@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -9,73 +8,52 @@
 	<title>probands to be autodeleted</title>
 </h:head>
 <h:body>
-	<ui:composition template="/META-INF/templates/probandHomeTemplate.xhtml">
-		<ui:param
-			name="title"
+	<ui:composition
+		template="/META-INF/templates/probandHomeTemplate.xhtml">
+		<ui:param name="title"
 			value="#{probandlabels.auto_deletion_proband_overview_title}" />
 		<ui:define name="content">
 			<h:form id="autodeletionprobandoverview_form">
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
-						<h:panelGrid
-							columns="6"
-							cellpadding="2"
+						<h:panelGrid columns="6" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="reminderPeriod"
+							<h:outputLabel for="reminderPeriod"
 								value="#{probandlabels.auto_deletion_proband_overview_reminder_period_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="reminderPeriod"
+								<p:selectOneMenu id="reminderPeriod"
 									value="#{autoDeletionProbandOverviewBean.reminder.period}"
 									required="false"
 									label="#{probandlabels.auto_deletion_proband_overview_reminder_period}"
 									styleClass="ctsms-control">
 									<f:selectItems
 										value="#{autoDeletionProbandOverviewBean.reminder.variablePeriods}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
-									<p:ajax
-										update="autodeletionproband_list,reminderPeriodDays"
+									<p:ajax update="autodeletionproband_list,reminderPeriodDays"
 										listener="#{autoDeletionProbandOverviewBean.handleReminderChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="reminderPeriod">
+								<p:tooltip rendered="#{enableTooltips}" for="reminderPeriod">
 									<h:outputText
 										value="#{probandlabels.auto_deletion_proband_overview_reminder_period_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="reminderPeriod" />
-							<h:outputLabel
-								for="reminderPeriodDays"
+							<h:outputLabel for="reminderPeriodDays"
 								value="#{probandlabels.auto_deletion_proband_overview_reminder_period_days_label}" />
 							<h:panelGroup>
-								<p:spinner
-									id="reminderPeriodDays"
+								<p:spinner id="reminderPeriodDays"
 									disabled="#{!autoDeletionProbandOverviewBean.reminderPeriodSpinnerEnabled}"
 									value="#{autoDeletionProbandOverviewBean.autoDeletionProbandModel.reminderPeriodDays}"
-									styleClass="ctsms-spinner"
-									required="false"
+									styleClass="ctsms-spinner" required="false"
 									label="#{probandlabels.auto_deletion_proband_overview_reminder_period_days}">
-									<p:ajax
-									event="blur"
-												process="@this" 
+									<p:ajax event="blur" process="@this"
 										update="autodeletionproband_list"
 										listener="#{autoDeletionProbandOverviewBean.handleReminderChange}" />
-									<!-- <p:ajax
-										event="keyup"
-										update="autodeletionproband_list"
-										listener="#{autoDeletionProbandOverviewBean.handleReminderChange}" /> -->
 								</p:spinner>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="reminderPeriodDays">
+								<p:tooltip rendered="#{enableTooltips}" for="reminderPeriodDays">
 									<h:outputText
 										value="#{probandlabels.auto_deletion_proband_overview_reminder_period_days_tooltip}"
 										escape="false" />
@@ -85,9 +63,7 @@
 						</h:panelGrid>
 					</p:panel>
 					<h:panelGroup id="autodeletionproband_list_wrapper">
-						<p:dataTable
-							styleClass="ctsms-datatable"
-							lazy="true"
+						<p:dataTable styleClass="ctsms-datatable" lazy="true"
 							rows="#{dataTablesRowsFullPage}"
 							paginator="#{dataTablesPaginatorFullPage}"
 							paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
@@ -105,26 +81,20 @@
 							id="autodeletionproband_list"
 							rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{autoDeletionProbandOverviewBean.probandToColor(proband.vo)}#{rowBgColorAlpha}">
 							<f:facet name="header">
-								<h:panelGrid
-									columns="3"
-									cellpadding="0"
+								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
 									<h:outputText
 										value="#{autoDeletionProbandOverviewBean.autoDeletionProbandModel.rowCount} #{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_header}" />
 									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										actionListener="#{autoDeletionProbandOverviewBean.load}"
 										title="#{labels.update_datatable_button_title}"
-										icon="ui-icon-refresh"
-										styleClass="ctsms-list-header-button"
+										icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 										ajax="true"
 										update=":autodeletionprobandoverview_form:autodeletionproband_list" />
 								</h:panelGrid>
 							</f:facet>
-							<p:column
-								sortBy="#{proband.vo.id}"
-								filterBy="#{proband.vo.id}">
+							<p:column sortBy="#{proband.vo.id}" filterBy="#{proband.vo.id}">
 								<f:facet name="header">
 									<h:outputText value="#{labels.id_column}" />
 								</f:facet>
@@ -137,99 +107,88 @@
 										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_particulars_last_name_column}" />
 								</f:facet>
 								<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-									<ui:param
-										name="label"
-										value="#{proband.vo.name}" />
-									<ui:param
-										name="icon"
+									<ui:param name="label" value="#{proband.vo.name}" />
+									<ui:param name="icon"
 										value="#{proband.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
-									<ui:param
-										name="rendered"
-										value="true" />
+									<ui:param name="rendered" value="true" />
 								</ui:include>
 							</p:column>
-							<p:column
-								sortBy="#{proband.vo.department}"
+							<p:column sortBy="#{proband.vo.department}"
 								filterBy="#{proband.vo.department.id}"
 								filterOptions="#{sessionScopeBean.filterDepartments}">
 								<f:facet name="header">
-									<h:outputText value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_proband_department_column}" />
+									<h:outputText
+										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_proband_department_column}" />
 								</f:facet>
 								<h:outputText value="#{proband.vo.department.name}" />
 							</p:column>
-							<p:column
-								sortBy="#{proband.vo.category}"
+							<p:column sortBy="#{proband.vo.category}"
 								filterBy="#{proband.vo.category.id}"
 								filterOptions="#{sessionScopeBean.filterProbandCategories}">
 								<f:facet name="header">
-									<h:outputText value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_proband_category_column}" />
+									<h:outputText
+										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_proband_category_column}" />
 								</f:facet>
 								<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-									<ui:param
-										name="label"
-										value="#{proband.vo.category.name}" />
-									<ui:param
-										name="icon"
+									<ui:param name="label" value="#{proband.vo.category.name}" />
+									<ui:param name="icon"
 										value="#{proband.vo.category.nodeStyleClass}" />
-									<ui:param
-										name="rendered"
-										value="true" />
+									<ui:param name="rendered" value="true" />
 								</ui:include>
 							</p:column>
-							<p:column
-								sortBy="#{proband.vo.autoDeleteDeadline}"
+							<p:column sortBy="#{proband.vo.autoDeleteDeadline}"
 								filterBy="#{proband.vo.autoDeleteDeadline}">
 								<f:facet name="header">
-									<h:outputText value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_auto_delete_deadline_column}" />
+									<h:outputText
+										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_auto_delete_deadline_column}" />
 								</f:facet>
 								<h:outputText value="#{proband.vo.autoDeleteDeadline}">
 									<f:converter converterId="ctsms.Date" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 								</h:outputText>
 							</p:column>
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_due_in_column}" />
+									<h:outputText
+										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_due_in_column}" />
 								</f:facet>
-								<h:outputText value="#{autoDeletionProbandOverviewBean.getProbandDueInString(proband.vo)}" />
+								<h:outputText
+									value="#{autoDeletionProbandOverviewBean.getProbandDueInString(proband.vo)}" />
 							</p:column>
-							<p:column
-								sortBy="#{proband.vo.category.delete}"
+							<p:column sortBy="#{proband.vo.category.delete}"
 								filterBy="#{proband.vo.category.delete}"
 								filterOptions="#{sessionScopeBean.filterBooleans}">
 								<f:facet name="header">
-									<h:outputText value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_delete_column}" />
+									<h:outputText
+										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_delete_column}" />
 								</f:facet>
-								<ui:include src="/META-INF/includes/shared/listDeletionIcon.xhtml">
-									<ui:param
-										name="value"
-										value="#{proband.vo.category.delete}" />
+								<ui:include
+									src="/META-INF/includes/shared/listDeletionIcon.xhtml">
+									<ui:param name="value" value="#{proband.vo.category.delete}" />
 								</ui:include>
-							</p:column>							
-							<p:column
-								style="width:0px;"
+							</p:column>
+							<p:column style="width:0px;"
 								sortBy="#{proband.vo.privacyConsentStatus}"
 								filterBy="#{proband.vo.privacyConsentStatus.id}"
 								filterOptions="#{autoDeletionProbandOverviewBean.filterPrivacyConsentStatusTypes}">
 								<f:facet name="header">
-									<h:outputText value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_current_privacy_consent_status_column}" />
+									<h:outputText
+										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_current_privacy_consent_status_column}" />
 								</f:facet>
 								<h:panelGroup>
 									<p:selectOneMenu
 										value="#{autoDeletionProbandOverviewBean.autoDeletionProbandModel.probandPrivacyConsentTypeMap[proband.vo.id]}"
-										disabled="#{proband.vo.category.locked}"
-										required="false"
+										disabled="#{proband.vo.category.locked}" required="false"
 										id="privacyConsentStatusType"
 										label="#{probandlabels.update_privacy_consent_status_type}"
 										styleClass="ctsms-control">
 										<f:converter converterId="ctsms.ID" />
-										<f:selectItem
-											itemLabel="#{labels.no_selection_label}"
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
 											itemValue="#{applicationScopeBean.noSelectionValue}" />
 										<f:selectItems
 											value="#{autoDeletionProbandOverviewBean.privacyConsentTransitionsMap[proband.vo.privacyConsentStatus.id]}"
-											var="selectItem"
-											itemLabel="#{selectItem.label}"
+											var="selectItem" itemLabel="#{selectItem.label}"
 											itemValue="#{selectItem.value}" />
 										<p:ajax
 											update=":autodeletionprobandoverview_form:autodeletionproband_list_wrapper,:autodeletionprobandoverview_form:messages"
@@ -245,32 +204,26 @@
 								</h:panelGroup>
 							</p:column>
 							<p:column style="width:96px;white-space:nowrap;">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									title="#{proband.vo.category.delete ? probandlabels.reset_auto_delete_proband_delete_deadline_button_label : probandlabels.reset_auto_delete_proband_due_deadline_button_label}"
 									actionListener="#{autoDeletionProbandOverviewBean.resetAutoDeleteDeadline(proband.vo)}"
-									icon="ui-icon ui-icon-clock"
-									ajax="true"
+									icon="ui-icon ui-icon-clock" ajax="true"
 									disabled="#{proband.vo.category.locked}"
 									update=":autodeletionprobandoverview_form:autodeletionproband_list_wrapper,:autodeletionprobandoverview_form:messages" />
-								<p:commandButton
-									immediate="true"
-									ajax="false"
+								<p:commandButton immediate="true" ajax="false"
 									title="#{probandlabels.open_proband_letters_button_label}"
 									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{autoDeletionProbandOverviewBean.getProbandLettersPdfStreamedContent(proband.vo.id)}" />
-								</p:commandButton>									
-								<p:commandButton
-									type="button"
+									<p:fileDownload
+										value="#{autoDeletionProbandOverviewBean.getProbandLettersPdfStreamedContent(proband.vo.id)}" />
+								</p:commandButton>
+								<p:commandButton type="button"
 									title="#{labels.open_proband_button_label}"
 									icon="ui-icon ui-icon-extlink"
 									onclick="openProband(#{proband.vo.id})" />
 							</p:column>
 						</p:dataTable>
 					</h:panelGroup>
-					<p:growl
-						id="messages"
-						showDetail="false" />
+					<p:growl id="messages" showDetail="false" />
 				</h:panelGrid>
 			</h:form>
 		</ui:define>

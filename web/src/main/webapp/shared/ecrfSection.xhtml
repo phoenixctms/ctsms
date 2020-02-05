@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,211 +9,149 @@
 </h:head>
 <h:body>
 	<ui:composition template="/META-INF/templates/popupTemplate.xhtml">
-		<ui:param
-			name="title"
-			value="#{ecrfSectionBean.title}" />
-		<ui:param
-			name="windowName"
-			value="#{ecrfSectionBean.windowName}" />
-		<ui:param
-			name="favicon"
-			value="trial_entity.ico" />
-		<ui:param
-			name="onLoadJsFunction"
-			value="reloadEcrf()" />
+		<ui:param name="title" value="#{ecrfSectionBean.title}" />
+		<ui:param name="windowName" value="#{ecrfSectionBean.windowName}" />
+		<ui:param name="favicon" value="trial_entity.ico" />
+		<ui:param name="onLoadJsFunction" value="reloadEcrf()" />
 		<ui:define name="head">
-			<h:outputStylesheet
-				name="trial.min.css"
-				library="css"
+			<h:outputStylesheet name="trial.min.css" library="css" target="head" />
+			<h:outputStylesheet name="inputField.min.css" library="css"
 				target="head" />
-			<h:outputStylesheet
-				name="inputField.min.css"
-				library="css"
-				target="head" />
-			<h:outputScript
-				name="restApi.min.js"
-				library="js"
-				target="head" />
+			<h:outputScript name="restApi.min.js" library="js" target="head" />
 			<h:outputScript
 				rendered="#{applicationScopeBean.enableGeolocationServices}"
-				name="locationDistance.min.js"
-				library="js"
+				name="locationDistance.min.js" library="js" target="head" />
+			<h:outputScript name="js-joda.min.js" library="js" target="head" />
+			<h:outputScript name="js-joda-timezone.min.js" library="js"
 				target="head" />
-		<h:outputScript
-			name="js-joda.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
-			name="js-joda-timezone.min.js"
-			library="js"
-			target="head" />				
-			<h:outputScript
-				name="fieldCalculation.min.js"
-				library="js"
+			<h:outputScript name="fieldCalculation.min.js" library="js"
 				target="head" />
-			<ui:fragment rendered="#{applicationScopeBean.enableGeolocationServices}">
-				<script
-					type="text/javascript"
+			<ui:fragment
+				rendered="#{applicationScopeBean.enableGeolocationServices}">
+				<script type="text/javascript"
 					src="#{applicationScopeBean.googleApiUrl}"></script>
 			</ui:fragment>
 		</ui:define>
 		<ui:define name="content">
 			<h:form id="ecrfsection_form">
-				<p:remoteCommand
-					process="@this"
-					name="reloadEcrf"
+				<p:remoteCommand process="@this" name="reloadEcrf"
 					actionListener="#{ecrfSectionBean.load}"
 					oncomplete="handleUpdateEcrfSection(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 					update="ecrf_header,ecrffield_input_grid" />
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid"
 					rowClasses="ctsms-ecrfsection-list-row">
 					<h:panelGroup id="ecrf_header">
 						<p:panel rendered="#{not empty ecrfSectionBean.ecrf}">
-							<h:panelGrid
-								columns="2"
-								styleClass="ctsms-content-panelgrid"
+							<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
 								cellpadding="0">
-								<h:panelGrid
-									id="ecrf_title"
-									columns="1"
-									styleClass="ctsms-content-panelgrid-minheight"
-									cellpadding="2"
+								<h:panelGrid id="ecrf_title" columns="1"
+									styleClass="ctsms-content-panelgrid-minheight" cellpadding="2"
 									columnClasses="ctsms-text-column">
-									<!-- columnClasses="ctsms-label-for-text-column-bold-large,ctsms-text-column-bold-large">
-								<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_title_label}" /> -->
-									<ui:include src="/META-INF/includes/shared/multiLineOutputText.xhtml">
-										<ui:param
-											name="multiLineText"
+									<ui:include
+										src="/META-INF/includes/shared/multiLineOutputText.xhtml">
+										<ui:param name="multiLineText"
 											value="#{ecrfSectionBean.ecrf.title}" />
-										<ui:param
-											name="rendered"
-											value="true" />
-										<ui:param
-											name="multiLineTextClass"
+										<ui:param name="rendered" value="true" />
+										<ui:param name="multiLineTextClass"
 											value="ctsms-multilinetext-bold-large" />
-										<ui:param
-											name="escapeHtml"
-											value="true" />
+										<ui:param name="escapeHtml" value="true" />
 									</ui:include>
-									<!-- <h:outputLabel
-									rendered="#{not empty ecrfSectionBean.ecrf.description}"
-									value="#{triallabels.ecrf_field_values_ecrf_description_label}" /> -->
-									<ui:include src="/META-INF/includes/shared/multiLineOutputText.xhtml">
-										<ui:param
-											name="multiLineText"
+									<ui:include
+										src="/META-INF/includes/shared/multiLineOutputText.xhtml">
+										<ui:param name="multiLineText"
 											value="#{ecrfSectionBean.ecrf.description}" />
-										<ui:param
-											name="rendered"
+										<ui:param name="rendered"
 											value="#{not empty ecrfSectionBean.ecrf.description}" />
-										<ui:param
-											name="multiLineTextClass"
-											value="" />
-										<ui:param
-											name="escapeHtml"
-											value="true" />
+										<ui:param name="multiLineTextClass" value="" />
+										<ui:param name="escapeHtml" value="true" />
 									</ui:include>
 								</h:panelGrid>
-								<h:panelGrid
-									id="ecrf_detail"
-									columns="10"
-									cellpadding="2"
+								<h:panelGrid id="ecrf_detail" columns="10" cellpadding="2"
 									styleClass="ctsms-content-panelgrid-minheight"
 									columnClasses="ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column-bold">
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.name}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_field_section_label}" />
-									<h:outputLabel value="#{ecrfSectionBean.fieldStatusEntry.ecrfField.section}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_field_section_label}" />
+									<h:outputLabel
+										value="#{ecrfSectionBean.fieldStatusEntry.ecrfField.section}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.group.title}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.visit.title}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_status_label}" />
-									<h:outputLabel value="#{ecrfSectionBean.getEcrfStatusTypeLabel(ecrfSectionBean.ecrfStatus.status)}" />
-									<h:outputLabel value="#{probandlabels.ecrf_field_values_trial_name_label}" />
-									<h:outputLink
-										value="#"
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_status_label}" />
+									<h:outputLabel
+										value="#{ecrfSectionBean.getEcrfStatusTypeLabel(ecrfSectionBean.ecrfStatus.status)}" />
+									<h:outputLabel
+										value="#{probandlabels.ecrf_field_values_trial_name_label}" />
+									<h:outputLink value="#"
 										onclick="openTrial(#{ecrfSectionBean.probandListEntry.trial.id})">
-										<h:outputText value="#{ecrfSectionBean.probandListEntry.trial.name}" />
+										<h:outputText
+											value="#{ecrfSectionBean.probandListEntry.trial.name}" />
 									</h:outputLink>
-									<!-- <h:outputLabel value="#{ecrfSectionBean.probandListEntry.trial.name}" /> -->
-									<h:outputLabel value="#{triallabels.ecrf_field_values_proband_name_label}" />
-									<h:outputLink
-										value="#"
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_proband_name_label}" />
+									<h:outputLink value="#"
 										onclick="openProband(#{ecrfSectionBean.probandListEntry.proband.id})">
-										<h:outputText value="#{ecrfSectionBean.probandListEntry.proband.name}" />
+										<h:outputText
+											value="#{ecrfSectionBean.probandListEntry.proband.name}" />
 									</h:outputLink>
-									<!-- <h:outputLabel value="#{ecrfSectionBean.probandListEntry.proband.name}" /> -->
-									<h:outputLabel value="#{triallabels.ecrf_field_values_proband_list_entry_group_label}" />
-									<h:outputLabel value="#{ecrfSectionBean.probandListEntry.group.title}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_proband_list_entry_status_label}" />
-									<h:outputLabel value="#{ecrfSectionBean.probandListEntry.lastStatus.status.name}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_proband_list_entry_group_label}" />
+									<h:outputLabel
+										value="#{ecrfSectionBean.probandListEntry.group.title}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_proband_list_entry_status_label}" />
+									<h:outputLabel
+										value="#{ecrfSectionBean.probandListEntry.lastStatus.status.name}" />
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:panel>
 					</h:panelGroup>
-					<h:panelGrid
-						id="ecrffield_input_grid"
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid id="ecrffield_input_grid" columns="1" cellpadding="0"
 						styleClass="ctsms-ecrffieldvalues-input-panelgrid"
 						rowClasses="ctsms-pages-row,ctsms-input-row,ctsms-message-row,ctsms-message-row,ctsms-pages-row">
 						<ui:include src="/META-INF/includes/shared/paginator.xhtml">
-							<ui:param
-								name="valueBean"
+							<ui:param name="valueBean"
 								value="#{ecrfSectionBean.ecrfFieldValueBean}" />
-							<ui:param
-								name="showAjaxStatus"
-								value="true" />
-							<ui:param
-								name="update"
+							<ui:param name="showAjaxStatus" value="true" />
+							<ui:param name="update"
 								value=":ecrfsection_form:ecrffield_input_grid" />
-							<!-- :tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list, -->
 						</ui:include>
-						<p:dataGrid
-							var="section"
+						<p:dataGrid var="section"
 							value="#{ecrfSectionBean.ecrfFieldValueBean.sections}"
 							paginator="false"
 							emptyMessage="#{ecrfSectionBean.ecrfFieldValueBean.paginator.pagesEnabled ? triallabels.ecrf_field_values_page_empty_message : triallabels.ecrf_field_values_section_empty_message}"
-							columns="1"
-							id="ecrffield_inputs">
+							columns="1" id="ecrffield_inputs">
 							<p:column>
-								<p:panel
-									toggleable="true"
+								<p:panel toggleable="true"
 									styleClass="#{section.series ? 'ctsms-ecrf-section-series' : 'ctsms-ecrf-section'}"
 									collapsed="false">
-									<!-- collapsed="#{section.series and !probandEcrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}"> -->
 									<f:facet name="header">
 										<h:outputText value="#{section}" />
 									</f:facet>
-									<h:panelGrid
-										columns="1"
-										cellpadding="0"
+									<h:panelGrid columns="1" cellpadding="0"
 										styleClass="ctsms-content-panelgrid">
-										<ui:include src="/META-INF/includes/shared/ecrfFieldValue.xhtml">
-											<ui:param
-												name="ecrfStatusEntryBean"
+										<ui:include
+											src="/META-INF/includes/shared/ecrfFieldValue.xhtml">
+											<ui:param name="ecrfStatusEntryBean"
 												value="#{ecrfSectionBean}" />
-											<ui:param
-												name="namingContainer"
-												value=":ecrfsection_form" />
-											<ui:param
-												name="updateOnComplete"
-												value="" />
-											<!-- refreshTrialEcrfProgress() -->
-											<ui:param
-												name="audit_trail_enabled"
+											<ui:param name="namingContainer" value=":ecrfsection_form" />
+											<ui:param name="updateOnComplete" value="" />
+											<ui:param name="audit_trail_enabled"
 												value="#{not empty ecrfSectionBean.ecrfStatus}" />
-											<ui:param
-												name="sectionUnlockValue"
+											<ui:param name="sectionUnlockValue"
 												value="#{ecrfSectionBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}" />
-											<ui:param
-												name="reasonForChangeRequired"
+											<ui:param name="reasonForChangeRequired"
 												value="#{ecrfSectionBean.ecrfFieldValueBean.reasonForChangeRequired}" />
 										</ui:include>
-										<p:toolbar rendered="#{section.series and (!ecrfSectionBean.ecrfFieldValueBean.editable or !ecrfSectionBean.ecrfFieldValueBean.sectionCreatedMap[section])}">
+										<p:toolbar
+											rendered="#{section.series and (!ecrfSectionBean.ecrfFieldValueBean.editable or !ecrfSectionBean.ecrfFieldValueBean.sectionCreatedMap[section])}">
 											<p:toolbarGroup align="right">
 												<p:commandButton
 													process="@this,@([id^=\\'ecrfsection_form:ecrffield_inputs:#{section.rowIndex}:section_inputs:\\'][id*=\\'row\\'])"
@@ -222,77 +159,39 @@
 													id="updateSection#{section.rowIndex}"
 													actionListener="#{ecrfSectionBean.updateSection(section)}"
 													oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-													icon="ui-icon ui-icon-disk"
-													ajax="true"
+													icon="ui-icon ui-icon-disk" ajax="true"
 													disabled="#{!ecrfSectionBean.ecrfFieldValueBean.editable and !ecrfSectionBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}"
 													update=":ecrfsection_form:ecrffield_input_grid" />
-												<!-- <p:commandButton
-												process="@this"
-												value="#{triallabels.clear_ecrf_section_button_label}"
-												rendered="#{not ecrfSectionBean.ecrfFieldValueBean.sectionCreatedMap[section] and section.seriesIndex > 0 and not empty ecrfSectionBean.ecrfFieldValueBean.filterSection}"
-												onclick="ecrfSectionToClear=#{applicationScopeBean.quoteJsString(section.section)};ecrfClearSectionConfirmation.show();"
-												disabled="#{!ecrfSectionBean.ecrfFieldValueBean.editable}"
-												icon="ui-icon ui-icon-trash"
-												type="button" /> -->
-												<!-- <p:commandButton
-										process=":tabView:trialecrfstatusentry_form:ecrffield_inputs:#{section.rowIndex}"
-										update=":tabView:trialecrfstatusentry_form:ecrffield_inputs:#{section.rowIndex}"
-										value="#{labels.xx}"
-										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-										icon="ui-icon ui-icon-close"
-										disabled="false" /> -->
 											</p:toolbarGroup>
 										</p:toolbar>
 									</h:panelGrid>
 								</p:panel>
 							</p:column>
 						</p:dataGrid>
-						<ui:include src="/META-INF/includes/shared/summaryWarnMessage.xhtml">
-							<ui:param
-								name="rendered"
-								value="true" />
-							<ui:param
-								name="hidden"
-								value="true" />
-							<ui:param
-								name="value"
-								value="" />
-							<ui:param
-								name="error_message_id"
-								value="delta_error_msg" />
+						<ui:include
+							src="/META-INF/includes/shared/summaryWarnMessage.xhtml">
+							<ui:param name="rendered" value="true" />
+							<ui:param name="hidden" value="true" />
+							<ui:param name="value" value="" />
+							<ui:param name="error_message_id" value="delta_error_msg" />
 						</ui:include>
 						<p:messages />
 						<ui:include src="/META-INF/includes/shared/paginator.xhtml">
-							<ui:param
-								name="valueBean"
+							<ui:param name="valueBean"
 								value="#{ecrfSectionBean.ecrfFieldValueBean}" />
-							<ui:param
-								name="showAjaxStatus"
-								value="true" />
-							<ui:param
-								name="update"
+							<ui:param name="showAjaxStatus" value="true" />
+							<ui:param name="update"
 								value=":ecrfsection_form:ecrffield_input_grid" />
-							<!-- :tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list, -->
 						</ui:include>
 					</h:panelGrid>
 				</h:panelGrid>
 				<ui:include src="/META-INF/includes/shared/auditTrailDialog.xhtml">
-					<ui:param
-						name="openAuditTrailRemoteCommand"
+					<ui:param name="openAuditTrailRemoteCommand"
 						value="openEcrfAuditTrail" />
-					<ui:param
-						name="auditTrailDialog"
-						value="ecrfAuditTrailDialog" />
-					<ui:param
-						name="namingContainer"
-						value=":ecrfsection_form" />
-					<ui:param
-						name="auditTrailBean"
-						value="#{ecrfSectionBean}" />
-					<ui:param
-						name="refreshEcrfProgressRemoteCommand"
-						value="noop" />
-					<!-- refreshTrialEcrfsProgress -->
+					<ui:param name="auditTrailDialog" value="ecrfAuditTrailDialog" />
+					<ui:param name="namingContainer" value=":ecrfsection_form" />
+					<ui:param name="auditTrailBean" value="#{ecrfSectionBean}" />
+					<ui:param name="refreshEcrfProgressRemoteCommand" value="noop" />
 				</ui:include>
 			</h:form>
 		</ui:define>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,30 +10,16 @@
 <h:body>
 	<ui:composition>
 		<h:form id="userpermissionprofile_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeUserPermissionProfiles"
-				actionListener="#{userPermissionProfileBean.change(userBean.in.id)}"
-				update="userpermissionprofile_input_grid" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<h:panelGrid
-					id="userpermissionprofile_input_grid"
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-input-panelgrid"
+				<h:panelGrid id="userpermissionprofile_input_grid" columns="1"
+					cellpadding="0" styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
-					<p:dataGrid
-						var="profileGroup"
+					<p:dataGrid var="profileGroup"
 						value="#{userPermissionProfileBean.userPermissionProfileModel.getPermissionProfileGroups()}"
-						paginator="true"
-						columns="2"
-						rows="4"
+						paginator="true" columns="2" rows="4"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-						paginatorPosition="bottom"
-						pageLinks="5"
+						paginatorPosition="bottom" pageLinks="5"
 						paginatorAlwaysVisible="true"
 						styleClass="ctsms-userpermissionprofiles-datagrid"
 						id="userpermissionprofile_inputs">
@@ -43,14 +28,12 @@
 								<f:facet name="header">
 									<h:outputText value="#{profileGroup.profileGroupName}" />
 								</f:facet>
-								<p:selectOneRadio
-									id="userpermissionprofile_input"
+								<p:selectOneRadio id="userpermissionprofile_input"
 									layout="pageDirection"
 									value="#{userPermissionProfileBean.userPermissionProfileModel[profileGroup.profileGroup.name()]}">
 									<f:selectItems
 										value="#{userPermissionProfileBean.userPermissionProfileModel.getPermissionProfiles(profileGroup.profileGroup.name())}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax />
 								</p:selectOneRadio>
@@ -60,29 +43,23 @@
 					<p:messages />
 					<p:toolbar>
 						<p:toolbarGroup align="left">
-							<h:outputText
-								styleClass="ctsms-toolbar-text"
+							<h:outputText styleClass="ctsms-toolbar-text"
 								value="#{userPermissionProfileBean.created ? userPermissionProfileBean.modifiedAnnotation : ''}" />
 						</p:toolbarGroup>
 						<p:separator />
 						<p:toolbarGroup align="right">
-							<p:commandButton
-								process="@this,userpermissionprofile_inputs"
-								id="update"
-								value="#{labels.update_button_label}"
+							<p:commandButton process="@this,userpermissionprofile_inputs"
+								id="update" value="#{labels.update_button_label}"
 								actionListener="#{userPermissionProfileBean.update}"
 								oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
-								icon="ui-icon ui-icon-disk"
-								ajax="true"
+								icon="ui-icon ui-icon-disk" ajax="true"
 								disabled="#{!userPermissionProfileBean.editable}"
 								update="userpermissionprofile_input_grid" />
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{userPermissionProfileBean.load}"
 								oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
-								icon="ui-icon-refresh"
-								ajax="true"
+								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!userPermissionProfileBean.created}"
 								update="userpermissionprofile_input_grid" />
 						</p:toolbarGroup>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="courseparticipationstatus_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeCourseParticipationStatus"
-				actionListener="#{courseParticipationStatusBean.change(staffBean.in.id)}"
-				update="courseparticipationstatus_list,courseparticipationstatus_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -37,25 +28,20 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="statusEntry"
 					value="#{courseParticipationStatusBean.statusEntryModel}"
-					id="courseparticipationstatus_list"
-					selectionMode="single"
+					id="courseparticipationstatus_list" selectionMode="single"
 					selection="#{courseParticipationStatusBean.selectedCourseParticipationStatusEntry}"
 					rowStyleClass="#{statusEntry.vo.course.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.courseParticipationToColor(statusEntry.vo)}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:courseparticipationstatus_form:courseparticipationstatus_input" />
 					<f:facet name="header">
-						<h:panelGrid
-							columns="2"
-							cellpadding="0"
+						<h:panelGrid columns="2" cellpadding="0"
 							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
-							<h:outputText value="#{courseParticipationStatusBean.statusEntryModel.rowCount} #{stafflabels.course_participation_status_courseparticipationstatus_list_header}" />
-							<p:commandButton
-								process="@this"
+							<h:outputText
+								value="#{courseParticipationStatusBean.statusEntryModel.rowCount} #{stafflabels.course_participation_status_courseparticipationstatus_list_header}" />
+							<p:commandButton process="@this"
 								actionListener="#{courseParticipationStatusBean.refresh}"
 								title="#{labels.update_datatable_button_title}"
-								icon="ui-icon-refresh"
-								styleClass="ctsms-list-header-button"
+								icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 								ajax="true"
 								update=":tabView:courseparticipationstatus_form:courseparticipationstatus_list" />
 						</h:panelGrid>
@@ -71,225 +57,180 @@
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.course.name}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_name_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{statusEntry.vo.course.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{statusEntry.vo.course.name}" />
+							<ui:param name="icon"
 								value="#{statusEntry.vo.course.category.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
+							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.course.selfRegistration}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_self_registration_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_self_registration_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{statusEntry.vo.course.selfRegistration}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.course.stop}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_stop_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_stop_column}" />
 						</f:facet>
 						<h:outputText value="#{statusEntry.vo.course.stop}">
 							<f:converter converterId="ctsms.Date" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
-					<p:column
-						sortBy="#{statusEntry.vo.status}"
+					<p:column sortBy="#{statusEntry.vo.status}"
 						filterBy="#{statusEntry.vo.status.id}"
 						filterOptions="#{sessionScopeBean.filterCourseParticipationStatusTypes}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_status_type_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_status_type_column}" />
 						</f:facet>
 						<h:outputText value="#{statusEntry.vo.status.name}" />
 					</p:column>
-					<p:column
-						sortBy="#{statusEntry.vo.showCv}"
+					<p:column sortBy="#{statusEntry.vo.showCv}"
 						filterBy="#{statusEntry.vo.showCv}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_show_cv_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_show_cv_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{statusEntry.vo.showCv}" />
+							<ui:param name="value" value="#{statusEntry.vo.showCv}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_valid_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_valid_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{courseParticipationStatusBean.getCourseValid(statusEntry.vo.course)}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_colliding_duty_roster_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_colliding_duty_roster_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{courseParticipationStatusBean.getCollidingDutyRosterTurnModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_colliding_course_bookings_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_colliding_course_bookings_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{courseParticipationStatusBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_staff_status_entry_column}" />
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_staff_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{courseParticipationStatusBean.getCollidingStaffStatusEntryModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
 					<p:rowExpansion>
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingDutyRosterTurnTableTab.xhtml">
-								<ui:param
-									name="collidingDutyRosterTurnModel"
+								<ui:param name="collidingDutyRosterTurnModel"
 									value="#{courseParticipationStatusBean.getCollidingDutyRosterTurnModel(statusEntry.vo)}" />
-								<ui:param
-									name="showStaff"
-									value="false" />
-								<ui:param
-									name="showTrial"
-									value="true" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showStaff" value="false" />
+								<ui:param name="showTrial" value="true" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsRowExpansion}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateRowExpansion}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionRowExpansion}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableRowExpansion}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightRowExpansion}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
-							<ui:include src="../shared/collidingInventoryBookingTableTab.xhtml">
-								<ui:param
-									name="collidingInventoryBookingModel"
+							<ui:include
+								src="../shared/collidingInventoryBookingTableTab.xhtml">
+								<ui:param name="collidingInventoryBookingModel"
 									value="#{courseParticipationStatusBean.getCollidingInventoryBookingModel(statusEntry.vo)}" />
-								<ui:param
-									name="showInventory"
-									value="true" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showInventory" value="true" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsRowExpansion}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateRowExpansion}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionRowExpansion}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableRowExpansion}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightRowExpansion}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
 							<ui:include src="../shared/collidingStaffStatusTableTab.xhtml">
-								<ui:param
-									name="collidingStaffStatusEntryModel"
+								<ui:param name="collidingStaffStatusEntryModel"
 									value="#{courseParticipationStatusBean.getCollidingStaffStatusEntryModel(statusEntry.vo)}" />
-								<ui:param
-									name="showStaff"
-									value="false" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showStaff" value="false" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsRowExpansion}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateRowExpansion}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionRowExpansion}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableRowExpansion}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightRowExpansion}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
 						</p:tabView>
 					</p:rowExpansion>
 					<p:column style="width:32px;">
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							title="#{labels.open_course_button_label}"
 							icon="ui-icon ui-icon-extlink"
 							onclick="openCourse(#{statusEntry.vo.course.id})" />
@@ -299,48 +240,44 @@
 					<f:facet name="header">
 						<h:outputText value="#{courseParticipationStatusBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid
 							rendered="#{courseParticipationStatusBean.inputVisible}"
-							columns="9"
-							cellpadding="2"
+							columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel value="#{stafflabels.course_participation_status_course_label}" />
-							<h:outputText value="#{courseParticipationStatusBean.out.course.name}" />
+							<h:outputLabel
+								value="#{stafflabels.course_participation_status_course_label}" />
+							<h:outputText
+								value="#{courseParticipationStatusBean.out.course.name}" />
 							<h:outputLabel />
-							<h:outputLabel value="#{stafflabels.course_participation_status_current_status_label}" />
-							<h:outputText value="#{courseParticipationStatusBean.out.status.name}" />
+							<h:outputLabel
+								value="#{stafflabels.course_participation_status_current_status_label}" />
+							<h:outputText
+								value="#{courseParticipationStatusBean.out.status.name}" />
 							<h:outputLabel />
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="courseParticipationStatusType"
+							<h:outputLabel for="courseParticipationStatusType"
 								value="#{stafflabels.course_participation_status_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="courseParticipationStatusType"
+								<p:selectOneMenu id="courseParticipationStatusType"
 									value="#{courseParticipationStatusBean.in.statusId}"
 									required="true"
 									label="#{stafflabels.course_participation_status_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
 									<f:selectItems
 										value="#{courseParticipationStatusBean.statusTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax update="terminal_state_message" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="courseParticipationStatusType">
 									<h:outputText
 										value="#{courseParticipationStatusBean.out.course.selfRegistration ? stafflabels.self_registration_course_participation_status_type_tooltip : stafflabels.course_participation_status_type_tooltip}"
@@ -349,39 +286,33 @@
 							</h:panelGroup>
 							<p:message for="courseParticipationStatusType" />
 							<h:outputLabel />
-							<h:outputText
-								styleClass="ctsms-text-red"
+							<h:outputText styleClass="ctsms-text-red"
 								value="#{courseParticipationStatusBean.showTerminalStateMessage ? stafflabels.course_participation_status_terminal_state_message : ''}"
 								id="terminal_state_message" />
 							<h:outputLabel />
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="courseParticipationStatusEntrySection"
+							<h:outputLabel for="courseParticipationStatusEntrySection"
 								value="#{stafflabels.course_participation_status_section_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="courseParticipationStatusEntrySection"
+								<p:selectOneMenu id="courseParticipationStatusEntrySection"
 									value="#{courseParticipationStatusBean.in.sectionId}"
 									required="false"
 									label="#{stafflabels.course_participation_status_section}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
 									<f:selectItems
 										value="#{courseParticipationStatusBean.cvSections}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										oncomplete="handleCourseParticipationStatusEntryCvSectionSelected(xhr, status, args)"
 										listener="#{courseParticipationStatusBean.handleSectionChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="courseParticipationStatusEntrySection">
 									<h:outputText
 										value="#{stafflabels.course_participation_status_section_tooltip}"
@@ -389,8 +320,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="courseParticipationStatusEntrySection" />
-							<h:outputLabel
-								for="courseParticipationStatusEntryShowCv"
+							<h:outputLabel for="courseParticipationStatusEntryShowCv"
 								value="#{stafflabels.course_participation_status_show_cv_label}" />
 							<h:panelGroup>
 								<p:selectBooleanCheckbox
@@ -401,8 +331,7 @@
 										listener="#{courseParticipationStatusBean.handleShowCvChange}"
 										update="courseParticipationStatusEntryShowCommentCv" />
 								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="courseParticipationStatusEntryShowCv">
 									<h:outputText
 										value="#{stafflabels.course_participation_status_show_cv_tooltip}"
@@ -410,8 +339,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="courseParticipationStatusEntryShowCv" />
-							<h:outputLabel
-								for="courseParticipationStatusEntryShowCommentCv"
+							<h:outputLabel for="courseParticipationStatusEntryShowCommentCv"
 								value="#{stafflabels.course_participation_status_show_comment_cv_label}" />
 							<h:panelGroup>
 								<p:selectBooleanCheckbox
@@ -419,8 +347,7 @@
 									widgetVar="courseParticipationStatusEntryShowCommentCv"
 									disabled="#{!courseParticipationStatusBean.in.showCv}"
 									value="#{courseParticipationStatusBean.in.showCommentCv}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="courseParticipationStatusEntryShowCommentCv">
 									<h:outputText
 										value="#{stafflabels.course_participation_status_show_comment_cv_tooltip}"
@@ -431,24 +358,17 @@
 						</h:panelGrid>
 						<h:panelGrid
 							rendered="#{courseParticipationStatusBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+							columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="courseParticipationStatusEntryComment"
+							<h:outputLabel for="courseParticipationStatusEntryComment"
 								value="#{stafflabels.course_participation_status_comment_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="courseParticipationStatusEntryComment"
+								<p:inputTextarea id="courseParticipationStatusEntryComment"
 									value="#{courseParticipationStatusBean.in.comment}"
 									widgetVar="courseParticipationStatusEntryComment"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									required="false" autoResize="false" styleClass="ctsms-textarea"
 									label="#{stafflabels.course_participation_status_comment}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="courseParticipationStatusEntryComment">
 									<h:outputText
 										value="#{stafflabels.course_participation_status_comment_tooltip}"
@@ -456,51 +376,44 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-						<h:outputLabel rendered="#{!courseParticipationStatusBean.inputVisible}" />
-						<h:outputLabel rendered="#{!courseParticipationStatusBean.inputVisible}" />
+						<h:outputLabel
+							rendered="#{!courseParticipationStatusBean.inputVisible}" />
+						<h:outputLabel
+							rendered="#{!courseParticipationStatusBean.inputVisible}" />
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{courseParticipationStatusBean.created ? courseParticipationStatusBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this,courseparticipationstatus_input"
-									id="update"
-									value="#{labels.update_button_label}"
+								<p:commandButton process="@this,courseparticipationstatus_input"
+									id="update" value="#{labels.update_button_label}"
 									actionListener="#{courseParticipationStatusBean.update}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!courseParticipationStatusBean.editable}"
 									update="courseparticipationstatus_list,courseparticipationstatus_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{courseParticipationStatusBean.delete}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!courseParticipationStatusBean.removable}"
 									update="courseparticipationstatus_list,courseparticipationstatus_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{courseParticipationStatusBean.load}"
-									icon="ui-icon ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon ui-icon-refresh" ajax="true"
 									disabled="#{!courseParticipationStatusBean.created}"
 									update="courseparticipationstatus_list,courseparticipationstatus_input" />
-								<p:commandButton
-									immediate="true"
-									ajax="false"
+								<p:commandButton immediate="true" ajax="false"
 									value="#{stafflabels.open_cv_button_label}"
 									icon="ui-icon ui-icon-pdf"
 									disabled="#{!courseParticipationStatusBean.person}">
-									<p:fileDownload value="#{courseParticipationStatusBean.cvPdfStreamedContent}" />
+									<p:fileDownload
+										value="#{courseParticipationStatusBean.cvPdfStreamedContent}" />
 								</p:commandButton>
 							</p:toolbarGroup>
 							<p:separator />
@@ -511,21 +424,17 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="courseParticipationStatusEntryCvSectionShowCvPresetOverrideConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{stafflabels.course_participation_status_cv_section_show_cv_preset_override_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					value="#{labels.yes_button_label}"
+				<p:commandButton value="#{labels.yes_button_label}"
 					onclick="setCourseParticipationStatusEntryCvSectionShowCv(true)"
 					type="button" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
+				<p:commandButton value="#{labels.no_button_label}"
 					onclick="setCourseParticipationStatusEntryCvSectionShowCv(false)"
 					type="button" />
 			</p:confirmDialog>

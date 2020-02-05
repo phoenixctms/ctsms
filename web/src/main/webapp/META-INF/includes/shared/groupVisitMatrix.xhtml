@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,70 +9,74 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:panelGrid
-			columns="1"
-			cellpadding="0"
+		<h:panelGrid columns="1" cellpadding="0"
 			styleClass="ctsms-input-panelgrid"
 			rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-pages-row">
-			<h:panelGroup rendered="#{!matrixBean.matrix.matrixVisitsVertical and matrixBean.matrix.paginator.psf.rowCount gt 0}">
-				<!-- rendered="#{visitScheduleBean.inputVisible}" -->
-				<table class="ctsms-groupvisitmatrix-table ui-widget-content ui-corner-all">
+			<h:panelGroup
+				rendered="#{!matrixBean.matrix.matrixVisitsVertical and matrixBean.matrix.paginator.psf.rowCount gt 0}">
+
+				<table
+					class="ctsms-groupvisitmatrix-table ui-widget-content ui-corner-all">
 					<tr>
 						<td><span></span></td>
-						<ui:repeat
-							value="#{matrixBean.matrix.matrixVisits}"
-							var="visit">
-							<th><span>#{empty visit.token ? triallabels.empty_visit : visit.token}</span></th>
+						<ui:repeat value="#{matrixBean.matrix.matrixVisits}" var="visit">
+							<th><span>#{empty visit.token ?
+									triallabels.empty_visit : visit.token}</span></th>
 						</ui:repeat>
 					</tr>
-					<ui:repeat
-						value="#{matrixBean.matrix.matrixGroups}"
-						var="group"
+					<ui:repeat value="#{matrixBean.matrix.matrixGroups}" var="group"
 						varStatus="groupVarStatus">
 						<tr>
-							<td><span>#{empty group.token ? triallabels.empty_group : group.token}</span></td>
-							<ui:repeat
-								value="#{matrixBean.matrix.matrixVisits}"
-								var="visit"
+							<td><span>#{empty group.token ?
+									triallabels.empty_group : group.token}</span></td>
+							<ui:repeat value="#{matrixBean.matrix.matrixVisits}" var="visit"
 								varStatus="visitVarStatus">
 								<td><span
 									class="#{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}#{defaultColorOpacity}"
-									style="#{matrixBean.inputVisible ? 'cursor:crosshair;' : ''}"
+									style=""
 									onclick="#{matrixBean.inputVisible} &amp;&amp; #{selectRemoteCommand}(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty visit ? 'null' : visit.id},#{applicationScopeBean.parameterName('PROBAND_GROUP_ID')}:#{empty group ? 'null' : group.id}}));">
-										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ? (matrixBean.matrix.matrixVisitsCount > 5 ? matrixBean.matrix.getMatrixItemCount(visit,group) :
-										(empty matrixBean.matrix.getMatrixItemsString(visit,group) ? '&#160;' : applicationScopeBean.clipStringTrailing(matrixBean.matrix.getMatrixItemsString(visit,group),16))) : '&#160;'}</span></td>
+										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ?
+										(matrixBean.matrix.matrixVisitsCount > 5 ?
+										matrixBean.matrix.getMatrixItemCount(visit,group) : (empty
+										matrixBean.matrix.getMatrixItemsString(visit,group) ? '&#160;'
+										:
+										applicationScopeBean.clipStringTrailing(matrixBean.matrix.getMatrixItemsString(visit,group),16)))
+										: '&#160;'}</span></td>
 							</ui:repeat>
 						</tr>
 					</ui:repeat>
 				</table>
 			</h:panelGroup>
-			<h:panelGroup rendered="#{matrixBean.matrix.matrixVisitsVertical and matrixBean.matrix.paginator.psf.rowCount gt 0}">
-				<!-- rendered="#{visitScheduleBean.inputVisible}" -->
-				<table class="ctsms-groupvisitmatrix-table ui-widget-content ui-corner-all">
+			<h:panelGroup
+				rendered="#{matrixBean.matrix.matrixVisitsVertical and matrixBean.matrix.paginator.psf.rowCount gt 0}">
+
+				<table
+					class="ctsms-groupvisitmatrix-table ui-widget-content ui-corner-all">
 					<tr>
 						<td><span></span></td>
-						<ui:repeat
-							value="#{matrixBean.matrix.matrixGroups}"
-							var="group">
-							<th><span>#{empty group.token ? triallabels.empty_group : group.token}</span></th>
+						<ui:repeat value="#{matrixBean.matrix.matrixGroups}" var="group">
+							<th><span>#{empty group.token ?
+									triallabels.empty_group : group.token}</span></th>
 						</ui:repeat>
 					</tr>
-					<ui:repeat
-						value="#{matrixBean.matrix.matrixVisits}"
-						var="visit"
+					<ui:repeat value="#{matrixBean.matrix.matrixVisits}" var="visit"
 						varStatus="visitVarStatus">
 						<tr>
-							<td><span>#{empty visit.token ? triallabels.empty_visit : visit.token}</span></td>
-							<ui:repeat
-								value="#{matrixBean.matrix.matrixGroups}"
-								var="group"
+							<td><span>#{empty visit.token ?
+									triallabels.empty_visit : visit.token}</span></td>
+							<ui:repeat value="#{matrixBean.matrix.matrixGroups}" var="group"
 								varStatus="groupVarStatus">
 								<td><span
 									class="#{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}#{defaultColorOpacity}"
-									style="#{matrixBean.inputVisible ? 'cursor:crosshair;' : ''}"
+									style=""
 									onclick="#{matrixBean.inputVisible} &amp;&amp; #{selectRemoteCommand}(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty visit ? 'null' : visit.id},#{applicationScopeBean.parameterName('PROBAND_GROUP_ID')}:#{empty group ? 'null' : group.id}}));">
-										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ? (matrixBean.matrix.matrixVisitsCount > 5 ? matrixBean.matrix.getMatrixItemCount(visit,group) :
-										(empty matrixBean.matrix.getMatrixItemsString(visit,group) ? '&#160;' : applicationScopeBean.clipStringTrailing(matrixBean.matrix.getMatrixItemsString(visit,group),16))) : '&#160;'}</span></td>
+										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ?
+										(matrixBean.matrix.matrixVisitsCount > 5 ?
+										matrixBean.matrix.getMatrixItemCount(visit,group) : (empty
+										matrixBean.matrix.getMatrixItemsString(visit,group) ? '&#160;'
+										:
+										applicationScopeBean.clipStringTrailing(matrixBean.matrix.getMatrixItemsString(visit,group),16)))
+										: '&#160;'}</span></td>
 							</ui:repeat>
 						</tr>
 					</ui:repeat>
@@ -81,22 +84,16 @@
 			</h:panelGroup>
 			<h:panelGrid
 				rendered="#{matrixBean.matrix.paginator.psf.rowCount gt 0}"
-				columns="3"
-				cellpadding="2"
+				columns="3" cellpadding="2"
 				columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-				<h:outputLabel
-					for="matrix_visits_vertical"
+				<h:outputLabel for="matrix_visits_vertical"
 					value="#{triallabels.matrix_visits_vertical_label}" />
 				<h:panelGroup>
-					<p:selectBooleanCheckbox
-						id="matrix_visits_vertical"
+					<p:selectBooleanCheckbox id="matrix_visits_vertical"
 						value="#{matrixBean.matrix.matrixVisitsVertical}">
-						<p:ajax
-							process="@this"
-							update="#{update}" />
+						<p:ajax process="@this" update="#{update}" />
 					</p:selectBooleanCheckbox>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="matrix_visits_vertical">
 						<h:outputText
 							value="#{triallabels.matrix_visits_vertical_tooltip}"
@@ -106,15 +103,9 @@
 				<p:message for="matrix_visits_vertical" />
 			</h:panelGrid>
 			<ui:include src="paginator.xhtml">
-				<ui:param
-					name="valueBean"
-					value="#{matrixBean.matrix}" />
-				<ui:param
-					name="pagesLimit"
-					value="3" />
-				<ui:param
-					name="update"
-					value="#{update}" />
+				<ui:param name="valueBean" value="#{matrixBean.matrix}" />
+				<ui:param name="pagesLimit" value="3" />
+				<ui:param name="update" value="#{update}" />
 			</ui:include>
 		</h:panelGrid>
 	</ui:composition>

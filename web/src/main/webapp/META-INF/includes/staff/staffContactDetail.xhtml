@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="staffcontactdetail_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeStaffContactDetail"
-				actionListener="#{staffContactDetailBean.change(staffBean.in.id)}"
-				update="staffcontactdetail_list,staffcontactdetail_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -37,14 +28,13 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="contactDetailValue"
 					value="#{staffContactDetailBean.contactDetailValueModel}"
-					id="staffcontactdetail_list"
-					selectionMode="single"
+					id="staffcontactdetail_list" selectionMode="single"
 					selection="#{staffContactDetailBean.selectedStaffContactDetailValue}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:staffcontactdetail_form:staffcontactdetail_input" />
 					<f:facet name="header">
-						<h:outputText value="#{staffContactDetailBean.contactDetailValueModel.rowCount} #{stafflabels.staff_contact_detail_staffcontactdetail_list_header}" />
+						<h:outputText
+							value="#{staffContactDetailBean.contactDetailValueModel.rowCount} #{stafflabels.staff_contact_detail_staffcontactdetail_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{contactDetailValue.vo.id}">
 						<f:facet name="header">
@@ -54,151 +44,121 @@
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.type}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_type_name_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_type_name_column}" />
 						</f:facet>
 						<h:outputText value="#{contactDetailValue.vo.type.name}" />
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.value}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_value_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_value_column}" />
 						</f:facet>
 						<ui:include src="../shared/contactDetailValue.xhtml">
-							<ui:param
-								name="decrypted"
-								value="true" />
-							<ui:param
-								name="contactDetailValue"
+							<ui:param name="decrypted" value="true" />
+							<ui:param name="contactDetailValue"
 								value="#{contactDetailValue.vo}" />
-							<ui:param
-								name="styleClass"
-								value="" />
+							<ui:param name="styleClass" value="" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.notify}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_notify_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_notify_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{contactDetailValue.vo.notify}" />
+							<ui:param name="value" value="#{contactDetailValue.vo.notify}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.na}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_na_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_na_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{contactDetailValue.vo.na}" />
+							<ui:param name="value" value="#{contactDetailValue.vo.na}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.comment}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_comment_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_contact_detail_staffcontactdetail_list_comment_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.clipStringTrailing(contactDetailValue.vo.comment)}" />
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(contactDetailValue.vo.comment)}" />
 					</p:column>
 				</p:dataTable>
 				<p:panel id="staffcontactdetail_input">
 					<f:facet name="header">
 						<h:outputText value="#{staffContactDetailBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="9"
-							cellpadding="2"
+						<h:panelGrid columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="contactDetailType"
+							<h:outputLabel for="contactDetailType"
 								value="#{stafflabels.staff_contact_detail_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="contactDetailType"
-									value="#{staffContactDetailBean.in.typeId}"
-									required="true"
+								<p:selectOneMenu id="contactDetailType"
+									value="#{staffContactDetailBean.in.typeId}" required="true"
 									label="#{stafflabels.staff_contact_detail_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{staffContactDetailBean.availableTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{staffContactDetailBean.availableTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										oncomplete="handleContactDetailTypeSelected(xhr, status, args)"
 										listener="#{staffContactDetailBean.handleTypeChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="contactDetailType">
+								<p:tooltip rendered="#{enableTooltips}" for="contactDetailType">
 									<h:outputText
 										value="#{stafflabels.staff_contact_detail_type_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="contactDetailType" />
-							<h:outputLabel
-								for="contactDetailValue"
+							<h:outputLabel for="contactDetailValue"
 								value="#{stafflabels.staff_contact_detail_value_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="contactDetailValue"
-									value="#{staffContactDetailBean.in.value}"
-									required="false"
+								<p:inputText id="contactDetailValue"
+									value="#{staffContactDetailBean.in.value}" required="false"
 									label="#{stafflabels.staff_contact_detail_value}"
 									disabled="#{staffContactDetailBean.in.na}"
 									styleClass="ctsms-control-larger" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="contactDetailValue">
+								<p:tooltip rendered="#{enableTooltips}" for="contactDetailValue">
 									<h:outputText
 										value="#{stafflabels.staff_contact_detail_value_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="contactDetailValue" />
-							<h:outputLabel
-								for="notify"
+							<h:outputLabel for="notify"
 								value="#{stafflabels.staff_contact_detail_notify_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="notify"
+								<p:selectBooleanCheckbox id="notify"
 									widgetVar="contactDetailNotify"
 									disabled="#{!staffContactDetailBean.notifyEnabled}"
 									value="#{staffContactDetailBean.in.notify}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="notify">
+								<p:tooltip rendered="#{enableTooltips}" for="notify">
 									<h:outputText
 										value="#{stafflabels.staff_contact_detail_notify_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="notify" />
-							<h:outputLabel
-								for="na"
+							<h:outputLabel for="na"
 								value="#{stafflabels.staff_contact_detail_na_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="na"
-									widgetVar="contactDetailNa"
+								<p:selectBooleanCheckbox id="na" widgetVar="contactDetailNa"
 									value="#{staffContactDetailBean.in.na}">
-									<p:ajax
-										listener="#{staffContactDetailBean.handleNaChange}"
+									<p:ajax listener="#{staffContactDetailBean.handleNaChange}"
 										update="contactDetailValue,notify" />
 								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="na">
+								<p:tooltip rendered="#{enableTooltips}" for="na">
 									<h:outputText
 										value="#{stafflabels.staff_contact_detail_na_tooltip}"
 										escape="false" />
@@ -206,25 +166,17 @@
 							</h:panelGroup>
 							<p:message for="na" />
 						</h:panelGrid>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="contactcomment"
+							<h:outputLabel for="contactcomment"
 								value="#{stafflabels.staff_contact_detail_comment_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="contactcomment"
-									value="#{staffContactDetailBean.in.comment}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="contactcomment"
+									value="#{staffContactDetailBean.in.comment}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{stafflabels.staff_contact_detail_comment}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="contactcomment">
+								<p:tooltip rendered="#{enableTooltips}" for="contactcomment">
 									<h:outputText
 										value="#{stafflabels.staff_contact_detail_comment_tooltip}"
 										escape="false" />
@@ -234,57 +186,43 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{staffContactDetailBean.created ? staffContactDetailBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{staffContactDetailBean.reset}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="staffcontactdetail_list,staffcontactdetail_input" />
-								<p:commandButton
-									process="@this,staffcontactdetail_input"
-									id="add"
-									value="#{labels.add_button_label}"
+								<p:commandButton process="@this,staffcontactdetail_input"
+									id="add" value="#{labels.add_button_label}"
 									actionListener="#{staffContactDetailBean.add}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!staffContactDetailBean.createable}"
 									update="staffcontactdetail_list,staffcontactdetail_input" />
-								<p:commandButton
-									process="@this,staffcontactdetail_input"
-									id="update"
-									value="#{labels.update_button_label}"
+								<p:commandButton process="@this,staffcontactdetail_input"
+									id="update" value="#{labels.update_button_label}"
 									actionListener="#{staffContactDetailBean.update}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!staffContactDetailBean.editable}"
 									update="staffcontactdetail_list,staffcontactdetail_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{staffContactDetailBean.delete}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!staffContactDetailBean.removable}"
 									update="staffcontactdetail_list,staffcontactdetail_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{staffContactDetailBean.load}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!staffContactDetailBean.created}"
 									update="staffcontactdetail_list,staffcontactdetail_input" />
 							</p:toolbarGroup>
@@ -296,23 +234,17 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="contactDetailNotifyPresetOverrideConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{stafflabels.staff_contact_detail_notify_preset_override_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					value="#{labels.yes_button_label}"
-					onclick="setContactDetailNotify(true)"
-					type="button" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="setContactDetailNotify(false)"
-					type="button" />
+				<p:commandButton value="#{labels.yes_button_label}"
+					onclick="setContactDetailNotify(true)" type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="setContactDetailNotify(false)" type="button" />
 			</p:confirmDialog>
 		</h:form>
 	</ui:composition>

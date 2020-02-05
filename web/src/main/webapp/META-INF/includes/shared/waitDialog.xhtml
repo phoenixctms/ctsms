@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,17 +9,13 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:dialog
-			widgetVar="waitDialog"
-			modal="true"
-			closable="false"
+		<p:dialog widgetVar="waitDialog" modal="true" closable="false"
 			onShow="dequeueShowDialog();"
 			onHide="waitDialog.disableModality();dequeueShowDialog();"
-			showEffect=""
-			hideEffect="">
+			showEffect="" hideEffect="">
 			<span class="ctsms-field-icon ctsms-icon-loading"></span>
 			<h:outputLabel value="#{labels.wait_message}" />
-			<!-- showEffect="#{effect}" -->
+
 		</p:dialog>
 	</ui:composition>
 </h:body>

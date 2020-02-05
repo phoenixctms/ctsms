@@ -54,22 +54,7 @@
 
 
 
-			<!-- <p:selectOneMenu
-									id="timeZone"
-									value="#{settingsBean.in.timeZone}"
-									required="true"
-									label="#{userlabels.user_time_zone}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{settingsBean.timeZones}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu> -->
+
 			<p:tooltip rendered="#{enableTooltips}" for="timeZone">
 				<h:outputText value="#{userlabels.user_time_zone_tooltip}"
 					escape="false" />
@@ -83,14 +68,13 @@
 			value="#{userlabels.user_dateformat_label}" />
 		<h:panelGroup>
 
-			<p:selectOneMenu id="dateformat"
-				value="#{settingsBean.dateFormat}" required="false"
-				label="#{userlabels.user_dateformat}" styleClass="ctsms-control">
+			<p:selectOneMenu id="dateformat" value="#{settingsBean.dateFormat}"
+				required="false" label="#{userlabels.user_dateformat}"
+				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItems value="#{settingsBean.dateFormats}"
-					var="selectItem" itemLabel="#{selectItem.label}"
-					itemValue="#{selectItem.value}" />
+				<f:selectItems value="#{settingsBean.dateFormats}" var="selectItem"
+					itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
 			<p:tooltip rendered="#{enableTooltips}" for="dateformat">

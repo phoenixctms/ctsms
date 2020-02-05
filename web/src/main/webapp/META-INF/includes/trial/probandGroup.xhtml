@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandgroup_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeProbandGroup"
-				actionListener="#{probandGroupBean.change(trialBean.in.id)}"
-				update="probandgroup_list,probandgroup_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -35,19 +26,16 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{probandGroup.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="probandGroup"
-					value="#{probandGroupBean.probandGroupModel}"
-					id="probandgroup_list"
-					selectionMode="single"
+					var="probandGroup" value="#{probandGroupBean.probandGroupModel}"
+					id="probandgroup_list" selectionMode="single"
 					selection="#{probandGroupBean.selectedProbandGroup}">
-					<!-- widgetVar="probandGroupTable"
-					onExpandStart="setExpanding(probandGroupTable)" -->
-					<p:ajax
-						event="rowSelect"
+
+					<p:ajax event="rowSelect"
 						update=":tabView:probandgroup_form:probandgroup_input" />
-					<!-- onstart="suppressExpandingItemSelect(this,probandGroupTable)" -->
+
 					<f:facet name="header">
-						<h:outputText value="#{probandGroupBean.probandGroupModel.rowCount} #{triallabels.proband_group_probandgroup_list_header}" />
+						<h:outputText
+							value="#{probandGroupBean.probandGroupModel.rowCount} #{triallabels.proband_group_probandgroup_list_header}" />
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
@@ -60,52 +48,54 @@
 					</p:column>
 					<p:column sortBy="#{probandGroup.vo.token}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.proband_group_probandgroup_list_token_column}" />
+							<h:outputText
+								value="#{triallabels.proband_group_probandgroup_list_token_column}" />
 						</f:facet>
 						<h:outputText value="#{probandGroup.vo.token}" />
 					</p:column>
 					<p:column sortBy="#{probandGroup.vo.title}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.proband_group_probandgroup_list_title_column}" />
+							<h:outputText
+								value="#{triallabels.proband_group_probandgroup_list_title_column}" />
 						</f:facet>
 						<h:outputText value="#{probandGroup.vo.title}" />
 					</p:column>
 					<p:column sortBy="#{probandGroup.vo.description}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.proband_group_probandgroup_list_description_column}" />
+							<h:outputText
+								value="#{triallabels.proband_group_probandgroup_list_description_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.clipStringTrailing(probandGroup.vo.description)}" />
-					</p:column>					
-					<p:column
-						sortBy="#{probandGroup.vo.randomize}"
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(probandGroup.vo.description)}" />
+					</p:column>
+					<p:column sortBy="#{probandGroup.vo.randomize}"
 						filterBy="#{probandGroup.vo.randomize}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.proband_group_probandgroup_list_randomize_column}" />
+							<h:outputText
+								value="#{triallabels.proband_group_probandgroup_list_randomize_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{probandGroup.vo.randomize}" />
+							<ui:param name="value" value="#{probandGroup.vo.randomize}" />
 						</ui:include>
-					</p:column>					
+					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.proband_group_probandgroup_list_proband_group_size_column}" />
+							<h:outputText
+								value="#{triallabels.proband_group_probandgroup_list_proband_group_size_column}" />
 						</f:facet>
 						<h:outputText value="#{probandGroup.vo.size}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.proband_group_probandgroup_list_proband_group_total_size_column}" />
+							<h:outputText
+								value="#{triallabels.proband_group_probandgroup_list_proband_group_total_size_column}" />
 						</f:facet>
 						<h:outputText value="#{probandGroup.vo.totalSize}" />
 					</p:column>
 					<p:rowExpansion>
 						<p:panel>
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="false"
+							<p:dataTable styleClass="ctsms-datatable" lazy="false"
 								rows="#{dataTablesRowsRowExpansion}"
 								paginator="#{dataTablesPaginatorRowExpansion}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateRowExpansion}"
@@ -123,98 +113,80 @@
 								id="probandlistentry_list"
 								rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
 								<f:facet name="header">
-									<h:outputText value="#{probandGroupBean.getProbandListEntryModel(probandGroup.vo).allRowCount} #{triallabels.proband_group_probandlistentry_list_header}" />
+									<h:outputText
+										value="#{probandGroupBean.getProbandListEntryModel(probandGroup.vo).allRowCount} #{triallabels.proband_group_probandlistentry_list_header}" />
 								</f:facet>
 								<p:column sortBy="#{probandListEntry.vo.position}">
 									<f:facet name="header">
-										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_position_column}" />
+										<h:outputText
+											value="#{triallabels.proband_group_probandlistentry_list_position_column}" />
 									</f:facet>
 									<h:outputText value="#{probandListEntry.vo.position}" />
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntry.vo.proband.nameSortable}"
+								<p:column sortBy="#{probandListEntry.vo.proband.nameSortable}"
 									filterMatchMode="contains"
 									filterBy="#{probandListEntry.vo.proband.nameSortable}">
 									<f:facet name="header">
-										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_proband_name_column}" />
+										<h:outputText
+											value="#{triallabels.proband_group_probandlistentry_list_proband_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{probandListEntry.vo.proband.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{probandListEntry.vo.proband.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
+										<ui:param name="rendered"
 											value="#{probandListEntry.vo.proband.decrypted}" />
 									</ui:include>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{probandListEntry.vo.proband.name}" />
-										<ui:param
-											name="icon"
-											value="ctsms-icon-encrypted" />
-										<ui:param
-											name="rendered"
+										<ui:param name="icon" value="ctsms-icon-encrypted" />
+										<ui:param name="rendered"
 											value="#{!probandListEntry.vo.proband.decrypted}" />
 									</ui:include>
 								</p:column>
-								
+
 								<p:column
 									sortBy="#{probandListEntry.vo.proband.department.name}"
 									filterBy="#{probandListEntry.vo.trial.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_proband_department_column}" />
+										<h:outputText
+											value="#{triallabels.proband_group_probandlistentry_list_proband_department_column}" />
 									</f:facet>
-									<h:outputText value="#{probandListEntry.vo.proband.department.name}" />
-								</p:column>	
-								
+									<h:outputText
+										value="#{probandListEntry.vo.proband.department.name}" />
+								</p:column>
+
 								<p:column sortBy="#{probandListEntry.vo.proband.gender.name}"
 									filterBy="#{probandListEntry.vo.proband.gender.sex}"
 									filterOptions="#{sessionScopeBean.filterSexes}">
 									<f:facet name="header">
-										<h:outputText value="#{triallabels.proband_group_probandlistentry_list_proband_gender_column}" />
+										<h:outputText
+											value="#{triallabels.proband_group_probandlistentry_list_proband_gender_column}" />
 									</f:facet>
-									<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
+									<h:outputText
+										value="#{probandListEntry.vo.proband.gender.name}" />
 								</p:column>
 
 								<ui:include src="../shared/probandListEntryTableColumns.xhtml">
-									<ui:param
-										name="probandListEntryModel"
+									<ui:param name="probandListEntryModel"
 										value="#{probandGroupBean.getProbandListEntryModel(probandGroup.vo)}" />
-									<ui:param
-										name="probandlistentry_list"
+									<ui:param name="probandlistentry_list"
 										value=":tabView:probandgroup_form:probandgroup_list:#{probandGroup.rowIndex}:probandlistentry_list" />
-									<ui:param
-										name="showReimbursementTotalsColumn"
-										value="true" />
-									<ui:param
-										name="showStatusDetails"
-										value="true" />										
-									<ui:param
-										name="byTagInputField"
-										value="false" />
-									<ui:param
-										name="byInquiryInputField"
-										value="true" />
-									<ui:param
-										name="allTrials"
-										value="true" />
-									<ui:param
-										name="lazyModel"
-										value="false" />
-									<ui:param
-										name="person"
-										value="#{probandGroupBean.trial.type.person}" />												
+									<ui:param name="showReimbursementTotalsColumn" value="true" />
+									<ui:param name="showStatusDetails" value="true" />
+									<ui:param name="byTagInputField" value="false" />
+									<ui:param name="byInquiryInputField" value="true" />
+									<ui:param name="allTrials" value="true" />
+									<ui:param name="lazyModel" value="false" />
+									<ui:param name="person"
+										value="#{probandGroupBean.trial.type.person}" />
 								</ui:include>
 								<p:column style="width:32px;">
-									<p:commandButton
-										title="#{labels.open_proband_button_label}"
-										type="button"
-										icon="ui-icon ui-icon-extlink"
+									<p:commandButton title="#{labels.open_proband_button_label}"
+										type="button" icon="ui-icon ui-icon-extlink"
 										onclick="openProband(#{probandListEntry.vo.proband.id})" />
 								</p:column>
 							</p:dataTable>
@@ -225,154 +197,116 @@
 					<f:facet name="header">
 						<h:outputText value="#{probandGroupBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{probandGroupBean.inputVisible}"
-							columns="9"
-							cellpadding="2"
+						<h:panelGrid rendered="#{probandGroupBean.inputVisible}"
+							columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="probandgrouptoken"
+							<h:outputLabel for="probandgrouptoken"
 								value="#{triallabels.proband_group_token_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="probandgrouptoken"
-									value="#{probandGroupBean.in.token}"
-									required="true"
+								<p:inputText id="probandgrouptoken"
+									value="#{probandGroupBean.in.token}" required="true"
 									label="#{triallabels.proband_group_token}"
 									styleClass="ctsms-control-smaller" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="probandgrouptoken">
+								<p:tooltip rendered="#{enableTooltips}" for="probandgrouptoken">
 									<h:outputText
 										value="#{triallabels.proband_group_token_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="probandgrouptoken" />
-							<h:outputLabel
-								for="probandgrouptitle"
+							<h:outputLabel for="probandgrouptitle"
 								value="#{triallabels.proband_group_title_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="probandgrouptitle"
-									value="#{probandGroupBean.in.title}"
-									required="true"
+								<p:inputText id="probandgrouptitle"
+									value="#{probandGroupBean.in.title}" required="true"
 									label="#{triallabels.proband_group_title}"
 									styleClass="ctsms-control" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="probandgrouptitle">
+								<p:tooltip rendered="#{enableTooltips}" for="probandgrouptitle">
 									<h:outputText
 										value="#{triallabels.proband_group_title_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="probandgrouptitle" />
-							
-							<h:outputLabel
-									for="probandgrouprandomize"
-									value="#{triallabels.proband_group_randomize_label}" />
-								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="probandgrouprandomize"
-										value="#{probandGroupBean.in.randomize}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="probandgrouprandomize">
-										<h:outputText
-											value="#{triallabels.proband_group_randomize_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="probandgrouprandomize" />
+
+							<h:outputLabel for="probandgrouprandomize"
+								value="#{triallabels.proband_group_randomize_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="probandgrouprandomize"
+									value="#{probandGroupBean.in.randomize}" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="probandgrouprandomize">
+									<h:outputText
+										value="#{triallabels.proband_group_randomize_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="probandgrouprandomize" />
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{probandGroupBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{probandGroupBean.inputVisible}"
+							columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-noencryption"
 								for="probandgroupdescription"
 								value="#{labels.noencryption_warning_label}#{triallabels.proband_group_description_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="probandgroupdescription"
-									value="#{probandGroupBean.in.description}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="probandgroupdescription"
+									value="#{probandGroupBean.in.description}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.proband_group_description}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="probandgroupdescription">
 									<h:outputText
 										value="#{triallabels.proband_group_description_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-						</h:panelGrid>						
+						</h:panelGrid>
 						<h:outputLabel rendered="#{!probandGroupBean.inputVisible}" />
 						<h:outputLabel rendered="#{!probandGroupBean.inputVisible}" />
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{probandGroupBean.created ? probandGroupBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{probandGroupBean.reset}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="probandgroup_list,probandgroup_input" />
-								<p:commandButton
-									process="@this,probandgroup_input"
-									id="add"
+								<p:commandButton process="@this,probandgroup_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{probandGroupBean.add}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!probandGroupBean.createable}"
 									update="probandgroup_list,probandgroup_input" />
-								<p:commandButton
-									process="@this,probandgroup_input"
-									id="update"
+								<p:commandButton process="@this,probandgroup_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{probandGroupBean.update}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!probandGroupBean.editable}"
 									update="probandgroup_list,probandgroup_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									onclick="probandGroupDeleteConfirmation.show()"
 									disabled="#{!probandGroupBean.removable}"
-									icon="ui-icon ui-icon-trash"
-									type="button" />
-								<p:commandButton
-									process="@this"
+									icon="ui-icon ui-icon-trash" type="button" />
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{probandGroupBean.load}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!probandGroupBean.created}"
 									update="probandgroup_list,probandgroup_input" />
 							</p:toolbarGroup>
@@ -384,27 +318,20 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
+			<p:confirmDialog appendToBody="false" severity="alert"
 				widgetVar="probandGroupDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.proband_group_delete_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					process="@this"
-					value="#{labels.yes_button_label}"
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
 					actionListener="#{probandGroupBean.delete}"
 					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-					onclick="probandGroupDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="probandGroupDeleteConfirmation.hide()" ajax="true"
 					update="probandgroup_list,probandgroup_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="probandGroupDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="probandGroupDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
 		</h:form>
 	</ui:composition>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="lecturer_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeLecturer"
-				actionListener="#{lecturerBean.change(courseBean.in.id)}"
-				update="lecturer_list,lecturer_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -35,17 +26,15 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{lecturer.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="lecturer"
-					value="#{lecturerBean.lecturerModel}"
-					id="lecturer_list"
-					selectionMode="single"
+					var="lecturer" value="#{lecturerBean.lecturerModel}"
+					id="lecturer_list" selectionMode="single"
 					selection="#{lecturerBean.selectedLecturer}"
 					rowStyleClass="#{lecturer.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:lecturer_form:lecturer_input" />
 					<f:facet name="header">
-						<h:outputText value="#{lecturerBean.lecturerModel.rowCount} #{courselabels.lecturer_lecturer_list_header}" />
+						<h:outputText
+							value="#{lecturerBean.lecturerModel.rowCount} #{courselabels.lecturer_lecturer_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{lecturer.vo.id}">
 						<f:facet name="header">
@@ -56,18 +45,14 @@
 					<ui:include src="../shared/lecturerTableColumns.xhtml" />
 					<p:column sortBy="#{lecturer.vo.staff}">
 						<f:facet name="header">
-							<h:outputText value="#{courselabels.lecturer_lecturer_list_staff_name_column}" />
+							<h:outputText
+								value="#{courselabels.lecturer_lecturer_list_staff_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{lecturer.vo.staff.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{lecturer.vo.staff.name}" />
+							<ui:param name="icon"
 								value="#{lecturer.vo.staff.category.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
+							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
 				</p:dataTable>
@@ -75,87 +60,61 @@
 					<f:facet name="header">
 						<h:outputText value="#{lecturerBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="6"
-							cellpadding="2"
+						<h:panelGrid columns="6" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="lecturerCompetence"
+							<h:outputLabel for="lecturerCompetence"
 								value="#{courselabels.lecturer_competence_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="lecturerCompetence"
-									value="#{lecturerBean.in.competenceId}"
-									required="true"
+								<p:selectOneMenu id="lecturerCompetence"
+									value="#{lecturerBean.in.competenceId}" required="true"
 									label="#{courselabels.lecturer_competence}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{lecturerBean.availableCompetences}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{lecturerBean.availableCompetences}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="lecturerCompetence">
+								<p:tooltip rendered="#{enableTooltips}" for="lecturerCompetence">
 									<h:outputText
 										value="#{courselabels.lecturer_competence_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="lecturerCompetence" />
-							<h:outputLabel
-								for="lecturerStaff"
+							<h:outputLabel for="lecturerStaff"
 								value="#{courselabels.lecturer_staff_label}" />
-							<h:panelGrid
-								columns="5"
-								cellpadding="0">
+							<h:panelGrid columns="5" cellpadding="0">
 								<h:panelGroup>
-									<h:inputHidden
-										id="lecturerStaff"
-										required="true"
+									<h:inputHidden id="lecturerStaff" required="true"
 										requiredMessage="#{courselabels.lecturer_staff_required_message}"
 										value="#{lecturerBean.in.staffId}">
 										<f:converter converterId="ctsms.ID" />
 									</h:inputHidden>
-									<p:commandButton
-										id="lecturerStaffName"
+									<p:commandButton id="lecturerStaffName"
 										value="#{applicationScopeBean.clipStringPicker(lecturerBean.staffName)}"
 										title="#{courselabels.lecturer_staff_tooltip}#{labels.open_staff_button_label}"
-										styleClass="ctsms-picker"
-										icon="ui-icon ui-icon-extlink"
+										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 										type="button"
 										onclick="openPickedStaff(':tabView:lecturer_form:lecturerStaff')" />
 								</h:panelGroup>
 								<p:commandButton
 									title="#{labels.pick_active_identity_staff_button_label}"
-									icon="ui-icon ui-icon-person"
-									type="button"
+									icon="ui-icon ui-icon-person" type="button"
 									disabled="#{!sessionScopeBean.hasUserIdentity}"
 									onclick="setIDAjax(':tabView:lecturer_form:lecturerStaff',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':tabView:lecturer_form:lecturerStaffName','#{sessionScopeBean.userIdentityName}')" />
-								<p:commandButton
-									title="#{labels.pick_staff_button_label}"
-									icon="ui-icon ui-icon-search"
-									type="button"
+								<p:commandButton title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search" type="button"
 									onclick="openStaffPickerAjax(':tabView:lecturer_form:lecturerStaff',':tabView:lecturer_form:lecturerStaffName')" />
-								<p:commandButton
-									title="#{labels.clear_staff_button_label}"
-									icon="ui-icon ui-icon-close"
-									type="button"
+								<p:commandButton title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close" type="button"
 									onclick="clearIDAjax(':tabView:lecturer_form:lecturerStaff',':tabView:lecturer_form:lecturerStaffName','#{applicationScopeBean.noStaffPickedMessage}')" />
-								<p:commandButton
-									title="#{messages.create_new_staff}"
-									icon="ui-icon ui-icon-plusthick"
-									type="button"
+								<p:commandButton title="#{messages.create_new_staff}"
+									icon="ui-icon ui-icon-plusthick" type="button"
 									onclick="openNewStaff()" />
 							</h:panelGrid>
 							<p:message for="lecturerStaff" />
@@ -163,57 +122,43 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{lecturerBean.created ? lecturerBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{lecturerBean.reset}"
 									oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="lecturer_list,lecturer_input" />
-								<p:commandButton
-									process="@this,lecturer_input"
-									id="add"
+								<p:commandButton process="@this,lecturer_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{lecturerBean.add}"
 									oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!lecturerBean.createable}"
 									update="lecturer_list,lecturer_input" />
-								<p:commandButton
-									process="@this,lecturer_input"
-									id="update"
+								<p:commandButton process="@this,lecturer_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{lecturerBean.update}"
 									oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!lecturerBean.editable}"
 									update="lecturer_list,lecturer_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{lecturerBean.delete}"
 									oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!lecturerBean.removable}"
 									update="lecturer_list,lecturer_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{lecturerBean.load}"
 									oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!lecturerBean.created}"
 									update="lecturer_list,lecturer_input" />
 							</p:toolbarGroup>

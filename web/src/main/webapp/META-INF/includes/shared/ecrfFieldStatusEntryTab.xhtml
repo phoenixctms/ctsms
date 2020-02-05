@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,126 +10,112 @@
 <h:body>
 	<ui:composition>
 		<p:tab title="#{ecrfFieldStatusEntryBean.tabTitle}">
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-content-panelgrid">
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
-						rows="#{dataTablesRowsAuditTrail}"
-						paginator="#{dataTablesPaginatorAuditTrail}"
-						paginatorTemplate="#{dataTablesPaginatorTemplateAuditTrail}"
-						rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateAuditTrail}"
-						paginatorPosition="#{dataTablesPaginatorPositionAuditTrail}"
-						pageLinks="#{dataTablesPageLinksAuditTrail}"
-						paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleAuditTrail}"
-						scrollable="#{dataTablesScrollableAuditTrail}"
-						scrollHeight="#{dataTablesScrollHeightAuditTrail}"
-						resizableColumns="#{dataTablesResizableColumnsAuditTrail}"
-						sortBy="#{ecrfFieldStatusEntry.vo.id}"
-						sortOrder="descending"
-						emptyMessage="#{labels.datatable_permission_empty_message}"
-						var="ecrfFieldStatusEntry"
-						value="#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel}"
-						id="ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}_list"
-						
-						selectionMode="single"
-						selection="#{ecrfFieldStatusEntryBean.selectedEcrfFieldStatusEntry}"
-						rowStyleClass="#{applicationScopeBean.ecrfFieldStatusEntryToColor(ecrfFieldStatusEntry.vo)}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
+			<h:panelGrid columns="1" cellpadding="0"
+				styleClass="ctsms-content-panelgrid">
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
+					rows="#{dataTablesRowsAuditTrail}"
+					paginator="#{dataTablesPaginatorAuditTrail}"
+					paginatorTemplate="#{dataTablesPaginatorTemplateAuditTrail}"
+					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateAuditTrail}"
+					paginatorPosition="#{dataTablesPaginatorPositionAuditTrail}"
+					pageLinks="#{dataTablesPageLinksAuditTrail}"
+					paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleAuditTrail}"
+					scrollable="#{dataTablesScrollableAuditTrail}"
+					scrollHeight="#{dataTablesScrollHeightAuditTrail}"
+					resizableColumns="#{dataTablesResizableColumnsAuditTrail}"
+					sortBy="#{ecrfFieldStatusEntry.vo.id}" sortOrder="descending"
+					emptyMessage="#{labels.datatable_permission_empty_message}"
+					var="ecrfFieldStatusEntry"
+					value="#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel}"
+					id="ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}_list"
+					selectionMode="single"
+					selection="#{ecrfFieldStatusEntryBean.selectedEcrfFieldStatusEntry}"
+					rowStyleClass="#{applicationScopeBean.ecrfFieldStatusEntryToColor(ecrfFieldStatusEntry.vo)}#{rowBgColorAlpha}">
+					<p:ajax event="rowSelect"
 						update="#{namingContainer}:ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}_input" />
-						
-						<f:facet name="header">
-							<h:outputText value="#{ecrfFieldStatusEntryBean.queueName}: #{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.rowCount} #{labels.ecrffieldstatus_list_header}" />
-						</f:facet>
-						<!-- <p:column style="width:16px;">
-							<p:rowToggler rendered="#{!empty fieldValue.vo.changeComment}" />
-						</p:column> -->
-						<p:column sortBy="#{ecrfFieldStatusEntry.vo.id}">
-							<f:facet name="header">
-								<h:outputText value="#{labels.id_column}" />
-							</f:facet>
-							<h:outputText value="#{ecrfFieldStatusEntry.vo.id}" />
-						</p:column>
-						
-			<p:column sortBy="#{ecrfFieldStatusEntry.vo.status}">
-				<f:facet name="header">
-					<h:outputText value="#{labels.ecrffieldstatus_list_status_column}" />
-				</f:facet>
-				<h:outputText value="#{ecrfFieldStatusEntry.vo.status.name}" />
-			</p:column>
-			
-			<p:column sortBy="#{ecrfFieldStatusEntry.vo.status.resolved}">
-				<f:facet name="header">
-					<h:outputText value="#{labels.ecrffieldstatus_list_status_resolved_column}" />
-				</f:facet>
-				<ui:include src="listBooleanIcon.xhtml">
-					<ui:param
-						name="value"
-						value="#{ecrfFieldStatusEntry.vo.status.resolved}" />
-				</ui:include>
-			</p:column>
 
-			<!-- <p:column sortBy="#{ecrfFieldStatusEntry.vo.status.system}">
-				<f:facet name="header">
-					<h:outputText value="#{labels.ecrffieldstatus_list_status_system_column}" />
-				</f:facet>
-				<ui:include src="listBooleanIcon.xhtml">
-					<ui:param
-						name="value"
-						value="#{ecrfFieldStatusEntry.vo.status.system}" />
-				</ui:include>
-			</p:column> -->
-			
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{labels.ecrffieldstatus_list_comment_column}" />
-				</f:facet>
-				<h:outputText value="#{applicationScopeBean.clipStringTrailing(ecrfFieldStatusEntry.vo.comment,56)}" />
-			</p:column>
-			
-			<p:column sortBy="#{ecrfFieldStatusEntry.vo.modifiedUser.name}">
-				<f:facet name="header">
-					<h:outputText value="#{labels.ecrffieldstatus_list_modified_user_column}" />
-				</f:facet>
-				<h:outputText value="#{applicationScopeBean.getIdentityString(ecrfFieldStatusEntry.vo.modifiedUser)}" />
-			</p:column>
-			 <p:column sortBy="#{probandListStatusEntry.vo.modifiedTimestamp}">
-				<f:facet name="header">
-					<h:outputText value="#{labels.ecrffieldstatus_list_modified_timestamp_column}" />
-				</f:facet>
-				<h:outputText value="#{ecrfFieldStatusEntry.vo.modifiedTimestamp}">
-					<f:converter converterId="ctsms.DateTime" />
-					<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-				</h:outputText>
-			</p:column>					
-						
+					<f:facet name="header">
+						<h:outputText
+							value="#{ecrfFieldStatusEntryBean.queueName}: #{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.rowCount} #{labels.ecrffieldstatus_list_header}" />
+					</f:facet>
+
+					<p:column sortBy="#{ecrfFieldStatusEntry.vo.id}">
+						<f:facet name="header">
+							<h:outputText value="#{labels.id_column}" />
+						</f:facet>
+						<h:outputText value="#{ecrfFieldStatusEntry.vo.id}" />
+					</p:column>
+
+					<p:column sortBy="#{ecrfFieldStatusEntry.vo.status}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{labels.ecrffieldstatus_list_status_column}" />
+						</f:facet>
+						<h:outputText value="#{ecrfFieldStatusEntry.vo.status.name}" />
+					</p:column>
+
+					<p:column sortBy="#{ecrfFieldStatusEntry.vo.status.resolved}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{labels.ecrffieldstatus_list_status_resolved_column}" />
+						</f:facet>
+						<ui:include src="listBooleanIcon.xhtml">
+							<ui:param name="value"
+								value="#{ecrfFieldStatusEntry.vo.status.resolved}" />
+						</ui:include>
+					</p:column>
+
+
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText
+								value="#{labels.ecrffieldstatus_list_comment_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(ecrfFieldStatusEntry.vo.comment,56)}" />
+					</p:column>
+
+					<p:column sortBy="#{ecrfFieldStatusEntry.vo.modifiedUser.name}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{labels.ecrffieldstatus_list_modified_user_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{applicationScopeBean.getIdentityString(ecrfFieldStatusEntry.vo.modifiedUser)}" />
+					</p:column>
+					<p:column sortBy="#{probandListStatusEntry.vo.modifiedTimestamp}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{labels.ecrffieldstatus_list_modified_timestamp_column}" />
+						</f:facet>
+						<h:outputText value="#{ecrfFieldStatusEntry.vo.modifiedTimestamp}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+					</p:column>
+
 
 				</p:dataTable>
 
-								<p:panel id="ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}_input">
-									<f:facet name="header">
-										<h:outputText value="#{ecrfFieldStatusEntryBean.title}" />
-									</f:facet>
+				<p:panel
+					id="ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}_input">
+					<f:facet name="header">
+						<h:outputText value="#{ecrfFieldStatusEntryBean.title}" />
+					</f:facet>
 
-									<ui:include src="ecrfFieldStatusEntryInput.xhtml">
-										<!-- <ui:param
-											name="ecrfFieldStatusEntryBean"
-											value="#{fieldValue.vo.changeComment}" /> -->
-										<ui:param
-											name="id_prefix"
-											value="ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}" />
-				<ui:param 
-					name="id_suffix"
-					value="_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}" />											
-				<ui:param
-					name="updateOnComplete"
-					value="handleUpdateAuditTrailTabTitles(xhr, status, args);if(#{reloadEcrf}){reloadEcrf();}else{try{reloadEcrfField_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.listEntryId}_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.ecrfFieldId}_#{empty ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index ? 'null' : ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index}();}catch(e){;}#{refreshEcrfProgressRemoteCommand}();}" />																	
-									</ui:include>
+					<ui:include src="ecrfFieldStatusEntryInput.xhtml">
 
-								</p:panel>
+						<ui:param name="id_prefix"
+							value="ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}" />
+						<ui:param name="id_suffix"
+							value="_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}" />
+						<ui:param name="updateOnComplete"
+							value="handleUpdateAuditTrailTabTitles(xhr, status, args);if(#{reloadEcrf}){reloadEcrf();}else{try{reloadEcrfField_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.listEntryId}_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.ecrfFieldId}_#{empty ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index ? 'null' : ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index}();}catch(e){;}#{refreshEcrfProgressRemoteCommand}();}" />
+					</ui:include>
+
+				</p:panel>
 
 
 			</h:panelGrid>

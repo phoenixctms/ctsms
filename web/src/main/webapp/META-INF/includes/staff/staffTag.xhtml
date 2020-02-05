@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="stafftag_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeStaffTag"
-				actionListener="#{staffTagBean.change(staffBean.in.id)}"
-				update="stafftag_list,stafftag_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -35,16 +26,14 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{tagValue.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="tagValue"
-					value="#{staffTagBean.tagValueModel}"
-					id="stafftag_list"
-					selectionMode="single"
+					var="tagValue" value="#{staffTagBean.tagValueModel}"
+					id="stafftag_list" selectionMode="single"
 					selection="#{staffTagBean.selectedStaffTagValue}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:stafftag_form:stafftag_input" />
 					<f:facet name="header">
-						<h:outputText value="#{staffTagBean.tagValueModel.rowCount} #{stafflabels.staff_tag_stafftag_list_header}" />
+						<h:outputText
+							value="#{staffTagBean.tagValueModel.rowCount} #{stafflabels.staff_tag_stafftag_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{tagValue.vo.id}">
 						<f:facet name="header">
@@ -54,13 +43,15 @@
 					</p:column>
 					<p:column sortBy="#{tagValue.vo.tag}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_tag_stafftag_list_tag_name_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_tag_stafftag_list_tag_name_column}" />
 						</f:facet>
 						<h:outputText value="#{tagValue.vo.tag.name}" />
 					</p:column>
 					<p:column sortBy="#{tagValue.vo.value}">
 						<f:facet name="header">
-							<h:outputText value="#{stafflabels.staff_tag_stafftag_list_value_column}" />
+							<h:outputText
+								value="#{stafflabels.staff_tag_stafftag_list_value_column}" />
 						</f:facet>
 						<h:outputText value="#{tagValue.vo.value}" />
 					</p:column>
@@ -69,59 +60,38 @@
 					<f:facet name="header">
 						<h:outputText value="#{staffTagBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="6"
-							cellpadding="2"
+						<h:panelGrid columns="6" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="staffTag"
+							<h:outputLabel for="staffTag"
 								value="#{stafflabels.staff_tag_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="staffTag"
-									value="#{staffTagBean.in.tagId}"
-									required="true"
-									label="#{stafflabels.staff_tag}"
+								<p:selectOneMenu id="staffTag" value="#{staffTagBean.in.tagId}"
+									required="true" label="#{stafflabels.staff_tag}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{staffTagBean.availableTags}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{staffTagBean.availableTags}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="staffTag">
-									<h:outputText
-										value="#{stafflabels.staff_tag_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="staffTag">
+									<h:outputText value="#{stafflabels.staff_tag_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="staffTag" />
-							<h:outputLabel
-								for="tagValue"
+							<h:outputLabel for="tagValue"
 								value="#{stafflabels.staff_tag_value_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="tagValue"
-									value="#{staffTagBean.in.value}"
-									required="true"
-									label="#{stafflabels.staff_tag_value}"
+								<p:inputText id="tagValue" value="#{staffTagBean.in.value}"
+									required="true" label="#{stafflabels.staff_tag_value}"
 									styleClass="ctsms-control-larger" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="tagValue">
-									<h:outputText
-										value="#{stafflabels.staff_tag_value_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="tagValue">
+									<h:outputText value="#{stafflabels.staff_tag_value_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -130,57 +100,43 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{staffTagBean.created ? staffTagBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{staffTagBean.reset}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="stafftag_list,stafftag_input" />
-								<p:commandButton
-									process="@this,stafftag_input"
-									id="add"
+								<p:commandButton process="@this,stafftag_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{staffTagBean.add}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!staffTagBean.createable}"
 									update="stafftag_list,stafftag_input" />
-								<p:commandButton
-									process="@this,stafftag_input"
-									id="update"
+								<p:commandButton process="@this,stafftag_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{staffTagBean.update}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!staffTagBean.editable}"
 									update="stafftag_list,stafftag_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{staffTagBean.delete}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!staffTagBean.removable}"
 									update="stafftag_list,stafftag_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{staffTagBean.load}"
 									oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!staffTagBean.created}"
 									update="stafftag_list,stafftag_input" />
 							</p:toolbarGroup>

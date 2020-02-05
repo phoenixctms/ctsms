@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,20 +10,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandjob_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeTrialJournalEntry"
-				actionListener="#{journalBean.changeTrial(trialBean.in.id)}"
-				update="journal_list,journal_input" /> -->
+
 			<ui:include src="/META-INF/includes/shared/job.xhtml">
-				<ui:param
-					name="markUnEncrypted"
-					value="true" />
-				<ui:param
-					name="namingContainer"
-					value=":tabView:probandjob_form" />
-				<ui:param
-					name="jsUpdateTabTitles"
+				<ui:param name="markUnEncrypted" value="true" />
+				<ui:param name="namingContainer" value=":tabView:probandjob_form" />
+				<ui:param name="jsUpdateTabTitles"
 					value="handleUpdateProbandTabTitles" />
 			</ui:include>
 		</h:form>

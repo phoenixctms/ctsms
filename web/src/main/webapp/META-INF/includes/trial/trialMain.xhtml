@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,298 +10,197 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialmain_form">
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialTag"
+			<p:remoteCommand process="@this" name="changeTrialTag"
 				actionListener="#{trialTagBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialtag_form:trialtag_list,:tabView:trialtag_form:trialtag_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTeamMember"
+			<p:remoteCommand process="@this" name="changeTeamMember"
 				actionListener="#{teamMemberBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:teammember_form:team_member_list,:tabView:teammember_form:team_member_bulkadd,:tabView:teammember_form:team_member_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTimelineEvent"
+			<p:remoteCommand process="@this" name="changeTimelineEvent"
 				actionListener="#{timelineEventBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:timelineevent_form:timelineevent_list,:tabView:timelineevent_form:timelineevent_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialInventoryBooking"
+			<p:remoteCommand process="@this" name="changeTrialInventoryBooking"
 				actionListener="#{trialInventoryBookingBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialinventorybooking_form:inventorybooking_list,:tabView:trialinventorybooking_form:inventorybooking_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeVisit"
+			<p:remoteCommand process="@this" name="changeVisit"
 				actionListener="#{visitBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:visit_form:visit_list,:tabView:visit_form:visit_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeProbandGroup"
+			<p:remoteCommand process="@this" name="changeProbandGroup"
 				actionListener="#{probandGroupBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:probandgroup_form:probandgroup_list,:tabView:probandgroup_form:probandgroup_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeVisitSchedule"
+			<p:remoteCommand process="@this" name="changeVisitSchedule"
 				actionListener="#{visitScheduleBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:visitschedule_form:visitschedule_list,:tabView:visitschedule_form:visitschedule_matrix,:tabView:visitschedule_form:visitschedule_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialDutyRosterTurn"
+			<p:remoteCommand process="@this" name="changeTrialDutyRosterTurn"
 				actionListener="#{trialDutyRosterTurnBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialdutyrosterturn_form:dutyrosterturn_list,:tabView:trialdutyrosterturn_form:dutyrosterturn_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeProbandListEntryTag"
+			<p:remoteCommand process="@this" name="changeProbandListEntryTag"
 				actionListener="#{probandListEntryTagBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:probandlistentrytag_form:probandlistentrytag_list,:tabView:probandlistentrytag_form:probandlistentrytag_bulkadd,:tabView:probandlistentrytag_form:probandlistentrytag_input" />
-			<p:remoteCommand
-				process="@this"
+			<p:remoteCommand process="@this"
 				name="changeStratificationRandomizationList"
 				actionListener="#{randomizationListBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:randomizationlist_form:randomizationlist_list,:tabView:randomizationlist_form:randomizationlist_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInquiry"
+			<p:remoteCommand process="@this" name="changeInquiry"
 				actionListener="#{inquiryBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:inquiry_form:inquiry_list,:tabView:inquiry_form:inquiry_bulkadd,:tabView:inquiry_form:inquiry_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInquiryValueDummy"
+			<p:remoteCommand process="@this" name="changeInquiryValueDummy"
 				actionListener="#{dummyInquiryValueBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update=":tabView:inquiryvaluedummy_form:inquiry_input_grid" />
-			<p:remoteCommand
-				process="@this"
-				name="changeEcrf"
+			<p:remoteCommand process="@this" name="changeEcrf"
 				actionListener="#{ecrfBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:ecrf_form:ecrf_list,:tabView:ecrf_form:ecrf_matrix,:tabView:ecrf_form:ecrf_clone,:tabView:ecrf_form:ecrf_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeEcrfField"
+			<p:remoteCommand process="@this" name="changeEcrfField"
 				actionListener="#{ecrfFieldBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:ecrffield_form:ecrffield_ecrf_list,:tabView:ecrffield_form:ecrffield_list,:tabView:ecrffield_form:ecrffield_bulkadd,:tabView:ecrffield_form:ecrffield_updatesections,:tabView:ecrffield_form:ecrffield_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeProbandListEntry"
+			<p:remoteCommand process="@this" name="changeProbandListEntry"
 				actionListener="#{probandListEntryBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update=":tabView:probandlist_form:proband_list,:tabView:probandlist_form:probandlist_bulkadd,:tabView:probandlist_form:probandListTabView" />
-			<!-- onstart="ecrfAuditTrailDialog.hide()" -->
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialEcrfStatusEntry"
+			<p:remoteCommand process="@this" name="changeTrialEcrfStatusEntry"
 				actionListener="#{trialEcrfStatusEntryBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
-			<p:remoteCommand
-				process="@this"
-				name="changeEcrfFieldStatus"
+			<p:remoteCommand process="@this" name="changeEcrfFieldStatus"
 				actionListener="#{ecrfFieldStatusBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:ecrffieldstatus_form:ecrffieldstatus_list,:tabView:ecrffieldstatus_form:ecrffieldstatus_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeReimbursements"
+			<p:remoteCommand process="@this" name="changeReimbursements"
 				actionListener="#{reimbursementsBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:reimbursements_form:probandmoneytransfersummary_list,:tabView:reimbursements_form:probandmoneytransfernoparticipationsummary_list,:tabView:reimbursements_form:toolbar,:tabView:reimbursements_form:messages" />
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeEnrollmentChart"
-				actionListener="#{enrollmentChartBean.change(trialBean.in.id)}"
-				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-				update=":tabView:enrollmentchart_form:enrollmentChart" /> -->
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialAssociation"
+			<p:remoteCommand process="@this" name="changeTrialAssociation"
 				actionListener="#{trialAssociationBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialassociation_form:association_lists" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialHyperlink"
+			<p:remoteCommand process="@this" name="changeTrialHyperlink"
 				actionListener="#{hyperlinkBean.changeTrial(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialhyperlink_form:hyperlink_list,:tabView:trialhyperlink_form:hyperlink_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialFile"
+			<p:remoteCommand process="@this" name="changeTrialFile"
 				actionListener="#{fileBean.changeTrial(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialfile_form" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialJob"
+			<p:remoteCommand process="@this" name="changeTrialJob"
 				actionListener="#{jobBean.changeTrial(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-				update=":tabView:trialjob_form:job_list,:tabView:trialjob_form:job_input" />				
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialJournalEntry"
+				update=":tabView:trialjob_form:job_list,:tabView:trialjob_form:job_input" />
+			<p:remoteCommand process="@this" name="changeTrialJournalEntry"
 				actionListener="#{journalBean.changeTrial(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update=":tabView:trialjournal_form:journal_list,:tabView:trialjournal_form:journal_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByTag"
+			<p:remoteCommand process="@this" name="changeTrialByTag"
 				actionListener="#{trialBean.change(trialTagBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByTeamMember"
+			<p:remoteCommand process="@this" name="changeTrialByTeamMember"
 				actionListener="#{trialBean.change(teamMemberBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByTimelineEvent"
+			<p:remoteCommand process="@this" name="changeTrialByTimelineEvent"
 				actionListener="#{trialBean.change(timelineEventBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByInventoryBooking"
+			<p:remoteCommand process="@this" name="changeTrialByInventoryBooking"
 				actionListener="#{trialBean.change(trialInventoryBookingBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByVisit"
+			<p:remoteCommand process="@this" name="changeTrialByVisit"
 				actionListener="#{trialBean.change(visitBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByProbandGroup"
+			<p:remoteCommand process="@this" name="changeTrialByProbandGroup"
 				actionListener="#{trialBean.change(probandGroupBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByVisitSchedule"
+			<p:remoteCommand process="@this" name="changeTrialByVisitSchedule"
 				actionListener="#{trialBean.change(visitScheduleBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByDutyRosterTurn"
+			<p:remoteCommand process="@this" name="changeTrialByDutyRosterTurn"
 				actionListener="#{trialBean.change(trialDutyRosterTurnBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
+			<p:remoteCommand process="@this"
 				name="changeTrialByProbandListEntryTag"
 				actionListener="#{trialBean.change(probandListEntryTagBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
+			<p:remoteCommand process="@this"
 				name="changeTrialByStratificationRandomizationList"
 				actionListener="#{trialBean.change(randomizationListBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByInquiry"
+			<p:remoteCommand process="@this" name="changeTrialByInquiry"
 				actionListener="#{trialBean.change(inquiryBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByEcrf"
+			<p:remoteCommand process="@this" name="changeTrialByEcrf"
 				actionListener="#{trialBean.change(ecrfBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByEcrfField"
+			<p:remoteCommand process="@this" name="changeTrialByEcrfField"
 				actionListener="#{trialBean.change(ecrfFieldBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByProbandListEntry"
+			<p:remoteCommand process="@this" name="changeTrialByProbandListEntry"
 				actionListener="#{trialBean.change(probandListEntryBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByHyperlink"
+			<p:remoteCommand process="@this" name="changeTrialByHyperlink"
 				actionListener="#{trialBean.change(hyperlinkBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByJob"
+			<p:remoteCommand process="@this" name="changeTrialByJob"
 				actionListener="#{trialBean.change(jobBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByJournalEntry"
+			<p:remoteCommand process="@this" name="changeTrialByJournalEntry"
 				actionListener="#{trialBean.change(journalBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeTrialByFile"
+			<p:remoteCommand process="@this" name="changeTrialByFile"
 				actionListener="#{trialBean.change(fileBean.in.trialId)}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<p:remoteCommand
-				process="@this,trial_input"
-				name="updateTrial"
+			<p:remoteCommand process="@this,trial_input" name="updateTrial"
 				actionListener="#{trialBean.update}"
 				oncomplete="handleTrialChanged(xhr, status, args)"
 				update="trial_input" />
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:panel id="trial_input">
 					<f:facet name="header">
 						<h:outputText value="#{trialBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-row,ctsms-signature-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="6"
-							cellpadding="2"
+						<h:panelGrid columns="6" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="trialname"
+							<h:outputLabel for="trialname"
 								value="#{triallabels.trial_name_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="trialname"
-									value="#{trialBean.in.name}"
-									required="true"
-									label="#{triallabels.trial_name}"
+								<p:inputText id="trialname" value="#{trialBean.in.name}"
+									required="true" label="#{triallabels.trial_name}"
 									styleClass="ctsms-control">
 								</p:inputText>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="trialname">
-									<h:outputText
-										value="#{triallabels.trial_name_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="trialname">
+									<h:outputText value="#{triallabels.trial_name_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -310,31 +208,22 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="department"
+							<h:outputLabel for="department"
 								value="#{triallabels.trial_department_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="department"
-									value="#{trialBean.in.departmentId}"
-									required="true"
+								<p:selectOneMenu id="department"
+									value="#{trialBean.in.departmentId}" required="true"
 									label="#{triallabels.trial_department}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{trialBean.departments}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{trialBean.departments}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="department">
-									<h:outputText
-										value="#{triallabels.trial_department_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="department">
+									<h:outputText value="#{triallabels.trial_department_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -342,31 +231,21 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="trialType"
+							<h:outputLabel for="trialType"
 								value="#{triallabels.trial_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="trialType"
-									value="#{trialBean.in.typeId}"
-									required="true"
-									label="#{triallabels.trial_type}"
+								<p:selectOneMenu id="trialType" value="#{trialBean.in.typeId}"
+									required="true" label="#{triallabels.trial_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{trialBean.trialTypes}"
-										var="selectItem"
+									<f:selectItems value="#{trialBean.trialTypes}" var="selectItem"
 										itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="trialType">
-									<h:outputText
-										value="#{triallabels.trial_type_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="trialType">
+									<h:outputText value="#{triallabels.trial_type_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -374,29 +253,21 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="sponsoringType"
+							<h:outputLabel for="sponsoringType"
 								value="#{triallabels.trial_sponsoring_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="sponsoringType"
-									value="#{trialBean.in.sponsoringId}"
-									required="true"
+								<p:selectOneMenu id="sponsoringType"
+									value="#{trialBean.in.sponsoringId}" required="true"
 									label="#{triallabels.trial_sponsoring_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{trialBean.sponsoringTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{trialBean.sponsoringTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="sponsoringType">
+								<p:tooltip rendered="#{enableTooltips}" for="sponsoringType">
 									<h:outputText
 										value="#{triallabels.trial_sponsoring_type_tooltip}"
 										escape="false" />
@@ -406,29 +277,21 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="surveyStatusType"
+							<h:outputLabel for="surveyStatusType"
 								value="#{triallabels.trial_survey_status_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="surveyStatusType"
-									value="#{trialBean.in.surveyStatusId}"
-									required="true"
+								<p:selectOneMenu id="surveyStatusType"
+									value="#{trialBean.in.surveyStatusId}" required="true"
 									label="#{triallabels.trial_survey_status_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{trialBean.surveyStatusTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{trialBean.surveyStatusTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="surveyStatusType">
+								<p:tooltip rendered="#{enableTooltips}" for="surveyStatusType">
 									<h:outputText
 										value="#{triallabels.trial_survey_status_type_tooltip}"
 										escape="false" />
@@ -444,44 +307,32 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="trialStatusType"
+							<h:outputLabel for="trialStatusType"
 								value="#{triallabels.trial_status_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="trialStatusType"
-									value="#{trialBean.in.statusId}"
-									required="true"
+								<p:selectOneMenu id="trialStatusType"
+									value="#{trialBean.in.statusId}" required="true"
 									label="#{triallabels.trial_status_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{trialBean.statusTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{trialBean.statusTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										update="trialStatusType_terminal_state_message,trialStatusType_lockdown_message,trialStatusType_inquiryValueInputEnabled_message,trialStatusType_ecrfValueInputEnabled_message,toolbar"
 										listener="#{trialBean.handleStatusTypeChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="trialStatusType">
-									<h:outputText
-										value="#{triallabels.trial_status_type_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="trialStatusType">
+									<h:outputText value="#{triallabels.trial_status_type_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="trialStatusType" />
 							<h:outputLabel />
-							<h:panelGrid
-								columns="1"
-								cellpadding="0">
-								<h:outputText
-									styleClass="ctsms-text-red"
+							<h:panelGrid columns="1" cellpadding="0">
+								<h:outputText styleClass="ctsms-text-red"
 									value="#{trialBean.showTerminalStateMessage ? triallabels.trial_status_terminal_state_message : ''}"
 									id="trialStatusType_terminal_state_message" />
 								<h:outputText
@@ -495,19 +346,16 @@
 									id="trialStatusType_ecrfValueInputEnabled_message" />
 							</h:panelGrid>
 							<h:outputLabel />
-							<h:outputLabel
-								for="dutySelfAllocationLocked"
+							<h:outputLabel for="dutySelfAllocationLocked"
 								value="#{triallabels.trial_duty_self_allocation_locked_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="dutySelfAllocationLocked"
+								<p:selectBooleanCheckbox id="dutySelfAllocationLocked"
 									value="#{trialBean.in.dutySelfAllocationLocked}">
 									<p:ajax
 										listener="#{trialBean.handleDutySelfAllocationLockedChange}"
 										update="dutySelfAllocationLockedUntil,dutySelfAllocationLockedFrom" />
 								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="dutySelfAllocationLocked">
 									<h:outputText
 										value="#{triallabels.trial_duty_self_allocation_locked_tooltip}"
@@ -515,30 +363,24 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="dutySelfAllocationLocked" />
-							<h:outputLabel
-								for="dutySelfAllocationLockedUntil"
+							<h:outputLabel for="dutySelfAllocationLockedUntil"
 								value="#{triallabels.trial_duty_self_allocation_locked_until_label}" />
 							<h:panelGroup>
-								<p:calendar
-									id="dutySelfAllocationLockedUntil"
+								<p:calendar id="dutySelfAllocationLockedUntil"
 									value="#{trialBean.in.dutySelfAllocationLockedUntil}"
 									required="false"
 									disabled="#{!trialBean.in.dutySelfAllocationLocked}"
 									label="#{triallabels.trial_duty_self_allocation_locked_until}"
 									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
-									showWeek="true"
-									navigator="true"
+									showWeek="true" navigator="true"
 									locale="#{sessionScopeBean.locale}"
 									styleClass="ctsms-calendar-datetime">
 									<f:converter converterId="ctsms.DateTime" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-									<p:ajax
-										event="blur"
-										process="@this" />
-									<p:ajax
-										event="dateSelect"
-										process="@this" />
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<p:ajax event="blur" process="@this" />
+									<p:ajax event="dateSelect" process="@this" />
 								</p:calendar>
 								<p:tooltip for="dutySelfAllocationLockedUntil">
 									<h:outputText
@@ -550,30 +392,24 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="dutySelfAllocationLockedFrom"
+							<h:outputLabel for="dutySelfAllocationLockedFrom"
 								value="#{triallabels.trial_duty_self_allocation_locked_from_label}" />
 							<h:panelGroup>
-								<p:calendar
-									id="dutySelfAllocationLockedFrom"
+								<p:calendar id="dutySelfAllocationLockedFrom"
 									value="#{trialBean.in.dutySelfAllocationLockedFrom}"
 									required="false"
 									disabled="#{!trialBean.in.dutySelfAllocationLocked}"
 									label="#{triallabels.trial_duty_self_allocation_locked_from}"
 									pattern="#{sessionScopeBean.inputDateTimePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
-									showWeek="true"
-									navigator="true"
+									showWeek="true" navigator="true"
 									locale="#{sessionScopeBean.locale}"
 									styleClass="ctsms-calendar-datetime">
 									<f:converter converterId="ctsms.DateTime" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-									<p:ajax
-										event="blur"
-										process="@this" />
-									<p:ajax
-										event="dateSelect"
-										process="@this" />
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<p:ajax event="blur" process="@this" />
+									<p:ajax event="dateSelect" process="@this" />
 								</p:calendar>
 								<p:tooltip for="dutySelfAllocationLockedFrom">
 									<h:outputText
@@ -583,20 +419,15 @@
 							</h:panelGroup>
 							<p:message for="dutySelfAllocationLockedFrom" />
 
-							<h:outputLabel
-								for="probandaliasformat"
+							<h:outputLabel for="probandaliasformat"
 								value="#{triallabels.trial_proband_alias_format_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="probandaliasformat"
-									value="#{trialBean.in.probandAliasFormat}"
-									required="false"
+								<p:inputText id="probandaliasformat"
+									value="#{trialBean.in.probandAliasFormat}" required="false"
 									label="#{triallabels.trial_proband_alias_format}"
 									styleClass="ctsms-control">
 								</p:inputText>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="probandaliasformat">
+								<p:tooltip rendered="#{enableTooltips}" for="probandaliasformat">
 									<h:outputText
 										value="#{triallabels.trial_proband_alias_format_tooltip}"
 										escape="false" />
@@ -606,19 +437,15 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-														
-							<h:outputLabel
-								for="exclusiveProbands"
+
+							<h:outputLabel for="exclusiveProbands"
 								value="#{triallabels.trial_exclusive_probands_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="exclusiveProbands"
+								<p:selectBooleanCheckbox id="exclusiveProbands"
 									value="#{trialBean.in.exclusiveProbands}">
 									<p:ajax update="blockingPeriod,blockingPeriodDays" />
 								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="exclusiveProbands">
+								<p:tooltip rendered="#{enableTooltips}" for="exclusiveProbands">
 									<h:outputText
 										value="#{triallabels.trial_exclusive_probands_tooltip}"
 										escape="false" />
@@ -628,48 +455,36 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="blockingPeriod"
+							<h:outputLabel for="blockingPeriod"
 								value="#{triallabels.trial_blocking_period_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="blockingPeriod"
+								<p:selectOneMenu id="blockingPeriod"
 									disabled="#{!trialBean.blockingPeriodSelectorEnabled}"
-									value="#{trialBean.blocking.period}"
-									required="false"
+									value="#{trialBean.blocking.period}" required="false"
 									label="#{triallabels.trial_blocking_period}"
 									styleClass="ctsms-control">
-									<f:selectItems
-										value="#{trialBean.blocking.variablePeriods}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{trialBean.blocking.variablePeriods}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax update="blockingPeriodDays" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="blockingPeriod">
+								<p:tooltip rendered="#{enableTooltips}" for="blockingPeriod">
 									<h:outputText
 										value="#{triallabels.trial_blocking_period_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="blockingPeriod" />
-							<h:outputLabel
-								for="blockingPeriodDays"
+							<h:outputLabel for="blockingPeriodDays"
 								value="#{triallabels.trial_blocking_period_days_label}" />
 							<h:panelGroup>
-								<p:spinner
-									disabled="#{!trialBean.blockingPeriodSpinnerEnabled}"
+								<p:spinner disabled="#{!trialBean.blockingPeriodSpinnerEnabled}"
 									id="blockingPeriodDays"
 									value="#{trialBean.in.blockingPeriodDays}"
-									styleClass="ctsms-spinner"
-									required="false"
+									styleClass="ctsms-spinner" required="false"
 									label="#{triallabels.trial_blocking_period_days}">
 								</p:spinner>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="blockingPeriodDays">
+								<p:tooltip rendered="#{enableTooltips}" for="blockingPeriodDays">
 									<h:outputText
 										value="#{triallabels.trial_blocking_period_days_tooltip}"
 										escape="false" />
@@ -677,133 +492,94 @@
 							</h:panelGroup>
 							<p:message for="blockingPeriodDays" />
 						</h:panelGrid>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="trialtitle"
+							<h:outputLabel for="trialtitle"
 								value="#{triallabels.trial_title_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="trialtitle"
-									value="#{trialBean.in.title}"
-									required="true"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="trialtitle" value="#{trialBean.in.title}"
+									required="true" autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.trial_title}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="trialtitle">
-									<h:outputText
-										value="#{triallabels.trial_title_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="trialtitle">
+									<h:outputText value="#{triallabels.trial_title_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="trialdescription"
+							<h:outputLabel for="trialdescription"
 								value="#{triallabels.trial_description_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="trialdescription"
-									value="#{trialBean.in.description}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="trialdescription"
+									value="#{trialBean.in.description}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.trial_description}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="trialdescription">
-									<h:outputText
-										value="#{triallabels.trial_description_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="trialdescription">
+									<h:outputText value="#{triallabels.trial_description_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-						<p:fieldset
-							toggleable="true"
-							collapsed="false">
+						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
-								<h:outputText value="#{triallabels.trial_randomization_field_set}" />
+								<h:outputText
+									value="#{triallabels.trial_randomization_field_set}" />
 							</f:facet>
-							<h:panelGrid
-								columns="1"
-								cellpadding="0"
+							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
-								<h:panelGrid
-									columns="3"
-									cellpadding="2"
+								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="trialrandomization"
+									<h:outputLabel for="trialrandomization"
 										value="#{triallabels.trial_randomization_label}" />
-									<p:selectOneMenu
-										id="trialrandomization"
+									<p:selectOneMenu id="trialrandomization"
 										value="#{trialBean.randomization.randomizationMode}"
-										required="false"
-										label="#{triallabels.trial_randomization}"
+										required="false" label="#{triallabels.trial_randomization}"
 										styleClass="ctsms-control-largest">
-										<f:selectItem
-											itemLabel="#{labels.no_selection_label}"
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
 											itemValue="#{applicationScopeBean.noSelectionValue}" />
 										<f:selectItems
 											value="#{trialBean.randomization.randomizationModes}"
-											var="selectItem"
-											itemLabel="#{selectItem.label}"
+											var="selectItem" itemLabel="#{selectItem.label}"
 											itemValue="#{selectItem.value}" />
 										<p:ajax update="generaterandomizationlisttoolbar" />
 									</p:selectOneMenu>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="trialrandomization">
 										<h:outputText
 											value="#{triallabels.trial_randomization_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGrid>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row,ctsms-toolbar-row">
-									<h:outputLabel
-										for="trialrandomizationlist"
+									<h:outputLabel for="trialrandomizationlist"
 										value="#{triallabels.trial_randomization_list_label}" />
 									<h:panelGroup>
-										<p:inputTextarea
-											id="trialrandomizationlist"
-											value="#{trialBean.in.randomizationList}"
-											required="false"
-											autoResize="false"
-											styleClass="ctsms-textarea"
+										<p:inputTextarea id="trialrandomizationlist"
+											value="#{trialBean.in.randomizationList}" required="false"
+											autoResize="false" styleClass="ctsms-textarea"
 											label="#{triallabels.trial_randomization_list_title}">
 										</p:inputTextarea>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="trialrandomizationlist">
 											<h:outputText
 												value="#{triallabels.trial_randomization_list_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<!-- <p:message for="trialrandomizationlist" /> -->
 									<p:messages for="trialrandomizationlistMessages" />
 									<p:toolbar id="generaterandomizationlisttoolbar">
 										<p:toolbarGroup align="right">
 											<p:commandButton
 												value="#{triallabels.open_generate_randomization_list_button_label}"
-												icon="ui-icon ui-icon-gear"
-												type="button"
+												icon="ui-icon ui-icon-gear" type="button"
 												disabled="#{!trialBean.generateRandomizationListEnabled}"
 												onclick="openTrialGenerateRandomizationList()" />
 										</p:toolbarGroup>
@@ -811,32 +587,23 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
-						<p:fieldset
-							toggleable="true"
-							collapsed="false">
+						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText value="#{triallabels.trial_signup_field_set}" />
 							</f:facet>
-							<h:panelGrid
-								columns="1"
-								cellpadding="0"
+							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
-								<h:panelGrid
-									columns="6"
-									cellpadding="2"
+								<h:panelGrid columns="6" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="signupprobandlist"
+									<h:outputLabel for="signupprobandlist"
 										value="#{triallabels.trial_signup_proband_list_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="signupprobandlist"
+										<p:selectBooleanCheckbox id="signupprobandlist"
 											value="#{trialBean.in.signupProbandList}">
 											<p:ajax update="signuprandomize" />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="signupprobandlist">
 											<h:outputText
 												value="#{triallabels.trial_signup_proband_list_tooltip}"
@@ -844,35 +611,27 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="signupprobandlist" />
-									<h:outputLabel
-										for="signuprandomize"
+									<h:outputLabel for="signuprandomize"
 										value="#{triallabels.trial_signup_randomize_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="signuprandomize"
+										<p:selectBooleanCheckbox id="signuprandomize"
 											disabled="#{!trialBean.signupRandomizeEnabled}"
 											value="#{trialBean.in.signupRandomize}">
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="signuprandomize">
+										<p:tooltip rendered="#{enableTooltips}" for="signuprandomize">
 											<h:outputText
 												value="#{triallabels.trial_signup_randomize_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="signuprandomize" />
-									<h:outputLabel
-										for="signupinquiries"
+									<h:outputLabel for="signupinquiries"
 										value="#{triallabels.trial_signup_inquiries_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="signupinquiries"
+										<p:selectBooleanCheckbox id="signupinquiries"
 											value="#{trialBean.in.signupInquiries}">
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="signupinquiries">
+										<p:tooltip rendered="#{enableTooltips}" for="signupinquiries">
 											<h:outputText
 												value="#{triallabels.trial_signup_inquiries_tooltip}"
 												escape="false" />
@@ -880,27 +639,19 @@
 									</h:panelGroup>
 									<p:message for="signupinquiries" />
 								</h:panelGrid>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-									<h:outputLabel
-										for="trialsignupdescription"
+									<h:outputLabel for="trialsignupdescription"
 										value="#{triallabels.trial_signup_description_label}" />
 									<h:panelGroup>
-										<p:editor
-											id="trialsignupdescription"
-											value="#{trialBean.in.signupDescription}"
-											required="false"
+										<p:editor id="trialsignupdescription"
+											value="#{trialBean.in.signupDescription}" required="false"
 											controls="bold italic underline strikethrough color indent outdent bullets numbering image link unlink source"
-											height="280"
-											styleClass="ctsms-editor"
+											height="280" styleClass="ctsms-editor"
 											label="#{triallabels.trial_signup_description}">
 										</p:editor>
-										<!-- autoResize="false" -->
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="trialsignupdescription">
 											<h:outputText
 												value="#{triallabels.trial_signup_description_tooltip}"
@@ -911,91 +662,61 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
-						<h:inputHidden
-							id="trialStatusPassword"
-							required="false"
+						<h:inputHidden id="trialStatusPassword" required="false"
 							value="#{trialBean.password}">
 						</h:inputHidden>
 						<ui:include src="../shared/signature.xhtml">
-							<ui:param
-								name="id"
-								value="signature" />
-							<ui:param
-								name="signature"
-								value="#{trialBean.signature}" />
-							<ui:param
-								name="tooltip"
+							<ui:param name="id" value="signature" />
+							<ui:param name="signature" value="#{trialBean.signature}" />
+							<ui:param name="tooltip"
 								value="#{triallabels.trial_signature_tooltip}" />
 						</ui:include>
-						<!-- <p:messages /> -->
 						<p:messages globalOnly="true" />
 						<p:toolbar id="toolbar">
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{trialBean.created ? trialBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{trialBean.reset}"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
+									icon="ui-icon ui-icon-close" ajax="true"
 									oncomplete="handleTrialChanged(xhr, status, args)"
-									disabled="false"
-									update="trial_input" />
-								<p:commandButton
-									rendered="#{!trialBean.created}"
-									process="@this,trial_input"
-									id="add"
+									disabled="false" update="trial_input" />
+								<p:commandButton rendered="#{!trialBean.created}"
+									process="@this,trial_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{trialBean.add}"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									oncomplete="handleTrialChanged(xhr, status, args)"
-									disabled="#{!trialBean.createable}"
-									update="trial_input" />
-								<p:commandButton
-									rendered="#{trialBean.created}"
-									process="@this"
+									disabled="#{!trialBean.createable}" update="trial_input" />
+								<p:commandButton rendered="#{trialBean.created}" process="@this"
 									value="#{labels.add_button_label}"
 									onclick="trialAddConfirmation.show()"
 									disabled="#{!trialBean.createable}"
-									icon="ui-icon ui-icon-plusthick"
-									type="button" />
-								<p:commandButton
-									process="@this"
+									icon="ui-icon ui-icon-plusthick" type="button" />
+								<p:commandButton process="@this"
 									value="#{labels.update_button_label}"
 									onclick="if(#{trialBean.trialStatusTypePasswordRequired}){trialStatusPassword.setValue('');trialUpdatePassword.show();}else{updateTrial();}"
-									disabled="#{!trialBean.editable}"
-									icon="ui-icon ui-icon-disk"
+									disabled="#{!trialBean.editable}" icon="ui-icon ui-icon-disk"
 									type="button" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									onclick="if('trialDeleteReason' in window){trialDeleteReason.setValue(#{applicationScopeBean.quoteJsString(trialBean.deferredDeleteReason)});}trialDeleteConfirmation.show()"
-									disabled="#{!trialBean.removable}"
-									icon="ui-icon ui-icon-trash"
+									disabled="#{!trialBean.removable}" icon="ui-icon ui-icon-trash"
 									type="button" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
-									actionListener="#{trialBean.load}"
-									icon="ui-icon-refresh"
-									ajax="true"
-									oncomplete="handleTrialChanged(xhr, status, args)"
-									disabled="#{!trialBean.created}"
-									update="trial_input" />
-								<p:commandButton
-									process="@this"
+									actionListener="#{trialBean.load}" icon="ui-icon-refresh"
+									ajax="true" oncomplete="handleTrialChanged(xhr, status, args)"
+									disabled="#{!trialBean.created}" update="trial_input" />
+								<p:commandButton process="@this"
 									value="#{labels.verify_signature_button_label}"
 									actionListener="#{trialBean.verifySignature}"
-									icon="ui-icon ui-icon-signature"
-									ajax="true"
-									disabled="#{empty trialBean.signature}"
-									update="signature" />
+									icon="ui-icon ui-icon-signature" ajax="true"
+									disabled="#{empty trialBean.signature}" update="signature" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
@@ -1006,54 +727,35 @@
 				</p:panel>
 			</h:panelGrid>
 			<ui:include src="../shared/generateRandomizationListDialog.xhtml">
-				<ui:param
-					name="openGenerateRandomizationListCommand"
+				<ui:param name="openGenerateRandomizationListCommand"
 					value="openTrialGenerateRandomizationList" />
-				<ui:param
-					name="generateRandomizationListDialog"
+				<ui:param name="generateRandomizationListDialog"
 					value="trialGenerateRandomizationListDialog" />
-				<ui:param
-					name="generateRandomizationListBean"
-					value="#{trialBean}" />
-				<ui:param
-					name="randomizationListTarget"
+				<ui:param name="generateRandomizationListBean" value="#{trialBean}" />
+				<ui:param name="randomizationListTarget"
 					value=":tabView:trialmain_form:trialrandomizationlist" />
 			</ui:include>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
-				width="500"
+			<p:confirmDialog appendToBody="false" severity="alert" width="500"
 				widgetVar="trialDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.trial_delete_confirmation_dialog_message}"
 						escape="false" />
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						<h:panelGrid
-							rendered="true"
-							columns="1"
-							cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid rendered="true" columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="deferredDeleteReason"
+							<h:outputLabel for="deferredDeleteReason"
 								value="#{triallabels.trial_deferred_delete_reason_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="deferredDeleteReason"
+								<p:inputTextarea id="deferredDeleteReason"
 									widgetVar="trialDeleteReason"
-									value="#{trialBean.deferredDeleteReason}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									value="#{trialBean.deferredDeleteReason}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.trial_deferred_delete_reason}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="deferredDeleteReason">
 									<h:outputText
 										value="#{triallabels.trial_deferred_delete_reason_tooltip}"
@@ -1067,69 +769,47 @@
 					process="@this,:tabView:trialmain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{trialBean.delete}"
-					onclick="trialDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="trialDeleteConfirmation.hide()" ajax="true"
 					oncomplete="handleTrialChanged(xhr, status, args)"
 					update="trial_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="trialDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="trialDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="trialAddConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.trial_add_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					process="@this,trial_input"
-					id="addConfirmed"
+				<p:commandButton process="@this,trial_input" id="addConfirmed"
 					value="#{labels.yes_button_label}"
 					actionListener="#{trialBean.add}"
-					onclick="trialAddConfirmation.hide()"
-					ajax="true"
+					onclick="trialAddConfirmation.hide()" ajax="true"
 					oncomplete="handleTrialChanged(xhr, status, args)"
 					update="trial_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="trialAddConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="trialAddConfirmation.hide()" type="button" />
 			</p:confirmDialog>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="trialUpdatePassword">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.trial_password_prompt_dialog_message}"
 						escape="false" />
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						<h:panelGrid
-							columns="3"
-							cellpadding="2"
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid columns="3" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="passwordTrialStatus"
+							<h:outputLabel for="passwordTrialStatus"
 								value="#{triallabels.trial_signing_password_label}" />
 							<h:panelGroup>
-								<p:password
-									id="passwordTrialStatus"
-									widgetVar="trialStatusPassword"
-									required="false"
-									feedback="false"
-									redisplay="false"
+								<p:password id="passwordTrialStatus"
+									widgetVar="trialStatusPassword" required="false"
+									feedback="false" redisplay="false"
 									label="#{triallabels.trial_signing_password}"
 									styleClass="ctsms-password" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="passwordTrialStatus">
 									<h:outputText
 										value="#{triallabels.trial_signing_password_tooltip}"
@@ -1140,21 +820,10 @@
 						</h:panelGrid>
 					</h:panelGrid>
 				</f:facet>
-				<!-- <p:commandButton
-					process="@this,trial_input"
-					id="updatePassword"
-					value="#{labels.ok_button_label}"
-					actionListener="#{trialBean.update}"
-					onclick="trialStatusPassword.hide()"
-					ajax="true"
-					oncomplete="handleTrialChanged(xhr, status, args)"
-					update="trial_input" /> -->
-				<p:commandButton
-					value="#{labels.ok_button_label}"
+				<p:commandButton value="#{labels.ok_button_label}"
 					onclick="setHiddenField('tabView:trialmain_form:trialStatusPassword',trialStatusPassword.getValue());trialUpdatePassword.hide();updateTrial();"
 					type="button" />
-				<p:commandButton
-					value="#{labels.cancel_button_label}"
+				<p:commandButton value="#{labels.cancel_button_label}"
 					onclick="trialUpdatePassword.hide();trialStatusPassword.setValue('');"
 					type="button" />
 			</p:confirmDialog>

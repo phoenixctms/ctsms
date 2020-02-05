@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,298 +10,224 @@
 <h:body>
 	<ui:composition>
 		<h:form id="coursemain_form">
-			<p:remoteCommand
-				process="@this"
-				name="changeLecturer"
+			<p:remoteCommand process="@this" name="changeLecturer"
 				actionListener="#{lecturerBean.change(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:lecturer_form:lecturer_list,:tabView:lecturer_form:lecturer_input" />		
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseInventoryBooking"
+				update=":tabView:lecturer_form:lecturer_list,:tabView:lecturer_form:lecturer_input" />
+			<p:remoteCommand process="@this" name="changeCourseInventoryBooking"
 				actionListener="#{courseInventoryBookingBean.change(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
 				update=":tabView:courseinventorybooking_form:inventorybooking_list,:tabView:courseinventorybooking_form:inventorybooking_input" />
-			<p:remoteCommand
-				process="@this"
+			<p:remoteCommand process="@this"
 				name="changeAdminCourseParticipationStatus"
 				actionListener="#{adminCourseParticipationStatusBean.change(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
 				update=":tabView:admincourseparticipationstatus_form:courseparticipationstatus_list,:tabView:admincourseparticipationstatus_form:courseparticipationstatus_bulkadd,:tabView:admincourseparticipationstatus_form:courseparticipationstatus_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseFile"
+			<p:remoteCommand process="@this" name="changeCourseFile"
 				actionListener="#{fileBean.changeCourse(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
 				update=":tabView:coursefile_form" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseHyperlink"
+			<p:remoteCommand process="@this" name="changeCourseHyperlink"
 				actionListener="#{hyperlinkBean.changeCourse(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
 				update=":tabView:coursehyperlink_form:hyperlink_list,:tabView:coursehyperlink_form:hyperlink_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseJournalEntry"
+			<p:remoteCommand process="@this" name="changeCourseJournalEntry"
 				actionListener="#{journalBean.changeCourse(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
 				update=":tabView:coursejournal_form:journal_list,:tabView:coursejournal_form:journal_input" />
-		
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseByLecturer"
+
+			<p:remoteCommand process="@this" name="changeCourseByLecturer"
 				actionListener="#{courseBean.change(lecturerBean.in.courseId)}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<p:remoteCommand
-				process="@this"
+			<p:remoteCommand process="@this"
 				name="changeCourseByInventoryBooking"
 				actionListener="#{courseBean.change(courseInventoryBookingBean.in.courseId)}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<p:remoteCommand
-				process="@this"
+			<p:remoteCommand process="@this"
 				name="changeCourseByAdminCourseParticipationStatus"
 				actionListener="#{courseBean.change(adminCourseParticipationStatusBean.in.courseId)}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseByHyperlink"
+			<p:remoteCommand process="@this" name="changeCourseByHyperlink"
 				actionListener="#{courseBean.change(hyperlinkBean.in.courseId)}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseByJournalEntry"
+			<p:remoteCommand process="@this" name="changeCourseByJournalEntry"
 				actionListener="#{courseBean.change(journalBean.in.courseId)}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseByFile"
+			<p:remoteCommand process="@this" name="changeCourseByFile"
 				actionListener="#{courseBean.change(fileBean.in.courseId)}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<p:remoteCommand
-				process="@this,lastPickedCoursePrecedingCourseIds"
+			<p:remoteCommand process="@this,lastPickedCoursePrecedingCourseIds"
 				name="addPrecedingCourseIDs"
 				actionListener="#{courseBean.addPrecedingCourseIds()}"
 				update="precedingCourses" />
-			<p:remoteCommand
-				process="@this"
-				name="changeCourseByTreeNode"
+			<p:remoteCommand process="@this" name="changeCourseByTreeNode"
 				actionListener="#{courseBean.changeByNode()}"
 				oncomplete="handleCourseChanged(xhr, status, args)"
 				update="preceding_course_tree,renewal_tree,course_input" />
-			<h:panelGrid
-				columns="2"
-				cellpadding="0"
+			<h:panelGrid columns="2" cellpadding="0"
 				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
 				columnClasses="ctsms-course-tree-column,ctsms-course-input-column">
 				<p:panel styleClass="ctsms-panel-maxheight">
 					<f:facet name="header">
 						<h:outputText value="#{courseBean.courseTreeLabel}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-content-panelgrid">
-						<h:outputText value="#{courseBean.courseTreePrecedingCoursesLabel}" />
-						<!-- value="#{courseBean.renewalsRoot}" id="renewal_tree" -->
-						<p:tree
-							id="preceding_course_tree"
+						<h:outputText
+							value="#{courseBean.courseTreePrecedingCoursesLabel}" />
+
+						<p:tree id="preceding_course_tree"
 							value="#{courseBean.precedingCoursesRoot}"
-							styleClass="ctsms-course-tree"
-							var="course"
-							dynamic="false"
+							styleClass="ctsms-course-tree" var="course" dynamic="false"
 							expanded="true">
 							<p:treeNode type="#{applicationScopeBean.parentNodeType}">
 								<ui:include src="../shared/treeIcon.xhtml">
-									<ui:param
-										name="iconClass"
+									<ui:param name="iconClass"
 										value="ctsms-coursecategory-unknown #{course.category.nodeStyleClass}" />
 								</ui:include>
 								<span
 									class="#{course.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-course-tree-node-parent"
-									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:#{course.id}}));"> <h:outputText
+									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:#{course.id}}));">
+									<h:outputText
 										value="#{applicationScopeBean.clipStringMid(course.name)}: #{courseBean.getCourseExpired(course) ? courselabels.course_tree_expired_label : courselabels.course_tree_valid_label}" />
 								</span>
 							</p:treeNode>
 							<p:treeNode type="#{applicationScopeBean.leafNodeType}">
 								<ui:include src="../shared/treeIcon.xhtml">
-									<ui:param
-										name="iconClass"
+									<ui:param name="iconClass"
 										value="ctsms-coursecategory-unknown #{course.category.nodeStyleClass}" />
 								</ui:include>
 								<span
 									class="#{course.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-course-tree-node-leaf"
-									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:#{course.id}}));"> <h:outputText
+									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:#{course.id}}));">
+									<h:outputText
 										value="#{applicationScopeBean.clipStringMid(course.name)}: #{courseBean.getCourseExpired(course) ? courselabels.course_tree_expired_label : courselabels.course_tree_valid_label}" />
 								</span>
 							</p:treeNode>
 						</p:tree>
 						<h:outputText value="#{courseBean.courseTreeRenewalCoursesLabel}" />
-						<!-- value="#{courseBean.precedingCoursesRoot}" id="preceding_course_tree" -->
-						<p:tree
-							id="renewal_tree"
-							value="#{courseBean.renewalsRoot}"
-							styleClass="ctsms-course-tree"
-							var="course"
-							dynamic="false"
+
+						<p:tree id="renewal_tree" value="#{courseBean.renewalsRoot}"
+							styleClass="ctsms-course-tree" var="course" dynamic="false"
 							expanded="true">
 							<p:treeNode type="#{applicationScopeBean.parentNodeType}">
 								<ui:include src="../shared/treeIcon.xhtml">
-									<ui:param
-										name="iconClass"
+									<ui:param name="iconClass"
 										value="ctsms-coursecategory-unknown #{course.category.nodeStyleClass}" />
 								</ui:include>
 								<span
 									class="#{course.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-course-tree-node-parent"
-									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:'#{course.id}'}));"> <h:outputText
+									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:'#{course.id}'}));">
+									<h:outputText
 										value="#{applicationScopeBean.clipStringMid(course.name)}: #{courseBean.getCourseExpired(course) ? courselabels.course_tree_expired_label : courselabels.course_tree_valid_label}" />
 								</span>
 							</p:treeNode>
 							<p:treeNode type="#{applicationScopeBean.leafNodeType}">
 								<ui:include src="../shared/treeIcon.xhtml">
-									<ui:param
-										name="iconClass"
+									<ui:param name="iconClass"
 										value="ctsms-coursecategory-unknown #{course.category.nodeStyleClass}" />
 								</ui:include>
 								<span
 									class="#{course.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-course-tree-node-leaf #{courseBean.getCourseExpired(course) ? 'ctsms-text-red' : 'ctsms-text-green'}"
-									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:'#{course.id}'}));"> <h:outputText
+									onclick="changeCourseByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('COURSE_ID')}:'#{course.id}'}));">
+									<h:outputText
 										value="#{applicationScopeBean.clipStringMid(course.name)}: #{courseBean.getCourseExpired(course) ? courselabels.course_tree_expired_label : courselabels.course_tree_valid_label}" />
 								</span>
 							</p:treeNode>
 						</p:tree>
 					</h:panelGrid>
 				</p:panel>
-				<p:panel
-					id="course_input"
-					styleClass="ctsms-panel-maxheight">
+				<p:panel id="course_input" styleClass="ctsms-panel-maxheight">
 					<f:facet name="header">
 						<h:outputText value="#{courseBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-course-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
-						<p:fieldset
-							toggleable="true"
-							collapsed="false">
+						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText value="#{courselabels.course_main_field_set}" />
 							</f:facet>
-							<h:panelGrid
-								id="course_self_registration_input"
-								columns="1"
-								cellpadding="0"
-								styleClass="ctsms-input-panelgrid"
+							<h:panelGrid id="course_self_registration_input" columns="1"
+								cellpadding="0" styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,#{!courseBean.in.selfRegistration ? 'ctsms-input-tied-row,' : ''}ctsms-textarea-row">
-								<h:panelGrid
-									columns="6"
-									cellpadding="2"
+								<h:panelGrid columns="6" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="selfRegistration"
+									<h:outputLabel for="selfRegistration"
 										value="#{courselabels.course_self_registration_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="selfRegistration"
+										<p:selectBooleanCheckbox id="selfRegistration"
 											disabled="#{courseBean.created}"
 											value="#{courseBean.in.selfRegistration}">
-											<p:ajax
-												listener="#{courseBean.handleSelfRegistrationChange}"
+											<p:ajax listener="#{courseBean.handleSelfRegistrationChange}"
 												update=":tabView:coursemain_form:course_self_registration_input" />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="selfRegistration">
+										<p:tooltip rendered="#{enableTooltips}" for="selfRegistration">
 											<h:outputText
 												value="#{courselabels.course_self_registration_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="selfRegistration" />
-									<h:outputLabel
-										for="name"
+									<h:outputLabel for="name"
 										value="#{courselabels.course_name_label}" />
 									<h:panelGroup>
-										<p:inputText
-											id="name"
-											value="#{courseBean.in.name}"
-											required="true"
-											label="#{courselabels.course_name}"
+										<p:inputText id="name" value="#{courseBean.in.name}"
+											required="true" label="#{courselabels.course_name}"
 											styleClass="ctsms-control">
 											<p:ajax />
 										</p:inputText>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="name">
-											<h:outputText
-												value="#{courselabels.course_name_tooltip}"
+										<p:tooltip rendered="#{enableTooltips}" for="name">
+											<h:outputText value="#{courselabels.course_name_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="name" />
-									<h:outputLabel
-										for="department"
+									<h:outputLabel for="department"
 										value="#{courselabels.course_department_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu
-											id="department"
-											value="#{courseBean.in.departmentId}"
-											required="true"
+										<p:selectOneMenu id="department"
+											value="#{courseBean.in.departmentId}" required="true"
 											label="#{courselabels.course_department}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
-											<f:selectItem
-												itemLabel="#{labels.no_selection_label}"
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
 												itemValue="#{applicationScopeBean.noSelectionValue}" />
-											<f:selectItems
-												value="#{courseBean.departments}"
-												var="selectItem"
-												itemLabel="#{selectItem.label}"
+											<f:selectItems value="#{courseBean.departments}"
+												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 											<p:ajax />
 										</p:selectOneMenu>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="department">
+										<p:tooltip rendered="#{enableTooltips}" for="department">
 											<h:outputText
 												value="#{courselabels.course_department_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="department" />
-									<h:outputLabel
-										for="category"
+									<h:outputLabel for="category"
 										value="#{courselabels.course_category_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu
-											id="category"
-											value="#{courseBean.in.categoryId}"
-											required="true"
+										<p:selectOneMenu id="category"
+											value="#{courseBean.in.categoryId}" required="true"
 											label="#{courselabels.course_category}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
-											<f:selectItem
-												itemLabel="#{labels.no_selection_label}"
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
 												itemValue="#{applicationScopeBean.noSelectionValue}" />
-											<f:selectItems
-												value="#{courseBean.categories}"
-												var="selectItem"
-												itemLabel="#{selectItem.label}"
+											<f:selectItems value="#{courseBean.categories}"
+												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 											<p:ajax />
 										</p:selectOneMenu>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="category">
-											<h:outputText
-												value="#{courselabels.course_category_tooltip}"
+										<p:tooltip rendered="#{enableTooltips}" for="category">
+											<h:outputText value="#{courselabels.course_category_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
@@ -310,201 +235,142 @@
 									<h:outputLabel value="" />
 									<h:outputText value="" />
 									<h:outputLabel value="" />
-									<h:outputLabel
-										for="trial"
+									<h:outputLabel for="trial"
 										value="#{courselabels.course_trial_label}" />
-									<h:panelGrid
-										columns="3"
-										cellpadding="0">
+									<h:panelGrid columns="3" cellpadding="0">
 										<h:panelGroup>
-											<h:inputHidden
-												id="trial"
-												required="false"
+											<h:inputHidden id="trial" required="false"
 												value="#{courseBean.in.trialId}">
 												<f:converter converterId="ctsms.ID" />
 											</h:inputHidden>
-											<p:commandButton
-												id="trialName"
+											<p:commandButton id="trialName"
 												value="#{applicationScopeBean.clipStringPicker(courseBean.trialName)}"
 												title="#{courselabels.course_trial_tooltip}#{labels.open_trial_button_label}"
-												styleClass="ctsms-picker"
-												icon="ui-icon ui-icon-extlink"
+												styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 												type="button"
 												onclick="openPickedTrial(':tabView:coursemain_form:trial')" />
 										</h:panelGroup>
-										<p:commandButton
-											title="#{labels.pick_trial_button_label}"
-											icon="ui-icon ui-icon-search"
-											type="button"
+										<p:commandButton title="#{labels.pick_trial_button_label}"
+											icon="ui-icon ui-icon-search" type="button"
 											onclick="openTrialPickerAjax(':tabView:coursemain_form:trial',':tabView:coursemain_form:trialName')" />
-										<p:commandButton
-											title="#{labels.clear_trial_button_label}"
-											icon="ui-icon ui-icon-close"
-											type="button"
+										<p:commandButton title="#{labels.clear_trial_button_label}"
+											icon="ui-icon ui-icon-close" type="button"
 											onclick="clearIDAjax(':tabView:coursemain_form:trial',':tabView:coursemain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}')" />
 									</h:panelGrid>
 									<p:message for="trial" />
-									<h:outputLabel
-										for="coursestart"
+									<h:outputLabel for="coursestart"
 										value="#{courselabels.course_start_label}" />
 									<h:panelGroup>
-										<p:calendar
-											id="coursestart"
-											value="#{courseBean.in.start}"
-											required="false"
-											label="#{courselabels.course_start}"
+										<p:calendar id="coursestart" value="#{courseBean.in.start}"
+											required="false" label="#{courselabels.course_start}"
 											pattern="#{sessionScopeBean.inputDatePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
-											showWeek="true"
-											navigator="true"
+											showWeek="true" navigator="true"
 											locale="#{sessionScopeBean.locale}"
 											styleClass="ctsms-calendar-date">
 											<f:converter converterId="ctsms.Date" />
-											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-											<p:ajax
-												event="blur"
-												process="@this" />
-											<p:ajax
-												event="dateSelect"
-												process="@this" />
+											<f:attribute name="timeZone"
+												value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+											<p:ajax event="blur" process="@this" />
+											<p:ajax event="dateSelect" process="@this" />
 										</p:calendar>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="coursestart">
-											<h:outputText
-												value="#{courselabels.course_start_tooltip}"
+										<p:tooltip rendered="#{enableTooltips}" for="coursestart">
+											<h:outputText value="#{courselabels.course_start_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="coursestart" />
-									<h:outputLabel
-										for="coursestop"
+									<h:outputLabel for="coursestop"
 										value="#{courselabels.course_stop_label}" />
 									<h:panelGroup>
-										<p:calendar
-											id="coursestop"
-											value="#{courseBean.in.stop}"
-											required="true"
-											label="#{courselabels.course_stop}"
+										<p:calendar id="coursestop" value="#{courseBean.in.stop}"
+											required="true" label="#{courselabels.course_stop}"
 											pattern="#{sessionScopeBean.inputDatePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
-											showWeek="true"
-											navigator="true"
+											showWeek="true" navigator="true"
 											locale="#{sessionScopeBean.locale}"
 											styleClass="ctsms-calendar-date">
 											<f:converter converterId="ctsms.Date" />
-											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-											<p:ajax
-												event="blur"
-												process="@this"
+											<f:attribute name="timeZone"
+												value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+											<p:ajax event="blur" process="@this"
 												update="courseexpiredmessage" />
-											<p:ajax
-												event="dateSelect"
-												process="@this"
+											<p:ajax event="dateSelect" process="@this"
 												update="courseexpiredmessage" />
 										</p:calendar>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="coursestop">
-											<h:outputText
-												value="#{courselabels.course_stop_tooltip}"
+										<p:tooltip rendered="#{enableTooltips}" for="coursestop">
+											<h:outputText value="#{courselabels.course_stop_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="coursestop" />
-									<h:outputLabel
-										rendered="#{courseBean.in.selfRegistration}"
+									<h:outputLabel rendered="#{courseBean.in.selfRegistration}"
 										for="participationdeadline"
 										value="#{courselabels.participation_deadline_label}" />
 									<h:panelGroup rendered="#{courseBean.in.selfRegistration}">
-										<p:calendar
-											id="participationdeadline"
+										<p:calendar id="participationdeadline"
 											value="#{courseBean.in.participationDeadline}"
 											required="false"
 											label="#{courselabels.participation_deadline}"
 											pattern="#{sessionScopeBean.inputDateTimePattern}"
 											yearRange="#{applicationScopeBean.calendarYearRange}"
-											showWeek="true"
-											navigator="true"
+											showWeek="true" navigator="true"
 											locale="#{sessionScopeBean.locale}"
 											styleClass="ctsms-calendar-datetime">
 											<f:converter converterId="ctsms.DateTime" />
-											<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-											<p:ajax
-												event="blur"
-												process="@this" />
-											<p:ajax
-												event="dateSelect"
-												process="@this" />
+											<f:attribute name="timeZone"
+												value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+											<p:ajax event="blur" process="@this" />
+											<p:ajax event="dateSelect" process="@this" />
 										</p:calendar>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="participationdeadline">
 											<h:outputText
 												value="#{courselabels.participation_deadline_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message
-										rendered="#{courseBean.in.selfRegistration}"
+									<p:message rendered="#{courseBean.in.selfRegistration}"
 										for="participationdeadline" />
-									<h:outputLabel
-										rendered="#{courseBean.in.selfRegistration}"
+									<h:outputLabel rendered="#{courseBean.in.selfRegistration}"
 										for="maxnumberofparticipants"
 										value="#{courselabels.max_number_of_participants_label}" />
 									<h:panelGroup rendered="#{courseBean.in.selfRegistration}">
-										<p:spinner
-											id="maxnumberofparticipants"
+										<p:spinner id="maxnumberofparticipants"
 											value="#{courseBean.in.maxNumberOfParticipants}"
-											styleClass="ctsms-spinner"
-											required="false"
+											styleClass="ctsms-spinner" required="false"
 											label="#{courselabels.max_number_of_participants}">
-											
-											<p:ajax
-												event="blur"
-												process="@this" />
+
+											<p:ajax event="blur" process="@this" />
 										</p:spinner>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="maxnumberofparticipants">
 											<h:outputText
 												value="#{courselabels.max_number_of_participants_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message
-										rendered="#{courseBean.in.selfRegistration}"
+									<p:message rendered="#{courseBean.in.selfRegistration}"
 										for="maxnumberofparticipants" />
 								</h:panelGrid>
-								<h:panelGrid
-									rendered="#{!courseBean.in.selfRegistration}"
-									columns="1"
-									cellpadding="0"
-									styleClass="ctsms-input-panelgrid">
-									<h:outputText
-										styleClass="ctsms-text-red"
+								<h:panelGrid rendered="#{!courseBean.in.selfRegistration}"
+									columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid">
+									<h:outputText styleClass="ctsms-text-red"
 										value="#{courselabels.register_participants_advice_message}" />
 								</h:panelGrid>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-									<h:outputLabel
-										for="coursedescription"
+									<h:outputLabel for="coursedescription"
 										value="#{courselabels.course_description_label}" />
 									<h:panelGroup>
-										<p:inputTextarea
-											id="coursedescription"
-											value="#{courseBean.in.description}"
-											required="false"
-											autoResize="false"
-											styleClass="ctsms-textarea"
+										<p:inputTextarea id="coursedescription"
+											value="#{courseBean.in.description}" required="false"
+											autoResize="false" styleClass="ctsms-textarea"
 											label="#{courselabels.course_description}">
 											<p:ajax />
 										</p:inputTextarea>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="coursedescription">
 											<h:outputText
 												value="#{courselabels.course_description_tooltip}"
@@ -514,84 +380,63 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
-						<p:fieldset
-							toggleable="true"
-							collapsed="true">
+						<p:fieldset toggleable="true" collapsed="true">
 							<f:facet name="legend">
-								<h:outputText value="#{courselabels.course_expiration_field_set}" />
+								<h:outputText
+									value="#{courselabels.course_expiration_field_set}" />
 							</f:facet>
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
+							<h:panelGrid columns="2" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								columnClasses="ctsms-expiry-input-column,ctsms-expiry-input-column">
-								<h:panelGrid
-									columns="3"
-									cellpadding="2"
+								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="expires"
+									<h:outputLabel for="expires"
 										value="#{courselabels.course_expires_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="expires"
+										<p:selectBooleanCheckbox id="expires"
 											value="#{courseBean.in.expires}">
-											<p:ajax update="validityPeriod,validityPeriodDays,courseexpiredmessage" />
+											<p:ajax
+												update="validityPeriod,validityPeriodDays,courseexpiredmessage" />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="expires">
-											<h:outputText
-												value="#{courselabels.course_expires_tooltip}"
+										<p:tooltip rendered="#{enableTooltips}" for="expires">
+											<h:outputText value="#{courselabels.course_expires_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="expires" />
-									<h:outputLabel
-										for="validityPeriod"
+									<h:outputLabel for="validityPeriod"
 										value="#{courselabels.course_validity_period_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu
-											id="validityPeriod"
+										<p:selectOneMenu id="validityPeriod"
 											disabled="#{!courseBean.validityPeriodSelectorEnabled}"
-											value="#{courseBean.validity.period}"
-											required="false"
+											value="#{courseBean.validity.period}" required="false"
 											label="#{courselabels.course_validity_period}"
 											styleClass="ctsms-control">
-											<f:selectItems
-												value="#{courseBean.validity.variablePeriods}"
-												var="selectItem"
-												itemLabel="#{selectItem.label}"
+											<f:selectItems value="#{courseBean.validity.variablePeriods}"
+												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 											<p:ajax update="validityPeriodDays,courseexpiredmessage" />
 										</p:selectOneMenu>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="validityPeriod">
+										<p:tooltip rendered="#{enableTooltips}" for="validityPeriod">
 											<h:outputText
 												value="#{courselabels.course_validity_period_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="validityPeriod" />
-									<h:outputLabel
-										for="validityPeriodDays"
+									<h:outputLabel for="validityPeriodDays"
 										value="#{courselabels.course_validity_period_days_label}" />
 									<h:panelGroup>
 										<p:spinner
 											disabled="#{!courseBean.validityPeriodSpinnerEnabled}"
 											id="validityPeriodDays"
 											value="#{courseBean.in.validityPeriodDays}"
-											styleClass="ctsms-spinner"
-											required="false"
+											styleClass="ctsms-spinner" required="false"
 											label="#{courselabels.course_validity_period_days}">
-											<p:ajax
-												event="blur"
-												process="@this"
+											<p:ajax event="blur" process="@this"
 												update="courseexpiredmessage" />
 										</p:spinner>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="validityPeriodDays">
 											<h:outputText
 												value="#{courselabels.course_validity_period_days_tooltip}"
@@ -600,43 +445,33 @@
 									</h:panelGroup>
 									<p:message for="validityPeriodDays" />
 									<h:outputLabel />
-									<h:outputText
-										id="courseexpiredmessage"
+									<h:outputText id="courseexpiredmessage"
 										value="#{courseBean.getExpired() ? courselabels.course_expired_message : courselabels.course_valid_message}" />
 									<h:outputLabel />
 								</h:panelGrid>
-								<h:panelGrid
-									id="precedingCourses"
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid id="precedingCourses" columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-input-tied-row,ctsms-input-tied-row">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-picker-multi-header-label-column,ctsms-picker-multi-header-btn-column,ctsms-picker-multi-header-btn-column">
-										<h:outputText value="#{courseBean.precedingCourseMultiPicker.count} #{courselabels.course_preceding_courses_label}" />
+										<h:outputText
+											value="#{courseBean.precedingCourseMultiPicker.count} #{courselabels.course_preceding_courses_label}" />
 										<p:commandButton
 											title="#{labels.multipick_course_button_label}"
-											icon="ui-icon ui-icon-cart"
-											type="button"
+											icon="ui-icon ui-icon-cart" type="button"
 											onclick="openCourseMultiPicker(':tabView:coursemain_form:lastPickedCoursePrecedingCourseIds','addPrecedingCourseIDs')" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											title="#{labels.multipick_clear_all_button_label}"
 											actionListener="#{courseBean.precedingCourseMultiPicker.clear}"
-											icon="ui-icon ui-icon-close"
-											ajax="true"
+											icon="ui-icon ui-icon-close" ajax="true"
 											disabled="#{!courseBean.precedingCourseMultiPicker.isEnabled}"
 											update="precedingCourses" />
-										<h:inputHidden
-											id="lastPickedCoursePrecedingCourseIds"
+										<h:inputHidden id="lastPickedCoursePrecedingCourseIds"
 											required="false"
 											value="#{courseBean.precedingCourseMultiPicker.ids}">
 										</h:inputHidden>
 									</h:panelGrid>
-									<p:dataList
-										type="#{multiPickerDataListsType}"
+									<p:dataList type="#{multiPickerDataListsType}"
 										rows="#{multiPickerDataListsRows}"
 										paginator="#{multiPickerDataListsPaginator}"
 										paginatorTemplate="#{multiPickerDataListsPaginatorTemplate}"
@@ -644,8 +479,7 @@
 										paginatorPosition="#{multiPickerDataListsPaginatorPosition}"
 										pageLinks="#{multiPickerDataListsPageLinks}"
 										paginatorAlwaysVisible="#{multiPickerDataListsPaginatorAlwaysVisible}"
-										id="preceding_course_selection"
-										var="course"
+										id="preceding_course_selection" var="course"
 										styleClass="ctsms-course-coursepicker-list"
 										value="#{courseBean.precedingCourseMultiPicker.selection}">
 										<f:facet name="description">
@@ -658,15 +492,13 @@
 											<h:outputText value=" " />
 										</p:column>
 										<p:column style="width:32px;">
-											<p:commandButton
-												type="button"
+											<p:commandButton type="button"
 												title="#{labels.open_course_button_label}"
 												icon="ui-icon ui-icon-extlink"
 												onclick="openCourse(#{course.vo.id})" />
 										</p:column>
 										<p:column style="width:32px;">
-											<p:commandButton
-												process="@this"
+											<p:commandButton process="@this"
 												title="#{labels.multipick_clear_button_label}"
 												actionListener="#{courseBean.precedingCourseMultiPicker.removeId(course.vo.id)}"
 												icon="ui-icon ui-icon-close"
@@ -684,143 +516,101 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
-						<p:fieldset
-							toggleable="true"
-							collapsed="false">
+						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText value="#{courselabels.course_cv_field_set}" />
 							</f:facet>
-							<h:panelGrid
-								columns="1"
-								cellpadding="0"
+							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
-								<h:panelGrid
-									columns="6"
-									cellpadding="2"
+								<h:panelGrid columns="6" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="cvtitle"
+									<h:outputLabel for="cvtitle"
 										value="#{courselabels.course_cv_title_label}" />
 									<h:panelGroup>
-										<p:inputText
-											id="cvtitle"
-											value="#{courseBean.in.cvTitle}"
-											required="false"
-											label="#{courselabels.course_cv_title}"
+										<p:inputText id="cvtitle" value="#{courseBean.in.cvTitle}"
+											required="false" label="#{courselabels.course_cv_title}"
 											styleClass="ctsms-control" />
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="cvtitle">
-											<h:outputText
-												value="#{courselabels.course_cv_title_tooltip}"
+										<p:tooltip rendered="#{enableTooltips}" for="cvtitle">
+											<h:outputText value="#{courselabels.course_cv_title_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="cvtitle" />
-									<h:outputLabel
-										for="institution"
+									<h:outputLabel for="institution"
 										value="#{courselabels.course_institution_label}" />
-									<h:panelGrid
-										columns="4"
-										cellpadding="0">
+									<h:panelGrid columns="4" cellpadding="0">
 										<h:panelGroup>
-											<h:inputHidden
-												id="institution"
-												required="false"
+											<h:inputHidden id="institution" required="false"
 												value="#{courseBean.in.institutionId}">
 												<f:converter converterId="ctsms.ID" />
 											</h:inputHidden>
-											<p:commandButton
-												id="institutionName"
+											<p:commandButton id="institutionName"
 												value="#{applicationScopeBean.clipStringPicker(courseBean.institutionName)}"
 												title="#{courselabels.course_institution_tooltip}#{labels.open_staff_button_label}"
-												styleClass="ctsms-picker"
-												icon="ui-icon ui-icon-extlink"
+												styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 												type="button"
 												onclick="openPickedStaff(':tabView:coursemain_form:institution')" />
 										</h:panelGroup>
-										<p:commandButton
-											title="#{labels.pick_staff_button_label}"
-											icon="ui-icon ui-icon-search"
-											type="button"
+										<p:commandButton title="#{labels.pick_staff_button_label}"
+											icon="ui-icon ui-icon-search" type="button"
 											onclick="openStaffPickerAjax(':tabView:coursemain_form:institution',':tabView:coursemain_form:institutionName')" />
-										<p:commandButton
-											title="#{labels.clear_staff_button_label}"
-											icon="ui-icon ui-icon-close"
-											type="button"
+										<p:commandButton title="#{labels.clear_staff_button_label}"
+											icon="ui-icon ui-icon-close" type="button"
 											onclick="clearIDAjax(':tabView:coursemain_form:institution',':tabView:coursemain_form:institutionName','#{applicationScopeBean.noStaffPickedMessage}')" />
-										<p:commandButton
-											title="#{messages.create_new_staff}"
-											icon="ui-icon ui-icon-plusthick"
-											type="button"
+										<p:commandButton title="#{messages.create_new_staff}"
+											icon="ui-icon ui-icon-plusthick" type="button"
 											onclick="openNewStaff()" />
 									</h:panelGrid>
 									<p:message for="institution" />
-									<h:outputLabel
-										for="showCvPreset"
+									<h:outputLabel for="showCvPreset"
 										value="#{courselabels.course_show_cv_preset_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="showCvPreset"
+										<p:selectBooleanCheckbox id="showCvPreset"
 											widgetVar="showCvPreset"
 											value="#{courseBean.in.showCvPreset}">
-											<p:ajax
-												listener="#{courseBean.handleShowCvPresetChange}"
+											<p:ajax listener="#{courseBean.handleShowCvPresetChange}"
 												update="showCommentCvPreset" />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="showCvPreset">
+										<p:tooltip rendered="#{enableTooltips}" for="showCvPreset">
 											<h:outputText
 												value="#{courselabels.course_show_cv_preset_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="showCvPreset" />
-									<h:outputLabel
-										for="cvSectionPreset"
+									<h:outputLabel for="cvSectionPreset"
 										value="#{courselabels.course_cv_section_preset_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu
-											id="cvSectionPreset"
-											value="#{courseBean.in.cvSectionPresetId}"
-											required="false"
+										<p:selectOneMenu id="cvSectionPreset"
+											value="#{courseBean.in.cvSectionPresetId}" required="false"
 											label="#{courselabels.course_cv_section_preset}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
-											<f:selectItem
-												itemLabel="#{labels.no_selection_label}"
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
 												itemValue="#{applicationScopeBean.noSelectionValue}" />
-											<f:selectItems
-												value="#{courseBean.cvSections}"
-												var="selectItem"
-												itemLabel="#{selectItem.label}"
+											<f:selectItems value="#{courseBean.cvSections}"
+												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 											<p:ajax
 												oncomplete="handleCvSectionPresetSelected(xhr, status, args)"
 												listener="#{courseBean.handleSectionPresetChange}" />
 										</p:selectOneMenu>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="cvSectionPreset">
+										<p:tooltip rendered="#{enableTooltips}" for="cvSectionPreset">
 											<h:outputText
 												value="#{courselabels.course_cv_section_preset_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="cvSectionPreset" />
-									<h:outputLabel
-										for="showCommentCvPreset"
+									<h:outputLabel for="showCommentCvPreset"
 										value="#{courselabels.course_show_comment_cv_preset_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="showCommentCvPreset"
+										<p:selectBooleanCheckbox id="showCommentCvPreset"
 											widgetVar="showCommentCvPreset"
 											disabled="#{!courseBean.in.showCvPreset}"
 											value="#{courseBean.in.showCommentCvPreset}" />
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="showCommentCvPreset">
 											<h:outputText
 												value="#{courselabels.course_show_comment_cv_preset_tooltip}"
@@ -829,25 +619,17 @@
 									</h:panelGroup>
 									<p:message for="showCommentCvPreset" />
 								</h:panelGrid>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-									<h:outputLabel
-										for="cvCommentPreset"
+									<h:outputLabel for="cvCommentPreset"
 										value="#{courselabels.course_cv_comment_label}" />
 									<h:panelGroup>
-										<p:inputTextarea
-											id="cvCommentPreset"
-											value="#{courseBean.in.cvCommentPreset}"
-											required="false"
-											autoResize="false"
-											styleClass="ctsms-textarea"
+										<p:inputTextarea id="cvCommentPreset"
+											value="#{courseBean.in.cvCommentPreset}" required="false"
+											autoResize="false" styleClass="ctsms-textarea"
 											label="#{courselabels.course_cv_comment}" />
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="cvCommentPreset">
+										<p:tooltip rendered="#{enableTooltips}" for="cvCommentPreset">
 											<h:outputText
 												value="#{courselabels.course_cv_comment_tooltip}"
 												escape="false" />
@@ -859,83 +641,64 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{courseBean.created ? courseBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									title="#{labels.reset_button_label}"
 									actionListener="#{courseBean.reset}"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
+									icon="ui-icon ui-icon-close" ajax="true"
 									oncomplete="handleCourseChanged(xhr, status, args)"
 									disabled="false"
 									update="preceding_course_tree,renewal_tree,course_input" />
-								<p:commandButton
-									rendered="#{!courseBean.created}"
-									process="@this,course_input"
-									id="add"
+								<p:commandButton rendered="#{!courseBean.created}"
+									process="@this,course_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{courseBean.add}"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									oncomplete="handleCourseChanged(xhr, status, args)"
 									disabled="#{!courseBean.createable}"
 									update="preceding_course_tree,renewal_tree,course_input" />
-								<p:commandButton
-									rendered="#{courseBean.created}"
-									process="@this"
-									value="#{labels.add_button_label}"
+								<p:commandButton rendered="#{courseBean.created}"
+									process="@this" value="#{labels.add_button_label}"
 									onclick="courseAddConfirmation.show()"
 									disabled="#{!courseBean.createable}"
-									icon="ui-icon ui-icon-plusthick"
-									type="button" />
-								<p:commandButton
-									process="@this,course_input"
-									id="update"
+									icon="ui-icon ui-icon-plusthick" type="button" />
+								<p:commandButton process="@this,course_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{courseBean.update}"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									oncomplete="handleCourseChanged(xhr, status, args)"
 									disabled="#{!courseBean.editable}"
 									update="preceding_course_tree,renewal_tree,course_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									onclick="if('courseDeleteReason' in window){courseDeleteReason.setValue(#{applicationScopeBean.quoteJsString(courseBean.deferredDeleteReason)});}courseDeleteConfirmation.show()"
 									disabled="#{!courseBean.removable}"
-									icon="ui-icon ui-icon-trash"
-									type="button" />
-								<p:commandButton
-									process="@this"
+									icon="ui-icon ui-icon-trash" type="button" />
+								<p:commandButton process="@this"
 									title="#{labels.load_button_label}"
-									actionListener="#{courseBean.load}"
-									icon="ui-icon-refresh"
-									ajax="true"
-									oncomplete="handleCourseChanged(xhr, status, args)"
+									actionListener="#{courseBean.load}" icon="ui-icon-refresh"
+									ajax="true" oncomplete="handleCourseChanged(xhr, status, args)"
 									disabled="#{!courseBean.created}"
 									update="preceding_course_tree,renewal_tree,course_input" />
-								<p:commandButton
-									immediate="true"
-									ajax="false"
+								<p:commandButton immediate="true" ajax="false"
 									disabled="#{!courseBean.created}"
 									value="#{courselabels.open_blank_course_participant_list_button_label}"
 									title="#{courselabels.open_blank_course_participant_list_button_title}"
 									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{courseBean.blankCourseParticipantListPdfStreamedContent}" />
+									<p:fileDownload
+										value="#{courseBean.blankCourseParticipantListPdfStreamedContent}" />
 								</p:commandButton>
-								<p:commandButton
-									immediate="true"
-									ajax="false"
+								<p:commandButton immediate="true" ajax="false"
 									disabled="#{!courseBean.created}"
 									value="#{courselabels.open_blank_course_certificate_button_label}"
 									title="#{courselabels.open_blank_course_certificate_button_title}"
 									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{courseBean.blankCourseCertificatePdfStreamedContent}" />
+									<p:fileDownload
+										value="#{courseBean.blankCourseCertificatePdfStreamedContent}" />
 								</p:commandButton>
 							</p:toolbarGroup>
 							<p:separator />
@@ -946,41 +709,27 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
-				width="500"
+			<p:confirmDialog appendToBody="false" severity="alert" width="500"
 				widgetVar="courseDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{courselabels.course_delete_confirmation_dialog_message}"
 						escape="false" />
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						<h:panelGrid
-							rendered="true"
-							columns="1"
-							cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid rendered="true" columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="deferredDeleteReason"
+							<h:outputLabel for="deferredDeleteReason"
 								value="#{courselabels.course_deferred_delete_reason_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="deferredDeleteReason"
+								<p:inputTextarea id="deferredDeleteReason"
 									widgetVar="courseDeleteReason"
-									value="#{courseBean.deferredDeleteReason}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									value="#{courseBean.deferredDeleteReason}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{courselabels.course_deferred_delete_reason}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="deferredDeleteReason">
 									<h:outputText
 										value="#{courselabels.course_deferred_delete_reason_tooltip}"
@@ -988,61 +737,45 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-					</h:panelGrid>						
+					</h:panelGrid>
 				</f:facet>
 				<p:commandButton
 					process="@this,:tabView:coursemain_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{courseBean.delete}"
-					onclick="courseDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="courseDeleteConfirmation.hide()" ajax="true"
 					oncomplete="handleCourseChanged(xhr, status, args)"
 					update="preceding_course_tree,renewal_tree,course_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="courseDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="courseDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="courseShowCvPresetPresetOverrideConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{courselabels.course_show_cv_preset_override_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					value="#{labels.yes_button_label}"
-					onclick="setCourseShowCvPreset(true)"
-					type="button" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="setCourseShowCvPreset(false)"
-					type="button" />
+				<p:commandButton value="#{labels.yes_button_label}"
+					onclick="setCourseShowCvPreset(true)" type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="setCourseShowCvPreset(false)" type="button" />
 			</p:confirmDialog>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="courseAddConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{courselabels.course_add_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					process="@this,course_input"
-					id="addConfirmed"
+				<p:commandButton process="@this,course_input" id="addConfirmed"
 					value="#{labels.yes_button_label}"
 					actionListener="#{courseBean.add}"
-					onclick="courseAddConfirmation.hide()"
-					ajax="true"
+					onclick="courseAddConfirmation.hide()" ajax="true"
 					oncomplete="handleCourseChanged(xhr, status, args)"
 					update="preceding_course_tree,renewal_tree,course_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="courseAddConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="courseAddConfirmation.hide()" type="button" />
 			</p:confirmDialog>
 		</h:form>
 	</ui:composition>

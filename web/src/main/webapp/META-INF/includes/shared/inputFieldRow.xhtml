@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -12,9 +11,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:fieldset
-			id="row#{index}"
-			rendered="#{rendered}"
+		<p:fieldset id="row#{index}" rendered="#{rendered}"
 			toggleable="#{toggleable}"
 			styleClass="#{fieldInput.getColor(optional)}"
 			collapsed="#{toggleable and fieldInput.collapsed}">
@@ -23,16 +20,12 @@
 					styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 					value="#{fieldInput.name}" />
 			</f:facet>
-		<p:remoteCommand
-			process="@this"
-			rendered="#{not empty reloadRemoteCommand}"
-			name="#{reloadRemoteCommand}"
-			actionListener="#{fieldInput.load}"
-			oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-			update="row#{index}" />			
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<p:remoteCommand process="@this"
+				rendered="#{not empty reloadRemoteCommand}"
+				name="#{reloadRemoteCommand}" actionListener="#{fieldInput.load}"
+				oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
+				update="row#{index}" />
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-input-panelgrid"
 				rowClasses="#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{fieldInput.hasOutput ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.fieldCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
 				<h:panelGrid
@@ -40,75 +33,55 @@
 					columns="#{fieldInput.longTitle ? 1 : 4}"
 					cellpadding="#{fieldInput.longTitle ? 0 : 2}"
 					styleClass="#{fieldInput.longTitle ? 'ctsms-input-panelgrid' : ''}"
-					rowClasses="#{fieldInput.longTitle ? 'ctsms-fieldrow-label-for-indent-row,ctsms-fieldrow-input-indent-row,ctsms-fieldrow-message-for-indent-row' : ''}"					
+					rowClasses="#{fieldInput.longTitle ? 'ctsms-fieldrow-label-for-indent-row,ctsms-fieldrow-input-indent-row,ctsms-fieldrow-message-for-indent-row' : ''}"
 					columnClasses="#{fieldInput.longTitle ? '' : (fieldInput.selectVertical ? (fieldInput.selectOneRadio ? 'ctsms-fieldrow-label-for-top-radio-column,ctsms-fieldrow-input-top-column,ctsms-fieldrow-message-for-top-column,ctsms-fieldrow-message-for-top-column' : 'ctsms-fieldrow-label-for-top-column,ctsms-fieldrow-input-top-column,ctsms-fieldrow-message-for-top-column,ctsms-fieldrow-message-for-top-column') : (fieldInput.selectHorizontal ? 'ctsms-fieldrow-label-for-column,ctsms-fieldrow-input-column,ctsms-fieldrow-message-for-column,ctsms-fieldrow-message-for-column' : 'ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-message-for-column'))}">
 					<h:outputLabel
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-field-icon ctsms-icon-noencryption"
 						for="singleLineText#{index}"
 						rendered="#{fieldInput.singleLineText}"
 						value="#{labels.noencryption_warning_short_label}#{fieldInput.title}" />
-					<h:outputLabel
-						for="selectOneMenu#{index}"
+					<h:outputLabel for="selectOneMenu#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 						rendered="#{fieldInput.selectOneDropdown}"
 						value="#{fieldInput.title}" />
-					<h:outputLabel
-						for="selectOneRadio#{index}"
+					<h:outputLabel for="selectOneRadio#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 						rendered="#{fieldInput.selectOneRadio}"
-						value="#{fieldInput.title}" />						
-					<h:outputLabel
-						for="selectMany#{index}"
-						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.selectMany}"
 						value="#{fieldInput.title}" />
+					<h:outputLabel for="selectMany#{index}"
+						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
+						rendered="#{fieldInput.selectMany}" value="#{fieldInput.title}" />
 					<h:outputLabel
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''} #{fieldInput.inputField.strict ? '' : 'ctsms-field-icon ctsms-icon-noencryption'}"
-						for="autocomplete#{index}"
-						rendered="#{fieldInput.autocomplete}"
+						for="autocomplete#{index}" rendered="#{fieldInput.autocomplete}"
 						value="#{fieldInput.inputField.strict ? '' : labels.noencryption_warning_short_label}#{fieldInput.title}" />
-					<h:outputLabel
-						for="checkBox#{index}"
+					<h:outputLabel for="checkBox#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.checkBox}"
-						value="#{fieldInput.title}" />
-					<h:outputLabel
-						for="integer#{index}"
+						rendered="#{fieldInput.checkBox}" value="#{fieldInput.title}" />
+					<h:outputLabel for="integer#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.integer}"
-						value="#{fieldInput.title}" />
-					<h:outputLabel
-						for="float#{index}"
+						rendered="#{fieldInput.integer}" value="#{fieldInput.title}" />
+					<h:outputLabel for="float#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.float}"
-						value="#{fieldInput.title}" />
-					<h:outputLabel
-						for="date#{index}"
+						rendered="#{fieldInput.float}" value="#{fieldInput.title}" />
+					<h:outputLabel for="date#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.date}"
-						value="#{fieldInput.title}" />
-					<h:outputLabel
-						for="timestamp#{index}"
+						rendered="#{fieldInput.date}" value="#{fieldInput.title}" />
+					<h:outputLabel for="timestamp#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.timestamp}"
-						value="#{fieldInput.title}" />
-					<h:outputLabel
-						for="time#{index}"
+						rendered="#{fieldInput.timestamp}" value="#{fieldInput.title}" />
+					<h:outputLabel for="time#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.time}"
-						value="#{fieldInput.title}" />						
+						rendered="#{fieldInput.time}" value="#{fieldInput.title}" />
 					<h:panelGroup>
-						<p:inputText
-							id="singleLineText#{index}"
+						<p:inputText id="singleLineText#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.textValue}"
-							label="#{fieldInput.label}"
+							value="#{fieldInput.textValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.singleLineText}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							styleClass="ctsms-control-larger"
-							autocomplete="off"
+							styleClass="ctsms-control-larger" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.singleLineTextOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.singleLineTextOnChange')}">
 							<p:ajax />
@@ -116,12 +89,9 @@
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.singleLineText}"
 							for="singleLineText#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:selectOneMenu
-							id="selectOneMenu#{index}"
+						<p:selectOneMenu id="selectOneMenu#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.selectionValueId}"
 							label="#{fieldInput.label}"
@@ -133,26 +103,20 @@
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectOneDropdownOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectOneDropdownOnChange')}">
 							<f:converter converterId="ctsms.ID" />
-							<f:selectItem
-								itemLabel="#{labels.no_selection_label}"
+							<f:selectItem itemLabel="#{labels.no_selection_label}"
 								itemValue="#{applicationScopeBean.noSelectionValue}" />
-							<f:selectItems
-								value="#{fieldInput.selectionSetValues}"
-								var="selectItem"
-								itemLabel="#{selectItem.label}"
+							<f:selectItems value="#{fieldInput.selectionSetValues}"
+								var="selectItem" itemLabel="#{selectItem.label}"
 								itemValue="#{selectItem.value}" />
 							<p:ajax />
-						</p:selectOneMenu> 
+						</p:selectOneMenu>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.selectOneDropdown}"
 							for="selectOneMenu#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
-						</p:tooltip>						
-						
-						<p:selectOneRadio
-							id="selectOneRadio#{index}"
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
+						</p:tooltip>
+
+						<p:selectOneRadio id="selectOneRadio#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.selectionValueId}"
 							label="#{fieldInput.label}"
@@ -161,58 +125,45 @@
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectOneRadioOnChange')}"
-							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectOneRadioOnChange')}"> <!-- styleClass="ctsms-control-larger" -->
+							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectOneRadioOnChange')}">
+
 							<f:converter converterId="ctsms.ID" />
-							<!-- <f:selectItem
-								itemLabel="#{labels.no_selection_label}"
-								itemValue="#{applicationScopeBean.noSelectionValue}" /> -->
-							<f:selectItems
-								value="#{fieldInput.selectionSetValues}"
-								var="selectItem"
-								itemLabel="#{selectItem.label}"
+
+							<f:selectItems value="#{fieldInput.selectionSetValues}"
+								var="selectItem" itemLabel="#{selectItem.label}"
 								itemValue="#{selectItem.value}" />
 							<p:ajax />
-						</p:selectOneRadio> 
+						</p:selectOneRadio>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.selectOneRadio}"
 							for="selectOneRadio#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						
 
-						<p:selectManyCheckbox
-							id="selectMany#{index}"
+
+						<p:selectManyCheckbox id="selectMany#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.selectionValueIds}"
-							label="#{fieldInput.label}"
-							rendered="#{fieldInput.selectMany}"
+							label="#{fieldInput.label}" rendered="#{fieldInput.selectMany}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
 							layout="#{fieldInput.selectVertical ? 'pageDirection' : 'lineDirection'}"
-							
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"
-							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"> <!-- styleClass="ctsms-control-larger" -->
-							<f:selectItems
-								value="#{fieldInput.selectionSetValues}"
-								var="selectItem"
-								itemLabel="#{selectItem.label}"
+							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}">
+
+							<f:selectItems value="#{fieldInput.selectionSetValues}"
+								var="selectItem" itemLabel="#{selectItem.label}"
 								itemValue="#{selectItem.value}" />
 							<p:ajax />
-						</p:selectManyCheckbox> 
+						</p:selectManyCheckbox>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.selectMany}"
 							for="selectMany#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:autoComplete
-							id="autocomplete#{index}"
+						<p:autoComplete id="autocomplete#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.textValue}"
 							forceSelection="#{fieldInput.inputField.strict}"
@@ -220,8 +171,7 @@
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							label="#{fieldInput.label}"
-							styleClass="ctsms-control-larger"
+							label="#{fieldInput.label}" styleClass="ctsms-control-larger"
 							autocomplete="off"
 							minQueryLength="#{autoCompleteMinQueryLengthInputField}"
 							maxResults="#{autoCompleteMaxResultsInputField}"
@@ -231,74 +181,56 @@
 							scrollHeight="#{autoCompleteScrollHeightInputField}"
 							completeMethod="#{fieldInput.completeValue}"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.autoCompleteOnChange')}">
-							<p:ajax
-								event="blur"
+							<p:ajax event="blur"
 								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.autoCompleteOnChange')}" />
-							<p:ajax
-								event="itemSelect"
+							<p:ajax event="itemSelect"
 								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.autoCompleteOnChange')}" />
-						</p:autoComplete> 
+						</p:autoComplete>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.autocomplete}"
 							for="autocomplete#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:selectBooleanCheckbox
-							id="checkBox#{index}"
+						<p:selectBooleanCheckbox id="checkBox#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.booleanValue}"
-							label="#{fieldInput.label}"
+							value="#{fieldInput.booleanValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.checkBox}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.checkBoxOnChange')}">
 							<p:ajax />
-						</p:selectBooleanCheckbox> 
+						</p:selectBooleanCheckbox>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.checkBox}"
 							for="checkBox#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:spinner
-							id="integer#{index}"
+						<p:spinner id="integer#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.longValue}"
-							label="#{fieldInput.label}"
+							value="#{fieldInput.longValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.integer}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							styleClass="ctsms-spinner"
-							autocomplete="off"
+							styleClass="ctsms-spinner" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}">
-							<p:ajax
-												event="blur"
-												process="@this" />
-						</p:spinner> 
+							<p:ajax event="blur" process="@this" />
+						</p:spinner>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.integer}"
 							for="integer#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:inputText
-							id="float#{index}"
+						<p:inputText id="float#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.floatValue}"
-							label="#{fieldInput.label}"
+							value="#{fieldInput.floatValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.float}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
-							styleClass="ctsms-control-float"
-							autocomplete="off"
+							styleClass="ctsms-control-float" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.floatOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.floatOnChange')}">
 							<f:converter converterId="ctsms.Float" />
@@ -307,86 +239,60 @@
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.float}"
 							for="float#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:calendar
-							id="date#{index}"
-							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.dateValue}"
-							label="#{fieldInput.label}"
+						<p:calendar id="date#{index}" widgetVar="#{fieldInput.widgetVar}"
+							value="#{fieldInput.dateValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.date}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
 							pattern="#{sessionScopeBean.inputDatePattern}"
 							yearRange="#{applicationScopeBean.calendarYearRange}"
-							showWeek="true"
-							navigator="true"
+							showWeek="true" navigator="true"
 							locale="#{sessionScopeBean.locale}"
-							
-							styleClass="ctsms-calendar-date"
-							autocomplete="off"
+							styleClass="ctsms-calendar-date" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.dateOnChange')}">
-							<!-- timeZone="#{applicationScopeBean.defaultTimeZone}" -->
-							<p:ajax
-								event="blur"
-								process="@this"
+
+							<p:ajax event="blur" process="@this"
 								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.dateOnChange')}" />
-							<p:ajax
-								event="dateSelect"
-								process="@this"
+							<p:ajax event="dateSelect" process="@this"
 								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.dateOnChange')}" />
-						</p:calendar> 
+						</p:calendar>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.date}"
 							for="date#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<p:calendar
-							id="timestamp#{index}"
+						<p:calendar id="timestamp#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.timestampValue}"
-							label="#{fieldInput.label}"
+							value="#{fieldInput.timestampValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.timestamp}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or fieldInput.disabled}"
 							pattern="#{sessionScopeBean.inputDateTimePattern}"
 							yearRange="#{applicationScopeBean.calendarYearRange}"
-							showWeek="true"
-							navigator="true"
+							showWeek="true" navigator="true"
 							locale="#{sessionScopeBean.locale}"
-							
-							styleClass="ctsms-calendar-datetime"
-							autocomplete="off"
+							styleClass="ctsms-calendar-datetime" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.timestampOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.timestampOnChange')}">
-							<!-- timeZone="#{fieldInput.inputField.userTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" -->
+
 							<f:converter converterId="ctsms.DateTime" />
-							<f:attribute name="timeZone" value="#{fieldInput.inputField.userTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-							<p:ajax
-								event="blur"
-								process="@this" />
-							<p:ajax
-								event="dateSelect"
-								process="@this" />
-						</p:calendar> 
+							<f:attribute name="timeZone"
+								value="#{fieldInput.inputField.userTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<p:ajax event="blur" process="@this" />
+							<p:ajax event="dateSelect" process="@this" />
+						</p:calendar>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.timestamp}"
 							for="timestamp#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
-						<pe:timePicker
-							id="time#{index}"
+						<pe:timePicker id="time#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
-							value="#{fieldInput.timeValue}"
-							label="#{fieldInput.label}"
+							value="#{fieldInput.timeValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.time}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
@@ -394,227 +300,141 @@
 							timeSeparator="#{applicationScopeBean.timeSeparator}"
 							mode="popup"
 							intervalMinutes="#{applicationScopeBean.timePickerIntervalMinutes}"
-							showCloseButton="true"
-							showNowButton="true"
-							locale="#{sessionScopeBean.locale}"
-							styleClass="ctsms-timepicker"
+							showCloseButton="true" showNowButton="true"
+							locale="#{sessionScopeBean.locale}" styleClass="ctsms-timepicker"
 							autocomplete="off">
-							<!-- <p:ajax
-								event="keyup"
-								process="@this"
-								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.timeOnChange')}" /> -->
-							<p:ajax
-								event="blur"
-								process="@this"
+
+							<p:ajax event="blur" process="@this"
 								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.timeOnChange')}" />
-							<p:ajax
-								event="timeSelect"
-								process="@this"
+							<p:ajax event="timeSelect" process="@this"
 								oncomplete="#{fieldInput.getEventJSCall('FieldCalculation.timeOnChange')}" />
 						</pe:timePicker>
 						<p:tooltip
 							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.time}"
 							for="time#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
-						</p:tooltip>						
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
+						</p:tooltip>
 					</h:panelGroup>
 					<ui:include src="errorMessage.xhtml">
-						<ui:param
-							name="rendered"
-							value="#{fieldInput.error}" />
-						<ui:param
-							name="value"
-							value="#{fieldInput.errorMessage}" />
-						<ui:param
-							name="error_message_id"
-							value="input#{index}_error_msg" />
+						<ui:param name="rendered" value="#{fieldInput.error}" />
+						<ui:param name="value" value="#{fieldInput.errorMessage}" />
+						<ui:param name="error_message_id" value="input#{index}_error_msg" />
 					</ui:include>
-					<p:message
-						for="singleLineText#{index}"
+					<p:message for="singleLineText#{index}"
 						rendered="#{fieldInput.singleLineText}" />
-					<p:message
-						for="selectOneMenu#{index}"
+					<p:message for="selectOneMenu#{index}"
 						rendered="#{fieldInput.selectOneDropdown}" />
-					<p:message
-						for="selectOneRadio#{index}"
-						rendered="#{fieldInput.selectOneRadio}" />						
-					<p:message
-						for="selectMany#{index}"
+					<p:message for="selectOneRadio#{index}"
+						rendered="#{fieldInput.selectOneRadio}" />
+					<p:message for="selectMany#{index}"
 						rendered="#{fieldInput.selectMany}" />
-					<p:message
-						for="autocomplete#{index}"
+					<p:message for="autocomplete#{index}"
 						rendered="#{fieldInput.autocomplete}" />
-					<p:message
-						for="checkBox#{index}"
-						rendered="#{fieldInput.checkBox}" />
-					<p:message
-						for="integer#{index}"
-						rendered="#{fieldInput.integer}" />
-					<p:message
-						for="float#{index}"
-						rendered="#{fieldInput.float}" />
-					<p:message
-						for="date#{index}"
-						rendered="#{fieldInput.date}" />
-					<p:message
-						for="timestamp#{index}"
+					<p:message for="checkBox#{index}" rendered="#{fieldInput.checkBox}" />
+					<p:message for="integer#{index}" rendered="#{fieldInput.integer}" />
+					<p:message for="float#{index}" rendered="#{fieldInput.float}" />
+					<p:message for="date#{index}" rendered="#{fieldInput.date}" />
+					<p:message for="timestamp#{index}"
 						rendered="#{fieldInput.timestamp}" />
-					<p:message
-						for="time#{index}"
-						rendered="#{fieldInput.time}" />						
+					<p:message for="time#{index}" rendered="#{fieldInput.time}" />
 				</h:panelGrid>
-				<h:panelGrid
-					rendered="#{fieldInput.multiLineText}"
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-input-panelgrid"
+				<h:panelGrid rendered="#{fieldInput.multiLineText}" columns="1"
+					cellpadding="0" styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 					<h:outputLabel
 						styleClass="ctsms-field-icon ctsms-icon-noencryption"
 						for="multiLineText#{index}"
 						value="#{labels.noencryption_warning_label}#{fieldInput.title}" />
 					<h:panelGroup>
-						<p:inputTextarea
-							id="multiLineText#{index}"
+						<p:inputTextarea id="multiLineText#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.textValue}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
-							autoResize="false"
-							styleClass="ctsms-textarea"
-							autocomplete="off"
+							disabled="#{!enabled or fieldInput.disabled}" autoResize="false"
+							styleClass="ctsms-textarea" autocomplete="off"
 							label="#{fieldInput.label}"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.multiLineTextOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.multiLineTextOnChange')}">
 							<p:ajax />
-						</p:inputTextarea> 
-						<p:tooltip
-							rendered="#{enableTooltips and fieldInput.showTooltip}"
+						</p:inputTextarea>
+						<p:tooltip rendered="#{enableTooltips and fieldInput.showTooltip}"
 							for="multiLineText#{index}">
-							<h:outputText
-								value="#{fieldInput.tooltip}"
-								escape="false" />
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
 					</h:panelGroup>
 					<ui:include src="errorMessage.xhtml">
-						<ui:param
-							name="rendered"
-							value="#{fieldInput.error}" />
-						<ui:param
-							name="value"
-							value="#{fieldInput.errorMessage}" />
-						<ui:param
-							name="error_message_id"
+						<ui:param name="rendered" value="#{fieldInput.error}" />
+						<ui:param name="value" value="#{fieldInput.errorMessage}" />
+						<ui:param name="error_message_id"
 							value="multiLineText#{index}_error_msg" />
 					</ui:include>
 					<p:message for="multiLineText#{index}" />
 				</h:panelGrid>
-				<h:panelGrid
-					rendered="#{fieldInput.sketch}"
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-input-panelgrid"
+				<h:panelGrid rendered="#{fieldInput.sketch}" columns="1"
+					cellpadding="0" styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-sketchpad-label-for-row,ctsms-sketchpad-input-row,ctsms-sketchpad-message-for-row">
-					<h:outputLabel
-						for="sketchpad#{index}"
-						value="#{fieldInput.title}" />
-					<ctsms:sketchPad
-						id="sketchpad#{index}"
+					<h:outputLabel for="sketchpad#{index}" value="#{fieldInput.title}" />
+					<ctsms:sketchPad id="sketchpad#{index}"
 						widgetVar="#{fieldInput.widgetVar}"
 						value="#{fieldInput.inkValueWithSelections}"
-						width="#{fieldInput.width}"
-						height="#{fieldInput.height}"
+						width="#{fieldInput.width}" height="#{fieldInput.height}"
 						regions="#{fieldInput.inkRegions}"
 						disabled="#{!enabled or fieldInput.disabled}"
 						label="#{fieldInput.label}"
 						backgroundImage="#{request.contextPath}/inputfieldimage?#{applicationScopeBean.parameterName('INPUT_FIELD_ID')}=#{fieldInput.inputField.id}"
 						onChange="#{fieldInput.getEventJSCall('FieldCalculation.sketchOnChange')}" />
 					<ui:include src="errorMessage.xhtml">
-						<ui:param
-							name="rendered"
-							value="#{fieldInput.error}" />
-						<ui:param
-							name="value"
-							value="#{fieldInput.errorMessage}" />
-						<ui:param
-							name="error_message_id"
+						<ui:param name="rendered" value="#{fieldInput.error}" />
+						<ui:param name="value" value="#{fieldInput.errorMessage}" />
+						<ui:param name="error_message_id"
 							value="sketchpad#{index}_error_msg" />
 					</ui:include>
 					<p:message for="sketchpad#{index}" />
 				</h:panelGrid>
 				<h:panelGroup rendered="#{fieldInput.hasOutput}">
-					<div class="#{(!enabled or fieldInput.disabled) ? 'ctsms-inputfield-output-disabled' : ''}" id="#{fieldInput.outputId}"></div>
+					<div
+						class="#{(!enabled or fieldInput.disabled) ? 'ctsms-inputfield-output-disabled' : ''}"
+						id="#{fieldInput.outputId}"></div>
 				</h:panelGroup>
 				<ui:include src="multiLineOutputText.xhtml">
-					<ui:param
-						name="multiLineText"
-						value="#{fieldInput.fieldComment}" />
-					<ui:param
-						name="rendered"
-						value="#{!fieldInput.fieldCommentEmpty}" />
-					<ui:param
-						name="multiLineTextClass"
-						value="" />
-					<ui:param
-						name="escapeHtml"
-						value="true" />
+					<ui:param name="multiLineText" value="#{fieldInput.fieldComment}" />
+					<ui:param name="rendered" value="#{!fieldInput.fieldCommentEmpty}" />
+					<ui:param name="multiLineTextClass" value="" />
+					<ui:param name="escapeHtml" value="true" />
 				</ui:include>
 				<ui:include src="multiLineOutputText.xhtml">
-					<ui:param
-						name="multiLineText"
-						value="#{fieldInput.comment}" />
-					<ui:param
-						name="rendered"
-						value="#{!fieldInput.commentEmpty}" />
-					<ui:param
-						name="multiLineTextClass"
-						value="" />
-					<ui:param
-						name="escapeHtml"
-						value="true" />
+					<ui:param name="multiLineText" value="#{fieldInput.comment}" />
+					<ui:param name="rendered" value="#{!fieldInput.commentEmpty}" />
+					<ui:param name="multiLineTextClass" value="" />
+					<ui:param name="escapeHtml" value="true" />
 				</ui:include>
 				<ui:include src="multiLineOutputText.xhtml">
-					<ui:param
-						name="multiLineText"
-						value="#{fieldInput.statusComment}" />
-					<ui:param
-						name="rendered"
-						value="#{!fieldInput.statusCommentEmpty}" />
-					<ui:param
-						name="multiLineTextClass"
+					<ui:param name="multiLineText" value="#{fieldInput.statusComment}" />
+					<ui:param name="rendered" value="#{!fieldInput.statusCommentEmpty}" />
+					<ui:param name="multiLineTextClass"
 						value="ctsms-multilinetext-icon ctsms-icon-flag" />
-					<ui:param
-						name="escapeHtml"
-						value="true" />
-				</ui:include>				
+					<ui:param name="escapeHtml" value="true" />
+				</ui:include>
 				<h:panelGrid
 					rendered="#{(not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired}"
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-input-panelgrid"
+					columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 					<h:outputLabel
 						styleClass="ctsms-field-icon ctsms-icon-noencryption"
 						for="reasonForChange#{index}"
 						value="#{labels.noencryption_warning_label}#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? labels.audit_trail_reason_for_change_label_required : labels.audit_trail_reason_for_change_label}" />
 					<h:panelGroup>
-						<p:inputTextarea
-							id="reasonForChange#{index}"
+						<p:inputTextarea id="reasonForChange#{index}"
 							value="#{fieldInput.reasonForChange}"
 							required="#{(not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired}"
 							requiredMessage="#{labels.audit_trail_reason_for_change_required_message}"
-							disabled="#{!enabled or fieldInput.disabled}"
-							autoResize="false"
-							styleClass="ctsms-textarea"
-							autocomplete="off"
+							disabled="#{!enabled or fieldInput.disabled}" autoResize="false"
+							styleClass="ctsms-textarea" autocomplete="off"
 							label="#{labels.audit_trail_reason_for_change}">
 							<p:ajax />
 						</p:inputTextarea>
-						<p:tooltip
-							rendered="#{enableTooltips}"
+						<p:tooltip rendered="#{enableTooltips}"
 							for="reasonForChange#{index}">
 							<h:outputText
 								value="#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? labels.audit_trail_reason_for_change_tooltip_required : labels.audit_trail_reason_for_change_tooltip}"
@@ -625,163 +445,127 @@
 				</h:panelGrid>
 				<p:toolbar rendered="#{fieldInput.showToolbar}">
 					<p:toolbarGroup align="left">
-						<h:outputText
-							styleClass="ctsms-toolbar-text"
+						<h:outputText styleClass="ctsms-toolbar-text"
 							value="#{fieldInput.created ? fieldInput.modifiedAnnotation : ''}" />
 					</p:toolbarGroup>
 					<p:separator />
 					<p:toolbarGroup align="right">
 
-						<p:commandButton
-							type="button"
-							rendered="#{fieldInput.auditTrail}"
-							disabled="#{!audit_trail_enabled}"
-							tabindex="-1"
+						<p:commandButton type="button" rendered="#{fieldInput.auditTrail}"
+							disabled="#{!audit_trail_enabled}" tabindex="-1"
 							title="#{labels.audit_trail_button_title}"
 							icon="ui-icon ui-icon-flag"
 							onclick="#{openAuditTrailRemoteCommand}" />
 
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.singleLineText and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.singleLineTextApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:singleLineText#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.multiLineText and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.multiLineTextApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:multiLineText#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.selectOneDropdown and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.selectOneDropdownApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:selectOneMenu#{index}','#{namingContainer}:row#{index}')" />
 
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.selectOneRadio and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.selectOneRadioApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:selectOneRadio#{index}','#{namingContainer}:row#{index}')" />
-							
-						<p:commandButton
-							type="button"
+
+						<p:commandButton type="button"
 							rendered="#{fieldInput.selectMany and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.selectManyApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:selectMany#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.autocomplete and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.autoCompleteApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:autocomplete#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.checkBox and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.checkBoxApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:checkBox#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.integer and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.integerApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:integer#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.float and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.floatApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:float#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.date and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.dateApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:date#{index}','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.timestamp and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.timestampApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:timestamp#{index}','#{namingContainer}:row#{index}')" />
 
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{fieldInput.time and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.timeApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:time#{index}','#{namingContainer}:row#{index}')" />
-							
-						<p:commandButton
-							type="button"
+
+						<p:commandButton type="button"
 							rendered="#{fieldInput.sketch and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.sketchApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:sketchpad#{index}_input','#{namingContainer}:row#{index}')" />
-						<p:commandButton
-							process="@this"
+						<p:commandButton process="@this"
 							title="#{labels.reset_button_label}"
-							actionListener="#{fieldInput.reset}"
-							tabindex="-1"
+							actionListener="#{fieldInput.reset}" tabindex="-1"
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-							icon="ui-icon ui-icon-close"
-							ajax="true"
-							disabled="false"
+							icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 							update="row#{index}" />
-						<p:commandButton
-							process="@this,row#{index}"
-							id="check#{index}"
+						<p:commandButton process="@this,row#{index}" id="check#{index}"
 							title="#{labels.test_dummy_input_button_label}"
-							actionListener="#{fieldInput.check}"
-							tabindex="-1"
+							actionListener="#{fieldInput.check}" tabindex="-1"
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-							icon="ui-icon ui-icon-help"
-							rendered="#{fieldInput.dummy}"
-							ajax="true"
-							disabled="false"
-							update="row#{index},#{update}" />
-						<p:commandButton
-							process="@this,row#{index}"
-							id="update#{index}"
+							icon="ui-icon ui-icon-help" rendered="#{fieldInput.dummy}"
+							ajax="true" disabled="false" update="row#{index},#{update}" />
+						<p:commandButton process="@this,row#{index}" id="update#{index}"
 							title="#{labels.update_button_label}"
-							actionListener="#{fieldInput.forceUpdate}"
-							tabindex="-1"
+							actionListener="#{fieldInput.forceUpdate}" tabindex="-1"
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);#{updateOnComplete}"
-							icon="ui-icon ui-icon-disk"
-							rendered="#{!fieldInput.dummy}"
-							ajax="true"
-							disabled="#{!editable or !fieldInput.editable}"
+							icon="ui-icon ui-icon-disk" rendered="#{!fieldInput.dummy}"
+							ajax="true" disabled="#{!editable or !fieldInput.editable}"
 							update="row#{index},#{update}" />
-						<p:commandButton
-							process="@this"
+						<p:commandButton process="@this"
 							title="#{labels.load_button_label}"
-							actionListener="#{fieldInput.load}"
-							tabindex="-1"
+							actionListener="#{fieldInput.load}" tabindex="-1"
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-							icon="ui-icon-refresh"
-							ajax="true"
-							disabled="#{fieldInput.dummy}"
+							icon="ui-icon-refresh" ajax="true" disabled="#{fieldInput.dummy}"
 							update="row#{index}" />
-							<!-- or !fieldInput.created -->
-							
+
+
 					</p:toolbarGroup>
 				</p:toolbar>
 			</h:panelGrid>

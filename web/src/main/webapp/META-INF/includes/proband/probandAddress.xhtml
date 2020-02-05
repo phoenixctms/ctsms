@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,23 +10,13 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandaddress_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeProbandAddress"
-				actionListener="#{probandAddressBean.change(probandBean.in.id)}"
-				update="probandaddress_list,probandaddress_input" /> -->
-			<p:remoteCommand
-				process="@this"
-				name="updateWireTransferAddress"
+
+			<p:remoteCommand process="@this" name="updateWireTransferAddress"
 				actionListener="#{probandAddressBean.setWireTransferAddress}"
 				update="probandaddress_list,probandaddress_input" />
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -40,16 +29,14 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{address.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="address"
-					value="#{probandAddressBean.addressModel}"
-					id="probandaddress_list"
-					selectionMode="single"
+					var="address" value="#{probandAddressBean.addressModel}"
+					id="probandaddress_list" selectionMode="single"
 					selection="#{probandAddressBean.selectedProbandAddress}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:probandaddress_form:probandaddress_input" />
 					<f:facet name="header">
-						<h:outputText value="#{probandAddressBean.addressModel.rowCount} #{probandlabels.proband_address_probandaddress_list_header}" />
+						<h:outputText
+							value="#{probandAddressBean.addressModel.rowCount} #{probandlabels.proband_address_probandaddress_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{address.vo.id}">
 						<f:facet name="header">
@@ -59,111 +46,115 @@
 					</p:column>
 					<p:column sortBy="#{address.vo.type}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_type_name_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_type_name_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.type.name}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_country_name_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_country_name_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.countryName}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_zip_code_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_zip_code_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.zipCode}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_city_name_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_city_name_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.cityName}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_street_name_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_street_name_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.streetName}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_house_number_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_house_number_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.houseNumber}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_entrance_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_entrance_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.entrance}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_door_number_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_door_number_column}" />
 						</f:facet>
 						<h:outputText value="#{address.vo.doorNumber}" />
 					</p:column>
 					<p:column sortBy="#{address.vo.wireTransfer}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_wire_transfer_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_wire_transfer_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{address.vo.wireTransfer}" />
+							<ui:param name="value" value="#{address.vo.wireTransfer}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{address.vo.deliver}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_deliver_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_deliver_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{address.vo.deliver}" />
+							<ui:param name="value" value="#{address.vo.deliver}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{address.vo.afnus}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_afnus_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_afnus_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{address.vo.afnus}" />
+							<ui:param name="value" value="#{address.vo.afnus}" />
 						</ui:include>
 					</p:column>
-					<p:column rendered="#{applicationScopeBean.enableGeolocationServices}">
+					<p:column
+						rendered="#{applicationScopeBean.enableGeolocationServices}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_address_probandaddress_list_distance_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_distance_column}" />
 						</f:facet>
-						<h:outputText
-							id="proband_address_distance"
+						<h:outputText id="proband_address_distance"
 							value="#{labels.press_to_calc_distance_label}" />
 					</p:column>
-					<p:column style="#{applicationScopeBean.enableGeolocationServices ? 'width:96px;' : 'width:32px;'}white-space:nowrap;">
+					<p:column
+						style="#{applicationScopeBean.enableGeolocationServices ? 'width:96px;' : 'width:32px;'}white-space:nowrap;">
 						<p:commandButton
 							title="#{probandlabels.update_wire_transfer_address_button_title}"
-							icon="ui-icon ui-icon-check"
-							type="button"
+							icon="ui-icon ui-icon-check" type="button"
 							disabled="#{address.vo.wireTransfer}"
 							onclick="updateWireTransferAddress(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_ADDRESS_ID')}:'#{address.vo.id}',#{applicationScopeBean.parameterName('VERSION')}:'#{address.vo.version}' }));" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							rendered="#{applicationScopeBean.enableGeolocationServices}"
 							title="#{labels.calculate_distance_button_label}"
 							icon="ui-icon ui-icon-arrow-2-e-w"
 							disabled="#{!address.vo.decrypted}"
 							onclick="LocationDistance.calcRouteDistance(null,#{applicationScopeBean.quoteJsString(address.vo.civicName)},LocationDistance.printLocationDistance,'tabView:probandaddress_form:probandaddress_list:#{address.rowIndex}:proband_address_distance',#{applicationScopeBean.quoteJsString(labels.location_distance_label)});" />
-						<p:commandButton
-							immediate="true"
-							ajax="false"
+						<p:commandButton immediate="true" ajax="false"
 							disabled="#{!address.vo.proband.person}"
 							title="#{probandlabels.open_proband_letter_button_label}"
 							icon="ui-icon ui-icon-pdf">
-							<p:fileDownload value="#{probandAddressBean.getProbandLetterPdfStreamedContent(address.vo)}" />
+							<p:fileDownload
+								value="#{probandAddressBean.getProbandLetterPdfStreamedContent(address.vo)}" />
 						</p:commandButton>
 					</p:column>
 				</p:dataTable>
@@ -171,59 +162,41 @@
 					<f:facet name="header">
 						<h:outputText value="#{probandAddressBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{probandAddressBean.inputVisible}"
-							columns="12"
-							cellpadding="2"
+						<h:panelGrid rendered="#{probandAddressBean.inputVisible}"
+							columns="12" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="addressType"
+							<h:outputLabel for="addressType"
 								value="#{probandlabels.address_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="addressType"
-									value="#{probandAddressBean.in.typeId}"
-									required="true"
+								<p:selectOneMenu id="addressType"
+									value="#{probandAddressBean.in.typeId}" required="true"
 									label="#{probandlabels.address_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{probandAddressBean.availableTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{probandAddressBean.availableTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										oncomplete="handleAddressTypeSelected(xhr, status, args)"
 										listener="#{probandAddressBean.handleTypeChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="addressType">
-									<h:outputText
-										value="#{probandlabels.address_type_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="addressType">
+									<h:outputText value="#{probandlabels.address_type_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="addressType" />
-							<h:outputLabel
-								for="wireTransfer"
+							<h:outputLabel for="wireTransfer"
 								value="#{probandlabels.wire_transfer_address_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="wireTransfer"
-									disabled="true"
+								<p:selectBooleanCheckbox id="wireTransfer" disabled="true"
 									value="#{probandAddressBean.wireTransfer}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="wireTransfer">
+								<p:tooltip rendered="#{enableTooltips}" for="wireTransfer">
 									<h:outputText
 										value="#{probandlabels.wire_transfer_address_tooltip}"
 										escape="false" />
@@ -238,14 +211,11 @@
 							<h:outputLabel />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="countryName"
-								value="#{probandlabels.country_name_label}" />
+								for="countryName" value="#{probandlabels.country_name_label}" />
 							<h:panelGroup>
-								<p:autoComplete
-									id="countryName"
+								<p:autoComplete id="countryName"
 									value="#{probandAddressBean.in.countryName}"
-									forceSelection="#{probandAddressBean.strict}"
-									required="false"
+									forceSelection="#{probandAddressBean.strict}" required="false"
 									label="#{probandlabels.country_name}"
 									styleClass="ctsms-control"
 									minQueryLength="#{autoCompleteMinQueryLengthCountry}"
@@ -257,33 +227,23 @@
 									completeMethod="#{probandAddressBean.completeCountryName}">
 									<p:ajax
 										listener="#{probandAddressBean.handleCountryNameSelect}"
-										event="itemSelect"
-										process="@this" />
-									<p:ajax
-										event="blur"
-										process="@this" />
+										event="itemSelect" process="@this" />
+									<p:ajax event="blur" process="@this" />
 								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="countryName">
-									<h:outputText
-										value="#{probandlabels.country_name_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="countryName">
+									<h:outputText value="#{probandlabels.country_name_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="countryName" />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="cityName"
-								value="#{probandlabels.city_name_label}" />
+								for="cityName" value="#{probandlabels.city_name_label}" />
 							<h:panelGroup>
-								<p:autoComplete
-									id="cityName"
+								<p:autoComplete id="cityName"
 									value="#{probandAddressBean.in.cityName}"
-									forceSelection="#{probandAddressBean.strict}"
-									required="false"
-									label="#{probandlabels.city_name}"
-									styleClass="ctsms-control"
+									forceSelection="#{probandAddressBean.strict}" required="false"
+									label="#{probandlabels.city_name}" styleClass="ctsms-control"
 									minQueryLength="#{autoCompleteMinQueryLengthCityName}"
 									maxResults="#{autoCompleteMaxResultsCityName}"
 									queryDelay="#{autoCompleteQueryDelayCityName}"
@@ -291,33 +251,23 @@
 									global="#{autoCompleteGlobalCityName}"
 									scrollHeight="#{autoCompleteScrollHeightCityName}"
 									completeMethod="#{probandAddressBean.completeCityName}">
-									<p:ajax
-										listener="#{probandAddressBean.handleCityNameSelect}"
-										event="itemSelect"
-										process="@this" />
-									<p:ajax
-										event="blur"
-										process="@this" />
+									<p:ajax listener="#{probandAddressBean.handleCityNameSelect}"
+										event="itemSelect" process="@this" />
+									<p:ajax event="blur" process="@this" />
 								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="cityName">
-									<h:outputText
-										value="#{probandlabels.city_name_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="cityName">
+									<h:outputText value="#{probandlabels.city_name_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="cityName" />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="zipCode"
-								value="#{probandlabels.zip_code_label}" />
+								for="zipCode" value="#{probandlabels.zip_code_label}" />
 							<h:panelGroup>
-								<p:autoComplete
-									id="zipCode"
+								<p:autoComplete id="zipCode"
 									value="#{probandAddressBean.in.zipCode}"
-									forceSelection="#{probandAddressBean.strict}"
-									required="false"
+									forceSelection="#{probandAddressBean.strict}" required="false"
 									label="#{probandlabels.zip_code}"
 									styleClass="ctsms-control-smaller"
 									minQueryLength="#{autoCompleteMinQueryLengthZipCode}"
@@ -327,19 +277,12 @@
 									global="#{autoCompleteGlobalZipCode}"
 									scrollHeight="#{autoCompleteScrollHeightZipCode}"
 									completeMethod="#{probandAddressBean.completeZipCode}">
-									<p:ajax
-										listener="#{probandAddressBean.handleZipCodeSelect}"
-										event="itemSelect"
-										process="@this" />
-									<p:ajax
-										event="blur"
-										process="@this" />
+									<p:ajax listener="#{probandAddressBean.handleZipCodeSelect}"
+										event="itemSelect" process="@this" />
+									<p:ajax event="blur" process="@this" />
 								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="zipCode">
-									<h:outputText
-										value="#{probandlabels.zip_code_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="zipCode">
+									<h:outputText value="#{probandlabels.zip_code_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -349,16 +292,12 @@
 							<h:outputLabel value="" />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="streetName"
-								value="#{probandlabels.street_name_label}" />
+								for="streetName" value="#{probandlabels.street_name_label}" />
 							<h:panelGroup>
-								<p:autoComplete
-									id="streetName"
+								<p:autoComplete id="streetName"
 									value="#{probandAddressBean.in.streetName}"
-									forceSelection="#{probandAddressBean.strict}"
-									required="false"
-									label="#{probandlabels.street_name}"
-									styleClass="ctsms-control"
+									forceSelection="#{probandAddressBean.strict}" required="false"
+									label="#{probandlabels.street_name}" styleClass="ctsms-control"
 									minQueryLength="#{autoCompleteMinQueryLengthStreetName}"
 									maxResults="#{autoCompleteMaxResultsStreetName}"
 									queryDelay="#{autoCompleteQueryDelayStreetName}"
@@ -366,132 +305,88 @@
 									global="#{autoCompleteGlobalStreetName}"
 									scrollHeight="#{autoCompleteScrollHeightStreetName}"
 									completeMethod="#{probandAddressBean.completeStreetName}">
-									<p:ajax
-										listener="#{probandAddressBean.handleStreetNameSelect}"
-										event="itemSelect"
-										process="@this" />
-									<p:ajax
-										event="blur"
-										process="@this" />
+									<p:ajax listener="#{probandAddressBean.handleStreetNameSelect}"
+										event="itemSelect" process="@this" />
+									<p:ajax event="blur" process="@this" />
 								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="streetName">
-									<h:outputText
-										value="#{probandlabels.street_name_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="streetName">
+									<h:outputText value="#{probandlabels.street_name_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="streetName" />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="houseNumber"
-								value="#{probandlabels.house_number_label}" />
+								for="houseNumber" value="#{probandlabels.house_number_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="houseNumber"
-									value="#{probandAddressBean.in.houseNumber}"
-									required="true"
+								<p:inputText id="houseNumber"
+									value="#{probandAddressBean.in.houseNumber}" required="true"
 									label="#{probandlabels.house_number}"
 									styleClass="ctsms-control-smaller" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="houseNumber">
-									<h:outputText
-										value="#{probandlabels.house_number_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="houseNumber">
+									<h:outputText value="#{probandlabels.house_number_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="houseNumber" />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="entrance"
-								value="#{probandlabels.entrance_label}" />
+								for="entrance" value="#{probandlabels.entrance_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="entrance"
-									value="#{probandAddressBean.in.entrance}"
-									required="false"
+								<p:inputText id="entrance"
+									value="#{probandAddressBean.in.entrance}" required="false"
 									label="#{probandlabels.entrance}"
 									styleClass="ctsms-control-smaller" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="entrance">
-									<h:outputText
-										value="#{probandlabels.entrance_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="entrance">
+									<h:outputText value="#{probandlabels.entrance_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="entrance" />
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="doorNumber"
-								value="#{probandlabels.door_number_label}" />
+								for="doorNumber" value="#{probandlabels.door_number_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="doorNumber"
-									value="#{probandAddressBean.in.doorNumber}"
-									required="false"
+								<p:inputText id="doorNumber"
+									value="#{probandAddressBean.in.doorNumber}" required="false"
 									label="#{probandlabels.door_number}"
 									styleClass="ctsms-control-smaller" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="doorNumber">
-									<h:outputText
-										value="#{probandlabels.door_number_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="doorNumber">
+									<h:outputText value="#{probandlabels.door_number_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="doorNumber" />
 							<h:outputLabel
-								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="careOf"
+								styleClass="ctsms-field-icon ctsms-icon-encryption" for="careOf"
 								value="#{probandlabels.care_of_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="careOf"
-									value="#{probandAddressBean.in.careOf}"
-									required="false"
-									label="#{probandlabels.care_of}"
+								<p:inputText id="careOf" value="#{probandAddressBean.in.careOf}"
+									required="false" label="#{probandlabels.care_of}"
 									styleClass="ctsms-control" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="careOf">
-									<h:outputText
-										value="#{probandlabels.care_of_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="careOf">
+									<h:outputText value="#{probandlabels.care_of_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="careOf" />
-							<h:outputLabel
-								for="deliver"
+							<h:outputLabel for="deliver"
 								value="#{probandlabels.deliver_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="deliver"
-									widgetVar="addressDeliver"
+								<p:selectBooleanCheckbox id="deliver" widgetVar="addressDeliver"
 									value="#{probandAddressBean.in.deliver}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="deliver">
-									<h:outputText
-										value="#{probandlabels.deliver_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="deliver">
+									<h:outputText value="#{probandlabels.deliver_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="deliver" />
-							<h:outputLabel
-								for="afnus"
-								value="#{probandlabels.afnus_label}" />
+							<h:outputLabel for="afnus" value="#{probandlabels.afnus_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="afnus"
+								<p:selectBooleanCheckbox id="afnus"
 									value="#{probandAddressBean.in.afnus}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="afnus">
-									<h:outputText
-										value="#{probandlabels.afnus_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="afnus">
+									<h:outputText value="#{probandlabels.afnus_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -501,66 +396,51 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{probandAddressBean.created ? probandAddressBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{probandAddressBean.reset}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="probandaddress_list,probandaddress_input" />
-								<p:commandButton
-									process="@this,probandaddress_input"
-									id="add"
+								<p:commandButton process="@this,probandaddress_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{probandAddressBean.add}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!probandAddressBean.createable}"
 									update="probandaddress_list,probandaddress_input" />
-								<p:commandButton
-									process="@this,probandaddress_input"
-									id="update"
-									value="#{labels.update_button_label}"
+								<p:commandButton process="@this,probandaddress_input"
+									id="update" value="#{labels.update_button_label}"
 									actionListener="#{probandAddressBean.update}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!probandAddressBean.editable}"
 									update="probandaddress_list,probandaddress_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{probandAddressBean.delete}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!probandAddressBean.removable}"
 									update="probandaddress_list,probandaddress_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{probandAddressBean.load}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!probandAddressBean.created}"
 									update="probandaddress_list,probandaddress_input" />
-								<p:commandButton
-									immediate="true"
-									ajax="false"
+								<p:commandButton immediate="true" ajax="false"
 									disabled="#{!probandAddressBean.person}"
 									value="#{probandlabels.open_proband_letters_button_label}"
 									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{probandAddressBean.probandLettersPdfStreamedContent}" />
+									<p:fileDownload
+										value="#{probandAddressBean.probandLettersPdfStreamedContent}" />
 								</p:commandButton>
 							</p:toolbarGroup>
 							<p:separator />
@@ -571,23 +451,17 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="addressDeliverPresetOverrideConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{probandlabels.proband_address_deliver_preset_override_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					value="#{labels.yes_button_label}"
-					onclick="setAddressDeliver(true)"
-					type="button" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="setAddressDeliver(false)"
-					type="button" />
+				<p:commandButton value="#{labels.yes_button_label}"
+					onclick="setAddressDeliver(true)" type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="setAddressDeliver(false)" type="button" />
 			</p:confirmDialog>
 		</h:form>
 	</ui:composition>

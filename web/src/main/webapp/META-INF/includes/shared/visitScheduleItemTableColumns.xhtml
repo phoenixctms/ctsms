@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,23 +9,25 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:column
-			filterBy="#{visitScheduleItem.vo.visit.type.id}"
-			filterOptions="#{sessionScopeBean.filterVisitTypes}"> <!-- sortBy="#{visitScheduleItem.vo.visit.type}" -->
+		<p:column filterBy="#{visitScheduleItem.vo.visit.type.id}"
+			filterOptions="#{sessionScopeBean.filterVisitTypes}">
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.visitschedule_list_visit_type_column}" />
+				<h:outputText
+					value="#{triallabels.visitschedule_list_visit_type_column}" />
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.visit.type.name}" />
 		</p:column>
 		<p:column sortBy="#{visitScheduleItem.vo.group.id}">
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.visitschedule_list_group_token_column}" />
+				<h:outputText
+					value="#{triallabels.visitschedule_list_group_token_column}" />
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.group.token}" />
 		</p:column>
 		<p:column sortBy="#{visitScheduleItem.vo.visit.id}">
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.visitschedule_list_visit_token_column}" />
+				<h:outputText
+					value="#{triallabels.visitschedule_list_visit_token_column}" />
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.visit.token}" />
 		</p:column>
@@ -42,7 +43,8 @@
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.start}">
 				<f:converter converterId="ctsms.DateTime" />
-				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+				<f:attribute name="timeZone"
+					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 		<p:column sortBy="#{visitScheduleItem.vo.stop}">
@@ -51,7 +53,8 @@
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.stop}">
 				<f:converter converterId="ctsms.DateTime" />
-				<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+				<f:attribute name="timeZone"
+					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
 	</ui:composition>

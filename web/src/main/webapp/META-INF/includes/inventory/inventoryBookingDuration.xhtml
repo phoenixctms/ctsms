@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,63 +10,36 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventorybookingduration_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeInventoryBookingDuration"
-				actionListener="#{inventoryBookingDurationBean.change(inventoryBean.in.id)}"
-				update=":tabView:inventorybookingduration_form:bookingDurationSummaryDataTable" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<ui:include src="../shared/bookingDurationSummaryTable.xhtml">
-					<ui:param
-						name="bookingDurationSummaryModel"
+					<ui:param name="bookingDurationSummaryModel"
 						value="#{inventoryBookingDurationBean.bookingDurationModel}" />
-					<ui:param
-						name="namingContainer"
+					<ui:param name="namingContainer"
 						value=":tabView:inventorybookingduration_form" />
-					<ui:param
-						name="showInventory"
-						value="false" />
-					<ui:param
-						name="showProband"
-						value="true" />
-					<ui:param
-						name="showCourse"
-						value="true" />
-					<ui:param
-						name="showTrial"
-						value="true" />
-					<ui:param
-						name="dataTableRows"
-						value="#{dataTablesRowsFullPageTab}" />
-					<ui:param
-						name="dataTablePaginator"
+					<ui:param name="showInventory" value="false" />
+					<ui:param name="showProband" value="true" />
+					<ui:param name="showCourse" value="true" />
+					<ui:param name="showTrial" value="true" />
+					<ui:param name="dataTableRows" value="#{dataTablesRowsFullPageTab}" />
+					<ui:param name="dataTablePaginator"
 						value="#{dataTablesPaginatorFullPageTab}" />
-					<ui:param
-						name="dataTablePaginatorTemplate"
+					<ui:param name="dataTablePaginatorTemplate"
 						value="#{dataTablesPaginatorTemplateFullPageTab}" />
-					<ui:param
-						name="dataTableRowsPerPageTemplate"
+					<ui:param name="dataTableRowsPerPageTemplate"
 						value="#{dataTablesRowsPerPageTemplateFullPageTab}" />
-					<ui:param
-						name="dataTablePaginatorPosition"
+					<ui:param name="dataTablePaginatorPosition"
 						value="#{dataTablesPaginatorPositionFullPageTab}" />
-					<ui:param
-						name="dataTablePageLinks"
+					<ui:param name="dataTablePageLinks"
 						value="#{dataTablesPageLinksFullPageTab}" />
-					<ui:param
-						name="dataTablePaginatorAlwaysVisible"
+					<ui:param name="dataTablePaginatorAlwaysVisible"
 						value="#{dataTablesPaginatorAlwaysVisibleFullPageTab}" />
-					<ui:param
-						name="dataTableScrollable"
+					<ui:param name="dataTableScrollable"
 						value="#{dataTablesScrollableFullPageTab}" />
-					<ui:param
-						name="dataTableScrollHeight"
+					<ui:param name="dataTableScrollHeight"
 						value="#{dataTablesScrollHeightFullPageTab}" />
-					<ui:param
-						name="dataTableResizableColumns"
+					<ui:param name="dataTableResizableColumns"
 						value="#{dataTablesResizableColumnsFullPageTab}" />
 				</ui:include>
 			</h:panelGrid>

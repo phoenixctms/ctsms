@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,216 +9,175 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:remoteCommand
-			process="@this"
-			name="#{openAuditTrailRemoteCommand}"
+		<p:remoteCommand process="@this" name="#{openAuditTrailRemoteCommand}"
 			actionListener="#{auditTrailBean.changeAuditTrail()}"
 			oncomplete="handleUpdateAuditTrailTabTitles(xhr, status, args);#{auditTrailDialog}.show()"
 			update="audit_trial_dialog" />
-		<p:dialog
-			widgetVar="#{auditTrailDialog}"
-			modal="true"
+		<p:dialog widgetVar="#{auditTrailDialog}" modal="true"
 			id="audit_trial_dialog"
-			header="#{auditTrailBean.auditTrailFieldLabel}"
-			width="950"
-			showEffect="#{effect}"
-			hideEffect="#{effect}">
-			<p:tabView
-				widgetVar="auditTrailTabView"
-				activeIndex="2"
+			header="#{auditTrailBean.auditTrailFieldLabel}" width="950"
+			showEffect="#{effect}" hideEffect="#{effect}">
+			<p:tabView widgetVar="auditTrailTabView" activeIndex="2"
 				id="auditTrailTabView">
-			
-			<p:tab title="#{labels.audit_trail_tab_title_1}#{auditTrailBean.auditTrailModel.rowCount}#{labels.audit_trail_tab_title_2}">
-			
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-content-panelgrid">
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
-						rows="#{dataTablesRowsAuditTrail}"
-						paginator="#{dataTablesPaginatorAuditTrail}"
-						paginatorTemplate="#{dataTablesPaginatorTemplateAuditTrail}"
-						rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateAuditTrail}"
-						paginatorPosition="#{dataTablesPaginatorPositionAuditTrail}"
-						pageLinks="#{dataTablesPageLinksAuditTrail}"
-						paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleAuditTrail}"
-						scrollable="#{dataTablesScrollableAuditTrail}"
-						scrollHeight="#{dataTablesScrollHeightAuditTrail}"
-						resizableColumns="#{dataTablesResizableColumnsAuditTrail}"
-						sortBy="#{fieldValue.vo.id}"
-						sortOrder="descending"
-						emptyMessage="#{labels.datatable_permission_empty_message}"
-						var="fieldValue"
-						value="#{auditTrailBean.auditTrailModel}"
-						id="field_value_list">
-						<f:facet name="header">
-							<h:outputText value="#{auditTrailBean.auditTrailModel.rowCount} #{labels.audit_trail_list_header}" />
-						</f:facet>
-						<p:column style="width:16px;">
-							<p:rowToggler rendered="#{!empty fieldValue.vo.changeComment}" />
-						</p:column>
-						<p:column sortBy="#{fieldValue.vo.id}">
-							<f:facet name="header">
-								<h:outputText value="#{labels.id_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldValue.vo.id}" />
-						</p:column>
-						<p:column sortBy="#{fieldValue.vo.version}">
-							<f:facet name="header">
-								<h:outputText value="#{labels.audit_trail_list_version_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldValue.vo.version}" />
-						</p:column>
-						<p:column>
-							<f:facet name="header">
-								<h:outputText value="#{labels.audit_trail_list_value_column}" />
-							</f:facet>
-							<h:outputText value="#{applicationScopeBean.getAuditTrailFieldValueString(fieldValue.vo)}" />
-						</p:column>
 
-						<p:column sortBy="#{fieldValue.vo.modifiedUser.name}">
+				<p:tab
+					title="#{labels.audit_trail_tab_title_1}#{auditTrailBean.auditTrailModel.rowCount}#{labels.audit_trail_tab_title_2}">
+
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-content-panelgrid">
+						<p:dataTable styleClass="ctsms-datatable" lazy="true"
+							rows="#{dataTablesRowsAuditTrail}"
+							paginator="#{dataTablesPaginatorAuditTrail}"
+							paginatorTemplate="#{dataTablesPaginatorTemplateAuditTrail}"
+							rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateAuditTrail}"
+							paginatorPosition="#{dataTablesPaginatorPositionAuditTrail}"
+							pageLinks="#{dataTablesPageLinksAuditTrail}"
+							paginatorAlwaysVisible="#{dataTablesPaginatorAlwaysVisibleAuditTrail}"
+							scrollable="#{dataTablesScrollableAuditTrail}"
+							scrollHeight="#{dataTablesScrollHeightAuditTrail}"
+							resizableColumns="#{dataTablesResizableColumnsAuditTrail}"
+							sortBy="#{fieldValue.vo.id}" sortOrder="descending"
+							emptyMessage="#{labels.datatable_permission_empty_message}"
+							var="fieldValue" value="#{auditTrailBean.auditTrailModel}"
+							id="field_value_list">
 							<f:facet name="header">
-								<h:outputText value="#{labels.audit_trail_list_user_column}" />
+								<h:outputText
+									value="#{auditTrailBean.auditTrailModel.rowCount} #{labels.audit_trail_list_header}" />
 							</f:facet>
-							<h:outputText value="#{applicationScopeBean.getIdentityString(fieldValue.vo.modifiedUser)} " />
-						</p:column>
-						
-												<p:column sortBy="#{fieldValue.vo.modifiedTimestamp}">
-							<f:facet name="header">
-								<h:outputText value="#{labels.audit_trail_list_timestamp_column}" />
-							</f:facet>
-							<h:outputText value="#{fieldValue.vo.modifiedTimestamp}">
-								<f:converter converterId="ctsms.DateTime" />
-								<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-							</h:outputText>
-						</p:column>
-						<p:rowExpansion>
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
-								rendered="#{!empty fieldValue.vo.changeComment}"
-								styleClass="ctsms-rowexpansion-panelgrid"
-								columnClasses="ctsms-audittrail-left-column,ctsms-audittrail-right-column">
-								<h:panelGrid
-									columns="1"
-									cellpadding="2"
-									columnClasses="ctsms-label-for-text-column-bold">
-									<h:outputFormat value="#{fieldValue.vo.version > 0 ? labels.audit_trail_updated_title_label : labels.audit_trail_created_title_label}">
-										<f:param value="#{auditTrailBean.auditTrailFieldShortLabel}" />
-										<f:param value="#{fieldValue.vo.version}" />
-									</h:outputFormat>
-									<h:panelGrid
-										columns="2"
-										cellpadding="2"
-										columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
-										<h:outputLabel value="#{labels.audit_trail_proband_label}" />
-										<h:outputText value="#{auditTrailBean.auditTrailProbandName}" />
-										<h:outputLabel value="#{labels.audit_trail_user_label}" />
-										<h:outputText value="#{applicationScopeBean.getIdentityString(fieldValue.vo.modifiedUser)}" />
-										<h:outputLabel value="#{labels.audit_trail_timestamp_label}" />
-										<h:outputText value="#{fieldValue.vo.modifiedTimestamp}">
-											<f:converter converterId="ctsms.DateTime" />
-											<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-										</h:outputText>
+							<p:column style="width:16px;">
+								<p:rowToggler rendered="#{!empty fieldValue.vo.changeComment}" />
+							</p:column>
+							<p:column sortBy="#{fieldValue.vo.id}">
+								<f:facet name="header">
+									<h:outputText value="#{labels.id_column}" />
+								</f:facet>
+								<h:outputText value="#{fieldValue.vo.id}" />
+							</p:column>
+							<p:column sortBy="#{fieldValue.vo.version}">
+								<f:facet name="header">
+									<h:outputText value="#{labels.audit_trail_list_version_column}" />
+								</f:facet>
+								<h:outputText value="#{fieldValue.vo.version}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{labels.audit_trail_list_value_column}" />
+								</f:facet>
+								<h:outputText
+									value="#{applicationScopeBean.getAuditTrailFieldValueString(fieldValue.vo)}" />
+							</p:column>
+
+							<p:column sortBy="#{fieldValue.vo.modifiedUser.name}">
+								<f:facet name="header">
+									<h:outputText value="#{labels.audit_trail_list_user_column}" />
+								</f:facet>
+								<h:outputText
+									value="#{applicationScopeBean.getIdentityString(fieldValue.vo.modifiedUser)} " />
+							</p:column>
+
+							<p:column sortBy="#{fieldValue.vo.modifiedTimestamp}">
+								<f:facet name="header">
+									<h:outputText
+										value="#{labels.audit_trail_list_timestamp_column}" />
+								</f:facet>
+								<h:outputText value="#{fieldValue.vo.modifiedTimestamp}">
+									<f:converter converterId="ctsms.DateTime" />
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								</h:outputText>
+							</p:column>
+							<p:rowExpansion>
+								<h:panelGrid columns="2" cellpadding="0"
+									rendered="#{!empty fieldValue.vo.changeComment}"
+									styleClass="ctsms-rowexpansion-panelgrid"
+									columnClasses="ctsms-audittrail-left-column,ctsms-audittrail-right-column">
+									<h:panelGrid columns="1" cellpadding="2"
+										columnClasses="ctsms-label-for-text-column-bold">
+										<h:outputFormat
+											value="#{fieldValue.vo.version > 0 ? labels.audit_trail_updated_title_label : labels.audit_trail_created_title_label}">
+											<f:param value="#{auditTrailBean.auditTrailFieldShortLabel}" />
+											<f:param value="#{fieldValue.vo.version}" />
+										</h:outputFormat>
+										<h:panelGrid columns="2" cellpadding="2"
+											columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
+											<h:outputLabel value="#{labels.audit_trail_proband_label}" />
+											<h:outputText value="#{auditTrailBean.auditTrailProbandName}" />
+											<h:outputLabel value="#{labels.audit_trail_user_label}" />
+											<h:outputText
+												value="#{applicationScopeBean.getIdentityString(fieldValue.vo.modifiedUser)}" />
+											<h:outputLabel value="#{labels.audit_trail_timestamp_label}" />
+											<h:outputText value="#{fieldValue.vo.modifiedTimestamp}">
+												<f:converter converterId="ctsms.DateTime" />
+												<f:attribute name="timeZone"
+													value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+											</h:outputText>
+										</h:panelGrid>
+										<h:outputLabel rendered="#{fieldValue.vo.version > 0}"
+											value="#{labels.audit_trail_reason_for_change_label}" />
+										<h:panelGrid columns="1"
+											rendered="#{not empty fieldValue.vo.reasonForChange}"
+											cellpadding="2" columnClasses="ctsms-text-column-bold">
+											<ui:include src="multiLineOutputText.xhtml">
+												<ui:param name="multiLineText"
+													value="#{fieldValue.vo.reasonForChange}" />
+												<ui:param name="rendered"
+													value="#{fieldValue.vo.version > 0}" />
+												<ui:param name="multiLineTextClass" value="" />
+												<ui:param name="escapeHtml" value="true" />
+											</ui:include>
+										</h:panelGrid>
 									</h:panelGrid>
-									<h:outputLabel rendered="#{fieldValue.vo.version > 0}" value="#{labels.audit_trail_reason_for_change_label}" />
-									<h:panelGrid
-										columns="1"
-										rendered="#{not empty fieldValue.vo.reasonForChange}"
-										cellpadding="2"
+									<h:panelGrid columns="1" cellpadding="2"
 										columnClasses="ctsms-text-column-bold">
 										<ui:include src="multiLineOutputText.xhtml">
-											<ui:param
-												name="multiLineText"
-												value="#{fieldValue.vo.reasonForChange}" />
-											<ui:param
-												name="rendered"
-												value="#{fieldValue.vo.version > 0}" />
-											<ui:param
-												name="multiLineTextClass"
-												value="" />
-											<ui:param
-												name="escapeHtml"
-												value="true" />
+											<ui:param name="multiLineText"
+												value="#{fieldValue.vo.changeComment}" />
+											<ui:param name="rendered" value="true" />
+											<ui:param name="multiLineTextClass" value="" />
+											<ui:param name="escapeHtml"
+												value="#{!applicationScopeBean.htmlAuditTrailChangeComments}" />
 										</ui:include>
 									</h:panelGrid>
 								</h:panelGrid>
-								<h:panelGrid
-									columns="1"
-									cellpadding="2"
-									columnClasses="ctsms-text-column-bold">
-									<ui:include src="multiLineOutputText.xhtml">
-										<ui:param
-											name="multiLineText"
-											value="#{fieldValue.vo.changeComment}" />
-										<ui:param
-											name="rendered"
-											value="true" />
-										<ui:param
-											name="multiLineTextClass"
-											value="" />
-										<ui:param
-											name="escapeHtml"
-											value="#{!applicationScopeBean.htmlAuditTrailChangeComments}" />
-									</ui:include>
-								</h:panelGrid>
-							</h:panelGrid>
-						</p:rowExpansion>
-					</p:dataTable>
-				</h:panelGrid>
-			
-			</p:tab>
-			
-			
-			
-			<ui:include src="ecrfFieldStatusEntryTab.xhtml">
-				<ui:param
-					name="reloadEcrf"
-					value="#{auditTrailBean.ecrfStatus.status.valueLockdown and !auditTrailBean.ecrfStatus.status.fieldStatusLockdown and auditTrailBean.auditTrialEcrfField.series and !auditTrailBean.ecrfFieldValueBean.sectionCreatedMap[auditTrailBean.ecrfFieldValidationStatusEntryBean.section]}" />	
-				<ui:param
-					name="ecrfFieldStatusEntryBean"
-					value="#{auditTrailBean.ecrfFieldValidationStatusEntryBean}" />
-				<ui:param
-					name="namingContainer"
-					value="#{namingContainer}:auditTrailTabView" />
-				<!-- <ui:param
-					name="updateOnComplete"
-					value="handleUpdateAuditTrailTabTitles(xhr, status, args);try{reloadEcrfField_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.listEntryId}_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.ecrfFieldId}_#{empty ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index ? 'null' : ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index}();}catch(e){;}#{refreshEcrfProgressRemoteCommand}()" /> -->						
-			</ui:include>			
-			
-			<ui:include src="ecrfFieldStatusEntryTab.xhtml">
-				<ui:param
-					name="reloadEcrf"
-					value="#{auditTrailBean.ecrfStatus.status.valueLockdown and !auditTrailBean.ecrfStatus.status.fieldStatusLockdown and auditTrailBean.auditTrialEcrfField.series and !auditTrailBean.ecrfFieldValueBean.sectionCreatedMap[auditTrailBean.ecrfFieldQueryStatusEntryBean.section]}" />	
-				<ui:param
-					name="ecrfFieldStatusEntryBean"
-					value="#{auditTrailBean.ecrfFieldQueryStatusEntryBean}" />
-				<ui:param
-					name="namingContainer"
-					value="#{namingContainer}:auditTrailTabView" />
-				<!-- <ui:param
-					name="updateOnComplete"
-					value="handleUpdateAuditTrailTabTitles(xhr, status, args);try{reloadEcrfField_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.listEntryId}_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.ecrfFieldId}_#{empty ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index ? 'null' : ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index}();}catch(e){;}#{refreshEcrfProgressRemoteCommand}()" /> -->						
-			</ui:include>			
-			
-			
-			<ui:include src="ecrfFieldStatusEntryTab.xhtml">
-				<ui:param
-					name="reloadEcrf"
-					value="#{auditTrailBean.ecrfStatus.status.valueLockdown and !auditTrailBean.ecrfStatus.status.fieldStatusLockdown and auditTrailBean.auditTrialEcrfField.series and !auditTrailBean.ecrfFieldValueBean.sectionCreatedMap[auditTrailBean.ecrfFieldAnnotationStatusEntryBean.section]}" />
-				<ui:param
-					name="ecrfFieldStatusEntryBean"
-					value="#{auditTrailBean.ecrfFieldAnnotationStatusEntryBean}" />
-				<ui:param
-					name="namingContainer"
-					value="#{namingContainer}:auditTrailTabView" />
-				<!-- <ui:param
-					name="updateOnComplete"
-					value="handleUpdateAuditTrailTabTitles(xhr, status, args);try{reloadEcrfField_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.listEntryId}_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.ecrfFieldId}_#{empty ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index ? 'null' : ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.index}();}catch(e){;}#{refreshEcrfProgressRemoteCommand}()" /> -->						
-			</ui:include>
-			
+							</p:rowExpansion>
+						</p:dataTable>
+					</h:panelGrid>
+
+				</p:tab>
+
+
+
+				<ui:include src="ecrfFieldStatusEntryTab.xhtml">
+					<ui:param name="reloadEcrf"
+						value="#{auditTrailBean.ecrfStatus.status.valueLockdown and !auditTrailBean.ecrfStatus.status.fieldStatusLockdown and auditTrailBean.auditTrialEcrfField.series and !auditTrailBean.ecrfFieldValueBean.sectionCreatedMap[auditTrailBean.ecrfFieldValidationStatusEntryBean.section]}" />
+					<ui:param name="ecrfFieldStatusEntryBean"
+						value="#{auditTrailBean.ecrfFieldValidationStatusEntryBean}" />
+					<ui:param name="namingContainer"
+						value="#{namingContainer}:auditTrailTabView" />
+
+				</ui:include>
+
+				<ui:include src="ecrfFieldStatusEntryTab.xhtml">
+					<ui:param name="reloadEcrf"
+						value="#{auditTrailBean.ecrfStatus.status.valueLockdown and !auditTrailBean.ecrfStatus.status.fieldStatusLockdown and auditTrailBean.auditTrialEcrfField.series and !auditTrailBean.ecrfFieldValueBean.sectionCreatedMap[auditTrailBean.ecrfFieldQueryStatusEntryBean.section]}" />
+					<ui:param name="ecrfFieldStatusEntryBean"
+						value="#{auditTrailBean.ecrfFieldQueryStatusEntryBean}" />
+					<ui:param name="namingContainer"
+						value="#{namingContainer}:auditTrailTabView" />
+
+				</ui:include>
+
+
+				<ui:include src="ecrfFieldStatusEntryTab.xhtml">
+					<ui:param name="reloadEcrf"
+						value="#{auditTrailBean.ecrfStatus.status.valueLockdown and !auditTrailBean.ecrfStatus.status.fieldStatusLockdown and auditTrailBean.auditTrialEcrfField.series and !auditTrailBean.ecrfFieldValueBean.sectionCreatedMap[auditTrailBean.ecrfFieldAnnotationStatusEntryBean.section]}" />
+					<ui:param name="ecrfFieldStatusEntryBean"
+						value="#{auditTrailBean.ecrfFieldAnnotationStatusEntryBean}" />
+					<ui:param name="namingContainer"
+						value="#{namingContainer}:auditTrailTabView" />
+
+				</ui:include>
+
 			</p:tabView>
 		</p:dialog>
 	</ui:composition>

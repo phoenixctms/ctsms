@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,9 @@
 <h:body>
 	<ui:composition>
 		<h:form id="useractivity_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeUserActivity"
-				actionListener="#{userActivityBean.change(userBean.in.id)}"
-				update="useractivity_list" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsFullPageTab}"
 					paginator="#{dataTablesPaginatorFullPageTab}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -33,26 +23,21 @@
 					scrollable="#{dataTablesScrollableFullPageTab}"
 					scrollHeight="#{dataTablesScrollHeightFullPageTab}"
 					resizableColumns="#{dataTablesResizableColumnsFullPageTab}"
-					sortBy="#{journalEntry.vo.id}"
-					sortOrder="descending"
+					sortBy="#{journalEntry.vo.id}" sortOrder="descending"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="journalEntry"
-					value="#{userActivityBean.userActivityModel}"
+					var="journalEntry" value="#{userActivityBean.userActivityModel}"
 					id="useractivity_list"
 					rowStyleClass="#{applicationScopeBean.journalEntryToColor(journalEntry.vo)}#{rowBgColorAlpha}">
 					<f:facet name="header">
-						<h:panelGrid
-							columns="3"
-							cellpadding="0"
+						<h:panelGrid columns="3" cellpadding="0"
 							columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-							<h:outputText value="#{userActivityBean.userActivityModel.rowCount} #{userlabels.user_activity_useractivity_list_header}" />
+							<h:outputText
+								value="#{userActivityBean.userActivityModel.rowCount} #{userlabels.user_activity_useractivity_list_header}" />
 							<ui:include src="../shared/ajaxStatus.xhtml" />
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								actionListener="#{userActivityBean.refresh}"
 								title="#{labels.update_datatable_button_title}"
-								icon="ui-icon-refresh"
-								styleClass="ctsms-list-header-button"
+								icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 								ajax="true"
 								update=":tabView:useractivity_form:useractivity_list" />
 						</h:panelGrid>
@@ -66,157 +51,125 @@
 						</f:facet>
 						<h:outputText value="#{journalEntry.vo.id}" />
 					</p:column>
-					<p:column
-						sortBy="#{journalEntry.vo.systemMessage}"
+					<p:column sortBy="#{journalEntry.vo.systemMessage}"
 						filterBy="#{journalEntry.vo.systemMessage}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_system_message_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_system_message_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{journalEntry.vo.systemMessage}" />
+							<ui:param name="value" value="#{journalEntry.vo.systemMessage}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_title_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_title_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
+							<ui:param name="label"
 								value="#{journalEntry.vo.decrypted ? journalEntry.vo.title : labels.encrypted_journal_entry_title}" />
-							<ui:param
-								name="icon"
+							<ui:param name="icon"
 								value="#{journalEntry.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
-							<ui:param
-								name="rendered"
+							<ui:param name="rendered"
 								value="#{userActivityBean.isJournalEntryEncrypted(journalEntry.vo)}" />
 						</ui:include>
 						<h:outputText
 							rendered="#{!userActivityBean.isJournalEntryEncrypted(journalEntry.vo)}"
 							value="#{journalEntry.vo.title}" />
 					</p:column>
-					<p:column
-						sortBy="#{journalEntry.vo.realTimestamp}"
+					<p:column sortBy="#{journalEntry.vo.realTimestamp}"
 						filterBy="#{journalEntry.vo.realTimestamp}">
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_real_timestamp_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_real_timestamp_column}" />
 						</f:facet>
 						<h:outputText value="#{journalEntry.vo.realTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
-					<p:column
-						filterBy="#{journalEntry.vo.systemMessageModule}"
+					<p:column filterBy="#{journalEntry.vo.systemMessageModule}"
 						filterOptions="#{userActivityBean.filterJournalModules}">
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_system_message_entity_name_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_system_message_entity_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
+							<ui:param name="label"
 								value="#{journalEntry.vo.systemMessage ? userActivityBean.getEntityName(journalEntry.vo) : ''}" />
-							<ui:param
-								name="icon"
+							<ui:param name="icon"
 								value="#{userActivityBean.getEntityNodeStyleClass(journalEntry.vo)}" />
-							<ui:param
-								name="rendered"
+							<ui:param name="rendered"
 								value="#{journalEntry.vo.systemMessage}" />
 						</ui:include>
 					</p:column>
-					<p:column
-						sortBy="#{journalEntry.vo.category}"
+					<p:column sortBy="#{journalEntry.vo.category}"
 						filterBy="#{journalEntry.vo.category.id}"
 						filterOptions="#{userActivityBean.filterCategories}">
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_category_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_category_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{journalEntry.vo.category.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{journalEntry.vo.category.name}" />
+							<ui:param name="icon"
 								value="#{journalEntry.vo.category.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
+							<ui:param name="rendered"
 								value="#{!journalEntry.vo.systemMessage}" />
 						</ui:include>
 					</p:column>
-					<p:column
-						filterBy="#{journalEntry.vo.category.module}"
+					<p:column filterBy="#{journalEntry.vo.category.module}"
 						filterOptions="#{userActivityBean.filterJournalModules}">
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_user_message_entity_name_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_user_message_entity_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
+							<ui:param name="label"
 								value="#{journalEntry.vo.systemMessage ? '' : userActivityBean.getEntityName(journalEntry.vo)}" />
-							<ui:param
-								name="icon"
+							<ui:param name="icon"
 								value="#{userActivityBean.getEntityNodeStyleClass(journalEntry.vo)}" />
-							<ui:param
-								name="rendered"
+							<ui:param name="rendered"
 								value="#{!journalEntry.vo.systemMessage}" />
 						</ui:include>
 					</p:column>
-					<p:column
-						filterBy="#{journalEntry.vo.criteria.module}"
+					<p:column filterBy="#{journalEntry.vo.criteria.module}"
 						filterOptions="#{userActivityBean.filterDbModules}">
 						<f:facet name="header">
-							<h:outputText value="#{userlabels.user_activity_useractivity_list_criteria_name_column}" />
+							<h:outputText
+								value="#{userlabels.user_activity_useractivity_list_criteria_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
+							<ui:param name="label"
 								value="#{userActivityBean.getCriteriaName(journalEntry.vo)}" />
-							<ui:param
-								name="icon"
-								value="ctsms-icon-search" />
-							<ui:param
-								name="rendered"
-								value="#{!empty label}" />
+							<ui:param name="icon" value="ctsms-icon-search" />
+							<ui:param name="rendered" value="#{!empty label}" />
 						</ui:include>
 					</p:column>
 					<p:column style="width:32px;">
-						<p:commandButton
-							title="#{userlabels.open_entity_button_label}"
-							type="button"
-							disabled="false"
-							icon="ui-icon ui-icon-extlink"
+						<p:commandButton title="#{userlabels.open_entity_button_label}"
+							type="button" disabled="false" icon="ui-icon ui-icon-extlink"
 							onclick="#{userActivityBean.getOpenEntityJSCall(journalEntry.vo)}" />
 					</p:column>
 					<p:rowExpansion>
 						<ui:include src="../shared/multiLineOutputText.xhtml">
-							<ui:param
-								name="multiLineText"
+							<ui:param name="multiLineText"
 								value="#{journalEntry.vo.decrypted ? journalEntry.vo.comment : labels.encrypted_journal_entry_comment}" />
-							<ui:param
-								name="rendered"
+							<ui:param name="rendered"
 								value="#{!journalEntry.vo.systemMessage}" />
-							<ui:param
-								name="multiLineTextClass"
-								value="" />
-							<ui:param
-								name="escapeHtml"
-								value="true" />
+							<ui:param name="multiLineTextClass" value="" />
+							<ui:param name="escapeHtml" value="true" />
 						</ui:include>
 						<ui:include src="../shared/systemMessage.xhtml">
-							<ui:param
-								name="rendered"
+							<ui:param name="rendered"
 								value="#{journalEntry.vo.systemMessage}" />
-							<ui:param
-								name="timestamp"
+							<ui:param name="timestamp"
 								value="#{journalEntry.vo.realTimestamp}" />
-							<ui:param
-								name="title"
-								value="#{journalEntry.vo.title}" />
-							<ui:param
-								name="comment"
+							<ui:param name="title" value="#{journalEntry.vo.title}" />
+							<ui:param name="comment"
 								value="#{journalEntry.vo.decrypted ? journalEntry.vo.comment : labels.encrypted_journal_entry_comment}" />
 						</ui:include>
 					</p:rowExpansion>

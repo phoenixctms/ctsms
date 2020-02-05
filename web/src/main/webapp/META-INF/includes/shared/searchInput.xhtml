@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,194 +10,130 @@
 </h:head>
 <h:body>
 	<ui:composition>
-					<p:remoteCommand
-						process="@this"
-						name="changeIntermediateSets"
-						actionListener="#{searchBean.updateIntermediateSets}"
-						oncomplete="handleUpdateIntermediateSets(xhr, status, args)"
-						update=":search_form:tabView:criteria_input,:search_form:tabView:intermediate_sets_panel,:search_form:messages" />
-					<p:remoteCommand
-						process="@this"
-						name="changeCriteriaJob"
-						actionListener="#{jobBean.changeCriteria(searchBean.criteriaIn.id, searchBean.jobModule)}"
-						update=":search_form:tabView:job_list,:search_form:tabView:job_input" />
-					<p:remoteCommand
-						process="@this"
-						name="changeCriteriaJournalEntry"
-						actionListener="#{journalBean.changeCriteria(searchBean.criteriaIn.id)}"
-						update=":search_form:tabView:journal_list,:search_form:tabView:journal_input" />
-	
-		<p:remoteCommand
-			process="@this"
-			name="criteriaRowSelect"
+		<p:remoteCommand process="@this" name="changeIntermediateSets"
+			actionListener="#{searchBean.updateIntermediateSets}"
+			oncomplete="handleUpdateIntermediateSets(xhr, status, args)"
+			update=":search_form:tabView:criteria_input,:search_form:tabView:intermediate_sets_panel,:search_form:messages" />
+		<p:remoteCommand process="@this" name="changeCriteriaJob"
+			actionListener="#{jobBean.changeCriteria(searchBean.criteriaIn.id, searchBean.jobModule)}"
+			update=":search_form:tabView:job_list,:search_form:tabView:job_input" />
+		<p:remoteCommand process="@this" name="changeCriteriaJournalEntry"
+			actionListener="#{journalBean.changeCriteria(searchBean.criteriaIn.id)}"
+			update=":search_form:tabView:journal_list,:search_form:tabView:journal_input" />
+
+		<p:remoteCommand process="@this" name="criteriaRowSelect"
 			onstart="#{resultListWidgetVar}.clearFilters()"
 			oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 			actionListener="#{searchBean.changeByRow()}"
 			update=":search_form:tabView:criteria_input,:search_form:criteria_toolbar,:search_form:messages,:search_form:#{searchBean.resultListId}" />
-		<p:remoteCommand
-			process="@this"
-			name="dropCriterionRow"
+		<p:remoteCommand process="@this" name="dropCriterionRow"
 			actionListener="#{searchBean.dropCriterion()}"
 			oncomplete="handleCriterionDropped(xhr, status, args)"
 			update=":search_form:tabView:criterions" />
-		<h:panelGrid
-			columns="2"
-			cellpadding="0"
+		<h:panelGrid columns="2" cellpadding="0"
 			styleClass="ctsms-search-content-panelgrid ctsms-content-panelgrid-maxheight"
 			columnClasses="ctsms-criteria-list-column,ctsms-criteria-input-column">
 			<p:panel styleClass="ctsms-panel-maxheight">
 				<f:facet name="header">
 					<h:outputText value="#{labels.search_saved_queries_label}" />
 				</f:facet>
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-criteria-list-panelgrid"
 					rowClasses="ctsms-criteria-list-filter-row,ctsms-criteria-list-row">
-					<h:panelGrid
-						columns="2"
-						cellpadding="0"
+					<h:panelGrid columns="2" cellpadding="0"
 						columnClasses="ctsms-criteria-list-filter-label-column,ctsms-criteria-list-filter-dropdown-column">
-						<h:outputLabel
-							for="category_filter"
+						<h:outputLabel for="category_filter"
 							value="#{labels.search_category_filter_label}" />
 						<h:panelGroup>
-							<p:selectOneMenu
-								id="category_filter"
-								value="#{searchBean.criteriaModel.category}"
-								required="false"
+							<p:selectOneMenu id="category_filter"
+								value="#{searchBean.criteriaModel.category}" required="false"
 								label="#{labels.search_category_filter}"
 								styleClass="ctsms-criteria-filter-control">
-								<f:selectItem
-									itemLabel="#{labels.no_selection_label}"
+								<f:selectItem itemLabel="#{labels.no_selection_label}"
 									itemValue="#{applicationScopeBean.noSelectionValue}" />
-								<f:selectItems
-									value="#{searchBean.categories}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
-									itemValue="#{selectItem.value}" />
-								<p:ajax
-									process="@this"
-									update="criteria_list"
+								<f:selectItems value="#{searchBean.categories}" var="selectItem"
+									itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
+								<p:ajax process="@this" update="criteria_list"
 									listener="#{searchBean.handleCategoryChange}" />
 							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="category_filter">
-								<h:outputText
-									value="#{labels.search_category_filter_tooltip}"
+							<p:tooltip rendered="#{enableTooltips}" for="category_filter">
+								<h:outputText value="#{labels.search_category_filter_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
 					</h:panelGrid>
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
-						rows="10"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true" rows="10"
 						paginator="true"
 						paginatorTemplate="{PageLinks} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="10,20,50"
-						paginatorPosition="bottom"
-						pageLinks="5"
-						paginatorAlwaysVisible="true"
-						scrollable="false"
-						scrollHeight=""
-						resizableColumns="false"
+						rowsPerPageTemplate="10,20,50" paginatorPosition="bottom"
+						pageLinks="5" paginatorAlwaysVisible="true" scrollable="false"
+						scrollHeight="" resizableColumns="false"
 						sortBy="#{criteria.vo.id}"
 						emptyMessage="#{labels.datatable_permission_empty_message}"
-						var="criteria"
-						value="#{searchBean.criteriaModel}"
+						var="criteria" value="#{searchBean.criteriaModel}"
 						id="criteria_list"
 						rowStyleClass="#{criteria.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{labels.search_criteria_list_header_1} #{empty searchBean.criteriaModel.category ? labels.search_criteria_list_header_2 : searchBean.criteriaModel.category}#{labels.search_criteria_list_header_3} #{searchBean.criteriaModel.rowCount} #{labels.search_criteria_list_header_4}" />
 						</f:facet>
-						<p:column
-							sortBy="#{criteria.vo.id}"
-							style="width:38px;">
+						<p:column sortBy="#{criteria.vo.id}" style="width:38px;">
 							<f:facet name="header">
 								<h:outputText value="#{labels.id_column}" />
 							</f:facet>
-							<span
-								class="ctsms-criterialist-row"
-								onclick="criteriaRowSelect(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('CRITERIA_ID')}:#{criteria.vo.id}}));"> <h:outputText
-									value="#{criteria.vo.id}" />
+							<span class="ctsms-criterialist-row"
+								onclick="criteriaRowSelect(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('CRITERIA_ID')}:#{criteria.vo.id}}));">
+								<h:outputText value="#{criteria.vo.id}" />
 							</span>
 						</p:column>
-						<p:column
-							sortBy="#{criteria.vo.label}"
-							style="width:160px;"
+						<p:column sortBy="#{criteria.vo.label}" style="width:160px;"
 							filterBy="#{criteria.vo.label}">
 							<f:facet name="header">
-								<h:outputText value="#{labels.search_criteria_list_label_column}" />
+								<h:outputText
+									value="#{labels.search_criteria_list_label_column}" />
 							</f:facet>
-							<span
-								class="ctsms-criterialist-row"
-								onclick="criteriaRowSelect(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('CRITERIA_ID')}:#{criteria.vo.id}}));"> <h:outputText
+							<span class="ctsms-criterialist-row"
+								onclick="criteriaRowSelect(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('CRITERIA_ID')}:#{criteria.vo.id}}));">
+								<h:outputText
 									value="#{applicationScopeBean.clipStringMid(criteria.vo.label,36)}" />
 							</span>
 						</p:column>
 					</p:dataTable>
 				</h:panelGrid>
 			</p:panel>
-			<p:tabView
-				id="tabView"
-				
-				widgetVar="searchTabView"
+			<p:tabView id="tabView" widgetVar="searchTabView"
 				onTabChange="handleSearchTabChange(index)"
-				styleClass="ctsms-search-tabview"> <!-- dynamic="true" cache="true" -->
-				<!-- <p:ajax
-					event="tabChange"
-					disabled="#{searchBean.picker}"
-					listener="#{searchBean.onSearchTabViewChange}"
-					process="@none"
-					update="journalMessages" /> -->
-				<p:tab
-					id="searchMain"
-					disabled="false"
+				styleClass="ctsms-search-tabview">
+
+				<p:tab id="searchMain" disabled="false"
 					titleStyleClass="#{!searchBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 					title="#{labels.search_main_tab_label}">
 					<p:panel id="criteria_input">
 						<f:facet name="header">
 							<h:outputText value="#{searchBean.title}" />
 						</f:facet>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-criteria-input-panelgrid"
 							rowClasses="ctsms-input-row,ctsms-input-row,ctsms-textarea-row">
-							<h:panelGrid
-								columns="8"
-								cellpadding="0"
+							<h:panelGrid columns="8" cellpadding="0"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column">
-								<h:outputLabel
-									for="label"
+								<h:outputLabel for="label"
 									value="#{labels.search_query_label_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="label"
-										value="#{searchBean.criteriaIn.label}"
-										required="false"
-										label="#{labels.search_query_label}"
+									<p:inputText id="label" value="#{searchBean.criteriaIn.label}"
+										required="false" label="#{labels.search_query_label}"
 										styleClass="ctsms-control" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="label">
-										<h:outputText
-											value="#{labels.search_query_label_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="label">
+										<h:outputText value="#{labels.search_query_label_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="label" />
-								<h:outputLabel
-									for="category"
+								<h:outputLabel for="category"
 									value="#{labels.search_query_category_label}" />
 								<h:panelGroup>
-									<p:autoComplete
-										id="category"
-										value="#{searchBean.criteriaIn.category}"
-										required="false"
+									<p:autoComplete id="category"
+										value="#{searchBean.criteriaIn.category}" required="false"
 										label="#{labels.search_query_category}"
 										styleClass="ctsms-control"
 										minQueryLength="#{autoCompleteMinQueryLengthCategory}"
@@ -210,78 +145,51 @@
 										completeMethod="#{searchBean.completeCategory}">
 										<p:ajax />
 									</p:autoComplete>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="category">
-										<h:outputText
-											value="#{labels.search_query_category_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="category">
+										<h:outputText value="#{labels.search_query_category_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="category" />
-								<h:outputLabel
-									for="loadByDefault"
+								<h:outputLabel for="loadByDefault"
 									value="#{labels.search_query_loadbydefault_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="loadByDefault"
+									<p:selectBooleanCheckbox id="loadByDefault"
 										value="#{searchBean.criteriaIn.loadByDefault}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="loadByDefault">
+									<p:tooltip rendered="#{enableTooltips}" for="loadByDefault">
 										<h:outputText
 											value="#{labels.search_query_loadbydefault_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 							</h:panelGrid>
-							<p:fieldset
-								id="criterions"
-								toggleable="true"
-								collapsed="false">
+							<p:fieldset id="criterions" toggleable="true" collapsed="false">
 								<f:facet name="legend">
 									<h:outputText value="#{searchBean.criterionsLabel}" />
 								</f:facet>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-criterions-panelgrid"
 									rowClasses="ctsms-criterion-row">
-									<c:forEach
-										var="index"
-										items="#{searchBean.criterionIndexes}">
+									<c:forEach var="index" items="#{searchBean.criterionIndexes}">
 										<ui:include src="criterionRow.xhtml">
-											<ui:param
-												name="index"
-												value="#{index}" />
-											<ui:param
-												name="searchBean"
-												value="#{searchBean}" />
+											<ui:param name="index" value="#{index}" />
+											<ui:param name="searchBean" value="#{searchBean}" />
 										</ui:include>
 									</c:forEach>
 								</h:panelGrid>
 							</p:fieldset>
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
+							<h:panelGrid columns="2" cellpadding="0"
 								columnClasses="ctsms-label-for-criteria-textarea-column,ctsms-criteria-textarea-column">
-								<h:outputLabel
-									for="comment"
+								<h:outputLabel for="comment"
 									styleClass="#{searchBean.markUnEncrypted ? 'ctsms-field-icon ctsms-icon-noencryption' : ''}"
 									value="#{searchBean.markUnEncrypted ? labels.noencryption_warning_short_label : ''}#{labels.search_query_comment_label}" />
 								<h:panelGroup>
-									<p:inputTextarea
-										id="comment"
-										value="#{searchBean.criteriaIn.comment}"
-										required="false"
-										autoResize="false"
-										styleClass="ctsms-criteria-textarea"
+									<p:inputTextarea id="comment"
+										value="#{searchBean.criteriaIn.comment}" required="false"
+										autoResize="false" styleClass="ctsms-criteria-textarea"
 										label="#{labels.search_query_comment}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="comment">
-										<h:outputText
-											value="#{labels.search_query_comment_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="comment">
+										<h:outputText value="#{labels.search_query_comment_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
@@ -289,66 +197,49 @@
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>
-				<p:tab
-					id="searchIntermediateSets"
-					rendered="#{!searchBean.picker}"
-					disabled="false"
-					titleStyleClass="ctsms-tabtitle"
+				<p:tab id="searchIntermediateSets" rendered="#{!searchBean.picker}"
+					disabled="false" titleStyleClass="ctsms-tabtitle"
 					title="#{labels.search_intermediate_sets_tab_label}">
 
-					<p:panel id="intermediate_sets_panel" styleClass="ctsms-panel-maxheight">
+					<p:panel id="intermediate_sets_panel"
+						styleClass="ctsms-panel-maxheight">
 						<f:facet name="header">
 							<h:outputText value="#{searchBean.title}" />
 						</f:facet>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<div id="intermediateSetsChartCanvas" class="ctsms-intermediatesets-chart"></div>
-							<!-- <div id="intermediateSetsChartTooltip" class="ctsms-intermediatesets-tooltip"></div> -->
+							<div id="intermediateSetsChartCanvas"
+								class="ctsms-intermediatesets-chart"></div>
+
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>
-				
-				<p:tab
-					id="searchJobs"
-					rendered="#{!searchBean.picker}"
+
+				<p:tab id="searchJobs" rendered="#{!searchBean.picker}"
 					disabled="#{!searchBean.created}"
 					titleStyleClass="#{searchBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_CRITERIA_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 					title="#{searchBean.getTabTitle(applicationScopeBean.jsValue('AJAX_CRITERIA_JOB_COUNT'))}">
 
 					<ui:include src="job.xhtml">
-						<ui:param
-							name="markUnEncrypted"
+						<ui:param name="markUnEncrypted"
 							value="#{searchBean.markUnEncrypted}" />
-						<ui:param
-							name="namingContainer"
-							value=":search_form:tabView" />
-						<ui:param
-							name="jsUpdateTabTitles"
+						<ui:param name="namingContainer" value=":search_form:tabView" />
+						<ui:param name="jsUpdateTabTitles"
 							value="handleUpdateCriteriaTabTitles" />
 					</ui:include>
 				</p:tab>
-								
-				<p:tab
-					id="searchJournal"
-					rendered="#{!searchBean.picker}"
+
+				<p:tab id="searchJournal" rendered="#{!searchBean.picker}"
 					disabled="#{!searchBean.created}"
 					titleStyleClass="#{searchBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_CRITERIA_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 					title="#{searchBean.getTabTitle(applicationScopeBean.jsValue('AJAX_CRITERIA_JOURNAL_ENTRY_COUNT'))}">
 
 					<ui:include src="journal.xhtml">
-						<ui:param
-							name="namingContainer"
-							value=":search_form:tabView" />
-						<ui:param
-							name="validate"
-							value="false" />
-						<ui:param
-							name="markUnEncrypted"
+						<ui:param name="namingContainer" value=":search_form:tabView" />
+						<ui:param name="validate" value="false" />
+						<ui:param name="markUnEncrypted"
 							value="#{searchBean.markUnEncrypted}" />
-						<ui:param
-							name="jsUpdateTabTitles"
+						<ui:param name="jsUpdateTabTitles"
 							value="handleUpdateCriteriaTabTitles" />
 					</ui:include>
 				</p:tab>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,163 +9,123 @@
 </h:head>
 <h:body>
 	<ui:composition>
-									<h:panelGrid
-										columns="1"
-										cellpadding="0"
-										styleClass="ctsms-input-panelgrid"
-										rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-
-
-		<h:panelGrid
-			rendered="#{ecrfFieldStatusEntryBean.inputVisible}"
-			columns="6"
-			cellpadding="2"
-			columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-			<h:outputLabel
-				for="#{id_prefix}_type"
-				value="#{labels.ecrffieldstatus_status_type_label}" />
-			<h:panelGroup>
-				<p:selectOneMenu
-					id="#{id_prefix}_type"
-					value="#{ecrfFieldStatusEntryBean.in.statusId}"
-					required="true"
-					label="#{labels.ecrffieldstatus_status_type}"
-					styleClass="ctsms-control">
-					<f:converter converterId="ctsms.ID" />
-					<f:selectItem
-						itemLabel="#{labels.no_selection_label}"
-						itemValue="#{applicationScopeBean.noSelectionValue}" />
-					<f:selectItems
-						value="#{ecrfFieldStatusEntryBean.statusTypes}"
-						var="selectItem"
-						itemLabel="#{selectItem.label}"
-						itemValue="#{selectItem.value}" />
-					<!-- process="@this,#{id_prefix}_type" -->
-					<p:ajax 
-						
-						listener="#{ecrfFieldStatusEntryBean.handleStatusTypeChange}"
-						update="#{id_prefix}_resolved_state_message,updateComment#{id_suffix}" />
-						<!-- ,#{id_prefix}_comment -->
-				</p:selectOneMenu>
-				<p:tooltip
-					rendered="#{enableTooltips}"
-					for="#{id_prefix}_type">
-					<h:outputFormat
-						value="#{labels.ecrffieldstatus_status_type_tooltip}"
-						escape="false" >
-						<f:param value="#{ecrfFieldStatusEntryBean.queueName}" />
-						<f:param value="#{ecrfFieldStatusEntryBean.queue.value}" />
-					</h:outputFormat>
-				</p:tooltip>
-			</h:panelGroup>
-			<p:message for="#{id_prefix}_type" />
-			<h:outputLabel />
-			<h:outputText
-				styleClass="ctsms-text-green"
-				value="#{ecrfFieldStatusEntryBean.showResolvedStateMessage ? labels.ecrffieldstatus_resolved_state_message : ''}"
-				id="#{id_prefix}_resolved_state_message" />
-			<h:outputLabel />
-		</h:panelGrid>
-		<h:panelGrid
-			rendered="#{ecrfFieldStatusEntryBean.inputVisible}"
-			columns="1"
-			cellpadding="0"
+		<h:panelGrid columns="1" cellpadding="0"
 			styleClass="ctsms-input-panelgrid"
-			rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-			<h:outputLabel
-				styleClass="ctsms-field-icon ctsms-icon-noencryption"
-				for="ecrffieldstatuscomment"
-				value="#{labels.ecrffieldstatus_comment_label}" />
-			<h:panelGroup>
-				<p:inputTextarea
-					id="#{id_prefix}_comment"
-					value="#{ecrfFieldStatusEntryBean.in.comment}"
-					required="false"
-					autoResize="false"
-					styleClass="ctsms-textarea"
-					label="#{labels.ecrffieldstatus_comment}">
-					
-				</p:inputTextarea> <!-- <p:ajax /> -->
-				<p:tooltip
-					rendered="#{enableTooltips}"
-					for="#{id_prefix}_comment">
-					<h:outputText
-						value="#{labels.ecrffieldstatus_comment_tooltip}"
-						escape="false" />
-				</p:tooltip>
-			</h:panelGroup>
+			rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+
+
+			<h:panelGrid rendered="#{ecrfFieldStatusEntryBean.inputVisible}"
+				columns="6" cellpadding="2"
+				columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+				<h:outputLabel for="#{id_prefix}_type"
+					value="#{labels.ecrffieldstatus_status_type_label}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="#{id_prefix}_type"
+						value="#{ecrfFieldStatusEntryBean.in.statusId}" required="true"
+						label="#{labels.ecrffieldstatus_status_type}"
+						styleClass="ctsms-control">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems value="#{ecrfFieldStatusEntryBean.statusTypes}"
+							var="selectItem" itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+
+						<p:ajax
+							listener="#{ecrfFieldStatusEntryBean.handleStatusTypeChange}"
+							update="#{id_prefix}_resolved_state_message,updateComment#{id_suffix}" />
+
+					</p:selectOneMenu>
+					<p:tooltip rendered="#{enableTooltips}" for="#{id_prefix}_type">
+						<h:outputFormat
+							value="#{labels.ecrffieldstatus_status_type_tooltip}"
+							escape="false">
+							<f:param value="#{ecrfFieldStatusEntryBean.queueName}" />
+							<f:param value="#{ecrfFieldStatusEntryBean.queue.value}" />
+						</h:outputFormat>
+					</p:tooltip>
+				</h:panelGroup>
+				<p:message for="#{id_prefix}_type" />
+				<h:outputLabel />
+				<h:outputText styleClass="ctsms-text-green"
+					value="#{ecrfFieldStatusEntryBean.showResolvedStateMessage ? labels.ecrffieldstatus_resolved_state_message : ''}"
+					id="#{id_prefix}_resolved_state_message" />
+				<h:outputLabel />
+			</h:panelGrid>
+			<h:panelGrid rendered="#{ecrfFieldStatusEntryBean.inputVisible}"
+				columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
+				rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+				<h:outputLabel styleClass="ctsms-field-icon ctsms-icon-noencryption"
+					for="ecrffieldstatuscomment"
+					value="#{labels.ecrffieldstatus_comment_label}" />
+				<h:panelGroup>
+					<p:inputTextarea id="#{id_prefix}_comment"
+						value="#{ecrfFieldStatusEntryBean.in.comment}" required="false"
+						autoResize="false" styleClass="ctsms-textarea"
+						label="#{labels.ecrffieldstatus_comment}">
+
+					</p:inputTextarea>
+					<p:tooltip rendered="#{enableTooltips}" for="#{id_prefix}_comment">
+						<h:outputText value="#{labels.ecrffieldstatus_comment_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</h:panelGrid>
+			<h:outputLabel rendered="#{!ecrfFieldStatusEntryBean.inputVisible}" />
+			<h:outputLabel rendered="#{!ecrfFieldStatusEntryBean.inputVisible}" />
+
+
+
+			<p:messages for="#{id_prefix}_messages" />
+			<p:toolbar>
+				<p:toolbarGroup align="left">
+					<h:outputText styleClass="ctsms-toolbar-text"
+						value="#{ecrfFieldStatusEntryBean.created ? ecrfFieldStatusEntryBean.modifiedAnnotation : ''}" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+
+					<p:commandButton process="@this" id="updateComment#{id_suffix}"
+						value="#{labels.update_ecrf_field_status_comment_button_label}"
+						actionListener="#{ecrfFieldStatusEntryBean.updateComment}"
+						icon="ui-icon ui-icon-copy" ajax="true"
+						disabled="#{!ecrfFieldStatusEntryBean.createable or !ecrfFieldStatusEntryBean.updateCommentEnabled}"
+						update="#{id_prefix}_comment" />
+
+					<p:commandButton process="@this"
+						value="#{labels.new_state_button_label}"
+						actionListener="#{ecrfFieldStatusEntryBean.reset}"
+						icon="ui-icon ui-icon-star" ajax="true"
+						disabled="#{empty ecrfFieldStatusEntryBean.queue}"
+						update="#{id_prefix}_input" />
+					<p:commandButton process="@this,#{id_prefix}_input"
+						id="addEcrfFieldStatusEntry#{id_suffix}"
+						value="#{labels.add_button_label}"
+						actionListener="#{ecrfFieldStatusEntryBean.add}"
+						oncomplete="#{updateOnComplete}" icon="ui-icon ui-icon-plusthick"
+						ajax="true" disabled="#{!ecrfFieldStatusEntryBean.createable}"
+						update="#{id_prefix}_list,#{id_prefix}_input" />
+
+					<p:commandButton process="@this"
+						value="#{labels.delete_button_label}"
+						actionListener="#{ecrfFieldStatusEntryBean.delete}"
+						oncomplete="#{updateOnComplete}" icon="ui-icon ui-icon-trash"
+						ajax="true" disabled="#{!ecrfFieldStatusEntryBean.removable}"
+						update="#{id_prefix}_list,#{id_prefix}_input" />
+
+					<p:commandButton process="@this"
+						value="#{labels.load_button_label}"
+						actionListener="#{ecrfFieldStatusEntryBean.load}"
+						icon="ui-icon-refresh" ajax="true"
+						disabled="#{!ecrfFieldStatusEntryBean.created}"
+						update="#{id_prefix}_list,#{id_prefix}_input" />
+				</p:toolbarGroup>
+				<p:separator />
+				<p:toolbarGroup align="right">
+					<ui:include src="toolbarAjaxStatus.xhtml" />
+				</p:toolbarGroup>
+			</p:toolbar>
 		</h:panelGrid>
-		<h:outputLabel rendered="#{!ecrfFieldStatusEntryBean.inputVisible}" />
-		<h:outputLabel rendered="#{!ecrfFieldStatusEntryBean.inputVisible}" />
-
-
-
-										<p:messages for="#{id_prefix}_messages" />
-										<p:toolbar>
-											<p:toolbarGroup align="left">
-												<h:outputText
-													styleClass="ctsms-toolbar-text"
-													value="#{ecrfFieldStatusEntryBean.created ? ecrfFieldStatusEntryBean.modifiedAnnotation : ''}" />
-											</p:toolbarGroup>
-											<p:separator />
-											<p:toolbarGroup align="right">
-											
-												<p:commandButton
-													process="@this"
-													id="updateComment#{id_suffix}"
-													value="#{labels.update_ecrf_field_status_comment_button_label}"
-													actionListener="#{ecrfFieldStatusEntryBean.updateComment}"
-													icon="ui-icon ui-icon-copy"
-													ajax="true"
-													disabled="#{!ecrfFieldStatusEntryBean.createable or !ecrfFieldStatusEntryBean.updateCommentEnabled}"
-													update="#{id_prefix}_comment" /> <!-- , {id_prefix}_list #{id_prefix}_input" /> -->											
-											
-												<p:commandButton
-													process="@this"
-													value="#{labels.new_state_button_label}"
-													actionListener="#{ecrfFieldStatusEntryBean.reset}"
-													icon="ui-icon ui-icon-star"
-													ajax="true"
-													disabled="#{empty ecrfFieldStatusEntryBean.queue}"
-													update="#{id_prefix}_input" /> <!-- , {id_prefix}_list #{id_prefix}_input" /> -->
-												<p:commandButton
-													process="@this,#{id_prefix}_input"
-													id="addEcrfFieldStatusEntry#{id_suffix}"
-													value="#{labels.add_button_label}"
-													actionListener="#{ecrfFieldStatusEntryBean.add}"
-													oncomplete="#{updateOnComplete}"
-													
-													icon="ui-icon ui-icon-plusthick"
-													ajax="true"
-													disabled="#{!ecrfFieldStatusEntryBean.createable}"
-													update="#{id_prefix}_list,#{id_prefix}_input" />
-													<!-- oncomplete="probandList.filter()" -->
-												<p:commandButton
-													process="@this"
-													value="#{labels.delete_button_label}"
-													actionListener="#{ecrfFieldStatusEntryBean.delete}"
-													oncomplete="#{updateOnComplete}"
-													
-													icon="ui-icon ui-icon-trash"
-													ajax="true"
-													disabled="#{!ecrfFieldStatusEntryBean.removable}"
-													update="#{id_prefix}_list,#{id_prefix}_input" />
-													<!-- oncomplete="probandList.filter()" -->
-												<p:commandButton
-													process="@this"
-													value="#{labels.load_button_label}"
-													actionListener="#{ecrfFieldStatusEntryBean.load}"
-													icon="ui-icon-refresh"
-													ajax="true"
-													disabled="#{!ecrfFieldStatusEntryBean.created}"
-													update="#{id_prefix}_list,#{id_prefix}_input" />
-											</p:toolbarGroup>
-											<p:separator />
-											<p:toolbarGroup align="right">
-												<ui:include src="toolbarAjaxStatus.xhtml" />
-											</p:toolbarGroup>
-										</p:toolbar>
-									</h:panelGrid>
 	</ui:composition>
 </h:body>
 </html>

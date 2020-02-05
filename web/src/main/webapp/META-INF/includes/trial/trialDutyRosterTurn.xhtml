@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialdutyrosterturn_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeTrialDutyRosterTurn"
-				actionListener="#{trialDutyRosterTurnBean.change(trialBean.in.id)}"
-				update="dutyrosterturn_list,dutyrosterturn_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -37,14 +28,13 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="dutyRosterTurn"
 					value="#{trialDutyRosterTurnBean.dutyRosterTurnModel}"
-					id="dutyrosterturn_list"
-					selectionMode="single"
+					id="dutyrosterturn_list" selectionMode="single"
 					selection="#{trialDutyRosterTurnBean.selectedDutyRosterTurn}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:trialdutyrosterturn_form:dutyrosterturn_input" />
 					<f:facet name="header">
-						<h:outputText value="#{trialDutyRosterTurnBean.dutyRosterTurnModel.rowCount} #{triallabels.trial_duty_roster_turn_dutyrosterturn_list_header}" />
+						<h:outputText
+							value="#{trialDutyRosterTurnBean.dutyRosterTurnModel.rowCount} #{triallabels.trial_duty_roster_turn_dutyrosterturn_list_header}" />
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
@@ -59,121 +49,91 @@
 						sortBy="#{dutyRosterTurn.vo.staff.personParticulars.lastName}"
 						filterBy="#{dutyRosterTurn.vo.staff.personParticulars.lastName}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trial_duty_roster_turn_dutyrosterturn_list_staff_name_column}" />
+							<h:outputText
+								value="#{triallabels.trial_duty_roster_turn_dutyrosterturn_list_staff_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{dutyRosterTurn.vo.staff.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{dutyRosterTurn.vo.staff.name}" />
+							<ui:param name="icon"
 								value="#{dutyRosterTurn.vo.staff.category.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
+							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
 					<ui:include src="../shared/dutyRosterTurnTableColumns.xhtml">
-						<ui:param
-							name="dutyRosterTurnBean"
+						<ui:param name="dutyRosterTurnBean"
 							value="#{trialDutyRosterTurnBean}" />
 					</ui:include>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trial_duty_roster_turn_dutyrosterturn_list_colliding_staff_status_entry_column}" />
+							<h:outputText
+								value="#{triallabels.trial_duty_roster_turn_dutyrosterturn_list_colliding_staff_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{trialDutyRosterTurnBean.getCollidingStaffStatusEntryModel(dutyRosterTurn.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trial_duty_roster_turn_dutyrosterturn_list_colliding_course_inventory_booking_column}" />
+							<h:outputText
+								value="#{triallabels.trial_duty_roster_turn_dutyrosterturn_list_colliding_course_inventory_booking_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{trialDutyRosterTurnBean.getCollidingInventoryBookingModel(dutyRosterTurn.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
 					<p:rowExpansion>
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingStaffStatusTableTab.xhtml">
-								<ui:param
-									name="collidingStaffStatusEntryModel"
+								<ui:param name="collidingStaffStatusEntryModel"
 									value="#{trialDutyRosterTurnBean.getCollidingStaffStatusEntryModel(dutyRosterTurn.vo)}" />
-								<ui:param
-									name="showStaff"
-									value="false" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showStaff" value="false" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsRowExpansion}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateRowExpansion}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionRowExpansion}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableRowExpansion}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightRowExpansion}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
-							<ui:include src="../shared/collidingInventoryBookingTableTab.xhtml">
-								<ui:param
-									name="collidingInventoryBookingModel"
+							<ui:include
+								src="../shared/collidingInventoryBookingTableTab.xhtml">
+								<ui:param name="collidingInventoryBookingModel"
 									value="#{trialDutyRosterTurnBean.getCollidingInventoryBookingModel(dutyRosterTurn.vo)}" />
-								<ui:param
-									name="showInventory"
-									value="true" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showInventory" value="true" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsRowExpansion}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateRowExpansion}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionRowExpansion}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableRowExpansion}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightRowExpansion}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
 						</p:tabView>
@@ -183,90 +143,63 @@
 					<f:facet name="header">
 						<h:outputText value="#{trialDutyRosterTurnBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{trialDutyRosterTurnBean.inputVisible}"
-							columns="9"
-							cellpadding="2"
+						<h:panelGrid rendered="#{trialDutyRosterTurnBean.inputVisible}"
+							columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 							<ui:include src="../shared/dutyRosterTurnBaseInput.xhtml">
-								<ui:param
-									name="dutyRosterTurnBean"
+								<ui:param name="dutyRosterTurnBean"
 									value="#{trialDutyRosterTurnBean}" />
-								<ui:param
-									name="visitScheduleItemChangeUpdate"
-									value="@this" />
+								<ui:param name="visitScheduleItemChangeUpdate" value="@this" />
 							</ui:include>
-							<h:outputLabel
-								for="staff"
+							<h:outputLabel for="staff"
 								value="#{triallabels.trial_duty_roster_turn_staff_label}" />
-							<h:panelGrid
-								columns="5"
-								cellpadding="0">
+							<h:panelGrid columns="5" cellpadding="0">
 								<h:panelGroup>
-									<h:inputHidden
-										id="staff"
-										required="false"
+									<h:inputHidden id="staff" required="false"
 										value="#{trialDutyRosterTurnBean.in.staffId}">
 										<f:converter converterId="ctsms.ID" />
 									</h:inputHidden>
-									<p:commandButton
-										id="staffName"
+									<p:commandButton id="staffName"
 										value="#{applicationScopeBean.clipStringPicker(trialDutyRosterTurnBean.staffName)}"
 										title="#{triallabels.trial_duty_roster_turn_staff_tooltip}#{labels.open_staff_button_label}"
-										styleClass="ctsms-picker"
-										icon="ui-icon ui-icon-extlink"
+										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 										type="button"
 										onclick="openPickedStaff(':tabView:trialdutyrosterturn_form:staff')" />
 								</h:panelGroup>
 								<p:commandButton
 									title="#{labels.pick_active_identity_staff_button_label}"
-									icon="ui-icon ui-icon-person"
-									type="button"
+									icon="ui-icon ui-icon-person" type="button"
 									disabled="#{!sessionScopeBean.hasUserIdentity}"
 									onclick="setIDAjax(':tabView:trialdutyrosterturn_form:staff',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':tabView:trialdutyrosterturn_form:staffName','#{sessionScopeBean.userIdentityName}')" />
 								<p:commandButton
 									title="#{labels.pick_trial_team_member_button_label}"
-									icon="ui-icon ui-icon-team"
-									type="button"
+									icon="ui-icon ui-icon-team" type="button"
 									onclick="openTeamMemberPickerAjax(#{trialDutyRosterTurnBean.in.trialId},dutyRosterTurnStart.getDate(),dutyRosterTurnStop.getDate(),':tabView:trialdutyrosterturn_form:staff',':tabView:trialdutyrosterturn_form:staffName')" />
-								<p:commandButton
-									title="#{labels.pick_staff_button_label}"
-									icon="ui-icon ui-icon-search"
-									type="button"
+								<p:commandButton title="#{labels.pick_staff_button_label}"
+									icon="ui-icon ui-icon-search" type="button"
 									onclick="openStaffPickerAjax(':tabView:trialdutyrosterturn_form:staff',':tabView:trialdutyrosterturn_form:staffName')" />
-								<p:commandButton
-									title="#{labels.clear_staff_button_label}"
-									icon="ui-icon ui-icon-close"
-									type="button"
+								<p:commandButton title="#{labels.clear_staff_button_label}"
+									icon="ui-icon ui-icon-close" type="button"
 									onclick="clearIDAjax(':tabView:trialdutyrosterturn_form:staff',':tabView:trialdutyrosterturn_form:staffName','#{applicationScopeBean.noStaffPickedMessage}')" />
 							</h:panelGrid>
 							<p:message for="staff" />
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{trialDutyRosterTurnBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{trialDutyRosterTurnBean.inputVisible}"
+							columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-noencryption"
 								for="dutyRosterTurnComment"
 								value="#{labels.noencryption_warning_label}#{triallabels.trial_duty_roster_turn_comment_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="dutyRosterTurnComment"
-									value="#{trialDutyRosterTurnBean.in.comment}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="dutyRosterTurnComment"
+									value="#{trialDutyRosterTurnBean.in.comment}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.trial_duty_roster_turn_comment}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="dutyRosterTurnComment">
 									<h:outputText
 										value="#{triallabels.trial_duty_roster_turn_comment_tooltip}"
@@ -279,57 +212,43 @@
 						<p:messages for="dutyRosterScheduleInputMessages" />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{trialDutyRosterTurnBean.created ? trialDutyRosterTurnBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{trialDutyRosterTurnBean.reset}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="dutyrosterturn_list,dutyrosterturn_input" />
-								<p:commandButton
-									process="@this,dutyrosterturn_input"
-									id="add"
+								<p:commandButton process="@this,dutyrosterturn_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{trialDutyRosterTurnBean.add}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!trialDutyRosterTurnBean.createable}"
 									update="dutyrosterturn_list,dutyrosterturn_input" />
-								<p:commandButton
-									process="@this,dutyrosterturn_input"
-									id="update"
-									value="#{labels.update_button_label}"
+								<p:commandButton process="@this,dutyrosterturn_input"
+									id="update" value="#{labels.update_button_label}"
 									actionListener="#{trialDutyRosterTurnBean.update}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!trialDutyRosterTurnBean.editable}"
 									update="dutyrosterturn_list,dutyrosterturn_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{trialDutyRosterTurnBean.delete}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!trialDutyRosterTurnBean.removable}"
 									update="dutyrosterturn_list,dutyrosterturn_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{trialDutyRosterTurnBean.load}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon ui-icon-refresh" ajax="true"
 									disabled="#{!trialDutyRosterTurnBean.created}"
 									update="dutyrosterturn_list,dutyrosterturn_input" />
 							</p:toolbarGroup>

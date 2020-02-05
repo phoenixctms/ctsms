@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -13,18 +12,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldselectionsetvalue_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeSelectionSetValue"
-				actionListener="#{selectionSetValueBean.change(inputFieldBean.in.id)}"
-				update="selectionsetvalue_list,selectionsetvalue_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -39,15 +30,14 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="selectionSetValue"
 					value="#{selectionSetValueBean.selectionSetValueModel}"
-					id="selectionsetvalue_list"
-					selectionMode="single"
+					id="selectionsetvalue_list" selectionMode="single"
 					selection="#{selectionSetValueBean.selectedInputFieldSelectionSetValue}"
 					rowStyleClass="#{selectionSetValue.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:inputfieldselectionsetvalue_form:selectionsetvalue_input" />
 					<f:facet name="header">
-						<h:outputText value="#{selectionSetValueBean.selectionSetValueModel.rowCount} #{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_header}" />
+						<h:outputText
+							value="#{selectionSetValueBean.selectionSetValueModel.rowCount} #{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{selectionSetValue.vo.id}">
 						<f:facet name="header">
@@ -55,113 +45,105 @@
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.id}" />
 					</p:column>
-					<p:column
-						sortBy="#{selectionSetValue.vo.nameL10nKey}"
+					<p:column sortBy="#{selectionSetValue.vo.nameL10nKey}"
 						filterBy="#{selectionSetValue.vo.nameL10nKey}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_name_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_name_column}" />
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.nameL10nKey}" />
 					</p:column>
-					<!-- <p:column>
+
+					<p:column filterBy="#{selectionSetValue.vo.localized}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_name_column}" />
-						</f:facet>
-						<h:outputText value="#{selectionSetValue.vo.name}" />
-					</p:column>	-->
-					<p:column
-						filterBy="#{selectionSetValue.vo.localized}">
-						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_localized_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_localized_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{selectionSetValue.vo.localized}" />
+							<ui:param name="value" value="#{selectionSetValue.vo.localized}" />
 						</ui:include>
-					</p:column>					
+					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_unique_name_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_unique_name_column}" />
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.uniqueName}" />
 					</p:column>
-					<p:column
-						rendered="#{!selectionSetValueBean.sketch}"
+					<p:column rendered="#{!selectionSetValueBean.sketch}"
 						sortBy="#{selectionSetValue.vo.preset}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_preset_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_preset_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{selectionSetValue.vo.preset}" />
+							<ui:param name="value" value="#{selectionSetValue.vo.preset}" />
 						</ui:include>
 					</p:column>
-					<p:column
-						sortBy="#{selectionSetValue.vo.value}"
+					<p:column sortBy="#{selectionSetValue.vo.value}"
 						filterBy="#{selectionSetValue.vo.value}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_value_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_value_column}" />
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.value}" />
 					</p:column>
 					<p:column rendered="#{selectionSetValueBean.sketch}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_region_count_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_region_count_column}" />
 						</f:facet>
-						<h:outputText value="#{selectionSetValueBean.getRegionCount(selectionSetValue.vo)}" />
+						<h:outputText
+							value="#{selectionSetValueBean.getRegionCount(selectionSetValue.vo)}" />
 					</p:column>
 					<p:column rendered="#{!selectionSetValueBean.autocomplete}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_input_field_value_count_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_input_field_value_count_column}" />
 						</f:facet>
-						<h:outputText value="#{selectionSetValueBean.getInputFieldValueCount(selectionSetValue.vo)}" />
+						<h:outputText
+							value="#{selectionSetValueBean.getInputFieldValueCount(selectionSetValue.vo)}" />
 					</p:column>
 					<p:column rendered="#{selectionSetValueBean.autocomplete}"
-					 	sortBy="#{selectionSetValue.vo.modifiedTimestamp}">
+						sortBy="#{selectionSetValue.vo.modifiedTimestamp}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_timestamp_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_timestamp_column}" />
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.modifiedTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
-					<p:column rendered="#{selectionSetValueBean.autocomplete}" 
+					<p:column rendered="#{selectionSetValueBean.autocomplete}"
 						sortBy="#{selectionSetValue.vo.modifiedUser.name}">
 						<f:facet name="header">
-							<h:outputText value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_user_column}" />
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_user_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.getIdentityString(selectionSetValue.vo.modifiedUser)} " />
-					</p:column>					
+						<h:outputText
+							value="#{applicationScopeBean.getIdentityString(selectionSetValue.vo.modifiedUser)} " />
+					</p:column>
 				</p:dataTable>
 				<p:panel id="selectionsetvalue_input">
 					<f:facet name="header">
 						<h:outputText value="#{selectionSetValueBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-sketchpad-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{selectionSetValueBean.inputVisible}"
-							columns="6"
-							cellpadding="2"
+						<h:panelGrid rendered="#{selectionSetValueBean.inputVisible}"
+							columns="6" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="selectionsetvaluename"
+							<h:outputLabel for="selectionsetvaluename"
 								value="#{inputfieldlabels.input_field_selection_set_value_name_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="selectionsetvaluename"
-									value="#{selectionSetValueBean.in.name}"
-									required="true"
+								<p:inputText id="selectionsetvaluename"
+									value="#{selectionSetValueBean.in.name}" required="true"
 									label="#{inputfieldlabels.input_field_selection_set_value_name}"
 									styleClass="ctsms-control-larger" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="selectionsetvaluename">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_selection_set_value_name_tooltip}"
@@ -169,37 +151,30 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="selectionsetvaluename" />
-							
-							<h:outputLabel
-								for="selectionsetvaluelocalized"
+
+							<h:outputLabel for="selectionsetvaluelocalized"
 								value="#{inputfieldlabels.input_field_selection_set_value_localized_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="selectionsetvaluelocalized"
+								<p:selectBooleanCheckbox id="selectionsetvaluelocalized"
 									value="#{selectionSetValueBean.in.localized}">
 								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="selectionsetvaluelocalized">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_selection_set_value_localized_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message for="selectionsetvaluelocalized" />							
-							
-							<h:outputLabel
-								for="selectionsetvaluevalue"
+							<p:message for="selectionsetvaluelocalized" />
+
+							<h:outputLabel for="selectionsetvaluevalue"
 								value="#{inputfieldlabels.input_field_selection_set_value_value_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="selectionsetvaluevalue"
-									value="#{selectionSetValueBean.in.value}"
-									required="false"
+								<p:inputText id="selectionsetvaluevalue"
+									value="#{selectionSetValueBean.in.value}" required="false"
 									label="#{inputfieldlabels.input_field_selection_set_value_value}"
 									styleClass="ctsms-control" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="selectionsetvaluevalue">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_selection_set_value_value_tooltip}"
@@ -207,155 +182,116 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="selectionsetvaluevalue" />
-							<h:outputLabel
-								rendered="#{!selectionSetValueBean.sketch}"
+							<h:outputLabel rendered="#{!selectionSetValueBean.sketch}"
 								for="selectionsetvaluepreset"
 								value="#{inputfieldlabels.input_field_selection_set_value_preset_label}" />
 							<h:panelGroup rendered="#{!selectionSetValueBean.sketch}">
-								<p:selectBooleanCheckbox
-									id="selectionsetvaluepreset"
+								<p:selectBooleanCheckbox id="selectionsetvaluepreset"
 									value="#{selectionSetValueBean.in.preset}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="selectionsetvaluepreset">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_selection_set_value_preset_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message
-								rendered="#{!selectionSetValueBean.sketch}"
+							<p:message rendered="#{!selectionSetValueBean.sketch}"
 								for="selectionsetvaluepreset" />
 						</h:panelGrid>
-						<h:panelGrid
-							id="region_input"
+						<h:panelGrid id="region_input"
 							rendered="#{selectionSetValueBean.inputVisible and selectionSetValueBean.sketch}"
-							columns="3"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+							columns="3" cellpadding="0" styleClass="ctsms-input-panelgrid"
 							columnClasses="ctsms-region-sketchpad-column,ctsms-region-buttons-column,ctsms-region-codemirror-column">
-							<h:panelGrid
-								columns="1"
-								cellpadding="0"
+							<h:panelGrid columns="1" cellpadding="0"
 								rowClasses="ctsms-sketchpad-label-for-row,ctsms-sketchpad-input-row,ctsms-sketchpad-message-for-row">
-								<h:outputLabel
-									for="regions"
+								<h:outputLabel for="regions"
 									value="#{inputfieldlabels.input_field_selection_set_value_regions_label}" />
-								<ctsms:sketchPad
-									id="regions"
+								<ctsms:sketchPad id="regions"
 									value="#{selectionSetValueBean.inkRegions}"
 									width="#{selectionSetValueBean.inputField.width}"
 									height="#{selectionSetValueBean.inputField.height}"
-									required="true"
-									disabled="false"
+									required="true" disabled="false"
 									label="#{inputfieldlabels.input_field_selection_set_value_regions}"
 									strokesId="#{selectionSetValueBean.in.strokesId}"
 									backgroundImage="#{request.contextPath}/inputfieldimage?#{applicationScopeBean.parameterName('INPUT_FIELD_ID')}=#{selectionSetValueBean.inputField.id}" />
 								<p:message for="regions" />
 							</h:panelGrid>
-							<h:panelGrid
-								columns="1"
-								cellpadding="0">
-								<p:commandButton
-									process="@this,regions"
+							<h:panelGrid columns="1" cellpadding="0">
+								<p:commandButton process="@this,regions"
 									actionListener="#{selectionSetValueBean.handleSketchToJson}"
 									icon="ui-icon ui-icon-carat-1-e"
 									title="#{inputfieldlabels.sketch_to_json_button_title}"
 									rendered="#{!selectionSetValueBean.inkRegionsJsonVisible}"
-									ajax="true"
-									update="region_input" />
-								<p:commandButton
-									process="@this,regions"
+									ajax="true" update="region_input" />
+								<p:commandButton process="@this,regions"
 									actionListener="#{selectionSetValueBean.handleSketchToJson}"
 									icon="ui-icon ui-icon-carat-1-e"
 									title="#{inputfieldlabels.sketch_to_json_button_title}"
 									rendered="#{selectionSetValueBean.inkRegionsJsonVisible}"
-									ajax="true"
-									update="regions_json" />
-								<p:commandButton
-									process="@this,regions_json"
+									ajax="true" update="regions_json" />
+								<p:commandButton process="@this,regions_json"
 									actionListener="#{selectionSetValueBean.handleJsonToSketch}"
 									icon="ui-icon ui-icon-carat-1-w"
 									title="#{inputfieldlabels.json_to_sketch_button_title}"
 									disabled="#{!selectionSetValueBean.inkRegionsJsonVisible}"
-									ajax="true"
-									update="regions" />
+									ajax="true" update="regions" />
 							</h:panelGrid>
 							<h:panelGrid
 								rendered="#{selectionSetValueBean.inkRegionsJsonVisible}"
-								columns="1"
-								cellpadding="0"
+								columns="1" cellpadding="0"
 								rowClasses="ctsms-codemirror-label-for-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row">
-								<h:outputLabel
-									for="regions_json"
+								<h:outputLabel for="regions_json"
 									value="#{inputfieldlabels.input_field_selection_set_value_regions_json_label}" />
-								<pe:codeMirror
-									id="regions_json"
-									mode="{name: 'javascript', json: true}"
-									theme="eclipse"
+								<pe:codeMirror id="regions_json"
+									mode="{name: 'javascript', json: true}" theme="eclipse"
 									value="#{selectionSetValueBean.inkRegionsJson}"
 									label="#{inputfieldlabels.input_field_selection_set_value_regions_json}"
-									required="false"
-									lineWrapping="true"
-									lineNumbers="true">
+									required="false" lineWrapping="true" lineNumbers="true">
 								</pe:codeMirror>
 								<p:message for="regions_json" />
 							</h:panelGrid>
 						</h:panelGrid>
-						<h:outputLabel rendered="#{!selectionSetValueBean.sketch or !selectionSetValueBean.inputVisible}" />
+						<h:outputLabel
+							rendered="#{!selectionSetValueBean.sketch or !selectionSetValueBean.inputVisible}" />
 						<h:outputLabel rendered="#{!selectionSetValueBean.inputVisible}" />
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{selectionSetValueBean.created ? selectionSetValueBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{selectionSetValueBean.reset}"
 									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="selectionsetvalue_list,selectionsetvalue_input" />
-								<p:commandButton
-									process="@this,selectionsetvalue_input"
-									id="add"
-									value="#{labels.add_button_label}"
+								<p:commandButton process="@this,selectionsetvalue_input"
+									id="add" value="#{labels.add_button_label}"
 									actionListener="#{selectionSetValueBean.add}"
 									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!selectionSetValueBean.createable}"
 									update="selectionsetvalue_list,selectionsetvalue_input" />
-								<p:commandButton
-									process="@this,selectionsetvalue_input"
-									id="update"
-									value="#{labels.update_button_label}"
+								<p:commandButton process="@this,selectionsetvalue_input"
+									id="update" value="#{labels.update_button_label}"
 									actionListener="#{selectionSetValueBean.update}"
 									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!selectionSetValueBean.editable}"
 									update="selectionsetvalue_list,selectionsetvalue_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									onclick="if('inputFieldSelectionSetValueDeleteReason' in window){inputFieldSelectionSetValueDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inputFieldSelectionSetValueBean.deferredDeleteReason)});}inputFieldSelectionSetValueDeleteConfirmation.show()"
 									disabled="#{!selectionSetValueBean.removable}"
-									icon="ui-icon ui-icon-trash"
-									type="button" />
-								<p:commandButton
-									process="@this"
+									icon="ui-icon ui-icon-trash" type="button" />
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{selectionSetValueBean.load}"
 									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon ui-icon-refresh" ajax="true"
 									disabled="#{!selectionSetValueBean.created}"
 									update="selectionsetvalue_list,selectionsetvalue_input" />
 							</p:toolbarGroup>
@@ -367,41 +303,27 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
-				width="500"
+			<p:confirmDialog appendToBody="false" severity="alert" width="500"
 				widgetVar="inputFieldSelectionSetValueDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{inputfieldlabels.input_field_selection_set_value_delete_confirmation_dialog_message}"
 						escape="false" />
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						<h:panelGrid
-							rendered="true"
-							columns="1"
-							cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid rendered="true" columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="deferredDeleteReason"
+							<h:outputLabel for="deferredDeleteReason"
 								value="#{inputfieldlabels.input_field_selection_set_value_deferred_delete_reason_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="deferredDeleteReason"
+								<p:inputTextarea id="deferredDeleteReason"
 									widgetVar="inputFieldSelectionSetValueDeleteReason"
 									value="#{selectionSetValueBean.deferredDeleteReason}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									required="false" autoResize="false" styleClass="ctsms-textarea"
 									label="#{inputfieldlabels.input_field_selection_set_value_deferred_delete_reason}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="deferredDeleteReason">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_selection_set_value_deferred_delete_reason_tooltip}"
@@ -409,7 +331,7 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-					</h:panelGrid>						
+					</h:panelGrid>
 				</f:facet>
 				<p:commandButton
 					process="@this,:tabView:inputfieldselectionsetvalue_form:deferredDeleteReason"
@@ -417,10 +339,8 @@
 					actionListener="#{selectionSetValueBean.delete}"
 					oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
 					onclick="inputFieldSelectionSetValueDeleteConfirmation.hide()"
-					ajax="true"
-					update="selectionsetvalue_list,selectionsetvalue_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
+					ajax="true" update="selectionsetvalue_list,selectionsetvalue_input" />
+				<p:commandButton value="#{labels.no_button_label}"
 					onclick="inputFieldSelectionSetValueDeleteConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>

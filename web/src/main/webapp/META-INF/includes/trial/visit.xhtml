@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,9 @@
 <h:body>
 	<ui:composition>
 		<h:form id="visit_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeVisit"
-				actionListener="#{visitBean.change(trialBean.in.id)}"
-				update="visit_list,visit_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -35,17 +25,13 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{visit.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="visit"
-					value="#{visitBean.visitModel}"
-					id="visit_list"
-					selectionMode="single"
-					selection="#{visitBean.selectedVisit}"
+					var="visit" value="#{visitBean.visitModel}" id="visit_list"
+					selectionMode="single" selection="#{visitBean.selectedVisit}"
 					rowStyleClass="#{applicationScopeBean.visitToColor(visit.vo)}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
-						update=":tabView:visit_form:visit_input" />
+					<p:ajax event="rowSelect" update=":tabView:visit_form:visit_input" />
 					<f:facet name="header">
-						<h:outputText value="#{visitBean.visitModel.rowCount} #{triallabels.visit_visit_list_header}" />
+						<h:outputText
+							value="#{visitBean.visitModel.rowCount} #{triallabels.visit_visit_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{visit.vo.id}">
 						<f:facet name="header">
@@ -53,9 +39,7 @@
 						</f:facet>
 						<h:outputText value="#{visit.vo.id}" />
 					</p:column>
-					<p:column
-						sortBy="#{visit.vo.type}"
-						filterBy="#{visit.vo.type.id}"
+					<p:column sortBy="#{visit.vo.type}" filterBy="#{visit.vo.type.id}"
 						filterOptions="#{sessionScopeBean.filterVisitTypes}">
 						<f:facet name="header">
 							<h:outputText value="#{triallabels.visit_visit_list_type_column}" />
@@ -64,29 +48,31 @@
 					</p:column>
 					<p:column sortBy="#{visit.vo.type.travel}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.visit_visit_list_type_travel_column}" />
+							<h:outputText
+								value="#{triallabels.visit_visit_list_type_travel_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{visit.vo.type.travel}" />
+							<ui:param name="value" value="#{visit.vo.type.travel}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{visit.vo.token}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.visit_visit_list_token_column}" />
+							<h:outputText
+								value="#{triallabels.visit_visit_list_token_column}" />
 						</f:facet>
 						<h:outputText value="#{visit.vo.token}" />
 					</p:column>
 					<p:column sortBy="#{visit.vo.title}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.visit_visit_list_title_column}" />
+							<h:outputText
+								value="#{triallabels.visit_visit_list_title_column}" />
 						</f:facet>
 						<h:outputText value="#{visit.vo.title}" />
 					</p:column>
 					<p:column sortBy="#{visit.vo.reimbursement}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.visit_visit_list_reimbursement_column}" />
+							<h:outputText
+								value="#{triallabels.visit_visit_list_reimbursement_column}" />
 						</f:facet>
 						<h:outputFormat value="#{labels.currency_format}">
 							<f:param value="#{visit.vo.reimbursement}" />
@@ -95,53 +81,40 @@
 					</p:column>
 					<p:column sortBy="#{visit.vo.description}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.visit_visit_list_description_column}" />
+							<h:outputText
+								value="#{triallabels.visit_visit_list_description_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.clipStringTrailing(visit.vo.description)}" />
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(visit.vo.description)}" />
 					</p:column>
 				</p:dataTable>
 				<p:panel id="visit_input">
 					<f:facet name="header">
 						<h:outputText value="#{visitBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{visitBean.inputVisible}"
-							columns="9"
+						<h:panelGrid rendered="#{visitBean.inputVisible}" columns="9"
 							cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="visittype"
+							<h:outputLabel for="visittype"
 								value="#{triallabels.visit_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="visittype"
-									value="#{visitBean.in.typeId}"
-									required="true"
-									label="#{triallabels.visit_type}"
+								<p:selectOneMenu id="visittype" value="#{visitBean.in.typeId}"
+									required="true" label="#{triallabels.visit_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{visitBean.availableTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{visitBean.availableTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
-									<p:ajax
-										update="visit_type_travel_message"
+									<p:ajax update="visit_type_travel_message"
 										listener="#{visitBean.handleTypeChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="visittype">
-									<h:outputText
-										value="#{triallabels.visit_type_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="visittype">
+									<h:outputText value="#{triallabels.visit_type_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -154,92 +127,64 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<h:outputLabel
-								for="visittoken"
+							<h:outputLabel for="visittoken"
 								value="#{triallabels.visit_token_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="visittoken"
-									value="#{visitBean.in.token}"
-									required="true"
-									label="#{triallabels.visit_token}"
+								<p:inputText id="visittoken" value="#{visitBean.in.token}"
+									required="true" label="#{triallabels.visit_token}"
 									styleClass="ctsms-control-smaller" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="visittoken">
-									<h:outputText
-										value="#{triallabels.visit_token_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="visittoken">
+									<h:outputText value="#{triallabels.visit_token_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="visittoken" />
-							<h:outputLabel
-								for="visittitle"
+							<h:outputLabel for="visittitle"
 								value="#{triallabels.visit_title_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="visittitle"
-									value="#{visitBean.in.title}"
-									required="true"
-									label="#{triallabels.visit_title}"
+								<p:inputText id="visittitle" value="#{visitBean.in.title}"
+									required="true" label="#{triallabels.visit_title}"
 									styleClass="ctsms-control" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="visittitle">
-									<h:outputText
-										value="#{triallabels.visit_title_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="visittitle">
+									<h:outputText value="#{triallabels.visit_title_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="visittitle" />
-							<h:outputLabel
-								for="reimbursement"
+							<h:outputLabel for="reimbursement"
 								value="#{triallabels.visit_reimbursement_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="reimbursement"
-									value="#{visitBean.in.reimbursement}"
-									required="true"
+								<p:inputText id="reimbursement"
+									value="#{visitBean.in.reimbursement}" required="true"
 									label="#{triallabels.visit_reimbursement}"
-									styleClass="ctsms-control-float" >
+									styleClass="ctsms-control-float">
 									<f:converter converterId="ctsms.Float" />
-									</p:inputText>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="reimbursement">
-									<h:outputFormat 
+								</p:inputText>
+								<p:tooltip rendered="#{enableTooltips}" for="reimbursement">
+									<h:outputFormat
 										value="#{triallabels.visit_reimbursement_tooltip}"
 										escape="false">
 										<f:param value="#{applicationScopeBean.currencySymbol}" />
-									</h:outputFormat>									
+									</h:outputFormat>
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="reimbursement" />
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{visitBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{visitBean.inputVisible}" columns="1"
+							cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-noencryption"
 								for="visitdescription"
 								value="#{labels.noencryption_warning_label}#{triallabels.visit_description_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="visitdescription"
-									value="#{visitBean.in.description}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="visitdescription"
+									value="#{visitBean.in.description}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.visit_description}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="visitdescription">
-									<h:outputText
-										value="#{triallabels.visit_description_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="visitdescription">
+									<h:outputText value="#{triallabels.visit_description_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -249,55 +194,41 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{visitBean.created ? visitBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{visitBean.reset}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="visit_list,visit_input" />
-								<p:commandButton
-									process="@this,visit_input"
-									id="add"
+								<p:commandButton process="@this,visit_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{visitBean.add}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!visitBean.createable}"
 									update="visit_list,visit_input" />
-								<p:commandButton
-									process="@this,visit_input"
-									id="update"
+								<p:commandButton process="@this,visit_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{visitBean.update}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!visitBean.editable}"
 									update="visit_list,visit_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									onclick="visitDeleteConfirmation.show()"
-									disabled="#{!visitBean.removable}"
-									icon="ui-icon ui-icon-trash"
+									disabled="#{!visitBean.removable}" icon="ui-icon ui-icon-trash"
 									type="button" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{visitBean.load}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!visitBean.created}"
 									update="visit_list,visit_input" />
 							</p:toolbarGroup>
@@ -309,27 +240,20 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
+			<p:confirmDialog appendToBody="false" severity="alert"
 				widgetVar="visitDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.visit_delete_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					process="@this"
-					value="#{labels.yes_button_label}"
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
 					actionListener="#{visitBean.delete}"
 					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-					onclick="visitDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="visitDeleteConfirmation.hide()" ajax="true"
 					update="visit_list,visit_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="visitDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="visitDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
 		</h:form>
 	</ui:composition>

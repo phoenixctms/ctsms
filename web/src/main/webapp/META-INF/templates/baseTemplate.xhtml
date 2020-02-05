@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
-<f:view
-	contentType="text/html"
-	locale="#{sessionScopeBean.locale}">
+<f:view contentType="text/html" locale="#{sessionScopeBean.locale}">
 	<h:head>
 		<f:facet name="first">
-			<meta
-				http-equiv="X-UA-Compatible"
-				content="IE=9" />
-			<meta
-				name="description"
+			<meta http-equiv="X-UA-Compatible" content="IE=9" />
+			<meta name="description"
 				content="#{applicationScopeBean.metaDescription}" />
-			<meta
-				content='text/html; charset=UTF-8'
-				http-equiv="Content-Type" />
-			<meta
-				http-equiv="robots"
-				content="noindex" />
-			<meta
-				http-equiv="X-Frame-Options"
-				content="deny" />
+			<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+			<meta http-equiv="robots" content="noindex" />
+			<meta http-equiv="X-Frame-Options" content="deny" />
 			<title>#{title}</title>
-			<link
-				rel="shortcut icon"
-				type="image/x-icon"
+			<link rel="shortcut icon" type="image/x-icon"
 				href="#{request.contextPath}/resources/images/favicons/#{favicon}" />
 			<script type="text/javascript">
 	    	<ui:repeat value="#{applicationScopeBean.mapToList(applicationScopeBean.jsValues)}" var="jsvalue">
@@ -39,9 +25,7 @@
 			</script>
 		</f:facet>
 	</h:head>
-	<h:body
-		onload="#{onLoadJsFunction}"
-		styleClass="ctsms-js-off">
+	<h:body onload="#{onLoadJsFunction}" styleClass="ctsms-js-off">
 		<script type="text/javascript">
             document.body.className = document.body.className.replace('ctsms-js-off ','');
             //blink();
@@ -63,703 +47,297 @@
             	//});
             });           
         </script>
-		<noscript>#{labels.no_script}</noscript>
-		<h:outputStylesheet
-			name="fullcalendar.min.css"
-			library="css"
+		<noscript>#{labels.no_script}
+		</noscript>
+		<h:outputStylesheet name="fullcalendar.min.css" library="css"
 			target="head" />
-		<h:outputStylesheet
-			name="fullcalendar.print.min.css"
-			library="css"
-			media="print"
-			target="head" />			
-		<h:outputStylesheet
-			name="print.min.css"
-			library="css"
-			media="print"
-			target="head" />			
-		<h:outputStylesheet
-			name="default.min.css"
-			library="css"
+		<h:outputStylesheet name="fullcalendar.print.min.css" library="css"
+			media="print" target="head" />
+		<h:outputStylesheet name="print.min.css" library="css" media="print"
 			target="head" />
-		<h:outputStylesheet
-			name="colors.min.css"
-			library="css"
-			target="head" />
+		<h:outputStylesheet name="default.min.css" library="css" target="head" />
+		<h:outputStylesheet name="colors.min.css" library="css" target="head" />
 		<h:outputStylesheet
 			rendered="#{applicationScopeBean.highlightTextInput}"
-			name="jquery.highlighttextarea.min.css"
-			library="css"
+			name="jquery.highlighttextarea.min.css" library="css" target="head" />
+		<h:outputScript library="primefaces" name="jquery/jquery.js"
 			target="head" />
-		<h:outputScript
-			library="primefaces"
-			name="jquery/jquery.js"
+		<h:outputScript name="primefacesMessageProperties.min.js" library="js"
 			target="head" />
-		<h:outputScript
-			name="primefacesMessageProperties.min.js"
-			library="js"
+		<h:outputScript name="primefacesExtensionsMessageProperties.min.js"
+			library="js" target="head" />
+		<h:outputScript rendered="#{applicationScopeBean.highlightTextInput}"
+			name="jquery.highlighttextarea.min.js" library="js" target="head" />
+		<h:outputScript name="primefacesOverrides.min.js" library="js"
 			target="head" />
-		<h:outputScript
-			name="primefacesExtensionsMessageProperties.min.js"
-			library="js"
+		<h:outputScript name="jquery.base64.min.js" library="js" target="head" />
+		<h:outputScript name="numerals.min.js" library="js" target="head" />
+		<h:outputScript name="strip-comments.min.js" library="js"
 			target="head" />
-		<h:outputScript
-			rendered="#{applicationScopeBean.highlightTextInput}"
-			name="jquery.highlighttextarea.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
-			name="primefacesOverrides.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
-			name="jquery.base64.min.js"
-			library="js"
-			target="head" />
-		<!-- <h:outputScript
-			name="time.min.js"
-			library="js"
-			target="head" /> -->
-		<h:outputScript
-			name="numerals.min.js"
-			library="js"
-			target="head" />			
-		<h:outputScript
-			name="strip-comments.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
-			name="sprintf.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
-			name="countdown.min.js"
-			library="js"
-			target="head" />
-		<h:outputScript
-			name="common.min.js"
-			library="js"
-			target="head" />
-		<ui:param
-			name="enableTooltips"
+		<h:outputScript name="sprintf.min.js" library="js" target="head" />
+		<h:outputScript name="countdown.min.js" library="js" target="head" />
+		<h:outputScript name="common.min.js" library="js" target="head" />
+		<ui:param name="enableTooltips"
 			value="#{applicationScopeBean.enableTooltips and sessionScopeBean.showTooltips}" />
-		<ui:param
-			name="rowBgColorAlpha"
-			value="-25" />
-		<ui:param
-			name="defaultColorOpacity"
-			value="-50" />			
-		<ui:param
-			name="effect"
-			value="fade" />
-		<ui:param
-		    name="autoCompleteForceSelectionPreventFormSubmission"
-			value="return event.keyCode != 13;"/>
-		<ui:param
-			name="autoCompleteMinQueryLengthTitle"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsTitle"
+		<ui:param name="rowBgColorAlpha" value="-25" />
+		<ui:param name="defaultColorOpacity" value="-50" />
+		<ui:param name="effect" value="fade" />
+		<ui:param name="autoCompleteForceSelectionPreventFormSubmission"
+			value="return event.keyCode != 13;" />
+		<ui:param name="autoCompleteMinQueryLengthTitle" value="1" />
+		<ui:param name="autoCompleteMaxResultsTitle"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayTitle"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownTitle"
-			value="false" />
-		<ui:param
-			name="autoCompleteGlobalTitle"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightTitle"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthCountry"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCountry"
+		<ui:param name="autoCompleteQueryDelayTitle" value="300" />
+		<ui:param name="autoCompleteDropdownTitle" value="false" />
+		<ui:param name="autoCompleteGlobalTitle" value="true" />
+		<ui:param name="autoCompleteScrollHeightTitle" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthCountry" value="1" />
+		<ui:param name="autoCompleteMaxResultsCountry"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCountry"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCountry"
-			value="false" />
-		<ui:param
-			name="autoCompleteGlobalCountry"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCountry"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthCityName"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCityName"
+		<ui:param name="autoCompleteQueryDelayCountry" value="300" />
+		<ui:param name="autoCompleteDropdownCountry" value="false" />
+		<ui:param name="autoCompleteGlobalCountry" value="true" />
+		<ui:param name="autoCompleteScrollHeightCountry" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthCityName" value="1" />
+		<ui:param name="autoCompleteMaxResultsCityName"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCityName"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCityName"
-			value="false" />
-		<ui:param
-			name="autoCompleteGlobalCityName"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCityName"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthZipCode"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsZipCode"
+		<ui:param name="autoCompleteQueryDelayCityName" value="300" />
+		<ui:param name="autoCompleteDropdownCityName" value="false" />
+		<ui:param name="autoCompleteGlobalCityName" value="true" />
+		<ui:param name="autoCompleteScrollHeightCityName" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthZipCode" value="1" />
+		<ui:param name="autoCompleteMaxResultsZipCode"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayZipCode"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownZipCode"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalZipCode"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightZipCode"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthStreetName"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsStreetName"
+		<ui:param name="autoCompleteQueryDelayZipCode" value="300" />
+		<ui:param name="autoCompleteDropdownZipCode" value="true" />
+		<ui:param name="autoCompleteGlobalZipCode" value="true" />
+		<ui:param name="autoCompleteScrollHeightZipCode" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthStreetName" value="1" />
+		<ui:param name="autoCompleteMaxResultsStreetName"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayStreetName"
-			value="600" />
-		<ui:param
-			name="autoCompleteDropdownStreetName"
-			value="false" />
-		<ui:param
-			name="autoCompleteGlobalStreetName"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightStreetName"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthBankCodeNumber"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsBankCodeNumber"
+		<ui:param name="autoCompleteQueryDelayStreetName" value="600" />
+		<ui:param name="autoCompleteDropdownStreetName" value="false" />
+		<ui:param name="autoCompleteGlobalStreetName" value="true" />
+		<ui:param name="autoCompleteScrollHeightStreetName" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthBankCodeNumber" value="1" />
+		<ui:param name="autoCompleteMaxResultsBankCodeNumber"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayBankCodeNumber"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownBankCodeNumber"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalBankCodeNumber"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightBankCodeNumber"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthBankName"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsBankName"
+		<ui:param name="autoCompleteQueryDelayBankCodeNumber" value="300" />
+		<ui:param name="autoCompleteDropdownBankCodeNumber" value="true" />
+		<ui:param name="autoCompleteGlobalBankCodeNumber" value="true" />
+		<ui:param name="autoCompleteScrollHeightBankCodeNumber" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthBankName" value="1" />
+		<ui:param name="autoCompleteMaxResultsBankName"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayBankName"
-			value="600" />
-		<ui:param
-			name="autoCompleteDropdownBankName"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalBankName"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightBankName"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthBic"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsBic"
+		<ui:param name="autoCompleteQueryDelayBankName" value="600" />
+		<ui:param name="autoCompleteDropdownBankName" value="true" />
+		<ui:param name="autoCompleteGlobalBankName" value="true" />
+		<ui:param name="autoCompleteScrollHeightBankName" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthBic" value="1" />
+		<ui:param name="autoCompleteMaxResultsBic"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayBic"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownBic"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalBic"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightBic"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthCostType"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCostType"
+		<ui:param name="autoCompleteQueryDelayBic" value="300" />
+		<ui:param name="autoCompleteDropdownBic" value="true" />
+		<ui:param name="autoCompleteGlobalBic" value="true" />
+		<ui:param name="autoCompleteScrollHeightBic" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthCostType" value="1" />
+		<ui:param name="autoCompleteMaxResultsCostType"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCostType"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCostType"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalCostType"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCostType"
-			value="220" />
-			
-			
-			
-		<ui:param
-			name="autoCompleteMinQueryLengthUnit"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsUnit"
+		<ui:param name="autoCompleteQueryDelayCostType" value="300" />
+		<ui:param name="autoCompleteDropdownCostType" value="true" />
+		<ui:param name="autoCompleteGlobalCostType" value="true" />
+		<ui:param name="autoCompleteScrollHeightCostType" value="220" />
+
+
+
+		<ui:param name="autoCompleteMinQueryLengthUnit" value="1" />
+		<ui:param name="autoCompleteMaxResultsUnit"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayUnit"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownUnit"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalUnit"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightUnit"
-			value="220" />
-			
-		<ui:param
-			name="autoCompleteMinQueryLengthCriteriaVo"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCriteriaVo"
+		<ui:param name="autoCompleteQueryDelayUnit" value="300" />
+		<ui:param name="autoCompleteDropdownUnit" value="true" />
+		<ui:param name="autoCompleteGlobalUnit" value="true" />
+		<ui:param name="autoCompleteScrollHeightUnit" value="220" />
+
+		<ui:param name="autoCompleteMinQueryLengthCriteriaVo" value="1" />
+		<ui:param name="autoCompleteMaxResultsCriteriaVo"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCriteriaVo"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCriteriaVo"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalCriteriaVo"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCriteriaVo"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthCriteriaText"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCriteriaText"
+		<ui:param name="autoCompleteQueryDelayCriteriaVo" value="300" />
+		<ui:param name="autoCompleteDropdownCriteriaVo" value="true" />
+		<ui:param name="autoCompleteGlobalCriteriaVo" value="true" />
+		<ui:param name="autoCompleteScrollHeightCriteriaVo" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthCriteriaText" value="1" />
+		<ui:param name="autoCompleteMaxResultsCriteriaText"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCriteriaText"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCriteriaText"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalCriteriaText"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCriteriaText"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthCategory"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCategory"
+		<ui:param name="autoCompleteQueryDelayCriteriaText" value="300" />
+		<ui:param name="autoCompleteDropdownCriteriaText" value="true" />
+		<ui:param name="autoCompleteGlobalCriteriaText" value="true" />
+		<ui:param name="autoCompleteScrollHeightCriteriaText" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthCategory" value="1" />
+		<ui:param name="autoCompleteMaxResultsCategory"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCategory"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCategory"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalCategory"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCategory"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthCoding"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsCoding"
+		<ui:param name="autoCompleteQueryDelayCategory" value="300" />
+		<ui:param name="autoCompleteDropdownCategory" value="true" />
+		<ui:param name="autoCompleteGlobalCategory" value="true" />
+		<ui:param name="autoCompleteScrollHeightCategory" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthCoding" value="1" />
+		<ui:param name="autoCompleteMaxResultsCoding"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayCoding"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownCoding"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalCoding"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightCoding"
-			value="220" />
-			
-			<ui:param
-			name="autoCompleteMinQueryLengthTimeZone"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsTimeZone"
+		<ui:param name="autoCompleteQueryDelayCoding" value="300" />
+		<ui:param name="autoCompleteDropdownCoding" value="true" />
+		<ui:param name="autoCompleteGlobalCoding" value="true" />
+		<ui:param name="autoCompleteScrollHeightCoding" value="220" />
+
+		<ui:param name="autoCompleteMinQueryLengthTimeZone" value="1" />
+		<ui:param name="autoCompleteMaxResultsTimeZone"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayTimeZone"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownTimeZone"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalTimeZone"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightTimeZone"
-			value="220" />
-			
-		<ui:param
-			name="autoCompleteMinQueryLengthLdapEntry"
-			value="3" />
-		<ui:param
-			name="autoCompleteMaxResultsLdapEntry"
+		<ui:param name="autoCompleteQueryDelayTimeZone" value="300" />
+		<ui:param name="autoCompleteDropdownTimeZone" value="true" />
+		<ui:param name="autoCompleteGlobalTimeZone" value="true" />
+		<ui:param name="autoCompleteScrollHeightTimeZone" value="220" />
+
+		<ui:param name="autoCompleteMinQueryLengthLdapEntry" value="3" />
+		<ui:param name="autoCompleteMaxResultsLdapEntry"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayLdapEntry"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownLdapEntry"
-			value="true" />
-		<ui:param
-			name="autoCompleteGlobalLdapEntry"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightLdapEntry"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthLogicalPath"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsLogicalPath"
+		<ui:param name="autoCompleteQueryDelayLdapEntry" value="300" />
+		<ui:param name="autoCompleteDropdownLdapEntry" value="true" />
+		<ui:param name="autoCompleteGlobalLdapEntry" value="true" />
+		<ui:param name="autoCompleteScrollHeightLdapEntry" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthLogicalPath" value="1" />
+		<ui:param name="autoCompleteMaxResultsLogicalPath"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayLogicalPath"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownLogicalPath"
-			value="false" />
-		<ui:param
-			name="autoCompleteGlobalLogicalPath"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightLogicalPath"
-			value="220" />
-		<ui:param
-			name="autoCompleteMinQueryLengthInputField"
-			value="1" />
-		<ui:param
-			name="autoCompleteMaxResultsInputField"
+		<ui:param name="autoCompleteQueryDelayLogicalPath" value="300" />
+		<ui:param name="autoCompleteDropdownLogicalPath" value="false" />
+		<ui:param name="autoCompleteGlobalLogicalPath" value="true" />
+		<ui:param name="autoCompleteScrollHeightLogicalPath" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthInputField" value="1" />
+		<ui:param name="autoCompleteMaxResultsInputField"
 			value="#{applicationScopeBean.integerMaxValue}" />
-		<ui:param
-			name="autoCompleteQueryDelayInputField"
-			value="300" />
-		<ui:param
-			name="autoCompleteDropdownInputField"
-			value="false" />
-		<ui:param
-			name="autoCompleteGlobalInputField"
-			value="true" />
-		<ui:param
-			name="autoCompleteScrollHeightInputField"
-			value="220" />
-		<ui:param
-			name="multiPickerDataListsType"
-			value="definition" />
-		<ui:param
-			name="multiPickerDataListsRows"
-			value="5" />
-		<ui:param
-			name="multiPickerDataListsPaginator"
-			value="true" />
-		<ui:param
-			name="multiPickerDataListsPaginatorTemplate"
+		<ui:param name="autoCompleteQueryDelayInputField" value="300" />
+		<ui:param name="autoCompleteDropdownInputField" value="false" />
+		<ui:param name="autoCompleteGlobalInputField" value="true" />
+		<ui:param name="autoCompleteScrollHeightInputField" value="220" />
+		<ui:param name="multiPickerDataListsType" value="definition" />
+		<ui:param name="multiPickerDataListsRows" value="5" />
+		<ui:param name="multiPickerDataListsPaginator" value="true" />
+		<ui:param name="multiPickerDataListsPaginatorTemplate"
 			value="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" />
-		<ui:param
-			name="multiPickerDataListsRowsPerPageTemplate"
+		<ui:param name="multiPickerDataListsRowsPerPageTemplate"
 			value="5,10,20" />
-		<ui:param
-			name="multiPickerDataListsPaginatorPosition"
-			value="bottom" />
-		<ui:param
-			name="multiPickerDataListsPageLinks"
-			value="5" />
-		<ui:param
-			name="multiPickerDataListsPaginatorAlwaysVisible"
+		<ui:param name="multiPickerDataListsPaginatorPosition" value="bottom" />
+		<ui:param name="multiPickerDataListsPageLinks" value="5" />
+		<ui:param name="multiPickerDataListsPaginatorAlwaysVisible"
 			value="true" />
-		<ui:param
-			name="dataTablesRowsDefault"
-			value="5" />
-		<ui:param
-			name="dataTablesPaginatorDefault"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateDefault"
+		<ui:param name="dataTablesRowsDefault" value="5" />
+		<ui:param name="dataTablesPaginatorDefault" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateDefault"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateDefault"
+		<ui:param name="dataTablesRowsPerPageTemplateDefault"
 			value="5,10,20,50" />
-		<ui:param
-			name="dataTablesPaginatorPositionDefault"
-			value="bottom" />
-		<ui:param
-			name="dataTablesPageLinksDefault"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleDefault"
-			value="true" />
-		<ui:param
-			name="dataTablesScrollableDefault"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightDefault"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsDefault"
-			value="false" />
-		<ui:param
-			name="dataTablesRowsRowExpansion"
-			value="5" />
-		<ui:param
-			name="dataTablesPaginatorRowExpansion"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateRowExpansion"
+		<ui:param name="dataTablesPaginatorPositionDefault" value="bottom" />
+		<ui:param name="dataTablesPageLinksDefault" value="10" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleDefault" value="true" />
+		<ui:param name="dataTablesScrollableDefault" value="false" />
+		<ui:param name="dataTablesScrollHeightDefault" value="" />
+		<ui:param name="dataTablesResizableColumnsDefault" value="false" />
+		<ui:param name="dataTablesRowsRowExpansion" value="5" />
+		<ui:param name="dataTablesPaginatorRowExpansion" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateRowExpansion"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateRowExpansion"
+		<ui:param name="dataTablesRowsPerPageTemplateRowExpansion"
 			value="5,10,20" />
-		<ui:param
-			name="dataTablesPaginatorPositionRowExpansion"
+		<ui:param name="dataTablesPaginatorPositionRowExpansion"
 			value="bottom" />
-		<ui:param
-			name="dataTablesPageLinksRowExpansion"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleRowExpansion"
+		<ui:param name="dataTablesPageLinksRowExpansion" value="10" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleRowExpansion"
 			value="true" />
-		<ui:param
-			name="dataTablesScrollableRowExpansion"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightRowExpansion"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsRowExpansion"
-			value="false" />
-		<ui:param
-			name="dataTablesRowsSchedule"
-			value="5" />
-		<ui:param
-			name="dataTablesPaginatorSchedule"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateSchedule"
+		<ui:param name="dataTablesScrollableRowExpansion" value="false" />
+		<ui:param name="dataTablesScrollHeightRowExpansion" value="" />
+		<ui:param name="dataTablesResizableColumnsRowExpansion" value="false" />
+		<ui:param name="dataTablesRowsSchedule" value="5" />
+		<ui:param name="dataTablesPaginatorSchedule" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateSchedule"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateSchedule"
-			value="5,10" />
-		<ui:param
-			name="dataTablesPaginatorPositionSchedule"
-			value="bottom" />
-		<ui:param
-			name="dataTablesPageLinksSchedule"
-			value="5" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleSchedule"
-			value="true" />
-		<ui:param
-			name="dataTablesScrollableSchedule"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightSchedule"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsSchedule"
-			value="false" />
-		<ui:param
-			name="dataTablesRowsAuditTrail"
-			value="5" />
-		<ui:param
-			name="dataTablesPaginatorAuditTrail"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateAuditTrail"
+		<ui:param name="dataTablesRowsPerPageTemplateSchedule" value="5,10" />
+		<ui:param name="dataTablesPaginatorPositionSchedule" value="bottom" />
+		<ui:param name="dataTablesPageLinksSchedule" value="5" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleSchedule" value="true" />
+		<ui:param name="dataTablesScrollableSchedule" value="false" />
+		<ui:param name="dataTablesScrollHeightSchedule" value="" />
+		<ui:param name="dataTablesResizableColumnsSchedule" value="false" />
+		<ui:param name="dataTablesRowsAuditTrail" value="5" />
+		<ui:param name="dataTablesPaginatorAuditTrail" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateAuditTrail"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateAuditTrail"
-			value="5,10" />
-		<ui:param
-			name="dataTablesPaginatorPositionAuditTrail"
-			value="bottom" />
-		<ui:param
-			name="dataTablesPageLinksAuditTrail"
-			value="5" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleAuditTrail"
+		<ui:param name="dataTablesRowsPerPageTemplateAuditTrail" value="5,10" />
+		<ui:param name="dataTablesPaginatorPositionAuditTrail" value="bottom" />
+		<ui:param name="dataTablesPageLinksAuditTrail" value="5" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleAuditTrail"
 			value="true" />
-		<ui:param
-			name="dataTablesScrollableAuditTrail"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightAuditTrail"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsAuditTrail"
-			value="false" />
-		<ui:param
-			name="dataTablesRowsFullPage"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorFullPage"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateFullPage"
+		<ui:param name="dataTablesScrollableAuditTrail" value="false" />
+		<ui:param name="dataTablesScrollHeightAuditTrail" value="" />
+		<ui:param name="dataTablesResizableColumnsAuditTrail" value="false" />
+		<ui:param name="dataTablesRowsFullPage" value="10" />
+		<ui:param name="dataTablesPaginatorFullPage" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateFullPage"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateFullPage"
+		<ui:param name="dataTablesRowsPerPageTemplateFullPage"
 			value="5,10,20,50" />
-		<ui:param
-			name="dataTablesPaginatorPositionFullPage"
-			value="bottom" />
-		<ui:param
-			name="dataTablesPageLinksFullPage"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleFullPage"
-			value="true" />
-		<ui:param
-			name="dataTablesScrollableFullPage"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightFullPage"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsFullPage"
-			value="false" />
-		<ui:param
-			name="dataTablesRowsFullPageTab"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorFullPageTab"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateFullPageTab"
+		<ui:param name="dataTablesPaginatorPositionFullPage" value="bottom" />
+		<ui:param name="dataTablesPageLinksFullPage" value="10" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleFullPage" value="true" />
+		<ui:param name="dataTablesScrollableFullPage" value="false" />
+		<ui:param name="dataTablesScrollHeightFullPage" value="" />
+		<ui:param name="dataTablesResizableColumnsFullPage" value="false" />
+		<ui:param name="dataTablesRowsFullPageTab" value="10" />
+		<ui:param name="dataTablesPaginatorFullPageTab" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateFullPageTab"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateFullPageTab"
+		<ui:param name="dataTablesRowsPerPageTemplateFullPageTab"
 			value="5,10,20,50" />
-		<ui:param
-			name="dataTablesPaginatorPositionFullPageTab"
-			value="bottom" />
-		<ui:param
-			name="dataTablesPageLinksFullPageTab"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleFullPageTab"
+		<ui:param name="dataTablesPaginatorPositionFullPageTab" value="bottom" />
+		<ui:param name="dataTablesPageLinksFullPageTab" value="10" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleFullPageTab"
 			value="true" />
-		<ui:param
-			name="dataTablesScrollableFullPageTab"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightFullPageTab"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsFullPageTab"
-			value="false" />
-		<ui:param
-			name="dataTablesRowsSearch"
-			value="20" />
-		<ui:param
-			name="dataTablesPaginatorSearch"
-			value="true" />
-		<ui:param
-			name="dataTablesPaginatorTemplateSearch"
+		<ui:param name="dataTablesScrollableFullPageTab" value="false" />
+		<ui:param name="dataTablesScrollHeightFullPageTab" value="" />
+		<ui:param name="dataTablesResizableColumnsFullPageTab" value="false" />
+		<ui:param name="dataTablesRowsSearch" value="20" />
+		<ui:param name="dataTablesPaginatorSearch" value="true" />
+		<ui:param name="dataTablesPaginatorTemplateSearch"
 			value="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" />
-		<ui:param
-			name="dataTablesRowsPerPageTemplateSearch"
+		<ui:param name="dataTablesRowsPerPageTemplateSearch"
 			value="5,10,20,50" />
-		<ui:param
-			name="dataTablesPaginatorPositionSearch"
-			value="both" />
-		<ui:param
-			name="dataTablesPageLinksSearch"
-			value="10" />
-		<ui:param
-			name="dataTablesPaginatorAlwaysVisibleSearch"
-			value="true" />
-		<ui:param
-			name="dataTablesScrollableSearch"
-			value="false" />
-		<ui:param
-			name="dataTablesScrollHeightSearch"
-			value="" />
-		<ui:param
-			name="dataTablesResizableColumnsSearch"
-			value="false" />
+		<ui:param name="dataTablesPaginatorPositionSearch" value="both" />
+		<ui:param name="dataTablesPageLinksSearch" value="10" />
+		<ui:param name="dataTablesPaginatorAlwaysVisibleSearch" value="true" />
+		<ui:param name="dataTablesScrollableSearch" value="false" />
+		<ui:param name="dataTablesScrollHeightSearch" value="" />
+		<ui:param name="dataTablesResizableColumnsSearch" value="false" />
 		<ui:insert name="head"></ui:insert>
 		<ui:insert name="menu"></ui:insert>
 		<ui:insert name="headline"></ui:insert>
 		<ui:insert name="content"></ui:insert>
 		<h:form>
-			<p:remoteCommand
-				process="@this"
-				name="keepAliveCallback"
+			<p:remoteCommand process="@this" name="keepAliveCallback"
 				actionListener="#{applicationScopeBean.keepAliveCallback}"
 				oncomplete="handleKeepAliveCallback(xhr, status, args)" />
-			<p:notificationBar
-				rendered="#{showStatusBar}"
-				styleClass="ctsms-statusbar"
-				position="bottom"
-				autoDisplay="true"
+			<p:notificationBar rendered="#{showStatusBar}"
+				styleClass="ctsms-statusbar" position="bottom" autoDisplay="true"
 				effect="none">
-				<h:panelGrid
-					columns="3"
-					cellpadding="0"
+				<h:panelGrid columns="3" cellpadding="0"
 					styleClass="ctsms-statusbar-panelgrid"
 					columnClasses="ctsms-statusbar-left-column,ctsms-statusbar-version-column,ctsms-statusbar-contact-column">
-					<h:outputText
-						rendered="#{!statusBarShowText}"
+					<h:outputText rendered="#{!statusBarShowText}"
 						styleClass="#{sessionScopeBean.showStatusBarInfo ? 'ctsms-statusbar-icon ctsms-icon-warning-large' : ''}"
-						value="#{sessionScopeBean.statusBarInfo}"
-						escape="false" />
-					<h:outputText
-						rendered="#{statusBarShowText}"
+						value="#{sessionScopeBean.statusBarInfo}" escape="false" />
+					<h:outputText rendered="#{statusBarShowText}"
 						styleClass="ctsms-statusbar-icon-small ctsms-icon-information"
-						value="#{statusBarText}"
-						escape="false" />
-					<h:outputText
-						value="#{applicationScopeBean.applicationInstance}"
+						value="#{statusBarText}" escape="false" />
+					<h:outputText value="#{applicationScopeBean.applicationInstance}"
 						escape="false" />
 					<h:outputLink value="mailto:#{applicationScopeBean.contactEmail}">
-						<f:param
-							name="subject"
-							value="#{labels.contact_subject}" />
-						<h:outputText
-							value="#{labels.contact_label}"
-							escape="false" />
+						<f:param name="subject" value="#{labels.contact_subject}" />
+						<h:outputText value="#{labels.contact_label}" escape="false" />
 					</h:outputLink>
 				</h:panelGrid>
 			</p:notificationBar>

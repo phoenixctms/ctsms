@@ -10,15 +10,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialassociation_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeTrialAssociation"
-				actionListener="#{trialAssociationBean.change(trialBean.in.id)}"
-				update="association_lists" /> -->
+
 			<p:remoteCommand process="@this" name="changeEnrollmentChart"
 				actionListener="#{trialAssociationBean.handleEnrollmentChartChange}"
 				update=":tabView:trialassociation_form:association_lists:enrollmentChart" />
-			<!-- 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)" -->
+
 			<p:remoteCommand process="@this" name="changeShiftDurationSummary"
 				actionListener="#{trialAssociationBean.handleShiftDurationSummaryChange}"
 				update=":tabView:trialassociation_form:association_lists:shiftDurationSummaryDataTable" />
@@ -504,7 +500,7 @@
 								<p:column style="width:16px;">
 									<p:rowToggler />
 								</p:column>
-				
+
 								<p:column sortBy="#{randomizationListCode.vo.id}">
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
@@ -518,15 +514,14 @@
 									<ui:param name="showReason" value="true" />
 
 								</ui:include>
-								
+
 								<p:column style="width:32px;white-space:nowrap;">
-								<p:commandButton
-									type="button"
-									disabled="#{empty randomizationListCode.vo.listEntry}"
-									title="#{labels.open_proband_button_label}"
-									icon="ui-icon ui-icon-extlink"
-									onclick="openProband(#{randomizationListCode.vo.listEntry.proband.id})" />									
-								</p:column>								
+									<p:commandButton type="button"
+										disabled="#{empty randomizationListCode.vo.listEntry}"
+										title="#{labels.open_proband_button_label}"
+										icon="ui-icon ui-icon-extlink"
+										onclick="openProband(#{randomizationListCode.vo.listEntry.proband.id})" />
+								</p:column>
 
 							</p:dataTable>
 						</h:panelGrid>

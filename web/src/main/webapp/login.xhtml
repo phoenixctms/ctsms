@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,42 +10,25 @@
 </h:head>
 <h:body>
 	<ui:composition template="/META-INF/templates/baseTemplate.xhtml">
-		<ui:param
-			name="title"
-			value="#{labels.login_title}" />
-		<ui:param
-			name="favicon"
-			value="ctsms.ico" />
-		<ui:param
-			name="allowEnter"
-			value="true" />			
-		<ui:param
-			name="viewExpired"
+		<ui:param name="title" value="#{labels.login_title}" />
+		<ui:param name="favicon" value="ctsms.ico" />
+		<ui:param name="allowEnter" value="true" />
+		<ui:param name="viewExpired"
 			value="#{param[applicationScopeBean.parameterName('EXPIRED')]}" />
-		<ui:param
-			name="authenticationFailed"
+		<ui:param name="authenticationFailed"
 			value="#{param[applicationScopeBean.parameterName('AUTHENTICATION_FAILED')]}" />
-		<ui:param
-			name="authenticationFailedMessageBase64"
+		<ui:param name="authenticationFailedMessageBase64"
 			value="#{authenticationFailed ? param[applicationScopeBean.parameterName('AUTHENTICATION_FAILED_MESSAGE')] : ''}" />
-		<ui:param
-			name="authenticationFailedMessage"
+		<ui:param name="authenticationFailedMessage"
 			value="#{applicationScopeBean.decodeBase64(authenticationFailedMessageBase64)}" />
-		<ui:param
-			name="refererBase64"
+		<ui:param name="refererBase64"
 			value="#{param[applicationScopeBean.parameterName('REFERER')]}" />
-		<ui:param
-			name="onLoadJsFunction"
+		<ui:param name="onLoadJsFunction"
 			value="openReferer(#{sessionScopeBean.loggedIn},'#{labels.retry_action_after_expiration}','#{labels.popup_close_after_expiration}')" />
-		<ui:param
-			name="showStatusBar"
-			value="true" />
-		<ui:param
-			name="statusBarShowText"
+		<ui:param name="showStatusBar" value="true" />
+		<ui:param name="statusBarShowText"
 			value="#{!viewExpired and !authenticationFailed and !sessionScopeBean.authenticationFailed}" />
-		<ui:param
-			name="statusBarText"
-			value="#{labels.allow_popups_message}" />
+		<ui:param name="statusBarText" value="#{labels.allow_popups_message}" />
 		<ui:define name="javascript">
 		    var IS_LOGIN_WINDOW = 1;
 			var REFERER_URL_BASE64 = '#{refererBase64}';
@@ -54,167 +36,114 @@
 		</ui:define>
 		<ui:define name="content">
 			<h:form id="login_form">
-				<p:dialog
-					closable="false"
-					visible="true"
+				<p:dialog closable="false" visible="true"
 					header="#{sessionScopeBean.loggedIn ? labels.login_successful_title : applicationScopeBean.loginPromptTitle}"
-					width="620"
-					height="340"
-					showEffect="#{effect}"
+					width="620" height="340" showEffect="#{effect}"
 					hideEffect="#{effect}">
-					<h:panelGrid
-						rendered="#{!sessionScopeBean.loggedIn}"
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-login-panelgrid"
+					<h:panelGrid rendered="#{!sessionScopeBean.loggedIn}" columns="1"
+						cellpadding="0" styleClass="ctsms-login-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-input-row,ctsms-message-row,ctsms-message-row,ctsms-message-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="3"
-							cellpadding="2"
+						<h:panelGrid columns="3" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="username"
+							<h:outputLabel for="username"
 								value="#{labels.login_username_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="username"
-									value="#{sessionScopeBean.username}"
-									required="true"
-									label="#{labels.login_username}"
+								<p:inputText id="username" value="#{sessionScopeBean.username}"
+									required="true" label="#{labels.login_username}"
 									styleClass="ctsms-control" />
-								<p:tooltip
-									rendered="false"
-									for="username">
-									<h:outputText
-										value="#{labels.login_username_tooltip}"
+								<p:tooltip rendered="false" for="username">
+									<h:outputText value="#{labels.login_username_tooltip}"
 										escape="false" />
 								</p:tooltip>
-								<!-- #{enableTooltips} -->
 							</h:panelGroup>
 							<p:message for="username" />
-							<h:outputLabel
-								for="password"
+							<h:outputLabel for="password"
 								value="#{labels.login_password_label}" />
 							<h:panelGroup>
-								<p:password
-									id="password"
-									value="#{sessionScopeBean.password}"
-									required="false"
-									feedback="false"
+								<p:password id="password" value="#{sessionScopeBean.password}"
+									required="false" feedback="false"
 									redisplay="#{sessionScopeBean.localPasswordRequired}"
-									label="#{labels.login_password}"
-									styleClass="ctsms-password" />
-								<p:tooltip
-									rendered="false"
-									for="password">
-									<h:outputText
-										value="#{labels.login_password_tooltip}"
+									label="#{labels.login_password}" styleClass="ctsms-password" />
+								<p:tooltip rendered="false" for="password">
+									<h:outputText value="#{labels.login_password_tooltip}"
 										escape="false" />
 								</p:tooltip>
-								<!-- #{enableTooltips} -->
 							</h:panelGroup>
 							<p:message for="password" />
 							<h:outputLabel
 								style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}"
-								for="localPassword"
-								value="#{labels.login_local_password_label}" />
-							<h:panelGroup style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}">
-								<p:password
-									id="localPassword"
-									value="#{sessionScopeBean.localPassword}"
-									required="false"
-									feedback="false"
-									redisplay="false"
+								for="localPassword" value="#{labels.login_local_password_label}" />
+							<h:panelGroup
+								style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}">
+								<p:password id="localPassword"
+									value="#{sessionScopeBean.localPassword}" required="false"
+									feedback="false" redisplay="false"
 									label="#{labels.login_local_password}"
 									styleClass="ctsms-password" />
-								<p:tooltip
-									rendered="true"
-									for="localPassword">
-									<h:outputText
-										value="#{labels.login_local_password_tooltip}"
+								<p:tooltip rendered="true" for="localPassword">
+									<h:outputText value="#{labels.login_local_password_tooltip}"
 										escape="false" />
 								</p:tooltip>
-								<!-- rendered="#{enableTooltips}" -->
 							</h:panelGroup>
 							<p:message
 								style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}"
 								for="localPassword" />
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{sessionScopeBean.captchaRequired}"
-							columns="2"
-							cellpadding="2"
+						<h:panelGrid rendered="#{sessionScopeBean.captchaRequired}"
+							columns="2" cellpadding="2"
 							columnClasses="ctsms-input-column,ctsms-message-for-column">
-							<ctsms:captcha
-								required="false"
-								id="captcha"
-								secure="true"
+							<ctsms:captcha required="false" id="captcha" secure="true"
 								label="#{labels.login_captcha}"
-								language="#{sessionScopeBean.locale.language}"
-								theme="white" />
+								language="#{sessionScopeBean.locale.language}" theme="white" />
 							<p:message for="captcha" />
 						</h:panelGrid>
-						<!-- <h:outputText rendered="#{!sessionScopeBean.captchaRequired}" /> -->
-						
-						<h:outputLink rendered="#{!sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired}" value="http://phoenixctms.org">
-							<h:graphicImage style="border:0px;" value="resources/images/phoenix_banner.png" />
+
+						<h:outputLink
+							rendered="#{!sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired}"
+							value="http://phoenixctms.org">
+							<h:graphicImage style="border:0px;"
+								value="resources/images/phoenix_banner.png" />
 						</h:outputLink>
-						
+
 						<p:messages globalOnly="true" />
-						<ui:include src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
-							<ui:param
-								name="rendered"
-								value="#{viewExpired}" />
-							<ui:param
-								name="value"
-								value="#{labels.view_expired_message}" />
-							<ui:param
-								name="error_message_id"
-								value="viewexpired_error_msg" />
+						<ui:include
+							src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
+							<ui:param name="rendered" value="#{viewExpired}" />
+							<ui:param name="value" value="#{labels.view_expired_message}" />
+							<ui:param name="error_message_id" value="viewexpired_error_msg" />
 						</ui:include>
 						<h:outputText rendered="#{!viewExpired}" />
-						<ui:include src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
-							<ui:param
-								name="rendered"
-								value="#{authenticationFailed}" />
-							<ui:param
-								name="value"
-								value="#{authenticationFailedMessage}" />
-							<ui:param
-								name="error_message_id"
+						<ui:include
+							src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
+							<ui:param name="rendered" value="#{authenticationFailed}" />
+							<ui:param name="value" value="#{authenticationFailedMessage}" />
+							<ui:param name="error_message_id"
 								value="authenticationfailed_error_msg" />
 						</ui:include>
 						<h:outputText rendered="#{!authenticationFailed}" />
-						<ui:include src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
-							<ui:param
-								name="rendered"
+						<ui:include
+							src="/META-INF/includes/shared/summaryErrorMessage.xhtml">
+							<ui:param name="rendered"
 								value="#{sessionScopeBean.authenticationFailed}" />
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{sessionScopeBean.authenticationFailedMessage}" />
-							<ui:param
-								name="error_message_id"
+							<ui:param name="error_message_id"
 								value="sessionauthenticationfailed_error_msg" />
 						</ui:include>
 						<h:outputText rendered="#{!sessionScopeBean.authenticationFailed}" />
 						<p:toolbar>
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									value="#{labels.login_button_label}"
+								<p:commandButton value="#{labels.login_button_label}"
 									action="#{sessionScopeBean.login}"
-									icon="ui-icon ui-icon-arrowreturnthick-1-e"
-									ajax="false"
+									icon="ui-icon ui-icon-arrowreturnthick-1-e" ajax="false"
 									disabled="false">
 									<f:param
 										name="#{applicationScopeBean.parameterName('REFERER')}"
 										value="#{refererBase64 == null ? '' : refererBase64}" />
 								</p:commandButton>
-								<p:commandButton
-									value="#{labels.reset_button_label}"
+								<p:commandButton value="#{labels.reset_button_label}"
 									action="#{sessionScopeBean.resetLoginInputs}"
-									icon="ui-icon ui-icon-close"
-									immediate="true"
-									ajax="false"
+									icon="ui-icon ui-icon-close" immediate="true" ajax="false"
 									disabled="false">
 									<f:param
 										name="#{applicationScopeBean.parameterName('REFERER')}"
@@ -223,21 +152,18 @@
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<ui:include src="/META-INF/includes/shared/toolbarAjaxStatus.xhtml" />
+								<ui:include
+									src="/META-INF/includes/shared/toolbarAjaxStatus.xhtml" />
 							</p:toolbarGroup>
 						</p:toolbar>
 					</h:panelGrid>
-					<h:panelGrid
-						rendered="#{sessionScopeBean.loggedIn}"
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-login-panelgrid"
+					<h:panelGrid rendered="#{sessionScopeBean.loggedIn}" columns="1"
+						cellpadding="0" styleClass="ctsms-login-panelgrid"
 						rowClasses="ctsms-login-notification-row">
-						<h:panelGrid
-							columns="1"
-							cellpadding="2"
+						<h:panelGrid columns="1" cellpadding="2"
 							columnClasses="ctsms-text-column-bold">
-							<h:outputFormat value="#{viewExpired ? labels.restoring_view_message : labels.logged_in_message}">
+							<h:outputFormat
+								value="#{viewExpired ? labels.restoring_view_message : labels.logged_in_message}">
 								<f:param value="#{sessionScopeBean.userIdentityString}" />
 							</h:outputFormat>
 						</h:panelGrid>

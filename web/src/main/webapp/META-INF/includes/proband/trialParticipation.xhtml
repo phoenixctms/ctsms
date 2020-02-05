@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,21 +10,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialparticipation_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeTrialParticipation"
-				actionListener="#{trialParticipationBean.change(probandBean.in.id)}"
-				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update="trialparticipation_list,trialParticipationListTabView" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
-					widgetVar="trialParticipationList"
-					rows="#{dataTablesRowsDefault}"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
+					widgetVar="trialParticipationList" rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
 					rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateDefault}"
@@ -39,27 +28,23 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="probandListEntry"
 					value="#{trialParticipationBean.probandListEntryModel}"
-					id="trialparticipation_list"
-					selectionMode="single"
+					id="trialparticipation_list" selectionMode="single"
 					selection="#{trialParticipationBean.selectedProbandListEntry}"
 					rowStyleClass="#{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:trialparticipation_form:trialParticipationListTabView:probandlistentry_input,:tabView:trialparticipation_form:trialParticipationListTabView:probandliststatus_list,:tabView:trialparticipation_form:trialParticipationListTabView:probandliststatus_input,:tabView:trialparticipation_form:trialParticipationListTabView:tagvalue_input_grid"
 						oncomplete="handleUpdateTrialParticipationListTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 					<f:facet name="header">
-						<h:panelGrid
-							columns="2"
-							cellpadding="0"
+						<h:panelGrid columns="2" cellpadding="0"
 							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
-							<h:outputText value="#{trialParticipationBean.probandListEntryModel.rowCount} #{probandlabels.trial_participation_trialparticipation_list_header}" />
-							<p:commandButton
-								type="button"
+							<h:outputText
+								value="#{trialParticipationBean.probandListEntryModel.rowCount} #{probandlabels.trial_participation_trialparticipation_list_header}" />
+							<p:commandButton type="button"
 								title="#{labels.open_table_columns_dialog_button_label}"
 								icon="ui-icon ui-icon-wrench"
 								styleClass="ctsms-list-header-button"
 								onclick="trialParticipationListTableColumnsDialog.show()" />
-						</h:panelGrid>	
+						</h:panelGrid>
 					</f:facet>
 					<p:column sortBy="#{probandListEntry.vo.id}">
 						<f:facet name="header">
@@ -69,236 +54,185 @@
 					</p:column>
 					<p:column sortBy="#{probandListEntry.vo.trial.name}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.trial_participation_trialparticipation_list_trial_name_column}" />
+							<h:outputText
+								value="#{probandlabels.trial_participation_trialparticipation_list_trial_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{probandListEntry.vo.trial.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{probandListEntry.vo.trial.name}" />
+							<ui:param name="icon"
 								value="#{probandListEntry.vo.trial.status.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
+							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
-					<p:column
-						sortBy="#{probandListEntry.vo.trial.department}"
+					<p:column sortBy="#{probandListEntry.vo.trial.department}"
 						filterBy="#{probandListEntry.vo.trial.department.id}"
 						filterOptions="#{sessionScopeBean.filterDepartments}">
-						<f:attribute name="visibleDefault" value = "false" />
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.trial_participation_trialparticipation_list_trial_department_column}" />
+							<h:outputText
+								value="#{probandlabels.trial_participation_trialparticipation_list_trial_department_column}" />
 						</f:facet>
 						<h:outputText value="#{probandListEntry.vo.trial.department.name}" />
-					</p:column>					
+					</p:column>
 					<p:column sortBy="#{probandListEntry.vo.position}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.trial_participation_trialparticipation_list_position_column}" />
+							<h:outputText
+								value="#{probandlabels.trial_participation_trialparticipation_list_position_column}" />
 						</f:facet>
 						<h:outputText value="#{probandListEntry.vo.position}" />
 					</p:column>
 					<p:column sortBy="#{probandListEntry.vo.group.title}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.trial_participation_trialparticipation_list_group_column}" />
+							<h:outputText
+								value="#{probandlabels.trial_participation_trialparticipation_list_group_column}" />
 						</f:facet>
 						<h:outputText value="#{probandListEntry.vo.group.title}" />
 					</p:column>
-					
-				<p:column sortBy="#{probandListEntry.vo.rating}" rendered="#{trialParticipationBean.showProbandListEntryRating}" style="width:100px;">
-					<f:facet name="header">
-						<h:outputText value="#{probandlabels.trial_participation_trialparticipation_list_rating_column}" />
-					</f:facet>
-								<p:rating
-									rendered="#{not empty probandListEntry.vo.ratingMax}"
-									value="#{probandListEntry.vo.rating}"
-									stars="#{probandListEntry.vo.ratingMax}"
-									required="false"
-									cancel="false"
-									readonly="true"/>
-				</p:column>							
-					
+
+					<p:column sortBy="#{probandListEntry.vo.rating}"
+						rendered="#{trialParticipationBean.showProbandListEntryRating}"
+						style="width:100px;">
+						<f:facet name="header">
+							<h:outputText
+								value="#{probandlabels.trial_participation_trialparticipation_list_rating_column}" />
+						</f:facet>
+						<p:rating rendered="#{not empty probandListEntry.vo.ratingMax}"
+							value="#{probandListEntry.vo.rating}"
+							stars="#{probandListEntry.vo.ratingMax}" required="false"
+							cancel="false" readonly="true" />
+					</p:column>
+
 					<ui:include src="../shared/probandListEntryTableColumns.xhtml">
-						<ui:param
-							name="probandListEntryModel"
+						<ui:param name="probandListEntryModel"
 							value="#{trialParticipationBean.probandListEntryModel}" />
-						<ui:param
-							name="probandlistentry_list"
+						<ui:param name="probandlistentry_list"
 							value=":tabView:trialparticipation_form:trialparticipation_list" />
-						<ui:param
-							name="showReimbursementTotalsColumn"
-							value="true" />
-						<ui:param
-							name="showStatusDetails"
-							value="true" />							
-						<ui:param
-							name="byTagInputField"
-							value="true" />
-						<ui:param
-							name="byInquiryInputField"
-							value="true" />
-						<ui:param
-							name="allTrials"
-							value="false" />
-						<ui:param
-							name="lazyModel"
-							value="true" />
-						<ui:param
-							name="person"
-							value="#{trialParticipationBean.proband.person}" />								
+						<ui:param name="showReimbursementTotalsColumn" value="true" />
+						<ui:param name="showStatusDetails" value="true" />
+						<ui:param name="byTagInputField" value="true" />
+						<ui:param name="byInquiryInputField" value="true" />
+						<ui:param name="allTrials" value="false" />
+						<ui:param name="lazyModel" value="true" />
+						<ui:param name="person"
+							value="#{trialParticipationBean.proband.person}" />
 					</ui:include>
 					<p:column style="width:32px;">
-						<p:commandButton
-							title="#{labels.open_trial_button_label}"
-							type="button"
-							icon="ui-icon ui-icon-extlink"
+						<p:commandButton title="#{labels.open_trial_button_label}"
+							type="button" icon="ui-icon ui-icon-extlink"
 							onclick="openTrial(#{probandListEntry.vo.trial.id})" />
 					</p:column>
 				</p:dataTable>
-				<p:tabView
-					widgetVar="trialParticipationListTabView"
+				<p:tabView widgetVar="trialParticipationListTabView"
 					id="trialParticipationListTabView"
 					styleClass="ctsms-probandlist-tabview">
-					<!-- 					activeIndex="2" -->
-					<!-- <p:ajax
-						event="tabChange"
-						listener="#{trialParticipationBean.onTabViewChange}"
-						process="@none"
-						update="probandListEntryMessages,probandListStatusEntryMessages,probandListEntryTagValueMessages" /> -->
-					<p:tab
-						id="probandListEntryMain"
+
+
+					<p:tab id="probandListEntryMain"
 						title="#{trialParticipationBean.mainTabTitle}">
 						<p:panel id="probandlistentry_input">
 							<f:facet name="header">
 								<h:outputText value="#{trialParticipationBean.title}" />
 							</f:facet>
-							<h:panelGrid
-								columns="1"
-								cellpadding="0"
+							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
 								<ui:include src="../shared/probandListEntry.xhtml">
-									<ui:param
-										name="namingContainer"
+									<ui:param name="namingContainer"
 										value=":tabView:trialparticipation_form:trialParticipationListTabView" />
-									<ui:param
-										name="probandList"
+									<ui:param name="probandList"
 										value=":tabView:trialparticipation_form:trialparticipation_list" />
-									<ui:param
-										name="probandListBean"
+									<ui:param name="probandListBean"
 										value="#{trialParticipationBean}" />
-									<ui:param
-										name="showProbandPicker"
-										value="false" />
-									<ui:param
-										name="showTrialPicker"
-										value="true" />
+									<ui:param name="showProbandPicker" value="false" />
+									<ui:param name="showTrialPicker" value="true" />
 								</ui:include>
 								<p:messages for="probandListEntryMessages" />
 								<p:toolbar>
 									<p:toolbarGroup align="left">
-										<h:outputText
-											styleClass="ctsms-toolbar-text"
+										<h:outputText styleClass="ctsms-toolbar-text"
 											value="#{trialParticipationBean.created ? trialParticipationBean.modifiedAnnotation : ''}" />
 									</p:toolbarGroup>
 									<p:separator />
 									<p:toolbarGroup align="right">
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											value="#{labels.reset_button_label}"
 											actionListener="#{trialParticipationBean.reset}"
 											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-											icon="ui-icon ui-icon-close"
-											ajax="true"
-											disabled="false"
+											icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 											update=":tabView:trialparticipation_form:trialparticipation_list,:tabView:trialparticipation_form:trialParticipationListTabView" />
-										<p:commandButton
-											process="@this,probandlistentry_input"
+										<p:commandButton process="@this,probandlistentry_input"
 											rendered="#{not trialParticipationBean.randomization}"
-											id="addProbandListEntry"
-											value="#{labels.add_button_label}"
+											id="addProbandListEntry" value="#{labels.add_button_label}"
 											actionListener="#{trialParticipationBean.add}"
 											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-											icon="ui-icon ui-icon-plusthick"
-											ajax="true"
+											icon="ui-icon ui-icon-plusthick" ajax="true"
 											disabled="#{!trialParticipationBean.createable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
-											
-											<p:splitButton
-												ajax="true"
-												rendered="#{trialParticipationBean.randomization}"
+
+										<p:splitButton ajax="true"
+											rendered="#{trialParticipationBean.randomization}"
+											process="@this,probandlistentry_input"
+											id="addProbandListEntryNotRandomized"
+											actionListener="#{trialParticipationBean.add}"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											disabled="#{!trialParticipationBean.createable}"
+											update=":tabView:trialparticipation_form:trialParticipationListTabView"
+											value="#{labels.add_button_label}"
+											icon="ui-icon ui-icon-plusthick">
+											<p:menuitem ajax="true"
 												process="@this,probandlistentry_input"
-												id="addProbandListEntryNotRandomized"
-												actionListener="#{trialParticipationBean.add}"
+												id="addProbandListEntryRandomized"
+												actionListener="#{trialParticipationBean.addRandomized}"
 												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
 												disabled="#{!trialParticipationBean.createable}"
 												update=":tabView:trialparticipation_form:trialParticipationListTabView"
-												value="#{labels.add_button_label}"
-												icon="ui-icon ui-icon-plusthick">
-												<p:menuitem
-													ajax="true"
-													process="@this,probandlistentry_input"
-													id="addProbandListEntryRandomized"
-													actionListener="#{trialParticipationBean.addRandomized}"
-													oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-													disabled="#{!trialParticipationBean.createable}"
-													update=":tabView:trialparticipation_form:trialParticipationListTabView"
-													value="#{labels.add_randomize_button_label}"
-													icon="ctsms-menubar-icon ui-icon-gear">
-												</p:menuitem>
-											</p:splitButton>											
-											
-										<p:commandButton
-											process="@this,probandlistentry_input"
+												value="#{labels.add_randomize_button_label}"
+												icon="ctsms-menubar-icon ui-icon-gear">
+											</p:menuitem>
+										</p:splitButton>
+
+										<p:commandButton process="@this,probandlistentry_input"
 											rendered="#{not trialParticipationBean.randomization}"
 											id="updateProbandListEntry"
 											value="#{labels.update_button_label}"
 											actionListener="#{trialParticipationBean.update}"
 											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-											icon="ui-icon ui-icon-disk"
-											ajax="true"
+											icon="ui-icon ui-icon-disk" ajax="true"
 											disabled="#{!trialParticipationBean.editable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
-											
-										<p:splitButton
-												ajax="true"
-												rendered="#{trialParticipationBean.randomization}"
+
+										<p:splitButton ajax="true"
+											rendered="#{trialParticipationBean.randomization}"
+											process="@this,probandlistentry_input"
+											id="updateProbandListEntryNotRandomized"
+											actionListener="#{trialParticipationBean.update}"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											disabled="#{!trialParticipationBean.editable}"
+											update=":tabView:trialparticipation_form:trialParticipationListTabView"
+											value="#{labels.update_button_label}"
+											icon="ui-icon ui-icon-disk">
+											<p:menuitem ajax="true"
 												process="@this,probandlistentry_input"
-												id="updateProbandListEntryNotRandomized"
-												actionListener="#{trialParticipationBean.update}"
+												id="updateProbandListEntryRandomized"
+												actionListener="#{trialParticipationBean.updateRandomized}"
 												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
 												disabled="#{!trialParticipationBean.editable}"
 												update=":tabView:trialparticipation_form:trialParticipationListTabView"
-												value="#{labels.update_button_label}"
-												icon="ui-icon ui-icon-disk">
-												<p:menuitem
-													ajax="true"
-													process="@this,probandlistentry_input"
-													id="updateProbandListEntryRandomized"
-													actionListener="#{trialParticipationBean.updateRandomized}"
-													oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-													disabled="#{!trialParticipationBean.editable}"
-													update=":tabView:trialparticipation_form:trialParticipationListTabView"
-													value="#{labels.update_randomize_button_label}"
-													icon="ctsms-menubar-icon ui-icon-gear">
-												</p:menuitem>
-											</p:splitButton>												
-											
-										<p:commandButton
-											process="@this"
+												value="#{labels.update_randomize_button_label}"
+												icon="ctsms-menubar-icon ui-icon-gear">
+											</p:menuitem>
+										</p:splitButton>
+
+										<p:commandButton process="@this"
 											value="#{labels.delete_button_label}"
 											onclick="probandListEntryDeleteConfirmation.show()"
 											disabled="#{!trialParticipationBean.removable}"
-											icon="ui-icon ui-icon-trash"
-											type="button" />
-										<p:commandButton
-											process="@this"
+											icon="ui-icon ui-icon-trash" type="button" />
+										<p:commandButton process="@this"
 											value="#{labels.load_button_label}"
 											actionListener="#{trialParticipationBean.load}"
 											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-											icon="ui-icon-refresh"
-											ajax="true"
+											icon="ui-icon-refresh" ajax="true"
 											disabled="#{!trialParticipationBean.created}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
 									</p:toolbarGroup>
@@ -310,82 +244,64 @@
 							</h:panelGrid>
 						</p:panel>
 					</p:tab>
-					<p:tab
-						id="probandListStatusEntries"
+					<p:tab id="probandListStatusEntries"
 						title="#{probandlabels.proband_list_status_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
 							<ui:include src="../shared/probandListStatusEntryTable.xhtml">
-								<ui:param
-									name="namingContainer"
+								<ui:param name="namingContainer"
 									value=":tabView:trialparticipation_form:trialParticipationListTabView" />
-								<ui:param
-									name="probandListBean"
+								<ui:param name="probandListBean"
 									value="#{trialParticipationBean}" />
 							</ui:include>
 							<p:panel id="probandliststatus_input">
 								<f:facet name="header">
-									<h:outputText value="#{trialParticipationBean.probandListStatusEntryBean.title}" />
+									<h:outputText
+										value="#{trialParticipationBean.probandListStatusEntryBean.title}" />
 								</f:facet>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
 									<ui:include src="../shared/probandListStatusEntryInput.xhtml">
-										<ui:param
-											name="probandListBean"
+										<ui:param name="probandListBean"
 											value="#{trialParticipationBean}" />
-										<ui:param
-											name="person"
-											value="#{trialParticipationBean.proband.person}" />										
+										<ui:param name="person"
+											value="#{trialParticipationBean.proband.person}" />
 									</ui:include>
 									<p:messages for="probandListStatusEntryMessages" />
 									<p:toolbar>
 										<p:toolbarGroup align="left">
-											<h:outputText
-												styleClass="ctsms-toolbar-text"
+											<h:outputText styleClass="ctsms-toolbar-text"
 												value="#{trialParticipationBean.probandListStatusEntryBean.created ? trialParticipationBean.probandListStatusEntryBean.modifiedAnnotation : ''}" />
 										</p:toolbarGroup>
 										<p:separator />
 										<p:toolbarGroup align="right">
-											<p:commandButton
-												process="@this"
+											<p:commandButton process="@this"
 												value="#{labels.new_state_button_label}"
 												actionListener="#{trialParticipationBean.probandListStatusEntryBean.reset}"
-												icon="ui-icon ui-icon-star"
-												ajax="true"
-												disabled="false"
+												icon="ui-icon ui-icon-star" ajax="true" disabled="false"
 												update="probandliststatus_list,probandliststatus_input" />
-											<p:commandButton
-												process="@this,probandliststatus_input"
+											<p:commandButton process="@this,probandliststatus_input"
 												id="addProbandListStatusEntry"
 												value="#{labels.add_button_label}"
 												actionListener="#{trialParticipationBean.probandListStatusEntryBean.add}"
 												oncomplete="trialParticipationList.filter()"
-												icon="ui-icon ui-icon-plusthick"
-												ajax="true"
+												icon="ui-icon ui-icon-plusthick" ajax="true"
 												disabled="#{!trialParticipationBean.probandListStatusEntryBean.createable}"
 												update="probandliststatus_list,probandliststatus_input" />
-																								
-												
-											<p:commandButton
-												process="@this"
+
+
+											<p:commandButton process="@this"
 												value="#{labels.delete_button_label}"
 												actionListener="#{trialParticipationBean.probandListStatusEntryBean.delete}"
 												oncomplete="trialParticipationList.filter()"
-												icon="ui-icon ui-icon-trash"
-												ajax="true"
+												icon="ui-icon ui-icon-trash" ajax="true"
 												disabled="#{!trialParticipationBean.probandListStatusEntryBean.removable}"
 												update="probandliststatus_list,probandliststatus_input" />
-											<p:commandButton
-												process="@this"
+											<p:commandButton process="@this"
 												value="#{labels.load_button_label}"
 												actionListener="#{trialParticipationBean.probandListStatusEntryBean.load}"
-												icon="ui-icon-refresh"
-												ajax="true"
+												icon="ui-icon-refresh" ajax="true"
 												disabled="#{!trialParticipationBean.probandListStatusEntryBean.created}"
 												update="probandliststatus_list,probandliststatus_input" />
 										</p:toolbarGroup>
@@ -398,109 +314,88 @@
 							</p:panel>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab
-						id="probandListEntryTagValues"
+					<p:tab id="probandListEntryTagValues"
 						title="#{probandlabels.proband_list_entry_tag_values_tab_label}">
-						<h:panelGrid
-							id="tagvalue_input_grid"
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid id="tagvalue_input_grid" columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
 							<ui:include src="../shared/probandListEntryTagValue.xhtml">
-								<ui:param
-									name="probandListBean"
+								<ui:param name="probandListBean"
 									value="#{trialParticipationBean}" />
-								<ui:param
-									name="namingContainer"
+								<ui:param name="namingContainer"
 									value=":tabView:trialparticipation_form:trialParticipationListTabView" />
-								<ui:param
-									name="updateProbandListWidget"
+								<ui:param name="updateProbandListWidget"
 									value="trialParticipationList.filter()" />
-								<!-- <ui:param
-									name="probandList"
-									value=":tabView:trialparticipation_form:trialparticipation_list" /> -->
+
 							</ui:include>
 							<p:messages for="probandListEntryTagValueMessages" />
 							<p:toolbar>
 								<p:toolbarGroup align="left">
-									<h:outputText
-										styleClass="ctsms-toolbar-text"
+									<h:outputText styleClass="ctsms-toolbar-text"
 										value="#{trialParticipationBean.probandListEntryTagValueBean.created ? trialParticipationBean.probandListEntryTagValueBean.modifiedAnnotation : ''}" />
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.reset_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.reset}"
 										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-										icon="ui-icon ui-icon-close"
-										ajax="true"
-										disabled="false"
+										icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 										update="tagvalue_input_grid" />
-									<p:commandButton
-										process="@this,tagvalue_inputs"
+									<p:commandButton process="@this,tagvalue_inputs"
 										id="updateProbandListEntryTagValues"
 										value="#{labels.update_page_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.update}"
 										oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-										icon="ui-icon ui-icon-disk"
-										ajax="true"
+										icon="ui-icon ui-icon-disk" ajax="true"
 										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable}"
 										update="tagvalue_input_grid" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.load_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.load}"
 										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-										icon="ui-icon-refresh"
-										ajax="true"
+										icon="ui-icon-refresh" ajax="true"
 										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.created}"
 										update="tagvalue_input_grid" />
-										
-										
-								<p:splitButton
-									immediate="true"
-									ajax="false"
-									disabled="#{trialParticipationBean.probandListEntryModel.rowCount == 0}"
-									value="#{triallabels.probandlistentrytags_pdf_button_label}"
-									title="#{triallabels.probandlistentrytags_pdf_button_title}"
-									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{trialParticipationBean.getProbandListEntryTagsPdfStreamedContent(false)}" />
-									
-									<p:menuitem
-										immediate="true"
-										ajax="false"
-										value="#{triallabels.blank_probandlistentrytags_pdf_button_label}"
+
+
+									<p:splitButton immediate="true" ajax="false"
 										disabled="#{trialParticipationBean.probandListEntryModel.rowCount == 0}"
-										icon="ctsms-menubar-icon ctsms-icon-pdf">
-										<p:fileDownload value="#{trialParticipationBean.getProbandListEntryTagsPdfStreamedContent(true)}" />
-									</p:menuitem>
+										value="#{triallabels.probandlistentrytags_pdf_button_label}"
+										title="#{triallabels.probandlistentrytags_pdf_button_title}"
+										icon="ui-icon ui-icon-pdf">
+										<p:fileDownload
+											value="#{trialParticipationBean.getProbandListEntryTagsPdfStreamedContent(false)}" />
 
-									<p:menuitem
-										immediate="true"
-										ajax="false"
-										value="#{trialParticipationBean.getProbandListEntryTagPdfButtonLabel(false)}"
-										rendered="#{not empty trialParticipationBean.trial}"
-										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.created}"
-										icon="ctsms-menubar-icon ctsms-icon-pdf">
-										<p:fileDownload value="#{trialParticipationBean.probandListEntryTagValueBean.getProbandListEntryTagPdfStreamedContent(false)}" />
-									</p:menuitem>
+										<p:menuitem immediate="true" ajax="false"
+											value="#{triallabels.blank_probandlistentrytags_pdf_button_label}"
+											disabled="#{trialParticipationBean.probandListEntryModel.rowCount == 0}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload
+												value="#{trialParticipationBean.getProbandListEntryTagsPdfStreamedContent(true)}" />
+										</p:menuitem>
 
-									<p:menuitem
-										immediate="true"
-										ajax="false"
-										value="#{trialParticipationBean.getProbandListEntryTagPdfButtonLabel(true)}"
-										rendered="#{not empty trialParticipationBean.trial}"
-										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.created}"
-										icon="ctsms-menubar-icon ctsms-icon-pdf">
-										<p:fileDownload value="#{trialParticipationBean.probandListEntryTagValueBean.getProbandListEntryTagPdfStreamedContent(true)}" />
-									</p:menuitem>
+										<p:menuitem immediate="true" ajax="false"
+											value="#{trialParticipationBean.getProbandListEntryTagPdfButtonLabel(false)}"
+											rendered="#{not empty trialParticipationBean.trial}"
+											disabled="#{!trialParticipationBean.probandListEntryTagValueBean.created}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload
+												value="#{trialParticipationBean.probandListEntryTagValueBean.getProbandListEntryTagPdfStreamedContent(false)}" />
+										</p:menuitem>
 
-								</p:splitButton>										
-										
-									
+										<p:menuitem immediate="true" ajax="false"
+											value="#{trialParticipationBean.getProbandListEntryTagPdfButtonLabel(true)}"
+											rendered="#{not empty trialParticipationBean.trial}"
+											disabled="#{!trialParticipationBean.probandListEntryTagValueBean.created}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload
+												value="#{trialParticipationBean.probandListEntryTagValueBean.getProbandListEntryTagPdfStreamedContent(true)}" />
+										</p:menuitem>
+
+									</p:splitButton>
+
+
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">
@@ -508,47 +403,36 @@
 								</p:toolbarGroup>
 							</p:toolbar>
 							<ui:include src="../shared/paginator.xhtml">
-								<ui:param
-									name="valueBean"
+								<ui:param name="valueBean"
 									value="#{trialParticipationBean.probandListEntryTagValueBean}" />
-								<ui:param
-									name="update"
+								<ui:param name="update"
 									value=":tabView:trialparticipation_form:trialParticipationListTabView:tagvalue_input_grid" />
 							</ui:include>
 						</h:panelGrid>
 					</p:tab>
 				</p:tabView>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
+			<p:confirmDialog appendToBody="false" severity="alert"
 				widgetVar="probandListEntryDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{probandlabels.proband_list_entry_delete_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					process="@this"
-					value="#{labels.yes_button_label}"
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
 					actionListener="#{trialParticipationBean.delete}"
 					oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
-					onclick="probandListEntryDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="probandListEntryDeleteConfirmation.hide()" ajax="true"
 					update=":tabView:trialparticipation_form:trialParticipationListTabView" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="probandListEntryDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="probandListEntryDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="trialParticipationListTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:trialparticipation_form:trialparticipation_list" />
-			</ui:include>						
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

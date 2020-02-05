@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,48 +10,30 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inquiryvalue_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeInquiryValue"
-				actionListener="#{inquiryValueBean.change(probandBean.in.id)}"
-				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update="inquiriestrial,inquiry_input_grid" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:panel>
-					<h:panelGrid
-						columns="3"
-						cellpadding="2"
+					<h:panelGrid columns="3" cellpadding="2"
 						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-						<h:outputLabel
-							for="inquiriestrial"
+						<h:outputLabel for="inquiriestrial"
 							value="#{probandlabels.inquiry_value_inquiries_trial_label}" />
 						<h:panelGroup>
-							<p:selectOneMenu
-								id="inquiriestrial"
-								value="#{inquiryValueBean.trialId}"
-								required="false"
+							<p:selectOneMenu id="inquiriestrial"
+								value="#{inquiryValueBean.trialId}" required="false"
 								label="#{probandlabels.inquiry_value_inquiries_trial}"
 								styleClass="ctsms-control-larger">
 								<f:converter converterId="ctsms.ID" />
-								<f:selectItem
-									itemLabel="#{labels.no_selection_label}"
+								<f:selectItem itemLabel="#{labels.no_selection_label}"
 									itemValue="#{applicationScopeBean.noSelectionValue}" />
-								<f:selectItems
-									value="#{inquiryValueBean.trials}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
+								<f:selectItems value="#{inquiryValueBean.trials}"
+									var="selectItem" itemLabel="#{selectItem.label}"
 									itemValue="#{selectItem.value}" />
-								<p:ajax
-									update="inquiry_input_grid"
+								<p:ajax update="inquiry_input_grid"
 									listener="#{inquiryValueBean.handleTrialChange}"
 									oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="inquiriestrial">
+							<p:tooltip rendered="#{enableTooltips}" for="inquiriestrial">
 								<h:outputText
 									value="#{probandlabels.inquiry_value_inquiries_trial_tooltip}"
 									escape="false" />
@@ -61,42 +42,28 @@
 						<p:message for="inquiriestrial" />
 					</h:panelGrid>
 				</p:panel>
-				<h:panelGrid
-					id="inquiry_input_grid"
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid id="inquiry_input_grid" columns="1" cellpadding="0"
 					styleClass="ctsms-inquiryvalues-input-panelgrid"
 					rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
-					<p:dataGrid
-						var="category"
-						value="#{inquiryValueBean.categories}"
+					<p:dataGrid var="category" value="#{inquiryValueBean.categories}"
 						paginator="false"
 						emptyMessage="#{probandlabels.inquiry_value_inquiries_empty_message}"
-						columns="1"
-						id="inquiry_inputs">
+						columns="1" id="inquiry_inputs">
 						<p:column>
-							<p:panel
-								toggleable="true"
-								collapsed="false">
+							<p:panel toggleable="true" collapsed="false">
 								<f:facet name="header">
 									<h:outputText value="#{category.category}" />
 								</f:facet>
 
-<ui:include src="../shared/inquiryValue.xhtml">
-									<ui:param
-										name="inquiryValueBean"
-										value="#{inquiryValueBean}" />
-									<ui:param
-										name="namingContainer"
+								<ui:include src="../shared/inquiryValue.xhtml">
+									<ui:param name="inquiryValueBean" value="#{inquiryValueBean}" />
+									<ui:param name="namingContainer"
 										value=":tabView:inquiryvalue_form" />
-									<ui:param
-										name="update"
+									<ui:param name="update"
 										value=":tabView:inquiryvalue_form:inquiriestrial" />
-										<ui:param
-										name="enabled"
-										value="#{inquiryValueBean.editable}" />		
-										</ui:include>						
-								
+									<ui:param name="enabled" value="#{inquiryValueBean.editable}" />
+								</ui:include>
+
 
 							</p:panel>
 						</p:column>
@@ -104,38 +71,29 @@
 					<p:messages />
 					<p:toolbar>
 						<p:toolbarGroup align="left">
-							<h:outputText
-								styleClass="ctsms-toolbar-text"
+							<h:outputText styleClass="ctsms-toolbar-text"
 								value="#{inquiryValueBean.created ? inquiryValueBean.modifiedAnnotation : ''}" />
 						</p:toolbarGroup>
 						<p:separator />
 						<p:toolbarGroup align="right">
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.reset_button_label}"
 								actionListener="#{inquiryValueBean.reset}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-								icon="ui-icon ui-icon-close"
-								ajax="true"
-								disabled="false"
+								icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 								update="inquiriestrial,inquiry_input_grid" />
-							<p:commandButton
-								process="@this,inquiry_inputs"
-								id="update"
+							<p:commandButton process="@this,inquiry_inputs" id="update"
 								value="#{labels.update_page_button_label}"
 								actionListener="#{inquiryValueBean.update}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-								icon="ui-icon ui-icon-disk"
-								ajax="true"
+								icon="ui-icon ui-icon-disk" ajax="true"
 								disabled="#{!inquiryValueBean.editable}"
 								update="inquiriestrial,inquiry_input_grid" />
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{inquiryValueBean.load}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-								icon="ui-icon-refresh"
-								ajax="true"
+								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!inquiryValueBean.created}"
 								update="inquiriestrial,inquiry_input_grid" />
 
@@ -143,45 +101,41 @@
 
 
 
-							<p:splitButton
-								immediate="true"
-								ajax="false"
+							<p:splitButton immediate="true" ajax="false"
 								disabled="#{empty inquiryValueBean.trials}"
 								value="#{probandlabels.inquiries_pdf_button_label}"
 								title="#{probandlabels.inquiries_pdf_button_title}"
 								icon="ui-icon ui-icon-pdf">
-								<p:fileDownload value="#{inquiryValueBean.getInquiriesPdfStreamedContent(false)}" />
+								<p:fileDownload
+									value="#{inquiryValueBean.getInquiriesPdfStreamedContent(false)}" />
 
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:menuitem immediate="true" ajax="false"
 									value="#{probandlabels.blank_inquiries_pdf_button_label}"
 									disabled="#{empty inquiryValueBean.trials}"
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
-									<p:fileDownload value="#{inquiryValueBean.getInquiriesPdfStreamedContent(true)}" />
-								</p:menuitem>									
-								
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+									<p:fileDownload
+										value="#{inquiryValueBean.getInquiriesPdfStreamedContent(true)}" />
+								</p:menuitem>
+
+								<p:menuitem immediate="true" ajax="false"
 									value="#{inquiryValueBean.getInquiryPdfButtonLabel(false)}"
 									rendered="#{not empty inquiryValueBean.trial}"
 									disabled="#{!inquiryValueBean.created}"
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
-									<p:fileDownload value="#{inquiryValueBean.getInquiryPdfStreamedContent(false)}" />
+									<p:fileDownload
+										value="#{inquiryValueBean.getInquiryPdfStreamedContent(false)}" />
 								</p:menuitem>
-								
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+
+								<p:menuitem immediate="true" ajax="false"
 									value="#{inquiryValueBean.getInquiryPdfButtonLabel(true)}"
 									rendered="#{not empty inquiryValueBean.trial}"
 									disabled="#{!inquiryValueBean.created}"
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
-									<p:fileDownload value="#{inquiryValueBean.getInquiryPdfStreamedContent(true)}" />
+									<p:fileDownload
+										value="#{inquiryValueBean.getInquiryPdfStreamedContent(true)}" />
 								</p:menuitem>
 							</p:splitButton>
-				
+
 						</p:toolbarGroup>
 						<p:separator />
 						<p:toolbarGroup align="right">
@@ -189,11 +143,8 @@
 						</p:toolbarGroup>
 					</p:toolbar>
 					<ui:include src="../shared/paginator.xhtml">
-						<ui:param
-							name="valueBean"
-							value="#{inquiryValueBean}" />
-						<ui:param
-							name="update"
+						<ui:param name="valueBean" value="#{inquiryValueBean}" />
+						<ui:param name="update"
 							value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiry_input_grid" />
 					</ui:include>
 				</h:panelGrid>

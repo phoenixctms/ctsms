@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,74 +10,54 @@
 </h:head>
 <h:body>
 	<ui:composition template="/META-INF/templates/baseTemplate.xhtml">
-		<ui:param
-			name="title"
-			value="#{labels.portal_title}" />
-		<ui:param
-			name="showUserMenuBar"
-			value="#{sessionScopeBean.loggedIn}" />
-		<ui:param
-			name="favicon"
-			value="ctsms.ico" />
-		<ui:param
-			name="showStatusBar"
-			value="true" />
-		<ui:param
-			name="onLoadJsFunction"
+		<ui:param name="title" value="#{labels.portal_title}" />
+		<ui:param name="showUserMenuBar" value="#{sessionScopeBean.loggedIn}" />
+		<ui:param name="favicon" value="ctsms.ico" />
+		<ui:param name="showStatusBar" value="true" />
+		<ui:param name="onLoadJsFunction"
 			value="createSessionTimer(#{sessionScopeBean.sessionTimeout})" />
 		<ui:define name="javascript">
 			window.name = PORTAL_WINDOW_NAME;
 		</ui:define>
 		<ui:define name="menu">
 			<h:form id="menubar_form">
-				<h:panelGrid
-					columns="3"
-					cellpadding="0"
-					styleClass="ctsms-menubar"
+				<h:panelGrid columns="3" cellpadding="0" styleClass="ctsms-menubar"
 					columnClasses="ui-widget-content ui-corner-all ctsms-logo-column,ctsms-usermenubar-column,ctsms-welcome-column">
 					<h:outputText value="" />
 					<ui:include src="/META-INF/includes/shared/userMenuBar.xhtml" />
-					<h:panelGrid
-						columns="3"
-						cellpadding="0"
+					<h:panelGrid columns="3" cellpadding="0"
 						styleClass="ui-widget ui-widget-content ui-corner-all ui-menu ui-menubar ctsms-welcome-panelgrid"
 						columnClasses="ctsms-welcome-leftcolumn,ctsms-welcome-centercolumn,ctsms-welcome-rightcolumn"
 						rowClasses="ctsms-welcometitle-row,ctsms-welcomedetail-row">
 						<h:outputText value="" />
 						<h:outputText value="" />
-						<h:outputFormat
-							rendered="#{sessionScopeBean.hasUserIdentity}"
+						<h:outputFormat rendered="#{sessionScopeBean.hasUserIdentity}"
 							value="#{labels.identity_welcome_message}">
 							<f:param value="#{sessionScopeBean.userIdentityName}" />
 						</h:outputFormat>
-						<h:outputFormat
-							rendered="#{!sessionScopeBean.hasUserIdentity}"
+						<h:outputFormat rendered="#{!sessionScopeBean.hasUserIdentity}"
 							value="#{labels.user_welcome_message}">
 							<f:param value="#{sessionScopeBean.user.name}" />
 						</h:outputFormat>
-						<h:outputFormat
-							styleClass="ctsms-text-green"
+						<h:outputFormat styleClass="ctsms-text-green"
 							rendered="#{applicationScopeBean.trustedHost}"
 							value="#{labels.trusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
-						<h:outputFormat
-							styleClass="ctsms-text-red"
+						<h:outputFormat styleClass="ctsms-text-red"
 							rendered="#{!applicationScopeBean.trustedHost}"
 							value="#{labels.untrusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
 						<ui:include src="/META-INF/includes/shared/sessionTimer.xhtml" />
-						<h:outputFormat
-							rendered="#{sessionScopeBean.hasUserIdentity}"
+						<h:outputFormat rendered="#{sessionScopeBean.hasUserIdentity}"
 							value="#{labels.identity_department_message}">
 							<f:param value="#{sessionScopeBean.userIdentityName}" />
 							<f:param value="#{sessionScopeBean.userIdentity.department.name}" />
 							<f:param value="#{sessionScopeBean.user.name}" />
 							<f:param value="#{sessionScopeBean.user.department.name}" />
 						</h:outputFormat>
-						<h:outputFormat
-							rendered="#{!sessionScopeBean.hasUserIdentity}"
+						<h:outputFormat rendered="#{!sessionScopeBean.hasUserIdentity}"
 							value="#{labels.user_department_message}">
 							<f:param value="#{sessionScopeBean.user.name}" />
 							<f:param value="#{sessionScopeBean.user.department.name}" />
@@ -89,106 +68,70 @@
 		</ui:define>
 		<ui:define name="content">
 			<h:form id="portal_form">
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
-					<p:dataGrid
-						var="module"
-						value="#{portalBean.portalModuleItems}"
-						emptyMessage="#{labels.modules_empty_message}"
-						paginator="false"
-						columns="4"
-						styleClass="ctsms-portalitems-datagrid"
+					<p:dataGrid var="module" value="#{portalBean.portalModuleItems}"
+						emptyMessage="#{labels.modules_empty_message}" paginator="false"
+						columns="4" styleClass="ctsms-portalitems-datagrid"
 						id="moduleitems">
 						<p:column>
 							<p:panel>
 								<f:facet name="header">
 									<h:outputText value="#{module.label}" />
 								</f:facet>
-								<h:panelGrid
-									columns="2"
-									cellpadding="0"
+								<h:panelGrid columns="2" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									columnClasses="ctsms-portalitemicon-column,ctsms-portalitemdescription-column">
 									<h:panelGroup>
-										<div
-											class="ctsms-portalitem-icon #{module.icon}"
+										<div class="ctsms-portalitem-icon #{module.icon}"
 											onclick="#{module.onClick};"></div>
 									</h:panelGroup>
 									<h:panelGroup rendered="#{empty module.description}">
-										<ui:repeat
-											value="#{module.menuItems}"
-											var="menuItem"
+										<ui:repeat value="#{module.menuItems}" var="menuItem"
 											varStatus="varStatus">
-											<h:outputText
-												rendered="#{varStatus.index > 0}"
-												value=" | " />
-											<h:outputLink
-												value="#"
+											<h:outputText rendered="#{varStatus.index > 0}" value=" | " />
+											<h:outputLink value="#"
 												style="#{menuItem.icon.contains('ctsms-menu-bold') ? 'font-weight:bold;' : ''}"
 												onclick="#{menuItem.onclick}">
 												<h:outputText value="#{menuItem.value}" />
 											</h:outputLink>
 										</ui:repeat>
 									</h:panelGroup>
-									<ui:include src="/META-INF/includes/shared/multiLineOutputText.xhtml">
-										<ui:param
-											name="multiLineText"
-											value="#{module.description}" />
-										<ui:param
-											name="rendered"
-											value="#{!empty module.description}" />
-										<ui:param
-											name="multiLineTextClass"
-											value="" />
-										<ui:param
-											name="escapeHtml"
-											value="true" />
+									<ui:include
+										src="/META-INF/includes/shared/multiLineOutputText.xhtml">
+										<ui:param name="multiLineText" value="#{module.description}" />
+										<ui:param name="rendered" value="#{!empty module.description}" />
+										<ui:param name="multiLineTextClass" value="" />
+										<ui:param name="escapeHtml" value="true" />
 									</ui:include>
 								</h:panelGrid>
-								<ctsms:tagCloud
-									styleClass="ctsms-tagcloud"
+								<ctsms:tagCloud styleClass="ctsms-tagcloud"
 									model="#{module.tagModel}" />
 							</p:panel>
 						</p:column>
 					</p:dataGrid>
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
-						rows="5"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true" rows="5"
 						paginator="true"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="5,10,20,50"
-						paginatorPosition="top"
-						pageLinks="10"
-						paginatorAlwaysVisible="true"
-						scrollable="false"
-						scrollHeight=""
-						resizableColumns="false"
-						sortBy="#{notification.vo.id}"
-						sortOrder="descending"
+						rowsPerPageTemplate="5,10,20,50" paginatorPosition="top"
+						pageLinks="10" paginatorAlwaysVisible="true" scrollable="false"
+						scrollHeight="" resizableColumns="false"
+						sortBy="#{notification.vo.id}" sortOrder="descending"
 						emptyMessage="#{labels.datatable_empty_message}"
-						var="notification"
-						value="#{portalBean.notificationModel}"
+						var="notification" value="#{portalBean.notificationModel}"
 						id="notification_list"
 						rowStyleClass="#{portalBean.notificationToColor(notification.vo)}#{defaultColorOpacity}">
 						<f:facet name="header">
-							<h:panelGrid
-								columns="3"
-								cellpadding="0"
+							<h:panelGrid columns="3" cellpadding="0"
 								columnClasses="ctsms-notificationlist-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
 								<h:outputText
 									value="#{labels.notification_list_header_1} #{portalBean.notificationCountOfDay} #{labels.notification_list_header_2} #{applicationScopeBean.getActiveUsersString(160)}" />
 								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									actionListener="#{portalBean.load}"
 									title="#{labels.update_notification_list_button_title}"
-									icon="ui-icon-refresh"
-									styleClass="ctsms-list-header-button"
-									ajax="true"
-									update=":portal_form:notification_list" />
+									icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
+									ajax="true" update=":portal_form:notification_list" />
 							</h:panelGrid>
 						</f:facet>
 						<p:column style="width:16px;">
@@ -202,104 +145,73 @@
 						</p:column>
 						<p:column sortBy="#{notification.vo.obsolete}">
 							<f:facet name="header">
-								<h:outputText value="#{labels.notification_list_obsolete_column}" />
+								<h:outputText
+									value="#{labels.notification_list_obsolete_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-notification-new" />
-								<ui:param
-									name="rendered"
-									value="#{!notification.vo.obsolete}" />
+								<ui:param name="label" value="" />
+								<ui:param name="icon" value="ctsms-icon-notification-new" />
+								<ui:param name="rendered" value="#{!notification.vo.obsolete}" />
 							</ui:include>
 							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-notification-obsolete" />
-								<ui:param
-									name="rendered"
-									value="#{notification.vo.obsolete}" />
+								<ui:param name="label" value="" />
+								<ui:param name="icon" value="ctsms-icon-notification-obsolete" />
+								<ui:param name="rendered" value="#{notification.vo.obsolete}" />
 							</ui:include>
 						</p:column>
-						<p:column> <!--  filterBy="#{notification.vo.recipients.sent}"
-							filterOptions="#{sessionScopeBean.filterBooleans}"
-							  sortBy="#{notification.vo.recipients.sent}" -->
+						<p:column>
 							<f:facet name="header">
 								<h:outputText value="#{labels.notification_list_sent_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="" />
+								<ui:param name="icon"
 									value="#{notification.vo.obsolete ? 'ctsms-icon-notification-sentobsolete' : 'ctsms-icon-notification-sent'}" />
-								<ui:param
-									name="rendered"
-									value="#{notification.vo.sent}" />
-									<!-- value="#{portalBean.getNotificationSent(notification.vo)}" /> -->
+								<ui:param name="rendered" value="#{notification.vo.sent}" />
+
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{notification.vo.type}"
+						<p:column sortBy="#{notification.vo.type}"
 							filterBy="#{notification.vo.type.id}"
 							filterOptions="#{portalBean.filterNotificationTypes}">
 							<f:facet name="header">
-								<h:outputText value="#{labels.notification_list_notification_type_column}" />
+								<h:outputText
+									value="#{labels.notification_list_notification_type_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{notification.vo.type.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="#{notification.vo.type.name}" />
+								<ui:param name="icon"
 									value="#{portalBean.getEntityStyleClass(notification.vo)}" />
-								<ui:param
-									name="rendered"
-									value="true" />
-								<ui:param
-									name="uiicon"
-									value="#{portalBean.getEntityStyleClassIsUiIcon(notification.vo)}" />									
+								<ui:param name="rendered" value="true" />
+								<ui:param name="uiicon"
+									value="#{portalBean.getEntityStyleClassIsUiIcon(notification.vo)}" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{notification.vo.subject}"
+						<p:column sortBy="#{notification.vo.subject}"
 							filterBy="#{notification.vo.subject}">
 							<f:facet name="header">
 								<h:outputText value="#{labels.notification_list_subject_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{notification.vo.subject}" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="#{notification.vo.subject}" />
+								<ui:param name="icon"
 									value="#{notification.vo.obsolete ? 'ctsms-strikethrough' : (notification.vo.type.send and notification.vo.type.sendToIdentityStaffCategory ? 'ctsms-icon-notification-email' : '')}" />
-								<ui:param
-									name="rendered"
-									value="true" />
+								<ui:param name="rendered" value="true" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{notification.vo.date}"
+						<p:column sortBy="#{notification.vo.date}"
 							filterBy="#{notification.vo.date}">
 							<f:facet name="header">
 								<h:outputText value="#{labels.notification_list_date_column}" />
 							</f:facet>
 							<h:outputText value="#{notification.vo.date}">
 								<f:converter converterId="ctsms.Date" />
-								<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								<f:attribute name="timeZone"
+									value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
 						</p:column>
 						<p:column style="width:32px;">
-							<p:commandButton
-								title="#{userlabels.open_entity_button_label}"
+							<p:commandButton title="#{userlabels.open_entity_button_label}"
 								type="button"
 								rendered="#{portalBean.isOpenEntityRendered(notification.vo)}"
 								disabled="#{!portalBean.isOpenEntityEnabled(notification.vo)}"
@@ -307,41 +219,33 @@
 								onclick="#{portalBean.getOpenEntityJSCall(notification.vo)}" />
 						</p:column>
 						<p:rowExpansion>
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
+							<h:panelGrid columns="2" cellpadding="0"
 								styleClass="ctsms-rowexpansion-panelgrid"
 								columnClasses="ctsms-notificationlist-rowexpansion-left-column,ctsms-notificationlist-rowexpansion-right-column">
-								<h:panelGroup rendered="#{notification.vo.department == null and applicationScopeBean.getListSize(notification.vo.recipients) > 0}">
+								<h:panelGroup
+									rendered="#{notification.vo.department == null and applicationScopeBean.getListSize(notification.vo.recipients) > 0}">
 									<h:outputText value="#{labels.notification_receiver_label}" />
-									<p:dataList
-										value="#{notification.vo.recipients}"
-										var="recipient"
-										itemType="disc">
+									<p:dataList value="#{notification.vo.recipients}"
+										var="recipient" itemType="disc">
 										<h:outputText value="#{recipient.staff.name}" />
 									</p:dataList>
 								</h:panelGroup>
 								<h:panelGroup rendered="#{notification.vo.department != null}">
 									<h:outputText value="#{labels.notification_receiver_label}" />
 									<ul>
-										<li><h:outputText value="#{notification.vo.department.name}" /></li>
+										<li><h:outputText
+												value="#{notification.vo.department.name}" /></li>
 									</ul>
 								</h:panelGroup>
 								<h:panelGroup>
 									<h:outputText value="#{labels.notification_message_label}" />
-									<ui:include src="/META-INF/includes/shared/multiLineOutputText.xhtml">
-										<ui:param
-											name="multiLineText"
+									<ui:include
+										src="/META-INF/includes/shared/multiLineOutputText.xhtml">
+										<ui:param name="multiLineText"
 											value="#{notification.vo.message}" />
-										<ui:param
-											name="multiLineTextClass"
-											value="ctsms-monospaced" />
-										<ui:param
-											name="rendered"
-											value="true" />
-										<ui:param
-											name="escapeHtml"
-											value="true" />
+										<ui:param name="multiLineTextClass" value="ctsms-monospaced" />
+										<ui:param name="rendered" value="true" />
+										<ui:param name="escapeHtml" value="true" />
 									</ui:include>
 								</h:panelGroup>
 							</h:panelGrid>

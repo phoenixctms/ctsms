@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,23 +10,13 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldjournal_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeInputFieldJournalEntry"
-				actionListener="#{journalBean.changeInputField(inputFieldBean.in.id)}"
-				update="journal_list,journal_input" /> -->
+
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
-				<ui:param
-					name="namingContainer"
+				<ui:param name="namingContainer"
 					value=":tabView:inputfieldjournal_form" />
-				<ui:param
-					name="validate"
-					value="true" />
-				<ui:param
-					name="markUnEncrypted"
-					value="false" />
-				<ui:param
-					name="jsUpdateTabTitles"
+				<ui:param name="validate" value="true" />
+				<ui:param name="markUnEncrypted" value="false" />
+				<ui:param name="jsUpdateTabTitles"
 					value="handleUpdateInputFieldTabTitles" />
 			</ui:include>
 		</h:form>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,60 +9,55 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:panel >
-		
+		<p:panel>
 
-		<p:remoteCommand
-			process="@this,moneyTransferDistance,moneyTransferTravelOneWay"
-			name="#{calcReimbursementLocationDistance}Change"
-			actionListener="#{reimbursementBean.handleDistanceOneWayChange()}"
-			update="moneyTransferTravelExpenseAmount" />
-					
-		<script type="text/javascript">
+
+			<p:remoteCommand
+				process="@this,moneyTransferDistance,moneyTransferTravelOneWay"
+				name="#{calcReimbursementLocationDistance}Change"
+				actionListener="#{reimbursementBean.handleDistanceOneWayChange()}"
+				update="moneyTransferTravelExpenseAmount" />
+
+			<script type="text/javascript">
             function #{calcReimbursementLocationDistance}() {
             	if(#{applicationScopeBean.enableGeolocationServices and not empty reimbursementBean.address}){
             		LocationDistance.calcRouteDistance(null,#{applicationScopeBean.quoteJsString(reimbursementBean.address.civicName)},function(distance,id,format){setLocationDistance(distance,id,format,#{reimbursementLocationDistance});#{calcReimbursementLocationDistance}Change();},'#{namingContainer}:moneyTransferDistance');
                 }
             }           
         </script>
-			<h:panelGrid
-				columns="10"
-				cellpadding="2"
+			<h:panelGrid columns="10" cellpadding="2"
 				columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-label-for-column,ctsms-input-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-				
-				
 
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 
-				
-				<h:outputLabel
-					for="moneyTransferAddTravelExpense"
-					value="#{reimbursementBean.addTravelExpenseLabel}" />				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<h:outputLabel for="moneyTransferAddTravelExpense"
+					value="#{reimbursementBean.addTravelExpenseLabel}" />
 				<h:panelGroup>
-					<p:selectBooleanCheckbox
-						id="moneyTransferAddTravelExpense"
-						value="#{reimbursementBean.addTravelExpense}" >
+					<p:selectBooleanCheckbox id="moneyTransferAddTravelExpense"
+						value="#{reimbursementBean.addTravelExpense}">
 						<p:ajax
-						    update="moneyTransferDistance,moneyTransferDistanceBtn,moneyTransferTravelOneWay,moneyTransferTravelExpenseAmount" />						
+							update="moneyTransferDistance,moneyTransferDistanceBtn,moneyTransferTravelOneWay,moneyTransferTravelExpenseAmount" />
 					</p:selectBooleanCheckbox>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferAddTravelExpense">
 						<h:outputText
 							value="#{probandlabels.money_transfer_add_travel_expense_tooltip}"
@@ -71,93 +65,54 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAddTravelExpense" />
-	
-				
-				
-				<h:outputLabel
-					for="moneyTransferDistance"
+
+
+
+				<h:outputLabel for="moneyTransferDistance"
 					value="#{probandlabels.money_transfer_distance_label}" />
-				<h:panelGrid
-					columns="2"
-					cellpadding="0"
+				<h:panelGrid columns="2" cellpadding="0"
 					styleClass="ctsms-locationdistance-panelgrid">
 					<h:panelGroup>
-						<p:inputText
-							widgetVar="#{reimbursementLocationDistance}"
-							id="moneyTransferDistance"
-							value="#{reimbursementBean.distance}"
+						<p:inputText widgetVar="#{reimbursementLocationDistance}"
+							id="moneyTransferDistance" value="#{reimbursementBean.distance}"
 							required="false"
 							disabled="#{!reimbursementBean.addTravelExpense}"
 							label="#{probandlabels.money_transfer_distance}"
 							styleClass="ctsms-control-float">
 							<f:converter converterId="ctsms.Float" />
-						<p:ajax
-						    event="keyup"
-						    process="@this,moneyTransferTravelOneWay"
-						    update="moneyTransferTravelExpenseAmount"
-							listener="#{reimbursementBean.handleDistanceOneWayChange}" />
+							<p:ajax event="keyup" process="@this,moneyTransferTravelOneWay"
+								update="moneyTransferTravelExpenseAmount"
+								listener="#{reimbursementBean.handleDistanceOneWayChange}" />
 						</p:inputText>
-						<p:tooltip
-							rendered="#{enableTooltips}"
+						<p:tooltip rendered="#{enableTooltips}"
 							for="moneyTransferDistance">
 							<h:outputText
 								value="#{probandlabels.money_transfer_distance_tooltip}"
 								escape="false" />
 						</p:tooltip>
 					</h:panelGroup>
-					<p:commandButton
-						type="button"
-						id="moneyTransferDistanceBtn"
+					<p:commandButton type="button" id="moneyTransferDistanceBtn"
 						rendered="#{applicationScopeBean.enableGeolocationServices}"
 						title="#{labels.calculate_distance_button_label}"
 						icon="ui-icon ui-icon-arrow-2-e-w"
 						disabled="#{empty reimbursementBean.address or !reimbursementBean.address.decrypted or !reimbursementBean.addTravelExpense}"
 						onclick="#{calcReimbursementLocationDistance}()" />
 				</h:panelGrid>
-	
-				
-				
-				<!-- <h:outputLabel
-					for="moneyTransferTravelExpenseFactor"
-					value="#{probandlabels.money_transfer_travel_expense_factor_label}" />
+
+
+
+
+
+				<h:outputLabel for="moneyTransferTravelOneWay"
+					value="#{probandlabels.money_transfer_travel_one_way_label}" />
 				<h:panelGroup>
-					<p:inputText
-						id="moneyTransferTravelExpenseFactor"
-						value="#{reimbursementBean.travelExpenseFactor}"
-						required="false"
-						disabled="#{!reimbursementBean.addTravelExpense}"
-						label="#{probandlabels.money_transfer_travel_expense_factor}"
-						styleClass="ctsms-control-float">
-						<f:converter converterId="ctsms.Float" />
-						<p:ajax
-						    event="keyup"
-						    process="@this,moneyTransferDistance"
-						    update="moneyTransferTravelExpenseAmount"
-							listener="#{reimbursementBean.handleDistanceFactorChange}" />
-					</p:inputText>
-					<p:tooltip
-						rendered="#{enableTooltips}"
-						for="moneyTransferTravelExpenseFactor">
-						<h:outputText
-							value="#{probandlabels.money_transfer_travel_expense_factor_tooltip}"
-							escape="false" />
-					</p:tooltip>
-				</h:panelGroup> -->
-				
-				<h:outputLabel
-					for="moneyTransferTravelOneWay"
-					value="#{probandlabels.money_transfer_travel_one_way_label}" />				
-				<h:panelGroup>
-					<p:selectBooleanCheckbox
-						id="moneyTransferTravelOneWay"
-						value="#{reimbursementBean.travelOneWay}" >
-						<p:ajax
-						    process="@this,moneyTransferDistance"
-						    update="moneyTransferTravelExpenseAmount"
-							listener="#{reimbursementBean.handleDistanceOneWayChange}" />						
+					<p:selectBooleanCheckbox id="moneyTransferTravelOneWay"
+						value="#{reimbursementBean.travelOneWay}">
+						<p:ajax process="@this,moneyTransferDistance"
+							update="moneyTransferTravelExpenseAmount"
+							listener="#{reimbursementBean.handleDistanceOneWayChange}" />
 					</p:selectBooleanCheckbox>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferTravelOneWay">
 						<h:outputText
 							value="#{probandlabels.money_transfer_travel_one_way_tooltip}"
@@ -166,23 +121,19 @@
 				</h:panelGroup>
 
 
-				
-				<h:outputLabel
-					for="moneyTransferTravelExpenseAmount"
+
+				<h:outputLabel for="moneyTransferTravelExpenseAmount"
 					value="#{probandlabels.money_transfer_travel_expense_amount_label}" />
 				<h:panelGroup>
-					<p:inputText
-						id="moneyTransferTravelExpenseAmount"
-						value="#{reimbursementBean.travelExpenseAmount}"
-						required="false"
+					<p:inputText id="moneyTransferTravelExpenseAmount"
+						value="#{reimbursementBean.travelExpenseAmount}" required="false"
 						disabled="#{!reimbursementBean.addTravelExpense}"
 						label="#{probandlabels.money_transfer_travel_expense_amount}"
 						styleClass="ctsms-control-float">
 						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferTravelExpenseAmount">
 						<h:outputText
 							value="#{probandlabels.money_transfer_travel_expense_amount_tooltip}"
@@ -190,35 +141,32 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferTravelExpenseAmount" />
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				<h:outputLabel
-					for="moneyTransferAddTicketExpense"
-					value="#{probandlabels.money_transfer_add_ticket_expense_label}" />				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<h:outputLabel for="moneyTransferAddTicketExpense"
+					value="#{probandlabels.money_transfer_add_ticket_expense_label}" />
 				<h:panelGroup>
-					<p:selectBooleanCheckbox
-						id="moneyTransferAddTicketExpense"
-						value="#{reimbursementBean.addTicketExpense}" >
+					<p:selectBooleanCheckbox id="moneyTransferAddTicketExpense"
+						value="#{reimbursementBean.addTicketExpense}">
 						<p:ajax
-						    update="moneyTransferTicketType,moneyTransferTicketExpenseAmount" />						
+							update="moneyTransferTicketType,moneyTransferTicketExpenseAmount" />
 					</p:selectBooleanCheckbox>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferAddTicketExpense">
 						<h:outputText
 							value="#{probandlabels.money_transfer_add_ticket_expense_tooltip}"
@@ -226,64 +174,53 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAddTicketExpense" />
-				
-				
-				
-				<h:outputLabel
-								for="moneyTransferTicketType"
-								value="#{probandlabels.money_transfer_ticket_type_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="moneyTransferTicketType"
-									value="#{reimbursementBean.ticketType}"
-									required="false"
-									disabled="#{!reimbursementBean.addTicketExpense}"
-									label="#{probandlabels.money_transfer_ticket_type}"
-									styleClass="ctsms-control">
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{reimbursementBean.ticketTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-										
-						<p:ajax />										
-										
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="moneyTransferTicketType">
-									<h:outputText
-										value="#{probandlabels.money_transfer_ticket_type_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-				
-				<h:outputLabel  />
+
+
+
+				<h:outputLabel for="moneyTransferTicketType"
+					value="#{probandlabels.money_transfer_ticket_type_label}" />
+				<h:panelGroup>
+					<p:selectOneMenu id="moneyTransferTicketType"
+						value="#{reimbursementBean.ticketType}" required="false"
+						disabled="#{!reimbursementBean.addTicketExpense}"
+						label="#{probandlabels.money_transfer_ticket_type}"
+						styleClass="ctsms-control">
+						<f:selectItem itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems value="#{reimbursementBean.ticketTypes}"
+							var="selectItem" itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+
+						<p:ajax />
+
+					</p:selectOneMenu>
+					<p:tooltip rendered="#{enableTooltips}"
+						for="moneyTransferTicketType">
+						<h:outputText
+							value="#{probandlabels.money_transfer_ticket_type_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				<!-- <h:outputText value="#{reimbursementBean.aliquotReimbursementLabel}" /> -->
-				
-				
-				
-				
-				<h:outputLabel
-					for="moneyTransferTicketExpenseAmount"
+
+
+
+
+
+				<h:outputLabel for="moneyTransferTicketExpenseAmount"
 					value="#{probandlabels.money_transfer_ticket_expense_amount_label}" />
 				<h:panelGroup>
-					<p:inputText
-						id="moneyTransferTicketExpenseAmount"
-						value="#{reimbursementBean.ticketExpenseAmount}"
-						required="false"
+					<p:inputText id="moneyTransferTicketExpenseAmount"
+						value="#{reimbursementBean.ticketExpenseAmount}" required="false"
 						disabled="#{!reimbursementBean.addTicketExpense}"
 						label="#{probandlabels.money_transfer_ticket_expense_amount}"
 						styleClass="ctsms-control-float">
 						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferTicketExpenseAmount">
 						<h:outputText
 							value="#{probandlabels.money_transfer_ticket_expense_amount_tooltip}"
@@ -291,43 +228,39 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferTicketExpenseAmount" />
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-												<h:outputLabel
-					for="moneyTransferAddAccommodationExpense"
-					value="#{probandlabels.money_transfer_add_accommodation_expense_label}" />				
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				<h:outputLabel for="moneyTransferAddAccommodationExpense"
+					value="#{probandlabels.money_transfer_add_accommodation_expense_label}" />
 				<h:panelGroup>
-					<p:selectBooleanCheckbox
-						id="moneyTransferAddAccommodationExpense"
-						value="#{reimbursementBean.addAccommodationExpense}" >
-						<p:ajax
-						    update="moneyTransferAccommodationExpenseAmount" />						
+					<p:selectBooleanCheckbox id="moneyTransferAddAccommodationExpense"
+						value="#{reimbursementBean.addAccommodationExpense}">
+						<p:ajax update="moneyTransferAccommodationExpenseAmount" />
 					</p:selectBooleanCheckbox>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferAddAccommodationExpense">
 						<h:outputText
 							value="#{probandlabels.money_transfer_add_accommodation_expense_tooltip}"
@@ -335,25 +268,23 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAddAccommodationExpense" />
-				
-				
-				
-				<h:outputLabel  />
+
+
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				
-				<h:outputLabel  />
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				<!-- <h:outputText value="#{reimbursementBean.aliquotReimbursementLabel}" /> -->
-				
-				
-				
-				
-				<h:outputLabel
-					for="moneyTransferAccommodationExpenseAmount"
+
+
+
+
+
+				<h:outputLabel for="moneyTransferAccommodationExpenseAmount"
 					value="#{probandlabels.money_transfer_accommodation_expense_amount_label}" />
 				<h:panelGroup>
-					<p:inputText
-						id="moneyTransferAccommodationExpenseAmount"
+					<p:inputText id="moneyTransferAccommodationExpenseAmount"
 						value="#{reimbursementBean.accommodationExpenseAmount}"
 						required="false"
 						disabled="#{!reimbursementBean.addAccommodationExpense}"
@@ -362,8 +293,7 @@
 						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferAccommodationExpenseAmount">
 						<h:outputText
 							value="#{probandlabels.money_transfer_accommodation_expense_amount_tooltip}"
@@ -371,27 +301,23 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAccommodationExpenseAmount" />
-				
-				
-				
-				
-				
-				
-				
-				
-				
-												<h:outputLabel
-					for="moneyTransferAddReimbursement"
-					value="#{reimbursementBean.addReimbursementLabel}" />				
+
+
+
+
+
+
+
+
+
+				<h:outputLabel for="moneyTransferAddReimbursement"
+					value="#{reimbursementBean.addReimbursementLabel}" />
 				<h:panelGroup>
-					<p:selectBooleanCheckbox
-						id="moneyTransferAddReimbursement"
-						value="#{reimbursementBean.addReimbursement}" >
-						<p:ajax
-						    update="moneyTransferReimbursementAmount" />						
+					<p:selectBooleanCheckbox id="moneyTransferAddReimbursement"
+						value="#{reimbursementBean.addReimbursement}">
+						<p:ajax update="moneyTransferReimbursementAmount" />
 					</p:selectBooleanCheckbox>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferAddReimbursement">
 						<h:outputText
 							value="#{probandlabels.money_transfer_add_reimbursement_tooltip}"
@@ -399,35 +325,31 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAddReimbursement" />
-				
-				
-				
-				<h:outputLabel  />
+
+
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				
-				<h:outputLabel  />
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				<!-- <h:outputText value="#{reimbursementBean.aliquotReimbursementLabel}" /> -->
-				
-				
-				
-				
-				<h:outputLabel
-					for="moneyTransferReimbursementAmount"
+
+
+
+
+
+				<h:outputLabel for="moneyTransferReimbursementAmount"
 					value="#{probandlabels.money_transfer_reimbursement_amount_label}" />
 				<h:panelGroup>
-					<p:inputText
-						id="moneyTransferReimbursementAmount"
-						value="#{reimbursementBean.reimbursementAmount}"
-						required="false"
+					<p:inputText id="moneyTransferReimbursementAmount"
+						value="#{reimbursementBean.reimbursementAmount}" required="false"
 						disabled="#{!reimbursementBean.addReimbursement}"
 						label="#{probandlabels.money_transfer_reimbursement_amount}"
 						styleClass="ctsms-control-float">
 						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
-					<p:tooltip
-						rendered="#{enableTooltips}"
+					<p:tooltip rendered="#{enableTooltips}"
 						for="moneyTransferReimbursementAmount">
 						<h:outputText
 							value="#{probandlabels.money_transfer_reimbursement_amount_tooltip}"
@@ -435,43 +357,38 @@
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferReimbursementAmount" />
-				
 
-	
-				
-				<h:outputLabel  />
+
+
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				<h:outputLabel  />
-				
-				<h:outputLabel  />
+				<h:outputLabel />
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				
-				<h:outputLabel  />
+
+				<h:outputLabel />
 				<h:outputText value="" />
-				
-				
-				<h:outputLabel
-					for="moneyTransferAmount"
-					styleClass="ctsms-text-bold"					
+
+
+				<h:outputLabel for="moneyTransferAmount"
+					styleClass="ctsms-text-bold"
 					value="#{probandlabels.money_transfer_amount_label}" />
 				<h:panelGroup>
-					<p:inputText
-						id="moneyTransferAmount"
-						value="#{reimbursementBean.in.amount}"
-						required="true"
+					<p:inputText id="moneyTransferAmount"
+						value="#{reimbursementBean.in.amount}" required="true"
 						label="#{probandlabels.money_transfer_amount}"
 						styleClass="ctsms-control-float">
 						<f:converter converterId="ctsms.Float" />
 						<p:ajax />
 					</p:inputText>
-					<p:tooltip
-						rendered="#{enableTooltips}"
-						for="moneyTransferAmount">
-						<h:outputFormat 
+					<p:tooltip rendered="#{enableTooltips}" for="moneyTransferAmount">
+						<h:outputFormat
 							value="#{probandlabels.money_transfer_amount_tooltip}"
 							escape="false">
 							<f:param value="#{applicationScopeBean.currencySymbol}" />
-						</h:outputFormat>							
+						</h:outputFormat>
 					</p:tooltip>
 				</h:panelGroup>
 				<p:message for="moneyTransferAmount" />

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -12,29 +11,18 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inquiry_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeInquiry"
-				actionListener="#{inquiryBean.change(trialBean.in.id)}"
-				update="inquiry_list,inquiry_bulkadd,inquiry_input" /> -->
-			<p:remoteCommand
-				process="@this,lastPickedInputFieldIds"
+
+			<p:remoteCommand process="@this,lastPickedInputFieldIds"
 				name="inquiryAddInputFieldIDs"
 				actionListener="#{inquiryBean.inputFieldMultiPicker.addIds(inquiryBean.inputFieldMultiPicker.ids)}"
 				update="inquiry_bulkadd" />
-			<p:remoteCommand
-				process="@this"
-				name="moveInquiryTo"
+			<p:remoteCommand process="@this" name="moveInquiryTo"
 				actionListener="#{inquiryBean.moveTo}"
 				update="inquiry_list,inquiry_input" />
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<h:panelGroup id="inquiry_list_wrapper">
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true"
 						rows="#{dataTablesRowsDefault}"
 						paginator="#{dataTablesPaginatorDefault}"
 						paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -47,33 +35,28 @@
 						resizableColumns="#{dataTablesResizableColumnsDefault}"
 						sortBy="#{inquiry.vo.position}"
 						emptyMessage="#{labels.datatable_permission_empty_message}"
-						var="inquiry"
-						value="#{inquiryBean.inquiryModel}"
-						id="inquiry_list"
-						selectionMode="single"
+						var="inquiry" value="#{inquiryBean.inquiryModel}"
+						id="inquiry_list" selectionMode="single"
 						selection="#{inquiryBean.selectedInquiry}"
 						rowStyleClass="#{inquiry.vo.deferredDelete or inquiry.vo.field.deferredDelete ? 'ctsms-strikethrough' : ''}">
-						<p:ajax
-							event="rowSelect"
+						<p:ajax event="rowSelect"
 							update=":tabView:inquiry_form:inquiry_input" />
 						<f:facet name="header">
-							
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
+
+							<h:panelGrid columns="2" cellpadding="0"
 								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
-								<h:outputText value="#{inquiryBean.inquiryModel.rowCount} #{triallabels.inquiry_inquiry_list_header}" />
-								<p:commandButton
-									type="button"
+								<h:outputText
+									value="#{inquiryBean.inquiryModel.rowCount} #{triallabels.inquiry_inquiry_list_header}" />
+								<p:commandButton type="button"
 									title="#{labels.open_table_columns_dialog_button_label}"
 									icon="ui-icon ui-icon-wrench"
 									styleClass="ctsms-list-header-button"
 									onclick="inquiryTableColumnsDialog.show()" />
-							</h:panelGrid>							
-							
+							</h:panelGrid>
+
 						</f:facet>
 						<p:column sortBy="#{inquiry.vo.id}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText value="#{labels.id_column}" />
 							</f:facet>
@@ -82,157 +65,146 @@
 						<p:column sortBy="#{inquiry.vo.field.nameL10nKey}"
 							filterBy="#{inquiry.vo.field.nameL10nKey}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_input_field_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_input_field_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{inquiry.vo.field.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="#{inquiry.vo.field.name}" />
+								<ui:param name="icon"
 									value="#{applicationScopeBean.getInputFieldIcon(inquiry.vo.field)}" />
-								<ui:param
-									name="rendered"
-									value="true" />
+								<ui:param name="rendered" value="true" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{inquiry.vo.titleL10nKey}"
+						<p:column sortBy="#{inquiry.vo.titleL10nKey}"
 							filterBy="#{inquiry.vo.titleL10nKey}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_title_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_title_column}" />
 							</f:facet>
-							<h:outputText
-								value="#{inquiry.vo.titleL10nKey}" />
-						</p:column>						
-						<p:column
-							sortBy="#{inquiry.vo.jsVariableName}"
+							<h:outputText value="#{inquiry.vo.titleL10nKey}" />
+						</p:column>
+						<p:column sortBy="#{inquiry.vo.jsVariableName}"
 							filterBy="#{inquiry.vo.jsVariableName}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_js_variable_name_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_js_variable_name_column}" />
 							</f:facet>
-							<h:outputText
-								styleClass="ctsms-monospaced"
+							<h:outputText styleClass="ctsms-monospaced"
 								value="#{inquiry.vo.jsVariableName}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_js_value_expression_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_js_value_expression_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
+								<ui:param name="value"
 									value="#{!empty applicationScopeBean.compressJS(inquiry.vo.jsValueExpression)}" />
 							</ui:include>
 						</p:column>
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_js_output_expression_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_js_output_expression_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
+								<ui:param name="value"
 									value="#{!empty applicationScopeBean.compressJS(inquiry.vo.jsOutputExpression)}" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{inquiry.vo.active}"
+						<p:column sortBy="#{inquiry.vo.active}"
 							filterBy="#{inquiry.vo.active}"
 							filterOptions="#{sessionScopeBean.filterBooleans}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_active_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_active_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{inquiry.vo.active}" />
+								<ui:param name="value" value="#{inquiry.vo.active}" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{inquiry.vo.activeSignup}"
+						<p:column sortBy="#{inquiry.vo.activeSignup}"
 							filterBy="#{inquiry.vo.activeSignup}"
 							filterOptions="#{sessionScopeBean.filterBooleans}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_active_signup_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_active_signup_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{inquiry.vo.activeSignup}" />
+								<ui:param name="value" value="#{inquiry.vo.activeSignup}" />
 							</ui:include>
-						</p:column>						
+						</p:column>
 						<p:column sortBy="#{inquiry.vo.optional}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_optional_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_optional_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{inquiry.vo.optional}" />
+								<ui:param name="value" value="#{inquiry.vo.optional}" />
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{inquiry.vo.disabled}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_enabled_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_enabled_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{!inquiry.vo.disabled}" />
+								<ui:param name="value" value="#{!inquiry.vo.disabled}" />
 							</ui:include>
 						</p:column>
 						<p:column>
-						    <f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_excel_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_excel_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
+								<ui:param name="value"
 									value="#{inquiry.vo.excelValue or inquiry.vo.excelDate}" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{inquiry.vo.externalId}"
+						<p:column sortBy="#{inquiry.vo.externalId}"
 							filterBy="#{inquiry.vo.externalId}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_external_id_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_external_id_column}" />
 							</f:facet>
 							<h:outputText value="#{inquiry.vo.externalId}" />
-						</p:column>							
-						<p:column>
-						    <f:attribute name="visibleDefault" value = "false" />
-							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_number_of_values_column}" />
-							</f:facet>
-							<h:outputText value="#{applicationScopeBean.getInquiryValueCount(inquiry.vo)}" />
 						</p:column>
-						<p:column
-							sortBy="#{inquiry.vo.category}"
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_number_of_values_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{applicationScopeBean.getInquiryValueCount(inquiry.vo)}" />
+						</p:column>
+						<p:column sortBy="#{inquiry.vo.category}"
 							filterBy="#{inquiry.vo.category}"
 							filterOptions="#{inquiryBean.filterCategories}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_category_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_category_column}" />
 							</f:facet>
 							<h:outputText value="#{inquiry.vo.category}" />
 						</p:column>
 						<p:column sortBy="#{inquiry.vo.position}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.inquiry_inquiry_list_position_column}" />
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_position_column}" />
 							</f:facet>
 							<h:outputText
 								rendered="#{!inquiryBean.inputVisible or !inquiry.psf.filters.containsKey('category')}"
 								value="#{inquiry.vo.position}" />
-							<h:panelGroup rendered="#{inquiryBean.inputVisible and inquiry.psf.filters.containsKey('category')}">
-								<p:spinner
-									widgetVar="inquiryTargetPosition#{inquiry.vo.id}"
-									id="targetPosition"
-									value="#{inquiry.vo.position}"
-									styleClass="ctsms-spinner"
-									required="false"
+							<h:panelGroup
+								rendered="#{inquiryBean.inputVisible and inquiry.psf.filters.containsKey('category')}">
+								<p:spinner widgetVar="inquiryTargetPosition#{inquiry.vo.id}"
+									id="targetPosition" value="#{inquiry.vo.position}"
+									styleClass="ctsms-spinner" required="false"
 									label="#{triallabels.inquiry_target_position}" />
 								<p:tooltip
 									rendered="#{enableTooltips and inquiry.rowIndex == 0}"
@@ -243,62 +215,45 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</p:column>
-						<p:column
-							rendered="#{inquiryBean.inputVisible}"
+						<p:column rendered="#{inquiryBean.inputVisible}"
 							style="width:32px;white-space:nowrap;">
-							<p:commandButton
-								title="#{labels.rotate_positions_button_label}"
-								id="moveToTargetPosition"
-								icon="ui-icon-arrowstop-1-e"
+							<p:commandButton title="#{labels.rotate_positions_button_label}"
+								id="moveToTargetPosition" icon="ui-icon-arrowstop-1-e"
 								type="button"
 								rendered="#{inquiry.psf.filters.containsKey('category')}"
 								onclick="moveInquiryTo(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('INQUIRY_ID')}:'#{inquiry.vo.id}',#{applicationScopeBean.parameterName('TARGET_POSITION')}:inquiryTargetPosition#{inquiry.vo.id}.getValue() }));" />
 						</p:column>
 					</p:dataTable>
 				</h:panelGroup>
-				<h:panelGrid
-					columns="2"
-					cellpadding="0"
+				<h:panelGrid columns="2" cellpadding="0"
 					styleClass="ctsms-inquiry-content-panelgrid ctsms-content-panelgrid-maxheight"
 					columnClasses="ctsms-inquiry-inputfieldpicker-column,ctsms-inquiry-input-column">
-					<p:panel
-						id="inquiry_bulkadd"
-						styleClass="ctsms-panel-maxheight">
+					<p:panel id="inquiry_bulkadd" styleClass="ctsms-panel-maxheight">
 						<f:facet name="header">
 							<h:outputText value="#{labels.bulk_creation_label}" />
 						</f:facet>
-						<h:panelGrid
-							rendered="#{inquiryBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{inquiryBean.inputVisible}" columns="1"
+							cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
-							<h:panelGrid
-								columns="3"
-								cellpadding="0"
+							<h:panelGrid columns="3" cellpadding="0"
 								columnClasses="ctsms-picker-multi-header-label-column,ctsms-picker-multi-header-btn-column,ctsms-picker-multi-header-btn-column">
-								<h:outputText value="#{inquiryBean.inputFieldMultiPicker.count} #{triallabels.inquiry_input_fields_picked_label}" />
+								<h:outputText
+									value="#{inquiryBean.inputFieldMultiPicker.count} #{triallabels.inquiry_input_fields_picked_label}" />
 								<p:commandButton
 									title="#{labels.multipick_input_field_button_label}"
-									icon="ui-icon ui-icon-cart"
-									type="button"
+									icon="ui-icon ui-icon-cart" type="button"
 									onclick="openInputFieldMultiPicker(':tabView:inquiry_form:lastPickedInputFieldIds','inquiryAddInputFieldIDs')" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									title="#{labels.multipick_clear_all_button_label}"
 									actionListener="#{inquiryBean.inputFieldMultiPicker.clear}"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
+									icon="ui-icon ui-icon-close" ajax="true"
 									disabled="#{!inquiryBean.inputFieldMultiPicker.isEnabled}"
 									update="inquiry_bulkadd" />
-								<h:inputHidden
-									id="lastPickedInputFieldIds"
-									required="false"
+								<h:inputHidden id="lastPickedInputFieldIds" required="false"
 									value="#{inquiryBean.inputFieldMultiPicker.ids}">
 								</h:inputHidden>
 							</h:panelGrid>
-							<p:dataList
-								type="#{multiPickerDataListsType}"
+							<p:dataList type="#{multiPickerDataListsType}"
 								rows="#{multiPickerDataListsRows}"
 								paginator="#{multiPickerDataListsPaginator}"
 								paginatorTemplate="#{multiPickerDataListsPaginatorTemplate}"
@@ -306,8 +261,7 @@
 								paginatorPosition="#{multiPickerDataListsPaginatorPosition}"
 								pageLinks="#{multiPickerDataListsPageLinks}"
 								paginatorAlwaysVisible="#{multiPickerDataListsPaginatorAlwaysVisible}"
-								id="input_field_selection"
-								var="inputField"
+								id="input_field_selection" var="inputField"
 								styleClass="ctsms-inquiry-inputfieldpicker-list"
 								value="#{inquiryBean.inputFieldMultiPicker.selection}">
 								<f:facet name="description">
@@ -320,15 +274,13 @@
 									<h:outputText value=" " />
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_input_field_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInputField(#{inputField.vo.id})" />
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										title="#{labels.multipick_clear_button_label}"
 										actionListener="#{inquiryBean.inputFieldMultiPicker.removeId(inputField.vo.id)}"
 										icon="ui-icon ui-icon-close"
@@ -343,18 +295,13 @@
 										escape="false" />
 								</p:column>
 							</p:dataList>
-							<h:panelGrid
-								columns="3"
-								cellpadding="2"
+							<h:panelGrid columns="3" cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="bulkAddInquiryCategory"
+								<h:outputLabel for="bulkAddInquiryCategory"
 									value="#{triallabels.bulkadd_inquiry_category_label}" />
 								<h:panelGroup>
-									<p:autoComplete
-										id="bulkAddInquiryCategory"
-										value="#{inquiryBean.bulkAddCategory}"
-										required="false"
+									<p:autoComplete id="bulkAddInquiryCategory"
+										value="#{inquiryBean.bulkAddCategory}" required="false"
 										label="#{triallabels.bulkadd_inquiry_category}"
 										styleClass="ctsms-control"
 										minQueryLength="#{autoCompleteMinQueryLengthCategory}"
@@ -364,16 +311,11 @@
 										global="#{autoCompleteGlobalCategory}"
 										scrollHeight="#{autoCompleteScrollHeightCategory}"
 										completeMethod="#{inquiryBean.completeBulkAddCategory}">
-										<p:ajax
-											listener="#{inquiryBean.handleBulkAddCategorySelect}"
-											event="itemSelect"
-											process="@this" />
-										<p:ajax
-											event="blur"
-											process="@this" />
+										<p:ajax listener="#{inquiryBean.handleBulkAddCategorySelect}"
+											event="itemSelect" process="@this" />
+										<p:ajax event="blur" process="@this" />
 									</p:autoComplete>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="bulkAddInquiryCategory">
 										<h:outputText
 											value="#{triallabels.bulkadd_inquiry_category_tooltip}"
@@ -381,17 +323,14 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="bulkAddInquiryCategory" />
-								<h:outputLabel
-									for="bulkAddInquiryOptional"
+								<h:outputLabel for="bulkAddInquiryOptional"
 									value="#{triallabels.bulkadd_inquiry_optional_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="bulkAddInquiryOptional"
+									<p:selectBooleanCheckbox id="bulkAddInquiryOptional"
 										value="#{inquiryBean.bulkAddOptional}">
 										<p:ajax />
 									</p:selectBooleanCheckbox>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="bulkAddInquiryOptional">
 										<h:outputText
 											value="#{triallabels.bulkadd_inquiry_optional_tooltip}"
@@ -399,17 +338,14 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="bulkAddInquiryOptional" />
-								<h:outputLabel
-									for="bulkAddInquiryExcel"
+								<h:outputLabel for="bulkAddInquiryExcel"
 									value="#{triallabels.bulkadd_inquiry_excel_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="bulkAddInquiryExcel"
+									<p:selectBooleanCheckbox id="bulkAddInquiryExcel"
 										value="#{inquiryBean.bulkAddExcel}">
 										<p:ajax />
 									</p:selectBooleanCheckbox>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="bulkAddInquiryExcel">
 										<h:outputText
 											value="#{triallabels.bulkadd_inquiry_excel_tooltip}"
@@ -418,48 +354,37 @@
 								</h:panelGroup>
 								<p:message for="bulkAddInquiryExcel" />
 							</h:panelGrid>
-							<!-- <h:outputLabel rendered="#{!inquiryBean.inputVisible}" /> -->
+
 							<p:messages />
 							<p:toolbar>
 								<p:toolbarGroup align="right">
 									<p:commandButton
 										process="@this,bulkAddInquiryOptional,bulkAddInquiryExcel"
-										id="bulkAdd"
-										value="#{labels.add_button_label}"
+										id="bulkAdd" value="#{labels.add_button_label}"
 										actionListener="#{inquiryBean.addBulk}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-plusthick"
-										ajax="true"
+										icon="ui-icon ui-icon-plusthick" ajax="true"
 										disabled="#{!inquiryBean.inputFieldBulkCreateable}"
 										update="inquiry_list,inquiry_bulkadd" />
 								</p:toolbarGroup>
 							</p:toolbar>
 						</h:panelGrid>
 					</p:panel>
-					<p:panel
-						id="inquiry_input"
-						styleClass="ctsms-panel-maxheight">
+					<p:panel id="inquiry_input" styleClass="ctsms-panel-maxheight">
 						<f:facet name="header">
 							<h:outputText value="#{inquiryBean.title}" />
 						</f:facet>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-							<h:panelGrid
-								rendered="#{inquiryBean.inputVisible}"
-								columns="9"
+							<h:panelGrid rendered="#{inquiryBean.inputVisible}" columns="9"
 								cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="inquiryCategory"
+								<h:outputLabel for="inquiryCategory"
 									value="#{triallabels.inquiry_category_label}" />
 								<h:panelGroup>
-									<p:autoComplete
-										id="inquiryCategory"
-										value="#{inquiryBean.in.category}"
-										required="true"
+									<p:autoComplete id="inquiryCategory"
+										value="#{inquiryBean.in.category}" required="true"
 										label="#{triallabels.inquiry_category}"
 										styleClass="ctsms-control"
 										minQueryLength="#{autoCompleteMinQueryLengthCategory}"
@@ -469,234 +394,171 @@
 										global="#{autoCompleteGlobalCategory}"
 										scrollHeight="#{autoCompleteScrollHeightCategory}"
 										completeMethod="#{inquiryBean.completeCategory}">
-										<p:ajax
-											listener="#{inquiryBean.handleCategorySelect}"
-											event="itemSelect"
-											process="@this" />
-										<p:ajax
-											event="blur"
-											process="@this" />
+										<p:ajax listener="#{inquiryBean.handleCategorySelect}"
+											event="itemSelect" process="@this" />
+										<p:ajax event="blur" process="@this" />
 									</p:autoComplete>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryCategory">
-										<h:outputText
-											value="#{triallabels.inquiry_category_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryCategory">
+										<h:outputText value="#{triallabels.inquiry_category_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryCategory" />
-								<h:outputLabel
-									for="inquiryField"
+								<h:outputLabel for="inquiryField"
 									value="#{triallabels.inquiry_input_field_label}" />
-								<h:panelGrid
-									columns="4"
-									cellpadding="0">
+								<h:panelGrid columns="4" cellpadding="0">
 									<h:panelGroup>
-										<h:inputHidden
-											id="inquiryField"
-											required="true"
+										<h:inputHidden id="inquiryField" required="true"
 											requiredMessage="#{triallabels.inquiry_input_field_required_message}"
 											value="#{inquiryBean.in.fieldId}">
 											<f:converter converterId="ctsms.ID" />
 										</h:inputHidden>
-										<p:commandButton
-											id="inquiryFieldName"
+										<p:commandButton id="inquiryFieldName"
 											value="#{applicationScopeBean.clipStringPicker(inquiryBean.fieldName)}"
 											title="#{triallabels.inquiry_input_field_tooltip}#{labels.open_input_field_button_label}"
-											styleClass="ctsms-picker"
-											icon="ui-icon ui-icon-extlink"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 											type="button"
 											onclick="openPickedInputField(':tabView:inquiry_form:inquiryField')" />
 									</h:panelGroup>
 									<p:commandButton
 										title="#{labels.pick_input_field_button_label}"
-										icon="ui-icon ui-icon-search"
-										type="button"
+										icon="ui-icon ui-icon-search" type="button"
 										onclick="openInputFieldPickerAjax(':tabView:inquiry_form:inquiryField',':tabView:inquiry_form:inquiryFieldName')" />
 									<p:commandButton
 										title="#{labels.clear_input_field_button_label}"
-										icon="ui-icon ui-icon-close"
-										type="button"
+										icon="ui-icon ui-icon-close" type="button"
 										onclick="clearIDAjax(':tabView:inquiry_form:inquiryField',':tabView:inquiry_form:inquiryFieldName','#{applicationScopeBean.noInputFieldPickedMessage}')" />
-									<p:commandButton
-										title="#{messages.create_new_input_field}"
-										icon="ui-icon ui-icon-plusthick"
-										type="button"
+									<p:commandButton title="#{messages.create_new_input_field}"
+										icon="ui-icon ui-icon-plusthick" type="button"
 										onclick="openNewInputField()" />
 								</h:panelGrid>
 								<p:message for="inquiryField" />
-								
-								
-																<h:outputLabel
-									for="inquiryDisabled"
+
+
+								<h:outputLabel for="inquiryDisabled"
 									value="#{triallabels.inquiry_disabled_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryDisabled"
+									<p:selectBooleanCheckbox id="inquiryDisabled"
 										value="#{inquiryBean.in.disabled}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryDisabled">
-										<h:outputText
-											value="#{triallabels.inquiry_disabled_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryDisabled">
+										<h:outputText value="#{triallabels.inquiry_disabled_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryDisabled" />
-							
 
-								<h:outputLabel
-									for="inquiryPosition"
+
+								<h:outputLabel for="inquiryPosition"
 									value="#{triallabels.inquiry_position_label}" />
 								<h:panelGroup>
-									<p:spinner
-										id="inquiryPosition"
-										value="#{inquiryBean.in.position}"
-										styleClass="ctsms-spinner"
-										required="true"
-										label="#{triallabels.inquiry_position}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryPosition">
-										<h:outputText
-											value="#{triallabels.inquiry_position_tooltip}"
+									<p:spinner id="inquiryPosition"
+										value="#{inquiryBean.in.position}" styleClass="ctsms-spinner"
+										required="true" label="#{triallabels.inquiry_position}" />
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryPosition">
+										<h:outputText value="#{triallabels.inquiry_position_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryPosition" />
 
 
-								<h:outputLabel
-									for="inquiryTitle"
+								<h:outputLabel for="inquiryTitle"
 									value="#{triallabels.inquiry_title_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="inquiryTitle"
-										value="#{inquiryBean.in.title}"
-										required="false"
-										label="#{triallabels.inquiry_title}"
+									<p:inputText id="inquiryTitle" value="#{inquiryBean.in.title}"
+										required="false" label="#{triallabels.inquiry_title}"
 										styleClass="ctsms-control">
 									</p:inputText>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryTitle">
-										<h:outputText
-											value="#{triallabels.inquiry_title_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryTitle">
+										<h:outputText value="#{triallabels.inquiry_title_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryTitle" />
 
-								
-								<h:outputLabel
-									for="inquiryOptional"
+
+								<h:outputLabel for="inquiryOptional"
 									value="#{triallabels.inquiry_optional_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryOptional"
+									<p:selectBooleanCheckbox id="inquiryOptional"
 										value="#{inquiryBean.in.optional}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryOptional">
-										<h:outputText
-											value="#{triallabels.inquiry_optional_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryOptional">
+										<h:outputText value="#{triallabels.inquiry_optional_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="inquiryOptional" />								
+								<p:message for="inquiryOptional" />
 
 
 
-							
 
-								
 
-								<h:outputLabel
-									for="inquiryExcelValue"
+
+
+								<h:outputLabel for="inquiryExcelValue"
 									value="#{triallabels.inquiry_excel_value_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryExcelValue"
+									<p:selectBooleanCheckbox id="inquiryExcelValue"
 										value="#{inquiryBean.in.excelValue}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryExcelValue">
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryExcelValue">
 										<h:outputText
 											value="#{triallabels.inquiry_excel_value_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryExcelValue" />
-								<h:outputLabel
-									for="inquiryExcelDate"
+								<h:outputLabel for="inquiryExcelDate"
 									value="#{triallabels.inquiry_excel_date_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryExcelDate"
+									<p:selectBooleanCheckbox id="inquiryExcelDate"
 										value="#{inquiryBean.in.excelDate}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryExcelDate">
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryExcelDate">
 										<h:outputText
 											value="#{triallabels.inquiry_excel_date_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryExcelDate" />
-								
 
-								<h:outputLabel
-									for="inquiryActive"
+
+								<h:outputLabel for="inquiryActive"
 									value="#{triallabels.inquiry_active_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryActive"
+									<p:selectBooleanCheckbox id="inquiryActive"
 										value="#{inquiryBean.in.active}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryActive">
-										<h:outputText
-											value="#{triallabels.inquiry_active_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryActive">
+										<h:outputText value="#{triallabels.inquiry_active_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryActive" />
 
-								
-								
 
-								<h:outputLabel
-									for="jsVariableName"
+
+
+								<h:outputLabel for="jsVariableName"
 									value="#{triallabels.inquiry_js_variable_name_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="jsVariableName"
-										value="#{inquiryBean.in.jsVariableName}"
-										required="false"
+									<p:inputText id="jsVariableName"
+										value="#{inquiryBean.in.jsVariableName}" required="false"
 										label="#{triallabels.inquiry_js_variable_name}"
 										styleClass="ctsms-control-codeline" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="jsVariableName">
+									<p:tooltip rendered="#{enableTooltips}" for="jsVariableName">
 										<h:outputText
 											value="#{triallabels.inquiry_js_variable_name_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="jsVariableName" />
-								
-								
-								
-								<h:outputLabel
-									for="inquiryActiveSignup"
+
+
+
+								<h:outputLabel for="inquiryActiveSignup"
 									value="#{triallabels.inquiry_active_signup_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="inquiryActiveSignup"
+									<p:selectBooleanCheckbox id="inquiryActiveSignup"
 										value="#{inquiryBean.in.activeSignup}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="inquiryActiveSignup">
 										<h:outputText
 											value="#{triallabels.inquiry_active_signup_tooltip}"
@@ -704,94 +566,65 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryActiveSignup" />
-								
-								<h:outputLabel
-									for="inquiryExternalId"
+
+								<h:outputLabel for="inquiryExternalId"
 									value="#{triallabels.inquiry_externalid_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="inquiryExternalId"
-										value="#{inquiryBean.in.externalId}"
-										required="false"
+									<p:inputText id="inquiryExternalId"
+										value="#{inquiryBean.in.externalId}" required="false"
 										label="#{triallabels.inquiry_externalid}"
 										styleClass="ctsms-control">
 									</p:inputText>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryExternalId">
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryExternalId">
 										<h:outputText
 											value="#{triallabels.inquiry_externalid_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="inquiryExternalId" />								
-								
+								<p:message for="inquiryExternalId" />
+
 
 							</h:panelGrid>
-													<p:fieldset
-							rendered="#{inquiryBean.inputVisible}"
-							toggleable="true"
-							collapsed="false">
-							<f:facet name="legend">
-								<h:outputText value="#{triallabels.inquiry_field_calculation_js_snippets_field_set}" />
-							</f:facet>
-							<h:panelGrid
-								
-								columns="2"
-								cellpadding="0"
-								styleClass="ctsms-input-panelgrid"
-								rowClasses="ctsms-codemirror-label-for-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row">
-								<h:outputLabel
-									for="jsValueExpression"
-									value="#{triallabels.inquiry_js_value_expression_label}" />
-								<h:outputLabel
-									for="jsOutputExpression"
-									value="#{triallabels.inquiry_js_output_expression_label}" />
-								<pe:codeMirror
-									id="jsValueExpression"
-									mode="javascript"
-									theme="eclipse"
-									value="#{inquiryBean.in.jsValueExpression}"
-									label="#{triallabels.inquiry_js_value_expression}"
-									required="false"
-									lineNumbers="true"
-									extraKeys="{ 'Ctrl-Space': function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}">
-								</pe:codeMirror>
-								<pe:codeMirror
-									id="jsOutputExpression"
-									mode="javascript"
-									theme="eclipse"
-									value="#{inquiryBean.in.jsOutputExpression}"
-									label="#{triallabels.inquiry_js_output_expression}"
-									required="false"
-									lineNumbers="true"
-									extraKeys="{ 'Ctrl-Space': function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}">
-								</pe:codeMirror>
-							</h:panelGrid>
+							<p:fieldset rendered="#{inquiryBean.inputVisible}"
+								toggleable="true" collapsed="false">
+								<f:facet name="legend">
+									<h:outputText
+										value="#{triallabels.inquiry_field_calculation_js_snippets_field_set}" />
+								</f:facet>
+								<h:panelGrid columns="2" cellpadding="0"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-codemirror-label-for-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row">
+									<h:outputLabel for="jsValueExpression"
+										value="#{triallabels.inquiry_js_value_expression_label}" />
+									<h:outputLabel for="jsOutputExpression"
+										value="#{triallabels.inquiry_js_output_expression_label}" />
+									<pe:codeMirror id="jsValueExpression" mode="javascript"
+										theme="eclipse" value="#{inquiryBean.in.jsValueExpression}"
+										label="#{triallabels.inquiry_js_value_expression}"
+										required="false" lineNumbers="true"
+										extraKeys="{ 'Ctrl-Space': function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}">
+									</pe:codeMirror>
+									<pe:codeMirror id="jsOutputExpression" mode="javascript"
+										theme="eclipse" value="#{inquiryBean.in.jsOutputExpression}"
+										label="#{triallabels.inquiry_js_output_expression}"
+										required="false" lineNumbers="true"
+										extraKeys="{ 'Ctrl-Space': function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}">
+									</pe:codeMirror>
+								</h:panelGrid>
 							</p:fieldset>
-							<h:panelGrid
-								rendered="#{inquiryBean.inputVisible}"
-								columns="1"
-								cellpadding="0"
-								styleClass="ctsms-input-panelgrid"
+							<h:panelGrid rendered="#{inquiryBean.inputVisible}" columns="1"
+								cellpadding="0" styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-								<h:outputLabel
-									for="inquiryComment"
+								<h:outputLabel for="inquiryComment"
 									value="#{triallabels.inquiry_comment_label}" />
 								<h:panelGroup>
-									<p:inputTextarea
-										id="inquiryComment"
-										value="#{inquiryBean.in.comment}"
-										required="false"
-										autoResize="false"
-										styleClass="ctsms-textarea"
+									<p:inputTextarea id="inquiryComment"
+										value="#{inquiryBean.in.comment}" required="false"
+										autoResize="false" styleClass="ctsms-textarea"
 										label="#{triallabels.inquiry_comment}">
 									</p:inputTextarea>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="inquiryComment">
-										<h:outputText
-											value="#{triallabels.inquiry_comment_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="inquiryComment">
+										<h:outputText value="#{triallabels.inquiry_comment_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
@@ -802,65 +635,49 @@
 							<p:messages />
 							<p:toolbar>
 								<p:toolbarGroup align="left">
-									<h:outputText
-										styleClass="ctsms-toolbar-text"
+									<h:outputText styleClass="ctsms-toolbar-text"
 										value="#{inquiryBean.created ? inquiryBean.modifiedAnnotation : ''}" />
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.reset_button_label}"
 										actionListener="#{inquiryBean.reset}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-close"
-										ajax="true"
-										disabled="false"
+										icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 										update="inquiry_list,inquiry_input" />
-									<p:commandButton
-										process="@this,inquiry_input"
-										id="add"
+									<p:commandButton process="@this,inquiry_input" id="add"
 										value="#{labels.add_button_label}"
 										actionListener="#{inquiryBean.add}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-plusthick"
-										ajax="true"
+										icon="ui-icon ui-icon-plusthick" ajax="true"
 										disabled="#{!inquiryBean.createable}"
 										update="inquiry_list,inquiry_input" />
-									<p:commandButton
-										process="@this,inquiry_input"
-										id="update"
+									<p:commandButton process="@this,inquiry_input" id="update"
 										value="#{labels.update_button_label}"
 										actionListener="#{inquiryBean.update}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-disk"
-										ajax="true"
+										icon="ui-icon ui-icon-disk" ajax="true"
 										disabled="#{!inquiryBean.editable}"
 										update="inquiry_list,inquiry_input" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.normalize_positions_button_label}"
 										title="#{labels.normalize_positions_button_title}"
 										actionListener="#{inquiryBean.normalizePositions}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-link"
-										ajax="true"
+										icon="ui-icon ui-icon-link" ajax="true"
 										disabled="#{!inquiryBean.editable}"
 										update="inquiry_list,inquiry_input" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.delete_button_label}"
 										onclick="if('inquiryDeleteReason' in window){inquiryDeleteReason.setValue(#{applicationScopeBean.quoteJsString(inquiryBean.deferredDeleteReason)});}inquiryDeleteConfirmation.show()"
 										disabled="#{!inquiryBean.removable}"
-										icon="ui-icon ui-icon-trash"
-										type="button" />
-									<p:commandButton
-										process="@this"
+										icon="ui-icon ui-icon-trash" type="button" />
+									<p:commandButton process="@this"
 										value="#{labels.load_button_label}"
 										actionListener="#{inquiryBean.load}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon-refresh"
-										ajax="true"
+										icon="ui-icon-refresh" ajax="true"
 										disabled="#{!inquiryBean.created}"
 										update="inquiry_list,inquiry_input" />
 								</p:toolbarGroup>
@@ -873,41 +690,27 @@
 					</p:panel>
 				</h:panelGrid>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
-				width="500"
+			<p:confirmDialog appendToBody="false" severity="alert" width="500"
 				widgetVar="inquiryDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.inquiry_delete_confirmation_dialog_message}"
 						escape="false" />
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						<h:panelGrid
-							rendered="true"
-							columns="1"
-							cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid rendered="true" columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="deferredDeleteReason"
+							<h:outputLabel for="deferredDeleteReason"
 								value="#{triallabels.inquiry_deferred_delete_reason_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="deferredDeleteReason"
+								<p:inputTextarea id="deferredDeleteReason"
 									widgetVar="inquiryDeleteReason"
-									value="#{inquiryBean.deferredDeleteReason}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									value="#{inquiryBean.deferredDeleteReason}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.inquiry_deferred_delete_reason}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="deferredDeleteReason">
 									<h:outputText
 										value="#{triallabels.inquiry_deferred_delete_reason_tooltip}"
@@ -915,29 +718,24 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-					</h:panelGrid>						
+					</h:panelGrid>
 				</f:facet>
 				<p:commandButton
 					process="@this,:tabView:inquiry_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{inquiryBean.delete}"
 					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-					onclick="inquiryDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="inquiryDeleteConfirmation.hide()" ajax="true"
 					update="inquiry_list,inquiry_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="inquiryDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="inquiryDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="inquiryTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:inquiry_form:inquiry_list" />
-			</ui:include>			
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

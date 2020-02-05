@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -12,72 +11,43 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialecrfstatusentry_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeTrialEcrfStatusEntry"
-				actionListener="#{trialEcrfStatusEntryBean.change(trialBean.in.id)}"
-				onstart="ecrfAuditTrailDialog.hide()"
-				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,ecrf_header,ecrffield_input_grid" /> -->
-			<p:remoteCommand
-				process="@this,signPassword"
-				name="updateEcrfStatus"
+			<p:remoteCommand process="@this,signPassword" name="updateEcrfStatus"
 				actionListener="#{trialEcrfStatusEntryBean.updateEcrfStatus()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
-			<p:remoteCommand
-				process="@this,signPassword"
+			<p:remoteCommand process="@this,signPassword"
 				name="signVerifiedEcrfs"
 				actionListener="#{trialEcrfStatusEntryBean.signVerifiedEcrfs()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
-			<p:remoteCommand
-				process="@this,signPassword"
-				name="signAllEcrfs"
+			<p:remoteCommand process="@this,signPassword" name="signAllEcrfs"
 				actionListener="#{trialEcrfStatusEntryBean.signAllEcrfs()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
-			<p:remoteCommand
-				process="@this"
-				name="refreshTrialEcrfProgress"
+			<p:remoteCommand process="@this" name="refreshTrialEcrfProgress"
 				actionListener="#{trialEcrfStatusEntryBean.refreshEcrfProgress()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
 				update="trialecrfstatus_ecrf_list,section_filter,field_query" />
-				
-			<!-- <p:remoteCommand
-				process="@this"
-				name="clearEcrfSection"
-				actionListener="#{trialEcrfStatusEntryBean.clearSection()}"
-				oncomplete="ecrfSectionToClear=null;FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args);"
-				update="trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" /> -->
-			<p:remoteCommand
-				process="@this"
-				name="reloadEcrf"
+
+
+			<p:remoteCommand process="@this" name="reloadEcrf"
 				actionListener="#{trialEcrfStatusEntryBean.load}"
 				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-   				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />				
-				
-			<p:remoteCommand
-				process="@this"
-				name="refreshTrialEcrfsProgress"
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+
+			<p:remoteCommand process="@this" name="refreshTrialEcrfsProgress"
 				actionListener="#{trialEcrfStatusEntryBean.refreshEcrfProgress()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query" />	
-				
-			<p:remoteCommand 
-			    process="@this,field_query"
-			    name="filterFields"
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query" />
+
+			<p:remoteCommand process="@this,field_query" name="filterFields"
 				update="ecrffield_input_grid"
 				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				actionListener="#{trialEcrfStatusEntryBean.handleFilterSectionChange()}"/>			
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+				actionListener="#{trialEcrfStatusEntryBean.handleFilterSectionChange()}" />
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<h:panelGroup id="trialecrfstatus_proband_list_wrapper">
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true"
 						rows="#{dataTablesRowsDefault}"
 						paginator="#{dataTablesPaginatorDefault}"
 						paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -92,293 +62,236 @@
 						emptyMessage="#{labels.datatable_permission_empty_message}"
 						var="probandListEntry"
 						value="#{trialEcrfStatusEntryBean.probandListEntryModel}"
-						id="trialecrfstatus_proband_list"
-						selectionMode="single"
+						id="trialecrfstatus_proband_list" selectionMode="single"
 						selection="#{trialEcrfStatusEntryBean.selectedProbandListEntry}"
 						rowStyleClass="#{probandListEntry.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(probandListEntry.vo.lastStatus)}#{rowBgColorAlpha}">
-						<p:ajax
-							event="rowSelect"
+						<p:ajax event="rowSelect"
 							update=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid"
 							oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 						<f:facet name="header">
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
+							<h:panelGrid columns="2" cellpadding="0"
 								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
-								<h:outputText value="#{trialEcrfStatusEntryBean.probandListEntryModel.rowCount} #{triallabels.trialecrfstatus_proband_list_header}" />
-								<p:commandButton
-									type="button"
+								<h:outputText
+									value="#{trialEcrfStatusEntryBean.probandListEntryModel.rowCount} #{triallabels.trialecrfstatus_proband_list_header}" />
+								<p:commandButton type="button"
 									title="#{labels.open_table_columns_dialog_button_label}"
 									icon="ui-icon ui-icon-wrench"
 									styleClass="ctsms-list-header-button"
 									onclick="trialEcrfStatusProbandListTableColumnsDialog.show()" />
-							</h:panelGrid>								
+							</h:panelGrid>
 						</f:facet>
-						<p:column sortBy="#{probandListEntry.vo.position}" filterBy="#{probandListEntry.vo.position}">
+						<p:column sortBy="#{probandListEntry.vo.position}"
+							filterBy="#{probandListEntry.vo.position}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_position_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_position_column}" />
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.position}" />
 						</p:column>
-						<p:column
-							sortBy="#{probandListEntry.vo.group.title}"
+						<p:column sortBy="#{probandListEntry.vo.group.title}"
 							filterBy="#{probandListEntry.vo.group.id}"
 							filterOptions="#{trialEcrfStatusEntryBean.filterProbandGroups}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_group_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_group_column}" />
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.group.title}" />
 						</p:column>
-						<p:column
-							sortBy="#{probandListEntry.vo.proband.id}"
+						<p:column sortBy="#{probandListEntry.vo.proband.id}"
 							filterBy="#{probandListEntry.vo.proband.id}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_proband_id_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_proband_id_column}" />
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.id}" />
 						</p:column>
-						<p:column filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}">
-							<!-- rendered="#{trialEcrfStatusEntryBean.trial.type.person}" -->
+						<p:column
+							filterBy="#{probandListEntry.vo.proband.personParticulars.lastNameHash}">
+
 							<f:facet name="header">
 								<h:outputText
 									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
 									value="#{triallabels.trialecrfstatus_proband_list_proband_name_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
+								<ui:param name="label"
 									value="#{probandListEntry.vo.proband.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="icon"
 									value="#{probandListEntry.vo.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
+								<ui:param name="rendered"
 									value="#{probandListEntry.vo.proband.decrypted}" />
 							</ui:include>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
+								<ui:param name="label"
 									value="#{probandListEntry.vo.proband.name}" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-encrypted" />
-								<ui:param
-									name="rendered"
+								<ui:param name="icon" value="ctsms-icon-encrypted" />
+								<ui:param name="rendered"
 									value="#{!probandListEntry.vo.proband.decrypted}" />
 							</ui:include>
 						</p:column>
-						
-						<p:column filterBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
+
+						<p:column
+							filterBy="#{probandListEntry.vo.proband.animalParticulars.animalName}"
 							sortBy="#{probandListEntry.vo.proband.animalParticulars.animalName}">
-							<!-- rendered="#{!trialEcrfStatusEntryBean.trial.type.person}" -->
-							<f:attribute name="visibleDefault" value = "false" />
+
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.trialecrfstatus_proband_list_animal_name_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
+								<ui:param name="label"
 									value="#{probandListEntry.vo.proband.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="icon"
 									value="#{probandListEntry.vo.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
-									value="true" />
+								<ui:param name="rendered" value="true" />
 							</ui:include>
-						</p:column>			
-						
-						<p:column
-							sortBy="#{probandListEntry.vo.proband.department}"
+						</p:column>
+
+						<p:column sortBy="#{probandListEntry.vo.proband.department}"
 							filterBy="#{probandListEntry.vo.proband.department.id}"
 							filterOptions="#{sessionScopeBean.filterDepartments}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_proband_department_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_proband_department_column}" />
 							</f:facet>
-							<h:outputText value="#{probandListEntry.vo.proband.department.name}" />
-						</p:column>		
-															
+							<h:outputText
+								value="#{probandListEntry.vo.proband.department.name}" />
+						</p:column>
+
 						<p:column
 							filterBy="#{probandListEntry.vo.proband.personParticulars.gender}"
 							filterOptions="#{sessionScopeBean.filterSexes}"
 							rendered="#{trialEcrfStatusEntryBean.trial.type.person}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_proband_gender_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_proband_gender_column}" />
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
 						</p:column>
-						
-										
-						
+
+
+
 						<p:column
 							filterBy="#{probandListEntry.vo.proband.animalParticulars.gender}"
 							filterOptions="#{sessionScopeBean.filterSexes}"
 							rendered="#{!trialEcrfStatusEntryBean.trial.type.person}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_proband_gender_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_proband_gender_column}" />
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
 						</p:column>
 
-						<!-- filterBy="#{probandListEntry.vo.proband.personParticulars.dateOfBirthHash}" 
-						styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted" -->						
+
 						<p:column
 							sortBy="#{probandListEntry.vo.proband.personParticulars.yearOfBirth}"
 							rendered="#{trialEcrfStatusEntryBean.trial.type.person}">
 							<f:facet name="header">
-								<h:outputText 
+								<h:outputText
 									value="#{triallabels.trialecrfstatus_proband_list_proband_date_of_birth_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
+								<ui:param name="label"
 									value="#{probandListEntry.vo.proband.dateOfBirth}" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-decrypted" />
-								<ui:param
-									name="rendered"
+								<ui:param name="icon" value="ctsms-icon-decrypted" />
+								<ui:param name="rendered"
 									value="#{probandListEntry.vo.proband.decrypted}" />
-								<ui:param
-									name="converter"
-									value="ctsms.Date" />
+								<ui:param name="converter" value="ctsms.Date" />
 							</ui:include>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{labels.encrypted_date}" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-encrypted" />
-								<ui:param
-									name="rendered"
+								<ui:param name="label" value="#{labels.encrypted_date}" />
+								<ui:param name="icon" value="ctsms-icon-encrypted" />
+								<ui:param name="rendered"
 									value="#{!probandListEntry.vo.proband.decrypted}" />
 							</ui:include>
 						</p:column>
-						
+
 						<p:column
 							sortBy="#{probandListEntry.vo.proband.animalParticulars.dateOfBirth}"
 							filterBy="#{probandListEntry.vo.proband.animalParticulars.dateOfBirth}"
 							rendered="#{!trialEcrfStatusEntryBean.trial.type.person}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_proband_date_of_birth_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_proband_date_of_birth_column}" />
 							</f:facet>
-							<h:outputText value="#{probandListEntry.vo.proband.dateOfBirth}" >
+							<h:outputText value="#{probandListEntry.vo.proband.dateOfBirth}">
 								<f:converter converterId="ctsms.Date" />
-								<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								<f:attribute name="timeZone"
+									value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 							</h:outputText>
-						</p:column>						
-						
-						<!-- <p:column
-							sortBy="#{probandListEntry.vo.lastStatus.status}"
-							filterBy="#{probandListEntry.vo.lastStatus.status.id}"
-							filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
-							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_summary_list_last_status_column}" />
-							</f:facet>
-							<h:outputText value="#{probandListEntry.vo.lastStatus.status.name}" />
-						</p:column> -->
+						</p:column>
+
+
 						<ui:include src="../shared/probandListEntryTableColumns.xhtml">
-							<ui:param
-								name="probandListEntryModel"
+							<ui:param name="probandListEntryModel"
 								value="#{trialEcrfStatusEntryBean.probandListEntryModel}" />
-							<ui:param
-								name="probandlistentry_list"
+							<ui:param name="probandlistentry_list"
 								value=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list" />
-							<ui:param
-								name="showReimbursementTotalsColumn"
-								value="false" />
-							<ui:param
-								name="showStatusDetails"
-								value="false" />								
-							<ui:param
-								name="byTagInputField"
-								value="false" />
-							<ui:param
-								name="byInquiryInputField"
-								value="true" />
-							<ui:param
-								name="allTrials"
-								value="true" />
-							<ui:param
-								name="lazyModel"
-								value="true" />
-							<ui:param
-								name="person"
-								value="#{trialEcrfStatusEntryBean.trial.type.person}" />								
+							<ui:param name="showReimbursementTotalsColumn" value="false" />
+							<ui:param name="showStatusDetails" value="false" />
+							<ui:param name="byTagInputField" value="false" />
+							<ui:param name="byInquiryInputField" value="true" />
+							<ui:param name="allTrials" value="true" />
+							<ui:param name="lazyModel" value="true" />
+							<ui:param name="person"
+								value="#{trialEcrfStatusEntryBean.trial.type.person}" />
 						</ui:include>
 
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_proband_list_field_status_counts_column}" />
-						</f:facet>
-						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
-							<ui:param
-								name="value"
-								value="#{trialEcrfStatusEntryBean.getSummaryFieldStatusCount(probandListEntry.vo,'VALIDATION, QUERY')}" />
-							<ui:param
-								name="showNew"
-								value="true" />
-							<ui:param
-								name="showUpdate"
-								value="true" />
-							<ui:param
-								name="showProposed"
-								value="true" />								
-							<ui:param
-								name="showResolved"
-								value="true" />	
-							<ui:param
-								name="idSuffix"
-								value="total" />																												
-						</ui:include>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_proband_list_status_counts_column}" />
-						</f:facet>
-						<ui:include src="../shared/listEcrfStatusIcons.xhtml">
-							<ui:param
-								name="statusTypes"
-								value="#{trialEcrfStatusEntryBean.allStatusTypes}" />						
-							<ui:param
-								name="value"
-								value="#{trialEcrfStatusEntryBean.getSummaryStatusCountMap(probandListEntry.vo)}" />
-						</ui:include>
-					</p:column>					
-											
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.trialecrfstatus_proband_list_ecrf_progress_column}" />
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_field_status_counts_column}" />
 							</f:facet>
-							<p:progressBar
-								widgetVar="progressBar_#{probandListEntry.vo.id}"
+							<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
+								<ui:param name="value"
+									value="#{trialEcrfStatusEntryBean.getSummaryFieldStatusCount(probandListEntry.vo,'VALIDATION, QUERY')}" />
+								<ui:param name="showNew" value="true" />
+								<ui:param name="showUpdate" value="true" />
+								<ui:param name="showProposed" value="true" />
+								<ui:param name="showResolved" value="true" />
+								<ui:param name="idSuffix" value="total" />
+							</ui:include>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_status_counts_column}" />
+							</f:facet>
+							<ui:include src="../shared/listEcrfStatusIcons.xhtml">
+								<ui:param name="statusTypes"
+									value="#{trialEcrfStatusEntryBean.allStatusTypes}" />
+								<ui:param name="value"
+									value="#{trialEcrfStatusEntryBean.getSummaryStatusCountMap(probandListEntry.vo)}" />
+							</ui:include>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.trialecrfstatus_proband_list_ecrf_progress_column}" />
+							</f:facet>
+							<p:progressBar widgetVar="progressBar_#{probandListEntry.vo.id}"
 								ajax="false"
 								labelTemplate="#{trialEcrfStatusEntryBean.getEcrfProgressSummaryLabel(probandListEntry.vo)}"
 								value="#{trialEcrfStatusEntryBean.getEcrfProgressSummaryValue(probandListEntry.vo)}" />
 						</p:column>
 						<p:column style="width:64px;white-space:nowrap;">
-							<p:commandButton
-								immediate="true"
-								ajax="false"
+							<p:commandButton immediate="true" ajax="false"
 								title="#{triallabels.ecrfs_pdf_button_label}"
 								disabled="#{trialEcrfStatusEntryBean.getEcrfProgressSummary(probandListEntry.vo).ecrfTotalCount == 0}"
 								icon="ui-icon ui-icon-pdf">
-								<p:fileDownload value="#{trialEcrfStatusEntryBean.getEcrfPdfStreamedContent(probandListEntry.vo,false)}" />
+								<p:fileDownload
+									value="#{trialEcrfStatusEntryBean.getEcrfPdfStreamedContent(probandListEntry.vo,false)}" />
 							</p:commandButton>
-							<p:commandButton
-								title="#{labels.open_proband_button_label}"
-								type="button"
-								icon="ui-icon ui-icon-extlink"
+							<p:commandButton title="#{labels.open_proband_button_label}"
+								type="button" icon="ui-icon ui-icon-extlink"
 								onclick="openProband(#{probandListEntry.vo.proband.id})" />
 						</p:column>
 					</p:dataTable>
 				</h:panelGroup>
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -391,239 +304,176 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{ecrf.vo.position}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="ecrf"
-					value="#{trialEcrfStatusEntryBean.ecrfModel}"
-					id="trialecrfstatus_ecrf_list"
-					selectionMode="single"
+					var="ecrf" value="#{trialEcrfStatusEntryBean.ecrfModel}"
+					id="trialecrfstatus_ecrf_list" selectionMode="single"
 					selection="#{trialEcrfStatusEntryBean.selectedEcrf}"
 					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.ecrfStatusEntryToColor(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo))}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid"
 						oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 					<f:facet name="header">
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
-								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
-								<h:outputText value="#{trialEcrfStatusEntryBean.ecrfListHeader}" />
-								<p:commandButton
-									type="button"
-									title="#{labels.open_table_columns_dialog_button_label}"
-									icon="ui-icon ui-icon-wrench"
-									styleClass="ctsms-list-header-button"
-									onclick="trialEcrfStatusEcrfListTableColumnsDialog.show()" />
-							</h:panelGrid>	
-						
+						<h:panelGrid columns="2" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText value="#{trialEcrfStatusEntryBean.ecrfListHeader}" />
+							<p:commandButton type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="trialEcrfStatusEcrfListTableColumnsDialog.show()" />
+						</h:panelGrid>
+
 					</f:facet>
-					<p:column style="width:16px;" rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
+					<p:column style="width:16px;"
+						rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
 						<p:rowToggler />
-					</p:column> 
-					<!-- <p:column sortBy="#{ecrf.vo.id}">
-						<f:facet name="header">
-							<h:outputText value="#{labels.id_column}" />
-						</f:facet>
-						<h:outputText value="#{ecrf.vo.id}" />
-					</p:column> -->
+					</p:column>
+
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
-						<ui:param
-							name="ecrfSelectionBean"
+						<ui:param name="ecrfSelectionBean"
 							value="#{trialEcrfStatusEntryBean}" />
-						<ui:param
-							name="showPosition"
-							value="true" />
-						<ui:param
-							name="showVisit"
-							value="true" />
-						<ui:param
-							name="showGroup"
-							value="true" />
+						<ui:param name="showPosition" value="true" />
+						<ui:param name="showVisit" value="true" />
+						<ui:param name="showGroup" value="true" />
 						<!-- existing values! -->
-						<ui:param
-							name="showActive"
-							value="true" />
-						<ui:param
-							name="showCharge"
-							value="false" />								
-						<ui:param
-							name="showExternalId"
-							value="false" />							
-						<ui:param
-							name="showEnableBrowserFieldCalculation"
-							value="false" />								
+						<ui:param name="showActive" value="true" />
+						<ui:param name="showCharge" value="false" />
+						<ui:param name="showExternalId" value="false" />
+						<ui:param name="showEnableBrowserFieldCalculation" value="false" />
 						<!-- existing values! -->
-						<ui:param
-							name="showFieldCount"
-							value="false" />
+						<ui:param name="showFieldCount" value="false" />
 					</ui:include>
 
 
-	
+
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_validation_field_status_counts_column}" />
-						    <!-- <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_field_status_count_column}">
-								<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldValidationStatusEntryBean.queueName}" />
-							</h:outputFormat>-->
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_validation_field_status_counts_column}" />
+
 						</f:facet>
-						<f:attribute name="visibleDefault" value = "false" />
+						<f:attribute name="visibleDefault" value="false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
-							<ui:param
-								name="validationStatus"
-								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />						
-							<ui:param
-								name="showNew"
-								value="true" />
-							<ui:param
-								name="showUpdate"
-								value="true" />
-							<ui:param
-								name="showProposed"
-								value="true" />								
-							<ui:param
-								name="showResolved"
-								value="true" />
-							<ui:param
-								name="value"
+							<ui:param name="validationStatus"
+								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+							<ui:param name="showNew" value="true" />
+							<ui:param name="showUpdate" value="true" />
+							<ui:param name="showProposed" value="true" />
+							<ui:param name="showResolved" value="true" />
+							<ui:param name="value"
 								value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'VALIDATION')}" />
-							<ui:param
-								name="idSuffix"
-								value="validation" />								
+							<ui:param name="idSuffix" value="validation" />
 						</ui:include>
 					</p:column>
 
 
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_validation_timestamp_column}" />
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_validation_timestamp_column}" />
 						</f:facet>
-						<f:attribute name="visibleDefault" value = "false" />
+						<f:attribute name="visibleDefault" value="false" />
 						<ui:include src="../shared/listEcrfValidationTimestamp.xhtml">
-							<ui:param
-								name="validationStatus"
-								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />						
-							<ui:param
-								name="value"
+							<ui:param name="validationStatus"
+								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+							<ui:param name="value"
 								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationTimestamp}" />
-						</ui:include>					
-					</p:column>
-
-
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_query_field_status_counts_column}" />
-							<!-- <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_field_status_count_column}">
-								<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldQueryStatusEntryBean.queueName}" />
-							</h:outputFormat> -->
-						</f:facet>
-						<f:attribute name="visibleDefault" value = "false" />
-						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
-							<ui:param
-								name="validationStatus"
-								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />						
-							<ui:param
-								name="showNew"
-								value="true" />
-							<ui:param
-								name="showUpdate"
-								value="true" />
-							<ui:param
-								name="showProposed"
-								value="true" />								
-							<ui:param
-								name="showResolved"
-								value="true" />
-							<ui:param
-								name="value"
-								value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'QUERY')}" />
-							<ui:param
-								name="idSuffix"
-								value="query" />								
 						</ui:include>
-					</p:column>		
-
-
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_annotation_field_status_counts_column}" />
-							<!-- <h:outputFormat value="#{triallabels.trialecrfstatus_ecrf_list_total_ecrf_field_status_count_column}">
-								<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldAnnotationStatusEntryBean.queueName}" />
-							</h:outputFormat>  -->
-						</f:facet>
-						<f:attribute name="visibleDefault" value = "false" />
-						<h:outputText rendered="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total > 0}" value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total}" />
 					</p:column>
-					
+
+
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_field_status_counts_column}" />
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_query_field_status_counts_column}" />
+
+						</f:facet>
+						<f:attribute name="visibleDefault" value="false" />
+						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
+							<ui:param name="validationStatus"
+								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+							<ui:param name="showNew" value="true" />
+							<ui:param name="showUpdate" value="true" />
+							<ui:param name="showProposed" value="true" />
+							<ui:param name="showResolved" value="true" />
+							<ui:param name="value"
+								value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'QUERY')}" />
+							<ui:param name="idSuffix" value="query" />
+						</ui:include>
+					</p:column>
+
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_annotation_field_status_counts_column}" />
+
+						</f:facet>
+						<f:attribute name="visibleDefault" value="false" />
+						<h:outputText
+							rendered="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total > 0}"
+							value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total}" />
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_field_status_counts_column}" />
 						</f:facet>
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
-							<ui:param
-								name="validationStatus"
-								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />						
-							<ui:param
-								name="showNew"
-								value="true" />
-							<ui:param
-								name="showUpdate"
-								value="true" />
-							<ui:param
-								name="showProposed"
-								value="true" />								
-							<ui:param
-								name="showResolved"
-								value="true" />
-							<ui:param
-								name="value"
+							<ui:param name="validationStatus"
+								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+							<ui:param name="showNew" value="true" />
+							<ui:param name="showUpdate" value="true" />
+							<ui:param name="showProposed" value="true" />
+							<ui:param name="showResolved" value="true" />
+							<ui:param name="value"
 								value="#{trialEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'VALIDATION, QUERY')}" />
-							<ui:param
-								name="idSuffix"
-								value="ecrfTotal" />																												
+							<ui:param name="idSuffix" value="ecrfTotal" />
 						</ui:include>
 					</p:column>
 
 
 					<p:column style="width:250px;">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_type_column}" />
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_type_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
+							<ui:param name="label"
 								value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeLabel(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).status)}" />
-							<ui:param
-								name="icon"
+							<ui:param name="icon"
 								value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).status.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
-							<ui:param
-								name="uiicon"
-								value="true" />
+							<ui:param name="rendered" value="true" />
+							<ui:param name="uiicon" value="true" />
 						</ui:include>
-						<!-- <h:outputText value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeLabel(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).status)}" /> -->
+
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_modified_user_column}" />
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_modified_user_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.getIdentityString(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedUser)}" />
+						<h:outputText
+							value="#{applicationScopeBean.getIdentityString(trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedUser)}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_modified_timestamp_column}" />
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_status_modified_timestamp_column}" />
 						</f:facet>
-						<h:outputText value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedTimestamp}">
+						<h:outputText
+							value="#{trialEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 
-					
+
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_progress_column}" />
+							<h:outputText
+								value="#{triallabels.trialecrfstatus_ecrf_list_ecrf_progress_column}" />
 						</f:facet>
 						<p:progressBar
 							widgetVar="progressBar_#{probandListEntry.vo.id}_#{ecrf.vo.id}"
@@ -631,263 +481,198 @@
 							labelTemplate="#{trialEcrfStatusEntryBean.getEcrfProgressLabel(ecrf.vo)}"
 							value="#{trialEcrfStatusEntryBean.getEcrfProgressValue(ecrf.vo)}" />
 					</p:column>
-					
-					 <p:rowExpansion rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
+
+					<p:rowExpansion rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
 						<ui:include src="../shared/auditTrailEcrfLog.xhtml">
-							<ui:param
-								name="ecrfStatusEntryBean"
+							<ui:param name="ecrfStatusEntryBean"
 								value="#{trialEcrfStatusEntryBean}" />
-							<ui:param
-								name="ecrf"
-								value="#{ecrf.vo}" />								
+							<ui:param name="ecrf" value="#{ecrf.vo}" />
 						</ui:include>
-					</p:rowExpansion> 				
-					
+					</p:rowExpansion>
+
 				</p:dataTable>
 				<h:panelGroup id="ecrf_header">
 					<p:panel rendered="#{not empty trialEcrfStatusEntryBean.ecrf}">
-						<h:panelGrid
-							columns="1"
-							styleClass="ctsms-content-panelgrid"
+						<h:panelGrid columns="1" styleClass="ctsms-content-panelgrid"
 							cellpadding="0">
-							<h:panelGrid
-								id="ecrf_title"
-								columns="1"
-								cellpadding="2"
+							<h:panelGrid id="ecrf_title" columns="1" cellpadding="2"
 								columnClasses="ctsms-text-column">
-								<!-- columnClasses="ctsms-label-for-text-column-bold-large,ctsms-text-column-bold-large">
-								<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_title_label}" /> -->
+
 								<ui:include src="../shared/multiLineOutputText.xhtml">
-									<ui:param
-										name="multiLineText"
+									<ui:param name="multiLineText"
 										value="#{trialEcrfStatusEntryBean.ecrf.title}" />
-									<ui:param
-										name="rendered"
-										value="true" />
-									<ui:param
-										name="multiLineTextClass"
+									<ui:param name="rendered" value="true" />
+									<ui:param name="multiLineTextClass"
 										value="ctsms-multilinetext-bold-large" />
-									<ui:param
-										name="escapeHtml"
-										value="true" />
+									<ui:param name="escapeHtml" value="true" />
 								</ui:include>
-								<!-- <h:outputLabel
-									rendered="#{not empty trialEcrfStatusEntryBean.ecrf.description}"
-									value="#{triallabels.ecrf_field_values_ecrf_description_label}" /> -->
+
 								<ui:include src="../shared/multiLineOutputText.xhtml">
-									<ui:param
-										name="multiLineText"
+									<ui:param name="multiLineText"
 										value="#{trialEcrfStatusEntryBean.ecrf.description}" />
-									<ui:param
-										name="rendered"
+									<ui:param name="rendered"
 										value="#{not empty trialEcrfStatusEntryBean.ecrf.description}" />
-									<ui:param
-										name="multiLineTextClass"
-										value="" />
-									<ui:param
-										name="escapeHtml"
-										value="true" />
+									<ui:param name="multiLineTextClass" value="" />
+									<ui:param name="escapeHtml" value="true" />
 								</ui:include>
 							</h:panelGrid>
-							<h:panelGrid
-								columns="2"
-								styleClass="ctsms-content-panelgrid"
+							<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
 								cellpadding="0">
-								<h:panelGrid
-									columns="3"
-									cellpadding="2"
+								<h:panelGrid columns="3" cellpadding="2"
 									styleClass="ctsms-content-panelgrid"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="section_filter"
+									<h:outputLabel for="section_filter"
 										value="#{triallabels.ecrf_field_values_section_filter_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu
-											id="section_filter"
-											required="false"
+										<p:selectOneMenu id="section_filter" required="false"
 											height="430"
-
 											value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSectionProgress}"
-											var="sectionProgress"
-                 							converter="ctsms.ECRFSectionProgress"
-                 
+											var="sectionProgress" converter="ctsms.ECRFSectionProgress"
 											label="#{triallabels.ecrf_field_values_section_filter}"
 											styleClass="ctsms-control-largest">
-											
+
 											<f:selectItems
 												value="#{trialEcrfStatusEntryBean.filterSections}"
-												var="selectItem"
-												itemLabel="#{selectItem.label}"
+												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 
 											<p:column>
 												<h:outputText value="#{sectionProgress.section}" />
 											</p:column>
-											<p:column> 
+											<p:column>
 												<ui:include src="../shared/progressBar.xhtml">
-													<ui:param
-														name="id"
+													<ui:param name="id"
 														value="tabView:trialecrfstatusentry_form:progressBar_#{applicationScopeBean.getStringDigest(sectionProgress.section)}" />
-													<ui:param
-														name="widgetVar"
+													<ui:param name="widgetVar"
 														value="progressBar_#{applicationScopeBean.getStringDigest(sectionProgress.section)}" />
-													<ui:param
-														name="value"
+													<ui:param name="value"
 														value="#{trialEcrfStatusEntryBean.getEcrfSectionProgressValue(sectionProgress)}" />
-													<ui:param
-														name="labelTemplate"
-														value="#{trialEcrfStatusEntryBean.getEcrfSectionProgressLabel(sectionProgress)}" />		
-													<ui:param
-														name="width"
-														value="60" />
+													<ui:param name="labelTemplate"
+														value="#{trialEcrfStatusEntryBean.getEcrfSectionProgressLabel(sectionProgress)}" />
+													<ui:param name="width" value="60" />
 												</ui:include>
 											</p:column>
 											<p:column>
 												<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
-													<ui:param
-														name="value"
+													<ui:param name="value"
 														value="#{trialEcrfStatusEntryBean.getSectionFieldStatusCount(sectionProgress,'VALIDATION, QUERY')}" />
-							<ui:param
-								name="showNew"
-								value="true" />
-							<ui:param
-								name="showUpdate"
-								value="true" />
-							<ui:param
-								name="showProposed"
-								value="true" />								
-							<ui:param
-								name="showResolved"
-								value="true" />	
-							<ui:param
-								name="idSuffix"
-								value="section" />
-												</ui:include>											
-											</p:column>											
-									
-												
+													<ui:param name="showNew" value="true" />
+													<ui:param name="showUpdate" value="true" />
+													<ui:param name="showProposed" value="true" />
+													<ui:param name="showResolved" value="true" />
+													<ui:param name="idSuffix" value="section" />
+												</ui:include>
+											</p:column>
+
+
 											<p:ajax
 												update=":tabView:trialecrfstatusentry_form:ecrffield_input_grid"
 												oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 												listener="#{trialEcrfStatusEntryBean.handleFilterSectionChange}" />
 										</p:selectOneMenu>
-										<p:tooltip
-											rendered="#{enableTooltips}"
-											for="section_filter">
+										<p:tooltip rendered="#{enableTooltips}" for="section_filter">
 											<h:outputText
 												value="#{triallabels.ecrf_field_values_section_filter_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="section_filter" />
-									
-									<h:outputLabel
-										for="field_query"
+
+									<h:outputLabel for="field_query"
 										value="#{triallabels.ecrf_field_values_field_query_label}" />
-									<h:panelGroup>									
-								<p:inputText
-									id="field_query"
-									value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.fieldQuery}"
-									required="false"
-									label="#{triallabels.ecrf_field_values_field_query}"
-									styleClass="ctsms-control-largest"
-									onkeyup="onKeyUpDelay(function(){ filterFields(); }, 500);">
-								</p:inputText>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="field_query">
-									<h:outputText
-										value="#{triallabels.ecrf_field_values_field_query_tooltip}"
-										escape="false" />
-								</p:tooltip>									
+									<h:panelGroup>
+										<p:inputText id="field_query"
+											value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.fieldQuery}"
+											required="false"
+											label="#{triallabels.ecrf_field_values_field_query}"
+											styleClass="ctsms-control-largest"
+											onkeyup="onKeyUpDelay(function(){ filterFields(); }, 500);">
+										</p:inputText>
+										<p:tooltip rendered="#{enableTooltips}" for="field_query">
+											<h:outputText
+												value="#{triallabels.ecrf_field_values_field_query_tooltip}"
+												escape="false" />
+										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="field_query" />
-									
+
 								</h:panelGrid>
-								<h:panelGrid
-									id="ecrf_detail"
-									columns="8"
-									cellpadding="2"
+								<h:panelGrid id="ecrf_detail" columns="8" cellpadding="2"
 									styleClass="ctsms-content-panelgrid"
 									columnClasses="ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column-bold">
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
 									<h:outputLabel value="#{trialEcrfStatusEntryBean.ecrf.name}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
-									<h:outputLabel value="#{trialEcrfStatusEntryBean.ecrf.group.title}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
-									<h:outputLabel value="#{trialEcrfStatusEntryBean.ecrf.visit.title}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_ecrf_status_label}" />
-									<h:outputLabel value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeLabel(trialEcrfStatusEntryBean.ecrfStatus.status)}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_proband_name_label}" />
-									<h:outputLabel value="#{trialEcrfStatusEntryBean.probandListEntry.proband.name}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_proband_list_entry_group_label}" />
-									<h:outputLabel value="#{trialEcrfStatusEntryBean.probandListEntry.group.title}" />
-									<h:outputLabel value="#{triallabels.ecrf_field_values_proband_list_entry_status_label}" />
-									<h:outputLabel value="#{trialEcrfStatusEntryBean.probandListEntry.lastStatus.status.name}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
+									<h:outputLabel
+										value="#{trialEcrfStatusEntryBean.ecrf.group.title}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
+									<h:outputLabel
+										value="#{trialEcrfStatusEntryBean.ecrf.visit.title}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_status_label}" />
+									<h:outputLabel
+										value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeLabel(trialEcrfStatusEntryBean.ecrfStatus.status)}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_proband_name_label}" />
+									<h:outputLabel
+										value="#{trialEcrfStatusEntryBean.probandListEntry.proband.name}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_proband_list_entry_group_label}" />
+									<h:outputLabel
+										value="#{trialEcrfStatusEntryBean.probandListEntry.group.title}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_proband_list_entry_status_label}" />
+									<h:outputLabel
+										value="#{trialEcrfStatusEntryBean.probandListEntry.lastStatus.status.name}" />
 								</h:panelGrid>
 							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>
 				</h:panelGroup>
-				<h:panelGrid
-					id="ecrffield_input_grid"
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid id="ecrffield_input_grid" columns="1" cellpadding="0"
 					styleClass="ctsms-ecrffieldvalues-input-panelgrid"
 					rowClasses="ctsms-pages-row,ctsms-input-row,ctsms-input-row,ctsms-signature-row,ctsms-message-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
 					<ui:include src="../shared/paginator.xhtml">
-						<ui:param
-							name="valueBean"
+						<ui:param name="valueBean"
 							value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean}" />
-						<ui:param
-							name="showAjaxStatus"
-							value="true" />							
-						<ui:param
-							name="update"
+						<ui:param name="showAjaxStatus" value="true" />
+						<ui:param name="update"
 							value=":tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
-							<!-- :tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list, -->							
+
 					</ui:include>
-					<p:dataGrid
-						var="section"
+					<p:dataGrid var="section"
 						value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.sections}"
 						paginator="false"
 						emptyMessage="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.paginator.pagesEnabled ? triallabels.ecrf_field_values_page_empty_message : triallabels.ecrf_field_values_empty_message}"
-						columns="1"
-						id="ecrffield_inputs">
+						columns="1" id="ecrffield_inputs">
 						<p:column>
-							<p:panel
-								toggleable="true"
+							<p:panel toggleable="true"
 								styleClass="#{section.series ? 'ctsms-ecrf-section-series' : 'ctsms-ecrf-section'}"
 								collapsed="false">
-								<!-- collapsed="#{section.series and !probandEcrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}"> -->
+
 								<f:facet name="header">
 									<h:outputText value="#{section}" />
 								</f:facet>
-								<h:panelGrid
-									columns="1"
-									cellpadding="0"
+								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-content-panelgrid">
 
-<ui:include src="../shared/ecrfFieldValue.xhtml">
-									<ui:param
-										name="ecrfStatusEntryBean"
-										value="#{trialEcrfStatusEntryBean}" />
-									<ui:param
-										name="namingContainer"
-										value=":tabView:trialecrfstatusentry_form" />
-									<ui:param
-										name="updateOnComplete"
-										value="refreshTrialEcrfProgress()" />
-									<ui:param
-										name="audit_trail_enabled"
-										value="#{not empty trialEcrfStatusEntryBean.ecrfStatus}" />
-									<ui:param
-										name="sectionUnlockValue"
-										value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}" />
-													<ui:param
-														name="reasonForChangeRequired"
-														value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.reasonForChangeRequired}" />										
-</ui:include>
+									<ui:include src="../shared/ecrfFieldValue.xhtml">
+										<ui:param name="ecrfStatusEntryBean"
+											value="#{trialEcrfStatusEntryBean}" />
+										<ui:param name="namingContainer"
+											value=":tabView:trialecrfstatusentry_form" />
+										<ui:param name="updateOnComplete"
+											value="refreshTrialEcrfProgress()" />
+										<ui:param name="audit_trail_enabled"
+											value="#{not empty trialEcrfStatusEntryBean.ecrfStatus}" />
+										<ui:param name="sectionUnlockValue"
+											value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}" />
+										<ui:param name="reasonForChangeRequired"
+											value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.reasonForChangeRequired}" />
+									</ui:include>
 
 									<p:toolbar rendered="#{section.series}">
 										<p:toolbarGroup align="right">
@@ -897,133 +682,81 @@
 												id="updateSection#{section.rowIndex}"
 												actionListener="#{trialEcrfStatusEntryBean.updateSection(section)}"
 												oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-												icon="ui-icon ui-icon-disk"
-												ajax="true"
+												icon="ui-icon ui-icon-disk" ajax="true"
 												disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.editable and !trialEcrfStatusEntryBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}"
 												update=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
-											
-											<!-- <p:commandButton
-												process="@this"
-												value="#{triallabels.clear_ecrf_section_button_label}"
-												rendered="#{not trialEcrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section] and section.seriesIndex > 0 and not empty trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSection}"
-												onclick="ecrfSectionToClear=#{applicationScopeBean.quoteJsString(section.section)};ecrfClearSectionConfirmation.show();"
-												disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-												icon="ui-icon ui-icon-trash"
-												type="button" /> -->
-											
-												
-											<!-- <p:commandButton
-										process=":tabView:trialecrfstatusentry_form:ecrffield_inputs:#{section.rowIndex}"
-										update=":tabView:trialecrfstatusentry_form:ecrffield_inputs:#{section.rowIndex}"
-										value="#{labels.xx}"
-										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-										icon="ui-icon ui-icon-close"
-										disabled="false" /> -->
+
+
 										</p:toolbarGroup>
 									</p:toolbar>
 								</h:panelGrid>
 							</p:panel>
 						</p:column>
 					</p:dataGrid>
-					<h:inputHidden
-						id="signPassword"
-						required="false"
+					<h:inputHidden id="signPassword" required="false"
 						value="#{trialEcrfStatusEntryBean.password}">
 					</h:inputHidden>
 					<ui:include src="../shared/signature.xhtml">
-						<ui:param
-							name="id"
-							value="signature" />
-						<ui:param
-							name="signature"
+						<ui:param name="id" value="signature" />
+						<ui:param name="signature"
 							value="#{trialEcrfStatusEntryBean.signature}" />
-						<ui:param
-							name="tooltip"
+						<ui:param name="tooltip"
 							value="#{triallabels.ecrf_signature_tooltip}" />
 					</ui:include>
 					<ui:include src="../shared/summaryWarnMessage.xhtml">
-						<ui:param
-							name="rendered"
-							value="true" />
-						<ui:param
-							name="hidden"
-							value="true" />
-						<ui:param
-							name="value"
-							value="" />
-						<ui:param
-							name="error_message_id"
-							value="delta_error_msg" />
+						<ui:param name="rendered" value="true" />
+						<ui:param name="hidden" value="true" />
+						<ui:param name="value" value="" />
+						<ui:param name="error_message_id" value="delta_error_msg" />
 					</ui:include>
 					<p:messages />
 					<p:toolbar>
 						<p:toolbarGroup align="left">
-							<h:outputText
-								styleClass="ctsms-toolbar-text"
+							<h:outputText styleClass="ctsms-toolbar-text"
 								value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.created ? trialEcrfStatusEntryBean.ecrfFieldValueBean.modifiedAnnotation : ''}" />
 						</p:toolbarGroup>
 						<p:separator />
 						<p:toolbarGroup align="right">
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.reset_button_label}"
 								actionListener="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.reset}"
 								oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-								icon="ui-icon ui-icon-close"
-								ajax="true"
+								icon="ui-icon ui-icon-close" ajax="true"
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								
 								update="trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
-								<!-- disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.paginator.pagesEnabled}" -->
-							<p:commandButton
-								process="@this,ecrffield_inputs"
-								id="update"
+
+							<p:commandButton process="@this,ecrffield_inputs" id="update"
 								value="#{labels.update_page_button_label}"
 								actionListener="#{trialEcrfStatusEntryBean.update}"
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-								icon="ui-icon ui-icon-disk"
-								ajax="true"
+								icon="ui-icon ui-icon-disk" ajax="true"
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								
 								update="trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
-								<!-- disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}" -->
-							<!-- <f:param name="#{param[applicationScopeBean.parameterName('REQUIRED')]}" value="true" />
-								</p:commandButton> -->
-								
-							<!-- rendered="#{not trialEcrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section] and section.seriesIndex > 0 and not empty trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSection}" -->
-							<p:commandButton
 
+
+
+
+							<p:commandButton
 								value="#{triallabels.clear_ecrf_section_button_label}"
-								
 								onclick="ecrfClearSectionConfirmation.show();"
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
 								disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.editable or empty trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSection}"
-								icon="ui-icon ui-icon-trash"
-								type="button" />								
-								
-							<p:commandButton
-								process="@this"
+								icon="ui-icon ui-icon-trash" type="button" />
+
+							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{trialEcrfStatusEntryBean.load}"
 								oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-								icon="ui-icon-refresh"
-								ajax="true"
+								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.created}"
 								update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.verify_signature_button_label}"
 								actionListener="#{trialEcrfStatusEntryBean.verifySignature}"
-								icon="ui-icon ui-icon-signature"
-								ajax="true"
+								icon="ui-icon ui-icon-signature" ajax="true"
 								disabled="#{empty trialEcrfStatusEntryBean.signature}"
 								update="signature" />
-							<!-- <p:commandButton
-								type="button"
-								value="#{triallabels.sign_ecrfs_button_label}"
-								icon="ui-icon ui-icon-pencil"
-								rendered="#{trialEcrfStatusEntryBean.signEcrfsVisible}"
-								onclick="ecrfStatusPassword.setValue('');signEcrfsPassword.show();" /> -->
+
 
 							<p:menuButton
 								rendered="#{trialEcrfStatusEntryBean.signEcrfsVisible}"
@@ -1032,111 +765,85 @@
 									value="#{triallabels.sign_verified_ecrfs_button_label}"
 									disabled="#{!trialEcrfStatusEntryBean.signVerifiedEcrfsEnabled}"
 									onclick="ecrfsVerifiedPassword.setValue('');signVerifiedEcrfsPassword.show();"
-									icon="ctsms-menubar-icon ui-icon-pencil"
-									url="#"
-									ajax="false" />
-								<p:menuitem
-									value="#{triallabels.sign_all_ecrfs_button_label}"
+									icon="ctsms-menubar-icon ui-icon-pencil" url="#" ajax="false" />
+								<p:menuitem value="#{triallabels.sign_all_ecrfs_button_label}"
 									onclick="ecrfsAllPassword.setValue('');signAllEcrfsPassword.show();"
-									icon="ctsms-menubar-icon ui-icon-pencil"
-									url="#"
-									ajax="false" />										
+									icon="ctsms-menubar-icon ui-icon-pencil" url="#" ajax="false" />
 							</p:menuButton>
-																
-							<p:splitButton
-								immediate="true"
-								ajax="false"
+
+							<p:splitButton immediate="true" ajax="false"
 								rendered="#{not empty trialEcrfStatusEntryBean.ecrf}"
 								disabled="#{empty trialEcrfStatusEntryBean.probandListEntry or trialEcrfStatusEntryBean.getEcrfProgressSummary(trialEcrfStatusEntryBean.probandListEntry).ecrfTotalCount == 0}"
 								value="#{triallabels.audit_trail_excel_button_label}"
 								title="#{triallabels.audit_trail_excel_button_title}"
 								icon="ui-icon ui-icon-xls">
-								<p:fileDownload value="#{trialEcrfStatusEntryBean.getAuditTrailExcelStreamedContent(trialEcrfStatusEntryBean.probandListEntry)}" />
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:fileDownload
+									value="#{trialEcrfStatusEntryBean.getAuditTrailExcelStreamedContent(trialEcrfStatusEntryBean.probandListEntry)}" />
+								<p:menuitem immediate="true" ajax="false"
 									value="#{trialEcrfStatusEntryBean.ecrf.name}"
 									disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.created}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.getAuditTrailExcelStreamedContent()}" />
+									<p:fileDownload
+										value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.getAuditTrailExcelStreamedContent()}" />
 								</p:menuitem>
-							</p:splitButton>			
-							<p:commandButton
-								immediate="true"
-								ajax="false"
+							</p:splitButton>
+							<p:commandButton immediate="true" ajax="false"
 								rendered="#{empty trialEcrfStatusEntryBean.ecrf}"
 								disabled="#{empty trialEcrfStatusEntryBean.probandListEntry or trialEcrfStatusEntryBean.getEcrfProgressSummary(trialEcrfStatusEntryBean.probandListEntry).ecrfTotalCount == 0}"
 								value="#{triallabels.audit_trail_excel_button_label}"
 								title="#{triallabels.audit_trail_excel_button_title}"
 								icon="ui-icon ui-icon-xls">
-								<p:fileDownload value="#{trialEcrfStatusEntryBean.getAuditTrailExcelStreamedContent(trialEcrfStatusEntryBean.probandListEntry)}" />
-							</p:commandButton>													
-								
-							<p:splitButton
-								immediate="true"
-								ajax="false"
+								<p:fileDownload
+									value="#{trialEcrfStatusEntryBean.getAuditTrailExcelStreamedContent(trialEcrfStatusEntryBean.probandListEntry)}" />
+							</p:commandButton>
+
+							<p:splitButton immediate="true" ajax="false"
 								disabled="#{empty trialEcrfStatusEntryBean.probandListEntry or trialEcrfStatusEntryBean.getEcrfProgressSummary(trialEcrfStatusEntryBean.probandListEntry).ecrfTotalCount == 0}"
 								value="#{triallabels.ecrfs_pdf_button_label}"
 								title="#{triallabels.ecrfs_pdf_button_title}"
 								icon="ui-icon ui-icon-pdf">
-								<p:fileDownload value="#{trialEcrfStatusEntryBean.getEcrfPdfStreamedContent(trialEcrfStatusEntryBean.probandListEntry,false)}" />
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:fileDownload
+									value="#{trialEcrfStatusEntryBean.getEcrfPdfStreamedContent(trialEcrfStatusEntryBean.probandListEntry,false)}" />
+								<p:menuitem immediate="true" ajax="false"
 									value="#{triallabels.blank_ecrfs_pdf_button_label}"
 									disabled="#{empty trialEcrfStatusEntryBean.probandListEntry or trialEcrfStatusEntryBean.getEcrfProgressSummary(trialEcrfStatusEntryBean.probandListEntry).ecrfTotalCount == 0}"
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
-									<p:fileDownload value="#{trialEcrfStatusEntryBean.getEcrfPdfStreamedContent(trialEcrfStatusEntryBean.probandListEntry,true)}" />
+									<p:fileDownload
+										value="#{trialEcrfStatusEntryBean.getEcrfPdfStreamedContent(trialEcrfStatusEntryBean.probandListEntry,true)}" />
 								</p:menuitem>
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:menuitem immediate="true" ajax="false"
 									value="#{trialEcrfStatusEntryBean.getEcrfPdfButtonLabel(false)}"
 									rendered="#{not empty trialEcrfStatusEntryBean.ecrf}"
 									disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.created}"
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
-									<p:fileDownload value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.getEcrfPdfStreamedContent(false,false)}" />
+									<p:fileDownload
+										value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.getEcrfPdfStreamedContent(false,false)}" />
 								</p:menuitem>
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:menuitem immediate="true" ajax="false"
 									value="#{trialEcrfStatusEntryBean.getEcrfPdfButtonLabel(true)}"
 									rendered="#{not empty trialEcrfStatusEntryBean.ecrf}"
 									disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.created}"
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
-									<p:fileDownload value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.getEcrfPdfStreamedContent(true,false)}" />
+									<p:fileDownload
+										value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.getEcrfPdfStreamedContent(true,false)}" />
 								</p:menuitem>
 							</p:splitButton>
-							<p:menuButton
-								id="ecrfStatusMenuButton"
+							<p:menuButton id="ecrfStatusMenuButton"
 								disabled="#{empty trialEcrfStatusEntryBean.statusTypes or !trialEcrfStatusEntryBean.editable}"
 								value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeButtonLabel(trialEcrfStatusEntryBean.ecrfStatus.status)}">
-								<c:forEach
-									var="statusType"
+								<c:forEach var="statusType"
 									items="#{trialEcrfStatusEntryBean.statusTypes}">
 									<p:menuitem
 										value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeLabel(statusType)}"
 										onclick="if(#{trialEcrfStatusEntryBean.getEcrfStatusTypePasswordRequired(statusType)}){ecrfStatusPassword#{statusType.id}.setValue('');ecrfStatus#{statusType.id}Password.show();}else if(#{trialEcrfStatusEntryBean.getEcrfStatusTypeConfirmationRequired(statusType)}){ecrfStatus#{statusType.id}Confirmation.show();}else{updateEcrfStatus(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_STATUS_TYPE_ID')}:#{statusType.id}}));}"
-										icon="ctsms-menubar-icon #{statusType.nodeStyleClass}"
-										url="#"
+										icon="ctsms-menubar-icon #{statusType.nodeStyleClass}" url="#"
 										ajax="false" />
-									<!-- <p:menuitem
-										process="@this"
-										rendered="false"
-										value="#{trialEcrfStatusEntryBean.getEcrfStatusTypeLabel(statusType)}"
-										actionListener="#{trialEcrfStatusEntryBean.updateEcrfStatus(statusType.id)}"
-										oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ctsms-menubar-icon #{statusType.nodeStyleClass}"
-										ajax="true"
-										id="updateEcrfStatus#{statusType.id}"
-										update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,ecrf_detail,ecrf_title,ecrffield_input_grid" /> -->
+
 								</c:forEach>
 							</p:menuButton>
-							<p:tooltip
-								rendered="#{enableTooltips}"
+							<p:tooltip rendered="#{enableTooltips}"
 								for="ecrfStatusMenuButton">
-								<h:outputText
-									value="#{triallabels.ecrf_status_button_tooltip}"
+								<h:outputText value="#{triallabels.ecrf_status_button_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</p:toolbarGroup>
@@ -1146,81 +853,49 @@
 						</p:toolbarGroup>
 					</p:toolbar>
 					<ui:include src="../shared/paginator.xhtml">
-						<ui:param
-							name="valueBean"
+						<ui:param name="valueBean"
 							value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean}" />
-						<ui:param
-							name="showAjaxStatus"
-							value="false" />							
-						<ui:param
-							name="update"
+						<ui:param name="showAjaxStatus" value="false" />
+						<ui:param name="update"
 							value=":tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
-							<!-- :tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list, -->
+
 					</ui:include>
 				</h:panelGrid>
 			</h:panelGrid>
 			<ui:include src="../shared/auditTrailDialog.xhtml">
-				<ui:param
-					name="openAuditTrailRemoteCommand"
+				<ui:param name="openAuditTrailRemoteCommand"
 					value="openEcrfAuditTrail" />
-				<ui:param
-					name="auditTrailDialog"
-					value="ecrfAuditTrailDialog" />
-				<ui:param
-					name="namingContainer"
-					value=":tabView:trialecrfstatusentry_form" />					
-				<ui:param
-					name="auditTrailBean"
-					value="#{trialEcrfStatusEntryBean}" />
-									<ui:param
-										name="refreshEcrfProgressRemoteCommand"
-										value="refreshTrialEcrfsProgress" />					
+				<ui:param name="auditTrailDialog" value="ecrfAuditTrailDialog" />
+				<ui:param name="namingContainer"
+					value=":tabView:trialecrfstatusentry_form" />
+				<ui:param name="auditTrailBean" value="#{trialEcrfStatusEntryBean}" />
+				<ui:param name="refreshEcrfProgressRemoteCommand"
+					value="refreshTrialEcrfsProgress" />
 			</ui:include>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
+			<p:confirmDialog appendToBody="false" severity="alert"
 				widgetVar="ecrfClearSectionConfirmation">
 				<f:facet name="message">
-					<!-- <h:outputFormat
-						value="#{triallabels.ecrf_clear_section_confirmation_dialog_message}"
-						escape="false">
-						<f:param value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.filterSection}" />
-					</h:outputFormat> -->			
+
 					<h:outputText
 						value="#{triallabels.ecrf_clear_section_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				
-				<p:commandButton
-					process="@this"
-					value="#{labels.yes_button_label}"
+
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
 					actionListener="#{trialEcrfStatusEntryBean.clearValues}"
 					onstart="ecrfClearSectionConfirmation.hide();"
 					oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-					icon="ui-icon ui-icon-trash"
-					ajax="true"
+					icon="ui-icon ui-icon-trash" ajax="true"
 					update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
-				
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="ecrfClearSectionConfirmation.hide();"
-					type="button" />
-				
-				<!-- <p:commandButton
-					value="#{labels.yes_button_label}"
-					onclick="ecrfClearSectionConfirmation.hide();clearEcrfSection(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_SECTION')}:ecrfSectionToClear}));"
-					type="button" />				
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="ecrfClearSectionConfirmation.hide();ecrfSectionToClear=null;"
-					type="button" /> -->
-			</p:confirmDialog>			
-			<c:forEach
-				var="statusType"
+
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="ecrfClearSectionConfirmation.hide();" type="button" />
+
+
+			</p:confirmDialog>
+			<c:forEach var="statusType"
 				items="#{trialEcrfStatusEntryBean.allStatusTypes}">
-				<p:confirmDialog
-					appendToBody="false"
-					severity="alert"
+				<p:confirmDialog appendToBody="false" severity="alert"
 					widgetVar="ecrfStatus#{statusType.id}Confirmation">
 					<f:facet name="message">
 						<h:outputFormat
@@ -1229,46 +904,32 @@
 							<f:param value="#{statusType.name}" />
 						</h:outputFormat>
 					</f:facet>
-					<p:commandButton
-						value="#{labels.yes_button_label}"
+					<p:commandButton value="#{labels.yes_button_label}"
 						onclick="ecrfStatus#{statusType.id}Confirmation.hide();updateEcrfStatus(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_STATUS_TYPE_ID')}:#{statusType.id}}));"
 						type="button" />
-					<p:commandButton
-						value="#{labels.no_button_label}"
+					<p:commandButton value="#{labels.no_button_label}"
 						onclick="ecrfStatus#{statusType.id}Confirmation.hide()"
 						type="button" />
 				</p:confirmDialog>
-				<p:confirmDialog
-					appendToBody="false"
-					severity="info"
+				<p:confirmDialog appendToBody="false" severity="info"
 					widgetVar="ecrfStatus#{statusType.id}Password">
 					<f:facet name="message">
 						<h:outputText
 							value="#{triallabels.ecrf_status_password_prompt_dialog_message}"
 							escape="false" />
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-row">
-							<h:panelGrid
-								columns="3"
-								cellpadding="2"
+						<h:panelGrid columns="1" cellpadding="0"
+							styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+							<h:panelGrid columns="3" cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="passwordEcrfStatus#{statusType.id}"
+								<h:outputLabel for="passwordEcrfStatus#{statusType.id}"
 									value="#{triallabels.ecrf_signing_password_label}" />
 								<h:panelGroup>
-									<p:password
-										id="passwordEcrfStatus#{statusType.id}"
+									<p:password id="passwordEcrfStatus#{statusType.id}"
 										widgetVar="ecrfStatusPassword#{statusType.id}"
-										required="false"
-										feedback="false"
-										redisplay="false"
+										required="false" feedback="false" redisplay="false"
 										label="#{triallabels.ecrf_signing_password}"
 										styleClass="ctsms-password" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="passwordEcrfStatus#{statusType.id}">
 										<h:outputText
 											value="#{triallabels.ecrf_signing_password_tooltip}"
@@ -1279,132 +940,96 @@
 							</h:panelGrid>
 						</h:panelGrid>
 					</f:facet>
-					<p:commandButton
-						value="#{labels.ok_button_label}"
+					<p:commandButton value="#{labels.ok_button_label}"
 						onclick="setHiddenField('tabView:trialecrfstatusentry_form:signPassword',ecrfStatusPassword#{statusType.id}.getValue());ecrfStatus#{statusType.id}Password.hide();updateEcrfStatus(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_STATUS_TYPE_ID')}:#{statusType.id}}));"
 						type="button" />
-					<p:commandButton
-						value="#{labels.cancel_button_label}"
+					<p:commandButton value="#{labels.cancel_button_label}"
 						onclick="ecrfStatus#{statusType.id}Password.hide();ecrfStatusPassword#{statusType.id}.setValue('');"
 						type="button" />
 				</p:confirmDialog>
 			</c:forEach>
-				<p:confirmDialog
-					appendToBody="false"
-					severity="info"
-					widgetVar="signVerifiedEcrfsPassword">
-					<f:facet name="message">
-						<h:outputText
-							value="#{triallabels.ecrfs_verified_password_prompt_dialog_message}"
-							escape="false" />
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-row">
-							<h:panelGrid
-								columns="3"
-								cellpadding="2"
-								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="passwordVerifiedEcrfs"
-									value="#{triallabels.ecrf_signing_password_label}" />
-								<h:panelGroup>
-									<p:password
-										id="passwordVerifiedEcrfs"
-										widgetVar="ecrfsVerifiedPassword"
-										required="false"
-										feedback="false"
-										redisplay="false"
-										label="#{triallabels.ecrf_signing_password}"
-										styleClass="ctsms-password" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="passwordVerifiedEcrfs">
-										<h:outputText
-											value="#{triallabels.ecrf_signing_password_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="passwordVerifiedEcrfs" />
-							</h:panelGrid>
+			<p:confirmDialog appendToBody="false" severity="info"
+				widgetVar="signVerifiedEcrfsPassword">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.ecrfs_verified_password_prompt_dialog_message}"
+						escape="false" />
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid columns="3" cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel for="passwordVerifiedEcrfs"
+								value="#{triallabels.ecrf_signing_password_label}" />
+							<h:panelGroup>
+								<p:password id="passwordVerifiedEcrfs"
+									widgetVar="ecrfsVerifiedPassword" required="false"
+									feedback="false" redisplay="false"
+									label="#{triallabels.ecrf_signing_password}"
+									styleClass="ctsms-password" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="passwordVerifiedEcrfs">
+									<h:outputText
+										value="#{triallabels.ecrf_signing_password_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="passwordVerifiedEcrfs" />
 						</h:panelGrid>
-					</f:facet>
-					<p:commandButton
-						value="#{labels.ok_button_label}"
-						onclick="setHiddenField('tabView:trialecrfstatusentry_form:signPassword',ecrfsVerifiedPassword.getValue());signVerifiedEcrfsPassword.hide();signVerifiedEcrfs();"
-						type="button" />
-					<p:commandButton
-						value="#{labels.cancel_button_label}"
-						onclick="signVerifiedEcrfsPassword.hide();ecrfsVerifiedPassword.setValue('');"
-						type="button" />
-				</p:confirmDialog>
-				<p:confirmDialog
-					appendToBody="false"
-					severity="info"
-					widgetVar="signAllEcrfsPassword">
-					<f:facet name="message">
-						<h:outputText
-							value="#{triallabels.ecrfs_all_password_prompt_dialog_message}"
-							escape="false" />
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-row">
-							<h:panelGrid
-								columns="3"
-								cellpadding="2"
-								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="passwordAllEcrfs"
-									value="#{triallabels.ecrf_signing_password_label}" />
-								<h:panelGroup>
-									<p:password
-										id="passwordAllEcrfs"
-										widgetVar="ecrfsAllPassword"
-										required="false"
-										feedback="false"
-										redisplay="false"
-										label="#{triallabels.ecrf_signing_password}"
-										styleClass="ctsms-password" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="passwordAllEcrfs">
-										<h:outputText
-											value="#{triallabels.ecrf_signing_password_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="passwordAllEcrfs" />
-							</h:panelGrid>
+					</h:panelGrid>
+				</f:facet>
+				<p:commandButton value="#{labels.ok_button_label}"
+					onclick="setHiddenField('tabView:trialecrfstatusentry_form:signPassword',ecrfsVerifiedPassword.getValue());signVerifiedEcrfsPassword.hide();signVerifiedEcrfs();"
+					type="button" />
+				<p:commandButton value="#{labels.cancel_button_label}"
+					onclick="signVerifiedEcrfsPassword.hide();ecrfsVerifiedPassword.setValue('');"
+					type="button" />
+			</p:confirmDialog>
+			<p:confirmDialog appendToBody="false" severity="info"
+				widgetVar="signAllEcrfsPassword">
+				<f:facet name="message">
+					<h:outputText
+						value="#{triallabels.ecrfs_all_password_prompt_dialog_message}"
+						escape="false" />
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid columns="3" cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel for="passwordAllEcrfs"
+								value="#{triallabels.ecrf_signing_password_label}" />
+							<h:panelGroup>
+								<p:password id="passwordAllEcrfs" widgetVar="ecrfsAllPassword"
+									required="false" feedback="false" redisplay="false"
+									label="#{triallabels.ecrf_signing_password}"
+									styleClass="ctsms-password" />
+								<p:tooltip rendered="#{enableTooltips}" for="passwordAllEcrfs">
+									<h:outputText
+										value="#{triallabels.ecrf_signing_password_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="passwordAllEcrfs" />
 						</h:panelGrid>
-					</f:facet>
-					<p:commandButton
-						value="#{labels.ok_button_label}"
-						onclick="setHiddenField('tabView:trialecrfstatusentry_form:signPassword',ecrfsAllPassword.getValue());signAllEcrfsPassword.hide();signAllEcrfs();"
-						type="button" />
-					<p:commandButton
-						value="#{labels.cancel_button_label}"
-						onclick="signAllEcrfsPassword.hide();ecrfsAllPassword.setValue('');"
-						type="button" />
-				</p:confirmDialog>				
+					</h:panelGrid>
+				</f:facet>
+				<p:commandButton value="#{labels.ok_button_label}"
+					onclick="setHiddenField('tabView:trialecrfstatusentry_form:signPassword',ecrfsAllPassword.getValue());signAllEcrfsPassword.hide();signAllEcrfs();"
+					type="button" />
+				<p:commandButton value="#{labels.cancel_button_label}"
+					onclick="signAllEcrfsPassword.hide();ecrfsAllPassword.setValue('');"
+					type="button" />
+			</p:confirmDialog>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="trialEcrfStatusProbandListTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list" />
 			</ui:include>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="trialEcrfStatusEcrfListTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list" />
-			</ui:include>					
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

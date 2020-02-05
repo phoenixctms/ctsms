@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -13,33 +12,20 @@
 <h:body>
 	<ui:composition>
 		<h:form id="reimbursements_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeReimbursements"
-				actionListener="#{reimbursementsBean.change(trialBean.in.id)}"
-				update="probandmoneytransfersummary_list,probandmoneytransfernoparticipationsummary_list,toolbar,messages" /> -->
-			<p:remoteCommand
-				process="@this"
-				name="updateAllPaid"
+
+			<p:remoteCommand process="@this" name="updateAllPaid"
 				actionListener="#{reimbursementsBean.updateMoneyTransfersPaid}"
 				update="probandmoneytransfersummary_list,probandmoneytransfernoparticipationsummary_list,toolbar,messages" />
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:panel>
-					<h:panelGrid
-						columns="9"
-						cellpadding="2"
+					<h:panelGrid columns="9" cellpadding="2"
 						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-						<h:outputLabel
-							for="paid_filter"
+						<h:outputLabel for="paid_filter"
 							value="#{triallabels.money_transfer_summary_paid_filter_label}" />
 						<h:panelGroup>
-							<p:selectOneMenu
-								id="paid_filter"
-								value="#{reimbursementsBean.paid}"
-								required="false"
+							<p:selectOneMenu id="paid_filter"
+								value="#{reimbursementsBean.paid}" required="false"
 								label="#{triallabels.money_transfer_summary_paid_filter}"
 								styleClass="ctsms-control">
 								<f:converter converterId="ctsms.Tristate" />
@@ -56,48 +42,40 @@
 									listener="#{reimbursementsBean.handleMoneyTransferPaidChange}"
 									update="probandmoneytransfersummary_list,probandmoneytransfernoparticipationsummary_list" />
 							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="paid_filter">
+							<p:tooltip rendered="#{enableTooltips}" for="paid_filter">
 								<h:outputText
 									value="#{triallabels.money_transfer_summary_paid_filter_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="paid_filter" />
-						
-						<h:outputLabel
-							for="list_entries_count_only"
+
+						<h:outputLabel for="list_entries_count_only"
 							value="#{triallabels.money_transfer_summary_list_entries_count_only_filter_label}" />
 						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="list_entries_count_only"
+							<p:selectBooleanCheckbox id="list_entries_count_only"
 								value="#{reimbursementsBean.listEntriesCountOnly}">
 								<p:ajax
 									listener="#{reimbursementsBean.handleMoneyTransferPaidChange}"
 									update="probandmoneytransfersummary_list,probandmoneytransfernoparticipationsummary_list" />
 							</p:selectBooleanCheckbox>
-							<p:tooltip
-								rendered="#{enableTooltips}"
+							<p:tooltip rendered="#{enableTooltips}"
 								for="list_entries_count_only">
 								<h:outputText
 									value="#{triallabels.money_transfer_summary_list_entries_count_only_filter_tooltip}"
 									escape="false" />
 							</p:tooltip>
-						</h:panelGroup>						
+						</h:panelGroup>
 						<p:message for="list_entries_count_only" />
-						
+
 					</h:panelGrid>
 				</p:panel>
-				<p:fieldset
-					toggleable="true"
-					collapsed="false">
+				<p:fieldset toggleable="true" collapsed="false">
 					<f:facet name="legend">
-						<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_field_set}" />
+						<h:outputText
+							value="#{triallabels.reimbursements_proband_money_transfer_field_set}" />
 					</f:facet>
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true"
 						rows="#{dataTablesRowsFullPageTab}"
 						paginator="#{dataTablesPaginatorFullPageTab}"
 						paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -115,123 +93,110 @@
 						id="probandmoneytransfersummary_list"
 						rowStyleClass="#{summary.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(summary.vo.listEntry.lastStatus)}#{rowBgColorAlpha}">
 						<f:facet name="header">
-							<h:outputText value="#{reimbursementsBean.probandMoneyTransferSummaryModel.rowCount} #{triallabels.reimbursements_proband_money_transfer_summary_list_header}" />
+							<h:outputText
+								value="#{reimbursementsBean.probandMoneyTransferSummaryModel.rowCount} #{triallabels.reimbursements_proband_money_transfer_summary_list_header}" />
 						</f:facet>
 						<p:column style="width:16px;">
 							<p:rowToggler />
 						</p:column>
 						<p:column sortBy="#{summary.vo.position}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_summary_list_position_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_position_column}" />
 							</f:facet>
 							<h:outputText value="#{summary.vo.listEntry.position}" />
 						</p:column>
 
-						<p:column
-							sortBy="#{summary.vo.group.title}"
+						<p:column sortBy="#{summary.vo.group.title}"
 							filterBy="#{summary.vo.group.id}"
 							filterOptions="#{reimbursementsBean.filterProbandGroups}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_summary_list_group_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_group_column}" />
 							</f:facet>
 							<h:outputText value="#{summary.vo.listEntry.group.title}" />
 						</p:column>
 
 						<p:column sortBy="#{summary.vo.proband.id}"
-						    filterBy="#{summary.vo.proband.id}">
+							filterBy="#{summary.vo.proband.id}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_summary_list_proband_id_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_proband_id_column}" />
 							</f:facet>
 							<h:outputText value="#{summary.vo.proband.id}" />
-						</p:column>						
+						</p:column>
 
-						<p:column filterBy="#{summary.vo.proband.personParticulars.lastNameHash}">
+						<p:column
+							filterBy="#{summary.vo.proband.personParticulars.lastNameHash}">
 							<f:facet name="header">
 								<h:outputText
 									styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
 									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_proband_name_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{summary.vo.proband.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="#{summary.vo.proband.name}" />
+								<ui:param name="icon"
 									value="#{summary.vo.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
+								<ui:param name="rendered"
 									value="#{summary.vo.proband.decrypted}" />
 							</ui:include>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{summary.vo.proband.name}" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-encrypted" />
-								<ui:param
-									name="rendered"
+								<ui:param name="label" value="#{summary.vo.proband.name}" />
+								<ui:param name="icon" value="ctsms-icon-encrypted" />
+								<ui:param name="rendered"
 									value="#{!summary.vo.proband.decrypted}" />
 							</ui:include>
 						</p:column>
-						
-						<!-- <p:column filterBy="#{summary.vo.proband.animalParticulars.animalName}"
-							sortBy="#{summary.vo.proband.animalParticulars.animalName}">
-							<f:facet name="header">
-								<h:outputText
-									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_animal_name_column}" />
-							</f:facet>
-							<h:outputText value="#{summary.vo.proband.name}" />
-						</p:column> -->				
-						
-						<p:column
-							sortBy="#{summary.vo.lastStatus.status}"
+
+
+
+						<p:column sortBy="#{summary.vo.lastStatus.status}"
 							filterBy="#{summary.vo.lastStatus.status.id}"
 							filterOptions="#{sessionScopeBean.filterPersonProbandListStatusTypes}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_summary_list_last_status_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_last_status_column}" />
 							</f:facet>
-							<h:outputText value="#{summary.vo.listEntry.lastStatus.status.name}" />
+							<h:outputText
+								value="#{summary.vo.listEntry.lastStatus.status.name}" />
 						</p:column>
 						<p:columns
 							value="#{reimbursementsBean.probandMoneyTransferSummaryModel.costTypesTruncated}"
-							var="costType"
-							columnIndexVar="costTypeIndex">
+							var="costType" columnIndexVar="costTypeIndex">
 							<f:facet name="header">
-								<h:outputText value="#{empty costType ? messages.empty_cost_type : costType}" />
+								<h:outputText
+									value="#{empty costType ? messages.empty_cost_type : costType}" />
 							</f:facet>
-							<h:outputFormat
-								styleClass="ctsms-list-cell-normal"
+							<h:outputFormat styleClass="ctsms-list-cell-normal"
 								rendered="#{summary.vo.totalsByCostTypes[costTypeIndex].count > 0}"
 								value="#{labels.currency_items_format}">
-								<f:param value="#{summary.vo.totalsByCostTypes[costTypeIndex].total}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[costTypeIndex].total}" />
 								<f:param value="#{applicationScopeBean.currencySymbol}" />
-								<f:param value="#{summary.vo.totalsByCostTypes[costTypeIndex].count}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[costTypeIndex].count}" />
 							</h:outputFormat>
 						</p:columns>
-						<p:column rendered="#{reimbursementsBean.probandMoneyTransferSummaryModel.costTypeColumnsTruncated}">
+						<p:column
+							rendered="#{reimbursementsBean.probandMoneyTransferSummaryModel.costTypeColumnsTruncated}">
 							<f:facet name="header">
 								<h:panelGroup>
-									<p:selectOneMenu
-										id="truncatedCostTypeIndex"
+									<p:selectOneMenu id="truncatedCostTypeIndex"
 										value="#{reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex}"
 										required="false"
 										label="#{triallabels.reimbursements_proband_money_transfer_summary_list_truncated_cost_type}"
 										styleClass="ctsms-control-small">
 										<f:converter converterId="ctsms.ID" />
-										<f:selectItem
-											itemLabel="#{labels.no_selection_label}"
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
 											itemValue="#{applicationScopeBean.noSelectionValue}" />
 										<f:selectItems
 											value="#{reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypes}"
-											var="selectItem"
-											itemLabel="#{selectItem.label}"
+											var="selectItem" itemLabel="#{selectItem.label}"
 											itemValue="#{selectItem.value}" />
 										<pe:javascript
 											execute="ajaxRequest(':tabView:reimbursements_form:probandmoneytransfersummary_list:truncatedCostTypeIndex',':tabView:reimbursements_form:probandmoneytransfersummary_list:truncatedCostTypeIndex',':tabView:reimbursements_form:probandmoneytransfersummary_list')" />
 									</p:selectOneMenu>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="truncatedCostTypeIndex">
 										<h:outputText
 											value="#{triallabels.reimbursements_proband_money_transfer_summary_list_truncated_cost_type_tooltip}"
@@ -239,21 +204,22 @@
 									</p:tooltip>
 								</h:panelGroup>
 							</f:facet>
-							<h:outputFormat
-								styleClass="ctsms-list-cell-normal"
+							<h:outputFormat styleClass="ctsms-list-cell-normal"
 								rendered="#{not empty reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex and summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex].count > 0}"
 								value="#{labels.currency_items_format}">
-								<f:param value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex].total}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex].total}" />
 								<f:param value="#{applicationScopeBean.currencySymbol}" />
-								<f:param value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex].count}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferSummaryModel.truncatedCostTypeIndex].count}" />
 							</h:outputFormat>
 						</p:column>
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_summary_list_total_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_total_column}" />
 							</f:facet>
-							<h:outputFormat
-								rendered="#{summary.vo.count > 0}"
+							<h:outputFormat rendered="#{summary.vo.count > 0}"
 								value="#{labels.currency_items_format}">
 								<f:param value="#{summary.vo.total}" />
 								<f:param value="#{applicationScopeBean.currencySymbol}" />
@@ -263,83 +229,65 @@
 						<p:column style="width:128px;white-space:nowrap;">
 							<p:commandButton
 								title="#{triallabels.money_transfers_update_paid_button_title}"
-								id="updateMoneyTransfersPaid"
-								icon="ui-icon ui-icon-check"
+								id="updateMoneyTransfersPaid" icon="ui-icon ui-icon-check"
 								type="button"
 								disabled="#{reimbursementsBean.getOpenSummary(summary.vo.listEntry).count == 0}"
 								onclick="updateAllPaid(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('TRIAL_ID')}:'#{summary.vo.trial.id}',#{applicationScopeBean.parameterName('PROBAND_ID')}:'#{summary.vo.proband.id}' }));" />
-							<p:commandButton
-								immediate="true"
-								ajax="false"
+							<p:commandButton immediate="true" ajax="false"
 								title="#{labels.export_visit_schedule_travel_expenses_button_label}"
 								icon="ctsms-menubar-icon ctsms-icon-xls">
-								<p:fileDownload value="#{reimbursementsBean.getVisitScheduleExcelStreamedContent(summary.vo.proband.id)}" />
+								<p:fileDownload
+									value="#{reimbursementsBean.getVisitScheduleExcelStreamedContent(summary.vo.proband.id)}" />
 							</p:commandButton>
-							<!-- disabled="#{empty summary.vo.listEntry.group}" -->
-							<p:commandButton
-								immediate="true"
-								ajax="false"
+
+							<p:commandButton immediate="true" ajax="false"
 								title="#{labels.reimbursements_pdf_button_label}"
 								disabled="#{reimbursementsBean.getPayOffSummary(summary.vo.listEntry).count == 0}"
 								icon="ctsms-menubar-icon ctsms-icon-pdf">
-								<p:fileDownload value="#{reimbursementsBean.getReimbursementsPdfStreamedContent(summary.vo.proband.id)}" />
+								<p:fileDownload
+									value="#{reimbursementsBean.getReimbursementsPdfStreamedContent(summary.vo.proband.id)}" />
 							</p:commandButton>
-							<p:commandButton
-								type="button"
+							<p:commandButton type="button"
 								title="#{labels.open_proband_button_label}"
 								icon="ui-icon ui-icon-extlink"
 								onclick="openProband(#{summary.vo.proband.id})" />
 						</p:column>
 						<p:rowExpansion>
 							<p:panel>
-								<ui:include src="../shared/moneyTransferSummaryDetailTable.xhtml">
-									<ui:param
-										name="summary"
-										value="#{summary}" />
-									<ui:param
-										name="dataTableRows"
+								<ui:include
+									src="../shared/moneyTransferSummaryDetailTable.xhtml">
+									<ui:param name="summary" value="#{summary}" />
+									<ui:param name="dataTableRows"
 										value="#{dataTablesRowsRowExpansion}" />
-									<ui:param
-										name="dataTablePaginator"
+									<ui:param name="dataTablePaginator"
 										value="#{dataTablesPaginatorRowExpansion}" />
-									<ui:param
-										name="dataTablePaginatorTemplate"
+									<ui:param name="dataTablePaginatorTemplate"
 										value="#{dataTablesPaginatorTemplateRowExpansion}" />
-									<ui:param
-										name="dataTableRowsPerPageTemplate"
+									<ui:param name="dataTableRowsPerPageTemplate"
 										value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-									<ui:param
-										name="dataTablePaginatorPosition"
+									<ui:param name="dataTablePaginatorPosition"
 										value="#{dataTablesPaginatorPositionRowExpansion}" />
-									<ui:param
-										name="dataTablePageLinks"
+									<ui:param name="dataTablePageLinks"
 										value="#{dataTablesPageLinksRowExpansion}" />
-									<ui:param
-										name="dataTablePaginatorAlwaysVisible"
+									<ui:param name="dataTablePaginatorAlwaysVisible"
 										value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-									<ui:param
-										name="dataTableScrollable"
+									<ui:param name="dataTableScrollable"
 										value="#{dataTablesScrollableRowExpansion}" />
-									<ui:param
-										name="dataTableScrollHeight"
+									<ui:param name="dataTableScrollHeight"
 										value="#{dataTablesScrollHeightRowExpansion}" />
-									<ui:param
-										name="dataTableResizableColumns"
+									<ui:param name="dataTableResizableColumns"
 										value="#{dataTablesResizableColumnsRowExpansion}" />
 								</ui:include>
 							</p:panel>
 						</p:rowExpansion>
 					</p:dataTable>
 				</p:fieldset>
-				<p:fieldset
-					toggleable="true"
-					collapsed="true">
+				<p:fieldset toggleable="true" collapsed="true">
 					<f:facet name="legend">
-						<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_no_participation_field_set}" />
+						<h:outputText
+							value="#{triallabels.reimbursements_proband_money_transfer_no_participation_field_set}" />
 					</f:facet>
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true"
 						rows="#{dataTablesRowsFullPageTab}"
 						paginator="#{dataTablesPaginatorFullPageTab}"
 						paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -365,11 +313,12 @@
 						</p:column>
 						<p:column sortBy="#{summary.vo.id}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_id_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_id_column}" />
 							</f:facet>
 							<h:outputText value="#{summary.vo.proband.id}" />
 						</p:column>
-						
+
 						<p:column filterBy="#{summary.vo.personParticulars.lastNameHash}">
 							<f:facet name="header">
 								<h:outputText
@@ -377,105 +326,83 @@
 									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_proband_name_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{summary.vo.proband.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="#{summary.vo.proband.name}" />
+								<ui:param name="icon"
 									value="#{summary.vo.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
+								<ui:param name="rendered"
 									value="#{summary.vo.proband.decrypted}" />
 							</ui:include>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{summary.vo.proband.name}" />
-								<ui:param
-									name="icon"
-									value="ctsms-icon-encrypted" />
-								<ui:param
-									name="rendered"
+								<ui:param name="label" value="#{summary.vo.proband.name}" />
+								<ui:param name="icon" value="ctsms-icon-encrypted" />
+								<ui:param name="rendered"
 									value="#{!summary.vo.proband.decrypted}" />
 							</ui:include>
 						</p:column>
-						
-						<!-- <p:column filterBy="#{summary.vo.proband.animalParticulars.animalName}"
-							sortBy="#{summary.vo.proband.animalParticulars.animalName}">
-							<f:facet name="header">
-								<h:outputText
-									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_animal_name_column}" />
-							</f:facet>
-							<h:outputText value="#{summary.vo.proband.name}" />
-						</p:column>	-->
-						
-						<p:column
-							sortBy="#{summary.vo.department}"
+
+
+
+						<p:column sortBy="#{summary.vo.department}"
 							filterBy="#{summary.vo.department.id}"
 							filterOptions="#{sessionScopeBean.filterDepartments}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_proband_department_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_proband_department_column}" />
 							</f:facet>
 							<h:outputText value="#{summary.vo.proband.department.name}" />
 						</p:column>
-						<p:column
-							sortBy="#{summary.vo.category}"
+						<p:column sortBy="#{summary.vo.category}"
 							filterBy="#{summary.vo.category.id}"
 							filterOptions="#{sessionScopeBean.filterProbandCategories}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_proband_category_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_proband_category_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
+								<ui:param name="label"
 									value="#{summary.vo.proband.category.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="icon"
 									value="#{summary.vo.proband.category.nodeStyleClass}" />
-								<ui:param
-									name="rendered"
-									value="true" />
+								<ui:param name="rendered" value="true" />
 							</ui:include>
 						</p:column>
 						<p:columns
 							value="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.costTypesTruncated}"
-							var="costType"
-							columnIndexVar="costTypeIndex">
+							var="costType" columnIndexVar="costTypeIndex">
 							<f:facet name="header">
-								<h:outputText value="#{empty costType ? messages.empty_cost_type : costType}" />
+								<h:outputText
+									value="#{empty costType ? messages.empty_cost_type : costType}" />
 							</f:facet>
-							<h:outputFormat
-								styleClass="ctsms-list-cell-normal"
+							<h:outputFormat styleClass="ctsms-list-cell-normal"
 								rendered="#{summary.vo.totalsByCostTypes[costTypeIndex].count > 0}"
 								value="#{labels.currency_items_format}">
-								<f:param value="#{summary.vo.totalsByCostTypes[costTypeIndex].total}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[costTypeIndex].total}" />
 								<f:param value="#{applicationScopeBean.currencySymbol}" />
-								<f:param value="#{summary.vo.totalsByCostTypes[costTypeIndex].count}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[costTypeIndex].count}" />
 							</h:outputFormat>
 						</p:columns>
-						<p:column rendered="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.costTypeColumnsTruncated}">
+						<p:column
+							rendered="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.costTypeColumnsTruncated}">
 							<f:facet name="header">
 								<h:panelGroup>
-									<p:selectOneMenu
-										id="noParticipationTruncatedCostTypeIndex"
+									<p:selectOneMenu id="noParticipationTruncatedCostTypeIndex"
 										value="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex}"
 										required="false"
 										label="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_truncated_cost_type}"
 										styleClass="ctsms-control-small">
 										<f:converter converterId="ctsms.ID" />
-										<f:selectItem
-											itemLabel="#{labels.no_selection_label}"
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
 											itemValue="#{applicationScopeBean.noSelectionValue}" />
 										<f:selectItems
 											value="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypes}"
-											var="selectItem"
-											itemLabel="#{selectItem.label}"
+											var="selectItem" itemLabel="#{selectItem.label}"
 											itemValue="#{selectItem.value}" />
 										<pe:javascript
 											execute="ajaxRequest(':tabView:reimbursements_form:probandmoneytransfernoparticipationsummary_list:noParticipationTruncatedCostTypeIndex',':tabView:reimbursements_form:probandmoneytransfernoparticipationsummary_list:noParticipationTruncatedCostTypeIndex',':tabView:reimbursements_form:probandmoneytransfernoparticipationsummary_list')" />
 									</p:selectOneMenu>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="noParticipationTruncatedCostTypeIndex">
 										<h:outputText
 											value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_truncated_cost_type_tooltip}"
@@ -483,21 +410,22 @@
 									</p:tooltip>
 								</h:panelGroup>
 							</f:facet>
-							<h:outputFormat
-								styleClass="ctsms-list-cell-normal"
+							<h:outputFormat styleClass="ctsms-list-cell-normal"
 								rendered="#{not empty reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex and summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex].count > 0}"
 								value="#{labels.currency_items_format}">
-								<f:param value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex].total}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex].total}" />
 								<f:param value="#{applicationScopeBean.currencySymbol}" />
-								<f:param value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex].count}" />
+								<f:param
+									value="#{summary.vo.totalsByCostTypes[reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.truncatedCostTypeIndex].count}" />
 							</h:outputFormat>
 						</p:column>
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_total_column}" />
+								<h:outputText
+									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_total_column}" />
 							</f:facet>
-							<h:outputFormat
-								rendered="#{summary.vo.count > 0}"
+							<h:outputFormat rendered="#{summary.vo.count > 0}"
 								value="#{labels.currency_items_format}">
 								<f:param value="#{summary.vo.total}" />
 								<f:param value="#{applicationScopeBean.currencySymbol}" />
@@ -507,60 +435,46 @@
 						<p:column style="width:96px;white-space:nowrap;">
 							<p:commandButton
 								title="#{triallabels.money_transfers_update_paid_button_title}"
-								id="updateMoneyTransfersPaid"
-								icon="ui-icon ui-icon-check"
+								id="updateMoneyTransfersPaid" icon="ui-icon ui-icon-check"
 								type="button"
 								disabled="#{reimbursementsBean.getOpenNoParticipationSummary(summary.vo.proband).count == 0}"
 								onclick="updateAllPaid(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('TRIAL_ID')}:'#{summary.vo.trial.id}',#{applicationScopeBean.parameterName('PROBAND_ID')}:'#{summary.vo.proband.id}' }));" />
-							<p:commandButton
-								immediate="true"
-								ajax="false"
+							<p:commandButton immediate="true" ajax="false"
 								title="#{labels.reimbursements_pdf_button_label}"
 								disabled="#{reimbursementsBean.getPayOffNoParticipationSummary(summary.vo.proband).count == 0}"
 								icon="ctsms-menubar-icon ctsms-icon-pdf">
-								<p:fileDownload value="#{reimbursementsBean.getReimbursementsPdfStreamedContent(summary.vo.proband.id)}" />
+								<p:fileDownload
+									value="#{reimbursementsBean.getReimbursementsPdfStreamedContent(summary.vo.proband.id)}" />
 							</p:commandButton>
-							<p:commandButton
-								type="button"
+							<p:commandButton type="button"
 								title="#{labels.open_proband_button_label}"
 								icon="ui-icon ui-icon-extlink"
 								onclick="openProband(#{summary.vo.proband.id})" />
 						</p:column>
 						<p:rowExpansion>
 							<p:panel>
-								<ui:include src="../shared/moneyTransferSummaryDetailTable.xhtml">
-									<ui:param
-										name="summary"
-										value="#{summary}" />
-									<ui:param
-										name="dataTableRows"
+								<ui:include
+									src="../shared/moneyTransferSummaryDetailTable.xhtml">
+									<ui:param name="summary" value="#{summary}" />
+									<ui:param name="dataTableRows"
 										value="#{dataTablesRowsRowExpansion}" />
-									<ui:param
-										name="dataTablePaginator"
+									<ui:param name="dataTablePaginator"
 										value="#{dataTablesPaginatorRowExpansion}" />
-									<ui:param
-										name="dataTablePaginatorTemplate"
+									<ui:param name="dataTablePaginatorTemplate"
 										value="#{dataTablesPaginatorTemplateRowExpansion}" />
-									<ui:param
-										name="dataTableRowsPerPageTemplate"
+									<ui:param name="dataTableRowsPerPageTemplate"
 										value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-									<ui:param
-										name="dataTablePaginatorPosition"
+									<ui:param name="dataTablePaginatorPosition"
 										value="#{dataTablesPaginatorPositionRowExpansion}" />
-									<ui:param
-										name="dataTablePageLinks"
+									<ui:param name="dataTablePageLinks"
 										value="#{dataTablesPageLinksRowExpansion}" />
-									<ui:param
-										name="dataTablePaginatorAlwaysVisible"
+									<ui:param name="dataTablePaginatorAlwaysVisible"
 										value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-									<ui:param
-										name="dataTableScrollable"
+									<ui:param name="dataTableScrollable"
 										value="#{dataTablesScrollableRowExpansion}" />
-									<ui:param
-										name="dataTableScrollHeight"
+									<ui:param name="dataTableScrollHeight"
 										value="#{dataTablesScrollHeightRowExpansion}" />
-									<ui:param
-										name="dataTableResizableColumns"
+									<ui:param name="dataTableResizableColumns"
 										value="#{dataTablesResizableColumnsRowExpansion}" />
 								</ui:include>
 							</p:panel>
@@ -569,120 +483,99 @@
 				</p:fieldset>
 				<p:toolbar id="toolbar">
 					<p:toolbarGroup align="right">
-						<p:splitButton
-							immediate="true"
-							ajax="false"
+						<p:splitButton immediate="true" ajax="false"
 							disabled="#{reimbursementsBean.getOpenSummary().count == 0}"
 							value="#{reimbursementsBean.getReimbursementsExcelButtonLabel(false)}"
 							title="#{labels.reimbursements_export_button_label}"
 							icon="ui-icon ui-icon-xls">
-							<p:fileDownload value="#{reimbursementsBean.getReimbursementsExcelStreamedContent(false)}" />
-							<c:forEach
-								var="method"
+							<p:fileDownload
+								value="#{reimbursementsBean.getReimbursementsExcelStreamedContent(false)}" />
+							<c:forEach var="method"
 								items="#{reimbursementsBean.paymentMethods}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:menuitem immediate="true" ajax="false"
 									value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelButtonLabel(method,false)}"
 									title="#{labels.reimbursements_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelStreamedContent(method,false)}" />
+									<p:fileDownload
+										value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelStreamedContent(method,false)}" />
 								</p:menuitem>
 							</c:forEach>
-							<c:forEach
-								var="costType"
-								items="#{reimbursementsBean.costTypes}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+							<c:forEach var="costType" items="#{reimbursementsBean.costTypes}">
+								<p:menuitem immediate="true" ajax="false"
 									value="#{reimbursementsBean.getReimbursementsByCostTypeExcelButtonLabel(costType,false)}"
 									title="#{labels.reimbursements_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{reimbursementsBean.getReimbursementsByCostTypeExcelStreamedContent(costType,false)}" />
+									<p:fileDownload
+										value="#{reimbursementsBean.getReimbursementsByCostTypeExcelStreamedContent(costType,false)}" />
 								</p:menuitem>
 							</c:forEach>
 						</p:splitButton>
-						<p:splitButton
-							immediate="true"
-							ajax="false"
+						<p:splitButton immediate="true" ajax="false"
 							disabled="#{reimbursementsBean.getPaidSummary().count == 0}"
 							value="#{reimbursementsBean.getReimbursementsExcelButtonLabel(true)}"
 							title="#{labels.reimbursements_export_button_label}"
 							icon="ui-icon ui-icon-xls">
-							<p:fileDownload value="#{reimbursementsBean.getReimbursementsExcelStreamedContent(true)}" />
-							<c:forEach
-								var="method"
+							<p:fileDownload
+								value="#{reimbursementsBean.getReimbursementsExcelStreamedContent(true)}" />
+							<c:forEach var="method"
 								items="#{reimbursementsBean.paymentMethods}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:menuitem immediate="true" ajax="false"
 									value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelButtonLabel(method,true)}"
 									title="#{labels.reimbursements_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelStreamedContent(method,true)}" />
+									<p:fileDownload
+										value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelStreamedContent(method,true)}" />
 								</p:menuitem>
 							</c:forEach>
-							<c:forEach
-								var="costType"
-								items="#{reimbursementsBean.costTypes}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+							<c:forEach var="costType" items="#{reimbursementsBean.costTypes}">
+								<p:menuitem immediate="true" ajax="false"
 									value="#{reimbursementsBean.getReimbursementsByCostTypeExcelButtonLabel(costType,true)}"
 									title="#{labels.reimbursements_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{reimbursementsBean.getReimbursementsByCostTypeExcelStreamedContent(costType,true)}" />
+									<p:fileDownload
+										value="#{reimbursementsBean.getReimbursementsByCostTypeExcelStreamedContent(costType,true)}" />
 								</p:menuitem>
 							</c:forEach>
 						</p:splitButton>
-						<p:splitButton
-							immediate="true"
-							ajax="false"
+						<p:splitButton immediate="true" ajax="false"
 							disabled="#{reimbursementsBean.getOpenPaidSummary().count == 0}"
 							value="#{reimbursementsBean.getReimbursementsExcelButtonLabel()}"
 							title="#{labels.reimbursements_export_button_label}"
 							icon="ui-icon ui-icon-xls">
-							<p:fileDownload value="#{reimbursementsBean.getReimbursementsExcelStreamedContent()}" />
-							<c:forEach
-								var="method"
+							<p:fileDownload
+								value="#{reimbursementsBean.getReimbursementsExcelStreamedContent()}" />
+							<c:forEach var="method"
 								items="#{reimbursementsBean.paymentMethods}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+								<p:menuitem immediate="true" ajax="false"
 									value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelButtonLabel(method)}"
 									title="#{labels.reimbursements_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelStreamedContent(method)}" />
+									<p:fileDownload
+										value="#{reimbursementsBean.getReimbursementsByPaymentMethodExcelStreamedContent(method)}" />
 								</p:menuitem>
 							</c:forEach>
-							<c:forEach
-								var="costType"
-								items="#{reimbursementsBean.costTypes}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+							<c:forEach var="costType" items="#{reimbursementsBean.costTypes}">
+								<p:menuitem immediate="true" ajax="false"
 									value="#{reimbursementsBean.getReimbursementsByCostTypeExcelButtonLabel(costType)}"
 									title="#{labels.reimbursements_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{reimbursementsBean.getReimbursementsByCostTypeExcelStreamedContent(costType)}" />
+									<p:fileDownload
+										value="#{reimbursementsBean.getReimbursementsByCostTypeExcelStreamedContent(costType)}" />
 								</p:menuitem>
 							</c:forEach>
 						</p:splitButton>
-						<p:commandButton
-							immediate="true"
-							ajax="false"
+						<p:commandButton immediate="true" ajax="false"
 							value="#{triallabels.reimbursements_all_probands_pdf_button_label}"
 							title="#{labels.reimbursements_pdf_button_label}"
 							disabled="#{reimbursementsBean.getPayOffSummary().count == 0}"
 							icon="ui-icon ui-icon-pdf">
-							<p:fileDownload value="#{reimbursementsBean.reimbursementsPdfStreamedContent}" />
+							<p:fileDownload
+								value="#{reimbursementsBean.reimbursementsPdfStreamedContent}" />
 						</p:commandButton>
-						<p:commandButton
-							process="@this"
+						<p:commandButton process="@this"
 							actionListener="#{reimbursementsBean.refreshProbandMoneyTransferSummaries}"
 							value="#{labels.update_datatable_button_label}"
-							icon="ui-icon-refresh"
-							ajax="true"
+							icon="ui-icon-refresh" ajax="true"
 							update="probandmoneytransfersummary_list,probandmoneytransfernoparticipationsummary_list,toolbar" />
 					</p:toolbarGroup>
 					<p:separator />
@@ -690,9 +583,7 @@
 						<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
 					</p:toolbarGroup>
 				</p:toolbar>
-				<p:growl
-					for="reimbursementsMessages"
-					id="messages"
+				<p:growl for="reimbursementsMessages" id="messages"
 					showDetail="false" />
 			</h:panelGrid>
 		</h:form>

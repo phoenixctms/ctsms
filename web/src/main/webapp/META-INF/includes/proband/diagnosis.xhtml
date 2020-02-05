@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,19 +9,12 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="diagnosis_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeDiagnosis"
-				actionListener="#{diagnosisBean.change(probandBean.in.id)}"
-				update="diagnosis_list,diagnosis_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+		<h:form id="diagnosis_form"
+			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -35,16 +27,14 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{diagnosis.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="diagnosis"
-					value="#{diagnosisBean.diagnosisModel}"
-					id="diagnosis_list"
-					selectionMode="single"
+					var="diagnosis" value="#{diagnosisBean.diagnosisModel}"
+					id="diagnosis_list" selectionMode="single"
 					selection="#{diagnosisBean.selectedDiagnosis}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:diagnosis_form:diagnosis_input" />
 					<f:facet name="header">
-						<h:outputText value="#{diagnosisBean.diagnosisModel.rowCount} #{probandlabels.diagnosis_list_header}" />
+						<h:outputText
+							value="#{diagnosisBean.diagnosisModel.rowCount} #{probandlabels.diagnosis_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{diagnosis.vo.id}">
 						<f:facet name="header">
@@ -54,31 +44,37 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.diagnosis_list_code_code_column}" />
+							<h:outputText
+								value="#{probandlabels.diagnosis_list_code_code_column}" />
 						</f:facet>
 						<h:outputText value="#{diagnosis.vo.code.code}" />
 					</p:column>
-					<p:column
-						sortBy="#{diagnosis.vo.code.text}"
+					<p:column sortBy="#{diagnosis.vo.code.text}"
 						filterBy="#{diagnosis.vo.code.text}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.diagnosis_list_code_text_column}" />
+							<h:outputText
+								value="#{probandlabels.diagnosis_list_code_text_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.clipStringTrailing(diagnosis.vo.code.text,48)}" />
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(diagnosis.vo.code.text,48)}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.diagnosis_list_code_last_category_column}" />
+							<h:outputText
+								value="#{probandlabels.diagnosis_list_code_last_category_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.clipStringTrailing(diagnosisBean.getLastCategoryLabel(diagnosis.vo.code),48)}" />
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(diagnosisBean.getLastCategoryLabel(diagnosis.vo.code),48)}" />
 					</p:column>
 					<p:column sortBy="#{diagnosis.vo.start}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.diagnosis_list_start_column}" />
+							<h:outputText
+								value="#{probandlabels.diagnosis_list_start_column}" />
 						</f:facet>
 						<h:outputText value="#{diagnosis.vo.start}">
 							<f:converter converterId="ctsms.Date" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{diagnosis.vo.stop}">
@@ -87,37 +83,33 @@
 						</f:facet>
 						<h:outputText value="#{diagnosis.vo.stop}">
 							<f:converter converterId="ctsms.Date" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.diagnosis_list_medication_count_column}" />
+							<h:outputText
+								value="#{probandlabels.diagnosis_list_medication_count_column}" />
 						</f:facet>
-						<h:outputText value="#{diagnosisBean.getMedicationCount(diagnosis.vo)}" />
-					</p:column>					
+						<h:outputText
+							value="#{diagnosisBean.getMedicationCount(diagnosis.vo)}" />
+					</p:column>
 				</p:dataTable>
 				<p:panel id="diagnosis_input">
 					<f:facet name="header">
 						<h:outputText value="#{diagnosisBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{diagnosisBean.inputVisible}"
-							columns="6"
+						<h:panelGrid rendered="#{diagnosisBean.inputVisible}" columns="6"
 							cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="code"
+							<h:outputLabel for="code"
 								value="#{probandlabels.diagnosis_code_label}" />
 							<h:panelGroup>
-								<p:autoComplete
-									id="code"
-									required="false"
+								<p:autoComplete id="code" required="false"
 									value="#{diagnosisBean.code}"
 									label="#{probandlabels.diagnosis_code}"
 									styleClass="ctsms-control-larger"
@@ -128,58 +120,49 @@
 									global="#{autoCompleteGlobalCoding}"
 									scrollHeight="#{autoCompleteScrollHeightCoding}"
 									completeMethod="#{diagnosisBean.completeAlphaId}"
-									forceSelection="true"
-									var="alphaId"
-									itemValue="#{alphaId}"
-									itemLabel="#{alphaId.vo.text}"
-									converter="ctsms.AlphaId">
-									<p:ajax
-									    process="@this"
-										event="itemSelect"
+									forceSelection="true" var="alphaId" itemValue="#{alphaId}"
+									itemLabel="#{alphaId.vo.text}" converter="ctsms.AlphaId">
+									<p:ajax process="@this" event="itemSelect"
 										listener="#{diagnosisBean.handleCodeSelect}" />
-									<p:ajax
-									    process="@this"
-										event="itemUnselect"
+									<p:ajax process="@this" event="itemUnselect"
 										listener="#{diagnosisBean.handleCodeUnselect}" />
 									<p:column>
 										<h:outputText value="#{alphaId.vo.code}" />
 									</p:column>
 									<p:column>
-										<h:outputText value="#{applicationScopeBean.clipStringTrailing(alphaId.vo.text,128)}" />
+										<h:outputText
+											value="#{applicationScopeBean.clipStringTrailing(alphaId.vo.text,128)}" />
 									</p:column>
 									<f:facet name="itemtip">
-										<h:panelGrid
-											columns="1"
-											cellpadding="0"
+										<h:panelGrid columns="1" cellpadding="0"
 											styleClass="ctsms-code-itemtip-panelgrid">
-											<h:outputText value="#{probandlabels.diagnosis_code_chapter_label} #{alphaId.vo.systematics.chapterCode}" />
 											<h:outputText
-												styleClass="ctsms-code-itemtip-em"
+												value="#{probandlabels.diagnosis_code_chapter_label} #{alphaId.vo.systematics.chapterCode}" />
+											<h:outputText styleClass="ctsms-code-itemtip-em"
 												value="#{applicationScopeBean.clipStringTrailing(alphaId.vo.systematics.chapterPreferredRubricLabel,96)}" />
 											<h:panelGroup>
 												<ul>
-													<ui:repeat
-														value="#{alphaId.vo.systematics.blocks}"
+													<ui:repeat value="#{alphaId.vo.systematics.blocks}"
 														var="block">
-														<li><h:outputText value="#{probandlabels.diagnosis_code_block_label} #{block.code}" /><br /> <h:outputText
-																styleClass="ctsms-code-itemtip-em"
+														<li><h:outputText
+																value="#{probandlabels.diagnosis_code_block_label} #{block.code}" /><br />
+															<h:outputText styleClass="ctsms-code-itemtip-em"
 																value="#{applicationScopeBean.clipStringTrailing(block.preferredRubricLabel,96)}" /></li>
 													</ui:repeat>
 												</ul>
 											</h:panelGroup>
 											<h:panelGroup>
 												<ul>
-													<ui:repeat
-														value="#{alphaId.vo.systematics.categories}"
+													<ui:repeat value="#{alphaId.vo.systematics.categories}"
 														var="category">
-														<li><h:outputText value="#{probandlabels.diagnosis_code_category_label} #{category.code}" /><br /> <h:outputText
-																styleClass="ctsms-code-itemtip-em"
+														<li><h:outputText
+																value="#{probandlabels.diagnosis_code_category_label} #{category.code}" /><br />
+															<h:outputText styleClass="ctsms-code-itemtip-em"
 																value="#{applicationScopeBean.clipStringTrailing(category.preferredRubricLabel,96)}" />
 															<ul>
-																<ui:repeat
-																	value="#{category.modifiers}"
-																	var="modifier">
-																	<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(modifier.preferredRubricLabel,96)}" /></li>
+																<ui:repeat value="#{category.modifiers}" var="modifier">
+																	<li><h:outputText
+																			value="#{applicationScopeBean.clipStringTrailing(modifier.preferredRubricLabel,96)}" /></li>
 																</ui:repeat>
 															</ul></li>
 													</ui:repeat>
@@ -188,11 +171,8 @@
 										</h:panelGrid>
 									</f:facet>
 								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="code">
-									<h:outputText
-										value="#{probandlabels.diagnosis_code_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="code">
+									<h:outputText value="#{probandlabels.diagnosis_code_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
@@ -200,82 +180,59 @@
 							<h:outputLabel />
 							<h:outputText />
 							<h:outputLabel />
-							<h:outputLabel
-								for="start"
+							<h:outputLabel for="start"
 								value="#{probandlabels.diagnosis_start_label}" />
 							<h:panelGroup>
-								<p:calendar
-									id="start"
-									value="#{diagnosisBean.in.start}"
-									required="false"
-									label="#{probandlabels.diagnosis_start}"
+								<p:calendar id="start" value="#{diagnosisBean.in.start}"
+									required="false" label="#{probandlabels.diagnosis_start}"
 									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
-									showWeek="true"
-									navigator="true"
+									showWeek="true" navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									styleClass="ctsms-calendar-date" >
+									styleClass="ctsms-calendar-date">
 									<f:converter converterId="ctsms.Date" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 								</p:calendar>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="start">
-									<h:outputText
-										value="#{probandlabels.diagnosis_start_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="start">
+									<h:outputText value="#{probandlabels.diagnosis_start_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="start" />
-							<h:outputLabel
-								for="stop"
+							<h:outputLabel for="stop"
 								value="#{probandlabels.diagnosis_stop_label}" />
 							<h:panelGroup>
-								<p:calendar
-									id="stop"
-									value="#{diagnosisBean.in.stop}"
-									required="false"
-									label="#{probandlabels.diagnosis_stop}"
+								<p:calendar id="stop" value="#{diagnosisBean.in.stop}"
+									required="false" label="#{probandlabels.diagnosis_stop}"
 									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
-									showWeek="true"
-									navigator="true"
+									showWeek="true" navigator="true"
 									locale="#{sessionScopeBean.locale}"
-									styleClass="ctsms-calendar-date" >
+									styleClass="ctsms-calendar-date">
 									<f:converter converterId="ctsms.Date" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 								</p:calendar>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="stop">
-									<h:outputText
-										value="#{probandlabels.diagnosis_stop_tooltip}"
+								<p:tooltip rendered="#{enableTooltips}" for="stop">
+									<h:outputText value="#{probandlabels.diagnosis_stop_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="stop" />
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{diagnosisBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{diagnosisBean.inputVisible}" columns="1"
+							cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
-								for="comment"
-								value="#{probandlabels.diagnosis_comment_label}" />
+								for="comment" value="#{probandlabels.diagnosis_comment_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="comment"
-									value="#{diagnosisBean.in.comment}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="comment"
+									value="#{diagnosisBean.in.comment}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{probandlabels.diagnosis_comment}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="comment">
+								<p:tooltip rendered="#{enableTooltips}" for="comment">
 									<h:outputText
 										value="#{probandlabels.diagnosis_comment_tooltip}"
 										escape="false" />
@@ -287,57 +244,43 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{diagnosisBean.created ? diagnosisBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{diagnosisBean.reset}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="diagnosis_list,diagnosis_input" />
-								<p:commandButton
-									process="@this,diagnosis_input"
-									id="add"
+								<p:commandButton process="@this,diagnosis_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{diagnosisBean.add}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!diagnosisBean.createable}"
 									update="diagnosis_list,diagnosis_input" />
-								<p:commandButton
-									process="@this,diagnosis_input"
-									id="update"
+								<p:commandButton process="@this,diagnosis_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{diagnosisBean.update}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!diagnosisBean.editable}"
 									update="diagnosis_list,diagnosis_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{diagnosisBean.delete}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!diagnosisBean.removable}"
 									update="diagnosis_list,diagnosis_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{diagnosisBean.load}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!diagnosisBean.created}"
 									update="diagnosis_list,diagnosis_input" />
 							</p:toolbarGroup>

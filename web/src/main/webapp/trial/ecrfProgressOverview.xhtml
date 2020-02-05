@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,78 +9,60 @@
 </h:head>
 <h:body>
 	<ui:composition template="/META-INF/templates/trialHomeTemplate.xhtml">
-		<ui:param
-			name="title"
+		<ui:param name="title"
 			value="#{triallabels.ecrf_progress_overview_title}" />
 		<ui:define name="content">
 			<h:form id="ecrfprogressoverview_form">
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
-						<h:panelGrid
-							columns="12"
-							cellpadding="2"
+						<h:panelGrid columns="12" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="department_filter"
+							<h:outputLabel for="department_filter"
 								value="#{triallabels.ecrf_progress_summary_department_filter_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="department_filter"
+								<p:selectOneMenu id="department_filter"
 									value="#{ecrfProgressOverviewBean.ecrfProgressSummaryModel.departmentId}"
 									required="false"
 									label="#{triallabels.ecrf_progress_summary_department_filter}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{ecrfProgressOverviewBean.departments}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{ecrfProgressOverviewBean.departments}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
 										update="ecrfprogresssummary_list" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="department_filter">
+								<p:tooltip rendered="#{enableTooltips}" for="department_filter">
 									<h:outputText
 										value="#{triallabels.ecrf_progress_summary_department_filter_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="department_filter" />
-							
-							<h:outputLabel
-								for="proband_department_filter"
+
+							<h:outputLabel for="proband_department_filter"
 								value="#{triallabels.ecrf_progress_summary_proband_department_filter_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="proband_department_filter"
+								<p:selectOneMenu id="proband_department_filter"
 									value="#{ecrfProgressOverviewBean.probandDepartmentId}"
 									required="false"
 									label="#{triallabels.ecrf_progress_summary_proband_department_filter}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{ecrfProgressOverviewBean.departments}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+									<f:selectItems value="#{ecrfProgressOverviewBean.departments}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
 										update="ecrfprogresssummary_list" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="proband_department_filter">
 									<h:outputText
 										value="#{triallabels.ecrf_progress_summary_proband_department_filter_tooltip}"
@@ -89,93 +70,63 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="proband_department_filter" />
-							
-							<h:outputLabel
-								for="start_filter"
+
+							<h:outputLabel for="start_filter"
 								value="#{triallabels.ecrf_progress_summary_start_filter_label}" />
-							<h:panelGroup >
-								<p:calendar
-									id="start_filter"
-									value="#{ecrfProgressOverviewBean.start}"
-									required="false"
+							<h:panelGroup>
+								<p:calendar id="start_filter"
+									value="#{ecrfProgressOverviewBean.start}" required="false"
 									label="#{triallabels.ecrf_progress_summary_start_filter}"
 									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
-									showWeek="true"
-									navigator="true"
+									showWeek="true" navigator="true"
 									locale="#{sessionScopeBean.locale}"
 									styleClass="ctsms-calendar-date">
 									<f:converter converterId="ctsms.Date" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-									<!-- <p:ajax
-										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
-										update="ecrfprogresssummary_list" />
-									<p:ajax
-										event="blur"
-										process="@this"/> -->
-									<p:ajax
-										event="dateSelect"
-										process="@this"
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<p:ajax event="dateSelect" process="@this"
 										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
 										update="ecrfprogresssummary_list" />
 								</p:calendar>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="start_filter">
+								<p:tooltip rendered="#{enableTooltips}" for="start_filter">
 									<h:outputText
 										value="#{triallabels.ecrf_progress_summary_start_filter_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message for="start_filter" />							
-							
-							<h:outputLabel
-								for="stop_filter"
+							<p:message for="start_filter" />
+
+							<h:outputLabel for="stop_filter"
 								value="#{triallabels.ecrf_progress_summary_stop_filter_label}" />
-							<h:panelGroup >
-								<p:calendar
-									id="stop_filter"
-									value="#{ecrfProgressOverviewBean.stop}"
-									required="false"
+							<h:panelGroup>
+								<p:calendar id="stop_filter"
+									value="#{ecrfProgressOverviewBean.stop}" required="false"
 									label="#{triallabels.ecrf_progress_summary_stop_filter}"
 									pattern="#{sessionScopeBean.inputDatePattern}"
 									yearRange="#{applicationScopeBean.calendarYearRange}"
-									showWeek="true"
-									navigator="true"
+									showWeek="true" navigator="true"
 									locale="#{sessionScopeBean.locale}"
 									styleClass="ctsms-calendar-date">
 									<f:converter converterId="ctsms.Date" />
-									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-									<!-- <p:ajax
-										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
-										update="ecrfprogresssummary_list" /> 
-									<p:ajax
-										event="blur"
-										process="@this"
-										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
-										update="ecrfprogresssummary_list" /> -->
-									<p:ajax
-										event="dateSelect"
-										process="@this"
+									<f:attribute name="timeZone"
+										value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+									<p:ajax event="dateSelect" process="@this"
 										listener="#{ecrfProgressOverviewBean.handleDepartmentStartStopChange}"
 										update="ecrfprogresssummary_list" />
 								</p:calendar>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="stop_filter">
+								<p:tooltip rendered="#{enableTooltips}" for="stop_filter">
 									<h:outputText
 										value="#{triallabels.ecrf_progress_summary_stop_filter_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message for="stop_filter" />														
-							
+							<p:message for="stop_filter" />
+
 						</h:panelGrid>
 					</p:panel>
 					<h:panelGroup id="ecrfprogresssummary_list_wrapper">
-						<p:dataTable
-							styleClass="ctsms-datatable"
-							lazy="true"
+						<p:dataTable styleClass="ctsms-datatable" lazy="true"
 							rows="#{dataTablesRowsFullPage}"
 							paginator="#{dataTablesPaginatorFullPage}"
 							paginatorTemplate="#{dataTablesPaginatorTemplateFullPage}"
@@ -186,168 +137,129 @@
 							scrollable="#{dataTablesScrollableFullPage}"
 							scrollHeight="#{dataTablesScrollHeightFullPage}"
 							resizableColumns="#{dataTablesResizableColumnsFullPage}"
-							sortBy="#{trial.vo.id}"
-							sortOrder="descending"
+							sortBy="#{trial.vo.id}" sortOrder="descending"
 							emptyMessage="#{labels.datatable_permission_empty_message}"
 							var="trial"
 							value="#{ecrfProgressOverviewBean.ecrfProgressSummaryModel}"
 							id="ecrfprogresssummary_list"
 							rowStyleClass="#{trial.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
 							<f:facet name="header">
-								<h:panelGrid
-									columns="3"
-									cellpadding="0"
+								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-									<h:outputText value="#{ecrfProgressOverviewBean.ecrfProgressSummaryModel.rowCount} #{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_header}" />
+									<h:outputText
+										value="#{ecrfProgressOverviewBean.ecrfProgressSummaryModel.rowCount} #{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_header}" />
 									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										actionListener="#{ecrfProgressOverviewBean.load}"
 										title="#{labels.update_datatable_button_title}"
-										icon="ui-icon-refresh"
-										styleClass="ctsms-list-header-button"
+										icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 										ajax="true"
 										update=":ecrfprogressoverview_form:ecrfprogresssummary_list_wrapper" />
 								</h:panelGrid>
 							</f:facet>
-							<!-- <p:column style="width:16px;">
-								<p:rowToggler />
-							</p:column> -->
-							<p:column
-								sortBy="#{trial.vo.id}"
-								filterBy="#{trial.vo.id}">
+							<p:column sortBy="#{trial.vo.id}" filterBy="#{trial.vo.id}">
 								<f:facet name="header">
 									<h:outputText value="#{labels.id_column}" />
 								</f:facet>
 								<h:outputText value="#{trial.vo.id}" />
 							</p:column>
-							<p:column
-								sortBy="#{trial.vo.name}"
-								filterBy="#{trial.vo.name}">
+							<p:column sortBy="#{trial.vo.name}" filterBy="#{trial.vo.name}">
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_trial_name_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_trial_name_column}" />
 								</f:facet>
 								<h:outputText value="#{trial.vo.name}" />
 							</p:column>
 							<p:column sortBy="#{trial.vo.department}">
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_department_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_department_column}" />
 								</f:facet>
 								<h:outputText value="#{trial.vo.department.name}" />
 							</p:column>
-							<!-- <p:column
-								sortBy="#{trial.vo.type}"
-								filterBy="#{trial.vo.type.id}"
-								filterOptions="#{sessionScopeBean.filterTrialTypes}">
-								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_trial_type_column}" />
-								</f:facet>
-								<h:outputText value="#{trial.vo.type.name}" />
-							</p:column> -->
-							<p:column
-								sortBy="#{trial.vo.status}"
+							<p:column sortBy="#{trial.vo.status}"
 								filterBy="#{trial.vo.status.id}"
 								filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_trial_status_type_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_trial_status_type_column}" />
 								</f:facet>
 								<ui:include src="/META-INF/includes/shared/listIcon.xhtml">
-									<ui:param
-										name="label"
-										value="#{trial.vo.status.name}" />
-									<ui:param
-										name="icon"
-										value="#{trial.vo.status.nodeStyleClass}" />
-									<ui:param
-										name="rendered"
-										value="true" />
+									<ui:param name="label" value="#{trial.vo.status.name}" />
+									<ui:param name="icon" value="#{trial.vo.status.nodeStyleClass}" />
+									<ui:param name="rendered" value="true" />
 								</ui:include>
 							</p:column>
-							<!-- <p:column
-								sortBy="#{trial.vo.sponsoring}"
-								filterBy="#{trial.vo.sponsoring.id}"
-								filterOptions="#{sessionScopeBean.filterSponsoringTypes}">
-								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_sponsoring_type_column}" />
-								</f:facet>
-								<h:outputText value="#{trial.vo.sponsoring.name}" />
-							</p:column> -->
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_proband_list_entry_count_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_proband_list_entry_count_column}" />
 								</f:facet>
-								<h:outputText value="#{ecrfProgressOverviewBean.getEcrfProgressSummary(trial.vo).listEntries.size()}" />
+								<h:outputText
+									value="#{ecrfProgressOverviewBean.getEcrfProgressSummary(trial.vo).listEntries.size()}" />
 							</p:column>
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_field_status_counts_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_field_status_counts_column}" />
 								</f:facet>
-								<ui:include src="/META-INF/includes/shared/listEcrfFieldStatusIcons.xhtml">
-									<ui:param
-										name="value"
+								<ui:include
+									src="/META-INF/includes/shared/listEcrfFieldStatusIcons.xhtml">
+									<ui:param name="value"
 										value="#{ecrfProgressOverviewBean.getSummaryFieldStatusCount(trial.vo,'VALIDATION, QUERY')}" />
-									<ui:param
-										name="showNew"
-										value="true" />
-									<ui:param
-										name="showUpdate"
-										value="true" />
-									<ui:param
-										name="showProposed"
-										value="true" />
-									<ui:param
-										name="showResolved"
-										value="true" />
-									<ui:param
-										name="idSuffix"
-										value="total" />
+									<ui:param name="showNew" value="true" />
+									<ui:param name="showUpdate" value="true" />
+									<ui:param name="showProposed" value="true" />
+									<ui:param name="showResolved" value="true" />
+									<ui:param name="idSuffix" value="total" />
 								</ui:include>
 							</p:column>
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_status_counts_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_status_counts_column}" />
 								</f:facet>
-								<ui:include src="/META-INF/includes/shared/listEcrfStatusIcons.xhtml">
-									<ui:param
-										name="statusTypes"
+								<ui:include
+									src="/META-INF/includes/shared/listEcrfStatusIcons.xhtml">
+									<ui:param name="statusTypes"
 										value="#{ecrfProgressOverviewBean.allStatusTypes}" />
-									<ui:param
-										name="value"
+									<ui:param name="value"
 										value="#{ecrfProgressOverviewBean.getSummaryStatusCountMap(trial.vo)}" />
 								</ui:include>
 							</p:column>
 							<p:column style="width:120px;">
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_ecrf_progress_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_ecrf_progress_column}" />
 								</f:facet>
-								<p:progressBar
-									widgetVar="progressBar_#{trial.vo.id}"
+								<p:progressBar widgetVar="progressBar_#{trial.vo.id}"
 									ajax="false"
 									labelTemplate="#{ecrfProgressOverviewBean.getEcrfProgressSummaryLabel(trial.vo)}"
 									value="#{ecrfProgressOverviewBean.getEcrfProgressSummaryValue(trial.vo)}" />
 							</p:column>
 							<p:column style="width:120px;">
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_ecrf_progress_ontime_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_ecrf_progress_ontime_column}" />
 								</f:facet>
-								<p:progressBar
-									widgetVar="progressBar_ontime_#{trial.vo.id}"
+								<p:progressBar widgetVar="progressBar_ontime_#{trial.vo.id}"
 									ajax="false"
 									labelTemplate="#{ecrfProgressOverviewBean.getEcrfProgressSummaryOnTimeLabel(trial.vo)}"
 									value="#{ecrfProgressOverviewBean.getEcrfProgressSummaryOnTimeValue(trial.vo)}" />
 							</p:column>
 							<p:column>
 								<f:facet name="header">
-									<h:outputText value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_total_charge_column}" />
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_total_charge_column}" />
 								</f:facet>
 								<h:outputFormat value="#{labels.currency_format}">
-									<f:param value="#{ecrfProgressOverviewBean.getEcrfProgressSummary(trial.vo).charge}" />
+									<f:param
+										value="#{ecrfProgressOverviewBean.getEcrfProgressSummary(trial.vo).charge}" />
 									<f:param value="#{applicationScopeBean.currencySymbol}" />
 								</h:outputFormat>
 							</p:column>
 							<p:column style="width:32px;">
-								<p:commandButton
-									type="button"
+								<p:commandButton type="button"
 									title="#{labels.open_trial_button_label}"
 									icon="ui-icon ui-icon-extlink"
 									onclick="openTrial(#{trial.vo.id})" />

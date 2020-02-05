@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandcontactdetail_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeProbandContactDetail"
-				actionListener="#{probandContactDetailBean.change(probandBean.in.id)}"
-				update="probandcontactdetail_list,probandcontactdetail_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -37,14 +28,13 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="contactDetailValue"
 					value="#{probandContactDetailBean.contactDetailValueModel}"
-					id="probandcontactdetail_list"
-					selectionMode="single"
+					id="probandcontactdetail_list" selectionMode="single"
 					selection="#{probandContactDetailBean.selectedProbandContactDetailValue}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:probandcontactdetail_form:probandcontactdetail_input" />
 					<f:facet name="header">
-						<h:outputText value="#{probandContactDetailBean.contactDetailValueModel.rowCount} #{probandlabels.proband_contact_detail_probandcontactdetail_list_header}" />
+						<h:outputText
+							value="#{probandContactDetailBean.contactDetailValueModel.rowCount} #{probandlabels.proband_contact_detail_probandcontactdetail_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{contactDetailValue.vo.id}">
 						<f:facet name="header">
@@ -54,93 +44,80 @@
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.type}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_type_name_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_type_name_column}" />
 						</f:facet>
 						<h:outputText value="#{contactDetailValue.vo.type.name}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_value_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_value_column}" />
 						</f:facet>
 						<ui:include src="../shared/contactDetailValue.xhtml">
-							<ui:param
-								name="decrypted"
+							<ui:param name="decrypted"
 								value="#{contactDetailValue.vo.decrypted}" />
-							<ui:param
-								name="contactDetailValue"
+							<ui:param name="contactDetailValue"
 								value="#{contactDetailValue.vo}" />
-							<ui:param
-								name="styleClass"
-								value="" />
+							<ui:param name="styleClass" value="" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.notify}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_notify_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_notify_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{contactDetailValue.vo.notify}" />
+							<ui:param name="value" value="#{contactDetailValue.vo.notify}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{contactDetailValue.vo.na}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_na_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_na_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{contactDetailValue.vo.na}" />
+							<ui:param name="value" value="#{contactDetailValue.vo.na}" />
 						</ui:include>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_comment_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_contact_detail_probandcontactdetail_list_comment_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.clipStringTrailing(contactDetailValue.vo.comment)}" />
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(contactDetailValue.vo.comment)}" />
 					</p:column>
 				</p:dataTable>
 				<p:panel id="probandcontactdetail_input">
 					<f:facet name="header">
 						<h:outputText value="#{probandContactDetailBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{probandContactDetailBean.inputVisible}"
-							columns="9"
-							cellpadding="2"
+						<h:panelGrid rendered="#{probandContactDetailBean.inputVisible}"
+							columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="contactDetailType"
+							<h:outputLabel for="contactDetailType"
 								value="#{probandlabels.proband_contact_detail_type_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="contactDetailType"
-									value="#{probandContactDetailBean.in.typeId}"
-									required="true"
+								<p:selectOneMenu id="contactDetailType"
+									value="#{probandContactDetailBean.in.typeId}" required="true"
 									label="#{probandlabels.proband_contact_detail_type}"
 									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
 										itemValue="#{applicationScopeBean.noSelectionValue}" />
 									<f:selectItems
 										value="#{probandContactDetailBean.availableTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
+										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax
 										oncomplete="handleContactDetailTypeSelected(xhr, status, args)"
 										listener="#{probandContactDetailBean.handleTypeChange}" />
 								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="contactDetailType">
+								<p:tooltip rendered="#{enableTooltips}" for="contactDetailType">
 									<h:outputText
 										value="#{probandlabels.proband_contact_detail_type_tooltip}"
 										escape="false" />
@@ -152,56 +129,42 @@
 								for="contactDetailValue"
 								value="#{probandlabels.proband_contact_detail_value_label}" />
 							<h:panelGroup>
-								<p:inputText
-									id="contactDetailValue"
-									value="#{probandContactDetailBean.in.value}"
-									required="false"
+								<p:inputText id="contactDetailValue"
+									value="#{probandContactDetailBean.in.value}" required="false"
 									label="#{probandlabels.proband_contact_detail_value}"
 									disabled="#{probandContactDetailBean.in.na}"
 									styleClass="ctsms-control-larger" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="contactDetailValue">
+								<p:tooltip rendered="#{enableTooltips}" for="contactDetailValue">
 									<h:outputText
 										value="#{probandlabels.proband_contact_detail_value_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="contactDetailValue" />
-							<h:outputLabel
-								for="notify"
+							<h:outputLabel for="notify"
 								value="#{probandlabels.proband_contact_detail_notify_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="notify"
+								<p:selectBooleanCheckbox id="notify"
 									widgetVar="contactDetailNotify"
 									disabled="#{!probandContactDetailBean.notifyEnabled}"
 									value="#{probandContactDetailBean.in.notify}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="notify">
+								<p:tooltip rendered="#{enableTooltips}" for="notify">
 									<h:outputText
 										value="#{probandlabels.proband_contact_detail_notify_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="notify" />
-							
-							<h:outputLabel
-								for="na"
+
+							<h:outputLabel for="na"
 								value="#{probandlabels.proband_contact_detail_na_label}" />
 							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="na"
-									widgetVar="contactDetailNa"
+								<p:selectBooleanCheckbox id="na" widgetVar="contactDetailNa"
 									value="#{probandContactDetailBean.in.na}">
-									<p:ajax
-										listener="#{probandContactDetailBean.handleNaChange}"
+									<p:ajax listener="#{probandContactDetailBean.handleNaChange}"
 										update="contactDetailValue,notify" />
 								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="na">
+								<p:tooltip rendered="#{enableTooltips}" for="na">
 									<h:outputText
 										value="#{probandlabels.proband_contact_detail_na_tooltip}"
 										escape="false" />
@@ -209,89 +172,69 @@
 							</h:panelGroup>
 							<p:message for="na" />
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{probandContactDetailBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{probandContactDetailBean.inputVisible}"
+							columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
 								for="contactcomment"
 								value="#{probandlabels.proband_contact_detail_comment_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="contactcomment"
-									value="#{probandContactDetailBean.in.comment}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="contactcomment"
+									value="#{probandContactDetailBean.in.comment}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{probandlabels.proband_contact_detail_comment}" />
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="contactcomment">
+								<p:tooltip rendered="#{enableTooltips}" for="contactcomment">
 									<h:outputText
 										value="#{probandlabels.proband_contact_detail_comment_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-						<h:outputLabel rendered="#{!probandContactDetailBean.inputVisible}" />
-						<h:outputLabel rendered="#{!probandContactDetailBean.inputVisible}" />
+						<h:outputLabel
+							rendered="#{!probandContactDetailBean.inputVisible}" />
+						<h:outputLabel
+							rendered="#{!probandContactDetailBean.inputVisible}" />
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{probandContactDetailBean.created ? probandContactDetailBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{probandContactDetailBean.reset}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="probandcontactdetail_list,probandcontactdetail_input" />
-								<p:commandButton
-									process="@this,probandcontactdetail_input"
-									id="add"
-									value="#{labels.add_button_label}"
+								<p:commandButton process="@this,probandcontactdetail_input"
+									id="add" value="#{labels.add_button_label}"
 									actionListener="#{probandContactDetailBean.add}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!probandContactDetailBean.createable}"
 									update="probandcontactdetail_list,probandcontactdetail_input" />
-								<p:commandButton
-									process="@this,probandcontactdetail_input"
-									id="update"
-									value="#{labels.update_button_label}"
+								<p:commandButton process="@this,probandcontactdetail_input"
+									id="update" value="#{labels.update_button_label}"
 									actionListener="#{probandContactDetailBean.update}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!probandContactDetailBean.editable}"
 									update="probandcontactdetail_list,probandcontactdetail_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{probandContactDetailBean.delete}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!probandContactDetailBean.removable}"
 									update="probandcontactdetail_list,probandcontactdetail_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{probandContactDetailBean.load}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!probandContactDetailBean.created}"
 									update="probandcontactdetail_list,probandcontactdetail_input" />
 							</p:toolbarGroup>
@@ -303,23 +246,17 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="info"
+			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="contactDetailNotifyPresetOverrideConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{probandlabels.proband_contact_detail_notify_preset_override_confirmation_dialog_message}"
 						escape="false" />
 				</f:facet>
-				<p:commandButton
-					value="#{labels.yes_button_label}"
-					onclick="setContactDetailNotify(true)"
-					type="button" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="setContactDetailNotify(false)"
-					type="button" />
+				<p:commandButton value="#{labels.yes_button_label}"
+					onclick="setContactDetailNotify(true)" type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="setContactDetailNotify(false)" type="button" />
 			</p:confirmDialog>
 		</h:form>
 	</ui:composition>

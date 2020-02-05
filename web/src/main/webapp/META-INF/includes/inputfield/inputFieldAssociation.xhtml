@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,24 +10,15 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldassociation_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeInputFieldAssociation"
-				actionListener="#{inputFieldAssociationBean.change(inputFieldBean.in.id)}"
-				update="association_lists" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:tabView id="association_lists">
-					<p:tab title="#{inputfieldlabels.input_field_association_proband_list_entry_tags_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{inputfieldlabels.input_field_association_proband_list_entry_tags_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -45,126 +35,118 @@
 								value="#{inputFieldAssociationBean.probandListEntryTagUsageModel}"
 								id="probandlistentrytag_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="4"
-										cellpadding="0"
+									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText
 											value="#{inputFieldAssociationBean.probandListEntryTagUsageModel.rowCount} #{inputfieldlabels.input_field_association_probandlistentrytag_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											type="button"
+										<p:commandButton type="button"
 											title="#{labels.open_table_columns_dialog_button_label}"
 											icon="ui-icon ui-icon-wrench"
 											styleClass="ctsms-list-header-button"
 											onclick="probandListEntryTagTableColumnsDialog.show()" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{inputFieldAssociationBean.refreshProbandListEntryTagUsage}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:inputfieldassociation_form:association_lists:probandlistentrytag_list" />
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{probandListEntryTag.vo.id}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
 									<h:outputText value="#{probandListEntryTag.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntryTag.vo.trial.name}"
+								<p:column sortBy="#{probandListEntryTag.vo.trial.name}"
 									filterBy="#{probandListEntryTag.vo.trial.name}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_name_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_name_column}" />
 									</f:facet>
 									<h:outputText value="#{probandListEntryTag.vo.trial.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntryTag.vo.trial.department}"
+								<p:column sortBy="#{probandListEntryTag.vo.trial.department}"
 									filterBy="#{probandListEntryTag.vo.trial.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_department_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_department_column}" />
 									</f:facet>
-									<h:outputText value="#{probandListEntryTag.vo.trial.department.name}" />
+									<h:outputText
+										value="#{probandListEntryTag.vo.trial.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntryTag.vo.trial.status}"
+								<p:column sortBy="#{probandListEntryTag.vo.trial.status}"
 									filterBy="#{probandListEntryTag.vo.trial.status.id}"
 									filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_status_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_status_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{probandListEntryTag.vo.trial.status.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{probandListEntryTag.vo.trial.status.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntryTag.vo.titleL10nKey}"
+								<p:column sortBy="#{probandListEntryTag.vo.titleL10nKey}"
 									filterBy="#{probandListEntryTag.vo.titleL10nKey}">
 									<f:facet name="header">
-											<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_title_column}" />
-										</f:facet>
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_title_column}" />
+									</f:facet>
 									<h:outputText value="#{probandListEntryTag.vo.titleL10nKey}" />
-								</p:column>								
-								<p:column
-									sortBy="#{probandListEntryTag.vo.optional}"
+								</p:column>
+								<p:column sortBy="#{probandListEntryTag.vo.optional}"
 									filterBy="#{probandListEntryTag.vo.optional}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_optional_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_optional_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
+										<ui:param name="value"
 											value="#{probandListEntryTag.vo.optional}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntryTag.vo.disabled}"
+								<p:column sortBy="#{probandListEntryTag.vo.disabled}"
 									filterBy="#{probandListEntryTag.vo.disabled}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_enabled_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_enabled_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
+										<ui:param name="value"
 											value="#{!probandListEntryTag.vo.disabled}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{probandListEntryTag.vo.comment}"
+								<p:column sortBy="#{probandListEntryTag.vo.comment}"
 									filterBy="#{probandListEntryTag.vo.comment}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_comment_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_comment_column}" />
 									</f:facet>
-									<h:outputText value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.comment)}" />
+									<h:outputText
+										value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.comment)}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_number_of_values_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_number_of_values_column}" />
 									</f:facet>
-									<h:outputText value="#{applicationScopeBean.getProbandListEntryTagValueCount(probandListEntryTag.vo)}" />
+									<h:outputText
+										value="#{applicationScopeBean.getProbandListEntryTagValueCount(probandListEntryTag.vo)}" />
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_trial_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openTrial(#{probandListEntryTag.vo.trial.id})" />
@@ -172,14 +154,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{inputfieldlabels.input_field_association_inquiries_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{inputfieldlabels.input_field_association_inquiries_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -196,164 +175,149 @@
 								value="#{inputFieldAssociationBean.inquiryUsageModel}"
 								id="inquiry_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="4"
-										cellpadding="0"
+									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{inputFieldAssociationBean.inquiryUsageModel.rowCount} #{inputfieldlabels.input_field_association_inquiry_list_header}" />
+										<h:outputText
+											value="#{inputFieldAssociationBean.inquiryUsageModel.rowCount} #{inputfieldlabels.input_field_association_inquiry_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											type="button"
+										<p:commandButton type="button"
 											title="#{labels.open_table_columns_dialog_button_label}"
 											icon="ui-icon ui-icon-wrench"
 											styleClass="ctsms-list-header-button"
 											onclick="inquiryTableColumnsDialog.show()" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{inputFieldAssociationBean.refreshInquiryUsage}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:inputfieldassociation_form:association_lists:inquiry_list" />
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{inquiry.vo.id}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
 									<h:outputText value="#{inquiry.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{inquiry.vo.trial.name}"
+								<p:column sortBy="#{inquiry.vo.trial.name}"
 									filterBy="#{inquiry.vo.trial.name}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_trial_name_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_trial_name_column}" />
 									</f:facet>
 									<h:outputText value="#{inquiry.vo.trial.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{inquiry.vo.trial.department}"
+								<p:column sortBy="#{inquiry.vo.trial.department}"
 									filterBy="#{inquiry.vo.trial.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_trial_department_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_trial_department_column}" />
 									</f:facet>
 									<h:outputText value="#{inquiry.vo.trial.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{inquiry.vo.trial.status}"
+								<p:column sortBy="#{inquiry.vo.trial.status}"
 									filterBy="#{inquiry.vo.trial.status.id}"
 									filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_trial_status_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_trial_status_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{inquiry.vo.trial.status.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="label" value="#{inquiry.vo.trial.status.name}" />
+										<ui:param name="icon"
 											value="#{inquiry.vo.trial.status.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
-														
-								<p:column
-									sortBy="#{inquiry.vo.category}"
+
+								<p:column sortBy="#{inquiry.vo.category}"
 									filterBy="#{inquiry.vo.category}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_category_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_category_column}" />
 									</f:facet>
 									<h:outputText value="#{inquiry.vo.category}" />
 								</p:column>
 
-								<p:column
-									sortBy="#{inquiry.vo.titleL10nKey}"
+								<p:column sortBy="#{inquiry.vo.titleL10nKey}"
 									filterBy="#{inquiry.vo.titleL10nKey}">
 									<f:facet name="header">
-											<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_title_column}" />
-										</f:facet>
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_title_column}" />
+									</f:facet>
 									<h:outputText value="#{inquiry.vo.titleL10nKey}" />
-								</p:column>	
+								</p:column>
 
-								<p:column
-									sortBy="#{inquiry.vo.active}"
+								<p:column sortBy="#{inquiry.vo.active}"
 									filterBy="#{inquiry.vo.active}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_active_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_active_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{inquiry.vo.active}" />
+										<ui:param name="value" value="#{inquiry.vo.active}" />
 									</ui:include>
-								</p:column>	
-								<p:column
-									sortBy="#{inquiry.vo.activeSignup}"
+								</p:column>
+								<p:column sortBy="#{inquiry.vo.activeSignup}"
 									filterBy="#{inquiry.vo.activeSignup}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_active_signup_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_active_signup_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{inquiry.vo.activeSignup}" />
+										<ui:param name="value" value="#{inquiry.vo.activeSignup}" />
 									</ui:include>
-								</p:column>								
-								<p:column
-									sortBy="#{inquiry.vo.optional}"
+								</p:column>
+								<p:column sortBy="#{inquiry.vo.optional}"
 									filterBy="#{inquiry.vo.optional}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_optional_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_optional_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{inquiry.vo.optional}" />
+										<ui:param name="value" value="#{inquiry.vo.optional}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{inquiry.vo.disabled}"
+								<p:column sortBy="#{inquiry.vo.disabled}"
 									filterBy="#{inquiry.vo.disabled}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_enabled_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_enabled_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{!inquiry.vo.disabled}" />
+										<ui:param name="value" value="#{!inquiry.vo.disabled}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{inquiry.vo.comment}"
+								<p:column sortBy="#{inquiry.vo.comment}"
 									filterBy="#{inquiry.vo.comment}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_comment_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_comment_column}" />
 									</f:facet>
-									<h:outputText value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.comment)}" />
+									<h:outputText
+										value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.comment)}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_inquiry_list_number_of_values_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_inquiry_list_number_of_values_column}" />
 									</f:facet>
-									<h:outputText value="#{applicationScopeBean.getInquiryValueCount(inquiry.vo)}" />
+									<h:outputText
+										value="#{applicationScopeBean.getInquiryValueCount(inquiry.vo)}" />
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_trial_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openTrial(#{inquiry.vo.trial.id})" />
@@ -361,31 +325,28 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-										<p:tab title="#{inputfieldlabels.input_field_association_ecrf_fields_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<p:tab
+						title="#{inputfieldlabels.input_field_association_ecrf_fields_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -402,160 +363,147 @@
 								value="#{inputFieldAssociationBean.ecrfFieldUsageModel}"
 								id="ecrffield_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="4"
-										cellpadding="0"
+									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 										<h:outputText
 											value="#{inputFieldAssociationBean.ecrfFieldUsageModel.rowCount} #{inputfieldlabels.input_field_association_ecrffield_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											type="button"
+										<p:commandButton type="button"
 											title="#{labels.open_table_columns_dialog_button_label}"
 											icon="ui-icon ui-icon-wrench"
 											styleClass="ctsms-list-header-button"
 											onclick="ecrfFieldTableColumnsDialog.show()" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{inputFieldAssociationBean.refreshEcrfFieldUsage}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:inputfieldassociation_form:association_lists:ecrffield_list" />
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{ecrfField.vo.id}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{ecrfField.vo.trial.name}"
+								<p:column sortBy="#{ecrfField.vo.trial.name}"
 									filterBy="#{ecrfField.vo.trial.name}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_name_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_name_column}" />
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.trial.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{ecrfField.vo.trial.department}"
+								<p:column sortBy="#{ecrfField.vo.trial.department}"
 									filterBy="#{ecrfField.vo.trial.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_department_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_department_column}" />
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.trial.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{ecrfField.vo.trial.status}"
+								<p:column sortBy="#{ecrfField.vo.trial.status}"
 									filterBy="#{ecrfField.vo.trial.status.id}"
 									filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_status_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_status_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{ecrfField.vo.trial.status.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{ecrfField.vo.trial.status.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
-																
-								<p:column
-									sortBy="#{ecrfField.vo.ecrf.name}"
+
+								<p:column sortBy="#{ecrfField.vo.ecrf.name}"
 									filterBy="#{ecrfField.vo.ecrf.name}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_ecrf_name_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_ecrf_name_column}" />
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.ecrf.name}" />
 								</p:column>
 
-								<p:column
-									sortBy="#{ecrfField.vo.section}"
+								<p:column sortBy="#{ecrfField.vo.section}"
 									filterBy="#{ecrfField.vo.section}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_section_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_section_column}" />
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.section}" />
 								</p:column>
 
-								<p:column
-									sortBy="#{ecrfField.vo.titleL10nKey}"
+								<p:column sortBy="#{ecrfField.vo.titleL10nKey}"
 									filterBy="#{ecrfField.vo.titleL10nKey}">
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_title_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_title_column}" />
 									</f:facet>
 									<h:outputText value="#{ecrfField.vo.titleL10nKey}" />
 								</p:column>
-								
-								<p:column
-									sortBy="#{ecrfField.vo.series}"
+
+								<p:column sortBy="#{ecrfField.vo.series}"
 									filterBy="#{ecrfField.vo.series}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									
+
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_series_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_series_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{ecrfField.vo.series}" />
+										<ui:param name="value" value="#{ecrfField.vo.series}" />
 									</ui:include>
-								</p:column>								
-								<p:column
-									sortBy="#{ecrfField.vo.optional}"
+								</p:column>
+								<p:column sortBy="#{ecrfField.vo.optional}"
 									filterBy="#{ecrfField.vo.optional}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_optional_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_optional_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{ecrfField.vo.optional}" />
+										<ui:param name="value" value="#{ecrfField.vo.optional}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{ecrfField.vo.disabled}"
+								<p:column sortBy="#{ecrfField.vo.disabled}"
 									filterBy="#{ecrfField.vo.disabled}"
 									filterOptions="#{sessionScopeBean.filterBooleans}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_enabled_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_enabled_column}" />
 									</f:facet>
 									<ui:include src="../shared/listBooleanIcon.xhtml">
-										<ui:param
-											name="value"
-											value="#{!ecrfField.vo.disabled}" />
+										<ui:param name="value" value="#{!ecrfField.vo.disabled}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{ecrfField.vo.comment}"
+								<p:column sortBy="#{ecrfField.vo.comment}"
 									filterBy="#{ecrfField.vo.comment}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_comment_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_comment_column}" />
 									</f:facet>
-									<h:outputText value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.comment)}" />
+									<h:outputText
+										value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.comment)}" />
 								</p:column>
 								<p:column>
 									<f:facet name="header">
-										<h:outputText value="#{inputfieldlabels.input_field_association_ecrffield_list_number_of_values_column}" />
+										<h:outputText
+											value="#{inputfieldlabels.input_field_association_ecrffield_list_number_of_values_column}" />
 									</f:facet>
-									<h:outputText value="#{applicationScopeBean.getEcrfFieldValueCount(ecrfField.vo)}" />
+									<h:outputText
+										value="#{applicationScopeBean.getEcrfFieldValueCount(ecrfField.vo)}" />
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_trial_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openTrial(#{ecrfField.vo.trial.id})" />
@@ -563,34 +511,28 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					
-					
-					
-					
+
+
+
+
 				</p:tabView>
 			</h:panelGrid>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="probandListEntryTagTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:inputfieldassociation_form:association_lists:probandlistentrytag_list" />
 			</ui:include>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="inquiryTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:inputfieldassociation_form:association_lists:inquiry_list" />
 			</ui:include>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="ecrfFieldTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:inputfieldassociation_form:association_lists:ecrffield_list" />
 			</ui:include>
 		</h:form>

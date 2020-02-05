@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,24 +10,15 @@
 <h:body>
 	<ui:composition>
 		<h:form id="staffassociation_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeStaffAssociation"
-				actionListener="#{staffAssociationBean.change(staffBean.in.id)}"
-				update="association_lists" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:tabView id="association_lists">
-					<p:tab title="#{stafflabels.staff_association_user_accounts_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_user_accounts_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -41,22 +31,18 @@
 								resizableColumns="#{dataTablesResizableColumnsFullPageTab}"
 								sortBy="#{user.vo.id}"
 								emptyMessage="#{labels.datatable_permission_empty_message}"
-								var="user"
-								value="#{staffAssociationBean.accountModel}"
+								var="user" value="#{staffAssociationBean.accountModel}"
 								id="account_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.accountModel.rowCount} #{stafflabels.staff_association_account_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.accountModel.rowCount} #{stafflabels.staff_association_account_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshAccount}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:account_list" />
 									</h:panelGrid>
@@ -67,34 +53,32 @@
 									</f:facet>
 									<h:outputText value="#{user.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{user.vo.name}"
-									filterBy="#{user.vo.name}">
+								<p:column sortBy="#{user.vo.name}" filterBy="#{user.vo.name}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_account_list_username_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_account_list_username_column}" />
 									</f:facet>
 									<h:outputText value="#{user.vo.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{user.vo.department}"
+								<p:column sortBy="#{user.vo.department}"
 									filterBy="#{user.vo.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_account_list_user_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_account_list_user_department_column}" />
 									</f:facet>
 									<h:outputText value="#{user.vo.department.name}" />
 								</p:column>
-								<p:column
-									filterBy="#{user.vo.authMethod}"
+								<p:column filterBy="#{user.vo.authMethod}"
 									filterOptions="#{sessionScopeBean.filterAuthenticationTypes}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_account_list_auth_method_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_account_list_auth_method_column}" />
 									</f:facet>
 									<h:outputText value="#{user.vo.authMethod.name}" />
-								</p:column>							
+								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_user_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openUser(#{user.vo.id})" />
@@ -102,14 +86,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_ownership_inventory_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_ownership_inventory_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -126,18 +107,15 @@
 								value="#{staffAssociationBean.ownershipInventoryModel}"
 								id="ownershipinventory_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.ownershipInventoryModel.rowCount} #{stafflabels.staff_association_ownershipinventory_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.ownershipInventoryModel.rowCount} #{stafflabels.staff_association_ownershipinventory_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshOwnershipInventory}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:ownershipinventory_list" />
 									</h:panelGrid>
@@ -148,45 +126,39 @@
 									</f:facet>
 									<h:outputText value="#{inventory.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{inventory.vo.name}"
+								<p:column sortBy="#{inventory.vo.name}"
 									filterBy="#{inventory.vo.name}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_ownershipinventory_list_inventory_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_ownershipinventory_list_inventory_name_column}" />
 									</f:facet>
 									<h:outputText value="#{inventory.vo.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{inventory.vo.department}"
+								<p:column sortBy="#{inventory.vo.department}"
 									filterBy="#{inventory.vo.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_ownershipinventory_list_inventory_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_ownershipinventory_list_inventory_department_column}" />
 									</f:facet>
 									<h:outputText value="#{inventory.vo.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{inventory.vo.category}"
+								<p:column sortBy="#{inventory.vo.category}"
 									filterBy="#{inventory.vo.category.id}"
 									filterOptions="#{sessionScopeBean.filterInventoryCategories}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_ownershipinventory_list_inventory_category_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_ownershipinventory_list_inventory_category_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{inventory.vo.category.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="label" value="#{inventory.vo.category.name}" />
+										<ui:param name="icon"
 											value="#{inventory.vo.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_inventory_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInventory(#{inventory.vo.id})" />
@@ -194,14 +166,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_on_behalf_of_inventory_bookings_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_on_behalf_of_inventory_bookings_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -218,170 +187,138 @@
 								value="#{staffAssociationBean.onBehalfOfInventoryBookingModel}"
 								id="inventorybooking_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="4"
-										cellpadding="0"
+									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.onBehalfOfInventoryBookingModel.rowCount} #{stafflabels.staff_association_inventorybooking_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.onBehalfOfInventoryBookingModel.rowCount} #{stafflabels.staff_association_inventorybooking_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											type="button"
+										<p:commandButton type="button"
 											title="#{labels.open_table_columns_dialog_button_label}"
 											icon="ui-icon ui-icon-wrench"
 											styleClass="ctsms-list-header-button"
-											onclick="onBehalfOfInventoryBookingTableColumnsDialog.show()" />										
-										<p:commandButton
-											process="@this"
+											onclick="onBehalfOfInventoryBookingTableColumnsDialog.show()" />
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshOnBehalfOfInventoryBooking}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:inventorybooking_list" />
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{booking.vo.id}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
 									<h:outputText value="#{booking.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{booking.vo.inventory.name}"
+								<p:column sortBy="#{booking.vo.inventory.name}"
 									filterBy="#{booking.vo.inventory.name}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_inventory_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_inventorybooking_list_inventory_name_column}" />
 									</f:facet>
 									<h:outputText value="#{booking.vo.inventory.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{booking.vo.inventory.department}"
+								<p:column sortBy="#{booking.vo.inventory.department}"
 									filterBy="#{booking.vo.inventory.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_inventory_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_inventorybooking_list_inventory_department_column}" />
 									</f:facet>
 									<h:outputText value="#{booking.vo.inventory.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{booking.vo.inventory.category}"
+								<p:column sortBy="#{booking.vo.inventory.category}"
 									filterBy="#{booking.vo.inventory.category.id}"
 									filterOptions="#{sessionScopeBean.filterInventoryCategories}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_inventory_category_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_inventorybooking_list_inventory_category_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{booking.vo.inventory.category.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{booking.vo.inventory.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<ui:include src="../shared/inventoryBookingTableColumns.xhtml">
-									<ui:param
-										name="bookingBean"
-										value="#{staffAssociationBean}" />
+									<ui:param name="bookingBean" value="#{staffAssociationBean}" />
 								</ui:include>
-								<p:column filterBy="#{booking.vo.proband.personParticulars.lastNameHash}">
-								<f:attribute name="visibleDefault" value = "false" />
+								<p:column
+									filterBy="#{booking.vo.proband.personParticulars.lastNameHash}">
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText
 											styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
 											value="#{stafflabels.staff_association_inventorybooking_list_proband_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{booking.vo.proband.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="label" value="#{booking.vo.proband.name}" />
+										<ui:param name="icon"
 											value="#{booking.vo.proband.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
+										<ui:param name="rendered"
 											value="#{booking.vo.proband != null and booking.vo.proband.person and booking.vo.proband.decrypted}" />
 									</ui:include>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{booking.vo.proband.name}" />
-										<ui:param
-											name="icon"
-											value="ctsms-icon-encrypted" />
-										<ui:param
-											name="rendered"
+										<ui:param name="label" value="#{booking.vo.proband.name}" />
+										<ui:param name="icon" value="ctsms-icon-encrypted" />
+										<ui:param name="rendered"
 											value="#{booking.vo.proband != null and booking.vo.proband.person and !booking.vo.proband.decrypted}" />
 									</ui:include>
 								</p:column>
-								
-								
-					<p:column filterBy="#{booking.vo.proband.animalParticulars.animalName}"
-					    sortBy="#{booking.vo.proband.animalParticulars.animalName}">
-					    <f:attribute name="visibleDefault" value = "false" />
-						<f:facet name="header">
-							<h:outputText
-								value="#{stafflabels.staff_association_inventorybooking_list_animal_name_column}" />
-						</f:facet>
-						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{booking.vo.proband.name}" />
-							<ui:param
-								name="icon"
-								value="#{booking.vo.proband.category.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="#{booking.vo.proband != null and !booking.vo.proband.person}" />
-						</ui:include>
-					</p:column>								
-								
-								
+
+
 								<p:column
-									sortBy="#{booking.vo.course.name}"
-									filterBy="#{booking.vo.course.name}">
-									<f:attribute name="visibleDefault" value = "false" />
+									filterBy="#{booking.vo.proband.animalParticulars.animalName}"
+									sortBy="#{booking.vo.proband.animalParticulars.animalName}">
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_course_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_inventorybooking_list_animal_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{booking.vo.course.name}" />
-										<ui:param
-											name="icon"
-											value="#{booking.vo.course.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="label" value="#{booking.vo.proband.name}" />
+										<ui:param name="icon"
+											value="#{booking.vo.proband.category.nodeStyleClass}" />
+										<ui:param name="rendered"
+											value="#{booking.vo.proband != null and !booking.vo.proband.person}" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{booking.vo.trial.name}"
-									filterBy="#{booking.vo.trial.name}">
-									<f:attribute name="visibleDefault" value = "false" />
+
+
+								<p:column sortBy="#{booking.vo.course.name}"
+									filterBy="#{booking.vo.course.name}">
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_inventorybooking_list_trial_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_inventorybooking_list_course_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{booking.vo.trial.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="label" value="#{booking.vo.course.name}" />
+										<ui:param name="icon"
+											value="#{booking.vo.course.category.nodeStyleClass}" />
+										<ui:param name="rendered" value="true" />
+									</ui:include>
+								</p:column>
+								<p:column sortBy="#{booking.vo.trial.name}"
+									filterBy="#{booking.vo.trial.name}">
+									<f:attribute name="visibleDefault" value="false" />
+									<f:facet name="header">
+										<h:outputText
+											value="#{stafflabels.staff_association_inventorybooking_list_trial_name_column}" />
+									</f:facet>
+									<ui:include src="../shared/listIcon.xhtml">
+										<ui:param name="label" value="#{booking.vo.trial.name}" />
+										<ui:param name="icon"
 											value="#{booking.vo.trial.status.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_inventory_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInventory(#{booking.vo.inventory.id})" />
@@ -389,14 +326,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_responsible_person_maintenance_items_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_responsible_person_maintenance_items_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -413,27 +347,22 @@
 								value="#{staffAssociationBean.responsiblePersonMaintenanceModel}"
 								id="responsiblepersonmaintenanceitems_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
 										<h:outputText
 											value="#{staffAssociationBean.responsiblePersonMaintenanceModel.rowCount} #{stafflabels.staff_association_responsiblepersonmaintenanceitems_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshResponsiblePersonMaintenance}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:responsiblepersonmaintenanceitems_list" />
 									</h:panelGrid>
 								</f:facet>
 								<ui:include src="../shared/maintenanceItemTableColumns.xhtml" />
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_inventory_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInventory(#{maintenanceItem.vo.inventory.id})" />
@@ -441,14 +370,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_company_contact_maintenance_items_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_company_contact_maintenance_items_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -465,27 +391,22 @@
 								value="#{staffAssociationBean.companyContactMaintenanceModel}"
 								id="companycontactmaintenanceitems_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
 										<h:outputText
 											value="#{staffAssociationBean.companyContactMaintenanceModel.rowCount} #{stafflabels.staff_association_companycontactmaintenanceitems_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshCompanyContactMaintenance}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:companycontactmaintenanceitems_list" />
 									</h:panelGrid>
 								</f:facet>
 								<ui:include src="../shared/maintenanceItemTableColumns.xhtml" />
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_inventory_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInventory(#{maintenanceItem.vo.inventory.id})" />
@@ -493,14 +414,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_originator_inventory_status_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_originator_inventory_status_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -517,18 +435,15 @@
 								value="#{staffAssociationBean.originatorInventoryStatusModel}"
 								id="originatorinventorystatus_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.originatorInventoryStatusModel.rowCount} #{stafflabels.staff_association_originatorinventorystatus_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.originatorInventoryStatusModel.rowCount} #{stafflabels.staff_association_originatorinventorystatus_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshOriginatorInventoryStatus}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:originatorinventorystatus_list" />
 									</h:panelGrid>
@@ -541,40 +456,34 @@
 								</p:column>
 								<p:column sortBy="#{statusEntry.vo.inventory}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_originatorinventorystatus_list_inventory_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_originatorinventorystatus_list_inventory_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{statusEntry.vo.inventory.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{statusEntry.vo.inventory.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
-								<ui:include src="../shared/inventoryStatusEntryTableColumns.xhtml" />
+								<ui:include
+									src="../shared/inventoryStatusEntryTableColumns.xhtml" />
 								<p:column sortBy="#{statusEntry.vo.addressee}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_originatorinventorystatus_list_addressee_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_originatorinventorystatus_list_addressee_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{statusEntry.vo.addressee.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{statusEntry.vo.addressee.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_inventory_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInventory(#{statusEntry.vo.inventory.id})" />
@@ -582,14 +491,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_addressee_inventory_status_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_addressee_inventory_status_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -606,18 +512,15 @@
 								value="#{staffAssociationBean.addresseeInventoryStatusModel}"
 								id="addresseeinventorystatus_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.addresseeInventoryStatusModel.rowCount} #{stafflabels.staff_association_addresseeinventorystatus_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.addresseeInventoryStatusModel.rowCount} #{stafflabels.staff_association_addresseeinventorystatus_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshAddresseeInventoryStatus}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:addresseeinventorystatus_list" />
 									</h:panelGrid>
@@ -630,40 +533,34 @@
 								</p:column>
 								<p:column sortBy="#{statusEntry.vo.inventory}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_addresseeinventorystatus_list_inventory_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_addresseeinventorystatus_list_inventory_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{statusEntry.vo.inventory.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{statusEntry.vo.inventory.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
-								<ui:include src="../shared/inventoryStatusEntryTableColumns.xhtml" />
+								<ui:include
+									src="../shared/inventoryStatusEntryTableColumns.xhtml" />
 								<p:column sortBy="#{statusEntry.vo.originator}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_addresseeinventorystatus_list_originator_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_addresseeinventorystatus_list_originator_name_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{statusEntry.vo.originator.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{statusEntry.vo.originator.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_inventory_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openInventory(#{statusEntry.vo.inventory.id})" />
@@ -671,14 +568,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_institution_courses_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_institution_courses_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -695,18 +589,15 @@
 								value="#{staffAssociationBean.institutionCourseModel}"
 								id="institutioncourses_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.institutionCourseModel.rowCount} #{stafflabels.staff_association_institutioncourses_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.institutionCourseModel.rowCount} #{stafflabels.staff_association_institutioncourses_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshInstitutionCourse}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:institutioncourses_list" />
 									</h:panelGrid>
@@ -717,45 +608,39 @@
 									</f:facet>
 									<h:outputText value="#{course.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{course.vo.name}"
+								<p:column sortBy="#{course.vo.name}"
 									filterBy="#{course.vo.name}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncourses_list_course_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncourses_list_course_name_column}" />
 									</f:facet>
 									<h:outputText value="#{course.vo.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{course.vo.department}"
+								<p:column sortBy="#{course.vo.department}"
 									filterBy="#{course.vo.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncourses_list_course_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncourses_list_course_department_column}" />
 									</f:facet>
 									<h:outputText value="#{course.vo.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{course.vo.category}"
+								<p:column sortBy="#{course.vo.category}"
 									filterBy="#{course.vo.category.id}"
 									filterOptions="#{sessionScopeBean.filterCourseCategories}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncourses_list_course_category_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncourses_list_course_category_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
-											value="#{course.vo.category.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="label" value="#{course.vo.category.name}" />
+										<ui:param name="icon"
 											value="#{course.vo.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_course_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openCourse(#{course.vo.id})" />
@@ -763,14 +648,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_institution_cv_positions_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_institution_cv_positions_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -787,18 +669,15 @@
 								value="#{staffAssociationBean.institutionCvPositionModel}"
 								id="institutioncvpositions_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.institutionCvPositionModel.rowCount} #{stafflabels.staff_association_institutioncvpositions_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.institutionCvPositionModel.rowCount} #{stafflabels.staff_association_institutioncvpositions_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshInstitutionCvPosition}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:institutioncvpositions_list" />
 									</h:panelGrid>
@@ -813,74 +692,75 @@
 									sortBy="#{cvPosition.vo.staff.personParticulars.lastName}"
 									filterBy="#{cvPosition.vo.staff.personParticulars.lastName}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_staff_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_staff_name_column}" />
 									</f:facet>
 									<h:outputText value="#{cvPosition.vo.staff.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{cvPosition.vo.staff.department}"
+								<p:column sortBy="#{cvPosition.vo.staff.department}"
 									filterBy="#{cvPosition.vo.staff.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_staff_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_staff_department_column}" />
 									</f:facet>
 									<h:outputText value="#{cvPosition.vo.staff.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{cvPosition.vo.staff.category}"
+								<p:column sortBy="#{cvPosition.vo.staff.category}"
 									filterBy="#{cvPosition.vo.staff.category.id}"
 									filterOptions="#{sessionScopeBean.filterStaffCategories}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_staff_category_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_staff_category_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{cvPosition.vo.staff.category.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{cvPosition.vo.staff.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
-								<p:column
-									sortBy="#{cvPosition.vo.section}"
+								<p:column sortBy="#{cvPosition.vo.section}"
 									filterBy="#{cvPosition.vo.section.id}"
 									filterOptions="#{sessionScopeBean.filterCvSections}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_section_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_section_name_column}" />
 									</f:facet>
 									<h:outputText value="#{cvPosition.vo.section.name}" />
 								</p:column>
 								<p:column sortBy="#{cvPosition.vo.title}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_title_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_title_column}" />
 									</f:facet>
 									<h:outputText value="#{cvPosition.vo.title}" />
 								</p:column>
 								<p:column sortBy="#{cvPosition.vo.start}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_start_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_start_column}" />
 									</f:facet>
 									<h:outputText value="#{cvPosition.vo.start}">
 										<f:converter converterId="ctsms.Date" />
-										<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+										<f:attribute name="timeZone"
+											value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									</h:outputText>
 								</p:column>
 								<p:column sortBy="#{cvPosition.vo.stop}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_institutioncvpositions_list_stop_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_institutioncvpositions_list_stop_column}" />
 									</f:facet>
 									<h:outputText value="#{cvPosition.vo.stop}">
 										<f:converter converterId="ctsms.Date" />
-										<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+										<f:attribute name="timeZone"
+											value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 									</h:outputText>
 								</p:column>
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_staff_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openStaff(#{cvPosition.vo.staff.id})" />
@@ -889,13 +769,9 @@
 						</h:panelGrid>
 					</p:tab>
 					<p:tab title="#{stafflabels.staff_association_lectures_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -908,22 +784,18 @@
 								resizableColumns="#{dataTablesResizableColumnsFullPageTab}"
 								sortBy="#{lecturer.vo.id}"
 								emptyMessage="#{labels.datatable_permission_empty_message}"
-								var="lecturer"
-								value="#{staffAssociationBean.lectureModel}"
+								var="lecturer" value="#{staffAssociationBean.lectureModel}"
 								id="lectures_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.lectureModel.rowCount} #{stafflabels.staff_association_lectures_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.lectureModel.rowCount} #{stafflabels.staff_association_lectures_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshLecture}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:lectures_list" />
 									</h:panelGrid>
@@ -934,46 +806,41 @@
 									</f:facet>
 									<h:outputText value="#{lecturer.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{lecturer.vo.course.name}"
+								<p:column sortBy="#{lecturer.vo.course.name}"
 									filterBy="#{lecturer.vo.course.name}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_lectures_list_course_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_lectures_list_course_name_column}" />
 									</f:facet>
 									<h:outputText value="#{lecturer.vo.course.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{lecturer.vo.course.department}"
+								<p:column sortBy="#{lecturer.vo.course.department}"
 									filterBy="#{lecturer.vo.course.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_lectures_list_course_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_lectures_list_course_department_column}" />
 									</f:facet>
 									<h:outputText value="#{lecturer.vo.course.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{lecturer.vo.course.category}"
+								<p:column sortBy="#{lecturer.vo.course.category}"
 									filterBy="#{lecturer.vo.course.category.id}"
 									filterOptions="#{sessionScopeBean.filterCourseCategories}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_lectures_list_course_category_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_lectures_list_course_category_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{lecturer.vo.course.category.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{lecturer.vo.course.category.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<ui:include src="../shared/lecturerTableColumns.xhtml" />
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_course_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openCourse(#{lecturer.vo.course.id})" />
@@ -981,14 +848,11 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_trial_membership_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_trial_membership_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -1005,75 +869,66 @@
 								value="#{staffAssociationBean.trialMembershipModel}"
 								id="trial_membership_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="4"
-										cellpadding="0"
+									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.trialMembershipModel.rowCount} #{stafflabels.staff_association_trial_membership_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.trialMembershipModel.rowCount} #{stafflabels.staff_association_trial_membership_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											type="button"
+										<p:commandButton type="button"
 											title="#{labels.open_table_columns_dialog_button_label}"
 											icon="ui-icon ui-icon-wrench"
 											styleClass="ctsms-list-header-button"
 											onclick="trialMembershipTableColumnsDialog.show()" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshTrialMembership}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:trial_membership_list" />
 									</h:panelGrid>
 								</f:facet>
 								<p:column sortBy="#{teamMember.vo.id}">
-									<f:attribute name="visibleDefault" value = "false" />
+									<f:attribute name="visibleDefault" value="false" />
 									<f:facet name="header">
 										<h:outputText value="#{labels.id_column}" />
 									</f:facet>
 									<h:outputText value="#{teamMember.vo.id}" />
 								</p:column>
-								<p:column
-									sortBy="#{teamMember.vo.trial.name}"
+								<p:column sortBy="#{teamMember.vo.trial.name}"
 									filterBy="#{teamMember.vo.trial.name}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_trial_membership_list_trial_name_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_trial_membership_list_trial_name_column}" />
 									</f:facet>
 									<h:outputText value="#{teamMember.vo.trial.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{teamMember.vo.trial.department}"
+								<p:column sortBy="#{teamMember.vo.trial.department}"
 									filterBy="#{teamMember.vo.trial.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_trial_membership_list_trial_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_trial_membership_list_trial_department_column}" />
 									</f:facet>
 									<h:outputText value="#{teamMember.vo.trial.department.name}" />
 								</p:column>
-								<p:column
-									sortBy="#{teamMember.vo.trial.status}"
+								<p:column sortBy="#{teamMember.vo.trial.status}"
 									filterBy="#{teamMember.vo.trial.status.id}"
 									filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_trial_membership_list_trial_status_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_trial_membership_list_trial_status_column}" />
 									</f:facet>
 									<ui:include src="../shared/listIcon.xhtml">
-										<ui:param
-											name="label"
+										<ui:param name="label"
 											value="#{teamMember.vo.trial.status.name}" />
-										<ui:param
-											name="icon"
+										<ui:param name="icon"
 											value="#{teamMember.vo.trial.status.nodeStyleClass}" />
-										<ui:param
-											name="rendered"
-											value="true" />
+										<ui:param name="rendered" value="true" />
 									</ui:include>
 								</p:column>
 								<ui:include src="../shared/teamMemberTableColumns.xhtml" />
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_trial_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										onclick="openTrial(#{teamMember.vo.trial.id})" />
@@ -1081,74 +936,53 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab title="#{stafflabels.staff_association_shift_duration_summary_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+					<p:tab
+						title="#{stafflabels.staff_association_shift_duration_summary_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
 							<ui:include src="../shared/shiftDurationSummaryTable.xhtml">
-								<ui:param
-									name="shiftDurationSummaryModel"
+								<ui:param name="shiftDurationSummaryModel"
 									value="#{staffAssociationBean.shiftDurationModel}" />
-								<ui:param
-									name="namingContainer"
+								<ui:param name="namingContainer"
 									value=":tabView:staffassociation_form:association_lists" />
-								<ui:param
-									name="showTrials"
-									value="true" />
-								<ui:param
-									name="showStaff"
-									value="false" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showTrials" value="true" />
+								<ui:param name="showStaff" value="false" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsFullPageTab}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorFullPageTab}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateFullPageTab}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateFullPageTab}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionFullPageTab}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksFullPageTab}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleFullPageTab}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableFullPageTab}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightFullPageTab}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsFullPageTab}" />
 							</ui:include>
 						</h:panelGrid>
 					</p:tab>
-					
-					
-					
-					
-					
-					
-					
-					
-					
+
+
+
+
+
+
+
+
+
 					<p:tab title="#{stafflabels.staff_association_patients_tab_label}">
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-							<p:dataTable
-								styleClass="ctsms-datatable"
-								lazy="true"
+							<p:dataTable styleClass="ctsms-datatable" lazy="true"
 								rows="#{dataTablesRowsFullPageTab}"
 								paginator="#{dataTablesPaginatorFullPageTab}"
 								paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -1161,22 +995,18 @@
 								resizableColumns="#{dataTablesResizableColumnsFullPageTab}"
 								sortBy="#{proband.vo.id}"
 								emptyMessage="#{labels.datatable_permission_empty_message}"
-								var="proband"
-								value="#{staffAssociationBean.patientModel}"
+								var="proband" value="#{staffAssociationBean.patientModel}"
 								id="patients_list">
 								<f:facet name="header">
-									<h:panelGrid
-										columns="3"
-										cellpadding="0"
+									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
-										<h:outputText value="#{staffAssociationBean.patientModel.rowCount} #{stafflabels.staff_association_patients_list_header}" />
+										<h:outputText
+											value="#{staffAssociationBean.patientModel.rowCount} #{stafflabels.staff_association_patients_list_header}" />
 										<ui:include src="../shared/ajaxStatus.xhtml" />
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											actionListener="#{staffAssociationBean.refreshPatient}"
 											title="#{labels.update_datatable_button_title}"
-											icon="ui-icon-refresh"
-											styleClass="ctsms-list-header-button"
+											icon="ui-icon-refresh" styleClass="ctsms-list-header-button"
 											ajax="true"
 											update=":tabView:staffassociation_form:association_lists:patients_list" />
 									</h:panelGrid>
@@ -1190,79 +1020,70 @@
 
 
 
-				<p:column filterBy="#{proband.vo.personParticulars.lastNameHash}">
-					<f:facet name="header">
-						<h:outputText
-							styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
-							value="#{stafflabels.staff_association_patients_list_last_name_column}" />
-					</f:facet>
-					<ui:include src="../shared/listIcon.xhtml">
-						<ui:param
-							name="label"
-							value="#{proband.vo.name}" />
-						<ui:param
-							name="icon"
-							value="#{proband.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
-						<ui:param
-							name="rendered"
-							value="#{proband.vo.person}" />
-					</ui:include>
-				</p:column>
-				
-				<p:column filterBy="#{proband.vo.animalParticulars.animalName}"
-					sortBy="#{proband.vo.animalParticulars.animalName}">
-					<f:facet name="header">
-						<h:outputText
-							value="#{stafflabels.staff_association_patients_list_animal_name_column}" />
-					</f:facet>
-					<h:outputText rendered="#{!proband.vo.person}" value="#{proband.vo.name}" />
-				</p:column>
-
 								<p:column
-									sortBy="#{proband.vo.department}"
+									filterBy="#{proband.vo.personParticulars.lastNameHash}">
+									<f:facet name="header">
+										<h:outputText
+											styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+											value="#{stafflabels.staff_association_patients_list_last_name_column}" />
+									</f:facet>
+									<ui:include src="../shared/listIcon.xhtml">
+										<ui:param name="label" value="#{proband.vo.name}" />
+										<ui:param name="icon"
+											value="#{proband.vo.decrypted ? 'ctsms-icon-decrypted' : 'ctsms-icon-encrypted'}" />
+										<ui:param name="rendered" value="#{proband.vo.person}" />
+									</ui:include>
+								</p:column>
+
+								<p:column filterBy="#{proband.vo.animalParticulars.animalName}"
+									sortBy="#{proband.vo.animalParticulars.animalName}">
+									<f:facet name="header">
+										<h:outputText
+											value="#{stafflabels.staff_association_patients_list_animal_name_column}" />
+									</f:facet>
+									<h:outputText rendered="#{!proband.vo.person}"
+										value="#{proband.vo.name}" />
+								</p:column>
+
+								<p:column sortBy="#{proband.vo.department}"
 									filterBy="#{proband.vo.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
-										<h:outputText value="#{stafflabels.staff_association_patients_list_proband_department_column}" />
+										<h:outputText
+											value="#{stafflabels.staff_association_patients_list_proband_department_column}" />
 									</f:facet>
 									<h:outputText value="#{course.vo.department.name}" />
 								</p:column>
 
-				<p:column
-					sortBy="#{proband.vo.category}"
-					filterBy="#{proband.vo.category.id}"
-					filterOptions="#{sessionScopeBean.filterProbandCategories}">
-					<f:facet name="header">
-						<h:outputText value="#{stafflabels.staff_association_patients_list_proband_category_column}" />
-					</f:facet>
-					<ui:include src="../shared/listIcon.xhtml">
-						<ui:param
-							name="label"
-							value="#{proband.vo.category.name}" />
-						<ui:param
-							name="icon"
-							value="#{proband.vo.category.nodeStyleClass}" />
-						<ui:param
-							name="rendered"
-							value="true" />
-					</ui:include>
-				</p:column>
-				<p:column>
-					<!-- filterBy="#{proband.vo.personParticulars.gender}"
-					filterOptions="#{sessionScopeBean.filterSexes}">  -->
-					<f:facet name="header">
-						<h:outputText value="#{stafflabels.staff_association_patients_list_gender_column}" />
-					</f:facet>
-					<h:outputText value="#{proband.vo.gender.name}" />
-					<!-- rendered="#{proband.vo.person}" -->
-				</p:column>
+								<p:column sortBy="#{proband.vo.category}"
+									filterBy="#{proband.vo.category.id}"
+									filterOptions="#{sessionScopeBean.filterProbandCategories}">
+									<f:facet name="header">
+										<h:outputText
+											value="#{stafflabels.staff_association_patients_list_proband_category_column}" />
+									</f:facet>
+									<ui:include src="../shared/listIcon.xhtml">
+										<ui:param name="label" value="#{proband.vo.category.name}" />
+										<ui:param name="icon"
+											value="#{proband.vo.category.nodeStyleClass}" />
+										<ui:param name="rendered" value="true" />
+									</ui:include>
+								</p:column>
+								<p:column>
+
+									<f:facet name="header">
+										<h:outputText
+											value="#{stafflabels.staff_association_patients_list_gender_column}" />
+									</f:facet>
+									<h:outputText value="#{proband.vo.gender.name}" />
+
+								</p:column>
 
 
 
 
 								<p:column style="width:32px;">
-									<p:commandButton
-										type="button"
+									<p:commandButton type="button"
 										title="#{labels.open_proband_button_label}"
 										icon="ui-icon ui-icon-extlink"
 										disabled="#{!proband.vo.decrypted}"
@@ -1271,28 +1092,24 @@
 							</p:dataTable>
 						</h:panelGrid>
 					</p:tab>
-					
-					
-					
-					
+
+
+
+
 				</p:tabView>
 			</h:panelGrid>
-		<ui:include src="../shared/tableColumnsDialog.xhtml">
-			<ui:param
-				name="tableColumnsDialog"
-				value="onBehalfOfInventoryBookingTableColumnsDialog" />
-			<ui:param
-				name="dataTableId"
-				value=":tabView:staffassociation_form:association_lists:inventorybooking_list" />
-		</ui:include>
-		<ui:include src="../shared/tableColumnsDialog.xhtml">
-			<ui:param
-				name="tableColumnsDialog"
-				value="trialMembershipTableColumnsDialog" />
-			<ui:param
-				name="dataTableId"
-				value=":tabView:staffassociation_form:association_lists:trial_membership_list" />
-		</ui:include>		
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog"
+					value="onBehalfOfInventoryBookingTableColumnsDialog" />
+				<ui:param name="dataTableId"
+					value=":tabView:staffassociation_form:association_lists:inventorybooking_list" />
+			</ui:include>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog"
+					value="trialMembershipTableColumnsDialog" />
+				<ui:param name="dataTableId"
+					value=":tabView:staffassociation_form:association_lists:trial_membership_list" />
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

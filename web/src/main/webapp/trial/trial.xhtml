@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -9,195 +8,138 @@
 	<title>trial tab</title>
 </h:head>
 <h:body>
-	<ui:composition template="/META-INF/templates/trialEntityTemplate.xhtml">
-		<ui:param
-			name="title"
-			value="#{trialBean.title}" />
-		<ui:param
-			name="windowName"
-			value="#{trialBean.windowName}" />
+	<ui:composition
+		template="/META-INF/templates/trialEntityTemplate.xhtml">
+		<ui:param name="title" value="#{trialBean.title}" />
+		<ui:param name="windowName" value="#{trialBean.windowName}" />
 		<ui:define name="content">
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:tabView
-					id="tabView"
-					dynamic="true" cache="false"
+				<p:tabView id="tabView" dynamic="true" cache="false"
 					widgetVar="trialTabView"
 					onTabShow="handleTrialTabChange(index.index())"
 					styleClass="ctsms-tabview">
-					<p:tab
-						id="trialmain"
-						disabled="false"
+					<p:tab id="trialmain" disabled="false"
 						titleStyleClass="#{!trialBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{triallabels.trial_main_tab_label}">
 						<ui:include src="/META-INF/includes/trial/trialMain.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialtags"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialtags" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_TAG_VALUE_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/trialTag.xhtml" />
 					</p:tab>
-					<p:tab
-						id="teammembers"
-						disabled="#{!trialBean.created}"
+					<p:tab id="teammembers" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TEAM_MEMBER_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TEAM_MEMBER_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/teamMember.xhtml" />
 					</p:tab>
-					<p:tab
-						id="timelineevents"
-						disabled="#{!trialBean.created}"
+					<p:tab id="timelineevents" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TIMELINE_EVENT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TIMELINE_EVENT_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/timelineEvent.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialinventorybookings"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialinventorybookings" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_INVENTORY_BOOKING_COUNT'))}">
-						<ui:include src="/META-INF/includes/trial/trialInventoryBooking.xhtml" />
+						<ui:include
+							src="/META-INF/includes/trial/trialInventoryBooking.xhtml" />
 					</p:tab>
-					<p:tab
-						id="visits"
-						disabled="#{!trialBean.created}"
+					<p:tab id="visits" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_VISIT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_VISIT_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/visit.xhtml" />
 					</p:tab>
-					<p:tab
-						id="probandgroups"
-						disabled="#{!trialBean.created}"
+					<p:tab id="probandgroups" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_GROUP_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_GROUP_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/probandGroup.xhtml" />
 					</p:tab>
-					<p:tab
-						id="visitschedule"
-						disabled="#{!trialBean.created}"
+					<p:tab id="visitschedule" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_VISIT_SCHEDULE_ITEM_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_VISIT_SCHEDULE_ITEM_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/visitSchedule.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialdutyrosterturns"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialdutyrosterturns" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT'))}">
-						<ui:include src="/META-INF/includes/trial/trialDutyRosterTurn.xhtml" />
+						<ui:include
+							src="/META-INF/includes/trial/trialDutyRosterTurn.xhtml" />
 					</p:tab>
-					<p:tab
-						id="probandlistentrytags"
-						disabled="#{!trialBean.created}"
+					<p:tab id="probandlistentrytags" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_LIST_ENTRY_TAG_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_LIST_ENTRY_TAG_COUNT'))}">
-						<ui:include src="/META-INF/includes/trial/probandListEntryTag.xhtml" />
+						<ui:include
+							src="/META-INF/includes/trial/probandListEntryTag.xhtml" />
 					</p:tab>
-					<p:tab
-						id="randomizationlists"
-						disabled="#{!trialBean.created}"
+					<p:tab id="randomizationlists" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/randomizationList.xhtml" />
 					</p:tab>
-					<p:tab
-						id="inquiries"
-						disabled="#{!trialBean.created}"
+					<p:tab id="inquiries" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INQUIRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INQUIRY_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/inquiry.xhtml" />
 					</p:tab>
-					<p:tab
-						id="inquiryvaluesdummy"
-						disabled="#{!trialBean.created}"
+					<p:tab id="inquiryvaluesdummy" disabled="#{!trialBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{triallabels.trial_inquiry_value_dummy_tab_label}">
 						<ui:include src="/META-INF/includes/trial/inquiryValueDummy.xhtml" />
 					</p:tab>
-					<p:tab
-						id="ecrfs"
-						disabled="#{!trialBean.created}"
+					<p:tab id="ecrfs" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_ECRF_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_ECRF_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/ecrf.xhtml" />
 					</p:tab>
-					<p:tab
-						id="ecrfFields"
-						disabled="#{!trialBean.created}"
+					<p:tab id="ecrfFields" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_ECRF_FIELD_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_ECRF_FIELD_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/ecrfField.xhtml" />
 					</p:tab>
-					<p:tab
-						id="probandlistentries"
-						disabled="#{!trialBean.created}"
+					<p:tab id="probandlistentries" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_PROBAND_LIST_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_PROBAND_LIST_ENTRY_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/probandList.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialecrfstatusentries"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialecrfstatusentries" disabled="#{!trialBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{triallabels.trialecrfstatusentries_tab_label}">
-						<ui:include src="/META-INF/includes/trial/trialEcrfStatusEntry.xhtml" />
-					</p:tab>				
-					<p:tab
-						id="trialecrffieldstatusentries"
+						<ui:include
+							src="/META-INF/includes/trial/trialEcrfStatusEntry.xhtml" />
+					</p:tab>
+					<p:tab id="trialecrffieldstatusentries"
 						disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_ECRF_FIELD_STATUS_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_ECRF_FIELD_STATUS_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/ecrfFieldStatus.xhtml" />
 					</p:tab>
-					<p:tab
-						id="reimbursements"
-						disabled="#{!trialBean.created}"
+					<p:tab id="reimbursements" disabled="#{!trialBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{triallabels.reimbursements_tab_label}">
 						<ui:include src="/META-INF/includes/trial/reimbursements.xhtml" />
 					</p:tab>
-					<!-- <p:tab
-						id="enrollmentchart"
-						disabled="#{!trialBean.created}"
-						titleStyleClass="tsms-tabtitle"
-						title="#{triallabels.enrollment_chart_tab_label}">
-						<ui:include src="/META-INF/includes/trial/enrollmentChart.xhtml" />
-					</p:tab> -->
-					<p:tab
-						id="trialassociations"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialassociations" disabled="#{!trialBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{triallabels.trial_associations_tab_label}">
 						<ui:include src="/META-INF/includes/trial/trialAssociation.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialhyperlinks"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialhyperlinks" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_HYPERLINK_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/trialHyperlink.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialjobs"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialjobs" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_JOB_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/trialJob.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialfiles"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialfiles" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_FILE_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/trialFile.xhtml" />
 					</p:tab>
-					<p:tab
-						id="trialjournal"
-						disabled="#{!trialBean.created}"
+					<p:tab id="trialjournal" disabled="#{!trialBean.created}"
 						titleStyleClass="#{trialBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_TRIAL_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{trialBean.getTabTitle(applicationScopeBean.jsValue('AJAX_TRIAL_JOURNAL_ENTRY_COUNT'))}">
 						<ui:include src="/META-INF/includes/trial/trialJournal.xhtml" />

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,83 +9,59 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:panelGrid
-			columns="1"
-			cellpadding="0"
+		<h:panelGrid columns="1" cellpadding="0"
 			styleClass="ctsms-content-panelgrid"
 			rowClasses="ctsms-search-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-search-result-row">
 			<ui:include src="searchInput.xhtml">
-				<ui:param
-					name="searchBean"
-					value="#{massMailSearchBean}" />
-				<ui:param
-					name="resultListWidgetVar"
-					value="massMailResultList" />
+				<ui:param name="searchBean" value="#{massMailSearchBean}" />
+				<ui:param name="resultListWidgetVar" value="massMailResultList" />
 			</ui:include>
-			<p:messages
-				id="messages"
-				globalOnly="true" />
+			<p:messages id="messages" globalOnly="true" />
 			<p:toolbar id="criteria_toolbar">
 				<p:toolbarGroup align="left">
-					<h:outputText
-						styleClass="ctsms-toolbar-text"
+					<h:outputText styleClass="ctsms-toolbar-text"
 						value="#{massMailSearchBean.created ? massMailSearchBean.modifiedAnnotation : ''}" />
 				</p:toolbarGroup>
 				<p:separator />
 				<p:toolbarGroup align="right">
-					<p:commandButton
-						process="@this"
+					<p:commandButton process="@this"
 						value="#{labels.reset_button_label}"
 						actionListener="#{massMailSearchBean.reset}"
-						icon="ui-icon ui-icon-close"
-						ajax="true"
+						icon="ui-icon ui-icon-close" ajax="true"
 						onstart="massMailResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="false"
 						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{massMailSearchBean.resultListId}" />
-					<p:commandButton
-						rendered="#{!massMailSearchBean.created}"
-						process="@this,:search_form:tabView:criteria_input"
-						id="add"
+					<p:commandButton rendered="#{!massMailSearchBean.created}"
+						process="@this,:search_form:tabView:criteria_input" id="add"
 						value="#{labels.add_button_label}"
 						actionListener="#{massMailSearchBean.add}"
-						icon="ui-icon ui-icon-plusthick"
-						ajax="true"
+						icon="ui-icon ui-icon-plusthick" ajax="true"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!massMailSearchBean.createable}"
 						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
-					<p:commandButton
-						rendered="#{massMailSearchBean.created}"
-						process="@this"
-						value="#{labels.add_button_label}"
+					<p:commandButton rendered="#{massMailSearchBean.created}"
+						process="@this" value="#{labels.add_button_label}"
 						onclick="criteriaAddConfirmation.show()"
 						disabled="#{!massMailSearchBean.createable}"
-						icon="ui-icon ui-icon-plusthick"
-						type="button" />
+						icon="ui-icon ui-icon-plusthick" type="button" />
 					<p:commandButton
-						process="@this,:search_form:tabView:criteria_input"
-						id="update"
+						process="@this,:search_form:tabView:criteria_input" id="update"
 						value="#{labels.update_button_label}"
 						actionListener="#{massMailSearchBean.update}"
-						icon="ui-icon ui-icon-disk"
-						ajax="true"
+						icon="ui-icon ui-icon-disk" ajax="true"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!massMailSearchBean.editable}"
 						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
-					<p:commandButton
-						process="@this"
+					<p:commandButton process="@this"
 						value="#{labels.delete_button_label}"
 						onclick="if('criteriaDeleteReason' in window){criteriaDeleteReason.setValue(#{applicationScopeBean.quoteJsString(massMailSearchBean.deferredDeleteReason)});}criteriaDeleteConfirmation.show()"
 						disabled="#{!massMailSearchBean.removable}"
-						icon="ui-icon ui-icon-trash"
-						type="button" />
-					<p:commandButton
-						process="@this"
+						icon="ui-icon ui-icon-trash" type="button" />
+					<p:commandButton process="@this"
 						value="#{labels.load_button_label}"
-						actionListener="#{massMailSearchBean.load}"
-						icon="ui-icon-refresh"
-						ajax="true"
-						onstart="massMailResultList.clearFilters()"
+						actionListener="#{massMailSearchBean.load}" icon="ui-icon-refresh"
+						ajax="true" onstart="massMailResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!massMailSearchBean.created}"
 						update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar,#{massMailSearchBean.resultListId}" />
@@ -95,8 +70,7 @@
 						process="@this,:search_form:tabView:criteria_input"
 						value="#{labels.search_button_label}"
 						actionListener="#{massMailSearchBean.search}"
-						icon="ui-icon ui-icon-search"
-						ajax="true"
+						icon="ui-icon ui-icon-search" ajax="true"
 						onstart="massMailResultList.clearFilters()"
 						oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 						disabled="#{!massMailSearchBean.createable}"
@@ -107,11 +81,8 @@
 					<ui:include src="toolbarAjaxStatus.xhtml" />
 				</p:toolbarGroup>
 			</p:toolbar>
-			<p:dataTable
-				styleClass="ctsms-datatable"
-				lazy="true"
-				widgetVar="massMailResultList"
-				rows="#{dataTablesRowsSearch}"
+			<p:dataTable styleClass="ctsms-datatable" lazy="true"
+				widgetVar="massMailResultList" rows="#{dataTablesRowsSearch}"
 				paginator="#{dataTablesPaginatorSearch}"
 				paginatorTemplate="#{dataTablesPaginatorTemplateSearch}"
 				rowsPerPageTemplate="#{dataTablesRowsPerPageTemplateSearch}"
@@ -121,21 +92,16 @@
 				scrollable="#{dataTablesScrollableSearch}"
 				scrollHeight="#{dataTablesScrollHeightSearch}"
 				resizableColumns="#{dataTablesResizableColumnsSearch}"
-				sortBy="#{massMail.vo.id}"
-				sortOrder="descending"
-				emptyMessage="#{labels.datatable_empty_message}"
-				var="massMail"
+				sortBy="#{massMail.vo.id}" sortOrder="descending"
+				emptyMessage="#{labels.datatable_empty_message}" var="massMail"
 				value="#{massMailSearchBean.massMailResultModel}"
 				id="#{massMailSearchBean.resultListId}"
 				rowStyleClass="#{massMail.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMail.vo)}#{rowBgColorAlpha}">
 				<f:facet name="header">
-					<h:panelGrid
-						columns="2"
-						cellpadding="0"
+					<h:panelGrid columns="2" cellpadding="0"
 						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
 						<h:outputText value="#{massMailSearchBean.queryResultTitle}" />
-						<p:commandButton
-							type="button"
+						<p:commandButton type="button"
 							title="#{labels.open_table_columns_dialog_button_label}"
 							icon="ui-icon ui-icon-wrench"
 							styleClass="ctsms-list-header-button"
@@ -143,210 +109,177 @@
 					</h:panelGrid>
 				</f:facet>
 
-				<p:column
-					sortBy="#{massMail.vo.id}"
-					filterBy="#{massMail.vo.id}">
+				<p:column sortBy="#{massMail.vo.id}" filterBy="#{massMail.vo.id}">
 					<f:facet name="header">
 						<h:outputText value="#{labels.id_column}" />
 					</f:facet>
 					<h:outputText value="#{massMail.vo.id}" />
 				</p:column>
-				
-				<p:column
-					sortBy="#{massMail.vo.name}"
+
+				<p:column sortBy="#{massMail.vo.name}"
 					filterBy="#{massMail.vo.name}">
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_mass_mail_name_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_mass_mail_name_column}" />
 					</f:facet>
 					<h:outputText value="#{massMail.vo.name}" />
 				</p:column>
-				<p:column
-					sortBy="#{massMail.vo.department}"
+				<p:column sortBy="#{massMail.vo.department}"
 					filterBy="#{massMail.vo.department.id}"
 					filterOptions="#{sessionScopeBean.filterDepartments}">
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_mass_mail_department_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_mass_mail_department_column}" />
 					</f:facet>
 					<h:outputText value="#{massMail.vo.department.name}" />
 				</p:column>
-				
-				<p:column
-					sortBy="#{massMail.vo.type}"
+
+				<p:column sortBy="#{massMail.vo.type}"
 					filterBy="#{massMail.vo.type.id}"
 					filterOptions="#{sessionScopeBean.filterMassMailTypes}">
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_mass_mail_type_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_mass_mail_type_column}" />
 					</f:facet>
 					<h:outputText value="#{massMail.vo.type.name}" />
 				</p:column>
-				
-				<p:column
-					sortBy="#{massMail.vo.trial}"
+
+				<p:column sortBy="#{massMail.vo.trial}"
 					filterBy="#{massMail.vo.trial.name}">
-					<f:attribute name="visibleDefault" value = "#{!massMailSearchBean.picker}" />
+					<f:attribute name="visibleDefault"
+						value="#{!massMailSearchBean.picker}" />
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_trial_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_trial_column}" />
 					</f:facet>
 					<ui:include src="listIcon.xhtml">
-						<ui:param
-							name="label"
-							value="#{massMail.vo.trial.name}" />
-						<ui:param
-							name="icon"
+						<ui:param name="label" value="#{massMail.vo.trial.name}" />
+						<ui:param name="icon"
 							value="#{massMail.vo.trial.status.nodeStyleClass}" />
-						<ui:param
-							name="rendered"
-							value="true" />
+						<ui:param name="rendered" value="true" />
 					</ui:include>
 				</p:column>
-				
-				<p:column
-							sortBy="#{massMail.vo.probandListStatus}"
-							filterBy="#{massMail.vo.probandListStatus.id}"
-							filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
-							<f:facet name="header">
-								<h:outputText value="#{massmaillabels.search_mass_mail_result_list_proband_list_status_column}" />
-							</f:facet>
-							<h:outputText value="#{massMail.vo.probandListStatus.name}" />
-						</p:column>
+
+				<p:column sortBy="#{massMail.vo.probandListStatus}"
+					filterBy="#{massMail.vo.probandListStatus.id}"
+					filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
+					<f:facet name="header">
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_proband_list_status_column}" />
+					</f:facet>
+					<h:outputText value="#{massMail.vo.probandListStatus.name}" />
+				</p:column>
 
 				<p:column sortBy="#{massMail.vo.locale}"
 					filterBy="#{massMail.vo.locale}"
-					filterOptions="#{sessionScopeBean.filterLocales}" rendered="#{!massMailSearchBean.picker}">
+					filterOptions="#{sessionScopeBean.filterLocales}"
+					rendered="#{!massMailSearchBean.picker}">
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_locale_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_locale_column}" />
 					</f:facet>
-					<h:outputText value="#{applicationScopeBean.localeToDisplayString(massMail.vo.locale)}" />
-				</p:column>	
-				
+					<h:outputText
+						value="#{applicationScopeBean.localeToDisplayString(massMail.vo.locale)}" />
+				</p:column>
 
-				
-				<!-- <p:column sortBy="#{massMail.vo.status.locked}"
-					filterBy="#{massMail.vo.status.locked}"
-					filterOptions="#{sessionScopeBean.filterBooleans}">
-					<f:facet name="header">
-						<h:outputText value="#{probandlabels.search_proband_result_list_locked_column}" />
-					</f:facet>
-					<ui:include src="listBooleanIcon.xhtml">
-						<ui:param
-							name="value"
-							value="#{massMail.vo.status.locked}" />
-					</ui:include>
-				</p:column>		-->
-				
+
+
+
+
 				<p:column sortBy="#{massMail.vo.probandTo}"
 					filterBy="#{massMail.vo.probandTo}"
-					filterOptions="#{sessionScopeBean.filterBooleans}" >
-					<f:attribute name="visibleDefault" value = "#{!massMailSearchBean.picker}" />
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:attribute name="visibleDefault"
+						value="#{!massMailSearchBean.picker}" />
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_proband_to_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_proband_to_column}" />
 					</f:facet>
 					<ui:include src="listBooleanIcon.xhtml">
-						<ui:param
-							name="value"
-							value="#{massMail.vo.probandTo}" />
-					</ui:include>
-				</p:column>	
-				
-				<p:column sortBy="#{massMail.vo.physicianTo}"
-					filterBy="#{massMail.vo.physicianTo}"
-					filterOptions="#{sessionScopeBean.filterBooleans}" >
-					<f:attribute name="visibleDefault" value = "#{!massMailSearchBean.picker}" />
-					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_physician_to_column}" />
-					</f:facet>
-					<ui:include src="listBooleanIcon.xhtml">
-						<ui:param
-							name="value"
-							value="#{massMail.vo.physicianTo}" />
+						<ui:param name="value" value="#{massMail.vo.probandTo}" />
 					</ui:include>
 				</p:column>
-				
 
-				
-				<p:column >
-					<f:attribute name="visibleDefault" value = "false" />
+				<p:column sortBy="#{massMail.vo.physicianTo}"
+					filterBy="#{massMail.vo.physicianTo}"
+					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:attribute name="visibleDefault"
+						value="#{!massMailSearchBean.picker}" />
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_attachment_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_physician_to_column}" />
 					</f:facet>
 					<ui:include src="listBooleanIcon.xhtml">
-						<ui:param
-							name="value"
+						<ui:param name="value" value="#{massMail.vo.physicianTo}" />
+					</ui:include>
+				</p:column>
+
+
+
+				<p:column>
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_attachment_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param name="value"
 							value="#{massMail.vo.attachMassMailFiles or massMail.vo.attachTrialFiles or massMail.vo.attachProbandFiles or massMail.vo.attachInquiries or massMail.vo.attachProbandListEntryTags or massMail.vo.attachEcrfs or massMail.vo.attachProbandLetter or massMail.vo.attachReimbursementsPdf}" />
 					</ui:include>
-				</p:column>	
+				</p:column>
 
-				<p:column
-					sortBy="#{massMail.vo.status}"
+				<p:column sortBy="#{massMail.vo.status}"
 					filterBy="#{massMail.vo.status.id}"
 					filterOptions="#{sessionScopeBean.filterMassMailStatusTypes}">
 					<f:facet name="header">
-						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_mass_mail_status_type_column}" />
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_mass_mail_status_type_column}" />
 					</f:facet>
 					<ui:include src="listIcon.xhtml">
-						<ui:param
-							name="label"
-							value="#{massMail.vo.status.name}" />
-						<ui:param
-							name="icon"
-							value="#{massMail.vo.status.nodeStyleClass}" />
-						<ui:param
-							name="rendered"
-							value="true" />
+						<ui:param name="label" value="#{massMail.vo.status.name}" />
+						<ui:param name="icon" value="#{massMail.vo.status.nodeStyleClass}" />
+						<ui:param name="rendered" value="true" />
 					</ui:include>
-				</p:column>		
-				
-				<p:column >
-					<f:attribute name="visibleDefault" value = "#{!massMailSearchBean.picker}" />
-							<f:facet name="header">
-								<h:outputText value="#{massmaillabels.search_mass_mail_result_list_mass_mail_progress_column}" />
-							</f:facet>
-							<p:progressBar
-								widgetVar="progressBar_#{massMail.vo.id}"
-								ajax="false"
-								labelTemplate="#{massMailSearchBean.getMassMailProgressLabel(massMail.vo)}"
-								value="#{massMailSearchBean.getMassMailProgressValue(massMail.vo)}" />
-						</p:column>
+				</p:column>
+
+				<p:column>
+					<f:attribute name="visibleDefault"
+						value="#{!massMailSearchBean.picker}" />
+					<f:facet name="header">
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_mass_mail_progress_column}" />
+					</f:facet>
+					<p:progressBar widgetVar="progressBar_#{massMail.vo.id}"
+						ajax="false"
+						labelTemplate="#{massMailSearchBean.getMassMailProgressLabel(massMail.vo)}"
+						value="#{massMailSearchBean.getMassMailProgressValue(massMail.vo)}" />
+				</p:column>
 
 				<ui:insert name="pickbutton"></ui:insert>
 
 			</p:dataTable>
 		</h:panelGrid>
-		<p:confirmDialog
-			appendToBody="false"
-			severity="alert"
-			width="500"
+		<p:confirmDialog appendToBody="false" severity="alert" width="500"
 			widgetVar="criteriaDeleteConfirmation">
 			<f:facet name="message">
 				<h:outputText
 					value="#{labels.criteria_delete_confirmation_dialog_message}"
 					escape="false" />
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
-					styleClass="ctsms-input-panelgrid"
-					rowClasses="ctsms-input-row">
-					<h:panelGrid
-						rendered="true"
-						columns="1"
-						cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
+					styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+					<h:panelGrid rendered="true" columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-						<h:outputLabel
-							for="deferredDeleteReason"
+						<h:outputLabel for="deferredDeleteReason"
 							value="#{labels.criteria_deferred_delete_reason_label}" />
 						<h:panelGroup>
-							<p:inputTextarea
-								id="deferredDeleteReason"
+							<p:inputTextarea id="deferredDeleteReason"
 								widgetVar="criteriaDeleteReason"
 								value="#{massMailSearchBean.deferredDeleteReason}"
-								required="false"
-								autoResize="false"
-								styleClass="ctsms-textarea"
+								required="false" autoResize="false" styleClass="ctsms-textarea"
 								label="#{labels.criteria_deferred_delete_reason}">
 							</p:inputTextarea>
-							<p:tooltip
-								rendered="#{enableTooltips}"
+							<p:tooltip rendered="#{enableTooltips}"
 								for="deferredDeleteReason">
 								<h:outputText
 									value="#{labels.criteria_deferred_delete_reason_tooltip}"
@@ -354,52 +287,38 @@
 							</p:tooltip>
 						</h:panelGroup>
 					</h:panelGrid>
-				</h:panelGrid>						
+				</h:panelGrid>
 			</f:facet>
-			<p:commandButton
-				process="@this,:search_form:deferredDeleteReason"
+			<p:commandButton process="@this,:search_form:deferredDeleteReason"
 				value="#{labels.yes_button_label}"
 				actionListener="#{massMailSearchBean.delete}"
-				onclick="criteriaDeleteConfirmation.hide()"
-				ajax="true"
+				onclick="criteriaDeleteConfirmation.hide()" ajax="true"
 				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
-			<p:commandButton
-				value="#{labels.no_button_label}"
-				onclick="criteriaDeleteConfirmation.hide()"
-				type="button" />
+			<p:commandButton value="#{labels.no_button_label}"
+				onclick="criteriaDeleteConfirmation.hide()" type="button" />
 		</p:confirmDialog>
-		<p:confirmDialog
-			appendToBody="false"
-			severity="info"
+		<p:confirmDialog appendToBody="false" severity="info"
 			widgetVar="criteriaAddConfirmation">
 			<f:facet name="message">
 				<h:outputText
 					value="#{labels.criteria_add_confirmation_dialog_message}"
 					escape="false" />
 			</f:facet>
-			<p:commandButton
-				process="@this,:search_form:tabView:criteria_input"
-				id="addConfirmed"
-				value="#{labels.yes_button_label}"
+			<p:commandButton process="@this,:search_form:tabView:criteria_input"
+				id="addConfirmed" value="#{labels.yes_button_label}"
 				actionListener="#{massMailSearchBean.add}"
-				onclick="criteriaAddConfirmation.hide()"
-				ajax="true"
+				onclick="criteriaAddConfirmation.hide()" ajax="true"
 				oncomplete="handleCriteriaChanged(xhr, status, args);handleSearchTabChange(oldSearchTabIndex);"
 				update="category_filter,criteria_list,:search_form:tabView:criteria_input,messages,criteria_toolbar" />
-			<p:commandButton
-				value="#{labels.no_button_label}"
-				onclick="criteriaAddConfirmation.hide()"
-				type="button" />
+			<p:commandButton value="#{labels.no_button_label}"
+				onclick="criteriaAddConfirmation.hide()" type="button" />
 		</p:confirmDialog>
 		<ui:include src="tableColumnsDialog.xhtml">
-			<ui:param
-				name="tableColumnsDialog"
-				value="searchTableColumnsDialog" />
-			<ui:param
-				name="dataTableId"
+			<ui:param name="tableColumnsDialog" value="searchTableColumnsDialog" />
+			<ui:param name="dataTableId"
 				value=":search_form:#{massMailSearchBean.resultListId}" />
-		</ui:include>		
+		</ui:include>
 	</ui:composition>
 </h:body>
 </html>

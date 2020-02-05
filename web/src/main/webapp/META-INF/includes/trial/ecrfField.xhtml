@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -12,28 +11,17 @@
 <h:body>
 	<ui:composition>
 		<h:form id="ecrffield_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeEcrfField"
-				actionListener="#{ecrfFieldBean.change(trialBean.in.id)}"
-				update="ecrffield_ecrf_list,ecrffield_list,ecrffield_bulkadd,ecrffield_updatesections,ecrffield_input" /> -->
-			<p:remoteCommand
-				process="@this,lastPickedInputFieldIds"
+
+			<p:remoteCommand process="@this,lastPickedInputFieldIds"
 				name="ecrfFieldAddInputFieldIDs"
 				actionListener="#{ecrfFieldBean.inputFieldMultiPicker.addIds(ecrfFieldBean.inputFieldMultiPicker.ids)}"
 				update="ecrffield_bulkadd" />
-			<p:remoteCommand
-				process="@this"
-				name="moveEcrfFieldTo"
+			<p:remoteCommand process="@this" name="moveEcrfFieldTo"
 				actionListener="#{ecrfFieldBean.moveTo}"
 				update="ecrffield_list,ecrffield_input" />
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -46,72 +34,47 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{ecrf.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="ecrf"
-					value="#{ecrfFieldBean.ecrfModel}"
-					id="ecrffield_ecrf_list"
-					selectionMode="single"
+					var="ecrf" value="#{ecrfFieldBean.ecrfModel}"
+					id="ecrffield_ecrf_list" selectionMode="single"
 					selection="#{ecrfFieldBean.selectedEcrf}"
 					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitToColor(ecrf.vo.visit)}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:ecrffield_form:ecrffield_list,:tabView:ecrffield_form:ecrffield_bulkadd,:tabView:ecrffield_form:ecrffield_updatesections,:tabView:ecrffield_form:ecrffield_input" />
 					<f:facet name="header">
-					
-						<h:panelGrid
-							columns="2"
-							cellpadding="0"
+
+						<h:panelGrid columns="2" cellpadding="0"
 							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
-							<h:outputText value="#{ecrfFieldBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
-							<p:commandButton
-								type="button"
+							<h:outputText
+								value="#{ecrfFieldBean.ecrfModel.rowCount} #{triallabels.ecrf_ecrf_list_header}" />
+							<p:commandButton type="button"
 								title="#{labels.open_table_columns_dialog_button_label}"
 								icon="ui-icon ui-icon-wrench"
 								styleClass="ctsms-list-header-button"
 								onclick="ecrfFieldEcrfTableColumnsDialog.show()" />
-						</h:panelGrid>					
-					
+						</h:panelGrid>
+
 					</f:facet>
 					<p:column sortBy="#{ecrf.vo.id}">
-						<f:attribute name="visibleDefault" value = "false" />
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
 						<h:outputText value="#{ecrf.vo.id}" />
 					</p:column>
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
-						<ui:param
-							name="ecrfSelectionBean"
-							value="#{ecrfFieldBean}" />
-						<ui:param
-							name="showPosition"
-							value="true" />
-						<ui:param
-							name="showVisit"
-							value="true" />
-						<ui:param
-							name="showGroup"
-							value="true" />
-						<ui:param
-							name="showActive"
-							value="true" />
-						<ui:param
-							name="showCharge"
-							value="false" />								
-						<ui:param
-							name="showExternalId"
-							value="true" />							
-						<ui:param
-							name="showEnableBrowserFieldCalculation"
-							value="true" />								
-						<ui:param
-							name="showFieldCount"
-							value="true" />							
+						<ui:param name="ecrfSelectionBean" value="#{ecrfFieldBean}" />
+						<ui:param name="showPosition" value="true" />
+						<ui:param name="showVisit" value="true" />
+						<ui:param name="showGroup" value="true" />
+						<ui:param name="showActive" value="true" />
+						<ui:param name="showCharge" value="false" />
+						<ui:param name="showExternalId" value="true" />
+						<ui:param name="showEnableBrowserFieldCalculation" value="true" />
+						<ui:param name="showFieldCount" value="true" />
 					</ui:include>
 				</p:dataTable>
 				<h:panelGroup id="ecrffield_list_wrapper">
-					<p:dataTable
-						styleClass="ctsms-datatable"
-						lazy="true"
+					<p:dataTable styleClass="ctsms-datatable" lazy="true"
 						rows="#{dataTablesRowsDefault}"
 						paginator="#{dataTablesPaginatorDefault}"
 						paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -124,33 +87,27 @@
 						resizableColumns="#{dataTablesResizableColumnsDefault}"
 						sortBy="#{ecrfField.vo.position}"
 						emptyMessage="#{labels.datatable_permission_empty_message}"
-						var="ecrfField"
-						value="#{ecrfFieldBean.ecrfFieldModel}"
-						id="ecrffield_list"
-						selectionMode="single"
+						var="ecrfField" value="#{ecrfFieldBean.ecrfFieldModel}"
+						id="ecrffield_list" selectionMode="single"
 						selection="#{ecrfFieldBean.selectedEcrfField}"
 						rowStyleClass="#{ecrfField.vo.deferredDelete or ecrfField.vo.field.deferredDelete ? 'ctsms-strikethrough' : ''}">
-						<p:ajax
-							event="rowSelect"
+						<p:ajax event="rowSelect"
 							update=":tabView:ecrffield_form:ecrffield_input" />
 						<f:facet name="header">
-						
-							<h:panelGrid
-								columns="2"
-								cellpadding="0"
+
+							<h:panelGrid columns="2" cellpadding="0"
 								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
 								<h:outputText value="#{ecrfFieldBean.ecrfFieldListHeader}" />
-								<p:commandButton
-									type="button"
+								<p:commandButton type="button"
 									title="#{labels.open_table_columns_dialog_button_label}"
 									icon="ui-icon ui-icon-wrench"
 									styleClass="ctsms-list-header-button"
 									onclick="ecrfFieldEcrfFieldTableColumnsDialog.show()" />
 							</h:panelGrid>
-							
+
 						</f:facet>
 						<p:column sortBy="#{ecrfField.vo.id}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText value="#{labels.id_column}" />
 							</f:facet>
@@ -159,172 +116,161 @@
 						<p:column sortBy="#{ecrfField.vo.field.nameL10nKey}"
 							filterBy="#{ecrfField.vo.field.nameL10nKey}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_input_field_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_input_field_column}" />
 							</f:facet>
 							<ui:include src="../shared/listIcon.xhtml">
-								<ui:param
-									name="label"
-									value="#{ecrfField.vo.field.name}" />
-								<ui:param
-									name="icon"
+								<ui:param name="label" value="#{ecrfField.vo.field.name}" />
+								<ui:param name="icon"
 									value="#{applicationScopeBean.getInputFieldIcon(ecrfField.vo.field)}" />
-								<ui:param
-									name="rendered"
-									value="true" />
+								<ui:param name="rendered" value="true" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{ecrfField.vo.titleL10nKey}"
+						<p:column sortBy="#{ecrfField.vo.titleL10nKey}"
 							filterBy="#{ecrfField.vo.titleL10nKey}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_title_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_title_column}" />
 							</f:facet>
-							<h:outputText
-								value="#{ecrfField.vo.titleL10nKey}" />
+							<h:outputText value="#{ecrfField.vo.titleL10nKey}" />
 						</p:column>
-						<p:column
-							sortBy="#{ecrfField.vo.jsVariableName}"
+						<p:column sortBy="#{ecrfField.vo.jsVariableName}"
 							filterBy="#{ecrfField.vo.jsVariableName}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_js_variable_name_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_js_variable_name_column}" />
 							</f:facet>
-							<h:outputText
-								styleClass="ctsms-monospaced"
+							<h:outputText styleClass="ctsms-monospaced"
 								value="#{ecrfField.vo.jsVariableName}" />
 						</p:column>
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_js_value_expression_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_js_value_expression_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
+								<ui:param name="value"
 									value="#{!empty applicationScopeBean.compressJS(ecrfField.vo.jsValueExpression)}" />
 							</ui:include>
 						</p:column>
 						<p:column>
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_js_output_expression_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_js_output_expression_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
+								<ui:param name="value"
 									value="#{!empty applicationScopeBean.compressJS(ecrfField.vo.jsOutputExpression)}" />
 							</ui:include>
 						</p:column>
-					
+
 						<p:column sortBy="#{ecrfField.vo.optional}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_optional_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_optional_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{ecrfField.vo.optional}" />
+								<ui:param name="value" value="#{ecrfField.vo.optional}" />
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.disabled}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_enabled_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_enabled_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{!ecrfField.vo.disabled}" />
+								<ui:param name="value" value="#{!ecrfField.vo.disabled}" />
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.auditTrail}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_audit_trail_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_audit_trail_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{ecrfField.vo.auditTrail}" />
+								<ui:param name="value" value="#{ecrfField.vo.auditTrail}" />
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.reasonForChangeRequired}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_reason_for_change_required_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_reason_for_change_required_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
+								<ui:param name="value"
 									value="#{ecrfField.vo.reasonForChangeRequired}" />
 							</ui:include>
 						</p:column>
-						<p:column
-							sortBy="#{ecrfField.vo.notify}">
-							<f:attribute name="visibleDefault" value = "false" />
+						<p:column sortBy="#{ecrfField.vo.notify}">
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_notify_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_notify_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{ecrfField.vo.notify}" />
+								<ui:param name="value" value="#{ecrfField.vo.notify}" />
 							</ui:include>
-						</p:column>							
-						<p:column
-							sortBy="#{ecrfField.vo.externalId}"
+						</p:column>
+						<p:column sortBy="#{ecrfField.vo.externalId}"
 							filterBy="#{ecrfField.vo.externalId}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_external_id_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_external_id_column}" />
 							</f:facet>
 							<h:outputText value="#{ecrfField.vo.externalId}" />
 						</p:column>
-						<p:column
-							sortBy="#{ecrfField.vo.field.externalId}"
+						<p:column sortBy="#{ecrfField.vo.field.externalId}"
 							filterBy="#{ecrfField.vo.field.externalId}">
-							<f:attribute name="visibleDefault" value = "false" />
+							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_field_external_id_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_field_external_id_column}" />
 							</f:facet>
 							<h:outputText value="#{ecrfField.vo.field.externalId}" />
-						</p:column>	
-						<p:column>
-							<f:attribute name="visibleDefault" value = "false" />
-							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_number_of_values_column}" />
-							</f:facet>
-							<h:outputText value="#{applicationScopeBean.getEcrfFieldValueCount(ecrfField.vo)}" />
 						</p:column>
-						<p:column
-							sortBy="#{ecrfField.vo.section}"
+						<p:column>
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_number_of_values_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{applicationScopeBean.getEcrfFieldValueCount(ecrfField.vo)}" />
+						</p:column>
+						<p:column sortBy="#{ecrfField.vo.section}"
 							filterBy="#{ecrfField.vo.section}"
 							filterOptions="#{ecrfFieldBean.filterSections}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_section_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_section_column}" />
 							</f:facet>
 							<h:outputText value="#{ecrfField.vo.section}" />
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.series}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_series_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_series_column}" />
 							</f:facet>
 							<ui:include src="../shared/listBooleanIcon.xhtml">
-								<ui:param
-									name="value"
-									value="#{ecrfField.vo.series}" />
+								<ui:param name="value" value="#{ecrfField.vo.series}" />
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.position}">
 							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrffield_ecrffield_list_position_column}" />
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_position_column}" />
 							</f:facet>
 							<h:outputText
 								rendered="#{!ecrfFieldBean.inputVisible or !ecrfField.psf.filters.containsKey('section')}"
 								value="#{ecrfField.vo.position}" />
-							<h:panelGroup rendered="#{ecrfFieldBean.inputVisible and ecrfField.psf.filters.containsKey('section')}">
-								<p:spinner
-									widgetVar="ecrfFieldTargetPosition#{ecrfField.vo.id}"
-									id="targetPosition"
-									value="#{ecrfField.vo.position}"
-									styleClass="ctsms-spinner"
-									required="false"
+							<h:panelGroup
+								rendered="#{ecrfFieldBean.inputVisible and ecrfField.psf.filters.containsKey('section')}">
+								<p:spinner widgetVar="ecrfFieldTargetPosition#{ecrfField.vo.id}"
+									id="targetPosition" value="#{ecrfField.vo.position}"
+									styleClass="ctsms-spinner" required="false"
 									label="#{triallabels.ecrffield_target_position}" />
 								<p:tooltip
 									rendered="#{enableTooltips and ecrfField.rowIndex == 0}"
@@ -335,67 +281,48 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</p:column>
-						<p:column
-							rendered="#{ecrfFieldBean.inputVisible}"
+						<p:column rendered="#{ecrfFieldBean.inputVisible}"
 							style="width:32px;white-space:nowrap;">
-							<p:commandButton
-								title="#{labels.rotate_positions_button_label}"
-								id="moveToTargetPosition"
-								icon="ui-icon-arrowstop-1-e"
+							<p:commandButton title="#{labels.rotate_positions_button_label}"
+								id="moveToTargetPosition" icon="ui-icon-arrowstop-1-e"
 								type="button"
 								rendered="#{ecrfField.psf.filters.containsKey('section')}"
 								onclick="moveEcrfFieldTo(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:'#{ecrfField.vo.id}',#{applicationScopeBean.parameterName('TARGET_POSITION')}:ecrfFieldTargetPosition#{ecrfField.vo.id}.getValue() }));" />
 						</p:column>
 					</p:dataTable>
 				</h:panelGroup>
-				<h:panelGrid
-					columns="2"
-					cellpadding="0"
+				<h:panelGrid columns="2" cellpadding="0"
 					styleClass="ctsms-ecrffield-content-panelgrid ctsms-content-panelgrid-maxheight"
 					columnClasses="ctsms-ecrffield-inputfieldpicker-column,ctsms-ecrffield-input-column">
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-ecrffield-inputfieldpickercolumn-panelgrid"
 						rowClasses="ctsms-ecrffield-inputfieldpickercolumn-picker-row,ctsms-ecrffield-inputfieldpickercolumn-rename-row">
-						<p:panel
-							
-							id="ecrffield_bulkadd">
+						<p:panel id="ecrffield_bulkadd">
 							<f:facet name="header">
 								<h:outputText value="#{labels.bulk_creation_label}" />
 							</f:facet>
-							<h:panelGrid
-								rendered="#{ecrfFieldBean.inputVisible}"
-								columns="1"
-								cellpadding="0"
-								styleClass="ctsms-input-panelgrid"
+							<h:panelGrid rendered="#{ecrfFieldBean.inputVisible}" columns="1"
+								cellpadding="0" styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
-								<h:panelGrid
-									columns="3"
-									cellpadding="0"
+								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-picker-multi-header-label-column,ctsms-picker-multi-header-btn-column,ctsms-picker-multi-header-btn-column">
-									<h:outputText value="#{ecrfFieldBean.inputFieldMultiPicker.count} #{triallabels.ecrffield_input_fields_picked_label}" />
+									<h:outputText
+										value="#{ecrfFieldBean.inputFieldMultiPicker.count} #{triallabels.ecrffield_input_fields_picked_label}" />
 									<p:commandButton
 										title="#{labels.multipick_input_field_button_label}"
-										icon="ui-icon ui-icon-cart"
-										type="button"
+										icon="ui-icon ui-icon-cart" type="button"
 										onclick="openInputFieldMultiPicker(':tabView:ecrffield_form:lastPickedInputFieldIds','ecrfFieldAddInputFieldIDs')" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										title="#{labels.multipick_clear_all_button_label}"
 										actionListener="#{ecrfFieldBean.inputFieldMultiPicker.clear}"
-										icon="ui-icon ui-icon-close"
-										ajax="true"
+										icon="ui-icon ui-icon-close" ajax="true"
 										disabled="#{!ecrfFieldBean.inputFieldMultiPicker.isEnabled}"
 										update="ecrffield_bulkadd" />
-									<h:inputHidden
-										id="lastPickedInputFieldIds"
-										required="false"
+									<h:inputHidden id="lastPickedInputFieldIds" required="false"
 										value="#{ecrfFieldBean.inputFieldMultiPicker.ids}">
 									</h:inputHidden>
 								</h:panelGrid>
-								<p:dataList
-									type="#{multiPickerDataListsType}"
+								<p:dataList type="#{multiPickerDataListsType}"
 									rows="#{multiPickerDataListsRows}"
 									paginator="#{multiPickerDataListsPaginator}"
 									paginatorTemplate="#{multiPickerDataListsPaginatorTemplate}"
@@ -403,8 +330,7 @@
 									paginatorPosition="#{multiPickerDataListsPaginatorPosition}"
 									pageLinks="#{multiPickerDataListsPageLinks}"
 									paginatorAlwaysVisible="#{multiPickerDataListsPaginatorAlwaysVisible}"
-									id="input_field_selection"
-									var="inputField"
+									id="input_field_selection" var="inputField"
 									styleClass="ctsms-ecrffield-inputfieldpicker-list"
 									value="#{ecrfFieldBean.inputFieldMultiPicker.selection}">
 									<f:facet name="description">
@@ -417,15 +343,13 @@
 										<h:outputText value=" " />
 									</p:column>
 									<p:column style="width:32px;">
-										<p:commandButton
-											type="button"
+										<p:commandButton type="button"
 											title="#{labels.open_input_field_button_label}"
 											icon="ui-icon ui-icon-extlink"
 											onclick="openInputField(#{inputField.vo.id})" />
 									</p:column>
 									<p:column style="width:32px;">
-										<p:commandButton
-											process="@this"
+										<p:commandButton process="@this"
 											title="#{labels.multipick_clear_button_label}"
 											actionListener="#{ecrfFieldBean.inputFieldMultiPicker.removeId(inputField.vo.id)}"
 											icon="ui-icon ui-icon-close"
@@ -440,18 +364,13 @@
 											escape="false" />
 									</p:column>
 								</p:dataList>
-								<h:panelGrid
-									columns="3"
-									cellpadding="2"
+								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel
-										for="bulkAddEcrfFieldSection"
+									<h:outputLabel for="bulkAddEcrfFieldSection"
 										value="#{triallabels.bulkadd_ecrffield_section_label}" />
 									<h:panelGroup>
-										<p:autoComplete
-											id="bulkAddEcrfFieldSection"
-											value="#{ecrfFieldBean.bulkAddSection}"
-											required="false"
+										<p:autoComplete id="bulkAddEcrfFieldSection"
+											value="#{ecrfFieldBean.bulkAddSection}" required="false"
 											label="#{triallabels.bulkadd_ecrffield_section}"
 											styleClass="ctsms-control"
 											minQueryLength="#{autoCompleteMinQueryLengthCategory}"
@@ -463,14 +382,10 @@
 											completeMethod="#{ecrfFieldBean.completeBulkAddSection}">
 											<p:ajax
 												listener="#{ecrfFieldBean.handleBulkAddSectionSelect}"
-												event="itemSelect"
-												process="@this" />
-											<p:ajax
-												event="blur"
-												process="@this" />
+												event="itemSelect" process="@this" />
+											<p:ajax event="blur" process="@this" />
 										</p:autoComplete>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkAddEcrfFieldSection">
 											<h:outputText
 												value="#{triallabels.bulkadd_ecrffield_section_tooltip}"
@@ -478,17 +393,14 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkAddEcrfFieldSection" />
-									<h:outputLabel
-										for="bulkAddEcrfFieldSeries"
+									<h:outputLabel for="bulkAddEcrfFieldSeries"
 										value="#{triallabels.bulkadd_ecrffield_series_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="bulkAddEcrfFieldSeries"
+										<p:selectBooleanCheckbox id="bulkAddEcrfFieldSeries"
 											value="#{ecrfFieldBean.bulkAddSeries}">
 											<p:ajax />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkAddEcrfFieldSeries">
 											<h:outputText
 												value="#{triallabels.bulkadd_ecrffield_series_tooltip}"
@@ -496,17 +408,14 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkAddEcrfFieldSeries" />
-									<h:outputLabel
-										for="bulkAddEcrfFieldOptional"
+									<h:outputLabel for="bulkAddEcrfFieldOptional"
 										value="#{triallabels.bulkadd_ecrffield_optional_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="bulkAddEcrfFieldOptional"
+										<p:selectBooleanCheckbox id="bulkAddEcrfFieldOptional"
 											value="#{ecrfFieldBean.bulkAddOptional}">
 											<p:ajax />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkAddEcrfFieldOptional">
 											<h:outputText
 												value="#{triallabels.bulkadd_ecrffield_optional_tooltip}"
@@ -514,17 +423,14 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkAddEcrfFieldOptional" />
-									<h:outputLabel
-										for="bulkAddEcrfFieldAuditTrail"
+									<h:outputLabel for="bulkAddEcrfFieldAuditTrail"
 										value="#{triallabels.bulkadd_ecrffield_audit_trail_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox
-											id="bulkAddEcrfFieldAuditTrail"
+										<p:selectBooleanCheckbox id="bulkAddEcrfFieldAuditTrail"
 											value="#{ecrfFieldBean.bulkAddAuditTrail}">
 											<p:ajax />
 										</p:selectBooleanCheckbox>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkAddEcrfFieldAuditTrail">
 											<h:outputText
 												value="#{triallabels.bulkadd_ecrffield_audit_trail_tooltip}"
@@ -533,60 +439,46 @@
 									</h:panelGroup>
 									<p:message for="bulkAddEcrfFieldAuditTrail" />
 								</h:panelGrid>
-								<!-- <h:outputLabel rendered="#{!ecrfFieldBean.inputVisible}" /> -->
+
 								<p:messages />
 								<p:toolbar>
 									<p:toolbarGroup align="right">
 										<p:commandButton
 											process="@this,bulkAddEcrfFieldSeries,bulkAddEcrfFieldOptional,bulkAddEcrfFieldAuditTrail"
-											id="bulkAdd"
-											value="#{labels.add_button_label}"
+											id="bulkAdd" value="#{labels.add_button_label}"
 											actionListener="#{ecrfFieldBean.addBulk}"
 											oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-											icon="ui-icon ui-icon-plusthick"
-											ajax="true"
+											icon="ui-icon ui-icon-plusthick" ajax="true"
 											disabled="#{!ecrfFieldBean.inputFieldBulkCreateable}"
 											update="ecrffield_list,ecrffield_bulkadd" />
 									</p:toolbarGroup>
 								</p:toolbar>
 							</h:panelGrid>
 						</p:panel>
-						<p:panel
-						styleClass="ctsms-panel-maxheight"
+						<p:panel styleClass="ctsms-panel-maxheight"
 							id="ecrffield_updatesections">
 							<f:facet name="header">
 								<h:outputText value="#{triallabels.update_ecrf_sections_label}" />
 							</f:facet>
-							<h:panelGrid
-								rendered="#{ecrfFieldBean.inputVisible}"
-								columns="1"
-								cellpadding="0"
-								styleClass="ctsms-input-panelgrid"
+							<h:panelGrid rendered="#{ecrfFieldBean.inputVisible}" columns="1"
+								cellpadding="0" styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
-								<h:panelGrid
-									columns="3"
-									cellpadding="2"
+								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									
-									<h:outputLabel
-										for="bulkUpdateOldSection"
+
+									<h:outputLabel for="bulkUpdateOldSection"
 										value="#{triallabels.update_ecrf_sections_old_section_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu
-											id="bulkUpdateOldSection"
-											value="#{ecrfFieldBean.oldSection}"
-											required="false"
+										<p:selectOneMenu id="bulkUpdateOldSection"
+											value="#{ecrfFieldBean.oldSection}" required="false"
 											label="#{triallabels.update_ecrf_sections_old_section}"
 											styleClass="ctsms-control">
-											<f:selectItems
-												value="#{ecrfFieldBean.oldSections}"
-												var="selectItem"
-												itemLabel="#{selectItem.label}"
+											<f:selectItems value="#{ecrfFieldBean.oldSections}"
+												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 											<p:ajax />
 										</p:selectOneMenu>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkUpdateOldSection">
 											<h:outputText
 												value="#{triallabels.update_ecrf_sections_old_section_tooltip}"
@@ -594,16 +486,13 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkUpdateOldSection" />
-									
-									
-									<h:outputLabel
-										for="bulkUpdateNewSection"
+
+
+									<h:outputLabel for="bulkUpdateNewSection"
 										value="#{triallabels.update_ecrf_sections_new_section_label}" />
 									<h:panelGroup>
-										<p:autoComplete
-											id="bulkUpdateNewSection"
-											value="#{ecrfFieldBean.newSection}"
-											required="false"
+										<p:autoComplete id="bulkUpdateNewSection"
+											value="#{ecrfFieldBean.newSection}" required="false"
 											label="#{triallabels.update_ecrf_sections_new_section}"
 											styleClass="ctsms-control"
 											minQueryLength="#{autoCompleteMinQueryLengthCategory}"
@@ -613,16 +502,11 @@
 											global="#{autoCompleteGlobalCategory}"
 											scrollHeight="#{autoCompleteScrollHeightCategory}"
 											completeMethod="#{ecrfFieldBean.completeNewSection}">
-											<p:ajax
-												listener="#{ecrfFieldBean.handleNewSectionSelect}"
-												event="itemSelect"
-												process="@this" />
-											<p:ajax
-												event="blur"
-												process="@this" />
+											<p:ajax listener="#{ecrfFieldBean.handleNewSectionSelect}"
+												event="itemSelect" process="@this" />
+											<p:ajax event="blur" process="@this" />
 										</p:autoComplete>
-										<p:tooltip
-											rendered="#{enableTooltips}"
+										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkUpdateNewSection">
 											<h:outputText
 												value="#{triallabels.update_ecrf_sections_new_section_tooltip}"
@@ -631,17 +515,15 @@
 									</h:panelGroup>
 									<p:message for="bulkUpdateNewSection" />
 								</h:panelGrid>
-								<p:messages for="updateSectionsMessages"/>
+								<p:messages for="updateSectionsMessages" />
 								<p:toolbar>
 									<p:toolbarGroup align="right">
 										<p:commandButton
 											process="@this,bulkUpdateOldSection,bulkUpdateNewSection"
-											id="bulkUpdateSections"
-											value="#{labels.update_button_label}"
+											id="bulkUpdateSections" value="#{labels.update_button_label}"
 											actionListener="#{ecrfFieldBean.updateSections}"
 											oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-											icon="ui-icon ui-icon-disk"
-											ajax="true"
+											icon="ui-icon ui-icon-disk" ajax="true"
 											disabled="#{!ecrfFieldBean.updateSectionsEditable}"
 											update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
 									</p:toolbarGroup>
@@ -649,30 +531,21 @@
 							</h:panelGrid>
 						</p:panel>
 					</h:panelGrid>
-					<p:panel
-						id="ecrffield_input"
-						styleClass="ctsms-panel-maxheight">
+					<p:panel id="ecrffield_input" styleClass="ctsms-panel-maxheight">
 						<f:facet name="header">
 							<h:outputText value="#{ecrfFieldBean.title}" />
 						</f:facet>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-							<h:panelGrid
-								rendered="#{ecrfFieldBean.inputVisible}"
-								columns="9"
+							<h:panelGrid rendered="#{ecrfFieldBean.inputVisible}" columns="9"
 								cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="ecrfFieldSection"
+								<h:outputLabel for="ecrfFieldSection"
 									value="#{triallabels.ecrffield_section_label}" />
 								<h:panelGroup>
-									<p:autoComplete
-										id="ecrfFieldSection"
-										value="#{ecrfFieldBean.in.section}"
-										required="true"
+									<p:autoComplete id="ecrfFieldSection"
+										value="#{ecrfFieldBean.in.section}" required="true"
 										label="#{triallabels.ecrffield_section}"
 										styleClass="ctsms-control"
 										minQueryLength="#{autoCompleteMinQueryLengthCategory}"
@@ -682,154 +555,112 @@
 										global="#{autoCompleteGlobalCategory}"
 										scrollHeight="#{autoCompleteScrollHeightCategory}"
 										completeMethod="#{ecrfFieldBean.completeSection}">
-										<p:ajax
-											listener="#{ecrfFieldBean.handleSectionSelect}"
-											event="itemSelect"
-											process="@this" />
-										<p:ajax
-											event="blur"
-											process="@this" />
+										<p:ajax listener="#{ecrfFieldBean.handleSectionSelect}"
+											event="itemSelect" process="@this" />
+										<p:ajax event="blur" process="@this" />
 									</p:autoComplete>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldSection">
-										<h:outputText
-											value="#{triallabels.ecrffield_section_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldSection">
+										<h:outputText value="#{triallabels.ecrffield_section_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldSection" />
-								<h:outputLabel
-									for="ecrfFieldInputField"
+								<h:outputLabel for="ecrfFieldInputField"
 									value="#{triallabels.ecrffield_input_field_label}" />
-								<h:panelGrid
-									columns="4"
-									cellpadding="0">
+								<h:panelGrid columns="4" cellpadding="0">
 									<h:panelGroup>
-										<h:inputHidden
-											id="ecrfFieldInputField"
-											required="true"
+										<h:inputHidden id="ecrfFieldInputField" required="true"
 											requiredMessage="#{triallabels.ecrffield_input_field_required_message}"
 											value="#{ecrfFieldBean.in.fieldId}">
 											<f:converter converterId="ctsms.ID" />
 										</h:inputHidden>
-										<p:commandButton
-											id="ecrfFieldInputFieldName"
+										<p:commandButton id="ecrfFieldInputFieldName"
 											value="#{applicationScopeBean.clipStringPicker(ecrfFieldBean.fieldName)}"
 											title="#{triallabels.ecrffield_input_field_tooltip}#{labels.open_input_field_button_label}"
-											styleClass="ctsms-picker"
-											icon="ui-icon ui-icon-extlink"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 											type="button"
 											onclick="openPickedInputField(':tabView:ecrffield_form:ecrfFieldInputField')" />
 									</h:panelGroup>
 									<p:commandButton
 										title="#{labels.pick_input_field_button_label}"
-										icon="ui-icon ui-icon-search"
-										type="button"
+										icon="ui-icon ui-icon-search" type="button"
 										onclick="openInputFieldPickerAjax(':tabView:ecrffield_form:ecrfFieldInputField',':tabView:ecrffield_form:ecrfFieldInputFieldName')" />
 									<p:commandButton
 										title="#{labels.clear_input_field_button_label}"
-										icon="ui-icon ui-icon-close"
-										type="button"
+										icon="ui-icon ui-icon-close" type="button"
 										onclick="clearIDAjax(':tabView:ecrffield_form:ecrfFieldInputField',':tabView:ecrffield_form:ecrfFieldInputFieldName','#{applicationScopeBean.noInputFieldPickedMessage}')" />
-									<p:commandButton
-										title="#{messages.create_new_input_field}"
-										icon="ui-icon ui-icon-plusthick"
-										type="button"
+									<p:commandButton title="#{messages.create_new_input_field}"
+										icon="ui-icon ui-icon-plusthick" type="button"
 										onclick="openNewInputField()" />
 								</h:panelGrid>
 								<p:message for="ecrfFieldInputField" />
-								
-								
-																
-								
-								<h:outputLabel
-									for="ecrfFieldSeries"
+
+
+
+
+								<h:outputLabel for="ecrfFieldSeries"
 									value="#{triallabels.ecrffield_series_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="ecrfFieldSeries"
+									<p:selectBooleanCheckbox id="ecrfFieldSeries"
 										value="#{ecrfFieldBean.in.series}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldSeries">
-										<h:outputText
-											value="#{triallabels.ecrffield_series_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldSeries">
+										<h:outputText value="#{triallabels.ecrffield_series_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldSeries" />
-								<h:outputLabel
-									for="ecrfFieldPosition"
+								<h:outputLabel for="ecrfFieldPosition"
 									value="#{triallabels.ecrffield_position_label}" />
 								<h:panelGroup>
-									<p:spinner
-										id="ecrfFieldPosition"
+									<p:spinner id="ecrfFieldPosition"
 										value="#{ecrfFieldBean.in.position}"
-										styleClass="ctsms-spinner"
-										required="true"
+										styleClass="ctsms-spinner" required="true"
 										label="#{triallabels.ecrffield_position}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldPosition">
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldPosition">
 										<h:outputText
 											value="#{triallabels.ecrffield_position_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldPosition" />
-								
-								
-								
-															<h:outputLabel
-									for="ecrfFieldTitle"
+
+
+
+								<h:outputLabel for="ecrfFieldTitle"
 									value="#{triallabels.ecrffield_title_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="ecrfFieldTitle"
-										value="#{ecrfFieldBean.in.title}"
-										required="false"
+									<p:inputText id="ecrfFieldTitle"
+										value="#{ecrfFieldBean.in.title}" required="false"
 										label="#{triallabels.ecrffield_title}"
 										styleClass="ctsms-control">
 									</p:inputText>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldTitle">
-										<h:outputText
-											value="#{triallabels.ecrffield_title_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldTitle">
+										<h:outputText value="#{triallabels.ecrffield_title_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfFieldTitle" />	
-								
-								
-								
-								<h:outputLabel
-									for="ecrfFieldOptional"
+								<p:message for="ecrfFieldTitle" />
+
+
+
+								<h:outputLabel for="ecrfFieldOptional"
 									value="#{triallabels.ecrffield_optional_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="ecrfFieldOptional"
+									<p:selectBooleanCheckbox id="ecrfFieldOptional"
 										value="#{ecrfFieldBean.in.optional}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldOptional">
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldOptional">
 										<h:outputText
 											value="#{triallabels.ecrffield_optional_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldOptional" />
-								<h:outputLabel
-									for="ecrfFieldDisabled"
+								<h:outputLabel for="ecrfFieldDisabled"
 									value="#{triallabels.ecrffield_disabled_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="ecrfFieldDisabled"
+									<p:selectBooleanCheckbox id="ecrfFieldDisabled"
 										value="#{ecrfFieldBean.in.disabled}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldDisabled">
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldDisabled">
 										<h:outputText
 											value="#{triallabels.ecrffield_disabled_tooltip}"
 											escape="false" />
@@ -837,19 +668,15 @@
 								</h:panelGroup>
 								<p:message for="ecrfFieldDisabled" />
 
-								<h:outputLabel
-									for="ecrfFieldAuditTrail"
+								<h:outputLabel for="ecrfFieldAuditTrail"
 									value="#{triallabels.ecrffield_audit_trail_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="ecrfFieldAuditTrail"
+									<p:selectBooleanCheckbox id="ecrfFieldAuditTrail"
 										value="#{ecrfFieldBean.in.auditTrail}">
-										<p:ajax
-											listener="#{ecrfFieldBean.handleAuditTrailChange}"
+										<p:ajax listener="#{ecrfFieldBean.handleAuditTrailChange}"
 											update="ecrfFieldReasonForChangeRequired" />
 									</p:selectBooleanCheckbox>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="ecrfFieldAuditTrail">
 										<h:outputText
 											value="#{triallabels.ecrffield_audit_trail_tooltip}"
@@ -857,16 +684,13 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldAuditTrail" />
-								<h:outputLabel
-									for="ecrfFieldReasonForChangeRequired"
+								<h:outputLabel for="ecrfFieldReasonForChangeRequired"
 									value="#{triallabels.ecrffield_reason_for_change_required_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="ecrfFieldReasonForChangeRequired"
+									<p:selectBooleanCheckbox id="ecrfFieldReasonForChangeRequired"
 										disabled="#{!ecrfFieldBean.in.auditTrail}"
 										value="#{ecrfFieldBean.in.reasonForChangeRequired}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="ecrfFieldReasonForChangeRequired">
 										<h:outputText
 											value="#{triallabels.ecrffield_reason_for_change_required_tooltip}"
@@ -874,133 +698,96 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldReasonForChangeRequired" />
-								
-							
 
-								<h:outputLabel
-									for="jsVariableName"
+
+
+								<h:outputLabel for="jsVariableName"
 									value="#{triallabels.ecrffield_js_variable_name_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="jsVariableName"
-										value="#{ecrfFieldBean.in.jsVariableName}"
-										required="false"
+									<p:inputText id="jsVariableName"
+										value="#{ecrfFieldBean.in.jsVariableName}" required="false"
 										label="#{triallabels.ecrffield_js_variable_name}"
 										styleClass="ctsms-control-codeline" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="jsVariableName">
+									<p:tooltip rendered="#{enableTooltips}" for="jsVariableName">
 										<h:outputText
 											value="#{triallabels.ecrffield_js_variable_name_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="jsVariableName" />
-								
-								
-															<h:outputLabel
-									for="ecrfFieldExternalId"
+
+
+								<h:outputLabel for="ecrfFieldExternalId"
 									value="#{triallabels.ecrffield_externalid_label}" />
 								<h:panelGroup>
-									<p:inputText
-										id="ecrfFieldExternalId"
-										value="#{ecrfFieldBean.in.externalId}"
-										required="false"
+									<p:inputText id="ecrfFieldExternalId"
+										value="#{ecrfFieldBean.in.externalId}" required="false"
 										label="#{triallabels.ecrffield_externalid}"
 										styleClass="ctsms-control">
 									</p:inputText>
-									<p:tooltip
-										rendered="#{enableTooltips}"
+									<p:tooltip rendered="#{enableTooltips}"
 										for="ecrfFieldExternalId">
 										<h:outputText
 											value="#{triallabels.ecrffield_externalid_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfFieldExternalId" />	
-								
-								
-								<h:outputLabel
-									for="ecrfFieldNotify"
+								<p:message for="ecrfFieldExternalId" />
+
+
+								<h:outputLabel for="ecrfFieldNotify"
 									value="#{triallabels.ecrffield_notify_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox
-										id="ecrfFieldNotify"
+									<p:selectBooleanCheckbox id="ecrfFieldNotify"
 										value="#{ecrfFieldBean.in.notify}" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldNotify">
-										<h:outputText
-											value="#{triallabels.ecrffield_notify_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldNotify">
+										<h:outputText value="#{triallabels.ecrffield_notify_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfFieldNotify" />								
-								
+								<p:message for="ecrfFieldNotify" />
+
 							</h:panelGrid>
-							<p:fieldset
-								rendered="#{ecrfFieldBean.inputVisible}"
-								toggleable="true"
-								collapsed="false">
+							<p:fieldset rendered="#{ecrfFieldBean.inputVisible}"
+								toggleable="true" collapsed="false">
 								<f:facet name="legend">
-									<h:outputText value="#{triallabels.ecrffield_field_calculation_js_snippets_field_set}" />
+									<h:outputText
+										value="#{triallabels.ecrffield_field_calculation_js_snippets_field_set}" />
 								</f:facet>
-								<h:panelGrid
-									columns="2"
-									cellpadding="0"
+								<h:panelGrid columns="2" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-codemirror-label-for-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row">
-									<h:outputLabel
-										for="jsValueExpression"
+									<h:outputLabel for="jsValueExpression"
 										value="#{triallabels.ecrffield_js_value_expression_label}" />
-									<h:outputLabel
-										for="jsOutputExpression"
+									<h:outputLabel for="jsOutputExpression"
 										value="#{triallabels.ecrffield_js_output_expression_label}" />
-									<pe:codeMirror
-										id="jsValueExpression"
-										mode="javascript"
-										theme="eclipse"
-										value="#{ecrfFieldBean.in.jsValueExpression}"
+									<pe:codeMirror id="jsValueExpression" mode="javascript"
+										theme="eclipse" value="#{ecrfFieldBean.in.jsValueExpression}"
 										label="#{triallabels.ecrffield_js_value_expression}"
-										required="false"
-										lineNumbers="true"
+										required="false" lineNumbers="true"
 										extraKeys="{ 'Ctrl-Space': function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}">
 									</pe:codeMirror>
-									<pe:codeMirror
-										id="jsOutputExpression"
-										mode="javascript"
-										theme="eclipse"
-										value="#{ecrfFieldBean.in.jsOutputExpression}"
+									<pe:codeMirror id="jsOutputExpression" mode="javascript"
+										theme="eclipse" value="#{ecrfFieldBean.in.jsOutputExpression}"
 										label="#{triallabels.ecrffield_js_output_expression}"
-										required="false"
-										lineNumbers="true"
+										required="false" lineNumbers="true"
 										extraKeys="{ 'Ctrl-Space': function(cm) {CodeMirror.simpleHint(cm, CodeMirror.javascriptHint);}}">
 									</pe:codeMirror>
 								</h:panelGrid>
 							</p:fieldset>
-							<h:panelGrid
-								rendered="#{ecrfFieldBean.inputVisible}"
-								columns="1"
-								cellpadding="0"
-								styleClass="ctsms-input-panelgrid"
+							<h:panelGrid rendered="#{ecrfFieldBean.inputVisible}" columns="1"
+								cellpadding="0" styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-								<h:outputLabel
-									for="ecrfFieldComment"
+								<h:outputLabel for="ecrfFieldComment"
 									value="#{triallabels.ecrffield_comment_label}" />
 								<h:panelGroup>
-									<p:inputTextarea
-										id="ecrfFieldComment"
-										value="#{ecrfFieldBean.in.comment}"
-										required="false"
-										autoResize="false"
-										styleClass="ctsms-textarea"
+									<p:inputTextarea id="ecrfFieldComment"
+										value="#{ecrfFieldBean.in.comment}" required="false"
+										autoResize="false" styleClass="ctsms-textarea"
 										label="#{triallabels.ecrffield_comment}">
 									</p:inputTextarea>
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="ecrfFieldComment">
-										<h:outputText
-											value="#{triallabels.ecrffield_comment_tooltip}"
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldComment">
+										<h:outputText value="#{triallabels.ecrffield_comment_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
@@ -1011,65 +798,50 @@
 							<p:messages for="ecrfFieldInputMessages" />
 							<p:toolbar>
 								<p:toolbarGroup align="left">
-									<h:outputText
-										styleClass="ctsms-toolbar-text"
+									<h:outputText styleClass="ctsms-toolbar-text"
 										value="#{ecrfFieldBean.created ? ecrfFieldBean.modifiedAnnotation : ''}" />
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.reset_button_label}"
 										actionListener="#{ecrfFieldBean.reset}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-close"
-										ajax="true"
+										icon="ui-icon ui-icon-close" ajax="true"
 										disabled="#{!ecrfFieldBean.inputVisible}"
 										update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
-									<p:commandButton
-										process="@this,ecrffield_input"
-										id="add"
+									<p:commandButton process="@this,ecrffield_input" id="add"
 										value="#{labels.add_button_label}"
 										actionListener="#{ecrfFieldBean.add}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-plusthick"
-										ajax="true"
+										icon="ui-icon ui-icon-plusthick" ajax="true"
 										disabled="#{!ecrfFieldBean.createable}"
 										update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
-									<p:commandButton
-										process="@this,ecrffield_input"
-										id="update"
+									<p:commandButton process="@this,ecrffield_input" id="update"
 										value="#{labels.update_button_label}"
 										actionListener="#{ecrfFieldBean.update}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-disk"
-										ajax="true"
+										icon="ui-icon ui-icon-disk" ajax="true"
 										disabled="#{!ecrfFieldBean.editable}"
 										update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.normalize_positions_button_label}"
 										title="#{labels.normalize_positions_button_title}"
 										actionListener="#{ecrfFieldBean.normalizePositions}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-link"
-										ajax="true"
+										icon="ui-icon ui-icon-link" ajax="true"
 										disabled="#{!ecrfFieldBean.editable}"
 										update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
-									<p:commandButton
-										process="@this"
+									<p:commandButton process="@this"
 										value="#{labels.delete_button_label}"
 										onclick="if('ecrfFieldDeleteReason' in window){ecrfFieldDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfFieldBean.deferredDeleteReason)});}ecrfFieldDeleteConfirmation.show()"
 										disabled="#{!ecrfFieldBean.removable}"
-										icon="ui-icon ui-icon-trash"
-										type="button" />
-									<p:commandButton
-										process="@this"
+										icon="ui-icon ui-icon-trash" type="button" />
+									<p:commandButton process="@this"
 										value="#{labels.load_button_label}"
 										actionListener="#{ecrfFieldBean.load}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon-refresh"
-										ajax="true"
+										icon="ui-icon-refresh" ajax="true"
 										disabled="#{!ecrfFieldBean.created}"
 										update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
 								</p:toolbarGroup>
@@ -1082,41 +854,27 @@
 					</p:panel>
 				</h:panelGrid>
 			</h:panelGrid>
-			<p:confirmDialog
-				appendToBody="false"
-				severity="alert"
-				width="500"
+			<p:confirmDialog appendToBody="false" severity="alert" width="500"
 				widgetVar="ecrfFieldDeleteConfirmation">
 				<f:facet name="message">
 					<h:outputText
 						value="#{triallabels.ecrffield_delete_confirmation_dialog_message}"
 						escape="false" />
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						<h:panelGrid
-							rendered="true"
-							columns="1"
-							cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+						<h:panelGrid rendered="true" columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="deferredDeleteReason"
+							<h:outputLabel for="deferredDeleteReason"
 								value="#{triallabels.ecrffield_deferred_delete_reason_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="deferredDeleteReason"
+								<p:inputTextarea id="deferredDeleteReason"
 									widgetVar="ecrfFieldDeleteReason"
-									value="#{ecrfFieldBean.deferredDeleteReason}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									value="#{ecrfFieldBean.deferredDeleteReason}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.ecrffield_deferred_delete_reason}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="deferredDeleteReason">
 									<h:outputText
 										value="#{triallabels.ecrffield_deferred_delete_reason_tooltip}"
@@ -1124,37 +882,30 @@
 								</p:tooltip>
 							</h:panelGroup>
 						</h:panelGrid>
-					</h:panelGrid>						
+					</h:panelGrid>
 				</f:facet>
 				<p:commandButton
 					process="@this,:tabView:ecrffield_form:deferredDeleteReason"
 					value="#{labels.yes_button_label}"
 					actionListener="#{ecrfFieldBean.delete}"
 					oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-					onclick="ecrfFieldDeleteConfirmation.hide()"
-					ajax="true"
+					onclick="ecrfFieldDeleteConfirmation.hide()" ajax="true"
 					update="ecrffield_list,ecrffield_updatesections,ecrffield_input" />
-				<p:commandButton
-					value="#{labels.no_button_label}"
-					onclick="ecrfFieldDeleteConfirmation.hide()"
-					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="ecrfFieldDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="ecrfFieldEcrfTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:ecrffield_form:ecrffield_ecrf_list" />
-			</ui:include>	
+			</ui:include>
 			<ui:include src="../shared/tableColumnsDialog.xhtml">
-				<ui:param
-					name="tableColumnsDialog"
+				<ui:param name="tableColumnsDialog"
 					value="ecrfFieldEcrfFieldTableColumnsDialog" />
-				<ui:param
-					name="dataTableId"
+				<ui:param name="dataTableId"
 					value=":tabView:ecrffield_form:ecrffield_list" />
-			</ui:include>						
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

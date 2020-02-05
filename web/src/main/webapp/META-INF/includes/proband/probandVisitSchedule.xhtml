@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -12,18 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandvisitschedule_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeProbandVisitSchedule"
-				actionListener="#{probandVisitScheduleBean.change(probandBean.in.id)}"
-				update="probandvisitschedule_list,toolbar" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsFullPageTab}"
 					paginator="#{dataTablesPaginatorFullPageTab}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateFullPageTab}"
@@ -41,7 +32,8 @@
 					id="probandvisitschedule_list"
 					rowStyleClass="#{probandVisitScheduleBean.visitScheduleItemToColor(visitScheduleItem.vo)}#{rowBgColorAlpha}">
 					<f:facet name="header">
-						<h:outputText value="#{probandVisitScheduleBean.visitScheduleItemModel.rowCount} #{probandlabels.proband_visit_schedule_probandvisitschedule_list_header}" />
+						<h:outputText
+							value="#{probandVisitScheduleBean.visitScheduleItemModel.rowCount} #{probandlabels.proband_visit_schedule_probandvisitschedule_list_header}" />
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
@@ -52,51 +44,46 @@
 						</f:facet>
 						<h:outputText value="#{visitScheduleItem.vo.id}" />
 					</p:column>
-					<p:column
-						sortBy="#{visitScheduleItem.vo.trial.id}"
+					<p:column sortBy="#{visitScheduleItem.vo.trial.id}"
 						filterBy="#{visitScheduleItem.vo.trial.id}"
 						filterOptions="#{probandVisitScheduleBean.filterTrials}">
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_trial_name_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_trial_name_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{visitScheduleItem.vo.trial.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{visitScheduleItem.vo.trial.name}" />
+							<ui:param name="icon"
 								value="#{visitScheduleItem.vo.trial.status.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
+							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
 					<ui:include src="../shared/visitScheduleItemTableColumns.xhtml" />
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_proband_list_status_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_proband_list_status_column}" />
 						</f:facet>
-						<h:outputText value="#{probandVisitScheduleBean.getProbandListStatusEntry(visitScheduleItem.vo).status.name}" />
+						<h:outputText
+							value="#{probandVisitScheduleBean.getProbandListStatusEntry(visitScheduleItem.vo).status.name}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_colliding_proband_status_entry_column}" />
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_colliding_proband_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{probandVisitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
 					<p:column style="width:64px;white-space:nowrap;">
 						<p:commandButton
 							title="#{probandlabels.add_reimbursement_button_title}"
-							icon="ui-icon ui-icon-suitcase"
-							type="button"
+							icon="ui-icon ui-icon-suitcase" type="button"
 							disabled="#{!probandVisitScheduleBean.isReimbursementCreateable(visitScheduleItem.vo)}"
-							onclick="openAddVisitScheduleItemReimbursement(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_SCHEDULE_ITEM_ID')}:'#{visitScheduleItem.vo.id}'}));" />			
-						<p:commandButton
-							type="button"
+							onclick="openAddVisitScheduleItemReimbursement(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_SCHEDULE_ITEM_ID')}:'#{visitScheduleItem.vo.id}'}));" />
+						<p:commandButton type="button"
 							title="#{labels.open_trial_button_label}"
 							icon="ui-icon ui-icon-extlink"
 							onclick="openTrial(#{visitScheduleItem.vo.trial.id})" />
@@ -104,41 +91,28 @@
 					<p:rowExpansion>
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingProbandStatusTableTab.xhtml">
-								<ui:param
-									name="collidingProbandStatusEntryModel"
+								<ui:param name="collidingProbandStatusEntryModel"
 									value="#{probandVisitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo)}" />
-								<ui:param
-									name="showProband"
-									value="false" />
-								<ui:param
-									name="dataTableRows"
+								<ui:param name="showProband" value="false" />
+								<ui:param name="dataTableRows"
 									value="#{dataTablesRowsRowExpansion}" />
-								<ui:param
-									name="dataTablePaginator"
+								<ui:param name="dataTablePaginator"
 									value="#{dataTablesPaginatorRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorTemplate"
+								<ui:param name="dataTablePaginatorTemplate"
 									value="#{dataTablesPaginatorTemplateRowExpansion}" />
-								<ui:param
-									name="dataTableRowsPerPageTemplate"
+								<ui:param name="dataTableRowsPerPageTemplate"
 									value="#{dataTablesRowsPerPageTemplateRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorPosition"
+								<ui:param name="dataTablePaginatorPosition"
 									value="#{dataTablesPaginatorPositionRowExpansion}" />
-								<ui:param
-									name="dataTablePageLinks"
+								<ui:param name="dataTablePageLinks"
 									value="#{dataTablesPageLinksRowExpansion}" />
-								<ui:param
-									name="dataTablePaginatorAlwaysVisible"
+								<ui:param name="dataTablePaginatorAlwaysVisible"
 									value="#{dataTablesPaginatorAlwaysVisibleRowExpansion}" />
-								<ui:param
-									name="dataTableScrollable"
+								<ui:param name="dataTableScrollable"
 									value="#{dataTablesScrollableRowExpansion}" />
-								<ui:param
-									name="dataTableScrollHeight"
+								<ui:param name="dataTableScrollHeight"
 									value="#{dataTablesScrollHeightRowExpansion}" />
-								<ui:param
-									name="dataTableResizableColumns"
+								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
 						</p:tabView>
@@ -146,50 +120,40 @@
 				</p:dataTable>
 				<p:toolbar id="toolbar">
 					<p:toolbarGroup align="right">
-						<p:splitButton
-							immediate="true"
-							ajax="false"
+						<p:splitButton immediate="true" ajax="false"
 							disabled="#{empty probandVisitScheduleBean.trials}"
 							value="#{probandVisitScheduleBean.getVisitScheduleExcelButtonLabel()}"
 							title="#{probandlabels.visit_schedule_export_button_label}"
 							icon="ui-icon ui-icon-xls">
-							<p:fileDownload value="#{probandVisitScheduleBean.getVisitScheduleExcelStreamedContent()}" />
-							<c:forEach
-								var="trial"
-								items="#{probandVisitScheduleBean.trials}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+							<p:fileDownload
+								value="#{probandVisitScheduleBean.getVisitScheduleExcelStreamedContent()}" />
+							<c:forEach var="trial" items="#{probandVisitScheduleBean.trials}">
+								<p:menuitem immediate="true" ajax="false"
 									value="#{probandVisitScheduleBean.getVisitScheduleExcelButtonLabel(trial)}"
 									title="#{probandlabels.visit_schedule_export_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{probandVisitScheduleBean.getVisitScheduleExcelStreamedContent(trial.value)}" />
+									<p:fileDownload
+										value="#{probandVisitScheduleBean.getVisitScheduleExcelStreamedContent(trial.value)}" />
 								</p:menuitem>
 							</c:forEach>
 						</p:splitButton>
-						<p:menuButton
-							disabled="#{empty probandVisitScheduleBean.trials}"
+						<p:menuButton disabled="#{empty probandVisitScheduleBean.trials}"
 							value="#{probandlabels.travel_expenses_visit_schedule_xls_menu_label}">
-							<c:forEach
-								var="trial"
-								items="#{probandVisitScheduleBean.trials}">
-								<p:menuitem
-									immediate="true"
-									ajax="false"
+							<c:forEach var="trial" items="#{probandVisitScheduleBean.trials}">
+								<p:menuitem immediate="true" ajax="false"
 									value="#{probandVisitScheduleBean.getTravelExpensesVisitScheduleExcelButtonLabel(trial)}"
 									title="#{labels.export_visit_schedule_travel_expenses_button_label}"
 									icon="ctsms-menubar-icon ctsms-icon-xls">
-									<p:fileDownload value="#{probandVisitScheduleBean.getTravelExpensesVisitScheduleExcelStreamedContent(trial.value)}" />
+									<p:fileDownload
+										value="#{probandVisitScheduleBean.getTravelExpensesVisitScheduleExcelStreamedContent(trial.value)}" />
 								</p:menuitem>
 							</c:forEach>
 						</p:menuButton>
-						<p:commandButton
-							process="@this"
+						<p:commandButton process="@this"
 							actionListener="#{probandVisitScheduleBean.load}"
 							value="#{labels.update_datatable_button_label}"
 							oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-							icon="ui-icon-refresh"
-							ajax="true"
+							icon="ui-icon-refresh" ajax="true"
 							update="probandvisitschedule_list,toolbar" />
 					</p:toolbarGroup>
 					<p:separator />
@@ -198,28 +162,20 @@
 					</p:toolbarGroup>
 				</p:toolbar>
 			</h:panelGrid>
-			<ui:include src="../shared/addVisitScheduleItemReimbursementDialog.xhtml">
-				<ui:param
-					name="openAddReimbursementRemoteCommand"
+			<ui:include
+				src="../shared/addVisitScheduleItemReimbursementDialog.xhtml">
+				<ui:param name="openAddReimbursementRemoteCommand"
 					value="openAddVisitScheduleItemReimbursement" />
-				<ui:param
-					name="addReimbursementDialog"
+				<ui:param name="addReimbursementDialog"
 					value="addVisitScheduleItemReimbursementDialog" />
-				<ui:param
-					name="namingContainer"
+				<ui:param name="namingContainer"
 					value=":tabView:probandvisitschedule_form" />
-				<ui:param
-					name="reimbursementBean"
+				<ui:param name="reimbursementBean"
 					value="#{probandVisitScheduleBean.addReimbursementBean}" />
-				<ui:param
-					name="visitScheduleBean"
+				<ui:param name="visitScheduleBean"
 					value="#{probandVisitScheduleBean}" />
-				<ui:param
-					name="closeDialog"
-					value="true" />
-				<ui:param
-					name="calcDistanceOnShow"
-					value="true" />
+				<ui:param name="closeDialog" value="true" />
+				<ui:param name="calcDistanceOnShow" value="true" />
 			</ui:include>
 		</h:form>
 	</ui:composition>

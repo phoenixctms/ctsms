@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,18 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="timelineevent_form">
-			<!-- <p:remoteCommand
-				process="@this"
-				name="changeTimelineEvent"
-				actionListener="#{timelineEventBean.change(trialBean.in.id)}"
-				update="timelineevent_list,timelineevent_input" /> -->
-			<h:panelGrid
-				columns="1"
-				cellpadding="0"
+
+			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
-				<p:dataTable
-					styleClass="ctsms-datatable"
-					lazy="true"
+				<p:dataTable styleClass="ctsms-datatable" lazy="true"
 					rows="#{dataTablesRowsDefault}"
 					paginator="#{dataTablesPaginatorDefault}"
 					paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -35,17 +26,15 @@
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
 					sortBy="#{timelineEvent.vo.id}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="timelineEvent"
-					value="#{timelineEventBean.timelineEventModel}"
-					id="timelineevent_list"
-					selectionMode="single"
+					var="timelineEvent" value="#{timelineEventBean.timelineEventModel}"
+					id="timelineevent_list" selectionMode="single"
 					selection="#{timelineEventBean.selectedTimelineEvent}"
 					rowStyleClass="#{applicationScopeBean.timelineEventToColor(timelineEvent.vo)}#{rowBgColorAlpha}">
-					<p:ajax
-						event="rowSelect"
+					<p:ajax event="rowSelect"
 						update=":tabView:timelineevent_form:timelineevent_input" />
 					<f:facet name="header">
-						<h:outputText value="#{timelineEventBean.timelineEventModel.rowCount} #{triallabels.timeline_event_timelineevent_list_header}" />
+						<h:outputText
+							value="#{timelineEventBean.timelineEventModel.rowCount} #{triallabels.timeline_event_timelineevent_list_header}" />
 					</f:facet>
 					<p:column sortBy="#{timelineEvent.vo.id}">
 						<f:facet name="header">
@@ -53,96 +42,94 @@
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.id}" />
 					</p:column>
-					<p:column
-						sortBy="#{timelineEvent.vo.type}"
+					<p:column sortBy="#{timelineEvent.vo.type}"
 						filterBy="#{timelineEvent.vo.type.id}"
 						filterOptions="#{sessionScopeBean.filterTimelineEventTypes}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_event_type_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_event_type_column}" />
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
-							<ui:param
-								name="label"
-								value="#{timelineEvent.vo.type.name}" />
-							<ui:param
-								name="icon"
+							<ui:param name="label" value="#{timelineEvent.vo.type.name}" />
+							<ui:param name="icon"
 								value="#{timelineEvent.vo.type.nodeStyleClass}" />
-							<ui:param
-								name="rendered"
-								value="true" />
+							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
-					<p:column
-						sortBy="#{timelineEvent.vo.title}"
+					<p:column sortBy="#{timelineEvent.vo.title}"
 						filterBy="#{timelineEvent.vo.title}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_title_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_title_column}" />
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.title}" />
 					</p:column>
 					<p:column sortBy="#{timelineEvent.vo.start}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_start_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_start_column}" />
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.start}">
 							<f:converter converterId="ctsms.Date" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
 					<p:column sortBy="#{timelineEvent.vo.stop}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_stop_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_stop_column}" />
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.stop}">
 							<f:converter converterId="ctsms.Date" />
-							<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
-					<p:column
-						sortBy="#{timelineEvent.vo.show}"
+					<p:column sortBy="#{timelineEvent.vo.show}"
 						filterBy="#{timelineEvent.vo.show}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_show_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_show_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{timelineEvent.vo.show}" />
+							<ui:param name="value" value="#{timelineEvent.vo.show}" />
 						</ui:include>
 					</p:column>
-					<p:column
-						sortBy="#{timelineEvent.vo.notify}"
+					<p:column sortBy="#{timelineEvent.vo.notify}"
 						filterBy="#{timelineEvent.vo.notify}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_notify_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_notify_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
-								value="#{timelineEvent.vo.notify}" />
+							<ui:param name="value" value="#{timelineEvent.vo.notify}" />
 						</ui:include>
 					</p:column>
 					<p:column sortBy="#{timelineEvent.vo.reminderPeriod}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_reminder_period_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_reminder_period_column}" />
 						</f:facet>
-						<h:outputText value="#{applicationScopeBean.timelineEventReminderPeriodToString(timelineEvent.vo)}" />
+						<h:outputText
+							value="#{applicationScopeBean.timelineEventReminderPeriodToString(timelineEvent.vo)}" />
 					</p:column>
 					<p:column sortBy="#{timelineEvent.vo.importance}">
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_importance_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_importance_column}" />
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.importance.name}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{triallabels.timeline_event_timelineevent_list_dismissed_column}" />
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_dismissed_column}" />
 						</f:facet>
 						<ui:include src="../shared/listBooleanIcon.xhtml">
-							<ui:param
-								name="value"
+							<ui:param name="value"
 								value="#{timelineEventBean.getDismissed(timelineEvent.vo)}" />
 						</ui:include>
 					</p:column>
@@ -151,43 +138,30 @@
 					<f:facet name="header">
 						<h:outputText value="#{timelineEventBean.title}" />
 					</f:facet>
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							rendered="#{timelineEventBean.inputVisible}"
-							columns="8"
-							cellpadding="2"
+						<h:panelGrid rendered="#{timelineEventBean.inputVisible}"
+							columns="8" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column">
 							<ui:include src="../shared/timelineEventInput.xhtml">
-								<ui:param
-									name="timelineEventBean"
-									value="#{timelineEventBean}" />
+								<ui:param name="timelineEventBean" value="#{timelineEventBean}" />
 							</ui:include>
 						</h:panelGrid>
-						<h:panelGrid
-							rendered="#{timelineEventBean.inputVisible}"
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
+						<h:panelGrid rendered="#{timelineEventBean.inputVisible}"
+							columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-noencryption"
 								for="timelineeventdescription"
 								value="#{labels.noencryption_warning_label}#{triallabels.timeline_event_description_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="timelineeventdescription"
-									value="#{timelineEventBean.in.description}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+								<p:inputTextarea id="timelineeventdescription"
+									value="#{timelineEventBean.in.description}" required="false"
+									autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.timeline_event_description}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="timelineeventdescription">
 									<h:outputText
 										value="#{triallabels.timeline_event_description_tooltip}"
@@ -200,57 +174,43 @@
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{timelineEventBean.created ? timelineEventBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{timelineEventBean.reset}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="timelineevent_list,timelineevent_input" />
-								<p:commandButton
-									process="@this,timelineevent_input"
-									id="add"
+								<p:commandButton process="@this,timelineevent_input" id="add"
 									value="#{labels.add_button_label}"
 									actionListener="#{timelineEventBean.add}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!timelineEventBean.createable}"
 									update="timelineevent_list,timelineevent_input" />
-								<p:commandButton
-									process="@this,timelineevent_input"
-									id="update"
+								<p:commandButton process="@this,timelineevent_input" id="update"
 									value="#{labels.update_button_label}"
 									actionListener="#{timelineEventBean.update}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!timelineEventBean.editable}"
 									update="timelineevent_list,timelineevent_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									actionListener="#{timelineEventBean.delete}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!timelineEventBean.removable}"
 									update="timelineevent_list,timelineevent_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{timelineEventBean.load}"
 									oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!timelineEventBean.created}"
 									update="timelineevent_list,timelineevent_input" />
 							</p:toolbarGroup>
