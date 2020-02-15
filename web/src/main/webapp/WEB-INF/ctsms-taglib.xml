@@ -1,22 +1,19 @@
-<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
-               version="2.0">
-   <!-- <namespace>http://phoenix.joanneum.at/ctsms-taglib</namespace> -->
-   <namespace>http://phoenixctms.org/ctsms-taglib</namespace>
-
-   
-   <tag>
-  <tag-name>sketchPad</tag-name>
-  <component>
-    <component-type>ctsms.SketchPad</component-type>
-    <renderer-type>ctsms.SketchPad</renderer-type>
-    <handler-class>
-      org.phoenixctms.ctsms.web.component.sketchpad.SketchPadTagHandler
-    </handler-class>
-  </component>
-</tag>
-
+<facelet-taglib
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+	version="2.0">
+	<namespace>http://phoenixctms.org/ctsms-taglib</namespace>
+	<tag>
+		<tag-name>sketchPad</tag-name>
+		<component>
+			<component-type>ctsms.SketchPad</component-type>
+			<renderer-type>ctsms.SketchPad</renderer-type>
+			<handler-class>
+				org.phoenixctms.ctsms.web.component.sketchpad.SketchPadTagHandler
+			</handler-class>
+		</component>
+	</tag>
 	<tag>
 		<tag-name>tagCloud</tag-name>
 		<component>
@@ -67,8 +64,7 @@
 			<type>java.lang.String</type>
 		</attribute>
 	</tag>
-	
-		<tag>
+	<tag>
 		<tag-name>captcha</tag-name>
 		<component>
 			<description><![CDATA[Captcha is a form validation component based on Recaptcha API.]]></description>
@@ -179,5 +175,4 @@
 			<type>java.lang.Boolean</type>
 		</attribute>
 	</tag>
-	
 </facelet-taglib>

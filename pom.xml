@@ -62,7 +62,6 @@
 						<groupId>log4j</groupId>
 						<artifactId>log4j</artifactId>
 					</exclusion>
-
 				</exclusions>
 			</dependency>
 			<dependency>
@@ -140,8 +139,6 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
-			<!-- This dependency provides the ability to implement your business logic
-				in an interpreted manner during development on your local machine -->
 			<dependency>
 				<groupId>org.andromda</groupId>
 				<artifactId>andromda-script-wrappers</artifactId>
@@ -163,21 +160,11 @@
 				<artifactId>commons-collections</artifactId>
 				<version>3.2.1</version>
 			</dependency>
-			<!-- <dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>2.0.1</version>
-			</dependency>  -->
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>3.9</version>
 			</dependency>
-			<!-- <dependency>
-				<groupId>commons-logging</groupId>
-				<artifactId>commons-logging</artifactId>
-				<version>1.1.1</version>
-			</dependency>  -->
 			<dependency>
 				<groupId>jboss</groupId>
 				<artifactId>jboss-j2ee</artifactId>
@@ -567,8 +554,6 @@
 		<!-- SCM user ID and Password here, or in user specific settings.xml file -->
 		<username></username>
 		<password></password>
-
-
 	</properties>
 	<profiles>
 		<profile>
@@ -665,7 +650,6 @@
 	</profiles>
 
 	<pluginRepositories>
-
 		<pluginRepository>
 			<id>maven-repo</id>
 			<name>repo1 maven.org</name>
