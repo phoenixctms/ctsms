@@ -5,8 +5,8 @@ import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 
 public class ProbandLetterPDFBlockCursor extends PDFBlockCursor {
 
-	private ProbandLetterPDFPainter painter;
-	private ProbandAddressOutVO address;
+	protected ProbandLetterPDFPainter painter;
+	protected ProbandAddressOutVO address;
 
 	public ProbandLetterPDFBlockCursor(ProbandLetterPDFPainter painter) {
 		this.painter = painter;

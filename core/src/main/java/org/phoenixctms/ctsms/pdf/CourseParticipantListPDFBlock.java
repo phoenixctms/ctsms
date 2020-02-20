@@ -40,14 +40,14 @@ public class CourseParticipantListPDFBlock {
 		PARTICIPANT_TABLE_ROW
 	}
 
-	private CourseOutVO course;
-	private TrialOutVO trial;
-	private CourseParticipationStatusEntryOutVO participation;
-	private LecturerCompetenceVO competence;
-	private Collection<LecturerOutVO> lecturers;
-	private Collection<InventoryBookingOutVO> bookings;
-	private Date now;
-	private BlockType type;
+	protected CourseOutVO course;
+	protected TrialOutVO trial;
+	protected CourseParticipationStatusEntryOutVO participation;
+	protected LecturerCompetenceVO competence;
+	protected Collection<LecturerOutVO> lecturers;
+	protected Collection<InventoryBookingOutVO> bookings;
+	protected Date now;
+	protected BlockType type;
 
 	public CourseParticipantListPDFBlock() {
 		type = BlockType.SPACER;
@@ -95,7 +95,7 @@ public class CourseParticipantListPDFBlock {
 		this.type = BlockType.TRIAL_TITLE;
 	}
 
-	private String getBookingString(InventoryBookingOutVO booking) {
+	protected String getBookingString(InventoryBookingOutVO booking) {
 		if (booking != null) {
 			DateFormat bookingDateFormat = Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.BOOKING_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 					CourseParticipantListPDFDefaultSettings.BOOKING_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF);
@@ -109,42 +109,42 @@ public class CourseParticipantListPDFBlock {
 		return course;
 	}
 
-	private String getCourseCvCommentPreset() {
+	protected String getCourseCvCommentPreset() {
 		if (course != null) {
 			return course.getCvCommentPreset();
 		}
 		return "";
 	}
 
-	private String getCourseCvTitle() {
+	protected String getCourseCvTitle() {
 		if (course != null) {
 			return course.getCvTitle();
 		}
 		return "";
 	}
 
-	private String getCourseDescription() {
+	protected String getCourseDescription() {
 		if (course != null) {
 			return course.getDescription();
 		}
 		return "";
 	}
 
-	private String getCourseInstitutionString() {
+	protected String getCourseInstitutionString() {
 		if (course != null && course.getInstitution() != null) {
 			return course.getInstitution().getNameWithTitles();
 		}
 		return "";
 	}
 
-	private String getCourseName() {
+	protected String getCourseName() {
 		if (course != null) {
 			return course.getName();
 		}
 		return "";
 	}
 
-	private String getCoursePeriodString() {
+	protected String getCoursePeriodString() {
 		if (course != null) {
 			Date start = course.getStart();
 			Date stop = course.getStop();
@@ -162,7 +162,7 @@ public class CourseParticipantListPDFBlock {
 		return "";
 	}
 
-	private String getCourseSelfRegistrationString() {
+	protected String getCourseSelfRegistrationString() {
 		if (course != null) {
 			if (course.isSelfRegistration()) {
 				return L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.TRUE, PDFUtil.DEFAULT_LABEL);
@@ -173,7 +173,7 @@ public class CourseParticipantListPDFBlock {
 		return "";
 	}
 
-	private String getCourseValidityString() {
+	protected String getCourseValidityString() {
 		if (course != null && course.getValidityPeriod() != null) {
 			if (!VariablePeriod.EXPLICIT.equals(course.getValidityPeriod().getPeriod())) {
 				return L10nUtil.getVariablePeriodName(Locales.COURSE_PARTICIPANT_LIST_PDF, course.getValidityPeriod().getPeriod().name());
@@ -189,7 +189,7 @@ public class CourseParticipantListPDFBlock {
 		return renderBlock(null, cursor);
 	}
 
-	private String getLecturerCompetenceString() {
+	protected String getLecturerCompetenceString() {
 		StringBuilder sb = new StringBuilder();
 		if (competence != null) {
 			sb.append(L10nUtil.getLecturerCompetenceName(Locales.COURSE_PARTICIPANT_LIST_PDF, competence.getNameL10nKey()));
@@ -198,21 +198,21 @@ public class CourseParticipantListPDFBlock {
 		return sb.toString();
 	}
 
-	private String getLecturerName(LecturerOutVO lecturer) {
+	protected String getLecturerName(LecturerOutVO lecturer) {
 		if (lecturer != null && lecturer.getStaff() != null) {
 			return lecturer.getStaff().getNameWithTitles();
 		}
 		return null;
 	}
 
-	private String getParticipantName() {
+	protected String getParticipantName() {
 		if (participation != null) {
 			return participation.getStaff().getNameWithTitles();
 		}
 		return "";
 	}
 
-	private boolean getShowBookingColumns() {
+	protected boolean getShowBookingColumns() {
 		if (bookings != null
 				&& bookings.size() > 0
 				&& Settings.getInt(CourseParticipantListPDFSettingCodes.BOOKING_COLUMN_COUNT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
@@ -222,7 +222,7 @@ public class CourseParticipantListPDFBlock {
 		return false;
 	}
 
-	private float getSignatureColumnWidth(float blockWidth) {
+	protected float getSignatureColumnWidth(float blockWidth) {
 		float columnWidth = 0.0f;
 		int bookingColumnCount = Settings.getInt(CourseParticipantListPDFSettingCodes.BOOKING_COLUMN_COUNT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 				CourseParticipantListPDFDefaultSettings.BOOKING_COLUMN_COUNT);
@@ -241,7 +241,7 @@ public class CourseParticipantListPDFBlock {
 		return columnWidth;
 	}
 
-	private String getTrialTitle() {
+	protected String getTrialTitle() {
 		if (trial != null) {
 			return trial.getTitle();
 		}
@@ -848,7 +848,7 @@ public class CourseParticipantListPDFBlock {
 		return height;
 	}
 
-	private void renderBookingColumnBorders(PDPageContentStream contentStream, CourseParticipantListPDFBlockCursor cursor, float height, boolean dateColumn) throws IOException {
+	protected void renderBookingColumnBorders(PDPageContentStream contentStream, CourseParticipantListPDFBlockCursor cursor, float height, boolean dateColumn) throws IOException {
 		float signatureColumnWidth = Settings.getFloat(CourseParticipantListPDFSettingCodes.PARTICIPANT_TABLE_COLUMN_PARTICIPANT_SIGNATURE_WIDTH,
 				Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_COLUMN_SIGNATURE_SIGNATURE_WIDTH);
 		float x;

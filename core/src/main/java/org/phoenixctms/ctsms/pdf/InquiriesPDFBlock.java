@@ -32,13 +32,13 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		END_OF_CATEGORY,
 	}
 
-	private InquiryValueOutVO value;
-	private ProbandOutVO proband;
-	private TrialOutVO trial;
-	private String category;
-	private BlockType type;
-	private boolean inserted = false;
-	private Date now;
+	protected InquiryValueOutVO value;
+	protected ProbandOutVO proband;
+	protected TrialOutVO trial;
+	protected String category;
+	protected BlockType type;
+	protected boolean inserted = false;
+	protected Date now;
 
 	public InquiriesPDFBlock(BlockType type, boolean inserted) {
 		super();
@@ -259,7 +259,7 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		return value.getSelectionValues();
 	}
 
-	private String getStatusTypeName() {
+	protected String getStatusTypeName() {
 		if (trial != null && trial.getStatus() != null) {
 			return L10nUtil.getTrialStatusTypeName(Locales.INQUIRIES_PDF, trial.getStatus().getNameL10nKey());
 		}

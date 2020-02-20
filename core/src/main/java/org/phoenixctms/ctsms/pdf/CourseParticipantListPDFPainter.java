@@ -29,22 +29,22 @@ import org.phoenixctms.ctsms.vo.LecturerOutVO;
 
 public class CourseParticipantListPDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<CourseParticipantListPDFBlock> blocks;
-	private CourseParticipantListPDFBlockCursor cursor;
-	private CourseParticipantListPDFVO pdfVO;
-	private Collection<CourseOutVO> courseVOs;
-	private HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> participationVOMap;
-	private Collection<LecturerCompetenceVO> allCompetenceVOs;
-	private HashMap<Long, HashMap<Long, Collection<LecturerOutVO>>> lecturerVOMap;
-	private HashMap<Long, Collection<InventoryBookingOutVO>> bookingVOMap;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String COURSE_PARTICIPANT_LIST_PDF_FILENAME_PREFIX = "course_participant_list_";
+	protected int blockIndex;
+	protected ArrayList<CourseParticipantListPDFBlock> blocks;
+	protected CourseParticipantListPDFBlockCursor cursor;
+	protected CourseParticipantListPDFVO pdfVO;
+	protected Collection<CourseOutVO> courseVOs;
+	protected HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> participationVOMap;
+	protected Collection<LecturerCompetenceVO> allCompetenceVOs;
+	protected HashMap<Long, HashMap<Long, Collection<LecturerOutVO>>> lecturerVOMap;
+	protected HashMap<Long, Collection<InventoryBookingOutVO>> bookingVOMap;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String COURSE_PARTICIPANT_LIST_PDF_FILENAME_PREFIX = "course_participant_list_";
 
 	public CourseParticipantListPDFPainter() {
 		super();
@@ -333,7 +333,7 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 						CourseParticipantListPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 	}
 
-	private void updateCourseParticipantListPDFVO() {
+	protected void updateCourseParticipantListPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.setCourses(courseVOs);

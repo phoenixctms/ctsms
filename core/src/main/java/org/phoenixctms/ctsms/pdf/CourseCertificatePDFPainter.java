@@ -30,22 +30,22 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 
 public class CourseCertificatePDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<CourseCertificatePDFBlock> blocks;
-	private CourseCertificatePDFBlockCursor cursor;
-	private CourseCertificatePDFVO pdfVO;
-	private Collection<CourseParticipationStatusEntryOutVO> participantVOs;
-	private HashMap<Long, StaffOutVO> institutionVOMap;
-	private HashMap<Long, StaffAddressOutVO> institutionAddressVOMap;
-	private Collection<LecturerCompetenceVO> allCompetenceVOs;
-	private HashMap<Long, HashMap<Long, Collection<LecturerOutVO>>> lecturerVOMap;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String COURSE_CERTIFICATE_PDF_FILENAME_PREFIX = "course_certificate_";
+	protected int blockIndex;
+	protected ArrayList<CourseCertificatePDFBlock> blocks;
+	protected CourseCertificatePDFBlockCursor cursor;
+	protected CourseCertificatePDFVO pdfVO;
+	protected Collection<CourseParticipationStatusEntryOutVO> participantVOs;
+	protected HashMap<Long, StaffOutVO> institutionVOMap;
+	protected HashMap<Long, StaffAddressOutVO> institutionAddressVOMap;
+	protected Collection<LecturerCompetenceVO> allCompetenceVOs;
+	protected HashMap<Long, HashMap<Long, Collection<LecturerOutVO>>> lecturerVOMap;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String COURSE_CERTIFICATE_PDF_FILENAME_PREFIX = "course_certificate_";
 
 	public CourseCertificatePDFPainter() {
 		super();
@@ -287,7 +287,7 @@ public class CourseCertificatePDFPainter extends PDFPainterBase implements PDFOu
 				- Settings.getFloat(CourseCertificatePDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 	}
 
-	private void updateCourseCertificatePDFVO() {
+	protected void updateCourseCertificatePDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.setParticipants(participantVOs);

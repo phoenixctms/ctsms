@@ -6,9 +6,9 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 
 public class ProbandListEntryTagsPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFBlockCursor {
 
-	private ProbandListEntryTagsPDFPainter painter;
-	private ProbandListEntryTagsPDFBlock listEntryBlock;
-	private ProbandListEntryOutVO listEntry;
+	protected ProbandListEntryTagsPDFPainter painter;
+	protected ProbandListEntryTagsPDFBlock listEntryBlock;
+	protected ProbandListEntryOutVO listEntry;
 
 	public ProbandListEntryTagsPDFBlockCursor(ProbandListEntryTagsPDFPainter painter) {
 		this.painter = painter;

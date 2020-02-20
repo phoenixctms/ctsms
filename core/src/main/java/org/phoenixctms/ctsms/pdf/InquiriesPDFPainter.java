@@ -30,33 +30,33 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<InquiriesPDFBlock> blocks;
-	private InquiriesPDFBlockCursor cursor;
-	private HashMap<Long, HashMap<Long, PDFJpeg>> images;
-	private InquiriesPDFVO pdfVO;
-	private Collection<ProbandOutVO> probandVOs;
-	private HashMap<Long, Collection<TrialOutVO>> trialVOMap;
-	private HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap;
-	private HashMap<Long, InputFieldImageVO> imageVOMap;
-	private boolean blank;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private PDFont fontD;
-	private PDFJpeg checkboxCheckedImage;
-	private PDFJpeg checkboxUncheckedImage;
-	private PDFJpeg radioOnImage;
-	private PDFJpeg radioOffImage;
-	private PDFJpeg selectboxCheckedImage;
-	private PDFJpeg selectboxUncheckedImage;
-	private PDFJpeg checkboxCheckedPresetImage;
-	private PDFJpeg radioOnPresetImage;
-	private PDFJpeg selectboxCheckedPresetImage;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String INQUIRIES_PDF_FILENAME_PREFIX = "inquiries_";
+	protected int blockIndex;
+	protected ArrayList<InquiriesPDFBlock> blocks;
+	protected InquiriesPDFBlockCursor cursor;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
+	protected InquiriesPDFVO pdfVO;
+	protected Collection<ProbandOutVO> probandVOs;
+	protected HashMap<Long, Collection<TrialOutVO>> trialVOMap;
+	protected HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap;
+	protected HashMap<Long, InputFieldImageVO> imageVOMap;
+	protected boolean blank;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected PDFont fontD;
+	protected PDFJpeg checkboxCheckedImage;
+	protected PDFJpeg checkboxUncheckedImage;
+	protected PDFJpeg radioOnImage;
+	protected PDFJpeg radioOffImage;
+	protected PDFJpeg selectboxCheckedImage;
+	protected PDFJpeg selectboxUncheckedImage;
+	protected PDFJpeg checkboxCheckedPresetImage;
+	protected PDFJpeg radioOnPresetImage;
+	protected PDFJpeg selectboxCheckedPresetImage;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String INQUIRIES_PDF_FILENAME_PREFIX = "inquiries_";
 
 	public InquiriesPDFPainter() {
 		super();
@@ -67,7 +67,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		setDrawPageNumbers(Settings.getBoolean(InquiriesPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SHOW_PAGE_NUMBERS));
 	}
 
-	private void drawBlock(PDPageContentStream contentStream, InquiriesPDFBlock block) throws Exception {
+	protected void drawBlock(PDPageContentStream contentStream, InquiriesPDFBlock block) throws Exception {
 		if (BlockType.NEW_PROBAND_TRIAL.equals(block.getType())) {
 			cursor.setCategoryY(cursor.getBlockY());
 		} else if (BlockType.NEW_CATEGORY.equals(block.getType())) {
@@ -199,7 +199,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		return selectboxUncheckedImage;
 	}
 
-	private PDFJpeg getSketchImage(InquiryValueOutVO value) {
+	protected PDFJpeg getSketchImage(InquiryValueOutVO value) {
 		InputFieldOutVO field = value.getInquiry().getField();
 		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
 		if (sketchImages != null) {
@@ -342,7 +342,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
-	private boolean putSketchImage(InquiryValueOutVO value, PDDocument doc) throws Exception {
+	protected boolean putSketchImage(InquiryValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getInquiry().getField();
 		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
@@ -465,7 +465,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
-	private void updateInquiriesPDFVO() {
+	protected void updateInquiriesPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.getProbands().clear();

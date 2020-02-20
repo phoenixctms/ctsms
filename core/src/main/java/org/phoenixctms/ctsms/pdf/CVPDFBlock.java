@@ -22,13 +22,13 @@ public class CVPDFBlock {
 		SPACER, IMAGE_CENTERED, IMAGE_RIGHT, HEAD, FULL_NAME, DATE_OF_BIRTH, ACADEMIC_TITLE, ADDRESS, CV_SECTION_POSITIONS, SIGNATURE_DATE
 	}
 
-	private StaffOutVO staff;
-	private CvSectionVO cvSection;
-	private Collection<CvPositionPDFVO> cvPositions;
-	private StaffAddressOutVO address;
-	private Date now;
-	private BlockType type;
-	private PDFJpeg ximage;
+	protected StaffOutVO staff;
+	protected CvSectionVO cvSection;
+	protected Collection<CvPositionPDFVO> cvPositions;
+	protected StaffAddressOutVO address;
+	protected Date now;
+	protected BlockType type;
+	protected PDFJpeg ximage;
 
 	public CVPDFBlock() {
 		type = BlockType.SPACER;
@@ -69,14 +69,14 @@ public class CVPDFBlock {
 		type = BlockType.IMAGE_RIGHT;
 	}
 
-	private String getCvAcademicTitle() {
+	protected String getCvAcademicTitle() {
 		if (staff != null && staff.isPerson() && staff.getCvAcademicTitle() != null) {
 			return staff.getCvAcademicTitle();
 		}
 		return "";
 	}
 
-	private String getDateOfBirth() {
+	protected String getDateOfBirth() {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null && staff.isPerson() && staff.getDateOfBirth() != null) {
 			sb.append(Settings.getSimpleDateFormat(CVPDFSettingCodes.DATE_OF_BIRTH_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.DATE_OF_BIRTH_DATE_PATTERN, Locales.CV_PDF)
@@ -85,7 +85,7 @@ public class CVPDFBlock {
 		return sb.toString();
 	}
 
-	private String getFullName() {
+	protected String getFullName() {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null && staff.isPerson()) {
 			sb.append(staff.getLastName().toUpperCase(L10nUtil.getLocale(Locales.CV_PDF)));
@@ -99,14 +99,14 @@ public class CVPDFBlock {
 		return renderBlock(null, cursor);
 	}
 
-	private String getSectionDescription() {
+	protected String getSectionDescription() {
 		if (cvSection != null) {
 			return L10nUtil.getCvSectionDescription(Locales.CV_PDF, cvSection.getDescriptionL10nKey());
 		}
 		return "";
 	}
 
-	private String getSectionName() {
+	protected String getSectionName() {
 		StringBuilder sb = new StringBuilder();
 		if (cvSection != null) {
 			sb.append(L10nUtil.getCvSectionName(Locales.CV_PDF, cvSection.getNameL10nKey()));
@@ -115,7 +115,7 @@ public class CVPDFBlock {
 		return sb.toString();
 	}
 
-	private String getSignatureLabel() {
+	protected String getSignatureLabel() {
 		if (staff != null && staff.isPerson()) {
 			return L10nUtil.getCVPDFLabel(Locales.CV_PDF, CVPDFLabelCodes.SIGNATURE_ANNOTATION, PDFUtil.DEFAULT_LABEL, CommonUtil.getCvStaffName(staff), now == null ? null
 					: Settings.getSimpleDateFormat(CVPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.CV_PDF)

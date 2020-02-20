@@ -34,40 +34,40 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<EcrfPDFBlock> blocks;
-	private EcrfPDFBlockCursor cursor;
-	private HashMap<Long, HashMap<Long, PDFJpeg>> images;
-	private ECRFPDFVO pdfVO;
-	private Collection<ProbandListEntryOutVO> listEntryVOs;
-	private HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap;
-	private HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap;
-	private HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap;
-	private HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap;
-	private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap;
-	private HashMap<Long, SignatureVO> signatureVOMap;
-	private HashMap<Long, InputFieldImageVO> imageVOMap;
-	private boolean blank;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private PDFont fontD;
-	private PDFJpeg checkboxCheckedImage;
-	private PDFJpeg checkboxUncheckedImage;
-	private PDFJpeg radioOnImage;
-	private PDFJpeg radioOffImage;
-	private PDFJpeg selectboxCheckedImage;
-	private PDFJpeg selectboxUncheckedImage;
-	private PDFJpeg checkboxCheckedPresetImage;
-	private PDFJpeg radioOnPresetImage;
-	private PDFJpeg selectboxCheckedPresetImage;
-	private PDFJpeg signatureValidImage;
-	private PDFJpeg signatureInvalidImage;
-	private PDFJpeg signatureAvailableImage;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String ECRF_PDF_FILENAME_PREFIX = "ecrf_";
+	protected int blockIndex;
+	protected ArrayList<EcrfPDFBlock> blocks;
+	protected EcrfPDFBlockCursor cursor;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
+	protected ECRFPDFVO pdfVO;
+	protected Collection<ProbandListEntryOutVO> listEntryVOs;
+	protected HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap;
+	protected HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap;
+	protected HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap;
+	protected HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap;
+	protected HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap;
+	protected HashMap<Long, SignatureVO> signatureVOMap;
+	protected HashMap<Long, InputFieldImageVO> imageVOMap;
+	protected boolean blank;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected PDFont fontD;
+	protected PDFJpeg checkboxCheckedImage;
+	protected PDFJpeg checkboxUncheckedImage;
+	protected PDFJpeg radioOnImage;
+	protected PDFJpeg radioOffImage;
+	protected PDFJpeg selectboxCheckedImage;
+	protected PDFJpeg selectboxUncheckedImage;
+	protected PDFJpeg checkboxCheckedPresetImage;
+	protected PDFJpeg radioOnPresetImage;
+	protected PDFJpeg selectboxCheckedPresetImage;
+	protected PDFJpeg signatureValidImage;
+	protected PDFJpeg signatureInvalidImage;
+	protected PDFJpeg signatureAvailableImage;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String ECRF_PDF_FILENAME_PREFIX = "ecrf_";
 
 	public EcrfPDFPainter() {
 		super();
@@ -78,7 +78,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		setDrawPageNumbers(Settings.getBoolean(EcrfPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SHOW_PAGE_NUMBERS));
 	}
 
-	private void drawBlock(PDPageContentStream contentStream, EcrfPDFBlock block) throws Exception {
+	protected void drawBlock(PDPageContentStream contentStream, EcrfPDFBlock block) throws Exception {
 		if (BlockType.NEW_ECRF.equals(block.getType())) {
 			cursor.setSectionY(cursor.getBlockY());
 			cursor.setIndexY(cursor.getBlockY());
@@ -169,7 +169,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return DEFAULT_PAGE_SIZE;
 	}
 
-	private ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId) {
+	protected ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId) {
 		if (statusEntryVOMap != null) {
 			HashMap<Long, ECRFStatusEntryVO> ecrfMap = statusEntryVOMap.get(listEntryId);
 			if (ecrfMap != null) {
@@ -244,7 +244,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return signatureValidImage;
 	}
 
-	private PDFJpeg getSketchImage(ECRFFieldValueOutVO value) {
+	protected PDFJpeg getSketchImage(ECRFFieldValueOutVO value) {
 		InputFieldOutVO field = value.getEcrfField().getField();
 		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
 		if (sketchImages != null) {
@@ -253,7 +253,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return null;
 	}
 
-	private PDFJpeg getSketchImage(ProbandListEntryTagValueOutVO value) {
+	protected PDFJpeg getSketchImage(ProbandListEntryTagValueOutVO value) {
 		InputFieldOutVO field = value.getTag().getField();
 		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
 		if (sketchImages != null) {
@@ -271,7 +271,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return Settings.getPDFTemplateFilename(EcrfPDFSettingCodes.TEMPLATE_FILE_NAME, Bundle.ECRF_PDF, null);
 	}
 
-	private Collection getValueLog(ECRFFieldValueOutVO value) {
+	protected Collection getValueLog(ECRFFieldValueOutVO value) {
 		if (logVOMap != null) {
 			HashMap<Long, HashMap<Long, Collection>> ecrfLogVOMap = logVOMap.get(value.getListEntry().getId());
 			if (ecrfLogVOMap != null) {
@@ -475,7 +475,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
-	private boolean putSketchImage(ECRFFieldValueOutVO value, PDDocument doc) throws Exception {
+	protected boolean putSketchImage(ECRFFieldValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getEcrfField().getField();
 		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
@@ -506,7 +506,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return false;
 	}
 
-	private boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
+	protected boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getTag().getField();
 		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
@@ -648,7 +648,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
-	private void updateECRFPDFVO() {
+	protected void updateECRFPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.getStatusEntries().clear();

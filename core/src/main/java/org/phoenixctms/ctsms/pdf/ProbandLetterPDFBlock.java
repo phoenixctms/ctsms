@@ -21,9 +21,9 @@ public class ProbandLetterPDFBlock {
 		NEW_LETTER, NEW_PAGE, ADDRESS, PROBAND_ID, FIRST_PAGE_DATE, SECOND_PAGE_DATE, SALUTATION
 	}
 
-	private ProbandAddressOutVO address;
-	private Date now;
-	private BlockType type;
+	protected ProbandAddressOutVO address;
+	protected Date now;
+	protected BlockType type;
 
 	public ProbandLetterPDFBlock(BlockType type) {
 		this.type = type;
@@ -43,7 +43,7 @@ public class ProbandLetterPDFBlock {
 		return address;
 	}
 
-	private String getBodyGenderSpecificSalutation() {
+	protected String getBodyGenderSpecificSalutation() {
 		if (address != null) {
 			return CommonUtil.getGenderSpecificSalutation(address.getProband(),
 					L10nUtil.getReimbursementsPDFLabel(Locales.PROBAND_LETTER_PDF, ReimbursementsPDFLabelCodes.BODY_MALE_SALUTATION, PDFUtil.DEFAULT_LABEL),
@@ -52,7 +52,7 @@ public class ProbandLetterPDFBlock {
 		return "";
 	}
 
-	private String getCareOf() {
+	protected String getCareOf() {
 		if (address != null) {
 			if (address.isDecrypted() && !CommonUtil.isEmptyString(address.getCareOf())) {
 				return address.getCareOf();
@@ -61,7 +61,7 @@ public class ProbandLetterPDFBlock {
 		return "";
 	}
 
-	private String getCountryName() {
+	protected String getCountryName() {
 		if (address != null) {
 			if (address.isDecrypted()) {
 				return address.getCountryName();
@@ -70,7 +70,7 @@ public class ProbandLetterPDFBlock {
 		return "";
 	}
 
-	private String getGenderSpecificSalutation() {
+	protected String getGenderSpecificSalutation() {
 		if (address != null) {
 			return CommonUtil.getGenderSpecificSalutation(address.getProband(),
 					L10nUtil.getProbandLetterPDFLabel(Locales.PROBAND_LETTER_PDF, ProbandLetterPDFLabelCodes.MALE_SALUTATION, PDFUtil.DEFAULT_LABEL),
@@ -83,14 +83,14 @@ public class ProbandLetterPDFBlock {
 		return renderBlock(null, cursor);
 	}
 
-	private String getProbandId() {
+	protected String getProbandId() {
 		if (address != null) {
 			return Long.toString(address.getProband().getId());
 		}
 		return "";
 	}
 
-	private String getProbandName(boolean withTitles, boolean withFirstName) {
+	protected String getProbandName(boolean withTitles, boolean withFirstName) {
 		if (address != null) {
 			return CommonUtil.getProbandName(address.getProband(), withTitles, withFirstName,
 					L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
@@ -100,7 +100,7 @@ public class ProbandLetterPDFBlock {
 		return "";
 	}
 
-	private String getStreetNameHouseNumberEntranceDoornumber() {
+	protected String getStreetNameHouseNumberEntranceDoornumber() {
 		StringBuilder sb = new StringBuilder();
 		if (address != null) {
 			if (address.isDecrypted()) {
@@ -121,7 +121,7 @@ public class ProbandLetterPDFBlock {
 		return type;
 	}
 
-	private String getZipCodeCityName() {
+	protected String getZipCodeCityName() {
 		if (address != null) {
 			if (address.isDecrypted()) {
 				StringBuilder sb = new StringBuilder();

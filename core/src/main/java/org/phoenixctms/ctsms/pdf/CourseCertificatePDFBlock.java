@@ -42,7 +42,7 @@ public class CourseCertificatePDFBlock {
 		INSTITUTION_ADDRESS
 	}
 
-	private static void populateOrganisationList(ArrayList<String> organisationList, StaffOutVO staff) {
+	protected static void populateOrganisationList(ArrayList<String> organisationList, StaffOutVO staff) {
 		if (staff != null) {
 			if (!staff.isPerson()) {
 				organisationList.add(0, staff.getNameWithTitles());
@@ -51,15 +51,15 @@ public class CourseCertificatePDFBlock {
 		}
 	}
 
-	private CourseOutVO course;
-	private TrialOutVO trial;
-	private StaffOutVO participant;
-	private CourseParticipationStatusEntryOutVO participation;
-	private LecturerCompetenceVO competence;
-	private Collection<LecturerOutVO> lecturers;
-	private StaffOutVO institution;
-	private StaffAddressOutVO address;
-	private BlockType type;
+	protected CourseOutVO course;
+	protected TrialOutVO trial;
+	protected StaffOutVO participant;
+	protected CourseParticipationStatusEntryOutVO participation;
+	protected LecturerCompetenceVO competence;
+	protected Collection<LecturerOutVO> lecturers;
+	protected StaffOutVO institution;
+	protected StaffAddressOutVO address;
+	protected BlockType type;
 
 	public CourseCertificatePDFBlock() {
 		this.type = BlockType.SPACER;
@@ -107,7 +107,7 @@ public class CourseCertificatePDFBlock {
 		this.type = BlockType.TRIAL_TITLE;
 	}
 
-	private String getAddress() {
+	protected String getAddress() {
 		StringBuilder sb = new StringBuilder();
 		if (institution != null && address != null) {
 			ArrayList<String> organisationList = new ArrayList<String>();
@@ -131,28 +131,28 @@ public class CourseCertificatePDFBlock {
 		return sb.toString();
 	}
 
-	private String getCourseCvTitle() {
+	protected String getCourseCvTitle() {
 		if (course != null) {
 			return course.getCvTitle();
 		}
 		return "";
 	}
 
-	private String getCourseDescription() {
+	protected String getCourseDescription() {
 		if (course != null) {
 			return course.getDescription();
 		}
 		return "";
 	}
 
-	private String getCourseInstitutionString() {
+	protected String getCourseInstitutionString() {
 		if (institution != null) {
 			return institution.getNameWithTitles();
 		}
 		return "";
 	}
 
-	private String getCoursePeriodString() {
+	protected String getCoursePeriodString() {
 		if (course != null) {
 			Date start = course.getStart();
 			Date stop = course.getStop();
@@ -170,7 +170,7 @@ public class CourseCertificatePDFBlock {
 		return "";
 	}
 
-	private String getCourseValidityString() {
+	protected String getCourseValidityString() {
 		if (course != null && course.getValidityPeriod() != null) {
 			String courseValidityString;
 			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseCertificatePDFSettingCodes.COURSE_DATE_TIME_PATTERN, Bundle.COURSE_CERTIFICATE_PDF,
@@ -187,7 +187,7 @@ public class CourseCertificatePDFBlock {
 		return "";
 	}
 
-	private String getGenderSpecificParticipantName() {
+	protected String getGenderSpecificParticipantName() {
 		if (participant != null) {
 			switch (participant.getGender().getSex()) {
 				case MALE:
@@ -209,7 +209,7 @@ public class CourseCertificatePDFBlock {
 		return renderBlock(null, cursor);
 	}
 
-	private String getLecturerCompetenceString() {
+	protected String getLecturerCompetenceString() {
 		StringBuilder sb = new StringBuilder();
 		if (competence != null) {
 			sb.append(L10nUtil.getLecturerCompetenceName(Locales.COURSE_CERTIFICATE_PDF, competence.getNameL10nKey()));
@@ -218,7 +218,7 @@ public class CourseCertificatePDFBlock {
 		return sb.toString();
 	}
 
-	private String getLecturerName(LecturerOutVO lecturer) {
+	protected String getLecturerName(LecturerOutVO lecturer) {
 		if (lecturer != null && lecturer.getStaff() != null) {
 			return lecturer.getStaff().getName();
 		}
@@ -229,7 +229,7 @@ public class CourseCertificatePDFBlock {
 		return participation;
 	}
 
-	private String getPassedString() {
+	protected String getPassedString() {
 		if (participation != null) {
 			CourseParticipationStatusTypeVO status = participation.getStatus();
 			if (status == null || status.getPass()) {
@@ -241,7 +241,7 @@ public class CourseCertificatePDFBlock {
 		return "";
 	}
 
-	private String getTrialTitle() {
+	protected String getTrialTitle() {
 		if (trial != null) {
 			return trial.getTitle();
 		}
