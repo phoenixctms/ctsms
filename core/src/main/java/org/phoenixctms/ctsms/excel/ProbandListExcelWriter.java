@@ -57,7 +57,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.IC_DATE_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	private static String getIdentityName(UserOutVO user) {
+	protected static String getIdentityName(UserOutVO user) {
 		StaffOutVO identity = user.getIdentity();
 		if (identity != null) {
 			return identity.getName();
@@ -86,10 +86,10 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	private ProbandListExcelVO excelVO;
-	private ProbandListStatusLogLevel logLevel;
-	private TrialOutVO trial;
-	private static final String PROBAND_LIST_EXCEL_FILENAME_PREFIX = "proband_list_";
+	protected ProbandListExcelVO excelVO;
+	protected ProbandListStatusLogLevel logLevel;
+	protected TrialOutVO trial;
+	protected static final String PROBAND_LIST_EXCEL_FILENAME_PREFIX = "proband_list_";
 
 	public static String getICAgeColumnName() {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.IC_AGE_HEAD, ExcelUtil.DEFAULT_LABEL);
@@ -127,7 +127,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().add(createSpreadSheetWriter(omitFields));
 	}
 
-	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
+	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		header.getLeft().clear();
 		temp = CommonUtil.trialOutVOToString(trial);
@@ -219,7 +219,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	private SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
 		if (logLevel != null) {
 			switch (logLevel) {
 				case ENROLLMENT:

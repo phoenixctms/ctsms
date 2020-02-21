@@ -35,10 +35,10 @@ import jxl.write.WritableSheet;
 
 public class AuditTrailExcelWriter extends WorkbookWriter {
 
-	private static final String AUDIT_TRAIL_EXCEL_FILENAME_PREFIX = "audit_trail_";
-	private static final String AUDIT_TRAIL_EXCEL_FILENAME_TRIAL = "trial_";
-	private static final String AUDIT_TRAIL_EXCEL_FILENAME_PROBAND = "proband_";
-	private static final String AUDIT_TRAIL_EXCEL_FILENAME_ECRF = "ecrf_";
+	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_PREFIX = "audit_trail_";
+	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_TRIAL = "trial_";
+	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_PROBAND = "proband_";
+	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_ECRF = "ecrf_";
 	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		@Override
@@ -123,15 +123,15 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 	};
 
-	private static String getEcrfFieldValueColumnName() {
+	protected static String getEcrfFieldValueColumnName() {
 		return L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_VALUE_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	private AuditTrailExcelVO excelVO;
-	private TrialOutVO trial;
-	private ProbandListEntryOutVO listEntry;
-	private ECRFOutVO ecrf;
-	private LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
+	protected AuditTrailExcelVO excelVO;
+	protected TrialOutVO trial;
+	protected ProbandListEntryOutVO listEntry;
+	protected ECRFOutVO ecrf;
+	protected LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
 
 	protected AuditTrailExcelWriter() {
 		super();
@@ -148,7 +148,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 	}
 
-	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
+	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		header.getLeft().clear();
 		if (trial != null) {
@@ -222,7 +222,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	private SpreadSheetWriter createAuditTrailSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createAuditTrailSpreadSheetWriter(boolean omitFields) {
 		return new SpreadSheetWriter(this,
 				getColumnIndexMap(L10nUtil.getAuditTrailExcelColumns(Locales.USER, AuditTrailExcelLabelCodes.AUDIT_TRAIL_VO_FIELD_COLUMNS,
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_VO_FIELD_COLUMNS)),
@@ -243,7 +243,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_FORMAT));
 	}
 
-	private SpreadSheetWriter createEcrfFieldStatusSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createEcrfFieldStatusSpreadSheetWriter(boolean omitFields) {
 		return new SpreadSheetWriter(this,
 				getColumnIndexMap(L10nUtil.getAuditTrailExcelColumns(Locales.USER, AuditTrailExcelLabelCodes.ECRF_FIELD_STATUS_VO_FIELD_COLUMNS,
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_VO_FIELD_COLUMNS)),

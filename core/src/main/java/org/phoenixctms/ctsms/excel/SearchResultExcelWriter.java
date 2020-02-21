@@ -34,10 +34,10 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 				inquiry == null ? null : inquiry.getUniqueName(), inquiry == null ? null : CommonUtil.inputFieldOutVOToString(inquiry.getField()));
 	}
 
-	private CriteriaInstantVO criteria;
-	private DBModule module;
-	private SearchResultExcelVO excelVO;
-	private static final String SEARCH_RESULT_EXCEL_FILENAME_PREFIX = "search_result_";
+	protected CriteriaInstantVO criteria;
+	protected DBModule module;
+	protected SearchResultExcelVO excelVO;
+	protected static final String SEARCH_RESULT_EXCEL_FILENAME_PREFIX = "search_result_";
 
 	protected SearchResultExcelWriter() {
 		super();
@@ -100,7 +100,7 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	private SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
 		if (module != null) {
 			switch (module) {
 				case INVENTORY_DB:
