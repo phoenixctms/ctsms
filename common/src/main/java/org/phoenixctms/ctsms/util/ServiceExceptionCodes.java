@@ -48,6 +48,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_CONTACT_DETAIL_TYPE_ID = "invalid_contact_detail_type_id";
 	public final static String INVALID_ADDRESS_TYPE_ID = "invalid_address_type_id";
 	public final static String INVALID_CV_SECTION_ID = "invalid_cv_section_id";
+	public final static String INVALID_TRAINING_RECORD_SECTION_ID = "invalid_training_record_section_id";
 	public final static String INVALID_COURSE_PARTICIPATION_STATUS_TYPE_ID = "invalid_course_participation_status_type_id";
 	public final static String INVALID_COURSE_PARTICIPATION_STATUS_ENTRY_ID = "invalid_course_participation_status_entry_id";
 	public final static String COURSE_PARTICIPATION_STAFF_NOT_PERSON = "course_participation_staff_not_person";
@@ -56,6 +57,8 @@ public interface ServiceExceptionCodes {
 	public final static String COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED = "course_participation_show_cv_preset_disabled";
 	public final static String COURSE_PARTICIPATION_CV_SECTION_REQUIRED = "course_participation_cv_section_required";
 	public final static String COURSE_PARTICIPATION_SHOW_CV_DISABLED = "course_participation_show_cv_disabled";
+	public final static String COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_PRESET_DISABLED = "course_participation_show_training_record_preset_disabled";
+	public final static String COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED = "course_participation_training_record_section_required";
 	public final static String COURSE_PARTICIPATION_ALREADY_PARTICIPATING = "course_participation_already_participating";
 	public final static String COURSE_PARTICIPATION_MAX_NUMBER_OF_PARTICIPANTS_EXCEEDED = "course_participation_max_number_of_participants_exceeded";
 	public final static String COURSE_PARTICIPATION_DEADLINE_EXCEEDED = "course_participation_deadline_exceeded";
@@ -218,6 +221,7 @@ public interface ServiceExceptionCodes {
 	public final static String COURSE_INVALID_INSTITUTION_STAFF_ID = "course_invalid_institution_staff_id";
 	public final static String COURSE_TRIAL_REQUIRED = "course_trial_required";
 	public final static String INVALID_CV_SECTION_ID_PRESET = "invalid_cv_section_id_preset";
+	public final static String INVALID_TRAINING_RECORD_SECTION_ID_PRESET = "invalid_training_record_section_id_preset";
 	public final static String MAX_NUMBER_OF_PARTICIPANTS_NOT_NULL = "max_number_of_participants_not_null";
 	public final static String PARTICIPATION_DEADLINE_NOT_NULL = "participation_deadline_not_null";
 	public final static String MAX_NUMBER_OF_PARTICIPANTS_LESS_THAN_ZERO = "max_number_of_participants_less_than_zero";
@@ -229,6 +233,7 @@ public interface ServiceExceptionCodes {
 	public final static String CV_TITLE_PRESET_REQUIRED = "cv_title_preset_required";
 	public final static String CV_COMMENT_PRESET_REQUIRED = "cv_comment_preset_required";
 	public final static String SHOW_CV_PRESET_DISABLED = "show_cv_preset_disabled";
+	public final static String TRAINING_RECORD_SECTION_PRESET_REQUIRED = "training_record_section_preset_required";
 	public final static String INVALID_LECTURER_ID = "invalid_lecturer_id";
 	public final static String STAFF_PERSON_FLAG_CHANGED = "staff_person_flag_changed";
 	public final static String CANNOT_DELETE_ACTIVE_IDENTITY = "cannot_delete_active_identity";

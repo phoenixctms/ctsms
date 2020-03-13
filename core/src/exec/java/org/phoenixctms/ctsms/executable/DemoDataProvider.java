@@ -771,6 +771,13 @@ public class DemoDataProvider {
 		} else {
 			newCourse.setShowCvPreset(false);
 		}
+		if (getRandomBoolean(50)) {
+			newCourse.setShowTrainingRecordPreset(true);
+			//newCourse.setCvTitle(cvTitle);
+			newCourse.setTrainingRecordSectionPresetId(getRandomElement(selectionSetService.getTrainingRecordSections(auth, null)).getId());
+		} else {
+			newCourse.setShowTrainingRecordPreset(false);
+		}
 		CourseOutVO course = courseService.addCourse(auth, newCourse, null, null, null);
 		jobOutput.println("course created: " + course.getName());
 		ArrayList<Staff> persons = new ArrayList<Staff>(staffDao.search(new Search(new SearchParameter[] {
@@ -786,9 +793,11 @@ public class DemoDataProvider {
 			CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry = new CourseParticipationStatusEntryInVO();
 			newCourseParticipationStatusEntry.setComment(course.getCvCommentPreset());
 			newCourseParticipationStatusEntry.setCourseId(course.getId());
-			newCourseParticipationStatusEntry.setSectionId(course.getCvSectionPreset() == null ? null : course.getCvSectionPreset().getId());
+			newCourseParticipationStatusEntry.setCvSectionId(course.getCvSectionPreset() == null ? null : course.getCvSectionPreset().getId());
 			newCourseParticipationStatusEntry.setShowCommentCv(course.getShowCommentCvPreset());
 			newCourseParticipationStatusEntry.setShowCv(course.getShowCvPreset());
+			newCourseParticipationStatusEntry.setTrainingRecordSectionId(course.getTrainingRecordSectionPreset() == null ? null : course.getTrainingRecordSectionPreset().getId());
+			newCourseParticipationStatusEntry.setShowTrainingRecord(course.isShowTrainingRecordPreset());
 			newCourseParticipationStatusEntry.setStaffId(participantStaffIt.next().getId());
 			newCourseParticipationStatusEntry.setStatusId(getRandomElement(initialStates).getId());
 			CourseParticipationStatusEntryOutVO participation = courseService.addCourseParticipationStatusEntry(auth, newCourseParticipationStatusEntry);

@@ -80,6 +80,8 @@ public final class L10nUtil {
 	private static String cvSectionsBundleBasename;
 	private static String cvSectionTitlePresetBundleBasename;
 	private static String cvSectionDescriptionBundleBasename;
+	private static String trainingRecordSectionsBundleBasename;
+	private static String trainingRecordSectionDescriptionBundleBasename;
 	private static String staffStatusTypesBundleBasename;
 	private static String cvPdfLabelsBundleBasename;
 	private static String ecrfPdfLabelsBundleBasename;
@@ -424,6 +426,14 @@ public final class L10nUtil {
 
 	public static String getCvSectionTitlePreset(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, cvSectionTitlePresetBundleBasename), DefaultMessages.CV_SECTION_TITLE_PRESET);
+	}
+
+	public static String getTrainingRecordSectionDescription(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, trainingRecordSectionDescriptionBundleBasename), DefaultMessages.TRAINING_RECORD_SECTION_DESCRIPTION);
+	}
+
+	public static String getTrainingRecordSectionName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, trainingRecordSectionsBundleBasename), DefaultMessages.TRAINING_RECORD_SECTION_NAME);
 	}
 
 	public static String getDBModuleName(Locales locale, String l10nKey) {
@@ -1048,6 +1058,20 @@ public final class L10nUtil {
 			String cvSectionTitlePresetBundleBasename) {
 		L10nUtil.cvSectionTitlePresetBundleBasename = cvSectionTitlePresetBundleBasename;
 		getBundle(Locales.DEFAULT, cvSectionTitlePresetBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setTrainingRecordSectionDescriptionBundleBasename(
+			String trainingRecordSectionDescriptionBundleBasename) {
+		L10nUtil.trainingRecordSectionDescriptionBundleBasename = trainingRecordSectionDescriptionBundleBasename;
+		getBundle(Locales.DEFAULT, trainingRecordSectionDescriptionBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setTrainingRecordSectionsBundleBasename(
+			String trainingRecordSectionsBundleBasename) {
+		L10nUtil.trainingRecordSectionsBundleBasename = trainingRecordSectionsBundleBasename;
+		getBundle(Locales.DEFAULT, trainingRecordSectionsBundleBasename);
 	}
 
 	@Autowired(required = true)

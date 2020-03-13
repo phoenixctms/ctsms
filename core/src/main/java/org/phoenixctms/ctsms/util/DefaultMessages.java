@@ -109,6 +109,8 @@ public interface DefaultMessages {
 	public static final String CV_SECTION_NAME = "<cv section name>";
 	public static final String CV_SECTION_TITLE_PRESET = "<cv section title preset>"; // < and > cause ajax xhr xml parse error
 	public static final String CV_SECTION_DESCRIPTION = "";
+	public static final String TRAINING_RECORD_SECTION_NAME = "<training record section name>";
+	public static final String TRAINING_RECORD_SECTION_DESCRIPTION = "";
 	public static final String STAFF_STATUS_TYPE_NAME = "<staff status>";
 	public static final String COURSE_CATEGORY_NAME = "<course category>";
 	public static final String LECTURER_COMPETENCE_NAME = "<lecturer competence>";

@@ -548,13 +548,17 @@ public final class ServiceUtil {
 	}
 
 	public static void checkAddCourseParticipationStatusEntryInput(CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin, Boolean selfRegistration,
-			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
+			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao,
+			CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(courseParticipationIn.getStaffId(), staffDao);
 		Course course = CheckIDUtil.checkCourseId(courseParticipationIn.getCourseId(), courseDao, LockMode.PESSIMISTIC_WRITE);
-		if (courseParticipationIn.getSectionId() != null) {
-			CheckIDUtil.checkCvSectionId(courseParticipationIn.getSectionId(), cvSectionDao);
+		if (courseParticipationIn.getCvSectionId() != null) {
+			CheckIDUtil.checkCvSectionId(courseParticipationIn.getCvSectionId(), cvSectionDao);
+		}
+		if (courseParticipationIn.getTrainingRecordSectionId() != null) {
+			CheckIDUtil.checkTrainingRecordSectionId(courseParticipationIn.getTrainingRecordSectionId(), trainingRecordSectionDao);
 		}
 		CourseParticipationStatusType state = CheckIDUtil.checkCourseParticipationStatusTypeId(courseParticipationIn.getStatusId(), courseParticipationStatusTypeDao);
 		// other input checks
@@ -565,10 +569,16 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(selfRegistration ? ServiceExceptionCodes.COURSE_PARTICIPATION_COURSE_SELF_REGISTRATION
 					: ServiceExceptionCodes.COURSE_PARTICIPATION_COURSE_ADMIN_REGISTRATION);
 		}
+		if (courseParticipationIn.getShowTrainingRecord() && !course.isShowTrainingRecordPreset()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_PRESET_DISABLED);
+		}
+		if (courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getTrainingRecordSectionId() == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED);
+		}
 		if (courseParticipationIn.getShowCv() && !course.isShowCvPreset()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED);
 		}
-		if (courseParticipationIn.getShowCv() && courseParticipationIn.getSectionId() == null) {
+		if (courseParticipationIn.getShowCv() && courseParticipationIn.getCvSectionId() == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_CV_SECTION_REQUIRED);
 		}
 		if (!courseParticipationIn.getShowCv() && courseParticipationIn.getShowCommentCv()) {
@@ -1004,11 +1014,14 @@ public final class ServiceUtil {
 
 	public static void checkUpdateCourseParticipationStatusEntryInput(CourseParticipationStatusEntry originalCourseParticipation,
 			CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin,
-			CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
+			CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		// referential checks
-		if (courseParticipationIn.getSectionId() != null) {
-			CheckIDUtil.checkCvSectionId(courseParticipationIn.getSectionId(), cvSectionDao);
+		if (courseParticipationIn.getCvSectionId() != null) {
+			CheckIDUtil.checkCvSectionId(courseParticipationIn.getCvSectionId(), cvSectionDao);
+		}
+		if (courseParticipationIn.getTrainingRecordSectionId() != null) {
+			CheckIDUtil.checkTrainingRecordSectionId(courseParticipationIn.getTrainingRecordSectionId(), trainingRecordSectionDao);
 		}
 		CourseParticipationStatusType state = CheckIDUtil.checkCourseParticipationStatusTypeId(courseParticipationIn.getStatusId(), courseParticipationStatusTypeDao);
 		// other input checks
@@ -1020,10 +1033,16 @@ public final class ServiceUtil {
 		if (!course.getId().equals(courseParticipationIn.getCourseId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_COURSE_CHANGED);
 		}
+		if (courseParticipationIn.getShowTrainingRecord() && !course.isShowTrainingRecordPreset()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_PRESET_DISABLED);
+		}
+		if (courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getTrainingRecordSectionId() == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED);
+		}
 		if (courseParticipationIn.getShowCv() && !course.isShowCvPreset()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED);
 		}
-		if (courseParticipationIn.getShowCv() && courseParticipationIn.getSectionId() == null) {
+		if (courseParticipationIn.getShowCv() && courseParticipationIn.getCvSectionId() == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_CV_SECTION_REQUIRED);
 		}
 		if (!courseParticipationIn.getShowCv() && courseParticipationIn.getShowCommentCv()) {
@@ -3285,7 +3304,7 @@ public final class ServiceUtil {
 	public static Collection<CvPositionPDFVO> loadCvPositions(Long staffId, Long sectionId, CvPositionDao cvPositionDao, CourseParticipationStatusEntryDao courseParticipationDao)
 			throws Exception {
 		Collection cvPositions = cvPositionDao.findByStaffSection(staffId, sectionId, true, null);
-		Collection courseParticipations = courseParticipationDao.findByStaffSection(staffId, sectionId, true, true, true, null);
+		Collection courseParticipations = courseParticipationDao.findByStaffCvSection(staffId, sectionId, true, true, true, null);
 		cvPositionDao.toCvPositionPDFVOCollection(cvPositions);
 		courseParticipationDao.toCvPositionPDFVOCollection(courseParticipations);
 		ArrayList<CvPositionPDFVO> result = new ArrayList<CvPositionPDFVO>(cvPositions.size() + courseParticipations.size());

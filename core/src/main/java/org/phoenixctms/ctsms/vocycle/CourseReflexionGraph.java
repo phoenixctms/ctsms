@@ -17,6 +17,8 @@ import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffDao;
+import org.phoenixctms.ctsms.domain.TrainingRecordSection;
+import org.phoenixctms.ctsms.domain.TrainingRecordSectionDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
@@ -42,6 +44,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	private CourseCategoryDao courseCategoryDao;
 	private DepartmentDao departmentDao;
 	private CvSectionDao cvSectionDao;
+	private TrainingRecordSectionDao trainingRecordSectionDao;
 	private StaffDao staffDao;
 	private TrialDao trialDao;
 	private UserDao userDao;
@@ -55,7 +58,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 
 	public CourseReflexionGraph(CourseDaoImpl courseDaoImpl,
 			CourseCategoryDao courseCategoryDao, DepartmentDao departmentDao,
-			CvSectionDao cvSectionDao, StaffDao staffDao, TrialDao trialDao, UserDao userDao, Integer... maxInstances) {
+			CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao, StaffDao staffDao, TrialDao trialDao, UserDao userDao, Integer... maxInstances) {
 		this.maxInstances = maxInstances != null && maxInstances.length > 0 ? (maxInstances[0] == null ? DEFAULT_MAX_INSTANCES : maxInstances[0]) : DEFAULT_MAX_INSTANCES;
 		this.precedingCoursesDepth = maxInstances != null && maxInstances.length > 1 ? (maxInstances[1] == null ? DEFAULT_PRECEDING_COURSES_DEPTH : maxInstances[1])
 				: DEFAULT_PRECEDING_COURSES_DEPTH;
@@ -65,6 +68,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		this.courseCategoryDao = courseCategoryDao;
 		this.departmentDao = departmentDao;
 		this.cvSectionDao = cvSectionDao;
+		this.trainingRecordSectionDao = trainingRecordSectionDao;
 		this.staffDao = staffDao;
 		this.trialDao = trialDao;
 		this.userDao = userDao;
@@ -179,6 +183,7 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		CourseCategory category = source.getCategory();
 		Department department = source.getDepartment();
 		CvSection cvSectionPreset = source.getCvSectionPreset();
+		TrainingRecordSection trainingRecordSectionPreset = source.getTrainingRecordSectionPreset();
 		Staff institution = source.getInstitution();
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
@@ -190,6 +195,9 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 		}
 		if (cvSectionPreset != null) {
 			target.setCvSectionPreset(cvSectionDao.toCvSectionVO(cvSectionPreset));
+		}
+		if (trainingRecordSectionPreset != null) {
+			target.setTrainingRecordSectionPreset(trainingRecordSectionDao.toTrainingRecordSectionVO(trainingRecordSectionPreset));
 		}
 		if (institution != null) {
 			target.setInstitution(staffDao.toStaffOutVO(institution));

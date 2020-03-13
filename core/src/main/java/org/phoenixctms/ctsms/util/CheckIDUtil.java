@@ -145,6 +145,14 @@ public final class CheckIDUtil {
 		return section;
 	}
 
+	public static TrainingRecordSection checkTrainingRecordSectionId(Long sectionId, TrainingRecordSectionDao trainingRecordSectionDao) throws ServiceException {
+		TrainingRecordSection section = trainingRecordSectionDao.load(sectionId);
+		if (section == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TRAINING_RECORD_SECTION_ID, sectionId == null ? null : sectionId.toString());
+		}
+		return section;
+	}
+
 	public static Department checkDepartmentId(Long departmentId, DepartmentDao departmentDao) throws ServiceException {
 		Department department = departmentDao.load(departmentId);
 		if (department == null) {

@@ -1831,7 +1831,8 @@ public class StaffServiceImpl
 			AuthenticationVO auth, CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry)
 			throws Exception {
 		ServiceUtil.checkAddCourseParticipationStatusEntryInput(newCourseParticipationStatusEntry, false, true,
-				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getCourseParticipationStatusTypeDao(), this.getCourseParticipationStatusEntryDao());
+				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getCourseParticipationStatusTypeDao(),
+				this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -2166,7 +2167,7 @@ public class StaffServiceImpl
 				courseParticipationStatusEntryDao);
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		ServiceUtil.checkUpdateCourseParticipationStatusEntryInput(originalCourseParticipation, modifiedCourseParticipationStatusEntry, false,
-				this.getCvSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao());
+				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryOutVO original = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(originalCourseParticipation);
 		CourseParticipationStatusType originalCourseParticipationStatusType = originalCourseParticipation.getStatus();
 		courseParticipationStatusTypeDao.evict(originalCourseParticipationStatusType);

@@ -47,6 +47,7 @@ import org.phoenixctms.ctsms.domain.NotificationDao;
 import org.phoenixctms.ctsms.domain.NotificationRecipientDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffStatusEntryDao;
+import org.phoenixctms.ctsms.domain.TrainingRecordSection;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -128,7 +129,8 @@ public class CourseServiceImpl
 	private CourseParticipationStatusEntryOutVO addCourseParticipationStatusEntry(CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry,
 			Timestamp now, User user) throws Exception {
 		ServiceUtil.checkAddCourseParticipationStatusEntryInput(newCourseParticipationStatusEntry, true, null,
-				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getCourseParticipationStatusTypeDao(), this.getCourseParticipationStatusEntryDao());
+				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getCourseParticipationStatusTypeDao(),
+				this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
 		CoreUtil.modifyVersion(courseParticipation, now, user);
@@ -181,6 +183,11 @@ public class CourseServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_CV_SECTION_ID_PRESET, courseIn.getCvSectionPresetId().toString());
 			}
 		}
+		if (courseIn.getTrainingRecordSectionPresetId() != null) {
+			if (this.getTrainingRecordSectionDao().load(courseIn.getTrainingRecordSectionPresetId()) == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_TRAINING_RECORD_SECTION_ID_PRESET, courseIn.getTrainingRecordSectionPresetId().toString());
+			}
+		}
 		if (courseIn.isSelfRegistration()) {
 			if (courseIn.getMaxNumberOfParticipants() != null && courseIn.getMaxNumberOfParticipants() < 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MAX_NUMBER_OF_PARTICIPANTS_LESS_THAN_ZERO);
@@ -222,6 +229,14 @@ public class CourseServiceImpl
 			if (courseIn.getShowCommentCvPreset()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.SHOW_CV_PRESET_DISABLED);
 			}
+		}
+		if (courseIn.getShowTrainingRecordPreset()) {
+			if (courseIn.getTrainingRecordSectionPresetId() == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRAINING_RECORD_SECTION_PRESET_REQUIRED);
+			}
+			//			if (CommonUtil.isEmptyString(courseIn.getCvTitle())) {
+			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.CV_TITLE_PRESET_REQUIRED);
+			//			}
 		}
 	}
 
@@ -375,12 +390,15 @@ public class CourseServiceImpl
 			while (staffIt.hasNext()) {
 				Long staffId = staffIt.next();
 				CvSection cvSection = course.getCvSectionPreset();
+				TrainingRecordSection trainingRecordSection = course.getTrainingRecordSectionPreset();
 				CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry = new CourseParticipationStatusEntryInVO();
 				newCourseParticipationStatusEntry.setComment(course.getCvCommentPreset());
 				newCourseParticipationStatusEntry.setCourseId(course.getId());
-				newCourseParticipationStatusEntry.setSectionId(cvSection != null ? cvSection.getId() : null);
+				newCourseParticipationStatusEntry.setCvSectionId(cvSection != null ? cvSection.getId() : null);
 				newCourseParticipationStatusEntry.setShowCommentCv(course.isShowCommentCvPreset());
 				newCourseParticipationStatusEntry.setShowCv(course.isShowCvPreset());
+				newCourseParticipationStatusEntry.setTrainingRecordSectionId(trainingRecordSection != null ? trainingRecordSection.getId() : null);
+				newCourseParticipationStatusEntry.setShowTrainingRecord(course.isShowTrainingRecordPreset());
 				newCourseParticipationStatusEntry.setStaffId(staffId);
 				newCourseParticipationStatusEntry.setStatusId(statusType.getId());
 				try {
@@ -428,7 +446,7 @@ public class CourseServiceImpl
 				courseParticipationStatusEntryDao);
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		ServiceUtil.checkUpdateCourseParticipationStatusEntryInput(originalCourseParticipation, modifiedCourseParticipationStatusEntry, true,
-				this.getCvSectionDao(), courseParticipationStatusTypeDao, courseParticipationStatusEntryDao);
+				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, courseParticipationStatusEntryDao);
 		CourseParticipationStatusEntryOutVO original = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(originalCourseParticipation);
 		CourseParticipationStatusType originalCourseParticipationStatusType = originalCourseParticipation.getStatus();
 		courseParticipationStatusTypeDao.evict(originalCourseParticipationStatusType);
@@ -809,9 +827,11 @@ public class CourseServiceImpl
 		participationDummy.setCourse(courseVO);
 		participationDummy.setModifiedTimestamp(courseVO.getModifiedTimestamp());
 		participationDummy.setModifiedUser(courseVO.getModifiedUser());
-		participationDummy.setSection(courseVO.getCvSectionPreset());
+		participationDummy.setCvSection(courseVO.getCvSectionPreset());
 		participationDummy.setShowCommentCv(courseVO.getShowCommentCvPreset());
 		participationDummy.setShowCv(courseVO.getShowCvPreset());
+		participationDummy.setTrainingRecordSection(courseVO.getTrainingRecordSectionPreset());
+		participationDummy.setShowTrainingRecord(courseVO.getShowTrainingRecordPreset());
 		participationDummy.setStatus(null);
 		participationDummy.setVersion(0l);
 		participationDummy.setComment(courseVO.getCvCommentPreset());
