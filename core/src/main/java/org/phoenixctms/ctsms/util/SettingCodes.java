@@ -158,6 +158,7 @@ public interface SettingCodes {
 	public final static String ENABLE_HOST_BASED_AUTHORISATION = "enable_host_based_authorisation";
 	public static final String TRUSTED_IP_RANGES = "trusted_ip_ranges";
 	public static final String SIGNUP_FROM_UNTRUSTED_HOSTS = "signup_from_untrusted_hosts";
+	public static final String DECRYPT_FROM_UNTRUSTED_HOSTS = "decrypt_from_untrusted_hosts";
 	public static final String SIGNATURE_COMMENT_LINE_SEPARATOR = "signature_comment_line_separator";
 	public static final String SIGNATURE_COMMENT_KEY_VALUE_SEPARATOR = "signature_comment_key_value_separator";
 	public static final String TRIAL_SIGNATURE_ENTITY_DEPTH = "trial_signature_entity_depth";

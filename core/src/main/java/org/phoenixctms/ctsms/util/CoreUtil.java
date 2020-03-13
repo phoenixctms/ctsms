@@ -890,7 +890,9 @@ public final class CoreUtil {
 			// skip trusted host check for method used by signup (if enabled):
 			return userContext.getUser().isDecrypt();
 		} else {
-			return userContext.getUser().isDecrypt() && userContext.isTrustedHost();
+			return userContext.getUser().isDecrypt()
+					&& (Settings.getBoolean(SettingCodes.DECRYPT_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS, DefaultSettings.DECRYPT_FROM_UNTRUSTED_HOSTS)
+							|| userContext.isTrustedHost());
 		}
 	}
 

@@ -187,6 +187,7 @@ public final class DefaultSettings {
 	public static final Long RECENT_JOURNAL_ENTRY_PERIOD_DAYS = null;
 	public static final String TRUSTED_IP_RANGES = null;
 	public static final boolean SIGNUP_FROM_UNTRUSTED_HOSTS = false;
+	public static final boolean DECRYPT_FROM_UNTRUSTED_HOSTS = false;
 	public static final String EXCEPTION_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final String EXCEPTION_DATE_PATTERN = "yyyy-MM-dd";
 	public static final int EMAIL_PROCESS_NOTIFICATIONS_DELAY_MILLIS = 10;
