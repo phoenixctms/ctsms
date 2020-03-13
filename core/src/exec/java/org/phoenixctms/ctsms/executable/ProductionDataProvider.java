@@ -123,6 +123,8 @@ public class ProductionDataProvider {
 	@Autowired
 	protected CvSectionDao cvSectionDao;
 	@Autowired
+	protected TrainingRecordSectionDao trainingRecordSectionDao;
+	@Autowired
 	protected CourseParticipationStatusEntryDao courseParticipationStatusEntryDao;
 	@Autowired
 	protected CourseParticipationStatusTypeDao courseParticipationStatusTypeDao;
@@ -579,6 +581,24 @@ public class ProductionDataProvider {
 		createCvSection("documentation_of_gcp_training_and_other_trainings", "documentation_of_gcp_training_and_other_trainings",
 				"documentation_of_gcp_training_and_other_trainings", 40, true, true);
 		jobOutput.println("cv sections created");
+	}
+
+	protected TrainingRecordSection createTrainingRecordSection(String nameL10nKey, String descriptionL10nKey, long position, boolean showTrainingRecordPreset, boolean visible) {
+		TrainingRecordSection trainingRecordSection = TrainingRecordSection.Factory.newInstance();
+		trainingRecordSection.setNameL10nKey(nameL10nKey);
+		trainingRecordSection.setDescriptionL10nKey(descriptionL10nKey);
+		trainingRecordSection.setPosition(position);
+		trainingRecordSection.setShowTrainingRecordPreset(showTrainingRecordPreset);
+		trainingRecordSection.setVisible(visible);
+		trainingRecordSection = trainingRecordSectionDao.create(trainingRecordSection);
+		return trainingRecordSection;
+	}
+
+	protected void createTrainingRecordSections() {
+		createTrainingRecordSection("in_house_trainings", "in_house_trainings", 0, true, true);
+		createTrainingRecordSection("external_trainings", "external_trainings", 10, true, true);
+		createTrainingRecordSection("trial_specific_trainings", "trial_specific_trainings", 20, true, true);
+		jobOutput.println("training record sections created");
 	}
 
 	protected ECRFFieldStatusType createEcrfFieldStatusType(String nameL10nKey,
@@ -3172,6 +3192,7 @@ public class ProductionDataProvider {
 		createStaffStatusTypes();
 		createAddressTypes();
 		createCvSections();
+		createTrainingRecordSections();
 		createCourseParticipationStatusTypeEntries();
 		createCourseCategories();
 		createLecturerCompetences();
