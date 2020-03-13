@@ -38,13 +38,22 @@
 					<p:ajax event="rowSelect"
 						update=":tabView:admincourseparticipationstatus_form:courseparticipationstatus_input" />
 					<f:facet name="header">
-						<h:outputText
-							value="#{adminCourseParticipationStatusBean.statusEntryModel.rowCount} #{courselabels.admin_course_participation_status_courseparticipationstatus_list_header}" />
+						<h:panelGrid columns="2" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText
+								value="#{adminCourseParticipationStatusBean.statusEntryModel.rowCount} #{courselabels.admin_course_participation_status_courseparticipationstatus_list_header}" />
+							<p:commandButton type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="courseParticipationStatusTableColumnsDialog.show()" />
+						</h:panelGrid>							
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.id}">
+					    <f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -82,14 +91,17 @@
 							<ui:param name="value" value="#{statusEntry.vo.showCv}" />
 						</ui:include>
 					</p:column>
-					<p:column sortBy="#{statusEntry.vo.section}">
+					<p:column sortBy="#{statusEntry.vo.cvSection}"
+						filterBy="#{statusEntry.vo.cvSection.id}"
+						filterOptions="#{sessionScopeBean.filterCvSections}">
 						<f:facet name="header">
 							<h:outputText
-								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_section_name_column}" />
+								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_cv_section_name_column}" />
 						</f:facet>
-						<h:outputText value="#{statusEntry.vo.section.name}" />
+						<h:outputText value="#{statusEntry.vo.cvSection.name}" />
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.showCommentCv}">
+					    <f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_show_comment_cv_column}" />
@@ -98,7 +110,28 @@
 							<ui:param name="value" value="#{statusEntry.vo.showCommentCv}" />
 						</ui:include>
 					</p:column>
+					<p:column sortBy="#{statusEntry.vo.showTrainingRecord}"
+						filterBy="#{statusEntry.vo.showTrainingRecord}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_show_training_record_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param name="value" value="#{statusEntry.vo.showTrainingRecord}" />
+						</ui:include>
+					</p:column>	
+					<p:column sortBy="#{statusEntry.vo.trainingRecordSection}"
+						filterBy="#{statusEntry.vo.trainingRecordSection.id}"
+						filterOptions="#{sessionScopeBean.filterTrainingRecordSections}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_training_record_section_name_column}" />
+						</f:facet>
+						<h:outputText value="#{statusEntry.vo.trainingRecordSection.name}" />
+					</p:column>							
 					<p:column>
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_colliding_duty_roster_column}" />
@@ -109,6 +142,7 @@
 						</ui:include>
 					</p:column>
 					<p:column>
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_colliding_course_bookings_column}" />
@@ -119,6 +153,7 @@
 						</ui:include>
 					</p:column>
 					<p:column>
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_staff_status_entry_column}" />
@@ -384,14 +419,63 @@
 								<h:outputLabel />
 								<h:outputText value="" />
 								<h:outputLabel />
-								<h:outputLabel for="courseParticipationStatusEntrySection"
-									value="#{courselabels.admin_course_participation_status_section_label}" />
+								
+								<h:outputLabel for="courseParticipationStatusEntryTrainingRecordSection"
+									value="#{courselabels.admin_course_participation_status_training_record_section_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="courseParticipationStatusEntrySection"
-										value="#{adminCourseParticipationStatusBean.in.sectionId}"
+									<p:selectOneMenu id="courseParticipationStatusEntryTrainingRecordSection"
+										value="#{adminCourseParticipationStatusBean.in.trainingRecordSectionId}"
 										required="false"
-										label="#{courselabels.admin_course_participation_status_section}"
-										styleClass="ctsms-control">
+										label="#{courselabels.admin_course_participation_status_training_record_section}"
+										styleClass="ctsms-control-larger">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{adminCourseParticipationStatusBean.trainingRecordSections}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax
+											oncomplete="handleCourseParticipationStatusEntryTrainingRecordSectionSelected(xhr, status, args)"
+											listener="#{adminCourseParticipationStatusBean.handleTrainingRecordSectionChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="courseParticipationStatusEntryTrainingRecordSection">
+										<h:outputText
+											value="#{courselabels.admin_course_participation_status_training_record_section_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="courseParticipationStatusEntryTrainingRecordSection" />
+								
+								<h:outputLabel for="courseParticipationStatusEntryShowTrainingRecord"
+									value="#{courselabels.admin_course_participation_status_show_training_record_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="courseParticipationStatusEntryShowTrainingRecord"
+										widgetVar="courseParticipationStatusEntryShowTrainingRecord"
+										value="#{adminCourseParticipationStatusBean.in.showTrainingRecord}">
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="courseParticipationStatusEntryShowTrainingRecord">
+										<h:outputText
+											value="#{courselabels.admin_course_participation_status_show_training_record_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="courseParticipationStatusEntryShowTrainingRecord" />							
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />							
+								
+								<h:outputLabel for="courseParticipationStatusEntryCvSection"
+									value="#{courselabels.admin_course_participation_status_cv_section_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu id="courseParticipationStatusEntryCvSection"
+										value="#{adminCourseParticipationStatusBean.in.cvSectionId}"
+										required="false"
+										label="#{courselabels.admin_course_participation_status_cv_section}"
+										styleClass="ctsms-control-larger">
 										<f:converter converterId="ctsms.ID" />
 										<f:selectItem itemLabel="#{labels.no_selection_label}"
 											itemValue="#{applicationScopeBean.noSelectionValue}" />
@@ -401,16 +485,16 @@
 											itemValue="#{selectItem.value}" />
 										<p:ajax
 											oncomplete="handleCourseParticipationStatusEntryCvSectionSelected(xhr, status, args)"
-											listener="#{adminCourseParticipationStatusBean.handleSectionChange}" />
+											listener="#{adminCourseParticipationStatusBean.handleCvSectionChange}" />
 									</p:selectOneMenu>
 									<p:tooltip rendered="#{enableTooltips}"
-										for="courseParticipationStatusEntrySection">
+										for="courseParticipationStatusEntryCvSection">
 										<h:outputText
-											value="#{courselabels.admin_course_participation_status_section_tooltip}"
+											value="#{courselabels.admin_course_participation_status_cv_section_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="courseParticipationStatusEntrySection" />
+								<p:message for="courseParticipationStatusEntryCvSection" />
 								<h:outputLabel for="courseParticipationStatusEntryShowCv"
 									value="#{courselabels.admin_course_participation_status_show_cv_label}" />
 								<h:panelGroup>
@@ -547,6 +631,24 @@
 					onclick="setCourseParticipationStatusEntryCvSectionShowCv(false)"
 					type="button" />
 			</p:confirmDialog>
+			<p:confirmDialog appendToBody="false" severity="info"
+				widgetVar="courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{courselabels.admin_course_participation_status_training_record_section_show_training_record_preset_override_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton value="#{labels.yes_button_label}"
+					onclick="setCourseParticipationStatusEntryTrainingRecordSectionShowTrainingRecord(true)"
+					type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="setCourseParticipationStatusEntryTrainingRecordSectionShowTrainingRecord(false)"
+					type="button" />
+			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog" value="courseParticipationStatusTableColumnsDialog" />
+				<ui:param name="dataTableId" value=":tabView:admincourseparticipationstatus_form:courseparticipationstatus_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

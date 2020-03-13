@@ -315,6 +315,32 @@ function handleCourseParticipationStatusEntryCvSectionSelected(xhr, status, args
 
 }
 
+var courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset;
+
+function setCourseParticipationStatusEntryTrainingRecordSectionShowTrainingRecord(apply) {
+
+	if (apply) {
+		courseParticipationStatusEntryShowTrainingRecord.setValue(courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset);
+	}
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation.hide();
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;
+
+}
+
+function handleCourseParticipationStatusEntryTrainingRecordSectionSelected(xhr, status, args) {
+
+	if (_testPropertyExists(args, AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET)) {
+		courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = args[AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET];
+		if (courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset
+		        && courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset != courseParticipationStatusEntryShowTrainingRecord.getValue()) {
+			courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation.show();
+			return;
+		}
+	}
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;
+
+}
+
 function handleDutyRosterDepartmentCategorySelected(xhr, status, args) {
 
 	updateDutyRosterSchedule();

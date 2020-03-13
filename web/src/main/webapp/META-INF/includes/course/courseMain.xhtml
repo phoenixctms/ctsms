@@ -563,6 +563,46 @@
 											onclick="openNewStaff()" />
 									</h:panelGrid>
 									<p:message for="institution" />
+
+									<h:outputLabel for="showTrainingRecordPreset"
+										value="#{courselabels.course_show_training_record_preset_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="showTrainingRecordPreset"
+											widgetVar="showTrainingRecordPreset"
+											value="#{courseBean.in.showTrainingRecordPreset}">
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}" for="showTrainingRecordPreset">
+											<h:outputText
+												value="#{courselabels.course_show_training_record_preset_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="showTrainingRecordPreset" />
+									<h:outputLabel for="trainingRecordSectionPreset"
+										value="#{courselabels.course_training_record_section_preset_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu id="trainingRecordSectionPreset"
+											value="#{courseBean.in.trainingRecordSectionPresetId}" required="false"
+											label="#{courselabels.course_training_record_section_preset}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems value="#{courseBean.trainingRecordSections}"
+												var="selectItem" itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+											<p:ajax
+												oncomplete="handleTrainingRecordSectionPresetSelected(xhr, status, args)"
+												listener="#{courseBean.handleTrainingRecordSectionPresetChange}" />
+										</p:selectOneMenu>
+										<p:tooltip rendered="#{enableTooltips}" for="trainingRecordSectionPreset">
+											<h:outputText
+												value="#{courselabels.course_training_record_section_preset_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="trainingRecordSectionPreset" />
+
 									<h:outputLabel for="showCvPreset"
 										value="#{courselabels.course_show_cv_preset_label}" />
 									<h:panelGroup>
@@ -594,7 +634,7 @@
 												itemValue="#{selectItem.value}" />
 											<p:ajax
 												oncomplete="handleCvSectionPresetSelected(xhr, status, args)"
-												listener="#{courseBean.handleSectionPresetChange}" />
+												listener="#{courseBean.handleCvSectionPresetChange}" />
 										</p:selectOneMenu>
 										<p:tooltip rendered="#{enableTooltips}" for="cvSectionPreset">
 											<h:outputText
@@ -761,6 +801,18 @@
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="setCourseShowCvPreset(false)" type="button" />
 			</p:confirmDialog>
+			<p:confirmDialog appendToBody="false" severity="info"
+				widgetVar="courseShowTrainingRecordPresetPresetOverrideConfirmation">
+				<f:facet name="message">
+					<h:outputText
+						value="#{courselabels.course_show_training_record_preset_override_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+				<p:commandButton value="#{labels.yes_button_label}"
+					onclick="setCourseShowTrainingRecordPreset(true)" type="button" />
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="setCourseShowTrainingRecordPreset(false)" type="button" />
+			</p:confirmDialog>			
 			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="courseAddConfirmation">
 				<f:facet name="message">

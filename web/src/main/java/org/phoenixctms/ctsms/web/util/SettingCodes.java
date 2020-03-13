@@ -79,6 +79,7 @@ public interface SettingCodes {
 	public final static String COURSE_EXPIRES_PRESET = "course_expires_preset";
 	public final static String COURSE_MAX_NUMBER_OF_PARTICIPANTS_PRESET = "course_max_number_of_participant_preset";
 	public final static String COURSE_SHOW_CV_PRESET_PRESET = "course_show_cv_preset_preset";
+	public final static String COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET = "course_show_training_record_preset_preset";
 	public final static String COURSE_SHOW_COMMENT_CV_PRESET_PRESET = "course_show_comment_cv_preset_preset";
 	public final static String COURSE_DURATION_DAYS_PRESET = "course_duration_days_preset";
 	public final static String COURSE_DEADLINE_START_DAYS_PRESET = "course_deadline_start_days_preset";
