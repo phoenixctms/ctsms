@@ -2213,7 +2213,8 @@ public class ProductionDataProvider {
 		jobOutput.println("staff status types created");
 	}
 
-	protected StaffTag createStaffTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean person, boolean organisation, boolean excel) {
+	protected StaffTag createStaffTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean person, boolean organisation, boolean excel,
+			boolean trainingRecord) {
 		StaffTag tag = StaffTag.Factory.newInstance();
 		tag.setPerson(person);
 		tag.setOrganisation(organisation);
@@ -2222,23 +2223,24 @@ public class ProductionDataProvider {
 		tag.setRegExp(regExp);
 		tag.setMismatchMsgL10nKey(mismatchMsgL10nKey);
 		tag.setExcel(excel);
+		tag.setTrainingRecord(trainingRecord);
 		tag = staffTagDao.create(tag);
 		return tag;
 	}
 
 	protected void createStaffTags() {
 		String dateRegExp = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
-		createStaffTag("legal_form", 1, null, null, false, true, true);
-		createStaffTag("vat_number", 1, null, null, false, true, true);
-		createStaffTag("commercial_reg_number", 1, null, null, false, true, true);
-		createStaffTag("court_of_jurisdiction", 1, null, null, false, true, true);
-		createStaffTag("function", 1, null, null, true, false, true);
-		createStaffTag("description", 1, null, null, true, true, true);
-		createStaffTag("social_security_number", 1, null, null, true, false, true);
-		createStaffTag("badge_number", 1, null, null, false, false, true);
-		createStaffTag("mug_badge_number", 1, null, null, true, false, true);
-		createStaffTag("klinikum_badge_number", 1, null, null, true, false, true);
-		createStaffTag("entry_date", 1, dateRegExp, ServiceExceptionCodes.INVALID_DATE_FORMAT, false, false, true);
+		createStaffTag("legal_form", 1, null, null, false, true, true, false);
+		createStaffTag("vat_number", 1, null, null, false, true, true, false);
+		createStaffTag("commercial_reg_number", 1, null, null, false, true, true, false);
+		createStaffTag("court_of_jurisdiction", 1, null, null, false, true, true, false);
+		createStaffTag("01_role", 3, null, null, true, false, true, true);
+		createStaffTag("02_description", 1, null, null, true, true, true, true);
+		createStaffTag("social_security_number", 1, null, null, true, false, true, false);
+		createStaffTag("badge_number", 1, null, null, false, false, true, false);
+		createStaffTag("mug_badge_number", 1, null, null, true, false, true, false);
+		createStaffTag("klinikum_badge_number", 1, null, null, true, false, true, false);
+		createStaffTag("entry_date", 1, dateRegExp, ServiceExceptionCodes.INVALID_DATE_FORMAT, false, false, true, false);
 		jobOutput.println("staff tags created");
 	}
 
