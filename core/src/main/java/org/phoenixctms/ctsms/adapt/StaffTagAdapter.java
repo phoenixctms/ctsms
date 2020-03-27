@@ -64,12 +64,12 @@ public class StaffTagAdapter extends TagAdapter<Staff, StaffTag, StaffTagValue, 
 	protected Collection<StaffTag> findTagsIncludingId(Staff root, Long tagId) {
 		if (root != null) {
 			if (root.isPerson()) {
-				return staffTagDao.findByPersonOrganisationIdExcel(true, null, tagId, null);
+				return staffTagDao.findByPersonOrganisationIdExcelTrainingRecord(true, null, tagId, null, null);
 			} else {
-				return staffTagDao.findByPersonOrganisationIdExcel(null, true, tagId, null);
+				return staffTagDao.findByPersonOrganisationIdExcelTrainingRecord(null, true, tagId, null, null);
 			}
 		} else {
-			return staffTagDao.findByPersonOrganisationIdExcel(person, organisation, tagId, null);
+			return staffTagDao.findByPersonOrganisationIdExcelTrainingRecord(person, organisation, tagId, null, null);
 		}
 	}
 

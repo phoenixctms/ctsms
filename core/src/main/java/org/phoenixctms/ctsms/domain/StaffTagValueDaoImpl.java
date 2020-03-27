@@ -8,6 +8,9 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
@@ -39,6 +42,22 @@ public class StaffTagValueDaoImpl
 			tagValueCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return tagValueCriteria.list();
+	}
+
+	@Override
+	protected Collection<TrialTagValue> handleFindByStaffExcelTrainingRecordSorted(Long staffId,
+			Boolean excel, Boolean trainingRecord) throws Exception {
+		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
+		tagValueCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
+		Criteria tagCriteria = tagValueCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN);
+		if (excel != null) {
+			tagCriteria.add(Restrictions.eq("excel", excel.booleanValue()));
+		}
+		if (trainingRecord != null) {
+			tagCriteria.add(Restrictions.eq("trainingRecord", trainingRecord.booleanValue()));
+		}
+		tagCriteria.addOrder(Order.asc("nameL10nKey"));
 		return tagValueCriteria.list();
 	}
 
