@@ -50,6 +50,7 @@ public final class L10nUtil {
 		NOTIFICATION,
 		PROBAND_LIST_STATUS_ENTRY_REASON,
 		CV_PDF,
+		TRAINING_RECORD_PDF,
 		REIMBURSEMENTS_PDF,
 		COURSE_PARTICIPANT_LIST_PDF,
 		PROBAND_LETTER_PDF,
@@ -84,6 +85,7 @@ public final class L10nUtil {
 	private static String trainingRecordSectionDescriptionBundleBasename;
 	private static String staffStatusTypesBundleBasename;
 	private static String cvPdfLabelsBundleBasename;
+	private static String trainingRecordPdfLabelsBundleBasename;
 	private static String ecrfPdfLabelsBundleBasename;
 	private static String inquiriesPdfLabelsBundleBasename;
 	private static String probandListEntryTagsPdfLabelsBundleBasename;
@@ -143,6 +145,7 @@ public final class L10nUtil {
 	private static Locale notificationsDatabaseWriteLocale;
 	private static Locale probandListStatusReasonsDatabaseWriteLocale;
 	private static Locale cvPdfLocale;
+	private static Locale trainingRecordPdfLocale;
 	private static Locale reimbursementsPdfLocale;
 	private static Locale ecrfPdfLocale;
 	private static Locale inquiriesPdfLocale;
@@ -416,6 +419,10 @@ public final class L10nUtil {
 		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, cvPdfLabelsBundleBasename), defaultName);
 	}
 
+	public static String getTrainingRecordPDFLabel(Locales locale, String l10nKey, String defaultName, Object... args) {
+		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, trainingRecordPdfLabelsBundleBasename), defaultName);
+	}
+
 	public static String getCvSectionDescription(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, cvSectionDescriptionBundleBasename), DefaultMessages.CV_SECTION_DESCRIPTION);
 	}
@@ -627,6 +634,8 @@ public final class L10nUtil {
 				return probandListStatusReasonsDatabaseWriteLocale;
 			case CV_PDF:
 				return cvPdfLocale;
+			case TRAINING_RECORD_PDF:
+				return trainingRecordPdfLocale;
 			case REIMBURSEMENTS_PDF:
 				return reimbursementsPdfLocale;
 			case COURSE_PARTICIPANT_LIST_PDF:
@@ -1034,9 +1043,22 @@ public final class L10nUtil {
 	}
 
 	@Autowired(required = true)
+	public void setTrainingRecordPdfLabelsBundleBasename(
+			String trainingRecordPdfLabelsBundleBasename) {
+		L10nUtil.trainingRecordPdfLabelsBundleBasename = trainingRecordPdfLabelsBundleBasename;
+		getBundle(Locales.DEFAULT, trainingRecordPdfLabelsBundleBasename);
+	}
+
+	@Autowired(required = true)
 	public void setCvPdfLocale(
 			String cvPdfLocale) {
 		L10nUtil.cvPdfLocale = getLocaleFromString(cvPdfLocale);
+	}
+
+	@Autowired(required = true)
+	public void setTrainingRecordPdfLocale(
+			String trainingRecordPdfLocale) {
+		L10nUtil.trainingRecordPdfLocale = getLocaleFromString(trainingRecordPdfLocale);
 	}
 
 	@Autowired(required = true)

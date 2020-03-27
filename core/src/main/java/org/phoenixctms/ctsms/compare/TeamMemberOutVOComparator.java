@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
+import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 public class TeamMemberOutVOComparator extends AlphanumComparatorBase implements Comparator<TeamMemberOutVO> {
 
@@ -30,6 +31,19 @@ public class TeamMemberOutVOComparator extends AlphanumComparatorBase implements
 					int lastNameComparison = comp(staffA.getLastName(), staffB.getLastName());
 					if (lastNameComparison != 0) {
 						return lastNameComparison;
+					} else {
+						TrialOutVO trialA = a.getTrial();
+						TrialOutVO trialB = b.getTrial();
+						if (trialA != null && trialB != null) {
+							int trialNameComparison = comp(trialA.getName(), trialB.getName());
+							if (trialNameComparison != 0) {
+								return trialNameComparison;
+							}
+						} else if (trialA == null && trialB != null) {
+							return -1;
+						} else if (trialA != null && trialB == null) {
+							return 1;
+						}
 					}
 				} else if (staffA.isPerson() == false && staffB.isPerson() == false) {
 					int organisationNameComparison = comp(staffA.getOrganisationName(), staffB.getOrganisationName());

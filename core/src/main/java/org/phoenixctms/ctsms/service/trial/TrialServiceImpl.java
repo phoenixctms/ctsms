@@ -4668,7 +4668,7 @@ public class TrialServiceImpl
 		boolean aggregateContactDetails = Settings.getBoolean(TeamMembersExcelSettingCodes.AGGREGATE_CONTACT_DETAILS, Bundle.TEAM_MEMBERS_EXCEL,
 				TeamMembersExcelDefaultSettings.AGGREGATE_CONTACT_DETAILS);
 		StaffTagDao staffTagDao = this.getStaffTagDao();
-		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcel(null, null, null, true) : new ArrayList();
+		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcelTrainingRecord(null, null, null, true, null) : new ArrayList();
 		staffTagDao.toStaffTagVOCollection(staffTags);
 		AddressTypeDao addressTypeDao = this.getAddressTypeDao();
 		Collection addressTypes = showAddresses ? addressTypeDao.findByStaffProbandAnimalId(true, null, null, null) : new ArrayList();

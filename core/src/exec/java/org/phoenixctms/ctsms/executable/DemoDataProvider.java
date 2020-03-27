@@ -778,6 +778,7 @@ public class DemoDataProvider {
 		} else {
 			newCourse.setShowTrainingRecordPreset(false);
 		}
+		newCourse.setCertificate(false);
 		CourseOutVO course = courseService.addCourse(auth, newCourse, null, null, null);
 		jobOutput.println("course created: " + course.getName());
 		ArrayList<Staff> persons = new ArrayList<Staff>(staffDao.search(new Search(new SearchParameter[] {

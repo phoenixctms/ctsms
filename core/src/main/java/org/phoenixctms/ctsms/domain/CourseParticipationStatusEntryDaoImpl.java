@@ -281,6 +281,31 @@ public class CourseParticipationStatusEntryDaoImpl
 	}
 
 	@Override
+	protected Collection<CourseParticipationStatusEntry> handleFindByStaffTrainingRecordSection(Long staffId, Long trainingRecordSectionId, Boolean showTrainingRecord,
+			Boolean pass, Boolean showTrainingRecordPreset, PSFVO psf)
+			throws Exception {
+		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
+		if (staffId != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
+		}
+		if (showTrainingRecordPreset != null) {
+			criteriaMap.createCriteria("course").add(Restrictions.eq("showTrainingRecordPreset", showTrainingRecordPreset.booleanValue()));
+		}
+		if (trainingRecordSectionId != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("trainingRecordSection.id", trainingRecordSectionId.longValue()));
+		}
+		if (showTrainingRecord != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("showTrainingRecord", showTrainingRecord.booleanValue()));
+		}
+		if (pass != null) {
+			criteriaMap.createCriteria("status").add(Restrictions.eq("pass", pass.booleanValue()));
+		}
+		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return courseParticipationStatusEntryCriteria.list();
+	}
+
+	@Override
 	protected Collection<CourseParticipationStatusEntry> handleFindExpiring(Date today,
 			Long courseDepartmentId, Long courseCategoryId,
 			Long staffDepartmentId, Long staffCategoryId,
