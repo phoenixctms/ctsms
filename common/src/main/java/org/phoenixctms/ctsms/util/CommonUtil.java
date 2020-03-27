@@ -118,7 +118,6 @@ public final class CommonUtil {
 	public final static String DEFAULT_INPUT_TIME_PATTERN = "HH" + TIME_SEPARATOR + "mm"; // must not be locale dependent
 	private final static String DEFAULT_INPUT_DATE_PATTERN = "yyyy-MM-dd"; // "dd.MM.yyyy"; //must not be locale dependent
 	private final static String DEFAULT_INPUT_DATETIME_PATTERN = DEFAULT_INPUT_DATE_PATTERN + " " + DEFAULT_INPUT_TIME_PATTERN; // "yyyy-MM-dd HH:mm"; //must not be locale
-
 	public final static String DIGITS_ONLY_DATETIME_PATTERN = "yyyyMMddHHmmss";
 	public final static boolean FILE_EXTENSION_REGEXP_MODE = true; // different primefaces versions(?), etc...
 	public final static String DEFAULT_FILE_EXTENSION_PATTERN = (FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)([a-zA-Z0-9]+)$/" : "*.*");
@@ -139,7 +138,7 @@ public final class CommonUtil {
 	private final static String DEFAULT_FILENAME_ESCAPE_CHAR = "_";
 	// the only custom error messages that are not localized.
 	private final static String INVALID_LONG_CAST = "long ({0}) cannot be converted to int";
-	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported"; 
+	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported";
 	public static final String UNSUPPORTED_CRITERION_VALUE_TYPE = "unsupported criterion value type {0}";
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction> UNARY_RESTRICTIONS = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
 	static {
@@ -240,7 +239,6 @@ public final class CommonUtil {
 	public final static String GIF_FILENAME_EXTENSION = "gif";
 	public static final String GIF_MIMETYPE_STRING = "image/gif";
 	public static final String BEACON_PATH = "beacon";
-
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
@@ -979,21 +977,33 @@ public final class CommonUtil {
 	}
 
 	public static String getCvStaffName(StaffOutVO staff) {
+		return getCvStaffName(staff, false, null);
+	}
+
+	public static String getCvStaffName(StaffOutVO staff, boolean lastNameUpperCase, Locale locale) {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null) {
 			if (staff.isPerson()) {
+				String lastName = staff.getLastName();
+				if (lastNameUpperCase && !isEmptyString(lastName)) {
+					if (locale != null) {
+						lastName = lastName.toUpperCase(locale);
+					} else {
+						lastName = lastName.toUpperCase();
+					}
+				}
 				if (CommonUtil.isEmptyString(staff.getCvAcademicTitle())) {
 					CommonUtil.appendString(sb, staff.getPrefixedTitle1(), null);
 					CommonUtil.appendString(sb, staff.getPrefixedTitle2(), " ");
 					CommonUtil.appendString(sb, staff.getPrefixedTitle3(), " ");
 					CommonUtil.appendString(sb, staff.getFirstName(), " ");
-					CommonUtil.appendString(sb, staff.getLastName(), " ", "?");
+					CommonUtil.appendString(sb, lastName, " ", "?");
 					CommonUtil.appendString(sb, staff.getPostpositionedTitle1(), ", ");
 					CommonUtil.appendString(sb, staff.getPostpositionedTitle2(), ", ");
 					CommonUtil.appendString(sb, staff.getPostpositionedTitle3(), ", ");
 				} else {
 					CommonUtil.appendString(sb, staff.getFirstName(), null);
-					CommonUtil.appendString(sb, staff.getLastName(), " ", "?");
+					CommonUtil.appendString(sb, lastName, " ", "?");
 					CommonUtil.appendString(sb, staff.getCvAcademicTitle(), ", ");
 				}
 			} else {
@@ -1417,10 +1427,22 @@ public final class CommonUtil {
 		return sb.toString();
 	}
 
-	public static final String getStaffName(StaffOutVO staff, boolean withTitles, boolean withFirstName) {
+	public static String getStaffName(StaffOutVO staff, boolean withTitles, boolean withFirstName) {
+		return getStaffName(staff, withTitles, withFirstName, false, null);
+	}
+
+	public static final String getStaffName(StaffOutVO staff, boolean withTitles, boolean withFirstName, boolean lastNameUpperCase, Locale locale) {
 		StringBuilder sb = new StringBuilder();
 		if (staff != null) {
 			if (staff.isPerson()) {
+				String lastName = staff.getLastName();
+				if (lastNameUpperCase && !isEmptyString(lastName)) {
+					if (locale != null) {
+						lastName = lastName.toUpperCase(locale);
+					} else {
+						lastName = lastName.toUpperCase();
+					}
+				}
 				if (withTitles) {
 					appendString(sb, staff.getPrefixedTitle1(), null);
 					appendString(sb, staff.getPrefixedTitle2(), " ");
@@ -1428,16 +1450,16 @@ public final class CommonUtil {
 					if (withFirstName) {
 						appendString(sb, staff.getFirstName(), " ");
 					}
-					appendString(sb, staff.getLastName(), " ", "?");
+					appendString(sb, lastName, " ", "?");
 					appendString(sb, staff.getPostpositionedTitle1(), ", ");
 					appendString(sb, staff.getPostpositionedTitle2(), ", ");
 					appendString(sb, staff.getPostpositionedTitle3(), ", ");
 				} else {
 					if (withFirstName) {
 						appendString(sb, staff.getFirstName(), null);
-						appendString(sb, staff.getLastName(), " ", "?");
+						appendString(sb, lastName, " ", "?");
 					} else {
-						CommonUtil.appendString(sb, staff.getLastName(), null, "?");
+						CommonUtil.appendString(sb, lastName, null, "?");
 					}
 				}
 			} else {
@@ -1901,7 +1923,6 @@ public final class CommonUtil {
 	public static String localeToString(Locale locale) {
 		return locale == null ? null : locale.getLanguage();
 	}
-
 
 	public static String massMailOutVOToString(MassMailOutVO massMail) {
 		if (massMail != null) {

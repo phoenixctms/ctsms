@@ -26,11 +26,11 @@ public interface ReimbursementsPDFSettingCodes {
 	public static final String FRAME_COLOR = "frame_color";
 	public final static String SPACER_HEIGHT = "spacer_height";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
-	public final static String X_PAYMENT_TABLE_COLUMN_INDENT = "x_payment_table_column_indent";
+	public final static String X_PAYMENT_TABLE_COLUMN_PAYMENT_METHOD_WIDTH = "x_payment_table_column_payment_method_width";
 	public final static String X_PAYMENT_TABLE_FRAME_INDENT = "x_payment_table_frame_indent";
 	public final static String Y_PAYMENT_TABLE_FRAME_INDENT = "y_payment_table_frame_indent";
 	public final static String Y_PAYMENT_TABLE_HEAD_FRAME_INDENT = "y_payment_table_head_frame_indent";
-	public final static String PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH = "payment_table_block_frame_line_width";
+	public final static String PAYMENT_TABLE_FRAME_LINE_WIDTH = "payment_table_frame_line_width";
 	public final static String PAYMENT_TABLE_COLUMN_LINE_WIDTH = "payment_table_column_line_width";
 	public static final String PAYMENT_TABLE_TEXT_COLOR = "payment_table_text_color";
 	public static final String PAYMENT_TABLE_FRAME_COLOR = "payment_table_frame_color";

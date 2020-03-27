@@ -214,8 +214,8 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 			if (!block.isLastTableRow()) {
 				PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockX() + cursor.getBlockWidth(),
-						cursor.getBlockY(), Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+						cursor.getBlockY(), Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_LINE_WIDTH));
 			}
 		}
 	}

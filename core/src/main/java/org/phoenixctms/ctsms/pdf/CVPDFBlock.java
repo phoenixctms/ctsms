@@ -77,12 +77,11 @@ public class CVPDFBlock {
 	}
 
 	protected String getDateOfBirth() {
-		StringBuilder sb = new StringBuilder();
 		if (staff != null && staff.isPerson() && staff.getDateOfBirth() != null) {
-			sb.append(Settings.getSimpleDateFormat(CVPDFSettingCodes.DATE_OF_BIRTH_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.DATE_OF_BIRTH_DATE_PATTERN, Locales.CV_PDF)
-					.format(staff.getDateOfBirth()));
+			return Settings.getSimpleDateFormat(CVPDFSettingCodes.DATE_OF_BIRTH_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.DATE_OF_BIRTH_DATE_PATTERN, Locales.CV_PDF)
+					.format(staff.getDateOfBirth());
 		}
-		return sb.toString();
+		return "";
 	}
 
 	protected String getFullName() {
