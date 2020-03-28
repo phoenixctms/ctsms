@@ -97,6 +97,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setShowCommentCvPreset(out.getShowCommentCvPreset());
 			in.setShowCvPreset(out.getShowCvPreset());
 			in.setShowTrainingRecordPreset(out.getShowTrainingRecordPreset());
+			in.setCertificate(out.getCertificate());
 			in.setStart(out.getStart());
 			in.setStop(out.getStop());
 			in.setValidityPeriod(validityPeriodVO == null ? null : validityPeriodVO.getPeriod());
@@ -125,6 +126,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			result.setShowCommentCvPreset(in.getShowCommentCvPreset());
 			result.setShowCvPreset(in.getShowCvPreset());
 			result.setShowTrainingRecordPreset(in.getShowTrainingRecordPreset());
+			result.setCertificate(in.getCertificate());
 			result.setStart(in.getStart());
 			result.setStop(in.getStop());
 			result.setParticipationDeadline(in.getParticipationDeadline());
@@ -159,6 +161,8 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setShowCvPreset(Settings.getBoolean(SettingCodes.COURSE_SHOW_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_CV_PRESET_PRESET));
 			in.setShowTrainingRecordPreset(
 					Settings.getBoolean(SettingCodes.COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET));
+			in.setCertificate(
+					Settings.getBoolean(SettingCodes.COURSE_CERTIFICATE_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_CERTIFICATE_PRESET));
 			int courseDurationDays = Settings.getInt(SettingCodes.COURSE_DURATION_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_DURATION_DAYS_PRESET);
 			if (courseDurationDays > 0) {
 				in.setStart(new Date());

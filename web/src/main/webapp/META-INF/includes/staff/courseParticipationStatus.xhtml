@@ -513,6 +513,13 @@
 									<p:fileDownload
 										value="#{courseParticipationStatusBean.cvPdfStreamedContent}" />
 								</p:commandButton>
+								<p:commandButton immediate="true" ajax="false"
+									value="#{stafflabels.open_training_record_button_label}"
+									icon="ui-icon ui-icon-pdf"
+									disabled="#{!courseParticipationStatusBean.person}">
+									<p:fileDownload
+										value="#{courseParticipationStatusBean.trainingRecordPdfStreamedContent}" />
+								</p:commandButton>
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">

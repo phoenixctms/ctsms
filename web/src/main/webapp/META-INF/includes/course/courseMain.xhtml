@@ -523,8 +523,8 @@
 							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row,ctsms-textarea-row">
-								<h:panelGrid columns="6" cellpadding="2"
-									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:panelGrid columns="8" cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column">
 									<h:outputLabel for="cvtitle"
 										value="#{courselabels.course_cv_title_label}" />
 									<h:panelGroup>
@@ -564,6 +564,18 @@
 									</h:panelGrid>
 									<p:message for="institution" />
 
+									<h:outputLabel for="certificate"
+										value="#{courselabels.course_certificate_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="certificate"
+											value="#{courseBean.in.certificate}" />
+										<p:tooltip rendered="#{enableTooltips}" for="certificate">
+											<h:outputText
+												value="#{courselabels.course_certificate_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+
 									<h:outputLabel for="showTrainingRecordPreset"
 										value="#{courselabels.course_show_training_record_preset_label}" />
 									<h:panelGroup>
@@ -571,7 +583,8 @@
 											widgetVar="showTrainingRecordPreset"
 											value="#{courseBean.in.showTrainingRecordPreset}">
 										</p:selectBooleanCheckbox>
-										<p:tooltip rendered="#{enableTooltips}" for="showTrainingRecordPreset">
+										<p:tooltip rendered="#{enableTooltips}"
+											for="showTrainingRecordPreset">
 											<h:outputText
 												value="#{courselabels.course_show_training_record_preset_tooltip}"
 												escape="false" />
@@ -582,7 +595,8 @@
 										value="#{courselabels.course_training_record_section_preset_label}" />
 									<h:panelGroup>
 										<p:selectOneMenu id="trainingRecordSectionPreset"
-											value="#{courseBean.in.trainingRecordSectionPresetId}" required="false"
+											value="#{courseBean.in.trainingRecordSectionPresetId}"
+											required="false"
 											label="#{courselabels.course_training_record_section_preset}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
@@ -595,13 +609,16 @@
 												oncomplete="handleTrainingRecordSectionPresetSelected(xhr, status, args)"
 												listener="#{courseBean.handleTrainingRecordSectionPresetChange}" />
 										</p:selectOneMenu>
-										<p:tooltip rendered="#{enableTooltips}" for="trainingRecordSectionPreset">
+										<p:tooltip rendered="#{enableTooltips}"
+											for="trainingRecordSectionPreset">
 											<h:outputText
 												value="#{courselabels.course_training_record_section_preset_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="trainingRecordSectionPreset" />
+									<h:outputLabel />
+									<h:outputText value="" />
 
 									<h:outputLabel for="showCvPreset"
 										value="#{courselabels.course_show_cv_preset_label}" />
@@ -657,7 +674,6 @@
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="showCommentCvPreset" />
 								</h:panelGrid>
 								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
@@ -812,7 +828,7 @@
 					onclick="setCourseShowTrainingRecordPreset(true)" type="button" />
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="setCourseShowTrainingRecordPreset(false)" type="button" />
-			</p:confirmDialog>			
+			</p:confirmDialog>
 			<p:confirmDialog appendToBody="false" severity="info"
 				widgetVar="courseAddConfirmation">
 				<f:facet name="message">

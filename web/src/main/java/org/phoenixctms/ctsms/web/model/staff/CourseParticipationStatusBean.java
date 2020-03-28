@@ -119,6 +119,10 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		return WebUtil.getCvPdfStreamedContent(in.getStaffId());
 	}
 
+	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
+		return WebUtil.getTrainingRecordPdfStreamedContent(in.getStaffId());
+	}
+
 	public boolean getShowTerminalStateMessage() {
 		if (out != null && in.getStatusId() != null) {
 			Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;

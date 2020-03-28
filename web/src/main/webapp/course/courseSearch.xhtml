@@ -55,22 +55,21 @@
 						</f:facet>
 						<ui:decorate template="/META-INF/includes/shared/courseSearcher.xhtml">
 							<ui:define name="toolbarbuttons">
-								<p:commandButton
-								    disabled="#{!courseSearchBean.enableExports}"
-									process="@this,:search_form:tabView:criteria_input"
-									ajax="false"
-									value="#{courselabels.search_open_course_participant_lists_button_label}"
-									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{courseSearchBean.courseParticipantListPdfStreamedContent}" />
-								</p:commandButton>
-								<p:commandButton
-								    disabled="#{!courseSearchBean.enableExports}"
-									process="@this,:search_form:tabView:criteria_input"
-									ajax="false"
+								<p:splitButton immediate="true" ajax="false"
 									value="#{labels.search_export_results_button_label}"
+									process="@this,:search_form:tabView:criteria_input"
+									disabled="#{!courseSearchBean.enableExports}"
 									icon="ui-icon ui-icon-xls">
-									<p:fileDownload value="#{courseSearchBean.excelStreamedContent}" />
-								</p:commandButton>
+									<p:fileDownload
+										value="#{courseSearchBean.excelStreamedContent}" />
+									<p:menuitem immediate="true" ajax="false"
+										value="#{courselabels.search_open_course_participant_lists_button_label}"
+										process="@this,:search_form:tabView:criteria_input"
+										disabled="#{!courseSearchBean.enableExports}"
+										icon="ctsms-menubar-icon ctsms-icon-pdf">
+										<p:fileDownload value="#{courseSearchBean.courseParticipantListPdfStreamedContent}" />
+									</p:menuitem>
+								</p:splitButton>	
 							</ui:define>
 							<ui:define name="pickbutton">
 								<p:column style="width:32px;">
