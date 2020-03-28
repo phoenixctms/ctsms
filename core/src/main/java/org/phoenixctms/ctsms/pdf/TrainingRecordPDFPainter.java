@@ -338,7 +338,9 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 										}
 										if (trialParticipationVOMap.keySet().size() > 1
 												|| trialParticipationVOMap.keySet().iterator().next() != null) {
-											trialParticipationVOMap.put(null, trialParticipationVOMap.remove(null)); //move those w/o course trial at the end
+											if (trialParticipationVOMap.containsKey(null)) {
+												trialParticipationVOMap.put(null, trialParticipationVOMap.remove(null)); //move those w/o course trial at the end
+											}
 											Iterator<Long> trialIt = trialParticipationVOMap.keySet().iterator();
 											while (trialIt.hasNext()) {
 												Collection<CourseParticipationStatusEntryOutVO> trialParticipations = trialParticipationVOMap.get(trialIt.next());
