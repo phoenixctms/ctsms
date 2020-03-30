@@ -588,6 +588,28 @@ public final class WebUtil {
 		return cvSections;
 	}
 
+	public static ArrayList<SelectItem> getAllTrainingRecordSections() {
+		ArrayList<SelectItem> trainingRecordSections;
+		Collection<TrainingRecordSectionVO> sectionVOs = null;
+		try {
+			sectionVOs = getServiceLocator().getSelectionSetService().getAllTrainingRecordSections(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (sectionVOs != null) {
+			trainingRecordSections = new ArrayList<SelectItem>(sectionVOs.size());
+			Iterator<TrainingRecordSectionVO> it = sectionVOs.iterator();
+			while (it.hasNext()) {
+				TrainingRecordSectionVO sectionVO = it.next();
+				trainingRecordSections.add(new SelectItem(sectionVO.getId().toString(), sectionVO.getName()));
+			}
+		} else {
+			trainingRecordSections = new ArrayList<SelectItem>();
+		}
+		return trainingRecordSections;
+	}
+
 	public static ArrayList<SelectItem> getAllDepartments() {
 		ArrayList<SelectItem> departments;
 		Collection<DepartmentVO> departmentVOs = null;
@@ -1559,6 +1581,21 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static StreamedContent getTrainingRecordPdfStreamedContent(Long staffId) throws Exception {
+		if (staffId != null) {
+			try {
+				TrainingRecordPDFVO cv = getServiceLocator().getStaffService().renderTrainingRecordPDF(getAuthentication(), staffId);
+				return new DefaultStreamedContent(new ByteArrayInputStream(cv.getDocumentDatas()), cv.getContentType().getMimeType(), cv.getFileName());
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				throw e;
+			} catch (AuthenticationException e) {
+				publishException(e);
+				throw e;
+			}
+		}
+		return null;
+	}
+
 	public static CvPositionOutVO getCvPosition(Long cvPositionId) {
 		if (cvPositionId != null) {
 			try {
@@ -1595,6 +1632,18 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static TrainingRecordSectionVO getTrainingRecordSection(Long sectionId) {
+		if (sectionId != null) {
+			try {
+				return getServiceLocator().getSelectionSetService().getTrainingRecordSection(getAuthentication(), sectionId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
 	public static ArrayList<SelectItem> getCvSections(Long sectionId) {
 		ArrayList<SelectItem> cvSections;
 		Collection<CvSectionVO> sectionVOs = null;
@@ -1615,6 +1664,28 @@ public final class WebUtil {
 			cvSections = new ArrayList<SelectItem>();
 		}
 		return cvSections;
+	}
+
+	public static ArrayList<SelectItem> getTrainingRecordSections(Long sectionId) {
+		ArrayList<SelectItem> trainingRecordSections;
+		Collection<TrainingRecordSectionVO> sectionVOs = null;
+		try {
+			sectionVOs = getServiceLocator().getSelectionSetService().getTrainingRecordSections(getAuthentication(), sectionId);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (sectionVOs != null) {
+			trainingRecordSections = new ArrayList<SelectItem>(sectionVOs.size());
+			Iterator<TrainingRecordSectionVO> it = sectionVOs.iterator();
+			while (it.hasNext()) {
+				TrainingRecordSectionVO sectionVO = it.next();
+				trainingRecordSections.add(new SelectItem(sectionVO.getId().toString(), sectionVO.getName()));
+			}
+		} else {
+			trainingRecordSections = new ArrayList<SelectItem>();
+		}
+		return trainingRecordSections;
 	}
 
 	public static String getDateFormat() {

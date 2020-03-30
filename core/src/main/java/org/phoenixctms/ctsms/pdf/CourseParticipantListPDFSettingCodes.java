@@ -17,11 +17,11 @@ public interface CourseParticipantListPDFSettingCodes {
 	public final static String Y_FRAME_INDENT = "y_frame_indent";
 	public final static String SPACER_HEIGHT = "spacer_height";
 	public final static String PAGE_FRAME_LINE_WIDTH = "page_frame_line_width";
-	public final static String X_PARTICIPANT_TABLE_COLUMN_INDENT = "x_participant_table_column_indent";
+	public final static String X_PARTICIPANT_TABLE_COLUMN_PARTICIPANT_WIDTH = "x_participant_table_column_participant_width";
 	public final static String X_PARTICIPANT_TABLE_FRAME_INDENT = "x_participant_table_frame_indent";
 	public final static String Y_PARTICIPANT_TABLE_FRAME_INDENT = "y_participant_table_frame_indent";
 	public final static String Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT = "y_participant_table_head_frame_indent";
-	public final static String PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH = "participant_table_block_frame_line_width";
+	public final static String PARTICIPANT_TABLE_FRAME_LINE_WIDTH = "participant_table_frame_line_width";
 	public final static String PARTICIPANT_TABLE_COLUMN_LINE_WIDTH = "participant_table_column_line_width";
 	public final static String PAGE_UPPER_MARGIN = "page_upper_margin";
 	public final static String PAGE_LOWER_MARGIN = "page_lower_margin";

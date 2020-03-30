@@ -5,8 +5,8 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 
 public class CourseParticipantListPDFBlockCursor extends PDFBlockCursor {
 
-	private CourseParticipantListPDFPainter painter;
-	private CourseOutVO course;
+	protected CourseParticipantListPDFPainter painter;
+	protected CourseOutVO course;
 
 	public CourseParticipantListPDFBlockCursor(CourseParticipantListPDFPainter painter) {
 		this.painter = painter;

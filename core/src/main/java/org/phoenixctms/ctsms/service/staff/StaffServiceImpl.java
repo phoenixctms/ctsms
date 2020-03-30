@@ -89,6 +89,9 @@ import org.phoenixctms.ctsms.pdf.CVPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.CVPDFPainter;
 import org.phoenixctms.ctsms.pdf.CVPDFSettingCodes;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFDefaultSettings;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFPainter;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFSettingCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -135,6 +138,7 @@ import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueInVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordPDFVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vocycle.StaffReflexionGraph;
@@ -1831,7 +1835,8 @@ public class StaffServiceImpl
 			AuthenticationVO auth, CourseParticipationStatusEntryInVO newCourseParticipationStatusEntry)
 			throws Exception {
 		ServiceUtil.checkAddCourseParticipationStatusEntryInput(newCourseParticipationStatusEntry, false, true,
-				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getCourseParticipationStatusTypeDao(), this.getCourseParticipationStatusEntryDao());
+				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getCourseParticipationStatusTypeDao(),
+				this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -1865,6 +1870,28 @@ public class StaffServiceImpl
 		(new PDFImprinter(painter, painter)).render();
 		CvPDFVO result = painter.getPdfVO();
 		logSystemMessage(staff, staffVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.CV_PDF_RENDERED, result, null,
+				this.getJournalEntryDao());
+		return result;
+	}
+
+	@Override
+	protected TrainingRecordPDFVO handleRenderTrainingRecordPDF(AuthenticationVO auth, Long staffId) throws Exception {
+		StaffDao staffDao = this.getStaffDao();
+		Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao);
+		if (!staff.isPerson()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_STAFF_NOT_PERSON);
+		}
+		ArrayList<StaffOutVO> staffVOs = new ArrayList<StaffOutVO>();
+		StaffOutVO staffVO = staffDao.toStaffOutVO(staff,
+				Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES));
+		staffVOs.add(staffVO);
+		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, this.getStaffDao(), this.getStaffTagValueDao(), this.getTrainingRecordSectionDao(),
+				this.getCourseParticipationStatusEntryDao());
+		User user = CoreUtil.getUser();
+		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
+		(new PDFImprinter(painter, painter)).render();
+		TrainingRecordPDFVO result = painter.getPdfVO();
+		logSystemMessage(staff, staffVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.TRAINING_RECORD_PDF_RENDERED, result, null,
 				this.getJournalEntryDao());
 		return result;
 	}
@@ -2166,7 +2193,7 @@ public class StaffServiceImpl
 				courseParticipationStatusEntryDao);
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		ServiceUtil.checkUpdateCourseParticipationStatusEntryInput(originalCourseParticipation, modifiedCourseParticipationStatusEntry, false,
-				this.getCvSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao());
+				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao());
 		CourseParticipationStatusEntryOutVO original = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(originalCourseParticipation);
 		CourseParticipationStatusType originalCourseParticipationStatusType = originalCourseParticipation.getStatus();
 		courseParticipationStatusTypeDao.evict(originalCourseParticipationStatusType);

@@ -165,6 +165,7 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterSponsoringTypes;
 	private ArrayList<SelectItem> filterSurveyStatusTypes;
 	private ArrayList<SelectItem> filterCvSections;
+	private ArrayList<SelectItem> filterTrainingRecordSections;
 	private ArrayList<SelectItem> filterContactDetailTypes;
 	private ArrayList<SelectItem> filterLecturerCompetences;
 	private ArrayList<SelectItem> filterTeamMemberRoles;
@@ -316,6 +317,14 @@ public class SessionScopeBean {
 			filterCvSections.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		}
 		return filterCvSections;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterTrainingRecordSections() {
+		if (filterTrainingRecordSections == null) {
+			filterTrainingRecordSections = WebUtil.getAllTrainingRecordSections();
+			filterTrainingRecordSections.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterTrainingRecordSections;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterDepartments() {
@@ -861,6 +870,7 @@ public class SessionScopeBean {
 		filterSponsoringTypes = null;
 		filterSurveyStatusTypes = null;
 		filterCvSections = null;
+		filterTrainingRecordSections = null;
 		filterContactDetailTypes = null;
 		filterLecturerCompetences = null;
 		filterTeamMemberRoles = null;

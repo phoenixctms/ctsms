@@ -23,14 +23,14 @@ import jxl.write.WritableSheet;
 
 public class InventoryBookingsExcelWriter extends WorkbookWriter {
 
-	private InventoryBookingsExcelVO excelVO;
-	private DepartmentVO probandDepartment;
-	private DepartmentVO courseDepartment;
-	private DepartmentVO trialDepartment;
-	private String calendar;
-	private Date from;
-	private Date to;
-	private static final String INVENTORY_BOOKINGS_EXCEL_FILENAME_PREFIX = "inventory_bookings_";
+	protected InventoryBookingsExcelVO excelVO;
+	protected DepartmentVO probandDepartment;
+	protected DepartmentVO courseDepartment;
+	protected DepartmentVO trialDepartment;
+	protected String calendar;
+	protected Date from;
+	protected Date to;
+	protected static final String INVENTORY_BOOKINGS_EXCEL_FILENAME_PREFIX = "inventory_bookings_";
 
 	protected InventoryBookingsExcelWriter() {
 		super();
@@ -58,7 +58,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 								InventoryBookingsExcelDefaultSettings.ROW_FORMAT)));
 	}
 
-	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
+	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		header.getLeft().clear();
 		temp = getDepartmentsHeader();
@@ -130,7 +130,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		return courseDepartment;
 	}
 
-	private String getDepartmentsHeader() {
+	protected String getDepartmentsHeader() {
 		StringBuilder sb = new StringBuilder();
 		if (probandDepartment != null) {
 			if (sb.length() > 0) {

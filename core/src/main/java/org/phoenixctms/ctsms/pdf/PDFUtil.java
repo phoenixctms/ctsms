@@ -23,7 +23,7 @@ public final class PDFUtil {
 	}
 
 	public enum FontSize {
-		TINY, SMALL, MEDIUM, BIG, LARGE, SIZE11, SIZE12
+		TINY, SMALL, MEDIUM, BIG, LARGE, SIZE10, SIZE11, SIZE12
 	}
 
 	public enum LineStyle {
@@ -57,6 +57,9 @@ public final class PDFUtil {
 	private final static float LARGE_FONT_SIZE = 18.0f;
 	private final static float LARGE_FONT_LINE_SPACING = 6.0f;
 	private final static float LARGE_FONT_TEXT_DECORATION_LINE_WIDTH = LARGE_FONT_SIZE / 10.0f;
+	private final static float SIZE10_FONT_SIZE = 10.0f;
+	private final static float SIZE10_FONT_LINE_SPACING = 3.333f;
+	private final static float SIZE10_FONT_TEXT_DECORATION_LINE_WIDTH = SIZE10_FONT_SIZE / 10.0f;
 	private final static float SIZE11_FONT_SIZE = 11.0f;
 	private final static float SIZE11_FONT_LINE_SPACING = 3.5f;
 	private final static float SIZE11_FONT_TEXT_DECORATION_LINE_WIDTH = SIZE11_FONT_SIZE / 10.0f;
@@ -116,6 +119,8 @@ public final class PDFUtil {
 					return BIG_FONT_SIZE;
 				case LARGE:
 					return LARGE_FONT_SIZE;
+				case SIZE10:
+					return SIZE10_FONT_SIZE;
 				case SIZE11:
 					return SIZE11_FONT_SIZE;
 				case SIZE12:
@@ -145,6 +150,8 @@ public final class PDFUtil {
 					return BIG_FONT_LINE_SPACING;
 				case LARGE:
 					return LARGE_FONT_LINE_SPACING;
+				case SIZE10:
+					return SIZE10_FONT_LINE_SPACING;
 				case SIZE11:
 					return SIZE11_FONT_LINE_SPACING;
 				case SIZE12:
@@ -173,6 +180,8 @@ public final class PDFUtil {
 					return BIG_FONT_TEXT_DECORATION_LINE_WIDTH;
 				case LARGE:
 					return LARGE_FONT_TEXT_DECORATION_LINE_WIDTH;
+				case SIZE10:
+					return SIZE10_FONT_TEXT_DECORATION_LINE_WIDTH;
 				case SIZE11:
 					return SIZE11_FONT_TEXT_DECORATION_LINE_WIDTH;
 				case SIZE12:

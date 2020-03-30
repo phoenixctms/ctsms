@@ -36,6 +36,7 @@ import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueInVOInputFieldValueEq
 import org.phoenixctms.ctsms.adapt.ProbandListStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
 import org.phoenixctms.ctsms.compare.BankAccountOutVOComparator;
+import org.phoenixctms.ctsms.compare.CourseParticipationStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.CvPositionPDFVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
@@ -77,6 +78,9 @@ import org.phoenixctms.ctsms.pdf.PDFPainterFactory;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
 import org.phoenixctms.ctsms.pdf.ProbandListEntryTagsPDFPainter;
 import org.phoenixctms.ctsms.pdf.ReimbursementsPDFPainter;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFDefaultSettings;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFPainter;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFSettingCodes;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.EcrfSignature;
 import org.phoenixctms.ctsms.security.EntitySignature;
@@ -171,6 +175,8 @@ import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
 import org.phoenixctms.ctsms.vo.StaffImageOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
@@ -548,13 +554,17 @@ public final class ServiceUtil {
 	}
 
 	public static void checkAddCourseParticipationStatusEntryInput(CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin, Boolean selfRegistration,
-			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
+			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao,
+			CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(courseParticipationIn.getStaffId(), staffDao);
 		Course course = CheckIDUtil.checkCourseId(courseParticipationIn.getCourseId(), courseDao, LockMode.PESSIMISTIC_WRITE);
-		if (courseParticipationIn.getSectionId() != null) {
-			CheckIDUtil.checkCvSectionId(courseParticipationIn.getSectionId(), cvSectionDao);
+		if (courseParticipationIn.getCvSectionId() != null) {
+			CheckIDUtil.checkCvSectionId(courseParticipationIn.getCvSectionId(), cvSectionDao);
+		}
+		if (courseParticipationIn.getTrainingRecordSectionId() != null) {
+			CheckIDUtil.checkTrainingRecordSectionId(courseParticipationIn.getTrainingRecordSectionId(), trainingRecordSectionDao);
 		}
 		CourseParticipationStatusType state = CheckIDUtil.checkCourseParticipationStatusTypeId(courseParticipationIn.getStatusId(), courseParticipationStatusTypeDao);
 		// other input checks
@@ -565,10 +575,16 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(selfRegistration ? ServiceExceptionCodes.COURSE_PARTICIPATION_COURSE_SELF_REGISTRATION
 					: ServiceExceptionCodes.COURSE_PARTICIPATION_COURSE_ADMIN_REGISTRATION);
 		}
+		if (courseParticipationIn.getShowTrainingRecord() && !course.isShowTrainingRecordPreset()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_PRESET_DISABLED);
+		}
+		if (courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getTrainingRecordSectionId() == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED);
+		}
 		if (courseParticipationIn.getShowCv() && !course.isShowCvPreset()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED);
 		}
-		if (courseParticipationIn.getShowCv() && courseParticipationIn.getSectionId() == null) {
+		if (courseParticipationIn.getShowCv() && courseParticipationIn.getCvSectionId() == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_CV_SECTION_REQUIRED);
 		}
 		if (!courseParticipationIn.getShowCv() && courseParticipationIn.getShowCommentCv()) {
@@ -1004,11 +1020,14 @@ public final class ServiceUtil {
 
 	public static void checkUpdateCourseParticipationStatusEntryInput(CourseParticipationStatusEntry originalCourseParticipation,
 			CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin,
-			CvSectionDao cvSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
+			CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
 			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
 		// referential checks
-		if (courseParticipationIn.getSectionId() != null) {
-			CheckIDUtil.checkCvSectionId(courseParticipationIn.getSectionId(), cvSectionDao);
+		if (courseParticipationIn.getCvSectionId() != null) {
+			CheckIDUtil.checkCvSectionId(courseParticipationIn.getCvSectionId(), cvSectionDao);
+		}
+		if (courseParticipationIn.getTrainingRecordSectionId() != null) {
+			CheckIDUtil.checkTrainingRecordSectionId(courseParticipationIn.getTrainingRecordSectionId(), trainingRecordSectionDao);
 		}
 		CourseParticipationStatusType state = CheckIDUtil.checkCourseParticipationStatusTypeId(courseParticipationIn.getStatusId(), courseParticipationStatusTypeDao);
 		// other input checks
@@ -1020,10 +1039,16 @@ public final class ServiceUtil {
 		if (!course.getId().equals(courseParticipationIn.getCourseId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_COURSE_CHANGED);
 		}
+		if (courseParticipationIn.getShowTrainingRecord() && !course.isShowTrainingRecordPreset()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_PRESET_DISABLED);
+		}
+		if (courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getTrainingRecordSectionId() == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED);
+		}
 		if (courseParticipationIn.getShowCv() && !course.isShowCvPreset()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED);
 		}
-		if (courseParticipationIn.getShowCv() && courseParticipationIn.getSectionId() == null) {
+		if (courseParticipationIn.getShowCv() && courseParticipationIn.getCvSectionId() == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_CV_SECTION_REQUIRED);
 		}
 		if (!courseParticipationIn.getShowCv() && courseParticipationIn.getShowCommentCv()) {
@@ -1197,6 +1222,46 @@ public final class ServiceUtil {
 			painter.setImageVOMap(imageVOMap);
 		}
 		painter.setAllCvSectionVOs(allCvSections);
+		return painter;
+	}
+
+	public static TrainingRecordPDFPainter createTrainingRecordPDFPainter(Collection<StaffOutVO> staffVOs, StaffDao staffDao,
+			StaffTagValueDao staffTagValueDao, TrainingRecordSectionDao trainingRecordSectionDao, CourseParticipationStatusEntryDao courseParticipationDao) throws Exception {
+		TrainingRecordPDFPainter painter = PDFPainterFactory.createTrainingRecordPDFPainter();
+		Collection allTrainingRecordSections = trainingRecordSectionDao.loadAllSorted(0, 0);
+		trainingRecordSectionDao.toTrainingRecordSectionVOCollection(allTrainingRecordSections);
+		if (staffVOs != null) {
+			ArrayList<StaffOutVO> personVOs = new ArrayList<StaffOutVO>(staffVOs.size());
+			//HashMap<Long, StaffAddressOutVO> addressVOMap = new HashMap<Long, StaffAddressOutVO>(staffVOs.size());
+			HashMap<Long, Collection<StaffTagValueOutVO>> staffTagValueVOMap = new HashMap<Long, Collection<StaffTagValueOutVO>>(staffVOs.size());
+			HashMap<Long, HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>> participationVOMap = new HashMap<Long, HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>>(
+					staffVOs.size());
+			Iterator<StaffOutVO> staffIt = staffVOs.iterator();
+			while (staffIt.hasNext()) {
+				StaffOutVO staffVO = staffIt.next();
+				if (staffVO.isPerson()) {
+					personVOs.add(staffVO);
+					//StaffAddressOutVO addressVO = findOrganisationCvAddress(staffVO, true, staffAddressDao);
+					//addressVOMap.put(staffVO.getId(), addressVO);
+					Collection staffTagValues = staffTagValueDao.findByStaffExcelTrainingRecordSorted(staffVO.getId(), null, true);
+					staffTagValueDao.toStaffTagValueOutVOCollection(staffTagValues);
+					staffTagValueVOMap.put(staffVO.getId(), staffTagValues);
+					HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> staffParticipationVOMap = new HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>(
+							allTrainingRecordSections.size());
+					Iterator<TrainingRecordSectionVO> sectionIt = allTrainingRecordSections.iterator();
+					while (sectionIt.hasNext()) {
+						TrainingRecordSectionVO sectionVO = sectionIt.next();
+						staffParticipationVOMap.put(sectionVO.getId(), loadTrainingRecordParticipations(staffVO.getId(), sectionVO.getId(), courseParticipationDao, staffDao));
+					}
+					participationVOMap.put(staffVO.getId(), staffParticipationVOMap);
+				}
+			}
+			painter.setStaffVOs(personVOs);
+			painter.setParticipationVOMap(participationVOMap);
+			//painter.setAddressVOMap(addressVOMap);
+			painter.setStaffTagValueVOMap(staffTagValueVOMap);
+		}
+		painter.setAllTrainingRecordSectionVOs(allTrainingRecordSections);
 		return painter;
 	}
 
@@ -3285,13 +3350,33 @@ public final class ServiceUtil {
 	public static Collection<CvPositionPDFVO> loadCvPositions(Long staffId, Long sectionId, CvPositionDao cvPositionDao, CourseParticipationStatusEntryDao courseParticipationDao)
 			throws Exception {
 		Collection cvPositions = cvPositionDao.findByStaffSection(staffId, sectionId, true, null);
-		Collection courseParticipations = courseParticipationDao.findByStaffSection(staffId, sectionId, true, true, true, null);
+		Collection courseParticipations = courseParticipationDao.findByStaffCvSection(staffId, sectionId, true, true, true, null);
 		cvPositionDao.toCvPositionPDFVOCollection(cvPositions);
 		courseParticipationDao.toCvPositionPDFVOCollection(courseParticipations);
 		ArrayList<CvPositionPDFVO> result = new ArrayList<CvPositionPDFVO>(cvPositions.size() + courseParticipations.size());
 		result.addAll(cvPositions);
 		result.addAll(courseParticipations);
 		Collections.sort(result, new CvPositionPDFVOComparator());
+		return result;
+	}
+
+	private static Collection<CourseParticipationStatusEntryOutVO> loadTrainingRecordParticipations(Long staffId, Long sectionId,
+			CourseParticipationStatusEntryDao courseParticipationDao, StaffDao staffDao)
+			throws Exception {
+		Collection courseParticipations = courseParticipationDao.findByStaffTrainingRecordSection(staffId, sectionId, true, true, true, null);
+		courseParticipationDao.toCourseParticipationStatusEntryOutVOCollection(courseParticipations);
+		ArrayList<CourseParticipationStatusEntryOutVO> result = new ArrayList<CourseParticipationStatusEntryOutVO>(courseParticipations.size());
+		Iterator it = courseParticipations.iterator();
+		while (it.hasNext()) {
+			CourseParticipationStatusEntryOutVO participationVO = ((CourseParticipationStatusEntryOutVO) it.next());
+			if (participationVO.getCourse().getInstitution() != null) {
+				participationVO.getCourse().setInstitution(staffDao.toStaffOutVO(staffDao.load(participationVO.getCourse().getInstitution().getId()),
+						Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF,
+								TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES)));
+			}
+			result.add(participationVO);
+		}
+		Collections.sort(result, new CourseParticipationStatusEntryOutVOComparator());
 		return result;
 	}
 
@@ -5426,7 +5511,7 @@ public final class ServiceUtil {
 		Iterator<MoneyTransfer> moneyTransfersIt = null;
 		if (trial != null) {
 			trialVO = trialDao.toTrialOutVO(trial);
-			trialTagValues = trialTagValueDao.findByTrialExcelPayoffsSorted(trial.getId(), true, null);
+			trialTagValues = trialTagValueDao.findByTrialExcelPayoffsSorted(trial.getId(), null, true);
 			trialTagValueDao.toTrialTagValueOutVOCollection(trialTagValues);
 			costTypes = moneyTransferDao.getCostTypes(null, trial.getId(), null, null, method);
 			moneyTransfersIt = moneyTransferDao.findByProbandTrialMethodCostTypePaidPerson(null, trialVO.getId(), null, proband == null ? null : proband.getId(), method, null,

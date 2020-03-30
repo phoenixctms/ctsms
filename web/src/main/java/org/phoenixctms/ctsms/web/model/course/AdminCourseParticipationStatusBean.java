@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CourseParticipationStatusBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.StaffMultiPickerModel;
@@ -48,17 +49,22 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 			in.setStatusId(null);
 			CourseOutVO course = WebUtil.getCourse(courseId, null, null, null);
 			if (course != null) {
-				CvSectionVO sectionVO = course.getCvSectionPreset();
+				CvSectionVO cvSectionVO = course.getCvSectionPreset();
+				TrainingRecordSectionVO trainingRecordSectionVO = course.getTrainingRecordSectionPreset();
 				in.setComment(course.getCvCommentPreset());
-				in.setSectionId(sectionVO == null ? null : sectionVO.getId());
+				in.setCvSectionId(cvSectionVO == null ? null : cvSectionVO.getId());
 				in.setShowCommentCv(course.getShowCommentCvPreset());
 				in.setShowCv(course.getShowCvPreset());
+				in.setTrainingRecordSectionId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
+				in.setShowTrainingRecord(course.getShowTrainingRecordPreset());
 				return;
 			}
 			in.setComment(null);
-			in.setSectionId(null);
+			in.setCvSectionId(null);
 			in.setShowCommentCv(false);
 			in.setShowCv(false);
+			in.setTrainingRecordSectionId(null);
+			in.setShowTrainingRecord(false);
 		}
 	}
 
@@ -212,6 +218,10 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		return WebUtil.getCvPdfStreamedContent(in.getStaffId());
 	}
 
+	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
+		return WebUtil.getTrainingRecordPdfStreamedContent(in.getStaffId());
+	}
+
 	public boolean getShowTerminalStateMessage() {
 		if (out != null && in.getStatusId() != null) {
 			Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
@@ -282,7 +292,8 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		statusEntryModel.setStaffId(null);
 		statusEntryModel.setCourseId(in.getCourseId());
 		statusEntryModel.updateRowCount();
-		cvSections = WebUtil.getCvSections(this.in.getSectionId());
+		cvSections = WebUtil.getCvSections(this.in.getCvSectionId());
+		trainingRecordSections = WebUtil.getTrainingRecordSections(this.in.getTrainingRecordSectionId());
 		Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
 		if (out != null) {
 			try {
@@ -314,7 +325,8 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
 		}
-		loadSelectedSection();
+		loadSelectedCvSection();
+		loadSelectedTrainingRecordSection();
 	}
 
 	@Override

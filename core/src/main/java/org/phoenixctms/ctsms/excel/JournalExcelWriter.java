@@ -28,18 +28,18 @@ import jxl.write.WritableSheet;
 
 public class JournalExcelWriter extends WorkbookWriter {
 
-	private JournalModule module;
-	private InventoryOutVO inventory;
-	private StaffOutVO staff;
-	private CourseOutVO course;
-	private TrialOutVO trial;
-	private ProbandOutVO proband;
-	private UserOutVO user;
-	private CriteriaOutVO criteria;
-	private InputFieldOutVO inputField;
-	private MassMailOutVO massMail;
-	private JournalExcelVO excelVO;
-	private static final String JOURNAL_EXCEL_FILENAME_PREFIX = "journal_";
+	protected JournalModule module;
+	protected InventoryOutVO inventory;
+	protected StaffOutVO staff;
+	protected CourseOutVO course;
+	protected TrialOutVO trial;
+	protected ProbandOutVO proband;
+	protected UserOutVO user;
+	protected CriteriaOutVO criteria;
+	protected InputFieldOutVO inputField;
+	protected MassMailOutVO massMail;
+	protected JournalExcelVO excelVO;
+	protected static final String JOURNAL_EXCEL_FILENAME_PREFIX = "journal_";
 
 	protected JournalExcelWriter() {
 		super();
@@ -102,7 +102,7 @@ public class JournalExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	private SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
 		if (module != null) {
 			switch (module) {
 				case INVENTORY_JOURNAL:

@@ -27,11 +27,11 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		PAGE_TITLE, NEW_LIST_ENTRY, INPUT_FIELD,
 	}
 
-	private ProbandListEntryTagValueOutVO value;
-	private ProbandListEntryOutVO listEntry;
-	private BlockType type;
-	private boolean inserted = false;
-	private Date now;
+	protected ProbandListEntryTagValueOutVO value;
+	protected ProbandListEntryOutVO listEntry;
+	protected BlockType type;
+	protected boolean inserted = false;
+	protected Date now;
 
 	public ProbandListEntryTagsPDFBlock(BlockType type, boolean inserted) {
 		super();
@@ -252,7 +252,7 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 		return value.getSelectionValues();
 	}
 
-	private String getStatusTypeName() {
+	protected String getStatusTypeName() {
 		if (listEntry != null && listEntry.getLastStatus() != null) {
 			return L10nUtil.getProbandListStatusTypeName(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, listEntry.getLastStatus().getStatus().getNameL10nKey());
 		}

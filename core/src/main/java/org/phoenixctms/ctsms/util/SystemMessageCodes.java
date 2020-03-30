@@ -82,6 +82,7 @@ public interface SystemMessageCodes {
 	public final static String CV_POSITION_UPDATED = "cv_position_updated";
 	public final static String CV_POSITION_DELETED = "cv_position_deleted";
 	public final static String CV_PDF_RENDERED = "cv_pdf_rendered";
+	public final static String TRAINING_RECORD_PDF_RENDERED = "training_record_pdf_rendered";
 	public final static String TRIAL_CREATED = "trial_created";
 	public final static String TRIAL_UPDATED = "trial_updated";
 	public final static String TRIAL_DELETED = "trial_deleted";
@@ -316,6 +317,7 @@ public interface SystemMessageCodes {
 	public final static String SEARCH_EXPORTED = "search_exported";
 	public final static String SEARCH_COURSE_PARTICIPANT_LIST_EXPORTED = "search_course_participant_list_exported";
 	public final static String SEARCH_CV_EXPORTED = "search_cv_exported";
+	public final static String SEARCH_TRAINING_RECORD_EXPORTED = "search_training_record_exported";
 	public static final String SEARCH_PROBAND_LETTER_EXPORTED = "search_proband_letter_exported";
 	public final static String FILE_CREATED = "file_created";
 	public final static String FILE_UPDATED = "file_updated";

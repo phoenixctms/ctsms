@@ -26,19 +26,19 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 
 public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<ProbandLetterPDFBlock> blocks;
-	private ProbandLetterPDFBlockCursor cursor;
-	private ProbandLetterPDFVO pdfVO;
-	private Collection<ProbandOutVO> probandVOs;
-	private HashMap<Long, Collection<ProbandAddressOutVO>> addressVOMap;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String PROBAND_LETTER_PDF_FILENAME_PREFIX = "proband_letter_";
+	protected int blockIndex;
+	protected ArrayList<ProbandLetterPDFBlock> blocks;
+	protected ProbandLetterPDFBlockCursor cursor;
+	protected ProbandLetterPDFVO pdfVO;
+	protected Collection<ProbandOutVO> probandVOs;
+	protected HashMap<Long, Collection<ProbandAddressOutVO>> addressVOMap;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String PROBAND_LETTER_PDF_FILENAME_PREFIX = "proband_letter_";
 
 	public ProbandLetterPDFPainter() {
 		super();
@@ -244,7 +244,7 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 		}
 	}
 
-	private void updateProbandLetterPDFVO() {
+	protected void updateProbandLetterPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.setProbands(probandVOs);

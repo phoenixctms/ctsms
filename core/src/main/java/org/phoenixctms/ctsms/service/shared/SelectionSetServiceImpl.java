@@ -106,6 +106,8 @@ import org.phoenixctms.ctsms.domain.TeamMemberRole;
 import org.phoenixctms.ctsms.domain.TeamMemberRoleDao;
 import org.phoenixctms.ctsms.domain.TimelineEventType;
 import org.phoenixctms.ctsms.domain.TimelineEventTypeDao;
+import org.phoenixctms.ctsms.domain.TrainingRecordSection;
+import org.phoenixctms.ctsms.domain.TrainingRecordSectionDao;
 import org.phoenixctms.ctsms.domain.TrialStatusType;
 import org.phoenixctms.ctsms.domain.TrialStatusTypeDao;
 import org.phoenixctms.ctsms.domain.TrialTag;
@@ -202,6 +204,7 @@ import org.phoenixctms.ctsms.vo.SurveyStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTagVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
@@ -323,6 +326,14 @@ public class SelectionSetServiceImpl
 		Collection cvSections = cvSectionDao.loadAllSorted(0, 0);
 		cvSectionDao.toCvSectionVOCollection(cvSections);
 		return cvSections;
+	}
+
+	@Override
+	protected Collection<TrainingRecordSectionVO> handleGetAllTrainingRecordSections(AuthenticationVO auth) throws Exception {
+		TrainingRecordSectionDao trainingRecordSectionDao = this.getTrainingRecordSectionDao();
+		Collection trainingRecordSections = trainingRecordSectionDao.loadAllSorted(0, 0);
+		trainingRecordSectionDao.toTrainingRecordSectionVOCollection(trainingRecordSections);
+		return trainingRecordSections;
 	}
 
 	/**
@@ -886,6 +897,24 @@ public class SelectionSetServiceImpl
 		Collection cvSections = cvSectionDao.findByVisibleIdSorted(true, sectionId);
 		cvSectionDao.toCvSectionVOCollection(cvSections);
 		return cvSections;
+	}
+
+	@Override
+	protected TrainingRecordSectionVO handleGetTrainingRecordSection(AuthenticationVO auth, Long sectionId) throws Exception {
+		TrainingRecordSectionDao trainingRecordSectionDao = this.getTrainingRecordSectionDao();
+		TrainingRecordSection trainingRecordSection = CheckIDUtil.checkTrainingRecordSectionId(sectionId, trainingRecordSectionDao);
+		return trainingRecordSectionDao.toTrainingRecordSectionVO(trainingRecordSection);
+	}
+
+	@Override
+	protected Collection<TrainingRecordSectionVO> handleGetTrainingRecordSections(AuthenticationVO auth, Long sectionId) throws Exception {
+		TrainingRecordSectionDao trainingRecordSectionDao = this.getTrainingRecordSectionDao();
+		if (sectionId != null) {
+			CheckIDUtil.checkTrainingRecordSectionId(sectionId, trainingRecordSectionDao);
+		}
+		Collection trainingRecordSections = trainingRecordSectionDao.findByVisibleIdSorted(true, sectionId);
+		trainingRecordSectionDao.toTrainingRecordSectionVOCollection(trainingRecordSections);
+		return trainingRecordSections;
 	}
 
 	@Override

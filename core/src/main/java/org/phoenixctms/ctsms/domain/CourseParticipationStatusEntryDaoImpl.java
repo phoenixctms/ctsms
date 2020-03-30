@@ -36,6 +36,7 @@ import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 
 /**
@@ -63,14 +64,20 @@ public class CourseParticipationStatusEntryDaoImpl
 			CourseParticipationStatusEntry target,
 			boolean copyIfNull) {
 		super.courseParticipationStatusEntryInVOToEntity(source, target, copyIfNull);
-		Long sectionId = source.getSectionId();
+		Long cvSectionId = source.getCvSectionId();
+		Long trainingRecordSectionId = source.getTrainingRecordSectionId();
 		Long courseId = source.getCourseId();
 		Long statusId = source.getStatusId();
 		Long staffId = source.getStaffId();
-		if (sectionId != null) {
-			target.setSection(this.getCvSectionDao().load(sectionId));
+		if (cvSectionId != null) {
+			target.setCvSection(this.getCvSectionDao().load(cvSectionId));
 		} else if (copyIfNull) {
-			target.setSection(null);
+			target.setCvSection(null);
+		}
+		if (trainingRecordSectionId != null) {
+			target.setTrainingRecordSection(this.getTrainingRecordSectionDao().load(trainingRecordSectionId));
+		} else if (copyIfNull) {
+			target.setTrainingRecordSection(null);
 		}
 		if (courseId != null) {
 			Course course = this.getCourseDao().load(courseId);
@@ -120,15 +127,21 @@ public class CourseParticipationStatusEntryDaoImpl
 			CourseParticipationStatusEntry target,
 			boolean copyIfNull) {
 		super.courseParticipationStatusEntryOutVOToEntity(source, target, copyIfNull);
-		CvSectionVO sectionVO = source.getSection();
+		CvSectionVO cvSectionVO = source.getCvSection();
+		TrainingRecordSectionVO trainingRecordSectionVO = source.getTrainingRecordSection();
 		CourseOutVO courseVO = source.getCourse();
 		StaffOutVO staffVO = source.getStaff();
 		CourseParticipationStatusTypeVO statusVO = source.getStatus();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
-		if (sectionVO != null) {
-			target.setSection(this.getCvSectionDao().cvSectionVOToEntity(sectionVO));
+		if (cvSectionVO != null) {
+			target.setCvSection(this.getCvSectionDao().cvSectionVOToEntity(cvSectionVO));
 		} else if (copyIfNull) {
-			target.setSection(null);
+			target.setCvSection(null);
+		}
+		if (trainingRecordSectionVO != null) {
+			target.setTrainingRecordSection(this.getTrainingRecordSectionDao().trainingRecordSectionVOToEntity(trainingRecordSectionVO));
+		} else if (copyIfNull) {
+			target.setTrainingRecordSection(null);
 		}
 		if (courseVO != null) {
 			Course course = this.getCourseDao().courseOutVOToEntity(courseVO);
@@ -244,7 +257,7 @@ public class CourseParticipationStatusEntryDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<CourseParticipationStatusEntry> handleFindByStaffSection(Long staffId, Long sectionId, Boolean showCv, Boolean pass, Boolean showCvPreset, PSFVO psf)
+	protected Collection<CourseParticipationStatusEntry> handleFindByStaffCvSection(Long staffId, Long cvSectionId, Boolean showCv, Boolean pass, Boolean showCvPreset, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
@@ -254,11 +267,36 @@ public class CourseParticipationStatusEntryDaoImpl
 		if (showCvPreset != null) {
 			criteriaMap.createCriteria("course").add(Restrictions.eq("showCvPreset", showCvPreset.booleanValue()));
 		}
-		if (sectionId != null) {
-			courseParticipationStatusEntryCriteria.add(Restrictions.eq("section.id", sectionId.longValue()));
+		if (cvSectionId != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("cvSection.id", cvSectionId.longValue()));
 		}
 		if (showCv != null) {
 			courseParticipationStatusEntryCriteria.add(Restrictions.eq("showCv", showCv.booleanValue()));
+		}
+		if (pass != null) {
+			criteriaMap.createCriteria("status").add(Restrictions.eq("pass", pass.booleanValue()));
+		}
+		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return courseParticipationStatusEntryCriteria.list();
+	}
+
+	@Override
+	protected Collection<CourseParticipationStatusEntry> handleFindByStaffTrainingRecordSection(Long staffId, Long trainingRecordSectionId, Boolean showTrainingRecord,
+			Boolean pass, Boolean showTrainingRecordPreset, PSFVO psf)
+			throws Exception {
+		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
+		if (staffId != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
+		}
+		if (showTrainingRecordPreset != null) {
+			criteriaMap.createCriteria("course").add(Restrictions.eq("showTrainingRecordPreset", showTrainingRecordPreset.booleanValue()));
+		}
+		if (trainingRecordSectionId != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("trainingRecordSection.id", trainingRecordSectionId.longValue()));
+		}
+		if (showTrainingRecord != null) {
+			courseParticipationStatusEntryCriteria.add(Restrictions.eq("showTrainingRecord", showTrainingRecord.booleanValue()));
 		}
 		if (pass != null) {
 			criteriaMap.createCriteria("status").add(Restrictions.eq("pass", pass.booleanValue()));
@@ -382,12 +420,16 @@ public class CourseParticipationStatusEntryDaoImpl
 			CourseParticipationStatusEntry source,
 			CourseParticipationStatusEntryInVO target) {
 		super.toCourseParticipationStatusEntryInVO(source, target);
-		CvSection section = source.getSection();
+		CvSection cvSection = source.getCvSection();
+		TrainingRecordSection trainingRecordSection = source.getTrainingRecordSection();
 		Course course = source.getCourse();
 		CourseParticipationStatusType status = source.getStatus();
 		Staff staff = source.getStaff();
-		if (section != null) {
-			target.setSectionId(section.getId());
+		if (cvSection != null) {
+			target.setCvSectionId(cvSection.getId());
+		}
+		if (trainingRecordSection != null) {
+			target.setTrainingRecordSectionId(trainingRecordSection.getId());
 		}
 		if (course != null) {
 			target.setCourseId(course.getId());
@@ -416,13 +458,17 @@ public class CourseParticipationStatusEntryDaoImpl
 			CourseParticipationStatusEntry source,
 			CourseParticipationStatusEntryOutVO target) {
 		super.toCourseParticipationStatusEntryOutVO(source, target);
-		CvSection section = source.getSection();
+		CvSection cvSection = source.getCvSection();
+		TrainingRecordSection trainingRecordSection = source.getTrainingRecordSection();
 		Course course = source.getCourse();
 		Staff staff = source.getStaff();
 		CourseParticipationStatusType status = source.getStatus();
 		User modifiedUser = source.getModifiedUser();
-		if (section != null) {
-			target.setSection(this.getCvSectionDao().toCvSectionVO(section));
+		if (cvSection != null) {
+			target.setCvSection(this.getCvSectionDao().toCvSectionVO(cvSection));
+		}
+		if (trainingRecordSection != null) {
+			target.setTrainingRecordSection(this.getTrainingRecordSectionDao().toTrainingRecordSectionVO(trainingRecordSection));
 		}
 		if (course != null) {
 			target.setCourse(this.getCourseDao().toCourseOutVO(course));
@@ -454,10 +500,10 @@ public class CourseParticipationStatusEntryDaoImpl
 			CourseParticipationStatusEntry source,
 			CvPositionPDFVO target) {
 		super.toCvPositionPDFVO(source, target);
-		CvSection section = source.getSection();
+		CvSection cvSection = source.getCvSection();
 		Course course = source.getCourse();
-		if (section != null) {
-			target.setSection(this.getCvSectionDao().toCvSectionVO(section));
+		if (cvSection != null) {
+			target.setSection(this.getCvSectionDao().toCvSectionVO(cvSection));
 		}
 		if (course != null) {
 			StringBuilder sb = new StringBuilder(course.getCvTitle());

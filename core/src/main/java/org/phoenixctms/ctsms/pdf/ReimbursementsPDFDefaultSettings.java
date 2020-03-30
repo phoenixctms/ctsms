@@ -28,11 +28,11 @@ public final class ReimbursementsPDFDefaultSettings {
 	public static final Color FRAME_COLOR = Color.BLACK;
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public final static float SPACER_HEIGHT = 20.0f;
-	public final static float X_PAYMENT_TABLE_COLUMN_INDENT = 230.0f;
+	public final static float X_PAYMENT_TABLE_COLUMN_PAYMENT_METHOD_WIDTH = 230.0f;
 	public final static float X_PAYMENT_TABLE_FRAME_INDENT = 10.0f;
 	public final static float Y_PAYMENT_TABLE_FRAME_INDENT = 10.0f;
 	public final static float Y_PAYMENT_TABLE_HEAD_FRAME_INDENT = 3.0f;
-	public static final float PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH = 1.5f;
+	public static final float PAYMENT_TABLE_FRAME_LINE_WIDTH = 1.5f;
 	public static final float PAYMENT_TABLE_COLUMN_LINE_WIDTH = 0.8f;
 	public static final Color PAYMENT_TABLE_TEXT_COLOR = Color.BLACK;
 	public static final Color PAYMENT_TABLE_FRAME_COLOR = Color.DARKGREY;

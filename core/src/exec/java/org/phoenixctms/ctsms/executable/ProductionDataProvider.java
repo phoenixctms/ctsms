@@ -123,6 +123,8 @@ public class ProductionDataProvider {
 	@Autowired
 	protected CvSectionDao cvSectionDao;
 	@Autowired
+	protected TrainingRecordSectionDao trainingRecordSectionDao;
+	@Autowired
 	protected CourseParticipationStatusEntryDao courseParticipationStatusEntryDao;
 	@Autowired
 	protected CourseParticipationStatusTypeDao courseParticipationStatusTypeDao;
@@ -322,7 +324,7 @@ public class ProductionDataProvider {
 	@Autowired
 	protected JobTypeDao jobTypeDao;
 
-	private AddressType createAddressType(String nameL10nKey, Integer maxOccurrence, boolean deliverPreset, boolean staff, boolean proband, boolean animal) {
+	protected AddressType createAddressType(String nameL10nKey, Integer maxOccurrence, boolean deliverPreset, boolean staff, boolean proband, boolean animal) {
 		AddressType addressType = AddressType.Factory.newInstance();
 		addressType.setNameL10nKey(nameL10nKey);
 		addressType.setMaxOccurrence(maxOccurrence);
@@ -334,7 +336,7 @@ public class ProductionDataProvider {
 		return addressType;
 	}
 
-	private void createAddressTypes() {
+	protected void createAddressTypes() {
 		createAddressType("business", null, false, true, true, false);
 		createAddressType("home", null, true, true, true, false);
 		createAddressType("other", null, true, true, true, false);
@@ -343,7 +345,7 @@ public class ProductionDataProvider {
 		jobOutput.println("address types created");
 	}
 
-	private ContactDetailType createContactDetailType(String nameL10nKey, boolean email, boolean phone, boolean url, boolean notifyPreset, Integer maxOccurrence, String regExp,
+	protected ContactDetailType createContactDetailType(String nameL10nKey, boolean email, boolean phone, boolean url, boolean notifyPreset, Integer maxOccurrence, String regExp,
 			String mismatchMsgL10nKey, boolean staff, boolean proband, boolean animal, boolean business) {
 		ContactDetailType type = ContactDetailType.Factory.newInstance();
 		type.setNameL10nKey(nameL10nKey);
@@ -362,7 +364,7 @@ public class ProductionDataProvider {
 		return type;
 	}
 
-	private void createContactDetailTypes() {
+	protected void createContactDetailTypes() {
 		createContactDetailType("business_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, true,
 				false, true);
 		createContactDetailType("office_phone_number", false, true, false, false, null, CoreUtil.PHONE_NUMBER_PATTERN, ServiceExceptionCodes.INVALID_PHONE_NUMBER, true, false,
@@ -383,7 +385,7 @@ public class ProductionDataProvider {
 		jobOutput.println("contact detail types created");
 	}
 
-	private void createCourseCategories() {
+	protected void createCourseCategories() {
 		createCourseCategory("gcp", Color.LEMONCHIFFON, true, false, "ctsms-coursecategory-gcp");
 		createCourseCategory("study_specific", Color.MOCCASIN, true, true, "ctsms-coursecategory-study-specific");
 		createCourseCategory("continuing_education", Color.LIGHTYELLOW, true, false, "ctsms-coursecategory-continuing-education");
@@ -391,7 +393,7 @@ public class ProductionDataProvider {
 		jobOutput.println("course categories created");
 	}
 
-	private CourseCategory createCourseCategory(String nameL10nKey, Color color, boolean visible, boolean trialRequired, String nodeStyleClass) {
+	protected CourseCategory createCourseCategory(String nameL10nKey, Color color, boolean visible, boolean trialRequired, String nodeStyleClass) {
 		CourseCategory courseCategory = CourseCategory.Factory.newInstance();
 		courseCategory.setNameL10nKey(nameL10nKey);
 		courseCategory.setColor(color);
@@ -402,7 +404,7 @@ public class ProductionDataProvider {
 		return courseCategory;
 	}
 
-	private CourseParticipationStatusType createCourseParticipationStatusType(String nameL10nKey,
+	protected CourseParticipationStatusType createCourseParticipationStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			boolean userInitial,
 			boolean userSelfRegistrationInitial,
@@ -429,7 +431,7 @@ public class ProductionDataProvider {
 		return courseParticipationType;
 	}
 
-	private void createCourseParticipationStatusTypeEntries() {
+	protected void createCourseParticipationStatusTypeEntries() {
 		CourseParticipationStatusType passedParticipationStatusType = createCourseParticipationStatusType("passed", Color.LIGHTGREEN,
 				false, false, false, false,
 				false, false, true, false,
@@ -529,7 +531,7 @@ public class ProductionDataProvider {
 		jobOutput.println("course participation states created");
 	}
 
-	private CriterionRestriction createCriterionRestriction(org.phoenixctms.ctsms.enumeration.CriterionRestriction r) {
+	protected CriterionRestriction createCriterionRestriction(org.phoenixctms.ctsms.enumeration.CriterionRestriction r) {
 		CriterionRestriction restriction = CriterionRestriction.Factory.newInstance();
 		restriction.setNameL10nKey(r.name());
 		restriction.setRestriction(r);
@@ -537,14 +539,14 @@ public class ProductionDataProvider {
 		return restriction;
 	}
 
-	private void createCriterionRestrictionEntries() {
+	protected void createCriterionRestrictionEntries() {
 		org.phoenixctms.ctsms.enumeration.CriterionRestriction[] restrictions = org.phoenixctms.ctsms.enumeration.CriterionRestriction.values();
 		for (int i = 0; i < restrictions.length; i++) {
 			createCriterionRestriction(restrictions[i]);
 		}
 	}
 
-	private CriterionTie createCriterionTie(org.phoenixctms.ctsms.enumeration.CriterionTie t) {
+	protected CriterionTie createCriterionTie(org.phoenixctms.ctsms.enumeration.CriterionTie t) {
 		CriterionTie tie = CriterionTie.Factory.newInstance();
 		tie.setNameL10nKey(t.name());
 		tie.setTie(t);
@@ -552,14 +554,14 @@ public class ProductionDataProvider {
 		return tie;
 	}
 
-	private void createCriterionTieEntries() {
+	protected void createCriterionTieEntries() {
 		org.phoenixctms.ctsms.enumeration.CriterionTie[] ties = org.phoenixctms.ctsms.enumeration.CriterionTie.values();
 		for (int i = 0; i < ties.length; i++) {
 			createCriterionTie(ties[i]);
 		}
 	}
 
-	private CvSection createCvSection(String nameL10nKey, String titlePresetL10nKey, String descriptionL10nKey, long position, boolean showCvPreset, boolean visible) {
+	protected CvSection createCvSection(String nameL10nKey, String titlePresetL10nKey, String descriptionL10nKey, long position, boolean showCvPreset, boolean visible) {
 		CvSection cvSection = CvSection.Factory.newInstance();
 		cvSection.setNameL10nKey(nameL10nKey);
 		cvSection.setTitlePresetL10nKey(titlePresetL10nKey);
@@ -571,7 +573,7 @@ public class ProductionDataProvider {
 		return cvSection;
 	}
 
-	private void createCvSections() {
+	protected void createCvSections() {
 		createCvSection("present_position", "present_position", null, 0, true, true);
 		createCvSection("relevant_education", "relevant_education", "relevant_education", 10, true, true);
 		createCvSection("relevant_previous_positions", "relevant_previous_positions", "relevant_previous_positions", 20, true, true);
@@ -581,7 +583,25 @@ public class ProductionDataProvider {
 		jobOutput.println("cv sections created");
 	}
 
-	private ECRFFieldStatusType createEcrfFieldStatusType(String nameL10nKey,
+	protected TrainingRecordSection createTrainingRecordSection(String nameL10nKey, String descriptionL10nKey, long position, boolean showTrainingRecordPreset, boolean visible) {
+		TrainingRecordSection trainingRecordSection = TrainingRecordSection.Factory.newInstance();
+		trainingRecordSection.setNameL10nKey(nameL10nKey);
+		trainingRecordSection.setDescriptionL10nKey(descriptionL10nKey);
+		trainingRecordSection.setPosition(position);
+		trainingRecordSection.setShowTrainingRecordPreset(showTrainingRecordPreset);
+		trainingRecordSection.setVisible(visible);
+		trainingRecordSection = trainingRecordSectionDao.create(trainingRecordSection);
+		return trainingRecordSection;
+	}
+
+	protected void createTrainingRecordSections() {
+		createTrainingRecordSection("in_house_trainings", "in_house_trainings", 0, true, true);
+		createTrainingRecordSection("external_trainings", "external_trainings", 10, true, true);
+		createTrainingRecordSection("trial_specific_trainings", "trial_specific_trainings", 20, true, true);
+		jobOutput.println("training record sections created");
+	}
+
+	protected ECRFFieldStatusType createEcrfFieldStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			ECRFFieldStatusQueue queue,
 			boolean initial,
@@ -593,7 +613,7 @@ public class ProductionDataProvider {
 		return createEcrfFieldStatusType(nameL10nKey, color, queue, initial, updated, proposed, resolved, false, false, false, commentRequired, unlockValue);
 	}
 
-	private ECRFFieldStatusType createEcrfFieldStatusType(String nameL10nKey,
+	protected ECRFFieldStatusType createEcrfFieldStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			ECRFFieldStatusQueue queue,
 			boolean initial,
@@ -622,7 +642,7 @@ public class ProductionDataProvider {
 		return ecrfFieldStatusType;
 	}
 
-	private void createEcrfFieldStatusTypeEntries() {
+	protected void createEcrfFieldStatusTypeEntries() {
 		ECRFFieldStatusType annotationEcrfFieldStatusType = createEcrfFieldStatusType(
 				"annotation",
 				Color.GAINSBORO,
@@ -821,14 +841,14 @@ public class ProductionDataProvider {
 		jobOutput.println("eCRF field states created");
 	}
 
-	private ECRFStatusAction createEcrfStatusAction(org.phoenixctms.ctsms.enumeration.ECRFStatusAction a) {
+	protected ECRFStatusAction createEcrfStatusAction(org.phoenixctms.ctsms.enumeration.ECRFStatusAction a) {
 		ECRFStatusAction action = ECRFStatusAction.Factory.newInstance();
 		action.setAction(a);
 		action = eCRFStatusActionDao.create(action);
 		return action;
 	}
 
-	private void createEcrfStatusActions() {
+	protected void createEcrfStatusActions() {
 		org.phoenixctms.ctsms.enumeration.ECRFStatusAction[] actions = org.phoenixctms.ctsms.enumeration.ECRFStatusAction.values();
 		for (int i = 0; i < actions.length; i++) {
 			createEcrfStatusAction(actions[i]);
@@ -836,7 +856,7 @@ public class ProductionDataProvider {
 		jobOutput.println("eCRF status actions created");
 	}
 
-	private ECRFStatusType createEcrfStatusType(String nameL10nKey,
+	protected ECRFStatusType createEcrfStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			String nodeStyleClass,
 			boolean initial,
@@ -869,7 +889,7 @@ public class ProductionDataProvider {
 		return ecrfStatusType;
 	}
 
-	private void createEcrfStatusTypeEntries() {
+	protected void createEcrfStatusTypeEntries() {
 		ECRFStatusType inProgressEcrfStatusType = createEcrfStatusType("in_progress", Color.ANTIQUEWHITE,
 				"ui-icon-pencil",
 				true,
@@ -1082,7 +1102,7 @@ public class ProductionDataProvider {
 		jobOutput.println("eCRF states created");
 	}
 
-	private FileFolderPreset createFileFolderPreset(FileModule module, String logicalPath) {
+	protected FileFolderPreset createFileFolderPreset(FileModule module, String logicalPath) {
 		FileFolderPreset fileFolderPreset = FileFolderPreset.Factory.newInstance();
 		fileFolderPreset.setModule(module);
 		fileFolderPreset.setLogicalPath(logicalPath);
@@ -1090,7 +1110,7 @@ public class ProductionDataProvider {
 		return fileFolderPreset;
 	}
 
-	private void createFileFolderPresets() {
+	protected void createFileFolderPresets() {
 		createFileFolderPreset(FileModule.INVENTORY_DOCUMENT, CommonUtil.fixLogicalPathFolderName("Manuals"));
 		createFileFolderPreset(FileModule.INVENTORY_DOCUMENT, CommonUtil.fixLogicalPathFolderName("Reports und Zertifikate"));
 		createFileFolderPreset(FileModule.INVENTORY_DOCUMENT, CommonUtil.fixLogicalPathFolderName("Rechnungen"));
@@ -1183,7 +1203,7 @@ public class ProductionDataProvider {
 		jobOutput.println("file folder presets created");
 	}
 
-	private Holiday createHoliday(HolidayBaseDate base, Integer month, Integer day, Weekday weekday, Integer n, long offsetDays, boolean isHoliday, boolean active,
+	protected Holiday createHoliday(HolidayBaseDate base, Integer month, Integer day, Weekday weekday, Integer n, long offsetDays, boolean isHoliday, boolean active,
 			String nameL10nKey) {
 		Holiday holiday = Holiday.Factory.newInstance();
 		holiday.setBase(base);
@@ -1199,7 +1219,7 @@ public class ProductionDataProvider {
 		return holiday;
 	}
 
-	private void createHolidayEntries() {
+	protected void createHolidayEntries() {
 		createHoliday(HolidayBaseDate.WEEKDAY, null, null, Weekday.SATURDAY, null, 0, true, true, "saturday");
 		createHoliday(HolidayBaseDate.WEEKDAY, null, null, Weekday.SUNDAY, null, 0, true, true, "sunday");
 		createHoliday(HolidayBaseDate.EASTER_DATE, null, null, null, null, -52, false, true, "womens_carnival_day");
@@ -1351,7 +1371,7 @@ public class ProductionDataProvider {
 		jobOutput.println("holidays created");
 	}
 
-	private void createHyperlinkCategories() {
+	protected void createHyperlinkCategories() {
 		createHyperlinkCategory(HyperlinkModule.INVENTORY_HYPERLINK, "manual", "manual_title_preset", true);
 		createHyperlinkCategory(HyperlinkModule.INVENTORY_HYPERLINK, "customer_service", "customer_service_title_preset", true);
 		createHyperlinkCategory(HyperlinkModule.INVENTORY_HYPERLINK, "product_info", "product_info_title_preset", true);
@@ -1364,7 +1384,7 @@ public class ProductionDataProvider {
 		jobOutput.println("hyperlink categories created");
 	}
 
-	private HyperlinkCategory createHyperlinkCategory(HyperlinkModule module, String nameL10nKey, String titlePresetL10nKey, boolean visible) {
+	protected HyperlinkCategory createHyperlinkCategory(HyperlinkModule module, String nameL10nKey, String titlePresetL10nKey, boolean visible) {
 		HyperlinkCategory hyperlinkCategory = HyperlinkCategory.Factory.newInstance();
 		hyperlinkCategory.setModule(module);
 		hyperlinkCategory.setNameL10nKey(nameL10nKey);
@@ -1374,7 +1394,7 @@ public class ProductionDataProvider {
 		return hyperlinkCategory;
 	}
 
-	private void createInventoryCategories() {
+	protected void createInventoryCategories() {
 		createInventoryCategory("building", Color.LIGHTSTEELBLUE, true, true, true, true, "ctsms-inventorycategory-building");
 		createInventoryCategory("room", Color.POWDERBLUE, true, true, true, true, "ctsms-inventorycategory-room");
 		createInventoryCategory("bed", Color.LIGHTBLUE, false, true, true, true, "ctsms-inventorycategory-bed");
@@ -1390,7 +1410,7 @@ public class ProductionDataProvider {
 		jobOutput.println("inventory categories created");
 	}
 
-	private InventoryCategory createInventoryCategory(String nameL10nKey, Color color, boolean relevantForCourseAppointments, boolean relevantForTrialAppointments,
+	protected InventoryCategory createInventoryCategory(String nameL10nKey, Color color, boolean relevantForCourseAppointments, boolean relevantForTrialAppointments,
 			boolean relevantForProbandAppointments, boolean visible, String nodeStyleClass) {
 		InventoryCategory inventoryCategory = InventoryCategory.Factory.newInstance();
 		inventoryCategory.setNameL10nKey(nameL10nKey);
@@ -1404,7 +1424,7 @@ public class ProductionDataProvider {
 		return inventoryCategory;
 	}
 
-	private InventoryStatusType createInventoryStatusType(String nameL10nKey, boolean inventoryActive, boolean originatorRequired, boolean addresseeRequired, boolean visible,
+	protected InventoryStatusType createInventoryStatusType(String nameL10nKey, boolean inventoryActive, boolean originatorRequired, boolean addresseeRequired, boolean visible,
 			boolean hideAvailability) {
 		InventoryStatusType statusType = InventoryStatusType.Factory.newInstance();
 		statusType.setNameL10nKey(nameL10nKey);
@@ -1417,7 +1437,7 @@ public class ProductionDataProvider {
 		return statusType;
 	}
 
-	private void createInventoryStatusTypes() {
+	protected void createInventoryStatusTypes() {
 		createInventoryStatusType("lent", false, true, true, true, false);
 		createInventoryStatusType("defective", false, false, false, true, true);
 		createInventoryStatusType("in_repair", false, true, true, true, false);
@@ -1430,7 +1450,7 @@ public class ProductionDataProvider {
 		jobOutput.println("inventory status types created");
 	}
 
-	private InventoryTag createInventoryTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean visible, boolean excel) {
+	protected InventoryTag createInventoryTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean visible, boolean excel) {
 		InventoryTag tag = InventoryTag.Factory.newInstance();
 		tag.setNameL10nKey(nameL10nKey);
 		tag.setMaxOccurrence(maxOccurrence);
@@ -1442,7 +1462,7 @@ public class ProductionDataProvider {
 		return tag;
 	}
 
-	private void createInventoryTags() {
+	protected void createInventoryTags() {
 		createInventoryTag("serial_number", 1, null, null, true, true);
 		createInventoryTag("model", 1, null, null, true, true);
 		createInventoryTag("mug_inventory_number", 1, null, null, true, true);
@@ -1450,7 +1470,7 @@ public class ProductionDataProvider {
 		jobOutput.println("inventory tags created");
 	}
 
-	private void createJournalCategories() {
+	protected void createJournalCategories() {
 		createJournalCategory(JournalModule.INVENTORY_JOURNAL, "information", "information_title_preset", true, Color.LIGHTCORAL, "ctsms-journalcategory-instruction", false);
 		createJournalCategory(JournalModule.INVENTORY_JOURNAL, "call", "call_title_preset", true, Color.PALEGREEN, "ctsms-journalcategory-call", true);
 		createJournalCategory(JournalModule.INVENTORY_JOURNAL, "general", "general_title_preset", true, Color.PAPAYAWHIP, "ctsms-journalcategory-general", false);
@@ -1469,7 +1489,7 @@ public class ProductionDataProvider {
 		jobOutput.println("journal categories created");
 	}
 
-	private JournalCategory createJournalCategory(
+	protected JournalCategory createJournalCategory(
 			JournalModule module,
 			String nameL10nKey,
 			String titlePresetL10nKey,
@@ -1489,7 +1509,7 @@ public class ProductionDataProvider {
 		return journalCategory;
 	}
 
-	private LecturerCompetence createLecturerCompetence(String nameL10nKey, Integer maxOccurrence, boolean visible) {
+	protected LecturerCompetence createLecturerCompetence(String nameL10nKey, Integer maxOccurrence, boolean visible) {
 		LecturerCompetence competence = LecturerCompetence.Factory.newInstance();
 		competence.setNameL10nKey(nameL10nKey);
 		competence.setMaxOccurrence(maxOccurrence);
@@ -1498,7 +1518,7 @@ public class ProductionDataProvider {
 		return competence;
 	}
 
-	private void createLecturerCompetences() {
+	protected void createLecturerCompetences() {
 		createLecturerCompetence("lecturer", null, true);
 		createLecturerCompetence("course_instructor", null, true);
 		createLecturerCompetence("course_supervisor", null, true);
@@ -1507,7 +1527,7 @@ public class ProductionDataProvider {
 		jobOutput.println("lecturer competences created");
 	}
 
-	private MaintenanceType createMaintenanceType(String nameL10nKey, String titlePresetL10nKey, boolean visible) {
+	protected MaintenanceType createMaintenanceType(String nameL10nKey, String titlePresetL10nKey, boolean visible) {
 		MaintenanceType maintenanceType = MaintenanceType.Factory.newInstance();
 		maintenanceType.setNameL10nKey(nameL10nKey);
 		maintenanceType.setTitlePresetL10nKey(titlePresetL10nKey);
@@ -1516,7 +1536,7 @@ public class ProductionDataProvider {
 		return maintenanceType;
 	}
 
-	private void createMaintenanceTypes() {
+	protected void createMaintenanceTypes() {
 		createMaintenanceType("servicing", "servicing_title_preset", true);
 		createMaintenanceType("inspection", "inspection_title_preset", true);
 		createMaintenanceType("calibration", "calibration_title_preset", true);
@@ -1526,7 +1546,7 @@ public class ProductionDataProvider {
 		jobOutput.println("maintenance reminder types created");
 	}
 
-	private MassMailStatusType createMassMailStatusType(String nameL10nKey,
+	protected MassMailStatusType createMassMailStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			String nodeStyleClass,
 			boolean initial,
@@ -1543,7 +1563,7 @@ public class ProductionDataProvider {
 		return massMailStatusType;
 	}
 
-	private void createMassMailStatusTypeEntries() {
+	protected void createMassMailStatusTypeEntries() {
 		MassMailStatusType pausedMassMailStatusType = createMassMailStatusType("paused", Color.TOMATO,
 				"ctsms-massmailstatus-paused",
 				true,
@@ -1568,7 +1588,7 @@ public class ProductionDataProvider {
 		jobOutput.println("mass mail states created");
 	}
 
-	private MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired) {
+	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired) {
 		MassMailType massMailType = MassMailType.Factory.newInstance();
 		massMailType.setNameL10nKey(nameL10nKey);
 		massMailType.setVisible(visible);
@@ -1578,7 +1598,7 @@ public class ProductionDataProvider {
 		return massMailType;
 	}
 
-	private void createMassMailTypes() {
+	protected void createMassMailTypes() {
 		createMassMailType("regulatory", true, false, false);
 		createMassMailType("welcome", true, false, false);
 		createMassMailType("newsletter", true, false, false);
@@ -1587,7 +1607,7 @@ public class ProductionDataProvider {
 		jobOutput.println("mass mail types created");
 	}
 
-	private NotificationType createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType type,
+	protected NotificationType createNotificationType(org.phoenixctms.ctsms.enumeration.NotificationType type,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			String nodeStyleClass,
 			boolean send,
@@ -1607,7 +1627,7 @@ public class ProductionDataProvider {
 		return notificationType;
 	}
 
-	private void createNotificationTypes() {
+	protected void createNotificationTypes() {
 		HashSet<StaffCategory> allStaffCategories = new HashSet<StaffCategory>(ALL_STAFF_CATEGORY_NAME_L10N_KEYS.size());
 		Iterator<String> it = ALL_STAFF_CATEGORY_NAME_L10N_KEYS.iterator();
 		while (it.hasNext()) {
@@ -1746,7 +1766,7 @@ public class ProductionDataProvider {
 		jobOutput.println("notification types created");
 	}
 
-	private PrivacyConsentStatusType createPrivacyConsentStatusType(String nameL10nKey,
+	protected PrivacyConsentStatusType createPrivacyConsentStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			boolean initial,
 			boolean autoDelete) {
@@ -1759,7 +1779,7 @@ public class ProductionDataProvider {
 		return privacyConsentStatusType;
 	}
 
-	private void createPrivacyConsentStatusTypeEntries() {
+	protected void createPrivacyConsentStatusTypeEntries() {
 		PrivacyConsentStatusType registeredPrivacyConsentStatusType = createPrivacyConsentStatusType("registered",
 				Color.LIMEGREEN,
 				true,
@@ -1798,7 +1818,7 @@ public class ProductionDataProvider {
 		jobOutput.println("privacy consent states created");
 	}
 
-	private void createProbandCategories() {
+	protected void createProbandCategories() {
 		createProbandCategory("new_person", Color.WHITESMOKE, true, false, true, false, "ctsms-probandcategory-new-person", true, false, false);
 		createProbandCategory("new_animal", Color.WHITESMOKE, false, true, false, false, "ctsms-probandcategory-new-animal", true, false, false);
 		createProbandCategory("signup", Color.ANTIQUEWHITE, true, false, true, true, "ctsms-probandcategory-signup", true, true, false);
@@ -1813,7 +1833,7 @@ public class ProductionDataProvider {
 		jobOutput.println("proband categories created");
 	}
 
-	private ProbandCategory createProbandCategory(String nameL10nKey, Color color, boolean person, boolean animal, boolean privacyConsentControl, boolean delete,
+	protected ProbandCategory createProbandCategory(String nameL10nKey, Color color, boolean person, boolean animal, boolean privacyConsentControl, boolean delete,
 			String nodeStyleClass,
 			boolean preset,
 			boolean signup,
@@ -1833,14 +1853,14 @@ public class ProductionDataProvider {
 		return probandCategory;
 	}
 
-	private ProbandListStatusLogLevel createProbandListStatusLogLevel(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel l) {
+	protected ProbandListStatusLogLevel createProbandListStatusLogLevel(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel l) {
 		ProbandListStatusLogLevel logLevel = ProbandListStatusLogLevel.Factory.newInstance();
 		logLevel.setLogLevel(l);
 		logLevel = probandListStatusLogLevelDao.create(logLevel);
 		return logLevel;
 	}
 
-	private void createProbandListStatusLogLevels() {
+	protected void createProbandListStatusLogLevels() {
 		org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel[] logLevels = org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.values();
 		for (int i = 0; i < logLevels.length; i++) {
 			createProbandListStatusLogLevel(logLevels[i]);
@@ -1848,7 +1868,7 @@ public class ProductionDataProvider {
 		jobOutput.println("proband status log levels created");
 	}
 
-	private ProbandListStatusType createProbandListStatusType(String nameL10nKey,
+	protected ProbandListStatusType createProbandListStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			boolean initial,
 			boolean reasonRequired,
@@ -1877,7 +1897,7 @@ public class ProductionDataProvider {
 		return probandListStatusType;
 	}
 
-	private void createProbandListStatusTypeEntries() {
+	protected void createProbandListStatusTypeEntries() {
 		ProbandListStatusType candidateProbandListStatusType = createProbandListStatusType("candidate", Color.LIGHTYELLOW,
 				true,
 				false,
@@ -2066,7 +2086,7 @@ public class ProductionDataProvider {
 		jobOutput.println("proband states created");
 	}
 
-	private ProbandStatusType createProbandStatusType(String nameL10nKey, boolean probandActive, boolean person, boolean animal, boolean hideAvailability) {
+	protected ProbandStatusType createProbandStatusType(String nameL10nKey, boolean probandActive, boolean person, boolean animal, boolean hideAvailability) {
 		ProbandStatusType statusType = ProbandStatusType.Factory.newInstance();
 		statusType.setNameL10nKey(nameL10nKey);
 		statusType.setProbandActive(probandActive);
@@ -2077,7 +2097,7 @@ public class ProductionDataProvider {
 		return statusType;
 	}
 
-	private void createProbandStatusTypes() {
+	protected void createProbandStatusTypes() {
 		createProbandStatusType("vacation", false, true, false, false);
 		createProbandStatusType("sick", false, true, false, false);
 		createProbandStatusType("no_time", false, true, false, false);
@@ -2088,7 +2108,7 @@ public class ProductionDataProvider {
 		jobOutput.println("proband status types created");
 	}
 
-	private ProbandTag createProbandTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean person, boolean animal, boolean excel) {
+	protected ProbandTag createProbandTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean person, boolean animal, boolean excel) {
 		ProbandTag tag = ProbandTag.Factory.newInstance();
 		tag.setNameL10nKey(nameL10nKey);
 		tag.setMaxOccurrence(maxOccurrence);
@@ -2101,7 +2121,7 @@ public class ProductionDataProvider {
 		return tag;
 	}
 
-	private void createProbandTags() {
+	protected void createProbandTags() {
 		createProbandTag("social_security_number", 1, null, null, true, false, true);
 		createProbandTag("subject_id", null, null, null, true, true, true);
 		createProbandTag("unique_id", 1, null, null, true, true, true);
@@ -2109,7 +2129,7 @@ public class ProductionDataProvider {
 		jobOutput.println("proband tags created");
 	}
 
-	private SponsoringType createSponsoringType(String nameL10nKey, boolean visible) {
+	protected SponsoringType createSponsoringType(String nameL10nKey, boolean visible) {
 		SponsoringType sponsoringType = SponsoringType.Factory.newInstance();
 		sponsoringType.setNameL10nKey(nameL10nKey);
 		sponsoringType.setVisible(visible);
@@ -2117,14 +2137,14 @@ public class ProductionDataProvider {
 		return sponsoringType;
 	}
 
-	private void createSponsoringTypes() {
+	protected void createSponsoringTypes() {
 		createSponsoringType("commissioned_trial", true);
 		createSponsoringType("academic_trial", true);
 		createSponsoringType("na", true);
 		jobOutput.println("sponsoring types created");
 	}
 
-	private void createStaffCategories() {
+	protected void createStaffCategories() {
 		createStaffCategory(INSTITUTION_STAFF_CATEGORY_NAME_L10N_KEY, Color.NAVAJOWHITE, false, true, "ctsms-staffcategory-institution");
 		createStaffCategory(DIVISION_STAFF_CATEGORY_NAME_L10N_KEY, Color.WHEAT, false, true, "ctsms-staffcategory-division");
 		createStaffCategory(VENDOR_STAFF_CATEGORY_NAME_L10N_KEY, Color.BURLYWOOD, false, true, "ctsms-staffcategory-vendor");
@@ -2157,7 +2177,7 @@ public class ProductionDataProvider {
 		jobOutput.println("staff categories created");
 	}
 
-	private StaffCategory createStaffCategory(String nameL10nKey, Color color, boolean person, boolean organisation, String nodeStyleClass) {
+	protected StaffCategory createStaffCategory(String nameL10nKey, Color color, boolean person, boolean organisation, String nodeStyleClass) {
 		StaffCategory staffCategory = StaffCategory.Factory.newInstance();
 		staffCategory.setNameL10nKey(nameL10nKey);
 		staffCategory.setColor(color);
@@ -2168,7 +2188,7 @@ public class ProductionDataProvider {
 		return staffCategory;
 	}
 
-	private StaffStatusType createStaffStatusType(String nameL10nKey, boolean staffActive, boolean visible, boolean hideAvailability) {
+	protected StaffStatusType createStaffStatusType(String nameL10nKey, boolean staffActive, boolean visible, boolean hideAvailability) {
 		StaffStatusType statusType = StaffStatusType.Factory.newInstance();
 		statusType.setNameL10nKey(nameL10nKey);
 		statusType.setStaffActive(staffActive);
@@ -2178,7 +2198,7 @@ public class ProductionDataProvider {
 		return statusType;
 	}
 
-	private void createStaffStatusTypes() {
+	protected void createStaffStatusTypes() {
 		createStaffStatusType("vacation", false, true, false);
 		createStaffStatusType("continuing_education", false, true, false);
 		createStaffStatusType("compensatory_time", false, true, false);
@@ -2193,7 +2213,8 @@ public class ProductionDataProvider {
 		jobOutput.println("staff status types created");
 	}
 
-	private StaffTag createStaffTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean person, boolean organisation, boolean excel) {
+	protected StaffTag createStaffTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean person, boolean organisation, boolean excel,
+			boolean trainingRecord) {
 		StaffTag tag = StaffTag.Factory.newInstance();
 		tag.setPerson(person);
 		tag.setOrganisation(organisation);
@@ -2202,27 +2223,28 @@ public class ProductionDataProvider {
 		tag.setRegExp(regExp);
 		tag.setMismatchMsgL10nKey(mismatchMsgL10nKey);
 		tag.setExcel(excel);
+		tag.setTrainingRecord(trainingRecord);
 		tag = staffTagDao.create(tag);
 		return tag;
 	}
 
-	private void createStaffTags() {
+	protected void createStaffTags() {
 		String dateRegExp = "^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$";
-		createStaffTag("legal_form", 1, null, null, false, true, true);
-		createStaffTag("vat_number", 1, null, null, false, true, true);
-		createStaffTag("commercial_reg_number", 1, null, null, false, true, true);
-		createStaffTag("court_of_jurisdiction", 1, null, null, false, true, true);
-		createStaffTag("function", 1, null, null, true, false, true);
-		createStaffTag("description", 1, null, null, true, true, true);
-		createStaffTag("social_security_number", 1, null, null, true, false, true);
-		createStaffTag("badge_number", 1, null, null, false, false, true);
-		createStaffTag("mug_badge_number", 1, null, null, true, false, true);
-		createStaffTag("klinikum_badge_number", 1, null, null, true, false, true);
-		createStaffTag("entry_date", 1, dateRegExp, ServiceExceptionCodes.INVALID_DATE_FORMAT, false, false, true);
+		createStaffTag("legal_form", 1, null, null, false, true, true, false);
+		createStaffTag("vat_number", 1, null, null, false, true, true, false);
+		createStaffTag("commercial_reg_number", 1, null, null, false, true, true, false);
+		createStaffTag("court_of_jurisdiction", 1, null, null, false, true, true, false);
+		createStaffTag("01_role", 3, null, null, true, false, true, true);
+		createStaffTag("02_description", 1, null, null, true, true, true, true);
+		createStaffTag("social_security_number", 1, null, null, true, false, true, false);
+		createStaffTag("badge_number", 1, null, null, false, false, true, false);
+		createStaffTag("mug_badge_number", 1, null, null, true, false, true, false);
+		createStaffTag("klinikum_badge_number", 1, null, null, true, false, true, false);
+		createStaffTag("entry_date", 1, dateRegExp, ServiceExceptionCodes.INVALID_DATE_FORMAT, false, false, true, false);
 		jobOutput.println("staff tags created");
 	}
 
-	private SurveyStatusType createSurveyStatusType(String nameL10nKey, boolean visible) {
+	protected SurveyStatusType createSurveyStatusType(String nameL10nKey, boolean visible) {
 		SurveyStatusType surveyStatusType = SurveyStatusType.Factory.newInstance();
 		surveyStatusType.setNameL10nKey(nameL10nKey);
 		surveyStatusType.setVisible(visible);
@@ -2230,14 +2252,14 @@ public class ProductionDataProvider {
 		return surveyStatusType;
 	}
 
-	private void createSurveyStatusTypes() {
+	protected void createSurveyStatusTypes() {
 		createSurveyStatusType("pending", true);
 		createSurveyStatusType("yes", true);
 		createSurveyStatusType("na", true);
 		jobOutput.println("survey status types created");
 	}
 
-	private TeamMemberRole createTeamMemberRole(String nameL10nKey, Integer maxOccurrence, boolean visible) {
+	protected TeamMemberRole createTeamMemberRole(String nameL10nKey, Integer maxOccurrence, boolean visible) {
 		TeamMemberRole role = TeamMemberRole.Factory.newInstance();
 		role.setNameL10nKey(nameL10nKey);
 		role.setMaxOccurrence(maxOccurrence);
@@ -2246,7 +2268,7 @@ public class ProductionDataProvider {
 		return role;
 	}
 
-	private void createTeamMemberRoles() {
+	protected void createTeamMemberRoles() {
 		createTeamMemberRole("sponsor", null, true);
 		createTeamMemberRole("principal_investigator", null, true);
 		createTeamMemberRole("project_manager", null, true);
@@ -2259,7 +2281,7 @@ public class ProductionDataProvider {
 		jobOutput.println("trial team member roles created");
 	}
 
-	private TimelineEventType createTimelineEventType(String nameL10nKey, Integer maxOccurrence, boolean visible, boolean showPreset, boolean notifyPreset,
+	protected TimelineEventType createTimelineEventType(String nameL10nKey, Integer maxOccurrence, boolean visible, boolean showPreset, boolean notifyPreset,
 			EventImportance importancePreset, String nodeStyleClass, Color color, TimelineEventTitlePresetType titlePresetType, String titlePresetL10nKey,
 			boolean titlePresetFixed) {
 		TimelineEventType type = TimelineEventType.Factory.newInstance();
@@ -2278,7 +2300,7 @@ public class ProductionDataProvider {
 		return type;
 	}
 
-	private void createTimelineEventTypes() {
+	protected void createTimelineEventTypes() {
 		createTimelineEventType("trial", 1, true, true, false, EventImportance.HIGH, "ctsms-icon-timeline-trial", Color.ALICEBLUE, TimelineEventTitlePresetType.TRIAL_NAME, null,
 				true);
 		createTimelineEventType("phase", null, true, true, false, EventImportance.LOW, "ctsms-icon-timeline-phase", Color.WHITESMOKE, TimelineEventTitlePresetType.NONE, null,
@@ -2321,14 +2343,14 @@ public class ProductionDataProvider {
 		jobOutput.println("timeline event types created");
 	}
 
-	private TrialStatusAction createTrialStatusAction(org.phoenixctms.ctsms.enumeration.TrialStatusAction a) {
+	protected TrialStatusAction createTrialStatusAction(org.phoenixctms.ctsms.enumeration.TrialStatusAction a) {
 		TrialStatusAction action = TrialStatusAction.Factory.newInstance();
 		action.setAction(a);
 		action = trialStatusActionDao.create(action);
 		return action;
 	}
 
-	private void createTrialStatusActions() {
+	protected void createTrialStatusActions() {
 		org.phoenixctms.ctsms.enumeration.TrialStatusAction[] actions = org.phoenixctms.ctsms.enumeration.TrialStatusAction.values();
 		for (int i = 0; i < actions.length; i++) {
 			createTrialStatusAction(actions[i]);
@@ -2336,7 +2358,7 @@ public class ProductionDataProvider {
 		jobOutput.println("trial status actions created");
 	}
 
-	private TrialStatusType createTrialStatusType(String nameL10nKey,
+	protected TrialStatusType createTrialStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			String nodeStyleClass,
 			boolean initial,
@@ -2359,7 +2381,7 @@ public class ProductionDataProvider {
 		return trialStatusType;
 	}
 
-	private void createTrialStatusTypeEntries() {
+	protected void createTrialStatusTypeEntries() {
 		TrialStatusType plannedTrialStatusType = createTrialStatusType("planned", Color.LIMEGREEN,
 				"ctsms-trialstatus-planned",
 				true,
@@ -2455,7 +2477,7 @@ public class ProductionDataProvider {
 		jobOutput.println("trial states created");
 	}
 
-	private TrialTag createTrialTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean visible, boolean notifyMissing, boolean excel,
+	protected TrialTag createTrialTag(String nameL10nKey, Integer maxOccurrence, String regExp, String mismatchMsgL10nKey, boolean visible, boolean notifyMissing, boolean excel,
 			boolean payoffs) {
 		TrialTag tag = TrialTag.Factory.newInstance();
 		tag.setNameL10nKey(nameL10nKey);
@@ -2470,7 +2492,7 @@ public class ProductionDataProvider {
 		return tag;
 	}
 
-	private void createTrialTags() {
+	protected void createTrialTags() {
 		createTrialTag("ethical_review_committee_number", 1, "", "", true, true, true, false);
 		createTrialTag("basg_ages_file_number", 1, "", "", true, true, true, false);
 		createTrialTag("eudract_reference_number", 1, "", "", true, true, true, false);
@@ -2484,7 +2506,7 @@ public class ProductionDataProvider {
 		jobOutput.println("trial tags created");
 	}
 
-	private TrialType createTrialType(String nameL10nKey, boolean visible, boolean person) {
+	protected TrialType createTrialType(String nameL10nKey, boolean visible, boolean person) {
 		TrialType trialType = TrialType.Factory.newInstance();
 		trialType.setNameL10nKey(nameL10nKey);
 		trialType.setVisible(visible);
@@ -2493,7 +2515,7 @@ public class ProductionDataProvider {
 		return trialType;
 	}
 
-	private void createTrialTypes() {
+	protected void createTrialTypes() {
 		createTrialType("amg", true, true);
 		createTrialType("mpg", true, true);
 		createTrialType("amg_mpg", true, true);
@@ -2509,7 +2531,7 @@ public class ProductionDataProvider {
 		jobOutput.println("trial types created");
 	}
 
-	private VisitType createVisitType(String nameL10nKey, Integer maxOccurrence, boolean visible, boolean travel, Color color) {
+	protected VisitType createVisitType(String nameL10nKey, Integer maxOccurrence, boolean visible, boolean travel, Color color) {
 		VisitType type = VisitType.Factory.newInstance();
 		type.setNameL10nKey(nameL10nKey);
 		type.setMaxOccurrence(maxOccurrence);
@@ -2520,7 +2542,7 @@ public class ProductionDataProvider {
 		return type;
 	}
 
-	private void createVisitTypes() {
+	protected void createVisitTypes() {
 		createVisitType("screening", null, true, true, Color.TOMATO);
 		createVisitType("outpatient", null, true, true, Color.KHAKI); // application
 		createVisitType("inpatient", null, true, true, Color.YELLOWGREEN); // treatment
@@ -2529,7 +2551,7 @@ public class ProductionDataProvider {
 		jobOutput.println("visit types created");
 	}
 
-	private void createJobTypes() {
+	protected void createJobTypes() {
 		createJobType(
 				JobModule.TRIAL_JOB,
 				"import_ecrfs",
@@ -3014,7 +3036,7 @@ public class ProductionDataProvider {
 		jobOutput.println("job types created");
 	}
 
-	private JobType createJobType(JobModule module,
+	protected JobType createJobType(JobModule module,
 			String nameL10nKey, String descriptionL10nKey,
 			String commandFormat, boolean visible,
 			boolean daily, boolean weekly, boolean monthly,
@@ -3038,7 +3060,7 @@ public class ProductionDataProvider {
 		return type;
 	}
 
-	private HashSet<CourseParticipationStatusType> getCourseParticipationTransitions(CourseParticipationStatusType... types) {
+	protected HashSet<CourseParticipationStatusType> getCourseParticipationTransitions(CourseParticipationStatusType... types) {
 		HashSet<CourseParticipationStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<CourseParticipationStatusType>();
@@ -3049,7 +3071,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<ECRFFieldStatusType> getEcrfFieldStatusTransitions(ECRFFieldStatusType... types) {
+	protected HashSet<ECRFFieldStatusType> getEcrfFieldStatusTransitions(ECRFFieldStatusType... types) {
 		HashSet<ECRFFieldStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<ECRFFieldStatusType>();
@@ -3060,7 +3082,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<ECRFStatusAction> getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction... actions) {
+	protected HashSet<ECRFStatusAction> getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction... actions) {
 		HashSet<ECRFStatusAction> result = null;
 		if (actions != null && actions.length > 0) {
 			result = new HashSet<ECRFStatusAction>();
@@ -3071,7 +3093,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<ECRFStatusType> getEcrfStatusTransitions(ECRFStatusType... types) {
+	protected HashSet<ECRFStatusType> getEcrfStatusTransitions(ECRFStatusType... types) {
 		HashSet<ECRFStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<ECRFStatusType>();
@@ -3082,7 +3104,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<MassMailStatusType> getMassMailStatusTransitions(MassMailStatusType... types) {
+	protected HashSet<MassMailStatusType> getMassMailStatusTransitions(MassMailStatusType... types) {
 		HashSet<MassMailStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<MassMailStatusType>();
@@ -3093,7 +3115,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<PrivacyConsentStatusType> getPrivacyConsentStatusTransitions(PrivacyConsentStatusType... types) {
+	protected HashSet<PrivacyConsentStatusType> getPrivacyConsentStatusTransitions(PrivacyConsentStatusType... types) {
 		HashSet<PrivacyConsentStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<PrivacyConsentStatusType>();
@@ -3104,7 +3126,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<ProbandListStatusLogLevel> getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel... logLevels) {
+	protected HashSet<ProbandListStatusLogLevel> getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel... logLevels) {
 		HashSet<ProbandListStatusLogLevel> result = null;
 		if (logLevels != null && logLevels.length > 0) {
 			result = new HashSet<ProbandListStatusLogLevel>();
@@ -3115,7 +3137,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<ProbandListStatusType> getProbandListStatusTransitions(ProbandListStatusType... types) {
+	protected HashSet<ProbandListStatusType> getProbandListStatusTransitions(ProbandListStatusType... types) {
 		HashSet<ProbandListStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<ProbandListStatusType>();
@@ -3126,7 +3148,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<TrialStatusAction> getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction... actions) {
+	protected HashSet<TrialStatusAction> getTrialStatusActions(org.phoenixctms.ctsms.enumeration.TrialStatusAction... actions) {
 		HashSet<TrialStatusAction> result = null;
 		if (actions != null && actions.length > 0) {
 			result = new HashSet<TrialStatusAction>();
@@ -3137,7 +3159,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private HashSet<TrialStatusType> getTrialStatusTransitions(TrialStatusType... types) {
+	protected HashSet<TrialStatusType> getTrialStatusTransitions(TrialStatusType... types) {
 		HashSet<TrialStatusType> result = null;
 		if (types != null && types.length > 0) {
 			result = new HashSet<TrialStatusType>();
@@ -3148,7 +3170,7 @@ public class ProductionDataProvider {
 		return result;
 	}
 
-	private void initializeCriteriaTables() {
+	protected void initializeCriteriaTables() {
 		createCriterionRestrictionEntries();
 		jobOutput.println("search criterion restrictions created");
 		createCriterionTieEntries();
@@ -3172,6 +3194,7 @@ public class ProductionDataProvider {
 		createStaffStatusTypes();
 		createAddressTypes();
 		createCvSections();
+		createTrainingRecordSections();
 		createCourseParticipationStatusTypeEntries();
 		createCourseCategories();
 		createLecturerCompetences();
@@ -3202,7 +3225,7 @@ public class ProductionDataProvider {
 		this.jobOutput = jobOutput;
 	}
 
-	private void unlinkProbandListEntryLastStatus() throws Exception {
+	protected void unlinkProbandListEntryLastStatus() throws Exception {
 		ChunkedDaoOperationAdapter<ProbandListEntryDao, ProbandListEntry> probandListEntryProcessor = new ChunkedDaoOperationAdapter<ProbandListEntryDao, ProbandListEntry>(
 				probandListEntryDao) {
 
@@ -3228,7 +3251,7 @@ public class ProductionDataProvider {
 		probandListEntryProcessor.processPages(null);
 	}
 
-	private void unlinkUserIdentity() throws Exception {
+	protected void unlinkUserIdentity() throws Exception {
 		ChunkedDaoOperationAdapter<UserDao, User> userProcessor = new ChunkedDaoOperationAdapter<UserDao, User>(userDao) {
 
 			@Override
@@ -3253,7 +3276,7 @@ public class ProductionDataProvider {
 		userProcessor.processPages(null);
 	}
 
-	private void updateCourseParticipationStatusType(CourseParticipationStatusType courseParticipationType,
+	protected void updateCourseParticipationStatusType(CourseParticipationStatusType courseParticipationType,
 			Set<CourseParticipationStatusType> userTransitions,
 			Set<CourseParticipationStatusType> userSelfRegistrationTransitions,
 			Set<CourseParticipationStatusType> adminTransitions,
@@ -3265,37 +3288,37 @@ public class ProductionDataProvider {
 		courseParticipationStatusTypeDao.update(courseParticipationType);
 	}
 
-	private void updateEcrfFieldStatusType(ECRFFieldStatusType ecrfFieldStatusType,
+	protected void updateEcrfFieldStatusType(ECRFFieldStatusType ecrfFieldStatusType,
 			Set<ECRFFieldStatusType> transitions) {
 		ecrfFieldStatusType.setTransitions(transitions);
 		eCRFFieldStatusTypeDao.update(ecrfFieldStatusType);
 	}
 
-	private void updateEcrfStatusType(ECRFStatusType ecrfStatusType,
+	protected void updateEcrfStatusType(ECRFStatusType ecrfStatusType,
 			Set<ECRFStatusType> transitions) {
 		ecrfStatusType.setTransitions(transitions);
 		eCRFStatusTypeDao.update(ecrfStatusType);
 	}
 
-	private void updateMassMailStatusType(MassMailStatusType massMailStatusType,
+	protected void updateMassMailStatusType(MassMailStatusType massMailStatusType,
 			Set<MassMailStatusType> transitions) {
 		massMailStatusType.setTransitions(transitions);
 		massMailStatusTypeDao.update(massMailStatusType);
 	}
 
-	private void updatePrivacyConsentStatusType(PrivacyConsentStatusType privacyConsentStatusType,
+	protected void updatePrivacyConsentStatusType(PrivacyConsentStatusType privacyConsentStatusType,
 			Set<PrivacyConsentStatusType> transitions) {
 		privacyConsentStatusType.setTransitions(transitions);
 		privacyConsentStatusTypeDao.update(privacyConsentStatusType);
 	}
 
-	private void updateProbandListStatusType(ProbandListStatusType probandListStatusType,
+	protected void updateProbandListStatusType(ProbandListStatusType probandListStatusType,
 			Set<ProbandListStatusType> transitions) {
 		probandListStatusType.setTransitions(transitions);
 		probandListStatusTypeDao.update(probandListStatusType);
 	}
 
-	private void updateTrialStatusType(TrialStatusType trialStatusType,
+	protected void updateTrialStatusType(TrialStatusType trialStatusType,
 			Set<TrialStatusType> transitions) {
 		trialStatusType.setTransitions(transitions);
 		trialStatusTypeDao.update(trialStatusType);

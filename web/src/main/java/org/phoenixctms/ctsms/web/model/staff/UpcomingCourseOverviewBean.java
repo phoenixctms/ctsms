@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -104,13 +105,16 @@ public class UpcomingCourseOverviewBean extends ManagedBeanBase {
 		if (course != null && identity != null) {
 			CourseParticipationStatusEntryInVO participation = new CourseParticipationStatusEntryInVO();
 			CvSectionVO cvSectionPreset = course.getCvSectionPreset();
+			TrainingRecordSectionVO trainingRecordSectionVO = course.getTrainingRecordSectionPreset();
 			participation.setComment(course.getCvCommentPreset());
 			participation.setCourseId(course.getId());
 			participation.setId(null);
 			participation.setVersion(null);
-			participation.setSectionId(cvSectionPreset != null ? cvSectionPreset.getId() : null);
+			participation.setCvSectionId(cvSectionPreset != null ? cvSectionPreset.getId() : null);
 			participation.setShowCommentCv(course.getShowCommentCvPreset());
 			participation.setShowCv(course.getShowCvPreset());
+			participation.setTrainingRecordSectionId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
+			participation.setShowTrainingRecord(course.getShowTrainingRecordPreset());
 			participation.setStaffId(identity.getId());
 			try {
 				participation.setStatusId(WebUtil.getServiceLocator().getSelectionSetService().getInitialCourseParticipationStatusTypes(WebUtil.getAuthentication(), false, true)
@@ -119,7 +123,7 @@ public class UpcomingCourseOverviewBean extends ManagedBeanBase {
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

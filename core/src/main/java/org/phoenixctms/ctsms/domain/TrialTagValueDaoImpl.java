@@ -47,7 +47,7 @@ public class TrialTagValueDaoImpl
 
 	@Override
 	protected Collection<TrialTagValue> handleFindByTrialExcelPayoffsSorted(Long trialId,
-			Boolean payoffs, Boolean excel) throws Exception {
+			Boolean excel, Boolean payoffs) throws Exception {
 		org.hibernate.Criteria tagValueCriteria = createTagValueCriteria();
 		tagValueCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		Criteria tagCriteria = tagValueCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN);

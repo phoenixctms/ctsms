@@ -17,6 +17,17 @@ public final class PDFPainterFactory {
 		}
 	}
 
+	public static TrainingRecordPDFPainter createTrainingRecordPDFPainter() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		String className = Settings.getString(TrainingRecordPDFSettingCodes.PAINTER_CLASS, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.PAINTER_CLASS);
+		if (CommonUtil.isEmptyString(className)) {
+			return new TrainingRecordPDFPainter();
+		} else {
+			return (TrainingRecordPDFPainter) Compile.loadClass(className,
+					Settings.getStringList(TrainingRecordPDFSettingCodes.PAINTER_SOURCE_FILES, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.PAINTER_SOURCE_FILES))
+					.newInstance();
+		}
+	}
+
 	public static CourseCertificatePDFPainter createCourseCertificatePDFPainter() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String className = Settings.getString(CourseCertificatePDFSettingCodes.PAINTER_CLASS, Bundle.COURSE_CERTIFICATE_PDF, CourseCertificatePDFDefaultSettings.PAINTER_CLASS);
 		if (CommonUtil.isEmptyString(className)) {

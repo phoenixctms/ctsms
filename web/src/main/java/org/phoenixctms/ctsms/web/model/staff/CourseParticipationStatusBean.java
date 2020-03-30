@@ -39,9 +39,11 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			in.setCourseId(null);
 			in.setId(null);
 			in.setVersion(null);
-			in.setSectionId(null);
+			in.setCvSectionId(null);
 			in.setShowCommentCv(false);
 			in.setShowCv(false);
+			in.setTrainingRecordSectionId(null);
+			in.setShowTrainingRecord(false);
 			in.setStaffId(staffId);
 			in.setStatusId(null);
 		}
@@ -92,7 +94,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -117,13 +119,17 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		return WebUtil.getCvPdfStreamedContent(in.getStaffId());
 	}
 
+	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
+		return WebUtil.getTrainingRecordPdfStreamedContent(in.getStaffId());
+	}
+
 	public boolean getShowTerminalStateMessage() {
 		if (out != null && in.getStatusId() != null) {
 			Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 						.getCourseParticipationStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId(), false, out.getCourse().getSelfRegistration());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -180,13 +186,14 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		statusEntryModel.setStaffId(in.getStaffId());
 		statusEntryModel.setCourseId(null);
 		statusEntryModel.updateRowCount();
-		cvSections = WebUtil.getCvSections(this.in.getSectionId());
+		cvSections = WebUtil.getCvSections(this.in.getCvSectionId());
+		trainingRecordSections = WebUtil.getTrainingRecordSections(this.in.getTrainingRecordSectionId());
 		Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
 		if (out != null) {
 			try {
 				statusTypeVOs = WebUtil.getServiceLocator().getSelectionSetService()
 						.getCourseParticipationStatusTypeTransitions(WebUtil.getAuthentication(), in.getStatusId(), false, out.getCourse().getSelfRegistration());
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -202,7 +209,8 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			statusTypes = new ArrayList<SelectItem>();
 		}
 		staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
-		loadSelectedSection();
+		loadSelectedCvSection();
+		loadSelectedTrainingRecordSection();
 		if (staff != null) {
 			if (!WebUtil.isStaffPerson(staff)) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.STAFF_NOT_PERSON);
@@ -255,7 +263,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

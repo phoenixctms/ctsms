@@ -28,18 +28,18 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 		return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	private ReimbursementsExcelVO excelVO;
-	private String costType;
-	private PaymentMethodVO method;
-	private Boolean paid;
-	private TrialOutVO trial;
-	private ProbandOutVO proband;
-	private static final String REIMBURSEMENTS_EXCEL_FILENAME_PREFIX = "reimbursements_";
-	private static final String REIMBURSEMENTS_EXCEL_FILENAME_TRIAL = "trial_";
-	private static final String REIMBURSEMENTS_EXCEL_FILENAME_PROBAND = "proband_";
-	private static final String REIMBURSEMENTS_EXCEL_FILENAME_EMPTY_COSTTYPE = "no_asset";
-	private static final String REIMBURSEMENTS_EXCEL_FILENAME_PAID = "booked";
-	private static final String REIMBURSEMENTS_EXCEL_FILENAME_NOT_PAID = "open";
+	protected ReimbursementsExcelVO excelVO;
+	protected String costType;
+	protected PaymentMethodVO method;
+	protected Boolean paid;
+	protected TrialOutVO trial;
+	protected ProbandOutVO proband;
+	protected static final String REIMBURSEMENTS_EXCEL_FILENAME_PREFIX = "reimbursements_";
+	protected static final String REIMBURSEMENTS_EXCEL_FILENAME_TRIAL = "trial_";
+	protected static final String REIMBURSEMENTS_EXCEL_FILENAME_PROBAND = "proband_";
+	protected static final String REIMBURSEMENTS_EXCEL_FILENAME_EMPTY_COSTTYPE = "no_asset";
+	protected static final String REIMBURSEMENTS_EXCEL_FILENAME_PAID = "booked";
+	protected static final String REIMBURSEMENTS_EXCEL_FILENAME_NOT_PAID = "open";
 
 	public static String getStreetsColumnName() {
 		return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
@@ -60,7 +60,7 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().add(createSpreadSheetWriter(omitFields));
 	}
 
-	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
+	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		String temp1;
 		String temp2;
@@ -155,7 +155,7 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	private SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
 		if (method != null) {
 			switch (method.getPaymentMethod()) {
 				case PETTY_CASH:
@@ -269,7 +269,7 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 		return paid;
 	}
 
-	private String getPaidMethodString() {
+	protected String getPaidMethodString() {
 		if (method == null) {
 			if (paid == null) {
 				return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.PAID_AND_NOT_PAID_LABEL, ExcelUtil.DEFAULT_LABEL);

@@ -30,9 +30,9 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 		return L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.CV_ADDRESS_BLOCK_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	private TeamMembersExcelVO excelVO;
-	private TrialOutVO trial;
-	private static final String TEAM_MEMBERS_EXCEL_FILENAME_PREFIX = "team_members_";
+	protected TeamMembersExcelVO excelVO;
+	protected TrialOutVO trial;
+	protected static final String TEAM_MEMBERS_EXCEL_FILENAME_PREFIX = "team_members_";
 
 	public static String getEmailContactDetailsColumnName() {
 		return L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.EMAIL_CONTACT_DETAILS_HEAD, ExcelUtil.DEFAULT_LABEL);
@@ -72,7 +72,7 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 						Settings.getExcelCellFormat(TeamMembersExcelSettingCodes.ROW_FORMAT, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.ROW_FORMAT)));
 	}
 
-	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
+	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		header.getLeft().clear();
 		temp = CommonUtil.trialOutVOToString(trial);

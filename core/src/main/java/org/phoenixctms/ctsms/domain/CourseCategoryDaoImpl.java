@@ -85,5 +85,6 @@ public class CourseCategoryDaoImpl
 			CourseCategoryVO target) {
 		super.toCourseCategoryVO(source, target);
 		target.setName(L10nUtil.getCourseCategoryName(Locales.USER, source.getNameL10nKey()));
+		//target.setDescription(L10nUtil.getCourseCategoryDescription(Locales.USER, source.getDescriptionL10nKey()));
 	}
 }

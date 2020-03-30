@@ -20,6 +20,7 @@ public enum JSValues {
 	AJAX_CONTACT_DETAIL_TYPE_NOTIFY_PRESET("contactDetailTypeNotifyPreset"),
 	AJAX_ADDRESS_TYPE_DELIVER_PRESET("addressTypeDeliverPreset"),
 	AJAX_CV_SECTION_SHOW_CV_PRESET("cvSectionShowCvPreset"),
+	AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET("trainingRecordSectionShowTrainingRecordPreset"),
 	AJAX_CV_SECTION_TITLE_PRESET_BASE64("cvSectionTitlePresetBase64"),
 	AJAX_TIMELINE_EVENT_TYPE_IMPORTANCE_PRESET("timelineEventTypeImportancePreset"),
 	AJAX_TIMELINE_EVENT_TYPE_SHOW_PRESET("timelineEventTypeShowPreset"),

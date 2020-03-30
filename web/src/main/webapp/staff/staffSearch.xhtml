@@ -55,22 +55,30 @@
 						</f:facet>
 						<ui:decorate template="/META-INF/includes/shared/staffSearcher.xhtml">
 							<ui:define name="toolbarbuttons">
-								<p:commandButton
-								    disabled="#{!staffSearchBean.enableExports}"
-									process="@this,:search_form:tabView:criteria_input"
-									ajax="false"
-									value="#{stafflabels.search_open_cvs_button_label}"
-									icon="ui-icon ui-icon-pdf">
-									<p:fileDownload value="#{staffSearchBean.cvPdfStreamedContent}" />
-								</p:commandButton>
-								<p:commandButton
-								    disabled="#{!staffSearchBean.enableExports}"
-									process="@this,:search_form:tabView:criteria_input"
-									ajax="false"
+								<p:splitButton immediate="true" ajax="false"
 									value="#{labels.search_export_results_button_label}"
+									process="@this,:search_form:tabView:criteria_input"
+									disabled="#{!staffSearchBean.enableExports}"
 									icon="ui-icon ui-icon-xls">
-									<p:fileDownload value="#{staffSearchBean.excelStreamedContent}" />
-								</p:commandButton>
+									<p:fileDownload
+										value="#{staffSearchBean.excelStreamedContent}" />
+									<p:menuitem immediate="true" ajax="false"
+										value="#{stafflabels.search_open_cvs_button_label}"
+										process="@this,:search_form:tabView:criteria_input"
+										disabled="#{!staffSearchBean.enableExports}"
+										icon="ctsms-menubar-icon ctsms-icon-pdf">
+										<p:fileDownload
+											value="#{staffSearchBean.cvPdfStreamedContent}" />
+									</p:menuitem>
+									<p:menuitem immediate="true" ajax="false"
+										value="#{stafflabels.search_open_trainingrecords_button_label}"
+										process="@this,:search_form:tabView:criteria_input"
+										disabled="#{!staffSearchBean.enableExports}"
+										icon="ctsms-menubar-icon ctsms-icon-pdf">
+										<p:fileDownload
+											value="#{staffSearchBean.trainingRecordPdfStreamedContent}" />											
+									</p:menuitem>
+								</p:splitButton>
 							</ui:define>
 							<ui:define name="pickbutton">
 								<p:column style="width:32px;">

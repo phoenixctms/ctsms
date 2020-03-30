@@ -11,13 +11,13 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 
 public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFBlockCursor {
 
-	private EcrfPDFPainter painter;
-	private float sectionY;
-	private float indexY;
-	private EcrfPDFBlock sectionBlock;
-	private EcrfPDFBlock indexBlock;
-	private EcrfPDFBlock ecrfBlock;
-	private ProbandListEntryOutVO listEntry;
+	protected EcrfPDFPainter painter;
+	protected float sectionY;
+	protected float indexY;
+	protected EcrfPDFBlock sectionBlock;
+	protected EcrfPDFBlock indexBlock;
+	protected EcrfPDFBlock ecrfBlock;
+	protected ProbandListEntryOutVO listEntry;
 
 	public EcrfPDFBlockCursor(EcrfPDFPainter painter) {
 		this.painter = painter;

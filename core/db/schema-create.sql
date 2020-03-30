@@ -158,6 +158,8 @@
         SHOW_CV_PRESET BOOLEAN not null,
         CV_COMMENT_PRESET TEXT,
         SHOW_COMMENT_CV_PRESET BOOLEAN not null,
+        SHOW_TRAINING_RECORD_PRESET BOOLEAN not null,
+        CERTIFICATE BOOLEAN not null,
         EXPIRES BOOLEAN not null,
         VALIDITY_PERIOD CHARACTER VARYING(1024),
         VALIDITY_PERIOD_DAYS BIGINT,
@@ -170,6 +172,7 @@
         TRIAL_FK BIGINT,
         INSTITUTION_FK BIGINT,
         CV_SECTION_PRESET_FK BIGINT,
+        TRAINING_RECORD_SECTION_PRESET_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
         primary key (ID)
     );
@@ -190,8 +193,10 @@
         SHOW_CV BOOLEAN not null,
         SHOW_COMMENT_CV BOOLEAN not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        SHOW_TRAINING_RECORD BOOLEAN not null,
         VERSION BIGINT not null,
-        SECTION_FK BIGINT,
+        CV_SECTION_FK BIGINT,
+        TRAINING_RECORD_SECTION_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
         COURSE_FK BIGINT not null,
         STATUS_FK BIGINT not null,
@@ -1631,6 +1636,7 @@
         REG_EXP CHARACTER VARYING(1024),
         MISMATCH_MSG_L10N_KEY CHARACTER VARYING(1024),
         EXCEL BOOLEAN not null,
+        TRAINING_RECORD BOOLEAN not null,
         primary key (ID)
     );
 
@@ -1740,6 +1746,16 @@
     create table TITLE (
         ID BIGINT not null,
         TITLE CHARACTER VARYING(1024) not null unique,
+        primary key (ID)
+    );
+
+    create table TRAINING_RECORD_SECTION (
+        ID BIGINT not null,
+        POSITION BIGINT not null unique,
+        NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
+        DESCRIPTION_L10N_KEY CHARACTER VARYING(1024),
+        SHOW_TRAINING_RECORD_PRESET BOOLEAN not null,
+        VISIBLE BOOLEAN not null,
         primary key (ID)
     );
 
@@ -2196,6 +2212,11 @@
         references STAFF;
 
     alter table COURSE 
+        add constraint COURSE_TRAINING_RECORD_SECTION_PRESET_FKC 
+        foreign key (TRAINING_RECORD_SECTION_PRESET_FK) 
+        references TRAINING_RECORD_SECTION;
+
+    alter table COURSE 
         add constraint COURSE_TRIAL_FKC 
         foreign key (TRIAL_FK) 
         references TRIAL;
@@ -2216,6 +2237,16 @@
         references users;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
+        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_TRAINING_RECORD_SECTION_FC 
+        foreign key (TRAINING_RECORD_SECTION_FK) 
+        references TRAINING_RECORD_SECTION;
+
+    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
+        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_CV_SECTION_FKC 
+        foreign key (CV_SECTION_FK) 
+        references CV_SECTION;
+
+    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
         add constraint COURSE_PARTICIPATION_STATUS_ENTRY_COURSE_FKC 
         foreign key (COURSE_FK) 
         references COURSE;
@@ -2229,11 +2260,6 @@
         add constraint COURSE_PARTICIPATION_STATUS_ENTRY_STAFF_FKC 
         foreign key (STAFF_FK) 
         references STAFF;
-
-    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
-        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_SECTION_FKC 
-        foreign key (SECTION_FK) 
-        references CV_SECTION;
 
     alter table CRITERIA 
         add constraint CRITERIA_MODIFIED_USER_FKC 

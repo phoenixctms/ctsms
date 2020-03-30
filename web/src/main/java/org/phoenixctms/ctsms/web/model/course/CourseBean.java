@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipantListPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
@@ -67,6 +68,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			Collection<CourseOutVO> precedingCourseVOs = out.getPrecedingCourses();
 			DepartmentVO departmentVO = out.getDepartment();
 			CvSectionVO cvSectionVO = out.getCvSectionPreset();
+			TrainingRecordSectionVO trainingRecordSectionVO = out.getTrainingRecordSectionPreset();
 			StaffOutVO institution = out.getInstitution();
 			TrialOutVO trial = out.getTrial();
 			VariablePeriodVO validityPeriodVO = out.getValidityPeriod();
@@ -74,6 +76,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setSelfRegistration(out.getSelfRegistration());
 			in.setCvCommentPreset(out.getCvCommentPreset());
 			in.setCvSectionPresetId(cvSectionVO == null ? null : cvSectionVO.getId());
+			in.setTrainingRecordSectionPresetId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
 			in.setCvTitle(out.getCvTitle());
 			in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
 			in.setDescription(out.getDescription());
@@ -93,6 +96,8 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setPrecedingCourseIds(precedingCourseIds);
 			in.setShowCommentCvPreset(out.getShowCommentCvPreset());
 			in.setShowCvPreset(out.getShowCvPreset());
+			in.setShowTrainingRecordPreset(out.getShowTrainingRecordPreset());
+			in.setCertificate(out.getCertificate());
 			in.setStart(out.getStart());
 			in.setStop(out.getStop());
 			in.setValidityPeriod(validityPeriodVO == null ? null : validityPeriodVO.getPeriod());
@@ -120,6 +125,8 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			result.setName(CommonUtil.getCourseName(result));
 			result.setShowCommentCvPreset(in.getShowCommentCvPreset());
 			result.setShowCvPreset(in.getShowCvPreset());
+			result.setShowTrainingRecordPreset(in.getShowTrainingRecordPreset());
+			result.setCertificate(in.getCertificate());
 			result.setStart(in.getStart());
 			result.setStop(in.getStop());
 			result.setParticipationDeadline(in.getParticipationDeadline());
@@ -136,6 +143,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setSelfRegistration(Settings.getBoolean(SettingCodes.COURSE_SELF_REGISTRATION_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SELF_REGISTRATION_PRESET));
 			in.setCvCommentPreset(Messages.getString(MessageCodes.COURSE_CV_COMMENT_PRESET_PRESET));
 			in.setCvSectionPresetId(null);
+			in.setTrainingRecordSectionPresetId(null);
 			in.setCvTitle(Messages.getString(MessageCodes.COURSE_CV_TITLE_PRESET));
 			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
 			in.setDescription(Messages.getString(MessageCodes.COURSE_DESCRIPTION_PRESET));
@@ -151,6 +159,10 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setShowCommentCvPreset(
 					Settings.getBoolean(SettingCodes.COURSE_SHOW_COMMENT_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_COMMENT_CV_PRESET_PRESET));
 			in.setShowCvPreset(Settings.getBoolean(SettingCodes.COURSE_SHOW_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_CV_PRESET_PRESET));
+			in.setShowTrainingRecordPreset(
+					Settings.getBoolean(SettingCodes.COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET));
+			in.setCertificate(
+					Settings.getBoolean(SettingCodes.COURSE_CERTIFICATE_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_CERTIFICATE_PRESET));
 			int courseDurationDays = Settings.getInt(SettingCodes.COURSE_DURATION_DAYS_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_DURATION_DAYS_PRESET);
 			if (courseDurationDays > 0) {
 				in.setStart(new Date());
@@ -173,7 +185,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private ArrayList<SelectItem> categories;
 	private ArrayList<SelectItem> departments;
 	private ArrayList<SelectItem> cvSections;
+	private ArrayList<SelectItem> trainingRecordSections;
 	private CvSectionVO cvSection;
+	private TrainingRecordSectionVO trainingRecordSection;
 	private TreeNode renewalsRoot;
 	private TreeNode precedingCoursesRoot;
 	private CourseMultiPickerModel precedingCourseMultiPicker;
@@ -480,6 +494,10 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		return cvSections;
 	}
 
+	public ArrayList<SelectItem> getTrainingRecordSections() {
+		return trainingRecordSections;
+	}
+
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
 	}
@@ -583,11 +601,19 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		}
 	}
 
-	public void handleSectionPresetChange() {
-		loadSelectedSection();
+	public void handleCvSectionPresetChange() {
+		loadCvSelectedSection();
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null && cvSection != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_CV_SECTION_SHOW_CV_PRESET.toString(), cvSection.getShowCvPreset());
+		}
+	}
+
+	public void handleTrainingRecordSectionPresetChange() {
+		loadTrainingRecordSelectedSection();
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		if (requestContext != null && trainingRecordSection != null) {
+			requestContext.addCallbackParam(JSValues.AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET.toString(), trainingRecordSection.getShowTrainingRecordPreset());
 		}
 	}
 
@@ -672,7 +698,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		categories = WebUtil.getVisibleCourseCategories(in.getCategoryId());
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
 		cvSections = WebUtil.getCvSections(this.in.getCvSectionPresetId());
-		loadSelectedSection();
+		trainingRecordSections = WebUtil.getTrainingRecordSections(this.in.getTrainingRecordSectionPresetId());
+		loadCvSelectedSection();
+		loadTrainingRecordSelectedSection();
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, out.getDeferredDeleteReason());
@@ -741,8 +769,12 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		return ERROR_OUTCOME;
 	}
 
-	private void loadSelectedSection() {
+	private void loadCvSelectedSection() {
 		cvSection = WebUtil.getCvSection(in.getCvSectionPresetId());
+	}
+
+	private void loadTrainingRecordSelectedSection() {
+		trainingRecordSection = WebUtil.getTrainingRecordSection(in.getTrainingRecordSectionPresetId());
 	}
 
 	@Override

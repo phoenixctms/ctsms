@@ -87,7 +87,7 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		}
 	}
 
-	private static Iterator<MoneyTransferByBankAccountSummaryDetailVO> createByCostTypeIterator(
+	protected static Iterator<MoneyTransferByBankAccountSummaryDetailVO> createByCostTypeIterator(
 			final MoneyTransferByBankAccountSummaryDetailVO detail, final ReimbursementsPDFBlockCursor cursor) {
 		return new MoneyTransferByCostTypeSummaryDetailVOIterator<MoneyTransferByBankAccountSummaryDetailVO>(detail,
 				Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_ROW_HEIGHT_LIMIT, Bundle.REIMBURSEMENTS_PDF,
@@ -121,7 +121,7 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		};
 	}
 
-	private static Iterator<MoneyTransferByPaymentMethodSummaryDetailVO> createByCostTypeIterator(
+	protected static Iterator<MoneyTransferByPaymentMethodSummaryDetailVO> createByCostTypeIterator(
 			final MoneyTransferByPaymentMethodSummaryDetailVO detail, final ReimbursementsPDFBlockCursor cursor) {
 		return new MoneyTransferByCostTypeSummaryDetailVOIterator<MoneyTransferByPaymentMethodSummaryDetailVO>(detail,
 				Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_ROW_HEIGHT_LIMIT, Bundle.REIMBURSEMENTS_PDF,
@@ -154,27 +154,27 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		};
 	}
 
-	private int blockIndex;
-	private ArrayList<ReimbursementsPDFBlock> blocks;
-	private ReimbursementsPDFBlockCursor cursor;
-	private ReimbursementsPDFVO pdfVO;
-	private TrialOutVO trialVO;
-	private Collection<TrialTagValueOutVO> trialTagValueVOs;
-	private Collection<ProbandOutVO> probandVOs;
-	private HashMap<Long, MoneyTransferSummaryVO> summaryMap;
-	private HashMap<Long, ProbandAddressOutVO> addressVOMap;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private PDFont fontD;
-	private PDFont fontE;
-	private PDFont fontF;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String REIMBURSEMENTS_PDF_FILENAME_PREFIX = "reimbursements_";
-	private static final String REIMBURSEMENTS_PDF_FILENAME_TRIAL = "trial_";
-	private static final String REIMBURSEMENTS_PDF_FILENAME_PROBAND = "proband_";
+	protected int blockIndex;
+	protected ArrayList<ReimbursementsPDFBlock> blocks;
+	protected ReimbursementsPDFBlockCursor cursor;
+	protected ReimbursementsPDFVO pdfVO;
+	protected TrialOutVO trialVO;
+	protected Collection<TrialTagValueOutVO> trialTagValueVOs;
+	protected Collection<ProbandOutVO> probandVOs;
+	protected HashMap<Long, MoneyTransferSummaryVO> summaryMap;
+	protected HashMap<Long, ProbandAddressOutVO> addressVOMap;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected PDFont fontD;
+	protected PDFont fontE;
+	protected PDFont fontF;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String REIMBURSEMENTS_PDF_FILENAME_PREFIX = "reimbursements_";
+	protected static final String REIMBURSEMENTS_PDF_FILENAME_TRIAL = "trial_";
+	protected static final String REIMBURSEMENTS_PDF_FILENAME_PROBAND = "proband_";
 
 	public ReimbursementsPDFPainter() {
 		super();
@@ -214,8 +214,8 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 			if (!block.isLastTableRow()) {
 				PDFUtil.renderLine(contentStream, Settings.getColor(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_COLOR, Bundle.REIMBURSEMENTS_PDF,
 						ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_COLOR), cursor.getBlockX(), cursor.getBlockY(), cursor.getBlockX() + cursor.getBlockWidth(),
-						cursor.getBlockY(), Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
-								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_BLOCK_FRAME_LINE_WIDTH));
+						cursor.getBlockY(), Settings.getFloat(ReimbursementsPDFSettingCodes.PAYMENT_TABLE_FRAME_LINE_WIDTH, Bundle.REIMBURSEMENTS_PDF,
+								ReimbursementsPDFDefaultSettings.PAYMENT_TABLE_FRAME_LINE_WIDTH));
 			}
 		}
 	}
@@ -471,7 +471,7 @@ public class ReimbursementsPDFPainter extends PDFPainterBase implements PDFOutpu
 		}
 	}
 
-	private void updateReimbursementsPDFVO() {
+	protected void updateReimbursementsPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.setProbands(probandVOs);

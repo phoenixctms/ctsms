@@ -29,23 +29,23 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 
 public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<CVPDFBlock> blocks;
-	private CVPDFBlockCursor cursor;
-	private HashMap<Long, PDFJpeg> images;
-	private CvPDFVO pdfVO;
-	private Collection<StaffOutVO> staffVOs;
-	private Collection<CvSectionVO> allCvSectionVOs;
-	private HashMap<Long, HashMap<Long, Collection<CvPositionPDFVO>>> cvPositionVOMap;
-	private HashMap<Long, StaffAddressOutVO> addressVOMap;
-	private HashMap<Long, StaffImageOutVO> imageVOMap;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String CV_PDF_FILENAME_PREFIX = "cv_";
+	protected int blockIndex;
+	protected ArrayList<CVPDFBlock> blocks;
+	protected CVPDFBlockCursor cursor;
+	protected HashMap<Long, PDFJpeg> images;
+	protected CvPDFVO pdfVO;
+	protected Collection<StaffOutVO> staffVOs;
+	protected Collection<CvSectionVO> allCvSectionVOs;
+	protected HashMap<Long, HashMap<Long, Collection<CvPositionPDFVO>>> cvPositionVOMap;
+	protected HashMap<Long, StaffAddressOutVO> addressVOMap;
+	protected HashMap<Long, StaffImageOutVO> imageVOMap;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String CV_PDF_FILENAME_PREFIX = "cv_";
 
 	public CVPDFPainter() {
 		super();
@@ -343,7 +343,7 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
-	private void updateCvPDFVO() {
+	protected void updateCvPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.setStafves(staffVOs);

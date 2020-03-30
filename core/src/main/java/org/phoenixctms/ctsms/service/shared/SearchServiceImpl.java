@@ -95,6 +95,9 @@ import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFSettingCodes;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFDefaultSettings;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFPainter;
+import org.phoenixctms.ctsms.pdf.TrainingRecordPDFSettingCodes;
 import org.phoenixctms.ctsms.query.QueryUtil;
 import org.phoenixctms.ctsms.query.parser.CriterionIntermediateSetParser;
 import org.phoenixctms.ctsms.query.parser.CriterionSyntaxParser;
@@ -154,6 +157,7 @@ import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberRoleVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordPDFVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialTagVO;
 import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
@@ -943,6 +947,15 @@ public class SearchServiceImpl
 	}
 
 	@Override
+	protected TrainingRecordPDFVO handleRenderTrainingRecordPDFs(AuthenticationVO auth, CriteriaInVO criteria,
+			Set<CriterionInVO> criterions, PSFVO psf) throws Exception {
+		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
+		TrainingRecordPDFVO result = renderTrainingRecordPDFsHelper(instantCriteria, psf);
+		logTrainingRecordExport(criteria.getId(), instantCriteria, result);
+		return result;
+	}
+
+	@Override
 	protected ProbandLetterPDFVO handleRenderProbandLetterPDFs(
 			AuthenticationVO auth, CriteriaInVO criteria,
 			Set<CriterionInVO> criterions, PSFVO psf) throws Exception {
@@ -1328,6 +1341,27 @@ public class SearchServiceImpl
 		}
 	}
 
+	private void logTrainingRecordExport(Long criteriaId, CriteriaInstantVO criteriaInstantVO, TrainingRecordPDFVO result) throws Exception {
+		if (criteriaId != null && criteriaInstantVO != null && result != null) {
+			User user = CoreUtil.getUser();
+			Timestamp now = CommonUtil.dateToTimestamp(result.getContentTimestamp());
+			CriteriaDao criteriaDao = this.getCriteriaDao();
+			Criteria criteria = CheckIDUtil.checkCriteriaId(criteriaId, criteriaDao);
+			CriteriaOutVO criteriaVO = criteriaDao.toCriteriaOutVO(criteria);
+			String systemMessageCode = SystemMessageCodes.SEARCH_TRAINING_RECORD_EXPORTED;
+			this.getJournalEntryDao().addSystemMessage(
+					criteria,
+					now,
+					user,
+					systemMessageCode,
+					new Object[] { CommonUtil.criteriaOutVOToString(criteriaVO), Integer.toString(result.getStafves().size()) },
+					new Object[] {
+							CoreUtil.getSystemMessageCommentContent(obfuscateCriterions(criteriaInstantVO), null,
+									!CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)),
+							CoreUtil.getSystemMessageCommentContent(result, null, !CommonUtil.getUseJournalEncryption(JournalModule.CRITERIA_JOURNAL, null)) });
+		}
+	}
+
 	private void logExcelExport(Long criteriaId, CriteriaInstantVO criteriaInstantVO, SearchResultExcelVO result) throws Exception {
 		if (criteriaId != null && criteriaInstantVO != null && result != null) {
 			User user = CoreUtil.getUser();
@@ -1687,7 +1721,7 @@ public class SearchServiceImpl
 			HashMap<Long, HashMap<String, Object>> distinctFieldRows) throws Exception {
 		boolean showTags = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_STAFF_TAGS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.SHOW_STAFF_TAGS);
 		StaffTagDao staffTagDao = this.getStaffTagDao();
-		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcel(null, null, null, true) : new ArrayList();
+		Collection staffTags = showTags ? staffTagDao.findByPersonOrganisationIdExcelTrainingRecord(null, null, null, true, null) : new ArrayList();
 		staffTagDao.toStaffTagVOCollection(staffTags);
 		distinctColumnNames.ensureCapacity(staffTags.size());
 		Iterator<StaffTagVO> staffTagsIt = staffTags.iterator();
@@ -1827,6 +1861,18 @@ public class SearchServiceImpl
 				Settings.getInt(CVPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.CV_PDF, CVPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES), psf);
 		CVPDFPainter painter = ServiceUtil.createCVPDFPainter(staffVOs, this.getStaffDao(), this.getCvSectionDao(), this.getCvPositionDao(),
 				this.getCourseParticipationStatusEntryDao(), this.getStaffAddressDao());
+		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(CoreUtil.getUser()));
+		painter.getPdfVO().setCriteria(criteria);
+		(new PDFImprinter(painter, painter)).render();
+		return painter.getPdfVO();
+	}
+
+	private TrainingRecordPDFVO renderTrainingRecordPDFsHelper(CriteriaInstantVO criteria, PSFVO psf) throws Exception {
+		Collection<StaffOutVO> staffVOs = searchStaffHelper(criteria,
+				Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
+				psf);
+		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, this.getStaffDao(), this.getStaffTagValueDao(), this.getTrainingRecordSectionDao(),
+				this.getCourseParticipationStatusEntryDao());
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(CoreUtil.getUser()));
 		painter.getPdfVO().setCriteria(criteria);
 		(new PDFImprinter(painter, painter)).render();

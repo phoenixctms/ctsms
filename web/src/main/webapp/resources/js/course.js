@@ -139,6 +139,31 @@ function handleCvSectionPresetSelected(xhr, status, args) {
 
 }
 
+var courseShowTrainingRecordPresetPreset;
+
+function setCourseShowTrainingRecordPreset(apply) {
+
+	if (apply) {
+		showTrainingRecordPreset.setValue(courseShowTrainingRecordPresetPreset);
+	}
+	courseShowTrainingRecordPresetPresetOverrideConfirmation.hide();
+	courseShowTrainingRecordPresetPreset = null;
+
+}
+
+function handleTrainingRecordSectionPresetSelected(xhr, status, args) {
+
+	if (_testPropertyExists(args, AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET)) {
+		courseShowTrainingRecordPresetPreset = args[AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET];
+		if (courseShowTrainingRecordPresetPreset && courseShowTrainingRecordPresetPreset != showTrainingRecordPreset.getValue()) {
+			courseShowTrainingRecordPresetPresetOverrideConfirmation.show();
+			return;
+		}
+	}
+	courseShowTrainingRecordPresetPreset = null;
+
+}
+
 var courseParticipationStatusEntryCvSectionShowCvPreset;
 
 function setCourseParticipationStatusEntryCvSectionShowCv(apply) {
@@ -168,5 +193,31 @@ function handleCourseParticipationStatusEntryCvSectionSelected(xhr, status, args
 		}
 	}
 	courseParticipationStatusEntryCvSectionShowCvPreset = null;
+
+}
+
+var courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset;
+
+function setCourseParticipationStatusEntryTrainingRecordSectionShowTrainingRecord(apply) {
+
+	if (apply) {
+		courseParticipationStatusEntryShowTrainingRecord.setValue(courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset);
+	}
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation.hide();
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;
+
+}
+
+function handleCourseParticipationStatusEntryTrainingRecordSectionSelected(xhr, status, args) {
+
+	if (_testPropertyExists(args, AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET)) {
+		courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = args[AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET];
+		if (courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset
+		        && courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset != courseParticipationStatusEntryShowTrainingRecord.getValue()) {
+			courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation.show();
+			return;
+		}
+	}
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;
 
 }

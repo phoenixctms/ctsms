@@ -10,12 +10,12 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 public class InquiriesPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFBlockCursor {
 
-	private InquiriesPDFPainter painter;
-	private float categoryY;
-	private InquiriesPDFBlock categoryBlock;
-	private InquiriesPDFBlock probandTrialBlock;
-	private ProbandOutVO proband;
-	private TrialOutVO trial;
+	protected InquiriesPDFPainter painter;
+	protected float categoryY;
+	protected InquiriesPDFBlock categoryBlock;
+	protected InquiriesPDFBlock probandTrialBlock;
+	protected ProbandOutVO proband;
+	protected TrialOutVO trial;
 
 	public InquiriesPDFBlockCursor(InquiriesPDFPainter painter) {
 		this.painter = painter;

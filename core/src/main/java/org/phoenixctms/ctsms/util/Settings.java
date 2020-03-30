@@ -40,6 +40,7 @@ public final class Settings {
 		SETTINGS,
 		TRUSTED_HOSTS,
 		CV_PDF,
+		TRAINING_RECORD_PDF,
 		REIMBURSEMENTS_PDF,
 		COURSE_PARTICIPANT_LIST_PDF,
 		PROBAND_LETTER_PDF,
@@ -61,6 +62,7 @@ public final class Settings {
 	private static String settingsBundleBasename;
 	private static String trustedHostsBundleBasename;
 	private static String cvPdfSettingsBundleBasename;
+	private static String trainingRecordPdfSettingsBundleBasename;
 	private static String reimbursementsPdfSettingsBundleBasename;
 	private static String courseParticipantListPdfSettingsBundleBasename;
 	private static String probandLetterPdfSettingsBundleBasename;
@@ -272,6 +274,8 @@ public final class Settings {
 				return getBundle(trustedHostsBundleBasename);
 			case CV_PDF:
 				return getBundle(cvPdfSettingsBundleBasename);
+			case TRAINING_RECORD_PDF:
+				return getBundle(trainingRecordPdfSettingsBundleBasename);
 			case REIMBURSEMENTS_PDF:
 				return getBundle(reimbursementsPdfSettingsBundleBasename);
 			case COURSE_PARTICIPANT_LIST_PDF:
@@ -524,6 +528,13 @@ public final class Settings {
 			String cvPdfSettingsBundleBasename) {
 		Settings.cvPdfSettingsBundleBasename = cvPdfSettingsBundleBasename;
 		getBundle(cvPdfSettingsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setTrainingRecordPdfSettingsBundleBasename(
+			String trainingRecordPdfSettingsBundleBasename) {
+		Settings.trainingRecordPdfSettingsBundleBasename = trainingRecordPdfSettingsBundleBasename;
+		getBundle(trainingRecordPdfSettingsBundleBasename);
 	}
 
 	@Autowired(required = true)

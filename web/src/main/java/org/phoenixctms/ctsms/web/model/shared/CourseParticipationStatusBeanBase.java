@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -28,15 +29,18 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 		if (in != null && out != null) {
 			CourseOutVO courseVO = out.getCourse();
 			StaffOutVO staffVO = out.getStaff();
-			CvSectionVO sectionVO = out.getSection();
+			CvSectionVO cvSectionVO = out.getCvSection();
+			TrainingRecordSectionVO trainingRecordSectionVO = out.getTrainingRecordSection();
 			CourseParticipationStatusTypeVO statusVO = out.getStatus();
 			in.setComment(out.getComment());
 			in.setCourseId(courseVO == null ? null : courseVO.getId());
 			in.setId(out.getId());
 			in.setVersion(out.getVersion());
-			in.setSectionId(sectionVO == null ? null : sectionVO.getId());
+			in.setCvSectionId(cvSectionVO == null ? null : cvSectionVO.getId());
 			in.setShowCommentCv(out.getShowCommentCv());
 			in.setShowCv(out.getShowCv());
+			in.setTrainingRecordSectionId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
+			in.setShowTrainingRecord(out.getShowTrainingRecord());
 			in.setStaffId(staffVO == null ? null : staffVO.getId());
 			in.setStatusId(statusVO == null ? null : statusVO.getId());
 		}
@@ -46,8 +50,10 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	protected CourseParticipationStatusEntryOutVO out;
 	protected CourseParticipationStatusEntryLazyModel statusEntryModel;
 	protected ArrayList<SelectItem> cvSections;
+	protected ArrayList<SelectItem> trainingRecordSections;
 	protected ArrayList<SelectItem> statusTypes;
 	private CvSectionVO cvSection;
+	private TrainingRecordSectionVO trainingRecordSection;
 	protected HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
 	protected HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache;
 	protected HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
@@ -74,6 +80,10 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 
 	public ArrayList<SelectItem> getCvSections() {
 		return cvSections;
+	}
+
+	public ArrayList<SelectItem> getTrainingRecordSections() {
+		return trainingRecordSections;
 	}
 
 	public CourseParticipationStatusEntryInVO getIn() {
@@ -109,8 +119,8 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 		return statusTypes;
 	}
 
-	public void handleSectionChange() {
-		loadSelectedSection();
+	public void handleCvSectionChange() {
+		loadSelectedCvSection();
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null && cvSection != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_CV_SECTION_SHOW_CV_PRESET.toString(), cvSection.getShowCvPreset());
@@ -120,6 +130,14 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	public void handleShowCvChange() {
 		if (!in.getShowCv()) {
 			in.setShowCommentCv(false);
+		}
+	}
+
+	public void handleTrainingRecordSectionChange() {
+		loadSelectedTrainingRecordSection();
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		if (requestContext != null && trainingRecordSection != null) {
+			requestContext.addCallbackParam(JSValues.AJAX_TRAINING_RECORD_SECTION_SHOW_TRAINING_RECORD_PRESET.toString(), trainingRecordSection.getShowTrainingRecordPreset());
 		}
 	}
 
@@ -138,7 +156,7 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 		try {
 			out = WebUtil.getServiceLocator().getCourseService().getCourseParticipationStatusEntry(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -150,8 +168,12 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 		return ERROR_OUTCOME;
 	}
 
-	protected void loadSelectedSection() {
-		cvSection = WebUtil.getCvSection(in.getSectionId());
+	protected void loadSelectedCvSection() {
+		cvSection = WebUtil.getCvSection(in.getCvSectionId());
+	}
+
+	protected void loadSelectedTrainingRecordSection() {
+		trainingRecordSection = WebUtil.getTrainingRecordSection(in.getTrainingRecordSectionId());
 	}
 
 	protected void sanitizeInVals() {

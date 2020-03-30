@@ -24,6 +24,9 @@
         drop constraint COURSE_INSTITUTION_FKC;
 
     alter table COURSE 
+        drop constraint COURSE_TRAINING_RECORD_SECTION_PRESET_FKC;
+
+    alter table COURSE 
         drop constraint COURSE_TRIAL_FKC;
 
     alter table COURSE 
@@ -36,6 +39,12 @@
         drop constraint COURSE_PARTICIPATION_STATUS_ENTRY_MODIFIED_USER_FKC;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
+        drop constraint COURSE_PARTICIPATION_STATUS_ENTRY_TRAINING_RECORD_SECTION_FC;
+
+    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
+        drop constraint COURSE_PARTICIPATION_STATUS_ENTRY_CV_SECTION_FKC;
+
+    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
         drop constraint COURSE_PARTICIPATION_STATUS_ENTRY_COURSE_FKC;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
@@ -43,9 +52,6 @@
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
         drop constraint COURSE_PARTICIPATION_STATUS_ENTRY_STAFF_FKC;
-
-    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
-        drop constraint COURSE_PARTICIPATION_STATUS_ENTRY_SECTION_FKC;
 
     alter table CRITERIA 
         drop constraint CRITERIA_MODIFIED_USER_FKC;
@@ -1170,6 +1176,8 @@
     drop table TIMELINE_EVENT_TYPE cascade;
 
     drop table TITLE cascade;
+
+    drop table TRAINING_RECORD_SECTION cascade;
 
     drop table TRIAL cascade;
 

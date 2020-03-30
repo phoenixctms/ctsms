@@ -53,13 +53,13 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 		return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.FIRST_VISIT_REIMBURSEMENT_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
-	private VisitScheduleExcelVO excelVO;
-	private TrialOutVO trial;
-	private ProbandOutVO proband;
-	private ProbandAddressOutVO address;
-	private Styles style;
-	private static final String VISIT_SCHEDULE_EXCEL_FILENAME_TRIAL = "trial_";
-	private static final String VISIT_SCHEDULE_EXCEL_FILENAME_PROBAND = "proband_";
+	protected VisitScheduleExcelVO excelVO;
+	protected TrialOutVO trial;
+	protected ProbandOutVO proband;
+	protected ProbandAddressOutVO address;
+	protected Styles style;
+	protected static final String VISIT_SCHEDULE_EXCEL_FILENAME_TRIAL = "trial_";
+	protected static final String VISIT_SCHEDULE_EXCEL_FILENAME_PROBAND = "proband_";
 	public static final String RECENT_PROBAND_LIST_STATUS_ENTRY = "_RECENT_PROBAND_LIST_STATUS_ENTRY";
 
 	protected VisitScheduleExcelWriter() {
@@ -73,7 +73,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().add(createSpreadSheetWriter(omitFields));
 	}
 
-	private void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
+	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
 		header.getLeft().clear();
 		temp = CommonUtil.trialOutVOToString(trial);
@@ -194,7 +194,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	private SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
+	protected SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
 				return new SpreadSheetWriter(this,
@@ -312,7 +312,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 		return proband;
 	}
 
-	private String getStyleName() {
+	protected String getStyleName() {
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
 				return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.TRIAL_VISIT_SCHEDULE_NAME, ExcelUtil.DEFAULT_LABEL);

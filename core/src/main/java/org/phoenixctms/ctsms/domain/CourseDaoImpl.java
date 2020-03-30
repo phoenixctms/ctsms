@@ -38,6 +38,7 @@ import org.phoenixctms.ctsms.vo.CvSectionVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vocycle.CourseReflexionGraph;
@@ -107,6 +108,7 @@ public class CourseDaoImpl
 		Long departmentId = source.getDepartmentId();
 		Long categoryId = source.getCategoryId();
 		Long cvSectionPresetId = source.getCvSectionPresetId();
+		Long trainingRecordSectionPresetId = source.getTrainingRecordSectionPresetId();
 		Long institutionId = source.getInstitutionId();
 		Long trialId = source.getTrialId();
 		if (departmentId != null) {
@@ -123,6 +125,11 @@ public class CourseDaoImpl
 			target.setCvSectionPreset(this.getCvSectionDao().load(cvSectionPresetId));
 		} else if (copyIfNull) {
 			target.setCvSectionPreset(null);
+		}
+		if (trainingRecordSectionPresetId != null) {
+			target.setTrainingRecordSectionPreset(this.getTrainingRecordSectionDao().load(trainingRecordSectionPresetId));
+		} else if (copyIfNull) {
+			target.setTrainingRecordSectionPreset(null);
 		}
 		if (institutionId != null) {
 			Staff institution = this.getStaffDao().load(institutionId);
@@ -178,6 +185,7 @@ public class CourseDaoImpl
 		DepartmentVO departmentVO = source.getDepartment();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		CvSectionVO cvSectionPresetVO = source.getCvSectionPreset();
+		TrainingRecordSectionVO trainingRecordPresetVO = source.getTrainingRecordSectionPreset();
 		StaffOutVO institutionVO = source.getInstitution();
 		TrialOutVO trialVO = source.getTrial();
 		if (categoryVO != null) {
@@ -199,6 +207,11 @@ public class CourseDaoImpl
 			target.setCvSectionPreset(this.getCvSectionDao().cvSectionVOToEntity(cvSectionPresetVO));
 		} else if (copyIfNull) {
 			target.setCvSectionPreset(null);
+		}
+		if (trainingRecordPresetVO != null) {
+			target.setTrainingRecordSectionPreset(this.getTrainingRecordSectionDao().trainingRecordSectionVOToEntity(trainingRecordPresetVO));
+		} else if (copyIfNull) {
+			target.setTrainingRecordSectionPreset(null);
 		}
 		if (institutionVO != null) {
 			Staff institution = this.getStaffDao().staffOutVOToEntity(institutionVO);
@@ -504,6 +517,7 @@ public class CourseDaoImpl
 		Department department = source.getDepartment();
 		CourseCategory category = source.getCategory();
 		CvSection cvSectionPreset = source.getCvSectionPreset();
+		TrainingRecordSection trainingRecordSectionPreset = source.getTrainingRecordSectionPreset();
 		Staff institution = source.getInstitution();
 		Trial trial = source.getTrial();
 		if (department != null) {
@@ -514,6 +528,9 @@ public class CourseDaoImpl
 		}
 		if (cvSectionPreset != null) {
 			target.setCvSectionPresetId(cvSectionPreset.getId());
+		}
+		if (trainingRecordSectionPreset != null) {
+			target.setTrainingRecordSectionPresetId(trainingRecordSectionPreset.getId());
 		}
 		if (institution != null) {
 			target.setInstitutionId(institution.getId());
@@ -539,15 +556,17 @@ public class CourseDaoImpl
 	public void toCourseOutVO(
 			Course source,
 			CourseOutVO target) {
-		(new CourseReflexionGraph(this, this.getCourseCategoryDao(), this.getDepartmentDao(), this.getCvSectionDao(), this.getStaffDao(), this.getTrialDao(), this.getUserDao()))
-				.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
+		(new CourseReflexionGraph(this, this.getCourseCategoryDao(), this.getDepartmentDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getStaffDao(),
+				this.getTrialDao(), this.getUserDao()))
+						.toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 
 	@Override
 	public void toCourseOutVO(
 			Course source,
 			CourseOutVO target, Integer... maxInstances) {
-		(new CourseReflexionGraph(this, this.getCourseCategoryDao(), this.getDepartmentDao(), this.getCvSectionDao(), this.getStaffDao(), this.getTrialDao(), this.getUserDao(),
+		(new CourseReflexionGraph(this, this.getCourseCategoryDao(), this.getDepartmentDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getStaffDao(),
+				this.getTrialDao(), this.getUserDao(),
 				maxInstances)).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 

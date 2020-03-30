@@ -9,7 +9,6 @@ package org.phoenixctms.ctsms.domain;
 import java.util.Collection;
 
 import org.hibernate.criterion.Restrictions;
-
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.StaffTagVO;
@@ -21,12 +20,15 @@ public class StaffTagDaoImpl
 		extends StaffTagDaoBase {
 
 	@Override
-	protected Collection<StaffTag> handleFindByPersonOrganisationIdExcel(
-			Boolean person, Boolean organisation, Long tagId, Boolean excel) throws Exception {
+	protected Collection<StaffTag> handleFindByPersonOrganisationIdExcelTrainingRecord(
+			Boolean person, Boolean organisation, Long tagId, Boolean excel, Boolean trainingRecord) throws Exception {
 		org.hibernate.Criteria staffTagCriteria = this.getSession().createCriteria(StaffTag.class);
 		staffTagCriteria.setCacheable(true);
 		if (excel != null) {
 			staffTagCriteria.add(Restrictions.eq("excel", excel.booleanValue()));
+		}
+		if (trainingRecord != null) {
+			staffTagCriteria.add(Restrictions.eq("trainingRecord", trainingRecord.booleanValue()));
 		}
 		if (person != null) {
 			if (tagId != null) {

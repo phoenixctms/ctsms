@@ -14,11 +14,11 @@ public final class CourseParticipantListPDFDefaultSettings {
 	public final static float Y_FRAME_INDENT = 2.5f;
 	public final static float SPACER_HEIGHT = 20.0f;
 	public static final float PAGE_FRAME_LINE_WIDTH = 2.0f;
-	public final static float X_PARTICIPANT_TABLE_COLUMN_INDENT = 230.0f;
+	public final static float X_PARTICIPANT_TABLE_COLUMN_PARTICIPANT_WIDTH = 230.0f;
 	public final static float X_PARTICIPANT_TABLE_FRAME_INDENT = 10.0f;
 	public final static float Y_PARTICIPANT_TABLE_FRAME_INDENT = 10.0f;
 	public final static float Y_PARTICIPANT_TABLE_HEAD_FRAME_INDENT = 3.0f;
-	public static final float PARTICIPANT_TABLE_BLOCK_FRAME_LINE_WIDTH = 1.5f;
+	public static final float PARTICIPANT_TABLE_FRAME_LINE_WIDTH = 1.5f;
 	public static final float PARTICIPANT_TABLE_COLUMN_LINE_WIDTH = 0.8f;
 	public static final float PAGE_UPPER_MARGIN = 70.0f;
 	public static final float PAGE_LOWER_MARGIN = 60.0f;

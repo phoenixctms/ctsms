@@ -22,6 +22,7 @@ import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
 import org.phoenixctms.ctsms.vo.StaffContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
+import org.phoenixctms.ctsms.vo.TrainingRecordPDFVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -77,6 +78,20 @@ public class StaffSearchBean extends SearchBeanBase {
 		clearCaches();
 		try {
 			CvPDFVO cv = WebUtil.getServiceLocator().getSearchService().renderCvPDFs(WebUtil.getAuthentication(), criteriaIn, new HashSet<CriterionInVO>(criterionsIn), null);
+			return new DefaultStreamedContent(new ByteArrayInputStream(cv.getDocumentDatas()), cv.getContentType().getMimeType(), cv.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
+		clearCaches();
+		try {
+			TrainingRecordPDFVO cv = WebUtil.getServiceLocator().getSearchService().renderTrainingRecordPDFs(WebUtil.getAuthentication(), criteriaIn,
+					new HashSet<CriterionInVO>(criterionsIn), null);
 			return new DefaultStreamedContent(new ByteArrayInputStream(cv.getDocumentDatas()), cv.getContentType().getMimeType(), cv.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

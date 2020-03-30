@@ -38,7 +38,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		PAGE_TITLE, NEW_ECRF, LIST_ENTRY_TAG_VALUE, NEW_SECTION, NEW_INDEX, INPUT_FIELD, AUDIT_TRAIL_VALUE, FIELD_STATUS_ENTRY, END_OF_INDEX, END_OF_SECTION,
 	}
 
-	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
+	protected final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		@Override
 		protected boolean getBooleanValue(ECRFFieldValueOutVO value) {
@@ -121,20 +121,20 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 			return value.getTimeValue();
 		}
 	};
-	private ECRFFieldValueOutVO auditTrailValue;
-	private ECRFFieldStatusEntryOutVO fieldStatusEntry;
-	private ProbandListEntryTagValueOutVO listEntryTagValuesVO;
-	private ECRFFieldValueOutVO value;
-	private ProbandListEntryOutVO listEntry;
-	private ECRFOutVO ecrf;
-	private ECRFStatusEntryVO statusEntry;
-	private SignatureVO signature;
-	private String section;
-	private Long index;
-	private BlockType type;
-	private boolean inserted = false;
-	private Date now;
-	private boolean hasNext = false;
+	protected ECRFFieldValueOutVO auditTrailValue;
+	protected ECRFFieldStatusEntryOutVO fieldStatusEntry;
+	protected ProbandListEntryTagValueOutVO listEntryTagValuesVO;
+	protected ECRFFieldValueOutVO value;
+	protected ProbandListEntryOutVO listEntry;
+	protected ECRFOutVO ecrf;
+	protected ECRFStatusEntryVO statusEntry;
+	protected SignatureVO signature;
+	protected String section;
+	protected Long index;
+	protected BlockType type;
+	protected boolean inserted = false;
+	protected Date now;
+	protected boolean hasNext = false;
 
 	public EcrfPDFBlock(BlockType type, boolean inserted) {
 		super();
@@ -328,7 +328,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		return listEntry;
 	}
 
-	private float getLogFrameLineWidth() {
+	protected float getLogFrameLineWidth() {
 		return Settings.getFloat(EcrfPDFSettingCodes.LOG_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.LOG_FRAME_LINE_WIDTH);
 	}
 
@@ -391,14 +391,14 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		return value.getSelectionValues();
 	}
 
-	private String getStatusTypeName() {
+	protected String getStatusTypeName() {
 		if (statusEntry != null && statusEntry.getStatus() != null) {
 			return L10nUtil.getEcrfStatusTypeName(Locales.ECRF_PDF, statusEntry.getStatus().getNameL10nKey());
 		}
 		return "";
 	}
 
-	private String getStatusUser() {
+	protected String getStatusUser() {
 		if (statusEntry != null && statusEntry.getModifiedUser() != null) {
 			if (statusEntry.getModifiedUser().getIdentity() != null) {
 				return CommonUtil.staffOutVOToString(statusEntry.getModifiedUser().getIdentity());

@@ -30,32 +30,32 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PDFOutput {
 
-	private int blockIndex;
-	private ArrayList<ProbandListEntryTagsPDFBlock> blocks;
-	private ProbandListEntryTagsPDFBlockCursor cursor;
-	private HashMap<Long, HashMap<Long, PDFJpeg>> images;
-	private ProbandListEntryTagsPDFVO pdfVO;
-	private Collection<ProbandListEntryOutVO> listEntryVOs;
-	private HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap;
-	private HashMap<Long, InputFieldImageVO> imageVOMap;
-	private boolean blank;
-	private float pageWidth;
-	private float pageHeight;
-	private PDFont fontA;
-	private PDFont fontB;
-	private PDFont fontC;
-	private PDFont fontD;
-	private PDFJpeg checkboxCheckedImage;
-	private PDFJpeg checkboxUncheckedImage;
-	private PDFJpeg radioOnImage;
-	private PDFJpeg radioOffImage;
-	private PDFJpeg selectboxCheckedImage;
-	private PDFJpeg selectboxUncheckedImage;
-	private PDFJpeg checkboxCheckedPresetImage;
-	private PDFJpeg radioOnPresetImage;
-	private PDFJpeg selectboxCheckedPresetImage;
-	private final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
-	private static final String PROBAND_LIST_ENTRY_TAGS_PDF_FILENAME_PREFIX = "probandlistentrytags_";
+	protected int blockIndex;
+	protected ArrayList<ProbandListEntryTagsPDFBlock> blocks;
+	protected ProbandListEntryTagsPDFBlockCursor cursor;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
+	protected ProbandListEntryTagsPDFVO pdfVO;
+	protected Collection<ProbandListEntryOutVO> listEntryVOs;
+	protected HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap;
+	protected HashMap<Long, InputFieldImageVO> imageVOMap;
+	protected boolean blank;
+	protected float pageWidth;
+	protected float pageHeight;
+	protected PDFont fontA;
+	protected PDFont fontB;
+	protected PDFont fontC;
+	protected PDFont fontD;
+	protected PDFJpeg checkboxCheckedImage;
+	protected PDFJpeg checkboxUncheckedImage;
+	protected PDFJpeg radioOnImage;
+	protected PDFJpeg radioOffImage;
+	protected PDFJpeg selectboxCheckedImage;
+	protected PDFJpeg selectboxUncheckedImage;
+	protected PDFJpeg checkboxCheckedPresetImage;
+	protected PDFJpeg radioOnPresetImage;
+	protected PDFJpeg selectboxCheckedPresetImage;
+	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
+	protected static final String PROBAND_LIST_ENTRY_TAGS_PDF_FILENAME_PREFIX = "probandlistentrytags_";
 
 	public ProbandListEntryTagsPDFPainter() {
 		super();
@@ -67,7 +67,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				ProbandListEntryTagsPDFDefaultSettings.SHOW_PAGE_NUMBERS));
 	}
 
-	private void drawBlock(PDPageContentStream contentStream, ProbandListEntryTagsPDFBlock block) throws Exception {
+	protected void drawBlock(PDPageContentStream contentStream, ProbandListEntryTagsPDFBlock block) throws Exception {
 		cursor.setBlocks(block);
 		cursor.setBlockY(cursor.getBlockY() - block.renderBlock(contentStream, cursor));
 	}
@@ -187,7 +187,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		return selectboxUncheckedImage;
 	}
 
-	private PDFJpeg getSketchImage(ProbandListEntryTagValueOutVO value) {
+	protected PDFJpeg getSketchImage(ProbandListEntryTagValueOutVO value) {
 		InputFieldOutVO field = value.getTag().getField();
 		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
 		if (sketchImages != null) {
@@ -306,7 +306,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		}
 	}
 
-	private boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
+	protected boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getTag().getField();
 		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
@@ -441,7 +441,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		}
 	}
 
-	private void updateProbandListEntryTagsPDFVO() {
+	protected void updateProbandListEntryTagsPDFVO() {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.getListEntries().clear();
