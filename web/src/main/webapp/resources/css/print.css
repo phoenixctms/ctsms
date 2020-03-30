@@ -1,9 +1,13 @@
 @media print {
 	body,html {
 		width: 100%;
+		/* transform: scale(.7); */
 	}
 	div {
 		overflow: visible !important;
+	}
+	table {
+		page-break-inside: avoid;
 	}
 }
 @page {
