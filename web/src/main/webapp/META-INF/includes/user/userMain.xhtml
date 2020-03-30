@@ -382,6 +382,29 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="decrypt" />
+							
+							<h:outputLabel />
+							<h:outputText value="" />
+							<h:outputLabel />
+							<h:outputLabel
+								for="decryptUntrusted"
+								value="#{userlabels.user_decrypt_untrusted_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="decryptUntrusted"
+									disabled="#{!userBean.decryptFromUntrustedHosts}"
+									value="#{userBean.in.decryptUntrusted}">
+									<p:ajax />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="decryptUntrusted">
+									<h:outputText
+										value="#{userlabels.user_decrypt_untrusted_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="decryptUntrusted" />
 							</h:panelGrid>
 
 						<p:fieldset

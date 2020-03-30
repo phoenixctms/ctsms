@@ -167,6 +167,7 @@ public interface SettingCodes {
 	public final static String PROBAND_GENDER_PRESET = "proband_gender_preset";
 	public final static String USER_LOCKED_PRESET = "user_locked_preset";
 	public final static String USER_DECRYPT_PRESET = "user_decrypt_preset";
+	public final static String USER_DECRYPT_UNTRUSTED_PRESET = "user_decrypt_untrusted_preset";
 	public final static String USER_ENABLE_INVENTORY_MODULE_PRESET = "user_enable_inventory_module_preset";
 	public final static String USER_ENABLE_STAFF_MODULE_PRESET = "user_enable_staff_module_preset";
 	public final static String USER_ENABLE_COURSE_MODULE_PRESET = "user_enable_course_module_preset";

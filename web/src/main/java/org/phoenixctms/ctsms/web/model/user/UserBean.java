@@ -61,6 +61,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setShowTooltips(out.getShowTooltips());
 			in.setLocked(out.getLocked());
 			in.setDecrypt(out.getDecrypt());
+			in.setDecryptUntrusted(out.getDecryptUntrusted());
 			in.setEnableInventoryModule(out.getEnableInventoryModule());
 			in.setEnableStaffModule(out.getEnableStaffModule());
 			in.setEnableCourseModule(out.getEnableCourseModule());
@@ -88,6 +89,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setShowTooltips(Settings.getBoolean(SettingCodes.USER_SHOW_TOOLTIPS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_SHOW_TOOLTIPS_PRESET));
 			in.setLocked(Settings.getBoolean(SettingCodes.USER_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_PRESET));
 			in.setDecrypt(Settings.getBoolean(SettingCodes.USER_DECRYPT_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_PRESET));
+			in.setDecryptUntrusted(Settings.getBoolean(SettingCodes.USER_DECRYPT_UNTRUSTED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_UNTRUSTED_PRESET));
 			in.setEnableInventoryModule(
 					Settings.getBoolean(SettingCodes.USER_ENABLE_INVENTORY_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_INVENTORY_MODULE_PRESET));
 			in.setEnableStaffModule(Settings.getBoolean(SettingCodes.USER_ENABLE_STAFF_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_STAFF_MODULE_PRESET));
@@ -121,6 +123,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	private String deferredDeleteReason;
 	private String newDepartmentPassword;
 	private String oldDepartmentPassword;
+	private boolean decryptFromUntrustedHosts;
 
 	public UserBean() {
 		super();
@@ -131,6 +134,17 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		remoteUserOk = null;
 		ldapEntry1 = null;
 		ldapEntry2 = null;
+		decryptFromUntrustedHosts = false;
+		try {
+			decryptFromUntrustedHosts = WebUtil.getServiceLocator().getToolsService().isDecryptFromUntrustedHosts();
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+	}
+
+	public boolean isDecryptFromUntrustedHosts() {
+		return decryptFromUntrustedHosts;
 	}
 
 	@Override

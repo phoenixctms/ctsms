@@ -254,6 +254,7 @@ public final class DefaultSettings {
 	public static final boolean INPUT_FIELD_SELECTION_SET_VALUE_LOCALIZED_PRESET = false;
 	public final static boolean USER_LOCKED_PRESET = false;
 	public final static boolean USER_DECRYPT_PRESET = true;
+	public final static boolean USER_DECRYPT_UNTRUSTED_PRESET = false;
 	public static final String USER_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
 	public static final String USER_TIME_ZONE_PRESET = CommonUtil.timeZoneToString(TimeZone.getDefault());
 	public static final String USER_THEME_PRESET = "aristo";
