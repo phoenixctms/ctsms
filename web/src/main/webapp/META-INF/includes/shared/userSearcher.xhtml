@@ -234,7 +234,18 @@
 							name="value"
 							value="#{user.vo.decrypt}" />
 					</ui:include>
-				</p:column>				
+				</p:column>		
+				<p:column sortBy="#{user.vo.decryptUntrusted}">
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_decrypt_untrusted_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param
+							name="value"
+							value="#{user.vo.decryptUntrusted}" />
+					</ui:include>
+				</p:column>
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="#{userlabels.search_user_result_list_password_valid_column}" />

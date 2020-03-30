@@ -660,6 +660,7 @@ public class DemoDataProvider {
 			modifiedUser.setLocked(user.isLocked());
 			modifiedUser.setShowTooltips(user.isShowTooltips());
 			modifiedUser.setDecrypt(user.isDecrypt());
+			modifiedUser.setDecryptUntrusted(user.isDecryptUntrusted());
 			modifiedUser.setEnableInventoryModule(true);
 			modifiedUser.setEnableStaffModule(true);
 			modifiedUser.setEnableCourseModule(true);
@@ -2430,6 +2431,7 @@ public class DemoDataProvider {
 		newUser.setLocked(false);
 		newUser.setShowTooltips(false);
 		newUser.setDecrypt(true);
+		newUser.setDecryptUntrusted(false);
 		newUser.setEnableInventoryModule(true);
 		newUser.setEnableStaffModule(true);
 		newUser.setEnableCourseModule(true);

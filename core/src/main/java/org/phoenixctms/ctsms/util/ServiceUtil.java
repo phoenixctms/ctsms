@@ -1077,6 +1077,9 @@ public final class ServiceUtil {
 		if (userIn.getIdentityId() != null) {
 			CheckIDUtil.checkStaffId(userIn.getIdentityId(), staffDao);
 		}
+		if (userIn.getDecryptUntrusted() && !userIn.getDecrypt()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.DECRYPT_FLAG_NOT_SET);
+		}
 		checkUserSettingsInput(userIn.getLocale(), userIn.getTimeZone(), userIn.getDecimalSeparator(), userIn.getDateFormat(), originalUser);
 	}
 

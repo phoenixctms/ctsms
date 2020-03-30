@@ -150,6 +150,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_LOCALE = "invalid_locale";
 	public final static String INVALID_TIME_ZONE = "invalid_time_zone";
 	public final static String DEPARTMENT_PASSWORD_WRONG = "department_password_wrong";
+	public final static String DECRYPT_FLAG_NOT_SET = "decrypt_flag_not_set";
 	public final static String INVALID_DATE_FORMAT_PATTERN = "invalid_date_format_pattern";
 	public final static String INVALID_DECIMAL_SEPARATOR = "invalid_decimal_separator";
 	public final static String INPUT_FIELD_VALUE_REQUIRED = "input_field_value_required";

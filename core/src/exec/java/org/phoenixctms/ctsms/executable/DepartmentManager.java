@@ -184,6 +184,7 @@ public class DepartmentManager {
 		newUser.setLocked(false);
 		newUser.setShowTooltips(true);
 		newUser.setDecrypt(true);
+		newUser.setDecryptUntrusted(false);
 		newUser.setEnableInventoryModule(true);
 		newUser.setEnableStaffModule(true);
 		newUser.setEnableCourseModule(true);
