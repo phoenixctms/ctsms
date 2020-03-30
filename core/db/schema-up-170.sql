@@ -32,3 +32,7 @@ update STAFF_TAG set TRAINING_RECORD = 't' where NAME_L10N_KEY = 'function' or N
 update STAFF_TAG set MAX_OCCURRENCE = 3 where NAME_L10N_KEY = 'function';
 update STAFF_TAG set NAME_L10N_KEY = '01_role' where NAME_L10N_KEY = 'function';
 update STAFF_TAG set NAME_L10N_KEY = '02_description' where NAME_L10N_KEY = 'description';
+
+alter table USERS add column DECRYPT_UNTRUSTED BOOLEAN;
+update USERS set DECRYPT_UNTRUSTED = 'f';
+alter table USERS alter DECRYPT_UNTRUSTED set not null;
