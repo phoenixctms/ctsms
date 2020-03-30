@@ -1264,6 +1264,11 @@ public class ToolsServiceImpl
 		return Settings.getIntNullable(SettingCodes.JOB_FILE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.JOB_FILE_SIZE_LIMIT);
 	}
 
+	@Override
+	protected boolean handleIsDecryptFromUntrustedHosts() throws Exception {
+		return Settings.getBoolean(SettingCodes.DECRYPT_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS, DefaultSettings.DECRYPT_FROM_UNTRUSTED_HOSTS);
+	}
+
 	public void setAuthenticator(Authenticator authenticator) {
 		this.authenticator = authenticator;
 	}
