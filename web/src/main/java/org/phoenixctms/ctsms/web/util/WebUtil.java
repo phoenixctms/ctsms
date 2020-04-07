@@ -118,10 +118,10 @@ public final class WebUtil {
 	public static final String JS_NULL = "null";
 	private final static Gson JSON_BEAUTIFIER = new GsonBuilder().setPrettyPrinting()
 			.serializeNulls()
-			.setDateFormat(JsUtil.JSON_DATETIME_PATTERN)
+			.setDateFormat(JsUtil.VO_JSON_DATETIME_PATTERN)
 			.create();
 	private final static Gson JSON_COMPRESSOR = new GsonBuilder().serializeNulls()
-			.setDateFormat(JsUtil.JSON_DATETIME_PATTERN)
+			.setDateFormat(JsUtil.VO_JSON_DATETIME_PATTERN)
 			.create();
 	private final static JsonParser JSON_PARSER = new JsonParser();
 	private final static String EL_ENUM_LIST_DEFAULT_SEPARATOR = ",";

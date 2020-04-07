@@ -103,6 +103,7 @@ public class FieldCalculation {
 	private final static void updateEnv(ScriptEngine engine) throws ScriptException {
 		StringBuilder sb = new StringBuilder();
 		sb.append("INPUT_JSON_DATETIME_PATTERN = '" + JsUtil.INPUT_JSON_DATETIME_PATTERN + "';");
+		sb.append("VO_JSON_DATETIME_PATTERN = '" + JsUtil.VO_JSON_DATETIME_PATTERN + "';");
 		sb.append("INPUT_DATE_PATTERN = '" + CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()) + "';");
 		sb.append("INPUT_TIME_PATTERN = '" + CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()) + "';");
 		sb.append("INPUT_DATETIME_PATTERN = '" + CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()) + "';");

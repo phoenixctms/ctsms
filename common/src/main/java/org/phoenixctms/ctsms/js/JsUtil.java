@@ -27,7 +27,7 @@ import com.google.gson.JsonSerializer;
 public final class JsUtil {
 
 	public final static String INPUT_JSON_DATETIME_PATTERN = "yyyy-MM-dd " + CommonUtil.DEFAULT_INPUT_TIME_PATTERN;
-	public final static String JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public final static String VO_JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	public static final GsonExclusionStrategy[] GSON_EXCLUSION_STRATEGIES = new GsonExclusionStrategy[] {
 			new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
 			new GsonExclusionStrategy(StaffOutVO.class, "modifiedUser"),
@@ -68,7 +68,7 @@ public final class JsUtil {
 	private final static Gson VO_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
 			JsUtil.GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
 					.serializeNulls()
-					.setDateFormat(JSON_DATETIME_PATTERN)
+					.setDateFormat(VO_JSON_DATETIME_PATTERN)
 					.create();
 
 	public static String decodeBase64(String base64String) {
@@ -91,7 +91,7 @@ public final class JsUtil {
 		return "";
 	}
 
-	public static String inputFieldVariableValueToJson(Object src) { 
+	public static String inputFieldVariableValueToJson(Object src) {
 		return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
 	}
 
