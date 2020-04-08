@@ -66,7 +66,7 @@ public final class ProbandListEntryTagsPDFDefaultSettings {
 	public static final int SKETCH_IMAGE_DPI = 144;
 	public static final Color SKETCH_IMAGE_BG_COLOR = null;
 	public static final boolean RENDER_SKETCH_IMAGES = true;
-	public static final boolean SHOW_SKETCH_REGIONS = true;
+	public static final boolean SHOW_SKETCH_REGIONS = false;
 	public static final int LONG_TITLE_LENGTH = 36;
 	public static final boolean SHOW_MODIFIED_LABEL = false;
 	public static final String PAINTER_CLASS = null;
