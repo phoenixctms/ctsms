@@ -22,7 +22,6 @@ public class Image {
 	private final static int DEFAULT_SCALE_MODE = java.awt.Image.SCALE_SMOOTH;
 	private final static int DEFAULT_IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
 
-
 	public Image(byte[] imageData, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
 		this.image = ImageIO.read(new ByteArrayInputStream(imageData));
 		this.bgColor = CommonUtil.convertColor(bgColor == null ? DEFAULT_BG_COLOR : bgColor);
@@ -55,7 +54,6 @@ public class Image {
 		BufferedImage croppedImage = image.getSubimage(0, 0, width, height);
 		image = croppedImage;
 		drawn = false;
-
 		return this;
 	}
 
@@ -69,7 +67,7 @@ public class Image {
 	}
 
 	public void drawInk(byte[]... inkValues) throws Exception {
-		Document svg = CommonUtil.inkValueToSvg(inkValues);
+		Document svg = CommonUtil.inkValueToSvg(image.getWidth(), image.getHeight(), inkValues);
 		if (svg != null) {
 			getSvgTranscoder().transcode(new TranscoderInput(svg), null);
 		}
@@ -99,7 +97,6 @@ public class Image {
 					img.setImage(imgage);
 				}
 			};
-
 		}
 		return imageTranscoder;
 	}

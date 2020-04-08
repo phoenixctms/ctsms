@@ -1748,7 +1748,7 @@ public final class CommonUtil {
 		return inkValue == null ? null : new String(inkValue, INK_VALUE_CHARSET);
 	}
 
-	public static Document inkValueToSvg(byte[]... inkValues) throws Exception {
+	public static Document inkValueToSvg(Integer width, Integer height, byte[]... inkValues) throws Exception {
 		if (inkValues != null && inkValues.length > 0) {
 			DOMImplementation impl = SVGDOMImplementation.getDOMImplementation();
 			String svgNS = SVGDOMImplementation.SVG_NAMESPACE_URI;
@@ -1756,8 +1756,8 @@ public final class CommonUtil {
 			// Get the root element (the 'svg' element).
 			Element svgRoot = doc.getDocumentElement();
 			// Set the width and height attributes on the root 'svg' element.
-			// svgRoot.setAttributeNS(null, "width", "400");
-			// svgRoot.setAttributeNS(null, "height", "450");
+			svgRoot.setAttributeNS(null, "width", Integer.toString(width)); //defaults to 400
+			svgRoot.setAttributeNS(null, "height", Integer.toString(height)); //defaults to 400
 			for (int i = 0; i < inkValues.length; i++) {
 				String inkJson = inkValueToString(inkValues[i]);
 				if (inkJson != null) {
