@@ -135,7 +135,10 @@ public class SketchPadRenderer extends Renderer {
 			String strokesId = sketchPad.getStrokesId();
 			boolean regionMode = true;
 			if (!(strokesId != null && strokesId.length() > 0)) {
-				encodeButton(context, sketchPad, "regionToggler", "sketch-region-toggler-off", Messages.getString(MessageCodes.SKETCH_TOGGLE_REGION_TOOLTIP));
+				encodeButton(context, sketchPad, "regionToggler",
+						Settings.getBoolean(SettingCodes.SKETCH_REGIONS_VISIBLE, Bundle.SETTINGS, DefaultSettings.SKETCH_REGIONS_VISIBLE) ? "sketch-region-toggler-off"
+								: "sketch-region-toggler-on",
+						Messages.getString(MessageCodes.SKETCH_TOGGLE_REGION_TOOLTIP));
 				regionMode = false;
 			}
 			encodeButton(context, sketchPad, "drawEraseMode", "sketch-draw-mode", Messages.getString(MessageCodes.SKETCH_DRAW_MODE_TOOLTIP));

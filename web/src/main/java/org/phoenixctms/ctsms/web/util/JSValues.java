@@ -244,6 +244,7 @@ public enum JSValues {
 	INPUT_DECIMAL_SEPARATOR(""),
 	INPUT_TIMEZONE_ID(""),
 	SYSTEM_TIMEZONE_ID(""),
+	SKETCH_REGIONS_VISIBLE(""),
 	FIELD_CALCULATION_DEBUG_LEVEL(""),
 	JQPLOT_DATE_PATTERN(DateUtil.JQPLOT_DATE_PATTERN),
 	INPUT_JSON_DATETIME_PATTERN(JsUtil.INPUT_JSON_DATETIME_PATTERN),
@@ -407,6 +408,7 @@ public enum JSValues {
 				return WebUtil.escapeJSStringArray(Settings.getTrustetRefererHosts((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()), true,
 						true);
 			case INPUT_FIELD_DELTA_SUMMARY_MAX:
+			case SKETCH_REGIONS_VISIBLE:
 			case FIELD_CALCULATION_DEBUG_LEVEL:
 			case ENABLE_GEOLOCATION_SERVICES:
 			case FORCE_DEFAULT_GEOLOCATION:
@@ -553,6 +555,8 @@ public enum JSValues {
 				return CommonUtil.timeZoneToString(WebUtil.getTimeZone());
 			case SYSTEM_TIMEZONE_ID:
 				return CommonUtil.timeZoneToString(WebUtil.getDefaultTimeZone());
+			case SKETCH_REGIONS_VISIBLE:
+				return Boolean.toString(Settings.getBoolean(SettingCodes.SKETCH_REGIONS_VISIBLE, Bundle.SETTINGS, DefaultSettings.SKETCH_REGIONS_VISIBLE));
 			case FIELD_CALCULATION_DEBUG_LEVEL:
 				return Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL));
 			case PF_LOCALE_STRING:

@@ -251,6 +251,7 @@ public final class DefaultSettings {
 	public static final Date INPUT_FIELD_MIN_TIME_PRESET = null;
 	public static final Date INPUT_FIELD_MAX_TIME_PRESET = null;
 	public static final Date INPUT_FIELD_TIME_PRESET_PRESET = null;
+	public static final boolean SKETCH_REGIONS_VISIBLE = false;
 	public static final boolean INPUT_FIELD_SELECTION_SET_VALUE_LOCALIZED_PRESET = false;
 	public final static boolean USER_LOCKED_PRESET = false;
 	public final static boolean USER_DECRYPT_PRESET = true;

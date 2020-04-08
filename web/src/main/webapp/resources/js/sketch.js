@@ -89,7 +89,7 @@ var Sketch = Sketch || {};
 		input.off();
 		div.off();
 
-		var regionVisible = true;
+		var regionVisible = SKETCH_REGIONS_VISIBLE;
 		var regions = [];
 		for ( var i = 9; i < arguments.length; i++) {
 			var region = [];

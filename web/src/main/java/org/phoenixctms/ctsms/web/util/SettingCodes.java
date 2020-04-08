@@ -218,6 +218,7 @@ public interface SettingCodes {
 	public static final String INPUT_FIELD_STRICT_PRESET = "input_field_strict_preset";
 	public static final String INPUT_FIELD_SKETCH_WIDTH_PRESET = "input_field_sketch_width_preset";
 	public static final String INPUT_FIELD_SKETCH_HEIGHT_PRESET = "input_field_sketch_height_preset";
+	public static final String SKETCH_REGIONS_VISIBLE = "sketch_regions_visible";
 	public final static String MAINTENANCE_SCHEDULE_IDENTITY_RESPONSIBLE_PERSON_PRESET = "maintenance_schedule_identity_responsible_person_preset";
 	public final static String MAINTENANCE_SCHEDULE_SHOW_NOTIFY_ONLY_PRESET = "maintenance_schedule_show_notify_only_preset";
 	public final static String TIMELINE_SCHEDULE_IDENTITY_TEAM_MEMBER_PRESET = "timeline_schedule_identity_team_member_preset";
