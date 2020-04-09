@@ -157,7 +157,12 @@ public class Captcha extends UIInput {
 	protected void validateValue(FacesContext context, Object value) {
 		super.validateValue(context, value);
 		if (isValid()) {
-			Verification verification = (Verification) value;
+			Verification verification = null;
+			try {
+				verification = (Verification) value;
+			} catch (ClassCastException e) {
+				throw new FacesException("malformed reCAPTCHA validation data: " + (value != null ? value.toString() : "null"), e);
+			}
 			boolean isValid = false;
 			OutputStream out = null;
 			BufferedReader rd = null;
