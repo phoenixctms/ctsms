@@ -7661,7 +7661,7 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	private Object[] setEcrfFieldValues(Set<ECRFFieldValueInVO> ecrfFieldValuesIn, boolean force, boolean loadPageResult) throws Exception {
+	private Object[] setEcrfFieldValues(Set<ECRFFieldValueInVO> ecrfFieldValuesIn, boolean loadPageResult, boolean force) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
