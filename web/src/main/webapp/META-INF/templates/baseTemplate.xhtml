@@ -6,6 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
 <f:view contentType="text/html" locale="#{sessionScopeBean.locale}">
+	<f:event type="preRenderView"
+    	listener="#{facesContext.externalContext.response.setHeader('X-Frame-Options', 'deny')}" />
 	<h:head>
 		<f:facet name="first">
 			<meta http-equiv="X-UA-Compatible" content="IE=9" />
@@ -13,7 +15,6 @@
 				content="#{applicationScopeBean.metaDescription}" />
 			<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
 			<meta http-equiv="robots" content="noindex" />
-			<meta http-equiv="X-Frame-Options" content="deny" />
 			<title>#{title}</title>
 			<link rel="shortcut icon" type="image/x-icon"
 				href="#{request.contextPath}/resources/images/favicons/#{favicon}" />
