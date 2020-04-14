@@ -332,19 +332,21 @@ public class InputFieldRowProcessor extends RowProcessor {
 	}
 
 	private void loadFile(InputFieldInVO inputFieldIn, String fileName) throws Throwable {
-		try {
-			long fileId = Long.parseLong(fileName);
-			FileContentOutVO file = fileService.getFileContent(context.getAuth(), fileId);
-			jobOutput.println("file ID " + fileName + " loaded (" + file.getFileName() + ")");
-			inputFieldIn.setFileName(file.getFileName());
-			inputFieldIn.setDatas(file.getDatas());
-			inputFieldIn.setMimeType(file.getContentType().getMimeType());
-		} catch (NumberFormatException e) {
-			java.io.File file = new java.io.File(filePath.getDirectory(), CommonUtil.sanitizeFilePath(fileName));
-			inputFieldIn.setFileName(file.getName());
-			FileInputStream stream = new FileInputStream(file);
-			inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
-			inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
+		if (!CommonUtil.isEmptyString(fileName)) {
+			try {
+				long fileId = Long.parseLong(fileName);
+				FileContentOutVO file = fileService.getFileContent(context.getAuth(), fileId);
+				jobOutput.println("file ID " + fileName + " loaded (" + file.getFileName() + ")");
+				inputFieldIn.setFileName(file.getFileName());
+				inputFieldIn.setDatas(file.getDatas());
+				inputFieldIn.setMimeType(file.getContentType().getMimeType());
+			} catch (NumberFormatException e) {
+				java.io.File file = new java.io.File(filePath.getDirectory(), CommonUtil.sanitizeFilePath(fileName));
+				inputFieldIn.setFileName(file.getName());
+				FileInputStream stream = new FileInputStream(file);
+				inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
+				inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
+			}
 		}
 	}
 
