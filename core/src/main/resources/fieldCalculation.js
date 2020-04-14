@@ -29,8 +29,8 @@ var FieldCalculation = FieldCalculation || {};
 	    'calculatedIndex'        : "%s (Index %d) erwartet: %s",
 	    'calculated'             : "%s erwartet: %s",		
 	    'enteredSectionIndex'    : "%s - %s (Index %d) eingegeben: %s",
-	    'entered'                : "%s - %s eingegeben: %s",
-	    'enteredSectionIndex'    : "%s (Index %d) eingegeben: %s",
+	    'enteredSection'         : "%s - %s eingegeben: %s",
+	    'enteredIndex'           : "%s (Index %d) eingegeben: %s",
 	    'entered'                : "%s eingegeben: %s",
 	    'noSelectionLabel'       : "[kein]",
 
