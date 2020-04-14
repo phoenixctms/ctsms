@@ -12,35 +12,41 @@ var FieldCalculation = FieldCalculation || {};
 	var defaultLocale = 'en';
 	var localizedMessages = {};
 	localizedMessages['de'] = {
-	    'errorIndex'          : "%s - %s (Index %d)%s%s",
-	    'error'               : "%s - %s%s%s",
-	    'required'            : " erforderlich",
-	    'mustBeEmpty'         : " muss leer sein",
-	    'mustBeUnchecked'     : " darf nicht angekreuzt sein",
-	    'mustBeUnselected'    : " darf nicht gesetzt sein",
-	    'mustBeUnmarked'      : " darf nicht markiert sein",
+	    'errorSectionIndex'      : "%s - %s (Index %d)%s%s",
+	    'errorSection'           : "%s - %s%s%s",
+	    'errorIndex'             : "%s (Index %d)%s%s",
+	    'error'                  : "%s%s%s",		
+	    'required'               : " erforderlich",
+	    'mustBeEmpty'            : " muss leer sein",
+	    'mustBeUnchecked'        : " darf nicht angekreuzt sein",
+	    'mustBeUnselected'       : " darf nicht gesetzt sein",
+	    'mustBeUnmarked'         : " darf nicht markiert sein",
 
-	    'true'                : "angekreuzt",
-	    'false'               : "nicht angekreuzt",
-	    'calculatedIndex'     : "%s - %s (Index %d) erwartet: %s",
-	    'calculated'          : "%s - %s erwartet: %s",
-	    'enteredIndex'        : "%s - %s (Index %d) eingegeben: %s",
-	    'entered'             : "%s - %s eingegeben: %s",
-	    'noSelectionLabel'    : "[kein]",
+	    'true'                   : "angekreuzt",
+	    'false'                  : "nicht angekreuzt",
+	    'calculatedSectionIndex' : "%s - %s (Index %d) erwartet: %s",
+	    'calculatedSection'      : "%s - %s erwartet: %s",
+	    'calculatedIndex'        : "%s (Index %d) erwartet: %s",
+	    'calculated'             : "%s erwartet: %s",		
+	    'enteredSectionIndex'    : "%s - %s (Index %d) eingegeben: %s",
+	    'entered'                : "%s - %s eingegeben: %s",
+	    'enteredSectionIndex'    : "%s (Index %d) eingegeben: %s",
+	    'entered'                : "%s eingegeben: %s",
+	    'noSelectionLabel'       : "[kein]",
 
-	    'date is empty'       : "Datum ist leer",
-	    'wrong date format'   : "falsches Datumsformat",
-	    'year required'       : "Jahr erforderlich",
-	    'month not regognized': "Monat nicht erkannt",
-	    'month required'      : "Monat erforderlich",
-	    'day required'        : "Tag erforderlich",
-	    'invalid date'        : "ungültiges Datum",
+	    'date is empty'          : "Datum ist leer",
+	    'wrong date format'      : "falsches Datumsformat",
+	    'year required'          : "Jahr erforderlich",
+	    'month not regognized'   : "Monat nicht erkannt",
+	    'month required'         : "Monat erforderlich",
+	    'day required'           : "Tag erforderlich",
+	    'invalid date'           : "ungültiges Datum",
 
-	    'time is empty'       : "Uhrzeit ist leer",
-	    'wrong time format'   : "falsches Uhrzeitformat",
-	    'hour required'       : "Stunde erforderlich",
-	    'minute required'     : "Minute erforderlich",
-	    'invalid time'        : "ungültige Uhrzeit",
+	    'time is empty'          : "Uhrzeit ist leer",
+	    'wrong time format'      : "falsches Uhrzeitformat",
+	    'hour required'          : "Stunde erforderlich",
+	    'minute required'        : "Minute erforderlich",
+	    'invalid time'           : "ungültige Uhrzeit",
 
 	    'customMonthNameToNumberMap' : {
 	    	'JAN' : '01',
@@ -63,35 +69,41 @@ var FieldCalculation = FieldCalculation || {};
 	    'customPartialTimePartRegExp' : /NK|NA|ND/
 	};
 	localizedMessages['en'] = {
-	    'errorIndex'          : "%s - %s (index %d)%s%s",
-	    'error'               : "%s - %s%s%s",
-	    'required'            : " required",
-	    'mustBeEmpty'         : " must be empty",
-	    'mustBeUnchecked'     : " must be unchecked",
-	    'mustBeUnselected'    : " must not be selected",
-	    'mustBeUnmarked'      : " must not be marked",
+	    'errorSectionIndex'      : "%s - %s (index %d)%s%s",
+	    'errorSection'           : "%s - %s%s%s",
+	    'errorIndex'             : "%s (index %d)%s%s",
+	    'error'                  : "%s%s%s",		
+	    'required'               : " required",
+	    'mustBeEmpty'            : " must be empty",
+	    'mustBeUnchecked'        : " must be unchecked",
+	    'mustBeUnselected'       : " must not be selected",
+	    'mustBeUnmarked'         : " must not be marked",
 
-	    'true'                : "checked",
-	    'false'               : "unchecked",
-	    'calculatedIndex'     : "%s - %s (index %d) expected: %s",
-	    'calculated'          : "%s - %s expected: %s",
-	    'enteredIndex'        : "%s - %s (index %d) entered: %s",
-	    'entered'             : "%s - %s entered: %s",
-	    'noSelectionLabel'    : "[none]",
+	    'true'                   : "checked",
+	    'false'                  : "unchecked",
+	    'calculatedSectionIndex' : "%s - %s (index %d) expected: %s",
+	    'calculatedSection'      : "%s - %s expected: %s",
+	    'calculatedIndex'        : "%s (index %d) expected: %s",
+	    'calculated'             : "%s expected: %s",		
+	    'enteredSectionIndex'    : "%s - %s (index %d) entered: %s",
+	    'enteredSection'         : "%s - %s entered: %s",
+	    'enteredIndex'           : "%s (index %d) entered: %s",
+	    'entered'                : "%s entered: %s",
+	    'noSelectionLabel'       : "[none]",
 
-	    'date is empty'       : "date is empty",
-	    'wrong date format'   : "wrong date format",
-	    'year required'       : "year required",
-	    'month not regognized': "month not regognized",
-	    'month required'      : "month required",
-	    'day required'        : "day required",
-	    'invalid date'        : "invalid date",
+	    'date is empty'          : "date is empty",
+	    'wrong date format'      : "wrong date format",
+	    'year required'          : "year required",
+	    'month not regognized'   : "month not regognized",
+	    'month required'         : "month required",
+	    'day required'           : "day required",
+	    'invalid date'           : "invalid date",
 
-	    'time is empty'       : "time is empty",
-	    'wrong time format'   : "wrong time format",
-	    'hour required'       : "hour required",
-	    'minute required'     : "minute required",
-	    'invalid time'        : "invalid time",
+	    'time is empty'          : "time is empty",
+	    'wrong time format'      : "wrong time format",
+	    'hour required'          : "hour required",
+	    'minute required'        : "minute required",
+	    'invalid time'           : "invalid time",
 
 	    'customMonthNameToNumberMap' : {
 	    	'JAN' : '01',
@@ -657,19 +669,35 @@ var FieldCalculation = FieldCalculation || {};
 
 		mask["printCalculated"] = function(formatOrSeparator, selectionSetValueFieldOrLocale) {
 			var value = _printValue(calculated, formatOrSeparator, selectionSetValueFieldOrLocale);
-			if (inputFieldVariable.value.series) {
-		        return sprintf(localizedMessages[inputFieldVars.locale].calculatedIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
-		    } else {
-		        return sprintf(localizedMessages[inputFieldVars.locale].calculated,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,value);
-		    }
+			if (inputFieldVariable.value.section != null && inputFieldVariable.value.section.length > 0) {
+			    if (inputFieldVariable.value.series) {
+			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedSectionIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
+			    } else {
+			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedSection,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,value);
+			    }
+			} else {
+			    if (inputFieldVariable.value.series) {
+			        return sprintf(localizedMessages[inputFieldVars.locale].calculatedIndex,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
+			    } else {
+			        return sprintf(localizedMessages[inputFieldVars.locale].calculated,inputFieldVariable.value.inputFieldName,value);
+			    }
+			}
 		};
 		mask["printEntered"] = function(formatOrSeparator, selectionSetValueFieldOrLocale) {
 			var value = _printValue(entered, formatOrSeparator, selectionSetValueFieldOrLocale);
-			if (inputFieldVariable.value.series) {
-		        return sprintf(localizedMessages[inputFieldVars.locale].enteredIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
-		    } else {
-		        return sprintf(localizedMessages[inputFieldVars.locale].entered,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,value);
-		    }
+			if (inputFieldVariable.value.section != null && inputFieldVariable.value.section.length > 0) {
+			    if (inputFieldVariable.value.series) {
+			        return sprintf(localizedMessages[inputFieldVars.locale].enteredSectionIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
+			    } else {
+			        return sprintf(localizedMessages[inputFieldVars.locale].enteredSection,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,value);
+			    }
+			} else {
+				if (inputFieldVariable.value.series) {
+			        return sprintf(localizedMessages[inputFieldVars.locale].enteredIndex,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,value);
+			    } else {
+			        return sprintf(localizedMessages[inputFieldVars.locale].entered,inputFieldVariable.value.inputFieldName,value);
+			    }
+			}
 		};
 
 		mask["findSelectionSetValueIds"] = function(condition) {
@@ -705,10 +733,18 @@ var FieldCalculation = FieldCalculation || {};
 		    if (localize) {
 		        message = localizedMessages[inputFieldVars.locale][message];
 		    }
-		    if (inputFieldVariable.value.series) {
-		        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,noColon,message) };
+		    if (inputFieldVariable.value.section != null && inputFieldVariable.value.section.length > 0) {
+			    if (inputFieldVariable.value.series) {
+			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorSectionIndex,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,noColon,message) };
+			    } else {
+			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorSection,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,noColon,message) };
+			    }
 		    } else {
-		        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].error,inputFieldVariable.value.section,inputFieldVariable.value.inputFieldName,noColon,message) };
+		    	if (inputFieldVariable.value.series) {
+			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].errorIndex,inputFieldVariable.value.inputFieldName,inputFieldVariable.value.index,noColon,message) };
+			    } else {
+			        throw { msg: sprintf(localizedMessages[inputFieldVars.locale].error,inputFieldVariable.value.inputFieldName,noColon,message) };
+			    }
 		    }
 		};
 
