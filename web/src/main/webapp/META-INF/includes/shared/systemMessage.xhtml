@@ -41,7 +41,7 @@
 				<ui:include src="multiLineOutputText.xhtml">
 					<ui:param
 						name="multiLineText"
-						value="#{comment}" />
+						value="#{empty comment ? labels.system_message_comment_empty_message : comment}" />
 					<ui:param
 						name="rendered"
 						value="true" />
