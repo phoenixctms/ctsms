@@ -29,6 +29,22 @@ public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implement
 	}
 
 	@Override
+	public void setRowIndex(int rowIndex){
+		/*
+		 * the following is a workaround to avoid div by zero in case of pageSize=0
+		 * (possible bug in pf)
+		 * this.rowIndex = rowIndex == -1 ? rowIndex : (rowIndex % pageSize);
+		 */
+		if (rowIndex == -1 || getPageSize() == 0) {
+			super.setRowIndex(-1);
+		}
+		else {
+			super.setRowIndex(rowIndex % getPageSize());
+		}
+	}
+
+
+	@Override
 	public IDVO getRowData() {
 		// http://primefaces.prime.com.tr/forum/viewtopic.php?f=3&t=11353
 		if (isRowAvailable()) {
