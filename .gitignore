@@ -17,6 +17,7 @@ hs_err_pid*
 .settings/
 *.log
 target/
+*/target/
 *.bak
 
 # Windows thumbnail cache files
@@ -29,3 +30,8 @@ ehthumbs_vista.db
 .project
 .metadata
 /bin/
+
+# Remove IntelliJ related files
+*.iml
+.idea/*
+*/.idea/*
