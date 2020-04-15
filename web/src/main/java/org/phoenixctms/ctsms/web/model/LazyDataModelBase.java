@@ -29,7 +29,7 @@ public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implement
 	}
 
 	@Override
-	public void setRowIndex(int rowIndex){
+	public void setRowIndex(int rowIndex) {
 		/*
 		 * the following is a workaround to avoid div by zero in case of pageSize=0
 		 * (possible bug in pf)
@@ -37,12 +37,10 @@ public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implement
 		 */
 		if (rowIndex == -1 || getPageSize() == 0) {
 			super.setRowIndex(-1);
-		}
-		else {
-			super.setRowIndex(rowIndex % getPageSize());
+		} else {
+			super.setRowIndex(rowIndex);
 		}
 	}
-
 
 	@Override
 	public IDVO getRowData() {
