@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.phoenixctms.ctsms</groupId>
 	<artifactId>ctsms</artifactId>
@@ -245,11 +246,23 @@
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
-
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib-nodep</artifactId>
-				<version>2.2</version>
+				<version>2.2.2</version>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- Following is necessary for deployment on Payara to avoid version conflicts -->
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>2.2.2</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>3.3.1</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
@@ -542,6 +555,7 @@
 		<hibernate.dialect>
 			org.phoenixctms.ctsms.PostgreSQLDialect
 		</hibernate.dialect>
+		<!--suppress UnresolvedMavenProperty -->
 		<tomcat.home>${env.CATALINA_HOME}</tomcat.home>
 		<application.id>ctsms</application.id>
 		<application.package>org.phoenixctms.ctsms</application.package>
@@ -562,6 +576,9 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
+				<skipTests>
+					true
+				</skipTests>
 				<!-- Change driver path and jar for appropriate database For MySQL use:
 					mysql-connector-java-X-bin.jar For Hypersonic use: hsqldb.jar -->
 				<jdbc.driver.jar>
@@ -638,6 +655,9 @@
 						<plugin>
 							<artifactId>maven-surefire-plugin</artifactId>
 							<version>2.8</version>
+							<configuration>
+								<skipTests>${skipTests}</skipTests>
+							</configuration>
 						</plugin>
 						<plugin>
 							<artifactId>maven-site-plugin</artifactId>
@@ -689,6 +709,7 @@
 				</reportSets>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.7</version>
 				<configuration>
