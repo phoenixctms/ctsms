@@ -407,7 +407,7 @@ public final class WebUtil {
 	}
 
 	public static String escapeHtml(String string) {
-		return org.apache.commons.lang.StringEscapeUtils.escapeHtml(string);
+		return org.apache.commons.text.StringEscapeUtils.escapeHtml4(string);
 	}
 
 	public static String escapeJSStringArray(List<String> valueList, boolean brackets, boolean quotes) {
@@ -4614,7 +4614,7 @@ public final class WebUtil {
 		} else {
 			sb = new StringBuilder();
 		}
-		sb.append(org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(value));
+		sb.append(org.apache.commons.text.StringEscapeUtils.escapeEcmaScript(value));
 		if (quotes) {
 			sb.append("'");
 		}
