@@ -135,6 +135,12 @@ public final class ToolsResource {
 		WebUtil.getServiceLocator().getToolsService().clearResourceBundleCache();
 	}
 
+	@PUT
+	@Path("hibernatecache/clear")
+	public void clearHibernateCache() throws Exception {
+		WebUtil.getServiceLocator().getToolsService().clearHibernateCache();
+	}
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("announcement")
