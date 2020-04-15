@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -93,6 +94,7 @@ import org.phoenixctms.ctsms.security.PasswordPolicy;
 import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Compile;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -262,7 +264,7 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected void handleClearCache() throws Exception {
+	protected void handleClearHibernateCache() throws Exception {
 		Session session = sessionFactory.getCurrentSession();
 		if (session != null) {
 			session.clear(); // internal cache clear
@@ -274,6 +276,12 @@ public class ToolsServiceImpl
 			cache.evictEntityRegions();
 			cache.evictQueryRegions();
 		}
+	}
+
+	@Override
+	protected void handleClearResourceBundleCache() throws Exception {
+		ResourceBundle.clearCache();
+		Compile.clearResourceBundleCache();
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.ResourceBundle;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -168,6 +169,12 @@ public final class Compile {
 			compilerClassPath = sb.toString();
 		}
 		return compilerClassPath;
+	}
+
+	public static void clearResourceBundleCache() {
+		if (classLoader != null) {
+			ResourceBundle.clearCache(classLoader);
+		}
 	}
 
 	private static URLClassLoader getClassLoader() {
