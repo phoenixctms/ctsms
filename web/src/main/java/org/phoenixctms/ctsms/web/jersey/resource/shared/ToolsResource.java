@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -129,13 +128,13 @@ public final class ToolsResource {
 		return COMPLETE_INDEX;
 	}
 
-	@PUT
+	@POST
 	@Path("resourcebundlecache/clear")
 	public void clearResourceBundleCache() throws Exception {
 		WebUtil.getServiceLocator().getToolsService().clearResourceBundleCache();
 	}
 
-	@PUT
+	@POST
 	@Path("hibernatecache/clear")
 	public void clearHibernateCache() throws Exception {
 		WebUtil.getServiceLocator().getToolsService().clearHibernateCache();
