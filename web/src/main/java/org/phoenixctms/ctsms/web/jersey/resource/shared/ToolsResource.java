@@ -131,7 +131,7 @@ public final class ToolsResource {
 	@POST
 	@Path("resourcebundlecache/clear")
 	public void clearResourceBundleCache() throws Exception {
-		WebUtil.getServiceLocator().getToolsService().clearResourceBundleCache();
+		WebUtil.clearResourceBundleCache();
 	}
 
 	@POST

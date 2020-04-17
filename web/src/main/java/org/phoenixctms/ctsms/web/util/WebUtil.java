@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -61,6 +62,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.sun.faces.application.ApplicationAssociate;
+import com.sun.faces.application.ApplicationResourceBundle;
 import com.sun.faces.application.view.ViewScopeManager;
 
 public final class WebUtil {
@@ -4826,6 +4829,18 @@ public final class WebUtil {
 			return getTrial(code.getTrialRandomizationList().getId());
 		}
 		return null;
+	}
+
+	public static void clearResourceBundleCache() throws Exception {
+		WebUtil.getServiceLocator().getToolsService().clearResourceBundleCache();
+		//https://stackoverflow.com/questions/4325164/how-to-reload-resource-bundle-in-web-application
+		ResourceBundle.clearCache(Thread.currentThread().getContextClassLoader());
+		Iterator<ApplicationResourceBundle> it = ApplicationAssociate.getCurrentInstance().getResourceBundles().values().iterator();
+		while (it.hasNext()) {
+			ApplicationResourceBundle appBundle = it.next();
+			Map<Locale, ResourceBundle> resources = CommonUtil.getDeclaredFieldValue(appBundle, "resources");
+			resources.clear();
+		}
 	}
 
 	private WebUtil() {
