@@ -28,7 +28,8 @@ public final class Compile {
 	private static String javaSearchPath = null; //once a search path containing .java files was determined, use always the same
 	private static JavaCompiler compiler = null;
 	private static String compilerClassPath = null;
-	private static boolean CLEAN = false; //true for no initial .class file cleanup
+	private static final boolean CLEAN = false; //true for no initial .class file cleanup
+	private static boolean clean = CLEAN;
 	private final static String NO_CLASS_NAME = "no class to instantiate specified";
 	private final static String NO_JAVA_SEARCH_PATHS = "no valid path for external .java/.class files defined ({0})";
 	private final static String SOURCE_FILE_NOT_FOUND = "cannot find source file {0}";
@@ -78,6 +79,9 @@ public final class Compile {
 					int cnt = 0;
 					while (it.hasNext()) {
 						Diagnostic<? extends JavaFileObject> diagnostic = it.next();
+						if (diagnostic.getSource() == null) {
+							break;
+						}
 						if (cnt < ERROR_LIMIT) {
 							sb.append(MessageFormat.format(SOURCE_FILE_ERROR_LINE, diagnostic.getLineNumber(), diagnostic.getSource().toUri(), diagnostic.getMessage(null)));
 						}
@@ -99,7 +103,7 @@ public final class Compile {
 		}
 	}
 
-	public synchronized static void clean() {
+	private static void clean() {
 		Queue<File> dirs = new LinkedList<File>();
 		dirs.add(new File(getSearchClassPath()));
 		while (!dirs.isEmpty()) {
@@ -177,6 +181,14 @@ public final class Compile {
 		}
 	}
 
+	public static synchronized void reset() {
+		classLoader = null;
+		javaSearchPath = null; //files might have been moved between javasearchpath locations
+		compiler = null;
+		compilerClassPath = null;
+		clean = CLEAN;
+	}
+
 	private static URLClassLoader getClassLoader() {
 		if (classLoader == null) {
 			String classPath = getSearchClassPath();
@@ -212,9 +224,9 @@ public final class Compile {
 							File file = new java.io.File(searchPath, fileName);
 							if (file.exists() && file.isFile()) {
 								javaSearchPath = searchPath;
-								if (!CLEAN) {
+								if (!clean) {
 									clean();
-									CLEAN = true;
+									clean = true;
 								}
 								found = fileList.add(file);
 								break;

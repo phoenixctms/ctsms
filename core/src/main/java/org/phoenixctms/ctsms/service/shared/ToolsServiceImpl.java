@@ -285,6 +285,11 @@ public class ToolsServiceImpl
 	}
 
 	@Override
+	protected void handleCleanJavaClasses() throws Exception {
+		Compile.reset();
+	}
+
+	@Override
 	protected Collection<AlphaIdVO> handleCompleteAlphaId(AuthenticationVO auth, String textInfix,
 			Integer limit) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
