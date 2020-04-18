@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -1035,6 +1036,18 @@ public final class CommonUtil {
 
 	public static Long getEntityId(Object entity) throws Exception {
 		return (Long) entity.getClass().getMethod(ENTITY_ID_GETTER_METHOD_NAME).invoke(entity);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getDeclaredFieldValue(Object object, String fieldName) {
+		//https://stackoverflow.com/questions/4325164/how-to-reload-resource-bundle-in-web-application
+		try {
+			Field field = object.getClass().getDeclaredField(fieldName);
+			field.setAccessible(true);
+			return (T) field.get(object);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public static Long getEntityPosition(Object entity) throws Exception {

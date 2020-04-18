@@ -128,6 +128,24 @@ public final class ToolsResource {
 		return COMPLETE_INDEX;
 	}
 
+	@POST
+	@Path("clearresourcebundlecache")
+	public void clearResourceBundleCache() throws Exception {
+		WebUtil.clearResourceBundleCache();
+	}
+
+	@POST
+	@Path("clearhibernatecache")
+	public void clearHibernateCache() throws Exception {
+		WebUtil.getServiceLocator().getToolsService().clearHibernateCache();
+	}
+
+	@POST
+	@Path("cleanjavaclasses")
+	public void cleanJavaClasses() throws Exception {
+		WebUtil.getServiceLocator().getToolsService().cleanJavaClasses();
+	}
+
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("announcement")
