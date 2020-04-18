@@ -129,15 +129,21 @@ public final class ToolsResource {
 	}
 
 	@POST
-	@Path("resourcebundlecache/clear")
+	@Path("clearresourcebundlecache")
 	public void clearResourceBundleCache() throws Exception {
 		WebUtil.clearResourceBundleCache();
 	}
 
 	@POST
-	@Path("hibernatecache/clear")
+	@Path("clearhibernatecache")
 	public void clearHibernateCache() throws Exception {
 		WebUtil.getServiceLocator().getToolsService().clearHibernateCache();
+	}
+
+	@POST
+	@Path("cleanjavaclasses")
+	public void cleanJavaClasses() throws Exception {
+		WebUtil.getServiceLocator().getToolsService().cleanJavaClasses();
 	}
 
 	@GET
