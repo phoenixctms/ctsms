@@ -966,8 +966,10 @@ public class TrialServiceImpl
 					tagIn.setId(originalTagValue.getId());
 					tagIn.setVersion(originalTagValue.getVersion());
 				}
-				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, true, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
-						ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
+				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, true,
+						Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
+						Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND), null,
+						null);
 				break;
 			case TAG_TEXT:
 				if (originalTagValue != null) {
@@ -983,8 +985,10 @@ public class TrialServiceImpl
 					tagIn.setId(originalTagValue.getId());
 					tagIn.setVersion(originalTagValue.getVersion());
 				}
-				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, true, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
-						ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, null, null);
+				addUpdateProbandListEntryTagValue(tagIn, probandListEntry, randomizationTag, now, user, true,
+						Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
+						Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND), null,
+						null);
 				break;
 			default:
 				throw new IllegalArgumentException(
@@ -2046,8 +2050,10 @@ public class TrialServiceImpl
 			ECRFFieldStatusEntry fieldStatus = ecrfFieldStatusEntriesIt.next();
 			fieldStatus.getListEntry().removeEcrfFieldStatusEntries(fieldStatus);
 			fieldStatus.getEcrfField().removeEcrfFieldStatusEntries(fieldStatus);
-			result.add(ServiceUtil.removeEcrfFieldStatusEntry(fieldStatus, now, user, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL,
-					ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, ecrfFieldStatusEntryDao, journalEntryDao, notificationDao, notificationRecipientDao));
+			result.add(ServiceUtil.removeEcrfFieldStatusEntry(fieldStatus, now, user,
+					Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
+					Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
+					ecrfFieldStatusEntryDao, journalEntryDao, notificationDao, notificationRecipientDao));
 		}
 		return result;
 	}
@@ -2485,8 +2491,9 @@ public class TrialServiceImpl
 			AuthenticationVO auth, ECRFFieldStatusQueue queue, ECRFFieldStatusEntryInVO newEcrfFieldStatusEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		return addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, null, queue, now, user, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL,
-				ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND,
+		return addEcrfFieldStatusEntry(newEcrfFieldStatusEntry, null, queue, now, user,
+				Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
+				Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
 				false);
 	}
 
@@ -3240,7 +3247,9 @@ public class TrialServiceImpl
 		ECRFFieldStatusEntryOutVO result = ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVO(fieldStatus);
 		listEntry.removeEcrfFieldStatusEntries(fieldStatus);
 		fieldStatus.getEcrfField().removeEcrfFieldStatusEntries(fieldStatus);
-		ServiceUtil.removeEcrfFieldStatusEntry(fieldStatus, now, user, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, ServiceUtil.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND,
+		ServiceUtil.removeEcrfFieldStatusEntry(fieldStatus, now, user,
+				Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
+				Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
 				ecrfFieldStatusEntryDao, this.getJournalEntryDao(), this.getNotificationDao(),
 				this.getNotificationRecipientDao());
 		return result;
@@ -6959,8 +6968,10 @@ public class TrialServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_DIFFERENT_LIST_ENTRIES);
 				}
 				try {
-					addUpdateProbandListEntryTagValue(probandListEntryTagValueIn, listEntry, listEntryTag, now, user, force, ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL,
-							ServiceUtil.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, tagValues, jsTagValues);
+					addUpdateProbandListEntryTagValue(probandListEntryTagValueIn, listEntry, listEntryTag, now, user, force,
+							Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
+							Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND),
+							tagValues, jsTagValues);
 				} catch (ServiceException e) {
 					if (firstException == null) {
 						firstException = e;
@@ -7728,8 +7739,10 @@ public class TrialServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_DIFFERENT_PROBAND_LIST_ENTRIES);
 				}
 				try {
-					addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, force, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
-							ServiceUtil.LOG_ECRF_FIELD_VALUE_PROBAND, sectionIndexMap, ecrfFieldValues, jsEcrfFieldValues);
+					addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, force,
+							Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
+							Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND), sectionIndexMap,
+							ecrfFieldValues, jsEcrfFieldValues);
 				} catch (ServiceException e) {
 					if (firstException == null) {
 						firstException = e;
@@ -7761,8 +7774,10 @@ public class TrialServiceImpl
 							// another error and replace the original exception).
 							ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldValueIn.getEcrfFieldId(), this.getECRFFieldDao());
 							try {
-								addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, force, ServiceUtil.LOG_ECRF_FIELD_VALUE_TRIAL,
-										ServiceUtil.LOG_ECRF_FIELD_VALUE_PROBAND, null, ecrfFieldValues, jsEcrfFieldValues);
+								addUpdateEcrfFieldValue(ecrfFieldValueIn, statusEntry, listEntryVO, ecrfField, now, user, force,
+										Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
+										Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND), null,
+										ecrfFieldValues, jsEcrfFieldValues);
 							} catch (ServiceException e) {
 								if (firstException == null) {
 									firstException = e;

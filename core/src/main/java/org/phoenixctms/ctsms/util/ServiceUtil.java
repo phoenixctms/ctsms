@@ -198,14 +198,6 @@ public final class ServiceUtil {
 	public final static String PROBAND_LIST_ENTRY_TAG_VALUE_DAO_PROBAND_LIST_ENTRY_TAG_VALUE_ALIAS = "tagValue0";
 	public final static boolean LOG_ADD_UPDATE_ECRF_NO_DIFF = false;
 	public final static boolean LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF = false;
-	public final static boolean LOG_ECRF_FIELD_VALUE_PROBAND = false;
-	public final static boolean LOG_ECRF_FIELD_VALUE_TRIAL = false;
-	public final static boolean LOG_INQUIRY_VALUE_PROBAND = false;
-	public final static boolean LOG_INQUIRY_VALUE_TRIAL = false;
-	public final static boolean LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND = false;
-	public final static boolean LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL = false;
-	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL = false;
-	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND = false;
 	public final static VelocityStringUtils VELOCITY_STRING_UTILS = new VelocityStringUtils();
 	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
@@ -4449,7 +4441,10 @@ public final class ServiceUtil {
 					checkProbandLocked(listEntry.getProband());
 				}
 				listEntry.removeEcrfValues(fieldValue);
-				removeEcrfFieldValue(fieldValue, now, user, LOG_ECRF_FIELD_VALUE_TRIAL && logTrial, LOG_ECRF_FIELD_VALUE_PROBAND && logProband, inputFieldValueDao,
+				removeEcrfFieldValue(fieldValue, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND),
+						inputFieldValueDao,
 						ecrfFieldValueDao, journalEntryDao);
 			}
 			ecrfField.getFieldValues().clear();
@@ -4461,7 +4456,9 @@ public final class ServiceUtil {
 					checkProbandLocked(listEntry.getProband());
 				}
 				listEntry.removeEcrfFieldStatusEntries(fieldStatus);
-				removeEcrfFieldStatusEntry(fieldStatus, now, user, LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL && logTrial, LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND && logProband,
+				removeEcrfFieldStatusEntry(fieldStatus, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
 						ecrfFieldStatusEntryDao, journalEntryDao, notificationDao, notificationRecipientDao);
 			}
 			ecrfField.getEcrfFieldStatusEntries().clear();
@@ -4565,7 +4562,10 @@ public final class ServiceUtil {
 					checkProbandLocked(proband);
 				}
 				proband.removeInquiryValues(inquiryValue);
-				removeInquiryValue(inquiryValue, now, user, LOG_INQUIRY_VALUE_TRIAL && logTrial, LOG_INQUIRY_VALUE_PROBAND && logProband, inputFieldValueDao, inquiryValueDao,
+				removeInquiryValue(inquiryValue, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_PROBAND), inputFieldValueDao,
+						inquiryValueDao,
 						journalEntryDao);
 			}
 			inquiry.getInquiryValues().clear();
@@ -4923,7 +4923,8 @@ public final class ServiceUtil {
 					checkTrialLocked(inquiry.getTrial());
 				}
 				inquiry.removeInquiryValues(inquiryValue);
-				removeInquiryValue(inquiryValue, now, user, LOG_INQUIRY_VALUE_TRIAL, false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
+				removeInquiryValue(inquiryValue, now, user, Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_TRIAL),
+						false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
 			}
 			proband.getInquiryValues().clear();
 			boolean keepSentMassMailRecipients = Settings.getBoolean(SettingCodes.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS, Bundle.SETTINGS,
@@ -5048,7 +5049,11 @@ public final class ServiceUtil {
 			while (tagValuesIt.hasNext()) {
 				ProbandListEntryTagValue tagValue = tagValuesIt.next();
 				tagValue.getTag().removeTagValues(tagValue);
-				removeProbandListEntryTagValue(tagValue, now, user, LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL && logTrial, LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND && logProband,
+				removeProbandListEntryTagValue(tagValue, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS,
+								DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, Bundle.SETTINGS,
+								DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND),
 						inputFieldValueDao,
 						probandListEntryTagValueDao, journalEntryDao);
 			}
@@ -5057,7 +5062,10 @@ public final class ServiceUtil {
 			while (ecrfValuesIt.hasNext()) {
 				ECRFFieldValue fieldValue = ecrfValuesIt.next();
 				fieldValue.getEcrfField().removeFieldValues(fieldValue);
-				removeEcrfFieldValue(fieldValue, now, user, LOG_ECRF_FIELD_VALUE_TRIAL && logTrial, LOG_ECRF_FIELD_VALUE_PROBAND && logProband, inputFieldValueDao,
+				removeEcrfFieldValue(fieldValue, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_VALUE_PROBAND),
+						inputFieldValueDao,
 						ecrfFieldValueDao, journalEntryDao);
 			}
 			probandListEntry.getEcrfValues().clear();
@@ -5065,7 +5073,9 @@ public final class ServiceUtil {
 			while (ecrfFieldStatusEntriesIt.hasNext()) {
 				ECRFFieldStatusEntry fieldStatus = ecrfFieldStatusEntriesIt.next();
 				fieldStatus.getEcrfField().removeEcrfFieldStatusEntries(fieldStatus);
-				removeEcrfFieldStatusEntry(fieldStatus, now, user, LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL && logTrial, LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND && logProband,
+				removeEcrfFieldStatusEntry(fieldStatus, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND),
 						ecrfFieldStatusEntryDao, journalEntryDao, notificationDao, notificationRecipientDao);
 			}
 			probandListEntry.getEcrfFieldStatusEntries().clear();
@@ -5092,7 +5102,11 @@ public final class ServiceUtil {
 					checkProbandLocked(listEntry.getProband());
 				}
 				listEntry.removeTagValues(tagValue);
-				removeProbandListEntryTagValue(tagValue, now, user, LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL && logTrial, LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND && logProband,
+				removeProbandListEntryTagValue(tagValue, now, user,
+						logTrial && Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL, Bundle.SETTINGS,
+								DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL),
+						logProband && Settings.getBoolean(SettingCodes.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND, Bundle.SETTINGS,
+								DefaultSettings.LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND),
 						inputFieldValueDao,
 						probandListEntryTagValueDao, journalEntryDao);
 			}
