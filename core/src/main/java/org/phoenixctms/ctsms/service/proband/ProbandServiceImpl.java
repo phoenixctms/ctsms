@@ -2247,7 +2247,9 @@ public class ProbandServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUES_FOR_DIFFERENT_PROBANDS);
 				}
 				try {
-					addUpdateInquiryValue(inquiryValueIn, proband, inquiry, now, user, force, ServiceUtil.LOG_INQUIRY_VALUE_TRIAL, ServiceUtil.LOG_INQUIRY_VALUE_PROBAND,
+					addUpdateInquiryValue(inquiryValueIn, proband, inquiry, now, user, force,
+							Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_TRIAL),
+							Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_PROBAND, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_PROBAND),
 							inquiryValues,
 							jsInquiryValues);
 				} catch (ServiceException e) {

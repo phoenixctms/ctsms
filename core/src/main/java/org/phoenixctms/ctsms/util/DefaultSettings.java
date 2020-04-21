@@ -174,6 +174,14 @@ public final class DefaultSettings {
 	public static final Integer PROBAND_IMAGE_MIN_HEIGHT = 240;
 	public static final int PDFBOX_PUSH_BACK_SIZE = 131072;
 	public static final boolean LOG_SEARCH_FILTERED = false;
+	public final static boolean LOG_ECRF_FIELD_VALUE_PROBAND = false;
+	public final static boolean LOG_ECRF_FIELD_VALUE_TRIAL = false;
+	public final static boolean LOG_INQUIRY_VALUE_PROBAND = true;
+	public final static boolean LOG_INQUIRY_VALUE_TRIAL = false;
+	public final static boolean LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND = true;
+	public final static boolean LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL = true;
+	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL = false;
+	public final static boolean LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND = false;
 	public static final boolean ENABLE_SERVICE_EXCEPTION_LOGGER = true;
 	public static final boolean ENABLE_AUTHENTICATION_EXCEPTION_LOGGER = false;
 	public static final boolean ENABLE_AUTHORISATION_EXCEPTION_LOGGER = false;

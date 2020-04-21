@@ -225,6 +225,14 @@ public interface SettingCodes {
 	public static final String PROBAND_IMAGE_MIN_HEIGHT = "proband_image_min_height";
 	public static final String PDFBOX_PUSH_BACK_SIZE = "pdfbox_push_back_size";
 	public static final String LOG_SEARCH_FILTERED = "log_search_filtered";
+	public static final String LOG_ECRF_FIELD_VALUE_PROBAND = "log_ecrf_field_value_proband";
+	public static final String LOG_ECRF_FIELD_VALUE_TRIAL = "log_ecrf_field_value_trial";
+	public static final String LOG_INQUIRY_VALUE_PROBAND = "log_inquiry_value_proband";
+	public static final String LOG_INQUIRY_VALUE_TRIAL = "log_inquiry_value_trial";
+	public static final String LOG_PROBAND_LIST_ENTRY_TAG_VALUE_PROBAND = "log_proband_list_entry_tag_value_proband";
+	public static final String LOG_PROBAND_LIST_ENTRY_TAG_VALUE_TRIAL = "log_proband_list_entry_tag_value_trial";
+	public static final String LOG_ECRF_FIELD_STATUS_ENTRY_TRIAL = "log_ecrf_field_status_entry_trial";
+	public static final String LOG_ECRF_FIELD_STATUS_ENTRY_PROBAND = "log_ecrf_field_status_entry_proband";
 	public static final String ENABLE_SERVICE_EXCEPTION_LOGGER = "enable_service_exception_logger";
 	public static final String ENABLE_AUTHENTICATION_EXCEPTION_LOGGER = "enable_authentication_exception_logger";
 	public static final String ENABLE_AUTHORISATION_EXCEPTION_LOGGER = "enable_authorisation_exception_logger";
