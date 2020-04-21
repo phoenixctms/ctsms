@@ -45,7 +45,7 @@
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
 						<h:outputFormat styleClass="ctsms-text-red"
-							rendered="#{!applicationScopeBean.trustedHost}"
+							rendered="#{!sessionScopeBean.user.decryptUntrusted and !applicationScopeBean.trustedHost}"
 							value="#{labels.untrusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
