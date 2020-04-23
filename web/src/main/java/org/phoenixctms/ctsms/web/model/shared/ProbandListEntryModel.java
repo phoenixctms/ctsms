@@ -116,12 +116,15 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 	private ArrayList<SelectItem> inquiryInputFields;
 	private Long columnProbandListEntryTagAId;
 	private Long columnProbandListEntryTagBId;
+	private Long columnProbandListEntryTagCId;
 	private Long columnInquiryId;
 	private ProbandListEntryTagOutVO columnProbandListEntryTagA;
 	private ProbandListEntryTagOutVO columnProbandListEntryTagB;
+	private ProbandListEntryTagOutVO columnProbandListEntryTagC;
 	private InquiryOutVO columnInquiry;
 	private Long columnProbandListEntryTagInputFieldAId;
 	private Long columnProbandListEntryTagInputFieldBId;
+	private Long columnProbandListEntryTagInputFieldCId;
 	private Long columnInquiryInputFieldId;
 	private List<IDVO> allRows;
 	private HashMap<Long, MoneyTransferSummaryVO> payOffSummaryCache;
@@ -165,12 +168,15 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 	public void clearSelectedColumns() {
 		columnProbandListEntryTagAId = null;
 		columnProbandListEntryTagBId = null;
+		columnProbandListEntryTagCId = null;
 		columnInquiryId = null;
 		columnProbandListEntryTagA = null;
 		columnProbandListEntryTagB = null;
+		columnProbandListEntryTagC = null;
 		columnInquiry = null;
 		columnProbandListEntryTagInputFieldAId = null;
 		columnProbandListEntryTagInputFieldBId = null;
+		columnProbandListEntryTagInputFieldCId = null;
 		columnInquiryInputFieldId = null;
 	}
 
@@ -228,12 +234,20 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		return columnProbandListEntryTagBId;
 	}
 
+	public Long getColumnProbandListEntryTagCId() {
+		return columnProbandListEntryTagCId;
+	}
+
 	public Long getColumnProbandListEntryTagInputFieldAId() {
 		return columnProbandListEntryTagInputFieldAId;
 	}
 
 	public Long getColumnProbandListEntryTagInputFieldBId() {
 		return columnProbandListEntryTagInputFieldBId;
+	}
+
+	public Long getColumnProbandListEntryTagInputFieldCId() {
+		return columnProbandListEntryTagInputFieldCId;
 	}
 
 	public ArrayList<SelectItem> getInquiries() {
@@ -386,12 +400,24 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		return probandListEntryTagValueToString(getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagBId));
 	}
 
+	public ProbandListEntryTagValueOutVO getProbandListEntryTagCValue(ProbandListEntryOutVO listEntry) {
+		return getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagCId);
+	}
+
+	public String getProbandListEntryTagCValueString(ProbandListEntryOutVO listEntry) {
+		return probandListEntryTagValueToString(getProbandListEntryTagValueCached(listEntry, columnProbandListEntryTagCId));
+	}
+
 	public Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldAValues(ProbandListEntryOutVO listEntry) {
 		return getProbandListEntryTagInputFieldValuesCached(listEntry, columnProbandListEntryTagInputFieldAId);
 	}
 
 	public Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldBValues(ProbandListEntryOutVO listEntry) {
 		return getProbandListEntryTagInputFieldValuesCached(listEntry, columnProbandListEntryTagInputFieldBId);
+	}
+
+	public Collection<ProbandListEntryTagValueOutVO> getProbandListEntryTagInputFieldCValues(ProbandListEntryOutVO listEntry) {
+		return getProbandListEntryTagInputFieldValuesCached(listEntry, columnProbandListEntryTagInputFieldCId);
 	}
 
 	public ArrayList<SelectItem> getProbandListEntryTagInputFields() {
@@ -584,6 +610,13 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		return false;
 	}
 
+	public boolean isProbandListEntryTagCBoolean(ProbandListEntryOutVO listEntry) {
+		if (columnProbandListEntryTagC != null) {
+			return isFieldTypeBoolean(columnProbandListEntryTagC.getField().getFieldType());
+		}
+		return false;
+	}
+
 	public boolean isProbandListEntryTagValueBoolean(ProbandListEntryTagValueOutVO listEntryTagValue) {
 		if (listEntryTagValue != null) {
 			return isFieldTypeBoolean(listEntryTagValue.getTag().getField().getFieldType());
@@ -635,12 +668,21 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		columnProbandListEntryTagB = WebUtil.getProbandListEntryTag(probandListEntryTagId);
 	}
 
+	public void setColumnProbandListEntryTagCId(Long probandListEntryTagId) {
+		this.columnProbandListEntryTagCId = probandListEntryTagId;
+		columnProbandListEntryTagC = WebUtil.getProbandListEntryTag(probandListEntryTagId);
+	}
+
 	public void setColumnProbandListEntryTagInputFieldAId(Long inputFieldId) {
 		this.columnProbandListEntryTagInputFieldAId = inputFieldId;
 	}
 
 	public void setColumnProbandListEntryTagInputFieldBId(Long inputFieldId) {
 		this.columnProbandListEntryTagInputFieldBId = inputFieldId;
+	}
+
+	public void setColumnProbandListEntryTagInputFieldCId(Long inputFieldId) {
+		this.columnProbandListEntryTagInputFieldCId = inputFieldId;
 	}
 
 	public void setProbandGroup(ProbandGroupOutVO probandGroup) {

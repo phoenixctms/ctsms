@@ -165,6 +165,94 @@
 				rendered="#{!probandListEntryModel.isProbandListEntryTagABoolean(probandListEntry.vo)}"
 				value="#{probandListEntryModel.getProbandListEntryTagAValueString(probandListEntry.vo)}" />
 		</p:column>
+		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
+		    <f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnProbandListEntryTagB"
+						value="#{probandListEntryModel.columnProbandListEntryTagBId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_b}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.probandListEntryTags}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnProbandListEntryTagB','#{probandlistentry_list}:columnProbandListEntryTagB','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnProbandListEntryTagB">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_b_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup
+				rendered="#{probandListEntryModel.isProbandListEntryTagBBoolean(probandListEntry.vo)}"
+				layout="block">
+				<ui:include src="listBooleanIcon.xhtml">
+					<ui:param
+						name="value"
+						value="#{probandListEntryModel.getProbandListEntryTagBValue(probandListEntry.vo).booleanValue}" />
+				</ui:include>
+			</h:panelGroup>
+			<h:outputText
+				rendered="#{!probandListEntryModel.isProbandListEntryTagBBoolean(probandListEntry.vo)}"
+				value="#{probandListEntryModel.getProbandListEntryTagBValueString(probandListEntry.vo)}" />
+		</p:column>
+		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
+			<f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnProbandListEntryTagC"
+						value="#{probandListEntryModel.columnProbandListEntryTagCId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_c}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.probandListEntryTags}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnProbandListEntryTagC','#{probandlistentry_list}:columnProbandListEntryTagC','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnProbandListEntryTagC">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_c_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGroup
+				rendered="#{probandListEntryModel.isProbandListEntryTagCBoolean(probandListEntry.vo)}"
+				layout="block">
+				<ui:include src="listBooleanIcon.xhtml">
+					<ui:param
+						name="value"
+						value="#{probandListEntryModel.getProbandListEntryTagCValue(probandListEntry.vo).booleanValue}" />
+				</ui:include>
+			</h:panelGroup>
+			<h:outputText
+				rendered="#{!probandListEntryModel.isProbandListEntryTagCBoolean(probandListEntry.vo)}"
+				value="#{probandListEntryModel.getProbandListEntryTagCValueString(probandListEntry.vo)}" />
+		</p:column>
 		<p:column rendered="#{probandListEntryModel.showInquiryColumn and !byInquiryInputField}">
 			<f:facet name="header">
 				<h:panelGroup>
@@ -258,6 +346,113 @@
 				</f:facet>
 			</p:dataList>
 		</p:column>
+		
+		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
+		    <f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnProbandListEntryTagInputFieldB"
+						value="#{probandListEntryModel.columnProbandListEntryTagInputFieldBId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_input_field_b}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.probandListEntryTagInputFields}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnProbandListEntryTagInputFieldB','#{probandlistentry_list}:columnProbandListEntryTagInputFieldB','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnProbandListEntryTagInputFieldB">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_input_field_b_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<p:dataList
+				value="#{probandListEntryModel.getProbandListEntryTagInputFieldBValues(probandListEntry.vo)}"
+				var="tagValue"
+				type="definition">
+				<h:outputText value="#{probandListEntryModel.getProbandListEntryTagValueLabel(tagValue)}" />
+				<f:facet name="description">
+					<h:panelGroup
+						rendered="#{applicationScopeBean.clipStringMid(probandListEntryModel.isProbandListEntryTagValueBoolean(tagValue))}"
+						layout="block">
+						<ui:include src="listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{tagValue.booleanValue}" />
+						</ui:include>
+					</h:panelGroup>
+					<h:outputText
+						rendered="#{!probandListEntryModel.isProbandListEntryTagValueBoolean(tagValue)}"
+						value="#{probandListEntryModel.probandListEntryTagValueToString(tagValue)}" />
+				</f:facet>
+			</p:dataList>
+		</p:column>
+		
+		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
+		    <f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:panelGroup>
+					<p:selectOneMenu
+						id="columnProbandListEntryTagInputFieldC"
+						value="#{probandListEntryModel.columnProbandListEntryTagInputFieldCId}"
+						required="false"
+						label="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_input_field_c}"
+						styleClass="ctsms-control-small">
+						<f:converter converterId="ctsms.ID" />
+						<f:selectItem
+							itemLabel="#{labels.no_selection_label}"
+							itemValue="#{applicationScopeBean.noSelectionValue}" />
+						<f:selectItems
+							value="#{probandListEntryModel.probandListEntryTagInputFields}"
+							var="selectItem"
+							itemLabel="#{selectItem.label}"
+							itemValue="#{selectItem.value}" />
+						<pe:javascript
+							execute="ajaxRequest('#{probandlistentry_list}:columnProbandListEntryTagInputFieldC','#{probandlistentry_list}:columnProbandListEntryTagInputFieldC','#{probandlistentry_list}')" />
+					</p:selectOneMenu>
+					<p:tooltip
+						rendered="#{enableTooltips}"
+						for="columnProbandListEntryTagInputFieldC">
+						<h:outputText
+							value="#{triallabels.probandlistentry_list_column_proband_list_entry_tag_input_field_c_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</f:facet>
+			<p:dataList
+				value="#{probandListEntryModel.getProbandListEntryTagInputFieldCValues(probandListEntry.vo)}"
+				var="tagValue"
+				type="definition">
+				<h:outputText value="#{probandListEntryModel.getProbandListEntryTagValueLabel(tagValue)}" />
+				<f:facet name="description">
+					<h:panelGroup
+						rendered="#{applicationScopeBean.clipStringMid(probandListEntryModel.isProbandListEntryTagValueBoolean(tagValue))}"
+						layout="block">
+						<ui:include src="listBooleanIcon.xhtml">
+							<ui:param
+								name="value"
+								value="#{tagValue.booleanValue}" />
+						</ui:include>
+					</h:panelGroup>
+					<h:outputText
+						rendered="#{!probandListEntryModel.isProbandListEntryTagValueBoolean(tagValue)}"
+						value="#{probandListEntryModel.probandListEntryTagValueToString(tagValue)}" />
+				</f:facet>
+			</p:dataList>
+		</p:column>		
+		
 		<p:column rendered="#{probandListEntryModel.showInquiryColumn and byInquiryInputField}">
 			<f:facet name="header">
 				<h:panelGroup>

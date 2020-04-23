@@ -11,7 +11,9 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.component.html.HtmlOutputText;
+import javax.faces.component.html.HtmlPanelGroup;
 import javax.faces.event.ActionEvent;
 
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -115,7 +117,15 @@ public class ColumnManagementBean {
 	}
 
 	private static String getColumnName(Column column) {
-		String headerTextEl = ((HtmlOutputText) column.getFacet("header")).getValueExpression("value").getExpressionString();
+		String headerTextEl;
+		UIComponent headerFacet = column.getFacet("header");
+		try {
+			//in general, columns have a header facet with p:outputText
+			headerTextEl = ((HtmlOutputText) headerFacet).getValueExpression("value").getExpressionString();
+		} catch (ClassCastException e) {
+			//and there are columns with a dropdown in the header
+			headerTextEl = ((HtmlPanelGroup) headerFacet).getChildren().get(0).getValueExpression("label").getExpressionString();
+		}
 		return headerTextEl.substring(2, headerTextEl.length() - 1); // Remove #{}
 	}
 
