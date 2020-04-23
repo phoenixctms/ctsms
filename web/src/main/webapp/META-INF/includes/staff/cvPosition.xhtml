@@ -32,8 +32,17 @@
 					<p:ajax event="rowSelect"
 						update=":tabView:cvposition_form:cvposition_input" />
 					<f:facet name="header">
-						<h:outputText
+					
+						<h:panelGrid columns="2" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText
 							value="#{cvPositionBean.cvPositionModel.rowCount} #{stafflabels.cv_position_cvposition_list_header}" />
+							<p:commandButton type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="cvPositionTableColumnsDialog.show()" />
+						</h:panelGrid>
 					</f:facet>
 					<p:column sortBy="#{cvPosition.vo.id}">
 						<f:facet name="header">
@@ -50,7 +59,8 @@
 						</f:facet>
 						<h:outputText value="#{cvPosition.vo.section.name}" />
 					</p:column>
-					<p:column sortBy="#{cvPosition.vo.title}">
+					<p:column sortBy="#{cvPosition.vo.title}"
+						filterBy="#{cvPosition.vo.title}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{stafflabels.cv_position_cvposition_list_title_column}" />
@@ -361,6 +371,10 @@
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="setCvPositionShowCv(false)" type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog" value="cvPositionTableColumnsDialog" />
+				<ui:param name="dataTableId" value=":tabView:cvposition_form:cvposition_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>

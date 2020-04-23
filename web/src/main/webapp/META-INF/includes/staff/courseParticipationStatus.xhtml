@@ -61,7 +61,8 @@
 						</f:facet>
 						<h:outputText value="#{statusEntry.vo.id}" />
 					</p:column>
-					<p:column sortBy="#{statusEntry.vo.course.name}">
+					<p:column sortBy="#{statusEntry.vo.course.name}"
+						filterBy="#{statusEntry.vo.course.name}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_course_name_column}" />
