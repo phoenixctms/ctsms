@@ -9,6 +9,9 @@ alter table COURSE_PARTICIPATION_STATUS_ENTRY add column SHOW_TRAINING_RECORD BO
 update COURSE_PARTICIPATION_STATUS_ENTRY set SHOW_TRAINING_RECORD = 'f';
 alter table COURSE_PARTICIPATION_STATUS_ENTRY alter SHOW_TRAINING_RECORD set not null;
 
+update COURSE_PARTICIPATION_STATUS_ENTRY set CV_SECTION_FK = SECTION_FK where CV_SECTION_FK is null;
+alter table COURSE_PARTICIPATION_STATUS_ENTRY drop column SECTION_FK;
+
 insert into TRAINING_RECORD_SECTION 
 (id,name_l10n_key,description_l10n_key,position,show_training_record_preset,visible)
 values (nextval('hibernate_sequence'), 'in_house_trainings', 'in_house_trainings', 0, true, true);
