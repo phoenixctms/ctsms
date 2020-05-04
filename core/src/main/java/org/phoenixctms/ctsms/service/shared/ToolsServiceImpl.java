@@ -72,6 +72,7 @@ import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.StaffCategory;
 import org.phoenixctms.ctsms.domain.StaffStatusEntry;
 import org.phoenixctms.ctsms.domain.TimelineEvent;
+import org.phoenixctms.ctsms.domain.TimelineEventDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
@@ -134,6 +135,7 @@ import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
+import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
@@ -467,6 +469,22 @@ public class ToolsServiceImpl
 		Collection inputFields = inputFieldDao.findUsedByInquiriesSorted(fieldNameInfix, limit);
 		inputFieldDao.toInputFieldOutVOCollection(inputFields);
 		return inputFields;
+	}
+
+	@Override
+	protected Collection<TimelineEventOutVO> handleCompleteTimelineEvent(AuthenticationVO auth, String titleInfix, Long trialId, Integer maxInstances, Integer maxParentDepth,
+			Integer maxChildrenDepth, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for trialId ...
+		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
+		Collection timelineEvents = timelineEventDao.findTimelineEvents(trialId, titleInfix, limit);
+		ArrayList<TimelineEventOutVO> result = new ArrayList<TimelineEventOutVO>(timelineEvents.size());
+		Iterator<TimelineEvent> timelineEventsIt = timelineEvents.iterator();
+		while (timelineEventsIt.hasNext()) {
+			result.add(timelineEventDao.toTimelineEventOutVO(timelineEventsIt.next(), maxInstances, maxParentDepth, maxChildrenDepth));
+		}
+		return result;
 	}
 
 	@Override
