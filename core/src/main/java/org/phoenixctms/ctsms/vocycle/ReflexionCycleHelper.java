@@ -6,9 +6,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.DefaultMessages;
+import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.MessageCodes;
 
 public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AVO> {
 
@@ -16,15 +22,23 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 
 	protected abstract A aquireWriteLock(Long id) throws ServiceException;
 
-	private final void checkChildren(A entity, A root, HashSet<Long> checked) throws ServiceException {
+	protected void appendLoopPath(StringBuilder sb, String entityLabel) {
+		if (sb.length() > 0) {
+			sb.append(L10nUtil.getString(MessageCodes.LOOP_PATH_SEPARATOR, DefaultMessages.LOOP_PATH_SEPARATOR));
+		}
+		sb.append(entityLabel);
+	}
+
+	private final void checkChildren(A entity, A root, HashSet<Long> checked, Set<A> path) throws ServiceException {
 		Long id;
 		if (entity != null && !checked.contains(id = getEntityId(entity))) {
 			// lock
 			aquireWriteLock(id);
 			A child = getChild(entity);
-			if (checkEntity(child, entity, root)) {
-				checkChildren(child, root, checked);
+			if (checkEntity(child, entity, root, path)) {
+				checkChildren(child, root, checked, path);
 			}
+			path.remove(child);
 			Collection<A> children = getEntityChildren(entity);
 			if (children != null && children.size() > 0) {
 				ArrayList<A> childrenSorted = new ArrayList<A>(children);
@@ -32,22 +46,28 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 				Iterator<A> it = childrenSorted.iterator();
 				while (it.hasNext()) {
 					child = it.next();
-					if (checkEntity(child, entity, root)) {
-						checkChildren(child, root, checked);
+					LinkedHashSet<A> lastPath = new LinkedHashSet<A>(path);
+					if (checkEntity(child, entity, root, lastPath)) {
+						checkChildren(child, root, checked, lastPath);
 					}
+					path.remove(child);
 				}
 			}
-			checked.add(getEntityId(entity));
+			checked.add(id);
 		}
 	}
 
-	private final boolean checkEntity(A parentChild, A entity, A root) throws ServiceException {
+	private final boolean checkEntity(A parentChild, A entity, A root, Set<A> path) throws ServiceException {
 		if (parentChild != null && root != null) {
 			//lock
 			Long id = getEntityId(parentChild);
 			aquireWriteLock(id);
+			path.add(parentChild);
 			if (id.equals(getEntityId(root))) {
-				throwGraphLoopException(entity);
+				ArrayList<A> loopPath = new ArrayList<A>(path.size() + 1);
+				loopPath.add(root);
+				loopPath.addAll(path);
+				throwGraphLoopException(loopPath);
 			} else {
 				return true;
 			}
@@ -57,24 +77,27 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 
 	public final void checkGraphLoop(A entity, boolean parents, boolean children) throws ServiceException {
 		HashSet<Long> checked = new HashSet<Long>();
+		LinkedHashSet<A> path = new LinkedHashSet<A>();
 		if (parents) {
-			checkParents(entity, entity, checked);
+			checkParents(entity, entity, checked, path);
 		}
 		checked.clear();
+		path.clear();
 		if (children) {
-			checkChildren(entity, entity, checked);
+			checkChildren(entity, entity, checked, path);
 		}
 	}
 
-	private final void checkParents(A entity, A root, HashSet<Long> checked) throws ServiceException {
+	private final void checkParents(A entity, A root, HashSet<Long> checked, Set<A> path) throws ServiceException {
 		Long id;
 		if (entity != null && !checked.contains(id = getEntityId(entity))) {
 			//lock
 			aquireWriteLock(id);
 			A parent = getParent(entity);
-			if (checkEntity(parent, entity, root)) {
-				checkParents(parent, root, checked);
+			if (checkEntity(parent, entity, root, path)) {
+				checkParents(parent, root, checked, path);
 			}
+			path.remove(parent);
 			Collection<A> parents = getEntityParents(entity);
 			if (parents != null && parents.size() > 0) {
 				ArrayList<A> parentsSorted = new ArrayList<A>(parents);
@@ -82,12 +105,13 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 				Iterator<A> it = parentsSorted.iterator();
 				while (it.hasNext()) {
 					parent = it.next();
-					if (checkEntity(parent, entity, root)) {
-						checkParents(parent, root, checked);
+					if (checkEntity(parent, entity, root, path)) {
+						checkParents(parent, root, checked, path);
 					}
+					path.remove(parent);
 				}
 			}
-			checked.add(getEntityId(entity));
+			checked.add(id);
 		}
 	}
 
@@ -128,7 +152,7 @@ public abstract class ReflexionCycleHelper<A, AVO> extends CycleHelperBase<A, AV
 
 	protected abstract void setParent(AVO target, AVO parentVO);
 
-	protected void throwGraphLoopException(A entity) throws ServiceException {
+	protected void throwGraphLoopException(List<A> path) throws ServiceException {
 	}
 
 	@Override

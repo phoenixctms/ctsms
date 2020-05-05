@@ -2,6 +2,8 @@ package org.phoenixctms.ctsms.vocycle;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
@@ -19,8 +21,10 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -150,8 +154,14 @@ public class StaffReflexionGraph extends ReflexionCycleHelper<Staff, StaffOutVO>
 	}
 
 	@Override
-	protected void throwGraphLoopException(Staff entity) throws ServiceException {
-		throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_GRAPH_LOOP, entity.getId().toString(), CommonUtil.staffOutVOToString(staffDao.toStaffOutVO(entity)));
+	protected void throwGraphLoopException(List<Staff> path) throws ServiceException {
+		Iterator<Staff> it = path.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (it.hasNext()) {
+			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.LOOP_PATH_STAFF_LABEL, DefaultMessages.LOOP_PATH_STAFF_LABEL,
+					CommonUtil.staffOutVOToString(staffDao.toStaffOutVO(it.next()))));
+		}
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_GRAPH_LOOP, sb.toString());
 	}
 
 	@Override
