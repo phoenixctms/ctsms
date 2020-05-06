@@ -102,6 +102,7 @@ public interface SystemMessageCodes {
 	public final static String TEAM_MEMBER_DELETED = "team_member_deleted";
 	public static final String TIMELINE_EVENT_CREATED = "timeline_event_created";
 	public static final String TIMELINE_EVENT_UPDATED = "timeline_event_updated";
+	public static final String TIMELINE_EVENT_SHIFTED_CHILD_UPDATED = "timeline_event_shifted_child_updated";
 	public static final String TIMELINE_EVENT_DELETED = "timeline_event_deleted";
 	public static final String TIMELINE_EVENT_DISMISSED_SET = "timeline_event_dismissed_set";
 	public static final String TIMELINE_EVENT_DISMISSED_UNSET = "timeline_event_dismissed_unset";
