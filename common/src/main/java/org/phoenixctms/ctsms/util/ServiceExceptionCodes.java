@@ -23,6 +23,8 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_CONTACT_NOTIFY_FLAG_SET = "proband_contact_notify_flag_set";
 	public final static String PROBAND_CONTACT_VALUE_REQUIRED = "proband_contact_value_required";
 	public final static String TIMELINE_EVENT_END_DATE_LESS_THAN_OR_EQUAL_TO_START_DATE = "timeline_event_end_date_less_than_or_equal_to_start_date";
+	public final static String INVALID_PARENT_TIMELINE_EVENT_ID = "invalid_parent_timeline_event_id";
+	public final static String TIMELINE_EVENT_PARENT_WRONG_TRIAL = "timeline_event_parent_wrong_trial";
 	public final static String STAFF_TAG_NOT_FOR_PERSON_ENTRIES = "staff_tag_not_for_person_entries";
 	public final static String STAFF_TAG_NOT_FOR_ORGANISATION_ENTRIES = "staff_tag_not_for_organiastion_entries";
 	public final static String TAG_MAX_NUMBER_EXCEEDED = "tag_max_number_exceeded";
@@ -32,6 +34,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVENTORY_GRAPH_LOOP = "inventory_graph_loop";
 	public final static String STAFF_GRAPH_LOOP = "staff_graph_loop";
 	public final static String PROBAND_GRAPH_LOOP = "proband_graph_loop";
+	public final static String TIMELINE_EVENT_GRAPH_LOOP = "timeline_event_graph_loop";
 	public final static String INVALID_DEPARTMENT_ID = "invalid_department_id";
 	public final static String INVALID_INVENTORY_ID = "invalid_inventory_id";
 	public final static String INVALID_INVENTORY_CATEGORY_ID = "invalid_inventory_category_id";

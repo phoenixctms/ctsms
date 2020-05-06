@@ -217,6 +217,7 @@ import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemInVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.vocycle.TimelineEventReflexionGraph;
 
 /**
  * @see org.phoenixctms.ctsms.service.trial.TrialService
@@ -1714,7 +1715,7 @@ public class TrialServiceImpl
 	}
 
 	private void checkTimelineEventInput(TimelineEventInVO timelineEventIn) throws ServiceException {
-		(new TimelineEventTypeTagAdapter(this.getTrialDao(), this.getTimelineEventTypeDao())).checkTagValueInput(timelineEventIn);
+		(new TimelineEventTypeTagAdapter(this.getTrialDao(), this.getTimelineEventTypeDao(), this.getTimelineEventDao())).checkTagValueInput(timelineEventIn);
 	}
 
 	private void checkTrialInput(TrialInVO trialIn) throws ServiceException {
@@ -2745,7 +2746,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected TimelineEventOutVO handleAddTimelineEvent(
-			AuthenticationVO auth, TimelineEventInVO newTimelineEvent) throws Exception {
+			AuthenticationVO auth, TimelineEventInVO newTimelineEvent, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) throws Exception {
 		checkTimelineEventInput(newTimelineEvent);
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		TimelineEvent timelineEvent = timelineEventDao.timelineEventInVOToEntity(newTimelineEvent);
@@ -2755,7 +2756,7 @@ public class TrialServiceImpl
 		timelineEvent.setDismissedTimestamp(now);
 		timelineEvent = timelineEventDao.create(timelineEvent);
 		notifyTimelineEventReminder(timelineEvent, now);
-		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent);
+		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
 		ServiceUtil.logSystemMessage(timelineEvent.getTrial(), result.getTrial(), now, user, SystemMessageCodes.TIMELINE_EVENT_CREATED, result, null, this.getJournalEntryDao());
 		return result;
 	}
@@ -3521,19 +3522,34 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected TimelineEventOutVO handleDeleteTimelineEvent(AuthenticationVO auth, Long timelineEventId)
+	protected TimelineEventOutVO handleDeleteTimelineEvent(AuthenticationVO auth, Long timelineEventId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception {
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		TimelineEvent timelineEvent = CheckIDUtil.checkTimelineEventId(timelineEventId, timelineEventDao);
 		Trial trial = timelineEvent.getTrial();
 		ServiceUtil.checkTrialLocked(trial);
-		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent);
+		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		Iterator<TimelineEvent> childrenIt = timelineEvent.getChildren().iterator();
+		while (childrenIt.hasNext()) {
+			TimelineEvent child = childrenIt.next();
+			child.setParent(null);
+			CoreUtil.modifyVersion(child, child.getVersion(), now, user);
+			timelineEventDao.update(child);
+			TimelineEventOutVO childVO = timelineEventDao.toTimelineEventOutVO(child);
+		}
+		timelineEvent.getChildren().clear();
+		TimelineEvent parent = timelineEvent.getParent();
+		if (parent != null) {
+			parent.removeChildren(timelineEvent);
+			timelineEvent.setParent(null);
+			timelineEventDao.update(parent);
+		}
 		trial.removeEvents(timelineEvent);
 		timelineEvent.setTrial(null);
 		ServiceUtil.removeNotifications(timelineEvent.getNotifications(), this.getNotificationDao(), this.getNotificationRecipientDao());
 		timelineEventDao.remove(timelineEvent);
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		User user = CoreUtil.getUser();
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.TIMELINE_EVENT_DELETED, result, null, this.getJournalEntryDao());
 		return result;
 	}
@@ -3592,6 +3608,19 @@ public class TrialServiceImpl
 			while (eventsIt.hasNext()) {
 				TimelineEvent event = eventsIt.next();
 				event.setTrial(null);
+				Iterator<TimelineEvent> childrenIt = event.getChildren().iterator();
+				while (childrenIt.hasNext()) {
+					TimelineEvent child = childrenIt.next();
+					child.setParent(null);
+					timelineEventDao.update(child);
+				}
+				event.getChildren().clear();
+				TimelineEvent parent = event.getParent();
+				if (parent != null) {
+					parent.removeChildren(event);
+					event.setParent(null);
+					timelineEventDao.update(parent);
+				}
 				ServiceUtil.removeNotifications(event.getNotifications(), notificationDao, notificationRecipientDao);
 				timelineEventDao.remove(event);
 			}
@@ -6177,11 +6206,11 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected TimelineEventOutVO handleGetTimelineEvent(AuthenticationVO auth, Long timelineEventId)
+	protected TimelineEventOutVO handleGetTimelineEvent(AuthenticationVO auth, Long timelineEventId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception {
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		TimelineEvent timelineEvent = CheckIDUtil.checkTimelineEventId(timelineEventId, timelineEventDao);
-		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent);
+		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
 		return result;
 	}
 
@@ -6219,14 +6248,19 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<TimelineEventOutVO> handleGetTimelineEventList(
-			AuthenticationVO auth, Long trialId, PSFVO psf) throws Exception {
+			AuthenticationVO auth, Long trialId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		Collection timelineEvents = timelineEventDao.findByTrial(trialId, psf);
-		timelineEventDao.toTimelineEventOutVOCollection(timelineEvents);
-		return timelineEvents;
+		//timelineEventDao.toTimelineEventOutVOCollection(timelineEvents);
+		ArrayList<TimelineEventOutVO> result = new ArrayList<TimelineEventOutVO>(timelineEvents.size());
+		Iterator<TimelineEvent> timelineEventsIt = timelineEvents.iterator();
+		while (timelineEventsIt.hasNext()) {
+			result.add(timelineEventDao.toTimelineEventOutVO(timelineEventsIt.next(), maxInstances, maxParentDepth, maxChildrenDepth));
+		}
+		return result;
 	}
 
 	@Override
@@ -6253,7 +6287,7 @@ public class TrialServiceImpl
 	@Override
 	protected Collection<TimelineEventOutVO> handleGetTimelineSchedule(
 			AuthenticationVO auth, Date today, Long trialId, Long departmentId, Long teamMemberStaffId, Boolean notify,
-			Boolean ignoreTimelineEvents, PSFVO psf) throws Exception {
+			Boolean ignoreTimelineEvents, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -6265,8 +6299,12 @@ public class TrialServiceImpl
 		}
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		Collection timelineEvents = timelineEventDao.findTimelineSchedule(today, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents, true, psf);
-		timelineEventDao.toTimelineEventOutVOCollection(timelineEvents);
-		return timelineEvents;
+		ArrayList<TimelineEventOutVO> result = new ArrayList<TimelineEventOutVO>(timelineEvents.size());
+		Iterator<TimelineEvent> timelineEventsIt = timelineEvents.iterator();
+		while (timelineEventsIt.hasNext()) {
+			result.add(timelineEventDao.toTimelineEventOutVO(timelineEventsIt.next(), maxInstances, maxParentDepth, maxChildrenDepth));
+		}
+		return result;
 	}
 
 	/**
@@ -6994,10 +7032,10 @@ public class TrialServiceImpl
 
 	@Override
 	protected TimelineEventOutVO handleSetTimelineEventDismissed(
-			AuthenticationVO auth, Long timelineEventId, Long version, boolean dismissed) throws Exception {
+			AuthenticationVO auth, Long timelineEventId, Long version, boolean dismissed, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) throws Exception {
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		TimelineEvent timelineEvent = CheckIDUtil.checkTimelineEventId(timelineEventId, timelineEventDao);
-		TimelineEventOutVO original = timelineEventDao.toTimelineEventOutVO(timelineEvent);
+		TimelineEventOutVO original = timelineEventDao.toTimelineEventOutVO(timelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(timelineEvent, version.longValue(), now, user);
@@ -7005,7 +7043,7 @@ public class TrialServiceImpl
 		timelineEvent.setDismissedTimestamp(now);
 		timelineEventDao.update(timelineEvent);
 		notifyTimelineEventReminder(timelineEvent, now);
-		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent);
+		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
 		ServiceUtil.logSystemMessage(timelineEvent.getTrial(), result.getTrial(), now, user, dismissed ? SystemMessageCodes.TIMELINE_EVENT_DISMISSED_SET
 				: SystemMessageCodes.TIMELINE_EVENT_DISMISSED_UNSET, result, original, this.getJournalEntryDao());
 		return result;
@@ -7374,22 +7412,56 @@ public class TrialServiceImpl
 		return result;
 	}
 
+	private void checkTimelineEventLoop(TimelineEvent timelineEvent) throws ServiceException {
+		(new TimelineEventReflexionGraph(this.getTimelineEventDao())).checkGraphLoop(timelineEvent, true, false);
+	}
+
+	private void shiftTimelineEventChildren(TimelineEvent timelineEvent, long deltaDays, Timestamp now, User user, Integer maxInstances, Integer maxParentDepth,
+			Integer maxChildrenDepth) throws Exception {
+		if (deltaDays > 0l) {
+			TimelineEventDao timelineEventDao = this.getTimelineEventDao();
+			JournalEntryDao journalEntry = this.getJournalEntryDao();
+			Iterator<TimelineEvent> it = timelineEvent.getChildren().iterator();
+			while (it.hasNext()) {
+				TimelineEvent child = it.next();
+				TimelineEventOutVO original = timelineEventDao.toTimelineEventOutVO(child, maxInstances, maxParentDepth, maxChildrenDepth);
+				child.setStart(DateCalc.addInterval(child.getStart(), VariablePeriod.EXPLICIT, deltaDays));
+				if (child.getStop() != null) {
+					child.setStop(DateCalc.addInterval(child.getStop(), VariablePeriod.EXPLICIT, deltaDays));
+				}
+				CoreUtil.modifyVersion(child, child.getVersion(), now, user);
+				timelineEventDao.update(child);
+				notifyTimelineEventReminder(child, now);
+				TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(child, maxInstances, maxParentDepth, maxChildrenDepth);
+				ServiceUtil
+						.logSystemMessage(child.getTrial(), result.getTrial(), now, user, SystemMessageCodes.TIMELINE_EVENT_SHIFTED_CHILD_UPDATED, result, original,
+								journalEntry);
+			}
+			it = timelineEvent.getChildren().iterator();
+			while (it.hasNext()) {
+				shiftTimelineEventChildren(it.next(), deltaDays, now, user, maxInstances, maxParentDepth, maxChildrenDepth);
+			}
+		}
+	}
+
 	@Override
 	protected TimelineEventOutVO handleUpdateTimelineEvent(
-			AuthenticationVO auth, TimelineEventInVO modifiedTimelineEvent) throws Exception {
+			AuthenticationVO auth, TimelineEventInVO modifiedTimelineEvent, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) throws Exception {
 		TimelineEventDao timelineEventDao = this.getTimelineEventDao();
 		TimelineEvent originalTimelineEvent = CheckIDUtil.checkTimelineEventId(modifiedTimelineEvent.getId(), timelineEventDao);
 		checkTimelineEventInput(modifiedTimelineEvent);
-		TimelineEventOutVO original = timelineEventDao.toTimelineEventOutVO(originalTimelineEvent);
+		TimelineEventOutVO original = timelineEventDao.toTimelineEventOutVO(originalTimelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
 		timelineEventDao.evict(originalTimelineEvent);
 		TimelineEvent timelineEvent = timelineEventDao.timelineEventInVOToEntity(modifiedTimelineEvent);
+		checkTimelineEventLoop(timelineEvent);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		shiftTimelineEventChildren(timelineEvent, DateCalc.dateDeltaDays(original.getStart(), timelineEvent.getStart()), now, user, maxInstances, maxParentDepth, maxChildrenDepth);
 		CoreUtil.modifyVersion(originalTimelineEvent, timelineEvent, now, user);
 		timelineEvent.setDismissedTimestamp(now);
 		timelineEventDao.update(timelineEvent);
 		notifyTimelineEventReminder(timelineEvent, now);
-		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent);
+		TimelineEventOutVO result = timelineEventDao.toTimelineEventOutVO(timelineEvent, maxInstances, maxParentDepth, maxChildrenDepth);
 		ServiceUtil
 				.logSystemMessage(timelineEvent.getTrial(), result.getTrial(), now, user, SystemMessageCodes.TIMELINE_EVENT_UPDATED, result, original, this.getJournalEntryDao());
 		return result;

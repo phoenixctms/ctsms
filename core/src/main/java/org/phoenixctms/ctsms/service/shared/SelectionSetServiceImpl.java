@@ -756,7 +756,7 @@ public class SelectionSetServiceImpl
 	@Override
 	protected Collection<TimelineEventTypeVO> handleGetAvailableTimelineEventTypes(
 			AuthenticationVO auth, Long trialId, Long typeId) throws Exception {
-		return (new TimelineEventTypeTagAdapter(this.getTrialDao(), this.getTimelineEventTypeDao())).getAvailableTags(trialId, typeId);
+		return (new TimelineEventTypeTagAdapter(this.getTrialDao(), this.getTimelineEventTypeDao(), this.getTimelineEventDao())).getAvailableTags(trialId, typeId);
 	}
 
 	@Override
