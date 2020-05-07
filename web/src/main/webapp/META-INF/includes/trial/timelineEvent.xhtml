@@ -9,7 +9,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="timelineevent_form">
+		<h:form id="timelineevent_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
@@ -33,10 +33,19 @@
 					<p:ajax event="rowSelect"
 						update=":tabView:timelineevent_form:timelineevent_input" />
 					<f:facet name="header">
-						<h:outputText
-							value="#{timelineEventBean.timelineEventModel.rowCount} #{triallabels.timeline_event_timelineevent_list_header}" />
+						<h:panelGrid columns="2" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText
+								value="#{timelineEventBean.timelineEventModel.rowCount} #{triallabels.timeline_event_timelineevent_list_header}" />
+							<p:commandButton type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="timelineEventTableColumnsDialog.show()" />
+						</h:panelGrid>
 					</f:facet>
 					<p:column sortBy="#{timelineEvent.vo.id}">
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -64,6 +73,14 @@
 						</f:facet>
 						<h:outputText value="#{timelineEvent.vo.title}" />
 					</p:column>
+					<p:column sortBy="#{timelineEvent.vo.parent.title}"
+						filterBy="#{timelineEvent.vo.parent.title}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_parent_title_column}" />
+						</f:facet>
+						<h:outputText value="#{timelineEvent.vo.parent.title}" />
+					</p:column>
 					<p:column sortBy="#{timelineEvent.vo.start}">
 						<f:facet name="header">
 							<h:outputText
@@ -86,9 +103,19 @@
 								value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
 					</p:column>
+					<p:column sortBy="#{timelineEvent.vo.children.title}"
+						filterBy="#{timelineEvent.vo.children.title}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.timeline_event_timelineevent_list_children_title_column}" />
+						</f:facet>
+						<h:outputText value="#{applicationScopeBean.clipStringMid(applicationScopeBean.timelineEventsToString(timelineEvent.vo.children))}" />
+					</p:column>					
 					<p:column sortBy="#{timelineEvent.vo.show}"
 						filterBy="#{timelineEvent.vo.show}"
 						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{triallabels.timeline_event_timelineevent_list_show_column}" />
@@ -142,8 +169,8 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid rendered="#{timelineEventBean.inputVisible}"
-							columns="8" cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column">
+							columns="9" cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 							<ui:include src="../shared/timelineEventInput.xhtml">
 								<ui:param name="timelineEventBean" value="#{timelineEventBean}" />
 							</ui:include>
@@ -222,6 +249,10 @@
 					</h:panelGrid>
 				</p:panel>
 			</h:panelGrid>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog" value="timelineEventTableColumnsDialog" />
+				<ui:param name="dataTableId" value=":tabView:timelineevent_form:timelineevent_list" />
+			</ui:include>			
 		</h:form>
 	</ui:composition>
 </h:body>
