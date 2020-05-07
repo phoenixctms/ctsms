@@ -23,7 +23,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
-import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
@@ -48,8 +47,6 @@ import org.phoenixctms.ctsms.vocycle.CourseReflexionGraph;
  */
 public class CourseDaoImpl
 		extends CourseDaoBase {
-
-	private final static EntityIDComparator ID_COMPARATOR = new EntityIDComparator<Course>(false);
 
 	private static void findUpcomingRenewals(Timestamp now, Course course, Set<Course> result, boolean skip, Set<Long> participatingCourseIds, Set<Long> courseIdchecked) {
 		if (!courseIdchecked.add(course.getId())) {
@@ -570,7 +567,7 @@ public class CourseDaoImpl
 				maxInstances)).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
 	}
 
-	private HashSet<Course> toCourseSet(Collection<Long> courseIds) { // lazyload persistentset prevention
+	private HashSet<Course> toCourseSet(Collection<Long> courseIds) {
 		HashSet<Course> result = new HashSet<Course>(courseIds.size());
 		Iterator<Long> it = courseIds.iterator();
 		while (it.hasNext()) {
