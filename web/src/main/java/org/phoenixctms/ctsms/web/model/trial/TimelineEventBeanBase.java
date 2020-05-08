@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
@@ -36,11 +37,58 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 public abstract class TimelineEventBeanBase extends ManagedBeanBase implements VariablePeriodSelectorListener, EventImportanceSelectorListener {
 
 	private static final int IMPORTANCE_PROPERTY_ID = 1;
 	private static final int REMINDER_PERIOD_PROPERTY_ID = 1;
+	public static final Integer GRAPH_MAX_TIMElINE_EVENT_INSTANCES = 100;
+	public static final Integer GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH = 1;
+	public static final Integer GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH = 1;
+	private TimelineEventOutVO parent;
+
+	public List<IDVO> completeParent(String query) {
+		if (in.getTrialId() != null) {
+			try {
+				Collection eventVOs = WebUtil.getServiceLocator().getToolsService().completeTimelineEvent(WebUtil.getAuthentication(), query, in.getTrialId(),
+						GRAPH_MAX_TIMElINE_EVENT_INSTANCES, GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH, GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH, null);
+				IDVO.transformVoCollection(eventVOs);
+				return (List<IDVO>) eventVOs;
+			} catch (ClassCastException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getParent() {
+		if (parent != null) {
+			return IDVO.transformVo(parent);
+		}
+		return null;
+	}
+
+	public void setParent(IDVO parent) {
+		if (parent != null) {
+			this.parent = (TimelineEventOutVO) parent.getVo();
+		} else {
+			this.parent = null;
+		}
+	}
+
+	public void handleCodeSelect(SelectEvent event) {
+	}
+
+	public void handleCodeUnselect(UnselectEvent event) {
+	}
+
+	private void loadParent() {
+		parent = WebUtil.getTimelineEvent(in.getParentId(), GRAPH_MAX_TIMElINE_EVENT_INSTANCES, GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH, GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
+	}
 
 	public static void copyTimelineEventOutToIn(TimelineEventInVO in, TimelineEventOutVO out, Date today) {
 		if (in != null && out != null) {
@@ -48,6 +96,7 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 			TimelineEventTypeVO eventTypeVO = out.getType();
 			VariablePeriodVO reminderPeriodVO = out.getReminderPeriod();
 			EventImportanceVO importanceVO = out.getImportance();
+			TimelineEventOutVO parentVO = out.getParent();
 			in.setDescription(out.getDescription());
 			in.setId(out.getId());
 			in.setImportance(importanceVO == null ? null : importanceVO.getImportance());
@@ -58,6 +107,7 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 			in.setShow(out.getShow());
 			in.setStart(out.getStart());
 			in.setStop(out.getStop());
+			in.setParentId(parentVO == null ? null : parentVO.getId());
 			in.setTitle(out.getTitle());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setTypeId(eventTypeVO == null ? null : eventTypeVO.getId());
@@ -93,6 +143,7 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 			in.setShow(Settings.getBoolean(SettingCodes.TIMELINE_EVENT_SHOW_PRESET, Bundle.SETTINGS, DefaultSettings.TIMELINE_EVENT_SHOW_PRESET));
 			in.setStart(new Date());
 			in.setStop(null);
+			in.setParentId(null);
 			in.setTitle(Messages.getString(MessageCodes.TIMELINE_EVENT_TITLE_PRESET));
 			in.setTrialId(trialId);
 			in.setTypeId(null);
@@ -123,12 +174,15 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().addTimelineEvent(WebUtil.getAuthentication(), in);
+			out = WebUtil.getServiceLocator().getTrialService().addTimelineEvent(WebUtil.getAuthentication(), in,
+					GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+					GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH,
+					GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -147,13 +201,15 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 	@Override
 	public String deleteAction(Long id) {
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().deleteTimelineEvent(WebUtil.getAuthentication(), id);
+			out = WebUtil.getServiceLocator().getTrialService().deleteTimelineEvent(WebUtil.getAuthentication(), id, GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+					GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH,
+					GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
 			initIn();
 			initSets();
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -175,7 +231,7 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 		Collection<TimelineEventTypeVO> eventTypeVOs = null;
 		try {
 			eventTypeVOs = WebUtil.getServiceLocator().getSelectionSetService().getAvailableTimelineEventTypes(WebUtil.getAuthentication(), in.getTrialId(), in.getTypeId());
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -283,6 +339,7 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 	protected void initSets() {
 		today = new Date();
 		loadSelectedType();
+		loadParent();
 		initSpecificSets();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
@@ -329,9 +386,11 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 	public String loadAction(Long id) {
 		out = null;
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().getTimelineEvent(WebUtil.getAuthentication(), id);
+			out = WebUtil.getServiceLocator().getTrialService().getTimelineEvent(WebUtil.getAuthentication(), id, GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+					GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH,
+					GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -360,6 +419,11 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 			if (timelineEventType.isTitlePresetFixed()) {
 				in.setTitle(getTitlePreset());
 			}
+		}
+		if (parent != null) {
+			in.setParentId(parent.getId());
+		} else {
+			in.setParentId(null);
 		}
 	}
 
@@ -404,12 +468,15 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 		TimelineEventInVO backup = new TimelineEventInVO(in);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().updateTimelineEvent(WebUtil.getAuthentication(), in);
+			out = WebUtil.getServiceLocator().getTrialService().updateTimelineEvent(WebUtil.getAuthentication(), in,
+					GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+					GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH,
+					GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
