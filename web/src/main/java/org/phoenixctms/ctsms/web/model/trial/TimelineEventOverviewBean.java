@@ -37,11 +37,13 @@ public class TimelineEventOverviewBean extends ManagedBeanBase {
 	public void dismiss(TimelineEventOutVO timelineEvent) {
 		if (timelineEvent != null) {
 			try {
-				WebUtil.getServiceLocator().getTrialService().setTimelineEventDismissed(WebUtil.getAuthentication(), timelineEvent.getId(), timelineEvent.getVersion(), true);
+				WebUtil.getServiceLocator().getTrialService().setTimelineEventDismissed(WebUtil.getAuthentication(), timelineEvent.getId(), timelineEvent.getVersion(), true,
+						TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+						TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH, TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
