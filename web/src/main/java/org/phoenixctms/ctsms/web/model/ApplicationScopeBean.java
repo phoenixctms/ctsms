@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -673,5 +674,22 @@ public class ApplicationScopeBean {
 			return WebUtil.colorToStyleClass(visit.getType().getColor());
 		}
 		return "";
+	}
+
+	private final static String TIMELINE_EVENT_SEPARATOR = ", ";
+
+	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
+		if (events != null) {
+			Iterator<TimelineEventOutVO> it = events.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(TIMELINE_EVENT_SEPARATOR);
+				}
+				sb.append(it.next().getTitle());
+			}
+			return sb.toString();
+		}
+		return null;
 	}
 }

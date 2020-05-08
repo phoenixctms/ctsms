@@ -3638,10 +3638,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static TimelineEventOutVO getTimelineEvent(Long timelineEventId) {
+	public static TimelineEventOutVO getTimelineEvent(Long timelineEventId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) {
 		if (timelineEventId != null) {
 			try {
-				return getServiceLocator().getTrialService().getTimelineEvent(getAuthentication(), timelineEventId);
+				return getServiceLocator().getTrialService().getTimelineEvent(getAuthentication(), timelineEventId, maxInstances, maxParentDepth, maxChildrenDepth);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
