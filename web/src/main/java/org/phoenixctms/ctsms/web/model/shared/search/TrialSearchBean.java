@@ -151,7 +151,8 @@ public class TrialSearchBean extends SearchBeanBase {
 			if (!timelineEventCache.containsKey(trial.getId())) {
 				Collection timelineEvents = null;
 				try {
-					timelineEvents = WebUtil.getServiceLocator().getTrialService().getTimelineEventList(WebUtil.getAuthentication(), trial.getId(), null);
+					timelineEvents = WebUtil.getServiceLocator().getTrialService().getTimelineEventList(WebUtil.getAuthentication(), trial.getId(),
+							null, null, null, null);
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
