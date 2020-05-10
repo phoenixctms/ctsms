@@ -111,11 +111,16 @@
 							rowStyleClass="#{timelineEvent.vo.trial.deferredDelete ? 'ctsms-strikethrough' : ''} #{timelineEventOverviewBean.timelineEventToColor(timelineEvent.vo)}#{rowBgColorAlpha}">
 							<f:facet name="header">
 								<h:panelGrid
-									columns="3"
+									columns="4"
 									cellpadding="0"
-									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
 									<h:outputText value="#{timelineEventOverviewBean.timelineScheduleModel.rowCount} #{triallabels.timeline_event_overview_timelineevent_list_header}" />
 									<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+									<p:commandButton type="button"
+										title="#{labels.open_table_columns_dialog_button_label}"
+										icon="ui-icon ui-icon-wrench"
+										styleClass="ctsms-list-header-button"
+										onclick="timelineEventTableColumnsDialog.show()" />									
 									<p:commandButton
 										process="@this"
 										actionListener="#{timelineEventOverviewBean.load}"
@@ -123,10 +128,11 @@
 										icon="ui-icon-refresh"
 										styleClass="ctsms-list-header-button"
 										ajax="true"
-										update=":timelineeventoverview_form:timelineevent_list_wrapper" />
+										update=":timelineeventoverview_form:timelineevent_list_wrapper" />										
 								</h:panelGrid>
 							</f:facet>
 							<p:column sortBy="#{timelineEvent.vo.id}">
+								<f:attribute name="visibleDefault" value="false" />
 								<f:facet name="header">
 									<h:outputText value="#{labels.id_column}" />
 								</f:facet>
@@ -153,6 +159,7 @@
 								sortBy="#{timelineEvent.vo.trial.status}"
 								filterBy="#{timelineEvent.vo.trial.status.id}"
 								filterOptions="#{sessionScopeBean.filterTrialStatusTypes}">
+								<f:attribute name="visibleDefault" value="false" />
 								<f:facet name="header">
 									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_trial_status_type_column}" />
 								</f:facet>
@@ -187,6 +194,7 @@
 										value="true" />
 								</ui:include>
 							</p:column>
+
 							<p:column
 								sortBy="#{timelineEvent.vo.title}"
 								filterBy="#{timelineEvent.vo.title}">
@@ -194,6 +202,15 @@
 									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_title_column}" />
 								</f:facet>
 								<h:outputText value="#{timelineEvent.vo.title}" />
+							</p:column>
+
+							<p:column sortBy="#{timelineEvent.vo.parent.title}"
+								filterBy="#{timelineEvent.vo.parent.title}">
+								<f:facet name="header">
+									<h:outputText
+										value="#{triallabels.timeline_event_overview_timelineevent_list_parent_title_column}" />
+								</f:facet>
+								<h:outputText value="#{timelineEvent.vo.parent.title}" />
 							</p:column>
 							<p:column
 								sortBy="#{timelineEvent.vo.start}"
@@ -216,6 +233,15 @@
 									<f:converter converterId="ctsms.Date" />
 									<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 								</h:outputText>
+							</p:column>
+							<p:column sortBy="#{timelineEvent.vo.children.title}"
+								filterBy="#{timelineEvent.vo.children.title}">
+								<f:attribute name="visibleDefault" value="false" />
+								<f:facet name="header">
+									<h:outputText
+										value="#{triallabels.timeline_event_overview_timelineevent_list_children_title_column}" />
+								</f:facet>
+								<h:outputText value="#{applicationScopeBean.clipStringMid(applicationScopeBean.timelineEventsToString(timelineEvent.vo.children))}" />
 							</p:column>
 							<p:column>
 								<f:facet name="header">
@@ -244,6 +270,10 @@
 						id="messages"
 						showDetail="false" />
 				</h:panelGrid>
+				<ui:include src="/META-INF/includes/shared/tableColumnsDialog.xhtml">
+					<ui:param name="tableColumnsDialog" value="timelineEventTableColumnsDialog" />
+					<ui:param name="dataTableId" value=":timelineeventoverview_form:timelineevent_list" />
+				</ui:include>					
 			</h:form>
 		</ui:define>
 	</ui:composition>

@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 
 import com.google.gson.Gson;
@@ -35,6 +36,7 @@ public final class JsUtil {
 			new GsonExclusionStrategy(StaffOutVO.class, "children"),
 			new GsonExclusionStrategy(CourseOutVO.class, "renewals"),
 			new GsonExclusionStrategy(CourseOutVO.class, "precedingCourses"),
+			new GsonExclusionStrategy(TeamMemberOutVO.class, "children"),
 			// new GsonExclusionStrategy(InputFieldOutVO.class, "selectionSetValues"),
 			new GsonExclusionStrategy(InputFieldSelectionSetValueOutVO.class, "field"),
 			// new GsonExclusionStrategy(CriteriaOutVO.class, "criterions"),

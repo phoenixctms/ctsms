@@ -212,6 +212,7 @@ public interface SettingCodes {
 	public static final String INPUT_FIELD_SELECTION_SET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "input_field_selection_set_autocomplete_default_result_limit";
 	public static final String ECRF_FIELD_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "ecrf_field_field_autocomplete_default_result_limit";
 	public static final String SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "system_message_code_autocomplete_default_result_limit";
+	public static final String TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "timeline_event_autocomplete_default_result_limit";
 	public static final String OPS_CODE_REVISION = "ops_code_revision";
 	public static final String ALPHA_ID_REVISION = "alpha_id_revision";
 	public static final String ASP_REVISION = "asp_revision";

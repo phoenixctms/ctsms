@@ -44,8 +44,10 @@ public class TimelineScheduleLazyModel extends LazyDataModelBase<TimelineEventOu
 	protected Collection<TimelineEventOutVO> getLazyResult(PSFVO psf) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService()
-					.getTimelineSchedule(WebUtil.getAuthentication(), null, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents, psf);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+					.getTimelineSchedule(WebUtil.getAuthentication(), null, trialId, departmentId, teamMemberStaffId, notify, ignoreTimelineEvents,
+							TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+							TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH, TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH, psf);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -54,7 +56,8 @@ public class TimelineScheduleLazyModel extends LazyDataModelBase<TimelineEventOu
 
 	@Override
 	protected TimelineEventOutVO getRowElement(Long id) {
-		return WebUtil.getTimelineEvent(id);
+		return WebUtil.getTimelineEvent(id, TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_INSTANCES,
+				TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_PARENT_DEPTH, TimelineEventBeanBase.GRAPH_MAX_TIMElINE_EVENT_CHILDREN_DEPTH);
 	}
 
 	public boolean getShowNotifyOnly() {

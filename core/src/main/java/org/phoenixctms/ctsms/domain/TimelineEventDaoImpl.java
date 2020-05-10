@@ -10,16 +10,21 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
+import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
-import org.phoenixctms.ctsms.util.L10nUtil;
-import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.TimelineEventInVO;
@@ -28,6 +33,7 @@ import org.phoenixctms.ctsms.vo.TimelineEventTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
+import org.phoenixctms.ctsms.vocycle.TimelineEventReflexionGraph;
 
 /**
  * @see TimelineEvent
@@ -48,7 +54,21 @@ public class TimelineEventDaoImpl
 		if (trialId != null) {
 			timelineEventCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); // support filter by children
+	}
+
+	@Override
+	protected Collection<TimelineEvent> handleFindTimelineEvents(Long trialId, String titleInfix, Integer limit)
+			throws Exception {
+		Criteria timelineEventCriteria = createTimelineEventCriteria();
+		if (trialId != null) {
+			timelineEventCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		CategoryCriterion.apply(timelineEventCriteria, new CategoryCriterion(titleInfix, "title", MatchMode.ANYWHERE));
+		timelineEventCriteria.addOrder(Order.asc("title"));
+		timelineEventCriteria.addOrder(Order.asc("start"));
+		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), timelineEventCriteria);
 		return timelineEventCriteria.list();
 	}
 
@@ -146,7 +166,7 @@ public class TimelineEventDaoImpl
 			timelineEventCriteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 		}
 		ArrayList<TimelineEvent> resultSet = CriteriaUtil.listReminders(timelineEventCriteria, today, notify, includeAlreadyPassed, null, null);
-		return CriteriaUtil.applyPVO(resultSet, psf, teamMemberStaffId != null); // no dupes here any more
+		return CriteriaUtil.applyPVO(resultSet, psf, true); // remove dupes for teamMemberStaffId != null, but also support filter by children
 	}
 
 	@Override
@@ -182,11 +202,7 @@ public class TimelineEventDaoImpl
 	 * a new, blank entity is created
 	 */
 	private TimelineEvent loadTimelineEventFromTimelineEventOutVO(TimelineEventOutVO timelineEventOutVO) {
-		TimelineEvent timelineEvent = this.load(timelineEventOutVO.getId());
-		if (timelineEvent == null) {
-			timelineEvent = TimelineEvent.Factory.newInstance();
-		}
-		return timelineEvent;
+		throw new UnsupportedOperationException("out value object to recursive entity not supported");
 	}
 
 	/**
@@ -209,6 +225,7 @@ public class TimelineEventDaoImpl
 			boolean copyIfNull) {
 		super.timelineEventInVOToEntity(source, target, copyIfNull);
 		Long typeId = source.getTypeId();
+		Long parentId = source.getParentId();
 		Long trialId = source.getTrialId();
 		if (typeId != null) {
 			target.setType(this.getTimelineEventTypeDao().load(typeId));
@@ -224,6 +241,20 @@ public class TimelineEventDaoImpl
 			target.setTrial(null);
 			if (trial != null) {
 				trial.removeEvents(target);
+			}
+		}
+		if (parentId != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
+			TimelineEvent parent = this.load(parentId);
+			target.setParent(parent);
+			parent.addChildren(target);
+		} else if (copyIfNull) {
+			TimelineEvent parent = target.getParent();
+			target.setParent(null);
+			if (parent != null) {
+				parent.removeChildren(target);
 			}
 		}
 	}
@@ -249,6 +280,7 @@ public class TimelineEventDaoImpl
 		super.timelineEventOutVOToEntity(source, target, copyIfNull);
 		TimelineEventTypeVO typeVO = source.getType();
 		TrialOutVO trialVO = source.getTrial();
+		TimelineEventOutVO parentVO = source.getParent();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		VariablePeriodVO reminderPeriodVO = source.getReminderPeriod();
 		EventImportanceVO importanceVO = source.getImportance();
@@ -266,6 +298,20 @@ public class TimelineEventDaoImpl
 			target.setTrial(null);
 			if (trial != null) {
 				trial.removeEvents(target);
+			}
+		}
+		if (parentVO != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
+			TimelineEvent parent = this.timelineEventOutVOToEntity(parentVO);
+			target.setParent(parent);
+			parent.addChildren(target);
+		} else if (copyIfNull) {
+			TimelineEvent parent = target.getParent();
+			target.setParent(null);
+			if (parent != null) {
+				parent.removeChildren(target);
 			}
 		}
 		if (modifiedUserVO != null) {
@@ -303,8 +349,12 @@ public class TimelineEventDaoImpl
 		super.toTimelineEventInVO(source, target);
 		TimelineEventType type = source.getType();
 		Trial trial = source.getTrial();
+		TimelineEvent parent = source.getParent();
 		if (type != null) {
 			target.setTypeId(type.getId());
+		}
+		if (parent != null) {
+			target.setParentId(parent.getId());
 		}
 		if (trial != null) {
 			target.setTrialId(trial.getId());
@@ -326,25 +376,22 @@ public class TimelineEventDaoImpl
 	public void toTimelineEventOutVO(
 			TimelineEvent source,
 			TimelineEventOutVO target) {
-		super.toTimelineEventOutVO(source, target);
-		TimelineEventType type = source.getType();
-		Trial trial = source.getTrial();
-		User modifiedUser = source.getModifiedUser();
-		if (type != null) {
-			target.setType(this.getTimelineEventTypeDao().toTimelineEventTypeVO(type));
-		}
-		if (trial != null) {
-			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
-		}
-		if (modifiedUser != null) {
-			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
-		}
-		target.setReminderPeriod(L10nUtil.createVariablePeriodVO(Locales.USER, source.getReminderPeriod()));
-		target.setImportance(L10nUtil.createEventImportanceVO(Locales.USER, source.getImportance()));
-		ReminderEntityAdapter reminderItem = ReminderEntityAdapter.getInstance(source);
-		Date today = new Date();
-		if (target.getReminderStart() == null) {
-			target.setReminderStart(reminderItem.getReminderStart(today, false, null, null));
-		}
+		(new TimelineEventReflexionGraph(this, this.getTimelineEventTypeDao(), this.getTrialDao(), this.getUserDao())).toVOHelper(source, target,
+				new HashMap<Class, HashMap<Long, Object>>());
+	}
+
+	@Override
+	public void toTimelineEventOutVO(
+			TimelineEvent source,
+			TimelineEventOutVO target, Integer... maxInstances) {
+		(new TimelineEventReflexionGraph(this, this.getTimelineEventTypeDao(), this.getTrialDao(), this.getUserDao(), maxInstances)).toVOHelper(source,
+				target, new HashMap<Class, HashMap<Long, Object>>());
+	}
+
+	@Override
+	protected long handleGetChildrenCount(Long timelineEventId) throws Exception {
+		org.hibernate.Criteria timelineEventCriteria = createTimelineEventCriteria();
+		timelineEventCriteria.add(Restrictions.eq("parent.id", timelineEventId.longValue()));
+		return (Long) timelineEventCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 }

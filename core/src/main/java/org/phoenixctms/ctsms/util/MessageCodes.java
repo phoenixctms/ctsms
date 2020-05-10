@@ -119,4 +119,10 @@ public interface MessageCodes {
 	public static final String MASS_MAIL_CACNELLED_NO_RECIPIENTS = "mass_mail_cacnelled_no_recipients";
 	public static final String UNSUPPORTED_JOB_MODULE = "unsupported_job_module";
 	public static final String START_JOB_ERROR = "start_job_error";
+	public static final String LOOP_PATH_SEPARATOR = "loop_path_separator";
+	public static final String LOOP_PATH_COURSE_LABEL = "loop_path_course_label";
+	public static final String LOOP_PATH_INVENTORY_LABEL = "loop_path_inventory_label";
+	public static final String LOOP_PATH_PROBAND_LABEL = "loop_path_proband_label";
+	public static final String LOOP_PATH_STAFF_LABEL = "loop_path_staff_label";
+	public static final String LOOP_PATH_TIMELINE_EVENT_LABEL = "loop_path_timeline_event_label";
 }

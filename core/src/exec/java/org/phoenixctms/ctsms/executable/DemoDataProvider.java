@@ -1974,9 +1974,10 @@ public class DemoDataProvider {
 		newTimelineEvent.setShow(eventType.isShowPreset());
 		newTimelineEvent.setStart(start);
 		newTimelineEvent.setStop(stop);
+		newTimelineEvent.setParentId(null);
 		newTimelineEvent.setTitle(title == null ? eventType.getNameL10nKey() : title);
 		newTimelineEvent.setDescription("details eines weiteren " + eventType.getNameL10nKey() + " ereignisses");
-		TimelineEventOutVO out = trialService.addTimelineEvent(auth, newTimelineEvent);
+		TimelineEventOutVO out = trialService.addTimelineEvent(auth, newTimelineEvent, null, null, null);
 		jobOutput.println("timeline event created: " + out.getTitle());
 		return out;
 	}

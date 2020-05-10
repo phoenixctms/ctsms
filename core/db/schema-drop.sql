@@ -692,6 +692,9 @@
     alter table TIMELINE_EVENT 
         drop constraint TIMELINE_EVENT_TYPE_FKC;
 
+    alter table TIMELINE_EVENT 
+        drop constraint TIMELINE_EVENT_PARENT_FKC;
+
     alter table TRIAL 
         drop constraint TRIAL_MODIFIED_USER_FKC;
 

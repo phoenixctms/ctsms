@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
@@ -171,8 +173,13 @@ public class ProbandReflexionGraph extends ReflexionCycleHelper<Proband, Proband
 	}
 
 	@Override
-	protected void throwGraphLoopException(Proband entity) throws ServiceException {
-		throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GRAPH_LOOP, entity.getId().toString());
+	protected void throwGraphLoopException(List<Proband> path) throws ServiceException {
+		Iterator<Proband> it = path.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (it.hasNext()) {
+			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.LOOP_PATH_PROBAND_LABEL, DefaultMessages.LOOP_PATH_PROBAND_LABEL, it.next().getId().toString()));
+		}
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GRAPH_LOOP, sb.toString());
 	}
 
 	@Override

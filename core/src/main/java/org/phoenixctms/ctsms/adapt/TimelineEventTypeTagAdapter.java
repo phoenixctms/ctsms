@@ -4,12 +4,14 @@ import java.util.Collection;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.domain.TimelineEvent;
+import org.phoenixctms.ctsms.domain.TimelineEventDao;
 import org.phoenixctms.ctsms.domain.TimelineEventType;
 import org.phoenixctms.ctsms.domain.TimelineEventTypeDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
@@ -20,10 +22,12 @@ public class TimelineEventTypeTagAdapter extends TagAdapter<Trial, TimelineEvent
 
 	private TrialDao trialDao;
 	private TimelineEventTypeDao timelineEventTypeDao;
+	private TimelineEventDao timelineEventDao;
 
-	public TimelineEventTypeTagAdapter(TrialDao trialDao, TimelineEventTypeDao timelineEventTypeDao) {
+	public TimelineEventTypeTagAdapter(TrialDao trialDao, TimelineEventTypeDao timelineEventTypeDao, TimelineEventDao timelineEventDao) {
 		this.trialDao = trialDao;
 		this.timelineEventTypeDao = timelineEventTypeDao;
+		this.timelineEventDao = timelineEventDao;
 	}
 
 	@Override
@@ -38,6 +42,16 @@ public class TimelineEventTypeTagAdapter extends TagAdapter<Trial, TimelineEvent
 		ServiceUtil.checkReminderPeriod(tagValueIn.getReminderPeriod(), tagValueIn.getReminderPeriodDays());
 		if (tagValueIn.getStop() != null && DateCalc.getStartOfDay(tagValueIn.getStop()).compareTo(DateCalc.getStartOfDay(tagValueIn.getStart())) <= 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.TIMELINE_EVENT_END_DATE_LESS_THAN_OR_EQUAL_TO_START_DATE);
+		}
+		if (tagValueIn.getParentId() != null) {
+			TimelineEvent parent = timelineEventDao.load(tagValueIn.getParentId());
+			if (parent == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PARENT_TIMELINE_EVENT_ID, tagValueIn.getParentId().toString());
+			}
+			if (!root.equals(parent.getTrial())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TIMELINE_EVENT_PARENT_WRONG_TRIAL,
+						CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(parent.getTrial())));
+			}
 		}
 	}
 

@@ -2,6 +2,8 @@ package org.phoenixctms.ctsms.vocycle;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
@@ -25,7 +27,9 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.date.DateCalc;
@@ -172,9 +176,14 @@ public class CourseReflexionGraph extends ReflexionCycleHelper<Course, CourseOut
 	}
 
 	@Override
-	protected void throwGraphLoopException(Course entity) throws ServiceException {
+	protected void throwGraphLoopException(List<Course> path) throws ServiceException {
+		Iterator<Course> it = path.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (it.hasNext()) {
+			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.LOOP_PATH_COURSE_LABEL,DefaultMessages.LOOP_PATH_COURSE_LABEL,CommonUtil.courseOutVOToString(courseDao.toCourseOutVO(it.next()))));
+		}
 		throw L10nUtil
-				.initServiceException(ServiceExceptionCodes.COURSE_GRAPH_LOOP, entity.getId().toString(), CommonUtil.courseOutVOToString(courseDao.toCourseOutVO(entity)));
+				.initServiceException(ServiceExceptionCodes.COURSE_GRAPH_LOOP, sb.toString());
 	}
 
 	@Override

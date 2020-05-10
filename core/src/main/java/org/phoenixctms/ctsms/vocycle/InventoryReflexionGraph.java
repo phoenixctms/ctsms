@@ -2,6 +2,8 @@ package org.phoenixctms.ctsms.vocycle;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 
 import org.hibernate.LockMode;
@@ -19,7 +21,9 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 
@@ -150,9 +154,13 @@ public class InventoryReflexionGraph extends ReflexionCycleHelper<Inventory, Inv
 	}
 
 	@Override
-	protected void throwGraphLoopException(Inventory entity) throws ServiceException {
-		throw L10nUtil.initServiceException(ServiceExceptionCodes.INVENTORY_GRAPH_LOOP, entity.getId().toString(),
-				CommonUtil.inventoryOutVOToString(inventoryDao.toInventoryOutVO(entity)));
+	protected void throwGraphLoopException(List<Inventory> path) throws ServiceException {
+		Iterator<Inventory> it = path.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (it.hasNext()) {
+			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.LOOP_PATH_INVENTORY_LABEL,DefaultMessages.LOOP_PATH_INVENTORY_LABEL,CommonUtil.inventoryOutVOToString(inventoryDao.toInventoryOutVO(it.next()))));
+		}
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.INVENTORY_GRAPH_LOOP, sb.toString());
 	}
 
 	@Override

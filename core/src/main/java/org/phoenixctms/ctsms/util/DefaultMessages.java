@@ -198,4 +198,10 @@ public interface DefaultMessages {
 	public static final String JOB_TYPE_NAME = "<job type>";
 	public static final String JOB_TYPE_DESCRIPTION = "<job description>";
 	public static final String START_JOB_ERROR = "could not start job: {0}";
+	public static final String LOOP_PATH_SEPARATOR = " -> ";
+	public static final String LOOP_PATH_COURSE_LABEL = "{0}";
+	public static final String LOOP_PATH_INVENTORY_LABEL = "{0}";
+	public static final String LOOP_PATH_PROBAND_LABEL = "proband ID {0}";
+	public static final String LOOP_PATH_STAFF_LABEL = "{0}";
+	public static final String LOOP_PATH_TIMELINE_EVENT_LABEL = "{0}";
 }

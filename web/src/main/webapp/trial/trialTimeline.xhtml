@@ -15,7 +15,7 @@
 			name="title"
 			value="#{triallabels.trial_timeline_title}" />
 		<ui:define name="content">
-			<h:form id="trialtimeline_form">
+			<h:form id="trialtimeline_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 				<p:remoteCommand
 					process="@this,trial_filter"
 					name="changeTrial"
@@ -426,9 +426,9 @@
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
 						<h:panelGrid
-							columns="8"
+							columns="9"
 							cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column">
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 							<h:outputLabel
 								for="trial"
 								value="#{triallabels.trial_timeline_trial_label}" />
@@ -468,6 +468,7 @@
 							<h:outputLabel />
 							<h:outputLabel />
 							<h:outputText value="" />
+							<h:outputLabel />
 							<ui:include src="/META-INF/includes/shared/timelineEventInput.xhtml">
 								<ui:param
 									name="timelineEventBean"

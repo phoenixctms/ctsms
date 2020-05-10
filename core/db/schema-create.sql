@@ -1724,6 +1724,7 @@
         TYPE_FK BIGINT not null,
         TRIAL_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
+        PARENT_FK BIGINT,
         primary key (ID)
     );
 
@@ -3326,6 +3327,11 @@
         add constraint TIMELINE_EVENT_TYPE_FKC 
         foreign key (TYPE_FK) 
         references TIMELINE_EVENT_TYPE;
+
+    alter table TIMELINE_EVENT 
+        add constraint TIMELINE_EVENT_PARENT_FKC 
+        foreign key (PARENT_FK) 
+        references TIMELINE_EVENT;
 
     alter table TRIAL 
         add constraint TRIAL_MODIFIED_USER_FKC 
