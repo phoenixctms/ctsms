@@ -5,7 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -647,18 +646,7 @@ public class ApplicationScopeBean {
 	}
 
 	public String timelineEventToStartStopString(TimelineEventOutVO timelineEvent) {
-		if (timelineEvent != null) {
-			Date start = timelineEvent.getStart();
-			Date stop = timelineEvent.getStop();
-			if (start != null) {
-				if (stop != null) {
-					return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_STOP_LABEL, DateUtil.getDateFormat().format(start), DateUtil.getDateFormat().format(stop));
-				} else {
-					return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_LABEL, DateUtil.getDateFormat().format(start));
-				}
-			}
-		}
-		return "";
+		return WebUtil.timelineEventToStartStopString(timelineEvent);
 	}
 
 	public String url(String name) {

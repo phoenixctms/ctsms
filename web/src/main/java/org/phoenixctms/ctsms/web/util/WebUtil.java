@@ -3555,6 +3555,21 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static String timelineEventToStartStopString(TimelineEventOutVO timelineEvent) {
+		if (timelineEvent != null) {
+			Date start = timelineEvent.getStart();
+			Date stop = timelineEvent.getStop();
+			if (start != null) {
+				if (stop != null) {
+					return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_STOP_LABEL, DateUtil.getDateFormat().format(start), DateUtil.getDateFormat().format(stop));
+				} else {
+					return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_LABEL, DateUtil.getDateFormat().format(start));
+				}
+			}
+		}
+		return "";
+	}
+
 	public static StaffStatusTypeVO getStaffStatusType(Long statusTypeId) {
 		if (statusTypeId != null) {
 			try {

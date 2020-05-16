@@ -792,6 +792,8 @@ public interface MessageCodes {
 	public static final String CRITERION_ITEM_TIP_INQUIRY_CATEGORY = "criterion_item_tip_inquiry_category";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_NAME = "criterion_item_tip_input_field_name";
 	public static final String CRITERION_ITEM_TIP_TITLE = "criterion_item_tip_title";
+	public static final String CRITERION_ITEM_TIP_START_STOP = "criterion_item_tip_start_stop";
+	public static final String CRITERION_ITEM_TIP_TIMELINE_EVENT_TYPE = "criterion_item_tip_timeline_event_type";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID = "criterion_item_tip_input_field_external_id";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_DIMDI_ID = "criterion_item_tip_ops_code_dimdi_id";
 	public static final String CRITERION_ITEM_TIP_OPS_CODE_FIRST_CODE = "criterion_item_tip_ops_code_first_code";
