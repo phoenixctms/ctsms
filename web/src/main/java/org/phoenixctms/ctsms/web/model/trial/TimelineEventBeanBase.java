@@ -80,10 +80,10 @@ public abstract class TimelineEventBeanBase extends ManagedBeanBase implements V
 		}
 	}
 
-	public void handleCodeSelect(SelectEvent event) {
+	public void handleParentSelect(SelectEvent event) {
 	}
 
-	public void handleCodeUnselect(UnselectEvent event) {
+	public void handleParentUnselect(UnselectEvent event) {
 	}
 
 	private void loadParent() {
