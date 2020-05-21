@@ -70,4 +70,9 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase<ECRFFieldSt
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
 	}
+
+	@Override
+	public boolean isStorePage() {
+		return false;
+	}
 }

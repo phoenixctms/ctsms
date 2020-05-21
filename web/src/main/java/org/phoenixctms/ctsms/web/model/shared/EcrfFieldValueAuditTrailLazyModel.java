@@ -35,7 +35,7 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase<ECRFFie
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(WebUtil.getAuthentication(), listEntryId, ecrfFieldId, index, true, false, psf)
 						.getPageValues();
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -62,5 +62,10 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase<ECRFFie
 
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
+	}
+
+	@Override
+	public boolean isStorePage() {
+		return false;
 	}
 }

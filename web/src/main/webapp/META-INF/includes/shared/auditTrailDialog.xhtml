@@ -40,7 +40,7 @@
 							emptyMessage="#{labels.datatable_permission_empty_message}"
 							var="fieldValue" value="#{auditTrailBean.auditTrailModel}"
 							id="field_value_list">
-							<p:ajax event="page" listener="#{auditTrailBean.auditTrailModel.handlePageChanged}" />
+							<!-- <p:ajax event="page" listener="#{auditTrailBean.auditTrailModel.handlePageChanged}" /> -->
 							<f:facet name="header">
 								<h:outputText
 									value="#{auditTrailBean.auditTrailModel.rowCount} #{labels.audit_trail_list_header}" />

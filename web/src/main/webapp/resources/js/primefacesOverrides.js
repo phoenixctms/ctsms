@@ -2222,4 +2222,4 @@ PrimeFaces.widget.Paginator.prototype.setTotalRecords = function(value) {
     this.cfg.pageCount = Math.ceil(value / this.cfg.rows)||1;
     //this.cfg.page = 0; causes jumping back to 1st page after updating a datatable..
     this.updateUI();
-}
+};

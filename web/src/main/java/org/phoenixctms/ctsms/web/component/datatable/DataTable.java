@@ -156,9 +156,16 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 		}
 	}
 
+	private boolean usePageFromDataModel() {
+		if (this.isLazy()) {
+			return ((LazyDataModelBase) this.getDataModel()).isStorePage();
+		}
+		return false;
+	}
+
 	@Override
 	public int getPage() {
-		if (this.isLazy()) {
+		if (usePageFromDataModel()) {
 			return ((LazyDataModelBase) this.getDataModel()).getPage();
 		}
 		return super.getPage();
@@ -166,7 +173,7 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 
 	@Override
 	public int getFirst() {
-		if (this.isLazy()) {
+		if (usePageFromDataModel()) {
 			return getPage() * getRows();
 		}
 		return super.getFirst();

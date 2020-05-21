@@ -31,7 +31,7 @@
 					selectionMode="single"
 					selection="#{ecrfFieldStatusEntryBean.selectedEcrfFieldStatusEntry}"
 					rowStyleClass="#{applicationScopeBean.ecrfFieldStatusEntryToColor(ecrfFieldStatusEntry.vo)}#{rowBgColorAlpha}">
-					<p:ajax event="page" listener="#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.handlePageChanged}" />
+					<!-- <p:ajax event="page" listener="#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.handlePageChanged}" /> -->
 					<p:ajax event="rowSelect"
 						update="#{namingContainer}:ecrffieldstatus_#{ecrfFieldStatusEntryBean.ecrfFieldStatusEntryModel.queue.value}_input" />
 

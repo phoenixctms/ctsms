@@ -25,7 +25,7 @@ public class CriteriaLazyModel extends LazyDataModelBase<CriteriaOutVO> {
 	protected Collection<CriteriaOutVO> getLazyResult(PSFVO psf) {
 		try {
 			return WebUtil.getServiceLocator().getSearchService().getCriteriaList(WebUtil.getAuthentication(), module, category, psf);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -40,7 +40,7 @@ public class CriteriaLazyModel extends LazyDataModelBase<CriteriaOutVO> {
 	protected CriteriaOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getSearchService().getCriteria(WebUtil.getAuthentication(), id);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -53,5 +53,10 @@ public class CriteriaLazyModel extends LazyDataModelBase<CriteriaOutVO> {
 
 	public void setModule(DBModule module) {
 		this.module = module;
+	}
+
+	@Override
+	public boolean isStorePage() {
+		return false;
 	}
 }

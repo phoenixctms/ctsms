@@ -20,7 +20,7 @@ public class ProbandListStatusEntryLazyModel extends LazyDataModelBase<ProbandLi
 		if (probandListEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntryList(WebUtil.getAuthentication(), probandListEntryId, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -36,7 +36,7 @@ public class ProbandListStatusEntryLazyModel extends LazyDataModelBase<ProbandLi
 	protected ProbandListStatusEntryOutVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getProbandListStatusEntry(WebUtil.getAuthentication(), id);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -45,5 +45,10 @@ public class ProbandListStatusEntryLazyModel extends LazyDataModelBase<ProbandLi
 
 	public void setProbandListEntryId(Long probandListEntryId) {
 		this.probandListEntryId = probandListEntryId;
+	}
+
+	@Override
+	public boolean isStorePage() {
+		return false;
 	}
 }
