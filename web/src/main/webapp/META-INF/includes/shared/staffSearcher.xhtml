@@ -128,6 +128,7 @@
 				value="#{staffSearchBean.staffResultModel}"
 				id="#{staffSearchBean.resultListId}"
 				rowStyleClass="#{staff.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.staffToColor(staff.vo)}#{rowBgColorAlpha}">
+				<p:ajax event="page" listener="#{staffSearchBean.staffResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid
 						columns="2"

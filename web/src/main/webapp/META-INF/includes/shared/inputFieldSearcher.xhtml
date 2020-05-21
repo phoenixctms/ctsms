@@ -98,6 +98,7 @@
 				value="#{inputFieldSearchBean.inputFieldResultModel}"
 				id="#{inputFieldSearchBean.resultListId}"
 				rowStyleClass="#{inputField.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
+				<p:ajax event="page" listener="#{inputFieldSearchBean.inputFieldResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid columns="2" cellpadding="0"
 						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">

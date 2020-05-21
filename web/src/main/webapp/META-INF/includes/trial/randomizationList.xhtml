@@ -30,6 +30,7 @@
 					value="#{randomizationListBean.randomizationListModel}"
 					id="randomizationlist_list" selectionMode="single"
 					selection="#{randomizationListBean.selectedStratificationRandomizationList}">
+					<p:ajax event="page" listener="#{randomizationListBean.randomizationListModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:randomizationlist_form:randomizationlist_input" />
 					<f:facet name="header">

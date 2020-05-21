@@ -40,6 +40,7 @@
 						id="probandlistentrytag_list" selectionMode="single"
 						selection="#{probandListEntryTagBean.selectedProbandListEntryTag}"
 						rowStyleClass="#{probandListEntryTag.vo.field.deferredDelete ? 'ctsms-strikethrough' : ''}">
+						<p:ajax event="page" listener="#{probandListEntryTagBean.probandListEntryTagModel.handlePageChanged}" />
 						<p:ajax event="rowSelect"
 							update=":tabView:probandlistentrytag_form:probandlistentrytag_input" />
 						<f:facet name="header">

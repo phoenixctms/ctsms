@@ -128,6 +128,7 @@
 				value="#{userSearchBean.userResultModel}"
 				id="#{userSearchBean.resultListId}"
 				rowStyleClass="#{user.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{userSearchBean.userToColor(user.vo)}#{rowBgColorAlpha}">
+				<p:ajax event="page" listener="#{userSearchBean.userResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid
 						columns="2"

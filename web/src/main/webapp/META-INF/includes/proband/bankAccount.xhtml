@@ -29,6 +29,7 @@
 					var="bankAccount" value="#{bankAccountBean.bankAccountModel}"
 					id="bankaccount_list" selectionMode="single"
 					selection="#{bankAccountBean.selectedBankAccount}">
+					<p:ajax event="page" listener="#{bankAccountBean.bankAccountModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:bankaccount_form:bankaccount_input" />
 					<f:facet name="header">

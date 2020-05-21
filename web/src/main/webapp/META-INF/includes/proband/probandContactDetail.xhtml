@@ -30,6 +30,7 @@
 					value="#{probandContactDetailBean.contactDetailValueModel}"
 					id="probandcontactdetail_list" selectionMode="single"
 					selection="#{probandContactDetailBean.selectedProbandContactDetailValue}">
+					<p:ajax event="page" listener="#{probandContactDetailBean.contactDetailValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:probandcontactdetail_form:probandcontactdetail_input" />
 					<f:facet name="header">

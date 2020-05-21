@@ -29,6 +29,7 @@
 					value="#{staffDutyRosterTurnBean.dutyRosterTurnModel}"
 					id="dutyrosterturn_list" selectionMode="single"
 					selection="#{staffDutyRosterTurnBean.selectedDutyRosterTurn}">
+					<p:ajax event="page" listener="#{staffDutyRosterTurnBean.dutyRosterTurnModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:staffdutyrosterturn_form:dutyrosterturn_input" />
 					<f:facet name="header">

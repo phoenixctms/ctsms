@@ -33,6 +33,7 @@
 					var="moneyTransfer" value="#{moneyTransferBean.moneyTransferModel}"
 					id="moneytransfer_list" selectionMode="single"
 					selection="#{moneyTransferBean.selectedMoneyTransfer}">
+					<p:ajax event="page" listener="#{moneyTransferBean.moneyTransferModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:moneytransfer_form:moneytransfer_input" />
 					<f:facet name="header">

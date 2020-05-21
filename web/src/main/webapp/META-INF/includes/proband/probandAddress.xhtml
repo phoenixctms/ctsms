@@ -32,6 +32,7 @@
 					var="address" value="#{probandAddressBean.addressModel}"
 					id="probandaddress_list" selectionMode="single"
 					selection="#{probandAddressBean.selectedProbandAddress}">
+					<p:ajax event="page" listener="#{probandAddressBean.addressModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:probandaddress_form:probandaddress_input" />
 					<f:facet name="header">

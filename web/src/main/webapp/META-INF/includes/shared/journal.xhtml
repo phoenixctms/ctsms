@@ -36,6 +36,7 @@
 				selectionMode="single"
 				selection="#{journalBean.selectedJournalEntry}"
 				rowStyleClass="#{applicationScopeBean.journalEntryToColor(journalEntry.vo)}#{rowBgColorAlpha}">
+				<p:ajax event="page" listener="#{journalBean.journalEntryModel.handlePageChanged}" />
 				<p:ajax
 					event="rowSelect"
 					update="#{namingContainer}:journal_input" />

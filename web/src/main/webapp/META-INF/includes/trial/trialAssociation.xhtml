@@ -55,6 +55,7 @@
 								emptyMessage="#{labels.datatable_permission_empty_message}"
 								var="course" value="#{trialAssociationBean.trialCourseModel}"
 								id="trialcourses_list">
+								<p:ajax event="page" listener="#{trialAssociationBean.trialCourseModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -147,6 +148,7 @@
 								var="massMail"
 								value="#{trialAssociationBean.trialMassMailModel}"
 								id="trialmassmails_list">
+								<p:ajax event="page" listener="#{trialAssociationBean.trialMassMailModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -482,6 +484,7 @@
 								var="randomizationListCode"
 								value="#{trialAssociationBean.randomizationListCodeModel}"
 								id="randomizationlistcodes_list">
+								<p:ajax event="page" listener="#{trialAssociationBean.randomizationListCodeModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

@@ -31,6 +31,7 @@
 					value="#{probandVisitScheduleBean.visitScheduleItemModel}"
 					id="probandvisitschedule_list"
 					rowStyleClass="#{probandVisitScheduleBean.visitScheduleItemToColor(visitScheduleItem.vo)}#{rowBgColorAlpha}">
+					<p:ajax event="page" listener="#{probandVisitScheduleBean.visitScheduleItemModel.handlePageChanged}" />
 					<f:facet name="header">
 						<h:outputText
 							value="#{probandVisitScheduleBean.visitScheduleItemModel.rowCount} #{probandlabels.proband_visit_schedule_probandvisitschedule_list_header}" />

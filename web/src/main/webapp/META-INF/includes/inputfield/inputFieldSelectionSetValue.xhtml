@@ -33,6 +33,7 @@
 					id="selectionsetvalue_list" selectionMode="single"
 					selection="#{selectionSetValueBean.selectedInputFieldSelectionSetValue}"
 					rowStyleClass="#{selectionSetValue.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
+					<p:ajax event="page" listener="#{selectionSetValueBean.selectionSetValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:inputfieldselectionsetvalue_form:selectionsetvalue_input" />
 					<f:facet name="header">

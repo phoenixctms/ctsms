@@ -29,6 +29,7 @@
 					var="statusEntry" value="#{staffStatusBean.statusEntryModel}"
 					id="staffstatus_list" selectionMode="single"
 					selection="#{staffStatusBean.selectedStaffStatusEntry}">
+					<p:ajax event="page" listener="#{staffStatusBean.statusEntryModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:staffstatus_form:staffstatus_input" />
 					<f:facet name="header">

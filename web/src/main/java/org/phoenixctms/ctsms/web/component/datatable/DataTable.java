@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.columngroup.ColumnGroup;
@@ -153,5 +154,21 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 			//} else {
 			//	System.out.println("cannot find: " + id);
 		}
+	}
+
+	@Override
+	public int getPage() {
+		if (this.isLazy()) {
+			return ((LazyDataModelBase) this.getDataModel()).getPage();
+		}
+		return super.getPage();
+	}
+
+	@Override
+	public int getFirst() {
+		if (this.isLazy()) {
+			return getPage() * getRows();
+		}
+		return super.getFirst();
 	}
 }

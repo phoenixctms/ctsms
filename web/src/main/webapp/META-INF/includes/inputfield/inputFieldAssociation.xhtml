@@ -34,6 +34,7 @@
 								var="probandListEntryTag"
 								value="#{inputFieldAssociationBean.probandListEntryTagUsageModel}"
 								id="probandlistentrytag_list">
+								<p:ajax event="page" listener="#{inputFieldAssociationBean.probandListEntryTagUsageModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
@@ -174,6 +175,7 @@
 								var="inquiry"
 								value="#{inputFieldAssociationBean.inquiryUsageModel}"
 								id="inquiry_list">
+								<p:ajax event="page" listener="#{inputFieldAssociationBean.inquiryUsageModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
@@ -362,6 +364,7 @@
 								var="ecrfField"
 								value="#{inputFieldAssociationBean.ecrfFieldUsageModel}"
 								id="ecrffield_list">
+								<p:ajax event="page" listener="#{inputFieldAssociationBean.ecrfFieldUsageModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">

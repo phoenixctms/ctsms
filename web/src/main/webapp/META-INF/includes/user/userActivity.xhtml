@@ -28,6 +28,7 @@
 					var="journalEntry" value="#{userActivityBean.userActivityModel}"
 					id="useractivity_list"
 					rowStyleClass="#{applicationScopeBean.journalEntryToColor(journalEntry.vo)}#{rowBgColorAlpha}">
+					<p:ajax event="page" listener="#{userActivityBean.userActivityModel.handlePageChanged}" />
 					<f:facet name="header">
 						<h:panelGrid columns="3" cellpadding="0"
 							columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

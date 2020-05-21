@@ -26,7 +26,7 @@
 				emptyMessage="#{labels.datatable_permission_empty_message}"
 				var="job" value="#{jobBean.jobModel}" id="job_list"
 				selectionMode="single" selection="#{jobBean.selectedJob}">
-
+				<p:ajax event="page" listener="#{jobBean.jobModel.handlePageChanged}" />
 				<p:ajax event="rowSelect" update="#{namingContainer}:job_input" />
 				<f:facet name="header">
 					<h:outputText

@@ -38,6 +38,7 @@
 					id="mass_mail_recipient_list" selectionMode="single"
 					selection="#{massMailRecipientBean.selectedMassMailRecipient}"
 					rowStyleClass="#{massMailRecipient.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''}">
+					<p:ajax event="page" listener="#{massMailRecipientBean.massMailRecipientModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:massmailrecipient_form:mass_mail_recipient_input" />
 					<f:facet name="header">

@@ -34,6 +34,7 @@
 					var="ecrf" value="#{ecrfBean.ecrfModel}" id="ecrf_list"
 					selectionMode="single" selection="#{ecrfBean.selectedEcrf}"
 					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitToColor(ecrf.vo.visit)}#{rowBgColorAlpha}">
+					<p:ajax event="page" listener="#{ecrfBean.ecrfModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:ecrf_form:ecrf_input,:tabView:ecrf_form:ecrf_clone" />
 					<f:facet name="header">

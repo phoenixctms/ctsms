@@ -92,6 +92,7 @@
 						value="#{reimbursementsBean.probandMoneyTransferSummaryModel}"
 						id="probandmoneytransfersummary_list"
 						rowStyleClass="#{summary.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.probandListStatusToColor(summary.vo.listEntry.lastStatus)}#{rowBgColorAlpha}">
+						<p:ajax event="page" listener="#{reimbursementsBean.probandMoneyTransferSummaryModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{reimbursementsBean.probandMoneyTransferSummaryModel.rowCount} #{triallabels.reimbursements_proband_money_transfer_summary_list_header}" />
@@ -304,6 +305,7 @@
 						value="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel}"
 						id="probandmoneytransfernoparticipationsummary_list"
 						rowStyleClass="#{summary.vo.proband.deferredDelete ? 'ctsms-strikethrough' : ''}">
+						<p:ajax event="page" listener="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:outputText
 								value="#{reimbursementsBean.probandMoneyTransferNoParticipationSummaryModel.rowCount} #{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_header}" />

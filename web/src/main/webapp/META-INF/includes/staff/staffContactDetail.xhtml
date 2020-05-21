@@ -30,6 +30,7 @@
 					value="#{staffContactDetailBean.contactDetailValueModel}"
 					id="staffcontactdetail_list" selectionMode="single"
 					selection="#{staffContactDetailBean.selectedStaffContactDetailValue}">
+					<p:ajax event="page" listener="#{staffContactDetailBean.contactDetailValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:staffcontactdetail_form:staffcontactdetail_input" />
 					<f:facet name="header">

@@ -43,6 +43,7 @@
 							update=":tabView:probandlist_form:probandListTabView:probandlistentry_input,:tabView:probandlist_form:probandListTabView:probandliststatus_list,:tabView:probandlist_form:probandListTabView:probandliststatus_input,:tabView:probandlist_form:probandListTabView:tagvalue_input_grid"
 							oncomplete="handleUpdateProbandListTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 						<f:facet name="header">
+						<p:ajax event="page" listener="#{probandListEntryBean.probandListEntryModel.handlePageChanged}" />
 
 							<h:panelGrid columns="2" cellpadding="0"
 								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">

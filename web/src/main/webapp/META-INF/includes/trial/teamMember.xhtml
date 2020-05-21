@@ -34,6 +34,7 @@
 					id="team_member_list" selectionMode="single"
 					selection="#{teamMemberBean.selectedTeamMember}"
 					rowStyleClass="#{teamMember.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''}">
+					<p:ajax event="page" listener="#{teamMemberBean.teamMemberModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:teammember_form:team_member_input" />
 					<f:facet name="header">

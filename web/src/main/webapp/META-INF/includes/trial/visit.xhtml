@@ -28,6 +28,7 @@
 					var="visit" value="#{visitBean.visitModel}" id="visit_list"
 					selectionMode="single" selection="#{visitBean.selectedVisit}"
 					rowStyleClass="#{applicationScopeBean.visitToColor(visit.vo)}#{rowBgColorAlpha}">
+					<p:ajax event="page" listener="#{visitBean.visitModel.handlePageChanged}" />
 					<p:ajax event="rowSelect" update=":tabView:visit_form:visit_input" />
 					<f:facet name="header">
 						<h:outputText

@@ -66,6 +66,7 @@
 						value="#{staffStatusOverviewBean.staffStatusModel}"
 						id="staffstatus_list"
 						rowStyleClass="#{statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{staffStatusOverviewBean.staffStatusToColor(statusEntry.vo)}#{rowBgColorAlpha}">
+						<p:ajax event="page" listener="#{staffStatusOverviewBean.staffStatusModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

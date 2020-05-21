@@ -29,6 +29,7 @@
 					var="booking" value="#{inventoryBookingBean.bookingModel}"
 					id="inventorybooking_list" selectionMode="single"
 					selection="#{inventoryBookingBean.selectedInventoryBooking}">
+					<p:ajax event="page" listener="#{inventoryBookingBean.bookingModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:inventorybooking_form:inventorybooking_input" />
 					<f:facet name="header">

@@ -128,6 +128,7 @@
 				value="#{trialSearchBean.trialResultModel}"
 				id="#{trialSearchBean.resultListId}"
 				rowStyleClass="#{trial.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{trialSearchBean.trialToColor(trial.vo)}#{rowBgColorAlpha}">
+				<p:ajax event="page" listener="#{trialSearchBean.trialResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid
 						columns="2"

@@ -30,7 +30,7 @@
 					id="ecrffieldstatus_list" selectionMode="single"
 					selection="#{ecrfFieldStatusBean.selectedEcrfFieldStatusEntry}"
 					rowStyleClass="#{applicationScopeBean.ecrfFieldStatusEntryToColor(fieldStatusEntry.vo)}#{rowBgColorAlpha}">
-
+					<p:ajax event="page" listener="#{ecrfFieldStatusBean.ecrfFieldStatusEntryModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:ecrffieldstatus_form:ecrffieldstatus_input" />
 					<f:facet name="header">

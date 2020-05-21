@@ -29,6 +29,7 @@
 					var="address" value="#{staffAddressBean.addressModel}"
 					id="staffaddress_list" selectionMode="single"
 					selection="#{staffAddressBean.selectedStaffAddress}">
+					<p:ajax event="page" listener="#{staffAddressBean.addressModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:staffaddress_form:staffaddress_input" />
 					<f:facet name="header">

@@ -34,6 +34,7 @@
 				id="hyperlink_list"
 				selectionMode="single"
 				selection="#{hyperlinkBean.selectedHyperlink}">
+				<p:ajax event="page" listener="#{hyperlinkBean.hyperlinkModel.handlePageChanged}" />
 				<p:ajax
 					event="rowSelect"
 					update="#{namingContainer}:hyperlink_input" />

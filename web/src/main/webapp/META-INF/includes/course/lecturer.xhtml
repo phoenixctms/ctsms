@@ -30,6 +30,7 @@
 					id="lecturer_list" selectionMode="single"
 					selection="#{lecturerBean.selectedLecturer}"
 					rowStyleClass="#{lecturer.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''}">
+					<p:ajax event="page" listener="#{lecturerBean.lecturerModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:lecturer_form:lecturer_input" />
 					<f:facet name="header">

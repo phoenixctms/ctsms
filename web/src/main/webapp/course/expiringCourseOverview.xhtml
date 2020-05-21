@@ -78,6 +78,7 @@
 						value="#{expiringCourseOverviewBean.expiringCourseModel}"
 						id="expiringcourse_list"
 						rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{expiringCourseOverviewBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
+						<p:ajax event="page" listener="#{expiringCourseOverviewBean.expiringCourseModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid columns="3" cellpadding="0"
 								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

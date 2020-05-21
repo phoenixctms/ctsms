@@ -88,6 +88,7 @@
 							value="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel}"
 							id="inventorymaintenance_list"
 							rowStyleClass="#{maintenanceItem.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryMaintenanceOverviewBean.maintenanceItemToColor(maintenanceItem.vo)}#{rowBgColorAlpha}">
+							<p:ajax event="page" listener="#{inventoryMaintenanceOverviewBean.maintenanceScheduleModel.handlePageChanged}" />
 							<f:facet name="header">
 								<h:panelGrid
 									columns="3"

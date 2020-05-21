@@ -10,6 +10,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SelectableDataModel;
 import org.primefaces.model.SortOrder;
@@ -17,6 +18,7 @@ import org.primefaces.model.SortOrder;
 public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implements SelectableDataModel<IDVO> {
 
 	private String currentPageIdsString;
+	private int page = 0;
 
 	public String getCurrentPageIds() {
 		return (currentPageIdsString != null ? currentPageIdsString : "");
@@ -169,5 +171,13 @@ public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implement
 			rowCount = CommonUtil.safeLongToInt(psfRowCount);
 		}
 		setRowCount(rowCount);
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void handlePageChanged(PageEvent event) {
+		page = event.getPage();
 	}
 }

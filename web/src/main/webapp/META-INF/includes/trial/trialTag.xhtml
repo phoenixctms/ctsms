@@ -28,6 +28,7 @@
 					var="tagValue" value="#{trialTagBean.tagValueModel}"
 					id="trialtag_list" selectionMode="single"
 					selection="#{trialTagBean.selectedTrialTagValue}">
+					<p:ajax event="page" listener="#{trialTagBean.tagValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:trialtag_form:trialtag_input" />
 					<f:facet name="header">

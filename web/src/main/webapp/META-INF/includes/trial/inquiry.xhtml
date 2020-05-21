@@ -39,6 +39,7 @@
 						id="inquiry_list" selectionMode="single"
 						selection="#{inquiryBean.selectedInquiry}"
 						rowStyleClass="#{inquiry.vo.deferredDelete or inquiry.vo.field.deferredDelete ? 'ctsms-strikethrough' : ''}">
+						<p:ajax event="page" listener="#{inquiryBean.inquiryModel.handlePageChanged}" />
 						<p:ajax event="rowSelect"
 							update=":tabView:inquiry_form:inquiry_input" />
 						<f:facet name="header">

@@ -97,6 +97,7 @@
 				value="#{probandSearchBean.probandResultModel}"
 				id="#{probandSearchBean.resultListId}"
 				rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{probandSearchBean.probandToColor(proband.vo)}">
+				<p:ajax event="page" listener="#{probandSearchBean.probandResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid columns="2" cellpadding="0"
 						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">

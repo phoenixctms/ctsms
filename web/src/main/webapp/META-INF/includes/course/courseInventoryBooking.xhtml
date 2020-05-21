@@ -30,6 +30,7 @@
 					id="inventorybooking_list" selectionMode="single"
 					selection="#{courseInventoryBookingBean.selectedInventoryBooking}"
 					rowStyleClass="#{booking.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''}">
+					<p:ajax event="page" listener="#{courseInventoryBookingBean.bookingModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:courseinventorybooking_form:inventorybooking_input" />
 					<f:facet name="header">

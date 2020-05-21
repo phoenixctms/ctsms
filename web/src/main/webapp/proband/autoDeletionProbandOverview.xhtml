@@ -80,6 +80,7 @@
 							value="#{autoDeletionProbandOverviewBean.autoDeletionProbandModel}"
 							id="autodeletionproband_list"
 							rowStyleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{autoDeletionProbandOverviewBean.probandToColor(proband.vo)}#{rowBgColorAlpha}">
+							<p:ajax event="page" listener="#{autoDeletionProbandOverviewBean.autoDeletionProbandModel.handlePageChanged}" />
 							<f:facet name="header">
 								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

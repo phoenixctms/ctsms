@@ -30,6 +30,7 @@
 					var="medication" value="#{medicationBean.medicationModel}"
 					id="medication_list" selectionMode="single"
 					selection="#{medicationBean.selectedMedication}">
+					<p:ajax event="page" listener="#{medicationBean.medicationModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:medication_form:medication_input" />
 					<f:facet name="header">

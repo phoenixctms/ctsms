@@ -34,6 +34,7 @@
 					id="probandrecipient_list" selectionMode="single"
 					selection="#{probandRecipientBean.selectedMassMailRecipient}"
 					rowStyleClass="#{massMail.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMailRecipient.vo.massMail)}#{rowBgColorAlpha}">
+					<p:ajax event="page" listener="#{probandRecipientBean.massMailRecipientModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:massmailrecipient_form:probandrecipient_input" />
 					<f:facet name="header">

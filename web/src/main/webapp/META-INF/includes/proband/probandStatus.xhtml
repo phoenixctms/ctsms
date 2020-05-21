@@ -29,6 +29,7 @@
 					var="statusEntry" value="#{probandStatusBean.statusEntryModel}"
 					id="probandstatus_list" selectionMode="single"
 					selection="#{probandStatusBean.selectedProbandStatusEntry}">
+					<p:ajax event="page" listener="#{probandStatusBean.statusEntryModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:probandstatus_form:probandstatus_input" />
 					<f:facet name="header">

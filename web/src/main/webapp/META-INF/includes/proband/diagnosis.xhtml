@@ -30,6 +30,7 @@
 					var="diagnosis" value="#{diagnosisBean.diagnosisModel}"
 					id="diagnosis_list" selectionMode="single"
 					selection="#{diagnosisBean.selectedDiagnosis}">
+					<p:ajax event="page" listener="#{diagnosisBean.diagnosisModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:diagnosis_form:diagnosis_input" />
 					<f:facet name="header">

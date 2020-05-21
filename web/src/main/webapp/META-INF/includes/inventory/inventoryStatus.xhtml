@@ -29,6 +29,7 @@
 					var="statusEntry" value="#{inventoryStatusBean.statusEntryModel}"
 					id="inventorystatus_list" selectionMode="single"
 					selection="#{inventoryStatusBean.selectedInventoryStatusEntry}">
+					<p:ajax event="page" listener="#{inventoryStatusBean.statusEntryModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:inventorystatus_form:inventorystatus_input" />
 					<f:facet name="header">

@@ -29,6 +29,7 @@
 					var="cvPosition" value="#{cvPositionBean.cvPositionModel}"
 					id="cvposition_list" selectionMode="single"
 					selection="#{cvPositionBean.selectedCvPosition}">
+					<p:ajax event="page" listener="#{cvPositionBean.cvPositionModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:cvposition_form:cvposition_input" />
 					<f:facet name="header">

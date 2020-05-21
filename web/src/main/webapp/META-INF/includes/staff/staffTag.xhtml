@@ -29,6 +29,7 @@
 					var="tagValue" value="#{staffTagBean.tagValueModel}"
 					id="stafftag_list" selectionMode="single"
 					selection="#{staffTagBean.selectedStaffTagValue}">
+					<p:ajax event="page" listener="#{staffTagBean.tagValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:stafftag_form:stafftag_input" />
 					<f:facet name="header">

@@ -33,6 +33,7 @@
 								emptyMessage="#{labels.datatable_permission_empty_message}"
 								var="user" value="#{staffAssociationBean.accountModel}"
 								id="account_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.accountModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -106,6 +107,7 @@
 								var="inventory"
 								value="#{staffAssociationBean.ownershipInventoryModel}"
 								id="ownershipinventory_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.ownershipInventoryModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -186,6 +188,7 @@
 								var="booking"
 								value="#{staffAssociationBean.onBehalfOfInventoryBookingModel}"
 								id="inventorybooking_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.onBehalfOfInventoryBookingModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
@@ -346,6 +349,7 @@
 								var="maintenanceItem"
 								value="#{staffAssociationBean.responsiblePersonMaintenanceModel}"
 								id="responsiblepersonmaintenanceitems_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.responsiblePersonMaintenanceModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -390,6 +394,7 @@
 								var="maintenanceItem"
 								value="#{staffAssociationBean.companyContactMaintenanceModel}"
 								id="companycontactmaintenanceitems_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.companyContactMaintenanceModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -434,6 +439,7 @@
 								var="statusEntry"
 								value="#{staffAssociationBean.originatorInventoryStatusModel}"
 								id="originatorinventorystatus_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.originatorInventoryStatusModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -511,6 +517,7 @@
 								var="statusEntry"
 								value="#{staffAssociationBean.addresseeInventoryStatusModel}"
 								id="addresseeinventorystatus_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.addresseeInventoryStatusModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -588,6 +595,7 @@
 								var="course"
 								value="#{staffAssociationBean.institutionCourseModel}"
 								id="institutioncourses_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.institutionCourseModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -668,6 +676,7 @@
 								var="cvPosition"
 								value="#{staffAssociationBean.institutionCvPositionModel}"
 								id="institutioncvpositions_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.institutionCvPositionModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -786,6 +795,7 @@
 								emptyMessage="#{labels.datatable_permission_empty_message}"
 								var="lecturer" value="#{staffAssociationBean.lectureModel}"
 								id="lectures_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.lectureModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
@@ -868,6 +878,7 @@
 								var="teamMember"
 								value="#{staffAssociationBean.trialMembershipModel}"
 								id="trial_membership_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.trialMembershipModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="4" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column,ctsms-datatable-header-button-column">
@@ -997,6 +1008,7 @@
 								emptyMessage="#{labels.datatable_permission_empty_message}"
 								var="proband" value="#{staffAssociationBean.patientModel}"
 								id="patients_list">
+								<p:ajax event="page" listener="#{staffAssociationBean.patientModel.handlePageChanged}" />
 								<f:facet name="header">
 									<h:panelGrid columns="3" cellpadding="0"
 										columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

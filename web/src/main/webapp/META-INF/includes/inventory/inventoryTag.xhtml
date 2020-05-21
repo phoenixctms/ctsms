@@ -29,6 +29,7 @@
 					var="tagValue" value="#{inventoryTagBean.tagValueModel}"
 					id="inventorytag_list" selectionMode="single"
 					selection="#{inventoryTagBean.selectedInventoryTagValue}">
+					<p:ajax event="page" listener="#{inventoryTagBean.tagValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:inventorytag_form:inventorytag_input" />
 					<f:facet name="header">

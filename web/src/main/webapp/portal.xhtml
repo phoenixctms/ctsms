@@ -40,7 +40,7 @@
 							<f:param value="#{sessionScopeBean.user.name}" />
 						</h:outputFormat>
 						<h:outputFormat styleClass="ctsms-text-green"
-							rendered="#{applicationScopeBean.trustedHost}"
+							rendered="#{sessionScopeBean.user.decryptUntrusted or applicationScopeBean.trustedHost}"
 							value="#{labels.trusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
@@ -121,6 +121,7 @@
 						var="notification" value="#{portalBean.notificationModel}"
 						id="notification_list"
 						rowStyleClass="#{portalBean.notificationToColor(notification.vo)}#{defaultColorOpacity}">
+						<p:ajax event="page" listener="#{portalBean.notificationModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid columns="3" cellpadding="0"
 								columnClasses="ctsms-notificationlist-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

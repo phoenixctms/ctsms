@@ -66,6 +66,7 @@
 						value="#{inventoryStatusOverviewBean.inventoryStatusModel}"
 						id="inventorystatus_list"
 						rowStyleClass="#{statusEntry.vo.inventory.deferredDelete ? 'ctsms-strikethrough' : ''} #{inventoryStatusOverviewBean.inventoryStatusToColor(statusEntry.vo)}#{rowBgColorAlpha}">
+						<p:ajax event="page" listener="#{inventoryStatusOverviewBean.inventoryStatusModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid
 								columns="3"

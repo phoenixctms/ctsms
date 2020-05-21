@@ -30,6 +30,7 @@
 					value="#{inventoryMaintenanceBean.maintenanceItemModel}"
 					id="inventorymaintenance_list" selectionMode="single"
 					selection="#{inventoryMaintenanceBean.selectedMaintenanceScheduleItem}">
+					<p:ajax event="page" listener="#{inventoryMaintenanceBean.maintenanceItemModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:inventorymaintenance_form:inventorymaintenance_input" />
 					<f:facet name="header">

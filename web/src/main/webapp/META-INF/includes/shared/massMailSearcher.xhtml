@@ -97,6 +97,7 @@
 				value="#{massMailSearchBean.massMailResultModel}"
 				id="#{massMailSearchBean.resultListId}"
 				rowStyleClass="#{massMail.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMail.vo)}#{rowBgColorAlpha}">
+				<p:ajax event="page" listener="#{massMailSearchBean.massMailResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid columns="2" cellpadding="0"
 						columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">

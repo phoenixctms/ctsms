@@ -29,6 +29,7 @@
 					var="tagValue" value="#{probandTagBean.tagValueModel}"
 					id="probandtag_list" selectionMode="single"
 					selection="#{probandTagBean.selectedProbandTagValue}">
+					<p:ajax event="page" listener="#{probandTagBean.tagValueModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:probandtag_form:probandtag_input" />
 					<f:facet name="header">

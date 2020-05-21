@@ -128,6 +128,7 @@
 				value="#{courseSearchBean.courseResultModel}"
 				id="#{courseSearchBean.resultListId}"
 				rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{courseSearchBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
+				<p:ajax event="page" listener="#{courseSearchBean.courseResultModel.handlePageChanged}" />
 				<f:facet name="header">
 					<h:panelGrid
 						columns="2"

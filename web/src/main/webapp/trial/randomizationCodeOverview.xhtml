@@ -68,6 +68,7 @@
 							var="randomizationListCode"
 							value="#{randomizationCodeOverviewBean.randomizationListCodeModel}"
 							id="randomizationlistcodes_list">
+							<p:ajax event="page" listener="#{randomizationCodeOverviewBean.randomizationListCodeModel.handlePageChanged}" />
 							<f:facet name="header">
 								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

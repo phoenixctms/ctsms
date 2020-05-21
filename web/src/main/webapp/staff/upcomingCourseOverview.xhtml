@@ -39,6 +39,7 @@
 							value="#{upcomingCourseOverviewBean.upcomingCourseModel}"
 							id="upcomingcourse_list"
 							rowStyleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{upcomingCourseOverviewBean.courseToColor(course.vo)}#{rowBgColorAlpha}">
+							<p:ajax event="page" listener="#{upcomingCourseOverviewBean.upcomingCourseModel.handlePageChanged}" />
 							<f:facet name="header">
 								<h:panelGrid
 									columns="3"

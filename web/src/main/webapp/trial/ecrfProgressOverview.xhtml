@@ -143,6 +143,7 @@
 							value="#{ecrfProgressOverviewBean.ecrfProgressSummaryModel}"
 							id="ecrfprogresssummary_list"
 							rowStyleClass="#{trial.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
+							<p:ajax event="page" listener="#{ecrfProgressOverviewBean.ecrfProgressSummaryModel.handlePageChanged}" />
 							<f:facet name="header">
 								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

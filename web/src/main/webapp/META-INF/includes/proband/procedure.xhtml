@@ -30,6 +30,7 @@
 					var="procedure" value="#{procedureBean.procedureModel}"
 					id="procedure_list" selectionMode="single"
 					selection="#{procedureBean.selectedProcedure}">
+					<p:ajax event="page" listener="#{procedureBean.procedureModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:procedure_form:procedure_input" />
 					<f:facet name="header">

@@ -84,6 +84,7 @@
 							value="#{recipientOverviewBean.massMailRecipientModel}"
 							id="massmailrecipient_list"
 							rowStyleClass="#{massMailRecipient.vo.massMail.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.massMailToColor(massMailRecipient.vo.massMail)}#{rowBgColorAlpha}">
+							<p:ajax event="page" listener="#{recipientOverviewBean.massMailRecipientModel.handlePageChanged}" />
 							<f:facet name="header">
 								<h:panelGrid columns="3" cellpadding="0"
 									columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

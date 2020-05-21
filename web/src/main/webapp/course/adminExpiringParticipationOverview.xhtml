@@ -78,6 +78,7 @@
 						value="#{adminExpiringParticipationOverviewBean.adminExpiringParticipationModel}"
 						id="expiringparticipation_list"
 						rowStyleClass="#{statusEntry.vo.course.deferredDelete or statusEntry.vo.staff.deferredDelete ? 'ctsms-strikethrough' : ''} #{adminExpiringParticipationOverviewBean.courseToColor(statusEntry.vo.course)}#{rowBgColorAlpha}">
+						<p:ajax event="page" listener="#{adminExpiringParticipationOverviewBean.adminExpiringParticipationModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid columns="3" cellpadding="0"
 								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">

@@ -29,7 +29,7 @@
 					var="probandGroup" value="#{probandGroupBean.probandGroupModel}"
 					id="probandgroup_list" selectionMode="single"
 					selection="#{probandGroupBean.selectedProbandGroup}">
-
+					<p:ajax event="page" listener="#{probandGroupBean.probandGroupModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:probandgroup_form:probandgroup_input" />
 
