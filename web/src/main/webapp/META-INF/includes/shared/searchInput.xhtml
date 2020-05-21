@@ -73,7 +73,7 @@
 						var="criteria" value="#{searchBean.criteriaModel}"
 						id="criteria_list"
 						rowStyleClass="#{criteria.vo.deferredDelete ? 'ctsms-strikethrough' : ''}">
-						<p:ajax event="page" listener="#{searchBean.criteriaModel.handlePageChanged}" />
+						<!-- <p:ajax event="page" listener="#{searchBean.criteriaModel.handlePageChanged}" /> -->
 						<f:facet name="header">
 							<h:outputText
 								value="#{labels.search_criteria_list_header_1} #{empty searchBean.criteriaModel.category ? labels.search_criteria_list_header_2 : searchBean.criteriaModel.category}#{labels.search_criteria_list_header_3} #{searchBean.criteriaModel.rowCount} #{labels.search_criteria_list_header_4}" />

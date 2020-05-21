@@ -178,7 +178,7 @@ public abstract class LazyDataModelBase<T> extends LazyDataModel<IDVO> implement
 	}
 
 	public boolean isStorePage() {
-		return true;
+		return true; //store page by default
 	}
 
 	public void handlePageChanged(PageEvent event) {
