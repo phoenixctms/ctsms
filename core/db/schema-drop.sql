@@ -741,6 +741,12 @@
         drop constraint VISIT_SCHEDULE_ITEM_MODIFIED_USER_FKC;
 
     alter table VISIT_SCHEDULE_ITEM 
+        drop constraint VISIT_SCHEDULE_ITEM_START_TAG_FKC;
+
+    alter table VISIT_SCHEDULE_ITEM 
+        drop constraint VISIT_SCHEDULE_ITEM_STOP_TAG_FKC;
+
+    alter table VISIT_SCHEDULE_ITEM 
         drop constraint VISIT_SCHEDULE_ITEM_GROUP_FKC;
 
     alter table VISIT_SCHEDULE_ITEM 
