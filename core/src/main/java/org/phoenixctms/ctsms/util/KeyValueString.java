@@ -24,6 +24,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
@@ -92,6 +93,7 @@ import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleDateModeVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vo.VisitTypeVO;
 
@@ -368,6 +370,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getPaymentMethodName(locale, ((PaymentMethod) value).name());
+			} else if (valueClass.equals(VisitScheduleDateMode.class)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getVisitScheduleDateModeName(locale, ((VisitScheduleDateMode) value).name());
 			} else if (valueClass.equals(InputFieldType.class)) {
 				if (value == null) {
 					return "";
@@ -563,6 +570,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getPaymentMethodName(locale, ((PaymentMethodVO) value).getNameL10nKey());
+			} else if (VisitScheduleDateModeVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getVisitScheduleDateModeName(locale, ((VisitScheduleDateModeVO) value).getNameL10nKey());
 			} else if (ProbandCategoryVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";

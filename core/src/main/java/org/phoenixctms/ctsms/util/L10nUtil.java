@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -39,6 +40,7 @@ import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleDateModeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public final class L10nUtil {
@@ -115,6 +117,7 @@ public final class L10nUtil {
 	private static String jobStatusNamesBundleBasename;
 	private static String ecrfValidationStatusNamesBundleBasename;
 	private static String paymentMethodNamesBundleBasename;
+	private static String visitScheduleDateModeNamesBundleBasename;
 	private static String dbModuleNamesBundleBasename;
 	private static String journalModuleNamesBundleBasename;
 	private static String hyperlinkModuleNamesBundleBasename;
@@ -299,6 +302,19 @@ public final class L10nUtil {
 			paymentMethodVO = null;
 		}
 		return paymentMethodVO;
+	}
+
+	public static VisitScheduleDateModeVO createVisitScheduleDateModeVO(Locales locale, VisitScheduleDateMode mode) {
+		VisitScheduleDateModeVO modeVO;
+		if (mode != null) {
+			modeVO = new VisitScheduleDateModeVO();
+			modeVO.setDateMode(mode);
+			modeVO.setNameL10nKey(mode.name());
+			modeVO.setName(getVisitScheduleDateModeName(locale, mode.name()));
+		} else {
+			modeVO = null;
+		}
+		return modeVO;
 	}
 
 	public static PermissionProfileVO createPermissionProfileVO(Locales locale, PermissionProfile profile) {
@@ -715,6 +731,10 @@ public final class L10nUtil {
 
 	public static String getPaymentMethodName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, paymentMethodNamesBundleBasename), DefaultMessages.PAYMENT_METHOD_NAME);
+	}
+
+	public static String getVisitScheduleDateModeName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, visitScheduleDateModeNamesBundleBasename), DefaultMessages.VISIT_SCHEDULE_DATE_MODE_NAME);
 	}
 
 	public static String getPermissionProfileGroupName(Locales locale, String l10nKey) {
@@ -1418,6 +1438,13 @@ public final class L10nUtil {
 			String paymentMethodNamesBundleBasename) {
 		L10nUtil.paymentMethodNamesBundleBasename = paymentMethodNamesBundleBasename;
 		getBundle(Locales.DEFAULT, paymentMethodNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setVisitScheduleDateModeNamesBundleBasename(
+			String visitScheduleDateModeNamesBundleBasename) {
+		L10nUtil.visitScheduleDateModeNamesBundleBasename = visitScheduleDateModeNamesBundleBasename;
+		getBundle(Locales.DEFAULT, visitScheduleDateModeNamesBundleBasename);
 	}
 
 	@Autowired(required = true)
