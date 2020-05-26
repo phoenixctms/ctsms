@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.query;
 
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,8 +11,10 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -29,9 +32,11 @@ import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -44,16 +49,40 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 
 public final class CriteriaUtil {
 
+	private enum RestrictionCriterionTypes {
+		GT("({0}) > ?"),
+		GE("({0}) >= ?"),
+		LT("({0}) < ?"),
+		LE("({0}) <= ?"),
+		IS_NULL("({0}) is null"),
+		IS_NOT_NULL("({0}) is not null");
+
+		private final String term;
+
+		private RestrictionCriterionTypes(final String term) {
+			this.term = term;
+		}
+
+		@Override
+		public String toString() {
+			return term;
+		}
+	}
+
+	public final static Pattern PROPERTY_NAME_REGEXP = Pattern.compile("^[a-zA-Z0-9._]+$");
 	private static HashSet<String> EXACT_STRING_FILTER_ENTITY_FIELDS = new HashSet<String>();
 	static {
 		EXACT_STRING_FILTER_ENTITY_FIELDS.add("logicalPath");
 		EXACT_STRING_FILTER_ENTITY_FIELDS.add("code"); //randomization list code
 	}
+	private final static String ALIAS_PREFIX = "_";
 	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
 	}
+	private final static String UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE = "unsupported binary restriction criterion type {0}";
+	private final static String UNSUPPORTED_UNARY_RESTRICTION_CRITERION_TYPE = "unsupported unary restriction criterion type {0}";
 
 	private static <T> void addReminderItem(ArrayList<T> resultSet, ReminderEntityAdapter reminderItem, Date reminderStart, Boolean notify) {
 		if (!reminderItem.isDismissable() || !reminderItem.isRecurrenceDismissed(reminderStart)) {// !(reminderItem.isDismissed() && reminderStart.compareTo(new
@@ -84,49 +113,118 @@ public final class CriteriaUtil {
 
 	public static void applyClosedIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
 		if (intervalCriteria != null) {
-			if (from != null && to != null) {
-				if (to.before(from)) {
-					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
-				}
-				intervalCriteria.add(applyOr(
-						Restrictions.or(
-								Restrictions.or( // partial interval overlappings:
-										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
-										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))),
-								Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))),
-						or));
-			} else if (from != null && to == null) {
-				intervalCriteria.add(applyOr(
-						Restrictions.or( // partial interval overlappings:
-								Restrictions.ge("start", from),
-								Restrictions.gt("stop", from)),
-						or));
-			} else if (from == null && to != null) {
-				intervalCriteria.add(applyOr(Restrictions.lt("start", to), or));
+			org.hibernate.criterion.Criterion criterion = getClosedIntervalCriterion(from, to, or);
+			if (criterion != null) {
+				intervalCriteria.add(criterion);
 			}
 		}
 	}
 
+	private static org.hibernate.criterion.Criterion getRestrictionCriterion(RestrictionCriterionTypes restriction, String propertyName, Timestamp value) {
+		return getRestrictionCriterion(restriction, propertyName, value, Hibernate.TIMESTAMP);
+	}
+
+	private static org.hibernate.criterion.Criterion getRestrictionCriterion(RestrictionCriterionTypes restriction, String propertyName, Object value,
+			org.hibernate.type.NullableType type) {
+		if (PROPERTY_NAME_REGEXP.matcher(propertyName).find()) {
+			switch (restriction) {
+				case GT:
+					return Restrictions.gt(propertyName, value);
+				case GE:
+					return Restrictions.ge(propertyName, value);
+				case LT:
+					return Restrictions.lt(propertyName, value);
+				case LE:
+					return Restrictions.le(propertyName, value);
+				default:
+					throw new IllegalArgumentException(MessageFormat.format(UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE, restriction.toString()));
+			}
+		} else {
+			return Restrictions.sqlRestriction(MessageFormat.format(restriction.toString(), propertyName),
+					//"  "substr({alias}.logical_path, 1, length(?)) = ?",
+					new Object[] { value },
+					new org.hibernate.type.NullableType[] { type });
+		}
+	}
+
+	private static org.hibernate.criterion.Criterion getRestrictionCriterion(RestrictionCriterionTypes restriction, String propertyName) {
+		if (PROPERTY_NAME_REGEXP.matcher(propertyName).find()) {
+			switch (restriction) {
+				case IS_NULL:
+					return Restrictions.isNull(propertyName);
+				case IS_NOT_NULL:
+					return Restrictions.isNotNull(propertyName);
+				default:
+					throw new IllegalArgumentException(MessageFormat.format(UNSUPPORTED_UNARY_RESTRICTION_CRITERION_TYPE, restriction.toString()));
+			}
+		} else {
+			return Restrictions.sqlRestriction(MessageFormat.format(restriction.toString(), propertyName));
+		}
+	}
+
+	public static org.hibernate.criterion.Criterion getClosedIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
+		return getClosedIntervalCriterion(from, to, or, "start", "stop");
+	}
+
+	public static org.hibernate.criterion.Criterion getClosedIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, String startPropertyName,
+			String stopPropertyName) {
+		if (from != null && to != null) {
+			if (to.before(from)) {
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
+			}
+			return applyOr(
+					Restrictions.or(
+							Restrictions.or( // partial interval overlappings:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to)),
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to))),
+							Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+									getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to))),
+					or);
+		} else if (from != null && to == null) {
+			return applyOr(
+					Restrictions.or( // partial interval overlappings:
+							getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+							getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from)),
+					or);
+		} else if (from == null && to != null) {
+			return applyOr(getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to), or);
+		}
+		return null;
+	}
+
 	public static void applyCurrentStatusCriterion(Criteria statusEntryCriteria, Timestamp currentTimestamp, org.hibernate.criterion.Criterion or) {
 		if (statusEntryCriteria != null) {
-			Timestamp now;
-			if (currentTimestamp == null) {
-				now = new Timestamp(System.currentTimeMillis());
-			} else {
-				now = currentTimestamp;
-			}
-			statusEntryCriteria.add(applyOr(
-					Restrictions.or(
-							Restrictions.and(Restrictions.isNotNull("start"),
-									Restrictions.and(
-											Restrictions.le("start", now),
-											Restrictions.or(Restrictions.gt("stop", now), Restrictions.isNull("stop")))),
-							Restrictions.and(Restrictions.isNotNull("stop"),
-									Restrictions.and(
-											Restrictions.or(Restrictions.le("start", now), Restrictions.isNull("start")),
-											Restrictions.gt("stop", now)))),
-					or));
+			statusEntryCriteria.add(getCurrentStatusCriterion(currentTimestamp, or));
 		}
+	}
+
+	public static org.hibernate.criterion.Criterion getCurrentStatusCriterion(Timestamp currentTimestamp, org.hibernate.criterion.Criterion or) {
+		return getCurrentStatusCriterion(currentTimestamp, or, "start", "stop");
+	}
+
+	public static org.hibernate.criterion.Criterion getCurrentStatusCriterion(Timestamp currentTimestamp, org.hibernate.criterion.Criterion or, String startPropertyName,
+			String stopPropertyName) {
+		Timestamp now;
+		if (currentTimestamp == null) {
+			now = new Timestamp(System.currentTimeMillis());
+		} else {
+			now = currentTimestamp;
+		}
+		return applyOr(
+				Restrictions.or(
+						Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, startPropertyName),
+								Restrictions.and(
+										getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, now),
+										Restrictions.or(getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, now),
+												getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, stopPropertyName)))),
+						Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, stopPropertyName),
+								Restrictions.and(
+										Restrictions.or(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, now),
+												getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, startPropertyName)),
+										getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, now)))),
+				or);
 	}
 
 	private static org.hibernate.criterion.Criterion applyFilter(String propertyName, Class propertyClass, String value, org.hibernate.criterion.Criterion or) throws Exception {
@@ -186,6 +284,10 @@ public final class CriteriaUtil {
 			return applyOr(Restrictions.eq(propertyName, EventImportance.fromString(value)), or);
 		} else if (propertyClass.equals(JobStatus.class)) {
 			return applyOr(Restrictions.eq(propertyName, JobStatus.fromString(value)), or);
+		} else if (propertyClass.equals(PaymentMethod.class)) {
+			return applyOr(Restrictions.eq(propertyName, PaymentMethod.fromString(value)), or);
+		} else if (propertyClass.equals(VisitScheduleDateMode.class)) {
+			return applyOr(Restrictions.eq(propertyName, VisitScheduleDateMode.fromString(value)), or);
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
 			return applyOr(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)), or);
 		} else {
@@ -317,156 +419,238 @@ public final class CriteriaUtil {
 
 	public static void applyStartOpenIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
 		if (intervalCriteria != null) {
-			if (from != null && to != null) {
-				if (to.before(from)) {
-					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
-				}
-				intervalCriteria.add(applyOr(
-						Restrictions.or(
-								Restrictions.or( // partial interval overlappings:
-										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
-										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))),
-								Restrictions.or( // total inclusions:
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
-										Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to)))),
-						or));
-			} else if (from != null && to == null) {
-				intervalCriteria.add(applyOr(Restrictions.gt("stop", from), or));
-			} else if (from == null && to != null) {
-				intervalCriteria.add(applyOr(
-						Restrictions.or(
-								Restrictions.or( // partial interval overlappings:
-										Restrictions.lt("start", to),
-										Restrictions.le("stop", to)),
-								Restrictions.and(Restrictions.isNull("start"), Restrictions.ge("stop", to))),
-						or));
+			org.hibernate.criterion.Criterion criterion = getStartOpenIntervalCriterion(from, to, or);
+			if (criterion != null) {
+				intervalCriteria.add(criterion);
 			}
 		}
+	}
+
+	public static org.hibernate.criterion.Criterion getStartOpenIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
+		return getStartOpenIntervalCriterion(from, to, or, "start", "stop");
+	}
+
+	public static org.hibernate.criterion.Criterion getStartOpenIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, String startPropertyName,
+			String stopPropertyName) {
+		if (from != null && to != null) {
+			if (to.before(from)) {
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
+			}
+			return applyOr(
+					Restrictions.or(
+							Restrictions.or( // partial interval overlappings:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to)),
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to))),
+							Restrictions.or( // total inclusions:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to)),
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, startPropertyName),
+											getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to)))),
+					or);
+		} else if (from != null && to == null) {
+			return applyOr(getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from), or);
+		} else if (from == null && to != null) {
+			return applyOr(
+					Restrictions.or(
+							Restrictions.or( // partial interval overlappings:
+									getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to),
+									getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to)),
+							Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, startPropertyName),
+									getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to))),
+					or);
+		}
+		return null;
 	}
 
 	public static void applyStartOptionalIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, boolean includeStop) {
 		if (intervalCriteria != null) {
-			if (from != null && to != null) {
-				if (to.before(from)) {
-					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
-				}
-				intervalCriteria.add(applyOr(Restrictions.or(
-						Restrictions.and(
-								Restrictions.isNull("start"),
-								Restrictions.and(
-										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from),
-										Restrictions.le("stop", to))),
-						Restrictions.and(
-								Restrictions.isNotNull("start"),
-								Restrictions.or(
-										// partial interval overlappings:
-										Restrictions.or(
-												Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))),
-										// total inclusions:
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))))),
-						or));
-			} else if (from != null && to == null) {
-				intervalCriteria.add(applyOr(Restrictions.or(
-						Restrictions.and(
-								Restrictions.isNull("start"),
-								includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)),
-						Restrictions.and(
-								Restrictions.isNotNull("start"),
-								Restrictions.or(
-										Restrictions.ge("start", from),
-										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)))),
-						or));
-			} else if (from == null && to != null) {
-				intervalCriteria.add(applyOr(Restrictions.or(
-						Restrictions.and(
-								Restrictions.isNull("start"),
-								Restrictions.le("stop", to)),
-						Restrictions.and(
-								Restrictions.isNotNull("start"),
-								Restrictions.or(
-										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
-										Restrictions.le("stop", to)))),
-						or));
+			org.hibernate.criterion.Criterion criterion = getStartOptionalIntervalCriterion(from, to, or, includeStop);
+			if (criterion != null) {
+				intervalCriteria.add(criterion);
 			}
 		}
+	}
+
+	public static org.hibernate.criterion.Criterion getStartOptionalIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, boolean includeStop) {
+		return getStartOptionalIntervalCriterion(from, to, or, includeStop, "start", "stop");
+	}
+
+	public static org.hibernate.criterion.Criterion getStartOptionalIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, boolean includeStop,
+			String startPropertyName, String stopPropertyName) {
+		if (from != null && to != null) {
+			if (to.before(from)) {
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
+			}
+			return applyOr(Restrictions.or(
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, startPropertyName),
+							Restrictions.and(
+									includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, from)
+											: getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from),
+									getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to))),
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, startPropertyName),
+							Restrictions.or(
+									// partial interval overlappings:
+									Restrictions.or(
+											Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+													includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, to)
+															: getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to)),
+											Restrictions.and(
+													includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, from)
+															: getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from),
+													getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to))),
+									// total inclusions:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to))))),
+					or);
+		} else if (from != null && to == null) {
+			return applyOr(Restrictions.or(
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, startPropertyName),
+							includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, from)
+									: getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from)),
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, startPropertyName),
+							Restrictions.or(
+									getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+									includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, from)
+											: getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from)))),
+					or);
+		} else if (from == null && to != null) {
+			return applyOr(Restrictions.or(
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, startPropertyName),
+							getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to)),
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, startPropertyName),
+							Restrictions.or(
+									includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, to)
+											: getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to),
+									getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to)))),
+					or);
+		}
+		return null;
 	}
 
 	public static void applyStopOpenIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
 		if (intervalCriteria != null) {
-			if (from != null && to != null) {
-				if (to.before(from)) {
-					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
-				}
-				intervalCriteria.add(applyOr(
-						Restrictions.or(
-								Restrictions.or( // partial interval overlappings:
-										Restrictions.and(Restrictions.ge("start", from), Restrictions.lt("start", to)),
-										Restrictions.and(Restrictions.gt("stop", from), Restrictions.le("stop", to))),
-								Restrictions.or( // total inclusions:
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to)),
-										Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop")))),
-						or));
-			} else if (from != null && to == null) {
-				intervalCriteria.add(applyOr(
-						Restrictions.or(
-								Restrictions.or( // partial interval overlappings:
-										Restrictions.ge("start", from),
-										Restrictions.gt("stop", from)),
-								Restrictions.and(Restrictions.le("start", from), Restrictions.isNull("stop"))),
-						or));
-			} else if (from == null && to != null) {
-				intervalCriteria.add(applyOr(Restrictions.lt("start", to), or));
+			org.hibernate.criterion.Criterion criterion = getStopOpenIntervalCriterion(from, to, or);
+			if (criterion != null) {
+				intervalCriteria.add(criterion);
 			}
 		}
 	}
 
+	public static org.hibernate.criterion.Criterion getStopOpenIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
+		return getStopOpenIntervalCriterion(from, to, or, "start", "stop");
+	}
+
+	public static org.hibernate.criterion.Criterion getStopOpenIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, String startPropertyName,
+			String stopPropertyName) {
+		if (from != null && to != null) {
+			if (to.before(from)) {
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
+			}
+			return applyOr(
+					Restrictions.or(
+							Restrictions.or( // partial interval overlappings:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to)),
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to))),
+							Restrictions.or( // total inclusions:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to)),
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, stopPropertyName)))),
+					or);
+		} else if (from != null && to == null) {
+			return applyOr(
+					Restrictions.or(
+							Restrictions.or( // partial interval overlappings:
+									getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+									getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from)),
+							Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+									getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, stopPropertyName))),
+					or);
+		} else if (from == null && to != null) {
+			return applyOr(getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to), or);
+		}
+		return null;
+	}
+
 	public static void applyStopOptionalIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, boolean includeStop) {
 		if (intervalCriteria != null) {
-			if (from != null && to != null) {
-				if (to.before(from)) {
-					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
-				}
-				intervalCriteria.add(applyOr(Restrictions.or(
-						Restrictions.and(
-								Restrictions.isNull("stop"),
-								Restrictions.and(
-										Restrictions.ge("start", from),
-										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to))),
-						Restrictions.and(
-								Restrictions.isNotNull("stop"),
-								Restrictions.or(
-										// partial interval overlappings:
-										Restrictions.or(
-												Restrictions.and(Restrictions.ge("start", from), includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-												Restrictions.and(includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from), Restrictions.le("stop", to))),
-										// total inclusions:
-										Restrictions.and(Restrictions.le("start", from), Restrictions.ge("stop", to))))),
-						or));
-			} else if (from != null && to == null) {
-				intervalCriteria.add(applyOr(Restrictions.or(
-						Restrictions.and(
-								Restrictions.isNull("stop"),
-								Restrictions.ge("start", from)),
-						Restrictions.and(
-								Restrictions.isNotNull("stop"),
-								Restrictions.or(
-										Restrictions.ge("start", from),
-										includeStop ? Restrictions.ge("stop", from) : Restrictions.gt("stop", from)))),
-						or));
-			} else if (from == null && to != null) {
-				intervalCriteria.add(applyOr(Restrictions.or(
-						Restrictions.and(
-								Restrictions.isNull("stop"),
-								includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to)),
-						Restrictions.and(
-								Restrictions.isNotNull("stop"),
-								Restrictions.or(
-										includeStop ? Restrictions.le("start", to) : Restrictions.lt("start", to),
-										Restrictions.le("stop", to)))),
-						or));
+			org.hibernate.criterion.Criterion criterion = getStopOptionalIntervalCriterion(from, to, or, includeStop);
+			if (criterion != null) {
+				intervalCriteria.add(criterion);
 			}
 		}
+	}
+
+	public static org.hibernate.criterion.Criterion getStopOptionalIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, boolean includeStop) {
+		return getStopOptionalIntervalCriterion(from, to, or, includeStop, "start", "stop");
+	}
+
+	public static org.hibernate.criterion.Criterion getStopOptionalIntervalCriterion(Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or, boolean includeStop,
+			String startPropertyName, String stopPropertyName) {
+		if (from != null && to != null) {
+			if (to.before(from)) {
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INTERVAL_STOP_BEFORE_START, DefaultMessages.INTERVAL_STOP_BEFORE_START));
+			}
+			return applyOr(Restrictions.or(
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, stopPropertyName),
+							Restrictions.and(
+									getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+									includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, to)
+											: getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to))),
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, stopPropertyName),
+							Restrictions.or(
+									// partial interval overlappings:
+									Restrictions.or(
+											Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+													includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, to)
+															: getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to)),
+											Restrictions.and(
+													includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, from)
+															: getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from),
+													getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to))),
+									// total inclusions:
+									Restrictions.and(getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, from),
+											getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, to))))),
+					or);
+		} else if (from != null && to == null) {
+			return applyOr(Restrictions.or(
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, stopPropertyName),
+							getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from)),
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, stopPropertyName),
+							Restrictions.or(
+									getRestrictionCriterion(RestrictionCriterionTypes.GE, startPropertyName, from),
+									includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.GE, stopPropertyName, from)
+											: getRestrictionCriterion(RestrictionCriterionTypes.GT, stopPropertyName, from)))),
+					or);
+		} else if (from == null && to != null) {
+			return applyOr(Restrictions.or(
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NULL, stopPropertyName),
+							includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, to)
+									: getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to)),
+					Restrictions.and(
+							getRestrictionCriterion(RestrictionCriterionTypes.IS_NOT_NULL, stopPropertyName),
+							Restrictions.or(
+									includeStop ? getRestrictionCriterion(RestrictionCriterionTypes.LE, startPropertyName, to)
+											: getRestrictionCriterion(RestrictionCriterionTypes.LT, startPropertyName, to),
+									getRestrictionCriterion(RestrictionCriterionTypes.LE, stopPropertyName, to)))),
+					or);
+		}
+		return null;
 	}
 
 	public static void applyVisibleIdCriterion(String visibleProperty, Criteria criteria, Boolean visible, Long id) {
@@ -485,6 +669,19 @@ public final class CriteriaUtil {
 					// no filter...
 				}
 			}
+		}
+	}
+
+	public final static org.hibernate.loader.criteria.CriteriaQueryTranslator getCriteriaQueryTranslator(Criteria criteria) {
+		try {
+			org.hibernate.impl.CriteriaImpl criteriaImpl = (org.hibernate.impl.CriteriaImpl) criteria;
+			org.hibernate.engine.SessionImplementor session = criteriaImpl.getSession();
+			org.hibernate.engine.SessionFactoryImplementor factory = session.getFactory();
+			String[] implementors = factory.getImplementors(criteriaImpl.getEntityOrClassName());
+			return new org.hibernate.loader.criteria.CriteriaQueryTranslator(factory, criteriaImpl, implementors[0],
+					org.hibernate.loader.criteria.CriteriaQueryTranslator.ROOT_SQL_ALIAS);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 
@@ -532,8 +729,6 @@ public final class CriteriaUtil {
 		}
 		return null;
 	}
-
-	private final static String ALIAS_PREFIX = "_";
 
 	public static List listDistinctRootPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, Object dao) throws Exception {
 		Criteria criteria;
@@ -638,15 +833,22 @@ public final class CriteriaUtil {
 	public static <T> ArrayList<T> listExpirations(Criteria expirationItemCriteria, Date currentDate, Boolean notify, boolean includeAlreadyPassed,
 			VariablePeriod consistentValidityPeriod, Long consistentValidityPeriodDays,
 			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays, Map... caches) {
+		return listExpirations(expirationItemCriteria != null ? expirationItemCriteria.list() : null, currentDate, notify, includeAlreadyPassed, consistentValidityPeriod,
+				consistentValidityPeriodDays, consistentReminderPeriod, consistentReminderPeriodDays, caches);
+	}
+
+	public static <T> ArrayList<T> listExpirations(List expirationItems, Date currentDate, Boolean notify, boolean includeAlreadyPassed,
+			VariablePeriod consistentValidityPeriod, Long consistentValidityPeriodDays,
+			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays, Map... caches) {
 		ArrayList<T> resultSet = new ArrayList<T>();
-		if (expirationItemCriteria != null) {
+		if (expirationItems != null) {
 			Date today;
 			if (currentDate == null) {
 				today = new Date();
 			} else {
 				today = currentDate;
 			}
-			Iterator<T> it = expirationItemCriteria.list().iterator();
+			Iterator<T> it = expirationItems.iterator();
 			while (it.hasNext()) {
 				ExpirationEntityAdapter expirationItem = ExpirationEntityAdapter.getInstance(it.next(), today, caches);
 				if (expirationItem.isActive()) {
@@ -669,15 +871,21 @@ public final class CriteriaUtil {
 
 	public static <T> ArrayList<T> listReminders(Criteria reminderItemCriteria, Date currentDate, Boolean notify, boolean includeAlreadyPassed,
 			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays) {
+		return listReminders(reminderItemCriteria != null ? reminderItemCriteria.list() : null, currentDate, notify, includeAlreadyPassed,
+				consistentReminderPeriod, consistentReminderPeriodDays);
+	}
+
+	public static <T> ArrayList<T> listReminders(List reminderItems, Date currentDate, Boolean notify, boolean includeAlreadyPassed,
+			VariablePeriod consistentReminderPeriod, Long consistentReminderPeriodDays) {
 		ArrayList<T> resultSet = new ArrayList<T>();
-		if (reminderItemCriteria != null) {
+		if (reminderItems != null) {
 			Date today;
 			if (currentDate == null) {
 				today = new Date();
 			} else {
 				today = currentDate;
 			}
-			Iterator<T> it = reminderItemCriteria.list().iterator();
+			Iterator<T> it = reminderItems.iterator();
 			while (it.hasNext()) {
 				ReminderEntityAdapter reminderItem = ReminderEntityAdapter.getInstance(it.next());
 				if (reminderItem.isActive()) {
