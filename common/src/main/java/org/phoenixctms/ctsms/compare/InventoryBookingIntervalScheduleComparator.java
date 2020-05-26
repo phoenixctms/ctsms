@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 
 public class InventoryBookingIntervalScheduleComparator extends IntervalScheduleComparatorBase<InventoryBookingOutVO> {
 
-	public InventoryBookingIntervalScheduleComparator(boolean intDesc) {
-		super(intDesc);
+	public InventoryBookingIntervalScheduleComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override

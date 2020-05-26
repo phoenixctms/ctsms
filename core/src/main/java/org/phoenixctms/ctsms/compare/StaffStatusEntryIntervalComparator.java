@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 
 public class StaffStatusEntryIntervalComparator extends IntervalComparatorBase<StaffStatusEntryOutVO> {
 
-	public StaffStatusEntryIntervalComparator(boolean intDesc) {
-		super(intDesc);
+	public StaffStatusEntryIntervalComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override

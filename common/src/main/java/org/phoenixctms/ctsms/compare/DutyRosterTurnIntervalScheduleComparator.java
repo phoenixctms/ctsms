@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 
 public class DutyRosterTurnIntervalScheduleComparator extends IntervalScheduleComparatorBase<DutyRosterTurnOutVO> {
 
-	public DutyRosterTurnIntervalScheduleComparator(boolean intDesc) {
-		super(intDesc);
+	public DutyRosterTurnIntervalScheduleComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override

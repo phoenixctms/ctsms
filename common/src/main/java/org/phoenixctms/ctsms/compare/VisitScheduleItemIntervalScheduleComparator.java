@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 public class VisitScheduleItemIntervalScheduleComparator extends IntervalScheduleComparatorBase<VisitScheduleItemOutVO> {
 
-	public VisitScheduleItemIntervalScheduleComparator(boolean intDesc) {
-		super(intDesc);
+	public VisitScheduleItemIntervalScheduleComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override
@@ -18,5 +18,10 @@ public class VisitScheduleItemIntervalScheduleComparator extends IntervalSchedul
 	@Override
 	protected Date getStop(VisitScheduleItemOutVO item) {
 		return item.getStop();
+	}
+
+	@Override
+	protected boolean isInterval(VisitScheduleItemOutVO item) {
+		return item != null && item.getStart() != null && item.getStop() != null;
 	}
 }

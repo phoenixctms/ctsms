@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 
 public class ProbandStatusEntryIntervalScheduleComparator extends IntervalScheduleComparatorBase<ProbandStatusEntryOutVO> {
 
-	public ProbandStatusEntryIntervalScheduleComparator(boolean intDesc) {
-		super(intDesc);
+	public ProbandStatusEntryIntervalScheduleComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override
