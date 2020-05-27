@@ -50,9 +50,11 @@ import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.query.QueryParameterValue.NamedParameterValues;
 import org.phoenixctms.ctsms.query.QueryParameterValue.QueryParameterValueType;
 import org.phoenixctms.ctsms.security.CryptoUtil;
@@ -349,6 +351,14 @@ public final class QueryUtil {
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
 		} else if (propertyClass.equals(JobStatus.class)) {
+			hqlWhereClause.append(propertyName);
+			hqlWhereClause.append(" = ?");
+			queryValues.add(new QueryParameterValue(propertyClass, value));
+		} else if (propertyClass.equals(PaymentMethod.class)) {
+			hqlWhereClause.append(propertyName);
+			hqlWhereClause.append(" = ?");
+			queryValues.add(new QueryParameterValue(propertyClass, value));
+		} else if (propertyClass.equals(VisitScheduleDateMode.class)) {
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
