@@ -8,6 +8,11 @@ this is a notification for the following event:
    • Visit:         $visitscheduleitem_name
    • Visit from:    $visitscheduleitem_start
    • Visit to:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#end
 
 Please prepare and/or take appropriate actions.
 

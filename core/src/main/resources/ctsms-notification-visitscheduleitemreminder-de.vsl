@@ -8,6 +8,11 @@ dies ist die Benachrichtigung für folgendes Ereignis:
    • Visite:              $visitscheduleitem_name
    • Visite von:          $visitscheduleitem_start
    • Visite bis:          $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband:             #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#end
 
 Bitte vorbereiten bzw. entsprechende Maßnahmen treffen.
 
