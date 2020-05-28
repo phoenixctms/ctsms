@@ -141,6 +141,8 @@ public final class CommonUtil {
 	private final static String INVALID_LONG_CAST = "long ({0}) cannot be converted to int";
 	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported";
 	public static final String UNSUPPORTED_CRITERION_VALUE_TYPE = "unsupported criterion value type {0}";
+	private final static String INVALID_MESSAGE_FORMAT_PATTERN = "invalid message format pattern {0}";
+	private final static String INVALID_SQL_LIKE_PATTERN = "invalid sql like pattern {0}";
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction> UNARY_RESTRICTIONS = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
 	static {
 		UNARY_RESTRICTIONS.add(org.phoenixctms.ctsms.enumeration.CriterionRestriction.TRUE);
@@ -590,7 +592,7 @@ public final class CommonUtil {
 				return Pattern.compile(messageFormatPattern.toString());
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException("invalid message format pattern " + messageFormatPattern.toString());
+			throw new IllegalArgumentException(MessageFormat.format(INVALID_MESSAGE_FORMAT_PATTERN, messageFormatPattern.toString()));
 		}
 	}
 
@@ -619,7 +621,7 @@ public final class CommonUtil {
 				return Pattern.compile(sqlLikePattern.toString());
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException("invalid sql like pattern " + queryString.toString());
+			throw new IllegalArgumentException(MessageFormat.format(INVALID_SQL_LIKE_PATTERN, queryString.toString()));
 		}
 	}
 
