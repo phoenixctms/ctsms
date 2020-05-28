@@ -1030,7 +1030,7 @@ public class DemoDataProvider {
 
 	private Collection<DutyRosterTurnOutVO> createDuty(AuthenticationVO auth, ArrayList<Staff> staff, TrialOutVO trial, Date start, Date stop, String title) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
-		Collection<VisitScheduleItemOutVO> visitScheduleItems = trialService.getVisitScheduleItemInterval(auth, trial.getId(), null, null, null, start, stop, null, false);
+		Collection<VisitScheduleItemOutVO> visitScheduleItems = trialService.getVisitScheduleItems(auth, trial.getId(), null, start, stop, null, false);
 		DutyRosterTurnInVO newDutyRosterTurn = new DutyRosterTurnInVO();
 		newDutyRosterTurn.setSelfAllocatable(staff.size() > 0);
 		newDutyRosterTurn.setStart(start);
