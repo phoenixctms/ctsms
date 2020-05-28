@@ -1351,15 +1351,15 @@ public class ProbandServiceImpl
 		Collection<VisitScheduleItem> visitScheduleItems;
 		switch (style) {
 			case PROBAND_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(null, null, null, probandVO.getId(), null, null);
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(null, null, null, probandVO.getId(), null, true, null);
 				break;
 			case PROBAND_TRIAL_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), null, null);
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), null, true, null);
 				break;
 			default:
 				visitScheduleItems = null;
 		}
-		VisitScheduleExcelVO result = ServiceUtil.creatVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
+		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
 				visitScheduleItemDao,
 				this.getProbandListStatusEntryDao(),
 				this.getProbandAddressDao(),
@@ -1470,12 +1470,14 @@ public class ProbandServiceImpl
 				ProbandGroup probandGroup = probandListEntry.getGroup();
 				if (probandGroup != null) {
 					collidingVisitScheduleItems
-							.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), probandStatusEntry.getStart(),
+							.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), probandListEntry.getProband().getId(),
+									probandStatusEntry.getStart(),
 									probandStatusEntry.getStop()));
 				} else {
 					if (allProbandGroups) {
-						collidingVisitScheduleItems.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), null, probandStatusEntry.getStart(),
-								probandStatusEntry.getStop()));
+						collidingVisitScheduleItems.addAll(
+								visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), null, probandListEntry.getProband().getId(), probandStatusEntry.getStart(),
+										probandStatusEntry.getStop()));
 					}
 				}
 			}
@@ -2729,8 +2731,10 @@ public class ProbandServiceImpl
 					ProbandListEntry probandListEntry = trialParticipationsIt.next();
 					ProbandGroup probandGroup = probandListEntry.getGroup();
 					if (probandGroup != null) {
-						Iterator<VisitScheduleItem> it = visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), statusEntry.getStart(),
-								statusEntry.getStop()).iterator();
+						Iterator<VisitScheduleItem> it = visitScheduleItemDao
+								.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), proband.getId(), statusEntry.getStart(),
+										statusEntry.getStop())
+								.iterator();
 						while (it.hasNext()) {
 							notificationDao.addNotification(it.next(), proband, statusEntry, now, null);
 						}
