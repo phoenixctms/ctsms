@@ -69,6 +69,7 @@ import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.TeamMemberOutVOComparator;
 import org.phoenixctms.ctsms.compare.TrialStatusActionComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -6773,9 +6774,32 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected Collection<VisitScheduleItemOutVO> handleGetVisitScheduleItemInterval(AuthenticationVO auth, Long trialId,
-			Long departmentId, Long statusId, Long visitTypeId, Date from, Date to, Long id, boolean sort)
+	protected Collection<VisitScheduleItemOutVO> handleGetVisitScheduleItems(AuthenticationVO auth, Long trialId,
+			Long departmentId, Date from, Date to, Long id, boolean sort)
 			throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		if (id != null) {
+			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
+		}
+		Collection visitScheduleItems = visitScheduleItemDao.findByTrialDepartmentIntervalId(trialId, departmentId,
+				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), id);
+		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+		if (sort) {
+			visitScheduleItems = new ArrayList(visitScheduleItems);
+			Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+		}
+		return visitScheduleItems;
+	}
+
+	@Override
+	protected Collection<VisitScheduleAppointmentVO> handleGetVisitScheduleItemInterval(AuthenticationVO auth, Long trialId,
+			Long departmentId, Long statusId, Long visitTypeId, Date from, Date to, boolean sort) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -6789,17 +6813,20 @@ public class TrialServiceImpl
 			CheckIDUtil.checkVisitTypeId(visitTypeId, this.getVisitTypeDao());
 		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-		if (id != null) {
-			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
+		ProbandDao probandDao = this.getProbandDao();
+		ArrayList<VisitScheduleAppointmentVO> result = new ArrayList<VisitScheduleAppointmentVO>();
+		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, statusId, visitTypeId,
+				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
+		while (it.hasNext()) {
+			Object[] visitScheduleItemProband = it.next();
+			VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO((VisitScheduleItem) visitScheduleItemProband[0]);
+			visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO((Proband) visitScheduleItemProband[1]));
+			result.add(visitScheduleItemProbandVO);
 		}
-		Collection visitScheduleItems = visitScheduleItemDao.findByTrialDepartmentStatusTypeIntervalId(trialId, departmentId, statusId, visitTypeId,
-				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), id);
-		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		if (sort) {
-			visitScheduleItems = new ArrayList(visitScheduleItems);
-			Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+			Collections.sort(result, new VisitScheduleAppointmentIntervalComparator(false));
 		}
-		return visitScheduleItems;
+		return result;
 	}
 
 	@Override
