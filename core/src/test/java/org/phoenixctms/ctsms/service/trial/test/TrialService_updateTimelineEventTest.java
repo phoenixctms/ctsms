@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>updateTimelineEvent</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#updateTimelineEvent(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.TimelineEventInVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#updateTimelineEvent(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.TimelineEventInVO, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_updateTimelineEventTest extends TrialServiceBaseTest {

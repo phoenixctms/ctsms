@@ -53,4 +53,24 @@ public class VisitScheduleItemDaoTransformTest extends DaoTransformTestBase {
     Assert.fail("Test 'VisitScheduleItemDaoTransformTest.testVisitScheduleItemInVOToEntity' not implemented!");
   }
 
+  /**
+   * Test for method VisitScheduleItemDao.toVisitScheduleAppointmentVO
+   *
+   * @see org.phoenixctms.ctsms.domain.VisitScheduleItemDao#toVisitScheduleAppointmentVO(org.phoenixctms.ctsms.domain.VisitScheduleItem source, org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO target)
+   */
+  @Test
+  public void testToVisitScheduleAppointmentVO() {
+    Assert.fail("Test 'VisitScheduleItemDaoTransformTest.testToVisitScheduleAppointmentVO' not implemented!");
+  }
+
+    /**
+   * Test for method visitScheduleAppointmentVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.VisitScheduleItemDao#visitScheduleAppointmentVOToEntity(org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO source, org.phoenixctms.ctsms.domain.VisitScheduleItem target, boolean copyIfNull)
+   */
+  @Test
+  public void testVisitScheduleAppointmentVOToEntity() {
+    Assert.fail("Test 'VisitScheduleItemDaoTransformTest.testVisitScheduleAppointmentVOToEntity' not implemented!");
+  }
+
 }
