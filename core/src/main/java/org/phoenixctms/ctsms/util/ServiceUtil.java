@@ -53,6 +53,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
 import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
@@ -1269,14 +1270,18 @@ public final class ServiceUtil {
 			if (Settings.getBoolean(SettingCodes.ECRF_CHARGE_DUE_ANNUAL, Bundle.SETTINGS,
 					DefaultSettings.ECRF_CHARGE_DUE_ANNUAL)) {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
-						listEntryVO.getTrial().getId(),
-						listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+						ecrfVO.getTrial().getId(),
+						//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+						ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+						listEntryVO.getProband().getId());
 			} else {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
-						listEntryVO.getTrial().getId(),
-						listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+						ecrfVO.getTrial().getId(),
+						//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+						ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+						listEntryVO.getProband().getId());
 			}
 			if (ecrfVisitScheduleItemDate == null || !(new DateInterval(from, to, true)).contains(ecrfVisitScheduleItemDate)) {
 				return null;
@@ -1302,9 +1307,11 @@ public final class ServiceUtil {
 						// of the start timestamp of the first visit schedule
 						if (from == null && to == null) {
 							ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
-									listEntryVO.getTrial().getId(),
-									listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-									ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+									ecrfVO.getTrial().getId(),
+									//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+									ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+									ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+									listEntryVO.getProband().getId());
 						}
 						dueDate = DateCalc.getEndOfYear(ecrfVisitScheduleItemDate);
 					} else {
@@ -1315,9 +1322,11 @@ public final class ServiceUtil {
 							// then stop timestamp of the last visit schedule
 							if (from == null && to == null) {
 								ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
-										listEntryVO.getTrial().getId(),
-										listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-										ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null);
+										ecrfVO.getTrial().getId(),
+										//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
+										ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+										ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+										listEntryVO.getProband().getId());
 							}
 							dueDate = DateCalc.addInterval(ecrfVisitScheduleItemDate,
 									ecrfChargeDuePeriod, Settings.getLongNullable(SettingCodes.ECRF_CHARGE_DUE_PERIOD_DAYS, Bundle.SETTINGS,
@@ -2417,7 +2426,7 @@ public final class ServiceUtil {
 		return writer.getExcelVO();
 	}
 
-	public static VisitScheduleExcelVO creatVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
+	public static VisitScheduleExcelVO createVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
 			TrialOutVO trialVO,
 			VisitScheduleItemDao visitScheduleItemDao,
 			ProbandListStatusEntryDao probandListStatusEntryDao,
@@ -5092,8 +5101,47 @@ public final class ServiceUtil {
 			ProbandListEntryTagValueDao probandListEntryTagValueDao,
 			InputFieldValueDao inputFieldValueDao,
 			JournalEntryDao journalEntryDao,
-			ProbandListEntryTagDao probandListEntryTagDao) throws Exception {
+			ProbandListEntryTagDao probandListEntryTagDao,
+			VisitScheduleItemDao visitScheduleItemDao) throws Exception {
 		if (deleteCascade) {
+			Iterator<VisitScheduleItem> visitScheduleItemsIt = probandListEntryTag.getStartDates().iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+				VisitScheduleItemOutVO original = null;
+				if (logTrial) {
+					original = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+				}
+				visitScheduleItem.setStartTag(null);
+				visitScheduleItem.setMode(VisitScheduleDateMode.STALE);
+				CoreUtil.modifyVersion(visitScheduleItem, visitScheduleItem.getVersion(), now, user);
+				visitScheduleItemDao.update(visitScheduleItem);
+				if (logTrial) {
+					VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+					logSystemMessage(probandListEntryTag.getTrial(), original.getTrial(), now, user,
+							SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_DELETED_VISIT_SCHEDULE_ITEM_UPDATED, result, original,
+							journalEntryDao);
+				}
+			}
+			probandListEntryTag.getStartDates().clear();
+			visitScheduleItemsIt = probandListEntryTag.getStopDates().iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+				VisitScheduleItemOutVO original = null;
+				if (logTrial) {
+					original = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+				}
+				visitScheduleItem.setStopTag(null);
+				visitScheduleItem.setMode(VisitScheduleDateMode.STALE);
+				CoreUtil.modifyVersion(visitScheduleItem, visitScheduleItem.getVersion(), now, user);
+				visitScheduleItemDao.update(visitScheduleItem);
+				if (logTrial) {
+					VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+					logSystemMessage(probandListEntryTag.getTrial(), original.getTrial(), now, user,
+							SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_DELETED_VISIT_SCHEDULE_ITEM_UPDATED, result, original,
+							journalEntryDao);
+				}
+			}
+			probandListEntryTag.getStopDates().clear();
 			Iterator<ProbandListEntryTagValue> tagValuesIt = probandListEntryTag.getTagValues().iterator();
 			while (tagValuesIt.hasNext()) {
 				ProbandListEntryTagValue tagValue = tagValuesIt.next();
