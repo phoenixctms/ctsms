@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -44,6 +45,7 @@ import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
@@ -237,13 +239,14 @@ public class VisitScheduleItemDaoImpl
 		return sqlColumns;
 	}
 
-	private ArrayList<VisitScheduleItem> listExpandDateMode(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, SubCriteriaMap criteriaMap, PSFVO psf)
+	private ArrayList<VisitScheduleItem> listExpandDateMode(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, SubCriteriaMap criteriaMap, PSFVO psf,
+			boolean distinct)
 			throws Exception {
-		return listExpandDateMode(visitScheduleItemCriteria, probandId, null, null, null, criteriaMap, psf);
+		return listExpandDateMode(visitScheduleItemCriteria, probandId, null, null, null, criteriaMap, psf, distinct);
 	}
 
 	private ArrayList<VisitScheduleItem> listExpandDateMode(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, Timestamp from, Timestamp to,
-			org.hibernate.criterion.Criterion or, SubCriteriaMap criteriaMap, PSFVO psf) throws Exception {
+			org.hibernate.criterion.Criterion or, SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct) throws Exception {
 		// projection to avoid multiplebagexception and get calculated dates	
 		ProjectionList proj = Projections.projectionList();
 		proj.add(Projections.id());
@@ -254,10 +257,14 @@ public class VisitScheduleItemDaoImpl
 		// populate result collection
 		CriteriaUtil.applyPSFVO(criteriaMap, psf); //apply filter, populate rowcount
 		visitScheduleItemCriteria.setProjection(proj); //set projection for final .list()
+		HashSet<Long> dupeCheck = new HashSet<Long>();
 		ArrayList<VisitScheduleItem> result = new ArrayList<VisitScheduleItem>();
 		Iterator it = visitScheduleItemCriteria.list().iterator();
 		while (it.hasNext()) {
-			result.add(getVisitScheduleItemFromRow((Object[]) it.next()));
+			Object[] row = (Object[]) it.next();
+			if (!distinct || dupeCheck.add((Long) row[0])) {
+				result.add(getVisitScheduleItemFromRow(row));
+			}
 		}
 		// support sorting by start/stop
 		AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
@@ -299,9 +306,15 @@ public class VisitScheduleItemDaoImpl
 
 	private ArrayList<Object[]> listExpandDateModeProband(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, SubCriteriaMap criteriaMap, PSFVO psf)
 			throws Exception {
+		return listExpandDateModeProband(visitScheduleItemCriteria, probandId, null, null, criteriaMap, psf);
+	}
+
+	private ArrayList<Object[]> listExpandDateModeProband(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, Timestamp from, Timestamp to,
+			SubCriteriaMap criteriaMap, PSFVO psf)
+			throws Exception {
 		ProjectionList proj = Projections.projectionList();
 		proj.add(Projections.id());
-		Iterator<Projection> sqlColumnsIt = applyExpandDateModeCriterions(visitScheduleItemCriteria, probandId, null, null, null).values().iterator();
+		Iterator<Projection> sqlColumnsIt = applyExpandDateModeCriterions(visitScheduleItemCriteria, probandId, from, to, null).values().iterator();
 		while (sqlColumnsIt.hasNext()) {
 			proj.add(sqlColumnsIt.next());
 		}
@@ -311,9 +324,10 @@ public class VisitScheduleItemDaoImpl
 		Iterator it = visitScheduleItemCriteria.list().iterator();
 		while (it.hasNext()) {
 			Object[] row = (Object[]) it.next();
+			probandId = (Long) row[4];
 			result.add(new Object[] {
 					getVisitScheduleItemFromRow(row),
-					this.getProbandDao().load((Long) row[4])
+					probandId != null ? this.getProbandDao().load(probandId) : null
 			});
 		}
 		AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
@@ -410,7 +424,7 @@ public class VisitScheduleItemDaoImpl
 					Restrictions.or(Restrictions.eq("travel", travel.booleanValue()),
 							Restrictions.isNull("visitScheduleItem.visit")));
 		}
-		return listExpandDateMode(visitScheduleItemCriteria, null, from, to, null, null, null);
+		return listExpandDateMode(visitScheduleItemCriteria, null, from, to, null, null, null, false);
 	}
 
 	@Override
@@ -425,13 +439,11 @@ public class VisitScheduleItemDaoImpl
 					Restrictions.isNull("group.id")));
 		}
 		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
-		return listExpandDateMode(visitScheduleItemCriteria, probandId, from, to, null, null, null);
+		return listExpandDateMode(visitScheduleItemCriteria, probandId, from, to, null, null, null, false);
 	}
 
 	@Override
-	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentStatusTypeIntervalId(Long trialId,
-			Long departmentId, Long statusId, Long visitTypeId, Timestamp from, Timestamp to, Long id)
-			throws Exception {
+	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentIntervalId(Long trialId, Long departmentId, Timestamp from, Timestamp to, Long id) throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		org.hibernate.criterion.Criterion idCriterion;
 		if (id != null) {
@@ -439,23 +451,40 @@ public class VisitScheduleItemDaoImpl
 		} else {
 			idCriterion = null;
 		}
-		if (trialId != null || departmentId != null || statusId != null) {
+		if (trialId != null || departmentId != null) {
 			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			if (trialId != null) {
-				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.idEq(trialId.longValue()), idCriterion));
+				visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN).add(CriteriaUtil.applyOr(Restrictions.idEq(trialId.longValue()), idCriterion));
 			}
 			if (departmentId != null) {
 				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.eq("department.id", departmentId.longValue()), idCriterion));
 			}
+		}
+		return listExpandDateMode(visitScheduleItemCriteria, null, from, to, idCriterion, null, null, true);
+	}
+
+	@Override
+	protected Collection<Object[]> handleFindByTrialDepartmentStatusTypeInterval(Long trialId,
+			Long departmentId, Long statusId, Long visitTypeId, Timestamp from, Timestamp to)
+			throws Exception {
+		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
+		if (trialId != null || departmentId != null || statusId != null) {
+			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
+			if (trialId != null) {
+				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
+			}
+			if (departmentId != null) {
+				trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+			}
 			if (statusId != null) {
-				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.eq("status.id", statusId.longValue()), idCriterion));
+				trialCriteria.add(Restrictions.eq("status.id", statusId.longValue()));
 			}
 		}
 		if (visitTypeId != null) {
 			org.hibernate.Criteria visitCriteria = visitScheduleItemCriteria.createCriteria("visit", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
-			visitCriteria.add(CriteriaUtil.applyOr(Restrictions.eq("type.id", visitTypeId.longValue()), idCriterion));
+			visitCriteria.add(Restrictions.eq("type.id", visitTypeId.longValue()));
 		}
-		return listExpandDateMode(visitScheduleItemCriteria, null, from, to, idCriterion, null, null);
+		return listExpandDateModeProband(visitScheduleItemCriteria, null, from, to, null, null);
 	}
 
 	/**
@@ -485,7 +514,7 @@ public class VisitScheduleItemDaoImpl
 							Restrictions.isNull("visitScheduleItem.visit")));
 		}
 		if (expand) {
-			return listExpandDateMode(visitScheduleItemCriteria, probandId, criteriaMap, psf);
+			return listExpandDateMode(visitScheduleItemCriteria, probandId, criteriaMap, psf, false);
 		} else {
 			CriteriaUtil.applyPSFVO(criteriaMap, psf);
 			return visitScheduleItemCriteria.list();
@@ -539,7 +568,7 @@ public class VisitScheduleItemDaoImpl
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		visitScheduleItemCriteria.add(Restrictions.idEq(id.longValue()));
 		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
-		return listExpandDateMode(visitScheduleItemCriteria, probandId, null, null);
+		return listExpandDateMode(visitScheduleItemCriteria, probandId, null, null, false);
 	}
 
 	@Override
@@ -552,7 +581,7 @@ public class VisitScheduleItemDaoImpl
 			visitScheduleItemCriteria.add(Restrictions.isNull("group.id"));
 		}
 		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
-		return listExpandDateMode(visitScheduleItemCriteria, probandId, null, null);
+		return listExpandDateMode(visitScheduleItemCriteria, probandId, null, null, false);
 	}
 
 	@Override
@@ -1013,6 +1042,28 @@ public class VisitScheduleItemDaoImpl
 			VisitScheduleItem source,
 			VisitScheduleAppointmentVO target) {
 		super.toVisitScheduleAppointmentVO(source, target);
+		Trial trial = source.getTrial();
+		Visit visit = source.getVisit();
+		ProbandGroup group = source.getGroup();
+		ProbandListEntryTag startTag = source.getStartTag();
+		ProbandListEntryTag stopTag = source.getStopTag();
+		if (trial != null) {
+			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
+		}
+		if (visit != null) {
+			target.setVisit(this.getVisitDao().toVisitOutVO(visit));
+		}
+		if (group != null) {
+			target.setGroup(this.getProbandGroupDao().toProbandGroupOutVO(group));
+		}
+		if (startTag != null) {
+			target.setStartTag(this.getProbandListEntryTagDao().toLightProbandListEntryTagOutVO(startTag));
+		}
+		if (stopTag != null) {
+			target.setStopTag(this.getProbandListEntryTagDao().toLightProbandListEntryTagOutVO(stopTag));
+		}
+		target.setMode(L10nUtil.createVisitScheduleDateModeVO(Locales.USER, source.getMode()));
+		target.setName(getVisitScheduleItemName(visit, group, source.getToken()));
 	}
 
 	private VisitScheduleItem loadVisitScheduleItemFromVisitScheduleAppointmentVO(VisitScheduleAppointmentVO visitScheduleAppointmentVO) {
@@ -1036,5 +1087,71 @@ public class VisitScheduleItemDaoImpl
 			VisitScheduleItem target,
 			boolean copyIfNull) {
 		super.visitScheduleAppointmentVOToEntity(source, target, copyIfNull);
+		TrialOutVO trialVO = source.getTrial();
+		VisitOutVO visitVO = source.getVisit();
+		ProbandGroupOutVO groupVO = source.getGroup();
+		LightProbandListEntryTagOutVO startTagVO = source.getStartTag();
+		LightProbandListEntryTagOutVO stopTagVO = source.getStopTag();
+		VisitScheduleDateModeVO modeVO = source.getMode();
+		if (trialVO != null) {
+			Trial trial = this.getTrialDao().trialOutVOToEntity(trialVO);
+			target.setTrial(trial);
+			trial.addVisitScheduleItems(target);
+		} else if (copyIfNull) {
+			Trial trial = target.getTrial();
+			target.setTrial(null);
+			if (trial != null) {
+				trial.removeVisitScheduleItems(target);
+			}
+		}
+		if (visitVO != null) {
+			Visit visit = this.getVisitDao().visitOutVOToEntity(visitVO);
+			target.setVisit(visit);
+			visit.addVisitScheduleItems(target);
+		} else if (copyIfNull) {
+			Visit visit = target.getVisit();
+			target.setVisit(null);
+			if (visit != null) {
+				visit.removeVisitScheduleItems(target);
+			}
+		}
+		if (groupVO != null) {
+			ProbandGroup group = this.getProbandGroupDao().probandGroupOutVOToEntity(groupVO);
+			target.setGroup(group);
+			group.addVisitScheduleItems(target);
+		} else if (copyIfNull) {
+			ProbandGroup group = target.getGroup();
+			target.setGroup(null);
+			if (group != null) {
+				group.removeVisitScheduleItems(target);
+			}
+		}
+		if (startTagVO != null) {
+			ProbandListEntryTag startTag = this.getProbandListEntryTagDao().lightProbandListEntryTagOutVOToEntity(startTagVO);
+			target.setStartTag(startTag);
+			startTag.addStartDates(target);
+		} else if (copyIfNull) {
+			ProbandListEntryTag startTag = target.getStartTag();
+			target.setStartTag(null);
+			if (startTag != null) {
+				startTag.removeStartDates(target);
+			}
+		}
+		if (stopTagVO != null) {
+			ProbandListEntryTag stopTag = this.getProbandListEntryTagDao().lightProbandListEntryTagOutVOToEntity(stopTagVO);
+			target.setStopTag(stopTag);
+			stopTag.addStopDates(target);
+		} else if (copyIfNull) {
+			ProbandListEntryTag stopTag = target.getStopTag();
+			target.setStopTag(null);
+			if (stopTag != null) {
+				stopTag.removeStopDates(target);
+			}
+		}
+		if (modeVO != null) {
+			target.setMode(modeVO.getDateMode());
+		} else if (copyIfNull) {
+			target.setMode(null);
+		}
 	}
 }
