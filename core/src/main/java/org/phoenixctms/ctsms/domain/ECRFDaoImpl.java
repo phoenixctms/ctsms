@@ -227,6 +227,7 @@ public class ECRFDaoImpl
 						Restrictions.eq("active", active.booleanValue()),
 						Restrictions.eq("ecrfFieldValues.listEntry.id", probandListEntryId.longValue())));
 			}
+			ecrfCriteria.add(Restrictions.isNull("group.id"));
 		}
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRF.class, ecrfCriteria);
 		if (sort) {
