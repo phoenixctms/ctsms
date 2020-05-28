@@ -125,6 +125,7 @@ public interface DefaultMessages {
 	public static final String JOB_STATUS_NAME = "<job status>";
 	public static final String ECRF_VALIDATION_STATUS_NAME = "<eCRF validation status>";
 	public static final String PAYMENT_METHOD_NAME = "<payment method>";
+	public static final String VISIT_SCHEDULE_DATE_MODE_NAME = "<visit schedule date mode>";
 	public static final String DB_MODULE_NAME = "<db module>";
 	public static final String JOURNAL_MODULE_NAME = "<journal module>";
 	public static final String FILE_MODULE_NAME = "<file module>";
@@ -204,4 +205,5 @@ public interface DefaultMessages {
 	public static final String LOOP_PATH_PROBAND_LABEL = "proband ID {0}";
 	public static final String LOOP_PATH_STAFF_LABEL = "{0}";
 	public static final String LOOP_PATH_TIMELINE_EVENT_LABEL = "{0}";
+	public static final String UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE = "unsupported visit schedule date mode {0}";
 }
