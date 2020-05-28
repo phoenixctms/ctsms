@@ -39,3 +39,10 @@ update STAFF_TAG set NAME_L10N_KEY = '02_description' where NAME_L10N_KEY = 'des
 alter table USERS add column DECRYPT_UNTRUSTED BOOLEAN;
 update USERS set DECRYPT_UNTRUSTED = 'f';
 alter table USERS alter DECRYPT_UNTRUSTED set not null;
+
+alter table VISIT_SCHEDULE_ITEM add column MODE VARCHAR(1024);
+update VISIT_SCHEDULE_ITEM set MODE = 'STATIC';
+alter table VISIT_SCHEDULE_ITEM alter MODE set not null;
+
+alter table VISIT_SCHEDULE_ITEM alter START drop not null;
+alter table VISIT_SCHEDULE_ITEM alter STOP drop not null;
