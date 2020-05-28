@@ -2,11 +2,13 @@ package org.phoenixctms.ctsms;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public abstract class VOCacheContext implements Principal {
 
 	private static final long serialVersionUID = 1L;
 	private HashMap<Class, HashMap<Long, HashMap<Class, Object>>> entityVoMap;
+	private HashSet<Class> entityIgnoreSet;
 
 	protected VOCacheContext() {
 		super();
@@ -19,7 +21,15 @@ public abstract class VOCacheContext implements Principal {
 		return entityVoMap;
 	}
 
+	private HashSet<Class> getEntityIgnoreSet() {
+		if (entityIgnoreSet == null) {
+			entityIgnoreSet = new HashSet<Class>();
+		}
+		return entityIgnoreSet;
+	}
+
 	protected void reset() {
+		voMapResetIgnores();
 		voMapClear();
 	}
 
@@ -29,8 +39,18 @@ public abstract class VOCacheContext implements Principal {
 		}
 	}
 
+	public void voMapResetIgnores() {
+		if (entityIgnoreSet != null) {
+			entityIgnoreSet.clear();
+		}
+	}
+
+	public void voMapRegisterIgnores(Class entityClass) {
+		getEntityIgnoreSet().add(entityClass);
+	}
+
 	public boolean voMapContainsKey(Class entityClass, Class voClass, Long id) {
-		if (getEntityVoMap().containsKey(entityClass)) {
+		if (!getEntityIgnoreSet().contains(entityClass) && getEntityVoMap().containsKey(entityClass)) {
 			HashMap<Long, HashMap<Class, Object>> voMap = getEntityVoMap().get(entityClass);
 			if (voMap.containsKey(id)) {
 				return voMap.get(id).containsKey(voClass);
@@ -40,13 +60,13 @@ public abstract class VOCacheContext implements Principal {
 	}
 
 	public void voMapEvict(Class entityClass, Long id) {
-		if (getEntityVoMap().containsKey(entityClass)) {
+		if (!getEntityIgnoreSet().contains(entityClass) && getEntityVoMap().containsKey(entityClass)) {
 			getEntityVoMap().get(entityClass).remove(id);
 		}
 	}
 
 	public Object voMapGet(Class entityClass, Class voClass, Long id) {
-		if (getEntityVoMap().containsKey(entityClass)) {
+		if (!getEntityIgnoreSet().contains(entityClass) && getEntityVoMap().containsKey(entityClass)) {
 			HashMap<Long, HashMap<Class, Object>> voMap = getEntityVoMap().get(entityClass);
 			if (voMap.containsKey(id)) {
 				return voMap.get(id).get(voClass);
@@ -57,19 +77,23 @@ public abstract class VOCacheContext implements Principal {
 
 	public Object voMapPut(Class entityClass, Class voClass, Long id, Object vo) {
 		HashMap<Long, HashMap<Class, Object>> voMap;
-		if (getEntityVoMap().containsKey(entityClass)) {
-			voMap = getEntityVoMap().get(entityClass);
+		if (getEntityIgnoreSet().contains(entityClass)) {
+			return null;
 		} else {
-			voMap = new HashMap<Long, HashMap<Class, Object>>();
-			getEntityVoMap().put(entityClass, voMap);
+			if (getEntityVoMap().containsKey(entityClass)) {
+				voMap = getEntityVoMap().get(entityClass);
+			} else {
+				voMap = new HashMap<Long, HashMap<Class, Object>>();
+				getEntityVoMap().put(entityClass, voMap);
+			}
+			HashMap<Class, Object> map;
+			if (voMap.containsKey(id)) {
+				map = voMap.get(id);
+			} else {
+				map = new HashMap<Class, Object>();
+				voMap.put(id, map);
+			}
+			return map.put(voClass, vo);
 		}
-		HashMap<Class, Object> map;
-		if (voMap.containsKey(id)) {
-			map = voMap.get(id);
-		} else {
-			map = new HashMap<Class, Object>();
-			voMap.put(id, map);
-		}
-		return map.put(voClass, vo);
 	}
 }
