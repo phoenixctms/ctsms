@@ -197,6 +197,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		collidingProbandStatusEntryModelCache.clear();
 		statusEntryCache.clear();
 		visitScheduleItemModel.setProbandId(probandId);
+		visitScheduleItemModel.setExpand(true);
 		visitScheduleItemModel.updateRowCount();
 		trials = WebUtil.getParticipationTrials(probandId);
 		filterTrials = new ArrayList<SelectItem>(trials);
