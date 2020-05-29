@@ -12,8 +12,29 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public class IDVO implements Comparable<IDVO> {
 
+	private final static VOTransformation<Object, Object> PASSTHROUGH_VO_TRANSFORMATION = new VOTransformation<Object, Object>() {
+
+		@Override
+		public Object transform(Object vo) {
+			return vo;
+		}
+	};
+
+	public static abstract class VOTransformation<In, Out> {
+
+		IDVO transformVo(In in) {
+			return new IDVO(transform(in));
+		}
+
+		public abstract Out transform(In vo);
+	}
+
 	public static IDVO transformVo(Object object) {
-		return new IDVO(object);
+		return PASSTHROUGH_VO_TRANSFORMATION.transformVo(object);
+	}
+
+	public static IDVO transformVo(Object object, VOTransformation transformation) {
+		return transformation.transformVo(object);
 	}
 
 	public static void transformVoCollection(Collection<?> vos) {
@@ -23,6 +44,18 @@ public class IDVO implements Comparable<IDVO> {
 				@Override
 				public Object transform(Object input) {
 					return transformVo(input);
+				}
+			});
+		}
+	}
+
+	public static void transformVoCollection(Collection<?> vos, VOTransformation transformation) {
+		if (vos != null) {
+			CollectionUtils.transform(vos, new Transformer() {
+
+				@Override
+				public Object transform(Object input) {
+					return transformVo(input, transformation);
 				}
 			});
 		}
