@@ -149,6 +149,9 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterInverseBooleans;
 	private ArrayList<SelectItem> filterInputFieldTypes;
 	private ArrayList<SelectItem> filterSexes;
+	private ArrayList<SelectItem> filterVisitScheduleDateModes;
+	private ArrayList<SelectItem> filterVisitScheduleDurations;
+	private ArrayList<SelectItem> filterVisitScheduleOffsets;
 	private ArrayList<SelectItem> filterRandomizationModes;
 	private ArrayList<SelectItem> filterJobStates;
 	private ArrayList<SelectItem> filterVariablePeriods;
@@ -507,6 +510,30 @@ public class SessionScopeBean {
 		return filterSexes;
 	}
 
+	public synchronized ArrayList<SelectItem> getFilterVisitScheduleDateModes() {
+		if (filterVisitScheduleDateModes == null) {
+			filterVisitScheduleDateModes = WebUtil.getVisitScheduleDateModes();
+			filterVisitScheduleDateModes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVisitScheduleDateModes;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterVisitScheduleOffsets() {
+		if (filterVisitScheduleOffsets == null) {
+			filterVisitScheduleOffsets = WebUtil.getVisitScheduleOffsets();
+			filterVisitScheduleOffsets.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVisitScheduleOffsets;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterVisitScheduleDurations() {
+		if (filterVisitScheduleDurations == null) {
+			filterVisitScheduleDurations = WebUtil.getVisitScheduleDurations();
+			filterVisitScheduleDurations.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVisitScheduleDurations;
+	}
+
 	public synchronized ArrayList<SelectItem> getFilterSponsoringTypes() {
 		if (filterSponsoringTypes == null) {
 			filterSponsoringTypes = WebUtil.getAllSponsoringTypes();
@@ -854,6 +881,9 @@ public class SessionScopeBean {
 		filterInverseBooleans = null;
 		filterInputFieldTypes = null;
 		filterSexes = null;
+		filterVisitScheduleDateModes = null;
+		filterVisitScheduleDurations = null;
+		filterVisitScheduleOffsets = null;
 		filterRandomizationModes = null;
 		filterJobStates = null;
 		filterVariablePeriods = null;
@@ -1028,7 +1058,7 @@ public class SessionScopeBean {
 				while (it.hasNext()) {
 					Integer timeZoneOffset = it.next();
 					Submenu offsetTimeZonesMenu = new Submenu();
-					offsetTimeZonesMenu.setLabel(Messages.getMessage(MessageCodes.OFFSET_TIME_ZONE_LABEL, timeZoneOffset < 0 ? "-" : (timeZoneOffset > 0 ? "+" : ""),
+					offsetTimeZonesMenu.setLabel(Messages.getMessage(MessageCodes.OFFSET_TIME_ZONE_LABEL, DateUtil.getSignSymbol(timeZoneOffset),
 							DateUtil.getDurationString(timeZoneOffset / 1000, DurationUnitOfTime.HOURS, DurationUnitOfTime.MINUTES, 0)));
 					offsetTimeZonesMenu.setId("offsetTimeZonesMenu_" + Integer.toString(i));
 					int j = 0;

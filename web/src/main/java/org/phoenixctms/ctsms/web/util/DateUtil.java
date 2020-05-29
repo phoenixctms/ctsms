@@ -194,6 +194,20 @@ public final class DateUtil {
 		return "";
 	}
 
+	public static String getSignSymbol(Integer integer) {
+		if (integer != null) {
+			return integer < 0 ? "-" : (integer > 0 ? "+" : "");
+		}
+		return "";
+	}
+
+	public static String getSignSymbol(Long lng) {
+		if (lng != null) {
+			return lng < 0l ? "-" : (lng > 0l ? "+" : "");
+		}
+		return "";
+	}
+
 	public static String getDurationString(long duration) {
 		return getDurationString(duration,
 				Settings.getDurationUnitOfTime(SettingCodes.DEFAULT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,

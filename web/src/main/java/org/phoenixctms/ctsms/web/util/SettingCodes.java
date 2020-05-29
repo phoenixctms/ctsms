@@ -301,6 +301,12 @@ public interface SettingCodes {
 	public static final String DEFAULT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "default_most_significant_duration_unit_of_time";
 	public static final String DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "default_least_significant_duration_unit_of_time";
 	public static final String DEFAULT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "default_least_significant_duration_unit_of_time_decimals";
+	public static final String VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "visit_schedule_item_duration_most_significant_duration_unit_of_time";
+	public static final String VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "visit_schedule_item_duration_least_significant_duration_unit_of_time";
+	public static final String VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "visit_schedule_item_duration_least_significant_duration_unit_of_time_decimals";
+	public static final String VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "visit_schedule_item_offset_most_significant_duration_unit_of_time";
+	public static final String VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "visit_schedule_item_offset_least_significant_duration_unit_of_time";
+	public static final String VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "visit_schedule_item_offset_least_significant_duration_unit_of_time_decimals";
 	public static final String SHIFT_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "shift_most_significant_duration_unit_of_time";
 	public static final String SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = "shift_least_significant_duration_unit_of_time";
 	public static final String SHIFT_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = "shift_least_significant_duration_unit_of_time_decimals";
@@ -429,6 +435,11 @@ public interface SettingCodes {
 	public static final String ENABLE_USER_SEARCH_EXPORTS = "enable_user_search_exports";
 	public static final String ENABLE_JOURNAL_EXPORTS = "enable_journal_exports";
 	public static final String VISIT_SCHEDULE_ITEM_NOTIFY_PRESET = "visit_schedule_item_notify_preset";
+	public static final String VISIT_SCHEDULE_ITEM_OFFSET_SECONDS_PRESET = "visit_schedule_item_offset_seconds_preset";
+	public static final String VISIT_SCHEDULE_ITEM_DURATION_PRESET = "visit_schedule_item_duration_preset";
+	public static final String VISIT_SCHEDULE_ITEM_MODE_PRESET = "visit_schedule_item_mode_preset";
+	public static final String VISIT_SCHEDULE_ITEM_DURATIONS = "visit_schedule_item_durations";
+	public static final String VISIT_SCHEDULE_ITEM_OFFSETS = "visit_schedule_item_offsets";
 	public static final String PROBAND_PERSON_PRESET = "proband_person_preset";
 	public static final String PROBAND_BLINDED_PRESET = "proband_blinded_preset";
 	public static final String SHOW_PROBAND_RATING = "show_proband_rating";
