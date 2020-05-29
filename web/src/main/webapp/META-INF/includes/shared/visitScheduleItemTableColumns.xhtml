@@ -37,26 +37,7 @@
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.token}" />
 		</p:column>
-		<p:column sortBy="#{visitScheduleItem.vo.start}">
-			<f:facet name="header">
-				<h:outputText value="#{triallabels.visitschedule_list_start_column}" />
-			</f:facet>
-			<h:outputText value="#{visitScheduleItem.vo.start}">
-				<f:converter converterId="ctsms.DateTime" />
-				<f:attribute name="timeZone"
-					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-			</h:outputText>
-		</p:column>
-		<p:column sortBy="#{visitScheduleItem.vo.stop}">
-			<f:facet name="header">
-				<h:outputText value="#{triallabels.visitschedule_list_stop_column}" />
-			</f:facet>
-			<h:outputText value="#{visitScheduleItem.vo.stop}">
-				<f:converter converterId="ctsms.DateTime" />
-				<f:attribute name="timeZone"
-					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-			</h:outputText>
-		</p:column>
+
 	</ui:composition>
 </h:body>
 </html>
