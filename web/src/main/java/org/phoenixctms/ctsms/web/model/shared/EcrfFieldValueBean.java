@@ -793,7 +793,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						.getServiceLocator()
 						.getTrialService()
 						.getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup().getId(), null, listEntry.getProband().getId(),
-								null);
+								true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
