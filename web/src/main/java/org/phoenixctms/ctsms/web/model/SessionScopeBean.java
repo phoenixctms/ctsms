@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
+import org.phoenixctms.ctsms.util.FilterItemsStore;
 import org.phoenixctms.ctsms.util.MaxSizeHashMap;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -63,7 +64,7 @@ import org.primefaces.model.StreamedContent;
 
 @ManagedBean
 @SessionScoped
-public class SessionScopeBean {
+public class SessionScopeBean implements FilterItemsStore {
 
 	private static final String MENUITEM_CHECKED_STYLECLASS = "ui-icon ui-icon-check";
 
@@ -155,6 +156,7 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterRandomizationModes;
 	private ArrayList<SelectItem> filterJobStates;
 	private ArrayList<SelectItem> filterVariablePeriods;
+	private ArrayList<SelectItem> filterVariablePeriodsWoExplicit;
 	private ArrayList<SelectItem> filterEventImportances;
 	private ArrayList<SelectItem> filterPaymentMethods;
 	private ArrayList<SelectItem> filterDepartments;
@@ -606,6 +608,14 @@ public class SessionScopeBean {
 		return filterVariablePeriods;
 	}
 
+	public synchronized ArrayList<SelectItem> getFilterVariablePeriodsWoExplicit() {
+		if (filterVariablePeriodsWoExplicit == null) {
+			filterVariablePeriodsWoExplicit = WebUtil.getVariablePeriodsWoExplicit();
+			filterVariablePeriodsWoExplicit.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVariablePeriodsWoExplicit;
+	}
+
 	public synchronized ArrayList<SelectItem> getFilterVisitTypes() {
 		if (filterVisitTypes == null) {
 			filterVisitTypes = WebUtil.getAllVisitTypes();
@@ -887,6 +897,7 @@ public class SessionScopeBean {
 		filterRandomizationModes = null;
 		filterJobStates = null;
 		filterVariablePeriods = null;
+		filterVariablePeriodsWoExplicit = null;
 		filterEventImportances = null;
 		filterPaymentMethods = null;
 		filterDepartments = null;

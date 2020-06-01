@@ -4053,6 +4053,28 @@ public final class WebUtil {
 		return variablePeriods;
 	}
 
+	public static ArrayList<SelectItem> getVariablePeriodsWoExplicit() {
+		ArrayList<SelectItem> variablePeriods;
+		Collection<VariablePeriodVO> periodVOs = null;
+		try {
+			periodVOs = getServiceLocator().getSelectionSetService().getVariablePeriodsWoExplicit(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (periodVOs != null) {
+			variablePeriods = new ArrayList<SelectItem>(periodVOs.size());
+			Iterator<VariablePeriodVO> it = periodVOs.iterator();
+			while (it.hasNext()) {
+				VariablePeriodVO periodVO = it.next();
+				variablePeriods.add(new SelectItem(periodVO.getPeriod().name(), periodVO.getName()));
+			}
+		} else {
+			variablePeriods = new ArrayList<SelectItem>();
+		}
+		return variablePeriods;
+	}
+
 	public static String getViewId() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {
@@ -4779,6 +4801,13 @@ public final class WebUtil {
 
 	public static boolean testConverter(CriterionPropertyVO propertyVO) {
 		if (propertyVO.getConverter() != null && propertyVO.getConverter().length() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean testFilterItemsMethodName(CriterionPropertyVO propertyVO) {
+		if (propertyVO.getFilterItemsMethodName() != null && propertyVO.getFilterItemsMethodName().length() > 0) {
 			return true;
 		}
 		return false;

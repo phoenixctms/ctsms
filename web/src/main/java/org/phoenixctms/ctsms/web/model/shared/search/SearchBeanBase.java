@@ -527,6 +527,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return new CriterionIsSelectionList(criterionsIn, propertyVOsMap, restrictionVOsMap);
 	}
 
+	public List<Boolean> getIsFilterItems() {
+		return new CriterionIsFilterItemsList(criterionsIn, propertyVOsMap, restrictionVOsMap);
+	}
+
 	public List<Boolean> getIsStaffPicker() {
 		return new CriterionIsPickerList(criterionsIn, propertyVOsMap, restrictionVOsMap, DBModule.STAFF_DB);
 	}
@@ -866,6 +870,15 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 							converterMap.put(propertyVO.getId(), WebUtil.createConverter(propertyVO.getConverter()));
 						} catch (Exception e) {
 							converterMap.put(propertyVO.getId(), null);
+						}
+					} else if (WebUtil.testFilterItemsMethodName(propertyVO)) {
+						// return eg. sessionScopeBean.visitScheduleDurations available in web-tier only
+						Collection selectionSetServiceMethodResult = null;
+						try {
+							float x = 0.5f;
+							x = x + x;
+							selectionItems = (ArrayList<SelectItem>) AssociationPath.invoke(propertyVO.getFilterItemsMethodName(), WebUtil.getSessionScopeBean(), false);
+						} catch (Exception e) {
 						}
 					}
 					selectionItemsMap.put(propertyVO.getId(), selectionItems);
