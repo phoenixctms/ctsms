@@ -15,13 +15,14 @@ public class VisitScheduleItemLazyModel extends LazyDataModelBase<VisitScheduleI
 
 	private Long trialId;
 	private Long probandId;
+	private boolean expand;
 
 	@Override
 	protected Collection<VisitScheduleItemOutVO> getLazyResult(PSFVO psf) {
 		if (trialId != null || probandId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getVisitScheduleItemList(WebUtil.getAuthentication(), trialId, null, null, probandId, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				return WebUtil.getServiceLocator().getTrialService().getVisitScheduleItemList(WebUtil.getAuthentication(), trialId, null, null, probandId, expand, psf);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -48,5 +49,13 @@ public class VisitScheduleItemLazyModel extends LazyDataModelBase<VisitScheduleI
 
 	public void setTrialId(Long trialId) {
 		this.trialId = trialId;
+	}
+
+	public boolean isExpand() {
+		return expand;
+	}
+
+	public void setExpand(boolean expand) {
+		this.expand = expand;
 	}
 }

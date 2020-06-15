@@ -19,6 +19,7 @@ import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.FilterItemsStore;
 import org.phoenixctms.ctsms.util.JSFVOConverterIDs;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,17 +34,19 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 	private final static int GET_VALUE_METHOD_NAME_INDEX = 6;
 	private final static int COMPLETE_METHOD_NAME_INDEX = 7;
 	private final static int CONVERTER_INDEX = 8;
-	private final static int PICKER_INDEX = 9;
-	private final static int NAME_L10N_KEY_INDEX = 10;
-	private final static int VALID_RESTRICTIONS_INDEX = 11;
+	private final static int FILTER_ITEMS_METHOD_NAME_INDEX = 9;
+	private final static int PICKER_INDEX = 10;
+	private final static int NAME_L10N_KEY_INDEX = 11;
+	private final static int VALID_RESTRICTIONS_INDEX = 12;
 	private final static String DEFAULT_RESTRICTION_SEPARATOR_REGEXP_PATTERN = " *, *";
 	private static final String DEFAULT_EXCLUDE_RESTRICTION_CHAR = "/";
 	private final static Collection<String> SELECTION_SET_SERVICE_METHOD_NAMES = getServiceMethodNames(SelectionSetService.class);
 	private final static Collection<String> TOOLS_SERVICE_METHOD_NAMES = getServiceMethodNames(ToolsService.class);
+	private final static Collection<String> FILTER_ITEMS_METHOD_NAMES = getServiceMethodNames(FilterItemsStore.class);
 
-	private static Collection<String> getServiceMethodNames(Class serviceClass) {
+	private static Collection<String> getServiceMethodNames(Class iface) {
 		HashSet<String> serviceMethods = new HashSet<String>();
-		Method[] methods = serviceClass.getMethods();
+		Method[] methods = iface.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			serviceMethods.add(methods[i].getName());
 		}
@@ -75,6 +78,7 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 			String getValueMethodName,
 			String completeMethodName,
 			String converter,
+			String filterItemsMethodName,
 			String entityName,
 			String nameL10nKey,
 			Set<org.phoenixctms.ctsms.enumeration.CriterionRestriction> validRestrictions) {
@@ -89,6 +93,7 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 		property.setGetValueMethodName(getValueMethodName);
 		property.setCompleteMethodName(completeMethodName);
 		property.setConverter(converter);
+		property.setFilterItemsMethodName(filterItemsMethodName);
 		property.setEntityName(entityName);
 		HashSet<CriterionRestriction> restrictions;
 		if (validRestrictions != null) {
@@ -112,6 +117,10 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 
 	private String getConverter(String[] values) {
 		return values[CONVERTER_INDEX];
+	}
+
+	private String getFilterItemsMethodName(String[] values) {
+		return values[FILTER_ITEMS_METHOD_NAME_INDEX];
 	}
 
 	private String getEntityName(String[] values) {
@@ -198,6 +207,10 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 		if (!CommonUtil.isEmptyString(converter) && !JSFVOConverterIDs.CONVERTER_IDS.contains(converter)) {
 			throw new IllegalArgumentException("unknown JSF converter ID " + converter);
 		}
+		String filterItemsMethodName = getFilterItemsMethodName(values);
+		if (!CommonUtil.isEmptyString(filterItemsMethodName) && !FILTER_ITEMS_METHOD_NAMES.contains(filterItemsMethodName)) {
+			throw new IllegalArgumentException("unknown filter items method " + filterItemsMethodName);
+		}
 		String entityName = getEntityName(values);
 		if (!CommonUtil.isEmptyString(entityName) && !isValidEntityName(entityName)) {
 			throw new IllegalArgumentException("unknown entity/enumeration " + entityName);
@@ -219,6 +232,7 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 				CommonUtil.isEmptyString(getValueMethodName) ? null : getValueMethodName,
 				CommonUtil.isEmptyString(completeMethodName) ? null : completeMethodName,
 				CommonUtil.isEmptyString(converter) ? null : converter,
+				CommonUtil.isEmptyString(filterItemsMethodName) ? null : filterItemsMethodName,
 				CommonUtil.isEmptyString(entityName) ? null : entityName,
 				getNameL10nKey(values),
 				restrictions);

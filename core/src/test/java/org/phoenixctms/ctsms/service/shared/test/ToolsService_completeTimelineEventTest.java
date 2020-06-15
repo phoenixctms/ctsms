@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>completeTimelineEvent</code> of service <code>ToolsService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.ToolsService#completeTimelineEvent(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Long, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.shared.ToolsService#completeTimelineEvent(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Long, java.lang.Integer, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","ToolsService"})
 public class ToolsService_completeTimelineEventTest extends ToolsServiceBaseTest {

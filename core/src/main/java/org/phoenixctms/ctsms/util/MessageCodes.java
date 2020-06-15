@@ -125,4 +125,5 @@ public interface MessageCodes {
 	public static final String LOOP_PATH_PROBAND_LABEL = "loop_path_proband_label";
 	public static final String LOOP_PATH_STAFF_LABEL = "loop_path_staff_label";
 	public static final String LOOP_PATH_TIMELINE_EVENT_LABEL = "loop_path_timeline_event_label";
+	public static final String UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE = "unsupported_visit_schedule_date_mode";
 }

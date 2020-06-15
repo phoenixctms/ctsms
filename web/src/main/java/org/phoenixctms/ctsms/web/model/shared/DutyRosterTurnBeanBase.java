@@ -296,8 +296,8 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 				visitScheduleItemVOs = WebUtil
 						.getServiceLocator()
 						.getTrialService()
-						.getVisitScheduleItemInterval(WebUtil.getAuthentication(), in.getTrialId(), departmentId, null, null, in.getStart(), in.getStop(),
-								in.getVisitScheduleItemId(), false);
+						.getVisitScheduleItems(WebUtil.getAuthentication(), in.getTrialId(), departmentId, in.getStart(), in.getStop(),
+								in.getVisitScheduleItemId(), true);
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {

@@ -424,10 +424,18 @@ public class NotificationDaoImpl
 						messageParameters.get("timelineevent_title")
 				});
 			case VISIT_SCHEDULE_ITEM_REMINDER:
-				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-						messageParameters.get("visitscheduleitem_trial_name"),
-						messageParameters.get("visitscheduleitem_name")
-				});
+				if (notification.getProband() != null) {
+					return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey() + "_PROBAND", new Object[] {
+							messageParameters.get("visitscheduleitem_trial_name"),
+							messageParameters.get("visitscheduleitem_name"),
+							messageParameters.get("proband_id")
+					});
+				} else {
+					return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
+							messageParameters.get("visitscheduleitem_trial_name"),
+							messageParameters.get("visitscheduleitem_name")
+					});
+				}
 			case EXPIRING_PROBAND_AUTO_DELETE:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
 						messageParameters.get("proband_id"),
@@ -972,10 +980,10 @@ public class NotificationDaoImpl
 	}
 
 	@Override
-	protected Notification handleAddNotification(VisitScheduleItem visitScheduleItem, Date today, Map messageParameters)
+	protected Notification handleAddNotification(VisitScheduleItem visitScheduleItem, Proband proband, Date today, Map messageParameters)
 			throws Exception {
 		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER;
-		ServiceUtil.cancelNotifications(visitScheduleItem.getNotifications(), this, notificationType);
+		ServiceUtil.cancelNotifications(getNotifications(visitScheduleItem, proband), this, notificationType);
 		Notification notification = Notification.Factory.newInstance();
 		Trial trial = visitScheduleItem.getTrial();
 		Department department = null;
@@ -985,15 +993,44 @@ public class NotificationDaoImpl
 			notification.setDepartment(department);
 		}
 		notification.setVisitScheduleItem(visitScheduleItem);
-		visitScheduleItem.addNotifications(notification);
+		addNotifications(visitScheduleItem, notification);
+		if (proband != null) {
+			notification.setProband(proband);
+			proband.addNotifications(notification);
+		}
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
 			createNotificationRecipients(notification, trialMembers);
 			return notification;
 		} else {
 			visitScheduleItem.removeNotifications(notification);
+			if (proband != null) {
+				proband.removeNotifications(notification);
+			}
 			return null;
 		}
+	}
+
+	private Collection<Notification> getNotifications(VisitScheduleItem visitScheduleItem) {
+		Collection<Notification> notifications;
+		try {
+			notifications = visitScheduleItem.getNotifications();
+			notifications.iterator().next();
+		} catch (org.hibernate.LazyInitializationException e) {
+			visitScheduleItem = this.getVisitScheduleItemDao().load(visitScheduleItem.getId());
+			notifications = visitScheduleItem.getNotifications();
+		}
+		return notifications;
+	}
+
+	private void addNotifications(VisitScheduleItem visitScheduleItem, Notification notification) {
+		//try {
+		//	visitScheduleItem.addNotifications(notification);
+		//} catch (org.hibernate.LazyInitializationException e) {
+		//  this.getVisitScheduleItemDao().load(visitScheduleItem.getId()).addNotifications(notification);
+		//}
+		// always fetch it, to silence any log output
+		this.getVisitScheduleItemDao().load(visitScheduleItem.getId()).addNotifications(notification);
 	}
 
 	@Override
@@ -1001,7 +1038,7 @@ public class NotificationDaoImpl
 			VisitScheduleItem visitScheduleItem, Proband proband, ProbandStatusEntry probandStatusEntry, Date today, Map messageParameters)
 			throws Exception {
 		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.PROBAND_INACTIVE_VISIT_SCHEDULE_ITEM;
-		ServiceUtil.cancelNotifications(visitScheduleItem.getNotifications(), this, notificationType);
+		ServiceUtil.cancelNotifications(getNotifications(visitScheduleItem, proband), this, notificationType);
 		Notification notification = Notification.Factory.newInstance();
 		Trial trial = visitScheduleItem.getTrial();
 		Department department = null;
@@ -1011,7 +1048,7 @@ public class NotificationDaoImpl
 			notification.setDepartment(department);
 		}
 		notification.setVisitScheduleItem(visitScheduleItem);
-		visitScheduleItem.addNotifications(notification);
+		addNotifications(visitScheduleItem, notification);
 		notification.setProband(proband);
 		proband.addNotifications(notification);
 		notification.setProbandStatusEntry(probandStatusEntry);
@@ -1032,10 +1069,10 @@ public class NotificationDaoImpl
 	protected Notification handleAddNotification(VisitScheduleItem visitScheduleItem, Staff staff, Date today, Map messageParameters)
 			throws Exception {
 		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM;
-		ServiceUtil.cancelNotifications(visitScheduleItem.getNotifications(), this, notificationType);
+		ServiceUtil.cancelNotifications(getNotifications(visitScheduleItem), this, notificationType);
 		Notification notification = Notification.Factory.newInstance();
 		notification.setVisitScheduleItem(visitScheduleItem);
-		visitScheduleItem.addNotifications(notification);
+		addNotifications(visitScheduleItem, notification);
 		notification.setStaff(staff);
 		staff.addNotifications(notification);
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
@@ -1300,5 +1337,17 @@ public class NotificationDaoImpl
 		}
 		target.setSent(sent);
 		target.setDropped(dropped);
+	}
+
+	@Override
+	protected Collection<Notification> handleGetNotifications(VisitScheduleItem visitScheduleItem, Proband proband) throws Exception {
+		org.hibernate.Criteria notificationCriteria = createNotificationCriteria();
+		notificationCriteria.add(Restrictions.eq("visitScheduleItem.id", visitScheduleItem.getId().longValue()));
+		if (proband != null) {
+			notificationCriteria.add(Restrictions.eq("proband.id", proband.getId().longValue()));
+		} else {
+			notificationCriteria.add(Restrictions.isNull("proband.id"));
+		}
+		return notificationCriteria.list();
 	}
 }

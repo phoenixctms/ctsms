@@ -129,6 +129,7 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_LIST_ENTRY_TAG_CREATED = "proband_list_entry_tag_created";
 	public final static String PROBAND_LIST_ENTRY_TAG_UPDATED = "proband_list_entry_tag_updated";
 	public final static String PROBAND_LIST_ENTRY_TAG_DELETED = "proband_list_entry_tag_deleted";
+	public final static String PROBAND_LIST_ENTRY_TAG_DELETED_VISIT_SCHEDULE_ITEM_UPDATED = "proband_list_entry_tag_deleted_visit_schedule_item_updated";
 	public final static String INQUIRY_CREATED = "inquiry_created";
 	public final static String INQUIRY_UPDATED = "inquiry_updated";
 	public final static String INQUIRY_DELETED = "inquiry_deleted";

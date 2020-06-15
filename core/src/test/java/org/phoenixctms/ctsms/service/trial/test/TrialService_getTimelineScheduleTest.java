@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getTimelineSchedule</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getTimelineSchedule(org.phoenixctms.ctsms.vo.AuthenticationVO, java.util.Date, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Boolean, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getTimelineSchedule(org.phoenixctms.ctsms.vo.AuthenticationVO, java.util.Date, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Boolean, java.lang.Boolean, java.lang.Integer, java.lang.Integer, java.lang.Integer, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getTimelineScheduleTest extends TrialServiceBaseTest {

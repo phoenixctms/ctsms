@@ -31,15 +31,25 @@
 					value="#{probandVisitScheduleBean.visitScheduleItemModel}"
 					id="probandvisitschedule_list"
 					rowStyleClass="#{probandVisitScheduleBean.visitScheduleItemToColor(visitScheduleItem.vo)}#{rowBgColorAlpha}">
-					<p:ajax event="page" listener="#{probandVisitScheduleBean.visitScheduleItemModel.handlePageChanged}" />
+					<p:ajax event="page"
+						listener="#{probandVisitScheduleBean.visitScheduleItemModel.handlePageChanged}" />
 					<f:facet name="header">
-						<h:outputText
-							value="#{probandVisitScheduleBean.visitScheduleItemModel.rowCount} #{probandlabels.proband_visit_schedule_probandvisitschedule_list_header}" />
+						<h:panelGrid columns="2" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText
+								value="#{probandVisitScheduleBean.visitScheduleItemModel.rowCount} #{probandlabels.proband_visit_schedule_probandvisitschedule_list_header}" />
+							<p:commandButton type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="probandVisitScheduleTableColumnsDialog.show()" />
+						</h:panelGrid>
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{visitScheduleItem.vo.id}">
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -60,6 +70,30 @@
 						</ui:include>
 					</p:column>
 					<ui:include src="../shared/visitScheduleItemTableColumns.xhtml" />
+
+					<p:column sortBy="#{visitScheduleItem.vo.start}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_proband_list_start_column}" />
+						</f:facet>
+						<h:outputText value="#{visitScheduleItem.vo.start}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+					</p:column>
+					<p:column sortBy="#{visitScheduleItem.vo.stop}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_proband_list_stop_column}" />
+						</f:facet>
+						<h:outputText value="#{visitScheduleItem.vo.stop}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+					</p:column>
+
 					<p:column>
 						<f:facet name="header">
 							<h:outputText
@@ -177,6 +211,12 @@
 					value="#{probandVisitScheduleBean}" />
 				<ui:param name="closeDialog" value="true" />
 				<ui:param name="calcDistanceOnShow" value="true" />
+			</ui:include>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog"
+					value="probandVisitScheduleTableColumnsDialog" />
+				<ui:param name="dataTableId"
+					value=":tabView:probandvisitschedule_form:probandvisitschedule_list" />
 			</ui:include>
 		</h:form>
 	</ui:composition>

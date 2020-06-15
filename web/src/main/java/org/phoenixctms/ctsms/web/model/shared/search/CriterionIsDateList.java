@@ -21,8 +21,11 @@ public class CriterionIsDateList extends CriterionListBase<Boolean> {
 		CriterionInVO criterionIn = getCriterionIn(index);
 		CriterionPropertyVO propertyVO = getPropertyVO(criterionIn);
 		if (propertyVO != null && (CriterionValueType.DATE.equals(propertyVO.getValueType()) || CriterionValueType.DATE_HASH.equals(propertyVO.getValueType()))) {
-			if (!CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn)) && !WebUtil.testSelectionSetServiceMethodName(propertyVO)
-					&& !WebUtil.testCompleteMethodName(propertyVO) && !WebUtil.testPicker(propertyVO)) {
+			if (!CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn))
+					&& !WebUtil.testSelectionSetServiceMethodName(propertyVO)
+					&& !WebUtil.testFilterItemsMethodName(propertyVO)
+					&& !WebUtil.testCompleteMethodName(propertyVO)
+					&& !WebUtil.testPicker(propertyVO)) {
 				return true;
 			}
 		}

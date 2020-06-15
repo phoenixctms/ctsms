@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>setTimelineEventDismissed</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#setTimelineEventDismissed(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, boolean)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#setTimelineEventDismissed(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, boolean, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_setTimelineEventDismissedTest extends TrialServiceBaseTest {

@@ -132,6 +132,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -209,6 +210,7 @@ import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTagVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleDateModeVO;
 import org.phoenixctms.ctsms.vo.VisitTypeVO;
 import org.phoenixctms.ctsms.vo.ZipVO;
 
@@ -1374,6 +1376,21 @@ public class SelectionSetServiceImpl
 			}
 		} else {
 			result = new ArrayList<PaymentMethodVO>();
+		}
+		return result;
+	}
+
+	@Override
+	protected Collection<VisitScheduleDateModeVO> handleGetVisitScheduleDateModes(AuthenticationVO auth) throws Exception {
+		Collection<VisitScheduleDateModeVO> result;
+		VisitScheduleDateMode[] modes = VisitScheduleDateMode.values();
+		if (modes != null) {
+			result = new ArrayList<VisitScheduleDateModeVO>(modes.length);
+			for (int i = 0; i < modes.length; i++) {
+				result.add(L10nUtil.createVisitScheduleDateModeVO(Locales.USER, modes[i]));
+			}
+		} else {
+			result = new ArrayList<VisitScheduleDateModeVO>();
 		}
 		return result;
 	}

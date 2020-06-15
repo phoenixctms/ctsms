@@ -62,6 +62,7 @@ import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -1051,6 +1052,7 @@ public class InputFieldServiceImpl
 			inputField.getInquiries().clear();
 			ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 			ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
+			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 			Iterator<ProbandListEntryTag> listEntryTagsIt = inputField.getListEntryTags().iterator();
 			while (listEntryTagsIt.hasNext()) {
 				ProbandListEntryTag probandListEntryTag = listEntryTagsIt.next();
@@ -1062,7 +1064,8 @@ public class InputFieldServiceImpl
 				ServiceUtil.removeProbandListEntryTag(probandListEntryTag, true, checkProbandTrialLocked, now, user, true, true, probandListEntryTagValueDao,
 						inputFieldValueDao,
 						journalEntryDao,
-						probandListEntryTagDao);
+						probandListEntryTagDao,
+						visitScheduleItemDao);
 			}
 			inputField.getListEntryTags().clear();
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();

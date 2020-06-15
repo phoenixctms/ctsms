@@ -679,7 +679,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_TRIAL_PARTICIPATION_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_PARTICIPATION_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_PARTICIPATIONS_TAB_TITLE, MessageCodes.TRIAL_PARTICIPATIONS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getVisitScheduleItemCount(null, in.getId()));
+		count = (out == null ? null : WebUtil.getVisitScheduleItemCount(null, in.getId(), true));
 		tabCountMap.put(JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE, MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT, count));

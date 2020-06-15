@@ -42,7 +42,10 @@ public class CriterionIsAutocompleteList extends CriterionListBase<Boolean> {
 	}
 
 	private boolean testCompleteMethod(CriterionInVO criterionIn, CriterionPropertyVO propertyVO) {
-		return !CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn)) && !WebUtil.testSelectionSetServiceMethodName(propertyVO) && !WebUtil.testPicker(propertyVO)
+		return !CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn))
+				&& !WebUtil.testSelectionSetServiceMethodName(propertyVO)
+				&& !WebUtil.testFilterItemsMethodName(propertyVO)
+				&& !WebUtil.testPicker(propertyVO)
 				&& WebUtil.testCompleteMethodName(propertyVO);
 	}
 }

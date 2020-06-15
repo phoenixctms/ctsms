@@ -97,14 +97,23 @@ CREATE INDEX proband_status_type_fk_entry_start_stop ON proband_status_entry (ty
 CREATE INDEX proband_status_type_fk_entry_stop_start ON proband_status_entry (type_fk,stop,start);
 
 -- visit schedule items:
-CREATE INDEX visit_schedule_item_start_stop ON visit_schedule_item (start,stop);
-CREATE INDEX visit_schedule_item_stop_start ON visit_schedule_item (stop,start);
-CREATE INDEX visit_schedule_item_trial_fk_start_stop ON visit_schedule_item (trial_fk,start,stop);
-CREATE INDEX visit_schedule_item_trial_fk_stop_start ON visit_schedule_item (trial_fk,stop,start);
+CREATE INDEX visit_schedule_item_mode_start_stop ON visit_schedule_item (mode,start,stop);
+CREATE INDEX visit_schedule_item_mode_stop_start ON visit_schedule_item (mode,stop,start);
+CREATE INDEX visit_schedule_item_trial_fk_mode_start_stop ON visit_schedule_item (trial_fk,mode,start,stop);
+CREATE INDEX visit_schedule_item_trial_fk_mode_stop_start ON visit_schedule_item (trial_fk,mode,stop,start);
+
+CREATE INDEX visit_schedule_item_mode_start_tag_fk_stop_tag_fk ON visit_schedule_item (mode,start_tag_fk,stop_tag_fk);
+CREATE INDEX visit_schedule_item_mode_stop_tag_fk_start_tag_fk ON visit_schedule_item (mode,stop_tag_fk,start_tag_fk);
+CREATE INDEX visit_schedule_item_trial_fk_mode_start_tag_fk_stop_tag_fk ON visit_schedule_item (trial_fk,mode,start_tag_fk,stop_tag_fk);
+CREATE INDEX visit_schedule_item_trial_fk_mode_stop_tag_fk_start_tag_fk ON visit_schedule_item (trial_fk,mode,stop_tag_fk,start_tag_fk);
+
 CREATE INDEX visit_schedule_item_visit_fk_group_fk ON visit_schedule_item (visit_fk,group_fk);
 CREATE INDEX visit_schedule_item_group_fk_visit_fk ON visit_schedule_item (group_fk,visit_fk);
 CREATE INDEX visit_schedule_item_trial_fk_visit_fk_group_fk ON visit_schedule_item (trial_fk,visit_fk,group_fk);
 CREATE INDEX visit_schedule_item_trial_fk_group_fk_visit_fk ON visit_schedule_item (trial_fk,group_fk,visit_fk);
+
+CREATE INDEX input_field_timestmap_value ON input_field_value (timestamp_value);
+CREATE INDEX input_field_date_value ON input_field_value (date_value);
 
 -- journal:
 CREATE INDEX journal_entry_modified_timestamp ON journal_entry (modified_timestamp);

@@ -258,6 +258,22 @@
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
+			
+			<p:selectOneMenu
+				id="filter#{index}"
+				value="#{searchBean.selectedItem[index]}"
+				required="false"
+				label="#{labels.criterion_selectionitem} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isFilterItems[index] and searchBean.isCriterionPropertyRendered[index]}"
+				styleClass="ctsms-control-larger">
+				<f:selectItems
+					value="#{searchBean.selectionItems[index]}"
+					var="selectItem"
+					itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectOneMenu>
+			
 			<p:autoComplete
 				id="voautocomplete#{index}"
 				value="#{searchBean.vos[index]}"

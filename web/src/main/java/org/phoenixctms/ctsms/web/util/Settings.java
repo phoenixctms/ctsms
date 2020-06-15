@@ -11,6 +11,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
@@ -22,6 +23,7 @@ import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 
@@ -175,6 +177,23 @@ public final class Settings {
 		}
 	}
 
+	public static ArrayList<SelectItem> getDurationList(String key, Bundle bundle, ArrayList<String> defaultValue, boolean signed, DurationUnitOfTime mostSignificant,
+			DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
+		ArrayList<SelectItem> durations = new ArrayList<SelectItem>();
+		Iterator<String> it = CommonUtil.getValueStringList(key, getBundle(bundle), defaultValue).iterator();
+		while (it.hasNext()) {
+			Integer duration;
+			try {
+				duration = new Integer(Integer.parseInt(it.next()));
+			} catch (NumberFormatException e) {
+				continue;
+			}
+			durations.add(new SelectItem(duration,
+					(signed ? DateUtil.getSignSymbol(duration) : "") + DateUtil.getDurationString(duration, mostSignificant, leastSignificant, leastSignificantDecimals)));
+		}
+		return durations;
+	}
+
 	public static int getInt(String key, Bundle bundle, int defaultValue) {
 		return CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 	}
@@ -205,6 +224,15 @@ public final class Settings {
 		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
 		if (value != null && value.length() > 0) {
 			return PaymentMethod.fromString(value); // illegal arg exc!
+		} else {
+			return null;
+		}
+	}
+
+	public static VisitScheduleDateMode getVisitScheduleDateMode(String key, Bundle bundle, VisitScheduleDateMode defaultValue) {
+		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
+		if (value != null && value.length() > 0) {
+			return VisitScheduleDateMode.fromString(value); // illegal arg exc!
 		} else {
 			return null;
 		}

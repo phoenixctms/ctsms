@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getVisitScheduleItemInterval</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getVisitScheduleItemInterval(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long, java.util.Date, java.util.Date, java.lang.Long, boolean)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getVisitScheduleItemInterval(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long, java.util.Date, java.util.Date, boolean)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getVisitScheduleItemIntervalTest extends TrialServiceBaseTest {

@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
@@ -68,6 +69,7 @@ import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.TeamMemberOutVOComparator;
 import org.phoenixctms.ctsms.compare.TrialStatusActionComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -81,6 +83,7 @@ import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelDefaultSettings;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelWriter;
@@ -214,6 +217,7 @@ import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitInVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemInVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
@@ -729,6 +733,7 @@ public class TrialServiceImpl
 			InputFieldValue inputFieldValue = listEntryTagValue.getValue();
 			this.getInputFieldValueDao().create(inputFieldValue);
 			listEntryTagValue = probandListEntryTagValueDao.create(listEntryTagValue);
+			notifyVisitScheduleItemReminder(listEntry, listEntryTag, now);
 			if (tagValues != null || logTrial || logProband) {
 				result = probandListEntryTagValueDao.toProbandListEntryTagValueOutVO(listEntryTagValue);
 			}
@@ -748,6 +753,7 @@ public class TrialServiceImpl
 			ProbandListEntryTagValue originalListEntryTagValue = CheckIDUtil.checkProbandListEntryTagValueId(id, probandListEntryTagValueDao);
 			if (!listEntryTag.isDisabled()
 					&& !ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), force)) {
+				boolean isEqual = ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), false);
 				checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user,
 						this.getInputFieldSelectionSetValueDao(),
@@ -760,6 +766,9 @@ public class TrialServiceImpl
 				ProbandListEntryTagValue listEntryTagValue = probandListEntryTagValueDao.probandListEntryTagValueInVOToEntity(probandListEntryTagValueIn);
 				CoreUtil.modifyVersion(originalListEntryTagValue, listEntryTagValue, now, user);
 				probandListEntryTagValueDao.update(listEntryTagValue);
+				if (!isEqual) {
+					notifyVisitScheduleItemReminder(listEntry, listEntryTag, now);
+				}
 				if (tagValues != null || logTrial || logProband) {
 					result = probandListEntryTagValueDao.toProbandListEntryTagValueOutVO(listEntryTagValue);
 				}
@@ -808,7 +817,7 @@ public class TrialServiceImpl
 		if (listEntry.getGroup() != null) {
 			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 			visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(), listEntry.getGroup().getId(), null,
-					listEntry.getProband().getId(), null, null);
+					listEntry.getProband().getId(), null, true, null);
 			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		}
 		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
@@ -1966,8 +1975,39 @@ public class TrialServiceImpl
 		}
 		ServiceUtil.checkTrialLocked(trial);
 		checkProbandListEntryTagInput(listTagIn, trial, field);
-		if (!field.equals(originalProbandListEntryTag.getField()) && this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_CHANGED);
+		if (!field.equals(originalProbandListEntryTag.getField())) {
+			if (this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_CHANGED);
+			}
+			if (!InputFieldType.TIMESTAMP.equals(field.getFieldType())) {
+				HashSet<VisitScheduleDateMode> modes = new HashSet<VisitScheduleDateMode>();
+				modes.add(VisitScheduleDateMode.TAGS);
+				Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao().findByTagsModes(null, listTagIn.getId(), modes).iterator();
+				StringBuilder sb = new StringBuilder();
+				boolean used = it.hasNext();
+				while (it.hasNext()) {
+					if (sb.length() > 0) {
+						sb.append(", ");
+					}
+					sb.append(this.getVisitScheduleItemDao().toVisitScheduleItemOutVO(it.next()).getName());
+				}
+				if (used) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_NOT_TIMESTAMP, sb.toString());
+				}
+				modes.add(VisitScheduleDateMode.TAG_DURATION);
+				it = this.getVisitScheduleItemDao().findByTagsModes(listTagIn.getId(), null, modes).iterator();
+				sb = new StringBuilder();
+				used = it.hasNext();
+				while (it.hasNext()) {
+					if (sb.length() > 0) {
+						sb.append(", ");
+					}
+					sb.append(this.getVisitScheduleItemDao().toVisitScheduleItemOutVO(it.next()).getName());
+				}
+				if (used) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_NOT_TIMESTAMP, sb.toString());
+				}
+			}
 		}
 	}
 
@@ -2030,12 +2070,109 @@ public class TrialServiceImpl
 			}
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		if (visitScheduleItemIn.getStop().compareTo(visitScheduleItemIn.getStart()) <= 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TIMESTAMP_LESS_THAN_OR_EQUAL_TO_START_TIMESTAMP);
-		}
 		if ((new VisitScheduleItemCollisionFinder(this.getTrialDao(), this.getVisitScheduleItemDao())).collides(visitScheduleItemIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_TOKEN_EXISTS_ALREADY, group == null ? null : group.getToken(), visit == null ? null
 					: visit.getToken(), visitScheduleItemIn.getToken());
+		}
+		ProbandListEntryTag startTag = null;
+		ProbandListEntryTag stopTag = null;
+		switch (visitScheduleItemIn.getMode()) {
+			case STATIC:
+				if (visitScheduleItemIn.getStart() == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TIMESTAMP_REQUIRED);
+				}
+				if (visitScheduleItemIn.getStop() == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TIMESTAMP_REQUIRED);
+				}
+				if (visitScheduleItemIn.getStop().compareTo(visitScheduleItemIn.getStart()) <= 0) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TIMESTAMP_LESS_THAN_OR_EQUAL_TO_START_TIMESTAMP);
+				}
+				if (visitScheduleItemIn.getStartTagId() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TAG_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getStopTagId() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TAG_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getOffsetSeconds() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_OFFSET_SECONDS_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getDuration() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_DURATION_NOT_NULL);
+				}
+				break;
+			case TAGS:
+				if (visitScheduleItemIn.getStart() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TIMESTAMP_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getStop() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TIMESTAMP_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getStartTagId() == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TAG_REQUIRED);
+				} else {
+					startTag = CheckIDUtil.checkProbandListEntryTagId(visitScheduleItemIn.getStartTagId(), this.getProbandListEntryTagDao());
+					if (!InputFieldType.TIMESTAMP.equals(startTag.getField().getFieldType())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TAG_FIELD_NOT_TIMESTAMP);
+					}
+					if (!trial.equals(startTag.getTrial())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_WRONG_START_TAG,
+								CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
+					}
+				}
+				if (visitScheduleItemIn.getStopTagId() == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_STOP_TAG_REQUIRED);
+				} else {
+					stopTag = CheckIDUtil.checkProbandListEntryTagId(visitScheduleItemIn.getStopTagId(), this.getProbandListEntryTagDao());
+					if (!InputFieldType.TIMESTAMP.equals(stopTag.getField().getFieldType())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TAG_FIELD_NOT_TIMESTAMP);
+					}
+					if (!trial.equals(stopTag.getTrial())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_WRONG_END_TAG,
+								CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
+					}
+				}
+				if (startTag.equals(stopTag)) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TAG_EQUALS_END_TAG);
+				}
+				if (visitScheduleItemIn.getDuration() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_DURATION_NOT_NULL);
+				}
+				break;
+			case TAG_DURATION:
+				if (visitScheduleItemIn.getStart() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TIMESTAMP_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getStop() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TIMESTAMP_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getStartTagId() == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TAG_REQUIRED);
+				} else {
+					startTag = CheckIDUtil.checkProbandListEntryTagId(visitScheduleItemIn.getStartTagId(), this.getProbandListEntryTagDao());
+					if (!InputFieldType.TIMESTAMP.equals(startTag.getField().getFieldType())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_START_TAG_FIELD_NOT_TIMESTAMP);
+					}
+					if (!trial.equals(startTag.getTrial())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_WRONG_START_TAG,
+								CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
+					}
+				}
+				if (visitScheduleItemIn.getStopTagId() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_END_TAG_NOT_NULL);
+				}
+				if (visitScheduleItemIn.getDuration() == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_DURATION_REQUIRED);
+				} else if (visitScheduleItemIn.getDuration() < 1) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_SCHEDULE_ITEM_DURATION_LESS_THAN_ONE);
+				}
+				break;
+			case STALE:
+				//allow any nonsense.
+				break;
+			default:
+				throw new IllegalArgumentException(
+						L10nUtil.getMessage(MessageCodes.UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE, DefaultMessages.UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE,
+								visitScheduleItemIn.getMode()));
 		}
 	}
 
@@ -2936,7 +3073,7 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(visitScheduleItem, now, user);
 		visitScheduleItem = visitScheduleItemDao.create(visitScheduleItem);
-		notifyVisitScheduleItemReminder(visitScheduleItem, now);
+		notifyVisitScheduleItemReminder(visitScheduleItem, null, now);
 		VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
 		ServiceUtil.logSystemMessage(visitScheduleItem.getTrial(), result.getTrial(), now, user, SystemMessageCodes.VISIT_SCHEDULE_ITEM_CREATED, result, null,
 				this.getJournalEntryDao());
@@ -3447,7 +3584,7 @@ public class TrialServiceImpl
 		field.removeListEntryTags(probandListEntryTag);
 		ServiceUtil.removeProbandListEntryTag(probandListEntryTag, true, Settings.getBoolean(SettingCodes.REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED, Bundle.SETTINGS,
 				DefaultSettings.REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED), now, user, true, true, this.getProbandListEntryTagValueDao(),
-				this.getInputFieldValueDao(), journalEntryDao, probandListEntryTagDao);
+				this.getInputFieldValueDao(), journalEntryDao, probandListEntryTagDao, this.getVisitScheduleItemDao());
 		ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_DELETED, result, null, journalEntryDao);
 		return result;
 	}
@@ -3637,6 +3774,57 @@ public class TrialServiceImpl
 				logSystemMessage(booking.getInventory(), result, now, user, SystemMessageCodes.TRIAL_DELETED_BOOKING_UPDATED, bookingVO, original, journalEntryDao);
 			}
 			trial.getInventoryBookings().clear();
+			DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
+			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+			Iterator<VisitScheduleItem> visitScheduleItemsIt = trial.getVisitScheduleItems().iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+				Trial visitScheduleItemTrial = visitScheduleItem.getTrial();
+				ProbandGroup group = visitScheduleItem.getGroup();
+				Visit visit = visitScheduleItem.getVisit();
+				ProbandListEntryTag startTag = visitScheduleItem.getStartTag();
+				ProbandListEntryTag stopTag = visitScheduleItem.getStopTag();
+				Iterator<DutyRosterTurn> dutyRosterTurnIt = visitScheduleItem.getDutyRosterTurns().iterator();
+				while (dutyRosterTurnIt.hasNext()) {
+					DutyRosterTurn dutyRosterTurn = dutyRosterTurnIt.next();
+					Staff staff = dutyRosterTurn.getStaff();
+					DutyRosterTurnOutVO original = null;
+					if (staff != null) {
+						original = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
+					}
+					visitScheduleItemTrial.removeDutyRosterTurns(dutyRosterTurn);
+					dutyRosterTurn.setTrial(null);
+					dutyRosterTurn.setVisitScheduleItem(null);
+					CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
+					dutyRosterTurnDao.update(dutyRosterTurn);
+					if (staff != null) {
+						DutyRosterTurnOutVO dutyRosterTurnVO = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
+						ServiceUtil.logSystemMessage(staff, result, now, user, SystemMessageCodes.TRIAL_DELETED_DUTY_ROSTER_TURN_UPDATED, dutyRosterTurnVO, original,
+								journalEntryDao);
+					}
+				}
+				visitScheduleItem.getDutyRosterTurns().clear();
+				visitScheduleItem.setTrial(null);
+				if (group != null) {
+					group.removeVisitScheduleItems(visitScheduleItem);
+					visitScheduleItem.setGroup(null);
+				}
+				if (visit != null) {
+					visit.removeVisitScheduleItems(visitScheduleItem);
+					visitScheduleItem.setVisit(null);
+				}
+				if (startTag != null) { // required for removeProbandListEntryTag
+					startTag.removeStartDates(visitScheduleItem);
+					visitScheduleItem.setStartTag(null);
+				}
+				if (stopTag != null) { // required for removeProbandListEntryTag
+					stopTag.removeStopDates(visitScheduleItem);
+					visitScheduleItem.setStopTag(null);
+				}
+				ServiceUtil.removeNotifications(visitScheduleItem.getNotifications(), notificationDao, notificationRecipientDao);
+				visitScheduleItemDao.remove(visitScheduleItem);
+			}
+			trial.getVisitScheduleItems().clear();
 			InputFieldValueDao inputFieldValueDao = this.getInputFieldValueDao();
 			ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 			ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
@@ -3647,7 +3835,8 @@ public class TrialServiceImpl
 				ServiceUtil.removeProbandListEntryTag(probandListEntryTag, true, checkProbandLocked, now, user, false, true, probandListEntryTagValueDao,
 						inputFieldValueDao,
 						journalEntryDao,
-						probandListEntryTagDao);
+						probandListEntryTagDao,
+						visitScheduleItemDao);
 			}
 			trial.getListEntryTags().clear();
 			StratificationRandomizationListDao stratificationRandomizationListDao = this.getStratificationRandomizationListDao();
@@ -3726,37 +3915,6 @@ public class TrialServiceImpl
 				ecrfDao.remove(ecrf);
 			}
 			trial.getEcrfs().clear();
-			DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
-			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-			Iterator<VisitScheduleItem> visitScheduleItemsIt = trial.getVisitScheduleItems().iterator();
-			while (visitScheduleItemsIt.hasNext()) {
-				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
-				Trial visitScheduleItemTrial = visitScheduleItem.getTrial();
-				Iterator<DutyRosterTurn> dutyRosterTurnIt = visitScheduleItem.getDutyRosterTurns().iterator();
-				while (dutyRosterTurnIt.hasNext()) {
-					DutyRosterTurn dutyRosterTurn = dutyRosterTurnIt.next();
-					Staff staff = dutyRosterTurn.getStaff();
-					DutyRosterTurnOutVO original = null;
-					if (staff != null) {
-						original = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
-					}
-					visitScheduleItemTrial.removeDutyRosterTurns(dutyRosterTurn);
-					dutyRosterTurn.setTrial(null);
-					dutyRosterTurn.setVisitScheduleItem(null);
-					CoreUtil.modifyVersion(dutyRosterTurn, dutyRosterTurn.getVersion(), now, user);
-					dutyRosterTurnDao.update(dutyRosterTurn);
-					if (staff != null) {
-						DutyRosterTurnOutVO dutyRosterTurnVO = dutyRosterTurnDao.toDutyRosterTurnOutVO(dutyRosterTurn);
-						ServiceUtil.logSystemMessage(staff, result, now, user, SystemMessageCodes.TRIAL_DELETED_DUTY_ROSTER_TURN_UPDATED, dutyRosterTurnVO, original,
-								journalEntryDao);
-					}
-				}
-				visitScheduleItem.getDutyRosterTurns().clear();
-				visitScheduleItem.setTrial(null);
-				ServiceUtil.removeNotifications(visitScheduleItem.getNotifications(), notificationDao, notificationRecipientDao);
-				visitScheduleItemDao.remove(visitScheduleItem);
-			}
-			trial.getVisitScheduleItems().clear();
 			Iterator<DutyRosterTurn> trialDutyRosterTurnIt = trial.getDutyRosterTurns().iterator();
 			while (trialDutyRosterTurnIt.hasNext()) {
 				DutyRosterTurn dutyRosterTurn = trialDutyRosterTurnIt.next();
@@ -3969,6 +4127,8 @@ public class TrialServiceImpl
 		ServiceUtil.checkTrialLocked(trial);
 		ProbandGroup group = visitScheduleItem.getGroup();
 		Visit visit = visitScheduleItem.getVisit();
+		ProbandListEntryTag startTag = visitScheduleItem.getStartTag();
+		ProbandListEntryTag stopTag = visitScheduleItem.getStopTag();
 		VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -3981,6 +4141,14 @@ public class TrialServiceImpl
 		if (visit != null) {
 			visit.removeVisitScheduleItems(visitScheduleItem);
 			visitScheduleItem.setVisit(null);
+		}
+		if (startTag != null) {
+			startTag.removeStartDates(visitScheduleItem);
+			visitScheduleItem.setStartTag(null);
+		}
+		if (stopTag != null) {
+			stopTag.removeStopDates(visitScheduleItem);
+			visitScheduleItem.setStopTag(null);
 		}
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 		Iterator<DutyRosterTurn> dutyRosterTurnsIt = visitScheduleItem.getDutyRosterTurns().iterator();
@@ -4904,12 +5072,12 @@ public class TrialServiceImpl
 				visitScheduleItems = trial.getVisitScheduleItems();
 				break;
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, null);
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, true, null);
 				break;
 			default:
 				visitScheduleItems = null;
 		}
-		VisitScheduleExcelVO result = ServiceUtil.creatVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
+		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
 				visitScheduleItemDao,
 				this.getProbandListStatusEntryDao(),
 				this.getProbandAddressDao(),
@@ -4978,21 +5146,26 @@ public class TrialServiceImpl
 			AuthenticationVO auth, Long probandListEntryId) throws Exception {
 		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		ProbandGroup probandGroup = probandListEntry.getGroup();
-		if (probandGroup != null) {
-			Collection collidingProbandStatusEntries = new HashSet();
-			Long probandId = probandListEntry.getProband().getId();
-			ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
-			Iterator<VisitScheduleItem> it = probandGroup.getVisitScheduleItems().iterator();
-			while (it.hasNext()) {
-				VisitScheduleItem visitScheduleItem = it.next();
-				collidingProbandStatusEntries
-						.addAll(probandStatusEntryDao.findByProbandInterval(probandId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, null));
-			}
-			probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
-			return new ArrayList<ProbandStatusEntryOutVO>(collidingProbandStatusEntries);
-		} else {
-			return new ArrayList<ProbandStatusEntryOutVO>();
+		//if (probandGroup != null) {
+		Collection collidingProbandStatusEntries = new HashSet();
+		Long probandId = probandListEntry.getProband().getId();
+		ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
+		//Iterator<VisitScheduleItem> it = probandGroup.getVisitScheduleItems().iterator();
+		Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao()
+				.findByTrialGroupVisitProbandTravel(probandListEntry.getTrial().getId(), probandGroup != null ? probandGroup.getId() : null,
+						null, probandListEntry.getProband().getId(), null, true, null)
+				.iterator();
+		while (it.hasNext()) {
+			VisitScheduleItem expanded = it.next();
+			collidingProbandStatusEntries
+					.addAll(probandStatusEntryDao.findByProbandInterval(probandId, expanded.getStart(), expanded.getStop(), false, null));
 		}
+		probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
+		return new ArrayList<ProbandStatusEntryOutVO>(collidingProbandStatusEntries);
+		//} else {
+		//	//we do not count collisions of subjects that have not been assigned to a group yet:
+		//	return new ArrayList<ProbandStatusEntryOutVO>();
+		//}
 	}
 
 	@Override
@@ -5005,22 +5178,41 @@ public class TrialServiceImpl
 		Collection collidingProbandStatusEntries;
 		ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
 		if (probandId != null) {
-			collidingProbandStatusEntries = probandStatusEntryDao.findByProbandInterval(probandId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, null);
+			VisitScheduleItem expanded = this.getVisitScheduleItemDao().findExpandedDateMode(visitScheduleItem.getId(), probandId).iterator().next();
+			collidingProbandStatusEntries = probandStatusEntryDao.findByProbandInterval(probandId, expanded.getStart(), expanded.getStop(), false, null);
 			probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
 		} else {
+			collidingProbandStatusEntries = new HashSet();
 			ProbandGroup probandGroup = visitScheduleItem.getGroup();
 			if (probandGroup != null) {
-				collidingProbandStatusEntries = new HashSet();
-				Iterator<ProbandListEntry> it = probandGroup.getProbandListEntries().iterator();
-				while (it.hasNext()) {
-					ProbandListEntry probandListEntry = it.next();
-					collidingProbandStatusEntries.addAll(probandStatusEntryDao.findByProbandInterval(probandListEntry.getProband().getId(), visitScheduleItem.getStart(),
-							visitScheduleItem.getStop(), false, null));
+				Iterator<ProbandListEntry> listEntriesit = probandGroup.getProbandListEntries().iterator();
+				while (listEntriesit.hasNext()) {
+					ProbandListEntry probandListEntry = listEntriesit.next();
+					Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao().findExpandedDateMode(visitScheduleItem.getId(), probandListEntry.getProband().getId())
+							.iterator();
+					while (it.hasNext()) {
+						VisitScheduleItem expanded = it.next();
+						collidingProbandStatusEntries.addAll(probandStatusEntryDao.findByProbandInterval(probandListEntry.getProband().getId(), expanded.getStart(),
+								expanded.getStop(), false, null));
+					}
 				}
 				probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
 				collidingProbandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>(collidingProbandStatusEntries);
 			} else {
-				collidingProbandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>();
+				Iterator<ProbandListEntry> listEntriesit = visitScheduleItem.getTrial().getProbandListEntries().iterator();
+				while (listEntriesit.hasNext()) {
+					ProbandListEntry probandListEntry = listEntriesit.next();
+					Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao()
+							.findExpandedDateModeGroup(visitScheduleItem.getId(), probandListEntry.getProband().getId(), null)
+							.iterator();
+					while (it.hasNext()) {
+						VisitScheduleItem expanded = it.next();
+						collidingProbandStatusEntries.addAll(probandStatusEntryDao.findByProbandInterval(probandListEntry.getProband().getId(), expanded.getStart(),
+								expanded.getStop(), false, null));
+					}
+				}
+				probandStatusEntryDao.toProbandStatusEntryOutVOCollection(collidingProbandStatusEntries);
+				collidingProbandStatusEntries = new ArrayList<ProbandStatusEntryOutVO>(collidingProbandStatusEntries);
 			}
 		}
 		return collidingProbandStatusEntries;
@@ -5032,10 +5224,15 @@ public class TrialServiceImpl
 		if (staffId != null) {
 			CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		}
-		Collection collidingStaffStatusEntries;
+		Collection collidingStaffStatusEntries = new HashSet();
 		StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
-		collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staffId, visitScheduleItem.getStart(), visitScheduleItem.getStop(), false, true, false);
+		Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao().findExpandedDateMode(visitScheduleItem.getId(), null).iterator();
+		while (it.hasNext()) {
+			VisitScheduleItem expanded = it.next();
+			collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(staffId, expanded.getStart(), expanded.getStop(), false, true, false));
+		}
 		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
+		collidingStaffStatusEntries = new ArrayList<StaffStatusEntryOutVO>(collidingStaffStatusEntries);
 		return collidingStaffStatusEntries;
 	}
 
@@ -5981,7 +6178,8 @@ public class TrialServiceImpl
 			AuthenticationVO auth, Long probandId, Long visitScheduleItemId) throws Exception {
 		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 		Proband proband = CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
-		VisitScheduleItem visitScheduleItem = CheckIDUtil.checkVisitScheduleItemId(visitScheduleItemId, this.getVisitScheduleItemDao());
+		CheckIDUtil.checkVisitScheduleItemId(visitScheduleItemId, this.getVisitScheduleItemDao());
+		VisitScheduleItem visitScheduleItem = this.getVisitScheduleItemDao().findExpandedDateMode(visitScheduleItemId, probandId).iterator().next();
 		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(visitScheduleItem.getTrial().getId(), probandId, visitScheduleItem.getStop());
 		ProbandListStatusEntryOutVO result = null;
 		if (probandListStatusEntry != null) {
@@ -6559,7 +6757,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected long handleGetVisitScheduleItemCount(
-			AuthenticationVO auth, Long trialId, Long probandGroupId, Long visitId, Long probandId) throws Exception {
+			AuthenticationVO auth, Long trialId, Long probandGroupId, Long visitId, Long probandId, boolean expand) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -6572,13 +6770,36 @@ public class TrialServiceImpl
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
-		return this.getVisitScheduleItemDao().getCount(trialId, probandGroupId, visitId, probandId, null);
+		return this.getVisitScheduleItemDao().getCount(trialId, probandGroupId, visitId, probandId, null, expand);
 	}
 
 	@Override
-	protected Collection<VisitScheduleItemOutVO> handleGetVisitScheduleItemInterval(AuthenticationVO auth, Long trialId,
-			Long departmentId, Long statusId, Long visitTypeId, Date from, Date to, Long id, boolean sort)
+	protected Collection<VisitScheduleItemOutVO> handleGetVisitScheduleItems(AuthenticationVO auth, Long trialId,
+			Long departmentId, Date from, Date to, Long id, boolean sort)
 			throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		if (id != null) {
+			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
+		}
+		Collection visitScheduleItems = visitScheduleItemDao.findByTrialDepartmentIntervalId(trialId, departmentId,
+				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), id);
+		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+		if (sort) {
+			visitScheduleItems = new ArrayList(visitScheduleItems);
+			Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+		}
+		return visitScheduleItems;
+	}
+
+	@Override
+	protected Collection<VisitScheduleAppointmentVO> handleGetVisitScheduleItemInterval(AuthenticationVO auth, Long trialId,
+			Long departmentId, Long statusId, Long visitTypeId, Date from, Date to, boolean sort) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -6592,17 +6813,20 @@ public class TrialServiceImpl
 			CheckIDUtil.checkVisitTypeId(visitTypeId, this.getVisitTypeDao());
 		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-		if (id != null) {
-			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
+		ProbandDao probandDao = this.getProbandDao();
+		ArrayList<VisitScheduleAppointmentVO> result = new ArrayList<VisitScheduleAppointmentVO>();
+		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, statusId, visitTypeId,
+				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
+		while (it.hasNext()) {
+			Object[] visitScheduleItemProband = it.next();
+			VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO((VisitScheduleItem) visitScheduleItemProband[0]);
+			visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO((Proband) visitScheduleItemProband[1]));
+			result.add(visitScheduleItemProbandVO);
 		}
-		Collection visitScheduleItems = visitScheduleItemDao.findByTrialDepartmentStatusTypeIntervalId(trialId, departmentId, statusId, visitTypeId,
-				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), id);
-		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		if (sort) {
-			visitScheduleItems = new ArrayList(visitScheduleItems);
-			Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+			Collections.sort(result, new VisitScheduleAppointmentIntervalComparator(false));
 		}
-		return visitScheduleItems;
+		return result;
 	}
 
 	@Override
@@ -6619,7 +6843,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<VisitScheduleItemOutVO> handleGetVisitScheduleItemList(
-			AuthenticationVO auth, Long trialId, Long probandGroupId, Long visitId, Long probandId, PSFVO psf) throws Exception {
+			AuthenticationVO auth, Long trialId, Long probandGroupId, Long visitId, Long probandId, boolean expand, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -6633,7 +6857,7 @@ public class TrialServiceImpl
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-		Collection visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialId, probandGroupId, visitId, probandId, null, psf);
+		Collection visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialId, probandGroupId, visitId, probandId, null, expand, psf);
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		return visitScheduleItems;
 	}
@@ -7551,7 +7775,7 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		CoreUtil.modifyVersion(originalVisitScheduleItem, visitScheduleItem, now, user);
 		visitScheduleItemDao.update(visitScheduleItem);
-		notifyVisitScheduleItemReminder(visitScheduleItem, now);
+		notifyVisitScheduleItemReminder(visitScheduleItem, null, now);
 		VisitScheduleItemOutVO result = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
 		ServiceUtil.logSystemMessage(visitScheduleItem.getTrial(), result.getTrial(), now, user, SystemMessageCodes.VISIT_SCHEDULE_ITEM_UPDATED, result, original,
 				this.getJournalEntryDao());
@@ -7703,20 +7927,45 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void notifyVisitScheduleItemReminder(VisitScheduleItem visitScheduleItem, Date now) throws Exception {
-		ReminderEntityAdapter reminderItem = ReminderEntityAdapter.getInstance(visitScheduleItem);
-		VariablePeriod visitScheduleItemReminderPeriod = Settings.getVariablePeriod(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
-				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD);
-		Long visitScheduleItemReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
-				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS);
-		Date reminderStart = reminderItem.getReminderStart(now, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays);
-		if (reminderItem.isNotify() && now.compareTo(reminderStart) >= 0 && now.compareTo(visitScheduleItem.getStop()) <= 0
-				&& !visitScheduleItem.getTrial().getStatus().isIgnoreTimelineEvents()) {
-			this.getNotificationDao().addNotification(visitScheduleItem, now, null);
+	private void notifyVisitScheduleItemReminder(ProbandListEntry listEntry, ProbandListEntryTag listEntryTag,
+			Timestamp now) throws Exception {
+		Iterator<VisitScheduleItem> it = listEntryTag.getStartDates().iterator();
+		while (it.hasNext()) {
+			notifyVisitScheduleItemReminder(it.next(), listEntry, now);
+		}
+		it = listEntryTag.getStopDates().iterator();
+		while (it.hasNext()) {
+			notifyVisitScheduleItemReminder(it.next(), listEntry, now);
+		}
+	}
+
+	private void notifyVisitScheduleItemReminder(VisitScheduleItem visitScheduleItem, ProbandListEntry listEntry, Date now) throws Exception {
+		Collection<Notification> oldNotifications;
+		if (listEntry != null) {
+			oldNotifications = this.getNotificationDao().getNotifications(visitScheduleItem, listEntry.getProband());
 		} else {
-			ServiceUtil
-					.cancelNotifications(visitScheduleItem.getNotifications(), this.getNotificationDao(),
-							org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER);
+			oldNotifications = visitScheduleItem.getNotifications();
+		}
+		ServiceUtil.cancelNotifications(oldNotifications, this.getNotificationDao(),
+				org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER);
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Iterator<Map.Entry> visitScheduleItemScheduleIt = visitScheduleItemDao
+				.findVisitScheduleItemSchedule(now, visitScheduleItem.getId(), listEntry != null ? listEntry.getProband().getId() : null, null, null, true, false,
+						Settings.getVariablePeriod(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
+								DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD),
+						Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
+								DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS),
+						false)
+				.entrySet().iterator();
+		while (visitScheduleItemScheduleIt.hasNext()) {
+			Entry visitScheduleItemSchedule = visitScheduleItemScheduleIt.next();
+			Long probandId = (Long) visitScheduleItemSchedule.getKey();
+			Proband proband = probandId != null ? this.getProbandDao().load(probandId) : null;
+			//XXXX
+			Iterator<VisitScheduleItem> visitScheduleItemsIt = ((List<VisitScheduleItem>) visitScheduleItemSchedule.getValue()).iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				this.getNotificationDao().addNotification(visitScheduleItemsIt.next(), proband, now, null);
+			}
 		}
 	}
 
@@ -7975,6 +8224,26 @@ public class TrialServiceImpl
 		RandomizationListCode code = CheckIDUtil.checkRandomizationListCodeId(randomizationListCodeId, randomizationListCodeDao);
 		RandomizationListCodeOutVO result = randomizationListCodeDao.toRandomizationListCodeOutVO(code);
 		Randomization.obfuscateRandomizationListCodeValues(result);
+		return result;
+	}
+
+	@Override
+	protected Collection<VisitScheduleAppointmentVO> handleGetVisitScheduleAppointmentList(AuthenticationVO auth, Long visitScheduleItemId, Long probandId, PSFVO psf)
+			throws Exception {
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		CheckIDUtil.checkVisitScheduleItemId(visitScheduleItemId, visitScheduleItemDao);
+		ProbandDao probandDao = this.getProbandDao();
+		if (probandId != null) {
+			CheckIDUtil.checkProbandId(probandId, probandDao);
+		}
+		ArrayList<VisitScheduleAppointmentVO> result = new ArrayList<VisitScheduleAppointmentVO>();
+		Iterator<Object[]> it = visitScheduleItemDao.findExpandedDateMode(visitScheduleItemId, probandId, psf).iterator();
+		while (it.hasNext()) {
+			Object[] visitScheduleItemProband = it.next();
+			VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO((VisitScheduleItem) visitScheduleItemProband[0]);
+			visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO((Proband) visitScheduleItemProband[1]));
+			result.add(visitScheduleItemProbandVO);
+		}
 		return result;
 	}
 }

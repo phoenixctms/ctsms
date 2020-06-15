@@ -20,7 +20,8 @@ public class CriterionIsSelectionList extends CriterionListBase<Boolean> {
 		CriterionInVO criterionIn = getCriterionIn(index);
 		CriterionPropertyVO propertyVO = getPropertyVO(criterionIn);
 		if (propertyVO != null) {
-			if (!CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn)) && WebUtil.testSelectionSetServiceMethodName(propertyVO)) {
+			if (!CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn))
+					&& WebUtil.testSelectionSetServiceMethodName(propertyVO)) {
 				return true;
 			}
 		}

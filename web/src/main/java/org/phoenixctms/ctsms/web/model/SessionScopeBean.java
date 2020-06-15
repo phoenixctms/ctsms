@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
+import org.phoenixctms.ctsms.util.FilterItemsStore;
 import org.phoenixctms.ctsms.util.MaxSizeHashMap;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -63,7 +64,7 @@ import org.primefaces.model.StreamedContent;
 
 @ManagedBean
 @SessionScoped
-public class SessionScopeBean {
+public class SessionScopeBean implements FilterItemsStore {
 
 	private static final String MENUITEM_CHECKED_STYLECLASS = "ui-icon ui-icon-check";
 
@@ -149,9 +150,13 @@ public class SessionScopeBean {
 	private ArrayList<SelectItem> filterInverseBooleans;
 	private ArrayList<SelectItem> filterInputFieldTypes;
 	private ArrayList<SelectItem> filterSexes;
+	private ArrayList<SelectItem> filterVisitScheduleDateModes;
+	private ArrayList<SelectItem> filterVisitScheduleDurations;
+	private ArrayList<SelectItem> filterVisitScheduleOffsets;
 	private ArrayList<SelectItem> filterRandomizationModes;
 	private ArrayList<SelectItem> filterJobStates;
 	private ArrayList<SelectItem> filterVariablePeriods;
+	private ArrayList<SelectItem> filterVariablePeriodsWoExplicit;
 	private ArrayList<SelectItem> filterEventImportances;
 	private ArrayList<SelectItem> filterPaymentMethods;
 	private ArrayList<SelectItem> filterDepartments;
@@ -507,6 +512,30 @@ public class SessionScopeBean {
 		return filterSexes;
 	}
 
+	public synchronized ArrayList<SelectItem> getFilterVisitScheduleDateModes() {
+		if (filterVisitScheduleDateModes == null) {
+			filterVisitScheduleDateModes = WebUtil.getVisitScheduleDateModes();
+			filterVisitScheduleDateModes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVisitScheduleDateModes;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterVisitScheduleOffsets() {
+		if (filterVisitScheduleOffsets == null) {
+			filterVisitScheduleOffsets = WebUtil.getVisitScheduleOffsets();
+			filterVisitScheduleOffsets.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVisitScheduleOffsets;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterVisitScheduleDurations() {
+		if (filterVisitScheduleDurations == null) {
+			filterVisitScheduleDurations = WebUtil.getVisitScheduleDurations();
+			filterVisitScheduleDurations.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVisitScheduleDurations;
+	}
+
 	public synchronized ArrayList<SelectItem> getFilterSponsoringTypes() {
 		if (filterSponsoringTypes == null) {
 			filterSponsoringTypes = WebUtil.getAllSponsoringTypes();
@@ -577,6 +606,14 @@ public class SessionScopeBean {
 			filterVariablePeriods.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		}
 		return filterVariablePeriods;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterVariablePeriodsWoExplicit() {
+		if (filterVariablePeriodsWoExplicit == null) {
+			filterVariablePeriodsWoExplicit = WebUtil.getVariablePeriodsWoExplicit();
+			filterVariablePeriodsWoExplicit.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterVariablePeriodsWoExplicit;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterVisitTypes() {
@@ -854,9 +891,13 @@ public class SessionScopeBean {
 		filterInverseBooleans = null;
 		filterInputFieldTypes = null;
 		filterSexes = null;
+		filterVisitScheduleDateModes = null;
+		filterVisitScheduleDurations = null;
+		filterVisitScheduleOffsets = null;
 		filterRandomizationModes = null;
 		filterJobStates = null;
 		filterVariablePeriods = null;
+		filterVariablePeriodsWoExplicit = null;
 		filterEventImportances = null;
 		filterPaymentMethods = null;
 		filterDepartments = null;
@@ -1028,7 +1069,7 @@ public class SessionScopeBean {
 				while (it.hasNext()) {
 					Integer timeZoneOffset = it.next();
 					Submenu offsetTimeZonesMenu = new Submenu();
-					offsetTimeZonesMenu.setLabel(Messages.getMessage(MessageCodes.OFFSET_TIME_ZONE_LABEL, timeZoneOffset < 0 ? "-" : (timeZoneOffset > 0 ? "+" : ""),
+					offsetTimeZonesMenu.setLabel(Messages.getMessage(MessageCodes.OFFSET_TIME_ZONE_LABEL, DateUtil.getSignSymbol(timeZoneOffset),
 							DateUtil.getDurationString(timeZoneOffset / 1000, DurationUnitOfTime.HOURS, DurationUnitOfTime.MINUTES, 0)));
 					offsetTimeZonesMenu.setId("offsetTimeZonesMenu_" + Integer.toString(i));
 					int j = 0;

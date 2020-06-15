@@ -28,6 +28,7 @@ public interface SettingCodes {
 	public static final String SQL_UNION_KEYWORD = "sql_union_keyword";
 	public static final String SQL_INTERSECT_KEYWORD = "sql_intersect_keyword";
 	public static final String SQL_EXCEPT_KEYWORD = "sql_except_keyword";
+	public static final String SQL_ADD_SECONDS_TERM = "sql_add_seconds_term";
 	public static final String LDAP_FAILOVER = "ldap_failover";
 	public static final String PASSWORD_MIN_LENGTH = "password_min_length";
 	public static final String PASSWORD_MAX_LENGTH = "password_max_length";

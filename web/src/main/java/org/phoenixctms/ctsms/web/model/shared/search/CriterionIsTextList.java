@@ -21,7 +21,10 @@ public class CriterionIsTextList extends CriterionListBase<Boolean> {
 		CriterionInVO criterionIn = getCriterionIn(index);
 		CriterionPropertyVO propertyVO = getPropertyVO(criterionIn);
 		if (propertyVO != null && (CriterionValueType.STRING.equals(propertyVO.getValueType()) || CriterionValueType.STRING_HASH.equals(propertyVO.getValueType()))) {
-			if (!CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn)) && !WebUtil.testSelectionSetServiceMethodName(propertyVO) && !WebUtil.testPicker(propertyVO)
+			if (!CommonUtil.isUnaryCriterionRestriction(getRestriction(criterionIn))
+					&& !WebUtil.testSelectionSetServiceMethodName(propertyVO)
+					&& !WebUtil.testFilterItemsMethodName(propertyVO)
+					&& !WebUtil.testPicker(propertyVO)
 					&& !WebUtil.testCompleteMethodName(propertyVO)) {
 				return true;
 			}

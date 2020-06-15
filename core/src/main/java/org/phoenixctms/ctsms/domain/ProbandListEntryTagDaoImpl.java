@@ -83,8 +83,11 @@ public class ProbandListEntryTagDaoImpl
 	}
 
 	@Override
-	protected Collection<ProbandListEntryTag> handleFindAllSorted(String nameInfix, Integer limit) throws Exception {
+	protected Collection<ProbandListEntryTag> handleFindListEntryTags(Long trialId, String nameInfix, Integer limit) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
+		if (trialId != null) {
+			listEntryTagCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = listEntryTagCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = listEntryTagCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);

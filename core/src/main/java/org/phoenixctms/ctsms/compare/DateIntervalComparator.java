@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.util.date.DateInterval;
 
 public class DateIntervalComparator extends IntervalComparatorBase<DateInterval> {
 
-	public DateIntervalComparator(boolean intDesc) {
-		super(intDesc);
+	public DateIntervalComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override

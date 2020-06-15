@@ -1871,11 +1871,16 @@
     create table VISIT_SCHEDULE_ITEM (
         ID BIGINT not null,
         TOKEN CHARACTER VARYING(1024),
-        START TIMESTAMP WITHOUT TIME ZONE not null,
-        STOP TIMESTAMP WITHOUT TIME ZONE not null,
+        MODE CHARACTER VARYING(1024) not null,
+        START TIMESTAMP WITHOUT TIME ZONE,
+        STOP TIMESTAMP WITHOUT TIME ZONE,
+        DURATION INTEGER,
+        OFFSET_SECONDS INTEGER,
         NOTIFY BOOLEAN not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
+        START_TAG_FK BIGINT,
+        STOP_TAG_FK BIGINT,
         GROUP_FK BIGINT,
         VISIT_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
@@ -3407,6 +3412,16 @@
         add constraint VISIT_SCHEDULE_ITEM_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
+
+    alter table VISIT_SCHEDULE_ITEM 
+        add constraint VISIT_SCHEDULE_ITEM_START_TAG_FKC 
+        foreign key (START_TAG_FK) 
+        references PROBAND_LIST_ENTRY_TAG;
+
+    alter table VISIT_SCHEDULE_ITEM 
+        add constraint VISIT_SCHEDULE_ITEM_STOP_TAG_FKC 
+        foreign key (STOP_TAG_FK) 
+        references PROBAND_LIST_ENTRY_TAG;
 
     alter table VISIT_SCHEDULE_ITEM 
         add constraint VISIT_SCHEDULE_ITEM_GROUP_FKC 

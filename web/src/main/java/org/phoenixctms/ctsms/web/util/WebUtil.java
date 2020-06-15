@@ -2984,6 +2984,50 @@ public final class WebUtil {
 		return paymentMethods;
 	}
 
+	public static ArrayList<SelectItem> getVisitScheduleDateModes() {
+		ArrayList<SelectItem> visitScheduleDateModes;
+		Collection<VisitScheduleDateModeVO> visitScheduleDateModeVOs = null;
+		try {
+			visitScheduleDateModeVOs = getServiceLocator().getSelectionSetService().getVisitScheduleDateModes(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (visitScheduleDateModeVOs != null) {
+			visitScheduleDateModes = new ArrayList<SelectItem>(visitScheduleDateModeVOs.size());
+			Iterator<VisitScheduleDateModeVO> it = visitScheduleDateModeVOs.iterator();
+			while (it.hasNext()) {
+				VisitScheduleDateModeVO visitScheduleDateModeVO = it.next();
+				visitScheduleDateModes.add(new SelectItem(visitScheduleDateModeVO.getDateMode().name(), visitScheduleDateModeVO.getName()));
+			}
+		} else {
+			visitScheduleDateModes = new ArrayList<SelectItem>();
+		}
+		return visitScheduleDateModes;
+	}
+
+	public static ArrayList<SelectItem> getVisitScheduleDurations() {
+		return Settings.getDurationList(SettingCodes.VISIT_SCHEDULE_ITEM_DURATIONS, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_DURATIONS,
+				false,
+				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+	}
+
+	public static ArrayList<SelectItem> getVisitScheduleOffsets() {
+		return Settings.getDurationList(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSETS, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSETS,
+				true,
+				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
+						DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
+				Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
+						DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+	}
+
 	public static ProbandOutVO getProband(Long probandId, Integer maxInstances, Integer maxParentsDepth, Integer maxChildrenDepth) {
 		if (probandId != null) {
 			try {
@@ -4009,6 +4053,28 @@ public final class WebUtil {
 		return variablePeriods;
 	}
 
+	public static ArrayList<SelectItem> getVariablePeriodsWoExplicit() {
+		ArrayList<SelectItem> variablePeriods;
+		Collection<VariablePeriodVO> periodVOs = null;
+		try {
+			periodVOs = getServiceLocator().getSelectionSetService().getVariablePeriodsWoExplicit(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (periodVOs != null) {
+			variablePeriods = new ArrayList<SelectItem>(periodVOs.size());
+			Iterator<VariablePeriodVO> it = periodVOs.iterator();
+			while (it.hasNext()) {
+				VariablePeriodVO periodVO = it.next();
+				variablePeriods.add(new SelectItem(periodVO.getPeriod().name(), periodVO.getName()));
+			}
+		} else {
+			variablePeriods = new ArrayList<SelectItem>();
+		}
+		return variablePeriods;
+	}
+
 	public static String getViewId() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (context != null) {
@@ -4279,10 +4345,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long getVisitScheduleItemCount(Long trialId, Long probandId) {
+	public static Long getVisitScheduleItemCount(Long trialId, Long probandId, boolean expand) {
 		if (trialId != null || probandId != null) {
 			try {
-				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId);
+				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId, expand);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -4735,6 +4801,13 @@ public final class WebUtil {
 
 	public static boolean testConverter(CriterionPropertyVO propertyVO) {
 		if (propertyVO.getConverter() != null && propertyVO.getConverter().length() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean testFilterItemsMethodName(CriterionPropertyVO propertyVO) {
+		if (propertyVO.getFilterItemsMethodName() != null && propertyVO.getFilterItemsMethodName().length() > 0) {
 			return true;
 		}
 		return false;

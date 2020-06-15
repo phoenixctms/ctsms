@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getTimelineEventList</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getTimelineEventList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getTimelineEventList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Integer, java.lang.Integer, java.lang.Integer, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getTimelineEventListTest extends TrialServiceBaseTest {

@@ -409,6 +409,27 @@
 							rendered="#{not empty timelineEvent.vo.visit.description and timelineTrialTimelineEventBean.showDescription}"
 							value="#{applicationScopeBean.clipStringTrailing(timelineEvent.vo.visit.description,64)}" />
 					</h:panelGrid>
+					<h:panelGrid
+						rendered="#{timelineEvent.vo['class'].simpleName == 'VisitScheduleAppointmentVO'}"
+						columns="1"
+						cellpadding="0"
+						styleClass="#{applicationScopeBean.visitToColor(timelineEvent.vo.visit)}#{rowBgColorAlpha} ctsms-timeline-event-datagrid">
+						<h:outputText
+							styleClass="ctsms-timeline-event-startstop"
+							rendered="#{timelineTrialTimelineEventBean.showStartStop}"
+							value="#{timelineTrialTimelineEventBean.visitScheduleAppointmentToStartStopString(timelineEvent.vo)}" />
+						<h:panelGrid
+							columns="1"
+							cellpadding="0">
+							<h:outputText
+								styleClass="ctsms-timeline-importance-lowest}"
+								value="#{timelineEvent.vo.name}" />
+						</h:panelGrid>
+						<h:outputText
+							styleClass="ctsms-timeline-event-description"
+							rendered="#{not empty timelineEvent.vo.visit.description and timelineTrialTimelineEventBean.showDescription}"
+							value="#{applicationScopeBean.clipStringTrailing(timelineEvent.vo.visit.description,64)}" />
+					</h:panelGrid>
 				</pe:timeline>
 				<p:growl
 					id="messages"

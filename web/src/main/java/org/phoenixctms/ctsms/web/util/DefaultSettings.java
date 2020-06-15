@@ -1,8 +1,10 @@
 package org.phoenixctms.ctsms.web.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -15,6 +17,7 @@ import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 
@@ -63,6 +66,8 @@ public final class DefaultSettings {
 	public final static String LOCAL_ADDR_REFERER = "LOCAL_ADDR";
 	public final static String LOCAL_NAME_REFERER = "LOCAL_NAME";
 	public final static String HTTP_DOMAIN_REFERER = "HTTP_DOMAIN_REFERER";
+	public static final ArrayList<String> VISIT_SCHEDULE_ITEM_DURATIONS = new ArrayList<String>();
+	public static final ArrayList<String> VISIT_SCHEDULE_ITEM_OFFSETS = new ArrayList<String>();
 	static {
 		INVENTORY_MAINTENANCE_DUE_IN_DURATIONS.add(Long.toString(1 * 24 * 60 * 60));
 		INVENTORY_MAINTENANCE_DUE_IN_COLORS.add(Color.ORANGERED.name());
@@ -155,7 +160,54 @@ public final class DefaultSettings {
 		DUMMY_INQUIRY_VALUES_PAGE_SIZES.add("300");
 		DUMMY_INQUIRY_VALUES_PAGE_SIZES.add("500");
 		DUMMY_INQUIRY_VALUES_PAGE_SIZES.add("1000");
+		//by minutes:
+		for (int i = 0; i <= 24 * 60; i = i + 15) {
+			if (i == 0) {
+			} else if (i <= 60) {
+				VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 60));
+			} else if (i <= 720) {
+				if (i % 30 == 0) {
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 60));
+				}
+			} else {
+				if (i % 60 == 0) {
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 60));
+				}
+			}
+		}
+		//by days:
+		ArrayList<Integer> offsets = new ArrayList<Integer>();
+		for (int i = 1; i <= 180; i = i + 1) {
+			if (i <= 30) {
+				offsets.add(i * 24 * 60 * 60);
+			} else if (i <= 90) {
+				if (i % 10 == 0) {
+					offsets.add(i * 24 * 60 * 60);
+				}
+			} else {
+				if (i % 30 == 0) {
+					offsets.add(i * 24 * 60 * 60);
+				}
+			}
+		}
+		Collections.reverse(offsets);
+		Iterator<Integer> it = offsets.iterator();
+		while (it.hasNext()) {
+			VISIT_SCHEDULE_ITEM_OFFSETS.add(Long.toString(it.next() * -1));
+		}
+		Collections.reverse(offsets);
+		VISIT_SCHEDULE_ITEM_OFFSETS.add("0");
+		it = offsets.iterator();
+		while (it.hasNext()) {
+			VISIT_SCHEDULE_ITEM_OFFSETS.add(Long.toString(it.next()));
+		}
 	}
+	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
+	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.MINUTES;
+	public static final int VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = 0;
+	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.DAYS;
+	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.DAYS;
+	public static final int VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = 0;
 	public final static VariablePeriod COURSE_EXPIRATION_REMINDER_PERIOD = VariablePeriod.THREE_MONTHS;
 	public static final Long COURSE_EXPIRATION_REMINDER_PERIOD_DAYS = null;
 	public static final Color USER_LOCKED_COLOR = Color.CRIMSON;
@@ -539,6 +591,9 @@ public final class DefaultSettings {
 	public static final int TIME_PICKER_INTERVAL_MINUTES = 5;
 	public static final Float MEDICATION_DOSE_VALUE_PRESET = null;
 	public static final boolean VISIT_SCHEDULE_ITEM_NOTIFY_PRESET = false;
+	public static final Integer VISIT_SCHEDULE_ITEM_OFFSET_SECONDS_PRESET = 0;
+	public static final Integer VISIT_SCHEDULE_ITEM_DURATION_PRESET = null;
+	public final static VisitScheduleDateMode VISIT_SCHEDULE_ITEM_MODE_PRESET = VisitScheduleDateMode.STATIC;
 	public static final boolean PROBAND_PERSON_PRESET = true;
 	public static final boolean PROBAND_BLINDED_PRESET = false;
 	public static final ECRFFieldStatusQueue ECRF_FIELD_STATUS_QUEUE = null;

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
@@ -554,10 +555,11 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected Collection<LightProbandListEntryTagOutVO> handleCompleteProbandListEntryTag(AuthenticationVO auth, String nameInfix, Integer limit) throws Exception {
+	protected Collection<LightProbandListEntryTagOutVO> handleCompleteProbandListEntryTag(AuthenticationVO auth, String nameInfix, Long trialId, Integer limit) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for trialId ...
 		ProbandListEntryTagDao listEntryTagDao = this.getProbandListEntryTagDao();
-		Collection tags = listEntryTagDao.findAllSorted(nameInfix, limit);
+		Collection tags = listEntryTagDao.findListEntryTags(trialId, nameInfix, limit);
 		listEntryTagDao.toLightProbandListEntryTagOutVOCollection(tags);
 		return tags;
 	}
@@ -1153,14 +1155,21 @@ public class ToolsServiceImpl
 				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD);
 		Long visitScheduleItemReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS);
-		Iterator<VisitScheduleItem> visitScheduleItemScheduleIt = this.getVisitScheduleItemDao()
-				.findVisitScheduleItemSchedule(today, null, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false, null)
-				.iterator();
+		Iterator<Map.Entry> visitScheduleItemScheduleIt = this.getVisitScheduleItemDao()
+				.findVisitScheduleItemSchedule(today, null, null, null, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false)
+				.entrySet().iterator();
 		while (visitScheduleItemScheduleIt.hasNext()) {
-			VisitScheduleItem visitScheduleItem = visitScheduleItemScheduleIt.next();
-			if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER, false)) {
-				if (notificationDao.addNotification(visitScheduleItem, today, null) != null) {
-					count++;
+			Entry visitScheduleItemSchedule = visitScheduleItemScheduleIt.next();
+			Long probandId = (Long) visitScheduleItemSchedule.getKey();
+			Proband proband = probandId != null ? this.getProbandDao().load(probandId) : null;
+			Iterator<VisitScheduleItem> visitScheduleItemsIt = ((List<VisitScheduleItem>) visitScheduleItemSchedule.getValue()).iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+				if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER,
+						false)) {
+					if (notificationDao.addNotification(visitScheduleItem, proband, today, null) != null) {
+						count++;
+					}
 				}
 			}
 		}

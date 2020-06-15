@@ -11,7 +11,7 @@ import java.util.List;
 import org.phoenixctms.ctsms.compare.InventoryBookingIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.InventoryStatusEntryIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.ProbandStatusEntryIntervalScheduleComparator;
-import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalScheduleComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalScheduleComparator;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.vo.InventoryStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.web.model.LazyScheduleModelBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingCourseParticipationStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingDutyRosterTurnEagerModel;
@@ -37,7 +37,7 @@ import org.phoenixctms.ctsms.web.model.shared.CourseEvent;
 import org.phoenixctms.ctsms.web.model.shared.HolidayEvent;
 import org.phoenixctms.ctsms.web.model.shared.InventoryBookingEvent;
 import org.phoenixctms.ctsms.web.model.shared.ProbandStatusEvent;
-import org.phoenixctms.ctsms.web.model.trial.VisitScheduleItemEvent;
+import org.phoenixctms.ctsms.web.model.trial.VisitScheduleAppointmentEvent;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
@@ -188,7 +188,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				holidays = WebUtil.getServiceLocator().getToolsService()
 						.getHolidays(auth, from, to, Settings.getBooleanNullable(SettingCodes.SHOW_HOLIDAYS, Bundle.SETTINGS, DefaultSettings.SHOW_HOLIDAYS));
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -205,7 +205,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 				bookings = WebUtil.getServiceLocator().getInventoryService()
 						.getInventoryBookingInterval(auth, departmentId, inventoryCategoryId, inventoryId, responsiblePersonId, probandId, courseId, trialId, calendar, from, to,
 								false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -245,7 +245,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				statusEntries = WebUtil.getServiceLocator().getInventoryService()
 						.getInventoryStatusEntryInterval(auth, departmentId, inventoryCategoryId, inventoryStatusTypeId, hideInventoryAvailability, from, to, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -263,7 +263,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				statusEntries = WebUtil.getServiceLocator().getProbandService()
 						.getProbandStatusEntryInterval(auth, departmentId, probandCategoryId, hideProbandAvailability, from, to, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -277,20 +277,20 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			}
 		}
 		if (showVisitSchedule) {
-			Collection<VisitScheduleItemOutVO> visitScheduleItems = null;
+			Collection<VisitScheduleAppointmentVO> visitScheduleAppointments = null;
 			try {
-				visitScheduleItems = WebUtil.getServiceLocator().getTrialService()
-						.getVisitScheduleItemInterval(auth, trialId, departmentId, null, visitTypeId, from, to, null, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				visitScheduleAppointments = WebUtil.getServiceLocator().getTrialService()
+						.getVisitScheduleItemInterval(auth, trialId, departmentId, null, visitTypeId, from, to, false);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
-			if (visitScheduleItems != null) {
-				visitScheduleItems = new ArrayList(visitScheduleItems);
-				Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalScheduleComparator(false));
-				Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+			if (visitScheduleAppointments != null) {
+				visitScheduleAppointments = new ArrayList(visitScheduleAppointments);
+				Collections.sort((ArrayList) visitScheduleAppointments, new VisitScheduleAppointmentIntervalScheduleComparator(false));
+				Iterator<VisitScheduleAppointmentVO> it = visitScheduleAppointments.iterator();
 				while (it.hasNext()) {
-					addEvent(new VisitScheduleItemEvent(it.next()));
+					addEvent(new VisitScheduleAppointmentEvent(it.next()));
 				}
 			}
 		}
@@ -299,7 +299,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				maintenanceItems = WebUtil.getServiceLocator().getInventoryService()
 						.getMaintenanceInterval(auth, inventoryId, departmentId, inventoryCategoryId, responsiblePersonId, notify, from, to);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -317,7 +317,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			Collection<CourseOutVO> courses = null;
 			try {
 				courses = WebUtil.getServiceLocator().getCourseService().getCourseInterval(auth, departmentId, courseCategoryId, from, to);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

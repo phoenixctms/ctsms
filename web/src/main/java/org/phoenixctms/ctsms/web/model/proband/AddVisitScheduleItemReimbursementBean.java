@@ -92,7 +92,7 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 							.getTrialService()
 							.getVisitScheduleItemCount(WebUtil.getAuthentication(), visitScheduleItem.getTrial().getId(),
 									visitScheduleItem.getGroup() != null ? visitScheduleItem.getGroup().getId() : null,
-									visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getId() : null, probandId));
+									visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getId() : null, probandId, true));
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);

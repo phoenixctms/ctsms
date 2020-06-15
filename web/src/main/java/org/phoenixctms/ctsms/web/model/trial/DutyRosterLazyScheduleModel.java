@@ -11,7 +11,7 @@ import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.InventoryBookingIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.ProbandStatusEntryIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.StaffStatusEntryIntervalScheduleComparator;
-import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalScheduleComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalScheduleComparator;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
-import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.web.model.LazyScheduleModelBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
@@ -250,20 +250,20 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			}
 		}
 		if (showVisitSchedule) {
-			Collection<VisitScheduleItemOutVO> visitScheduleItems = null;
+			Collection<VisitScheduleAppointmentVO> visitScheduleAppointments = null;
 			try {
-				visitScheduleItems = WebUtil.getServiceLocator().getTrialService()
-						.getVisitScheduleItemInterval(auth, trialId, departmentId, statusId, visitTypeId, from, to, null, false);
+				visitScheduleAppointments = WebUtil.getServiceLocator().getTrialService()
+						.getVisitScheduleItemInterval(auth, trialId, departmentId, statusId, visitTypeId, from, to, false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
-			if (visitScheduleItems != null) {
-				visitScheduleItems = new ArrayList(visitScheduleItems);
-				Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalScheduleComparator(false));
-				Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+			if (visitScheduleAppointments != null) {
+				visitScheduleAppointments = new ArrayList(visitScheduleAppointments);
+				Collections.sort((ArrayList) visitScheduleAppointments, new VisitScheduleAppointmentIntervalScheduleComparator(false));
+				Iterator<VisitScheduleAppointmentVO> it = visitScheduleAppointments.iterator();
 				while (it.hasNext()) {
-					addEvent(new VisitScheduleItemEvent(it.next()));
+					addEvent(new VisitScheduleAppointmentEvent(it.next()));
 				}
 			}
 		}

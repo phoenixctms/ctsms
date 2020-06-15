@@ -6,8 +6,8 @@ import org.phoenixctms.ctsms.vo.InventoryStatusEntryOutVO;
 
 public class InventoryStatusEntryIntervalComparator extends IntervalComparatorBase<InventoryStatusEntryOutVO> {
 
-	public InventoryStatusEntryIntervalComparator(boolean intDesc) {
-		super(intDesc);
+	public InventoryStatusEntryIntervalComparator(boolean desc) {
+		super(desc);
 	}
 
 	@Override

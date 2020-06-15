@@ -61,7 +61,7 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 		if (operationSuccess && in.getProbandId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64,
 					JSValues.AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT, MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE, MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT,
-					WebUtil.getVisitScheduleItemCount(null, in.getProbandId()));
+					WebUtil.getVisitScheduleItemCount(null, in.getProbandId(), true));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
 					MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT,
 					WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
@@ -118,7 +118,7 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 				throw e;
-			} catch (AuthorisationException|ServiceException|IllegalArgumentException e) {
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
 				throw e;
 			}
 		}

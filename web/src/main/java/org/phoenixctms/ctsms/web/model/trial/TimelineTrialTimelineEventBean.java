@@ -21,6 +21,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.util.DateUtil;
@@ -59,6 +60,18 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 		event.setEndDate(DateUtil.sanitizeTimelineTimestamp(true, visitScheduleItem.getStop()));
 		if (group) {
 			setGroup(event, visitScheduleItem.getTrial());
+		}
+		event.setEditable(false);
+		return event;
+	}
+
+	private static org.primefaces.extensions.model.timeline.TimelineEvent createTimelineEventFromOut(VisitScheduleAppointmentVO visitScheduleAppointment, boolean group) {
+		org.primefaces.extensions.model.timeline.TimelineEvent event = new org.primefaces.extensions.model.timeline.TimelineEvent();
+		event.setData(new IDVO(visitScheduleAppointment));
+		event.setStartDate(DateUtil.sanitizeTimelineTimestamp(true, visitScheduleAppointment.getStart()));
+		event.setEndDate(DateUtil.sanitizeTimelineTimestamp(true, visitScheduleAppointment.getStop()));
+		if (group) {
+			setGroup(event, visitScheduleAppointment.getTrial());
 		}
 		event.setEditable(false);
 		return event;
@@ -340,7 +353,7 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 						.getTrialService()
 						.getTimelineEventInterval(WebUtil.getAuthentication(), filterTrialId, filterDepartmentId, filterStatusId, filterTypeId, showAll ? null : true, rangeStart,
 								rangeEnd);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -352,21 +365,21 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 			}
 		}
 		if (showVisitScheduleItems) {
-			Collection<VisitScheduleItemOutVO> visitScheduleItems = null;
+			Collection<VisitScheduleAppointmentVO> visitScheduleAppointments = null;
 			try {
-				visitScheduleItems = WebUtil
+				visitScheduleAppointments = WebUtil
 						.getServiceLocator()
 						.getTrialService()
 						.getVisitScheduleItemInterval(WebUtil.getAuthentication(), filterTrialId, filterDepartmentId, filterStatusId, filterVisitTypeId, rangeStart, rangeEnd,
-								null, false);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+								false);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
-			if (visitScheduleItems != null && visitScheduleItems.size() > 0) {
-				Iterator<VisitScheduleItemOutVO> visitScheduleItemsIt = visitScheduleItems.iterator();
-				while (visitScheduleItemsIt.hasNext()) {
-					timelines.add(createTimelineEventFromOut(visitScheduleItemsIt.next(), filterTrialId == null));
+			if (visitScheduleAppointments != null && visitScheduleAppointments.size() > 0) {
+				Iterator<VisitScheduleAppointmentVO> visitScheduleAppointmentsIt = visitScheduleAppointments.iterator();
+				while (visitScheduleAppointmentsIt.hasNext()) {
+					timelines.add(createTimelineEventFromOut(visitScheduleAppointmentsIt.next(), filterTrialId == null));
 				}
 			}
 		}
@@ -380,6 +393,19 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 			} else {
 				return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_STOP_LABEL, DateUtil.getDateTimeFormat().format(visitScheduleItem.getStart()), DateUtil
 						.getDateTimeFormat().format(visitScheduleItem.getStop()));
+			}
+		}
+		return "";
+	}
+
+	public String visitScheduleAppointmentToStartStopString(VisitScheduleAppointmentVO visitScheduleAppointment) {
+		if (visitScheduleAppointment != null) {
+			if (CommonUtil.isSameDay(visitScheduleAppointment.getStart(), visitScheduleAppointment.getStop())) {
+				return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_STOP_LABEL, DateUtil.getDateTimeFormat().format(visitScheduleAppointment.getStart()), DateUtil
+						.getTimeFormat().format(visitScheduleAppointment.getStop()));
+			} else {
+				return Messages.getMessage(MessageCodes.TIMELINE_TRIAL_EVENT_START_STOP_LABEL, DateUtil.getDateTimeFormat().format(visitScheduleAppointment.getStart()), DateUtil
+						.getDateTimeFormat().format(visitScheduleAppointment.getStop()));
 			}
 		}
 		return "";
