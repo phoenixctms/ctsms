@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import org.phoenixctms.ctsms.compare.DateIntervalComparator;
+import org.phoenixctms.ctsms.enumeration.RangePeriod;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -188,7 +189,7 @@ public class DateInterval {
 					if (intervalBStop.compareTo(intervalAStop) >= 0) { // duration contains interval entirely
 						result.add(intervalB);
 					} else if (intervalBStop.after(intervalAStart)) { // duration overlaps interval at intervalstart
-						result.add(new DateInterval(null, intervalA.stop));
+						result.add(new DateInterval((Date) null, intervalA.stop));
 					} else { // duration doesn't overlap and is entirely before interval
 						result.add(intervalB);
 						result.add(intervalA);
@@ -197,7 +198,7 @@ public class DateInterval {
 					if (intervalBStart.compareTo(intervalAStart) <= 0) { // duration contains interval entirely
 						result.add(intervalB);
 					} else if (intervalBStart.before(intervalAStop)) { // duration overlaps interval at intervalend
-						result.add(new DateInterval(intervalA.start, null));
+						result.add(new DateInterval(intervalA.start, (Date) null));
 					} else { // duration doesn't overlap and is entirely after interval
 						result.add(intervalA);
 						result.add(intervalB);
@@ -214,7 +215,7 @@ public class DateInterval {
 				if (durationB >= 0) {
 					if (intervalBStart.before(intervalAStop)) {
 						if (intervalBStop.compareTo(intervalAStop) >= 0) {
-							result.add(new DateInterval(null, intervalB.stop));
+							result.add(new DateInterval((Date) null, intervalB.stop));
 						} else {
 							result.add(intervalA);
 						}
@@ -233,7 +234,7 @@ public class DateInterval {
 				}
 			} else if (intervalBStart != null && intervalBStop == null) {
 				if (intervalBStart.before(intervalAStop)) {
-					result.add(new DateInterval(null, null));
+					result.add(new DateInterval((Date) null, (Date) null));
 				} else {
 					result.add(intervalA);
 					result.add(intervalB);
@@ -247,7 +248,7 @@ public class DateInterval {
 				if (durationB >= 0) {
 					if (intervalBStart.compareTo(intervalAStart) <= 0) {
 						if (intervalBStop.after(intervalAStart)) {
-							result.add(new DateInterval(intervalB.start, null));
+							result.add(new DateInterval(intervalB.start, (Date) null));
 						} else {
 							result.add(intervalB);
 							result.add(intervalA);
@@ -260,7 +261,7 @@ public class DateInterval {
 				}
 			} else if (intervalBStart == null && intervalBStop != null) {
 				if (intervalBStop.after(intervalAStart)) {
-					result.add(new DateInterval(null, null));
+					result.add(new DateInterval((Date) null, (Date) null));
 				} else {
 					result.add(intervalB);
 					result.add(intervalA);
@@ -305,6 +306,30 @@ public class DateInterval {
 
 	public DateInterval(Date from, Date to) {
 		this(from, to, false);
+	}
+
+	public DateInterval(Date now, RangePeriod period) {
+		switch (period) {
+			case DAY:
+				start = DateCalc.getStartOfDay(now);
+				stop = DateCalc.getEndOfDay(now);
+				break;
+			case WEEK:
+				start = DateCalc.getStartOfWeek(now);
+				stop = DateCalc.getEndOfWeek(now);
+				break;
+			case MONTH:
+				start = DateCalc.getStartOfMonth(now);
+				stop = DateCalc.getEndOfMonth(now);
+				break;
+			case YEAR:
+				start = DateCalc.getStartOfYear(now);
+				stop = DateCalc.getEndOfYear(now);
+				break;
+			default:
+				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_RANGE_PERIOD, DefaultMessages.UNSUPPORTED_RANGE_PERIOD,
+						new Object[] { period.toString() }));
+		}
 	}
 
 	public DateInterval(Date from, Date to, boolean truncate) {
