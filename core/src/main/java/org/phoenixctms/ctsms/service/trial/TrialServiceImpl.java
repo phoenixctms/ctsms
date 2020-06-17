@@ -133,6 +133,7 @@ import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.ContactDetailTypeVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
@@ -5052,10 +5053,14 @@ public class TrialServiceImpl
 
 	@Override
 	protected VisitScheduleExcelVO handleExportVisitSchedule(
-			AuthenticationVO auth, Long trialId, Long probandId) throws Exception {
+			AuthenticationVO auth, Long trialId, Long probandId, Long trialDepartmentId, Date from, Date to) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
-		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
-		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
+		Trial trial = null;
+		TrialOutVO trialVO = null;
+		if (trialId != null) {
+			trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+			trialVO = trialDao.toTrialOutVO(trial);
+		}
 		ProbandDao probandDao = this.getProbandDao();
 		Proband proband = null;
 		ProbandOutVO probandVO = null;
@@ -5063,10 +5068,24 @@ public class TrialServiceImpl
 			proband = CheckIDUtil.checkProbandId(probandId, probandDao);
 			probandVO = probandDao.toProbandOutVO(proband);
 		}
-		VisitScheduleExcelWriter.Styles style = probandVO == null ? VisitScheduleExcelWriter.Styles.TRIAL_VISIT_SCHEDULE
-				: VisitScheduleExcelWriter.Styles.TRAVEL_EXPENSES_VISIT_SCHEDULE;
+		DepartmentDao departmentDao = this.getDepartmentDao();
+		DepartmentVO trialDepartmentVO = null;
+		if (trialDepartmentId != null) {
+			trialDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(trialDepartmentId, departmentDao));
+		}
+		VisitScheduleExcelWriter.Styles style;
+		if (trialVO != null) {
+			if (probandVO != null) {
+				style = VisitScheduleExcelWriter.Styles.TRAVEL_EXPENSES_VISIT_SCHEDULE;
+			} else {
+				style = VisitScheduleExcelWriter.Styles.TRIAL_VISIT_SCHEDULE;
+			}
+		} else {
+			style = VisitScheduleExcelWriter.Styles.PROBAND_APPOINTMENT_SCHEDULE;
+		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-		Collection<VisitScheduleItem> visitScheduleItems;
+		Collection visitScheduleItems;
+		Iterator it;
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
 				visitScheduleItems = trial.getVisitScheduleItems();
@@ -5074,10 +5093,22 @@ public class TrialServiceImpl
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
 				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, true, null);
 				break;
+			case PROBAND_APPOINTMENT_SCHEDULE:
+				visitScheduleItems = new ArrayList<VisitScheduleAppointmentVO>();
+				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, null, null,
+						CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
+				while (it.hasNext()) {
+					Object[] visitScheduleItemProband = (Object[]) it.next();
+					VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO((VisitScheduleItem) visitScheduleItemProband[0]);
+					visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO((Proband) visitScheduleItemProband[1]));
+					visitScheduleItems.add(visitScheduleItemProbandVO);
+				}
+				break;
 			default:
 				visitScheduleItems = null;
 		}
-		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
+		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style,
+				probandVO, trialVO, trialDepartmentVO, from, to,
 				visitScheduleItemDao,
 				this.getProbandListStatusEntryDao(),
 				this.getProbandAddressDao(),
@@ -5090,6 +5121,16 @@ public class TrialServiceImpl
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
 				ServiceUtil.logSystemMessage(proband, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 						SystemMessageCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
+				break;
+			case PROBAND_APPOINTMENT_SCHEDULE:
+				if (trial != null) { //not implemented atm
+					ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+							SystemMessageCodes.PROBAND_APPOINTMENT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
+				} else {
+					ServiceUtil.logSystemMessage(CoreUtil.getUser(), null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+							SystemMessageCodes.PROBAND_APPOINTMENT_SCHEDULE_EXPORTED, result,
+							null, this.getJournalEntryDao());
+				}
 				break;
 			default:
 		}

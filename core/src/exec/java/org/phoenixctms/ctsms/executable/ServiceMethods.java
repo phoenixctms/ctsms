@@ -52,6 +52,7 @@ import org.phoenixctms.ctsms.util.ExecSettings;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
@@ -81,6 +82,7 @@ import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ServiceMethods {
@@ -452,20 +454,51 @@ public class ServiceMethods {
 		}
 	}
 
-	public long exportProbandAppointments(AuthenticationVO auth, Long id, String fileName) throws Exception {
-		Date now = new Date();
-		Date from = DateCalc.getStartOfDay(now);
-		Date to = DateCalc.getEndOfDay(now);
+	public long exportProbandInventoryBookings(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		DateInterval range = new DateInterval(
+				DateCalc.addInterval(new Date(), ExecSettings.getVariablePeriod(ExecSettingCodes.EXPORT_INVENTORY_BOOKINGS_OFFSET_PERIOD,
+						ExecDefaultSettings.EXPORT_INVENTORY_BOOKINGS_OFFSET_PERIOD),
+						ExecSettings.getLongNullable(ExecSettingCodes.EXPORT_INVENTORY_BOOKINGS_OFFSET_PERIOD_DAYS,
+								ExecDefaultSettings.EXPORT_INVENTORY_BOOKINGS_OFFSET_PERIOD_DAYS)),
+				ExecSettings.getRangePeriod(ExecSettingCodes.EXPORT_INVENTORY_BOOKINGS_RANGE_PERIOD,
+						ExecDefaultSettings.EXPORT_INVENTORY_BOOKINGS_RANGE_PERIOD));
 		jobOutput
 				.println("timespan: "
-						+ CommonUtil.getDateStartStopString(from, to,
+						+ CommonUtil.getDateStartStopString(range.getStart(), range.getStop(),
 								new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
-		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, null, null, id, null, from, to, true, true, null, null, null, null);
+		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, null, null, id, null, range.getStart(), range.getStop(), true, true, null, null, null,
+				null);
 		if (result != null) {
 			if (id != null) {
 				jobOutput.println("department ID " + Long.toString(id) + ": " + result.getRowCount() + " inventory bookings");
 			} else {
 				jobOutput.println(result.getRowCount() + " inventory bookings");
+			}
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			return result.getRowCount();
+		} else {
+			return 0l;
+		}
+	}
+
+	public long exportVisitScheduleAppointments(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		DateInterval range = new DateInterval(
+				DateCalc.addInterval(new Date(), ExecSettings.getVariablePeriod(ExecSettingCodes.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OFFSET_PERIOD,
+						ExecDefaultSettings.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OFFSET_PERIOD),
+						ExecSettings.getLongNullable(ExecSettingCodes.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OFFSET_PERIOD_DAYS,
+								ExecDefaultSettings.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OFFSET_PERIOD_DAYS)),
+				ExecSettings.getRangePeriod(ExecSettingCodes.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_RANGE_PERIOD,
+						ExecDefaultSettings.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_RANGE_PERIOD));
+		jobOutput
+				.println("timespan: "
+						+ CommonUtil.getDateStartStopString(range.getStart(), range.getStop(),
+								new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
+		VisitScheduleExcelVO result = trialService.exportVisitSchedule(auth, null, null, id, range.getStart(), range.getStop());
+		if (result != null) {
+			if (id != null) {
+				jobOutput.println("department ID " + Long.toString(id) + ": " + result.getRowCount() + " visit schedule appointments");
+			} else {
+				jobOutput.println(result.getRowCount() + " visit schedule appointments");
 			}
 			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return result.getRowCount();

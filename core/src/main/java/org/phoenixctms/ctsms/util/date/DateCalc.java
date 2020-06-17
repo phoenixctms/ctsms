@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.vo.HolidayVO;
 
 public final class DateCalc {
 
+	private final static int FIRST_DAY_OF_WEEK = Calendar.MONDAY;
 	private final static int MONTH_MIN_DAYS = 30;
 	private final static int FEBRUARY_MIN_DAYS = 28;
 	private final static int YEAR_MIN_DAYS = 365;
@@ -244,6 +245,30 @@ public final class DateCalc {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+			cal.set(Calendar.MILLISECOND, 999);
+			return cal.getTime();
+		}
+		return null;
+	}
+
+	public static Date getEndOfMonth(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+			cal.set(Calendar.MILLISECOND, 999);
+			return cal.getTime();
+		}
+		return null;
+	}
+
+	public static Date getEndOfWeek(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+			cal.add(Calendar.DATE, 6 + FIRST_DAY_OF_WEEK - cal.getFirstDayOfWeek());
 			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
 			cal.set(Calendar.MILLISECOND, 999);
 			return cal.getTime();
@@ -513,6 +538,26 @@ public final class DateCalc {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
 			return (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
+		}
+		return null;
+	}
+
+	public static Date getStartOfWeek(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+			cal.add(Calendar.DATE, FIRST_DAY_OF_WEEK - cal.getFirstDayOfWeek());
+			return (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
+		}
+		return null;
+	}
+
+	public static Date getStartOfMonth(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			return (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 1, 0, 0, 0)).getTime();
 		}
 		return null;
 	}

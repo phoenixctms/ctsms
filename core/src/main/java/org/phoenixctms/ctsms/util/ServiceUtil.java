@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.compare.CvPositionPDFVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandOutVOComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
@@ -107,6 +108,7 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.DiagnosisOutVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
@@ -152,6 +154,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
@@ -184,6 +187,7 @@ import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
@@ -2426,8 +2430,8 @@ public final class ServiceUtil {
 		return writer.getExcelVO();
 	}
 
-	public static VisitScheduleExcelVO createVisitScheduleExcel(Collection<VisitScheduleItem> visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
-			TrialOutVO trialVO,
+	public static VisitScheduleExcelVO createVisitScheduleExcel(Collection visitScheduleItems, VisitScheduleExcelWriter.Styles style, ProbandOutVO probandVO,
+			TrialOutVO trialVO, DepartmentVO trialDepartmentVO, Date from, Date to,
 			VisitScheduleItemDao visitScheduleItemDao,
 			ProbandListStatusEntryDao probandListStatusEntryDao,
 			ProbandAddressDao probandAddressDao,
@@ -2437,6 +2441,9 @@ public final class ServiceUtil {
 		writer.setTrial(trialVO);
 		writer.setProband(probandVO);
 		writer.setAddress(probandVO == null ? null : probandAddressDao.toProbandAddressOutVO(probandAddressDao.findByProbandWireTransfer(probandVO.getId())));
+		writer.setTrialDepartment(trialDepartmentVO);
+		writer.setFrom(from);
+		writer.setTo(to);
 		boolean showEnrollmentStatusReason = false;
 		boolean showEnrollmentStatus = false;
 		boolean showEnrollmentStatusTimestamp = false;
@@ -2500,6 +2507,20 @@ public final class ServiceUtil {
 				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT,
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
 				break;
+			case PROBAND_APPOINTMENT_SCHEDULE:
+				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON);
+				showEnrollmentStatus = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS);
+				showEnrollmentStatusTimestamp = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_TIMESTAMP,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_TIMESTAMP);
+				showEnrollmentStatusTypeIsCount = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_TYPE_IS_COUNT,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_TYPE_IS_COUNT);
+				showAliquotVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
+				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				break;
 			default:
 		}
 		ArrayList<String> distinctColumnNames;
@@ -2511,16 +2532,17 @@ public final class ServiceUtil {
 							(showEnrollmentStatusTypeIsCount ? 1 : 0) +
 							(showAliquotVisitReimbursement ? 1 : 0) +
 							(showFirstVisitReimbursement ? 1 : 0));
-			if (showEnrollmentStatusReason) {
-				distinctColumnNames.add(VisitScheduleExcelWriter.getEnrollmentStatusReasonColumnName());
-			}
 		} else {
 			distinctColumnNames = new ArrayList<String>(
-					(showEnrollmentStatus ? 1 : 0) +
+					(!CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON && showEnrollmentStatusReason ? 1 : 0) +
+							(showEnrollmentStatus ? 1 : 0) +
 							(showEnrollmentStatusTimestamp ? 1 : 0) +
 							(showEnrollmentStatusTypeIsCount ? 1 : 0) +
 							(showAliquotVisitReimbursement ? 1 : 0) +
 							(showFirstVisitReimbursement ? 1 : 0));
+		}
+		if ((!CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON || passDecryption) && showEnrollmentStatusReason) {
+			distinctColumnNames.add(VisitScheduleExcelWriter.getEnrollmentStatusReasonColumnName());
 		}
 		if (showEnrollmentStatus) {
 			distinctColumnNames.add(VisitScheduleExcelWriter.getEnrollmentStatusColumnName());
@@ -2537,18 +2559,38 @@ public final class ServiceUtil {
 		if (showFirstVisitReimbursement) {
 			distinctColumnNames.add(VisitScheduleExcelWriter.getFirstVisitReimbursementColumnName());
 		}
-		Collection VOs = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems.size());
+		Collection VOs = new ArrayList(visitScheduleItems.size());
 		String fieldKey;
 		Object fieldValue;
 		HashMap<Long, HashMap<String, Object>> distinctFieldRows = new HashMap<Long, HashMap<String, Object>>(VOs.size());
-		Iterator<VisitScheduleItem> visitScheduleItemsIt = visitScheduleItems.iterator();
-		HashMap<Long, HashMap<Long, Integer>> itemsPerGroupVisitCountMap = new HashMap<Long, HashMap<Long, Integer>>();
+		Iterator visitScheduleItemsIt = visitScheduleItems.iterator();
+		HashMap<Long, HashMap<Long, HashMap<Long, Integer>>> itemsPerGroupVisitCountProbandMap = new HashMap<Long, HashMap<Long, HashMap<Long, Integer>>>();
+		Long id = 1l;
 		while (visitScheduleItemsIt.hasNext()) {
-			VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
-			VisitScheduleItemOutVO vo = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+			Object vo = visitScheduleItemsIt.next();
+			VisitOutVO visitVO;
+			ProbandGroupOutVO groupVO;
+			Date stop;
+			if (vo instanceof VisitScheduleAppointmentVO) {
+				VisitScheduleAppointmentVO visitScheduleAppointmentVO = (VisitScheduleAppointmentVO) vo;
+				probandVO = visitScheduleAppointmentVO.getProband();
+				visitScheduleAppointmentVO.setId(id);
+				trialVO = visitScheduleAppointmentVO.getTrial();
+				visitVO = visitScheduleAppointmentVO.getVisit();
+				groupVO = visitScheduleAppointmentVO.getGroup();
+				stop = visitScheduleAppointmentVO.getStop();
+			} else {
+				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO((VisitScheduleItem) vo);
+				visitScheduleItemVO.setId(id);
+				trialVO = visitScheduleItemVO.getTrial();
+				visitVO = visitScheduleItemVO.getVisit();
+				groupVO = visitScheduleItemVO.getGroup();
+				vo = visitScheduleItemVO;
+				stop = visitScheduleItemVO.getStop();
+			}
 			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
 			if (probandVO != null) {
-				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(vo.getTrial().getId(), probandVO.getId(), visitScheduleItem.getStop());
+				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialVO.getId(), probandVO.getId(), CommonUtil.dateToTimestamp(stop));
 				ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
 				if (probandListStatusEntry != null) {
 					probandListStatusEntryVO = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
@@ -2577,8 +2619,16 @@ public final class ServiceUtil {
 					fieldRow.put(fieldKey, fieldValue);
 				}
 			}
-			Long groupId = vo.getGroup() == null ? null : vo.getGroup().getId();
-			Long visitId = vo.getVisit() == null ? null : vo.getVisit().getId();
+			Long groupId = groupVO == null ? null : groupVO.getId();
+			Long visitId = visitVO == null ? null : visitVO.getId();
+			Long probandId = probandVO == null ? null : probandVO.getId();
+			HashMap<Long, HashMap<Long, Integer>> itemsPerGroupVisitCountMap;
+			if (itemsPerGroupVisitCountProbandMap.containsKey(probandId)) {
+				itemsPerGroupVisitCountMap = itemsPerGroupVisitCountProbandMap.get(probandId);
+			} else {
+				itemsPerGroupVisitCountMap = new HashMap<Long, HashMap<Long, Integer>>();
+				itemsPerGroupVisitCountProbandMap.put(probandId, itemsPerGroupVisitCountMap);
+			}
 			HashMap<Long, Integer> itemsPerVisitCountMap;
 			int count = 0;
 			if (itemsPerGroupVisitCountMap.containsKey(groupId)) {
@@ -2591,8 +2641,9 @@ public final class ServiceUtil {
 				itemsPerGroupVisitCountMap.put(groupId, itemsPerVisitCountMap);
 			}
 			itemsPerVisitCountMap.put(visitId, count + 1);
-			distinctFieldRows.put(vo.getId(), fieldRow);
+			distinctFieldRows.put(id, fieldRow);
 			VOs.add(vo);
+			id += 1l;
 		}
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
@@ -2607,16 +2658,40 @@ public final class ServiceUtil {
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
 				Collections.sort((List<VisitScheduleItemOutVO>) VOs, new VisitScheduleItemOutVOComparator(true));
 				break;
+			case PROBAND_APPOINTMENT_SCHEDULE:
+				Collections.sort((List<VisitScheduleAppointmentVO>) VOs, new VisitScheduleAppointmentIntervalComparator(false));
+				break;
 			default:
 		}
-		HashMap<Long, HashSet<Long>> firstCheckMap = new HashMap<Long, HashSet<Long>>(itemsPerGroupVisitCountMap.size());
-		Iterator<VisitScheduleItemOutVO> vosIt = VOs.iterator();
+		HashMap<Long, HashMap<Long, HashSet<Long>>> firstCheckProbandMap = new HashMap<Long, HashMap<Long, HashSet<Long>>>(itemsPerGroupVisitCountProbandMap.size());
+		Iterator vosIt = VOs.iterator();
 		while (vosIt.hasNext()) { // final VOs order is relevant here
-			VisitScheduleItemOutVO vo = vosIt.next();
-			HashMap<String, Object> fieldRow = distinctFieldRows.get(vo.getId());
-			VisitOutVO visit = vo.getVisit();
-			Long groupId = vo.getGroup() == null ? null : vo.getGroup().getId();
-			Long visitId = visit == null ? null : visit.getId();
+			Object vo = vosIt.next();
+			VisitOutVO visitVO;
+			ProbandGroupOutVO groupVO;
+			if (vo instanceof VisitScheduleAppointmentVO) {
+				VisitScheduleAppointmentVO visitScheduleAppointmentVO = (VisitScheduleAppointmentVO) vo;
+				visitVO = visitScheduleAppointmentVO.getVisit();
+				groupVO = visitScheduleAppointmentVO.getGroup();
+				probandVO = visitScheduleAppointmentVO.getProband();
+				id = visitScheduleAppointmentVO.getId();
+			} else {
+				VisitScheduleItemOutVO visitScheduleItemVO = (VisitScheduleItemOutVO) vo;
+				visitVO = visitScheduleItemVO.getVisit();
+				groupVO = visitScheduleItemVO.getGroup();
+				id = visitScheduleItemVO.getId();
+			}
+			HashMap<String, Object> fieldRow = distinctFieldRows.get(id);
+			Long groupId = groupVO == null ? null : groupVO.getId();
+			Long visitId = visitVO == null ? null : visitVO.getId();
+			Long probandId = probandVO == null ? null : probandVO.getId();
+			HashMap<Long, HashSet<Long>> firstCheckMap;
+			if (firstCheckProbandMap.containsKey(probandId)) {
+				firstCheckMap = firstCheckProbandMap.get(probandId);
+			} else {
+				firstCheckMap = new HashMap<Long, HashSet<Long>>();
+				firstCheckProbandMap.put(probandId, firstCheckMap);
+			}
 			HashSet<Long> firstCheck;
 			if (firstCheckMap.containsKey(groupId)) {
 				firstCheck = firstCheckMap.get(groupId);
@@ -2627,8 +2702,8 @@ public final class ServiceUtil {
 			boolean isFirstItemOfGroupVisit = firstCheck.add(visitId);
 			if (showAliquotVisitReimbursement) {
 				fieldKey = VisitScheduleExcelWriter.getAliquotVisitReimbursementColumnName();
-				if (visit != null) {
-					fieldValue = visit.getReimbursement() / ((float) itemsPerGroupVisitCountMap.get(groupId).get(visitId));
+				if (visitVO != null) {
+					fieldValue = visitVO.getReimbursement() / ((float) itemsPerGroupVisitCountProbandMap.get(probandId).get(groupId).get(visitId));
 				} else {
 					fieldValue = null;
 				}
@@ -2636,8 +2711,8 @@ public final class ServiceUtil {
 			}
 			if (showFirstVisitReimbursement) {
 				fieldKey = VisitScheduleExcelWriter.getFirstVisitReimbursementColumnName();
-				if (visit != null && isFirstItemOfGroupVisit) {
-					fieldValue = visit.getReimbursement();
+				if (visitVO != null && isFirstItemOfGroupVisit) {
+					fieldValue = visitVO.getReimbursement();
 				} else {
 					fieldValue = null;
 				}

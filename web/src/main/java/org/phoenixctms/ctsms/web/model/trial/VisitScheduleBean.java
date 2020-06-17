@@ -451,7 +451,7 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	public StreamedContent getVisitScheduleExcelStreamedContent() throws Exception {
 		try {
-			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(WebUtil.getAuthentication(), trialId, null);
+			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(WebUtil.getAuthentication(), trialId, null, null, null, null);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
