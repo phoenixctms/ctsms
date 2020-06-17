@@ -6,16 +6,19 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.InventoryBookingIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.ProbandStatusEntryIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.StaffStatusEntryIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalScheduleComparator;
+import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.DateCountVO;
@@ -32,6 +35,7 @@ import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerMode
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CourseEvent;
 import org.phoenixctms.ctsms.web.model.shared.HolidayEvent;
+import org.phoenixctms.ctsms.web.model.shared.InventoryBookingEvent;
 import org.phoenixctms.ctsms.web.model.shared.ProbandStatusEvent;
 import org.phoenixctms.ctsms.web.model.shared.StaffNaCountEvent;
 import org.phoenixctms.ctsms.web.util.DateUtil;
@@ -49,6 +53,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	private boolean showDutyRoster;
 	private boolean showStaffStatus;
 	private boolean showCourseBookings;
+	private boolean showTrialBookings;
 	private boolean showVisitSchedule;
 	private boolean showTimelineEvents;
 	private boolean showCourses;
@@ -69,6 +74,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	private Long visitTypeId;
 	private Boolean hideProbandAvailability;
 	private Boolean hideStaffAvailability;
+	private List<Color> trialColors;
 
 	public DutyRosterLazyScheduleModel(HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache,
 			HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache) {
@@ -82,8 +88,11 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_STAFF_STATUS_PRESET);
 		showCourseBookings = Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_COURSE_BOOKINGS_PRESET, Bundle.SETTINGS,
 				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_COURSE_BOOKINGS_PRESET);
+		showTrialBookings = Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_TRIAL_BOOKINGS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_TRIAL_BOOKINGS_PRESET);
 		showVisitSchedule = Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_VISIT_SCHEDULE_PRESET, Bundle.SETTINGS,
 				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_VISIT_SCHEDULE_PRESET);
+		trialColors = Settings.getColorList(SettingCodes.DUTY_ROSTER_SCHEDULE_TRIAL_COLORS, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_TRIAL_COLORS);
 		showTimelineEvents = Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_TIMELINE_EVENTS_PRESET, Bundle.SETTINGS,
 				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_TIMELINE_EVENTS_PRESET);
 		showCourses = Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_COURSES_PRESET, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_COURSES_PRESET);
@@ -222,6 +231,32 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				Iterator<StaffStatusEntryOutVO> it = statusEntries.iterator();
 				while (it.hasNext()) {
 					addEvent(new StaffStatusEvent(it.next()));
+				}
+			}
+		}
+		if (showTrialBookings) {
+			Collection<InventoryBookingOutVO> bookings = null;
+			try {
+				bookings = WebUtil.getServiceLocator().getTrialService().getTrialInventoryBookingInterval(auth, trialId, departmentId,
+						from, to, true, false);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+			if (bookings != null) {
+				bookings = new ArrayList(bookings);
+				Collections.sort((ArrayList) bookings, new InventoryBookingIntervalScheduleComparator(false));
+				HashMap<Long, Color> trialColorMap = new HashMap<Long, Color>(bookings.size());
+				Iterator<Color> trialColorsIt = CommonUtil.getCircularIterator(trialColors);
+				Iterator<InventoryBookingOutVO> it = bookings.iterator();
+				while (it.hasNext()) {
+					InventoryBookingOutVO booking = it.next();
+					if (booking.getTrial() != null && !trialColorMap.containsKey(booking.getTrial().getId()) && trialColorsIt.hasNext()) {
+						trialColorMap.put(booking.getTrial().getId(), trialColorsIt.next());
+					}
+					InventoryBookingEvent event = new TrialInventoryBookingEvent(booking);
+					event.setTrialColorMap(trialColorMap);
+					addEvent(event);
 				}
 			}
 		}
@@ -468,5 +503,13 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 
 	public void setVisitTypeId(Long visitTypeId) {
 		this.visitTypeId = visitTypeId;
+	}
+
+	public boolean isShowTrialBookings() {
+		return showTrialBookings;
+	}
+
+	public void setShowTrialBookings(boolean showTrialBookings) {
+		this.showTrialBookings = showTrialBookings;
 	}
 }

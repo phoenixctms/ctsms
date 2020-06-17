@@ -101,7 +101,8 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 					sb.append(" ");
 					sb.append(WebUtil.COLLISION_ICON_STYLECLASS);
 				} else if (Settings
-						.getBoolean(SettingCodes.SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_ICONS, Bundle.SETTINGS, DefaultSettings.SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_ICONS)) {
+						.getBoolean(SettingCodes.SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_STAFF_ICONS, Bundle.SETTINGS,
+								DefaultSettings.SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_STAFF_ICONS)) {
 					sb.append(" ");
 					sb.append(staff.getCategory().getNodeStyleClass());
 				}

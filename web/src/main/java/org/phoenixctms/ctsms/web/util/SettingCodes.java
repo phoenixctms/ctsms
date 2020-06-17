@@ -228,6 +228,7 @@ public interface SettingCodes {
 	public final static String DUTY_ROSTER_SCHEDULE_SHOW_DUTY_ROSTER_PRESET = "duty_roster_schedule_show_duty_roster_preset";
 	public final static String DUTY_ROSTER_SCHEDULE_SHOW_STAFF_STATUS_PRESET = "duty_roster_schedule_show_staff_status_preset";
 	public final static String DUTY_ROSTER_SCHEDULE_SHOW_COURSE_BOOKINGS_PRESET = "duty_roster_schedule_show_course_booking_preset";
+	public final static String DUTY_ROSTER_SCHEDULE_SHOW_TRIAL_BOOKINGS_PRESET = "duty_roster_schedule_show_trial_booking_preset";
 	public final static String DUTY_ROSTER_SCHEDULE_SHOW_VISIT_SCHEDULE_PRESET = "duty_roster_schedule_show_visit_schedule_preset";
 	public final static String DUTY_ROSTER_SCHEDULE_SHOW_TIMELINE_EVENTS_PRESET = "duty_roster_schedule_show_timeline_events_preset";
 	public final static String DUTY_ROSTER_SCHEDULE_SHOW_COURSES_PRESET = "duty_roster_schedule_show_courses_preset";
@@ -382,6 +383,7 @@ public interface SettingCodes {
 	public static final String ENABLE_RECENT_ENTITIES_MENU = "enable_recent_entities_menu";
 	public final static String DUTY_SELF_ALLOCATION_LOCKED_COLOR = "duty_self_allocation_locked_color";
 	public final static String INVENTORY_BOOKING_SCHEDULE_TRIAL_COLORS = "inventory_booking_schedule_trial_colors";
+	public final static String DUTY_ROSTER_SCHEDULE_TRIAL_COLORS = "duty_roster_schedule_trial_colors";
 	public final static String MAX_COST_TYPES_PER_TRIAL = "max_cost_types_per_trial";
 	public final static String MAX_COST_TYPES_COLUMNS = "max_cost_types_columns";
 	public final static String ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR = "enrollment_status_is_not_count_color";
@@ -409,8 +411,9 @@ public interface SettingCodes {
 	public static final String PROBAND_ECRF_DATA_ENTRIES_SHOW_INQUIRY_COLUMN = "proband_ecrf_data_entries_show_inquiry_column";
 	public static final String PROBAND_ECRF_DATA_ENTRIES_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN = "proband_ecrf_data_entries_show_proband_list_entry_tag_column";
 	public static final String SHOW_COURSE_SCHEDULE_EVENT_ICONS = "show_course_schedule_event_icons";
-	public static final String SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_ICONS = "show_duty_roster_turn_schedule_event_icons";
-	public static final String SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_ICONS = "show_inventory_booking_schedule_event_icons";
+	public static final String SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_STAFF_ICONS = "show_duty_roster_turn_schedule_event_staff_icons";
+	public static final String SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_INVENTORY_ICONS = "show_duty_roster_turn_schedule_event_inventory_icons";
+	public static final String SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_INVENTORY_ICONS = "show_inventory_booking_schedule_event_inventory_icons";
 	public static final String SHOW_TIMELINE_EVENT_SCHEDULE_EVENT_ICONS = "show_timeline_event_schedule_event_icons";
 	public static final String GROUP_VISIT_MATRIX_DEFAULT_PAGE_SIZE = "group_visit_matrix_default_page_size";
 	public static final String GROUP_VISIT_MATRIX_PAGE_SIZES = "group_visit_matrix_page_sizes";
