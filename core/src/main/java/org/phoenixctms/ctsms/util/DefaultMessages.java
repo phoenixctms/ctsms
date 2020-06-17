@@ -206,4 +206,5 @@ public interface DefaultMessages {
 	public static final String LOOP_PATH_STAFF_LABEL = "{0}";
 	public static final String LOOP_PATH_TIMELINE_EVENT_LABEL = "{0}";
 	public static final String UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE = "unsupported visit schedule date mode {0}";
+	public static final String UNSUPPORTED_RANGE_PERIOD = "range period {0} is not supported";
 }

@@ -122,6 +122,7 @@ public interface SystemMessageCodes {
 	public final static String VISIT_SCHEDULE_ITEM_DELETED = "visit_schedule_item_deleted";
 	public final static String VISIT_SCHEDULE_EXPORTED = "visit_schedule_exported";
 	public final static String TRAVEL_EXPENSES_VISIT_SCHEDULE_EXPORTED = "travel_expenses_visit_schedule_exported";
+	public final static String PROBAND_APPOINTMENT_SCHEDULE_EXPORTED = "proband_appointment_schedule_exported";
 	public final static String TEAM_MEMBERS_EXPORTED = "team_members_exported";
 	public final static String AUDIT_TRAIL_EXPORTED = "audit_trail_exported";
 	public final static String REIMBURSEMENTS_EXPORTED = "reimbursements_exported";
