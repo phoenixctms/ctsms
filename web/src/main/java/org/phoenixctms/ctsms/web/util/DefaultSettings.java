@@ -387,6 +387,7 @@ public final class DefaultSettings {
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_DUTY_ROSTER_PRESET = true;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_STAFF_STATUS_PRESET = false;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_COURSE_BOOKINGS_PRESET = false;
+	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_TRIAL_BOOKINGS_PRESET = false;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_VISIT_SCHEDULE_PRESET = true;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_TIMELINE_EVENTS_PRESET = true;
 	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_COURSES_PRESET = false;
@@ -530,6 +531,7 @@ public final class DefaultSettings {
 	public static final boolean ENABLE_RECENT_ENTITIES_MENU = false;
 	public static final Color DUTY_SELF_ALLOCATION_LOCKED_COLOR = Color.GAINSBORO;
 	public static final ArrayList<String> INVENTORY_BOOKING_SCHEDULE_TRIAL_COLORS = new ArrayList<String>();
+	public static final ArrayList<String> DUTY_ROSTER_SCHEDULE_TRIAL_COLORS = new ArrayList<String>();
 	public static final Long MAX_COST_TYPES_PER_TRIAL = 10l;
 	public static final Long MAX_COST_TYPES_COLUMNS = 5l;
 	public final static Color ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR = Color.GAINSBORO;
@@ -555,8 +557,9 @@ public final class DefaultSettings {
 	public static final boolean PROBAND_ECRF_DATA_ENTRIES_SHOW_INQUIRY_COLUMN = true;
 	public static final boolean PROBAND_ECRF_DATA_ENTRIES_SHOW_PROBAND_LIST_ENTRY_TAG_COLUMN = true;
 	public static final boolean SHOW_COURSE_SCHEDULE_EVENT_ICONS = true;
-	public static final boolean SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_ICONS = true;
-	public static final boolean SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_ICONS = true;
+	public static final boolean SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_STAFF_ICONS = true;
+	public static final boolean SHOW_DUTY_ROSTER_TURN_SCHEDULE_EVENT_INVENTORY_ICONS = false;
+	public static final boolean SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_INVENTORY_ICONS = true;
 	public static final boolean SHOW_TIMELINE_EVENT_SCHEDULE_EVENT_ICONS = true;
 	public static final int GROUP_VISIT_MATRIX_DEFAULT_PAGE_SIZE = 100;
 	public static final Color GROUP_VISIT_MATRIX_NO_VISIT_COLOR = null;

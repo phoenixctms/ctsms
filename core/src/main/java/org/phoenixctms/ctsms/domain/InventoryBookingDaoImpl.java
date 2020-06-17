@@ -132,9 +132,8 @@ public class InventoryBookingDaoImpl
 		Criteria bookingCriteria = createBookingCriteria();
 		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
 		boolean distinctRoot = false;
-		Criteria courseCriteria = null;
 		if (courseCategoryId != null || courseDepartmentId != null || staffId != null) {
-			courseCriteria = bookingCriteria.createCriteria("course", CriteriaSpecification.INNER_JOIN);
+			Criteria courseCriteria = bookingCriteria.createCriteria("course", CriteriaSpecification.INNER_JOIN);
 			if (courseDepartmentId != null) {
 				courseCriteria.add(Restrictions.eq("department.id", courseDepartmentId.longValue()));
 			}
@@ -158,6 +157,27 @@ public class InventoryBookingDaoImpl
 		} else {
 			return bookingCriteria.list();
 		}
+	}
+
+	@Override
+	protected Collection<InventoryBooking> handleFindByTrialDepartmentInterval(
+			Long trialId, Long trialDepartmentId, Timestamp from, Timestamp to, Boolean isRelevantForTrialAppointments)
+			throws Exception {
+		Criteria bookingCriteria = createBookingCriteria();
+		CriteriaUtil.applyClosedIntervalCriterion(bookingCriteria, from, to, null);
+		if (trialId != null) {
+			bookingCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		} else if (trialDepartmentId != null) {
+			Criteria trialCriteria = bookingCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
+			trialCriteria.add(Restrictions.eq("department.id", trialDepartmentId.longValue()));
+		} else {
+			bookingCriteria.add(Restrictions.isNotNull("trial"));
+		}
+		if (isRelevantForTrialAppointments != null) {
+			bookingCriteria.createCriteria("inventory", CriteriaSpecification.INNER_JOIN).createCriteria("category", CriteriaSpecification.INNER_JOIN)
+					.add(Restrictions.eq("relevantForTrialAppointments", isRelevantForTrialAppointments.booleanValue()));
+		}
+		return bookingCriteria.list();
 	}
 
 	@Override

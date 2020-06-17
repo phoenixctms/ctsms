@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.phoenixctms.ctsms.web.util.WebUtil.ColorOpacity;
 import org.primefaces.model.ScheduleEvent;
 
 public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInVO> {
@@ -82,16 +83,20 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 		return DateUtil.sanitizeScheduleTimestamp(true, in.getStart());
 	}
 
+	protected void appendTrialColorStyleClass(InventoryOutVO inventory, StringBuilder sb, ColorOpacity alpha) {
+		if (in.getTrialId() != null && trialColorMap != null && trialColorMap.size() > 0) {
+			sb.append(WebUtil.colorToStyleClass(trialColorMap.get(in.getTrialId()), alpha));
+		} else {
+			sb.append(WebUtil.colorToStyleClass(inventory.getCategory().getColor(), alpha));
+		}
+	}
+
 	@Override
 	public String getStyleClass() {
 		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
 		if (inventory != null) {
 			StringBuilder sb = new StringBuilder();
-			if (in.getTrialId() != null && trialColorMap != null && trialColorMap.size() > 0) {
-				sb.append(WebUtil.colorToStyleClass(trialColorMap.get(in.getTrialId()), DEFAULT_COLOR_OPACITY));
-			} else {
-				sb.append(WebUtil.colorToStyleClass(inventory.getCategory().getColor(), DEFAULT_COLOR_OPACITY));
-			}
+			appendTrialColorStyleClass(inventory, sb, DEFAULT_COLOR_OPACITY);
 			sb.append(" ");
 			sb.append(WebUtil.SCHEDULE_EVENT_ICON_STYLECLASS);
 			if (collidingInventoryStatusEntryCount > 0 ||
@@ -101,8 +106,8 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 					collidingCourseParticipationStatusEntryCount > 0) {
 				sb.append(" ");
 				sb.append(WebUtil.COLLISION_ICON_STYLECLASS);
-			} else if (Settings.getBoolean(SettingCodes.SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_ICONS, Bundle.SETTINGS,
-					DefaultSettings.SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_ICONS)) {
+			} else if (Settings.getBoolean(SettingCodes.SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_INVENTORY_ICONS, Bundle.SETTINGS,
+					DefaultSettings.SHOW_INVENTORY_BOOKING_SCHEDULE_EVENT_INVENTORY_ICONS)) {
 				sb.append(" ");
 				sb.append(inventory.getCategory().getNodeStyleClass());
 			}
