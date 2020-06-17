@@ -65,6 +65,7 @@ import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfStatusActionComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
+import org.phoenixctms.ctsms.compare.InventoryBookingIntervalComparator;
 import org.phoenixctms.ctsms.compare.ProbandListEntryTagValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.TeamMemberOutVOComparator;
@@ -8286,5 +8287,27 @@ public class TrialServiceImpl
 			result.add(visitScheduleItemProbandVO);
 		}
 		return result;
+	}
+
+	@Override
+	protected Collection<InventoryBookingOutVO> handleGetTrialInventoryBookingInterval(
+			AuthenticationVO auth, Long trialId, Long trialDepartmentId, Date from, Date to, Boolean isRelevantForCourseAppointments, boolean sort)
+			throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (trialDepartmentId != null) {
+			CheckIDUtil.checkDepartmentId(trialDepartmentId, this.getDepartmentDao());
+		}
+		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
+		Collection inventoryBookings = inventoryBookingDao.findByTrialDepartmentInterval(
+				trialId, trialDepartmentId, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to),
+				isRelevantForCourseAppointments);
+		inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
+		if (sort) {
+			inventoryBookings = new ArrayList(inventoryBookings);
+			Collections.sort((ArrayList) inventoryBookings, new InventoryBookingIntervalComparator(false));
+		}
+		return inventoryBookings;
 	}
 }
