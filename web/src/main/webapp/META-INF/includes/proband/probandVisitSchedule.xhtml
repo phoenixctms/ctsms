@@ -112,6 +112,29 @@
 								value="#{probandVisitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
+					
+					<p:column sortBy="#{visitScheduleItem.vo.visit.type.travel}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_proband_list_travel_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param name="value" value="#{visitScheduleItem.vo.visit.type.travel}" />
+						</ui:include>
+					</p:column>
+					
+					<p:column sortBy="#{visitScheduleItem.vo.visit.reimbursement}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{probandlabels.proband_visit_schedule_probandvisitschedule_list_proband_list_reimbursement_column}" />
+						</f:facet>
+						<h:outputFormat value="#{labels.currency_format}">
+							<f:param value="#{visitScheduleItem.vo.visit.reimbursement}" />
+							<f:param value="#{applicationScopeBean.currencySymbol}" />
+						</h:outputFormat>
+					</p:column>
+					
 					<p:column style="width:64px;white-space:nowrap;">
 						<p:commandButton
 							title="#{probandlabels.add_reimbursement_button_title}"
