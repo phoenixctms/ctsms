@@ -5,6 +5,8 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import org.phoenixctms.ctsms.enumeration.RangePeriod;
+import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,6 +66,24 @@ public final class ExecSettings {
 
 	public static ArrayList<String> getStringList(String key, ArrayList<String> defaultValue) {
 		return CommonUtil.getValueStringList(key, getBundle(false), defaultValue);
+	}
+
+	public static VariablePeriod getVariablePeriod(String key, VariablePeriod defaultValue) {
+		String value = CommonUtil.getValue(key, getBundle(false), defaultValue == null ? null : defaultValue.name());
+		if (value != null && value.length() > 0) {
+			return VariablePeriod.fromString(value); // illegal arg exc!
+		} else {
+			return null;
+		}
+	}
+
+	public static RangePeriod getRangePeriod(String key, RangePeriod defaultValue) {
+		String value = CommonUtil.getValue(key, getBundle(false), defaultValue == null ? null : defaultValue.name());
+		if (value != null && value.length() > 0) {
+			return RangePeriod.fromString(value); // illegal arg exc!
+		} else {
+			return null;
+		}
 	}
 
 	public static void setBundleBasename(String basename) {

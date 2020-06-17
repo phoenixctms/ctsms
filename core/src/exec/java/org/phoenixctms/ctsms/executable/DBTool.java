@@ -956,13 +956,21 @@ public class DBTool {
 						sendEmail = dbTool.getServiceMethods().exportCriteriaJournal(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT)) > 0l;
 					}
-				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT);
+				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT);
 					dbTool.initJob(line).printPrelude(job);
-					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT))
-							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT))) {
-						sendEmail = dbTool.getServiceMethods().exportProbandAppointments(getAuthenticationOptionValue(line), getIdOptionValue(line, false),
-								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_APPOINTMENTS_OPT)) > 0l;
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT))) {
+						sendEmail = dbTool.getServiceMethods().exportProbandInventoryBookings(getAuthenticationOptionValue(line), getIdOptionValue(line, false),
+								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT);
+					dbTool.initJob(line).printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT))) {
+						sendEmail = dbTool.getServiceMethods().exportVisitScheduleAppointments(getAuthenticationOptionValue(line), getIdOptionValue(line, false),
+								line.getOptionValue(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.RUN_DAILY_JOBS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.RUN_DAILY_JOBS_OPT);
@@ -1219,7 +1227,7 @@ public class DBTool {
 				productionDataProvider = context.getBean(ProductionDataProvider.class);
 			} else {
 				productionDataProvider = (ProductionDataProvider) Compile
-						.loadClass(className, ExecSettings.getStringList(ExecSettingCodes.DATA_PROVIDER_CLASS_SOURCE_FILES, ExecDefaultSettings.DATA_PROVIDER_CLASS_SOURCE_FILES))
+						.loadClass(className, ExecSettings.getStringList(ExecSettingCodes.DATA_PROVIDER_SOURCE_FILES, ExecDefaultSettings.DATA_PROVIDER_SOURCE_FILES))
 						.newInstance();
 			}
 			productionDataProvider.setJobOutput(getJobOutput());

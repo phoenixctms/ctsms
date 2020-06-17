@@ -13,6 +13,7 @@ import org.apache.commons.cli.Options;
 public final class DBToolOptions {
 
 	private enum LockId {
+
 		DEFAULT_LOCK_ID("dbtool.init"),
 		NOTIFICATION_LOCK_ID("dbtool.notification"),
 		MASS_MAIL_LOCK_ID("dbtool.massmail"),
@@ -179,7 +180,8 @@ public final class DBToolOptions {
 	public static final String EXPORT_MASS_MAIL_JOURNAL_OPT = "emmj";
 	public static final String EXPORT_USER_JOURNAL_OPT = "euj";
 	public static final String EXPORT_CRITERIA_JOURNAL_OPT = "escj";
-	public static final String EXPORT_PROBAND_APPOINTMENTS_OPT = "epa";
+	public static final String EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT = "epib";
+	public static final String EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT = "evsa";
 	public static final String RUN_DAILY_JOBS_OPT = "rdj";
 	public static final String RUN_WEEKLY_JOBS_OPT = "rwj";
 	public static final String RUN_MONTHLY_JOBS_OPT = "rmj";
@@ -354,8 +356,10 @@ public final class DBToolOptions {
 				"export user journal", 1));
 		tasks.addOption(registerTaskOption(EXPORT_CRITERIA_JOURNAL_OPT, "export_criteria_journal",
 				"export criteria journal", 1));
-		tasks.addOption(registerTaskOption(EXPORT_PROBAND_APPOINTMENTS_OPT, "export_proband_appointments",
+		tasks.addOption(registerTaskOption(EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT, "export_proband_inventory_bookings",
 				"export proband inventory bookings of trials", 1));
+		tasks.addOption(registerTaskOption(EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT, "export_visit_schedule_appointments",
+				"export visit schedule appointments", 1));
 		tasks.setRequired(true);
 		options.addOptionGroup(tasks);
 		options.addOption(registerOptionalOption(FORCE_OPT, "force", "skip confirmation promt", 0));
