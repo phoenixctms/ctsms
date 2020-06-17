@@ -65,6 +65,21 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = "travel_expenses_visit_schedule_show_aliquot_visit_reimbursement";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = "travel_expenses_visit_schedule_show_first_visit_reimbursement";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = "travel_expenses_visit_schedule_append_header_footer";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_TEMPLATE_FILE_NAME = "proband_appointment_schedule_template_file_name";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_AUTOSIZE = "proband_appointment_schedule_autosize";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_WRITEHEAD = "proband_appointment_schedule_writehead";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_PAGE_BREAK_AT_ROW = "proband_appointment_schedule_page_break_at_row";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SCALE_FACTOR = "proband_appointment_schedule_scale_factor";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_ROW_FORMAT = "proband_appointment_schedule_row_format";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_HEAD_FORMAT = "proband_appointment_schedule_head_format";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_ROW_COLORS = "proband_appointment_schedule_row_colors";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON = "proband_appointment_schedule_show_enrollment_status_reason";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS = "proband_appointment_schedule_show_enrollment_status";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_TIMESTAMP = "proband_appointment_schedule_show_enrollment_status_timestamp";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_TYPE_IS_COUNT = "proband_appointment_schedule_show_enrollment_status_type_is_count";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = "proband_appointment_schedule_show_aliquot_visit_reimbursement";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = "proband_appointment_schedule_show_first_visit_reimbursement";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_APPEND_HEADER_FOOTER = "proband_appointment_schedule_append_header_footer";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }
