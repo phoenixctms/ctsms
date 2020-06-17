@@ -1360,6 +1360,7 @@ public class ProbandServiceImpl
 				visitScheduleItems = null;
 		}
 		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
+				null, null, null,
 				visitScheduleItemDao,
 				this.getProbandListStatusEntryDao(),
 				this.getProbandAddressDao(),
