@@ -2,10 +2,13 @@ package org.phoenixctms.ctsms.web.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 
+import org.phoenixctms.ctsms.compare.ProbandGroupOutVOTokenComparator;
+import org.phoenixctms.ctsms.compare.VisitOutVOTokenComparator;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -21,17 +24,19 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 	private Long trialId;
 	private static final String MATRIX_ITEMS_SEPARATOR = ", ";
-	private LinkedHashMap<Long, ProbandGroupOutVO> matrixGroups;
-	private LinkedHashMap<Long, VisitOutVO> matrixVisits;
+	private HashMap<Long, ProbandGroupOutVO> matrixGroups;
+	private HashMap<Long, VisitOutVO> matrixVisits;
 	private HashMap<Long, HashMap<Long, ArrayList<ITEM>>> matrixItemMap;
 	private Paginator paginator;
 	private boolean matrixVisitsVertical;
+	private final static Comparator GROUP_COMPARATOR = new ProbandGroupOutVOTokenComparator();
+	private final static Comparator VISIT_COMPARATOR = new VisitOutVOTokenComparator();
 
 	public GroupVisitMatrix() {
 		matrixVisitsVertical = Settings.getBoolean(SettingCodes.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT, Bundle.SETTINGS,
 				DefaultSettings.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT);
-		matrixGroups = new LinkedHashMap<Long, ProbandGroupOutVO>();
-		matrixVisits = new LinkedHashMap<Long, VisitOutVO>();
+		matrixGroups = new HashMap<Long, ProbandGroupOutVO>();
+		matrixVisits = new HashMap<Long, VisitOutVO>();
 		matrixItemMap = new HashMap<Long, HashMap<Long, ArrayList<ITEM>>>();
 		paginator = new Paginator() {
 
@@ -98,7 +103,9 @@ public abstract class GroupVisitMatrix<ITEM> {
 	protected abstract Collection<ITEM> getItemsPage(Long trialId, PSFVO psf);
 
 	public ProbandGroupOutVO[] getMatrixGroups() {
-		return matrixGroups.values().toArray(new ProbandGroupOutVO[0]);
+		ArrayList<ProbandGroupOutVO> groups = new ArrayList<ProbandGroupOutVO>(matrixGroups.values());
+		Collections.sort(groups, GROUP_COMPARATOR);
+		return groups.toArray(new ProbandGroupOutVO[0]);
 	}
 
 	public int getMatrixGroupsCount() {
@@ -158,7 +165,9 @@ public abstract class GroupVisitMatrix<ITEM> {
 	}
 
 	public VisitOutVO[] getMatrixVisits() {
-		return matrixVisits.values().toArray(new VisitOutVO[0]);
+		ArrayList<VisitOutVO> visits = new ArrayList<VisitOutVO>(matrixVisits.values());
+		Collections.sort(visits, VISIT_COMPARATOR);
+		return visits.toArray(new VisitOutVO[0]);
 	}
 
 	public int getMatrixVisitsCount() {

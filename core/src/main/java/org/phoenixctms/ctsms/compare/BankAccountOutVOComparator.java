@@ -13,9 +13,9 @@ public class BankAccountOutVOComparator extends AlphanumComparatorBase implement
 			ProbandOutVO probandA = a.getProband();
 			ProbandOutVO probandB = b.getProband();
 			if (probandA != null && probandB != null) {
-				int groupComparison = comp(probandA.getLastName(), probandB.getLastName());
-				if (groupComparison != 0) {
-					return groupComparison;
+				int probandNameComparison = comp(probandA.getLastName(), probandB.getLastName());
+				if (probandNameComparison != 0) {
+					return probandNameComparison;
 				} else {
 					if (probandA.getId() > probandB.getId()) {
 						return 1;
