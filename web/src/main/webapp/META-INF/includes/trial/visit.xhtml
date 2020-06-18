@@ -31,10 +31,19 @@
 					<p:ajax event="page" listener="#{visitBean.visitModel.handlePageChanged}" />
 					<p:ajax event="rowSelect" update=":tabView:visit_form:visit_input" />
 					<f:facet name="header">
-						<h:outputText
-							value="#{visitBean.visitModel.rowCount} #{triallabels.visit_visit_list_header}" />
+						<h:panelGrid columns="2" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+							<h:outputText
+								value="#{visitBean.visitModel.rowCount} #{triallabels.visit_visit_list_header}" />
+							<p:commandButton type="button"
+								title="#{labels.open_table_columns_dialog_button_label}"
+								icon="ui-icon ui-icon-wrench"
+								styleClass="ctsms-list-header-button"
+								onclick="visitTableColumnsDialog.show()" />
+						</h:panelGrid>
 					</f:facet>
 					<p:column sortBy="#{visit.vo.id}">
+						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText value="#{labels.id_column}" />
 						</f:facet>
@@ -47,7 +56,9 @@
 						</f:facet>
 						<h:outputText value="#{visit.vo.type.name}" />
 					</p:column>
-					<p:column sortBy="#{visit.vo.type.travel}">
+					<p:column sortBy="#{visit.vo.type.travel}"
+						filterBy="#{visit.vo.type.travel}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{triallabels.visit_visit_list_type_travel_column}" />
@@ -63,13 +74,23 @@
 						</f:facet>
 						<h:outputText value="#{visit.vo.token}" />
 					</p:column>
-					<p:column sortBy="#{visit.vo.title}">
+					<p:column sortBy="#{visit.vo.title}" filterBy="#{visit.vo.title}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{triallabels.visit_visit_list_title_column}" />
 						</f:facet>
 						<h:outputText value="#{visit.vo.title}" />
 					</p:column>
+					
+					<p:column sortBy="#{visit.vo.description}" filterBy="#{visit.vo.description}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.visit_visit_list_description_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(visit.vo.description)}" />
+					</p:column>
+					
 					<p:column sortBy="#{visit.vo.reimbursement}">
 						<f:facet name="header">
 							<h:outputText
@@ -79,14 +100,6 @@
 							<f:param value="#{visit.vo.reimbursement}" />
 							<f:param value="#{applicationScopeBean.currencySymbol}" />
 						</h:outputFormat>
-					</p:column>
-					<p:column sortBy="#{visit.vo.description}">
-						<f:facet name="header">
-							<h:outputText
-								value="#{triallabels.visit_visit_list_description_column}" />
-						</f:facet>
-						<h:outputText
-							value="#{applicationScopeBean.clipStringTrailing(visit.vo.description)}" />
 					</p:column>
 				</p:dataTable>
 				<p:panel id="visit_input">
@@ -256,6 +269,10 @@
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="visitDeleteConfirmation.hide()" type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/tableColumnsDialog.xhtml">
+				<ui:param name="tableColumnsDialog" value="visitTableColumnsDialog" />
+				<ui:param name="dataTableId" value=":tabView:visit_form:visit_list" />
+			</ui:include>						
 		</h:form>
 	</ui:composition>
 </h:body>

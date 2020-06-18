@@ -702,4 +702,16 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		this.probandId = null;
 		this.probandGroup = null;
 	}
+
+	public String getProbandNamesString() {
+		StringBuilder sb = new StringBuilder();
+		Iterator<IDVO> it = getAllRows().iterator();
+		while (it.hasNext()) {
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			sb.append(((ProbandListEntryOutVO) it.next().getVo()).getProband().getName());
+		}
+		return sb.toString();
+	}
 }

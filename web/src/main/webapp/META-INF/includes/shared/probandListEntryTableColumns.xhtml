@@ -165,7 +165,7 @@
 				rendered="#{!probandListEntryModel.isProbandListEntryTagABoolean(probandListEntry.vo)}"
 				value="#{probandListEntryModel.getProbandListEntryTagAValueString(probandListEntry.vo)}" />
 		</p:column>
-		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
+		<p:column rendered="#{lazyModel and probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
 		    <f:attribute name="visibleDefault" value="false" />
 			<f:facet name="header">
 				<h:panelGroup>
@@ -209,7 +209,7 @@
 				rendered="#{!probandListEntryModel.isProbandListEntryTagBBoolean(probandListEntry.vo)}"
 				value="#{probandListEntryModel.getProbandListEntryTagBValueString(probandListEntry.vo)}" />
 		</p:column>
-		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
+		<p:column rendered="#{lazyModel and probandListEntryModel.showProbandListEntryTagColumn and !byTagInputField}">
 			<f:attribute name="visibleDefault" value="false" />
 			<f:facet name="header">
 				<h:panelGroup>
@@ -347,7 +347,7 @@
 			</p:dataList>
 		</p:column>
 		
-		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
+		<p:column rendered="#{lazyModel and probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
 		    <f:attribute name="visibleDefault" value="false" />
 			<f:facet name="header">
 				<h:panelGroup>
@@ -400,7 +400,7 @@
 			</p:dataList>
 		</p:column>
 		
-		<p:column rendered="#{probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
+		<p:column rendered="#{lazyModel and probandListEntryModel.showProbandListEntryTagColumn and byTagInputField}">
 		    <f:attribute name="visibleDefault" value="false" />
 			<f:facet name="header">
 				<h:panelGroup>

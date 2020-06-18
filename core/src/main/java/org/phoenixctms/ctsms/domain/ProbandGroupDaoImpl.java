@@ -61,8 +61,7 @@ public class ProbandGroupDaoImpl
 		if (trialId != null) {
 			probandGroupCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		return probandGroupCriteria.list();
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); // support filter by proband name
 	}
 
 	@Override
