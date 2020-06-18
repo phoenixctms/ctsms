@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 
 import org.phoenixctms.ctsms.compare.ProbandGroupOutVOTokenComparator;
 import org.phoenixctms.ctsms.compare.VisitOutVOTokenComparator;
@@ -24,8 +25,8 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 	private Long trialId;
 	private static final String MATRIX_ITEMS_SEPARATOR = ", ";
-	private HashMap<Long, ProbandGroupOutVO> matrixGroups;
-	private HashMap<Long, VisitOutVO> matrixVisits;
+	private LinkedHashMap<Long, ProbandGroupOutVO> matrixGroups;
+	private LinkedHashMap<Long, VisitOutVO> matrixVisits;
 	private HashMap<Long, HashMap<Long, ArrayList<ITEM>>> matrixItemMap;
 	private Paginator paginator;
 	private boolean matrixVisitsVertical;
@@ -35,8 +36,8 @@ public abstract class GroupVisitMatrix<ITEM> {
 	public GroupVisitMatrix() {
 		matrixVisitsVertical = Settings.getBoolean(SettingCodes.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT, Bundle.SETTINGS,
 				DefaultSettings.GROUP_VISIT_MATRIX_VISITS_VERTICAL_DEFAULT);
-		matrixGroups = new HashMap<Long, ProbandGroupOutVO>();
-		matrixVisits = new HashMap<Long, VisitOutVO>();
+		matrixGroups = new LinkedHashMap<Long, ProbandGroupOutVO>();
+		matrixVisits = new LinkedHashMap<Long, VisitOutVO>();
 		matrixItemMap = new HashMap<Long, HashMap<Long, ArrayList<ITEM>>>();
 		paginator = new Paginator() {
 
@@ -104,7 +105,9 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 	public ProbandGroupOutVO[] getMatrixGroups() {
 		ArrayList<ProbandGroupOutVO> groups = new ArrayList<ProbandGroupOutVO>(matrixGroups.values());
-		Collections.sort(groups, GROUP_COMPARATOR);
+		if (paginator.getPages().size() == 1) {
+			Collections.sort(groups, GROUP_COMPARATOR);
+		}
 		return groups.toArray(new ProbandGroupOutVO[0]);
 	}
 
@@ -166,7 +169,9 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 	public VisitOutVO[] getMatrixVisits() {
 		ArrayList<VisitOutVO> visits = new ArrayList<VisitOutVO>(matrixVisits.values());
-		Collections.sort(visits, VISIT_COMPARATOR);
+		if (paginator.getPages().size() == 1) {
+			Collections.sort(visits, VISIT_COMPARATOR);
+		}
 		return visits.toArray(new VisitOutVO[0]);
 	}
 
