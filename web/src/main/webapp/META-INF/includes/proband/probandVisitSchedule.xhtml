@@ -140,7 +140,7 @@
 							title="#{probandlabels.add_reimbursement_button_title}"
 							icon="ui-icon ui-icon-suitcase" type="button"
 							disabled="#{!probandVisitScheduleBean.isReimbursementCreateable(visitScheduleItem.vo)}"
-							onclick="openAddVisitScheduleItemReimbursement(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_SCHEDULE_ITEM_ID')}:'#{visitScheduleItem.vo.id}'}));" />
+							onclick="openAddVisitScheduleItemReimbursement(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_SCHEDULE_ITEM_ID')}:'#{visitScheduleItem.vo.id}',#{applicationScopeBean.parameterName('START')}:'#{visitScheduleItem.vo.start.time}',#{applicationScopeBean.parameterName('STOP')}:'#{visitScheduleItem.vo.stop.time}'}));" />
 						<p:commandButton type="button"
 							title="#{labels.open_trial_button_label}"
 							icon="ui-icon ui-icon-extlink"

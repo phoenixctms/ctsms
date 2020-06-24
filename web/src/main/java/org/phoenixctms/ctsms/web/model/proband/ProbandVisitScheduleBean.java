@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.model.proband;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +23,7 @@ import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.VisitScheduleItemLazyModel;
+import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -88,6 +90,16 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		Long visitScheduleItemId = WebUtil.getLongParamValue(GetParamNames.VISIT_SCHEDULE_ITEM_ID);
 		addReimbursementBean.setProbandId(probandId);
 		addReimbursementBean.changeRootEntity(visitScheduleItemId);
+		try {
+			addReimbursementBean.setStart(DateUtil.sanitizeClientTimestamp(false, new Date(WebUtil.getLongParamValue(GetParamNames.START))));
+		} catch (Exception e) {
+			addReimbursementBean.setStart(null);
+		}
+		try {
+			addReimbursementBean.setStop(DateUtil.sanitizeClientTimestamp(false, new Date(WebUtil.getLongParamValue(GetParamNames.STOP))));
+		} catch (Exception e) {
+			addReimbursementBean.setStop(null);
+		}
 	}
 
 	public AddVisitScheduleItemReimbursementBean getAddReimbursementBean() {

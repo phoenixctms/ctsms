@@ -96,12 +96,12 @@ public class TeamMemberPickerBean extends PickerBeanBase {
 	private void init() {
 		initPickTarget();
 		try {
-			start = DateUtil.sanitizeTimelineTimestamp(false, new Date(WebUtil.getLongParamValue(GetParamNames.START)));
+			start = DateUtil.sanitizeClientTimestamp(false, new Date(WebUtil.getLongParamValue(GetParamNames.START)));
 		} catch (Exception e) {
 			start = null;
 		}
 		try {
-			stop = DateUtil.sanitizeTimelineTimestamp(false, new Date(WebUtil.getLongParamValue(GetParamNames.STOP)));
+			stop = DateUtil.sanitizeClientTimestamp(false, new Date(WebUtil.getLongParamValue(GetParamNames.STOP)));
 		} catch (Exception e) {
 			stop = null;
 		}

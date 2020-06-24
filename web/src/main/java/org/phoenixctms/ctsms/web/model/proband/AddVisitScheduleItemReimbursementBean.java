@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.web.model.proband;
 
+import java.util.Date;
+
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -72,6 +74,18 @@ public class AddVisitScheduleItemReimbursementBean extends AddReimbursementBeanB
 
 	public VisitScheduleItemOutVO getVisitScheduleItem() {
 		return visitScheduleItem;
+	}
+
+	public void setStart(Date start) {
+		if (visitScheduleItem != null) {
+			visitScheduleItem.setStart(start);
+		}
+	}
+
+	public void setStop(Date stop) {
+		if (visitScheduleItem != null) {
+			visitScheduleItem.setStop(stop);
+		}
 	}
 
 	@Override

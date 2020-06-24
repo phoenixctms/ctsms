@@ -21,6 +21,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 public final class DateUtil {
 
 	public enum ConverterType {
+
 		DATE("date"), TIME("time"), DATETIME("both");
 
 		private final String value;
@@ -588,11 +589,11 @@ public final class DateUtil {
 		return null;
 	}
 
-	public static Date sanitizeTimelineDate(boolean sub, Date date) {
-		return sanitizeTimelineTimestamp(sub, date);
+	public static Date sanitizeClientDate(boolean sub, Date date) {
+		return sanitizeClientTimestamp(sub, date);
 	}
 
-	public static Date sanitizeTimelineTimestamp(boolean sub, Date date) {
+	public static Date sanitizeClientTimestamp(boolean sub, Date date) {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
@@ -600,6 +601,14 @@ public final class DateUtil {
 			return cal.getTime();
 		}
 		return null;
+	}
+
+	public static Date sanitizeTimelineDate(boolean sub, Date date) {
+		return sanitizeTimelineTimestamp(sub, date);
+	}
+
+	public static Date sanitizeTimelineTimestamp(boolean sub, Date date) {
+		return sanitizeClientTimestamp(sub, date);
 	}
 
 	private DateUtil() {
