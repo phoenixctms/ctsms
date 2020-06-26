@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ctsms="http://phoenixctms.org/ctsms-taglib">
 <h:head>
 	<title>duty roster schedule</title>
 </h:head>
@@ -13,9 +14,11 @@
 			value="#{triallabels.duty_roster_schedule_title}" />
 		<ui:define name="head">
 			<h:outputStylesheet name="staff.min.css" library="css" target="head" />
+			<h:outputStylesheet
+				name="mimetypes.min.css"
+				library="css"
+				target="head" />			
 			<h:outputScript name="staff.min.js" library="js" target="head" />
-			<h:outputScript name="scheduleCalendarWeek.min.js" library="js"
-				target="head" />
 			<h:outputScript name="jquery.fullCalendar.min.js" library="js"
 				target="head" />
 		</ui:define>
@@ -30,6 +33,12 @@
 					actionListener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}"
 					oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
+				<p:remoteCommand process="@this"
+					name="openDateRangePeriodDialog"
+					onstart="setSupressWait()"
+					actionListener="#{scheduleDutyRosterTurnBean.updateDateRangePeriod}"
+					oncomplete="dateRangePeriodDialog.show()"
+					update="date_range_period_dialog" />
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
@@ -385,7 +394,7 @@
 								icon="ui-icon-refresh" />
 						</h:panelGrid>
 					</p:panel>
-					<p:schedule
+					<ctsms:schedule
 						value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel}"
 						editable="true" draggable="true" resizable="true"
 						widgetVar="dutyRosterSchedule" showWeekends="true"
@@ -395,7 +404,9 @@
 						timeZone="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}"
 						view="agendaDay" leftHeaderTemplate="prev,today,next"
 						centerTemplate="title"
-						rightHeaderTemplate="#{applicationScopeBean.scheduleRightHeaderTemplate}">
+						rightHeaderTemplate="#{applicationScopeBean.scheduleRightHeaderTemplate}"
+						weekNumberOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'WEEK',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));"
+						dateOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'DAY',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));">
 						<p:ajax event="dateSelect" onstart="setSupressWait()"
 							listener="#{scheduleDutyRosterTurnBean.onDateSelect}"
 							update="tabView,messages"
@@ -412,7 +423,7 @@
 							listener="#{scheduleDutyRosterTurnBean.onEventResize}"
 							update="tabView,messages"
 							oncomplete="handleDutyRosterScheduleEventResized(xhr, status, args)" />
-					</p:schedule>
+					</ctsms:schedule>
 					<p:growl id="messages" showDetail="false" />
 				</h:panelGrid>
 				<p:dialog widgetVar="dutyRosterTurnDialog"
@@ -706,6 +717,60 @@
 					</p:tabView>
 				</p:dialog>
 				<ui:include src="/META-INF/includes/shared/waitDialog.xhtml" />
+				<p:dialog widgetVar="dateRangePeriodDialog"
+					id="date_range_period_dialog"
+					header="#{scheduleDutyRosterTurnBean.dateRangePeriodDialogTitle}"
+					showEffect="#{effect}" hideEffect="#{effect}">			
+					
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						
+						<h:panelGrid columns="2"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column">
+
+							<h:outputText value="#{triallabels.duty_roster_schedule_proband_inventory_bookings_excel_label}" />
+							
+							<p:commandLink immediate="true" id="probandinventorybookingsexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleDutyRosterTurnBean.probandInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>
+
+							<h:outputText value="#{triallabels.duty_roster_schedule_course_inventory_bookings_excel_label}" />
+							
+							<p:commandLink immediate="true" id="courseinventorybookingsexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleDutyRosterTurnBean.courseInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>
+							
+							<h:outputText value="#{triallabels.duty_roster_schedule_trial_inventory_bookings_excel_label}" />
+							
+							<p:commandLink immediate="true" id="trialinventorybookingsexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleDutyRosterTurnBean.trialInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>						
+							
+							<h:outputText value="#{triallabels.duty_roster_schedule_visit_schedule_excel_label}" />
+							
+							<p:commandLink immediate="true" id="visitscheduleexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleDutyRosterTurnBean.visitScheduleExcelStreamedContent}" />
+							</p:commandLink>
+							
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:dialog>				
 			</h:form>
 		</ui:define>
 	</ui:composition>
