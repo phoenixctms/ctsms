@@ -2188,7 +2188,9 @@ function BasicView(element, calendar, viewName) {
 
 	var tm;
 	var colFormat;
+	var dayColFormat;
 	var showWeekNumbers;
+	var weekNumberOnClick;
 	var weekNumberTitle;
 	var weekNumberFormat;
 
@@ -2218,9 +2220,12 @@ function BasicView(element, calendar, viewName) {
 	function updateOptions() {
 		tm = opt('theme') ? 'ui' : 'fc';
 		colFormat = opt('columnFormat');
+		dayColFormat = opt('columnFormat', 'day');
 
 		// week # options. (TODO: bad, logic also in other views)
 		showWeekNumbers = opt('weekNumbers');
+		weekNumberOnClick = opt('weekNumberOnClick');
+		dateOnClick = opt('dateOnClick');
 		weekNumberTitle = opt('weekNumberTitle');
 		if (opt('weekNumberCalculation') != 'iso') {
 			weekNumberFormat = "w";
@@ -2333,12 +2338,21 @@ function BasicView(element, calendar, viewName) {
 
 			if (showWeekNumbers) {
 				date = cellToDate(row, 0);
-				html +=
-					"<td class='fc-week-number " + contentClass + "'>" +
-					"<div>" +
-					htmlEscape(formatDate(date, weekNumberFormat)) +
-					"</div>" +
-					"</td>";
+				if (weekNumberOnClick) {
+					html +=
+						"<td class='fc-week-number fc-link " + contentClass + "' onclick=\"var fn = function(time,label) {" + weekNumberOnClick + "}; fn.call(this," + date.getTime() + ", '" + weekNumberTitle + formatDate(date, weekNumberFormat) + "');\">" +
+						"<div>" +
+						htmlEscape(formatDate(date, weekNumberFormat)) +
+						"</div>" +
+						"</td>";
+				} else {
+					html +=
+						"<td class='fc-week-number " + contentClass + "'>" +
+						"<div>" +
+						htmlEscape(formatDate(date, weekNumberFormat)) +
+						"</div>" +
+						"</td>";
+				}
 			}
 
 			for (col=0; col<colCnt; col++) {
@@ -2390,7 +2404,11 @@ function BasicView(element, calendar, viewName) {
 			"<div>";
 
 		if (showNumbers) {
-			html += "<div class='fc-day-number'>" + date.getDate() + "</div>";
+			if (dateOnClick) {
+				html += "<div class='fc-day-number fc-link' onclick=\"event.stopPropagation(); var fn = function(time,label) {" + dateOnClick + "}; fn.call(this," + date.getTime() + ", '" + formatDate(date, dayColFormat) + "');\">" + date.getDate() + "</div>";
+			} else {
+				html += "<div class='fc-day-number'>" + date.getDate() + "</div>";
+			}
 		}
 
 		html +=
@@ -2882,7 +2900,10 @@ function AgendaView(element, calendar, viewName) {
 	var rtl;
 	var minMinute, maxMinute;
 	var colFormat;
+	var dayColFormat;
 	var showWeekNumbers;
+	var weekNumberOnClick;
+	var dateOnClick;
 	var weekNumberTitle;
 	var weekNumberFormat;
 
@@ -2915,9 +2936,12 @@ function AgendaView(element, calendar, viewName) {
 		minMinute = parseTime(opt('minTime'));
 		maxMinute = parseTime(opt('maxTime'));
 		colFormat = opt('columnFormat');
+		dayColFormat = opt('columnFormat','day');
 
 		// week # options. (TODO: bad, logic also in other views)
 		showWeekNumbers = opt('weekNumbers');
+		weekNumberOnClick = opt('weekNumberOnClick');
+		dateOnClick = opt('dateOnClick');
 		weekNumberTitle = opt('weekNumberTitle');
 		if (opt('weekNumberCalculation') != 'iso') {
 			weekNumberFormat = "w";
@@ -3087,10 +3111,17 @@ function AgendaView(element, calendar, viewName) {
 			else {
 				weekText = weekNumberTitle + weekText;
 			}
-			html +=
-				"<th class='fc-agenda-axis fc-week-number " + headerClass + "'>" +
-				htmlEscape(weekText) +
-				"</th>";
+			if (weekNumberOnClick) {
+				html +=
+					"<th class='fc-agenda-axis fc-week-number fc-link " + headerClass + "' onclick=\"var fn = function(time,label) {" + weekNumberOnClick + "}; fn.call(this," + date.getTime() + ", '" + weekText + "');\">" +
+					htmlEscape(weekText) +
+					"</th>";
+			} else {
+				html +=
+					"<th class='fc-agenda-axis fc-week-number " + headerClass + "'>" +
+					htmlEscape(weekText) +
+					"</th>";
+			}
 		}
 		else {
 			html += "<th class='fc-agenda-axis " + headerClass + "'>&nbsp;</th>";
@@ -3098,10 +3129,17 @@ function AgendaView(element, calendar, viewName) {
 
 		for (col=0; col<colCnt; col++) {
 			date = cellToDate(0, col);
-			html +=
-				"<th class='fc-" + dayIDs[date.getDay()] + " fc-col" + col + ' ' + headerClass + "'>" +
-				htmlEscape(formatDate(date, colFormat)) +
-				"</th>";
+			if (dateOnClick) {
+				html +=
+					"<th class='fc-" + dayIDs[date.getDay()] + " fc-col" + col + ' fc-link ' + headerClass + "' onclick=\"var fn = function(time,label) {" + dateOnClick + "}; fn.call(this," + date.getTime() + ", '" + formatDate(date, dayColFormat) + "');\">" +
+					htmlEscape(formatDate(date, colFormat)) +
+					"</th>";
+			} else {
+				html +=
+					"<th class='fc-" + dayIDs[date.getDay()] + " fc-col" + col + ' ' + headerClass + "'>" +
+					htmlEscape(formatDate(date, colFormat)) +
+					"</th>";
+			}
 		}
 
 		html +=
