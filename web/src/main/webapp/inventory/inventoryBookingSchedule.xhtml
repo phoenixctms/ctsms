@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ctsms="http://phoenixctms.org/ctsms-taglib">
 <h:head>
 	<title>inventory booking schedule</title>
 </h:head>
@@ -15,9 +16,11 @@
 		<ui:define name="head">
 			<h:outputStylesheet name="inventory.min.css" library="css"
 				target="head" />
+			<h:outputStylesheet
+				name="mimetypes.min.css"
+				library="css"
+				target="head" />				
 			<h:outputScript name="inventory.min.js" library="js" target="head" />
-			<h:outputScript name="scheduleCalendarWeek.min.js" library="js"
-				target="head" />
 			<h:outputScript name="jquery.fullCalendar.min.js" library="js"
 				target="head" />
 		</ui:define>
@@ -44,6 +47,12 @@
 					actionListener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}"
 					oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
+				<p:remoteCommand process="@this"
+					name="openDateRangePeriodDialog"
+					onstart="setSupressWait()"
+					actionListener="#{scheduleInventoryBookingBean.updateDateRangePeriod}"
+					oncomplete="dateRangePeriodDialog.show()"
+					update="date_range_period_dialog" />
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
@@ -371,7 +380,7 @@
 								icon="ui-icon-refresh" />
 						</h:panelGrid>
 					</p:panel>
-					<p:schedule
+					<ctsms:schedule
 						value="#{scheduleInventoryBookingBean.bookingScheduleModel}"
 						editable="true" draggable="true" resizable="true"
 						widgetVar="bookingSchedule" showWeekends="true"
@@ -381,7 +390,9 @@
 						timeZone="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}"
 						view="agendaDay" leftHeaderTemplate="prev,today,next"
 						centerTemplate="title"
-						rightHeaderTemplate="#{applicationScopeBean.scheduleRightHeaderTemplate}">
+						rightHeaderTemplate="#{applicationScopeBean.scheduleRightHeaderTemplate}"
+						weekNumberOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'WEEK',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));"
+						dateOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'DAY',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));">
 						<p:ajax event="dateSelect"
 							listener="#{scheduleInventoryBookingBean.onDateSelect}"
 							onstart="setSupressWait()" update="tabView,messages"
@@ -398,11 +409,11 @@
 							listener="#{scheduleInventoryBookingBean.onEventResize}"
 							update="tabView,messages"
 							oncomplete="handleBookingScheduleEventResized(xhr, status, args)" />
-					</p:schedule>
+					</ctsms:schedule>
 					<p:growl id="messages" showDetail="false" />
 				</h:panelGrid>
 				<p:dialog widgetVar="bookingDialog"
-					header="#{inventorylabels.booking_schedule_dialog_title}"
+					header="#{inventorylabels.booking_schedule_event_dialog_title}"
 					showEffect="#{effect}" hideEffect="#{effect}" width="680">
 					<p:tabView id="tabView">
 						<p:tab title="#{scheduleInventoryBookingBean.title}">
@@ -649,6 +660,60 @@
 					</p:tabView>
 				</p:dialog>
 				<ui:include src="/META-INF/includes/shared/waitDialog.xhtml" />
+				<p:dialog widgetVar="dateRangePeriodDialog"
+					id="date_range_period_dialog"
+					header="#{scheduleInventoryBookingBean.dateRangePeriodDialogTitle}"
+					showEffect="#{effect}" hideEffect="#{effect}">			
+					
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						
+						<h:panelGrid columns="2"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column">
+
+							<h:outputText value="#{inventorylabels.booking_schedule_proband_inventory_bookings_excel_label}" />
+							
+							<p:commandLink immediate="true" id="probandinventorybookingsexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleInventoryBookingBean.probandInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>
+
+							<h:outputText value="#{inventorylabels.booking_schedule_course_inventory_bookings_excel_label}" />
+							
+							<p:commandLink immediate="true" id="courseinventorybookingsexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleInventoryBookingBean.courseInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>
+							
+							<h:outputText value="#{inventorylabels.booking_schedule_trial_inventory_bookings_excel_label}" />
+							
+							<p:commandLink immediate="true" id="trialinventorybookingsexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleInventoryBookingBean.trialInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>						
+							
+							<h:outputText value="#{inventorylabels.booking_schedule_visit_schedule_excel_label}" />
+							
+							<p:commandLink immediate="true" id="visitscheduleexceldownload"
+								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								title="#{labels.download_link_label}">
+								<h:outputText value="#{labels.download_link_label}" />
+								<p:fileDownload value="#{scheduleInventoryBookingBean.visitScheduleExcelStreamedContent}" />
+							</p:commandLink>
+							
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:dialog>
 			</h:form>
 		</ui:define>
 	</ui:composition>
