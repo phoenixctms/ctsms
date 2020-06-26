@@ -86,6 +86,7 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
+import org.phoenixctms.ctsms.enumeration.RangePeriod;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -108,6 +109,7 @@ import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.vo.AlphaIdVO;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AspSubstanceVO;
@@ -134,6 +136,7 @@ import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.RandomizationModeVO;
+import org.phoenixctms.ctsms.vo.RangeIntervalVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
@@ -218,6 +221,15 @@ public class ToolsServiceImpl
 	protected Date handleAddIntervals(Date date, VariablePeriod period,
 			Long explicitDays, int n) throws Exception {
 		return DateCalc.addIntervals(date, period, explicitDays, n);
+	}
+
+	@Override
+	protected RangeIntervalVO handleGetRangeInterval(Date date, RangePeriod period) throws Exception {
+		DateInterval range = new DateInterval(date, period);
+		RangeIntervalVO result = new RangeIntervalVO();
+		result.setStart(range.getStart());
+		result.setStop(range.getStop());
+		return result;
 	}
 
 	@Override
