@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.web.util;
 
 public enum GetParamNames {
+
 	INVENTORY_ID("inventoryid"),
 	INVENTORY_TAG_VALUE_ID("inventorytagvalueid"),
 	INVENTORY_STATUS_ENTRY_ID("inventorystatusentryid"),
@@ -12,6 +13,9 @@ public enum GetParamNames {
 	PICK_TARGET_LABEL("picktargetlabel"),
 	START("start"),
 	STOP("stop"),
+	DATE("date"),
+	RANGE_PERIOD("rangeperiod"),
+	RANGE_LABEL("rangelabel"),
 	SOURCE_INDEX("sourceindex"),
 	TARGET_INDEX("targetindex"),
 	TARGET_POSITION("targetposition"),

@@ -9,6 +9,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.primefaces.extensions.converter.LocaleConverter;
 
 public enum JSValues {
+
 	ID_SEPARATOR_STRING(WebUtil.ID_SEPARATOR_STRING),
 	AJAX_CANCEL("cancel"),
 	AJAX_MAINTENANCE_TYPE_TITLE_PRESET_BASE64("maintenanceType"),
@@ -54,6 +55,12 @@ public enum JSValues {
 	START(GetParamNames.START
 			.toString()),
 	STOP(GetParamNames.STOP
+			.toString()),
+	DATE(GetParamNames.DATE
+			.toString()),
+	RANGE_PERIOD(GetParamNames.RANGE_PERIOD
+			.toString()),
+	RANGE_LABEL(GetParamNames.RANGE_LABEL
 			.toString()),
 	PICK_AJAX(GetParamNames.PICK_AJAX
 			.toString()),

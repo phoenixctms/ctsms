@@ -466,7 +466,7 @@ public class ServiceMethods {
 				.println("timespan: "
 						+ CommonUtil.getDateStartStopString(range.getStart(), range.getStop(),
 								new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
-		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, null, null, id, null, range.getStart(), range.getStop(), true, true, null, null, null,
+		InventoryBookingsExcelVO result = inventoryService.exportInventoryBookings(auth, id, null, null, null, range.getStart(), range.getStop(), true, true, null, null, null,
 				null);
 		if (result != null) {
 			if (id != null) {

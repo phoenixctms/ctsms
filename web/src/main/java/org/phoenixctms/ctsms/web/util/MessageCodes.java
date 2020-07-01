@@ -874,4 +874,6 @@ public interface MessageCodes {
 	public static final String PASSWORD_DEPARTMENT_PASSWORD_LABEL = "password_department_password_label";
 	public static final String CODE_BREAK_PROBAND_TITLE = "code_break_proband_title";
 	public static final String CODE_BREAK_TITLE = "code_break_title";
+	public static final String BOOKING_SCHEDULE_DATE_RANGE_PERIOD_DIALOG_TITLE = "booking_schedule_date_range_period_dialog_title";
+	public static final String DUTY_ROSTER_SCHEDULE_DATE_RANGE_PERIOD_DIALOG_TITLE = "duty_roster_schedule_date_range_period_dialog_title";
 }

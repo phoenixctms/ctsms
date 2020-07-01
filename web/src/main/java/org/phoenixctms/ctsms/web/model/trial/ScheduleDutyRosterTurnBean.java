@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -9,11 +11,15 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.phoenixctms.ctsms.enumeration.RangePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnInVO;
+import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
+import org.phoenixctms.ctsms.vo.RangeIntervalVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CourseEvent;
@@ -23,6 +29,7 @@ import org.phoenixctms.ctsms.web.model.shared.ProbandStatusEvent;
 import org.phoenixctms.ctsms.web.model.shared.StaffNaCountEvent;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
+import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
@@ -33,8 +40,10 @@ import org.primefaces.event.DateSelectEvent;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 import org.primefaces.event.ScheduleEntrySelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean
 @ViewScoped
@@ -574,5 +583,100 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		dutyRosterTurnEvent.setCollidingInventoryBookingCount(CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(out, true,
 				collidingInventoryBookingModelCache)
 				.getAllRowCount());
+	}
+
+	protected Date date;
+	protected RangePeriod rangePeriod;
+	protected String rangeLabel;
+
+	public void updateDateRangePeriod() {
+		try {
+			rangeLabel = WebUtil.getParamValue(GetParamNames.RANGE_LABEL);
+		} catch (Exception e) {
+			rangeLabel = null;
+		}
+		try {
+			rangePeriod = RangePeriod.fromString(WebUtil.getParamValue(GetParamNames.RANGE_PERIOD));
+		} catch (Exception e) {
+			rangePeriod = null;
+		}
+		try {
+			date = DateUtil.sanitizeScheduleTimestamp(true, new Date(WebUtil.getLongParamValue(GetParamNames.DATE)));
+		} catch (Exception e) {
+			date = null;
+		}
+	}
+
+	public String getDateRangePeriodDialogTitle() {
+		if (date != null && rangePeriod != null) {
+			try {
+				RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
+				return Messages.getMessage(MessageCodes.DUTY_ROSTER_SCHEDULE_DATE_RANGE_PERIOD_DIALOG_TITLE, rangeLabel,
+						DateUtil.getDateTimeStartStopString(range.getStart(), range.getStop()));
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			}
+		}
+		return "";
+	}
+
+	public StreamedContent getProbandInventoryBookingsExcelStreamedContent() throws Exception {
+		try {
+			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
+			InventoryBookingsExcelVO excel = WebUtil.getServiceLocator().getInventoryService().exportInventoryBookings(
+					WebUtil.getAuthentication(), dutyRosterScheduleModel.getDepartmentId(), null, null, null,
+					range.getStart(), range.getStop(), true, true, null, null, null, null);
+			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	public StreamedContent getCourseInventoryBookingsExcelStreamedContent() throws Exception {
+		try {
+			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
+			InventoryBookingsExcelVO excel = WebUtil.getServiceLocator().getInventoryService().exportInventoryBookings(
+					WebUtil.getAuthentication(), null, dutyRosterScheduleModel.getDepartmentId(), null, null,
+					range.getStart(), range.getStop(), null, null, true, true, null, null);
+			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	public StreamedContent getTrialInventoryBookingsExcelStreamedContent() throws Exception {
+		try {
+			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
+			InventoryBookingsExcelVO excel = WebUtil.getServiceLocator().getInventoryService().exportInventoryBookings(
+					WebUtil.getAuthentication(), null, null, dutyRosterScheduleModel.getDepartmentId(), null,
+					range.getStart(), range.getStop(), null, null, null, null, true, true);
+			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
+	public StreamedContent getVisitScheduleExcelStreamedContent() throws Exception {
+		try {
+			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
+			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(
+					WebUtil.getAuthentication(), dutyRosterScheduleModel.getTrialId(), null, dutyRosterScheduleModel.getDepartmentId(), range.getStart(), range.getStop());
+			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
 	}
 }
