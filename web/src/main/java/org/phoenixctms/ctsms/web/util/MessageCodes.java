@@ -222,6 +222,7 @@ public interface MessageCodes {
 	public static final String INQUIRY_JS_OUTPUT_EXPRESSION_PRESET = "inquiry_js_output_expression_preset";
 	public final static String ECRF_DESCRIPTION_PRESET = "ecrf_description_preset";
 	public final static String ECRF_NAME_PRESET = "ecrf_name_preset";
+	public final static String ECRF_REVISION_PRESET = "ecrf_revision_preset";
 	public final static String ECRF_TITLE_PRESET = "ecrf_title_preset";
 	public final static String ECRF_EXTERNAL_ID_PRESET = "ecrf_external_id_preset";
 	public final static String ECRF_FIELD_COMMENT_PRESET = "ecrf_field_comment_preset";
@@ -792,6 +793,7 @@ public interface MessageCodes {
 	public static final String CRITERION_ITEM_TIP_INQUIRY_CATEGORY = "criterion_item_tip_inquiry_category";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_NAME = "criterion_item_tip_input_field_name";
 	public static final String CRITERION_ITEM_TIP_TITLE = "criterion_item_tip_title";
+	public static final String CRITERION_ITEM_TIP_TOKEN = "criterion_item_tip_token";
 	public static final String CRITERION_ITEM_TIP_START_STOP = "criterion_item_tip_start_stop";
 	public static final String CRITERION_ITEM_TIP_TIMELINE_EVENT_TYPE = "criterion_item_tip_timeline_event_type";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID = "criterion_item_tip_input_field_external_id";
