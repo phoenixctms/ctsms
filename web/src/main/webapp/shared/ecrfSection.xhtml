@@ -69,17 +69,20 @@
 								</h:panelGrid>
 								<h:panelGrid id="ecrf_detail" columns="10" cellpadding="2"
 									styleClass="ctsms-content-panelgrid-minheight"
-									columnClasses="ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column-bold">
+									columnClasses="ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold">
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.name}" />
+									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_revision_label}" />
+									<h:outputLabel value="#{ecrfSectionBean.ecrf.revision}" />
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_field_section_label}" />
 									<h:outputLabel
 										value="#{ecrfSectionBean.fieldStatusEntry.ecrfField.section}" />
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
-									<h:outputLabel value="#{ecrfSectionBean.ecrf.group.title}" />
+									<h:outputLabel value="#{applicationScopeBean.probandGroupsToString(ecrfSectionBean.ecrf.groups)}" />
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.visit.title}" />

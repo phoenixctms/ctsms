@@ -147,9 +147,20 @@
 							<ui:param name="uiicon" value="true" />
 						</ui:include>
 					</p:column>
+
+					<p:column filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.revision}"
+						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.revision}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{labels.ecrffieldstatus_ecrf_revision_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{fieldStatusEntry.vo.ecrfField.ecrf.revision}" />
+					</p:column>
 					<p:column
-						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}"
-						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.group.id}"
+						sortBy="#{fieldStatusEntry.vo.listEntry.group.title}"
+						filterBy="#{fieldStatusEntry.vo.listEntry.group.id}"
 						filterOptions="#{ecrfFieldStatusBean.filterProbandGroups}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
@@ -157,16 +168,7 @@
 								value="#{labels.ecrffieldstatus_group_title_column}" />
 						</f:facet>
 						<h:outputText
-							value="#{fieldStatusEntry.vo.ecrfField.ecrf.group.title}" />
-					</p:column>
-					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.position}">
-						<f:attribute name="visibleDefault" value="false" />
-						<f:facet name="header">
-							<h:outputText
-								value="#{labels.ecrffieldstatus_ecrf_position_column}" />
-						</f:facet>
-						<h:outputText
-							value="#{fieldStatusEntry.vo.ecrfField.ecrf.position}" />
+							value="#{fieldStatusEntry.vo.listEntry.group.title}" />
 					</p:column>
 					<p:column
 						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}"

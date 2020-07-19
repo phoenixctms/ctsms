@@ -19,23 +19,22 @@
 			<h:outputText value="#{ecrf.vo.name}" />
 		</p:column>
 		<p:column
-			rendered="#{showGroup}"
-			sortBy="#{ecrf.vo.group.title}"
-			filterBy="#{ecrf.vo.group.id}"
-			filterOptions="#{ecrfSelectionBean.filterProbandGroups}">
+			rendered="#{showRevision}"
+			sortBy="#{ecrf.vo.revision}"
+			filterBy="#{ecrf.vo.revision}">
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.ecrf_list_group_title_column}" />
+				<h:outputText value="#{triallabels.ecrf_list_revision_column}" />
 			</f:facet>
-			<h:outputText value="#{ecrf.vo.group.title}" />
-		</p:column>
+			<h:outputText value="#{ecrf.vo.revision}" />
+		</p:column>	
 		<p:column
-			rendered="#{showPosition}"
-			sortBy="#{ecrf.vo.position}">
+			rendered="#{showGroups}"
+			filterBy="#{ecrf.vo.groups.title}">
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.ecrf_list_position_column}" />
+				<h:outputText value="#{triallabels.ecrf_list_groups_title_column}" />
 			</f:facet>
-			<h:outputText value="#{ecrf.vo.position}" />
-		</p:column>		
+			<h:outputText value="#{applicationScopeBean.clipStringMid(applicationScopeBean.probandGroupsToString(ecrf.vo.groups))}" />
+		</p:column>
 		<p:column
 			rendered="#{showVisit}"
 			sortBy="#{ecrf.vo.visit.title}"

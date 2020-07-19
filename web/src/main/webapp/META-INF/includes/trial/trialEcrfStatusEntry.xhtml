@@ -303,7 +303,7 @@
 					scrollable="#{dataTablesScrollableDefault}"
 					scrollHeight="#{dataTablesScrollHeightDefault}"
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
-					sortBy="#{ecrf.vo.position}"
+					sortBy="#{ecrf.vo.name}"
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="ecrf" value="#{trialEcrfStatusEntryBean.ecrfModel}"
 					id="trialecrfstatus_ecrf_list" selectionMode="single"
@@ -333,9 +333,9 @@
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
 						<ui:param name="ecrfSelectionBean"
 							value="#{trialEcrfStatusEntryBean}" />
-						<ui:param name="showPosition" value="true" />
+						<ui:param name="showRevision" value="true" />
 						<ui:param name="showVisit" value="true" />
-						<ui:param name="showGroup" value="true" />
+						<ui:param name="showGroups" value="false" />
 						<!-- existing values! -->
 						<ui:param name="showActive" value="true" />
 						<ui:param name="showCharge" value="false" />
@@ -601,14 +601,17 @@
 								</h:panelGrid>
 								<h:panelGrid id="ecrf_detail" columns="8" cellpadding="2"
 									styleClass="ctsms-content-panelgrid"
-									columnClasses="ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column,ctsms-label-for-column,ctsms-text-column-bold">
+									columnClasses="ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold,ctsms-label-for-column,ctsms-text-column-bold">
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
 									<h:outputLabel value="#{trialEcrfStatusEntryBean.ecrf.name}" />
 									<h:outputLabel
+										value="#{triallabels.ecrf_field_values_ecrf_revision_label}" />
+									<h:outputLabel value="#{trialEcrfStatusEntryBean.ecrf.revision}" />
+									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
 									<h:outputLabel
-										value="#{trialEcrfStatusEntryBean.ecrf.group.title}" />
+										value="#{applicationScopeBean.probandGroupsToString(probandEcrfStatusEntryBean.ecrf.groups)}" />
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
 									<h:outputLabel
