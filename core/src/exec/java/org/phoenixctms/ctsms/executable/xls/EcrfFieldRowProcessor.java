@@ -12,21 +12,16 @@ import org.phoenixctms.ctsms.domain.ECRFField;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
-import org.phoenixctms.ctsms.domain.ProbandGroupDao;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ECRFFieldInVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupInVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class EcrfFieldRowProcessor extends RowProcessor {
 
-	private final static String DEFAULT_PROBAND_GROUP_DESCRIPTION = "";
-	private final static boolean DEFAULT_PROBAND_GROUP_RANDOMIZE = false;
 	private final static String SHEET_NAME = "ecrffields";
-	private final static int ECRF_PROBAND_GROUP_COLUMN_INDEX = 0;
-	private final static int ECRF_POSITION_COLUMN_INDEX = 1;
+	private final static int ECRF_NAME_COLUMN_INDEX = 0;
+	private final static int ECRF_REVISION_COLUMN_INDEX = 1;
 	private final static int SECTION_COLUMN_INDEX = 2;
 	private final static int POSITION_COLUMN_INDEX = 3;
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 4;
@@ -42,8 +37,8 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 14;
 	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 15;
 	private final static int NOTIFY_COLUMN_INDEX = 16;
-	private int ecrfProbandGroupColumnIndex;
-	private int ecrfPositionColumnIndex;
+	private int ecrfNameColumnIndex;
+	private int ecrfRevisionColumnIndex;
 	private int sectionColumnIndex;
 	private int positionColumnIndex;
 	private int externalIdColumnIndex;
@@ -59,15 +54,12 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private int jsValueExpressionColumnIndex;
 	private int jsOutputExpressionColumnIndex;
 	private int notifyColumnIndex;
-	private HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>> ecrfFieldMap;
-	private HashMap<String, Long> probandGroupIdMap;
-	private HashMap<String, HashMap<Long, ECRF>> ecrfMap;
+	private HashMap<String, HashMap<String, Set<ECRFFieldInVO>>> ecrfFieldMap;
+	private HashMap<String, HashMap<String, ECRF>> ecrfMap;
 	@Autowired
 	protected ECRFDao eCRFDao; // varnames must match bean ids in applicationContext.xml
 	@Autowired
 	protected ECRFFieldDao eCRFFieldDao;
-	@Autowired
-	protected ProbandGroupDao probandGroupDao;
 	@Autowired
 	protected InputFieldDao inputFieldDao;
 	@Autowired
@@ -77,29 +69,18 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		super();
 		filterDupes = false;
 		acceptCommentsIndex = 0;
-		ecrfFieldMap = new HashMap<String, HashMap<Long, Set<ECRFFieldInVO>>>();
-		probandGroupIdMap = new HashMap<String, Long>();
-		ecrfMap = new HashMap<String, HashMap<Long, ECRF>>();
+		ecrfFieldMap = new HashMap<String, HashMap<String, Set<ECRFFieldInVO>>>();
+		ecrfMap = new HashMap<String, HashMap<String, ECRF>>();
 	}
 
-	public void clearEcrf(String probandGroupToken, Long ecrfPosition) {
-		if (ecrfMap.containsKey(probandGroupToken)) {
-			HashMap<Long, ECRF> positionMap = ecrfMap.get(probandGroupToken);
-			positionMap.remove(ecrfPosition);
-			if (positionMap.isEmpty()) {
-				ecrfMap.remove(probandGroupToken);
+	public void clearEcrf(String ecrfName, String ecrfRevision) {
+		if (ecrfMap.containsKey(ecrfName)) {
+			HashMap<String, ECRF> revisionMap = ecrfMap.get(ecrfName);
+			revisionMap.remove(ecrfRevision);
+			if (revisionMap.isEmpty()) {
+				ecrfMap.remove(ecrfName);
 			}
 		}
-	}
-
-	private ProbandGroupOutVO createProbandGroup(String probandGroupToken) throws Exception {
-		ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
-		newProbandGroup.setToken(probandGroupToken);
-		newProbandGroup.setTitle(probandGroupToken);
-		newProbandGroup.setDescription(DEFAULT_PROBAND_GROUP_DESCRIPTION);
-		newProbandGroup.setRandomize(DEFAULT_PROBAND_GROUP_RANDOMIZE);
-		newProbandGroup.setTrialId(context.getEntityId());
-		return trialService.addProbandGroup(context.getAuth(), newProbandGroup);
 	}
 
 	private String getAuditTrail(String[] values) {
@@ -118,41 +99,41 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, disabledColumnIndex);
 	}
 
-	public ECRF getEcrf(String probandGroupToken, Long ecrfPosition) throws Exception {
+	public ECRF getEcrf(String name, String revision) throws Exception {
 		ECRF ecrf = null;
-		HashMap<Long, ECRF> positionMap;
-		if (ecrfMap.containsKey(probandGroupToken)) {
-			positionMap = ecrfMap.get(probandGroupToken);
+		HashMap<String, ECRF> revisionMap;
+		if (ecrfMap.containsKey(name)) {
+			revisionMap = ecrfMap.get(name);
 		} else {
-			positionMap = new HashMap<Long, ECRF>();
-			ecrfMap.put(probandGroupToken, positionMap);
+			revisionMap = new HashMap<String, ECRF>();
+			ecrfMap.put(name, revisionMap);
 		}
-		if (positionMap.containsKey(ecrfPosition)) {
-			ecrf = positionMap.get(ecrfPosition);
+		if (revisionMap.containsKey(revision)) {
+			ecrf = revisionMap.get(revision);
 		} else {
 			try {
-				ecrf = eCRFDao.findCollidingTrialGroupPosition(context.getEntityId(), getProbandGroupId(probandGroupToken), ecrfPosition).iterator().next();
+				ecrf = eCRFDao.findCollidingTrialNameRevision(context.getEntityId(), name, revision).iterator().next();
 			} catch (NoSuchElementException e) {
 			}
-			positionMap.put(ecrfPosition, ecrf);
+			revisionMap.put(revision, ecrf);
 		}
 		return ecrf;
 	}
 
-	public Set<ECRFFieldInVO> getEcrfFields(String probandGroupToken, Long ecrfPosition) {
-		HashMap<Long, Set<ECRFFieldInVO>> positionMap = ecrfFieldMap.get(probandGroupToken);
-		if (positionMap != null) {
-			return positionMap.get(ecrfPosition);
+	public Set<ECRFFieldInVO> getEcrfFields(String ecrfName, String ecrfRevision) {
+		HashMap<String, Set<ECRFFieldInVO>> revisionMap = ecrfFieldMap.get(ecrfName);
+		if (revisionMap != null) {
+			return revisionMap.get(ecrfRevision);
 		}
 		return null;
 	}
 
-	private String getEcrfPosition(String[] values) {
-		return getColumnValue(values, ecrfPositionColumnIndex);
+	private String getEcrfRevision(String[] values) {
+		return getColumnValue(values, ecrfRevisionColumnIndex);
 	}
 
-	private String getEcrfProbandGroup(String[] values) {
-		return getColumnValue(values, ecrfProbandGroupColumnIndex);
+	private String getEcrfName(String[] values) {
+		return getColumnValue(values, ecrfNameColumnIndex);
 	}
 
 	private String getExternalId(String[] values) {
@@ -198,25 +179,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, positionColumnIndex);
 	}
 
-	public Long getProbandGroupId(String probandGroupToken) throws Exception {
-		Long probandGroupId = null;
-		if (!CommonUtil.isEmptyString(probandGroupToken)) {
-			if (!probandGroupIdMap.containsKey(probandGroupToken)) {
-				try {
-					probandGroupId = probandGroupDao.findByTrialTitleToken(context.getEntityId(), null, probandGroupToken).iterator().next().getId();
-				} catch (NoSuchElementException e) {
-					ProbandGroupOutVO probandGroupVO = createProbandGroup(probandGroupToken);
-					probandGroupId = probandGroupVO.getId();
-					jobOutput.println("proband group '" + probandGroupVO.getUniqueName() + "' created");
-				}
-				probandGroupIdMap.put(probandGroupToken, probandGroupId);
-			} else {
-				probandGroupId = probandGroupIdMap.get(probandGroupToken);
-			}
-		}
-		return probandGroupId;
-	}
-
 	private String getReasonForChangeRequired(String[] values) {
 		return getColumnValue(values, reasonForChangeRequiredColumnIndex);
 	}
@@ -237,8 +199,8 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	@Override
 	public void init() throws Throwable {
 		super.init();
-		ecrfProbandGroupColumnIndex = ECRF_PROBAND_GROUP_COLUMN_INDEX;
-		ecrfPositionColumnIndex = ECRF_POSITION_COLUMN_INDEX;
+		ecrfNameColumnIndex = ECRF_NAME_COLUMN_INDEX;
+		ecrfRevisionColumnIndex = ECRF_REVISION_COLUMN_INDEX;
 		sectionColumnIndex = SECTION_COLUMN_INDEX;
 		positionColumnIndex = POSITION_COLUMN_INDEX;
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
@@ -255,7 +217,6 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		jsOutputExpressionColumnIndex = JS_OUTPUT_EXPRESSION_COLUMN_INDEX;
 		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
 		ecrfFieldMap.clear();
-		probandGroupIdMap.clear();
 		ecrfMap.clear();
 		context.getImporter().loadInputFields(context);
 	}
@@ -263,8 +224,8 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	@Override
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
-				.append(getEcrfProbandGroup(values))
-				.append(getEcrfPosition(values))
+				.append(getEcrfName(values))
+				.append(getEcrfRevision(values))
 				.append(getSection(values))
 				.append(getPosition(values))
 				.append(getExternalId(values))
@@ -289,9 +250,9 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 
 	@Override
 	protected int processRow(String[] values, long rowNumber) throws Throwable {
-		String probandGroupToken = getEcrfProbandGroup(values);
-		Long ecrfPosition = Long.parseLong(getEcrfPosition(values));
-		ECRF ecrf = getEcrf(probandGroupToken, ecrfPosition);
+		String ecrfName = getEcrfName(values);
+		String ecrfRevision = getEcrfRevision(values);
+		ECRF ecrf = getEcrf(ecrfName, ecrfRevision);
 		Long position = Long.parseLong(getPosition(values));
 		String section = getSection(values);
 		ECRFField ecrfField = null;
@@ -326,20 +287,20 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ecrfFieldIn.setJsOutputExpression(clearJs ? null : getJsOutputExpression(values));
 		ecrfFieldIn.setNotify(Boolean.parseBoolean(getNotify(values))); //clearJs ? false :
 		Set<ECRFFieldInVO> ecrfFields;
-		HashMap<Long, Set<ECRFFieldInVO>> positionMap;
-		if (ecrfFieldMap.containsKey(probandGroupToken)) {
-			positionMap = ecrfFieldMap.get(probandGroupToken);
+		HashMap<String, Set<ECRFFieldInVO>> revisionMap;
+		if (ecrfFieldMap.containsKey(ecrfName)) {
+			revisionMap = ecrfFieldMap.get(ecrfName);
 		} else {
-			positionMap = new HashMap<Long, Set<ECRFFieldInVO>>();
-			ecrfFieldMap.put(probandGroupToken, positionMap);
+			revisionMap = new HashMap<String, Set<ECRFFieldInVO>>();
+			ecrfFieldMap.put(ecrfName, revisionMap);
 		}
-		if (positionMap.containsKey(ecrfPosition)) {
-			ecrfFields = positionMap.get(ecrfPosition);
+		if (revisionMap.containsKey(ecrfRevision)) {
+			ecrfFields = revisionMap.get(ecrfRevision);
 		} else {
 			ecrfFields = new LinkedHashSet<ECRFFieldInVO>();
-			positionMap.put(ecrfPosition, ecrfFields);
+			revisionMap.put(ecrfRevision, ecrfFields);
 		}
-		String label = "ecrf for proband group " + (CommonUtil.isEmptyString(probandGroupToken) ? "<no group>" : probandGroupToken) + ", position " + ecrfPosition
+		String label = "ecrf " + ecrfName + ", revision " + ecrfRevision
 				+ ": field section " + section + ", position " + position + ", field '" + inputFieldName + "'";
 		if (ecrfFields.add(ecrfFieldIn)) {
 			jobOutput.println(label + " read");
@@ -352,10 +313,10 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
-		if (CommonUtil.isEmptyString(getEcrfPosition(values))) {
+		if (CommonUtil.isEmptyString(getEcrfName(values))) {
 			return false;
 		}
-		if (CommonUtil.isEmptyString(getPosition(values))) {
+		if (CommonUtil.isEmptyString(getEcrfRevision(values))) {
 			return false;
 		}
 		return true;
