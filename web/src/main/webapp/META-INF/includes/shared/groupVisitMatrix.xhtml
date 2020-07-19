@@ -33,15 +33,10 @@
 								varStatus="visitVarStatus">
 								<td><span
 									class="#{matrixBean.inputVisible ? 'ctsms-groupvisitmatrix-item' : ''} #{matrixBean.matrix.getMatrixItemColor(visit,group,visitVarStatus.index,groupVarStatus.index)}"
+									title="#{matrixBean.matrix.getMatrixItemsString(visit,group)}"
 									style=""
 									onclick="#{matrixBean.inputVisible} &amp;&amp; #{selectRemoteCommand}(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty visit ? 'null' : visit.id},#{applicationScopeBean.parameterName('PROBAND_GROUP_ID')}:#{empty group ? 'null' : group.id}}));">
-										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ?
-										(matrixBean.matrix.matrixVisitsCount > 5 ?
-										matrixBean.matrix.getMatrixItemCount(visit,group) : (empty
-										matrixBean.matrix.getMatrixItemsString(visit,group) ? '&#160;'
-										:
-										applicationScopeBean.clipStringTrailing(matrixBean.matrix.getMatrixItemsString(visit,group),16)))
-										: '&#160;'}</span></td>
+										#{matrixBean.matrix.getMatrixItemCount(visit,group) > 0 ? matrixBean.matrix.getMatrixItemCount(visit,group) : '&#160;'}</span></td>
 							</ui:repeat>
 						</tr>
 					</ui:repeat>
