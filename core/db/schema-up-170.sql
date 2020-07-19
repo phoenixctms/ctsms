@@ -46,3 +46,29 @@ alter table VISIT_SCHEDULE_ITEM alter MODE set not null;
 
 alter table VISIT_SCHEDULE_ITEM alter START drop not null;
 alter table VISIT_SCHEDULE_ITEM alter STOP drop not null;
+
+update PROBAND_GROUP set TOKEN = regexp_replace(TOKEN,';',',','g') where TOKEN ~ ';';
+update PROBAND_GROUP set TOKEN = regexp_replace(TOKEN,'(^[[:space:]]+)|([[:space:]]+$)','','g') where TOKEN ~ '(^[[:space:]]+)|([[:space:]]+$)';
+
+update ECRF set NAME = concat(lpad(ECRF.POSITION::text, floor(log(greatest(coalesce((select max(POSITION) from ECRF), 1), 10)) + 1)::integer, '0'), '. ', ECRF.NAME);
+update
+     ECRF A
+set
+     NAME = (case when B.LINE_NO > 1 then concat(NAME, ' (', B.LINE_NO - 1, ')') else NAME end),
+     REVISION = B.GROUP_TOKEN
+from (select
+    C.ID ID,
+    PROBAND_GROUP.TOKEN GROUP_TOKEN,
+    row_number() over(partition by C.TRIAL_FK, C.NAME, C.GROUP_FK order by C.TRIAL_FK, C.NAME, C.GROUP_FK, C.POSITION) LINE_NO
+from (select
+    D.TRIAL_FK,
+    D.NAME
+from ECRF D group by D.TRIAL_FK, D.NAME having count(ID) > 1) COLLIDING
+left join ECRF C on COLLIDING.TRIAL_FK = C.TRIAL_FK and COLLIDING.NAME = C.NAME 
+left join PROBAND_GROUP on C.GROUP_FK = PROBAND_GROUP.ID) B
+where B.ID = A.ID;
+insert into ECRF_GROUP (GROUPS_FK, ECRFS_FK) select GROUP_FK, ID from ECRF where GROUP_FK is not null;
+alter table ECRF drop column GROUP_FK;
+alter table ECRF drop column POSITION;
+
+update INPUT_FIELD set TITLE_L10N_KEY = regexp_replace(TITLE_L10N_KEY,'(^[[:space:]]+)|([[:space:]]+$)','','g') where TITLE_L10N_KEY ~ '(^[[:space:]]+)|([[:space:]]+$)';
