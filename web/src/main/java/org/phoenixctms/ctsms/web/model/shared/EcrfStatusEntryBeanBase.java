@@ -550,8 +550,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				WebUtil.getEcrfFieldStatusQueueName(queue));
 	}
 
-	public abstract ArrayList<SelectItem> getFilterProbandGroups();
-
 	public ArrayList<SelectItem> getFilterSections() {
 		return filterSections;
 	}

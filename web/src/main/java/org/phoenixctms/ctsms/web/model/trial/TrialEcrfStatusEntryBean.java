@@ -82,7 +82,6 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		}
 	}
 
-	@Override
 	public ArrayList<SelectItem> getFilterProbandGroups() {
 		return filterProbandGroups;
 	}

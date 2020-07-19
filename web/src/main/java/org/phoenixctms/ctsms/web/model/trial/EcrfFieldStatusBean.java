@@ -37,8 +37,8 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 	private EcrfFieldStatusEntryLogLazyModel ecrfFieldStatusEntryModel;
 	private HashMap<Long, EcrfFieldValueAuditTrailEagerModel> ecrfFieldAuditTrailLogModelCache;
 	private HashMap<Long, EcrfFieldStatusEntryEagerModel> fieldStatusEntryLogModelCache;
-	private ArrayList<SelectItem> filterVisits;
 	private ArrayList<SelectItem> filterProbandGroups;
+	private ArrayList<SelectItem> filterVisits;
 	private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusCache;
 	private TrialOutVO trial;
 
@@ -174,12 +174,12 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		return "";
 	}
 
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
-	}
-
 	public ArrayList<SelectItem> getFilterVisits() {
 		return filterVisits;
+	}
+
+	public ArrayList<SelectItem> getFilterProbandGroups() {
+		return filterProbandGroups;
 	}
 
 	@Override
