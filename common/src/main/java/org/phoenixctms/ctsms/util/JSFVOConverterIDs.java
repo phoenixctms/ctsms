@@ -16,6 +16,7 @@ public final class JSFVOConverterIDs {
 	public final static String INPUT_FIELD_CONVERTER_ID = "ctsms.InputField";
 	public final static String INPUT_FIELD_SELECTION_SET_VALUE_CONVERTER_ID = "ctsms.InputFieldSelectionSetValue";
 	public final static String TIMELINE_EVENT_CONVERTER_ID = "ctsms.TimelineEvent";
+	public final static String PROAND_GROUP_CONVERTER_ID = "ctsms.ProbandGroup";
 	public final static Collection<String> CONVERTER_IDS = new HashSet<String>();
 	static {
 		CONVERTER_IDS.add(ALPHA_ID_CONVERTER_ID);
@@ -29,6 +30,7 @@ public final class JSFVOConverterIDs {
 		CONVERTER_IDS.add(INPUT_FIELD_CONVERTER_ID);
 		CONVERTER_IDS.add(INPUT_FIELD_SELECTION_SET_VALUE_CONVERTER_ID);
 		CONVERTER_IDS.add(TIMELINE_EVENT_CONVERTER_ID);
+		CONVERTER_IDS.add(PROAND_GROUP_CONVERTER_ID);
 	}
 
 	private JSFVOConverterIDs() {
