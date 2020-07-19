@@ -162,6 +162,7 @@ public final class DefaultSettings {
 	public static final Integer ECRF_FIELD_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
+	public static final Integer PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final String OPS_CODE_REVISION = null;
 	public static final String ALPHA_ID_REVISION = null;
 	public static final String ASP_REVISION = null;
@@ -207,7 +208,6 @@ public final class DefaultSettings {
 	public static final boolean REMOVE_INQUIRY_CHECK_PROBAND_LOCKED = false;
 	public static final boolean REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED = false;
 	public static final boolean REMOVE_TRIAL_CHECK_PROBAND_LOCKED = false;
-	public static final boolean UNIQUE_ECRF_NAMES = false;
 	public static final String SIGNATURE_DESCRIPTION_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final boolean INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
 	public static final boolean PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = true;
@@ -242,6 +242,7 @@ public final class DefaultSettings {
 	public static final String ECRF_PROCESS_PL = "process";
 	public static final String INQUIRY_PROCESS_PL = "process";
 	public static final boolean OBFUSCATE_BROKEN_RANDOMIZATION_CODES = true;
+	public static final String ECRF_COPY_REVISION_PATTERN = "copy {0}";
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");
