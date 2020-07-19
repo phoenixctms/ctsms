@@ -158,6 +158,7 @@ import org.springframework.core.io.ClassPathResource;
 public class DemoDataProvider {
 
 	private enum InputFields {
+
 		HEIGHT("Körpergröße"),
 		WEIGHT("Körpergewicht"),
 		BMI("Body Mass Index"),
@@ -257,6 +258,7 @@ public class DemoDataProvider {
 	}
 
 	private enum InputFieldValues {
+
 		TYP_1_DIABETES("Typ 1 Diabetes"),
 		TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"),
 		TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION("Typ 2 Diabetes ohne Insulineigenproduktion"),
@@ -338,6 +340,7 @@ public class DemoDataProvider {
 	}
 
 	public enum SearchCriteria {
+
 		ALL_INVENTORY("all inventory"),
 		ALL_STAFF("all staff"),
 		ALL_COURSES("all courses"),
@@ -886,8 +889,8 @@ public class DemoDataProvider {
 		return null;
 	}
 
-	private ArrayList<ECRFFieldOutVO> createDemoEcrfMedicalHistory(AuthenticationVO auth, TrialOutVO trial, Long probandGroupId, int position, Long visitId) throws Throwable {
-		ECRFOutVO ecrf = createEcrf(auth, trial, "medical history", "eCRF to capture ICD-10 coded medical history", probandGroupId, position, visitId, true, false, true, 0.0f,
+	private ArrayList<ECRFFieldOutVO> createDemoEcrfMedicalHistory(AuthenticationVO auth, TrialOutVO trial, Long probandGroupId, Long visitId) throws Throwable {
+		ECRFOutVO ecrf = createEcrf(auth, trial, "medical history", "eCRF to capture ICD-10 coded medical history", probandGroupId, "v0", visitId, true, false, true, 0.0f,
 				null);
 		ArrayList<ECRFFieldOutVO> ecrfFields = new ArrayList<ECRFFieldOutVO>();
 		ecrfFields.add(createEcrfField(auth, InputFields.DIAGNOSIS_COUNT, ecrf, "summary", 1, false, false, false, true, true, null, null, "count",
@@ -931,8 +934,8 @@ public class DemoDataProvider {
 		return ecrfFields;
 	}
 
-	private ArrayList<ECRFFieldOutVO> createDemoEcrfSum(AuthenticationVO auth, TrialOutVO trial, Long probandGroupId, int position, Long visitId) throws Throwable {
-		ECRFOutVO ecrf = createEcrf(auth, trial, "some eCRF", "demo eCRF to show field calculations with series sections", probandGroupId, position, visitId, true, false, true,
+	private ArrayList<ECRFFieldOutVO> createDemoEcrfSum(AuthenticationVO auth, TrialOutVO trial, Long probandGroupId, Long visitId) throws Throwable {
+		ECRFOutVO ecrf = createEcrf(auth, trial, "some eCRF", "demo eCRF to show field calculations with series sections", probandGroupId, "v0", visitId, true, false, true,
 				0.0f, null);
 		ArrayList<ECRFFieldOutVO> ecrfFields = new ArrayList<ECRFFieldOutVO>();
 		ecrfFields.add(createEcrfField(auth, InputFields.STRING_SINGLELINE, ecrf, "series #1", 1, true, false, false, true, true, null, "some name", null, null, null));
@@ -1071,21 +1074,21 @@ public class DemoDataProvider {
 		return out;
 	}
 
-	private ECRFOutVO createEcrf(AuthenticationVO auth, TrialOutVO trial, String name, String title, Long probandGroupId, int position, Long visitId, boolean active,
+	private ECRFOutVO createEcrf(AuthenticationVO auth, TrialOutVO trial, String name, String title, Long probandGroupId, String revision, Long visitId, boolean active,
 			boolean disabled, boolean enableBrowserFieldCalculation, float charge,
 			String description) throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		ECRFInVO newEcrf = new ECRFInVO();
 		newEcrf.setName(name);
 		newEcrf.setTitle(title);
-		newEcrf.setPosition(new Long(position));
+		newEcrf.setRevision(revision);
 		newEcrf.setTrialId(trial.getId());
 		newEcrf.setActive(active);
 		newEcrf.setDescription(description);
 		newEcrf.setDisabled(disabled);
 		newEcrf.setEnableBrowserFieldCalculation(enableBrowserFieldCalculation);
 		newEcrf.setCharge(charge);
-		newEcrf.setGroupId(probandGroupId);
+		newEcrf.getGroupIds().add(probandGroupId);
 		newEcrf.setVisitId(visitId);
 		ECRFOutVO out = trialService.addEcrf(auth, newEcrf);
 		jobOutput.println("eCRF created: " + out.getUniqueName());
@@ -1433,8 +1436,8 @@ public class DemoDataProvider {
 						"    return $output;\n" +
 						"  }\n" +
 						"}"));
-		createDemoEcrfSum(auth, trial, null, 1, null);
-		createDemoEcrfMedicalHistory(auth, trial, null, 2, null);
+		createDemoEcrfSum(auth, trial, null, null);
+		createDemoEcrfMedicalHistory(auth, trial, null, null);
 		return trial;
 	}
 
