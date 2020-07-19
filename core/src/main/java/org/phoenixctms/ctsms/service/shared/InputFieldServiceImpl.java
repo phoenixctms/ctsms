@@ -210,6 +210,9 @@ public class InputFieldServiceImpl
 	}
 
 	private void checkInputFieldInput(InputFieldInVO inputFieldIn) throws ServiceException {
+		if (inputFieldIn.getName() != null && !inputFieldIn.getName().trim().equals(inputFieldIn.getName())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_NAME, inputFieldIn.getName());
+		}
 		if ((new InputFieldCollisionFinder(this.getInputFieldDao())).collides(inputFieldIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.FIELD_NAME_ALREADY_EXISTS);
 		}
@@ -408,11 +411,17 @@ public class InputFieldServiceImpl
 	}
 
 	private void checkSelectionSetValueInput(InputField inputField, InputFieldSelectionSetValueInVO selectionSetValueIn) throws ServiceException {
+		if (selectionSetValueIn.getName() != null && !selectionSetValueIn.getName().trim().equals(selectionSetValueIn.getName())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_NAME, selectionSetValueIn.getName());
+		}
 		if ((new InputFieldSelectionSetValueNameCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_NAME_ALREADY_EXISTS);
 		}
 		String value = selectionSetValueIn.getValue();
 		if (value != null) {
+			if (!value.trim().equals(value)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_VALUE, value);
+			}
 			if ((new InputFieldSelectionSetValueValueCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS);
 			}

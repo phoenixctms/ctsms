@@ -11,7 +11,9 @@ import org.hibernate.criterion.Restrictions;
 public class CategoryCriterion {
 
 	public enum EmptyPrefixModes {
-		NON_EMPTY_ROWS, EMPTY_ROWS, ALL_ROWS
+		NON_EMPTY_ROWS, //for an empty/null filter, return items with NOT empty/null category
+		EMPTY_ROWS, //for an empty/null filter, return items with empty/null category
+		ALL_ROWS //for an empty/null filter, return all items
 	}
 
 	public static void apply(Criteria criteria, CategoryCriterion categoryCriterion) {

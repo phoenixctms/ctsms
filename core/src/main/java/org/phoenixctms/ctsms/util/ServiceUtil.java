@@ -210,6 +210,18 @@ public final class ServiceUtil {
 	private final static EcrfFieldValueInVOInputFieldValueEqualsAdapter ECRF_FIELD_VALUE_EQUALS_ADAPTER = new EcrfFieldValueInVOInputFieldValueEqualsAdapter();
 	private final static ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER = new ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter();
 	private final static InquiryValueInVOInputFieldValueEqualsAdapter INQUIRY_VALUE_EQUALS_ADAPTER = new InquiryValueInVOInputFieldValueEqualsAdapter();
+	public final static String GROUP_VISIT_SPLIT_SEPARATOR = ";";
+	public final static String GROUP_VISIT_SPLIT_REGEX_PATTERN = Pattern.quote(GROUP_VISIT_SPLIT_SEPARATOR);
+	private final static Pattern GROUP_VISIT_BLOCK_SPLIT_REGEXP = Pattern.compile(GROUP_VISIT_SPLIT_REGEX_PATTERN);
+
+	public static void checkProbandGroupToken(String token) throws ServiceException {
+		if (GROUP_VISIT_BLOCK_SPLIT_REGEXP.matcher(token).find()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PROBAND_GROUP_TOKEN, token);
+		}
+		if (!token.trim().equals(token)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_PROBAND_GROUP_TOKEN, token);
+		}
+	}
 
 	public static InputFieldSelectionSetValueOutVO addAutocompleteSelectionSetValue(InputField inputField, String textValue, Timestamp now, User user,
 			InputFieldSelectionSetValueDao selectionSetValueDao, JournalEntryDao journalEntryDao) throws Exception {
@@ -1276,14 +1288,14 @@ public final class ServiceUtil {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
 						ecrfVO.getTrial().getId(),
 						//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-						ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+						ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
 						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
 						listEntryVO.getProband().getId());
 			} else {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
 						ecrfVO.getTrial().getId(),
 						//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-						ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+						ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
 						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
 						listEntryVO.getProband().getId());
 			}
@@ -1313,7 +1325,7 @@ public final class ServiceUtil {
 							ecrfVisitScheduleItemDate = visitScheduleItemDao.findMinStart(
 									ecrfVO.getTrial().getId(),
 									//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-									ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+									ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
 									ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
 									listEntryVO.getProband().getId());
 						}
@@ -1328,7 +1340,7 @@ public final class ServiceUtil {
 								ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
 										ecrfVO.getTrial().getId(),
 										//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
-										ecrfVO.getGroup() != null ? ecrfVO.getGroup().getId() : null,
+										ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
 										ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
 										listEntryVO.getProband().getId());
 							}
@@ -1888,7 +1900,11 @@ public final class ServiceUtil {
 		ecrfFieldValueVO.setSection(ecrfField.getSection());
 		ECRF ecrf = ecrfField.getEcrf();
 		if (ecrf != null) {
-			ecrfFieldValueVO.setProbandGroupToken(ecrf.getGroup() != null ? ecrf.getGroup().getToken() : null);
+			Iterator it = ecrf.getGroups().iterator();
+			ecrfFieldValueVO.getProbandGroupTokens().clear();
+			while (it.hasNext()) {
+				ecrfFieldValueVO.getProbandGroupTokens().add(((ProbandGroup) it.next()).getToken());
+			}
 			ecrfFieldValueVO.setVisitToken(ecrf.getVisit() != null ? ecrf.getVisit().getToken() : null);
 		}
 		ecrfFieldValueVO.setInputFieldId(inputField.getId());

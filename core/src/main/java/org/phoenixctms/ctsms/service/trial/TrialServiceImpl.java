@@ -36,9 +36,7 @@ import org.phoenixctms.ctsms.adapt.EcrfFieldMoveAdapter;
 import org.phoenixctms.ctsms.adapt.EcrfFieldPositionCollisionFinder;
 import org.phoenixctms.ctsms.adapt.EcrfFieldSeriesCollisionFinder;
 import org.phoenixctms.ctsms.adapt.EcrfFieldValueCollisionFinder;
-import org.phoenixctms.ctsms.adapt.EcrfMoveAdapter;
-import org.phoenixctms.ctsms.adapt.EcrfNameCollisionFinder;
-import org.phoenixctms.ctsms.adapt.EcrfPositionCollisionFinder;
+import org.phoenixctms.ctsms.adapt.EcrfNameRevisionCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InquiryJsVariableNameCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InquiryMoveAdapter;
 import org.phoenixctms.ctsms.adapt.InquiryPositionCollisionFinder;
@@ -1216,6 +1214,9 @@ public class TrialServiceImpl
 	}
 
 	private void checkEcrfFieldInput(ECRFFieldInVO ecrfFieldIn) throws ServiceException {
+		if (ecrfFieldIn.getSection() != null && !ecrfFieldIn.getSection().trim().equals(ecrfFieldIn.getSection())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_FIELD_SECTION, ecrfFieldIn.getSection());
+		}
 		boolean hasJsValueExpression = !CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsValueExpression()));
 		boolean hasJsOutputExpression = !CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsOutputExpression()));
 		if (CommonUtil.isEmptyString(ecrfFieldIn.getJsVariableName())) {
@@ -1370,12 +1371,30 @@ public class TrialServiceImpl
 	}
 
 	private void checkEcrfInput(ECRFInVO ecrfIn) throws ServiceException {
+		if (ecrfIn.getName() != null && !ecrfIn.getName().trim().equals(ecrfIn.getName())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_NAME, ecrfIn.getName());
+		}
+		if (ecrfIn.getRevision() != null && !ecrfIn.getRevision().trim().equals(ecrfIn.getRevision())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_REVISION, ecrfIn.getRevision());
+		}
 		Trial trial = CheckIDUtil.checkTrialId(ecrfIn.getTrialId(), this.getTrialDao());
-		ProbandGroup group = null;
-		if (ecrfIn.getGroupId() != null) {
-			group = CheckIDUtil.checkProbandGroupId(ecrfIn.getGroupId(), this.getProbandGroupDao());
-			if (!trial.equals(group.getTrial())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_WRONG_PROBAND_GROUP, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
+		Collection<Long> groupIds = ecrfIn.getGroupIds();
+		if (groupIds != null && groupIds.size() > 0) {
+			Iterator<Long> it = groupIds.iterator();
+			HashSet<Long> dupeCheck = new HashSet<Long>(groupIds.size());
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_PROBAND_GROUP_ID_IS_NULL);
+				}
+				ProbandGroup group = CheckIDUtil.checkProbandGroupId(id, this.getProbandGroupDao());
+				if (!dupeCheck.add(group.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_DUPLICATE_PROBAND_GROUP, group.getTitle());
+				}
+				if (!trial.equals(group.getTrial())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_WRONG_PROBAND_GROUP, group.getTitle(),
+							CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
+				}
 			}
 		}
 		Visit visit = null;
@@ -1389,13 +1408,8 @@ public class TrialServiceImpl
 			CheckIDUtil.checkProbandListStatusTypeId(ecrfIn.getProbandListStatusId(), this.getProbandListStatusTypeDao());
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		if (Settings.getBoolean(SettingCodes.UNIQUE_ECRF_NAMES, Bundle.SETTINGS, DefaultSettings.UNIQUE_ECRF_NAMES)) {
-			if ((new EcrfNameCollisionFinder(this.getTrialDao(), this.getECRFDao())).collides(ecrfIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_NAME_NOT_UNIQUE);
-			}
-		}
-		if ((new EcrfPositionCollisionFinder(this.getTrialDao(), this.getECRFDao())).collides(ecrfIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_POSITION_NOT_UNIQUE);
+		if ((new EcrfNameRevisionCollisionFinder(this.getTrialDao(), this.getECRFDao())).collides(ecrfIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_NAME_REVISION_NOT_UNIQUE, ecrfIn.getName(), ecrfIn.getRevision());
 		}
 		if (ecrfIn.getCharge() < 0.0f) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_CHARGE_NEGATIVE);
@@ -1524,13 +1538,14 @@ public class TrialServiceImpl
 	private void checkProbandGroupInput(ProbandGroupInVO probandGroupIn) throws ServiceException {
 		Trial trial = CheckIDUtil.checkTrialId(probandGroupIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
+		ServiceUtil.checkProbandGroupToken(probandGroupIn.getToken());
+		Randomization.checkProbandGroupInput(trial, probandGroupIn);
 		if ((new ProbandGroupTitleCollisionFinder(this.getTrialDao(), this.getProbandGroupDao())).collides(probandGroupIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_TITLE_ALREADY_EXISTS);
 		}
 		if ((new ProbandGroupTokenCollisionFinder(this.getTrialDao(), this.getProbandGroupDao())).collides(probandGroupIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_GROUP_TOKEN_ALREADY_EXISTS);
 		}
-		Randomization.checkProbandGroupInput(trial, probandGroupIn);
 	}
 
 	private void checkProbandListEntryInput(ProbandListEntryInVO probandListEntryIn, boolean createProband, boolean signup, Timestamp now) throws ServiceException {
@@ -1771,6 +1786,33 @@ public class TrialServiceImpl
 		}
 	}
 
+	private String getNewEcrfRevision(Long trialId, String ecrfName, String revisionFormat) throws Exception {
+		try {
+			MessageFormat likeFormat = new MessageFormat(CommonUtil.escapeSqlLikeWildcards(revisionFormat));
+			likeFormat.setFormatByArgumentIndex(0, null);
+			String likePattern = likeFormat.format(
+					new Object[] {
+							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {0}
+					},
+					new StringBuffer(),
+					null).toString();
+			long maxRevision = 1l;
+			ECRF maxRevisionEcrf = this.getECRFDao().findByMaxRevision(trialId, ecrfName, likePattern);
+			if (maxRevisionEcrf != null) {
+				maxRevision = parseFormatLongAndIncrement(maxRevisionEcrf.getRevision(), revisionFormat, 0, maxRevision);
+			}
+			String revision = MessageFormat.format(revisionFormat,
+					maxRevision // {0}
+			);
+			if (this.getECRFDao().findCollidingTrialNameRevision(trialId, ecrfName, revision).size() > 0l) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_NAME_REVISION_NOT_UNIQUE, ecrfName, revision);
+			}
+			return revision;
+		} catch (IllegalArgumentException e) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_MALFORMED_REVISION_PATTERN);
+		}
+	}
+
 	private String getNewProbandAlias(Trial trial, User user) throws Exception {
 		try {
 			MessageFormat likeFormat = new MessageFormat(CommonUtil.escapeSqlLikeWildcards(trial.getProbandAliasFormat()));
@@ -1805,18 +1847,10 @@ public class TrialServiceImpl
 				} else {
 					alias = maxAliasProband.getAnimalParticulars().getAlias();
 				}
-				MessageFormat format = new MessageFormat(trial.getProbandAliasFormat());
-				Object[] args = format.parse(alias, new ParsePosition(0));
-				try {
-					maxAlias0based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX];
-					maxAlias0based += 1l;
-				} catch (Exception e) {
-				}
-				try {
-					maxAlias1based = (Long) args[PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX];
-					maxAlias1based += 1l;
-				} catch (Exception e) {
-				}
+				maxAlias0based = parseFormatLongAndIncrement(alias, trial.getProbandAliasFormat(),
+						PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, maxAlias0based);
+				maxAlias1based = parseFormatLongAndIncrement(alias, trial.getProbandAliasFormat(),
+						PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, maxAlias1based);
 			}
 			String alias = MessageFormat.format(trial.getProbandAliasFormat(),
 					user.getDepartment().getNameL10nKey(), // {0}
@@ -1836,6 +1870,23 @@ public class TrialServiceImpl
 		} catch (IllegalArgumentException e) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN);
 		}
+	}
+
+	private static Long parseFormatLongAndIncrement(String input, String format, int index, Long defaultValue) {
+		MessageFormat messageFormat = new MessageFormat(format);
+		Object[] args = messageFormat.parse(input, new ParsePosition(0));
+		Long result = new Long(defaultValue);
+		try {
+			result = (Long) args[index];
+			result += 1l;
+		} catch (Exception e1) {
+			try {
+				result = Long.parseLong((String) args[index]);
+				result += 1l;
+			} catch (Exception e2) {
+			}
+		}
+		return result;
 	}
 
 	private void checkTrialTagValueInput(TrialTagValueInVO tagValueIn) throws ServiceException {
@@ -3196,8 +3247,9 @@ public class TrialServiceImpl
 		newEcrf.setName(originalEcrf.getName());
 		newEcrf.setExternalId(originalEcrf.getExternalId());
 		newEcrf.setProbandListStatus(originalEcrf.getProbandListStatus());
-		Long ecrfMaxPosition = ecrfDao.findMaxPosition(trial.getId(), null);
-		newEcrf.setPosition(ecrfMaxPosition != null ? ecrfMaxPosition + 1l : CommonUtil.LIST_INITIAL_POSITION);
+		newEcrf.setRevision(
+				getNewEcrfRevision(trialId, newEcrf.getName(),
+						Settings.getString(SettingCodes.ECRF_COPY_REVISION_PATTERN, Bundle.SETTINGS, DefaultSettings.ECRF_COPY_REVISION_PATTERN)));
 		newEcrf.setTitle(originalEcrf.getTitle());
 		newEcrf.setTrial(trial);
 		trial.addEcrfs(newEcrf);
@@ -3274,10 +3326,11 @@ public class TrialServiceImpl
 			ServiceUtil.checkTrialLocked(trial);
 			result = ecrfDao.toECRFOutVO(ecrf);
 			trial.removeEcrfs(ecrf);
-			ProbandGroup group = ecrf.getGroup();
-			if (group != null) {
-				group.removeEcrfs(ecrf);
+			Iterator<ProbandGroup> groupsIt = ecrf.getGroups().iterator();
+			while (groupsIt.hasNext()) {
+				groupsIt.next().removeEcrfs(ecrf);
 			}
+			ecrf.getGroups().clear();
 			Visit visit = ecrf.getVisit();
 			if (visit != null) {
 				visit.removeEcrfs(ecrf);
@@ -3447,25 +3500,15 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ECRFDao ecrfDao = this.getECRFDao();
-		EcrfPositionCollisionFinder ecrfPositionCollisionFinder = new EcrfPositionCollisionFinder(this.getTrialDao(), ecrfDao);
 		Iterator<ECRF> ecrfsIt = probandGroup.getEcrfs().iterator();
 		while (ecrfsIt.hasNext()) {
 			ECRF ecrf = ecrfsIt.next();
-			ECRFInVO ecrfIn = new ECRFInVO();
-			ecrfIn.setId(ecrf.getId());
-			ecrfIn.setTrialId(ecrf.getTrial().getId());
-			ecrfIn.setPosition(ecrf.getPosition());
-			ecrfIn.setGroupId(null);
-			if (ecrfPositionCollisionFinder.collides(ecrfIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_POSITION_NOT_UNIQUE);
-			} else {
-				ECRFOutVO original = ecrfDao.toECRFOutVO(ecrf);
-				ecrf.setGroup(null);
-				CoreUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user);
-				ecrfDao.update(ecrf);
-				ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
-				ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_DELETED_ECRF_UPDATED, ecrfVO, original, journalEntryDao);
-			}
+			ECRFOutVO original = ecrfDao.toECRFOutVO(ecrf);
+			ecrf.removeGroups(probandGroup);
+			CoreUtil.modifyVersion(ecrf, ecrf.getVersion(), now, user);
+			ecrfDao.update(ecrf);
+			ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+			ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_DELETED_ECRF_UPDATED, ecrfVO, original, journalEntryDao);
 		}
 		probandGroup.getEcrfs().clear();
 		NotificationDao notificationDao = this.getNotificationDao();
@@ -3906,10 +3949,11 @@ public class TrialServiceImpl
 			while (ecrfsIt.hasNext()) {
 				ECRF ecrf = ecrfsIt.next();
 				ecrf.setTrial(null);
-				ProbandGroup group = ecrf.getGroup();
-				if (group != null) {
-					group.removeEcrfs(ecrf);
+				Iterator<ProbandGroup> groupsIt = ecrf.getGroups().iterator();
+				while (groupsIt.hasNext()) {
+					groupsIt.next().removeEcrfs(ecrf);
 				}
+				ecrf.getGroups().clear();
 				Visit visit = ecrf.getVisit();
 				if (visit != null) {
 					visit.removeEcrfs(ecrf);
@@ -5743,17 +5787,6 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected Long handleGetEcrfMaxPosition(AuthenticationVO auth, Long trialId, Long groupId) throws Exception {
-		if (trialId != null) {
-			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
-		}
-		if (groupId != null) {
-			CheckIDUtil.checkProbandGroupId(groupId, this.getProbandGroupDao());
-		}
-		return this.getECRFDao().findMaxPosition(trialId, groupId);
-	}
-
-	@Override
 	protected ECRFProgressVO handleGetEcrfProgress(AuthenticationVO auth, Long probandListEntryId, Long ecrfId, boolean sectionDetail)
 			throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
@@ -6905,11 +6938,6 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected ECRFOutVO handleMoveEcrf(AuthenticationVO auth, Long ecrfId, PositionMovement movement) throws Exception {
-		return (new EcrfMoveAdapter(this.getJournalEntryDao(), this.getECRFDao(), this.getTrialDao())).move(ecrfId, movement);
-	}
-
-	@Override
 	protected ECRFFieldOutVO handleMoveEcrfField(AuthenticationVO auth, Long ecrfFieldId, PositionMovement movement) throws Exception {
 		return (new EcrfFieldMoveAdapter(this.getJournalEntryDao(), this.getECRFFieldDao(), this.getECRFDao(), this.getTrialDao())).move(ecrfFieldId, movement);
 	}
@@ -6918,12 +6946,6 @@ public class TrialServiceImpl
 	protected ArrayList<ECRFFieldOutVO> handleMoveEcrfFieldTo(AuthenticationVO auth, Long ecrfFieldId, Long targetPosition)
 			throws Exception {
 		return (new EcrfFieldMoveAdapter(this.getJournalEntryDao(), this.getECRFFieldDao(), this.getECRFDao(), this.getTrialDao())).moveTo(ecrfFieldId, targetPosition);
-	}
-
-	@Override
-	protected Collection<ECRFOutVO> handleMoveEcrfTo(AuthenticationVO auth, Long ecrfId, Long targetPosition)
-			throws Exception {
-		return (new EcrfMoveAdapter(this.getJournalEntryDao(), this.getECRFDao(), this.getTrialDao())).moveTo(ecrfId, targetPosition);
 	}
 
 	@Override
@@ -6973,12 +6995,6 @@ public class TrialServiceImpl
 	protected Collection<ECRFFieldOutVO> handleNormalizeEcrfFieldPositions(
 			AuthenticationVO auth, Long groupEcrfFieldId) throws Exception {
 		return (new EcrfFieldMoveAdapter(this.getJournalEntryDao(), this.getECRFFieldDao(), this.getECRFDao(), this.getTrialDao())).normalizePositions(groupEcrfFieldId);
-	}
-
-	@Override
-	protected Collection<ECRFOutVO> handleNormalizeEcrfPositions(
-			AuthenticationVO auth, Long groupEcrfId) throws Exception {
-		return (new EcrfMoveAdapter(this.getJournalEntryDao(), this.getECRFDao(), this.getTrialDao())).normalizePositions(groupEcrfId);
 	}
 
 	@Override
