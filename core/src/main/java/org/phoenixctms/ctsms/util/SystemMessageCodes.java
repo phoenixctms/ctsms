@@ -195,16 +195,6 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_LIST_ENTRY_POSITIONS_NORMALIZED = "proband_list_entry_positions_normalized";
 	public final static String PROBAND_LIST_ENTRY_POSITIONS_ROTATED_DOWN = "proband_list_entry_positions_rotated_down";
 	public final static String PROBAND_LIST_ENTRY_POSITIONS_ROTATED_UP = "proband_list_entry_positions_rotated_up";
-	public final static String ECRF_MOVED_TO_FIRST_POSITION = "ecrf_moved_to_first_position";
-	public final static String ECRF_MOVED_UP = "ecrf_moved_up";
-	public final static String ECRF_MOVED_DOWN = "ecrf_moved_down";
-	public final static String ECRF_MOVED_TO_LAST_POSITION = "ecrf_moved_to_last_position";
-	public final static String ECRF_POSITION_NORMALIZED = "ecrf_position_normalized";
-	public final static String ECRF_POSITION_ROTATED_DOWN = "ecrf_position_rotated_down";
-	public final static String ECRF_POSITION_ROTATED_UP = "ecrf_position_rotated_up";
-	public final static String ECRF_POSITIONS_NORMALIZED = "ecrf_positions_normalized";
-	public final static String ECRF_POSITIONS_ROTATED_DOWN = "ecrf_positions_rotated_down";
-	public final static String ECRF_POSITIONS_ROTATED_UP = "ecrf_positions_rotated_up";
 	public final static String ECRF_FIELD_MOVED_TO_FIRST_POSITION = "ecrf_field_moved_to_first_position";
 	public final static String ECRF_FIELD_MOVED_UP = "ecrf_field_moved_up";
 	public final static String ECRF_FIELD_MOVED_DOWN = "ecrf_field_moved_down";
