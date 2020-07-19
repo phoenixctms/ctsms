@@ -569,7 +569,7 @@ public class ECRFFieldStatusEntryDaoImpl
 		if (sort) {
 			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldStatusEntryCriteria);
 		}
-		return ecrfFieldStatusEntryCriteria.list();
+		return ecrfFieldStatusEntryCriteria.list(); //ecrf.groups filter not supported.
 	}
 
 	@Override
@@ -610,7 +610,7 @@ public class ECRFFieldStatusEntryDaoImpl
 		if (sort) {
 			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldStatusEntryCriteria);
 		}
-		return ecrfFieldStatusEntryCriteria.list();
+		return ecrfFieldStatusEntryCriteria.list(); //ecrf.groups filter not supported.
 	}
 
 	/**
