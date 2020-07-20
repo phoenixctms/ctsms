@@ -90,8 +90,7 @@
 							<h:outputText value="#{probandListEntry.vo.position}" />
 						</p:column>
 						<p:column sortBy="#{probandListEntry.vo.group.title}"
-							filterBy="#{probandListEntry.vo.group.id}"
-							filterOptions="#{trialEcrfStatusEntryBean.filterProbandGroups}">
+							filterBy="#{probandListEntry.vo.group.title}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.trialecrfstatus_proband_list_group_column}" />

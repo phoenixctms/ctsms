@@ -109,8 +109,7 @@
 						</p:column>
 
 						<p:column sortBy="#{summary.vo.group.title}"
-							filterBy="#{summary.vo.group.id}"
-							filterOptions="#{reimbursementsBean.filterProbandGroups}">
+							filterBy="#{summary.vo.group.title}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.reimbursements_proband_money_transfer_summary_list_group_column}" />

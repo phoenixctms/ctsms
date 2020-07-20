@@ -9,7 +9,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="probandlist_form">
+		<h:form id="probandlist_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 
 			<p:remoteCommand process="@this,lastPickedProbandIds"
 				name="addProbandIDs"
@@ -69,8 +69,7 @@
 						</p:column>
 
 						<p:column sortBy="#{probandListEntry.vo.group.title}"
-							filterBy="#{probandListEntry.vo.group.id}"
-							filterOptions="#{probandListEntryBean.filterProbandGroups}">
+							filterBy="#{probandListEntry.vo.group.title}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.proband_list_proband_list_group_column}" />
@@ -456,19 +455,34 @@
 								<h:outputLabel for="bulkAddProbandListEntryProbandGroup"
 									value="#{triallabels.bulkadd_proband_list_proband_group_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="bulkAddProbandListEntryProbandGroup"
-										value="#{probandListEntryBean.bulkAddGroupId}"
-										required="false"
+									<p:autoComplete id="bulkAddProbandListEntryProbandGroup" required="false"
+										value="#{probandListEntryBean.bulkAddGroup}"
 										label="#{triallabels.bulkadd_proband_list_proband_group}"
-										styleClass="ctsms-control">
-										<f:converter converterId="ctsms.ID" />
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems value="#{probandListEntryBean.probandGroups}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-										<p:ajax />
-									</p:selectOneMenu>
+										styleClass="ctsms-control"
+										minQueryLength="#{autoCompleteMinQueryLengthProbandGroup}"
+										maxResults="#{autoCompleteMaxResultsProbandGroup}"
+										queryDelay="#{autoCompleteQueryDelayProbandGroup}"
+										dropdown="#{autoCompleteDropdownProbandGroup}"
+										global="#{autoCompleteGlobalProbandGroup}"
+										scrollHeight="#{autoCompleteScrollHeightProbandGroup}"
+										completeMethod="#{probandListEntryBean.completeGroup}"
+										forceSelection="true" var="group"
+										itemValue="#{group}"
+										itemLabel="#{group.vo.token}"
+										converter="ctsms.ProbandGroup">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{probandListBean.handleBulkAddGroupSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{probandListBean.handleBulkAddGroupUnselect}" />
+										<p:column>
+											<h:outputText
+												value="#{group.vo.token}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{applicationScopeBean.clipStringTrailing(group.vo.title,96)}" />
+										</p:column>
+									</p:autoComplete>																		
 									<p:tooltip rendered="#{enableTooltips}"
 										for="bulkAddProbandListEntryProbandGroup">
 										<h:outputText
@@ -556,7 +570,6 @@
 					</p:panel>
 					<p:tabView widgetVar="probandListTabView" id="probandListTabView"
 						styleClass="ctsms-probandlist-tabview">
-
 
 						<p:tab id="probandListEntryMain"
 							title="#{probandListEntryBean.mainTabTitle}">

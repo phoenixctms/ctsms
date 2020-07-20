@@ -224,8 +224,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	private TrialOutVO trial;
 	private ArrayList<SelectItem> visits;
 	private ArrayList<SelectItem> filterVisits;
-	private ArrayList<SelectItem> probandGroups;
-	private ArrayList<SelectItem> filterProbandGroups;
 	private ArrayList<SelectItem> durations;
 	private ArrayList<SelectItem> offsets;
 	private VisitScheduleItemLazyModel visitScheduleItemModel;
@@ -233,6 +231,7 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	private HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
 	private HashMap<Long, VisitScheduleAppointmentEagerModel> visitScheduleAppointmentModelCache;
 	private GroupVisitMatrix<VisitScheduleItemOutVO> matrix;
+	private ProbandGroupOutVO group;
 
 	public VisitScheduleBean() {
 		super();
@@ -395,10 +394,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 		return collidingStaffStatusEntryModel;
 	}
 
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
-	}
-
 	public ArrayList<SelectItem> getFilterVisits() {
 		return filterVisits;
 	}
@@ -422,10 +417,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	public VisitScheduleItemOutVO getOut() {
 		return out;
-	}
-
-	public ArrayList<SelectItem> getProbandGroups() {
-		return probandGroups;
 	}
 
 	public IDVO getSelectedVisitScheduleItem() {
@@ -496,15 +487,13 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 		visitScheduleItemModel.setExpand(false);
 		visitScheduleItemModel.updateRowCount();
 		visits = WebUtil.getVisits(in.getTrialId());
-		probandGroups = WebUtil.getProbandGroups(in.getTrialId());
 		durations = WebUtil.getVisitScheduleDurations();
 		offsets = WebUtil.getVisitScheduleOffsets();
-		filterProbandGroups = new ArrayList<SelectItem>(probandGroups);
-		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		filterVisits = new ArrayList<SelectItem>(visits);
 		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		loadStopTag();
 		loadStartTag();
+		loadProbandGroup();
 		matrix.initPages();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
@@ -652,6 +641,11 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	}
 
 	protected void sanitizeInVals() {
+		if (group != null) {
+			in.setGroupId(group.getId());
+		} else {
+			in.setGroupId(null);
+		}
 		if (!isStartVisible()) {
 			in.setStart(null);
 		}
@@ -741,5 +735,43 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	public ArrayList<SelectItem> getOffsets() {
 		return offsets;
+	}
+
+	public List<IDVO> completeGroup(String query) {
+		try {
+			Collection probandGroupVOs = WebUtil.getServiceLocator().getToolsService().completeProbandGroup(WebUtil.getAuthentication(), query, query, trialId, null);
+			IDVO.transformVoCollection(probandGroupVOs);
+			return (List<IDVO>) probandGroupVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getGroup() {
+		if (group != null) {
+			return IDVO.transformVo(group);
+		}
+		return null;
+	}
+
+	public void setGroup(IDVO group) {
+		if (group != null) {
+			this.group = (ProbandGroupOutVO) group.getVo();
+		} else {
+			this.group = null;
+		}
+	}
+
+	public void handleGroupSelect(SelectEvent event) {
+	}
+
+	public void handleGroupUnselect(UnselectEvent event) {
+	}
+
+	private void loadProbandGroup() {
+		group = WebUtil.getProbandGroup(in.getGroupId());
 	}
 }

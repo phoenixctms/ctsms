@@ -160,8 +160,7 @@
 					</p:column>
 					<p:column
 						sortBy="#{fieldStatusEntry.vo.listEntry.group.title}"
-						filterBy="#{fieldStatusEntry.vo.listEntry.group.id}"
-						filterOptions="#{ecrfFieldStatusBean.filterProbandGroups}">
+						filterBy="#{fieldStatusEntry.vo.listEntry.group.title}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
