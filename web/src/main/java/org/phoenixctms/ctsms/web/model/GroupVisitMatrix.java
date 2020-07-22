@@ -100,12 +100,27 @@ public abstract class GroupVisitMatrix<ITEM> {
 	}
 
 	protected Collection<ProbandGroupOutVO> getGroupsFromItem(ITEM item) {
-		ArrayList<ProbandGroupOutVO> groups = new ArrayList<ProbandGroupOutVO>();
+		return null;
+	}
+
+	private Collection<ProbandGroupOutVO> getGroups(ITEM item) {
+		ArrayList<ProbandGroupOutVO> result = new ArrayList<ProbandGroupOutVO>();
+		result.add(null);
 		ProbandGroupOutVO group = getGroupFromItem(item);
 		if (group != null) {
-			groups.add(group);
+			result.add(group);
 		}
-		return groups;
+		Collection<ProbandGroupOutVO> groups = getGroupsFromItem(item);
+		if (groups != null) {
+			Iterator<ProbandGroupOutVO> it = groups.iterator();
+			while (it.hasNext()) {
+				group = it.next();
+				if (group != null) {
+					result.add(group);
+				}
+			}
+		}
+		return result;
 	}
 
 	protected abstract Long getItemCount(Long trialId);
@@ -257,7 +272,7 @@ public abstract class GroupVisitMatrix<ITEM> {
 			Iterator<ITEM> it = items.iterator();
 			while (it.hasNext()) {
 				ITEM item = it.next();
-				Iterator<ProbandGroupOutVO> groupsIt = getGroupsFromItem(item).iterator();
+				Iterator<ProbandGroupOutVO> groupsIt = getGroups(item).iterator();
 				while (groupsIt.hasNext()) {
 					ProbandGroupOutVO group = groupsIt.next();
 					VisitOutVO visit = getVisitFromItem(item);
