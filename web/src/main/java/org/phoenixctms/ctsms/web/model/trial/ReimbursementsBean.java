@@ -10,13 +10,11 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
-import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -42,7 +40,6 @@ import org.primefaces.model.StreamedContent;
 public class ReimbursementsBean extends ManagedBeanBase {
 
 	private Long trialId;
-	private ArrayList<SelectItem> filterProbandGroups;
 	private LinkedHashMap<PaymentMethod, PaymentMethodVO> paymentMethodMap;
 	private Boolean paid;
 	private Collection<String> costTypes;
@@ -88,10 +85,6 @@ public class ReimbursementsBean extends ManagedBeanBase {
 
 	public Collection<String> getCostTypes() {
 		return costTypes;
-	}
-
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
 	}
 
 	public MoneyTransferSummaryVO getOpenNoParticipationSummary(ProbandOutVO proband) {
@@ -382,8 +375,6 @@ public class ReimbursementsBean extends ManagedBeanBase {
 		probandMoneyTransferNoParticipationSummaryModel.setCostTypes(costTypes);
 		probandMoneyTransferNoParticipationSummaryModel.setTrialId(trialId);
 		probandMoneyTransferNoParticipationSummaryModel.updateRowCount();
-		filterProbandGroups = WebUtil.getProbandGroups(trialId);
-		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		if (paymentMethodMap == null) {
 			paymentMethodMap = WebUtil.getPaymentMethodMap();
 		}

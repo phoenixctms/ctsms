@@ -9,13 +9,11 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="ecrf_form">
+		<h:form id="ecrf_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 
-			<p:remoteCommand process="@this" name="moveEcrfTo"
-				actionListener="#{ecrfBean.moveTo}" update="ecrf_list,ecrf_input" />
 			<p:remoteCommand process="@this" name="ecrfSelectVisitGroup"
 				actionListener="#{ecrfBean.matrix.selectVisitGroup()}"
-				update="ecrfvisit,ecrfgroup" />
+				update="ecrfvisit,ecrfgroups" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:dataTable styleClass="ctsms-datatable" lazy="true"
@@ -60,45 +58,15 @@
 					</p:column>
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
 						<ui:param name="ecrfSelectionBean" value="#{ecrfBean}" />
-						<ui:param name="showPosition" value="false" />
+						<ui:param name="showRevision" value="true" />
 						<ui:param name="showVisit" value="true" />
-						<ui:param name="showGroup" value="true" />
+						<ui:param name="showGroups" value="true" />
 						<ui:param name="showActive" value="true" />
 						<ui:param name="showCharge" value="true" />
 						<ui:param name="showExternalId" value="true" />
 						<ui:param name="showEnableBrowserFieldCalculation" value="true" />
 						<ui:param name="showFieldCount" value="true" />
 					</ui:include>
-					<p:column sortBy="#{ecrf.vo.position}">
-						<f:facet name="header">
-							<h:outputText value="#{triallabels.ecrf_list_position_column}" />
-						</f:facet>
-						<h:outputText
-							rendered="#{!ecrfBean.inputVisible or not (empty ecrf.vo.group or ecrf.psf.filters.containsKey('group.id'))}"
-							value="#{ecrf.vo.position}" />
-						<h:panelGroup
-							rendered="#{ecrfBean.inputVisible and (empty ecrf.vo.group or ecrf.psf.filters.containsKey('group.id'))}">
-							<p:spinner widgetVar="ecrfTargetPosition#{ecrf.vo.id}"
-								id="targetPosition" value="#{ecrf.vo.position}"
-								styleClass="ctsms-spinner" required="false"
-								label="#{triallabels.ecrf_target_position}" />
-							<p:tooltip rendered="#{enableTooltips and ecrf.rowIndex == 0}"
-								for="targetPosition">
-								<h:outputText
-									value="#{triallabels.ecrf_target_position_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-					</p:column>
-					<p:column rendered="#{ecrfBean.inputVisible}"
-						style="width:32px;white-space:nowrap;">
-						<p:commandButton title="#{labels.rotate_positions_button_label}"
-							id="moveToTargetPosition" icon="ui-icon-arrowstop-1-e"
-							type="button"
-							rendered="#{empty ecrf.vo.group or ecrf.psf.filters.containsKey('group.id')}"
-							onclick="moveEcrfTo(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('ECRF_ID')}:'#{ecrf.vo.id}',#{applicationScopeBean.parameterName('TARGET_POSITION')}:ecrfTargetPosition#{ecrf.vo.id}.getValue() }));" />
-					</p:column>
-
 				</p:dataTable>
 				<h:panelGrid columns="2" cellpadding="0"
 					styleClass="ctsms-ecrf-content-panelgrid ctsms-content-panelgrid-maxheight"
@@ -198,29 +166,20 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfname" />
-								<h:outputLabel for="ecrfPosition"
-									value="#{triallabels.ecrf_position_label}" />
+								<h:outputLabel for="ecrfRevision"
+									value="#{triallabels.ecrf_revision_label}" />
 								<h:panelGroup>
-									<p:spinner id="ecrfPosition" value="#{ecrfBean.in.position}"
-										styleClass="ctsms-spinner" required="true"
-										label="#{triallabels.ecrf_position}" />
-									<p:tooltip rendered="#{enableTooltips}" for="ecrfPosition">
-										<h:outputText value="#{triallabels.ecrf_position_tooltip}"
+									<p:inputText id="ecrfRevision" value="#{ecrfBean.in.revision}"
+										required="false" label="#{triallabels.ecrf_revision}"
+										styleClass="ctsms-control-smaller">
+									</p:inputText>
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfRevision">
+										<h:outputText value="#{triallabels.ecrf_revision_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfPosition" />
-								<h:outputLabel for="ecrfDisabled"
-									value="#{triallabels.ecrf_disabled_label}" />
-								<h:panelGroup>
-									<p:selectBooleanCheckbox id="ecrfDisabled"
-										value="#{ecrfBean.in.disabled}" />
-									<p:tooltip rendered="#{enableTooltips}" for="ecrfDisabled">
-										<h:outputText value="#{triallabels.ecrf_disabled_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="ecrfDisabled" />
+								<p:message for="ecrfRevision" />
+
 								<h:outputLabel for="ecrfActive"
 									value="#{triallabels.ecrf_active_label}" />
 								<h:panelGroup>
@@ -232,25 +191,44 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfActive" />
-								<h:outputLabel for="ecrfgroup"
-									value="#{triallabels.ecrf_group_label}" />
+
+
+
+								<h:outputLabel for="ecrfgroups"
+									value="#{triallabels.ecrf_groups_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="ecrfgroup" value="#{ecrfBean.in.groupId}"
-										required="false" label="#{triallabels.ecrf_group}"
-										styleClass="ctsms-control">
-										<f:converter converterId="ctsms.ID" />
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems value="#{ecrfBean.probandGroups}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-									</p:selectOneMenu>
-									<p:tooltip rendered="#{enableTooltips}" for="ecrfgroup">
-										<h:outputText value="#{triallabels.ecrf_group_tooltip}"
+									<p:autoComplete id="ecrfgroups" required="false"
+										value="#{ecrfBean.groups}"
+										label="#{triallabels.ecrf_groups}"
+										styleClass="ctsms-control-larger"
+										minQueryLength="#{autoCompleteMinQueryLengthProbandGroup}"
+										maxResults="#{autoCompleteMaxResultsProbandGroup}"
+										queryDelay="#{autoCompleteQueryDelayProbandGroup}"
+										global="#{autoCompleteGlobalProbandGroup}"
+										scrollHeight="#{autoCompleteScrollHeightProbandGroup}"
+										completeMethod="#{ecrfBean.completeGroup}"
+										multiple="true" var="group" itemValue="#{group}"
+										itemLabel="#{group.vo.token}" converter="ctsms.ProbandGroup">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{ecrfBean.handleGroupSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{ecrfBean.handleGroupUnselect}" />
+										<p:column>
+											<h:outputText
+												value="#{group.vo.token}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{applicationScopeBean.clipStringTrailing(group.vo.title,96)}" />
+										</p:column>
+									</p:autoComplete>
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfgroups">
+										<h:outputText
+											label="#{triallabels.ecrf_groups_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfgroup" />
+								<p:message for="ecrfgroups" />
 								<h:outputLabel for="ecrfvisit"
 									value="#{triallabels.ecrf_visit_label}" />
 								<h:panelGroup>
@@ -271,6 +249,17 @@
 								</h:panelGroup>
 								<p:message for="ecrfvisit" />
 
+								<h:outputLabel for="ecrfDisabled"
+									value="#{triallabels.ecrf_disabled_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="ecrfDisabled"
+										value="#{ecrfBean.in.disabled}" />
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfDisabled">
+										<h:outputText value="#{triallabels.ecrf_disabled_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfDisabled" />
 
 
 								<h:outputLabel for="probandListStatus"
@@ -406,13 +395,7 @@
 										icon="ui-icon ui-icon-disk" ajax="true"
 										disabled="#{!ecrfBean.editable}"
 										update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
-									<p:commandButton process="@this"
-										value="#{labels.normalize_positions_button_label}"
-										title="#{labels.normalize_positions_button_title}"
-										actionListener="#{ecrfBean.normalizePositions}"
-										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-										icon="ui-icon ui-icon-link" ajax="true"
-										disabled="#{!ecrfBean.editable}" update="ecrf_list,ecrf_input" />
+
 									<p:commandButton process="@this"
 										value="#{labels.delete_button_label}"
 										onclick="if('ecrfDeleteReason' in window){ecrfDeleteReason.setValue(#{applicationScopeBean.quoteJsString(ecrfBean.deferredDeleteReason)});}ecrfDeleteConfirmation.show()"

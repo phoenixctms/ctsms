@@ -263,6 +263,7 @@
         GET_VALUE_METHOD_NAME CHARACTER VARYING(1024),
         COMPLETE_METHOD_NAME CHARACTER VARYING(1024),
         CONVERTER CHARACTER VARYING(1024),
+        FILTER_ITEMS_METHOD_NAME CHARACTER VARYING(1024),
         PICKER CHARACTER VARYING(1024),
         ENTITY_NAME CHARACTER VARYING(1024),
         NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
@@ -1944,7 +1945,7 @@
         DESCRIPTION TEXT,
         EXTERNAL_ID CHARACTER VARYING(1024),
         ACTIVE BOOLEAN not null,
-        POSITION BIGINT not null,
+        REVISION CHARACTER VARYING(1024),
         DISABLED BOOLEAN not null,
         ENABLE_BROWSER_FIELD_CALCULATION BOOLEAN not null,
         CHARGE REAL not null,
@@ -1955,7 +1956,6 @@
         TRIAL_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
         VISIT_FK BIGINT,
-        GROUP_FK BIGINT,
         PROBAND_LIST_STATUS_FK BIGINT,
         primary key (ID)
     );
@@ -2035,6 +2035,11 @@
         VALUE_FK BIGINT not null unique,
         MODIFIED_USER_FK BIGINT not null,
         primary key (ID)
+    );
+
+    create table ecrf_group (
+        ECRFS_FK BIGINT not null,
+        GROUPS_FK BIGINT not null
     );
 
     create table ecrf_status_action (
@@ -3514,11 +3519,6 @@
         references TRIAL;
 
     alter table ecrf 
-        add constraint ecrf_GROUP_FKC 
-        foreign key (GROUP_FK) 
-        references PROBAND_GROUP;
-
-    alter table ecrf 
         add constraint ecrf_VISIT_FKC 
         foreign key (VISIT_FK) 
         references VISIT;
@@ -3592,6 +3592,16 @@
         add constraint ecrf_field_value_ECRF_FIELD_FKC 
         foreign key (ECRF_FIELD_FK) 
         references ecrf_field;
+
+    alter table ecrf_group 
+        add constraint PROBAND_GROUP_ECRFS_FKC 
+        foreign key (ECRFS_FK) 
+        references ecrf;
+
+    alter table ecrf_group 
+        add constraint ecrf_GROUPS_FKC 
+        foreign key (GROUPS_FK) 
+        references PROBAND_GROUP;
 
     alter table ecrf_status_entry 
         add constraint ecrf_status_entry_MODIFIED_USER_FKC 

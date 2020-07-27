@@ -371,14 +371,15 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	}
 
 	private void sanitizeInVals() {
-		in.getSelectionSetValueIds().clear();
+		ArrayList<Long> selectionSetValueIds = new ArrayList<Long>(selectionSetValues.size());
 		Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
 			if (selectionSetValue != null) {
-				in.getSelectionSetValueIds().add(selectionSetValue.getId());
+				selectionSetValueIds.add(selectionSetValue.getId());
 			}
 		}
+		in.setSelectionSetValueIds(selectionSetValueIds);
 	}
 
 	@Override

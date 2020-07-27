@@ -64,8 +64,7 @@
 						<h:outputText value="#{visitScheduleItem.vo.id}" />
 					</p:column>
 					<p:column sortBy="#{visitScheduleItem.vo.group.title}"
-						filterBy="#{visitScheduleItem.vo.group.id}"
-						filterOptions="#{visitScheduleBean.filterProbandGroups}">
+						filterBy="#{visitScheduleItem.vo.group.title}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
@@ -365,18 +364,34 @@
 								<h:outputLabel for="visitschedulegroup"
 									value="#{triallabels.visit_schedule_group_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="visitschedulegroup"
-										value="#{visitScheduleBean.in.groupId}" required="false"
+									<p:autoComplete id="visitschedulegroup" required="false"
+										value="#{visitScheduleBean.group}"
 										label="#{triallabels.visit_schedule_group}"
-										styleClass="ctsms-control">
-										<f:converter converterId="ctsms.ID" />
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems value="#{visitScheduleBean.probandGroups}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-										<p:ajax />
-									</p:selectOneMenu>
+										styleClass="ctsms-control"
+										minQueryLength="#{autoCompleteMinQueryLengthProbandGroup}"
+										maxResults="#{autoCompleteMaxResultsProbandGroup}"
+										queryDelay="#{autoCompleteQueryDelayProbandGroup}"
+										dropdown="#{autoCompleteDropdownProbandGroup}"
+										global="#{autoCompleteGlobalProbandGroup}"
+										scrollHeight="#{autoCompleteScrollHeightProbandGroup}"
+										completeMethod="#{visitScheduleBean.completeGroup}"
+										forceSelection="true" var="group"
+										itemValue="#{group}"
+										itemLabel="#{group.vo.token}"
+										converter="ctsms.ProbandGroup">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{visitScheduleBean.handleGroupSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{visitScheduleBean.handleGroupUnselect}" />
+										<p:column>
+											<h:outputText
+												value="#{group.vo.token}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{applicationScopeBean.clipStringTrailing(group.vo.title,96)}" />
+										</p:column>
+									</p:autoComplete>
 									<p:tooltip rendered="#{enableTooltips}"
 										for="visitschedulegroup">
 										<h:outputText

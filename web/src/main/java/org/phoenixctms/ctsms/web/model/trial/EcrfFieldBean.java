@@ -111,7 +111,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private Long ecrfId;
 	private ECRFOutVO ecrf;
 	private ArrayList<SelectItem> filterVisits;
-	private ArrayList<SelectItem> filterProbandGroups;
 	private ArrayList<SelectItem> filterSections;
 	private ArrayList<SelectItem> oldSections;
 	private EcrfLazyModel ecrfModel;
@@ -312,10 +311,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return WebUtil.inputFieldIdToName(in.getFieldId());
 	}
 
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
-	}
-
 	public ArrayList<SelectItem> getFilterSections() {
 		return filterSections;
 	}
@@ -458,8 +453,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		filterProbandGroups = WebUtil.getProbandGroups(in.getTrialId());
-		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		filterVisits = WebUtil.getVisits(in.getTrialId());
 		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		initEcrfFieldModel();

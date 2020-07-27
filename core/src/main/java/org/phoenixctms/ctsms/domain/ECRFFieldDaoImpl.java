@@ -29,21 +29,16 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.LightECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
-import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 public class ECRFFieldDaoImpl
 		extends ECRFFieldDaoBase {
 
-	private final static String GROUP_VISIT_TOKEN_SEPARATOR_STRING = ":";
-	private static final String UNIQUE_GROUP_VISIT_SECTION_ECRF_FIELD_NAME = "{0} {1} - {2}. {3} - {4} - {5}. {6}";
-	private static final String UNIQUE_GROUP_VISIT_ECRF_FIELD_NAME = "{0} {1} - {2}. {3} - {4}. {5}";
-	private static final String UNIQUE_ECRF_POSITION_SECTION_ECRF_FIELD_NAME = "{0} - {1}. {2} - {3} - {4}. {5}";
-	private static final String UNIQUE_ECRF_POSITION_ECRF_FIELD_NAME = "{0} - {1}. {2} - {3}. {4}";
 	private static final String UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME = "{0} - {1} - {2} - {3}. {4}";
 	private static final String UNIQUE_ECRF_NAME_ECRF_FIELD_NAME = "{0} - {1} - {2}. {3}";
+	private static final String UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME = "{0} - {1} ({2}) - {3} - {4}. {5}";
+	private static final String UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME = "{0} - {1} ({2}) - {3}. {4}";
 
 	private static void applySortOrders(org.hibernate.Criteria ecrfFieldCriteria) {
 		if (ecrfFieldCriteria != null) {
@@ -66,44 +61,22 @@ public class ECRFFieldDaoImpl
 			} else {
 				inputFieldName = field.getNameL10nKey();
 			}
-			if (Settings.getBoolean(SettingCodes.UNIQUE_ECRF_NAMES, Bundle.SETTINGS, DefaultSettings.UNIQUE_ECRF_NAMES)) {
-				if (section != null && section.length() > 0) {
+			String revision = ecrf.getRevision();
+			if (section != null && section.length() > 0) {
+				if (revision != null && revision.length() > 0) {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), revision, section,
+							Long.toString(ecrfField.getPosition()), inputFieldName);
+				} else {
 					return MessageFormat.format(UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), section,
 							Long.toString(ecrfField.getPosition()), inputFieldName);
+				}
+			} else {
+				if (revision != null && revision.length() > 0) {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), revision, Long.toString(ecrfField.getPosition()),
+							inputFieldName);
 				} else {
 					return MessageFormat.format(UNIQUE_ECRF_NAME_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), Long.toString(ecrfField.getPosition()),
 							inputFieldName);
-				}
-			} else {
-				Visit visit = ecrf.getVisit();
-				ProbandGroup group = ecrf.getGroup();
-				if (visit != null || group != null) {
-					StringBuilder groupVisit = new StringBuilder();
-					if (group != null) {
-						groupVisit.append(group.getToken());
-					}
-					if (visit != null) {
-						if (groupVisit.length() > 0) {
-							groupVisit.append(GROUP_VISIT_TOKEN_SEPARATOR_STRING);
-						}
-						groupVisit.append(visit.getToken());
-					}
-					if (section != null && section.length() > 0) {
-						return MessageFormat.format(UNIQUE_GROUP_VISIT_SECTION_ECRF_FIELD_NAME, trial.getName(), groupVisit.toString(), Long.toString(ecrf.getPosition()),
-								ecrf.getName(), section, Long.toString(ecrfField.getPosition()), inputFieldName);
-					} else {
-						return MessageFormat.format(UNIQUE_GROUP_VISIT_ECRF_FIELD_NAME, trial.getName(), groupVisit.toString(), Long.toString(ecrf.getPosition()), ecrf.getName(),
-								Long.toString(ecrfField.getPosition()), inputFieldName);
-					}
-				} else {
-					if (section != null && section.length() > 0) {
-						return MessageFormat.format(UNIQUE_ECRF_POSITION_SECTION_ECRF_FIELD_NAME, trial.getName(), Long.toString(ecrf.getPosition()), ecrf.getName(), section,
-								Long.toString(ecrfField.getPosition()), inputFieldName);
-					} else {
-						return MessageFormat.format(UNIQUE_ECRF_POSITION_ECRF_FIELD_NAME, trial.getName(), Long.toString(ecrf.getPosition()), ecrf.getName(),
-								Long.toString(ecrfField.getPosition()),
-								inputFieldName);
-					}
 				}
 			}
 		}
@@ -113,46 +86,23 @@ public class ECRFFieldDaoImpl
 	private static String getUniqueECRFFieldName(ECRFFieldOutVO ecrfFieldVO) {
 		if (ecrfFieldVO != null && ecrfFieldVO.getTrial() != null && ecrfFieldVO.getField() != null && ecrfFieldVO.getEcrf() != null) {
 			String section = ecrfFieldVO.getSection();
-			if (Settings.getBoolean(SettingCodes.UNIQUE_ECRF_NAMES, Bundle.SETTINGS, DefaultSettings.UNIQUE_ECRF_NAMES)) {
+			String revision = ecrfFieldVO.getEcrf().getRevision();
+			if (section != null && section.length() > 0) {
 				if (section != null && section.length() > 0) {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(), revision,
+							section,
+							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
+				} else {
 					return MessageFormat.format(UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(), section,
+							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
+				}
+			} else {
+				if (section != null && section.length() > 0) {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(), revision,
 							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
 				} else {
 					return MessageFormat.format(UNIQUE_ECRF_NAME_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(),
 							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
-				}
-			} else {
-				VisitOutVO visit = ecrfFieldVO.getEcrf().getVisit();
-				ProbandGroupOutVO group = ecrfFieldVO.getEcrf().getGroup();
-				if (visit != null || group != null) {
-					StringBuilder groupVisit = new StringBuilder();
-					if (group != null) {
-						groupVisit.append(group.getToken());
-					}
-					if (visit != null) {
-						if (groupVisit.length() > 0) {
-							groupVisit.append(GROUP_VISIT_TOKEN_SEPARATOR_STRING);
-						}
-						groupVisit.append(visit.getToken());
-					}
-					if (section != null && section.length() > 0) {
-						return MessageFormat.format(UNIQUE_GROUP_VISIT_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), groupVisit.toString(),
-								Long.toString(ecrfFieldVO.getEcrf().getPosition()), ecrfFieldVO.getEcrf().getName(), section, Long.toString(ecrfFieldVO.getPosition()),
-								ecrfFieldVO.getField().getName());
-					} else {
-						return MessageFormat.format(UNIQUE_GROUP_VISIT_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), groupVisit.toString(),
-								Long.toString(ecrfFieldVO.getEcrf().getPosition()), ecrfFieldVO.getEcrf().getName(), Long.toString(ecrfFieldVO.getPosition()),
-								ecrfFieldVO.getField().getName());
-					}
-				} else {
-					if (section != null && section.length() > 0) {
-						return MessageFormat.format(UNIQUE_ECRF_POSITION_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(),
-								Long.toString(ecrfFieldVO.getEcrf().getPosition()), ecrfFieldVO.getEcrf().getName(), section, Long.toString(ecrfFieldVO.getPosition()),
-								ecrfFieldVO.getField().getName());
-					} else {
-						return MessageFormat.format(UNIQUE_ECRF_POSITION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), Long.toString(ecrfFieldVO.getEcrf().getPosition()),
-								ecrfFieldVO.getEcrf().getName(), Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
-					}
 				}
 			}
 		}

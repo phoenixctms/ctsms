@@ -69,6 +69,7 @@ import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
@@ -462,7 +463,11 @@ public final class CommonUtil {
 				out.setSection(ecrfFieldVO.getSection());
 				ECRFOutVO ecrfVO = ecrfFieldVO.getEcrf();
 				if (ecrfVO != null) {
-					out.setProbandGroupToken(ecrfVO.getGroup() != null ? ecrfVO.getGroup().getToken() : null);
+					Iterator it = ecrfVO.getGroups().iterator();
+					out.getProbandGroupTokens().clear();
+					while (it.hasNext()) {
+						out.getProbandGroupTokens().add(((ProbandGroupOutVO) it.next()).getToken());
+					}
 					out.setVisitToken(ecrfVO.getVisit() != null ? ecrfVO.getVisit().getToken() : null);
 				}
 				out.setDisabled(ecrfFieldVO.getDisabled());

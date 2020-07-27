@@ -430,14 +430,15 @@ public class MedicationBean extends ManagedBeanBase {
 		} else {
 			in.setAspId(null);
 		}
-		in.getSubstanceIds().clear();
+		ArrayList<Long> substanceIds = new ArrayList<Long>(substances.size());
 		Iterator<AspSubstanceVO> it = substances.iterator();
 		while (it.hasNext()) {
 			AspSubstanceVO substance = it.next();
 			if (substance != null) {
-				in.getSubstanceIds().add(substance.getId());
+				substanceIds.add(substance.getId());
 			}
 		}
+		in.setSubstanceIds(substanceIds);
 		if (in.getDoseValue() == null) {
 			in.setDoseUnit(null);
 		}

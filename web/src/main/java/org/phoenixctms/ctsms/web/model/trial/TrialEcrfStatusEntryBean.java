@@ -1,13 +1,9 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
-import java.util.ArrayList;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
-import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.model.shared.EcrfStatusEntryBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.ProbandListEntryModel;
@@ -27,11 +23,9 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	private Long trialId;
 	private TrialOutVO trial;
-	private ArrayList<SelectItem> filterProbandGroups;
 
 	public TrialEcrfStatusEntryBean() {
 		super();
-		filterProbandGroups = new ArrayList<SelectItem>();
 	}
 
 	@Override
@@ -52,8 +46,6 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		this.trialId = id;
 		probandListEntryModel.setTrialId(id);
 		probandListEntryModel.initSets(true);
-		filterProbandGroups = WebUtil.getProbandGroups(id);
-		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 	}
 
 	@Override
@@ -80,11 +72,6 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		} else {
 			return Messages.getString(MessageCodes.SELECT_PROBAND_LIST_ENTRY);
 		}
-	}
-
-	@Override
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
 	}
 
 	@Override

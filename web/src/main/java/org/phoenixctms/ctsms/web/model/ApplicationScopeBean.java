@@ -40,6 +40,7 @@ import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
@@ -692,6 +693,7 @@ public class ApplicationScopeBean {
 	}
 
 	private final static String TIMELINE_EVENT_SEPARATOR = ", ";
+	private final static String PROBAND_GROUP_SEPARATOR = "; ";
 
 	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
 		if (events != null) {
@@ -706,5 +708,20 @@ public class ApplicationScopeBean {
 			return sb.toString();
 		}
 		return null;
+	}
+
+	public String probandGroupsToString(Collection<ProbandGroupOutVO> groups) {
+		if (groups != null) {
+			Iterator<ProbandGroupOutVO> it = groups.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(PROBAND_GROUP_SEPARATOR);
+				}
+				sb.append(it.next().getTitle());
+			}
+			return sb.toString();
+		}
+		return "";
 	}
 }

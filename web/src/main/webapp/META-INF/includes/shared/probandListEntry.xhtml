@@ -105,22 +105,34 @@
 				for="probandListEntryProbandGroup"
 				value="#{triallabels.proband_list_proband_group_label}" />
 			<h:panelGroup>
-				<p:selectOneMenu
-					id="probandListEntryProbandGroup"
-					value="#{probandListBean.in.groupId}"
-					required="false"
+				<p:autoComplete id="probandListEntryProbandGroup" required="false"
+					value="#{probandListBean.group}"
 					label="#{triallabels.proband_list_proband_group}"
-					styleClass="ctsms-control">
-					<f:converter converterId="ctsms.ID" />
-					<f:selectItem
-						itemLabel="#{labels.no_selection_label}"
-						itemValue="#{applicationScopeBean.noSelectionValue}" />
-					<f:selectItems
-						value="#{probandListBean.probandGroups}"
-						var="selectItem"
-						itemLabel="#{selectItem.label}"
-						itemValue="#{selectItem.value}" />
-				</p:selectOneMenu>
+					styleClass="ctsms-control"
+					minQueryLength="#{autoCompleteMinQueryLengthProbandGroup}"
+					maxResults="#{autoCompleteMaxResultsProbandGroup}"
+					queryDelay="#{autoCompleteQueryDelayProbandGroup}"
+					dropdown="#{autoCompleteDropdownProbandGroup}"
+					global="#{autoCompleteGlobalProbandGroup}"
+					scrollHeight="#{autoCompleteScrollHeightProbandGroup}"
+					completeMethod="#{probandListBean.completeGroup}"
+					forceSelection="true" var="group"
+					itemValue="#{group}"
+					itemLabel="#{group.vo.token}"
+					converter="ctsms.ProbandGroup">
+					<p:ajax process="@this" event="itemSelect"
+						listener="#{probandListBean.handleGroupSelect}" />
+					<p:ajax process="@this" event="itemUnselect"
+						listener="#{probandListBean.handleGroupUnselect}" />
+					<p:column>
+						<h:outputText
+							value="#{group.vo.token}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(group.vo.title,96)}" />
+					</p:column>
+				</p:autoComplete>
 				<p:tooltip
 					rendered="#{enableTooltips}"
 					for="probandListEntryProbandGroup">

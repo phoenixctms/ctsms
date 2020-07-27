@@ -6,19 +6,24 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Order;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.compare.EcrfRevisionComparator;
+import org.phoenixctms.ctsms.compare.VOIDComparator;
+import org.phoenixctms.ctsms.query.CategoryCriterion;
+import org.phoenixctms.ctsms.query.CategoryCriterion.EmptyPrefixModes;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
-import org.phoenixctms.ctsms.util.DefaultSettings;
-import org.phoenixctms.ctsms.util.SettingCodes;
-import org.phoenixctms.ctsms.util.Settings;
-import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ECRFInVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -31,34 +36,17 @@ import org.phoenixctms.ctsms.vo.VisitOutVO;
 public class ECRFDaoImpl
 		extends ECRFDaoBase {
 
-	private final static String GROUP_VISIT_TOKEN_SEPARATOR_STRING = ":";
-	private static final String UNIQUE_GROUP_VISIT_ECRF_NAME = "{0} {1} - {2}. {3}";
-	private static final String UNIQUE_ECRF_POSITION_NAME = "{0} - {1}. {2}";
+	private final static VOIDComparator PROBAND_GROUP_ID_COMPARATOR = new VOIDComparator<ProbandGroupOutVO>(false);
 	private static final String UNIQUE_ECRF_NAME = "{0} - {1}";
+	private static final String UNIQUE_ECRF_NAME_REVISION = "{0} - {1} ({2})";
+	EcrfRevisionComparator ECRF_REVISION_COMPARATOR = new EcrfRevisionComparator();
 
-	private static String getUniqueInquiryName(ECRFOutVO ecrfVO) {
+	private static String getUniqueEcrfName(ECRFOutVO ecrfVO) {
 		if (ecrfVO != null && ecrfVO.getTrial() != null) {
-			if (Settings.getBoolean(SettingCodes.UNIQUE_ECRF_NAMES, Bundle.SETTINGS, DefaultSettings.UNIQUE_ECRF_NAMES)) {
-				return MessageFormat.format(UNIQUE_ECRF_NAME, ecrfVO.getTrial().getName(), ecrfVO.getName());
+			if (ecrfVO.getRevision() != null && ecrfVO.getRevision().length() > 0) {
+				return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION, ecrfVO.getTrial().getName(), ecrfVO.getName(), ecrfVO.getRevision());
 			} else {
-				VisitOutVO visit = ecrfVO.getVisit();
-				ProbandGroupOutVO group = ecrfVO.getGroup();
-				if (visit != null || group != null) {
-					StringBuilder groupVisit = new StringBuilder();
-					if (group != null) {
-						groupVisit.append(group.getToken());
-					}
-					if (visit != null) {
-						if (groupVisit.length() > 0) {
-							groupVisit.append(GROUP_VISIT_TOKEN_SEPARATOR_STRING);
-						}
-						groupVisit.append(visit.getToken());
-					}
-					return MessageFormat
-							.format(UNIQUE_GROUP_VISIT_ECRF_NAME, ecrfVO.getTrial().getName(), groupVisit.toString(), Long.toString(ecrfVO.getPosition()), ecrfVO.getName());
-				} else {
-					return MessageFormat.format(UNIQUE_ECRF_POSITION_NAME, ecrfVO.getTrial().getName(), Long.toString(ecrfVO.getPosition()), ecrfVO.getName());
-				}
+				return MessageFormat.format(UNIQUE_ECRF_NAME, ecrfVO.getTrial().getName(), ecrfVO.getName());
 			}
 		}
 		return null;
@@ -89,7 +77,6 @@ public class ECRFDaoImpl
 		super.eCRFInVOToEntity(source, target, copyIfNull);
 		Long trialId = source.getTrialId();
 		Long visitId = source.getVisitId();
-		Long groupId = source.getGroupId();
 		Long probandListStatusId = source.getProbandListStatusId();
 		if (trialId != null) {
 			Trial trial = this.getTrialDao().load(trialId);
@@ -113,22 +100,37 @@ public class ECRFDaoImpl
 				visit.removeEcrfs(target);
 			}
 		}
-		if (groupId != null) {
-			ProbandGroup group = this.getProbandGroupDao().load(groupId);
-			target.setGroup(group);
-			group.addEcrfs(target);
-		} else if (copyIfNull) {
-			ProbandGroup group = target.getGroup();
-			target.setGroup(null);
-			if (group != null) {
-				group.removeEcrfs(target);
-			}
+		Collection groupIds;
+		if ((groupIds = source.getGroupIds()).size() > 0 || copyIfNull) {
+			target.setGroups(toProbandGroupSet(groupIds));
 		}
 		if (probandListStatusId != null) {
 			target.setProbandListStatus(this.getProbandListStatusTypeDao().load(probandListStatusId));
 		} else if (copyIfNull) {
 			target.setProbandListStatus(null);
 		}
+	}
+
+	private HashSet<ProbandGroup> toProbandGroupSet(Collection<Long> probandGroupIds) { // lazyload persistentset prevention
+		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
+		HashSet<ProbandGroup> result = new HashSet<ProbandGroup>(probandGroupIds.size());
+		Iterator<Long> it = probandGroupIds.iterator();
+		while (it.hasNext()) {
+			result.add(probandGroupDao.load(it.next()));
+		}
+		return result;
+	}
+
+	private ArrayList<ProbandGroupOutVO> toProbandGroupOutVOCollection(Collection<ProbandGroup> groups) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
+		ArrayList<ProbandGroupOutVO> result = new ArrayList<ProbandGroupOutVO>(groups.size());
+		Iterator<ProbandGroup> it = groups.iterator();
+		while (it.hasNext()) {
+			result.add(probandGroupDao.toProbandGroupOutVO(it.next()));
+		}
+		Collections.sort(result, PROBAND_GROUP_ID_COMPARATOR);
+		return result;
 	}
 
 	@Override
@@ -146,7 +148,6 @@ public class ECRFDaoImpl
 		super.eCRFOutVOToEntity(source, target, copyIfNull);
 		TrialOutVO trialVO = source.getTrial();
 		VisitOutVO visitVO = source.getVisit();
-		ProbandGroupOutVO groupVO = source.getGroup();
 		ProbandListStatusTypeVO probandListStatusVO = source.getProbandListStatus();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (trialVO != null) {
@@ -171,16 +172,13 @@ public class ECRFDaoImpl
 				visit.removeEcrfs(target);
 			}
 		}
-		if (groupVO != null) {
-			ProbandGroup group = this.getProbandGroupDao().probandGroupOutVOToEntity(groupVO);
-			target.setGroup(group);
-			group.addEcrfs(target);
+		Collection groups = source.getGroups();
+		if (groups.size() > 0) {
+			groups = new ArrayList(groups); //prevent changing VO
+			this.getProbandGroupDao().probandGroupOutVOToEntityCollection(groups);
+			target.setGroups(groups); // hashset-exception!!!
 		} else if (copyIfNull) {
-			ProbandGroup group = target.getGroup();
-			target.setGroup(null);
-			if (group != null) {
-				group.removeEcrfs(target);
-			}
+			target.getGroups().clear();
 		}
 		if (probandListStatusVO != null) {
 			target.setProbandListStatus(this.getProbandListStatusTypeDao().probandListStatusTypeVOToEntity(probandListStatusVO));
@@ -195,6 +193,19 @@ public class ECRFDaoImpl
 	}
 
 	@Override
+	protected ECRF handleFindByMaxRevision(Long trialId, String name, String revisionPattern) throws Exception {
+		org.hibernate.Criteria ecrfCriteria = createEcrfCriteria(null);
+		ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		ecrfCriteria.add(Restrictions.eq("name", name));
+		ecrfCriteria.add(Restrictions.like("revision", revisionPattern, MatchMode.EXACT));
+		try {
+			return (ECRF) Collections.max(ecrfCriteria.list(), ECRF_REVISION_COMPARATOR);
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
+	@Override
 	protected Collection<ECRF> handleFindByListEntryActiveSorted(Long probandListEntryId, Boolean active, boolean sort, PSFVO psf) throws Exception {
 		ProbandListEntry listEntry = this.getProbandListEntryDao().load(probandListEntryId);
 		Long trialId = listEntry.getTrial().getId();
@@ -203,19 +214,20 @@ public class ECRFDaoImpl
 		ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		if (groupId != null) {
 			// http://stackoverflow.com/questions/4334970/hibernate-cannot-simultaneously-fetch-multiple-bags
+			Criteria probandGroupCriteria = ecrfCriteria.createCriteria("groups", "probandGroups", CriteriaSpecification.LEFT_JOIN);
 			Criteria ecrfFieldCriteria = ecrfCriteria.createCriteria("ecrfFields", CriteriaSpecification.LEFT_JOIN);
 			Criteria ecrfFieldValueCriteria = ecrfFieldCriteria.createCriteria("fieldValues", "ecrfFieldValues", CriteriaSpecification.LEFT_JOIN);
 			if (active != null) {
 				ecrfCriteria.add(Restrictions.or(
 						Restrictions.and(
-								Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-										Restrictions.isNull("group.id")),
+								Restrictions.or(Restrictions.eq("probandGroups.id", groupId.longValue()),
+										Restrictions.isNull("probandGroups.id")),
 								Restrictions.eq("active", active.booleanValue())),
 						Restrictions.eq("ecrfFieldValues.listEntry.id", probandListEntryId.longValue())));
 			} else {
 				ecrfCriteria.add(Restrictions.or(
-						Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-								Restrictions.isNull("group.id")),
+						Restrictions.or(Restrictions.eq("probandGroups.id", groupId.longValue()),
+								Restrictions.isNull("probandGroups.id")),
 						Restrictions.eq("ecrfFieldValues.listEntry.id", probandListEntryId.longValue())));
 			}
 		} else {
@@ -227,14 +239,15 @@ public class ECRFDaoImpl
 						Restrictions.eq("active", active.booleanValue()),
 						Restrictions.eq("ecrfFieldValues.listEntry.id", probandListEntryId.longValue())));
 			}
-			ecrfCriteria.add(Restrictions.isNull("group.id"));
+			Criteria probandGroupCriteria = ecrfCriteria.createCriteria("groups", "probandGroups", CriteriaSpecification.LEFT_JOIN);
+			ecrfCriteria.add(Restrictions.isNull("probandGroups.id"));
 		}
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRF.class, ecrfCriteria);
 		if (sort) {
 			if (psf == null) {
 				psf = new PSFVO();
 			}
-			psf.setSortField("position");
+			psf.setSortField("name");
 			psf.setSortOrder(true);
 		}
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
@@ -250,32 +263,14 @@ public class ECRFDaoImpl
 		if (active != null) {
 			ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			ecrfCriteria.addOrder(Order.asc("trial"));
-			Criteria visitCriteria = ecrfCriteria.createCriteria("visit", CriteriaSpecification.LEFT_JOIN);
-			visitCriteria.addOrder(Order.asc("token"));
-			Criteria groupCriteria = ecrfCriteria.createCriteria("group", CriteriaSpecification.LEFT_JOIN);
-			groupCriteria.addOrder(Order.asc("token"));
-			ecrfCriteria.addOrder(Order.asc("position"));
+			if (psf == null) {
+				psf = new PSFVO();
+			}
+			psf.setSortField("name");
+			psf.setSortOrder(true);
 		}
-		return ecrfCriteria.list();
-	}
-
-	@Override
-	protected Collection<ECRF> handleFindByTrialGroupSorted(Long trialId, Long groupId) throws Exception {
-		org.hibernate.Criteria ecrfCriteria = createEcrfCriteria(null);
-		if (trialId != null) {
-			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		}
-		if (groupId != null) {
-			ecrfCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
-		} else {
-			ecrfCriteria.add(Restrictions.isNull("group.id"));
-		}
-		ecrfCriteria.addOrder(Order.asc("trial"));
-		ecrfCriteria.addOrder(Order.asc("position"));
-		return ecrfCriteria.list();
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); //ecrf.groups filter
 	}
 
 	@Override
@@ -286,8 +281,9 @@ public class ECRFDaoImpl
 			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (groupId != null) {
-			ecrfCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-					Restrictions.isNull("group.id")));
+			Criteria probandGroupCriteria = ecrfCriteria.createCriteria("groups", "probandGroups", CriteriaSpecification.LEFT_JOIN);
+			ecrfCriteria.add(Restrictions.or(Restrictions.eq("probandGroups.id", groupId.longValue()),
+					Restrictions.isNull("probandGroups.id")));
 		}
 		if (visitId != null) {
 			ecrfCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
@@ -296,54 +292,28 @@ public class ECRFDaoImpl
 		if (active != null) {
 			ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			ecrfCriteria.addOrder(Order.asc("trial"));
-			ecrfCriteria.addOrder(Order.asc("group"));
-			ecrfCriteria.addOrder(Order.asc("position"));
+			if (psf == null) {
+				psf = new PSFVO();
+			}
+			psf.setSortField("name");
+			psf.setSortOrder(true);
 		}
-		return ecrfCriteria.list();
+		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this); //ecrf.groups filter
 	}
 
 	@Override
-	protected Collection<ECRF> handleFindByTrialName(Long trialId, String name) throws Exception {
+	protected Collection<ECRF> handleFindCollidingTrialNameRevision(
+			Long trialId, String name, String revision) throws Exception {
 		org.hibernate.Criteria ecrfCriteria = createEcrfCriteria(null);
 		if (trialId != null) {
 			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		ecrfCriteria.add(Restrictions.eq("name", name));
+		if (name != null) {
+			ecrfCriteria.add(Restrictions.eq("name", name));
+		}
+		CategoryCriterion.apply(ecrfCriteria, new CategoryCriterion(revision, "revision", MatchMode.EXACT, EmptyPrefixModes.EMPTY_ROWS));
 		return ecrfCriteria.list();
-	}
-
-	@Override
-	protected Collection<ECRF> handleFindCollidingTrialGroupPosition(
-			Long trialId, Long groupId, Long position) throws Exception {
-		org.hibernate.Criteria ecrfCriteria = createEcrfCriteria(null);
-		if (trialId != null) {
-			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		}
-		if (groupId != null) {
-			ecrfCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
-		} else {
-			ecrfCriteria.add(Restrictions.isNull("group.id"));
-		}
-		ecrfCriteria.add(Restrictions.eq("position", position.longValue()));
-		return ecrfCriteria.list();
-	}
-
-	@Override
-	protected Long handleFindMaxPosition(Long trialId, Long groupId) throws Exception {
-		org.hibernate.Criteria ecrfCriteria = createEcrfCriteria(null);
-		if (trialId != null) {
-			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-		}
-		if (groupId != null) {
-			ecrfCriteria.add(Restrictions.eq("group.id", groupId.longValue()));
-		} else {
-			ecrfCriteria.add(Restrictions.isNull("group.id"));
-		}
-		ecrfCriteria.setProjection(Projections.max("position"));
-		return (Long) ecrfCriteria.uniqueResult();
 	}
 
 	@Override
@@ -359,8 +329,9 @@ public class ECRFDaoImpl
 			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (groupId != null) {
-			ecrfCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-					Restrictions.isNull("group.id")));
+			Criteria probandGroupCriteria = ecrfCriteria.createCriteria("groups", "probandGroups", CriteriaSpecification.LEFT_JOIN);
+			ecrfCriteria.add(Restrictions.or(Restrictions.eq("probandGroups.id", groupId.longValue()),
+					Restrictions.isNull("probandGroups.id")));
 		}
 		if (active != null) {
 			ecrfCriteria.add(Restrictions.eq("active", active.booleanValue()));
@@ -389,8 +360,9 @@ public class ECRFDaoImpl
 			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (groupId != null) {
-			ecrfCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
-					Restrictions.isNull("group.id")));
+			Criteria probandGroupCriteria = ecrfCriteria.createCriteria("groups", "probandGroups", CriteriaSpecification.LEFT_JOIN);
+			ecrfCriteria.add(Restrictions.or(Restrictions.eq("probandGroups.id", groupId.longValue()),
+					Restrictions.isNull("probandGroups.id")));
 		}
 		if (visitId != null) {
 			ecrfCriteria.add(Restrictions.or(Restrictions.eq("visit.id", visitId.longValue()),
@@ -447,7 +419,6 @@ public class ECRFDaoImpl
 		super.toECRFInVO(source, target);
 		Trial trial = source.getTrial();
 		Visit visit = source.getVisit();
-		ProbandGroup group = source.getGroup();
 		ProbandListStatusType probandListStatus = source.getProbandListStatus();
 		if (trial != null) {
 			target.setTrialId(trial.getId());
@@ -455,12 +426,20 @@ public class ECRFDaoImpl
 		if (visit != null) {
 			target.setVisitId(visit.getId());
 		}
-		if (group != null) {
-			target.setGroupId(group.getId());
-		}
+		target.setGroupIds(toProbandGroupIdCollection(source.getGroups()));
 		if (probandListStatus != null) {
 			target.setProbandListStatusId(probandListStatus.getId());
 		}
+	}
+
+	public static ArrayList<Long> toProbandGroupIdCollection(Collection<ProbandGroup> groups) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(groups.size());
+		Iterator<ProbandGroup> it = groups.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
 	}
 
 	@Override
@@ -478,7 +457,6 @@ public class ECRFDaoImpl
 		super.toECRFOutVO(source, target);
 		Trial trial = source.getTrial();
 		Visit visit = source.getVisit();
-		ProbandGroup group = source.getGroup();
 		ProbandListStatusType probandListStatus = source.getProbandListStatus();
 		User modifiedUser = source.getModifiedUser();
 		if (trial != null) {
@@ -487,15 +465,13 @@ public class ECRFDaoImpl
 		if (visit != null) {
 			target.setVisit(this.getVisitDao().toVisitOutVO(visit));
 		}
-		if (group != null) {
-			target.setGroup(this.getProbandGroupDao().toProbandGroupOutVO(group));
-		}
+		target.setGroups(toProbandGroupOutVOCollection(source.getGroups()));
 		if (probandListStatus != null) {
 			target.setProbandListStatus(this.getProbandListStatusTypeDao().toProbandListStatusTypeVO(probandListStatus));
 		}
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		target.setUniqueName(getUniqueInquiryName(target));
+		target.setUniqueName(getUniqueEcrfName(target));
 	}
 }

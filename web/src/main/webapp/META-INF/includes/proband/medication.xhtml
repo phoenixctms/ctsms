@@ -30,7 +30,8 @@
 					var="medication" value="#{medicationBean.medicationModel}"
 					id="medication_list" selectionMode="single"
 					selection="#{medicationBean.selectedMedication}">
-					<p:ajax event="page" listener="#{medicationBean.medicationModel.handlePageChanged}" />
+					<p:ajax event="page"
+						listener="#{medicationBean.medicationModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:medication_form:medication_input" />
 					<f:facet name="header">
@@ -130,39 +131,12 @@
 					<f:facet name="header">
 						<h:outputText value="#{medicationBean.title}" />
 					</f:facet>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-
-
-
-
-
-
 						<h:panelGrid rendered="#{medicationBean.inputVisible}"
 							columns="12" cellpadding="2"
 							columnClasses="ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
-
-
-
 							<h:outputLabel for="asp"
 								value="#{probandlabels.medication_asp_label}" />
 							<h:panelGroup>
@@ -179,15 +153,12 @@
 									completeMethod="#{medicationBean.completeAsp}"
 									forceSelection="true" var="asp" itemValue="#{asp}"
 									itemLabel="#{asp.vo.name}" converter="ctsms.Asp">
-
-
 									<p:ajax process="@this" event="itemSelect"
 										listener="#{medicationBean.handleAspSelect}"
 										update="substances" />
 									<p:ajax process="@this" event="itemUnselect"
 										listener="#{medicationBean.handleAspUnselect}"
 										update="substances" />
-
 									<p:column>
 										<h:outputText
 											value="#{applicationScopeBean.clipStringTrailing(asp.vo.atcCodesLabel,25)}" />
@@ -203,8 +174,6 @@
 												value="#{asp.vo.category} (#{asp.vo.human ? probandlabels.medication_asp_human_label : probandlabels.medication_asp_veterinary_label})" />
 											<h:outputText styleClass="ctsms-code-itemtip-em"
 												value="#{applicationScopeBean.clipStringTrailing(asp.vo.labeling,96)}" />
-
-
 											<h:panelGroup>
 												<ul>
 													<li><h:outputText
@@ -231,11 +200,8 @@
 															value="#{probandlabels.medication_asp_distribution_label}" /><br />
 														<h:outputText styleClass="ctsms-code-itemtip-em"
 															value="#{applicationScopeBean.clipStringTrailing(asp.vo.distribution,96)}" /></li>
-
 												</ul>
 											</h:panelGroup>
-
-
 											<h:outputText
 												value="#{probandlabels.medication_asp_substances_label}" />
 											<h:panelGroup>
@@ -255,9 +221,6 @@
 													</ui:repeat>
 												</ul>
 											</h:panelGroup>
-
-
-
 										</h:panelGrid>
 									</f:facet>
 								</p:autoComplete>
@@ -267,8 +230,6 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="asp" />
-
-
 
 							<h:outputLabel for="substances"
 								value="#{probandlabels.medication_substances_label}" />
@@ -304,8 +265,6 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="substances" />
-
-
 
 							<h:outputLabel for="doseValue"
 								value="#{probandlabels.medication_dose_value_label}" />
@@ -352,8 +311,6 @@
 							</h:panelGroup>
 							<p:message for="doseUnit" />
 
-
-
 							<h:outputLabel for="diagnosis"
 								value="#{probandlabels.medication_diagnosis_label}" />
 							<h:panelGroup>
@@ -397,14 +354,6 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="procedure" />
-
-
-
-
-
-
-
-
 
 							<h:outputLabel for="start"
 								value="#{probandlabels.medication_start_label}" />

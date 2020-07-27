@@ -11,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PositionMovement;
@@ -20,6 +19,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListExcelVO;
@@ -41,6 +41,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -61,11 +63,10 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		}
 	}
 
-	private ArrayList<SelectItem> filterProbandGroups;
 	private Long trialId;
-	private Long bulkAddGroupId;
 	private Long bulkAddRating;
 	private Long bulkAddRatingMax;
+	private ProbandGroupOutVO bulkAddGroup;
 	private boolean shuffle;
 	private boolean randomize;
 	private Long limit;
@@ -97,7 +98,8 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		try {
 			Set<Long> ids = this.probandMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryOutVO> it = WebUtil.getServiceLocator().getTrialService()
-					.addProbandListEntries(WebUtil.getAuthentication(), trialId, randomize && isRandomization(), bulkAddGroupId, bulkAddRating, bulkAddRatingMax, ids, shuffle,
+					.addProbandListEntries(WebUtil.getAuthentication(), trialId, randomize && isRandomization(), bulkAddGroup != null ? bulkAddGroup.getId() : null, bulkAddRating,
+							bulkAddRatingMax, ids, shuffle,
 							limit)
 					.iterator();
 			while (it.hasNext()) {
@@ -136,7 +138,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	@Override
 	protected void changeSpecific(Long id) {
 		probandMultiPicker.clear();
-		bulkAddGroupId = null;
+		bulkAddGroup = null;
 		shuffle = Settings.getBoolean(SettingCodes.PROBAND_LIST_BULK_ADD_SHUFFLE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_SHUFFLE);
 		randomize = Settings.getBoolean(SettingCodes.PROBAND_LIST_BULK_ADD_RANDOMIZE, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_RANDOMIZE);
 		limit = Settings.getLongNullable(SettingCodes.PROBAND_LIST_BULK_ADD_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_BULK_ADD_LIMIT);
@@ -191,10 +193,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		return ERROR_OUTCOME;
 	}
 
-	public Long getBulkAddGroupId() {
-		return bulkAddGroupId;
-	}
-
 	public Long getBulkAddLimit() {
 		return limit;
 	}
@@ -214,10 +212,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 
 	public boolean getEnableExports() {
 		return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_LIST_EXPORTS, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_LIST_EXPORTS);
-	}
-
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
 	}
 
 	@Override
@@ -408,9 +402,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	@Override
 	protected void initSpecificSets(boolean reset, boolean deleted, boolean select) {
 		clearCaches(select);
-		probandGroups = WebUtil.getProbandGroups(in.getTrialId());
-		filterProbandGroups = new ArrayList<SelectItem>(probandGroups);
-		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		probandListEntryModel.setTrialId(in.getTrialId());
 		probandListEntryModel.initSets(reset);
 		trial = WebUtil.getTrial(this.in.getTrialId());
@@ -548,10 +539,6 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 		return addAction(false, true);
 	}
 
-	public void setBulkAddGroupId(Long bulkAddGroupId) {
-		this.bulkAddGroupId = bulkAddGroupId;
-	}
-
 	public void setBulkAddLimit(Long limit) {
 		this.limit = limit;
 	}
@@ -566,5 +553,26 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 
 	public void setBulkAddShuffle(boolean shuffle) {
 		this.shuffle = shuffle;
+	}
+
+	public IDVO getBulkAddGroup() {
+		if (bulkAddGroup != null) {
+			return IDVO.transformVo(bulkAddGroup);
+		}
+		return null;
+	}
+
+	public void setBulkAddGroup(IDVO bulkAddGroup) {
+		if (bulkAddGroup != null) {
+			this.bulkAddGroup = (ProbandGroupOutVO) bulkAddGroup.getVo();
+		} else {
+			this.bulkAddGroup = null;
+		}
+	}
+
+	public void handleBulkAddGroupSelect(SelectEvent event) {
+	}
+
+	public void handleBulkAddGroupUnselect(UnselectEvent event) {
 	}
 }

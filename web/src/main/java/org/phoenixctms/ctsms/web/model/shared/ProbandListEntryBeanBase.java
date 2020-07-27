@@ -1,9 +1,10 @@
 package org.phoenixctms.ctsms.web.model.shared;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -27,6 +28,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
@@ -65,7 +68,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	protected ProbandListEntryModel probandListEntryModel;
 	protected TrialOutVO trial;
 	protected ProbandOutVO proband;
-	protected ArrayList<SelectItem> probandGroups;
+	private ProbandGroupOutVO group;
 	private ProbandListStatusEntryBean probandListStatusEntryBean;
 	private ProbandListEntryTagValueBean probandListEntryTagValueBean;
 
@@ -170,10 +173,6 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 		return out;
 	}
 
-	public ArrayList<SelectItem> getProbandGroups() {
-		return probandGroups;
-	}
-
 	public ProbandListEntryModel getProbandListEntryModel() {
 		return probandListEntryModel;
 	}
@@ -206,6 +205,7 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	private void initSets(boolean reset, boolean deleted, boolean select) {
 		initSpecificSets(reset, deleted, select);
+		loadProbandGroup();
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
 		probandListStatusEntryBean.changeRootEntity(deleted ? null : in.getId());
@@ -281,6 +281,11 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 	}
 
 	private void sanitizeInVals(boolean createProband) {
+		if (group != null) {
+			in.setGroupId(group.getId());
+		} else {
+			in.setGroupId(null);
+		}
 		if (createProband) {
 			in.setProbandId(null);
 		}
@@ -336,5 +341,45 @@ public abstract class ProbandListEntryBeanBase extends ManagedBeanBase {
 
 	public String updateRandomizedAction() {
 		return updateAction(true);
+	}
+
+	public List<IDVO> completeGroup(String query) {
+		if (trial != null) {
+			try {
+				Collection probandGroupVOs = WebUtil.getServiceLocator().getToolsService().completeProbandGroup(WebUtil.getAuthentication(), query, query, trial.getId(), null);
+				IDVO.transformVoCollection(probandGroupVOs);
+				return (List<IDVO>) probandGroupVOs;
+			} catch (ClassCastException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getGroup() {
+		if (group != null) {
+			return IDVO.transformVo(group);
+		}
+		return null;
+	}
+
+	public void setGroup(IDVO group) {
+		if (group != null) {
+			this.group = (ProbandGroupOutVO) group.getVo();
+		} else {
+			this.group = null;
+		}
+	}
+
+	public void handleGroupSelect(SelectEvent event) {
+	}
+
+	public void handleGroupUnselect(UnselectEvent event) {
+	}
+
+	private void loadProbandGroup() {
+		group = WebUtil.getProbandGroup(in.getGroupId());
 	}
 }

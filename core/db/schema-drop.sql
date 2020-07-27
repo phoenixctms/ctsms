@@ -801,9 +801,6 @@
         drop constraint ecrf_TRIAL_FKC;
 
     alter table ecrf 
-        drop constraint ecrf_GROUP_FKC;
-
-    alter table ecrf 
         drop constraint ecrf_VISIT_FKC;
 
     alter table ecrf_field 
@@ -847,6 +844,12 @@
 
     alter table ecrf_field_value 
         drop constraint ecrf_field_value_ECRF_FIELD_FKC;
+
+    alter table ecrf_group 
+        drop constraint PROBAND_GROUP_ECRFS_FKC;
+
+    alter table ecrf_group 
+        drop constraint ecrf_GROUPS_FKC;
 
     alter table ecrf_status_entry 
         drop constraint ecrf_status_entry_MODIFIED_USER_FKC;
@@ -1233,6 +1236,8 @@
     drop table ecrf_field_status_type cascade;
 
     drop table ecrf_field_value cascade;
+
+    drop table ecrf_group cascade;
 
     drop table ecrf_status_action cascade;
 

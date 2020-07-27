@@ -38,7 +38,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 	private HashMap<Long, EcrfFieldValueAuditTrailEagerModel> ecrfFieldAuditTrailLogModelCache;
 	private HashMap<Long, EcrfFieldStatusEntryEagerModel> fieldStatusEntryLogModelCache;
 	private ArrayList<SelectItem> filterVisits;
-	private ArrayList<SelectItem> filterProbandGroups;
 	private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusCache;
 	private TrialOutVO trial;
 
@@ -49,7 +48,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		fieldStatusEntryLogModelCache = new HashMap<Long, EcrfFieldStatusEntryEagerModel>();
 		ecrfStatusCache = new HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>();
 		filterVisits = new ArrayList<SelectItem>();
-		filterProbandGroups = new ArrayList<SelectItem>();
 	}
 
 	@Override
@@ -89,8 +87,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 		index = null;
 		filterVisits = WebUtil.getVisits(id);
 		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
-		filterProbandGroups = WebUtil.getProbandGroups(id);
-		filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		trial = WebUtil.getTrial(id);
 		clearCaches();
 		initIn();
@@ -172,10 +168,6 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 					WebUtil.getEcrfFieldStatusQueueName(statusVO.getStatus().getQueue()));
 		}
 		return "";
-	}
-
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
 	}
 
 	public ArrayList<SelectItem> getFilterVisits() {

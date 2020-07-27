@@ -672,8 +672,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN_INDENT) - getXFrameIndent());
 				x += Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height2 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
-						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.GROUP_TITLE, PDFUtil.DEFAULT_LABEL, ecrf.getGroup() != null ? ecrf.getGroup().getTitle() : "",
-								ecrf.getGroup() != null ? ecrf.getGroup().getToken() : ""),
+						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.GROUP_TITLE, PDFUtil.DEFAULT_LABEL,
+								listEntry.getGroup() != null ? listEntry.getGroup().getTitle() : ""),
 						x + getXFrameIndent(),
 						y,
 						Alignment.TOP_LEFT,
@@ -769,6 +769,23 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						x += Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN1_INDENT);
 						height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), FontSize.MEDIUM, getTextColor(),
 								ecrf.getDescription(),
+								x + getXFrameIndent(),
+								y,
+								Alignment.TOP_LEFT,
+								cursor.getBlockWidth() - x - 2.0f * getXFrameIndent()), height1);
+					}
+					if (!CommonUtil.isEmptyString(ecrf.getRevision())) {
+						x = cursor.getBlockX();
+						y -= height1 + getYFrameIndent();
+						height1 = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
+								L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.ECRF_REVISION_LABEL, PDFUtil.DEFAULT_LABEL),
+								x + getXFrameIndent(),
+								y,
+								Alignment.TOP_LEFT,
+								Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN1_INDENT) - getXFrameIndent());
+						x += Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN1_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN1_INDENT);
+						height1 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontC(), FontSize.MEDIUM, getTextColor(),
+								ecrf.getRevision(),
 								x + getXFrameIndent(),
 								y,
 								Alignment.TOP_LEFT,

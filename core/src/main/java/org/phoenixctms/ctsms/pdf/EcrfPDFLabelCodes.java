@@ -28,6 +28,7 @@ public interface EcrfPDFLabelCodes {
 	public static final String VISIT_TITLE = "visit_title";
 	public static final String ECRF_TITLE_LABEL = "ecrf_title_label";
 	public static final String ECRF_DESCRIPTION_LABEL = "ecrf_description_label";
+	public static final String ECRF_REVISION_LABEL = "ecrf_revision_label";
 	public static final String ECRF_STATUS_TYPE_LABEL = "ecrf_status_type_label";
 	public static final String ECRF_STATUS_TYPE = "ecrf_status_type";
 	public static final String ECRF_STATUS_TYPE_BLANK = "ecrf_status_type_blank";

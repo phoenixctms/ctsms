@@ -1,13 +1,9 @@
 package org.phoenixctms.ctsms.web.model.proband;
 
-import java.util.ArrayList;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
-import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.web.model.shared.EcrfStatusEntryBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.ProbandListEntryModel;
@@ -26,11 +22,9 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	private Long probandId;
 	private ProbandOutVO proband;
-	private ArrayList<SelectItem> filterProbandGroups;
 
 	public ProbandEcrfStatusEntryBean() {
 		super();
-		filterProbandGroups = new ArrayList<SelectItem>();
 	}
 
 	@Override
@@ -48,7 +42,6 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		this.probandId = id;
 		probandListEntryModel.setProbandId(id);
 		probandListEntryModel.initSets(true);
-		filterProbandGroups.clear();
 	}
 
 	@Override
@@ -77,11 +70,6 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 		}
 	}
 
-	@Override
-	public ArrayList<SelectItem> getFilterProbandGroups() {
-		return filterProbandGroups;
-	}
-
 	public ProbandOutVO getProband() {
 		return proband;
 	}
@@ -99,11 +87,5 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 	@Override
 	protected void initSpecificSets() {
 		proband = WebUtil.getProband(this.probandId, null, null, null);
-		if (probandListEntry != null) {
-			filterProbandGroups = WebUtil.getProbandGroups(probandListEntry.getTrial().getId());
-			filterProbandGroups.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
-		} else {
-			filterProbandGroups.clear();
-		}
 	}
 }

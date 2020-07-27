@@ -768,7 +768,11 @@ public class ECRFFieldValueDaoImpl
 			target.setSection(ecrfField.getSection());
 			ECRF ecrf = ecrfField.getEcrf();
 			if (ecrf != null) {
-				target.setProbandGroupToken(ecrf.getGroup() != null ? ecrf.getGroup().getToken() : null);
+				Iterator it = ecrf.getGroups().iterator();
+				target.getProbandGroupTokens().clear();
+				while (it.hasNext()) {
+					target.getProbandGroupTokens().add(((ProbandGroup) it.next()).getToken());
+				}
 				target.setVisitToken(ecrf.getVisit() != null ? ecrf.getVisit().getToken() : null);
 			}
 			target.setDisabled(ecrfField.isDisabled());

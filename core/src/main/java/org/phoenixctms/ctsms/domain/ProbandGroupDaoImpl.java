@@ -9,12 +9,19 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupInVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -39,6 +46,22 @@ public class ProbandGroupDaoImpl
 	private org.hibernate.Criteria createProbandGroupCriteria() {
 		org.hibernate.Criteria probandGroupCriteria = this.getSession().createCriteria(ProbandGroup.class);
 		return probandGroupCriteria;
+	}
+
+	@Override
+	protected Collection<ProbandGroup> handleFindProbandGroups(Long trialId, String tokenInfix, String titleInfix, Integer limit)
+			throws Exception {
+		Criteria probandGroupCriteria = createProbandGroupCriteria();
+		if (trialId != null) {
+			probandGroupCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		CategoryCriterion.applyOr(probandGroupCriteria,
+				new CategoryCriterion(tokenInfix, "token", MatchMode.ANYWHERE),
+				new CategoryCriterion(titleInfix, "title", MatchMode.ANYWHERE));
+		probandGroupCriteria.addOrder(Order.asc("token"));
+		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), probandGroupCriteria);
+		return probandGroupCriteria.list();
 	}
 
 	@Override

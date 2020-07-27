@@ -422,6 +422,7 @@ public interface ServiceExceptionCodes {
 	public final static String WHITESPACE_PROBAND_GROUP_TOKEN = "whitespace_proband_group_token";
 	public final static String INVALID_INPUT_FIELD_SELECTION_SET_VALUE_VALUE = "invalid_input_field_selection_set_value_value";
 	public final static String WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_VALUE = "whitespace_input_field_selection_set_value_value";
+	public final static String WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_NAME = "whitespace_input_field_selection_set_value_name";
 	public final static String INVALID_VISIT_ID = "invalid_visit_id";
 	public final static String VISIT_TRIAL_CHANGED = "visit_trial_changed";
 	public final static String VISIT_TITLE_ALREADY_EXISTS = "visit_title_already_exists";
@@ -497,6 +498,7 @@ public interface ServiceExceptionCodes {
 	public static final String ECRF_FIELD_WITH_STATUS_ENTRIES_SERIES_FLAG_CHANGED = "ecrf_field_with_status_entries_series_flag_changed";
 	public static final String ECRF_FIELD_WITH_VALUES_SECTION_CHANGED = "ecrf_field_with_values_section_changed";
 	public static final String ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED = "ecrf_field_with_status_entries_section_changed";
+	public static final String WHITESPACE_ECRF_FIELD_SECTION = "whitespace_ecrf_field_section";
 	public final static String ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED = "ecrf_field_js_variable_name_required";
 	public final static String ECRF_FIELD_JS_VARIABLE_NAME_INVALID = "ecrf_field_js_variable_name_invalid";
 	public final static String ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE = "ecrf_field_js_variable_name_not_unique";
@@ -534,10 +536,14 @@ public interface ServiceExceptionCodes {
 	public final static String RANDOMIZE_INPUT_FIELD_TEXT_VALUE_NOT_EMPTY = "randomize_input_field_text_value_not_empty";
 	public final static String RANDOMIZATION_PROBAND_LIST_ENTRY_TAG_VALUE_REQUIRED = "randomization_proband_list_entry_tag_value_required";
 	public final static String ECRF_WRONG_PROBAND_GROUP = "ecrf_wrong_proband_group";
+	public final static String ECRF_PROBAND_GROUP_ID_IS_NULL = "ecrf_proband_group_id_is_null";
+	public final static String WHITESPACE_ECRF_NAME = "whitespace_ecrf_name";
+	public final static String WHITESPACE_ECRF_REVISION = "whitespace_ecrf_revision";
+	public final static String ECRF_DUPLICATE_PROBAND_GROUP = "ecrf_duplicate_proband_group";
 	public final static String ECRF_WRONG_VISIT = "ecrf_wrong_visit";
-	public final static String ECRF_POSITION_NOT_UNIQUE = "ecrf_position_not_unique";
 	public final static String ECRF_CHARGE_NEGATIVE = "ecrf_charge_negative";
-	public final static String ECRF_NAME_NOT_UNIQUE = "ecrf_name_not_unique";
+	public final static String ECRF_NAME_REVISION_NOT_UNIQUE = "ecrf_name_revision_not_unique";
+	public final static String ECRF_MALFORMED_REVISION_PATTERN = "ecrf_malformed_revision_pattern";
 	public final static String CANNOT_DELETE_ACTIVE_USER = "cannot_delete_active_user";
 	public final static String USER_EXISTING_JOURNAL_ENTRIES = "user_existing_journal_entries";
 	public final static String OLD_PASSWORD_WRONG = "old_password_wrong";
@@ -611,6 +617,7 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_IMAGE_CANNOT_READ_DIMENSIONS = "input_field_image_cannot_read_dimensions";
 	public static final String INPUT_FIELD_SKETCH_WIDTH_LESS_THAN_OR_EQUAL_TO_ZERO = "input_field_sketch_width_less_than_or_equal_to_zero";
 	public static final String INPUT_FIELD_SKETCH_HEIGHT_LESS_THAN_OR_EQUAL_TO_ZERO = "input_field_sketch_height_less_than_or_equal_to_zero";
+	public static final String WHITESPACE_INPUT_FIELD_NAME = "whitespace_input_field_name";
 	public final static String FIELD_NAME_ALREADY_EXISTS = "field_name_already_exists";
 	public final static String INPUT_FIELD_REGEXP_OR_TEXT_PRESET_NOT_NULL = "input_field_regexp_or_text_preset_not_null";
 	public final static String INPUT_FIELD_SELECTION_LIMITS_NOT_NULL = "input_field_selection_limits_not_null";

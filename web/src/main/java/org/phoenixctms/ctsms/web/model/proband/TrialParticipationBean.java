@@ -193,7 +193,6 @@ public class TrialParticipationBean extends ProbandListEntryBeanBase {
 	}
 
 	private void onTrialChanged() {
-		probandGroups = WebUtil.getProbandGroups(in.getTrialId());
 		if (!isCreated()) {
 			in.setPosition(getInitialPosition(in.getTrialId()));
 		}

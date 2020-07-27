@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EcrfFieldRowWriter extends RowWriter {
 
 	private final static String SHEET_NAME = "ecrffields";
-	private final static int ECRF_PROBAND_GROUP_COLUMN_INDEX = 0;
-	private final static int ECRF_POSITION_COLUMN_INDEX = 1;
+	private final static int ECRF_NAME_COLUMN_INDEX = 0;
+	private final static int ECRF_REVISION_COLUMN_INDEX = 1;
 	private final static int SECTION_COLUMN_INDEX = 2;
 	private final static int POSITION_COLUMN_INDEX = 3;
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 4;
@@ -28,8 +28,8 @@ public class EcrfFieldRowWriter extends RowWriter {
 	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 14;
 	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 15;
 	private final static int NOTIFY_COLUMN_INDEX = 16;
-	private int ecrfProbandGroupColumnIndex;
-	private int ecrfPositionColumnIndex;
+	private int ecrfNameColumnIndex;
+	private int ecrfRevisionColumnIndex;
 	private int sectionColumnIndex;
 	private int positionColumnIndex;
 	private int externalIdColumnIndex;
@@ -65,10 +65,10 @@ public class EcrfFieldRowWriter extends RowWriter {
 	public void init() {
 		super.init();
 		maxColumnIndex = 0;
-		ecrfProbandGroupColumnIndex = ECRF_PROBAND_GROUP_COLUMN_INDEX;
-		maxColumnIndex = Math.max(ecrfProbandGroupColumnIndex, maxColumnIndex);
-		ecrfPositionColumnIndex = ECRF_POSITION_COLUMN_INDEX;
-		maxColumnIndex = Math.max(ecrfPositionColumnIndex, maxColumnIndex);
+		ecrfNameColumnIndex = ECRF_NAME_COLUMN_INDEX;
+		maxColumnIndex = Math.max(ecrfNameColumnIndex, maxColumnIndex);
+		ecrfRevisionColumnIndex = ECRF_REVISION_COLUMN_INDEX;
+		maxColumnIndex = Math.max(ecrfRevisionColumnIndex, maxColumnIndex);
 		sectionColumnIndex = SECTION_COLUMN_INDEX;
 		maxColumnIndex = Math.max(sectionColumnIndex, maxColumnIndex);
 		positionColumnIndex = POSITION_COLUMN_INDEX;
@@ -117,8 +117,8 @@ public class EcrfFieldRowWriter extends RowWriter {
 				context.getExporter().getInputFieldRowWriter().printRows(ecrfField.getField());
 			}
 			String[] values = new String[maxColumnIndex + 1];
-			values[ecrfProbandGroupColumnIndex] = (ecrfField.getEcrf().getGroup() != null ? ecrfField.getEcrf().getGroup().getToken() : null);
-			values[ecrfPositionColumnIndex] = Long.toString(ecrfField.getEcrf().getPosition());
+			values[ecrfNameColumnIndex] = ecrfField.getEcrf().getName();
+			values[ecrfRevisionColumnIndex] = ecrfField.getEcrf().getRevision();
 			values[sectionColumnIndex] = ecrfField.getSection();
 			values[positionColumnIndex] = Long.toString(ecrfField.getPosition());
 			values[externalIdColumnIndex] = ecrfField.getExternalId();

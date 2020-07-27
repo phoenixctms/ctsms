@@ -67,6 +67,7 @@ import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandContactDetailValue;
 import org.phoenixctms.ctsms.domain.ProbandContactDetailValueDao;
 import org.phoenixctms.ctsms.domain.ProbandDao;
+import org.phoenixctms.ctsms.domain.ProbandGroupDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntry;
 import org.phoenixctms.ctsms.domain.Staff;
@@ -135,6 +136,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.RandomizationModeVO;
 import org.phoenixctms.ctsms.vo.RangeIntervalVO;
 import org.phoenixctms.ctsms.vo.SexVO;
@@ -498,6 +500,17 @@ public class ToolsServiceImpl
 			result.add(timelineEventDao.toTimelineEventOutVO(timelineEventsIt.next(), maxInstances, maxParentDepth, maxChildrenDepth));
 		}
 		return result;
+	}
+
+	@Override
+	protected Collection<ProbandGroupOutVO> handleCompleteProbandGroup(AuthenticationVO auth, String tokenInfix, String titleInfix, Long trialId, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for trialId ...
+		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
+		Collection probandGroups = probandGroupDao.findProbandGroups(trialId, tokenInfix, titleInfix, limit);
+		probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
+		return probandGroups;
 	}
 
 	@Override

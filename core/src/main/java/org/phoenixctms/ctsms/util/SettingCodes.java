@@ -214,6 +214,7 @@ public interface SettingCodes {
 	public static final String ECRF_FIELD_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "ecrf_field_field_autocomplete_default_result_limit";
 	public static final String SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "system_message_code_autocomplete_default_result_limit";
 	public static final String TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "timeline_event_autocomplete_default_result_limit";
+	public static final String PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_group_autocomplete_default_result_limit";
 	public static final String OPS_CODE_REVISION = "ops_code_revision";
 	public static final String ALPHA_ID_REVISION = "alpha_id_revision";
 	public static final String ASP_REVISION = "asp_revision";
@@ -256,7 +257,6 @@ public interface SettingCodes {
 	public static final String REMOVE_INQUIRY_CHECK_PROBAND_LOCKED = "remove_inquiry_check_proband_locked";
 	public static final String REMOVE_LIST_ENTRY_TAG_CHECK_PROBAND_LOCKED = "remove_list_entry_tag_check_proband_locked";
 	public static final String REMOVE_TRIAL_CHECK_PROBAND_LOCKED = "remove_trial_check_proband_locked";
-	public static final String UNIQUE_ECRF_NAMES = "unique_ecrf_names";
 	public static final String SIGNATURE_DESCRIPTION_DATETIME_PATTERN = "signature_description_datetime_pattern";
 	public static final String INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = "inquiry_values_enable_browser_field_calculation";
 	public static final String PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION = "proband_list_entry_tag_values_enable_browser_field_calculation";
@@ -291,4 +291,5 @@ public interface SettingCodes {
 	public static final String ECRF_PROCESS_PL = "ecrf_process_pl";
 	public static final String INQUIRY_PROCESS_PL = "inquiry_process_pl";
 	public static final String OBFUSCATE_BROKEN_RANDOMIZATION_CODES = "obfuscate_broken_randomization_codes";
+	public static final String ECRF_COPY_REVISION_PATTERN = "ecrf_copy_revision_pattern";
 }
