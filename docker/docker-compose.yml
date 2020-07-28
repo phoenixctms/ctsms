@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  cache:
+    image: memcached:1.6
+  
+  db:
+    image: postgres:12
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=ctsms
+      - POSTGRES_PASSWORD=ctsms
+  
+  phoenix:
+    build: phoenix
+    ports:
+      - "8888:8080"
+    volumes:
+      - ./dbsetup.sh:/dbsetup.sh
+    links:
+      - cache:cache
+      - db:db
+
+#  bulk-processor:
+#    build: bulk-processor
+#    links:
+#      - cache:cache
+#      - db:db
+
+volumes:
+        postgres:
