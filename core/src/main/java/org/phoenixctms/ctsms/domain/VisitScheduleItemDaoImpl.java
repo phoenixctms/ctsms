@@ -454,7 +454,7 @@ public class VisitScheduleItemDaoImpl
 		if (trialId != null || departmentId != null) {
 			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			if (trialId != null) {
-				visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN).add(CriteriaUtil.applyOr(Restrictions.idEq(trialId.longValue()), idCriterion));
+				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.idEq(trialId.longValue()), idCriterion));
 			}
 			if (departmentId != null) {
 				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.eq("department.id", departmentId.longValue()), idCriterion));
