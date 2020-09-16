@@ -345,9 +345,21 @@ public class CourseParticipantListPDFBlock {
 								CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
 						+ Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT);
-				y2 -= PDFUtil.renderTextLine(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
+				y2 -= PDFUtil.renderMultilineText(
+						contentStream,
+						cursor.getFontB(),
+						PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
-						getCourseName(), x, y2, PDFUtil.Alignment.TOP_LEFT);
+						getCourseName(),
+						x,
+						y2,
+						PDFUtil.Alignment.TOP_LEFT,
+						cursor.getBlockWidth()
+								- Settings.getFloat(CourseParticipantListPDFSettingCodes.X_COLUMN_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_COLUMN_INDENT)
+								- 2.0f
+										* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+												CourseParticipantListPDFDefaultSettings.X_FRAME_INDENT));
 				y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_FRAME_INDENT);
 				height = cursor.getBlockY() - Math.min(y1, y2);
