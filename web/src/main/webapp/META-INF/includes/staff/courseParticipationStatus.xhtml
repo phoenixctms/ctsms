@@ -75,6 +75,25 @@
 							<ui:param name="rendered" value="true" />
 						</ui:include>
 					</p:column>
+					<p:column
+						sortBy="#{statusEntry.vo.course.trial}"
+						filterBy="#{statusEntry.vo.course.trial.name}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText value="#{stafflabels.course_participation_status_courseparticipationstatus_list_trial_column}" />
+						</f:facet>
+						<ui:include src="../shared/listIcon.xhtml">
+							<ui:param
+								name="label"
+								value="#{statusEntry.vo.course.trial.name}" />
+							<ui:param
+								name="icon"
+								value="#{statusEntry.vo.course.trial.status.nodeStyleClass}" />
+							<ui:param
+								name="rendered"
+								value="true" />
+						</ui:include>
+					</p:column>					
 					<p:column sortBy="#{statusEntry.vo.course.selfRegistration}">
 					    <f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
