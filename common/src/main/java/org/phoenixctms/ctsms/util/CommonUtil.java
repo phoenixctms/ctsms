@@ -85,6 +85,7 @@ import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -249,6 +250,56 @@ public final class CommonUtil {
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
+	private static final String ECRF_NAME = "{0}";
+	private static final String ECRF_VISIT_NAME = "{0}@{1}";
+
+	public static String getEcrfVisitName(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		return getEcrfVisitName(ecrfVO != null ? ecrfVO.getName() : null, visitVO != null ? visitVO.getToken() : null);
+	}
+
+	public static String getEcrfVisitName(String ecrfName, String visitToken) {
+		if (!isEmptyString(ecrfName)) {
+			if (isEmptyString(visitToken)) {
+				return MessageFormat.format(ECRF_NAME, ecrfName);
+			} else {
+				return MessageFormat.format(ECRF_VISIT_NAME, ecrfName, visitToken);
+			}
+		}
+		return "";
+	}
+
+	public static final String UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME = "{0} - {1} - {2} - {3}. {4}";
+	public static final String UNIQUE_ECRF_NAME_ECRF_FIELD_NAME = "{0} - {1} - {2}. {3}";
+	public static final String UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME = "{0} - {1} ({2}) - {3} - {4}. {5}";
+	public static final String UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME = "{0} - {1} ({2}) - {3}. {4}";
+
+	public static String getUniqueECRFFieldName(ECRFFieldOutVO ecrfFieldVO, VisitOutVO visit) {
+		if (ecrfFieldVO != null && ecrfFieldVO.getTrial() != null && ecrfFieldVO.getField() != null && ecrfFieldVO.getEcrf() != null) {
+			String section = ecrfFieldVO.getSection();
+			String revision = ecrfFieldVO.getEcrf().getRevision();
+			if (section != null && section.length() > 0) {
+				if (revision != null && revision.length() > 0) {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), getEcrfVisitName(ecrfFieldVO.getEcrf(), visit),
+							revision,
+							section,
+							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
+				} else {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), getEcrfVisitName(ecrfFieldVO.getEcrf(), visit), section,
+							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
+				}
+			} else {
+				if (revision != null && revision.length() > 0) {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), getEcrfVisitName(ecrfFieldVO.getEcrf(), visit),
+							revision,
+							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
+				} else {
+					return MessageFormat.format(UNIQUE_ECRF_NAME_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), getEcrfVisitName(ecrfFieldVO.getEcrf(), visit),
+							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
+				}
+			}
+		}
+		return null;
+	}
 
 	private static void appendProbandAlias(StringBuilder sb, ProbandOutVO proband, String newBlindedProbandNameLabel, String blindedProbandNameLabel) {
 		String alias = proband.getAlias();
@@ -440,7 +491,7 @@ public final class CommonUtil {
 		}
 	}
 
-	public static void copyEcrfFieldValueInToJson(ECRFFieldValueJsonVO out, ECRFFieldValueInVO in, ECRFFieldOutVO ecrfFieldVO) {
+	public static void copyEcrfFieldValueInToJson(ECRFFieldValueJsonVO out, ECRFFieldValueInVO in, ECRFFieldOutVO ecrfFieldVO, Long visitId) {
 		if (in != null && out != null) {
 			out.setId(in.getId());
 			out.setIndex(in.getIndex());
@@ -468,7 +519,11 @@ public final class CommonUtil {
 					while (it.hasNext()) {
 						out.getProbandGroupTokens().add(((ProbandGroupOutVO) it.next()).getToken());
 					}
-					out.setVisitToken(ecrfVO.getVisit() != null ? ecrfVO.getVisit().getToken() : null);
+					it = ecrfVO.getVisits().iterator();
+					out.getVisitTokens().clear();
+					while (it.hasNext()) {
+						out.getVisitTokens().add(((VisitOutVO) it.next()).getToken());
+					}
 				}
 				out.setDisabled(ecrfFieldVO.getDisabled());
 				InputFieldOutVO inputField = ecrfFieldVO.getField();
@@ -480,6 +535,7 @@ public final class CommonUtil {
 					copySelectionSetValuesOutToJson(inputField.getSelectionSetValues(), out.getInputFieldSelectionSetValues());
 				}
 			}
+			out.setVisitId(visitId);
 		}
 	}
 
