@@ -1089,7 +1089,7 @@ public class DemoDataProvider {
 		newEcrf.setEnableBrowserFieldCalculation(enableBrowserFieldCalculation);
 		newEcrf.setCharge(charge);
 		newEcrf.getGroupIds().add(probandGroupId);
-		newEcrf.setVisitId(visitId);
+		newEcrf.getVisitIds().add(visitId);
 		ECRFOutVO out = trialService.addEcrf(auth, newEcrf);
 		jobOutput.println("eCRF created: " + out.getUniqueName());
 		return out;
