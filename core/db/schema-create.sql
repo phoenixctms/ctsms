@@ -1955,7 +1955,6 @@
         DEFERRED_DELETE_REASON TEXT,
         TRIAL_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
-        VISIT_FK BIGINT,
         PROBAND_LIST_STATUS_FK BIGINT,
         primary key (ID)
     );
@@ -1996,6 +1995,7 @@
         VERSION BIGINT not null,
         LIST_ENTRY_FK BIGINT not null,
         ECRF_FIELD_FK BIGINT not null,
+        VISIT_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
         STATUS_FK BIGINT not null,
         primary key (ID)
@@ -2032,6 +2032,7 @@
         CHANGE_COMMENT TEXT,
         LIST_ENTRY_FK BIGINT not null,
         ECRF_FIELD_FK BIGINT not null,
+        VISIT_FK BIGINT,
         VALUE_FK BIGINT not null unique,
         MODIFIED_USER_FK BIGINT not null,
         primary key (ID)
@@ -2059,6 +2060,7 @@
         LIST_ENTRY_FK BIGINT not null,
         STATUS_FK BIGINT not null,
         ECRF_FK BIGINT not null,
+        VISIT_FK BIGINT,
         primary key (ID)
     );
 
@@ -2088,6 +2090,11 @@
     create table ecrf_status_type_action (
         E_C_R_F_STATUS_TYPES_FK BIGINT not null,
         ACTIONS_FK BIGINT not null
+    );
+
+    create table ecrf_visit (
+        ECRFS_FK BIGINT not null,
+        VISITS_FK BIGINT not null
     );
 
     create table input_field_value_selection (
@@ -3518,11 +3525,6 @@
         foreign key (TRIAL_FK) 
         references TRIAL;
 
-    alter table ecrf 
-        add constraint ecrf_VISIT_FKC 
-        foreign key (VISIT_FK) 
-        references VISIT;
-
     alter table ecrf_field 
         add constraint ecrf_field_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
@@ -3563,6 +3565,11 @@
         foreign key (STATUS_FK) 
         references ecrf_field_status_type;
 
+    alter table ecrf_field_status_entry 
+        add constraint ecrf_field_status_entry_VISIT_FKC 
+        foreign key (VISIT_FK) 
+        references VISIT;
+
     alter table ecrf_field_status_transition 
         add constraint ecrf_field_status_type_TRANSITIONS_FKC 
         foreign key (TRANSITIONS_FK) 
@@ -3592,6 +3599,11 @@
         add constraint ecrf_field_value_ECRF_FIELD_FKC 
         foreign key (ECRF_FIELD_FK) 
         references ecrf_field;
+
+    alter table ecrf_field_value 
+        add constraint ecrf_field_value_VISIT_FKC 
+        foreign key (VISIT_FK) 
+        references VISIT;
 
     alter table ecrf_group 
         add constraint PROBAND_GROUP_ECRFS_FKC 
@@ -3623,6 +3635,11 @@
         foreign key (ECRF_FK) 
         references ecrf;
 
+    alter table ecrf_status_entry 
+        add constraint ecrf_status_entry_VISIT_FKC 
+        foreign key (VISIT_FK) 
+        references VISIT;
+
     alter table ecrf_status_transition 
         add constraint ecrf_status_type_TRANSITIONS_FKC 
         foreign key (TRANSITIONS_FK) 
@@ -3642,6 +3659,16 @@
         add constraint ecrf_status_action_E_C_R_F_STATUS_TYPES_FKC 
         foreign key (E_C_R_F_STATUS_TYPES_FK) 
         references ecrf_status_type;
+
+    alter table ecrf_visit 
+        add constraint ecrf_VISITS_FKC 
+        foreign key (VISITS_FK) 
+        references VISIT;
+
+    alter table ecrf_visit 
+        add constraint VISIT_ECRFS_FKC 
+        foreign key (ECRFS_FK) 
+        references ecrf;
 
     alter table input_field_value_selection 
         add constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC 

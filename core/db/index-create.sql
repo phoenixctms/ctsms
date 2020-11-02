@@ -36,9 +36,9 @@ CREATE INDEX proband_list_entry_tag_value_list_entry_fk_tag_fk ON proband_list_e
 CREATE INDEX inquiry_value_proband_fk_inquiry_fk ON inquiry_value (proband_fk,inquiry_fk);
 
 -- ecrf status, field values, field status
-CREATE INDEX ecrf_status_entry_ecrf_fk_list_entry_fk ON ecrf_status_entry (ecrf_fk,list_entry_fk);
-CREATE INDEX ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version ON ecrf_field_value (ecrf_field_fk,list_entry_fk,index,version);
-CREATE INDEX ecrf_field_status_entry_ecrf_field_fk_list_entry_fk_index_status_fk_queue ON ecrf_field_status_entry (ecrf_field_fk,list_entry_fk,index,status_fk,queue);
+CREATE INDEX ecrf_status_entry_list_entry_fk_ecrf_fk_visit_fk ON ecrf_status_entry (list_entry_fk,ecrf_fk,visit_fk);
+CREATE INDEX ecrf_field_value_list_entry_fk_visit_fk_ecrf_field_fk_index_version ON ecrf_field_value (list_entry_fk,visit_fk,ecrf_field_fk,index,version);
+CREATE INDEX ecrf_field_status_entry_list_entry_fk_ecrf_field_fk_index_status_fk_queue ON ecrf_field_status_entry (list_entry_fk,visit_fk,ecrf_field_fk,index,status_fk,queue);
 
 -- categories:
 CREATE INDEX inquiry_category ON inquiry (category);
