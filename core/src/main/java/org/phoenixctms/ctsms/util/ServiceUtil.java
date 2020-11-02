@@ -39,8 +39,10 @@ import org.phoenixctms.ctsms.compare.BankAccountOutVOComparator;
 import org.phoenixctms.ctsms.compare.CourseParticipationStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.compare.CvPositionPDFVOComparator;
 import org.phoenixctms.ctsms.compare.EcrfFieldValueStatusEntryOutVOComparator;
+import org.phoenixctms.ctsms.compare.EcrfOutVONameComparator;
 import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandOutVOComparator;
+import org.phoenixctms.ctsms.compare.VisitOutVOTokenComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
@@ -220,6 +222,15 @@ public final class ServiceUtil {
 		}
 		if (!token.trim().equals(token)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_PROBAND_GROUP_TOKEN, token);
+		}
+	}
+
+	public static void checkVisitToken(String token) throws ServiceException {
+		if (GROUP_VISIT_BLOCK_SPLIT_REGEXP.matcher(token).find()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_VISIT_TOKEN, token);
+		}
+		if (!token.trim().equals(token)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_VISIT_TOKEN, token);
 		}
 	}
 
@@ -960,6 +971,14 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void checkLockedEcrfs(ECRF ecrf, Visit visit, ECRFStatusEntryDao ecrfStatusEntryDao, ECRFDao ecrfDao, VisitDao visitDao) throws ServiceException {
+		long valuesLockedEcrfCount = ecrfStatusEntryDao.getCount(null, ecrf.getId(), visit != null ? visit.getId() : null, null, true, null, null, null, null); // row lock order
+		if (valuesLockedEcrfCount > 0) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.LOCKED_ECRFS, ECRFDaoImpl.getUniqueEcrfName(ecrfDao.toECRFOutVO(ecrf), visitDao.toVisitOutVO(visit)),
+					valuesLockedEcrfCount);
+		}
+	}
+
 	public static void checkLogonLimitations(PasswordInVO password) throws ServiceException {
 		if (password.isExpires()) {
 			if (password.getValidityPeriod() == null) {
@@ -1277,7 +1296,7 @@ public final class ServiceUtil {
 		return painter;
 	}
 
-	public static ECRFProgressVO createEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, Date from, Date to,
+	public static ECRFProgressVO createEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, Date from, Date to,
 			ECRFStatusEntryDao ecrfStatusEntryDao,
 			ECRFStatusTypeDao ecrfStatusTypeDao,
 			VisitScheduleItemDao visitScheduleItemDao) throws Exception {
@@ -1289,14 +1308,14 @@ public final class ServiceUtil {
 						ecrfVO.getTrial().getId(),
 						//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
 						ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
-						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+						ecrfVO.getVisits().size() == 1 ? ecrfVO.getVisits().iterator().next().getId() : null,
 						listEntryVO.getProband().getId());
 			} else {
 				ecrfVisitScheduleItemDate = visitScheduleItemDao.findMaxStop(
 						ecrfVO.getTrial().getId(),
 						//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
 						ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
-						ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+						ecrfVO.getVisits().size() == 1 ? ecrfVO.getVisits().iterator().next().getId() : null,
 						listEntryVO.getProband().getId());
 			}
 			if (ecrfVisitScheduleItemDate == null || !(new DateInterval(from, to, true)).contains(ecrfVisitScheduleItemDate)) {
@@ -1306,10 +1325,11 @@ public final class ServiceUtil {
 		ECRFProgressVO result = new ECRFProgressVO();
 		result.setEcrf(ecrfVO);
 		result.setListEntry(listEntryVO);
+		result.setVisit(visitVO);
 		result.setStatus(null);
 		result.setCharge(0.0f);
 		result.setOverdue(false);
-		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrfVO.getId(), listEntryVO.getId());
+		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null);
 		if (statusEntry != null) {
 			result.setStatus(ecrfStatusTypeDao.toECRFStatusTypeVO(statusEntry.getStatus()));
 			if (result.getStatus().isDone()) {
@@ -1326,7 +1346,7 @@ public final class ServiceUtil {
 									ecrfVO.getTrial().getId(),
 									//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
 									ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
-									ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+									ecrfVO.getVisits().size() == 1 ? ecrfVO.getVisits().iterator().next().getId() : null,
 									listEntryVO.getProband().getId());
 						}
 						dueDate = DateCalc.getEndOfYear(ecrfVisitScheduleItemDate);
@@ -1341,7 +1361,7 @@ public final class ServiceUtil {
 										ecrfVO.getTrial().getId(),
 										//listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null,
 										ecrfVO.getGroups().size() == 1 ? ecrfVO.getGroups().iterator().next().getId() : null,
-										ecrfVO.getVisit() != null ? ecrfVO.getVisit().getId() : null,
+										ecrfVO.getVisits().size() == 1 ? ecrfVO.getVisits().iterator().next().getId() : null,
 										listEntryVO.getProband().getId());
 							}
 							dueDate = DateCalc.addInterval(ecrfVisitScheduleItemDate,
@@ -1830,7 +1850,7 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	public static ECRFFieldValueInVO createPresetEcrfFieldInValue(ECRFField ecrfField, long listEntryId, Long index,
+	public static ECRFFieldValueInVO createPresetEcrfFieldInValue(ECRFField ecrfField, long listEntryId, Long visitId, Long index,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		ECRFFieldValueInVO ecrfFieldValueIn = new ECRFFieldValueInVO();
 		InputField inputField = ecrfField.getField();
@@ -1840,6 +1860,7 @@ public final class ServiceUtil {
 			ecrfFieldValueIn.setIndex(null);
 		}
 		ecrfFieldValueIn.setEcrfFieldId(ecrfField.getId());
+		ecrfFieldValueIn.setVisitId(visitId);
 		ecrfFieldValueIn.setListEntryId(listEntryId);
 		ecrfFieldValueIn.setReasonForChange(null);
 		Boolean booleanPreset = inputField.getBooleanPreset();
@@ -1868,20 +1889,21 @@ public final class ServiceUtil {
 		return ecrfFieldValueIn;
 	}
 
-	public static ArrayList<ECRFFieldValueInVO> createPresetEcrfFieldInValues(long listEntryId, long ecrfId, String section, Long index, ECRFFieldDao ecrfFieldDao,
+	public static ArrayList<ECRFFieldValueInVO> createPresetEcrfFieldInValues(long listEntryId, long ecrfId, Long visitId, String section, Long index, ECRFFieldDao ecrfFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		ArrayList<ECRFFieldValueInVO> result = new ArrayList<ECRFFieldValueInVO>();
 		Iterator<ECRFField> ecrfFieldIt = ecrfFieldDao.findByEcrfSectionPosition(ecrfId, section, null).iterator();
 		while (ecrfFieldIt.hasNext()) {
 			ECRFField ecrfField = ecrfFieldIt.next();
-			if (ecrfFieldValueDao.getByListEntryEcrfFieldIndex(listEntryId, ecrfField.getId(), index) == null) {
-				result.add(createPresetEcrfFieldInValue(ecrfField, listEntryId, index, inputFieldSelectionSetValueDao));
+			if (ecrfFieldValueDao.getByListEntryVisitEcrfFieldIndex(listEntryId, visitId, ecrfField.getId(), index) == null) {
+				result.add(createPresetEcrfFieldInValue(ecrfField, listEntryId, visitId, index, inputFieldSelectionSetValueDao));
 			}
 		}
 		return result;
 	}
 
-	public static ECRFFieldValueJsonVO createPresetEcrfFieldJsonValue(ECRFField ecrfField, Long index, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
+	public static ECRFFieldValueJsonVO createPresetEcrfFieldJsonValue(ECRFField ecrfField, Long visitId, Long index,
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) {
 		ECRFFieldValueJsonVO ecrfFieldValueVO = new ECRFFieldValueJsonVO();
 		InputField inputField = ecrfField.getField();
 		if (ecrfField.isSeries()) {
@@ -1892,6 +1914,7 @@ public final class ServiceUtil {
 			ecrfFieldValueVO.setSeries(false);
 		}
 		ecrfFieldValueVO.setEcrfFieldId(ecrfField.getId());
+		ecrfFieldValueVO.setVisitId(visitId);
 		ecrfFieldValueVO.setPosition(ecrfField.getPosition());
 		ecrfFieldValueVO.setJsVariableName(ecrfField.getJsVariableName());
 		ecrfFieldValueVO.setJsValueExpression(ecrfField.getJsValueExpression());
@@ -1905,7 +1928,11 @@ public final class ServiceUtil {
 			while (it.hasNext()) {
 				ecrfFieldValueVO.getProbandGroupTokens().add(((ProbandGroup) it.next()).getToken());
 			}
-			ecrfFieldValueVO.setVisitToken(ecrf.getVisit() != null ? ecrf.getVisit().getToken() : null);
+			it = ecrf.getVisits().iterator();
+			ecrfFieldValueVO.getVisitTokens().clear();
+			while (it.hasNext()) {
+				ecrfFieldValueVO.getVisitTokens().add(((Visit) it.next()).getToken());
+			}
 		}
 		ecrfFieldValueVO.setInputFieldId(inputField.getId());
 		ecrfFieldValueVO.setInputFieldType(inputField.getFieldType());
@@ -1945,7 +1972,7 @@ public final class ServiceUtil {
 		return ecrfFieldValueVO;
 	}
 
-	public static ECRFFieldValueOutVO createPresetEcrfFieldOutValue(ECRFFieldOutVO ecrfFieldVO, ProbandListEntryOutVO listEntryVO, Long index, Locales locale,
+	public static ECRFFieldValueOutVO createPresetEcrfFieldOutValue(ProbandListEntryOutVO listEntryVO, VisitOutVO visitVO, ECRFFieldOutVO ecrfFieldVO, Long index, Locales locale,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao) {
 		ECRFFieldValueOutVO ecrfFieldValueVO = new ECRFFieldValueOutVO();
 		if (ecrfFieldVO.getSeries()) {
@@ -1972,6 +1999,7 @@ public final class ServiceUtil {
 			ecrfFieldVO = localizedEcrfFieldVO;
 		}
 		ecrfFieldValueVO.setEcrfField(ecrfFieldVO);
+		ecrfFieldValueVO.setVisit(visitVO);
 		ecrfFieldValueVO.setListEntry(listEntryVO);
 		ecrfFieldValueVO.setBooleanValue(inputField.getBooleanPreset());
 		ecrfFieldValueVO.setDateValue(inputField.getDatePreset());
@@ -1997,7 +2025,8 @@ public final class ServiceUtil {
 		if (listEntryVO != null && ecrfFieldVO != null) {
 			ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
 			for (int i = 0; i < queues.length; i++) {
-				ECRFFieldStatusEntry lastStatus = ecrfFieldStatusEntryDao.findLastStatus(queues[i], listEntryVO.getId(), ecrfFieldVO.getId(), ecrfFieldValueVO.getIndex());
+				ECRFFieldStatusEntry lastStatus = ecrfFieldStatusEntryDao.findLastStatus(queues[i], listEntryVO.getId(), visitVO != null ? visitVO.getId() : null,
+						ecrfFieldVO.getId(), ecrfFieldValueVO.getIndex());
 				if (lastStatus != null) {
 					ecrfFieldValueVO.getLastFieldStatuses().add(ecrfFieldStatusTypeDao.toECRFFieldStatusTypeVO(lastStatus.getStatus()));
 					if (!lastStatus.getStatus().isResolved()
@@ -2784,7 +2813,7 @@ public final class ServiceUtil {
 		return result.toString();
 	}
 
-	public static Collection<ECRFFieldValueJsonVO> getEcrfFieldJsonValues(Collection<Map> ecrfFieldValues, HashMap<String, Long> maxSeriesIndexMap,
+	public static Collection<ECRFFieldValueJsonVO> getEcrfFieldJsonValues(Long visitId, Collection<Map> ecrfFieldValues, HashMap<String, Long> maxSeriesIndexMap,
 			HashMap<String, Long> fieldMaxPositionMap, HashMap<String, Long> fieldMinPositionMap,
 			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap, boolean filterJsValues, ECRFFieldValueDao ecrfFieldValueDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
@@ -2812,7 +2841,7 @@ public final class ServiceUtil {
 						Iterator<ECRFField> seriesEcrfFieldsIt = seriesEcrfFields.iterator();
 						while (seriesEcrfFieldsIt.hasNext()) {
 							ECRFField seriesEcrfField = seriesEcrfFieldsIt.next();
-							result.add(createPresetEcrfFieldJsonValue(seriesEcrfField, maxSeriesIndex + 1l, inputFieldSelectionSetValueDao));
+							result.add(createPresetEcrfFieldJsonValue(seriesEcrfField, visitId, maxSeriesIndex + 1l, inputFieldSelectionSetValueDao));
 						}
 					}
 				}
@@ -2829,11 +2858,11 @@ public final class ServiceUtil {
 							Iterator<ECRFField> seriesEcrfFieldsIt = seriesEcrfFields.iterator();
 							while (seriesEcrfFieldsIt.hasNext()) {
 								ECRFField seriesEcrfField = seriesEcrfFieldsIt.next();
-								result.add(createPresetEcrfFieldJsonValue(seriesEcrfField, 0l, inputFieldSelectionSetValueDao));
+								result.add(createPresetEcrfFieldJsonValue(seriesEcrfField, visitId, 0l, inputFieldSelectionSetValueDao));
 							}
 						}
 					} else {
-						result.add(createPresetEcrfFieldJsonValue(ecrfField, null, inputFieldSelectionSetValueDao));
+						result.add(createPresetEcrfFieldJsonValue(ecrfField, visitId, null, inputFieldSelectionSetValueDao));
 					}
 				}
 			}
@@ -2841,7 +2870,8 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	public static ECRFFieldValuesOutVO getEcrfFieldValues(ECRF ecrf, ProbandListEntryOutVO listEntryVO, boolean addSeries, boolean jsValues, boolean loadAllJsValues,
+	public static ECRFFieldValuesOutVO getEcrfFieldValues(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean addSeries, boolean jsValues,
+			boolean loadAllJsValues,
 			String fieldQuery, PSFVO psf,
 			ECRFFieldDao ecrfFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
@@ -2850,8 +2880,10 @@ public final class ServiceUtil {
 			ECRFFieldStatusTypeDao ecrfFieldStatusTypeDao)
 			throws Exception {
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
-		if (listEntryVO != null && ecrf != null) {
-			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfJsField(listEntryVO.getId(), ecrf.getId(), true, null, fieldQuery, psf);
+		if (listEntryVO != null && ecrfVO != null) {
+			Collection<Map> ecrfFieldValues = ecrfFieldValueDao.findByListEntryEcrfVisitJsField(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, true,
+					null,
+					fieldQuery, psf);
 			HashMap<String, Long> maxSeriesIndexMap = null;
 			HashMap<String, Long> fieldMaxPositionMap = null;
 			HashMap<String, Long> fieldMinPositionMap = null;
@@ -2862,16 +2894,17 @@ public final class ServiceUtil {
 				fieldMinPositionMap = new HashMap<String, Long>();
 				seriesEcrfFieldMap = new HashMap<String, Set<ECRFField>>();
 				initSeriesEcrfFieldMaps(
-						ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, null, null),
+						ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, true, null, null),
 						listEntryVO.getId(),
-						ecrf.getId(),
+						ecrfVO.getId(),
+						visitVO != null ? visitVO.getId() : null,
 						maxSeriesIndexMap,
 						fieldMaxPositionMap,
 						fieldMinPositionMap,
 						seriesEcrfFieldMap,
 						ecrfFieldValueDao);
 			}
-			result.setPageValues(getEcrfFieldValues(listEntryVO, ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
+			result.setPageValues(getEcrfFieldValues(listEntryVO, visitVO, ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 					null,
 					ecrfFieldDao,
 					ecrfFieldValueDao,
@@ -2884,9 +2917,10 @@ public final class ServiceUtil {
 					fieldMinPositionMap.clear();
 					seriesEcrfFieldMap.clear();
 					initSeriesEcrfFieldMaps(
-							ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrf.getId(), true, true, true, null),
+							ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, true, true, null),
 							listEntryVO.getId(),
-							ecrf.getId(),
+							ecrfVO.getId(),
+							visitVO != null ? visitVO.getId() : null,
 							maxSeriesIndexMap,
 							fieldMaxPositionMap,
 							fieldMinPositionMap,
@@ -2894,12 +2928,15 @@ public final class ServiceUtil {
 							ecrfFieldValueDao);
 				}
 				if (loadAllJsValues) {
-					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValueDao.findByListEntryEcrfJsField(listEntryVO.getId(), ecrf.getId(), true, true, null, null),
+					result.setJsValues(getEcrfFieldJsonValues(visitVO != null ? visitVO.getId() : null,
+							ecrfFieldValueDao.findByListEntryEcrfVisitJsField(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, true, true, null,
+									null),
 							maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 							false, ecrfFieldValueDao,
 							inputFieldSelectionSetValueDao));
 				} else {
-					result.setJsValues(getEcrfFieldJsonValues(ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
+					result.setJsValues(getEcrfFieldJsonValues(visitVO != null ? visitVO.getId() : null, ecrfFieldValues, maxSeriesIndexMap, fieldMaxPositionMap,
+							fieldMinPositionMap, seriesEcrfFieldMap,
 							true, ecrfFieldValueDao,
 							inputFieldSelectionSetValueDao));
 				}
@@ -2908,7 +2945,7 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	public static Collection<ECRFFieldValueOutVO> getEcrfFieldValues(ProbandListEntryOutVO listEntryVO, Collection<Map> ecrfFieldValues,
+	public static Collection<ECRFFieldValueOutVO> getEcrfFieldValues(ProbandListEntryOutVO listEntryVO, VisitOutVO visitVO, Collection<Map> ecrfFieldValues,
 			HashMap<String, Long> maxSeriesIndexMap,
 			HashMap<String, Long> fieldMaxPositionMap, HashMap<String, Long> fieldMinPositionMap,
 			HashMap<String, Set<ECRFField>> seriesEcrfFieldMap, Locales locale, ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao,
@@ -2939,7 +2976,8 @@ public final class ServiceUtil {
 						// if (pageSize != null && result.size() >= pageSize) {
 						// break;// new section will be incomplete, so dont use unless fields are optional..
 						// } else {
-						result.add(createPresetEcrfFieldOutValue(ecrfFieldDao.toECRFFieldOutVO(seriesEcrfField), listEntryVO, maxSeriesIndex + 1l, locale, ecrfFieldStatusEntryDao,
+						result.add(createPresetEcrfFieldOutValue(listEntryVO, visitVO, ecrfFieldDao.toECRFFieldOutVO(seriesEcrfField), maxSeriesIndex + 1l, locale,
+								ecrfFieldStatusEntryDao,
 								ecrfFieldStatusTypeDao));
 					}
 				}
@@ -2955,19 +2993,20 @@ public final class ServiceUtil {
 						Iterator<ECRFField> seriesEcrfFieldsIt = seriesEcrfFields.iterator();
 						while (seriesEcrfFieldsIt.hasNext()) {
 							ECRFField seriesEcrfField = seriesEcrfFieldsIt.next();
-							result.add(createPresetEcrfFieldOutValue(ecrfFieldDao.toECRFFieldOutVO(seriesEcrfField), listEntryVO, 0l, locale, ecrfFieldStatusEntryDao,
+							result.add(createPresetEcrfFieldOutValue(listEntryVO, visitVO, ecrfFieldDao.toECRFFieldOutVO(seriesEcrfField), 0l, locale, ecrfFieldStatusEntryDao,
 									ecrfFieldStatusTypeDao));
 						}
 					}
 				} else {
-					result.add(createPresetEcrfFieldOutValue(ecrfFieldDao.toECRFFieldOutVO(ecrfField), listEntryVO, null, locale, ecrfFieldStatusEntryDao, ecrfFieldStatusTypeDao));
+					result.add(createPresetEcrfFieldOutValue(listEntryVO, visitVO, ecrfFieldDao.toECRFFieldOutVO(ecrfField), null, locale, ecrfFieldStatusEntryDao,
+							ecrfFieldStatusTypeDao));
 				}
 			}
 		}
 		return result;
 	}
 
-	public static ArrayList getIndexFieldLog(long listEntryId, long ecrfFieldId, Long index, boolean blank, boolean auditTrail, boolean skipMostRecentValue,
+	public static ArrayList getIndexFieldLog(long listEntryId, Long visitId, long ecrfFieldId, Long index, boolean blank, boolean auditTrail, boolean skipMostRecentValue,
 			boolean skipMostRecentStatus, ECRFFieldStatusQueue[] queues,
 			ECRFFieldValueDao ecrfFieldValueDao,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
@@ -2975,7 +3014,7 @@ public final class ServiceUtil {
 		ArrayList indexFieldLog = new ArrayList();
 		Collection log;
 		if (!blank && auditTrail) {
-			log = ecrfFieldValueDao.findByListEntryEcrfFieldIndex(listEntryId, ecrfFieldId, index, true, true, null);
+			log = ecrfFieldValueDao.findByListEntryVisitEcrfFieldIndex(listEntryId, visitId, ecrfFieldId, index, true, true, null);
 			Iterator logIt = log.iterator();
 			if (skipMostRecentValue && logIt.hasNext()) {
 				logIt.next();
@@ -2986,7 +3025,7 @@ public final class ServiceUtil {
 		}
 		if (!blank && queues != null) {
 			for (int i = 0; i < queues.length; i++) {
-				log = ecrfFieldStatusEntryDao.findByListEntryEcrfFieldIndex(queues[i], listEntryId, ecrfFieldId, index, false, true, null);
+				log = ecrfFieldStatusEntryDao.findByListEntryVisitEcrfFieldIndex(queues[i], listEntryId, visitId, ecrfFieldId, index, false, true, null);
 				Iterator logIt = log.iterator();
 				if (skipMostRecentStatus && logIt.hasNext()) {
 					logIt.next();
@@ -3319,7 +3358,7 @@ public final class ServiceUtil {
 		return map;
 	}
 
-	public static void initSeriesEcrfFieldMaps(Collection<ECRFField> seriesEcrfFields, long probandListEntryId, long ecrfId, HashMap<String, Long> maxSeriesIndexMap,
+	public static void initSeriesEcrfFieldMaps(Collection<ECRFField> seriesEcrfFields, long probandListEntryId, long ecrfId, Long visitId, HashMap<String, Long> maxSeriesIndexMap,
 			HashMap<String, Long> fieldMaxPositionMap, HashMap<String, Long> fieldMinPositionMap, HashMap<String, Set<ECRFField>> seriesEcrfFieldMap,
 			ECRFFieldValueDao ecrfFieldValueDao) {
 		Iterator<ECRFField> it = seriesEcrfFields.iterator();
@@ -3327,7 +3366,7 @@ public final class ServiceUtil {
 			ECRFField seriesEcrfField = it.next();
 			String section = seriesEcrfField.getSection();
 			if (!maxSeriesIndexMap.containsKey(section)) {
-				maxSeriesIndexMap.put(section, ecrfFieldValueDao.getMaxIndex(probandListEntryId, ecrfId, section));
+				maxSeriesIndexMap.put(section, ecrfFieldValueDao.getMaxIndex(probandListEntryId, ecrfId, visitId, section));
 			}
 			if (!fieldMaxPositionMap.containsKey(section)) {
 				fieldMaxPositionMap.put(section, seriesEcrfField.getPosition());
@@ -3772,7 +3811,7 @@ public final class ServiceUtil {
 		}
 	}
 
-	private static void populateEcrfFieldStatusEntryCount(Collection<ECRFFieldStatusQueueCountVO> counts, Long listEntryId, Long ecrfId,
+	private static void populateEcrfFieldStatusEntryCount(Collection<ECRFFieldStatusQueueCountVO> counts, Long listEntryId, Long ecrfId, Long visitId,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
 		if (counts != null) {
 			counts.clear();
@@ -3781,19 +3820,19 @@ public final class ServiceUtil {
 				for (int i = 0; i < queues.length; i++) {
 					ECRFFieldStatusQueueCountVO count = new ECRFFieldStatusQueueCountVO();
 					count.setQueue(queues[i]);
-					count.setTotal(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, false, null, null, null, null));
-					count.setInitial(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, true, true, null, null, false));
-					count.setUpdated(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, true, null, true, null, null));
-					count.setProposed(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, true, null, null, true, null));
-					count.setResolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, true, null, null, null, true));
-					count.setUnresolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, true, null, null, null, false));
+					count.setTotal(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, false, null, null, null, null));
+					count.setInitial(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, true, true, null, null, false));
+					count.setUpdated(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, true, null, true, null, null));
+					count.setProposed(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, true, null, null, true, null));
+					count.setResolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, true, null, null, null, true));
+					count.setUnresolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, true, null, null, null, false));
 					counts.add(count);
 				}
 			}
 		}
 	}
 
-	public static void populateEcrfFieldStatusEntryCount(Collection<ECRFFieldStatusQueueCountVO> counts, Long listEntryId, Long ecrfFieldId, Long index,
+	public static void populateEcrfFieldStatusEntryCount(Collection<ECRFFieldStatusQueueCountVO> counts, Long listEntryId, Long visitId, Long ecrfFieldId, Long index,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
 		if (counts != null) {
 			counts.clear();
@@ -3802,19 +3841,19 @@ public final class ServiceUtil {
 				for (int i = 0; i < queues.length; i++) {
 					ECRFFieldStatusQueueCountVO count = new ECRFFieldStatusQueueCountVO();
 					count.setQueue(queues[i]);
-					count.setTotal(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfFieldId, index, false, null, null, null, null));
-					count.setInitial(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfFieldId, index, true, true, null, null, false));
-					count.setUpdated(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfFieldId, index, true, null, true, null, null));
-					count.setProposed(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfFieldId, index, true, null, null, true, null));
-					count.setResolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfFieldId, index, true, null, null, null, true));
-					count.setUnresolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfFieldId, index, true, null, null, null, false));
+					count.setTotal(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, visitId, ecrfFieldId, index, false, null, null, null, null));
+					count.setInitial(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, visitId, ecrfFieldId, index, true, true, null, null, false));
+					count.setUpdated(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, visitId, ecrfFieldId, index, true, null, true, null, null));
+					count.setProposed(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, visitId, ecrfFieldId, index, true, null, null, true, null));
+					count.setResolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, visitId, ecrfFieldId, index, true, null, null, null, true));
+					count.setUnresolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, visitId, ecrfFieldId, index, true, null, null, null, false));
 					counts.add(count);
 				}
 			}
 		}
 	}
 
-	private static void populateEcrfFieldStatusEntryCount(Collection<ECRFFieldStatusQueueCountVO> counts, Long listEntryId, Long ecrfId, String section,
+	private static void populateEcrfFieldStatusEntryCount(Collection<ECRFFieldStatusQueueCountVO> counts, Long listEntryId, Long ecrfId, Long visitId, String section,
 			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
 		if (counts != null) {
 			counts.clear();
@@ -3823,12 +3862,12 @@ public final class ServiceUtil {
 				for (int i = 0; i < queues.length; i++) {
 					ECRFFieldStatusQueueCountVO count = new ECRFFieldStatusQueueCountVO();
 					count.setQueue(queues[i]);
-					count.setTotal(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, section, false, null, null, null, null));
-					count.setInitial(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, section, true, true, null, null, false));
-					count.setUpdated(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, section, true, null, true, null, null));
-					count.setProposed(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, section, true, null, null, true, null));
-					count.setResolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, section, true, null, null, null, true));
-					count.setUnresolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, section, true, null, null, null, false));
+					count.setTotal(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, section, false, null, null, null, null));
+					count.setInitial(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, section, true, true, null, null, false));
+					count.setUpdated(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, section, true, null, true, null, null));
+					count.setProposed(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, section, true, null, null, true, null));
+					count.setResolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, section, true, null, null, null, true));
+					count.setUnresolved(ecrfFieldStatusEntryDao.getCount(queues[i], listEntryId, ecrfId, visitId, section, true, null, null, null, false));
 					counts.add(count);
 				}
 			}
@@ -3836,21 +3875,20 @@ public final class ServiceUtil {
 	}
 
 	public static void populateEcrfPDFVOMaps(
-			ProbandListEntry listEntry,
 			ProbandListEntryOutVO listEntryVO,
-			ECRF ecrf,
 			ECRFOutVO ecrfVO,
+			VisitOutVO visitVO,
 			boolean blank,
 			Collection<ECRFFieldValueOutVO> ecrfValues,
-			ArrayList<ProbandListEntryOutVO> listEntryVOs,
-			HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap,
-			HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap,
-			HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap,
+			LinkedHashSet<ProbandListEntryOutVO> listEntryVOs,
+			TreeSet<ECRFOutVO> ecrfVOs,
+			TreeSet<VisitOutVO> visitVOs,
+			HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap,
+			HashMap<Long, HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>> logVOMap,
 			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap,
-			HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap,
+			HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap,
 			HashMap<Long, SignatureVO> signatureVOMap,
 			HashMap<Long, InputFieldImageVO> imageVOMap,
-			HashSet<Long> ecrfIds,
 			InputFieldDao inputFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
 			ECRFStatusEntryDao ecrfStatusEntryDao,
@@ -3866,27 +3904,21 @@ public final class ServiceUtil {
 					EcrfPDFDefaultSettings.SHOW_PROBAND_LIST_ENTRY_TAGS);
 			boolean showAllProbandListEntryTags = Settings.getBoolean(EcrfPDFSettingCodes.SHOW_ALL_PROBAND_LIST_ENTRY_TAGS, Bundle.ECRF_PDF,
 					EcrfPDFDefaultSettings.SHOW_ALL_PROBAND_LIST_ENTRY_TAGS);
-			Collection<ECRFOutVO> ecrfVOs;
-			if (ecrfVOMap.containsKey(listEntry.getId())) {
-				ecrfVOs = ecrfVOMap.get(listEntry.getId());
-			} else {
-				ecrfVOs = new ArrayList<ECRFOutVO>();
-				ecrfVOMap.put(listEntry.getId(), ecrfVOs);
-				listEntryVOs.add(listEntryVO);
-			}
-			ecrfVOs.add(ecrfVO);
-			if (!listEntryTagValuesVOMap.containsKey(listEntry.getId())) {
-				Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(listEntry.getTrial().getId(),
+			Long visitId = visitVO != null ? visitVO.getId() : null;
+			visitVOs.add(visitVO);
+			listEntryVOs.add(listEntryVO);
+			if (!listEntryTagValuesVOMap.containsKey(listEntryVO.getId())) {
+				Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(listEntryVO.getTrial().getId(),
 						null, showAllProbandListEntryTags
 								? null
 								: true,
 						null, null) : new ArrayList();
 				Collection<ProbandListEntryTagValueOutVO> listEntryTagValueVOs = new ArrayList<ProbandListEntryTagValueOutVO>(listEntryTags.size());
-				listEntryTagValuesVOMap.put(listEntry.getId(), listEntryTagValueVOs);
+				listEntryTagValuesVOMap.put(listEntryVO.getId(), listEntryTagValueVOs);
 				Iterator listEntryTagsIt = listEntryTags.iterator();
 				while (listEntryTagsIt.hasNext()) {
 					ProbandListEntryTag listEntryTag = (ProbandListEntryTag) listEntryTagsIt.next();
-					Iterator<ProbandListEntryTagValue> listEntryTagValueIt = probandListEntryTagValueDao.findByListEntryListEntryTag(listEntry.getId(), listEntryTag.getId())
+					Iterator<ProbandListEntryTagValue> listEntryTagValueIt = probandListEntryTagValueDao.findByListEntryListEntryTag(listEntryVO.getId(), listEntryTag.getId())
 							.iterator();
 					ProbandListEntryTagValueOutVO listEntryTagValueVO;
 					if (listEntryTagValueIt.hasNext()) {
@@ -3902,20 +3934,34 @@ public final class ServiceUtil {
 					}
 				}
 			}
+			HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfValueVisitsVOMap;
+			if (valueVOMap.containsKey(listEntryVO.getId())) {
+				ecrfValueVisitsVOMap = valueVOMap.get(listEntryVO.getId());
+			} else {
+				ecrfValueVisitsVOMap = new HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>();
+				valueVOMap.put(listEntryVO.getId(), ecrfValueVisitsVOMap);
+			}
 			HashMap<Long, Collection<ECRFFieldValueOutVO>> ecrfValueVOMap;
-			if (valueVOMap.containsKey(listEntry.getId())) {
-				ecrfValueVOMap = valueVOMap.get(listEntry.getId());
+			if (ecrfValueVisitsVOMap.containsKey(ecrfVO.getId())) {
+				ecrfValueVOMap = ecrfValueVisitsVOMap.get(ecrfVO.getId());
 			} else {
 				ecrfValueVOMap = new HashMap<Long, Collection<ECRFFieldValueOutVO>>();
-				valueVOMap.put(listEntry.getId(), ecrfValueVOMap);
+				ecrfValueVisitsVOMap.put(ecrfVO.getId(), ecrfValueVOMap);
 			}
-			ecrfValueVOMap.put(ecrf.getId(), ecrfValues);
+			ecrfValueVOMap.put(visitId, ecrfValues);
+			HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> ecrfLogVisitsVOMap;
+			if (logVOMap.containsKey(listEntryVO.getId())) {
+				ecrfLogVisitsVOMap = logVOMap.get(listEntryVO.getId());
+			} else {
+				ecrfLogVisitsVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>();
+				logVOMap.put(listEntryVO.getId(), ecrfLogVisitsVOMap);
+			}
 			HashMap<Long, HashMap<Long, Collection>> ecrfLogVOMap;
-			if (logVOMap.containsKey(listEntry.getId())) {
-				ecrfLogVOMap = logVOMap.get(listEntry.getId());
+			if (ecrfLogVisitsVOMap.containsKey(visitId)) {
+				ecrfLogVOMap = ecrfLogVisitsVOMap.get(visitId);
 			} else {
 				ecrfLogVOMap = new HashMap<Long, HashMap<Long, Collection>>();
-				logVOMap.put(listEntry.getId(), ecrfLogVOMap);
+				ecrfLogVisitsVOMap.put(visitId, ecrfLogVOMap);
 			}
 			Iterator<ECRFFieldValueOutVO> it = ecrfValues.iterator();
 			while (it.hasNext()) {
@@ -3927,20 +3973,28 @@ public final class ServiceUtil {
 					fieldLogVOMap = new HashMap<Long, Collection>();
 					ecrfLogVOMap.put(value.getEcrfField().getId(), fieldLogVOMap);
 				}
-				fieldLogVOMap.put(value.getIndex(), getIndexFieldLog(listEntry.getId(), value.getEcrfField().getId(), value.getIndex(), blank, auditTrail, true, false, queues,
+				fieldLogVOMap.put(value.getIndex(), getIndexFieldLog(listEntryVO.getId(), visitId,
+						value.getEcrfField().getId(), value.getIndex(), blank, auditTrail, true, false, queues,
 						ecrfFieldValueDao,
 						ecrfFieldStatusEntryDao));
 			}
+			HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusEntryVisitsVOMap;
+			if (statusEntryVOMap.containsKey(listEntryVO.getId())) {
+				ecrfStatusEntryVisitsVOMap = statusEntryVOMap.get(listEntryVO.getId());
+			} else {
+				ecrfStatusEntryVisitsVOMap = new HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>();
+				statusEntryVOMap.put(listEntryVO.getId(), ecrfStatusEntryVisitsVOMap);
+			}
 			HashMap<Long, ECRFStatusEntryVO> ecrfStatusEntryVOMap;
-			if (statusEntryVOMap.containsKey(listEntry.getId())) {
-				ecrfStatusEntryVOMap = statusEntryVOMap.get(listEntry.getId());
+			if (ecrfStatusEntryVisitsVOMap.containsKey(ecrfVO.getId())) {
+				ecrfStatusEntryVOMap = ecrfStatusEntryVisitsVOMap.get(ecrfVO.getId());
 			} else {
 				ecrfStatusEntryVOMap = new HashMap<Long, ECRFStatusEntryVO>();
-				statusEntryVOMap.put(listEntry.getId(), ecrfStatusEntryVOMap);
+				ecrfStatusEntryVisitsVOMap.put(ecrfVO.getId(), ecrfStatusEntryVOMap);
 			}
-			ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByEcrfListEntry(ecrf.getId(), listEntry.getId());
+			ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(listEntryVO.getId(), ecrfVO.getId(), visitId);
 			if (statusEntry != null) {
-				ecrfStatusEntryVOMap.put(ecrf.getId(), ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry));
+				ecrfStatusEntryVOMap.put(visitId, ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry));
 				Signature signature = signatureDao.findRecentSignature(SignatureModule.ECRF_SIGNATURE, statusEntry.getId());
 				if (!blank && signature != null) {
 					signatureVOMap.put(statusEntry.getId(), getVerifiedEcrfSignatureVO(signature,
@@ -3951,9 +4005,9 @@ public final class ServiceUtil {
 					signatureVOMap.put(statusEntry.getId(), null);
 				}
 			} else {
-				ecrfStatusEntryVOMap.put(ecrf.getId(), null);
+				ecrfStatusEntryVOMap.put(ecrfVO.getId(), null);
 			}
-			if (ecrfIds.add(ecrf.getId())) {
+			if (ecrfVOs.add(ecrfVO)) {
 				Iterator<ECRFFieldValueOutVO> ecrfValuesIt = ecrfValues.iterator();
 				while (ecrfValuesIt.hasNext()) {
 					InputFieldOutVO field = ecrfValuesIt.next().getEcrfField().getField();
@@ -3965,46 +4019,51 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, boolean sectionDetail, Date from, Date to,
+	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean sectionDetail, Date from,
+			Date to,
 			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
 			throws Exception {
-		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+		ECRFProgressVO result = createEcrfProgress(listEntryVO, ecrfVO, visitVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
 		if (result != null) {
 			if (sectionDetail) {
-				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), ecrfVO, listEntryVO, result, true,
+				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), listEntryVO, ecrfVO, visitVO, result, true,
 						ecrfFieldValueDao,
 						ecrfFieldStatusEntryDao);
 			} else {
-				populateEcrfProgress(ecrfVO, listEntryVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+				populateEcrfProgress(listEntryVO, ecrfVO, visitVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
 			}
 		}
 		return result;
 	}
 
-	public static ECRFProgressVO populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, boolean dueDetail, Date from, Date to, String section,
+	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, Date from, Date to,
+			String section,
 			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
 			throws Exception {
-		ECRFProgressVO result = createEcrfProgress(ecrfVO, listEntryVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+		ECRFProgressVO result = createEcrfProgress(listEntryVO, ecrfVO, visitVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
 		if (result != null) {
-			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(), section, true, null, null, null), ecrfVO, listEntryVO, result, false,
+			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(), section, true, null, null, null), listEntryVO, ecrfVO, visitVO, result,
+					false,
 					ecrfFieldValueDao, ecrfFieldStatusEntryDao);
-			populateEcrfProgress(ecrfVO, listEntryVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
+			populateEcrfProgress(listEntryVO, ecrfVO, visitVO, result, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao);
 		}
 		return result;
 	}
 
-	private static void populateEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, ECRFProgressVO result,
+	private static void populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, ECRFProgressVO result,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
 		result.setFieldCount(ecrfFieldDao.getCount(null, ecrfVO.getId(), false, null));
-		result.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), true, false, null));
+		result.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, true, false, null));
 		result.setMandatoryFieldCount(ecrfFieldDao.getCount(null, ecrfVO.getId(), false, false));
-		result.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), true, false, false));
-		populateEcrfFieldStatusEntryCount(result.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), ecrfFieldStatusEntryDao);
+		result.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, true, false, false));
+		populateEcrfFieldStatusEntryCount(result.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null,
+				ecrfFieldStatusEntryDao);
 	}
 
-	private static void populateEcrfSectionProgress(Collection<ECRFField> ecrfFields, ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO, ECRFProgressVO result,
+	private static void populateEcrfSectionProgress(Collection<ECRFField> ecrfFields, ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO,
+			ECRFProgressVO result,
 			boolean increment,
 			ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) throws Exception {
 		if (increment) {
@@ -4026,13 +4085,15 @@ public final class ServiceUtil {
 			} else {
 				sectionProgress = new ECRFSectionProgressVO();
 				sectionProgress.setSection(section);
-				populateEcrfFieldStatusEntryCount(sectionProgress.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), section, ecrfFieldStatusEntryDao);
+				populateEcrfFieldStatusEntryCount(sectionProgress.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null,
+						section, ecrfFieldStatusEntryDao);
 				result.setEcrfFieldStatusQueueCounts(addEcrfFieldStatusEntryCounts(result.getEcrfFieldStatusQueueCounts(),
 						sectionProgress.getEcrfFieldStatusQueueCounts()));
 				sectionProgress.setFieldCount(1l);
 				sectionProgress.setMandatoryFieldCount(ecrfField.isOptional() ? 0l : 1l);
-				sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, null));
-				sectionProgress.setMandatorySavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), section, true, false));
+				sectionProgress.setSavedValueCount(ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, section, true, null));
+				sectionProgress.setMandatorySavedValueCount(
+						ecrfFieldValueDao.getCount(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, section, true, false));
 				if (!ecrfField.isSeries()) {
 					if (increment) {
 						result.setSavedValueCount(result.getSavedValueCount() + sectionProgress.getSavedValueCount());
@@ -4041,7 +4102,7 @@ public final class ServiceUtil {
 					sectionProgress.setIndex(null);
 					sectionProgress.setSeries(false);
 				} else {
-					sectionProgress.setIndex(ecrfFieldValueDao.getMaxIndex(listEntryVO.getId(), ecrfVO.getId(), section));
+					sectionProgress.setIndex(ecrfFieldValueDao.getMaxIndex(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null, section));
 					sectionProgress.setSeries(true);
 				}
 				sectionProgressMap.put(section, sectionProgress);
@@ -4583,6 +4644,10 @@ public final class ServiceUtil {
 		}
 		removeNotifications(fieldStatus.getNotifications(), notificationDao, notificationRecipientDao);
 		fieldStatus.setListEntry(null);
+		Visit visit = fieldStatus.getVisit();
+		if (visit != null) {
+			visit.removeEcrfFieldStatusEntries(fieldStatus);
+		}
 		fieldStatus.setEcrfField(null);
 		ecrfFieldStatusEntryDao.remove(fieldStatus);
 		if (logProband) {
@@ -4611,6 +4676,10 @@ public final class ServiceUtil {
 		}
 		fieldValue.setListEntry(null);
 		fieldValue.setEcrfField(null);
+		Visit visit = fieldValue.getVisit();
+		if (visit != null) {
+			visit.removeEcrfValues(fieldValue);
+		}
 		ecrfFieldValueDao.remove(fieldValue);
 		fieldValue.setValue(null);
 		value.getSelectionValues().clear();
@@ -4643,6 +4712,10 @@ public final class ServiceUtil {
 		}
 		ecrfStatusEntry.setEcrf(null);
 		ecrfStatusEntry.setListEntry(null);
+		Visit visit = ecrfStatusEntry.getVisit();
+		if (visit != null) {
+			visit.removeEcrfStatusEntries(ecrfStatusEntry);
+		}
 		ecrfStatusEntryDao.remove(ecrfStatusEntry);
 	}
 
@@ -5451,9 +5524,10 @@ public final class ServiceUtil {
 		stratificationRandomizationListDao.remove(randomizationList);
 	}
 
-	public static ECRFPDFVO renderEcrfs(ProbandListEntry listEntry, Trial trial, ECRF ecrf, boolean blank, ArrayList<ProbandListEntryOutVO> listEntryVOs,
+	public static ECRFPDFVO renderEcrfs(ProbandListEntry listEntry, Trial trial, ECRF ecrf, Visit visit, boolean blank, LinkedHashSet<ProbandListEntryOutVO> listEntryVOs,
 			ProbandListEntryDao probandListEntryDao,
 			ECRFDao ecrfDao,
+			VisitDao visitDao,
 			ECRFFieldDao ecrfFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
 			InputFieldDao inputFieldDao,
@@ -5467,28 +5541,30 @@ public final class ServiceUtil {
 			UserDao userDao) throws Exception {
 		ProbandListEntryOutVO listEntryVO;
 		ECRFOutVO ecrfVO = null;
+		VisitOutVO visitVO = null;
 		if (listEntryVOs == null) {
-			listEntryVOs = new ArrayList<ProbandListEntryOutVO>();
+			listEntryVOs = new LinkedHashSet<ProbandListEntryOutVO>();
 		}
-		HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap = new HashMap<Long, Collection<ECRFOutVO>>();
-		HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>();
-		HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>();
+		TreeSet<ECRFOutVO> ecrfVOs = new TreeSet<ECRFOutVO>(new EcrfOutVONameComparator());
+		TreeSet<VisitOutVO> visitVOs = new TreeSet<VisitOutVO>(new VisitOutVOTokenComparator());
+		HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>>();
+		HashMap<Long, HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>> logVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>>();
 		HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
-		HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap = new HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>();
+		HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>>();
 		HashMap<Long, SignatureVO> signatureVOMap = new HashMap<Long, SignatureVO>();
 		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
-		HashSet<Long> ecrfIds = new HashSet<Long>();
 		if (listEntry != null) {
 			listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 			if (ecrf != null) {
 				ecrfVO = ecrfDao.toECRFOutVO(ecrf);
-				populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-						getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null, ecrfFieldDao,
+				visitVO = visitDao.toVisitOutVO(visit);
+				populateEcrfPDFVOMaps(listEntryVO, ecrfVO, visitVO, blank,
+						getEcrfFieldValues(listEntryVO, ecrfVO, visitVO, blank, false, false, null, null, ecrfFieldDao,
 								ecrfFieldValueDao,
 								inputFieldSelectionSetValueDao,
 								ecrfFieldStatusEntryDao,
 								ecrfFieldStatusTypeDao).getPageValues(),
-						listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+						listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
 						inputFieldDao,
 						ecrfFieldValueDao,
 						ecrfStatusEntryDao,
@@ -5497,18 +5573,21 @@ public final class ServiceUtil {
 						probandListEntryTagValueDao,
 						signatureDao);
 			} else {
-				Iterator<ECRF> ecrfIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
-				while (ecrfIt.hasNext()) {
-					ecrf = ecrfIt.next();
+				Iterator<Object[]> ecrfVisitIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+				while (ecrfVisitIt.hasNext()) {
+					Object[] ecrfVisit = ecrfVisitIt.next();
+					ecrf = (ECRF) ecrfVisit[0];
 					ecrfVO = ecrfDao.toECRFOutVO(ecrf);
-					populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null,
+					visit = (Visit) ecrfVisit[1];
+					visitVO = visitDao.toVisitOutVO(visit);
+					populateEcrfPDFVOMaps(listEntryVO, ecrfVO, visitVO, blank,
+							getEcrfFieldValues(listEntryVO, ecrfVO, visitVO, blank, false, false, null, null,
 									ecrfFieldDao,
 									ecrfFieldValueDao,
 									inputFieldSelectionSetValueDao,
 									ecrfFieldStatusEntryDao,
 									ecrfFieldStatusTypeDao).getPageValues(),
-							listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+							listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
 							inputFieldDao,
 							ecrfFieldValueDao,
 							ecrfStatusEntryDao,
@@ -5527,14 +5606,15 @@ public final class ServiceUtil {
 				listEntry = listEntryIt.next();
 				listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 				if (ecrf != null) {
-					populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-							getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null,
+					visitVO = visitDao.toVisitOutVO(visit);
+					populateEcrfPDFVOMaps(listEntryVO, ecrfVO, visitVO, blank,
+							getEcrfFieldValues(listEntryVO, ecrfVO, visitVO, blank, false, false, null, null,
 									ecrfFieldDao,
 									ecrfFieldValueDao,
 									inputFieldSelectionSetValueDao,
 									ecrfFieldStatusEntryDao,
 									ecrfFieldStatusTypeDao).getPageValues(),
-							listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+							listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
 							inputFieldDao,
 							ecrfFieldValueDao,
 							ecrfStatusEntryDao,
@@ -5543,18 +5623,21 @@ public final class ServiceUtil {
 							probandListEntryTagValueDao,
 							signatureDao);
 				} else {
-					Iterator<ECRF> ecrfIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
-					while (ecrfIt.hasNext()) {
-						ecrf = ecrfIt.next();
+					Iterator<Object[]> ecrfVisitIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+					while (ecrfVisitIt.hasNext()) {
+						Object[] ecrfVisit = ecrfVisitIt.next();
+						ecrf = (ECRF) ecrfVisit[0];
 						ecrfVO = ecrfDao.toECRFOutVO(ecrf);
-						populateEcrfPDFVOMaps(listEntry, listEntryVO, ecrf, ecrfVO, blank,
-								getEcrfFieldValues(ecrf, listEntryVO, blank, false, false, null, null,
+						visit = (Visit) ecrfVisit[1];
+						visitVO = visitDao.toVisitOutVO(visit);
+						populateEcrfPDFVOMaps(listEntryVO, ecrfVO, visitVO, blank,
+								getEcrfFieldValues(listEntryVO, ecrfVO, visitVO, blank, false, false, null, null,
 										ecrfFieldDao,
 										ecrfFieldValueDao,
 										inputFieldSelectionSetValueDao,
 										ecrfFieldStatusEntryDao,
 										ecrfFieldStatusTypeDao).getPageValues(),
-								listEntryVOs, ecrfVOMap, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap, ecrfIds,
+								listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
 								inputFieldDao,
 								ecrfFieldValueDao,
 								ecrfStatusEntryDao,
@@ -5570,7 +5653,8 @@ public final class ServiceUtil {
 		}
 		EcrfPDFPainter painter = PDFPainterFactory.createEcrfPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
-		painter.setEcrfVOMap(ecrfVOMap);
+		painter.setEcrfVOs(ecrfVOs);
+		painter.setVisitVOs(visitVOs);
 		painter.setValueVOMap(valueVOMap);
 		painter.setLogVOMap(logVOMap);
 		painter.setListEntryTagValuesVOMap(listEntryTagValuesVOMap);
