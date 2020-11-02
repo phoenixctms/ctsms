@@ -8,12 +8,12 @@ this is a notification for the following event:
    • Trial department:   $ecrffieldstatusentry_listentry_trial_department
    • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
-   • eCRF:               ${ecrffieldstatusentry_ecrffield_ecrf_position}. $ecrffieldstatusentry_ecrffield_ecrf_name
-#if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.group)
-   • eCRF proband group: $notification.ecrfFieldStatusEntry.ecrfField.ecrf.group.title
+   • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
 #end
-#if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.visit)
-   • eCRF visit:         $notification.ecrfFieldStatusEntry.ecrfField.ecrf.visit.title
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
 #end
    • eCRF section:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
