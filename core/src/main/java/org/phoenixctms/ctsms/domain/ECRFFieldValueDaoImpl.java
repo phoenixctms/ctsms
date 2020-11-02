@@ -43,6 +43,7 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 public class ECRFFieldValueDaoImpl
 		extends ECRFFieldValueDaoBase {
@@ -50,17 +51,32 @@ public class ECRFFieldValueDaoImpl
 	private final static VOIDComparator SELECTION_SET_VALUE_OUT_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueOutVO>(false);
 	private final static VOIDComparator SELECTION_SET_VALUE_JSON_VO_ID_COMPARATOR = new VOIDComparator<InputFieldSelectionSetValueJsonVO>(false);
 
-	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
-			org.hibernate.Criteria probandListEntryCriteria, Long probandListEntryId, Long ecrfFieldId) {
-		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, ecrfFieldCriteria, probandListEntryCriteria, probandListEntryId, ecrfFieldId);
+	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria visitCriteria, org.hibernate.Criteria ecrfFieldCriteria,
+			Long probandListEntryId, Long ecrfFieldId) {
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, probandListEntryCriteria, visitCriteria, ecrfFieldCriteria,
+				probandListEntryId,
+				ecrfFieldId);
 		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
 				Restrictions.eqProperty("index", ecrfFieldValueCriteria.getAlias() + ".index")));
 		ecrfFieldValueCriteria.add(Subqueries.propertyEq("id", subQuery));
 	}
 
-	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
-			org.hibernate.Criteria probandListEntryCriteria, Long probandListEntryId, Long ecrfFieldId, Long index) {
-		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, ecrfFieldCriteria, probandListEntryCriteria, probandListEntryId, ecrfFieldId);
+	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria ecrfFieldCriteria,
+			Long probandListEntryId, Long visitId, Long ecrfFieldId) {
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId,
+				ecrfFieldId);
+		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
+				Restrictions.eqProperty("index", ecrfFieldValueCriteria.getAlias() + ".index")));
+		ecrfFieldValueCriteria.add(Subqueries.propertyEq("id", subQuery));
+	}
+
+	private static void applyEcrfFieldValueMaxIdSubCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria ecrfFieldCriteria,
+			Long probandListEntryId, Long visitId, Long ecrfFieldId, Long index) {
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId,
+				ecrfFieldId);
 		if (index != null) {
 			subQuery.add(Restrictions.eq("index", index.longValue()));
 		} else {
@@ -69,7 +85,8 @@ public class ECRFFieldValueDaoImpl
 		ecrfFieldValueCriteria.add(Subqueries.propertyEq("id", subQuery));
 	}
 
-	private static void applySortOrders(org.hibernate.Criteria listEntryCriteria, org.hibernate.Criteria ecrfFieldCriteria, org.hibernate.Criteria ecrfFieldValueCriteria) {
+	private static void applySortOrders(boolean sortByVisit, org.hibernate.Criteria listEntryCriteria, org.hibernate.Criteria ecrfFieldCriteria,
+			org.hibernate.Criteria ecrfFieldValueCriteria) {
 		if (listEntryCriteria != null) {
 			listEntryCriteria.addOrder(Order.asc("trial"));
 			listEntryCriteria.addOrder(Order.asc("position"));
@@ -77,6 +94,12 @@ public class ECRFFieldValueDaoImpl
 		if (ecrfFieldCriteria != null) {
 			ecrfFieldCriteria.addOrder(Order.asc("trial"));
 			ecrfFieldCriteria.addOrder(Order.asc("ecrf"));
+		}
+		if (ecrfFieldValueCriteria != null && sortByVisit) {
+			// do not sort NULL values from LEFT JOIN
+			ecrfFieldValueCriteria.addOrder(Order.asc("visit"));
+		}
+		if (ecrfFieldCriteria != null) {
 			ecrfFieldCriteria.addOrder(Order.asc("section"));
 		}
 		if (ecrfFieldValueCriteria != null) {
@@ -101,8 +124,8 @@ public class ECRFFieldValueDaoImpl
 		}
 	}
 
-	private static DetachedCriteria createEcrfFieldValueDetachedCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
-			org.hibernate.Criteria probandListEntryCriteria,
+	private static DetachedCriteria createEcrfFieldValueDetachedCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria ecrfFieldCriteria,
 			Long probandListEntryId, Long ecrfFieldId) {
 		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFFieldValueImpl.class, "ecrfFieldValue1"); // IMPL!!!!
 		if (probandListEntryId == null) {
@@ -124,22 +147,58 @@ public class ECRFFieldValueDaoImpl
 		return subQuery;
 	}
 
-	private static DetachedCriteria createEcrfFieldValueDetachedCriteriaMaxId(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria ecrfFieldCriteria,
-			org.hibernate.Criteria probandListEntryCriteria,
+	private static DetachedCriteria createEcrfFieldValueDetachedCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria ecrfFieldCriteria,
+			Long probandListEntryId, Long visitId, Long ecrfFieldId) {
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, probandListEntryId, ecrfFieldId);
+		if (visitId != null) {
+			subQuery.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			subQuery.add(Restrictions.isNull("visit.id"));
+		}
+		return subQuery;
+	}
+
+	private static DetachedCriteria createEcrfFieldValueDetachedCriteria(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria visitCriteria, org.hibernate.Criteria ecrfFieldCriteria,
 			Long probandListEntryId, Long ecrfFieldId) {
-		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, ecrfFieldCriteria, probandListEntryCriteria, probandListEntryId, ecrfFieldId);
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, probandListEntryId, ecrfFieldId);
+		if (visitCriteria == null) {
+			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0");
+		}
+		subQuery.add(Restrictions.or(Restrictions.and(Restrictions.isNull("visit.id"), Restrictions.isNull(visitCriteria.getAlias() + ".id")),
+				Restrictions.eqProperty("visit.id", visitCriteria.getAlias() + ".id")));
+		return subQuery;
+	}
+
+	private static DetachedCriteria createEcrfFieldValueDetachedCriteriaMaxId(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria ecrfFieldCriteria,
+			Long probandListEntryId, Long visitId, Long ecrfFieldId) {
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId,
+				ecrfFieldId);
 		subQuery.setProjection(Projections.max("id"));
 		return subQuery;
 	}
 
-	private org.hibernate.Criteria[] createEcrfFieldCriteria(Long probandListEntryId, Long ecrfId) {
+	private static DetachedCriteria createEcrfFieldValueDetachedCriteriaMaxId(org.hibernate.Criteria ecrfFieldValueCriteria, org.hibernate.Criteria probandListEntryCriteria,
+			org.hibernate.Criteria visitCriteria, org.hibernate.Criteria ecrfFieldCriteria,
+			Long probandListEntryId, Long ecrfFieldId) {
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, visitCriteria, probandListEntryId,
+				ecrfFieldId);
+		subQuery.setProjection(Projections.max("id"));
+		return subQuery;
+	}
+
+	private org.hibernate.Criteria[] createEcrfFieldCriteria(Long probandListEntryId, Long ecrfId, Long visitId) {
 		org.hibernate.Criteria ecrfFieldCriteria = this.getSession().createCriteria(ECRFField.class, ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_ALIAS);
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		org.hibernate.Criteria ecrfFieldValueCriteria = ecrfFieldCriteria.createCriteria("fieldValues", ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS,
 				CriteriaSpecification.LEFT_JOIN,
-				Restrictions.eq(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".listEntry.id", probandListEntryId.longValue()));
+				Restrictions.and(Restrictions.eq(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".listEntry.id", probandListEntryId.longValue()),
+						visitId != null ? Restrictions.eq(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".visit.id", visitId.longValue())
+								: Restrictions.isNull(ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".visit.id")));
 		// correlated - slow:
-		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, ecrfFieldCriteria, null, probandListEntryId, null);
+		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteriaMaxId(ecrfFieldValueCriteria, null, ecrfFieldCriteria, probandListEntryId, visitId, null);
 		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
 				Restrictions.eqProperty("index", ServiceUtil.ECRF_FIELD_VALUE_DAO_ECRF_FIELD_VALUE_ALIAS + ".index")));
 		ecrfFieldValueCriteria.add(Restrictions.or(
@@ -178,6 +237,7 @@ public class ECRFFieldValueDaoImpl
 		super.eCRFFieldValueInVOToEntity(source, target, copyIfNull);
 		Long listEntryId = source.getListEntryId();
 		Long ecrfFieldId = source.getEcrfFieldId();
+		Long visitId = source.getVisitId();
 		if (listEntryId != null) {
 			ProbandListEntry listEntry = this.getProbandListEntryDao().load(listEntryId);
 			target.setListEntry(listEntry);
@@ -198,6 +258,17 @@ public class ECRFFieldValueDaoImpl
 			target.setEcrfField(null);
 			if (ecrfField != null) {
 				ecrfField.removeFieldValues(target);
+			}
+		}
+		if (visitId != null) {
+			Visit visit = this.getVisitDao().load(visitId);
+			target.setVisit(visit);
+			visit.addEcrfValues(target);
+		} else if (copyIfNull) {
+			Visit visit = target.getVisit();
+			target.setVisit(null);
+			if (visit != null) {
+				visit.removeEcrfValues(target);
 			}
 		}
 		InputFieldValue value = target.getValue();
@@ -268,6 +339,7 @@ public class ECRFFieldValueDaoImpl
 		super.eCRFFieldValueOutVOToEntity(source, target, copyIfNull);
 		ProbandListEntryOutVO listEntryVO = source.getListEntry();
 		ECRFFieldOutVO ecrfFieldVO = source.getEcrfField();
+		VisitOutVO visitVO = source.getVisit();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (listEntryVO != null) {
 			ProbandListEntry listEntry = this.getProbandListEntryDao().probandListEntryOutVOToEntity(listEntryVO);
@@ -286,9 +358,20 @@ public class ECRFFieldValueDaoImpl
 			ecrfField.addFieldValues(target);
 		} else if (copyIfNull) {
 			ECRFField ecrfField = target.getEcrfField();
-			target.setEcrfField(ecrfField);
+			target.setEcrfField(null);
 			if (ecrfField != null) {
 				ecrfField.removeFieldValues(target);
+			}
+		}
+		if (visitVO != null) {
+			Visit visit = this.getVisitDao().visitOutVOToEntity(visitVO);
+			target.setVisit(visit);
+			visit.addEcrfValues(target);
+		} else if (copyIfNull) {
+			Visit visit = target.getVisit();
+			target.setVisit(null);
+			if (visit != null) {
+				visit.removeEcrfValues(target);
 			}
 		}
 		if (modifiedUserVO != null) {
@@ -336,24 +419,35 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected Collection<ECRFFieldValue> handleFindByListEntryEcrf(Long probandListEntryId, Long ecrfId, boolean sort, PSFVO psf) throws Exception {
+	protected Collection<ECRFFieldValue> handleFindByListEntryEcrfVisit(Long probandListEntryId, Long ecrfId, Long visitId, boolean sort, PSFVO psf) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			applySortOrders(null, ecrfFieldCriteria, ecrfFieldValueCriteria);
+			applySortOrders(false, null, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		return ecrfFieldValueCriteria.list();
 	}
 
 	@Override
-	protected Collection<ECRFFieldValue> handleFindByListEntryEcrfFieldIndex(Long probandListEntryId, Long ecrfFieldId, Long index, boolean auditTrail, boolean sort, PSFVO psf)
+	protected Collection<ECRFFieldValue> handleFindByListEntryVisitEcrfFieldIndex(Long probandListEntryId, Long visitId, Long ecrfFieldId, Long index, boolean auditTrail,
+			boolean sort, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		if (index != null) {
 			ecrfFieldValueCriteria.add(Restrictions.eq("index", index.longValue()));
@@ -363,7 +457,7 @@ public class ECRFFieldValueDaoImpl
 		if (!auditTrail) {
 			// uncorrelated - fast:
 			// value with max id only:
-			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, ecrfFieldId, index);
+			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, visitId, ecrfFieldId, index);
 		}
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
@@ -375,8 +469,9 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected Collection<Map> handleFindByListEntryEcrfJsField(Long probandListEntryId, Long ecrfId, boolean sort, Boolean js, String fieldQuery, PSFVO psf) throws Exception {
-		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
+	protected Collection<Map> handleFindByListEntryEcrfVisitJsField(Long probandListEntryId, Long ecrfId, Long visitId, boolean sort, Boolean js, String fieldQuery, PSFVO psf)
+			throws Exception {
+		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId, visitId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
 		if (js != null) {
@@ -393,18 +488,24 @@ public class ECRFFieldValueDaoImpl
 			CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		}
 		if (sort) {
-			applySortOrders(null, ecrfFieldCriteria, ecrfFieldValueCriteria);
+			applySortOrders(false, null, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		ecrfFieldCriteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
 		return ecrfFieldCriteria.list();
 	}
 
 	@Override
-	protected Collection<ECRFFieldValue> handleFindByListEntryEcrfSection(Long probandListEntryId, Long ecrfId, String section, boolean sort, PSFVO psf) throws Exception {
+	protected Collection<ECRFFieldValue> handleFindByListEntryEcrfVisitSection(Long probandListEntryId, Long ecrfId, Long visitId, String section, boolean sort, PSFVO psf)
+			throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		if (section != null && section.length() > 0) {
 			ecrfFieldCriteria.add(Restrictions.eq("section", section));
 		} else {
@@ -413,17 +514,18 @@ public class ECRFFieldValueDaoImpl
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			applySortOrders(null, ecrfFieldCriteria, ecrfFieldValueCriteria);
+			applySortOrders(false, null, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		return ecrfFieldValueCriteria.list();
 	}
 
 	@Override
-	protected Collection<Map> handleFindByListEntryEcrfSectionIndexJsField(Long probandListEntryId, Long ecrfId, String section, Long index, boolean sort, Boolean js,
+	protected Collection<Map> handleFindByListEntryEcrfVisitSectionIndexJsField(Long probandListEntryId, Long ecrfId, Long visitId, String section, Long index, boolean sort,
+			Boolean js,
 			String fieldQuery,
 			PSFVO psf)
 			throws Exception {
-		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
+		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId, visitId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
 		if (section != null && section.length() > 0) {
@@ -448,26 +550,52 @@ public class ECRFFieldValueDaoImpl
 			CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		}
 		if (sort) {
-			applySortOrders(null, ecrfFieldCriteria, ecrfFieldValueCriteria);
+			applySortOrders(false, null, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		ecrfFieldCriteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
 		return ecrfFieldCriteria.list();
 	}
 
 	@Override
-	protected ECRFFieldValue handleGetByListEntryEcrfFieldIndex(Long probandListEntryId, Long ecrfFieldId, Long index)
+	protected ECRFFieldValue handleGetByListEntryVisitEcrfFieldIndex(Long probandListEntryId, Long visitId, Long ecrfFieldId, Long index)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		if (index != null) {
 			ecrfFieldValueCriteria.add(Restrictions.eq("index", index.longValue()));
 		} else {
 			ecrfFieldValueCriteria.add(Restrictions.isNull("index"));
 		}
-		applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, ecrfFieldId, index);
+		applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, visitId, ecrfFieldId, index);
 		ecrfFieldValueCriteria.setMaxResults(1);
 		return (ECRFFieldValue) ecrfFieldValueCriteria.uniqueResult();
+	}
+
+	@Override
+	protected long handleGetCount(Long visitId, Long ecrfFieldId, boolean excludeAuditTrail) throws Exception {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
+		if (ecrfFieldId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
+			if (visitId != null) {
+				ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+			} else {
+				ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+			}
+			if (excludeAuditTrail) {
+				applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, (Long) null, visitId, ecrfFieldId);
+			}
+		} else {
+			if (excludeAuditTrail) {
+				applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, (org.hibernate.Criteria) null, null, ecrfFieldId);
+			}
+		}
+		return (Long) ecrfFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
@@ -477,23 +605,28 @@ public class ECRFFieldValueDaoImpl
 			ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		}
 		if (excludeAuditTrail) {
-			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, null, ecrfFieldId);
+			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, (org.hibernate.Criteria) null, null, ecrfFieldId);
 		}
 		return (Long) ecrfFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
-	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, String fieldQuery) throws Exception {
-		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
+	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, Long visitId, String fieldQuery) throws Exception {
+		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId, visitId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		applyEcrfFieldSearchCriterions(ecrfFieldCriteria, fieldQuery);
 		return (Long) ecrfFieldCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
-	protected long handleGetCount(Long probandListEntryId, Long ecrfId, boolean excludeAuditTrail, Boolean series, Boolean optional) throws Exception {
+	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long visitId, boolean excludeAuditTrail, Boolean series, Boolean optional) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		if (series != null) {
@@ -503,15 +636,20 @@ public class ECRFFieldValueDaoImpl
 			ecrfFieldCriteria.add(Restrictions.eq("optional", optional.booleanValue()));
 		}
 		if (excludeAuditTrail) {
-			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, ecrfFieldCriteria, null, probandListEntryId, null);
+			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, ecrfFieldCriteria, probandListEntryId, visitId, null);
 		}
 		return (Long) ecrfFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
-	protected long handleGetCount(Long probandListEntryId, Long ecrfId, String section, boolean excludeAuditTrail, Boolean optional) throws Exception {
+	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long visitId, String section, boolean excludeAuditTrail, Boolean optional) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		if (optional != null) {
@@ -523,14 +661,14 @@ public class ECRFFieldValueDaoImpl
 			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
 		}
 		if (excludeAuditTrail) {
-			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, ecrfFieldCriteria, null, probandListEntryId, null);
+			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, ecrfFieldCriteria, probandListEntryId, visitId, null);
 		}
 		return (Long) ecrfFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
-	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, String section, Long index, String fieldQuery) throws Exception {
-		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId);
+	protected long handleGetCountField(Long probandListEntryId, Long ecrfId, Long visitId, String section, Long index, String fieldQuery) throws Exception {
+		org.hibernate.Criteria[] criterias = createEcrfFieldCriteria(probandListEntryId, ecrfId, visitId);
 		org.hibernate.Criteria ecrfFieldCriteria = criterias[0];
 		org.hibernate.Criteria ecrfFieldValueCriteria = criterias[1];
 		if (section != null && section.length() > 0) {
@@ -546,10 +684,41 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
+	protected long handleGetCount(Long ecrfId, Long visitId, String section) throws Exception {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", CriteriaSpecification.INNER_JOIN);
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (section != null && section.length() > 0) {
+			ecrfFieldCriteria.add(Restrictions.eq("section", section));
+		} else {
+			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+		}
+		return (Long) ecrfFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
+	protected long handleGetCount(Long ecrfId, Long visitId) throws Exception {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", CriteriaSpecification.INNER_JOIN);
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		return (Long) ecrfFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
 	protected long handleGetCount(Long ecrfId, String section) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", CriteriaSpecification.INNER_JOIN);
-		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue())); //no visit, so across all visits
 		if (section != null && section.length() > 0) {
 			ecrfFieldCriteria.add(Restrictions.eq("section", section));
 		} else {
@@ -569,7 +738,7 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
-	protected Collection<ECRFFieldValue> handleGetLog(Long trialId, Long probandListEntryId, Long ecrfId, boolean sort, PSFVO psf) throws Exception {
+	protected Collection<ECRFFieldValue> handleGetLog(Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, boolean sort, PSFVO psf) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
 		org.hibernate.Criteria listEntryCriteria = ecrfFieldValueCriteria.createCriteria("listEntry", "probandListEntry0");
 		if (trialId != null || probandListEntryId != null) {
@@ -581,46 +750,20 @@ public class ECRFFieldValueDaoImpl
 			}
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
+		org.hibernate.Criteria visitCriteria = null;
+		DetachedCriteria subQuery;
 		if (ecrfId != null) {
 			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		}
-		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, ecrfFieldCriteria, listEntryCriteria, probandListEntryId, null);
-		subQuery.setProjection(Projections.rowCount());
-		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
-				Restrictions.eqProperty("index", "ecrfFieldValue0" + ".index")));
-		ecrfFieldValueCriteria.add(Subqueries.lt(1l, subQuery));
-		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
-		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
-		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
-		if (sort) {
-			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldValueCriteria);
-		}
-		return ecrfFieldValueCriteria.list();
-	}
-
-	@Override
-	protected Collection<ECRFFieldValue> handleGetLog(Long trialId, Long probandListEntryId, Long ecrfId, String section, boolean sort, PSFVO psf) throws Exception {
-		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
-		org.hibernate.Criteria listEntryCriteria = ecrfFieldValueCriteria.createCriteria("listEntry", "probandListEntry0");
-		if (trialId != null || probandListEntryId != null) {
-			if (trialId != null) {
-				listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+			if (visitId != null) {
+				ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+			} else {
+				ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
 			}
-			if (probandListEntryId != null) {
-				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-			}
-		}
-		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
-		if (ecrfId != null) {
-			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
-		}
-		if (section != null && section.length() > 0) {
-			ecrfFieldCriteria.add(Restrictions.eq("section", section));
+			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId, null);
 		} else {
-			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0");
+			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, visitCriteria, ecrfFieldCriteria, probandListEntryId, null);
 		}
-		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, ecrfFieldCriteria, listEntryCriteria, probandListEntryId, null);
 		subQuery.setProjection(Projections.rowCount());
 		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
 				Restrictions.eqProperty("index", "ecrfFieldValue0" + ".index")));
@@ -628,29 +771,91 @@ public class ECRFFieldValueDaoImpl
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
 		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
 		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
+		if (visitCriteria != null) {
+			criteriaMap.registerCriteria("visit", visitCriteria);
+		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			applySortOrders(listEntryCriteria, ecrfFieldCriteria, ecrfFieldValueCriteria);
+			applySortOrders(true, listEntryCriteria, ecrfFieldCriteria, ecrfFieldValueCriteria);
 		}
 		return ecrfFieldValueCriteria.list();
 	}
 
 	@Override
-	protected Long handleGetMaxIndex(Long probandListEntryId, Long ecrfFieldId) throws Exception {
+	protected Collection<ECRFFieldValue> handleGetLog(Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, String section, boolean sort, PSFVO psf) throws Exception {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria("ecrfFieldValue0");
+		org.hibernate.Criteria listEntryCriteria = ecrfFieldValueCriteria.createCriteria("listEntry", "probandListEntry0");
+		if (trialId != null || probandListEntryId != null) {
+			if (trialId != null) {
+				listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+			}
+			if (probandListEntryId != null) {
+				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
+			}
+		}
+		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField", "ecrfField0");
+		org.hibernate.Criteria visitCriteria = null;
+		DetachedCriteria subQuery;
+		if (ecrfId != null) {
+			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+			if (section != null && section.length() > 0) {
+				ecrfFieldCriteria.add(Restrictions.eq("section", section));
+			} else {
+				ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+			}
+			if (visitId != null) {
+				ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+			} else {
+				ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+			}
+			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId, null);
+		} else {
+			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0");
+			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, visitCriteria, ecrfFieldCriteria, probandListEntryId, null);
+		}
+		subQuery.setProjection(Projections.rowCount());
+		subQuery.add(Restrictions.or(Restrictions.isNull("index"),
+				Restrictions.eqProperty("index", "ecrfFieldValue0" + ".index")));
+		ecrfFieldValueCriteria.add(Subqueries.lt(1l, subQuery));
+		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
+		criteriaMap.registerCriteria("listEntry", listEntryCriteria);
+		criteriaMap.registerCriteria("ecrfField", ecrfFieldCriteria);
+		if (visitCriteria != null) {
+			criteriaMap.registerCriteria("visit", visitCriteria);
+		}
+		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		if (sort) {
+			applySortOrders(true, listEntryCriteria, ecrfFieldCriteria, ecrfFieldValueCriteria);
+		}
+		return ecrfFieldValueCriteria.list();
+	}
+
+	@Override
+	protected Long handleGetMaxIndex(Long probandListEntryId, Long visitId, Long ecrfFieldId) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
 		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		ecrfFieldValueCriteria.add(Restrictions.isNotNull("index"));
 		return (Long) ecrfFieldValueCriteria.setProjection(Projections.max("index")).uniqueResult();
 	}
 
 	@Override
-	protected Long handleGetMaxIndex(Long probandListEntryId, Long ecrfId, String section) throws Exception {
+	protected Long handleGetMaxIndex(Long probandListEntryId, Long ecrfId, Long visitId, String section) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
 		if (probandListEntryId != null) {
 			ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		}
 		ecrfFieldValueCriteria.add(Restrictions.isNotNull("index"));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldValueCriteria.createCriteria("ecrfField");
 		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
 		ecrfFieldCriteria.add(Restrictions.eq("series", true));
@@ -721,11 +926,15 @@ public class ECRFFieldValueDaoImpl
 		super.toECRFFieldValueInVO(source, target);
 		ProbandListEntry listEntry = source.getListEntry();
 		ECRFField ecrfField = source.getEcrfField();
+		Visit visit = source.getVisit();
 		if (listEntry != null) {
 			target.setListEntryId(listEntry.getId());
 		}
 		if (ecrfField != null) {
 			target.setEcrfFieldId(ecrfField.getId());
+		}
+		if (visit != null) {
+			target.setVisitId(visit.getId());
 		}
 		InputFieldValue value = source.getValue();
 		if (value != null) {
@@ -758,6 +967,7 @@ public class ECRFFieldValueDaoImpl
 			ECRFFieldValueJsonVO target) {
 		super.toECRFFieldValueJsonVO(source, target);
 		ECRFField ecrfField = source.getEcrfField();
+		Visit visit = source.getVisit();
 		if (ecrfField != null) {
 			target.setEcrfFieldId(ecrfField.getId());
 			target.setSeries(ecrfField.isSeries());
@@ -773,7 +983,11 @@ public class ECRFFieldValueDaoImpl
 				while (it.hasNext()) {
 					target.getProbandGroupTokens().add(((ProbandGroup) it.next()).getToken());
 				}
-				target.setVisitToken(ecrf.getVisit() != null ? ecrf.getVisit().getToken() : null);
+				it = ecrf.getVisits().iterator();
+				target.getVisitTokens().clear();
+				while (it.hasNext()) {
+					target.getVisitTokens().add(((Visit) it.next()).getToken());
+				}
 			}
 			target.setDisabled(ecrfField.isDisabled());
 			InputField inputField = ecrfField.getField();
@@ -790,6 +1004,9 @@ public class ECRFFieldValueDaoImpl
 					target.setInputFieldSelectionSetValues(toInputFieldSelectionSetValueJsonVOCollection(inputField.getSelectionSetValues()));
 				}
 			}
+		}
+		if (visit != null) {
+			target.setVisitId(visit.getId());
 		}
 		InputFieldValue value = source.getValue();
 		if (value != null) {
@@ -821,12 +1038,16 @@ public class ECRFFieldValueDaoImpl
 		super.toECRFFieldValueOutVO(source, target);
 		ProbandListEntry listEntry = source.getListEntry();
 		ECRFField ecrfField = source.getEcrfField();
+		Visit visit = source.getVisit();
 		User modifiedUser = source.getModifiedUser();
 		if (listEntry != null) {
 			target.setListEntry(this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry));
 		}
 		if (ecrfField != null) {
 			target.setEcrfField(this.getECRFFieldDao().toECRFFieldOutVO(ecrfField));
+		}
+		if (visit != null) {
+			target.setVisit(this.getVisitDao().toVisitOutVO(visit));
 		}
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
@@ -850,7 +1071,8 @@ public class ECRFFieldValueDaoImpl
 		if (listEntry != null && ecrfField != null) {
 			ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
 			for (int i = 0; i < queues.length; i++) {
-				ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(queues[i], listEntry.getId(), ecrfField.getId(), source.getIndex());
+				ECRFFieldStatusEntry lastStatus = this.getECRFFieldStatusEntryDao().findLastStatus(queues[i], listEntry.getId(), visit != null ? visit.getId() : null,
+						ecrfField.getId(), source.getIndex());
 				if (lastStatus != null) {
 					target.getLastFieldStatuses().add(this.getECRFFieldStatusTypeDao().toECRFFieldStatusTypeVO(lastStatus.getStatus()));
 					if (!lastStatus.getStatus().isResolved()

@@ -9,10 +9,19 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -41,6 +50,16 @@ public class VisitDaoImpl
 	}
 
 	@Override
+	protected Collection<Visit> handleFindByEcrfStatusEntry(Long ecrfId) throws Exception {
+		org.hibernate.Criteria visitCriteria = createVisitCriteria();
+		org.hibernate.Criteria ecrfStatusEntryCriteria = visitCriteria.createCriteria("ecrfStatusEntries", CriteriaSpecification.INNER_JOIN);
+		if (ecrfId != null) {
+			ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		}
+		return CriteriaUtil.listDistinctRoot(visitCriteria, this);
+	}
+
+	@Override
 	protected Collection<Visit> handleFindByTrial(Long trialId, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria visitCriteria = createVisitCriteria();
@@ -65,6 +84,22 @@ public class VisitDaoImpl
 		if (token != null) {
 			visitCriteria.add(Restrictions.eq("token", token));
 		}
+		return visitCriteria.list();
+	}
+
+	@Override
+	protected Collection<Visit> handleFindVisits(Long trialId, String tokenInfix, String titleInfix, Integer limit)
+			throws Exception {
+		Criteria visitCriteria = createVisitCriteria();
+		if (trialId != null) {
+			visitCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		CategoryCriterion.applyOr(visitCriteria,
+				new CategoryCriterion(tokenInfix, "token", MatchMode.ANYWHERE),
+				new CategoryCriterion(titleInfix, "title", MatchMode.ANYWHERE));
+		visitCriteria.addOrder(Order.asc("token"));
+		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.VISIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.VISIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), visitCriteria);
 		return visitCriteria.list();
 	}
 
