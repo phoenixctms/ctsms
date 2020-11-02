@@ -72,3 +72,44 @@ alter table ECRF drop column GROUP_FK;
 alter table ECRF drop column POSITION;
 
 update INPUT_FIELD set TITLE_L10N_KEY = regexp_replace(TITLE_L10N_KEY,'(^[[:space:]]+)|([[:space:]]+$)','','g') where TITLE_L10N_KEY ~ '(^[[:space:]]+)|([[:space:]]+$)';
+
+update VISIT set TOKEN = regexp_replace(TOKEN,';',',','g') where TOKEN ~ ';';
+update VISIT set TOKEN = regexp_replace(TOKEN,'(^[[:space:]]+)|([[:space:]]+$)','','g') where TOKEN ~ '(^[[:space:]]+)|([[:space:]]+$)';
+
+insert into ECRF_VISIT (VISITS_FK, ECRFS_FK) select VISIT_FK, ID from ECRF where VISIT_FK is not null;
+
+update
+    ECRF_STATUS_ENTRY s
+set
+    VISIT_FK = e.VISIT_FK
+from
+    ECRF e
+where 
+    s.ECRF_FK = e.ID
+    and e.VISIT_FK is not null;
+
+update
+    ECRF_FIELD_VALUE v
+set
+    VISIT_FK = e.VISIT_FK
+from
+    ECRF_FIELD ef,
+    ECRF e
+where 
+    v.ECRF_FIELD_FK = ef.ID
+    and ef.ECRF_FK = e.ID
+    and e.VISIT_FK is not null;
+    
+update
+    ECRF_FIELD_STATUS_ENTRY s
+set
+    VISIT_FK = e.VISIT_FK
+from
+    ECRF_FIELD ef,
+    ECRF e
+where 
+    s.ECRF_FIELD_FK = ef.ID
+    and ef.ECRF_FK = e.ID
+    and e.VISIT_FK is not null;
+
+alter table ECRF drop column VISIT_FK;
