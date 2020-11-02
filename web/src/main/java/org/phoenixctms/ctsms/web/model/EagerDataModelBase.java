@@ -8,37 +8,15 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.model.SelectableDataModel;
 
-public abstract class EagerDataModelBase<T> implements EagerDataModel, SelectableDataModel<IDVO> {
+public abstract class EagerDataModelBase<T> extends EagerDataModel<IDVO> implements SelectableDataModel<IDVO>, RowExpansionDataModel {
 
 	private String currentPageIdsString;
-	private List<IDVO> allRows;
-
-	@Override
-	public int getAllRowCount() {
-		List<IDVO> rows = getAllRows();
-		if (rows != null) {
-			return rows.size();
-		}
-		return 0;
-	}
-
-	@Override
-	public List<IDVO> getAllRows() {
-		if (allRows == null) {
-			allRows = loadAll();
-		}
-		return allRows;
-	}
 
 	public String getCurrentPageIds() {
 		return (currentPageIdsString != null ? currentPageIdsString : "");
 	}
 
 	protected abstract Collection<T> getEagerResult(PSFVO psf);
-
-	public boolean getHasRows() {
-		return getAllRowCount() > 0;
-	}
 
 	protected Long getPageId(IDVO idvo) {
 		return idvo.getId();
@@ -61,6 +39,7 @@ public abstract class EagerDataModelBase<T> implements EagerDataModel, Selectabl
 		return element.getId().toString();
 	}
 
+	@Override
 	protected List<IDVO> load(PSFVO psf) {
 		Collection<T> eagerResult = getEagerResult(psf);
 		IDVO.transformVoCollection(eagerResult);
@@ -94,15 +73,5 @@ public abstract class EagerDataModelBase<T> implements EagerDataModel, Selectabl
 			currentPageIdsString = null;
 		}
 		return (List<IDVO>) eagerResult;
-	}
-
-	@Override
-	public List<IDVO> loadAll() {
-		return load(null); 
-	}
-
-	@Override
-	public void resetRows() {
-		allRows = null;
 	}
 }
