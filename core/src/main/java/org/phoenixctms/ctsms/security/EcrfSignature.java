@@ -87,8 +87,10 @@ public class EcrfSignature extends EntitySignature {
 
 	private static EcrfFieldValues getEntity(ECRFStatusEntry statusEntry, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao) {
 		return new EcrfFieldValues(statusEntry.getEcrf(), statusEntry.getListEntry().getProband(),
-				ecrfFieldValueDao.findByListEntryEcrf(statusEntry.getListEntry().getId(), statusEntry.getEcrf().getId(), true, null),
-				ecrfFieldStatusEntryDao.findByListEntryEcrf(statusEntry.getListEntry().getId(), statusEntry.getEcrf().getId(), true, null));
+				ecrfFieldValueDao.findByListEntryEcrfVisit(statusEntry.getListEntry().getId(), statusEntry.getEcrf().getId(),
+						statusEntry.getVisit() != null ? statusEntry.getVisit().getId() : null, true, null),
+				ecrfFieldStatusEntryDao.findByListEntryEcrfVisit(statusEntry.getListEntry().getId(), statusEntry.getEcrf().getId(),
+						statusEntry.getVisit() != null ? statusEntry.getVisit().getId() : null, true, null));
 	}
 
 	public static byte[] sign(ECRFStatusEntry statusEntry, Timestamp now, StringBuilder comment, ECRFFieldValueDao ecrfFieldValueDao,

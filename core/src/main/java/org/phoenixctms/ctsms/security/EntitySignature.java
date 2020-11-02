@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.Department;
+import org.phoenixctms.ctsms.domain.ECRFDaoImpl;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.Inventory;
@@ -209,23 +210,23 @@ public abstract class EntitySignature extends GraphEnumerator {
 				case ECRF_SIGNATURE:
 					if (signature.getVerified()) {
 						if (signature.getValid()) {
-							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_VALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_VALID_DESCRIPTION, signature
-									.getEcrfStatusEntry().getEcrf().getUniqueName(),
+							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_VALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_VALID_DESCRIPTION,
+									ECRFDaoImpl.getUniqueEcrfName(signature.getEcrfStatusEntry().getEcrf(), signature.getEcrfStatusEntry().getVisit()),
 									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband())
 											: Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()),
 									signeeString, dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()),
 									signatureDataBase64String);
 						} else {
-							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_INVALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_INVALID_DESCRIPTION, signature
-									.getEcrfStatusEntry().getEcrf().getUniqueName(),
+							return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_INVALID_DESCRIPTION, DefaultMessages.ECRF_SIGNATURE_INVALID_DESCRIPTION,
+									ECRFDaoImpl.getUniqueEcrfName(signature.getEcrfStatusEntry().getEcrf(), signature.getEcrfStatusEntry().getVisit()),
 									showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband())
 											: Long.toString(signature.getEcrfStatusEntry().getListEntry().getProband().getId()),
 									signeeString,
 									dateTimeFormat.format(signature.getTimestamp()), dateTimeFormat.format(signature.getVerificationTimestamp()));
 						}
 					} else {
-						return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_AVAILABLE, DefaultMessages.ECRF_SIGNATURE_AVAILABLE, signature.getEcrfStatusEntry().getEcrf()
-								.getUniqueName(),
+						return L10nUtil.getMessage(MessageCodes.ECRF_SIGNATURE_AVAILABLE, DefaultMessages.ECRF_SIGNATURE_AVAILABLE,
+								ECRFDaoImpl.getUniqueEcrfName(signature.getEcrfStatusEntry().getEcrf(), signature.getEcrfStatusEntry().getVisit()),
 								showProbandName ? CommonUtil.probandOutVOToString(signature.getEcrfStatusEntry().getListEntry().getProband())
 										: Long.toString(signature
 												.getEcrfStatusEntry().getListEntry().getProband().getId()),
