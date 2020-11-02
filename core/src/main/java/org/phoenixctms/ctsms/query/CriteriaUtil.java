@@ -50,6 +50,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 public final class CriteriaUtil {
 
 	private enum RestrictionCriterionTypes {
+
 		GT("({0}) > ?"),
 		GE("({0}) >= ?"),
 		LT("({0}) < ?"),
@@ -706,18 +707,23 @@ public final class CriteriaUtil {
 		}
 	}
 
-	public static List listDistinctRoot(Criteria criteria, Object dao, String... fields) throws Exception {
+	public static List listDistinctRoot(Criteria criteria, Object dao, String... distinctProjections) throws Exception {
 		if (dao != null && criteria != null) {
 			criteria.setProjection(null);
 			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 			Method loadMethod = CoreUtil.getDaoLoadMethod(dao);
 			ProjectionList projectionList = Projections.projectionList().add(Projections.id());
 			boolean cast = false;
-			if (fields != null && fields.length > 0) {
-				for (int i = 0; i < fields.length; i++) {
-					projectionList.add(Projections.property(fields[i]));
+			if (distinctProjections != null && distinctProjections.length > 0) {
+				SubCriteriaMap criteriaMap = new SubCriteriaMap(loadMethod.getReturnType(), criteria);
+				for (int i = 0; i < distinctProjections.length; i++) {
+					AssociationPath distinctProjectionAssociationPath = new AssociationPath(distinctProjections[i]);
+					Criteria projectioncriteria = getProjectionCriteria(criteriaMap, distinctProjectionAssociationPath);
+					if (projectioncriteria != null) {
+						projectionList.add(Projections.property(distinctProjectionAssociationPath.getFullQualifiedPropertyName()));
+						cast = true;
+					}
 				}
-				cast = true;
 			}
 			List items = criteria.setProjection(Projections.distinct(projectionList)).list();
 			Iterator it = items.iterator();
@@ -730,7 +736,7 @@ public final class CriteriaUtil {
 		return null;
 	}
 
-	public static List listDistinctRootPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, Object dao) throws Exception {
+	public static List listDistinctRootPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, Object dao, String... distinctProjections) throws Exception {
 		Criteria criteria;
 		if (dao != null && criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
 			if (psf != null) {
@@ -748,7 +754,7 @@ public final class CriteriaUtil {
 						if (sortFieldAssociationPath.isValid()
 								&& sortFieldAssociationPath.getPathDepth() >= 1
 								&& sortFieldAssociationPath.getPath().equals(filterFieldAssociationPath.getPath())) {
-							String alias = getSortAlias(sortFieldAssociationPath);
+							String alias = getProjectionAlias(sortFieldAssociationPath);
 							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath, alias);
 						} else {
 							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
@@ -777,20 +783,22 @@ public final class CriteriaUtil {
 				}
 				ProjectionList projectionList = Projections.projectionList().add(Projections.id());
 				boolean cast = false;
-				if (sortFieldAssociationPath.isValid()) {
-					Criteria subCriteria;
-					String sortProperty = sortFieldAssociationPath.getPropertyName();
-					if (sortFieldAssociationPath.getPathDepth() >= 1) {
-						String alias = getSortAlias(sortFieldAssociationPath);
-						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, alias, CriteriaSpecification.LEFT_JOIN);
-						sortFieldAssociationPath = new AssociationPath(alias + AssociationPath.ASSOCIATION_PATH_SEPARATOR + sortProperty);
-					} else {
-						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
-						sortFieldAssociationPath = new AssociationPath(sortProperty);
-					}
-					subCriteria.addOrder(psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty));
+				Criteria projectioncriteria = getProjectionCriteria(criteriaMap, sortFieldAssociationPath);
+				if (projectioncriteria != null) {
+					projectioncriteria
+							.addOrder(psf.getSortOrder() ? Order.asc(sortFieldAssociationPath.getPropertyName()) : Order.desc(sortFieldAssociationPath.getPropertyName()));
 					projectionList.add(Projections.property(sortFieldAssociationPath.getFullQualifiedPropertyName()));
 					cast = true;
+				}
+				if (distinctProjections != null && distinctProjections.length > 0) {
+					for (int i = 0; i < distinctProjections.length; i++) {
+						AssociationPath distinctProjectionAssociationPath = new AssociationPath(distinctProjections[i]);
+						projectioncriteria = getProjectionCriteria(criteriaMap, distinctProjectionAssociationPath);
+						if (projectioncriteria != null) {
+							projectionList.add(Projections.property(distinctProjectionAssociationPath.getFullQualifiedPropertyName()));
+							cast = true;
+						}
+					}
 				}
 				Iterator it = criteria.setProjection(Projections.distinct(projectionList)).list().iterator();
 				ArrayList result = (count == null ? new ArrayList() : new ArrayList(CommonUtil.safeLongToInt(count)));
@@ -805,8 +813,30 @@ public final class CriteriaUtil {
 		return null;
 	}
 
-	private static final String getSortAlias(AssociationPath sortFieldAssociationPath) {
-		return ALIAS_PREFIX + sortFieldAssociationPath.getPathElement(sortFieldAssociationPath.getPathDepth() - 1);
+	public static Criteria getProjectionCriteria(SubCriteriaMap criteriaMap, AssociationPath projectionAssociationPath) {
+		if (criteriaMap != null && projectionAssociationPath != null && projectionAssociationPath.isValid()) {
+			Criteria subCriteria;
+			String projectionProperty = projectionAssociationPath.getPropertyName();
+			if (projectionAssociationPath.getPathDepth() >= 1) {
+				if (projectionAssociationPath.getPathDepth() == 1 && "id".equals(projectionAssociationPath.getPropertyName())) {
+					subCriteria = criteriaMap.getCriteria();
+				} else {
+					String alias = getProjectionAlias(projectionAssociationPath);
+					subCriteria = criteriaMap.createCriteriaForAttribute(projectionAssociationPath, alias, CriteriaSpecification.LEFT_JOIN);
+					alias = subCriteria.getAlias();
+					projectionAssociationPath.setFullQualifiedPropertyName(alias + AssociationPath.ASSOCIATION_PATH_SEPARATOR + projectionProperty);
+				}
+			} else {
+				subCriteria = criteriaMap.createCriteriaForAttribute(projectionAssociationPath, CriteriaSpecification.LEFT_JOIN);
+				projectionAssociationPath.setFullQualifiedPropertyName(projectionProperty);
+			}
+			return subCriteria;
+		}
+		return null;
+	}
+
+	private static final String getProjectionAlias(AssociationPath projectionAssociationPath) {
+		return ALIAS_PREFIX + projectionAssociationPath.getPathElement(projectionAssociationPath.getPathDepth() - 1);
 	}
 
 	public static <T> ArrayList<T> listEvents(Criteria reminderItemCriteria, Date from, Date to, Boolean notify) {
