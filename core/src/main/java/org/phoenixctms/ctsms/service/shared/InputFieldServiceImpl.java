@@ -1202,9 +1202,10 @@ public class InputFieldServiceImpl
 	}
 
 	@Override
-	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long ecrfFieldId, boolean excludeAuditTrail) throws Exception {
+	protected long handleGetEcrfFieldValueCount(AuthenticationVO auth, Long visitId, Long ecrfFieldId, boolean excludeAuditTrail) throws Exception {
+		CheckIDUtil.checkVisitId(visitId, this.getVisitDao());
 		CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
-		return this.getECRFFieldValueDao().getCount(ecrfFieldId, excludeAuditTrail);
+		return this.getECRFFieldValueDao().getCount(visitId, ecrfFieldId, excludeAuditTrail);
 	}
 
 	@Override

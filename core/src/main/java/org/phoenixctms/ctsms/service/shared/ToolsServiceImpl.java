@@ -77,6 +77,7 @@ import org.phoenixctms.ctsms.domain.TimelineEvent;
 import org.phoenixctms.ctsms.domain.TimelineEventDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
+import org.phoenixctms.ctsms.domain.VisitDao;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
 import org.phoenixctms.ctsms.email.NotificationEmailSender;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
@@ -145,6 +146,7 @@ import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 /**
  * @see org.phoenixctms.ctsms.service.shared.ToolsService
@@ -511,6 +513,17 @@ public class ToolsServiceImpl
 		Collection probandGroups = probandGroupDao.findProbandGroups(trialId, tokenInfix, titleInfix, limit);
 		probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
 		return probandGroups;
+	}
+
+	@Override
+	protected Collection<VisitOutVO> handleCompleteVisit(AuthenticationVO auth, String tokenInfix, String titleInfix, Long trialId, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for trialId ...
+		VisitDao visitDao = this.getVisitDao();
+		Collection visits = visitDao.findVisits(trialId, tokenInfix, titleInfix, limit);
+		visitDao.toVisitOutVOCollection(visits);
+		return visits;
 	}
 
 	@Override
