@@ -8,6 +8,7 @@ import java.util.Date;
 
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.phoenixctms.ctsms.adapt.InputFieldValueStringAdapterBase;
+import org.phoenixctms.ctsms.domain.ECRFDaoImpl;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.pdf.PDFUtil.Alignment;
 import org.phoenixctms.ctsms.pdf.PDFUtil.FontSize;
@@ -31,6 +32,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 public class EcrfPDFBlock extends InputFieldPDFBlock {
 
@@ -127,6 +129,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	protected ECRFFieldValueOutVO value;
 	protected ProbandListEntryOutVO listEntry;
 	protected ECRFOutVO ecrf;
+	protected VisitOutVO visit;
 	protected ECRFStatusEntryVO statusEntry;
 	protected SignatureVO signature;
 	protected String section;
@@ -154,6 +157,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		value = block.value;
 		listEntry = block.listEntry;
 		ecrf = block.ecrf;
+		visit = block.visit;
 		statusEntry = block.statusEntry;
 		signature = block.signature;
 		section = block.section;
@@ -183,10 +187,11 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		}
 	}
 
-	public EcrfPDFBlock(ProbandListEntryOutVO listEntry, ECRFOutVO ecrf, ECRFStatusEntryVO statusEntry, SignatureVO signature, Date now, boolean blank) {
+	public EcrfPDFBlock(ProbandListEntryOutVO listEntry, ECRFOutVO ecrf, VisitOutVO visit, ECRFStatusEntryVO statusEntry, SignatureVO signature, Date now, boolean blank) {
 		super();
 		this.listEntry = listEntry;
 		this.ecrf = ecrf;
+		this.visit = visit;
 		this.statusEntry = statusEntry;
 		this.signature = signature;
 		this.now = now;
@@ -555,7 +560,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		switch (type) {
 			case PAGE_TITLE:
 				height = PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.BIG, getTextColor(),
-						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PAGE_TITLE, PDFUtil.DEFAULT_LABEL, listEntry.getTrial().getName(), ecrf.getName(),
+						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.PAGE_TITLE, PDFUtil.DEFAULT_LABEL, listEntry.getTrial().getName(),
+								CommonUtil.getEcrfVisitName(ecrf, visit),
 								Long.toString(listEntry.getProband().getId()), listEntry
 										.getProband()
 										.getInitials(),
@@ -580,7 +586,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 				if (!inserted) {
 					y -= Settings.getFloat(EcrfPDFSettingCodes.Y_HEADLINE_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.Y_HEADLINE_INDENT);
 					y -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.LARGE, getTextColor(),
-							ecrf.getUniqueName(),
+							ECRFDaoImpl.getUniqueEcrfName(ecrf, visit),
 							cursor.getBlockCenterX(),
 							y,
 							Alignment.TOP_CENTER,
@@ -687,8 +693,7 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 						Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN_INDENT) - getXFrameIndent());
 				x += Settings.getFloat(EcrfPDFSettingCodes.X_HEAD_COLUMN_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_HEAD_COLUMN_INDENT);
 				height3 = Math.max(PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), FontSize.MEDIUM, getTextColor(),
-						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.VISIT_TITLE, PDFUtil.DEFAULT_LABEL, ecrf.getVisit() != null ? ecrf.getVisit().getTitle() : "",
-								ecrf.getVisit() != null ? ecrf.getVisit().getToken() : ""),
+						L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.VISIT_TITLE, PDFUtil.DEFAULT_LABEL, visit != null ? visit.getToken() : ""),
 						x + getXFrameIndent(),
 						y,
 						Alignment.TOP_LEFT,
