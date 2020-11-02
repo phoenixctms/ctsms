@@ -7,6 +7,7 @@ import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class EcrfRowWriter extends RowWriter {
@@ -15,7 +16,7 @@ public class EcrfRowWriter extends RowWriter {
 	private final static int NAME_COLUMN_INDEX = 0;
 	private final static int REVISION_COLUMN_INDEX = 1;
 	private final static int PROBAND_GROUPS_COLUMN_INDEX = 2;
-	private final static int VISIT_COLUMN_INDEX = 3;
+	private final static int VISITS_COLUMN_INDEX = 3;
 	private final static int ACTIVE_COLUMN_INDEX = 4;
 	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 5;
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 6;
@@ -26,7 +27,7 @@ public class EcrfRowWriter extends RowWriter {
 	private int nameColumnIndex;
 	private int revisionColumnIndex;
 	private int probandGroupsColumnIndex;
-	private int visitColumnIndex;
+	private int visitsColumnIndex;
 	private int activeColumnIndex;
 	private int enableBrowserFieldCalculationColumnIndex;
 	private int externalIdColumnIndex;
@@ -58,8 +59,8 @@ public class EcrfRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(revisionColumnIndex, maxColumnIndex);
 		probandGroupsColumnIndex = PROBAND_GROUPS_COLUMN_INDEX;
 		maxColumnIndex = Math.max(probandGroupsColumnIndex, maxColumnIndex);
-		visitColumnIndex = VISIT_COLUMN_INDEX;
-		maxColumnIndex = Math.max(visitColumnIndex, maxColumnIndex);
+		visitsColumnIndex = VISITS_COLUMN_INDEX;
+		maxColumnIndex = Math.max(visitsColumnIndex, maxColumnIndex);
 		activeColumnIndex = ACTIVE_COLUMN_INDEX;
 		maxColumnIndex = Math.max(activeColumnIndex, maxColumnIndex);
 		enableBrowserFieldCalculationColumnIndex = ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX;
@@ -101,7 +102,15 @@ public class EcrfRowWriter extends RowWriter {
 				sb.append(((ProbandGroupOutVO) it.next()).getToken());
 			}
 			values[probandGroupsColumnIndex] = sb.toString();
-			values[visitColumnIndex] = (ecrf.getVisit() != null ? ecrf.getVisit().getToken() : null);
+			it = ecrf.getVisits().iterator();
+			sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(ServiceUtil.GROUP_VISIT_SPLIT_SEPARATOR);
+				}
+				sb.append(((VisitOutVO) it.next()).getToken());
+			}
+			values[visitsColumnIndex] = sb.toString();
 			values[activeColumnIndex] = Boolean.toString(ecrf.getActive());
 			values[enableBrowserFieldCalculationColumnIndex] = Boolean.toString(ecrf.getEnableBrowserFieldCalculation());
 			values[externalIdColumnIndex] = ecrf.getExternalId();

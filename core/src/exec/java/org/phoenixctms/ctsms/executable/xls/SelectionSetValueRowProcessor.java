@@ -173,7 +173,11 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
+		if (CommonUtil.isEmptyString(getFieldName(values))) {
+			return false;
+		}
 		if (CommonUtil.isEmptyString(getValue(values))) {
+			jobOutput.println("row " + rowNumber + ": empty value");
 			return false;
 		}
 		return true;

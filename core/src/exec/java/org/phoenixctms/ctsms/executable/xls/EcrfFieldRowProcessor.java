@@ -316,7 +316,8 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		if (CommonUtil.isEmptyString(getEcrfName(values))) {
 			return false;
 		}
-		if (CommonUtil.isEmptyString(getEcrfRevision(values))) {
+		if (CommonUtil.isEmptyString(getInputFieldName(values))) {
+			jobOutput.println("row " + rowNumber + ": empty input field name");
 			return false;
 		}
 		return true;
