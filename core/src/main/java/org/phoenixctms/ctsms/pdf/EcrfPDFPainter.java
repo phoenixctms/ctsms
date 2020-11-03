@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -31,6 +32,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
@@ -40,11 +42,12 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
 	protected ECRFPDFVO pdfVO;
 	protected Collection<ProbandListEntryOutVO> listEntryVOs;
-	protected HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap;
-	protected HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap;
-	protected HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap;
+	protected TreeSet<VisitOutVO> visitVOs;
+	protected TreeSet<ECRFOutVO> ecrfVOs;
+	protected HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap;
+	protected HashMap<Long, HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>> logVOMap;
 	protected HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap;
-	protected HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap;
+	protected HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap;
 	protected HashMap<Long, SignatureVO> signatureVOMap;
 	protected HashMap<Long, InputFieldImageVO> imageVOMap;
 	protected boolean blank;
@@ -169,14 +172,43 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		return DEFAULT_PAGE_SIZE;
 	}
 
-	protected ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId) {
+	protected ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId, Long visitId) {
 		if (statusEntryVOMap != null) {
-			HashMap<Long, ECRFStatusEntryVO> ecrfMap = statusEntryVOMap.get(listEntryId);
-			if (ecrfMap != null) {
-				return ecrfMap.get(ecrfId);
+			HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusEntryVisitsVOMap = statusEntryVOMap.get(listEntryId);
+			if (ecrfStatusEntryVisitsVOMap != null) {
+				HashMap<Long, ECRFStatusEntryVO> visitMap = ecrfStatusEntryVisitsVOMap.get(ecrfId);
+				if (visitMap != null) {
+					return visitMap.get(visitId);
+				}
 			}
 		}
 		return null;
+	}
+
+	protected Collection<ECRFFieldValueOutVO> getEcrfValues(Long listEntryId, Long ecrfId, Long visitId) {
+		if (valueVOMap != null) {
+			HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfValueVisitsVOMap = valueVOMap.get(listEntryId);
+			if (ecrfValueVisitsVOMap != null) {
+				HashMap<Long, Collection<ECRFFieldValueOutVO>> visitMap = ecrfValueVisitsVOMap.get(ecrfId);
+				if (visitMap != null) {
+					return visitMap.get(visitId);
+				}
+			}
+		}
+		return null;
+	}
+
+	protected boolean ecrfStatusEntryExists(Long listEntryId, Long ecrfId, Long visitId) {
+		if (statusEntryVOMap != null && statusEntryVOMap.containsKey(listEntryId)) {
+			HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusEntryVisitsVOMap = statusEntryVOMap.get(listEntryId);
+			if (ecrfStatusEntryVisitsVOMap != null && ecrfStatusEntryVisitsVOMap.containsKey(ecrfId)) {
+				HashMap<Long, ECRFStatusEntryVO> visitMap = ecrfStatusEntryVisitsVOMap.get(ecrfId);
+				if (visitMap != null && visitMap.containsKey(visitId)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public PDFont getFontA() {
@@ -273,10 +305,13 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected Collection getValueLog(ECRFFieldValueOutVO value) {
 		if (logVOMap != null) {
-			HashMap<Long, HashMap<Long, Collection>> ecrfLogVOMap = logVOMap.get(value.getListEntry().getId());
-			if (ecrfLogVOMap != null) {
-				HashMap<Long, Collection> fieldLogVOMap = ecrfLogVOMap.get(value.getEcrfField().getId());
-				return fieldLogVOMap.get(value.getIndex());
+			HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> ecrfLogVisitsVOMap = logVOMap.get(value.getListEntry().getId());
+			if (ecrfLogVisitsVOMap != null) {
+				HashMap<Long, HashMap<Long, Collection>> ecrfLogVOMap = ecrfLogVisitsVOMap.get(value.getVisit() != null ? value.getVisit().getId() : null);
+				if (ecrfLogVOMap != null) {
+					HashMap<Long, Collection> fieldLogVOMap = ecrfLogVOMap.get(value.getEcrfField().getId());
+					return fieldLogVOMap.get(value.getIndex());
+				}
 			}
 		}
 		return null;
@@ -343,21 +378,24 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				signatureImageWidth, signatureImageHeight, quality, dpi, bgColor);
 		if (imageVOMap != null && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
 			if (valueVOMap != null) {
-				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> listEntryMapIt = valueVOMap.values().iterator();
-				while (listEntryMapIt.hasNext()) {
-					Iterator<Collection<ECRFFieldValueOutVO>> ecrfMapIt = listEntryMapIt.next().values().iterator();
-					while (ecrfMapIt.hasNext()) {
-						Iterator<ECRFFieldValueOutVO> valuesIt = ecrfMapIt.next().iterator();
-						while (valuesIt.hasNext()) {
-							putSketchImage(valuesIt.next(), doc);
+				Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
+				while (listEntryEcrfVisitValuesIt.hasNext()) {
+					Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfVisitValuesIt = listEntryEcrfVisitValuesIt.next().values().iterator();
+					while (ecrfVisitValuesIt.hasNext()) {
+						Iterator<Collection<ECRFFieldValueOutVO>> visitValuesIt = ecrfVisitValuesIt.next().values().iterator();
+						while (visitValuesIt.hasNext()) {
+							Iterator<ECRFFieldValueOutVO> valuesIt = visitValuesIt.next().iterator();
+							while (valuesIt.hasNext()) {
+								putSketchImage(valuesIt.next(), doc);
+							}
 						}
 					}
 				}
 			}
 			if (listEntryTagValuesVOMap != null) {
-				Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryCollectionIt = listEntryTagValuesVOMap.values().iterator();
-				while (listEntryCollectionIt.hasNext()) {
-					Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryCollectionIt.next().iterator();
+				Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryValuesIt = listEntryTagValuesVOMap.values().iterator();
+				while (listEntryValuesIt.hasNext()) {
+					Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryValuesIt.next().iterator();
 					while (valuesIt.hasNext()) {
 						putSketchImage(valuesIt.next(), doc);
 					}
@@ -397,31 +435,34 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	@Override
 	public void populateBlocks() {
 		blocks.clear();
-		if (listEntryVOs != null && ecrfVOMap != null && valueVOMap != null) {
+		if (listEntryVOs != null && visitVOs != null && ecrfVOs != null && statusEntryVOMap != null && valueVOMap != null) {
 			Iterator<ProbandListEntryOutVO> listEntryIt = listEntryVOs.iterator();
 			while (listEntryIt.hasNext()) {
 				ProbandListEntryOutVO listEntryVO = listEntryIt.next();
-				Collection<ECRFOutVO> ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-				if (ecrfVOs != null) {
-					Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
-					while (ecrfIt.hasNext()) {
-						ECRFOutVO ecrfVO = ecrfIt.next();
-						ECRFStatusEntryVO statusEntryVO = getEcrfStatusEntry(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO.getId());
-						SignatureVO signatureVO = ((signatureVOMap != null && statusEntryVO != null) ? signatureVOMap.get(statusEntryVO.getId()) : null);
-						blocks.add(new EcrfPDFBlock(listEntryVO, ecrfVO, statusEntryVO, signatureVO, now, blank));
-						if (listEntryTagValuesVOMap != null) {
-							Collection<ProbandListEntryTagValueOutVO> tagValueVOs = listEntryTagValuesVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-							if (tagValueVOs != null) {
-								Iterator<ProbandListEntryTagValueOutVO> tagValueVOsIt = tagValueVOs.iterator();
-								while (tagValueVOsIt.hasNext()) {
-									ProbandListEntryTagValueOutVO tagValueVO = tagValueVOsIt.next();
-									blocks.add(new EcrfPDFBlock(tagValueVO, getSketchImage(tagValueVO), blank, tagValueVOsIt.hasNext()));
+				Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
+				while (ecrfIt.hasNext()) {
+					ECRFOutVO ecrfVO = ecrfIt.next();
+					Iterator<VisitOutVO> visitIt = visitVOs.iterator();
+					while (visitIt.hasNext()) {
+						VisitOutVO visitVO = visitIt.next();
+						if (ecrfStatusEntryExists(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO != null ? ecrfVO.getId() : null,
+								visitVO != null ? visitVO.getId() : null)) {
+							ECRFStatusEntryVO statusEntryVO = getEcrfStatusEntry(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO != null ? ecrfVO.getId() : null,
+									visitVO != null ? visitVO.getId() : null);
+							SignatureVO signatureVO = ((signatureVOMap != null && statusEntryVO != null) ? signatureVOMap.get(statusEntryVO.getId()) : null);
+							blocks.add(new EcrfPDFBlock(listEntryVO, ecrfVO, visitVO, statusEntryVO, signatureVO, now, blank));
+							if (listEntryTagValuesVOMap != null) {
+								Collection<ProbandListEntryTagValueOutVO> tagValueVOs = listEntryTagValuesVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
+								if (tagValueVOs != null) {
+									Iterator<ProbandListEntryTagValueOutVO> tagValueVOsIt = tagValueVOs.iterator();
+									while (tagValueVOsIt.hasNext()) {
+										ProbandListEntryTagValueOutVO tagValueVO = tagValueVOsIt.next();
+										blocks.add(new EcrfPDFBlock(tagValueVO, getSketchImage(tagValueVO), blank, tagValueVOsIt.hasNext()));
+									}
 								}
 							}
-						}
-						HashMap<Long, Collection<ECRFFieldValueOutVO>> ecrfValueVOMap = valueVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-						if (ecrfValueVOMap != null) {
-							Collection<ECRFFieldValueOutVO> valueVOs = ecrfValueVOMap.get(ecrfVO.getId());
+							Collection<ECRFFieldValueOutVO> valueVOs = getEcrfValues(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO != null ? ecrfVO.getId() : null,
+									visitVO != null ? visitVO.getId() : null);
 							if (valueVOs != null && valueVOs.size() > 0) {
 								boolean first = true;
 								String previousSection = null;
@@ -582,8 +623,12 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.blank = blank;
 	}
 
-	public void setEcrfVOMap(HashMap<Long, Collection<ECRFOutVO>> ecrfVOMap) {
-		this.ecrfVOMap = ecrfVOMap;
+	public void setVisitVOs(TreeSet<VisitOutVO> visitVOs) {
+		this.visitVOs = visitVOs;
+	}
+
+	public void setEcrfVOs(TreeSet<ECRFOutVO> ecrfVOs) {
+		this.ecrfVOs = ecrfVOs;
 	}
 
 	public void setImageVOMap(HashMap<Long, InputFieldImageVO> imageVOMap) {
@@ -598,7 +643,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.listEntryVOs = listEntryVOs;
 	}
 
-	public void setLogVOMap(HashMap<Long, HashMap<Long, HashMap<Long, Collection>>> logVOMap) {
+	public void setLogVOMap(HashMap<Long, HashMap<Long, HashMap<Long, HashMap<Long, Collection>>>> logVOMap) {
 		this.logVOMap = logVOMap;
 	}
 
@@ -621,11 +666,11 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.signatureVOMap = signatureVOMap;
 	}
 
-	public void setStatusEntryVOMap(HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> statusEntryVOMap) {
+	public void setStatusEntryVOMap(HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap) {
 		this.statusEntryVOMap = statusEntryVOMap;
 	}
 
-	public void setValueVOMap(HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>> valueVOMap) {
+	public void setValueVOMap(HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap) {
 		this.valueVOMap = valueVOMap;
 	}
 
@@ -652,22 +697,29 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.getStatusEntries().clear();
-		if (listEntryVOs != null && ecrfVOMap != null) {
+		if (listEntryVOs != null && ecrfVOs != null && visitVOs != null && statusEntryVOMap != null) {
 			Iterator<ProbandListEntryOutVO> listEntryIt = listEntryVOs.iterator();
 			while (listEntryIt.hasNext()) {
 				ProbandListEntryOutVO listEntryVO = listEntryIt.next();
-				Collection<ECRFOutVO> ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId());
-				if (ecrfVOs != null) {
-					Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
-					while (ecrfIt.hasNext()) {
-						ECRFOutVO ecrfVO = ecrfIt.next();
-						ECRFStatusEntryVO statusEntryVO = getEcrfStatusEntry(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO.getId());
-						if (statusEntryVO == null) {
-							statusEntryVO = new ECRFStatusEntryVO();
-							statusEntryVO.setEcrf(ecrfVO);
-							statusEntryVO.setListEntry(listEntryVO);
+				Iterator<ECRFOutVO> ecrfIt = ecrfVOs.iterator();
+				while (ecrfIt.hasNext()) {
+					ECRFOutVO ecrfVO = ecrfIt.next();
+					Iterator<VisitOutVO> visitIt = visitVOs.iterator();
+					while (visitIt.hasNext()) {
+						VisitOutVO visitVO = visitIt.next();
+						if (ecrfStatusEntryExists(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO != null ? ecrfVO.getId() : null,
+								visitVO != null ? visitVO.getId() : null)) {
+							ECRFStatusEntryVO statusEntryVO = getEcrfStatusEntry(listEntryVO == null ? null : listEntryVO.getId(), ecrfVO != null ? ecrfVO.getId() : null,
+									visitVO != null ? visitVO.getId() : null);
+							if (statusEntryVO == null) {
+								statusEntryVO = new ECRFStatusEntryVO();
+								statusEntryVO.setEcrf(ecrfVO);
+								statusEntryVO.setListEntry(listEntryVO);
+								statusEntryVO.setVisit(visitVO);
+								pdfVO.getStatusEntries().add(statusEntryVO);
+							}
+							//pdfVO.getStatusEntries().add(statusEntryVO);
 						}
-						pdfVO.getStatusEntries().add(statusEntryVO);
 					}
 				}
 			}
@@ -675,14 +727,15 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		StringBuilder fileName = new StringBuilder(ECRF_PDF_FILENAME_PREFIX);
 		if (listEntryVOs != null && listEntryVOs.size() == 1) {
 			ProbandListEntryOutVO listEntryVO = listEntryVOs.iterator().next();
-			if (listEntryVO != null) {
-				fileName.append(listEntryVO.getId());
-				fileName.append("_");
-			}
-			Collection<ECRFOutVO> ecrfVOs;
-			if (ecrfVOMap != null && (ecrfVOs = ecrfVOMap.get(listEntryVO == null ? null : listEntryVO.getId())) != null && ecrfVOs.size() == 1) {
+			fileName.append(listEntryVO.getId());
+			fileName.append("_");
+			if (ecrfVOs != null && ecrfVOs.size() == 1) {
 				fileName.append(ecrfVOs.iterator().next().getId());
 				fileName.append("_");
+				if (visitVOs != null && visitVOs.size() == 1) {
+					fileName.append(visitVOs.iterator().next().getId());
+					fileName.append("_");
+				}
 			}
 			if (blank) {
 				fileName.append("blank");

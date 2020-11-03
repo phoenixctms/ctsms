@@ -9,11 +9,6 @@
 </h:head>
 <h:body>
 	<ui:composition>
-
-
-
-
-
 		<p:tab
 			title="#{labels.audit_trail_tab_title_1}#{auditTrailLogEagerModel.allRowCount}#{labels.audit_trail_tab_title_2}">
 			<p:dataTable styleClass="ctsms-datatable" lazy="false"
@@ -32,8 +27,6 @@
 				emptyMessage="#{labels.datatable_permission_empty_message}"
 				value="#{auditTrailLogEagerModel.allRows}"
 				id="trialecrfstatus_ecrf_value_log_list">
-
-
 
 				<p:column sortBy="#{ecrfFieldValue.vo.id}">
 					<f:facet name="header">
@@ -114,11 +107,10 @@
 					<p:commandButton type="button"
 						title="#{labels.audit_trail_button_title}"
 						icon="ui-icon ui-icon-flag"
-						onclick="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{ecrfFieldValue.vo.listEntry.id},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{ecrfFieldValue.vo.ecrfField.id},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty ecrfFieldValue.vo.index ? 'null' : ecrfFieldValue.vo.index}}));" />
+						onclick="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{ecrfFieldValue.vo.listEntry.id},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty ecrfFieldValue.vo.visit ? 'null' : ecrfFieldValue.vo.visit.id},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{ecrfFieldValue.vo.ecrfField.id},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty ecrfFieldValue.vo.index ? 'null' : ecrfFieldValue.vo.index}}));" />
 				</p:column>
 			</p:dataTable>
 		</p:tab>
-
 
 	</ui:composition>
 </h:body>

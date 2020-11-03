@@ -73,8 +73,7 @@
 						<h:outputText value="#{visitScheduleItem.vo.group.title}" />
 					</p:column>
 					<p:column sortBy="#{visitScheduleItem.vo.visit.title}"
-						filterBy="#{visitScheduleItem.vo.visit.id}"
-						filterOptions="#{visitScheduleBean.filterVisits}">
+						filterBy="#{visitScheduleItem.vo.visit.title}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
@@ -403,18 +402,34 @@
 								<h:outputLabel for="visitschedulevisit"
 									value="#{triallabels.visit_schedule_visit_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="visitschedulevisit"
-										value="#{visitScheduleBean.in.visitId}" required="false"
+									<p:autoComplete id="visitschedulevisit" required="false"
+										value="#{visitScheduleBean.visit}"
 										label="#{triallabels.visit_schedule_visit}"
-										styleClass="ctsms-control">
-										<f:converter converterId="ctsms.ID" />
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems value="#{visitScheduleBean.visits}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-										<p:ajax />
-									</p:selectOneMenu>
+										styleClass="ctsms-control"
+										minQueryLength="#{autoCompleteMinQueryLengthVisit}"
+										maxResults="#{autoCompleteMaxResultsVisit}"
+										queryDelay="#{autoCompleteQueryDelayVisit}"
+										dropdown="#{autoCompleteDropdownVisit}"
+										global="#{autoCompleteGlobalVisit}"
+										scrollHeight="#{autoCompleteScrollHeightVisit}"
+										completeMethod="#{visitScheduleBean.completeVisit}"
+										forceSelection="true" var="visit"
+										itemValue="#{visit}"
+										itemLabel="#{visit.vo.token}"
+										converter="ctsms.Visit">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{visitScheduleBean.handleVisitSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{visitScheduleBean.handleVisitUnselect}" />
+										<p:column>
+											<h:outputText
+												value="#{visit.vo.token}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{applicationScopeBean.clipStringTrailing(visit.vo.title,96)}" />
+										</p:column>
+									</p:autoComplete>								
 									<p:tooltip rendered="#{enableTooltips}"
 										for="visitschedulevisit">
 										<h:outputText

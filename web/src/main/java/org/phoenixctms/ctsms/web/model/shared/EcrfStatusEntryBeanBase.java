@@ -25,12 +25,14 @@ import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusActionVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
+import org.phoenixctms.ctsms.vo.ECRFVisitVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.conversion.EcrfSectionProgressItemValue;
 import org.phoenixctms.ctsms.web.model.IDVO;
-import org.phoenixctms.ctsms.web.model.trial.EcrfLazyModel;
+import org.phoenixctms.ctsms.web.model.trial.EcrfVisitLazyModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -118,32 +120,30 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	private ArrayList<SelectItem> filterVisits;
 	protected ProbandListEntryModel probandListEntryModel;
-	protected EcrfLazyModel ecrfModel;
-	private HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>> ecrfAuditTrailLogModelCache;
-	private HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>> fieldStatusEntryLogModelCache;
+	protected EcrfVisitLazyModel ecrfVisitModel;
+	private HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>>> ecrfAuditTrailLogModelCache;
+	private HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>>> fieldStatusEntryLogModelCache;
 	private Collection<ECRFStatusTypeVO> statusTypes;
 	private Collection<ECRFStatusTypeVO> allStatusTypes;
 	private ArrayList<SelectItem> filterSections;
 	private ECRFProgressVO filterEcrfProgress;
 	private SignatureVO signature;
-	private HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfStatusCache;
+	private HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> ecrfStatusCache;
 	private HashMap<Long, ECRFProgressSummaryVO> ecrfProgressSummaryCache;
-	private HashMap<Long, HashMap<Long, ECRFProgressVO>> ecrfProgressCache;
+	private HashMap<Long, HashMap<Long, HashMap<Long, ECRFProgressVO>>> ecrfProgressCache;
 	private String password;
 
 	public EcrfStatusEntryBeanBase() {
 		super();
-		ecrfStatusCache = new HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>();
+		ecrfStatusCache = new HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>>();
 		ecrfProgressSummaryCache = new HashMap<Long, ECRFProgressSummaryVO>();
-		ecrfProgressCache = new HashMap<Long, HashMap<Long, ECRFProgressVO>>();
+		ecrfProgressCache = new HashMap<Long, HashMap<Long, HashMap<Long, ECRFProgressVO>>>();
 		filterEcrfProgress = null;
 		probandListEntryModel = createProbandListEntryModel();
-		ecrfModel = new EcrfLazyModel();
-		ecrfAuditTrailLogModelCache = new HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>>();
-		fieldStatusEntryLogModelCache = new HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>>();
-		filterVisits = new ArrayList<SelectItem>();
+		ecrfVisitModel = new EcrfVisitLazyModel();
+		ecrfAuditTrailLogModelCache = new HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>>>();
+		fieldStatusEntryLogModelCache = new HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>>>();
 		filterSections = new ArrayList<SelectItem>();
 		statusTypes = new ArrayList<ECRFStatusTypeVO>();
 		allStatusTypes = WebUtil.getEcrfStatusTypes();
@@ -155,12 +155,13 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		DataTable.clearFilters(getProbandListEntryDataTableId());
 		DataTable.clearFilters(getEcrfDataTableId());
 		ecrf = null;
+		visit = null;
 		probandListEntry = null;
 		ecrfStatus = null;
 		probandListEntryModel.clearSelectedColumns();
-		ecrfModel.setProbandListEntryId(null);
-		ecrfModel.setActive(true);
-		ecrfModel.updateRowCount();
+		ecrfVisitModel.setProbandListEntryId(null);
+		ecrfVisitModel.setActive(true);
+		ecrfVisitModel.updateRowCount();
 		changeSpecific(id);
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
@@ -179,35 +180,43 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		fieldStatusEntryLogModelCache.clear();
 	}
 
-	private void clearFromCache(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
-		clearFromEcrfStatusCache(ecrfVO, listEntryVO);
+	private void clearFromCache(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		clearFromEcrfStatusCache(listEntryVO, ecrfVO, visitVO);
 		clearFromEcrfProgressSummaryCache(listEntryVO);
-		clearFromEcrfProgressCache(ecrfVO, listEntryVO);
-		clearFromEcrfAuditTrailLogModelCache(ecrfVO, listEntryVO);
+		clearFromEcrfProgressCache(listEntryVO, ecrfVO, visitVO);
+		clearFromEcrfAuditTrailLogModelCache(listEntryVO, ecrfVO, visitVO);
 		ECRFFieldStatusQueue[] queues = ECRFFieldStatusQueue.values();
 		for (int i = 0; i < queues.length; i++) {
-			clearFromFieldStatusEntryLogModelCache(queues[i], ecrfVO, listEntryVO);
+			clearFromFieldStatusEntryLogModelCache(queues[i], listEntryVO, ecrfVO, visitVO);
 		}
 	}
 
-	private EcrfFieldValueAuditTrailLogEagerModel clearFromEcrfAuditTrailLogModelCache(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
+	private EcrfFieldValueAuditTrailLogEagerModel clearFromEcrfAuditTrailLogModelCache(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO) {
 		if (listEntryVO != null && ecrfVO != null) {
 			if (ecrfAuditTrailLogModelCache.containsKey(listEntryVO.getId())) {
-				HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel> ecrfMap = ecrfAuditTrailLogModelCache.get(listEntryVO.getId());
-				if (ecrfMap != null && ecrfMap.containsKey(ecrfVO.getId())) {
-					return ecrfMap.remove(ecrfVO.getId());
+				HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>> visitEcrfMap = ecrfAuditTrailLogModelCache.get(listEntryVO.getId());
+				if (visitEcrfMap != null && visitEcrfMap.containsKey(ecrfVO.getId())) {
+					HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel> ecrfMap = visitEcrfMap.get(ecrfVO.getId());
+					Long visitId = visitVO != null ? visitVO.getId() : null;
+					if (ecrfMap != null && ecrfMap.containsKey(visitId)) {
+						return ecrfMap.remove(visitId);
+					}
 				}
 			}
 		}
 		return null;
 	}
 
-	private ECRFProgressVO clearFromEcrfProgressCache(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
-		if (ecrfVO != null && listEntryVO != null) {
+	private ECRFProgressVO clearFromEcrfProgressCache(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		if (listEntryVO != null && ecrfVO != null) {
 			if (ecrfProgressCache.containsKey(listEntryVO.getId())) {
-				HashMap<Long, ECRFProgressVO> listEntryEcrfProgressCache = ecrfProgressCache.get(listEntryVO.getId());
-				if (listEntryEcrfProgressCache != null && listEntryEcrfProgressCache.containsKey(ecrfVO.getId())) {
-					return listEntryEcrfProgressCache.remove(ecrfVO.getId());
+				HashMap<Long, HashMap<Long, ECRFProgressVO>> visitEcrfMap = ecrfProgressCache.get(listEntryVO.getId());
+				if (visitEcrfMap != null && visitEcrfMap.containsKey(ecrfVO.getId())) {
+					HashMap<Long, ECRFProgressVO> ecrfMap = visitEcrfMap.get(ecrfVO.getId());
+					Long visitId = visitVO != null ? visitVO.getId() : null;
+					if (ecrfMap != null && ecrfMap.containsKey(visitId)) {
+						return ecrfMap.remove(visitId);
+					}
 				}
 			}
 		}
@@ -223,26 +232,35 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	private ECRFStatusEntryVO clearFromEcrfStatusCache(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
-		if (ecrfVO != null && listEntryVO != null) {
+	private ECRFStatusEntryVO clearFromEcrfStatusCache(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		if (listEntryVO != null && ecrfVO != null) {
 			if (ecrfStatusCache.containsKey(listEntryVO.getId())) {
-				HashMap<Long, ECRFStatusEntryVO> listEntryEcrfStatusCache = ecrfStatusCache.get(listEntryVO.getId());
-				if (listEntryEcrfStatusCache != null && listEntryEcrfStatusCache.containsKey(ecrfVO.getId())) {
-					return listEntryEcrfStatusCache.remove(ecrfVO.getId());
+				HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> visitEcrfMap = ecrfStatusCache.get(listEntryVO.getId());
+				if (visitEcrfMap != null && visitEcrfMap.containsKey(ecrfVO.getId())) {
+					HashMap<Long, ECRFStatusEntryVO> ecrfMap = visitEcrfMap.get(ecrfVO.getId());
+					Long visitId = visitVO != null ? visitVO.getId() : null;
+					if (ecrfMap != null && ecrfMap.containsKey(visitId)) {
+						return ecrfMap.remove(visitId);
+					}
 				}
 			}
 		}
 		return null;
 	}
 
-	private EcrfFieldStatusEntryLogEagerModel clearFromFieldStatusEntryLogModelCache(ECRFFieldStatusQueue queue, ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
+	private EcrfFieldStatusEntryLogEagerModel clearFromFieldStatusEntryLogModelCache(ECRFFieldStatusQueue queue, ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO,
+			VisitOutVO visitVO) {
 		if (queue != null && listEntryVO != null && ecrfVO != null) {
 			if (fieldStatusEntryLogModelCache.containsKey(queue)) {
-				HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>> listEntryMap = fieldStatusEntryLogModelCache.get(queue);
-				if (listEntryMap != null && listEntryMap.containsKey(listEntryVO.getId())) {
-					HashMap<Long, EcrfFieldStatusEntryLogEagerModel> ecrfMap = listEntryMap.get(listEntryVO.getId());
-					if (ecrfMap != null && ecrfMap.containsKey(ecrfVO.getId())) {
-						return ecrfMap.remove(ecrfVO.getId());
+				HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>> queueVisitEcrfMap = fieldStatusEntryLogModelCache.get(queue);
+				if (queueVisitEcrfMap != null && queueVisitEcrfMap.containsKey(listEntryVO.getId())) {
+					HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>> visitEcrfMap = queueVisitEcrfMap.get(listEntryVO.getId());
+					if (visitEcrfMap != null && visitEcrfMap.containsKey(ecrfVO.getId())) {
+						HashMap<Long, EcrfFieldStatusEntryLogEagerModel> ecrfMap = visitEcrfMap.get(ecrfVO.getId());
+						Long visitId = visitVO != null ? visitVO.getId() : null;
+						if (ecrfMap != null && ecrfMap.containsKey(visitId)) {
+							return ecrfMap.remove(visitId);
+						}
 					}
 				}
 			}
@@ -258,12 +276,13 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.delete();
 		initSpecificSets();
 		password = null;
-		clearFromCache(ecrf, probandListEntry);
+		clearFromCache(probandListEntry, ecrf, visit);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
+		Long visitId = visit != null ? visit.getId() : null;
+		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, true);
 		if (ecrfStatus == null) {
-			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+			ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 			statusTypes = loadEcrfStatusTypes();
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 			if (ecrfStatus != null) {
@@ -271,6 +290,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				ecrfFieldValueBean.setEcrf(ecrf);
 				probandListEntry = ecrfStatus.getListEntry();
 				ecrfFieldValueBean.setProbandListEntry(probandListEntry);
+				visit = ecrfStatus.getVisit();
+				ecrfFieldValueBean.setVisit(visit);
 			}
 		}
 		signature = loadSignature();
@@ -287,7 +308,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public StreamedContent getAuditTrailExcelStreamedContent(ProbandListEntryOutVO listEntry) throws Exception {
 		if (listEntry != null) {
 			try {
-				AuditTrailExcelVO auditTrailExcel = WebUtil.getServiceLocator().getTrialService().exportAuditTrail(WebUtil.getAuthentication(), null, listEntry.getId(), null);
+				AuditTrailExcelVO auditTrailExcel = WebUtil.getServiceLocator().getTrialService().exportAuditTrail(WebUtil.getAuthentication(), null, listEntry.getId(), null,
+						null);
 				return new DefaultStreamedContent(new ByteArrayInputStream(auditTrailExcel.getDocumentDatas()), auditTrailExcel.getContentType().getMimeType(),
 						auditTrailExcel.getFileName());
 			} catch (AuthenticationException e) {
@@ -300,21 +322,29 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	private ECRFProgressVO getCachedEcrfProgress(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
-		if (ecrfVO != null && listEntryVO != null) {
-			HashMap<Long, ECRFProgressVO> listEntryEcrfProgressCache;
+	private ECRFProgressVO getCachedEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		if (listEntryVO != null && ecrfVO != null) {
+			HashMap<Long, HashMap<Long, ECRFProgressVO>> ecrfVisitMap;
 			if (ecrfProgressCache.containsKey(listEntryVO.getId())) {
-				listEntryEcrfProgressCache = ecrfProgressCache.get(listEntryVO.getId());
+				ecrfVisitMap = ecrfProgressCache.get(listEntryVO.getId());
 			} else {
-				listEntryEcrfProgressCache = new HashMap<Long, ECRFProgressVO>();
-				ecrfProgressCache.put(listEntryVO.getId(), listEntryEcrfProgressCache);
+				ecrfVisitMap = new HashMap<Long, HashMap<Long, ECRFProgressVO>>();
+				ecrfProgressCache.put(listEntryVO.getId(), ecrfVisitMap);
+			}
+			HashMap<Long, ECRFProgressVO> ecrfMap;
+			if (ecrfVisitMap.containsKey(ecrfVO.getId())) {
+				ecrfMap = ecrfVisitMap.get(ecrfVO.getId());
+			} else {
+				ecrfMap = new HashMap<Long, ECRFProgressVO>();
+				ecrfVisitMap.put(ecrfVO.getId(), ecrfMap);
 			}
 			ECRFProgressVO ecrfProgressVO;
-			if (listEntryEcrfProgressCache.containsKey(ecrfVO.getId())) {
-				ecrfProgressVO = listEntryEcrfProgressCache.get(ecrfVO.getId());
+			Long visitId = visitVO != null ? visitVO.getId() : null;
+			if (ecrfMap.containsKey(visitId)) {
+				ecrfProgressVO = ecrfMap.get(visitId);
 			} else {
-				ecrfProgressVO = WebUtil.getEcrfProgress(ecrfVO.getId(), listEntryVO.getId(), false);
-				listEntryEcrfProgressCache.put(ecrfVO.getId(), ecrfProgressVO);
+				ecrfProgressVO = WebUtil.getEcrfProgress(listEntryVO.getId(), ecrfVO.getId(), visitId, false);
+				ecrfMap.put(visitId, ecrfProgressVO);
 			}
 			return ecrfProgressVO;
 		}
@@ -335,21 +365,29 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	private ECRFStatusEntryVO getCachedEcrfStatusEntry(ECRFOutVO ecrfVO, ProbandListEntryOutVO listEntryVO) {
+	private ECRFStatusEntryVO getCachedEcrfStatusEntry(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO) {
 		if (ecrfVO != null && listEntryVO != null) {
-			HashMap<Long, ECRFStatusEntryVO> listEntryEcrfStatusCache;
+			HashMap<Long, HashMap<Long, ECRFStatusEntryVO>> ecrfVisitMap;
 			if (ecrfStatusCache.containsKey(listEntryVO.getId())) {
-				listEntryEcrfStatusCache = ecrfStatusCache.get(listEntryVO.getId());
+				ecrfVisitMap = ecrfStatusCache.get(listEntryVO.getId());
 			} else {
-				listEntryEcrfStatusCache = new HashMap<Long, ECRFStatusEntryVO>();
-				ecrfStatusCache.put(listEntryVO.getId(), listEntryEcrfStatusCache);
+				ecrfVisitMap = new HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>();
+				ecrfStatusCache.put(listEntryVO.getId(), ecrfVisitMap);
+			}
+			HashMap<Long, ECRFStatusEntryVO> ecrfMap;
+			if (ecrfVisitMap.containsKey(ecrfVO.getId())) {
+				ecrfMap = ecrfVisitMap.get(ecrfVO.getId());
+			} else {
+				ecrfMap = new HashMap<Long, ECRFStatusEntryVO>();
+				ecrfVisitMap.put(ecrfVO.getId(), ecrfMap);
 			}
 			ECRFStatusEntryVO statusEntryVO;
-			if (listEntryEcrfStatusCache.containsKey(ecrfVO.getId())) {
-				statusEntryVO = listEntryEcrfStatusCache.get(ecrfVO.getId());
+			Long visitId = visitVO != null ? visitVO.getId() : null;
+			if (ecrfMap.containsKey(visitId)) {
+				statusEntryVO = ecrfMap.get(visitId);
 			} else {
-				statusEntryVO = WebUtil.getEcrfStatusEntry(ecrfVO.getId(), listEntryVO.getId());
-				listEntryEcrfStatusCache.put(ecrfVO.getId(), statusEntryVO);
+				statusEntryVO = WebUtil.getEcrfStatusEntry(listEntryVO.getId(), ecrfVO.getId(), visitId);
+				ecrfMap.put(visitId, statusEntryVO);
 			}
 			return statusEntryVO;
 		}
@@ -359,7 +397,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	private long getDoneEcrfCount() {
 		if (probandListEntry != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntryCount(WebUtil.getAuthentication(), probandListEntry.getId(), null, null, null, true, null,
+				return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntryCount(WebUtil.getAuthentication(), probandListEntry.getId(), null, null, null, null, true,
+						null,
 						null, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -369,14 +408,14 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return 0l;
 	}
 
-	public EcrfFieldValueAuditTrailLogEagerModel getEcrfAuditTrailLogModel(ECRFOutVO ecrfVO) {
-		return EcrfFieldValueAuditTrailLogEagerModel.getCachedAuditTrailLogModel(probandListEntry, ecrfVO, ecrfAuditTrailLogModelCache);
+	public EcrfFieldValueAuditTrailLogEagerModel getEcrfAuditTrailLogModel(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		return EcrfFieldValueAuditTrailLogEagerModel.getCachedAuditTrailLogModel(probandListEntry, ecrfVO, visitVO, ecrfAuditTrailLogModelCache);
 	}
 
 	protected abstract String getEcrfDataTableId();
 
-	public ECRFFieldStatusQueueCountVO getEcrfFieldStatusCount(ECRFOutVO ecrfVO, String queues) {
-		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
+	public ECRFFieldStatusQueueCountVO getEcrfFieldStatusCount(ECRFOutVO ecrfVO, VisitOutVO visitVO, String queues) {
+		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(probandListEntry, ecrfVO, visitVO);
 		ECRFFieldStatusQueueCountVO result = null;
 		if (ecrfProgress != null && ecrfProgress.getStatus() != null) {
 			ArrayList<Enum<ECRFFieldStatusQueue>> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
@@ -390,19 +429,19 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 					result.setProposed(result.getProposed() + queueCount.getProposed());
 					result.setResolved(result.getResolved() + queueCount.getResolved());
 					result.setUnresolved(result.getUnresolved() + queueCount.getUnresolved());
+					result.setTotal(result.getTotal() + queueCount.getTotal());
 				}
-				result.setTotal(result.getTotal() + queueCount.getTotal());
 			}
 		}
 		return result;
 	}
 
-	private ArrayList<SelectItem> getEcrfFilterSections(Long ecrfId, Long listEntryId, boolean update) {
+	private ArrayList<SelectItem> getEcrfFilterSections(Long listEntryId, Long ecrfId, Long visitId, boolean update) {
 		ECRFProgressVO sectionEcrfProgress = null;
 		if (update && filterEcrfProgress != null) {
 			if (!CommonUtil.isEmptyString(ecrfFieldValueBean.getFilterSection())) {
 				try {
-					sectionEcrfProgress = WebUtil.getServiceLocator().getTrialService().getEcrfProgress(WebUtil.getAuthentication(), listEntryId, ecrfId,
+					sectionEcrfProgress = WebUtil.getServiceLocator().getTrialService().getEcrfProgress(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId,
 							ecrfFieldValueBean.getFilterSection());
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
@@ -411,10 +450,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 				} catch (IllegalArgumentException e) {
 				}
 			} else {
-				filterEcrfProgress = WebUtil.getEcrfProgress(ecrfId, listEntryId, true);
+				filterEcrfProgress = WebUtil.getEcrfProgress(listEntryId, ecrfId, visitId, true);
 			}
 		} else {
-			filterEcrfProgress = WebUtil.getEcrfProgress(ecrfId, listEntryId, true);
+			filterEcrfProgress = WebUtil.getEcrfProgress(listEntryId, ecrfId, visitId, true);
 		}
 		Collection<String> sectionStrings = null;
 		if (filterEcrfProgress != null && filterEcrfProgress.getSections().size() > 0) {
@@ -427,22 +466,27 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return mergeEcrfFilterSections(sectionStrings, filterEcrfProgress, sectionEcrfProgress);
 	}
 
-	public EcrfLazyModel getEcrfModel() {
-		return ecrfModel;
+	public EcrfVisitLazyModel getEcrfVisitModel() {
+		return ecrfVisitModel;
 	}
 
 	public String getEcrfPdfButtonLabel(boolean blank) {
-		if (blank) {
-			return Messages.getMessage(MessageCodes.BLANK_ECRF_PDF_BUTTON_LABEL, ecrf != null ? ecrf.getName() : null);
-		} else {
-			return Messages.getMessage(MessageCodes.ECRF_PDF_BUTTON_LABEL, ecrf != null ? ecrf.getName() : null);
+		if (ecrf != null) {
+			if (blank) {
+				return Messages.getMessage(MessageCodes.BLANK_ECRF_PDF_BUTTON_LABEL,
+						CommonUtil.getEcrfVisitName(ecrf, visit));
+			} else {
+				return Messages.getMessage(MessageCodes.ECRF_PDF_BUTTON_LABEL,
+						CommonUtil.getEcrfVisitName(ecrf, visit));
+			}
 		}
+		return "";
 	}
 
 	public StreamedContent getEcrfPdfStreamedContent(ProbandListEntryOutVO listEntry, boolean blank) throws Exception {
 		if (listEntry != null) {
 			try {
-				ECRFPDFVO ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntry.getId(), null, blank);
+				ECRFPDFVO ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntry.getId(), null, null, blank);
 				return new DefaultStreamedContent(new ByteArrayInputStream(ecrfPdf.getDocumentDatas()), ecrfPdf.getContentType().getMimeType(), ecrfPdf.getFileName());
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -454,12 +498,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return null;
 	}
 
-	public ECRFProgressVO getEcrfProgress(ECRFOutVO ecrfVO) {
-		return getCachedEcrfProgress(ecrfVO, probandListEntry);
-	}
-
-	public String getEcrfProgressLabel(ECRFOutVO ecrfVO) {
-		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
+	public String getEcrfProgressLabel(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(probandListEntry, ecrfVO, visitVO);
 		if (ecrfProgress != null && ecrfProgress.getFieldCount() > 0l) {
 			return Messages.getMessage(MessageCodes.ECRF_PROGRESS_LABEL, ecrfProgress.getSavedValueCount(), ecrfProgress.getFieldCount());
 		}
@@ -487,8 +527,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return 0;
 	}
 
-	public int getEcrfProgressValue(ECRFOutVO ecrfVO) {
-		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(ecrfVO, probandListEntry);
+	public int getEcrfProgressValue(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(probandListEntry, ecrfVO, visitVO);
 		if (ecrfProgress != null && ecrfProgress.getFieldCount() > 0l) {
 			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE) * ecrfProgress
 					.getSavedValueCount()) / (ecrfProgress.getFieldCount()));
@@ -519,8 +559,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return 0;
 	}
 
-	public ECRFStatusEntryVO getEcrfStatusEntry(ECRFOutVO ecrfVO) {
-		return getCachedEcrfStatusEntry(ecrfVO, probandListEntry);
+	public ECRFStatusEntryVO getEcrfStatusEntry(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
+		return getCachedEcrfStatusEntry(probandListEntry, ecrfVO, visitVO);
 	}
 
 	public String getEcrfStatusTypeButtonLabel(ECRFStatusTypeVO statusType) {
@@ -540,22 +580,19 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 	}
 
-	public EcrfFieldStatusEntryLogEagerModel getFieldStatusEntryLogModel(ECRFFieldStatusQueue queue, ECRFOutVO ecrfVO) {
-		return EcrfFieldStatusEntryLogEagerModel.getCachedFieldStatusEntryLogModel(queue, probandListEntry, ecrfVO, fieldStatusEntryLogModelCache);
+	public EcrfFieldStatusEntryLogEagerModel getFieldStatusEntryLogModel(ECRFOutVO ecrfVO, VisitOutVO visitVO, ECRFFieldStatusQueue queue) {
+		return EcrfFieldStatusEntryLogEagerModel.getCachedFieldStatusEntryLogModel(queue, probandListEntry, ecrfVO, visitVO, fieldStatusEntryLogModelCache);
 	}
 
-	public String getFieldStatusEntryLogTabTitle(ECRFFieldStatusQueue queue, ECRFOutVO ecrfVO) {
+	public String getFieldStatusEntryLogTabTitle(ECRFOutVO ecrfVO, VisitOutVO visitVO, ECRFFieldStatusQueue queue) {
 		return WebUtil.getTabTitleString(MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_ENTRY_TAB_TITLE_WITH_COUNT,
-				new Long(EcrfFieldStatusEntryLogEagerModel.getCachedFieldStatusEntryLogModel(queue, probandListEntry, ecrfVO, fieldStatusEntryLogModelCache).getAllRowCount()),
+				new Long(EcrfFieldStatusEntryLogEagerModel.getCachedFieldStatusEntryLogModel(queue, probandListEntry, ecrfVO, visitVO, fieldStatusEntryLogModelCache)
+						.getAllRowCount()),
 				WebUtil.getEcrfFieldStatusQueueName(queue));
 	}
 
 	public ArrayList<SelectItem> getFilterSections() {
 		return filterSections;
-	}
-
-	public ArrayList<SelectItem> getFilterVisits() {
-		return filterVisits;
 	}
 
 	public String getPassword() {
@@ -582,8 +619,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 					result.setProposed(result.getProposed() + queueCount.getProposed());
 					result.setResolved(result.getResolved() + queueCount.getResolved());
 					result.setUnresolved(result.getUnresolved() + queueCount.getUnresolved());
+					result.setTotal(result.getTotal() + queueCount.getTotal());
 				}
-				result.setTotal(result.getTotal() + queueCount.getTotal());
 			}
 			if (result.getTotal() == 0l) {
 				result = null;
@@ -592,9 +629,9 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return result;
 	}
 
-	public IDVO getSelectedEcrf() {
+	public ECRFVisitVO getSelectedEcrfVisit() {
 		if (ecrf != null) {
-			return IDVO.transformVo(ecrf);
+			return new ECRFVisitVO(ecrf, visit);
 		} else {
 			return null;
 		}
@@ -631,8 +668,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 					result.setProposed(result.getProposed() + queueCount.getProposed());
 					result.setResolved(result.getResolved() + queueCount.getResolved());
 					result.setUnresolved(result.getUnresolved() + queueCount.getUnresolved());
+					result.setTotal(result.getTotal() + queueCount.getTotal());
 				}
-				result.setTotal(result.getTotal() + queueCount.getTotal());
 			}
 		}
 		return result;
@@ -665,6 +702,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		if (probandListEntry != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntryCount(WebUtil.getAuthentication(), probandListEntry.getId(), null, null, null, null, null,
+						null,
 						null, true);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -675,6 +713,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	public void handleFilterSectionChange() {
+		//ecrfFieldValueBean.setVisit(visit != null ? visit.getId() : null);
 		ecrfFieldValueBean.changeRootEntity(ecrf == null ? null : ecrf.getId());
 		addMessages();
 	}
@@ -685,17 +724,20 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		clearCaches();
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+		Long visitId = visit != null ? visit.getId() : null;
+		ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 		statusTypes = loadEcrfStatusTypes();
 		ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 		if (ecrfStatus != null) {
 			ecrf = ecrfStatus.getEcrf();
+			visit = ecrfStatus.getVisit();
 			probandListEntry = ecrfStatus.getListEntry();
 		}
 		ecrfFieldValueBean.setProbandListEntry(probandListEntry);
+		ecrfFieldValueBean.setVisit(visit);
 		ecrfFieldValueBean.setFilterSectionProgress(null);
 		ecrfFieldValueBean.setFilterIndex(null);
-		filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
+		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, false);
 		if (setFirstSection) {
 			setFirstFilterSection();
 		}
@@ -722,16 +764,19 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public String loadAction() {
 		initSpecificSets();
 		password = null;
-		clearFromCache(ecrf, probandListEntry);
+		clearFromCache(probandListEntry, ecrf, visit);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
-		ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+		Long visitId = visit != null ? visit.getId() : null;
+		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, false);
+		ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 		statusTypes = loadEcrfStatusTypes();
 		ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 		if (ecrfStatus != null) {
 			ecrf = ecrfStatus.getEcrf();
 			ecrfFieldValueBean.setEcrf(ecrf);
+			visit = ecrfStatus.getVisit();
+			ecrfFieldValueBean.setVisit(visit);
 			probandListEntry = ecrfStatus.getListEntry();
 			ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 		}
@@ -757,9 +802,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	private SignatureVO loadSignature() {
-		if (ecrf != null && probandListEntry != null) {
+		if (probandListEntry != null && ecrf != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfSignature(WebUtil.getAuthentication(), ecrf.getId(), probandListEntry.getId());
+				return WebUtil.getServiceLocator().getTrialService().getEcrfSignature(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(),
+						visit != null ? visit.getId() : null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -769,10 +815,11 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	public void refreshEcrfProgress() {
-		clearFromCache(ecrf, probandListEntry);
+		clearFromCache(probandListEntry, ecrf, visit);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
+		Long visitId = visit != null ? visit.getId() : null;
+		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, true);
 		appendRequestContextCallbackArgs(true);
 	}
 
@@ -800,9 +847,10 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		this.password = password;
 	}
 
-	public void setSelectedEcrf(IDVO ecrf) {
-		if (ecrf != null) {
-			this.ecrf = (ECRFOutVO) ecrf.getVo();
+	public void setSelectedEcrfVisit(ECRFVisitVO ecrfVisit) {
+		if (ecrfVisit != null) {
+			this.ecrf = ecrfVisit.getEcrf();
+			this.visit = ecrfVisit.getVisit();
 			ecrfFieldValueBean.setFieldQuery(null);
 			initSets(true);
 		}
@@ -816,15 +864,13 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			this.probandListEntry = null;
 		}
 		ecrf = null;
+		visit = null;
 		if (this.probandListEntry != null) {
-			ecrfModel.setProbandListEntryId(probandListEntry.getId());
-			filterVisits = WebUtil.getVisits(this.probandListEntry.getTrial().getId());
-			filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+			ecrfVisitModel.setProbandListEntryId(probandListEntry.getId());
 		} else {
-			ecrfModel.setProbandListEntryId(null);
-			filterVisits.clear();
+			ecrfVisitModel.setProbandListEntryId(null);
 		}
-		ecrfModel.updateRowCount();
+		ecrfVisitModel.updateRowCount();
 		ecrfFieldValueBean.setFieldQuery(null);
 		initSets(false);
 	}
@@ -842,6 +888,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			WebUtil.testPassword(password);
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
+			Long visitId = visit != null ? visit.getId() : null;
 			int signed = 0;
 			if (listEntryId != null) {
 				Collection<ECRFStatusEntryVO> ecrfStatusEntries = WebUtil.getServiceLocator().getTrialService()
@@ -852,20 +899,26 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 					Iterator<ECRFStatusEntryVO> it = ecrfStatusEntries.iterator();
 					while (it.hasNext()) {
 						ECRFStatusEntryVO updatedEcrfStatus = it.next();
-						if (listEntryId != null && updatedEcrfStatus.getListEntry().getId() == listEntryId && ecrfId != null && updatedEcrfStatus.getEcrf().getId() == ecrfId) {
+						if (listEntryId != null && updatedEcrfStatus.getListEntry().getId() == listEntryId
+								&& ecrfId != null && updatedEcrfStatus.getEcrf().getId() == ecrfId
+								&& ((visitId != null && updatedEcrfStatus.getVisit() != null && updatedEcrfStatus.getVisit().getId() == visitId)
+										|| (visitId == null && updatedEcrfStatus.getVisit() == null))) {
 							ecrfStatus = updatedEcrfStatus;
 						}
-						clearFromCache(updatedEcrfStatus.getEcrf(), updatedEcrfStatus.getListEntry());
+						clearFromCache(updatedEcrfStatus.getListEntry(), updatedEcrfStatus.getEcrf(), updatedEcrfStatus.getVisit());
 					}
 					if (ecrfStatus != null) {
 						statusTypes = loadEcrfStatusTypes();
 						ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 						ecrf = ecrfStatus.getEcrf();
 						ecrfFieldValueBean.setEcrf(ecrf);
+						visit = ecrfStatus.getVisit();
+						ecrfFieldValueBean.setVisit(visit);
 						probandListEntry = ecrfStatus.getListEntry();
 						listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 						ecrfId = ecrf == null ? null : ecrf.getId();
-						filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
+						visitId = visit != null ? visit.getId() : null;
+						filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, false);
 						ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 						ecrfFieldValueBean.getPaginator().setToFirstPage();
 						ecrfFieldValueBean.getPaginator().updatePSF();
@@ -907,19 +960,22 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.update();
 		initSpecificSets();
 		password = null;
-		clearFromCache(ecrf, probandListEntry);
+		clearFromCache(probandListEntry, ecrf, visit);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
+		Long visitId = visit != null ? visit.getId() : null;
 		// slow?:
 		// filterSections = WebUtil.getEcrfFilterSections(null, ecrfId, WebUtil.getEcrfProgress(ecrfId, listEntryId, true)); // getCachedEcrfProgress(ecrf, probandListEntry));
-		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
+		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, true);
 		if (ecrfStatus == null) {
-			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+			ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 			statusTypes = loadEcrfStatusTypes();
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 			if (ecrfStatus != null) {
 				ecrf = ecrfStatus.getEcrf();
 				ecrfFieldValueBean.setEcrf(ecrf);
+				visit = ecrfStatus.getVisit();
+				ecrfFieldValueBean.setVisit(visit);
 				probandListEntry = ecrfStatus.getListEntry();
 				ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 			}
@@ -941,19 +997,23 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			}
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
+			Long visitId = visit != null ? visit.getId() : null;
 			ecrfStatus = WebUtil.getServiceLocator().getTrialService()
-					.setEcrfStatusEntry(WebUtil.getAuthentication(), ecrfId,
-							listEntryId, ecrfStatus == null ? 0l : ecrfStatus.getVersion(), ecrfStatusTypeId, null);
+					.setEcrfStatusEntry(WebUtil.getAuthentication(),
+							listEntryId, ecrfId, visitId, ecrfStatus == null ? 0l : ecrfStatus.getVersion(), ecrfStatusTypeId, null);
 			initSpecificSets();
-			clearFromCache(ecrf, probandListEntry);
+			clearFromCache(probandListEntry, ecrf, visit);
 			statusTypes = loadEcrfStatusTypes();
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 			ecrf = ecrfStatus.getEcrf();
 			ecrfFieldValueBean.setEcrf(ecrf);
+			visit = ecrfStatus.getVisit();
+			ecrfFieldValueBean.setVisit(visit);
 			probandListEntry = ecrfStatus.getListEntry();
 			listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			ecrfId = ecrf == null ? null : ecrf.getId();
-			filterSections = getEcrfFilterSections(ecrfId, listEntryId, false);
+			visitId = visit != null ? visit.getId() : null;
+			filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, false);
 			ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 			ecrfFieldValueBean.getPaginator().setToFirstPage();
 			ecrfFieldValueBean.getPaginator().updatePSF();
@@ -983,17 +1043,20 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.updateSection(section);
 		initSpecificSets();
 		password = null;
-		clearFromCache(ecrf, probandListEntry);
+		clearFromCache(probandListEntry, ecrf, visit);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		filterSections = getEcrfFilterSections(ecrfId, listEntryId, true);
+		Long visitId = visit != null ? visit.getId() : null;
+		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, true);
 		if (ecrfStatus == null) {
-			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+			ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 			statusTypes = loadEcrfStatusTypes();
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 			if (ecrfStatus != null) {
 				ecrf = ecrfStatus.getEcrf();
 				ecrfFieldValueBean.setEcrf(ecrf);
+				visit = ecrfStatus.getVisit();
+				ecrfFieldValueBean.setVisit(visit);
 				probandListEntry = ecrfStatus.getListEntry();
 				ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 			}
@@ -1006,7 +1069,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public void verifySignature() {
 		try {
 			signature = WebUtil.getServiceLocator().getTrialService()
-					.verifyEcrfSignature(WebUtil.getAuthentication(), ecrf == null ? null : ecrf.getId(), probandListEntry == null ? null : probandListEntry.getId());
+					.verifyEcrfSignature(WebUtil.getAuthentication(), probandListEntry == null ? null : probandListEntry.getId(), ecrf == null ? null : ecrf.getId(),
+							visit != null ? visit.getId() : null);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

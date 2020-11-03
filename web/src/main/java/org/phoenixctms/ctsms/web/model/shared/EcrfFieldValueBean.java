@@ -34,6 +34,7 @@ import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.Paginator;
@@ -59,6 +60,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		if (in != null && out != null) {
 			ProbandListEntryOutVO listEntryVO = out.getListEntry();
 			ECRFFieldOutVO ecrfFieldVO = out.getEcrfField();
+			VisitOutVO visitVO = out.getVisit();
 			Collection<InputFieldSelectionSetValueOutVO> ecrfFieldValueVOs = out.getSelectionValues();
 			in.setBooleanValue(out.getBooleanValue());
 			in.setDateValue(out.getDateValue());
@@ -70,6 +72,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					: Messages
 							.getString(MessageCodes.ECRF_FIELD_VALUE_REASON_FOR_CHANGE_PRESET));
 			in.setListEntryId(listEntryVO == null ? null : listEntryVO.getId());
+			in.setVisitId(visitVO != null ? visitVO.getId() : null);
 			in.setLongValue(out.getLongValue());
 			ArrayList<Long> selectionValueIds = new ArrayList<Long>(ecrfFieldValueVOs.size());
 			Iterator<InputFieldSelectionSetValueOutVO> ecrfFieldValueVOsIt = ecrfFieldValueVOs.iterator();
@@ -86,7 +89,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	public static void copyEcrfFieldValuesInToJson(ArrayList<ECRFFieldValueJsonVO> ecrfFieldValuesOut, ArrayList<ECRFFieldValueInVO> ecrfFieldValuesIn,
-			HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap) {
+			HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap, Long visitId) {
 		if (ecrfFieldValuesOut != null) {
 			ecrfFieldValuesOut.clear();
 			if (ecrfFieldValuesIn != null && ecrfFieldVOsMap != null) {
@@ -96,7 +99,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					ECRFFieldValueInVO in = it.next();
 					if (ecrfFieldVOsMap.containsKey(in.getEcrfFieldId())) {
 						ECRFFieldValueJsonVO out = new ECRFFieldValueJsonVO();
-						CommonUtil.copyEcrfFieldValueInToJson(out, in, ecrfFieldVOsMap.get(in.getEcrfFieldId()));
+						CommonUtil.copyEcrfFieldValueInToJson(out, in, ecrfFieldVOsMap.get(in.getEcrfFieldId()), visitId);
 						ecrfFieldValuesOut.add(out);
 					}
 				}
@@ -143,6 +146,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	private ProbandListEntryOutVO probandListEntry;
 	private ECRFOutVO ecrf;
+	private VisitOutVO visit;
 	private ECRFStatusEntryVO ecrfStatus;
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<ProbandGroupOutVO> probandGroups;
@@ -167,6 +171,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		super();
 		probandListEntry = null;
 		ecrf = null;
+		visit = null;
 		ecrfStatus = null;
 		sections = new ArrayList<EcrfFieldSection>();
 		inputModelsMap = new HashMap<EcrfFieldSection, EcrfFieldInputModelList>();
@@ -186,7 +191,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				if (ids[0] != null && ids[1] != null) {
 					if (CommonUtil.isEmptyString(((EcrfFieldValueBean) bean).getFilterSection())) {
 						try {
-							return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueCount(WebUtil.getAuthentication(), ids[0], ids[1],
+							return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueCount(
+									WebUtil.getAuthentication(), ids[0], ids[1], ids[2],
 									((EcrfFieldValueBean) bean).getFieldQuery());
 						} catch (AuthenticationException e) {
 							WebUtil.publishException(e);
@@ -195,8 +201,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					} else {
 						try {
 							return WebUtil.getServiceLocator().getTrialService()
-									.getEcrfFieldValueCount(WebUtil.getAuthentication(), ids[0], ((EcrfFieldValueBean) bean).getFilterSection(),
-											((EcrfFieldValueBean) bean).getFilterIndex(), ids[1], ((EcrfFieldValueBean) bean).getFieldQuery());
+									.getEcrfFieldValueCount(WebUtil.getAuthentication(), ids[0], ids[1], ids[2], ((EcrfFieldValueBean) bean).getFilterSection(),
+											((EcrfFieldValueBean) bean).getFilterIndex(), ((EcrfFieldValueBean) bean).getFieldQuery());
 						} catch (AuthenticationException e) {
 							WebUtil.publishException(e);
 						} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
@@ -295,6 +301,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			if (ecrfFieldValuesIn != null && ecrfFieldValuesOut != null && ecrfFieldValuesOut.size() > 0
 					&& jsEcrfFieldValuesOut != null && jsEcrfFieldValuesOut.size() > 0) {
 				ProbandListEntryOutVO listEntry = null;
+				VisitOutVO ecrfVisit = null;
 				Collection<ProbandListEntryTagValueJsonVO> tagValues = null;
 				Collection<VisitScheduleItemOutVO> visitSchedule = null;
 				Collection<ProbandGroupOutVO> groups = null;
@@ -305,6 +312,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				while (ecrfFieldIt.hasNext()) {
 					ECRFFieldValueOutVO ecrfFieldValueVO = ecrfFieldIt.next();
 					listEntry = ecrfFieldValueVO.getListEntry();
+					ecrfVisit = ecrfFieldValueVO.getVisit();
 					ECRFFieldOutVO ecrfFieldVO = ecrfFieldValueVO.getEcrfField();
 					if (!CommonUtil.isEmptyString(ecrfFieldVO.getJsVariableName())) {
 						ecrfFieldVOsMap.put(ecrfFieldVO.getId(), ecrfFieldVO);
@@ -317,7 +325,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						}
 					}
 				}
-				copyEcrfFieldValuesInToJson(out, ecrfFieldValuesIn, ecrfFieldVOsMap);
+				copyEcrfFieldValuesInToJson(out, ecrfFieldValuesIn, ecrfFieldVOsMap, ecrfVisit != null ? ecrfVisit.getId() : null);
 				// add non visible values from jsEcrfFieldValuesOut:
 				Iterator<ECRFFieldValueJsonVO> jsEcrfFieldValueIt = jsEcrfFieldValuesOut.iterator();
 				while (jsEcrfFieldValueIt.hasNext()) {
@@ -331,17 +339,17 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					if (probandListEntry != null) {
 						if (listEntry.getId() != probandListEntry.getId()) {
 							tagValues = loadProbandListEntryTagValues(listEntry);
-							visitSchedule = loadVisitScheduleItems(listEntry);
-							groups = loadProbandGroups(probandListEntry);
+							visitSchedule = loadVisitScheduleItems(listEntry, ecrfVisit);
+							groups = loadProbandGroups(listEntry);
 						} else {
 							tagValues = probandListEntryTagValues;
 							visitSchedule = visitScheduleItems;
 							groups = probandGroups;
 						}
 					} else {
-						tagValues = loadProbandListEntryTagValues(listEntry);
-						visitSchedule = loadVisitScheduleItems(listEntry);
-						groups = loadProbandGroups(probandListEntry);
+						tagValues = loadProbandListEntryTagValues(null);
+						visitSchedule = loadVisitScheduleItems(null, null);
+						groups = loadProbandGroups(null);
 					}
 				}
 				if (!CommonUtil.isEmptyString(deltaErrorMessageId)) {
@@ -427,10 +435,11 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
+			Long visitId = visit != null ? visit.getId() : null;
 			if (CommonUtil.isEmptyString(filterSection)) {
-				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, listEntryId);
+				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId);
 			} else {
-				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, filterSection, listEntryId);
+				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection);
 			}
 			portionEcrfFieldValues(null);
 			initPages(true);
@@ -451,7 +460,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
-			AuditTrailExcelVO auditTrailExcel = WebUtil.getServiceLocator().getTrialService().exportAuditTrail(WebUtil.getAuthentication(), null, listEntryId, ecrfId);
+			Long visitId = visit != null ? visit.getId() : null;
+			AuditTrailExcelVO auditTrailExcel = WebUtil.getServiceLocator().getTrialService().exportAuditTrail(WebUtil.getAuthentication(), null, listEntryId, ecrfId, visitId);
 			return new DefaultStreamedContent(new ByteArrayInputStream(auditTrailExcel.getDocumentDatas()), auditTrailExcel.getContentType().getMimeType(),
 					auditTrailExcel.getFileName());
 		} catch (AuthenticationException e) {
@@ -493,11 +503,12 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
+			Long visitId = visit != null ? visit.getId() : null;
 			ECRFPDFVO ecrfPdf;
 			if (!section || CommonUtil.isEmptyString(filterSection)) {
-				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntryId, ecrfId, blank);
+				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntryId, ecrfId, visitId, blank);
 			} else {
-				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrf(WebUtil.getAuthentication(), ecrfId, filterSection, listEntryId, blank);
+				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrf(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, blank);
 			}
 			return new DefaultStreamedContent(new ByteArrayInputStream(ecrfPdf.getDocumentDatas()), ecrfPdf.getContentType().getMimeType(), ecrfPdf.getFileName());
 		} catch (AuthenticationException e) {
@@ -664,7 +675,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				if (CommonUtil.isEmptyString(filterSection)) {
 					try {
 						portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-								.getEcrfFieldValues(WebUtil.getAuthentication(), ecrf.getId(), probandListEntry.getId(), true,
+								.getEcrfFieldValues(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, true,
 										loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), fieldQuery, paginator.getPsf()));
 					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
@@ -673,7 +684,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				} else {
 					try {
 						portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-								.getEcrfFieldValues(WebUtil.getAuthentication(), ecrf.getId(), filterSection, filterIndex, probandListEntry.getId(), true,
+								.getEcrfFieldValues(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, filterSection,
+										filterIndex, true,
 										loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), fieldQuery, paginator.getPsf()));
 					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 					} catch (AuthenticationException e) {
@@ -687,13 +699,14 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	private void initPages(boolean resetSelectedPage) {
 		paginator.initPages(resetSelectedPage,
+				probandListEntry == null ? null : probandListEntry.getId(),
 				ecrf == null ? null : ecrf.getId(),
-				probandListEntry == null ? null : probandListEntry.getId());
+				visit != null ? visit.getId() : null);
 	}
 
 	private void initSets() {
 		probandListEntryTagValues = loadProbandListEntryTagValues(probandListEntry);
-		visitScheduleItems = loadVisitScheduleItems(probandListEntry);
+		visitScheduleItems = loadVisitScheduleItems(probandListEntry, visit);
 		probandGroups = loadProbandGroups(probandListEntry);
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
@@ -735,12 +748,13 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			PSFVO psf = paginator.getPsfCopy(true);
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
+			Long visitId = visit != null ? visit.getId() : null;
 			if (CommonUtil.isEmptyString(filterSection)) {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, listEntryId, true, true, fieldQuery, psf));
+						.getEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, true, true, fieldQuery, psf));
 			} else {
 				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldValues(WebUtil.getAuthentication(), ecrfId, filterSection, filterIndex, listEntryId, true, true,
+						.getEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, filterIndex, true, true,
 								fieldQuery, psf));
 			}
 			paginator.initPages(psf, false);
@@ -786,13 +800,14 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		return null;
 	}
 
-	private Collection<VisitScheduleItemOutVO> loadVisitScheduleItems(ProbandListEntryOutVO listEntry) {
+	private Collection<VisitScheduleItemOutVO> loadVisitScheduleItems(ProbandListEntryOutVO listEntry, VisitOutVO ecrfVisit) {
 		if (listEntry != null && listEntry.getGroup() != null) {
 			try {
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService()
-						.getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup().getId(), null, listEntry.getProband().getId(),
+						.getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup().getId(),
+								ecrfVisit != null ? ecrfVisit.getId() : null, listEntry.getProband().getId(), //narrow ecrf visit?
 								true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -834,6 +849,14 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	public void setEcrf(ECRFOutVO ecrf) {
 		this.ecrf = ecrf;
+	}
+
+	public VisitOutVO getVisit() {
+		return visit;
+	}
+
+	public void setVisit(VisitOutVO visit) {
+		this.visit = visit;
 	}
 
 	public void setEcrfStatus(ECRFStatusEntryVO ecrfStatus) {
@@ -1065,7 +1088,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				if (filterSectionProgress != null && filterSectionProgress.getSeries()) {
 					try {
 						filterSectionProgress.copy(WebUtil.getServiceLocator().getTrialService()
-								.getEcrfProgress(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), filterSection).getSections().iterator().next());
+								.getEcrfProgress(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, filterSection)
+								.getSections().iterator().next());
 					} catch (Exception e) {
 					}
 				}

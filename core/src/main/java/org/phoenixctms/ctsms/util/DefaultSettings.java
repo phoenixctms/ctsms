@@ -163,6 +163,7 @@ public final class DefaultSettings {
 	public static final Integer SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
+	public static final Integer VISIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final String OPS_CODE_REVISION = null;
 	public static final String ALPHA_ID_REVISION = null;
 	public static final String ASP_REVISION = null;

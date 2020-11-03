@@ -37,7 +37,7 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 					JSValues.AJAX_ECRF_FIELD_STATUS_COUNT,
 					MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE_WITH_COUNT,
 					WebUtil.getEcrfFieldStatusEntryCount(Settings.getEcrfFieldStatusQueue(SettingCodes.ECRF_FIELD_STATUS_QUEUE, Bundle.SETTINGS,
-							DefaultSettings.ECRF_FIELD_STATUS_QUEUE), probandListEntry.getTrial().getId(), null, null, true));
+							DefaultSettings.ECRF_FIELD_STATUS_QUEUE), probandListEntry.getTrial().getId(), null, null, null, true));
 		}
 	}
 
@@ -68,7 +68,7 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	public String getEcrfListHeader() {
 		if (probandListEntry != null) {
-			return Messages.getMessage(MessageCodes.ECRF_LIST_HEADER, probandListEntry.getProband().getName(), ecrfModel.getRowCount());
+			return Messages.getMessage(MessageCodes.ECRF_LIST_HEADER, probandListEntry.getProband().getName(), ecrfVisitModel.getRowCount());
 		} else {
 			return Messages.getString(MessageCodes.SELECT_PROBAND_LIST_ENTRY);
 		}

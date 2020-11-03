@@ -39,7 +39,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[0]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[0].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[0].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[0].ecrfFieldValue.index ? 'null' : inputModelRow[0].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[0].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[0].ecrfFieldValue.visitId ? 'null' : inputModelRow[0].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[0].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[0].ecrfFieldValue.index ? 'null' : inputModelRow[0].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[0].ecrfFieldValue.listEntryId}_#{inputModelRow[0].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[0].ecrfFieldValue.index ? 'null' : inputModelRow[0].ecrfFieldValue.index}" />
@@ -64,7 +64,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[1]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[1].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[1].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[1].ecrfFieldValue.index ? 'null' : inputModelRow[1].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[1].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[1].ecrfFieldValue.visitId ? 'null' : inputModelRow[1].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[1].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[1].ecrfFieldValue.index ? 'null' : inputModelRow[1].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[1].ecrfFieldValue.listEntryId}_#{inputModelRow[1].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[1].ecrfFieldValue.index ? 'null' : inputModelRow[1].ecrfFieldValue.index}" />
@@ -88,7 +88,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[2]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[2].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[2].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[2].ecrfFieldValue.index ? 'null' : inputModelRow[2].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[2].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[2].ecrfFieldValue.visitId ? 'null' : inputModelRow[2].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[2].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[2].ecrfFieldValue.index ? 'null' : inputModelRow[2].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[2].ecrfFieldValue.listEntryId}_#{inputModelRow[2].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[2].ecrfFieldValue.index ? 'null' : inputModelRow[2].ecrfFieldValue.index}" />
@@ -117,7 +117,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[3]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[3].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[3].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[3].ecrfFieldValue.index ? 'null' : inputModelRow[3].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[3].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[3].ecrfFieldValue.visitId ? 'null' : inputModelRow[3].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[3].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[3].ecrfFieldValue.index ? 'null' : inputModelRow[3].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[3].ecrfFieldValue.listEntryId}_#{inputModelRow[3].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[3].ecrfFieldValue.index ? 'null' : inputModelRow[3].ecrfFieldValue.index}" />
@@ -148,7 +148,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[4]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[4].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[4].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[4].ecrfFieldValue.index ? 'null' : inputModelRow[4].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[4].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[4].ecrfFieldValue.visitId ? 'null' : inputModelRow[4].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[4].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[4].ecrfFieldValue.index ? 'null' : inputModelRow[4].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[4].ecrfFieldValue.listEntryId}_#{inputModelRow[4].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[4].ecrfFieldValue.index ? 'null' : inputModelRow[4].ecrfFieldValue.index}" />
@@ -177,7 +177,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[5]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[5].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[5].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[5].ecrfFieldValue.index ? 'null' : inputModelRow[5].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[5].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[5].ecrfFieldValue.visitId ? 'null' : inputModelRow[5].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[5].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[5].ecrfFieldValue.index ? 'null' : inputModelRow[5].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[5].ecrfFieldValue.listEntryId}_#{inputModelRow[5].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[5].ecrfFieldValue.index ? 'null' : inputModelRow[5].ecrfFieldValue.index}" />
@@ -208,7 +208,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[6]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[6].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[6].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[6].ecrfFieldValue.index ? 'null' : inputModelRow[6].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[6].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[6].ecrfFieldValue.visitId ? 'null' : inputModelRow[6].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[6].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[6].ecrfFieldValue.index ? 'null' : inputModelRow[6].ecrfFieldValue.index}}));" />
 
 
 						<ui:param name="reloadRemoteCommand"
@@ -238,7 +238,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[7]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[7].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[7].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[7].ecrfFieldValue.index ? 'null' : inputModelRow[7].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[7].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[7].ecrfFieldValue.visitId ? 'null' : inputModelRow[7].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[7].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[7].ecrfFieldValue.index ? 'null' : inputModelRow[7].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[7].ecrfFieldValue.listEntryId}_#{inputModelRow[7].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[7].ecrfFieldValue.index ? 'null' : inputModelRow[7].ecrfFieldValue.index}" />
@@ -268,7 +268,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[8]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[8].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[8].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[8].ecrfFieldValue.index ? 'null' : inputModelRow[8].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[8].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[8].ecrfFieldValue.visitId ? 'null' : inputModelRow[8].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[8].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[8].ecrfFieldValue.index ? 'null' : inputModelRow[8].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[8].ecrfFieldValue.listEntryId}_#{inputModelRow[8].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[8].ecrfFieldValue.index ? 'null' : inputModelRow[8].ecrfFieldValue.index}" />
@@ -298,7 +298,7 @@
 							value="#{section.series and !ecrfStatusEntryBean.ecrfFieldValueBean.sectionCreatedMap[section]}" />
 						<ui:param name="fieldInput" value="#{inputModelRow[9]}" />
 						<ui:param name="openAuditTrailRemoteCommand"
-							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[9].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[9].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[9].ecrfFieldValue.index ? 'null' : inputModelRow[9].ecrfFieldValue.index}}));" />
+							value="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{inputModelRow[9].ecrfFieldValue.listEntryId},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty inputModelRow[9].ecrfFieldValue.visitId ? 'null' : inputModelRow[9].ecrfFieldValue.visitId},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{inputModelRow[9].ecrfFieldValue.ecrfFieldId},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty inputModelRow[9].ecrfFieldValue.index ? 'null' : inputModelRow[9].ecrfFieldValue.index}}));" />
 
 						<ui:param name="reloadRemoteCommand"
 							value="reloadEcrfField_#{inputModelRow[9].ecrfFieldValue.listEntryId}_#{inputModelRow[9].ecrfFieldValue.ecrfFieldId}_#{empty inputModelRow[9].ecrfFieldValue.index ? 'null' : inputModelRow[9].ecrfFieldValue.index}" />

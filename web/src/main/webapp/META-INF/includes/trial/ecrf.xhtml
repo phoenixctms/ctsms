@@ -13,7 +13,7 @@
 
 			<p:remoteCommand process="@this" name="ecrfSelectVisitGroup"
 				actionListener="#{ecrfBean.matrix.selectVisitGroup()}"
-				update="ecrfvisit,ecrfgroups" />
+				update="ecrfgroups,ecrfvisits" /> 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:dataTable styleClass="ctsms-datatable" lazy="true"
@@ -31,7 +31,7 @@
 					emptyMessage="#{labels.datatable_permission_empty_message}"
 					var="ecrf" value="#{ecrfBean.ecrfModel}" id="ecrf_list"
 					selectionMode="single" selection="#{ecrfBean.selectedEcrf}"
-					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitToColor(ecrf.vo.visit)}#{rowBgColorAlpha}">
+					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitsToColor(ecrf.vo.visits)}#{rowBgColorAlpha}">
 					<p:ajax event="page" listener="#{ecrfBean.ecrfModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:ecrf_form:ecrf_input,:tabView:ecrf_form:ecrf_clone" />
@@ -59,7 +59,8 @@
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
 						<ui:param name="ecrfSelectionBean" value="#{ecrfBean}" />
 						<ui:param name="showRevision" value="true" />
-						<ui:param name="showVisit" value="true" />
+						<ui:param name="showVisit" value="false" />
+						<ui:param name="showVisits" value="true" />
 						<ui:param name="showGroups" value="true" />
 						<ui:param name="showActive" value="true" />
 						<ui:param name="showCharge" value="true" />
@@ -224,30 +225,47 @@
 									</p:autoComplete>
 									<p:tooltip rendered="#{enableTooltips}" for="ecrfgroups">
 										<h:outputText
-											label="#{triallabels.ecrf_groups_tooltip}"
+											value="#{triallabels.ecrf_groups_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfgroups" />
-								<h:outputLabel for="ecrfvisit"
-									value="#{triallabels.ecrf_visit_label}" />
+								
+								<h:outputLabel for="ecrfvisits"
+									value="#{triallabels.ecrf_visits_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="ecrfvisit" value="#{ecrfBean.in.visitId}"
-										required="false" label="#{triallabels.ecrf_visit}"
-										styleClass="ctsms-control">
-										<f:converter converterId="ctsms.ID" />
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems value="#{ecrfBean.visits}" var="selectItem"
-											itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-									</p:selectOneMenu>
-									<p:tooltip rendered="#{enableTooltips}" for="ecrfvisit">
-										<h:outputText value="#{triallabels.ecrf_visit_tooltip}"
+									<p:autoComplete id="ecrfvisits" required="false"
+										value="#{ecrfBean.visits}"
+										label="#{triallabels.ecrf_visits}"
+										styleClass="ctsms-control-larger"
+										minQueryLength="#{autoCompleteMinQueryLengthVisit}"
+										maxResults="#{autoCompleteMaxResultsVisit}"
+										queryDelay="#{autoCompleteQueryDelayVisit}"
+										global="#{autoCompleteGlobalVisit}"
+										scrollHeight="#{autoCompleteScrollHeightVisit}"
+										completeMethod="#{ecrfBean.completeVisit}"
+										multiple="true" var="visit" itemValue="#{visit}"
+										itemLabel="#{visit.vo.token}" converter="ctsms.Visit">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{ecrfBean.handleVisitSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{ecrfBean.handleVisitUnselect}" />
+										<p:column>
+											<h:outputText
+												value="#{visit.vo.token}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{applicationScopeBean.clipStringTrailing(visit.vo.title,96)}" />
+										</p:column>
+									</p:autoComplete>
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfvisits">
+										<h:outputText
+											value="#{triallabels.ecrf_visits_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrfvisit" />
+								<p:message for="ecrfvisits" />
 
 								<h:outputLabel for="ecrfDisabled"
 									value="#{triallabels.ecrf_disabled_label}" />

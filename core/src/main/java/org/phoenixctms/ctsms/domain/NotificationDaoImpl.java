@@ -455,14 +455,15 @@ public class NotificationDaoImpl
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
 						messageParameters.get("ecrfstatusentry_listentry_trial_name"),
 						messageParameters.get("ecrfstatusentry_listentry_proband_id"),
-						messageParameters.get("ecrfstatusentry_ecrf_name"),
+						CommonUtil.getEcrfVisitName((String) messageParameters.get("ecrfstatusentry_ecrf_name"), (String) messageParameters.get("ecrfstatusentry_visit_token")),
 						messageParameters.get("ecrfstatusentry_status")
 				});
 			case NEW_ECRF_FIELD_STATUS:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
 						messageParameters.get("ecrffieldstatusentry_listentry_trial_name"),
 						messageParameters.get("ecrffieldstatusentry_listentry_proband_id"),
-						messageParameters.get("ecrffieldstatusentry_ecrffield_ecrf_name"),
+						CommonUtil.getEcrfVisitName((String) messageParameters.get("ecrffieldstatusentry_ecrffield_ecrf_name"),
+								(String) messageParameters.get("ecrffieldstatusentry_visit_token")),
 						messageParameters.get("ecrffieldstatusentry_status")
 				});
 			case PROBANDS_DELETED:

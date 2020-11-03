@@ -73,19 +73,25 @@
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_name_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.name}" />
+									
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_revision_label}" />
 									<h:outputLabel value="#{ecrfSectionBean.ecrf.revision}" />
+									
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_field_section_label}" />
 									<h:outputLabel
 										value="#{ecrfSectionBean.fieldStatusEntry.ecrfField.section}" />
+									
 									<h:outputLabel
-										value="#{triallabels.ecrf_field_values_ecrf_group_label}" />
+										value="#{triallabels.ecrf_field_values_ecrf_groups_label}" />
 									<h:outputLabel value="#{applicationScopeBean.probandGroupsToString(ecrfSectionBean.ecrf.groups)}" />
+									
 									<h:outputLabel
-										value="#{triallabels.ecrf_field_values_ecrf_visit_label}" />
-									<h:outputLabel value="#{ecrfSectionBean.ecrf.visit.title}" />
+										value="#{triallabels.ecrf_field_values_ecrf_visits_label}" />
+									<h:outputLabel value="#{applicationScopeBean.visitsToString(ecrfSectionBean.ecrf.visits)}" />
+									
+									
 									<h:outputLabel
 										value="#{triallabels.ecrf_field_values_ecrf_status_label}" />
 									<h:outputLabel
@@ -109,9 +115,9 @@
 									<h:outputLabel
 										value="#{ecrfSectionBean.probandListEntry.group.title}" />
 									<h:outputLabel
-										value="#{triallabels.ecrf_field_values_proband_list_entry_status_label}" />
+										value="#{triallabels.ecrf_field_values_visit_label}" />
 									<h:outputLabel
-										value="#{ecrfSectionBean.probandListEntry.lastStatus.status.name}" />
+										value="#{ecrfSectionBean.visit.title}" />
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:panel>

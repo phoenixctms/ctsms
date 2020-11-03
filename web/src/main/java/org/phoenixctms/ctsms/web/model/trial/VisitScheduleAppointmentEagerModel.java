@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.trial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -10,10 +11,10 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
-import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
+import org.phoenixctms.ctsms.web.model.EagerDataModel;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class VisitScheduleAppointmentEagerModel extends EagerDataModelBase<VisitScheduleAppointmentVO> {
+public class VisitScheduleAppointmentEagerModel extends EagerDataModel<VisitScheduleAppointmentVO> {
 
 	public static VisitScheduleAppointmentEagerModel getCachedVisitScheduleAppointmentModel(VisitScheduleItemOutVO visitScheduleItem, boolean load,
 			HashMap<Long, VisitScheduleAppointmentEagerModel> visitScheduleAppointmentModelCache) {
@@ -45,7 +46,6 @@ public class VisitScheduleAppointmentEagerModel extends EagerDataModelBase<Visit
 		resetRows();
 	}
 
-	@Override
 	protected Collection<VisitScheduleAppointmentVO> getEagerResult(PSFVO psf) {
 		if (visitScheduleItemId != null) {
 			try {
@@ -56,11 +56,6 @@ public class VisitScheduleAppointmentEagerModel extends EagerDataModelBase<Visit
 			}
 		}
 		return new ArrayList<VisitScheduleAppointmentVO>();
-	}
-
-	@Override
-	protected VisitScheduleAppointmentVO getRowElement(Long id) {
-		return null; //not selectable.
 	}
 
 	public Long getVisitScheduleItemId() {
@@ -77,5 +72,11 @@ public class VisitScheduleAppointmentEagerModel extends EagerDataModelBase<Visit
 
 	public void setProbandId(Long probandId) {
 		this.probandId = probandId;
+	}
+
+	@Override
+	protected List<VisitScheduleAppointmentVO> load(PSFVO psf) {
+		Collection<VisitScheduleAppointmentVO> eagerResult = getEagerResult(psf);
+		return (List<VisitScheduleAppointmentVO>) eagerResult;
 	}
 }

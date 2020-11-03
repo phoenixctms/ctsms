@@ -16,6 +16,7 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase<ECRFFie
 	private Long listEntryId;
 	private Long ecrfFieldId;
 	private Long index;
+	private Long visitId;
 
 	public EcrfFieldValueAuditTrailLazyModel() {
 		super();
@@ -33,7 +34,7 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase<ECRFFie
 	protected Collection<ECRFFieldValueOutVO> getLazyResult(PSFVO psf) {
 		if (listEntryId != null && ecrfFieldId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(WebUtil.getAuthentication(), listEntryId, ecrfFieldId, index, true, false, psf)
+				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(WebUtil.getAuthentication(), listEntryId, visitId, ecrfFieldId, index, true, false, psf)
 						.getPageValues();
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -67,5 +68,13 @@ public class EcrfFieldValueAuditTrailLazyModel extends LazyDataModelBase<ECRFFie
 	@Override
 	public boolean isStorePage() {
 		return false;
+	}
+
+	public Long getVisitId() {
+		return visitId;
+	}
+
+	public void setVisitId(Long visitId) {
+		this.visitId = visitId;
 	}
 }

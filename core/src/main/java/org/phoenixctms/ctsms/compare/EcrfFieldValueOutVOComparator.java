@@ -5,6 +5,7 @@ import java.util.Comparator;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 public class EcrfFieldValueOutVOComparator implements Comparator<ECRFFieldValueOutVO> {
 
@@ -22,6 +23,19 @@ public class EcrfFieldValueOutVOComparator implements Comparator<ECRFFieldValueO
 					} else if (ecrfA.getId() < ecrfB.getId()) {
 						return -1;
 					} else {
+						VisitOutVO visitA = a.getVisit();
+						VisitOutVO visitB = b.getVisit();
+						if (visitA != null && visitB != null) {
+							if (visitA.getId() > visitB.getId()) {
+								return 1;
+							} else if (visitA.getId() < visitB.getId()) {
+								return -1;
+							}
+						} else if (visitA == null && visitB != null) {
+							return -1;
+						} else if (visitA != null && visitB == null) {
+							return 1;
+						}
 						String sectionA = ecrfFieldA.getSection();
 						String sectionB = ecrfFieldB.getSection();
 						if (sectionA != null && sectionB != null) {

@@ -64,7 +64,7 @@ public class ProbandEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	public String getEcrfListHeader() {
 		if (probandListEntry != null) {
-			return Messages.getMessage(MessageCodes.ECRF_LIST_HEADER, probandListEntry.getTrial().getName(), ecrfModel.getRowCount());
+			return Messages.getMessage(MessageCodes.ECRF_LIST_HEADER, probandListEntry.getTrial().getName(), ecrfVisitModel.getRowCount());
 		} else {
 			return Messages.getString(MessageCodes.SELECT_PROBAND_LIST_ENTRY);
 		}

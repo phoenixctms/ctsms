@@ -2,13 +2,38 @@ package org.phoenixctms.ctsms.web.model;
 
 import java.util.List;
 
-public interface EagerDataModel {
+import org.phoenixctms.ctsms.vo.PSFVO;
 
-	public int getAllRowCount();
+public abstract class EagerDataModel<T> {
 
-	public List<IDVO> getAllRows();
+	protected abstract List<T> load(PSFVO psf);
 
-	public List<IDVO> loadAll();
+	public List<T> loadAll() {
+		return load(null);
+	}
 
-	public void resetRows();
+	public void resetRows() {
+		allRows = null;
+	}
+
+	private List<T> allRows;
+
+	public int getAllRowCount() {
+		List<T> rows = getAllRows();
+		if (rows != null) {
+			return rows.size();
+		}
+		return 0;
+	}
+
+	public List<T> getAllRows() {
+		if (allRows == null) {
+			allRows = loadAll();
+		}
+		return allRows;
+	}
+
+	public boolean getHasRows() {
+		return getAllRowCount() > 0;
+	}
 }

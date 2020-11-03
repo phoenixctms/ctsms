@@ -138,8 +138,8 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 					result.setProposed(result.getProposed() + queueCount.getProposed());
 					result.setResolved(result.getResolved() + queueCount.getResolved());
 					result.setUnresolved(result.getUnresolved() + queueCount.getUnresolved());
+					result.setTotal(result.getTotal() + queueCount.getTotal());
 				}
-				result.setTotal(result.getTotal() + queueCount.getTotal());
 			}
 		}
 		return result;

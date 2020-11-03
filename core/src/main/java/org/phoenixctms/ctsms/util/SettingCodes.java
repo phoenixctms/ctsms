@@ -215,6 +215,7 @@ public interface SettingCodes {
 	public static final String SYSTEM_MESSAGE_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "system_message_code_autocomplete_default_result_limit";
 	public static final String TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "timeline_event_autocomplete_default_result_limit";
 	public static final String PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_group_autocomplete_default_result_limit";
+	public static final String VISIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "visit_autocomplete_default_result_limit";
 	public static final String OPS_CODE_REVISION = "ops_code_revision";
 	public static final String ALPHA_ID_REVISION = "alpha_id_revision";
 	public static final String ASP_REVISION = "asp_revision";

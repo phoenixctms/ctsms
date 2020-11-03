@@ -119,7 +119,8 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_INITIAL_ECRF_FIELD_STATUS_TYPE = "invalid_initial_ecrf_field_status_type";
 	public final static String INVALID_NEW_ECRF_FIELD_STATUS_TYPE = "invalid_new_ecrf_field_status_type";
 	public final static String ECRF_FIELD_STATUS_ENTRY_COMMENT_REQUIRED = "ecrf_field_status_entry_comment_required";
-	public final static String ECRF_STATUS_ENTRY_FOR_WRONG_TRIAL = "ecrf_status_entry_for_wrong_trial";
+	public final static String ECRF_FIELD_STATUS_ENTRY_INVALID_VISIT = "ecrf_field_status_entry_invalid_visit";
+	public final static String ECRF_FIELD_STATUS_ENTRY_FOR_WRONG_TRIAL = "ecrf_field_status_entry_for_wrong_trial";
 	public final static String ECRF_FIELD_STATUS_ENTRY_NOT_LAST_ENTRY = "ecrf_field_status_entry_not_last_entry";
 	public final static String ECRF_FIELD_VALUES_FOR_DIFFERENT_ECRFS = "ecrf_field_values_for_different_ecrfs";
 	public final static String ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF = "ecrf_field_value_input_disabled_for_ecrf";
@@ -129,9 +130,11 @@ public interface ServiceExceptionCodes {
 	public final static String ECRF_FIELD_VALUE_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_value_input_locked_for_ecrf_status";
 	public final static String ECRF_FIELD_STATUS_INPUT_LOCKED_FOR_ECRF_STATUS = "ecrf_field_status_input_locked_for_ecrf_status";
 	public final static String ECRF_FIELD_VALUES_FOR_WRONG_TRIAL = "ecrf_field_values_for_wrong_trial";
+	public final static String ECRF_FIELD_VALUE_INVALID_VISIT = "ecrf_field_value_invalid_visit";
 	public final static String ECRF_FIELD_VALUE_REASON_FOR_CHANGE_NOT_NULL = "ecrf_field_value_reason_for_change_not_null";
 	public final static String ECRF_FIELD_VALUE_REASON_FOR_CHANGE_EMPTY = "ecrf_field_value_reason_for_change_empty";
 	public final static String ECRF_STATUS_ENTRY_DIFFERENT_TRIALS = "ecrf_status_entry_different_trials";
+	public final static String INVALID_VISIT_FOR_ECRF = "invalid_visit_for_ecrf";
 	public final static String INVALID_INITIAL_ECRF_STATUS_TYPE = "invalid_initial_ecrf_status_type";
 	public final static String INVALID_NEW_ECRF_STATUS_TYPE = "invalid_new_ecrf_status_type";
 	public final static String NO_ECRF_STATUS_ENTRY = "no_ecrf_status_entry";
@@ -420,6 +423,8 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_GROUP_TOKEN_ALREADY_EXISTS = "proband_group_token_already_exists";
 	public final static String INVALID_PROBAND_GROUP_TOKEN = "invalid_proband_group_token";
 	public final static String WHITESPACE_PROBAND_GROUP_TOKEN = "whitespace_proband_group_token";
+	public final static String INVALID_VISIT_TOKEN = "invalid_visit_token";
+	public final static String WHITESPACE_VISIT_TOKEN = "whitespace_visit_token";
 	public final static String INVALID_INPUT_FIELD_SELECTION_SET_VALUE_VALUE = "invalid_input_field_selection_set_value_value";
 	public final static String WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_VALUE = "whitespace_input_field_selection_set_value_value";
 	public final static String WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_NAME = "whitespace_input_field_selection_set_value_name";
@@ -541,6 +546,10 @@ public interface ServiceExceptionCodes {
 	public final static String WHITESPACE_ECRF_REVISION = "whitespace_ecrf_revision";
 	public final static String ECRF_DUPLICATE_PROBAND_GROUP = "ecrf_duplicate_proband_group";
 	public final static String ECRF_WRONG_VISIT = "ecrf_wrong_visit";
+	public final static String ECRF_DUPLICATE_VISIT = "ecrf_duplicate_visit";
+	public final static String ECRF_VISIT_ID_IS_NULL = "ecrf_visit_id_is_null";
+	public final static String ECRF_VISIT_WITH_STATUS_ENTRIES = "ecrf_visit_with_status_entries";
+	public final static String ECRF_VISIT_WITH_VALUES = "ecrf_visit_with_values";
 	public final static String ECRF_CHARGE_NEGATIVE = "ecrf_charge_negative";
 	public final static String ECRF_NAME_REVISION_NOT_UNIQUE = "ecrf_name_revision_not_unique";
 	public final static String ECRF_MALFORMED_REVISION_PATTERN = "ecrf_malformed_revision_pattern";
@@ -803,4 +812,5 @@ public interface ServiceExceptionCodes {
 	public static final String JOB_EMAIL_RECIPIENTS_NOT_NULL = "job_email_recipients_not_null";
 	public static final String JOB_INVALID_EMAIL_RECIPIENTS = "job_invalid_email_recipients";
 	public static final String JOB_ALREADY_EXISTS = "job_already_exists";
+	public static final String VISIT_ID_NOT_NULL = "visit_id_not_null";
 }

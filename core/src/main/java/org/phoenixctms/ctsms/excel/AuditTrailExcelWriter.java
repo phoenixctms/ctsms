@@ -28,6 +28,7 @@ import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 import jxl.HeaderFooter;
 import jxl.WorkbookSettings;
@@ -39,6 +40,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_TRIAL = "trial_";
 	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_PROBAND = "proband_";
 	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_ECRF = "ecrf_";
+	protected static final String AUDIT_TRAIL_EXCEL_FILENAME_VISIT = "visit_";
 	private final static InputFieldValueStringAdapterBase INPUT_FIELD_VALUE_ADAPTER = new InputFieldValueStringAdapterBase<ECRFFieldValueOutVO>() {
 
 		@Override
@@ -131,6 +133,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	protected TrialOutVO trial;
 	protected ProbandListEntryOutVO listEntry;
 	protected ECRFOutVO ecrf;
+	protected VisitOutVO visit;
 	protected LinkedHashMap<ECRFFieldStatusQueue, Integer> queueSheetIndexMap;
 
 	protected AuditTrailExcelWriter() {
@@ -170,7 +173,8 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		}
 		header.getRight().clear();
 		if (ecrf != null) {
-			header.getRight().append(L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, ecrf.getName()));
+			header.getRight().append(L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.ECRF_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL,
+					CommonUtil.getEcrfVisitName(ecrf, visit)));
 		}
 		footer.getLeft().clear();
 		temp = excelVO.getFileName();
@@ -309,7 +313,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 
 	public void setEcrf(ECRFOutVO ecrf) {
 		this.ecrf = ecrf;
-		setSpreadSheetName(ecrf != null ? ecrf.getName() : null);
+		setSpreadSheetName(CommonUtil.getEcrfVisitName(ecrf, visit));
 	}
 
 	public void setListEntry(ProbandListEntryOutVO listEntry) {
@@ -376,6 +380,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		excelVO.setTrial(trial);
 		excelVO.setListEntry(listEntry);
 		excelVO.setEcrf(ecrf);
+		excelVO.setVisit(visit);
 		excelVO.setAuditTrailRowCount(getVOs().size());
 		LinkedHashMap<ECRFFieldStatusQueue, Long> ecrfFieldStatusRowCountMap = new LinkedHashMap<ECRFFieldStatusQueue, Long>(queueSheetIndexMap.size());
 		Iterator<ECRFFieldStatusQueue> it = queueSheetIndexMap.keySet().iterator();
@@ -399,6 +404,11 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 			fileName.append(AUDIT_TRAIL_EXCEL_FILENAME_ECRF);
 			fileName.append(ecrf.getId());
 			fileName.append("_");
+			if (visit != null) {
+				fileName.append(AUDIT_TRAIL_EXCEL_FILENAME_VISIT);
+				fileName.append(visit.getId());
+				fileName.append("_");
+			}
 		}
 		fileName.append(CommonUtil.formatDate(now, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
 		fileName.append(".");
@@ -412,5 +422,14 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 			return ((ECRFFieldStatusEntryOutVO) vo).getStatus().getColor();
 		}
 		return null;
+	}
+
+	public VisitOutVO getVisit() {
+		return visit;
+	}
+
+	public void setVisit(VisitOutVO visit) {
+		this.visit = visit;
+		setSpreadSheetName(CommonUtil.getEcrfVisitName(ecrf, visit));
 	}
 }

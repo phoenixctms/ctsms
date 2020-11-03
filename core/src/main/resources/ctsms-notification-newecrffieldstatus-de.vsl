@@ -8,12 +8,12 @@ dies ist die Benachrichtigung für folgendes Ereignis:
    • Studie Org.einheit: $ecrffieldstatusentry_listentry_trial_department
    • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
-   • eCRF:               ${ecrffieldstatusentry_ecrffield_ecrf_position}. $ecrffieldstatusentry_ecrffield_ecrf_name
-#if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.group)
-   • eCRF Probandengr.:  $notification.ecrfFieldStatusEntry.ecrfField.ecrf.group.title
+   • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Probandengruppe:    $notification.ecrfFieldStatusEntry.listEntry.group.title
 #end
-#if($notification.ecrfFieldStatusEntry.ecrfField.ecrf.visit)
-   • eCRF Visite:        $notification.ecrfFieldStatusEntry.ecrfField.ecrf.visit.title
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Visite:             $notification.ecrfFieldStatusEntry.visit.title
 #end
    • eCRF Abschnitt:     $ecrffieldstatusentry_ecrffield_section
    • Eingabefeld:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name

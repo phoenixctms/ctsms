@@ -101,25 +101,30 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 	private void initSets() {
 		probandListEntry = null;
 		ecrf = null;
+		visit = null;
 		String section = null;
 		Long index = null;
 		if (fieldStatusEntry != null) {
 			probandListEntry = fieldStatusEntry.getListEntry();
 			ecrf = fieldStatusEntry.getEcrfField().getEcrf();
+			visit = fieldStatusEntry.getVisit();
 			section = fieldStatusEntry.getEcrfField().getSection();
 			index = fieldStatusEntry.getIndex();
 		}
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
-		ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+		Long visitId = visit != null ? visit.getId() : null;
+		ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 		ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 		if (ecrfStatus != null) {
 			ecrf = ecrfStatus.getEcrf();
+			visit = ecrfStatus.getVisit();
 			probandListEntry = ecrfStatus.getListEntry();
 		}
+		ecrfFieldValueBean.setVisit(visit);
 		ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 		ecrfFieldValueBean.setFilterSection(section);
-		ecrfFieldValueBean.setFilterSection(null);
+		//ecrfFieldValueBean.setFilterSection(null);
 		ecrfFieldValueBean.setFilterIndex(index);
 		ecrfFieldValueBean.changeRootEntity(ecrfId);
 		if (fieldStatusEntry != null) {
@@ -149,12 +154,15 @@ public class EcrfSectionBean extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.updateSection(section);
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		Long ecrfId = ecrf == null ? null : ecrf.getId();
+		Long visitId = visit != null ? visit.getId() : null;
 		if (ecrfStatus == null) {
-			ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfId, listEntryId);
+			ecrfStatus = WebUtil.getEcrfStatusEntry(listEntryId, ecrfId, visitId);
 			ecrfFieldValueBean.setEcrfStatus(ecrfStatus);
 			if (ecrfStatus != null) {
 				ecrf = ecrfStatus.getEcrf();
 				ecrfFieldValueBean.setEcrf(ecrf);
+				visit = ecrfStatus.getVisit();
+				ecrfFieldValueBean.setVisit(visit);
 				probandListEntry = ecrfStatus.getListEntry();
 				ecrfFieldValueBean.setProbandListEntry(probandListEntry);
 			}

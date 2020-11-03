@@ -33,7 +33,7 @@ public class EcrfRowProcessor extends RowProcessor {
 	private final static int NAME_COLUMN_INDEX = 0;
 	private final static int REVISION_COLUMN_INDEX = 1;
 	private final static int PROBAND_GROUPS_COLUMN_INDEX = 2;
-	private final static int VISIT_COLUMN_INDEX = 3;
+	private final static int VISITS_COLUMN_INDEX = 3;
 	private final static int ACTIVE_COLUMN_INDEX = 4;
 	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 5;
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 6;
@@ -44,7 +44,7 @@ public class EcrfRowProcessor extends RowProcessor {
 	private int nameColumnIndex;
 	private int revisionColumnIndex;
 	private int probandGroupsColumnIndex;
-	private int visitColumnIndex;
+	private int visitsColumnIndex;
 	private int activeColumnIndex;
 	private int enableBrowserFieldCalculationColumnIndex;
 	private int externalIdColumnIndex;
@@ -139,8 +139,8 @@ public class EcrfRowProcessor extends RowProcessor {
 		return getColumnValue(values, titleColumnIndex);
 	}
 
-	private String getVisit(String[] values) {
-		return getColumnValue(values, visitColumnIndex);
+	private String getVisits(String[] values) {
+		return getColumnValue(values, visitsColumnIndex);
 	}
 
 	private Long getVisitId(String visitToken) throws Exception {
@@ -208,7 +208,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		nameColumnIndex = NAME_COLUMN_INDEX;
 		revisionColumnIndex = REVISION_COLUMN_INDEX;
 		probandGroupsColumnIndex = PROBAND_GROUPS_COLUMN_INDEX;
-		visitColumnIndex = VISIT_COLUMN_INDEX;
+		visitsColumnIndex = VISITS_COLUMN_INDEX;
 		activeColumnIndex = ACTIVE_COLUMN_INDEX;
 		enableBrowserFieldCalculationColumnIndex = ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX;
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
@@ -229,7 +229,7 @@ public class EcrfRowProcessor extends RowProcessor {
 				.append(getName(values))
 				.append(getRevision(values))
 				.append(getProbandGroups(values))
-				.append(getVisit(values))
+				.append(getVisits(values))
 				.append(getActive(values))
 				.append(getEnableBrowserFieldCalculation(values))
 				.append(getExternalId(values))
@@ -255,19 +255,29 @@ public class EcrfRowProcessor extends RowProcessor {
 		ecrfIn.setName(name);
 		ecrfIn.setRevision(getRevision(values));
 		ecrfIn.setTrialId(context.getEntityId());
-		String[] probandGroupTokens;
+		String[] tokens;
 		try {
-			probandGroupTokens = getProbandGroups(values).split(ServiceUtil.GROUP_VISIT_SPLIT_REGEX_PATTERN);
+			tokens = getProbandGroups(values).split(ServiceUtil.GROUP_VISIT_SPLIT_REGEX_PATTERN);
 		} catch (Exception e) {
-			probandGroupTokens = new String[] {};
+			tokens = new String[] {};
 		}
-		for (int i = 0; i < probandGroupTokens.length; i++) {
-			String token = probandGroupTokens[i].trim();
+		for (int i = 0; i < tokens.length; i++) {
+			String token = tokens[i].trim();
 			if (token != null && token.length() > 0) {
 				ecrfIn.getGroupIds().add(getProbandGroupId(token));
 			}
 		}
-		ecrfIn.setVisitId(getVisitId(getVisit(values)));
+		try {
+			tokens = getVisits(values).split(ServiceUtil.GROUP_VISIT_SPLIT_REGEX_PATTERN);
+		} catch (Exception e) {
+			tokens = new String[] {};
+		}
+		for (int i = 0; i < tokens.length; i++) {
+			String token = tokens[i].trim();
+			if (token != null && token.length() > 0) {
+				ecrfIn.getVisitIds().add(getVisitId(token));
+			}
+		}
 		ecrfIn.setActive(Boolean.parseBoolean(getActive(values)));
 		ecrfIn.setEnableBrowserFieldCalculation(Boolean.parseBoolean(getEnableBrowserFieldCalculation(values)));
 		ecrfIn.setExternalId(getExternalId(values));

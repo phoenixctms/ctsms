@@ -35,11 +35,6 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class ECRFFieldDaoImpl
 		extends ECRFFieldDaoBase {
 
-	private static final String UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME = "{0} - {1} - {2} - {3}. {4}";
-	private static final String UNIQUE_ECRF_NAME_ECRF_FIELD_NAME = "{0} - {1} - {2}. {3}";
-	private static final String UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME = "{0} - {1} ({2}) - {3} - {4}. {5}";
-	private static final String UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME = "{0} - {1} ({2}) - {3}. {4}";
-
 	private static void applySortOrders(org.hibernate.Criteria ecrfFieldCriteria) {
 		if (ecrfFieldCriteria != null) {
 			ecrfFieldCriteria.addOrder(Order.asc("trial"));
@@ -64,45 +59,20 @@ public class ECRFFieldDaoImpl
 			String revision = ecrf.getRevision();
 			if (section != null && section.length() > 0) {
 				if (revision != null && revision.length() > 0) {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), revision, section,
+					return MessageFormat.format(CommonUtil.UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), revision, section,
 							Long.toString(ecrfField.getPosition()), inputFieldName);
 				} else {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), section,
+					return MessageFormat.format(CommonUtil.UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), section,
 							Long.toString(ecrfField.getPosition()), inputFieldName);
 				}
 			} else {
 				if (revision != null && revision.length() > 0) {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), revision, Long.toString(ecrfField.getPosition()),
+					return MessageFormat.format(CommonUtil.UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), revision,
+							Long.toString(ecrfField.getPosition()),
 							inputFieldName);
 				} else {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), Long.toString(ecrfField.getPosition()),
+					return MessageFormat.format(CommonUtil.UNIQUE_ECRF_NAME_ECRF_FIELD_NAME, trial.getName(), ecrf.getName(), Long.toString(ecrfField.getPosition()),
 							inputFieldName);
-				}
-			}
-		}
-		return null;
-	}
-
-	private static String getUniqueECRFFieldName(ECRFFieldOutVO ecrfFieldVO) {
-		if (ecrfFieldVO != null && ecrfFieldVO.getTrial() != null && ecrfFieldVO.getField() != null && ecrfFieldVO.getEcrf() != null) {
-			String section = ecrfFieldVO.getSection();
-			String revision = ecrfFieldVO.getEcrf().getRevision();
-			if (section != null && section.length() > 0) {
-				if (section != null && section.length() > 0) {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(), revision,
-							section,
-							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
-				} else {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_SECTION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(), section,
-							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
-				}
-			} else {
-				if (section != null && section.length() > 0) {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_REVISION_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(), revision,
-							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
-				} else {
-					return MessageFormat.format(UNIQUE_ECRF_NAME_ECRF_FIELD_NAME, ecrfFieldVO.getTrial().getName(), ecrfFieldVO.getEcrf().getName(),
-							Long.toString(ecrfFieldVO.getPosition()), ecrfFieldVO.getField().getName());
 				}
 			}
 		}
@@ -567,7 +537,7 @@ public class ECRFFieldDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		target.setUniqueName(getUniqueECRFFieldName(target));
+		target.setUniqueName(CommonUtil.getUniqueECRFFieldName(target, null));
 	}
 
 	@Override

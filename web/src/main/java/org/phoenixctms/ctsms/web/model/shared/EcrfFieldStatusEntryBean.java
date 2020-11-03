@@ -20,7 +20,7 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 
 	@Override
 	protected void addMessages() {
-		if (ecrfField != null) { // suppresse messages if dialog not open...
+		if (ecrfField != null) { // suppress messages if dialog not open...
 			super.addMessages();
 		}
 	}
@@ -79,6 +79,7 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 	@Override
 	protected void initSpecificSets() {
 		ecrfFieldStatusEntryModel.setListEntryId(in.getListEntryId());
+		ecrfFieldStatusEntryModel.setVisitId(in.getVisitId());
 		ecrfFieldStatusEntryModel.setEcrfFieldId(in.getEcrfFieldId());
 		ecrfFieldStatusEntryModel.setIndex(in.getIndex());
 		ecrfFieldStatusEntryModel.updateRowCount();
@@ -90,5 +91,9 @@ public class EcrfFieldStatusEntryBean extends EcrfFieldStatusEntryBeanBase {
 
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
+	}
+
+	public void setVisitId(Long visitId) {
+		this.visitId = visitId;
 	}
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
-import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.model.LazyDataModel;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.component.column.Column;
 import org.primefaces.component.columngroup.ColumnGroup;
@@ -138,7 +138,7 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 	public void setFilters(java.util.Map<String, String> filters) {
 		WebUtil.getSessionScopeBean().setFilterMap(this.getClientId(), filters);
 		if (usePageFromDataModel()) {
-			((LazyDataModelBase) this.getDataModel()).setPage(0);
+			((LazyDataModel) this.getDataModel()).setPage(0);
 		} else {
 			setFirst(0);
 		}
@@ -163,7 +163,7 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 
 	private boolean usePageFromDataModel() {
 		if (this.isLazy()) {
-			return ((LazyDataModelBase) this.getDataModel()).isStorePage();
+			return ((LazyDataModel) this.getDataModel()).isStorePage();
 		}
 		return false;
 	}
@@ -171,7 +171,7 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 	@Override
 	public int getPage() {
 		if (usePageFromDataModel()) {
-			return ((LazyDataModelBase) this.getDataModel()).getPage();
+			return ((LazyDataModel) this.getDataModel()).getPage();
 		}
 		return super.getPage();
 	}

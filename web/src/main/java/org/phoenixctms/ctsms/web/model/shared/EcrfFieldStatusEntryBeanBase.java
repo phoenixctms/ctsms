@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -33,9 +34,11 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 			ProbandListEntryOutVO listEntryVO = out.getListEntry();
 			ECRFFieldOutVO ecrfFieldVO = out.getEcrfField();
 			ECRFFieldStatusTypeVO statusVO = out.getStatus();
+			VisitOutVO visitVO = out.getVisit();
 			in.setId(out.getId());
 			in.setListEntryId(listEntryVO == null ? null : listEntryVO.getId());
 			in.setEcrfFieldId(ecrfFieldVO == null ? null : ecrfFieldVO.getId());
+			in.setVisitId(visitVO == null ? null : visitVO.getId());
 			in.setIndex(out.getIndex());
 			in.setComment(out.getComment());
 			in.setStatusId(statusVO == null ? null : statusVO.getId());
@@ -43,10 +46,11 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		}
 	}
 
-	protected static void initEcrfFieldStatusEntryDefaultValues(ECRFFieldStatusEntryInVO in, Long probandListEntryId, Long ecrfFieldId, Long index) {
+	protected static void initEcrfFieldStatusEntryDefaultValues(ECRFFieldStatusEntryInVO in, Long probandListEntryId, Long visitId, Long ecrfFieldId, Long index) {
 		if (in != null) {
 			in.setId(null);
 			in.setListEntryId(probandListEntryId);
+			in.setVisitId(visitId);
 			in.setEcrfFieldId(ecrfFieldId);
 			in.setIndex(index);
 			in.setComment(Messages.getString(MessageCodes.ECRF_FIELD_STATUS_ENTRY_COMMENT_PRESET));
@@ -61,8 +65,10 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	protected ProbandListEntryOutVO probandListEntry;
 	private ECRFStatusEntryVO ecrfStatus;
 	protected Long ecrfFieldId;
+	protected Long visitId;
 	protected ECRFFieldOutVO ecrfField;
 	protected Long index;
+	protected VisitOutVO visit;
 	protected ECRFFieldStatusEntryOutVO lastStatus;
 	private ECRFFieldStatusTypeVO statusType;
 	protected boolean isLastStatus;
@@ -219,10 +225,11 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		if (out != null) {
 			copyEcrfFieldStatusEntryOutToIn(in, out);
 			listEntryId = in.getListEntryId();
+			visitId = in.getVisitId();
 			ecrfFieldId = in.getEcrfFieldId();
 			index = in.getIndex();
 		} else {
-			initEcrfFieldStatusEntryDefaultValues(in, listEntryId, ecrfFieldId, index);
+			initEcrfFieldStatusEntryDefaultValues(in, listEntryId, visitId, ecrfFieldId, index);
 		}
 	}
 
@@ -233,7 +240,7 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		if (getQueue() != null && in.getListEntryId() != null && in.getEcrfFieldId() != null) {
 			try {
 				lastStatus = WebUtil.getServiceLocator().getTrialService()
-						.getLastEcrfFieldStatusEntry(WebUtil.getAuthentication(), getQueue(), in.getListEntryId(), in.getEcrfFieldId(), in.getIndex());
+						.getLastEcrfFieldStatusEntry(WebUtil.getAuthentication(), getQueue(), in.getListEntryId(), in.getVisitId(), in.getEcrfFieldId(), in.getIndex());
 				if (out != null && lastStatus != null) {
 					isLastStatus = (out.getId() == lastStatus.getId());
 				}
@@ -276,7 +283,7 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		if (in.getListEntryId() != null && in.getEcrfFieldId() != null) {
 			try {
 				value = WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldValue(WebUtil.getAuthentication(), in.getListEntryId(), in.getEcrfFieldId(), in.getIndex()).getPageValues().iterator().next();
+						.getEcrfFieldValue(WebUtil.getAuthentication(), in.getListEntryId(), in.getVisitId(), in.getEcrfFieldId(), in.getIndex()).getPageValues().iterator().next();
 			} catch (NoSuchElementException e) {
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -286,11 +293,13 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		if (value != null) {
 			probandListEntry = value.getListEntry();
 			ecrfField = value.getEcrfField();
+			visit = value.getVisit();
 		} else {
 			probandListEntry = WebUtil.getProbandListEntry(in.getListEntryId());
 			ecrfField = WebUtil.getEcrfField(in.getEcrfFieldId());
+			visit = WebUtil.getVisit(in.getVisitId());
 		}
-		ecrfStatus = WebUtil.getEcrfStatusEntry(ecrfField != null ? ecrfField.getEcrf().getId() : null, in.getListEntryId());
+		ecrfStatus = WebUtil.getEcrfStatusEntry(in.getListEntryId(), ecrfField != null ? ecrfField.getEcrf().getId() : null, in.getVisitId());
 		addMessages();
 	}
 

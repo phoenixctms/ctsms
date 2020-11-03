@@ -28,18 +28,12 @@
 				id="#{id_prefix}_status_log_list"
 				rowStyleClass="#{applicationScopeBean.ecrfFieldStatusEntryToColor(ecrfFieldStatusEntry.vo)}#{rowBgColorAlpha}">
 
-
-
 				<p:column sortBy="#{ecrfFieldStatusEntry.vo.id}">
 					<f:facet name="header">
 						<h:outputText value="#{labels.id_column}" />
 					</f:facet>
 					<h:outputText value="#{ecrfFieldStatusEntry.vo.id}" />
 				</p:column>
-
-
-
-
 
 				<p:column sortBy="#{ecrfFieldStatusEntry.vo.ecrfField.section}"
 					filterBy="#{ecrfFieldStatusEntry.vo.ecrfField.section}"
@@ -78,9 +72,6 @@
 					<h:outputText value="#{ecrfFieldStatusEntry.vo.index}" />
 				</p:column>
 
-
-
-
 				<p:column sortBy="#{ecrfFieldStatusEntry.vo.status}">
 					<f:facet name="header">
 						<h:outputText value="#{labels.ecrffieldstatus_list_status_column}" />
@@ -98,8 +89,6 @@
 							value="#{ecrfFieldStatusEntry.vo.status.resolved}" />
 					</ui:include>
 				</p:column>
-
-
 
 				<p:column>
 					<f:facet name="header">
@@ -135,7 +124,7 @@
 					<p:commandButton type="button"
 						title="#{labels.audit_trail_button_title}"
 						icon="ui-icon ui-icon-flag"
-						onclick="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{ecrfFieldStatusEntry.vo.listEntry.id},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{ecrfFieldStatusEntry.vo.ecrfField.id},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty ecrfFieldStatusEntry.vo.index ? 'null' : ecrfFieldStatusEntry.vo.index}}));" />
+						onclick="openEcrfAuditTrail(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('PROBAND_LIST_ENTRY_ID')}:#{ecrfFieldStatusEntry.vo.listEntry.id},#{applicationScopeBean.parameterName('VISIT_ID')}:#{empty ecrfFieldStatusEntry.vo.visit ? 'null' : ecrfFieldStatusEntry.vo.visit.id},#{applicationScopeBean.parameterName('ECRF_FIELD_ID')}:#{ecrfFieldStatusEntry.vo.ecrfField.id},#{applicationScopeBean.parameterName('SERIES_INDEX')}:#{empty ecrfFieldStatusEntry.vo.index ? 'null' : ecrfFieldStatusEntry.vo.index}}));" />
 				</p:column>
 
 			</p:dataTable>

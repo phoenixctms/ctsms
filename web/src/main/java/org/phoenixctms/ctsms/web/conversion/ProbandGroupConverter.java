@@ -13,7 +13,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 @FacesConverter(value = ProbandGroupConverter.CONVERTER_ID)
 public class ProbandGroupConverter extends IDVOConverter {
 
-	public static final String CONVERTER_ID = JSFVOConverterIDs.PROAND_GROUP_CONVERTER_ID;
+	public static final String CONVERTER_ID = JSFVOConverterIDs.PROBAND_GROUP_CONVERTER_ID;
 
 	@Override
 	public LinkedHashMap<String, String> getDetails(IDVO idvo) {

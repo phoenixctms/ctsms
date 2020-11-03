@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.domain.CourseDao;
 import org.phoenixctms.ctsms.domain.CriteriaDao;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.ECRFDao;
+import org.phoenixctms.ctsms.domain.ECRFDaoImpl;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
@@ -302,7 +303,7 @@ public class ServiceMethods {
 	}
 
 	public long exportAuditTrail(AuthenticationVO auth, Long id, String fileName) throws Exception {
-		AuditTrailExcelVO result = trialService.exportAuditTrail(auth, id, null, null);
+		AuditTrailExcelVO result = trialService.exportAuditTrail(auth, id, null, null, null);
 		if (result != null) {
 			long count = 0l;
 			StringBuilder sb = new StringBuilder(result.getTrial().getName() + " audit trail (" + result.getAuditTrailRowCount() + ")");
@@ -682,7 +683,7 @@ public class ServiceMethods {
 	}
 
 	public long renderEcrfPDFs(AuthenticationVO auth, Long id, String fileName) throws Exception {
-		ECRFPDFVO result = trialService.renderEcrfs(auth, id, null, null, false);
+		ECRFPDFVO result = trialService.renderEcrfs(auth, id, null, null, null, false);
 		if (result != null) {
 			long ecrfCount = result.getStatusEntries().size();
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + ecrfCount + " eCRF(s)");
@@ -713,12 +714,13 @@ public class ServiceMethods {
 	}
 
 	public int validatePendingTrialEcrfs(AuthenticationVO auth, Long id) throws Exception {
-		Collection<ECRFStatusEntryVO> statusEntries = trialService.validatePendingEcrfs(auth, id, null, null);
+		Collection<ECRFStatusEntryVO> statusEntries = trialService.validatePendingEcrfs(auth, id, null, null, null);
 		jobOutput.println("trial ID " + Long.toString(id) + ": " + statusEntries.size() + " eCRFs pending for validation");
 		Iterator<ECRFStatusEntryVO> it = statusEntries.iterator();
 		while (it.hasNext()) {
 			ECRFStatusEntryVO statusEntry = it.next();
-			jobOutput.println("proband ID " + Long.toString(statusEntry.getListEntry().getProband().getId()) + " / " + statusEntry.getEcrf().getUniqueName() + ": "
+			jobOutput.println("proband ID " + Long.toString(statusEntry.getListEntry().getProband().getId()) + " / "
+					+ ECRFDaoImpl.getUniqueEcrfName(statusEntry.getEcrf(), statusEntry.getVisit()) + ": "
 					+ statusEntry.getValidationResponseMsg());
 		}
 		return statusEntries.size();

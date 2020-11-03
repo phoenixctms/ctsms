@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -371,7 +372,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 	}
 
 	private void sanitizeInVals() {
-		ArrayList<Long> selectionSetValueIds = new ArrayList<Long>(selectionSetValues.size());
+		LinkedHashSet<Long> selectionSetValueIds = new LinkedHashSet<Long>(selectionSetValues.size()); //force unique items to prevent confusion when unselecting a duplicate item
 		Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
@@ -379,7 +380,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 				selectionSetValueIds.add(selectionSetValue.getId());
 			}
 		}
-		in.setSelectionSetValueIds(selectionSetValueIds);
+		in.setSelectionSetValueIds(new ArrayList<Long>(selectionSetValueIds));
 	}
 
 	@Override

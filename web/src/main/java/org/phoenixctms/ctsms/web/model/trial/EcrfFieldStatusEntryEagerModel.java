@@ -52,7 +52,8 @@ public class EcrfFieldStatusEntryEagerModel extends EagerDataModelBase<ECRFField
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService()
-						.getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), status.getStatus().getQueue(), status.getListEntry().getId(), status.getEcrfField().getId(),
+						.getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), status.getStatus().getQueue(), status.getListEntry().getId(),
+								status.getVisit() != null ? status.getVisit().getId() : null, status.getEcrfField().getId(),
 								status.getIndex(), false, false, new PSFVO(INITIAL_PSF));
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {

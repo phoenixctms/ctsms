@@ -62,6 +62,7 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.TrialTagValueDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
+import org.phoenixctms.ctsms.domain.VisitDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -118,6 +119,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private MassMailRecipientDao massMailRecipientDao;
 	private TrialDao trialDao;
 	private ECRFDao eCRFDao;
+	private VisitDao visitDao;
 	private ECRFFieldDao eCRFFieldDao;
 	private ECRFFieldValueDao eCRFFieldValueDao;
 	private ECRFStatusEntryDao eCRFStatusEntryDao;
@@ -243,8 +245,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				while (trialsIt.hasNext()) {
 					Trial trial = trialsIt.next();
 					ProbandListEntry listEntry = probandListEntryDao.findByTrialProband(trial.getId(), recipient.getProband().getId());
-					ECRFPDFVO ecrfsPDF = ServiceUtil.renderEcrfs(listEntry, trial, null, ECRFS_BLANK, null,
-							probandListEntryDao, eCRFDao, eCRFFieldDao, eCRFFieldValueDao,
+					ECRFPDFVO ecrfsPDF = ServiceUtil.renderEcrfs(listEntry, trial, null, null, ECRFS_BLANK, null,
+							probandListEntryDao, eCRFDao, visitDao, eCRFFieldDao, eCRFFieldValueDao,
 							inputFieldDao, inputFieldSelectionSetValueDao, eCRFStatusEntryDao, eCRFFieldStatusEntryDao, eCRFFieldStatusTypeDao,
 							probandListEntryTagDao, probandListEntryTagValueDao, signatureDao, userDao);
 					if (ecrfsPDF.getStatusEntries().size() > 0) {
@@ -642,6 +644,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 
 	public void seteCRFDao(ECRFDao eCRFDao) {
 		this.eCRFDao = eCRFDao;
+	}
+
+	public void setVisitDao(VisitDao visitDao) {
+		this.visitDao = visitDao;
 	}
 
 	public void seteCRFFieldDao(ECRFFieldDao eCRFFieldDao) {

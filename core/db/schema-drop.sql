@@ -800,9 +800,6 @@
     alter table ecrf 
         drop constraint ecrf_TRIAL_FKC;
 
-    alter table ecrf 
-        drop constraint ecrf_VISIT_FKC;
-
     alter table ecrf_field 
         drop constraint ecrf_field_MODIFIED_USER_FKC;
 
@@ -827,6 +824,9 @@
     alter table ecrf_field_status_entry 
         drop constraint ecrf_field_status_entry_STATUS_FKC;
 
+    alter table ecrf_field_status_entry 
+        drop constraint ecrf_field_status_entry_VISIT_FKC;
+
     alter table ecrf_field_status_transition 
         drop constraint ecrf_field_status_type_TRANSITIONS_FKC;
 
@@ -844,6 +844,9 @@
 
     alter table ecrf_field_value 
         drop constraint ecrf_field_value_ECRF_FIELD_FKC;
+
+    alter table ecrf_field_value 
+        drop constraint ecrf_field_value_VISIT_FKC;
 
     alter table ecrf_group 
         drop constraint PROBAND_GROUP_ECRFS_FKC;
@@ -863,6 +866,9 @@
     alter table ecrf_status_entry 
         drop constraint ecrf_status_entry_ECRF_FKC;
 
+    alter table ecrf_status_entry 
+        drop constraint ecrf_status_entry_VISIT_FKC;
+
     alter table ecrf_status_transition 
         drop constraint ecrf_status_type_TRANSITIONS_FKC;
 
@@ -874,6 +880,12 @@
 
     alter table ecrf_status_type_action 
         drop constraint ecrf_status_action_E_C_R_F_STATUS_TYPES_FKC;
+
+    alter table ecrf_visit 
+        drop constraint ecrf_VISITS_FKC;
+
+    alter table ecrf_visit 
+        drop constraint VISIT_ECRFS_FKC;
 
     alter table input_field_value_selection 
         drop constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC;
@@ -1248,6 +1260,8 @@
     drop table ecrf_status_type cascade;
 
     drop table ecrf_status_type_action cascade;
+
+    drop table ecrf_visit cascade;
 
     drop table input_field_value_selection cascade;
 

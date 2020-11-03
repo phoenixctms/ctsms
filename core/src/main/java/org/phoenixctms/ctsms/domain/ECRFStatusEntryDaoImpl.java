@@ -20,6 +20,7 @@ import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 
 /**
  * @see ECRFStatusEntry
@@ -48,6 +49,7 @@ public class ECRFStatusEntryDaoImpl
 		ECRFStatusTypeVO statusVO = source.getStatus();
 		ECRFOutVO ecrfVO = source.getEcrf();
 		ProbandListEntryOutVO listEntryVO = source.getListEntry();
+		VisitOutVO visitVO = source.getVisit();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		if (statusVO != null) {
 			target.setStatus(this.getECRFStatusTypeDao().eCRFStatusTypeVOToEntity(statusVO));
@@ -55,14 +57,37 @@ public class ECRFStatusEntryDaoImpl
 			target.setStatus(null);
 		}
 		if (ecrfVO != null) {
-			target.setEcrf(this.getECRFDao().eCRFOutVOToEntity(ecrfVO));
+			ECRF ecrf = this.getECRFDao().eCRFOutVOToEntity(ecrfVO);
+			target.setEcrf(ecrf);
+			ecrf.addEcrfStatusEntries(target);
 		} else if (copyIfNull) {
+			ECRF ecrf = target.getEcrf();
 			target.setEcrf(null);
+			if (ecrf != null) {
+				ecrf.removeEcrfStatusEntries(target);
+			}
 		}
 		if (listEntryVO != null) {
-			target.setListEntry(this.getProbandListEntryDao().probandListEntryOutVOToEntity(listEntryVO));
+			ProbandListEntry listEntry = this.getProbandListEntryDao().probandListEntryOutVOToEntity(listEntryVO);
+			target.setListEntry(listEntry);
+			listEntry.addEcrfStatusEntries(target);
 		} else if (copyIfNull) {
+			ProbandListEntry listEntry = target.getListEntry();
 			target.setListEntry(null);
+			if (listEntry != null) {
+				listEntry.removeEcrfStatusEntries(target);
+			}
+		}
+		if (visitVO != null) {
+			Visit visit = this.getVisitDao().visitOutVOToEntity(visitVO);
+			target.setVisit(visit);
+			visit.addEcrfStatusEntries(target);
+		} else if (copyIfNull) {
+			Visit visit = target.getVisit();
+			target.setVisit(null);
+			if (visit != null) {
+				visit.removeEcrfStatusEntries(target);
+			}
 		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
@@ -72,9 +97,14 @@ public class ECRFStatusEntryDaoImpl
 	}
 
 	@Override
-	protected ECRFStatusEntry handleFindByEcrfListEntry(Long ecrfId, Long probandListEntryId) throws Exception {
+	protected ECRFStatusEntry handleFindByListEntryEcrfVisit(Long probandListEntryId, Long ecrfId, Long visitId) throws Exception {
 		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
 		ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (visitId != null) {
+			ecrfStatusEntryCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfStatusEntryCriteria.add(Restrictions.isNull("visit.id"));
+		}
 		ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		ecrfStatusEntryCriteria.setMaxResults(1);
 		return (ECRFStatusEntry) ecrfStatusEntryCriteria.uniqueResult();
@@ -92,27 +122,13 @@ public class ECRFStatusEntryDaoImpl
 		if (probandListEntryId != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		}
-		if (done != null || validated != null || review != null || verified != null) {
-			org.hibernate.Criteria statusCriteria = ecrfStatusEntryCriteria.createCriteria("status");
-			if (done != null) {
-				statusCriteria.add(Restrictions.eq("done", done.booleanValue()));
-			}
-			if (validated != null) {
-				statusCriteria.add(Restrictions.eq("validated", validated.booleanValue()));
-			}
-			if (review != null) {
-				statusCriteria.add(Restrictions.eq("review", review.booleanValue()));
-			}
-			if (verified != null) {
-				statusCriteria.add(Restrictions.eq("verified", verified.booleanValue()));
-			}
-		}
+		applyEcrfStatusTypeCriterions(ecrfStatusEntryCriteria, null, null, done, validated, review, verified);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return ecrfStatusEntryCriteria.list();
 	}
 
 	@Override
-	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryEcrfValidationStatus(Long trialId, Long probandListEntryId, Long ecrfId,
+	protected Collection<ECRFStatusEntry> handleFindByTrialListEntryEcrfVisitValidationStatus(Long trialId, Long probandListEntryId, Long ecrfId, Long visitId,
 			ECRFValidationStatus validationStatus, PSFVO psf) throws Exception {
 		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFStatusEntry.class, ecrfStatusEntryCriteria);
@@ -125,6 +141,11 @@ public class ECRFStatusEntryDaoImpl
 		}
 		if (ecrfId != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+			if (visitId != null) {
+				ecrfStatusEntryCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+			} else {
+				ecrfStatusEntryCriteria.add(Restrictions.isNull("visit.id"));
+			}
 		}
 		if (validationStatus != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("validationStatus", validationStatus));
@@ -134,7 +155,7 @@ public class ECRFStatusEntryDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done, Boolean validated,
+	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long visitId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done, Boolean validated,
 			Boolean review, Boolean verified)
 			throws Exception {
 		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
@@ -143,7 +164,19 @@ public class ECRFStatusEntryDaoImpl
 		}
 		if (ecrfId != null) {
 			ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+			if (visitId != null) {
+				ecrfStatusEntryCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+			} else {
+				ecrfStatusEntryCriteria.add(Restrictions.isNull("visit.id"));
+			}
 		}
+		applyEcrfStatusTypeCriterions(ecrfStatusEntryCriteria, ecrfStatusTypeId, valueLockdown, done, validated, review, verified);
+		return (Long) ecrfStatusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	private final static void applyEcrfStatusTypeCriterions(org.hibernate.Criteria ecrfStatusEntryCriteria, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done,
+			Boolean validated,
+			Boolean review, Boolean verified) {
 		if (ecrfStatusTypeId != null || valueLockdown != null || done != null || validated != null || review != null || verified != null) {
 			org.hibernate.Criteria ecrfStatusTypeCriteria = ecrfStatusEntryCriteria.createCriteria("status");
 			if (ecrfStatusTypeId != null) {
@@ -165,6 +198,20 @@ public class ECRFStatusEntryDaoImpl
 				ecrfStatusTypeCriteria.add(Restrictions.eq("verified", verified.booleanValue()));
 			}
 		}
+	}
+
+	@Override
+	protected long handleGetCount(Long probandListEntryId, Long ecrfId, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done, Boolean validated,
+			Boolean review, Boolean verified)
+			throws Exception {
+		org.hibernate.Criteria ecrfStatusEntryCriteria = createEcrfStatusEntryCriteria();
+		if (probandListEntryId != null) {
+			ecrfStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		}
+		if (ecrfId != null) {
+			ecrfStatusEntryCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		}
+		applyEcrfStatusTypeCriterions(ecrfStatusEntryCriteria, ecrfStatusTypeId, valueLockdown, done, validated, review, verified);
 		return (Long) ecrfStatusEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
@@ -194,6 +241,7 @@ public class ECRFStatusEntryDaoImpl
 		ECRFStatusType status = source.getStatus();
 		ECRF ecrf = source.getEcrf();
 		ProbandListEntry listEntry = source.getListEntry();
+		Visit visit = source.getVisit();
 		User modifiedUser = source.getModifiedUser();
 		if (status != null) {
 			target.setStatus(this.getECRFStatusTypeDao().toECRFStatusTypeVO(status));
@@ -203,6 +251,9 @@ public class ECRFStatusEntryDaoImpl
 		}
 		if (listEntry != null) {
 			target.setListEntry(this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry));
+		}
+		if (visit != null) {
+			target.setVisit(this.getVisitDao().toVisitOutVO(visit));
 		}
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));

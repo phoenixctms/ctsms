@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.trial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +16,6 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
-import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ECRFInVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -47,19 +47,21 @@ public class EcrfBean extends ManagedBeanBase {
 
 	public static void copyEcrfOutToIn(ECRFInVO in, ECRFOutVO out) {
 		if (in != null && out != null) {
-			VisitOutVO visitVO = out.getVisit();
 			TrialOutVO trialVO = out.getTrial();
 			ProbandListStatusTypeVO probandListStatus = out.getProbandListStatus();
-			out.getGroups().iterator();
 			in.getGroupIds().clear();
 			Iterator it = out.getGroups().iterator();
 			while (it.hasNext()) {
 				in.getGroupIds().add(((ProbandGroupOutVO) it.next()).getId());
 			}
+			in.getVisitIds().clear();
+			it = out.getVisits().iterator();
+			while (it.hasNext()) {
+				in.getVisitIds().add(((VisitOutVO) it.next()).getId());
+			}
 			in.setId(out.getId());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
 			in.setVersion(out.getVersion());
-			in.setVisitId(visitVO == null ? null : visitVO.getId());
 			in.setProbandListStatusId(probandListStatus == null ? null : probandListStatus.getId());
 			in.setActive(out.getActive());
 			in.setDescription(out.getDescription());
@@ -78,7 +80,7 @@ public class EcrfBean extends ManagedBeanBase {
 			in.setId(null);
 			in.setTrialId(trialId);
 			in.setVersion(null);
-			in.setVisitId(null);
+			in.getVisitIds().clear();
 			in.getGroupIds().clear();
 			in.setProbandListStatusId(null);
 			in.setRevision(Messages.getString(MessageCodes.ECRF_REVISION_PRESET));
@@ -98,19 +100,19 @@ public class EcrfBean extends ManagedBeanBase {
 	private ECRFOutVO out;
 	private Long trialId;
 	private TrialOutVO trial;
-	private ArrayList<SelectItem> visits;
-	private ArrayList<SelectItem> filterVisits;
 	private ArrayList<SelectItem> probandListStatusTypes;
 	private EcrfLazyModel ecrfModel;
 	private GroupVisitMatrix<ECRFOutVO> matrix;
 	private Long cloneAddTrialId;
 	private String deferredDeleteReason;
 	private List<ProbandGroupOutVO> groups;
+	private List<VisitOutVO> visits;
 
 	public EcrfBean() {
 		super();
 		ecrfModel = new EcrfLazyModel();
 		groups = new ArrayList<ProbandGroupOutVO>();
+		visits = new ArrayList<VisitOutVO>();
 		matrix = new GroupVisitMatrix<ECRFOutVO>() {
 
 			@Override
@@ -156,21 +158,24 @@ public class EcrfBean extends ManagedBeanBase {
 			}
 
 			@Override
-			protected VisitOutVO getVisitFromItem(ECRFOutVO item) {
-				return item.getVisit();
+			protected Collection<VisitOutVO> getVisitsFromItem(ECRFOutVO item) {
+				return item.getVisits();
 			}
 
 			@Override
 			protected void setGroupId(Long groupId) {
 				ProbandGroupOutVO group = WebUtil.getProbandGroup(groupId);
-				if (group != null) {
+				if (group != null && !groups.contains(group)) {
 					groups.add(group);
 				}
 			}
 
 			@Override
 			protected void setVisitId(Long visitId) {
-				in.setVisitId(visitId);
+				VisitOutVO visit = WebUtil.getVisit(visitId);
+				if (visit != null && !visits.contains(visit)) {
+					visits.add(visit);
+				}
 			}
 		};
 	}
@@ -298,10 +303,6 @@ public class EcrfBean extends ManagedBeanBase {
 		return ecrfModel;
 	}
 
-	public ArrayList<SelectItem> getFilterVisits() {
-		return filterVisits;
-	}
-
 	public ECRFInVO getIn() {
 		return in;
 	}
@@ -348,10 +349,6 @@ public class EcrfBean extends ManagedBeanBase {
 		return WebUtil.trialOutVOToString(trial);
 	}
 
-	public ArrayList<SelectItem> getVisits() {
-		return visits;
-	}
-
 	@PostConstruct
 	private void init() {
 		Long id = WebUtil.getLongParamValue(GetParamNames.ECRF_ID);
@@ -379,11 +376,9 @@ public class EcrfBean extends ManagedBeanBase {
 		ecrfModel.setTrialId(in.getTrialId());
 		ecrfModel.updateRowCount();
 		loadProbandGroups();
-		visits = WebUtil.getVisits(in.getTrialId());
+		loadVisits();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		probandListStatusTypes = WebUtil.getAllProbandListStatusTypes(trial != null ? trial.getType().getPerson() : null);
-		filterVisits = new ArrayList<SelectItem>(visits);
-		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		matrix.initPages();
 		if (WebUtil.isTrialLocked(trial)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.TRIAL_LOCKED);
@@ -556,8 +551,59 @@ public class EcrfBean extends ManagedBeanBase {
 		}
 	}
 
+	public List<IDVO> completeVisit(String query) {
+		try {
+			Collection visitVOs = WebUtil.getServiceLocator().getToolsService().completeVisit(WebUtil.getAuthentication(), query, query, trialId, null);
+			IDVO.transformVoCollection(visitVOs);
+			return (List<IDVO>) visitVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public List<IDVO> getVisits() {
+		return new IDVOList(visits);
+	}
+
+	public void handleVisitSelect(SelectEvent event) {
+	}
+
+	public void handleVisitUnselect(UnselectEvent event) {
+	}
+
+	private void loadVisits() {
+		visits.clear();
+		Iterator<Long> it = in.getVisitIds().iterator();
+		while (it.hasNext()) {
+			VisitOutVO visit = WebUtil.getVisit(it.next());
+			if (visit != null) {
+				visits.add(visit);
+			}
+		}
+	}
+
+	public void setVisits(List<IDVO> visits) {
+		if (visits != null) {
+			ArrayList<VisitOutVO> visitsCopy = new ArrayList<VisitOutVO>(visits.size());
+			Iterator<IDVO> it = visits.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					visitsCopy.add((VisitOutVO) idVo.getVo());
+				}
+			}
+			this.visits.clear();
+			this.visits.addAll(visitsCopy);
+		} else {
+			this.visits.clear();
+		}
+	}
+
 	private void sanitizeInVals() {
-		ArrayList<Long> groupIds = new ArrayList<Long>(groups.size());
+		LinkedHashSet<Long> groupIds = new LinkedHashSet<Long>(groups.size()); //force unique items to prevent confusion when unselecting a duplicate item
 		Iterator it = groups.iterator();
 		while (it.hasNext()) {
 			ProbandGroupOutVO group = (ProbandGroupOutVO) it.next();
@@ -565,6 +611,15 @@ public class EcrfBean extends ManagedBeanBase {
 				groupIds.add(group.getId());
 			}
 		}
-		in.setGroupIds(groupIds);
+		in.setGroupIds(new ArrayList<Long>(groupIds));
+		LinkedHashSet<Long> visitIds = new LinkedHashSet<Long>(visits.size()); //force unique items to prevent confusion when unselecting a duplicate item
+		it = visits.iterator();
+		while (it.hasNext()) {
+			VisitOutVO visit = (VisitOutVO) it.next();
+			if (visit != null) {
+				visitIds.add(visit.getId());
+			}
+		}
+		in.setVisitIds(new ArrayList<Long>(visitIds));
 	}
 }

@@ -103,22 +103,50 @@ public abstract class GroupVisitMatrix<ITEM> {
 		return null;
 	}
 
+	protected VisitOutVO getVisitFromItem(ITEM item) {
+		return null;
+	}
+
+	protected Collection<VisitOutVO> getVisitsFromItem(ITEM item) {
+		return null;
+	}
+
+	private Collection<VisitOutVO> getVisits(ITEM item) {
+		ArrayList<VisitOutVO> result = new ArrayList<VisitOutVO>();
+		Collection<VisitOutVO> visits = getVisitsFromItem(item);
+		if (visits != null) {
+			Iterator<VisitOutVO> it = visits.iterator();
+			while (it.hasNext()) {
+				VisitOutVO visit = it.next();
+				if (visit != null) {
+					result.add(visit);
+				}
+			}
+			if (result.size() == 0) {
+				result.add(null);
+			}
+		} else {
+			result.add(getVisitFromItem(item));
+		}
+		return result;
+	}
+
 	private Collection<ProbandGroupOutVO> getGroups(ITEM item) {
 		ArrayList<ProbandGroupOutVO> result = new ArrayList<ProbandGroupOutVO>();
-		result.add(null);
-		ProbandGroupOutVO group = getGroupFromItem(item);
-		if (group != null) {
-			result.add(group);
-		}
 		Collection<ProbandGroupOutVO> groups = getGroupsFromItem(item);
 		if (groups != null) {
 			Iterator<ProbandGroupOutVO> it = groups.iterator();
 			while (it.hasNext()) {
-				group = it.next();
+				ProbandGroupOutVO group = it.next();
 				if (group != null) {
 					result.add(group);
 				}
 			}
+			if (result.size() == 0) {
+				result.add(null);
+			}
+		} else {
+			result.add(getGroupFromItem(item));
 		}
 		return result;
 	}
@@ -215,8 +243,6 @@ public abstract class GroupVisitMatrix<ITEM> {
 
 	protected abstract String getPaginatorPageButtonLabel();
 
-	protected abstract VisitOutVO getVisitFromItem(ITEM item);
-
 	public void handleFieldsPerRowChange() {
 	}
 
@@ -273,32 +299,36 @@ public abstract class GroupVisitMatrix<ITEM> {
 			while (it.hasNext()) {
 				ITEM item = it.next();
 				Iterator<ProbandGroupOutVO> groupsIt = getGroups(item).iterator();
+				Collection<VisitOutVO> visits = getVisits(item);
 				while (groupsIt.hasNext()) {
 					ProbandGroupOutVO group = groupsIt.next();
-					VisitOutVO visit = getVisitFromItem(item);
-					Long visitId = (visit != null ? visit.getId() : null);
-					Long groupId = (group != null ? group.getId() : null);
-					if (!matrixVisits.containsKey(visitId)) {
-						matrixVisits.put(visitId, visit);
+					Iterator<VisitOutVO> visitsIt = visits.iterator();
+					while (visitsIt.hasNext()) {
+						VisitOutVO visit = visitsIt.next();
+						Long visitId = (visit != null ? visit.getId() : null);
+						Long groupId = (group != null ? group.getId() : null);
+						if (!matrixVisits.containsKey(visitId)) {
+							matrixVisits.put(visitId, visit);
+						}
+						if (!matrixGroups.containsKey(groupId)) {
+							matrixGroups.put(groupId, group);
+						}
+						HashMap<Long, ArrayList<ITEM>> groupMap;
+						if (!matrixItemMap.containsKey(visitId)) {
+							groupMap = new HashMap<Long, ArrayList<ITEM>>();
+							matrixItemMap.put(visitId, groupMap);
+						} else {
+							groupMap = matrixItemMap.get(visitId);
+						}
+						ArrayList<ITEM> itemList;
+						if (!groupMap.containsKey(groupId)) {
+							itemList = new ArrayList<ITEM>();
+							groupMap.put(groupId, itemList);
+						} else {
+							itemList = groupMap.get(groupId);
+						}
+						itemList.add(item);
 					}
-					if (!matrixGroups.containsKey(groupId)) {
-						matrixGroups.put(groupId, group);
-					}
-					HashMap<Long, ArrayList<ITEM>> groupMap;
-					if (!matrixItemMap.containsKey(visitId)) {
-						groupMap = new HashMap<Long, ArrayList<ITEM>>();
-						matrixItemMap.put(visitId, groupMap);
-					} else {
-						groupMap = matrixItemMap.get(visitId);
-					}
-					ArrayList<ITEM> itemList;
-					if (!groupMap.containsKey(groupId)) {
-						itemList = new ArrayList<ITEM>();
-						groupMap.put(groupId, itemList);
-					} else {
-						itemList = groupMap.get(groupId);
-					}
-					itemList.add(item);
 				}
 			}
 		}

@@ -34,7 +34,7 @@ public class EcrfFieldValueCollisionFinder extends CollisionFinder<ECRFFieldValu
 	@Override
 	protected ECRFFieldValue getCollidingItem(
 			ECRFFieldValueInVO in, ProbandListEntry root) throws ServiceException {
-		return ecrfFieldValueDao.getByListEntryEcrfFieldIndex(in.getListEntryId(), in.getEcrfFieldId(), in.getIndex());
+		return ecrfFieldValueDao.getByListEntryVisitEcrfFieldIndex(in.getListEntryId(), in.getVisitId(), in.getEcrfFieldId(), in.getIndex());
 	}
 
 	@Override

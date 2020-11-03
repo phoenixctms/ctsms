@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.proband;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -430,7 +431,7 @@ public class MedicationBean extends ManagedBeanBase {
 		} else {
 			in.setAspId(null);
 		}
-		ArrayList<Long> substanceIds = new ArrayList<Long>(substances.size());
+		LinkedHashSet<Long> substanceIds = new LinkedHashSet<Long>(substances.size()); //force unique items to prevent confusion when unselecting a duplicate item
 		Iterator<AspSubstanceVO> it = substances.iterator();
 		while (it.hasNext()) {
 			AspSubstanceVO substance = it.next();
@@ -438,7 +439,7 @@ public class MedicationBean extends ManagedBeanBase {
 				substanceIds.add(substance.getId());
 			}
 		}
-		in.setSubstanceIds(substanceIds);
+		in.setSubstanceIds(new ArrayList<Long>(substanceIds));
 		if (in.getDoseValue() == null) {
 			in.setDoseUnit(null);
 		}
