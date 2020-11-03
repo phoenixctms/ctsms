@@ -110,7 +110,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private TrialOutVO trial;
 	private Long ecrfId;
 	private ECRFOutVO ecrf;
-	private ArrayList<SelectItem> filterVisits;
 	private ArrayList<SelectItem> filterSections;
 	private ArrayList<SelectItem> oldSections;
 	private EcrfLazyModel ecrfModel;
@@ -315,10 +314,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return filterSections;
 	}
 
-	public ArrayList<SelectItem> getFilterVisits() {
-		return filterVisits;
-	}
-
 	public ECRFFieldInVO getIn() {
 		return in;
 	}
@@ -453,8 +448,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		filterVisits = WebUtil.getVisits(in.getTrialId());
-		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		initEcrfFieldModel();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		ecrf = WebUtil.getEcrf(this.in.getEcrfId());

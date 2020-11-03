@@ -37,7 +37,7 @@
 					var="ecrf" value="#{ecrfFieldBean.ecrfModel}"
 					id="ecrffield_ecrf_list" selectionMode="single"
 					selection="#{ecrfFieldBean.selectedEcrf}"
-					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitToColor(ecrf.vo.visit)}#{rowBgColorAlpha}">
+					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.visitsToColor(ecrf.vo.visits)}#{rowBgColorAlpha}">
 					<p:ajax event="page" listener="#{ecrfFieldBean.ecrfModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:ecrffield_form:ecrffield_list,:tabView:ecrffield_form:ecrffield_bulkadd,:tabView:ecrffield_form:ecrffield_updatesections,:tabView:ecrffield_form:ecrffield_input" />
@@ -65,7 +65,8 @@
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
 						<ui:param name="ecrfSelectionBean" value="#{ecrfFieldBean}" />
 						<ui:param name="showRevision" value="true" />
-						<ui:param name="showVisit" value="true" />
+						<ui:param name="showVisit" value="false" />
+						<ui:param name="showVisits" value="true" />
 						<ui:param name="showGroups" value="true" />
 						<ui:param name="showActive" value="true" />
 						<ui:param name="showCharge" value="false" />
