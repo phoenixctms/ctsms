@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,51 +9,46 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:column
-			sortBy="#{ecrf.vo.name}"
-			filterBy="#{ecrf.vo.name}">
+		<p:column sortBy="#{ecrf.vo.name}" filterBy="#{ecrf.vo.name}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_name_column}" />
 			</f:facet>
 			<h:outputText value="#{ecrf.vo.name}" />
 		</p:column>
-		<p:column
-			rendered="#{showRevision}"
-			sortBy="#{ecrf.vo.revision}"
+		<p:column rendered="#{showRevision}" sortBy="#{ecrf.vo.revision}"
 			filterBy="#{ecrf.vo.revision}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_revision_column}" />
 			</f:facet>
 			<h:outputText value="#{ecrf.vo.revision}" />
-		</p:column>	
-		<p:column
-			rendered="#{showGroups}"
-			filterBy="#{ecrf.vo.groups.title}">
+		</p:column>
+		<p:column rendered="#{showGroups}" filterBy="#{ecrf.vo.groups.title}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_groups_title_column}" />
 			</f:facet>
-			<h:outputText value="#{applicationScopeBean.clipStringMid(applicationScopeBean.probandGroupsToString(ecrf.vo.groups))}" />
+			<h:outputText
+				value="#{applicationScopeBean.clipStringMid(applicationScopeBean.probandGroupsToString(ecrf.vo.groups))}" />
 		</p:column>
-		<p:column
-			rendered="#{showVisit}"
-			sortBy="#{ecrf.vo.visit.title}"
-			filterBy="#{ecrf.vo.visit.id}"
-			filterOptions="#{ecrfSelectionBean.filterVisits}">
+		<p:column rendered="#{showVisit}" sortBy="#{ecrf.vo.visits.title}"
+			filterBy="#{ecrf.vo.visits.title}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_visit_title_column}" />
 			</f:facet>
-			<h:outputText value="#{ecrf.vo.visit.title}" />
+			<h:outputText value="#{visit.vo.title}" />
 		</p:column>
-		<p:column
-		    rendered="#{showActive}"
-			sortBy="#{ecrf.vo.active}">
+		<p:column rendered="#{showVisits}" filterBy="#{ecrf.vo.visits.title}">
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_visits_title_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{applicationScopeBean.clipStringMid(applicationScopeBean.visitsToString(ecrf.vo.visits))}" />
+		</p:column>
+		<p:column rendered="#{showActive}" sortBy="#{ecrf.vo.active}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_active_column}" />
 			</f:facet>
 			<ui:include src="listBooleanIcon.xhtml">
-				<ui:param
-					name="value"
-					value="#{ecrf.vo.active}" />
+				<ui:param name="value" value="#{ecrf.vo.active}" />
 			</ui:include>
 		</p:column>
 		<p:column sortBy="#{ecrf.vo.disabled}">
@@ -62,16 +56,12 @@
 				<h:outputText value="#{triallabels.ecrf_list_enabled_column}" />
 			</f:facet>
 			<ui:include src="listBooleanIcon.xhtml">
-				<ui:param
-					name="value"
-					value="#{!ecrf.vo.disabled}" />
+				<ui:param name="value" value="#{!ecrf.vo.disabled}" />
 			</ui:include>
 		</p:column>
 
-		<p:column 
-			sortBy="#{ecrf.vo.charge}"
-			rendered="#{showCharge}">
-			<f:attribute name="visibleDefault" value = "false" />
+		<p:column sortBy="#{ecrf.vo.charge}" rendered="#{showCharge}">
+			<f:attribute name="visibleDefault" value="false" />
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_charge_column}" />
 			</f:facet>
@@ -80,41 +70,38 @@
 				<f:param value="#{applicationScopeBean.currencySymbol}" />
 			</h:outputFormat>
 		</p:column>
-		
-		<p:column
-		    rendered="#{showExternalId}"
-			sortBy="#{ecrf.vo.externalId}"
+
+		<p:column rendered="#{showExternalId}" sortBy="#{ecrf.vo.externalId}"
 			filterBy="#{ecrf.vo.externalId}">
-			<f:attribute name="visibleDefault" value = "false" />
+			<f:attribute name="visibleDefault" value="false" />
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.ecrf_list_external_id_column}" />
 			</f:facet>
 			<h:outputText value="#{ecrf.vo.externalId}" />
-		</p:column>		
-		
-		<p:column
-		    rendered="#{showEnableBrowserFieldCalculation}"
+		</p:column>
+
+		<p:column rendered="#{showEnableBrowserFieldCalculation}"
 			sortBy="#{ecrf.vo.enableBrowserFieldCalculation}">
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.ecrf_list_enablebrowserfieldcalculation_column}" />
+				<h:outputText
+					value="#{triallabels.ecrf_list_enablebrowserfieldcalculation_column}" />
 			</f:facet>
 			<ui:include src="listBooleanIcon.xhtml">
-				<ui:param
-					name="value"
+				<ui:param name="value"
 					value="#{ecrf.vo.enableBrowserFieldCalculation}" />
 			</ui:include>
 		</p:column>
-		
-		
-						<p:column rendered="#{showFieldCount}">
-							<f:attribute name="visibleDefault" value = "false" />
-							<f:facet name="header">
-								<h:outputText value="#{triallabels.ecrf_list_number_of_fields_column}" />
-							</f:facet>
-							<h:outputText value="#{applicationScopeBean.getEcrfFieldCount(ecrf.vo)}" />
-						</p:column>		
-		
-		
+
+		<p:column rendered="#{showFieldCount}">
+			<f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:outputText
+					value="#{triallabels.ecrf_list_number_of_fields_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{applicationScopeBean.getEcrfFieldCount(ecrf.vo)}" />
+		</p:column>
+
 	</ui:composition>
 </h:body>
 </html>

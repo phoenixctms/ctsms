@@ -16,7 +16,6 @@ public class EcrfLazyModel extends LazyDataModelBase<ECRFOutVO> {
 	private Long trialId;
 	private Long probandGroupId;
 	private Boolean active;
-	private Long probandListEntryId;
 
 	public Boolean getActive() {
 		return active;
@@ -24,17 +23,10 @@ public class EcrfLazyModel extends LazyDataModelBase<ECRFOutVO> {
 
 	@Override
 	protected Collection<ECRFOutVO> getLazyResult(PSFVO psf) {
-		if (probandListEntryId != null) {
-			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfList(WebUtil.getAuthentication(), probandListEntryId, active, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-			}
-		} else if (trialId != null) { // trialId is always required
+		if (trialId != null) { // trialId is always required
 			try {
 				return WebUtil.getServiceLocator().getTrialService().getEcrfList(WebUtil.getAuthentication(), trialId, probandGroupId, null, active, false, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -44,10 +36,6 @@ public class EcrfLazyModel extends LazyDataModelBase<ECRFOutVO> {
 
 	public Long getProbandGroupId() {
 		return probandGroupId;
-	}
-
-	public Long getProbandListEntryId() {
-		return probandListEntryId;
 	}
 
 	@Override
@@ -65,10 +53,6 @@ public class EcrfLazyModel extends LazyDataModelBase<ECRFOutVO> {
 
 	public void setProbandGroupId(Long probandGroupId) {
 		this.probandGroupId = probandGroupId;
-	}
-
-	public void setProbandListEntryId(Long probandListEntryId) {
-		this.probandListEntryId = probandListEntryId;
 	}
 
 	public void setTrialId(Long trialId) {

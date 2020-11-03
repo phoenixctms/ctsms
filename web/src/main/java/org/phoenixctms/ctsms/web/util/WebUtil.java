@@ -69,6 +69,7 @@ import com.sun.faces.application.view.ViewScopeManager;
 public final class WebUtil {
 
 	public enum ColorOpacity {
+
 		ALPHA100(""), ALPHA50("-50"), ALPHA25("-25");
 
 		private final String suffix;
@@ -1963,10 +1964,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long getEcrfFieldStatusEntryCount(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, boolean last) {
+	public static Long getEcrfFieldStatusEntryCount(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, boolean last) {
 		if (trialId != null || probandListEntryId != null || ecrfId != null) {
 			try {
-				return getServiceLocator().getTrialService().getEcrfFieldStatusEntryCount(getAuthentication(), queue, trialId, probandListEntryId, ecrfId, last);
+				return getServiceLocator().getTrialService().getEcrfFieldStatusEntryCount(getAuthentication(), queue, trialId, probandListEntryId, ecrfId, visitId, last);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2005,7 +2006,7 @@ public final class WebUtil {
 	public static Long getEcrfFieldValueCount(ECRFFieldOutVO ecrfField, boolean excludeAuditTrail) {
 		if (ecrfField != null) {
 			try {
-				return getServiceLocator().getInputFieldService().getEcrfFieldValueCount(getAuthentication(), ecrfField.getId(), excludeAuditTrail);
+				return getServiceLocator().getInputFieldService().getEcrfFieldValueCount(getAuthentication(), null, ecrfField.getId(), excludeAuditTrail);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2014,10 +2015,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static ECRFProgressVO getEcrfProgress(Long ecrfId, Long listEntryId, boolean sectionDetail) {
-		if (ecrfId != null && listEntryId != null) {
+	public static ECRFProgressVO getEcrfProgress(Long listEntryId, Long ecrfId, Long visitId, boolean sectionDetail) {
+		if (listEntryId != null && ecrfId != null) {
 			try {
-				return getServiceLocator().getTrialService().getEcrfProgress(getAuthentication(), listEntryId, ecrfId, sectionDetail);
+				return getServiceLocator().getTrialService().getEcrfProgress(getAuthentication(), listEntryId, ecrfId, visitId, sectionDetail);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -2043,6 +2044,7 @@ public final class WebUtil {
 			return new HashCodeBuilder(1249046965, -82296885)
 					.append(ecrfFieldStatusEntry.getListEntry().getId())
 					.append(ecrfFieldStatusEntry.getEcrfField().getEcrf().getId())
+					.append(ecrfFieldStatusEntry.getVisit() != null ? ecrfFieldStatusEntry.getVisit().getId() : null)
 					.append(ecrfFieldStatusEntry.getEcrfField().getSection())
 					.append(ecrfFieldStatusEntry.getIndex())
 					.toHashCode();
@@ -2054,10 +2056,10 @@ public final class WebUtil {
 		return getEcrfSectionHashCode(getEcrfFieldStatusEntry(ecrfFieldStatusEntryId));
 	}
 
-	public static ECRFStatusEntryVO getEcrfStatusEntry(Long ecrfId, Long listEntryId) {
+	public static ECRFStatusEntryVO getEcrfStatusEntry(Long listEntryId, Long ecrfId, Long visitId) {
 		if (ecrfId != null && listEntryId != null) {
 			try {
-				return getServiceLocator().getTrialService().getEcrfStatusEntry(getAuthentication(), ecrfId, listEntryId);
+				return getServiceLocator().getTrialService().getEcrfStatusEntry(getAuthentication(), listEntryId, ecrfId, visitId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);

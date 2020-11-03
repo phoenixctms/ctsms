@@ -692,8 +692,16 @@ public class ApplicationScopeBean {
 		return "";
 	}
 
+	public String visitsToColor(Collection<VisitOutVO> visits) {
+		if (visits != null && visits.iterator().hasNext()) { //the visits of eg. an eCRF for multiple visits will usually be of same type, so take the first.
+			return visitToColor(visits.iterator().next());
+		}
+		return "";
+	}
+
 	private final static String TIMELINE_EVENT_SEPARATOR = ", ";
 	private final static String PROBAND_GROUP_SEPARATOR = "; ";
+	private final static String VISIT_SEPARATOR = "; ";
 
 	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
 		if (events != null) {
@@ -717,6 +725,21 @@ public class ApplicationScopeBean {
 			while (it.hasNext()) {
 				if (sb.length() > 0) {
 					sb.append(PROBAND_GROUP_SEPARATOR);
+				}
+				sb.append(it.next().getTitle());
+			}
+			return sb.toString();
+		}
+		return "";
+	}
+
+	public String visitsToString(Collection<VisitOutVO> visits) {
+		if (visits != null) {
+			Iterator<VisitOutVO> it = visits.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(VISIT_SEPARATOR);
 				}
 				sb.append(it.next().getTitle());
 			}
