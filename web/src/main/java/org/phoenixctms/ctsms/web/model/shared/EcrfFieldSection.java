@@ -90,7 +90,7 @@ public class EcrfFieldSection {
 	@Override
 	public String toString() {
 		if (isSeries()) {
-			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_SERIES_INDEX_LABEL, seriesIndex, section);
+			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_SERIES_INDEX_LABEL, section, seriesIndex);
 		} else {
 			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_LABEL, section);
 		}
