@@ -16,6 +16,7 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase<ECRFFieldSt
 
 	private Long listEntryId;
 	private Long ecrfFieldId;
+	private Long visitId;
 	private Long index;
 	private ECRFFieldStatusQueue queue;
 
@@ -36,7 +37,8 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase<ECRFFieldSt
 	protected Collection<ECRFFieldStatusEntryOutVO> getLazyResult(PSFVO psf) {
 		if (listEntryId != null && ecrfFieldId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), queue, listEntryId, ecrfFieldId, index, false, false,
+				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldStatusEntryList(WebUtil.getAuthentication(), queue, listEntryId, visitId, ecrfFieldId, index,
+						false, false,
 						psf);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -69,6 +71,14 @@ public class EcrfFieldStatusEntryLazyModel extends LazyDataModelBase<ECRFFieldSt
 
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
+	}
+
+	public Long getVisitId() {
+		return visitId;
+	}
+
+	public void setVisitId(Long visitId) {
+		this.visitId = visitId;
 	}
 
 	@Override

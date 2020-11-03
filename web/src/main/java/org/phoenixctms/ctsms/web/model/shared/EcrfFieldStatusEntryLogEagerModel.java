@@ -12,6 +12,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
@@ -23,33 +24,42 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFi
 		INITIAL_PSF.setSortOrder(false);
 	}
 
-	public static EcrfFieldStatusEntryLogEagerModel getCachedFieldStatusEntryLogModel(ECRFFieldStatusQueue queue, ProbandListEntryOutVO listEntry, ECRFOutVO ecrf,
-			HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>> fieldStatusEntryLogModelCache) {
+	public static EcrfFieldStatusEntryLogEagerModel getCachedFieldStatusEntryLogModel(ECRFFieldStatusQueue queue, ProbandListEntryOutVO listEntry, ECRFOutVO ecrf, VisitOutVO visit,
+			HashMap<ECRFFieldStatusQueue, HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>>> fieldStatusEntryLogModelCache) {
 		EcrfFieldStatusEntryLogEagerModel model;
 		if (queue != null && listEntry != null && ecrf != null && fieldStatusEntryLogModelCache != null) {
 			long listEntryId = listEntry.getId();
 			long ecrfId = ecrf.getId();
-			HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>> listEntryMap;
+			Long visitId = visit != null ? visit.getId() : null;
+			HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>> queueEcrfVisitMap;
 			if (fieldStatusEntryLogModelCache.containsKey(queue)) {
-				listEntryMap = fieldStatusEntryLogModelCache.get(queue);
+				queueEcrfVisitMap = fieldStatusEntryLogModelCache.get(queue);
 			} else {
-				listEntryMap = new HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>();
-				fieldStatusEntryLogModelCache.put(queue, listEntryMap);
+				queueEcrfVisitMap = new HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>>();
+				fieldStatusEntryLogModelCache.put(queue, queueEcrfVisitMap);
+			}
+			HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>> ecrfVisitMap;
+			if (queueEcrfVisitMap.containsKey(listEntryId)) {
+				ecrfVisitMap = queueEcrfVisitMap.get(listEntryId);
+			} else {
+				ecrfVisitMap = new HashMap<Long, HashMap<Long, EcrfFieldStatusEntryLogEagerModel>>();
+				queueEcrfVisitMap.put(listEntryId, ecrfVisitMap);
 			}
 			HashMap<Long, EcrfFieldStatusEntryLogEagerModel> ecrfMap;
-			if (listEntryMap.containsKey(listEntryId)) {
-				ecrfMap = listEntryMap.get(listEntryId);
+			if (ecrfVisitMap.containsKey(ecrfId)) {
+				ecrfMap = ecrfVisitMap.get(ecrfId);
 			} else {
 				ecrfMap = new HashMap<Long, EcrfFieldStatusEntryLogEagerModel>();
-				listEntryMap.put(listEntryId, ecrfMap);
+				ecrfVisitMap.put(ecrfId, ecrfMap);
 			}
-			if (ecrfMap.containsKey(ecrfId)) {
-				model = ecrfMap.get(ecrfId);
+			if (ecrfMap.containsKey(visitId)) {
+				model = ecrfMap.get(visitId);
 			} else {
 				model = new EcrfFieldStatusEntryLogEagerModel(queue);
 				model.setListEntryId(listEntryId);
 				model.setEcrfId(ecrfId);
-				ecrfMap.put(ecrfId, model);
+				model.setVisitId(visitId);
+				ecrfMap.put(visitId, model);
 			}
 		} else {
 			model = new EcrfFieldStatusEntryLogEagerModel(queue);
@@ -84,6 +94,7 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFi
 
 	private Long listEntryId;
 	private Long ecrfId;
+	private Long visitId;
 	private ECRFFieldStatusQueue queue;
 
 	public EcrfFieldStatusEntryLogEagerModel(ECRFFieldStatusQueue queue) {
@@ -97,7 +108,7 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFi
 		if (listEntryId != null) {
 			try {
 				return WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, null, listEntryId, ecrfId, true, false, new PSFVO(INITIAL_PSF));
+						.getEcrfFieldStatusEntryLog(WebUtil.getAuthentication(), queue, null, listEntryId, ecrfId, visitId, true, false, new PSFVO(INITIAL_PSF));
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -129,5 +140,13 @@ public class EcrfFieldStatusEntryLogEagerModel extends EagerDataModelBase<ECRFFi
 
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
+	}
+
+	public Long getVisitId() {
+		return visitId;
+	}
+
+	public void setVisitId(Long visitId) {
+		this.visitId = visitId;
 	}
 }

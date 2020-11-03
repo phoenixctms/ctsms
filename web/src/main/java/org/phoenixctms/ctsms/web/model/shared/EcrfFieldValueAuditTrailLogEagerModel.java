@@ -11,6 +11,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
@@ -22,26 +23,35 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase<EC
 		INITIAL_PSF.setSortOrder(false);
 	}
 
-	public static EcrfFieldValueAuditTrailLogEagerModel getCachedAuditTrailLogModel(ProbandListEntryOutVO listEntry, ECRFOutVO ecrf,
-			HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>> auditTrailLogModelCache) {
+	public static EcrfFieldValueAuditTrailLogEagerModel getCachedAuditTrailLogModel(ProbandListEntryOutVO listEntry, ECRFOutVO ecrf, VisitOutVO visitVO,
+			HashMap<Long, HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>>> auditTrailLogModelCache) {
 		EcrfFieldValueAuditTrailLogEagerModel model;
 		if (listEntry != null && ecrf != null && auditTrailLogModelCache != null) {
 			long listEntryId = listEntry.getId();
 			long ecrfId = ecrf.getId();
-			HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel> ecrfMap;
+			Long visitId = visitVO != null ? visitVO.getId() : null;
+			HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>> ecrfVisitMap;
 			if (auditTrailLogModelCache.containsKey(listEntryId)) {
-				ecrfMap = auditTrailLogModelCache.get(listEntryId);
+				ecrfVisitMap = auditTrailLogModelCache.get(listEntryId);
+			} else {
+				ecrfVisitMap = new HashMap<Long, HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>>();
+				auditTrailLogModelCache.put(listEntryId, ecrfVisitMap);
+			}
+			HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel> ecrfMap;
+			if (ecrfVisitMap.containsKey(ecrfId)) {
+				ecrfMap = ecrfVisitMap.get(ecrfId);
 			} else {
 				ecrfMap = new HashMap<Long, EcrfFieldValueAuditTrailLogEagerModel>();
-				auditTrailLogModelCache.put(listEntryId, ecrfMap);
+				ecrfVisitMap.put(ecrfId, ecrfMap);
 			}
-			if (ecrfMap.containsKey(ecrfId)) {
-				model = ecrfMap.get(ecrfId);
+			if (ecrfMap.containsKey(visitId)) {
+				model = ecrfMap.get(visitId);
 			} else {
 				model = new EcrfFieldValueAuditTrailLogEagerModel();
 				model.setListEntryId(listEntryId);
 				model.setEcrfId(ecrfId);
-				ecrfMap.put(ecrfId, model);
+				model.setVisitId(visitId);
+				ecrfMap.put(visitId, model);
 			}
 		} else {
 			model = new EcrfFieldValueAuditTrailLogEagerModel();
@@ -69,6 +79,7 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase<EC
 
 	private Long listEntryId;
 	private Long ecrfId;
+	private Long visitId;
 
 	public EcrfFieldValueAuditTrailLogEagerModel() {
 		super();
@@ -79,7 +90,8 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase<EC
 	protected Collection<ECRFFieldValueOutVO> getEagerResult(PSFVO psf) {
 		if (listEntryId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueLog(WebUtil.getAuthentication(), null, listEntryId, ecrfId, false, new PSFVO(INITIAL_PSF));
+				return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueLog(WebUtil.getAuthentication(), null, listEntryId, ecrfId, visitId, false,
+						new PSFVO(INITIAL_PSF));
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -107,5 +119,13 @@ public class EcrfFieldValueAuditTrailLogEagerModel extends EagerDataModelBase<EC
 
 	public void setListEntryId(Long listEntryId) {
 		this.listEntryId = listEntryId;
+	}
+
+	public Long getVisitId() {
+		return visitId;
+	}
+
+	public void setVisitId(Long visitId) {
+		this.visitId = visitId;
 	}
 }
