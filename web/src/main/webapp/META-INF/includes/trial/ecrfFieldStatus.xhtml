@@ -170,15 +170,14 @@
 							value="#{fieldStatusEntry.vo.listEntry.group.title}" />
 					</p:column>
 					<p:column
-						sortBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}"
-						filterBy="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.id}"
-						filterOptions="#{ecrfFieldStatusBean.filterVisits}">
+						sortBy="#{fieldStatusEntry.vo.visit.title}"
+						filterBy="#{fieldStatusEntry.vo.visit.title}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{labels.ecrffieldstatus_visit_title_column}" />
 						</f:facet>
 						<h:outputText
-							value="#{fieldStatusEntry.vo.ecrfField.ecrf.visit.title}" />
+							value="#{fieldStatusEntry.vo.visit.title}" />
 					</p:column>
 					<p:column sortBy="#{fieldStatusEntry.vo.ecrfField.section}"
 						filterBy="#{fieldStatusEntry.vo.ecrfField.section}">
