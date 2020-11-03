@@ -19,7 +19,6 @@ import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
-import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.LightProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -222,8 +221,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	private VisitScheduleItemOutVO out;
 	private Long trialId;
 	private TrialOutVO trial;
-	private ArrayList<SelectItem> visits;
-	private ArrayList<SelectItem> filterVisits;
 	private ArrayList<SelectItem> durations;
 	private ArrayList<SelectItem> offsets;
 	private VisitScheduleItemLazyModel visitScheduleItemModel;
@@ -232,6 +229,7 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	private HashMap<Long, VisitScheduleAppointmentEagerModel> visitScheduleAppointmentModelCache;
 	private GroupVisitMatrix<VisitScheduleItemOutVO> matrix;
 	private ProbandGroupOutVO group;
+	private VisitOutVO visit;
 
 	public VisitScheduleBean() {
 		super();
@@ -291,12 +289,12 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 			@Override
 			protected void setGroupId(Long groupId) {
-				in.setGroupId(groupId);
+				group = WebUtil.getProbandGroup(groupId);
 			}
 
 			@Override
 			protected void setVisitId(Long visitId) {
-				in.setVisitId(visitId);
+				visit = WebUtil.getVisit(visitId);
 			}
 		};
 	}
@@ -394,10 +392,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 		return collidingStaffStatusEntryModel;
 	}
 
-	public ArrayList<SelectItem> getFilterVisits() {
-		return filterVisits;
-	}
-
 	public VisitScheduleItemInVO getIn() {
 		return in;
 	}
@@ -434,10 +428,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 		} else {
 			return Messages.getString(MessageCodes.CREATE_NEW_VISIT_SCHEDULE_ITEM);
 		}
-	}
-
-	public ArrayList<SelectItem> getVisits() {
-		return visits;
 	}
 
 	public StreamedContent getVisitScheduleExcelStreamedContent() throws Exception {
@@ -486,14 +476,12 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 		visitScheduleItemModel.setTrialId(in.getTrialId());
 		visitScheduleItemModel.setExpand(false);
 		visitScheduleItemModel.updateRowCount();
-		visits = WebUtil.getVisits(in.getTrialId());
 		durations = WebUtil.getVisitScheduleDurations();
 		offsets = WebUtil.getVisitScheduleOffsets();
-		filterVisits = new ArrayList<SelectItem>(visits);
-		filterVisits.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		loadStopTag();
 		loadStartTag();
 		loadProbandGroup();
+		loadVisit();
 		matrix.initPages();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
@@ -646,6 +634,11 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 		} else {
 			in.setGroupId(null);
 		}
+		if (visit != null) {
+			in.setVisitId(visit.getId());
+		} else {
+			in.setVisitId(null);
+		}
 		if (!isStartVisible()) {
 			in.setStart(null);
 		}
@@ -773,5 +766,43 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	private void loadProbandGroup() {
 		group = WebUtil.getProbandGroup(in.getGroupId());
+	}
+
+	public List<IDVO> completeVisit(String query) {
+		try {
+			Collection visitVOs = WebUtil.getServiceLocator().getToolsService().completeVisit(WebUtil.getAuthentication(), query, query, trialId, null);
+			IDVO.transformVoCollection(visitVOs);
+			return (List<IDVO>) visitVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getVisit() {
+		if (visit != null) {
+			return IDVO.transformVo(visit);
+		}
+		return null;
+	}
+
+	public void setVisit(IDVO visit) {
+		if (visit != null) {
+			this.visit = (VisitOutVO) visit.getVo();
+		} else {
+			this.visit = null;
+		}
+	}
+
+	public void handleVisitSelect(SelectEvent event) {
+	}
+
+	public void handleVisitUnselect(UnselectEvent event) {
+	}
+
+	private void loadVisit() {
+		visit = WebUtil.getVisit(in.getVisitId());
 	}
 }
