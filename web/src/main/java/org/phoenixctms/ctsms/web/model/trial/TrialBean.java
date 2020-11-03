@@ -519,6 +519,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		count = (out == null ? null
 				: WebUtil.getEcrfFieldStatusEntryCount(
 						Settings.getEcrfFieldStatusQueue(SettingCodes.ECRF_FIELD_STATUS_QUEUE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_STATUS_QUEUE), in.getId(), null, null,
+						null,
 						true));
 		tabCountMap.put(JSValues.AJAX_ECRF_FIELD_STATUS_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_ECRF_FIELD_STATUS_COUNT.toString(),
