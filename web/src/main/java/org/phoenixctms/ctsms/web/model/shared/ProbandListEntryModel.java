@@ -29,16 +29,16 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.adapt.InquiryValueOutVOStringAdapter;
 import org.phoenixctms.ctsms.web.adapt.ProbandListEntryTagValueOutVOStringAdapter;
-import org.phoenixctms.ctsms.web.model.EagerDataModel;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
+import org.phoenixctms.ctsms.web.model.RowExpansionDataModel;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOutVO> implements EagerDataModel {
+public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOutVO> implements RowExpansionDataModel {
 
 	private static final String PROBAND_LIST_ENTRY_TAG_LABEL_WITH_FIELD_NAME = "{0}. {1}";
 	private static final String PROBAND_LIST_ENTRY_TAG_LABEL = "{0}.";
