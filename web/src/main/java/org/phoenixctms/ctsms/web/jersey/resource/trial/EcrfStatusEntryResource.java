@@ -42,27 +42,30 @@ public class EcrfStatusEntryResource {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues")
-	public Collection<ECRFFieldValueOutVO> clearEcrfFieldValues(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId)
+	public Collection<ECRFFieldValueOutVO> clearEcrfFieldValues(@PathParam("listEntryId") Long listEntryId,
+			@PathParam("ecrfId") Long ecrfId, @QueryParam("visit_id") Long visitId)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(auth, ecrfId, listEntryId);
+		return WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(auth, listEntryId, ecrfId, visitId);
 	}
+	//@GET
+	//@Produces({ MediaType.APPLICATION_JSON })
+	//@Path("{listEntryId}/ecrffieldvalue/{ecrfFieldId}")
+	//public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValue(
+	//		@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfFieldId") Long ecrfFieldId, 
+	//		@QueryParam("visit_id") Long visitId)
+	//		throws AuthenticationException, AuthorisationException, ServiceException {
+	//	ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(auth, listEntryId, ecrfFieldId, null);
+	//	return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
+	//}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{listEntryId}/ecrffieldvalue/{ecrfFieldId}")
-	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValue(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfFieldId") Long ecrfFieldId)
+	@Path("{listEntryId}/ecrffieldvalue/{ecrfFieldId}") ///{index}")
+	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValue(
+			@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfFieldId") Long ecrfFieldId,
+			@QueryParam("visit_id") Long visitId, @QueryParam("index") Long index)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(auth, listEntryId, ecrfFieldId, null);
-		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
-	}
-
-	@GET
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{listEntryId}/ecrffieldvalue/{ecrfFieldId}/{index}")
-	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValue(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfFieldId") Long ecrfFieldId,
-			@PathParam("index") Long index)
-			throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(auth, listEntryId, ecrfFieldId, index);
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValue(auth, listEntryId, visitId, ecrfFieldId, index);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), null);
 	}
 
@@ -70,10 +73,10 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues")
 	public JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO> getEcrfFieldValues(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @QueryParam("query") String query, @Context UriInfo uriInfo)
+			@QueryParam("visit_id") Long visitId, @QueryParam("load_all_js_values") Boolean loadAllJsValues, @QueryParam("query") String query, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf = new PSFUriPart(uriInfo, "load_all_js_values", "query");
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, ecrfId, listEntryId, false, loadAllJsValues, query, psf);
+		PSFUriPart psf = new PSFUriPart(uriInfo, "visit_id", "load_all_js_values", "query");
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, listEntryId, ecrfId, visitId, false, loadAllJsValues, query, psf);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
 	}
 
@@ -81,25 +84,26 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues/maxindex")
 	public Long getEcrfFieldValuesSectionMaxIndex(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("section") String section)
+			@QueryParam("visit_id") Long visitId, @QueryParam("section") String section)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValuesSectionMaxIndex(auth, ecrfId, section, listEntryId);
+		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValuesSectionMaxIndex(auth, listEntryId, ecrfId, visitId, section);
 	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}")
-	public ECRFStatusEntryVO getEcrfStatusEntry(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId)
+	public ECRFStatusEntryVO getEcrfStatusEntry(@PathParam("listEntryId") Long listEntryId,
+			@PathParam("ecrfId") Long ecrfId, @QueryParam("visit_id") Long visitId)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntry(auth, ecrfId, listEntryId);
+		return WebUtil.getServiceLocator().getTrialService().getEcrfStatusEntry(auth, listEntryId, ecrfId, visitId);
 	}
 
 	@GET
 	@Path("{listEntryId}/ecrfpdf/{ecrfId}")
 	public Response renderEcrf(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("blank") Boolean blank) throws AuthenticationException,
+			@QueryParam("visit_id") Long visitId, @QueryParam("blank") Boolean blank) throws AuthenticationException,
 			AuthorisationException, ServiceException {
-		ECRFPDFVO vo = WebUtil.getServiceLocator().getTrialService().renderEcrf(auth, ecrfId, null, listEntryId, blank);
+		ECRFPDFVO vo = WebUtil.getServiceLocator().getTrialService().renderEcrf(auth, listEntryId, ecrfId, visitId, null, blank);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
 		ResponseBuilder response = Response.ok(vo.getDocumentDatas(), vo.getContentType().getMimeType());
@@ -111,8 +115,8 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/ecrfpdf/{ecrfId}")
 	public ECRFPDFVO renderEcrfHead(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrf(auth, ecrfId, null, listEntryId, blank);
+			@QueryParam("visit_id") Long visitId, @QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
+		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrf(auth, listEntryId, ecrfId, visitId, null, blank);
 		result.setDocumentDatas(null);
 		return result;
 	}
@@ -121,7 +125,7 @@ public class EcrfStatusEntryResource {
 	@Path("{listEntryId}/ecrfpdf")
 	public Response renderEcrfs(@PathParam("listEntryId") Long listEntryId,
 			@QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFPDFVO vo = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, blank);
+		ECRFPDFVO vo = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, blank);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
 		ResponseBuilder response = Response.ok(vo.getDocumentDatas(), vo.getContentType().getMimeType());
@@ -134,7 +138,7 @@ public class EcrfStatusEntryResource {
 	@Path("{listEntryId}/ecrfpdf")
 	public ECRFPDFVO renderEcrfsHead(@PathParam("listEntryId") Long listEntryId,
 			@QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, blank);
+		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, blank);
 		result.setDocumentDatas(null);
 		return result;
 	}
@@ -143,9 +147,9 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}")
 	public ECRFStatusEntryVO setEcrfStatusEntry(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
-			@QueryParam("version") Long version, @QueryParam("ecrf_status_type_id") Long ecrfStatusTypeId,
+			@QueryParam("visit_id") Long visitId, @QueryParam("version") Long version, @QueryParam("ecrf_status_type_id") Long ecrfStatusTypeId,
 			@QueryParam("proband_list_status_entry_id") Long probandListStatusEntryId)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().setEcrfStatusEntry(auth, ecrfId, listEntryId, version, ecrfStatusTypeId, probandListStatusEntryId);
+		return WebUtil.getServiceLocator().getTrialService().setEcrfStatusEntry(auth, listEntryId, ecrfId, visitId, version, ecrfStatusTypeId, probandListStatusEntryId);
 	}
 }

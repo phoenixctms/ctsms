@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="trial")
+@Api(value = "trial")
 @Path("/ecrf")
 public class EcrfResource {
 
@@ -59,9 +59,9 @@ public class EcrfResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/ecrffieldvalues/maxindex")
 	public Long getEcrfFieldValuesSectionMaxIndex(@PathParam("id") Long id,
-			@QueryParam("section") String section)
+			@QueryParam("visit_id") Long visitId, @QueryParam("section") String section)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValuesSectionMaxIndex(auth, id, section, null);
+		return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValuesSectionMaxIndex(auth, null, id, visitId, section);
 	}
 
 	@PUT
