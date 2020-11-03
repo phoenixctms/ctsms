@@ -3,11 +3,13 @@ package org.phoenixctms.ctsms.web.model.shared;
 import javax.faces.application.FacesMessage;
 
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -17,6 +19,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 
 	protected ECRFOutVO ecrf;
+	protected VisitOutVO visit;
 	protected ProbandListEntryOutVO probandListEntry;
 	protected ECRFStatusEntryVO ecrfStatus;
 	protected EcrfFieldValueBean ecrfFieldValueBean;
@@ -55,20 +58,25 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 
 	public void changeAuditTrail() {
 		Long listEntryId = WebUtil.getLongParamValue(GetParamNames.PROBAND_LIST_ENTRY_ID);
+		Long visitId = WebUtil.getLongParamValue(GetParamNames.VISIT_ID);
 		Long ecrfFieldId = WebUtil.getLongParamValue(GetParamNames.ECRF_FIELD_ID);
 		Long seriesIndex = WebUtil.getLongParamValue(GetParamNames.SERIES_INDEX);
 		ecrfFieldValueAuditTrailModel.setListEntryId(listEntryId);
+		ecrfFieldValueAuditTrailModel.setVisitId(visitId);
 		ecrfFieldValueAuditTrailModel.setEcrfFieldId(ecrfFieldId);
 		ecrfFieldValueAuditTrailModel.setIndex(seriesIndex);
 		ecrfFieldValueAuditTrailModel.updateRowCount();
 		ecrfFieldAnnotationStatusEntryBean.setListEntryId(listEntryId);
 		ecrfFieldAnnotationStatusEntryBean.setIndex(seriesIndex);
+		ecrfFieldAnnotationStatusEntryBean.setVisitId(visitId);
 		ecrfFieldAnnotationStatusEntryBean.changeRootEntity(ecrfFieldId);
 		ecrfFieldValidationStatusEntryBean.setListEntryId(listEntryId);
 		ecrfFieldValidationStatusEntryBean.setIndex(seriesIndex);
+		ecrfFieldValidationStatusEntryBean.setVisitId(visitId);
 		ecrfFieldValidationStatusEntryBean.changeRootEntity(ecrfFieldId);
 		ecrfFieldQueryStatusEntryBean.setListEntryId(listEntryId);
 		ecrfFieldQueryStatusEntryBean.setIndex(seriesIndex);
+		ecrfFieldQueryStatusEntryBean.setVisitId(visitId);
 		ecrfFieldQueryStatusEntryBean.changeRootEntity(ecrfFieldId);
 		auditTrialEcrfField = WebUtil.getEcrfField(ecrfFieldId);
 	}
@@ -79,7 +87,7 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 
 	public String getAuditTrailFieldLabel() {
 		if (auditTrialEcrfField != null) {
-			return getAuditTrailFieldLabel(auditTrialEcrfField.getUniqueName());
+			return getAuditTrailFieldLabel(CommonUtil.getUniqueECRFFieldName(auditTrialEcrfField, visit));
 		}
 		return null;
 	}
@@ -87,7 +95,7 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 	private String getAuditTrailFieldLabel(String fieldName) {
 		if (auditTrialEcrfField != null && probandListEntry != null) {
 			if (ecrfFieldValueAuditTrailModel.getIndex() != null) {
-				return Messages.getMessage(MessageCodes.ECRF_FIELD_SERIES_INDEX_LABEL, ecrfFieldValueAuditTrailModel.getIndex(), fieldName);
+				return Messages.getMessage(MessageCodes.ECRF_FIELD_SERIES_INDEX_LABEL, fieldName, ecrfFieldValueAuditTrailModel.getIndex());
 			} else {
 				return Messages.getMessage(MessageCodes.ECRF_FIELD_LABEL, fieldName);
 			}
@@ -118,6 +126,10 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 
 	public ECRFOutVO getEcrf() {
 		return ecrf;
+	}
+
+	public VisitOutVO getVisit() {
+		return visit;
 	}
 
 	public EcrfFieldStatusEntryBean getEcrfFieldAnnotationStatusEntryBean() {
@@ -181,17 +193,21 @@ public abstract class EcrfDataEntryBeanBase extends ManagedBeanBase {
 	protected void resetAuditTrailModel() {
 		Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 		ecrfFieldValueAuditTrailModel.setListEntryId(listEntryId);
+		ecrfFieldValueAuditTrailModel.setVisitId(null);
 		ecrfFieldValueAuditTrailModel.setEcrfFieldId(null);
 		ecrfFieldValueAuditTrailModel.setIndex(null);
 		ecrfFieldValueAuditTrailModel.updateRowCount();
 		ecrfFieldAnnotationStatusEntryBean.setListEntryId(listEntryId);
 		ecrfFieldAnnotationStatusEntryBean.setIndex(null);
+		ecrfFieldAnnotationStatusEntryBean.setVisitId(null);
 		ecrfFieldAnnotationStatusEntryBean.changeRootEntity(null);
 		ecrfFieldValidationStatusEntryBean.setListEntryId(listEntryId);
 		ecrfFieldValidationStatusEntryBean.setIndex(null);
+		ecrfFieldValidationStatusEntryBean.setVisitId(null);
 		ecrfFieldValidationStatusEntryBean.changeRootEntity(null);
 		ecrfFieldQueryStatusEntryBean.setListEntryId(listEntryId);
 		ecrfFieldQueryStatusEntryBean.setIndex(null);
+		ecrfFieldQueryStatusEntryBean.setVisitId(null);
 		ecrfFieldQueryStatusEntryBean.changeRootEntity(null);
 		auditTrialEcrfField = null;
 	}

@@ -203,13 +203,13 @@
 					scrollable="#{dataTablesScrollableDefault}"
 					scrollHeight="#{dataTablesScrollHeightDefault}"
 					resizableColumns="#{dataTablesResizableColumnsDefault}"
-					sortBy="#{ecrf.vo.name}"
+					sortBy=""
 					emptyMessage="#{labels.datatable_permission_empty_message}"
-					var="ecrf" value="#{probandEcrfStatusEntryBean.ecrfModel}"
+					var="ecrfVisit" value="#{probandEcrfStatusEntryBean.ecrfVisitModel}"
 					id="probandecrfstatus_ecrf_list" selectionMode="single"
-					selection="#{probandEcrfStatusEntryBean.selectedEcrf}"
-					rowStyleClass="#{ecrf.vo.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.ecrfStatusEntryToColor(probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo))}#{rowBgColorAlpha}">
-					<p:ajax event="page" listener="#{probandEcrfStatusEntryBean.ecrfModel.handlePageChanged}" />
+					selection="#{probandEcrfStatusEntryBean.selectedEcrfVisit}"
+					rowStyleClass="#{ecrfVisit.ecrf.deferredDelete ? 'ctsms-strikethrough' : ''} #{applicationScopeBean.ecrfStatusEntryToColor(probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit))}#{rowBgColorAlpha}">
+					<p:ajax event="page" listener="#{probandEcrfStatusEntryBean.ecrfVisitModel.handlePageChanged}" />
 					<p:ajax event="rowSelect"
 						update=":tabView:probandecrfstatusentry_form:ecrf_header,:tabView:probandecrfstatusentry_form:ecrffield_input_grid"
 						oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
@@ -232,10 +232,13 @@
 					</p:column>
 
 					<ui:include src="../shared/ecrfTableColumns.xhtml">
+						<ui:param name="ecrf" value="#{probandEcrfStatusEntryBean.ecrfVisitModel.ecrfToVo(ecrfVisit.ecrf)}" />
+						<ui:param name="visit" value="#{probandEcrfStatusEntryBean.ecrfVisitModel.visitToVo(ecrfVisit.visit)}" />					
 						<ui:param name="ecrfSelectionBean"
 							value="#{probandEcrfStatusEntryBean}" />
 						<ui:param name="showRevision" value="true" />
 						<ui:param name="showVisit" value="true" />
+						<ui:param name="showVisits" value="false" />
 						<ui:param name="showGroups" value="false" />
 						<!-- existing values! -->
 						<ui:param name="showActive" value="true" />
@@ -257,13 +260,13 @@
 						<f:attribute name="visibleDefault" value="false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param name="validationStatus"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).validationStatus}" />
 							<ui:param name="showNew" value="true" />
 							<ui:param name="showUpdate" value="true" />
 							<ui:param name="showProposed" value="true" />
 							<ui:param name="showResolved" value="true" />
 							<ui:param name="value"
-								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'VALIDATION')}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrfVisit.ecrf,ecrfVisit.visit,'VALIDATION')}" />
 							<ui:param name="idSuffix" value="validation" />
 						</ui:include>
 					</p:column>
@@ -277,9 +280,9 @@
 						<f:attribute name="visibleDefault" value="false" />
 						<ui:include src="../shared/listEcrfValidationTimestamp.xhtml">
 							<ui:param name="validationStatus"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).validationStatus}" />
 							<ui:param name="value"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationTimestamp}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).validationTimestamp}" />
 						</ui:include>
 					</p:column>
 
@@ -293,13 +296,13 @@
 						<f:attribute name="visibleDefault" value="false" />
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param name="validationStatus"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).validationStatus}" />
 							<ui:param name="showNew" value="true" />
 							<ui:param name="showUpdate" value="true" />
 							<ui:param name="showProposed" value="true" />
 							<ui:param name="showResolved" value="true" />
 							<ui:param name="value"
-								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'QUERY')}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrfVisit.ecrf,ecrfVisit.visit,'QUERY')}" />
 							<ui:param name="idSuffix" value="query" />
 						</ui:include>
 					</p:column>
@@ -313,8 +316,8 @@
 						</f:facet>
 						<f:attribute name="visibleDefault" value="false" />
 						<h:outputText
-							rendered="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total > 0}"
-							value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'ANNOTATION').total}" />
+							rendered="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrfVisit.ecrf,ecrfVisit.visit,'ANNOTATION').total > 0}"
+							value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrfVisit.ecrf,ecrfVisit.visit,'ANNOTATION').total}" />
 					</p:column>
 
 					<p:column>
@@ -324,13 +327,13 @@
 						</f:facet>
 						<ui:include src="../shared/listEcrfFieldStatusIcons.xhtml">
 							<ui:param name="validationStatus"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).validationStatus}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).validationStatus}" />
 							<ui:param name="showNew" value="true" />
 							<ui:param name="showUpdate" value="true" />
 							<ui:param name="showProposed" value="true" />
 							<ui:param name="showResolved" value="true" />
 							<ui:param name="value"
-								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrf.vo,'VALIDATION, QUERY')}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfFieldStatusCount(ecrfVisit.ecrf,ecrfVisit.visit,'VALIDATION, QUERY')}" />
 							<ui:param name="idSuffix" value="ecrfTotal" />
 						</ui:include>
 					</p:column>
@@ -343,9 +346,9 @@
 						</f:facet>
 						<ui:include src="../shared/listIcon.xhtml">
 							<ui:param name="label"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusTypeLabel(probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).status)}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusTypeLabel(probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).status)}" />
 							<ui:param name="icon"
-								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).status.nodeStyleClass}" />
+								value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).status.nodeStyleClass}" />
 							<ui:param name="rendered" value="true" />
 							<ui:param name="uiicon" value="true" />
 						</ui:include>
@@ -357,7 +360,7 @@
 								value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_status_modified_user_column}" />
 						</f:facet>
 						<h:outputText
-							value="#{applicationScopeBean.getIdentityString(probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedUser)}" />
+							value="#{applicationScopeBean.getIdentityString(probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).modifiedUser)}" />
 					</p:column>
 					<p:column>
 						<f:facet name="header">
@@ -365,7 +368,7 @@
 								value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_status_modified_timestamp_column}" />
 						</f:facet>
 						<h:outputText
-							value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrf.vo).modifiedTimestamp}">
+							value="#{probandEcrfStatusEntryBean.getEcrfStatusEntry(ecrfVisit.ecrf,ecrfVisit.visit).modifiedTimestamp}">
 							<f:converter converterId="ctsms.DateTime" />
 							<f:attribute name="timeZone"
 								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
@@ -380,10 +383,10 @@
 								value="#{probandlabels.probandecrfstatus_ecrf_list_ecrf_progress_column}" />
 						</f:facet>
 						<p:progressBar
-							widgetVar="progressBar_#{probandListEntry.vo.id}_#{ecrf.vo.id}"
+							widgetVar="progressBar_#{probandEcrfStatusEntryBean.selectedProbandListEntry.id}_#{ecrfVisit.ecrf.id}#{empty ecrfVisit.visit ? '' : '_'}#{empty ecrfVisit.visit ? '' : ecrfVisit.visit.id}"
 							ajax="false"
-							labelTemplate="#{probandEcrfStatusEntryBean.getEcrfProgressLabel(ecrf.vo)}"
-							value="#{probandEcrfStatusEntryBean.getEcrfProgressValue(ecrf.vo)}" />
+							labelTemplate="#{probandEcrfStatusEntryBean.getEcrfProgressLabel(ecrfVisit.ecrf,ecrfVisit.visit)}"
+							value="#{probandEcrfStatusEntryBean.getEcrfProgressValue(ecrfVisit.ecrf,ecrfVisit.visit)}" />
 					</p:column>
 
 					<p:rowExpansion
@@ -391,7 +394,8 @@
 						<ui:include src="../shared/auditTrailEcrfLog.xhtml">
 							<ui:param name="ecrfStatusEntryBean"
 								value="#{probandEcrfStatusEntryBean}" />
-							<ui:param name="ecrf" value="#{ecrf.vo}" />
+							<ui:param name="ecrf" value="#{ecrfVisit.ecrf}" />
+							<ui:param name="visit" value="#{ecrfVisit.visit}" />
 						</ui:include>
 					</p:rowExpansion>
 				</p:dataTable>
@@ -507,13 +511,13 @@
 										value="#{probandlabels.ecrf_field_values_ecrf_revision_label}" />
 									<h:outputLabel value="#{probandEcrfStatusEntryBean.ecrf.revision}" />
 									<h:outputLabel
-										value="#{probandlabels.ecrf_field_values_ecrf_group_label}" />
+										value="#{probandlabels.ecrf_field_values_ecrf_groups_label}" />
 									<h:outputLabel
 										value="#{applicationScopeBean.probandGroupsToString(probandEcrfStatusEntryBean.ecrf.groups)}" />
 									<h:outputLabel
-										value="#{probandlabels.ecrf_field_values_ecrf_visit_label}" />
+										value="#{probandlabels.ecrf_field_values_ecrf_visits_label}" />
 									<h:outputLabel
-										value="#{probandEcrfStatusEntryBean.ecrf.visit.title}" />
+										value="#{applicationScopeBean.visitsToString(probandEcrfStatusEntryBean.ecrf.visits)}" />
 									<h:outputLabel
 										value="#{probandlabels.ecrf_field_values_ecrf_status_label}" />
 									<h:outputLabel
@@ -527,9 +531,9 @@
 									<h:outputLabel
 										value="#{probandEcrfStatusEntryBean.probandListEntry.group.title}" />
 									<h:outputLabel
-										value="#{probandlabels.ecrf_field_values_proband_list_entry_status_label}" />
+										value="#{probandlabels.ecrf_field_values_visit_label}" />
 									<h:outputLabel
-										value="#{probandEcrfStatusEntryBean.probandListEntry.lastStatus.status.name}" />
+										value="#{probandEcrfStatusEntryBean.visit.title}" />
 								</h:panelGrid>
 							</h:panelGrid>
 						</h:panelGrid>

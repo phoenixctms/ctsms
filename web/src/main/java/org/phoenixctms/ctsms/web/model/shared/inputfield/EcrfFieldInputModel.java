@@ -38,6 +38,7 @@ public class EcrfFieldInputModel extends InputModel {
 
 	protected ECRFFieldValueInVO ecrfFieldValue;
 	protected ECRFFieldOutVO ecrfField;
+	protected Long visitId;
 	private String modifiedAnnotation;
 	private boolean unlockValue;
 	private Color fieldColor;
@@ -104,6 +105,10 @@ public class EcrfFieldInputModel extends InputModel {
 			return ecrfField.getId();
 		}
 		return null;
+	}
+
+	public Long getVisitId() {
+		return visitId;
 	}
 
 	public ECRFFieldValueInVO getEcrfFieldValue() {
@@ -366,7 +371,8 @@ public class EcrfFieldInputModel extends InputModel {
 			setLastFieldStatus(null);
 			try {
 				ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
-						.getEcrfFieldValue(WebUtil.getAuthentication(), ecrfFieldValue.getListEntryId(), ecrfFieldValue.getEcrfFieldId(), ecrfFieldValue.getIndex());
+						.getEcrfFieldValue(WebUtil.getAuthentication(), ecrfFieldValue.getListEntryId(), ecrfFieldValue.getVisitId(), ecrfFieldValue.getEcrfFieldId(),
+								ecrfFieldValue.getIndex());
 				ECRFFieldValueOutVO out = values.getPageValues().iterator().next();
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
 				setLastFieldStatus(out);
@@ -388,7 +394,7 @@ public class EcrfFieldInputModel extends InputModel {
 		applyPresets();
 		if (isJsVariable()) {
 			ECRFFieldValueJsonVO out = new ECRFFieldValueJsonVO();
-			CommonUtil.copyEcrfFieldValueInToJson(out, ecrfFieldValue, ecrfField);
+			CommonUtil.copyEcrfFieldValueInToJson(out, ecrfFieldValue, ecrfField, visitId);
 			return out;
 		}
 		return null;
@@ -417,9 +423,11 @@ public class EcrfFieldInputModel extends InputModel {
 	public void setEcrfFieldValue(ECRFFieldValueInVO ecrfFieldValue) {
 		this.ecrfFieldValue = ecrfFieldValue;
 		ecrfField = null;
+		visitId = null;
 		setField(null);
 		if (ecrfFieldValue != null) {
 			ecrfField = WebUtil.getEcrfField(ecrfFieldValue.getEcrfFieldId());
+			visitId = ecrfFieldValue.getVisitId();
 			if (ecrfField != null) {
 				setField(ecrfField.getField());
 			}
