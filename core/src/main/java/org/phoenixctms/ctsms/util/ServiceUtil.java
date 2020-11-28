@@ -4005,7 +4005,7 @@ public final class ServiceUtil {
 					signatureVOMap.put(statusEntry.getId(), null);
 				}
 			} else {
-				ecrfStatusEntryVOMap.put(ecrfVO.getId(), null);
+				ecrfStatusEntryVOMap.put(visitId, null);
 			}
 			if (ecrfVOs.add(ecrfVO)) {
 				Iterator<ECRFFieldValueOutVO> ecrfValuesIt = ecrfValues.iterator();
