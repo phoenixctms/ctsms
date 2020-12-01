@@ -2033,10 +2033,11 @@ public class TrialServiceImpl
 				ServiceUtil.checkLockedEcrfs(originalEcrf, visit, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
 				//delete ecrf status entries of empty ecrfs
 				if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES, CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken()));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
+							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
 				} else if (ecrfFieldStatusEntryDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
-							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken()));
+							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
 				} else {
 					ecrfStatusEntriesToRemove.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), visit.getId(), null, null));
 				}
@@ -4302,9 +4303,11 @@ public class TrialServiceImpl
 			while (ecrfStatusEntryIt.hasNext()) {
 				ECRFStatusEntry ecrfStatusEntry = ecrfStatusEntryIt.next();
 				if (ecrfFieldValueDao.getCount(ecrf.getId(), visitId) > 0) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES, CommonUtil.getEcrfVisitName(ecrf.getName(), visit.getToken()));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
+							CommonUtil.getEcrfVisitName(ecrf.getName(), visit.getToken(), ecrf.getVisits().size()));
 				} else if (ecrfFieldStatusEntryDao.getCount(ecrf.getId(), visitId) > 0) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES, CommonUtil.getEcrfVisitName(ecrf.getName(), visit.getToken()));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
+							CommonUtil.getEcrfVisitName(ecrf.getName(), visit.getToken(), ecrf.getVisits().size()));
 				} else {
 					ProbandListEntry listEntry = ecrfStatusEntry.getListEntry();
 					listEntry.removeEcrfStatusEntries(ecrfStatusEntry);

@@ -254,15 +254,15 @@ public final class CommonUtil {
 	private static final String ECRF_VISIT_NAME = "{0}@{1}";
 
 	public static String getEcrfVisitName(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
-		return getEcrfVisitName(ecrfVO != null ? ecrfVO.getName() : null, visitVO != null ? visitVO.getToken() : null);
+		return getEcrfVisitName(ecrfVO != null ? ecrfVO.getName() : null, visitVO != null ? visitVO.getToken() : null, ecrfVO != null ? ecrfVO.getVisits().size() : null);
 	}
 
-	public static String getEcrfVisitName(String ecrfName, String visitToken) {
+	public static String getEcrfVisitName(String ecrfName, String visitToken, Integer visits) {
 		if (!isEmptyString(ecrfName)) {
-			if (isEmptyString(visitToken)) {
-				return MessageFormat.format(ECRF_NAME, ecrfName);
-			} else {
+			if (visits != null && visits > 1 && !isEmptyString(visitToken)) {
 				return MessageFormat.format(ECRF_VISIT_NAME, ecrfName, visitToken);
+			} else {
+				return MessageFormat.format(ECRF_NAME, ecrfName);
 			}
 		}
 		return "";
