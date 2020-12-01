@@ -146,6 +146,7 @@ import org.phoenixctms.ctsms.vo.TimelineEventInVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.TrialTypeVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitInVO;
@@ -2021,7 +2022,11 @@ public class DemoDataProvider {
 		newTrial.setExclusiveProbands(false);
 		newTrial.setProbandAliasFormat("");
 		newTrial.setDutySelfAllocationLocked(false);
-		newTrial.setTypeId(getRandomElement(selectionSetService.getTrialTypes(auth, null)).getId());
+		TrialTypeVO trialType = null;
+		while (trialType == null || !trialType.isPerson()) {
+			trialType = getRandomElement(selectionSetService.getTrialTypes(auth, null));
+		}
+		newTrial.setTypeId(trialType.getId());
 		newTrial.setSponsoringId(getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
 		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
 		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
