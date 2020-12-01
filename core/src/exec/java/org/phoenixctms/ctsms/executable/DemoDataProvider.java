@@ -73,6 +73,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.PDFStream;
@@ -2119,6 +2120,7 @@ public class DemoDataProvider {
 		Date[] startStop = getFromTo(visitDate, 9, 0, 16, 0);
 		newVisitScheduleItem.setStart(startStop[0]);
 		newVisitScheduleItem.setStop(startStop[1]);
+		newVisitScheduleItem.setMode(VisitScheduleDateMode.STATIC);
 		VisitScheduleItemOutVO visitScheduleItem = trialService.addVisitScheduleItem(auth, newVisitScheduleItem);
 		ArrayList<VisitScheduleItemOutVO> groupVisitScheduleItems = new ArrayList<VisitScheduleItemOutVO>((int) screeningDays);
 		groupVisitScheduleItems.add(visitScheduleItem);
@@ -2134,6 +2136,7 @@ public class DemoDataProvider {
 			startStop = getFromTo(DateCalc.addInterval(visitDate, VariablePeriod.EXPLICIT, i - 1l), 9, 0, 16, 0);
 			newVisitScheduleItem.setStart(startStop[0]);
 			newVisitScheduleItem.setStop(startStop[1]);
+			newVisitScheduleItem.setMode(VisitScheduleDateMode.STATIC);
 			visitScheduleItem = trialService.addVisitScheduleItem(auth, newVisitScheduleItem);
 			groupVisitScheduleItems.add(visitScheduleItem);
 			visitScheduleItemPerGroupMap.put(screeningGroup.getId(), groupVisitScheduleItems);
@@ -2157,6 +2160,7 @@ public class DemoDataProvider {
 				startStop = getFromTo(visitDate, 9, 0, 16, 0);
 				newVisitScheduleItem.setStart(startStop[0]);
 				newVisitScheduleItem.setStop(startStop[1]);
+				newVisitScheduleItem.setMode(VisitScheduleDateMode.STATIC);
 				if (!visitScheduleItemPerGroupMap.containsKey(probandGroup.getId())) {
 					groupVisitScheduleItems = new ArrayList<VisitScheduleItemOutVO>(visits.size());
 					visitScheduleItemPerGroupMap.put(probandGroup.getId(), groupVisitScheduleItems);
