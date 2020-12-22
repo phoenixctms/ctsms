@@ -161,7 +161,12 @@ public class TrainingRecordPDFBlock {
 
 	protected String getCourseInstitutionString(CourseOutVO course) {
 		if (course != null && course.getInstitution() != null) {
-			return ServiceUtil.getCvStaffPathString(course.getInstitution());
+			if (Settings.getBoolean(TrainingRecordPDFSettingCodes.INSTITUTION_STAFF_PATH, Bundle.TRAINING_RECORD_PDF,
+				TrainingRecordPDFDefaultSettings.INSTITUTION_STAFF_PATH)) {
+				return ServiceUtil.getCvStaffPathString(course.getInstitution());
+			} else {
+				return CommonUtil.getCvStaffName(staff);
+			}
 		}
 		return "";
 	}

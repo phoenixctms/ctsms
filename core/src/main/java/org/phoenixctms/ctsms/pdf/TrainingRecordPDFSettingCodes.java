@@ -57,4 +57,5 @@ public interface TrainingRecordPDFSettingCodes {
 	public static final String SECTION_NEW_PAGE_PER_TRIAL = "section_new_page_per_trial";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String INSTITUTION_STAFF_PATH = "institution_staff_path";
 }

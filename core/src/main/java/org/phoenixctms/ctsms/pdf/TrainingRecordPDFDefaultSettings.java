@@ -54,6 +54,7 @@ public final class TrainingRecordPDFDefaultSettings {
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public static final boolean SECTION_NEW_PAGE_PER_TRIAL = false;
 	public static final String PAINTER_CLASS = null;
+	public static final boolean INSTITUTION_STAFF_PATH = true;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 
 	private TrainingRecordPDFDefaultSettings() {
