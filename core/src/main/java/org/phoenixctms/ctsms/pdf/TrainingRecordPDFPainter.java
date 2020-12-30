@@ -267,7 +267,7 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 		if (BlockType.SECTION.equals(block.getType())) {
 			ArrayList<CourseParticipationStatusEntryOutVO> blockParticipations = new ArrayList<CourseParticipationStatusEntryOutVO>();
 			TrainingRecordPDFBlock testBlock = new TrainingRecordPDFBlock(block.getTrainingRecordSection(), new ArrayList<CourseParticipationStatusEntryOutVO>(), block.hasTrials(),
-					block.hasInstitutions());
+					block.hasInstitutions(), block.hasCertificates());
 			Iterator<CourseParticipationStatusEntryOutVO> it = block.getParticipations().iterator();
 			while (it.hasNext()) {
 				CourseParticipationStatusEntryOutVO participation = it.next();

@@ -35,6 +35,7 @@ public class TrainingRecordPDFBlock {
 	protected Collection<CourseParticipationStatusEntryOutVO> participations;
 	protected boolean hasTrials;
 	protected boolean hasInstitutions;
+	protected boolean hasCertificates;
 	protected BlockType type;
 
 	public TrainingRecordPDFBlock() {
@@ -48,10 +49,11 @@ public class TrainingRecordPDFBlock {
 	}
 
 	public TrainingRecordPDFBlock(TrainingRecordSectionVO trainingRecordSection, Collection<CourseParticipationStatusEntryOutVO> participations, boolean hasTrials,
-			boolean hasInstitutions) {
+			boolean hasInstitutions, boolean hasCertificates) {
 		this.trainingRecordSection = trainingRecordSection;
 		this.hasTrials = hasTrials;
 		this.hasInstitutions = hasInstitutions;
+		this.hasCertificates = hasCertificates;
 		this.participations = participations;
 		this.type = BlockType.SECTION;
 	}
@@ -59,6 +61,7 @@ public class TrainingRecordPDFBlock {
 	private void setParticipations(Collection<CourseParticipationStatusEntryOutVO> participations) {
 		hasTrials = false;
 		hasInstitutions = false;
+		hasCertificates = false;
 		this.participations = participations;
 		if (participations != null) {
 			Iterator<CourseParticipationStatusEntryOutVO> it = participations.iterator();
@@ -69,6 +72,9 @@ public class TrainingRecordPDFBlock {
 				}
 				if (course.getInstitution() != null) {
 					hasInstitutions = true;
+				}
+				if (hasCourseCertificate(course)) {
+					hasCertificates = true;
 				}
 			}
 		}
@@ -162,7 +168,7 @@ public class TrainingRecordPDFBlock {
 	protected String getCourseInstitutionString(CourseOutVO course) {
 		if (course != null && course.getInstitution() != null) {
 			if (Settings.getBoolean(TrainingRecordPDFSettingCodes.INSTITUTION_STAFF_PATH, Bundle.TRAINING_RECORD_PDF,
-				TrainingRecordPDFDefaultSettings.INSTITUTION_STAFF_PATH)) {
+					TrainingRecordPDFDefaultSettings.INSTITUTION_STAFF_PATH)) {
 				return ServiceUtil.getCvStaffPathString(course.getInstitution());
 			} else {
 				return CommonUtil.getCvStaffName(staff);
@@ -182,6 +188,10 @@ public class TrainingRecordPDFBlock {
 
 	public boolean hasInstitutions() {
 		return hasInstitutions;
+	}
+
+	public boolean hasCertificates() {
+		return hasCertificates;
 	}
 
 	public float renderBlock(PDPageContentStream contentStream, TrainingRecordPDFBlockCursor cursor) throws Exception {
@@ -387,8 +397,8 @@ public class TrainingRecordPDFBlock {
 								TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_TRIAL_WIDTH) : 0.0f)
 						- (hasInstitutions ? Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_INSTITUTION_WIDTH, Bundle.TRAINING_RECORD_PDF,
 								TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_INSTITUTION_WIDTH) : 0.0f)
-						- Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH))
+						- (hasCertificates ? Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+								TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH) : 0.0f))
 						/ 2.0f;
 				y3 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), PDFUtil.FontSize.SIZE11, Settings.getColor(
 						TrainingRecordPDFSettingCodes.SECTION_TABLE_TEXT_COLOR, Bundle.TRAINING_RECORD_PDF,
@@ -420,20 +430,25 @@ public class TrainingRecordPDFBlock {
 					x4 = x3;
 					y4 = y3;
 				}
-				y5 = y - Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_HEAD_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_HEAD_FRAME_INDENT);
-				x5 = x4 + Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH) / 2.0f;
-				y5 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), PDFUtil.FontSize.SIZE11, Settings.getColor(
-						TrainingRecordPDFSettingCodes.SECTION_TABLE_TEXT_COLOR, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.SECTION_TABLE_TEXT_COLOR),
-						L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF,
-								TrainingRecordPDFLabelCodes.COURSE_CERTIFICATE_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
-						x5, y5, PDFUtil.Alignment.TOP_CENTER,
-						Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH));
-				y5 -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_HEAD_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_HEAD_FRAME_INDENT);
+				if (hasCertificates) {
+					y5 = y - Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_HEAD_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+							TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_HEAD_FRAME_INDENT);
+					x5 = x4 + Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+							TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH) / 2.0f;
+					y5 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), PDFUtil.FontSize.SIZE11, Settings.getColor(
+							TrainingRecordPDFSettingCodes.SECTION_TABLE_TEXT_COLOR, Bundle.TRAINING_RECORD_PDF,
+							TrainingRecordPDFDefaultSettings.SECTION_TABLE_TEXT_COLOR),
+							L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF,
+									TrainingRecordPDFLabelCodes.COURSE_CERTIFICATE_COLUMN_NAME, PDFUtil.DEFAULT_LABEL),
+							x5, y5, PDFUtil.Alignment.TOP_CENTER,
+							Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_COLUMN_COURSE_CERTIFICATE_WIDTH));
+					y5 -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_HEAD_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+							TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_HEAD_FRAME_INDENT);
+				} else {
+					x5 = x4;
+					y5 = y4;
+				}
 				height = y - Math.min(y1, Math.min(y2, Math.min(y3, Math.min(y4, y5))));
 				if (participations != null) {
 					Iterator<CourseParticipationStatusEntryOutVO> it = participations.iterator();
@@ -509,13 +524,17 @@ public class TrainingRecordPDFBlock {
 						} else {
 							y4 = y3;
 						}
-						y5 = y
-								- Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
-										TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
-						y5 -= renderHasCourseCertificate(x5,
-								y5, contentStream, cursor, participation.getCourse());
-						y5 -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
+						if (hasCertificates) {
+							y5 = y
+									- Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
+							y5 -= renderHasCourseCertificate(x5,
+									y5, contentStream, cursor, participation.getCourse());
+							y5 -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
+						} else {
+							y5 = y4;
+						}
 						height = y - Math.min(y1, Math.min(y2, Math.min(y3, Math.min(y4, y5))));
 					}
 				}
@@ -582,9 +601,16 @@ public class TrainingRecordPDFBlock {
 		return height;
 	}
 
+	private static boolean hasCourseCertificate(CourseOutVO course) {
+		if (course != null && course.getCertificate()) { //todo: check for uploaded certificate ...
+			return true;
+		}
+		return false;
+	}
+
 	private static float renderHasCourseCertificate(float x, float y, PDPageContentStream contentStream, TrainingRecordPDFBlockCursor cursor, CourseOutVO course) throws Exception {
 		PDFJpeg ximage;
-		if (course != null && course.getCertificate()) { //todo: check for uploaded certificate ...
+		if (hasCourseCertificate(course)) {
 			ximage = cursor.getCheckboxCheckedImage();
 		} else {
 			ximage = cursor.getCheckboxUncheckedImage();
