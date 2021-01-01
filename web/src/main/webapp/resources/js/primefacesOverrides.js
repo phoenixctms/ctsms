@@ -735,15 +735,69 @@ PrimeFaces.widget.SelectOneRadio.prototype.setValue = function(value) {
 }
 
 PrimeFaces.widget.SelectBooleanCheckbox.prototype.enable = function() {
-  this.jq.removeClass('ui-state-disabled');
-  this.disabled = false;
-  this.input.removeAttr('disabled');
+  if (this.disabled) {
+    this.jq.removeClass('ui-state-disabled');
+    this.jq.children().removeClass('ui-state-disabled');
+    this.disabled = false;
+    this.input.removeAttr('disabled');
+
+    var _self = this;
+    this.box.mouseover(function() {
+      _self.box.addClass('ui-state-hover');
+    }).mouseout(function() {
+      _self.box.removeClass('ui-state-hover');
+    }).click(function() {
+      _self.input.trigger('click');
+      if($.browser.msie && parseInt($.browser.version) < 9) {
+        _self.input.trigger('change');
+      }
+    });
+    this.input.focus(function() {
+      if(_self.input.prop('checked')) {
+        _self.box.removeClass('ui-state-active');
+      }
+      _self.box.addClass('ui-state-focus');
+    }).blur(function() {
+      if(_self.input.prop('checked')) {
+        _self.box.addClass('ui-state-active');
+      }
+      _self.box.removeClass('ui-state-focus');
+    }).change(function() {
+      if(_self.input.is(':checked')) {
+        _self.box.children('.ui-chkbox-icon').addClass('ui-icon ui-icon-check');
+        if(!_self.input.is(':focus')) {
+          _self.box.addClass('ui-state-active');
+        }             
+      } else {
+        _self.box.removeClass('ui-state-active').children('.ui-chkbox-icon').removeClass('ui-icon ui-icon-check');     
+      }
+    });
+    //toggle state on label click
+    this.itemLabel.click(function() {
+      _self.toggle();
+    });
+
+    //Client Behaviors
+    //if(this.cfg.behaviors) {
+    //  PrimeFaces.attachBehaviors(this.input, this.cfg.behaviors);
+    //}
+  }
 }
 
 PrimeFaces.widget.SelectBooleanCheckbox.prototype.disable = function() {
-  this.jq.addClass('ui-state-disabled');
-  this.disabled = true;
-  this.input.attr("disabled", "disabled");
+  if (!this.disabled) {
+    this.jq.addClass('ui-state-disabled');
+    this.disabled = true;
+    this.input.attr("disabled", "disabled");
+
+    this.box.unbind('mouseover');
+    this.box.unbind('mouseout');
+    this.box.unbind('click');
+    this.input.unbind('focus');
+    this.input.unbind('blur');
+    this.input.unbind('change');
+    this.itemLabel.unbind('click');
+  }
 }
 
 PrimeFaces.widget.Dialog.prototype.focusFirstInput = function() {
