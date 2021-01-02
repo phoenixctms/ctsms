@@ -44,6 +44,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			in.setShowCv(false);
 			in.setTrainingRecordSectionId(null);
 			in.setShowTrainingRecord(false);
+			in.setShowCommentTrainingRecord(false);
 			in.setStaffId(staffId);
 			in.setStatusId(null);
 		}
