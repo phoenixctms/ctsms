@@ -601,6 +601,9 @@ public final class ServiceUtil {
 		if (courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getTrainingRecordSectionId() == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED);
 		}
+		if (!courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getShowCommentTrainingRecord()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_DISABLED);
+		}
 		if (courseParticipationIn.getShowCv() && !course.isShowCvPreset()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED);
 		}
@@ -1072,6 +1075,9 @@ public final class ServiceUtil {
 		}
 		if (courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getTrainingRecordSectionId() == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_TRAINING_RECORD_SECTION_REQUIRED);
+		}
+		if (!courseParticipationIn.getShowTrainingRecord() && courseParticipationIn.getShowCommentTrainingRecord()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_TRAINING_RECORD_DISABLED);
 		}
 		if (courseParticipationIn.getShowCv() && !course.isShowCvPreset()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_SHOW_CV_PRESET_DISABLED);

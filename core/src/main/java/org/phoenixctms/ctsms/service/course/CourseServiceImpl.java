@@ -234,9 +234,16 @@ public class CourseServiceImpl
 			if (courseIn.getTrainingRecordSectionPresetId() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRAINING_RECORD_SECTION_PRESET_REQUIRED);
 			}
-			//			if (CommonUtil.isEmptyString(courseIn.getCvTitle())) {
-			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.CV_TITLE_PRESET_REQUIRED);
-			//			}
+			if (CommonUtil.isEmptyString(courseIn.getCvTitle())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CV_TITLE_PRESET_REQUIRED);
+			}
+			if (courseIn.getShowCommentTrainingRecordPreset() && CommonUtil.isEmptyString(courseIn.getCvCommentPreset())) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CV_COMMENT_PRESET_REQUIRED);
+			}
+		} else {
+			if (courseIn.getShowCommentTrainingRecordPreset()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.SHOW_TRAINING_RECORD_PRESET_DISABLED);
+			}
 		}
 	}
 
@@ -399,6 +406,7 @@ public class CourseServiceImpl
 				newCourseParticipationStatusEntry.setShowCv(course.isShowCvPreset());
 				newCourseParticipationStatusEntry.setTrainingRecordSectionId(trainingRecordSection != null ? trainingRecordSection.getId() : null);
 				newCourseParticipationStatusEntry.setShowTrainingRecord(course.isShowTrainingRecordPreset());
+				newCourseParticipationStatusEntry.setShowCommentTrainingRecord(course.isShowCommentTrainingRecordPreset());
 				newCourseParticipationStatusEntry.setStaffId(staffId);
 				newCourseParticipationStatusEntry.setStatusId(statusType.getId());
 				try {
@@ -831,6 +839,7 @@ public class CourseServiceImpl
 		participationDummy.setShowCommentCv(courseVO.getShowCommentCvPreset());
 		participationDummy.setShowCv(courseVO.getShowCvPreset());
 		participationDummy.setTrainingRecordSection(courseVO.getTrainingRecordSectionPreset());
+		participationDummy.setShowCommentTrainingRecord(courseVO.getShowCommentTrainingRecordPreset());
 		participationDummy.setShowTrainingRecord(courseVO.getShowTrainingRecordPreset());
 		participationDummy.setStatus(null);
 		participationDummy.setVersion(0l);
