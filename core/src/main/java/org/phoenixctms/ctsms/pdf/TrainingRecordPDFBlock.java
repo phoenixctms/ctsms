@@ -203,7 +203,6 @@ public class TrainingRecordPDFBlock {
 		float x3;
 		float x4;
 		float x5;
-		float y0;
 		float y1;
 		float y2;
 		float y3;
@@ -342,7 +341,6 @@ public class TrainingRecordPDFBlock {
 							PDFUtil.Alignment.TOP_LEFT);
 					y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.Y_FRAME_INDENT);
 				}
-				y0 = y;
 				PDFUtil.renderLine(contentStream,
 						Settings.getColor(TrainingRecordPDFSettingCodes.FRAME_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.FRAME_COLOR),
 						cursor.getBlockX(),
@@ -450,6 +448,50 @@ public class TrainingRecordPDFBlock {
 					y5 = y4;
 				}
 				height = y - Math.min(y1, Math.min(y2, Math.min(y3, Math.min(y4, y5))));
+				PDFUtil.renderLine(
+						contentStream,
+						Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+						x1,
+						y,
+						x1,
+						y - height, Settings.getFloat(
+								TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+				if (hasTrials) {
+					PDFUtil.renderLine(
+							contentStream,
+							Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+							x2,
+							y,
+							x2,
+							y - height, Settings.getFloat(
+									TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+				}
+				PDFUtil.renderLine(
+						contentStream,
+						Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+						x3,
+						y,
+						x3,
+						y - height, Settings.getFloat(
+								TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+				if (hasInstitutions) {
+					PDFUtil.renderLine(
+							contentStream,
+							Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+							x4,
+							y,
+							x4,
+							y - height, Settings.getFloat(
+									TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+				}
 				if (participations != null) {
 					Iterator<CourseParticipationStatusEntryOutVO> it = participations.iterator();
 					while (it.hasNext()) {
@@ -536,53 +578,81 @@ public class TrainingRecordPDFBlock {
 							y5 = y4;
 						}
 						height = y - Math.min(y1, Math.min(y2, Math.min(y3, Math.min(y4, y5))));
+						PDFUtil.renderLine(
+								contentStream,
+								Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+										TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+								x1,
+								y,
+								x1,
+								y - height, Settings.getFloat(
+										TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+										TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+						if (hasTrials) {
+							PDFUtil.renderLine(
+									contentStream,
+									Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+									x2,
+									y,
+									x2,
+									y - height, Settings.getFloat(
+											TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+						}
+						PDFUtil.renderLine(
+								contentStream,
+								Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+										TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+								x3,
+								y,
+								x3,
+								y - height, Settings.getFloat(
+										TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+										TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+						if (hasInstitutions) {
+							PDFUtil.renderLine(
+									contentStream,
+									Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
+									x4,
+									y,
+									x4,
+									y - height, Settings.getFloat(
+											TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+						}
+						if (participation.getShowCommentTrainingRecord() && !CommonUtil.isEmptyString(participation.getComment())) {
+							y -= height;
+							PDFUtil.renderLine(contentStream,
+									Settings.getColor(TrainingRecordPDFSettingCodes.FRAME_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.FRAME_COLOR),
+									cursor.getBlockX(),
+									y,
+									cursor.getBlockX() + cursor.getBlockWidth(),
+									y,
+									Settings.getFloat(
+											TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
+							y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
+							height = PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.SIZE10, Settings.getColor(
+									TrainingRecordPDFSettingCodes.SECTION_TABLE_TEXT_COLOR, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.SECTION_TABLE_TEXT_COLOR),
+									participation.getComment(),
+									x, //+ Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+									//		TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_FRAME_INDENT),
+									y, PDFUtil.Alignment.TOP_LEFT,
+									cursor.getBlockX() + cursor.getBlockWidth() - x
+											- Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+													TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_FRAME_INDENT));
+							// - 2.0f * Settings.getFloat(TrainingRecordPDFSettingCodes.X_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+							//		TrainingRecordPDFDefaultSettings.X_SECTION_TABLE_FRAME_INDENT));
+							height += Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
+									TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
+						}
 					}
 				}
 				y -= height;
-				PDFUtil.renderLine(
-						contentStream,
-						Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
-						x1,
-						y0,
-						x1,
-						y, Settings.getFloat(
-								TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
-				if (hasTrials) {
-					PDFUtil.renderLine(
-							contentStream,
-							Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
-									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
-							x2,
-							y0,
-							x2,
-							y, Settings.getFloat(
-									TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
-				}
-				PDFUtil.renderLine(
-						contentStream,
-						Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
-						x3,
-						y0,
-						x3,
-						y, Settings.getFloat(
-								TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
-				if (hasInstitutions) {
-					PDFUtil.renderLine(
-							contentStream,
-							Settings.getColor(TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_COLOR, Bundle.TRAINING_RECORD_PDF,
-									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_COLOR),
-							x4,
-							y0,
-							x4,
-							y, Settings.getFloat(
-									TrainingRecordPDFSettingCodes.SECTION_TABLE_FRAME_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF,
-									TrainingRecordPDFDefaultSettings.SECTION_TABLE_FRAME_LINE_WIDTH));
-				}
 				height = cursor.getBlockY() - y;
 				PDFUtil.renderFrame(contentStream,
 						Settings.getColor(TrainingRecordPDFSettingCodes.FRAME_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.FRAME_COLOR),
