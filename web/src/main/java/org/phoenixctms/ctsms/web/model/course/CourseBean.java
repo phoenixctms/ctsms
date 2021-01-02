@@ -96,6 +96,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setPrecedingCourseIds(precedingCourseIds);
 			in.setShowCommentCvPreset(out.getShowCommentCvPreset());
 			in.setShowCvPreset(out.getShowCvPreset());
+			in.setShowCommentTrainingRecordPreset(out.getShowCommentTrainingRecordPreset());
 			in.setShowTrainingRecordPreset(out.getShowTrainingRecordPreset());
 			in.setCertificate(out.getCertificate());
 			in.setStart(out.getStart());
@@ -125,6 +126,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			result.setName(CommonUtil.getCourseName(result));
 			result.setShowCommentCvPreset(in.getShowCommentCvPreset());
 			result.setShowCvPreset(in.getShowCvPreset());
+			result.setShowCommentTrainingRecordPreset(in.getShowCommentTrainingRecordPreset());
 			result.setShowTrainingRecordPreset(in.getShowTrainingRecordPreset());
 			result.setCertificate(in.getCertificate());
 			result.setStart(in.getStart());
@@ -159,6 +161,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			in.setShowCommentCvPreset(
 					Settings.getBoolean(SettingCodes.COURSE_SHOW_COMMENT_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_COMMENT_CV_PRESET_PRESET));
 			in.setShowCvPreset(Settings.getBoolean(SettingCodes.COURSE_SHOW_CV_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_CV_PRESET_PRESET));
+			in.setShowCommentTrainingRecordPreset(
+					Settings.getBoolean(SettingCodes.COURSE_SHOW_COMMENT_TRAINING_RECORD_PRESET_PRESET, Bundle.SETTINGS,
+							DefaultSettings.COURSE_SHOW_COMMENT_TRAINING_RECORD_PRESET_PRESET));
 			in.setShowTrainingRecordPreset(
 					Settings.getBoolean(SettingCodes.COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET));
 			in.setCertificate(
@@ -626,6 +631,12 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		}
 	}
 
+	public void handleShowTrainingRecordPresetChange() {
+		if (!in.getShowTrainingRecordPreset()) {
+			in.setShowCommentTrainingRecordPreset(false);
+		}
+	}
+
 	@PostConstruct
 	private void init() {
 		Long id = WebUtil.getLongParamValue(GetParamNames.COURSE_ID);
@@ -792,6 +803,9 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		}
 		if (!in.getShowCvPreset()) {
 			in.setShowCommentCvPreset(false);
+		}
+		if (!in.getShowTrainingRecordPreset()) {
+			in.setShowCommentTrainingRecordPreset(false);
 		}
 		in.setPrecedingCourseIds(new ArrayList<Long>(precedingCourseMultiPicker.getSelectionIds()));
 	}
