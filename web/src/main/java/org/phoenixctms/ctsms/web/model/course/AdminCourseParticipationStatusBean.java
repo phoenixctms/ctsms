@@ -57,6 +57,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 				in.setShowCv(course.getShowCvPreset());
 				in.setTrainingRecordSectionId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
 				in.setShowTrainingRecord(course.getShowTrainingRecordPreset());
+				in.setShowCommentTrainingRecord(course.getShowCommentTrainingRecordPreset());
 				return;
 			}
 			in.setComment(null);
@@ -65,6 +66,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 			in.setShowCv(false);
 			in.setTrainingRecordSectionId(null);
 			in.setShowTrainingRecord(false);
+			in.setShowCommentTrainingRecord(false);
 		}
 	}
 
