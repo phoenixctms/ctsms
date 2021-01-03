@@ -41,6 +41,7 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 			in.setShowCv(out.getShowCv());
 			in.setTrainingRecordSectionId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
 			in.setShowTrainingRecord(out.getShowTrainingRecord());
+			in.setShowCommentTrainingRecord(out.getShowCommentTrainingRecord());
 			in.setStaffId(staffVO == null ? null : staffVO.getId());
 			in.setStatusId(statusVO == null ? null : statusVO.getId());
 		}
@@ -141,6 +142,12 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 		}
 	}
 
+	public void handleShowTrainingRecordChange() {
+		if (!in.getShowTrainingRecord()) {
+			in.setShowCommentTrainingRecord(false);
+		}
+	}
+
 	protected abstract void initIn();
 
 	protected abstract void initSets();
@@ -179,6 +186,9 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	protected void sanitizeInVals() {
 		if (!in.getShowCv()) {
 			in.setShowCommentCv(false);
+		}
+		if (!in.getShowTrainingRecord()) {
+			in.setShowCommentTrainingRecord(false);
 		}
 	}
 

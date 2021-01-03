@@ -257,6 +257,7 @@ public final class DefaultSettings {
 	public final static boolean COURSE_SHOW_TRAINING_RECORD_PRESET_PRESET = false;
 	public final static boolean COURSE_CERTIFICATE_PRESET = false;
 	public final static boolean COURSE_SHOW_COMMENT_CV_PRESET_PRESET = false;
+	public final static boolean COURSE_SHOW_COMMENT_TRAINING_RECORD_PRESET_PRESET = false;
 	public final static int COURSE_DURATION_DAYS_PRESET = 0;
 	public final static Integer COURSE_DEADLINE_START_DAYS_PRESET = null;
 	public static final VariablePeriod COURSE_VALIDITY_PERIOD_PRESET = VariablePeriod.YEAR;

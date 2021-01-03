@@ -142,9 +142,15 @@ function handleCvSectionPresetSelected(xhr, status, args) {
 var courseShowTrainingRecordPresetPreset;
 
 function setCourseShowTrainingRecordPreset(apply) {
-
+	
 	if (apply) {
 		showTrainingRecordPreset.setValue(courseShowTrainingRecordPresetPreset);
+		if (courseShowTrainingRecordPresetPreset) {
+			showCommentTrainingRecordPreset.enable();
+		} else {
+			showCommentTrainingRecordPreset.setValue(false);
+			showCommentTrainingRecordPreset.disable();
+		}
 	}
 	courseShowTrainingRecordPresetPresetOverrideConfirmation.hide();
 	courseShowTrainingRecordPresetPreset = null;
@@ -163,6 +169,7 @@ function handleTrainingRecordSectionPresetSelected(xhr, status, args) {
 	courseShowTrainingRecordPresetPreset = null;
 
 }
+
 
 var courseParticipationStatusEntryCvSectionShowCvPreset;
 
@@ -196,12 +203,19 @@ function handleCourseParticipationStatusEntryCvSectionSelected(xhr, status, args
 
 }
 
+
 var courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset;
 
 function setCourseParticipationStatusEntryTrainingRecordSectionShowTrainingRecord(apply) {
 
 	if (apply) {
 		courseParticipationStatusEntryShowTrainingRecord.setValue(courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset);
+		if (courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset) {
+			courseParticipationStatusEntryShowCommentTrainingRecord.enable();
+		} else {
+			courseParticipationStatusEntryShowCommentTrainingRecord.setValue(false);
+			courseParticipationStatusEntryShowCommentTrainingRecord.disable();
+		}
 	}
 	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation.hide();
 	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;

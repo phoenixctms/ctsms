@@ -318,12 +318,18 @@ function handleCourseParticipationStatusEntryCvSectionSelected(xhr, status, args
 var courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset;
 
 function setCourseParticipationStatusEntryTrainingRecordSectionShowTrainingRecord(apply) {
-
+	
 	if (apply) {
 		courseParticipationStatusEntryShowTrainingRecord.setValue(courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset);
+		if (courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset) {
+			courseParticipationStatusEntryShowCommentTrainingRecord.enable();
+		} else {
+			courseParticipationStatusEntryShowCommentTrainingRecord.setValue(false);
+			courseParticipationStatusEntryShowCommentTrainingRecord.disable();
+		}
 	}
 	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPresetOverrideConfirmation.hide();
-	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;
+	courseParticipationStatusEntryTrainingRecordSectionShowTrainingRecordPreset = null;	
 
 }
 

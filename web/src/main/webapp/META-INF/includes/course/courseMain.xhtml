@@ -582,6 +582,8 @@
 										<p:selectBooleanCheckbox id="showTrainingRecordPreset"
 											widgetVar="showTrainingRecordPreset"
 											value="#{courseBean.in.showTrainingRecordPreset}">
+											<p:ajax listener="#{courseBean.handleShowTrainingRecordPresetChange}"
+												update="showCommentTrainingRecordPreset" />											
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}"
 											for="showTrainingRecordPreset">
@@ -617,8 +619,20 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="trainingRecordSectionPreset" />
-									<h:outputLabel />
-									<h:outputText value="" />
+									<h:outputLabel for="showCommentTrainingRecordPreset"
+										value="#{courselabels.course_show_comment_training_record_preset_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="showCommentTrainingRecordPreset"
+											widgetVar="showCommentTrainingRecordPreset"
+											disabled="#{!courseBean.in.showTrainingRecordPreset}"
+											value="#{courseBean.in.showCommentTrainingRecordPreset}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="showCommentTrainingRecordPreset">
+											<h:outputText
+												value="#{courselabels.course_show_comment_training_record_preset_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
 
 									<h:outputLabel for="showCvPreset"
 										value="#{courselabels.course_show_cv_preset_label}" />

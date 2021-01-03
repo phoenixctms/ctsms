@@ -23,6 +23,7 @@ import org.phoenixctms.ctsms.pdf.CVPDFLabelCodes;
 import org.phoenixctms.ctsms.pdf.CVPDFSettingCodes;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.ServiceUtil;
@@ -506,7 +507,12 @@ public class CourseParticipationStatusEntryDaoImpl
 			target.setSection(this.getCvSectionDao().toCvSectionVO(cvSection));
 		}
 		if (course != null) {
-			StringBuilder sb = new StringBuilder(course.getCvTitle());
+			StringBuilder sb = new StringBuilder();
+			if (CommonUtil.isEmptyString(course.getCvTitle())) {
+				sb.append(course.getName());
+			} else {
+				sb.append(course.getCvTitle());
+			}
 			sb.append(L10nUtil.getCVPDFLabel(
 					Locales.CV_PDF,
 					CVPDFLabelCodes.POSITION_COURSE_DATE,

@@ -174,7 +174,17 @@
 								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_training_record_section_name_column}" />
 						</f:facet>
 						<h:outputText value="#{statusEntry.vo.trainingRecordSection.name}" />
-					</p:column>				
+					</p:column>
+					<p:column sortBy="#{statusEntry.vo.showCommentTrainingRecord}">
+					    <f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{stafflabels.course_participation_status_courseparticipationstatus_list_show_comment_training_record_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param name="value" value="#{statusEntry.vo.showCommentTrainingRecord}" />
+						</ui:include>
+					</p:column>
 					<p:column>
 					    <f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
@@ -399,6 +409,9 @@
 									id="courseParticipationStatusEntryShowTrainingRecord"
 									widgetVar="courseParticipationStatusEntryShowTrainingRecord"
 									value="#{courseParticipationStatusBean.in.showTrainingRecord}">
+									<p:ajax
+										listener="#{courseParticipationStatusBean.handleShowTrainingRecordChange}"
+										update="courseParticipationStatusEntryShowCommentTrainingRecord" />									
 								</p:selectBooleanCheckbox>
 								<p:tooltip rendered="#{enableTooltips}"
 									for="courseParticipationStatusEntryShowTrainingRecord">
@@ -408,9 +421,22 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="courseParticipationStatusEntryShowTrainingRecord" />							
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />							
+							<h:outputLabel for="courseParticipationStatusEntryShowCommentTrainingRecord"
+								value="#{stafflabels.course_participation_status_show_comment_training_record_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox
+									id="courseParticipationStatusEntryShowCommentTrainingRecord"
+									widgetVar="courseParticipationStatusEntryShowCommentTrainingRecord"
+									disabled="#{!courseParticipationStatusBean.in.showTrainingRecord}"
+									value="#{courseParticipationStatusBean.in.showCommentTrainingRecord}" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="courseParticipationStatusEntryShowCommentTrainingRecord">
+									<h:outputText
+										value="#{stafflabels.course_participation_status_show_comment_training_record_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="courseParticipationStatusEntryShowCommentCv" />						
 							
 							<h:outputLabel for="courseParticipationStatusEntryCvSection"
 								value="#{stafflabels.course_participation_status_cv_section_label}" />

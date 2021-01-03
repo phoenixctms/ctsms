@@ -192,6 +192,7 @@ public class ExpiringParticipationOverviewBean extends ManagedBeanBase implement
 			participation.setShowCv(course.getShowCvPreset());
 			participation.setTrainingRecordSectionId(trainingRecordSectionVO == null ? null : trainingRecordSectionVO.getId());
 			participation.setShowTrainingRecord(course.getShowTrainingRecordPreset());
+			participation.setShowCommentTrainingRecord(course.getShowCommentTrainingRecordPreset());
 			participation.setStaffId(identity.getId());
 			try {
 				participation.setStatusId(WebUtil.getServiceLocator().getSelectionSetService().getInitialCourseParticipationStatusTypes(WebUtil.getAuthentication(), false, true)
