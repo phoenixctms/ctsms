@@ -30,6 +30,7 @@ public class TrainingRecordPDFBlock {
 	}
 
 	protected StaffOutVO staff;
+	protected StaffOutVO lastInstitution;
 	protected Collection<StaffTagValueOutVO> staffTagValues;
 	protected TrainingRecordSectionVO trainingRecordSection;
 	protected Collection<CourseParticipationStatusEntryOutVO> participations;
@@ -63,6 +64,7 @@ public class TrainingRecordPDFBlock {
 		hasInstitutions = false;
 		hasCertificates = false;
 		this.participations = participations;
+		lastInstitution = null;
 		if (participations != null) {
 			Iterator<CourseParticipationStatusEntryOutVO> it = participations.iterator();
 			while (it.hasNext()) {
@@ -76,6 +78,7 @@ public class TrainingRecordPDFBlock {
 				if (hasCourseCertificate(course)) {
 					hasCertificates = true;
 				}
+				lastInstitution = course.getInstitution();
 			}
 		}
 	}
@@ -121,6 +124,10 @@ public class TrainingRecordPDFBlock {
 
 	public StaffOutVO getStaff() {
 		return staff;
+	}
+
+	public StaffOutVO getLastInstitution() {
+		return lastInstitution;
 	}
 
 	public BlockType getType() {
@@ -171,7 +178,7 @@ public class TrainingRecordPDFBlock {
 					TrainingRecordPDFDefaultSettings.INSTITUTION_STAFF_PATH)) {
 				return ServiceUtil.getCvStaffPathString(course.getInstitution());
 			} else {
-				return CommonUtil.getCvStaffName(staff);
+				return CommonUtil.getCvStaffName(course.getInstitution());
 			}
 		}
 		return "";

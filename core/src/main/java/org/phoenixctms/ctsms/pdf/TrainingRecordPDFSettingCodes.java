@@ -55,6 +55,9 @@ public interface TrainingRecordPDFSettingCodes {
 	public static final String DATE_LINE_LENGTH = "date_line_length";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
 	public static final String SECTION_NEW_PAGE_PER_TRIAL = "section_new_page_per_trial";
+	public static final String STAFF_SIGNATURE = "staff_signature";
+	public static final String LAST_INSTITUTION_SIGNATURE = "last_institution_signature";
+	public static final String SIGNATURE_PER_PAGE = "signature_per_page";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String INSTITUTION_STAFF_PATH = "institution_staff_path";

@@ -60,12 +60,15 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 	public void drawNextBlock(PDPageContentStream contentStream) throws Exception {
 		TrainingRecordPDFBlock block = blocks.get(blockIndex);
 		cursor.setBlockY(cursor.getBlockY() - block.renderBlock(contentStream, cursor));
+		if (BlockType.SECTION.equals(block.getType())) {
+			cursor.setLastInstitution(block.getLastInstitution());
+		}
 		blockIndex++;
 	}
 
-	protected String getSignatureLabel() {
-		if (cursor.getStaff() != null && cursor.getStaff().isPerson()) {
-			return L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.SIGNATURE_ANNOTATION, PDFUtil.DEFAULT_LABEL,
+	protected String getStaffSignatureLabel() {
+		if (cursor.getStaff() != null) { // && cursor.getStaff().isPerson()) {
+			return L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.STAFF_SIGNATURE_ANNOTATION, PDFUtil.DEFAULT_LABEL,
 					CommonUtil.getCvStaffName(cursor.getStaff()),
 					now == null ? null
 							: Settings
@@ -76,75 +79,107 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 		return "";
 	}
 
-	@Override
-	public void drawPage(PDPageContentStream contentStream) throws Exception {
-		if (cursor.getStaff() != null) {
-			float y = Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_LOWER_MARGIN)
-					- Settings.getFloat(TrainingRecordPDFSettingCodes.Y_FRAME_UPPER_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
-							TrainingRecordPDFDefaultSettings.Y_FRAME_UPPER_INDENT_SIGNATURE);
-			float x = Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_LEFT_MARGIN)
+	protected String getLastInstitutionSignatureLabel() {
+		if (cursor.getLastInstitution() != null) { // && cursor.getLastInstitution().isPerson()) {
+			return L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.LAST_INSTITUTION_SIGNATURE_ANNOTATION, PDFUtil.DEFAULT_LABEL,
+					CommonUtil.getCvStaffName(cursor.getLastInstitution()),
+					now == null ? null
+							: Settings
+									.getSimpleDateFormat(TrainingRecordPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.TRAINING_RECORD_PDF)
+									.format(now));
+		}
+		return "";
+	}
+
+	protected float drawSignature(PDPageContentStream contentStream, float x, float y, String signature, boolean showDate, String signatureLabel) throws Exception {
+		float y0 = y;
+		float x1 = pageWidth
+				- Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
+				- Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE)
+				- Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH);
+		if (Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH) > 0.0f) {
+			x1 -= Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
+					TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE)
+					+ Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LABEL_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LABEL_WIDTH)
+					+ Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH);
+		}
+		y -= PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
+				Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR),
+				signature, x, y, PDFUtil.Alignment.TOP_LEFT,
+				x1 - x - Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
+		float y1 = y;
+		PDFUtil.renderLine(contentStream,
+				Settings.getColor(TrainingRecordPDFSettingCodes.FRAME_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.FRAME_COLOR), x1, y,
+				x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH),
+				y,
+				Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_WIDTH));
+		y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_OFFSET_SIGNATURE_ANNOTATION, Bundle.TRAINING_RECORD_PDF,
+				TrainingRecordPDFDefaultSettings.Y_OFFSET_SIGNATURE_ANNOTATION);
+		y -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.TINY,
+				Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR), signatureLabel,
+				x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH)
+						/ 2.0f,
+				y,
+				PDFUtil.Alignment.TOP_CENTER);
+		y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_FRAME_LOWER_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
+				TrainingRecordPDFDefaultSettings.Y_FRAME_LOWER_INDENT_SIGNATURE);
+		float height = y0 - y;
+		if (showDate && Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH) > 0.0f) {
+			y = y1;
+			x = x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH)
 					+ Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
 							TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE);
-			float x1 = pageWidth
-					- Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
-					- Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
-							TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE)
-					- Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH);
-			if (Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH) > 0.0f) {
-				x1 -= Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE)
-						+ Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LABEL_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LABEL_WIDTH)
-						+ Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH);
-			}
-			y -= PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
+			x1 = x + Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LABEL_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LABEL_WIDTH);
+			PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
 					Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR),
-					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.SIGNATURE, PDFUtil.DEFAULT_LABEL), x, y, PDFUtil.Alignment.TOP_LEFT,
+					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.DATE, PDFUtil.DEFAULT_LABEL), x, y,
+					PDFUtil.Alignment.BOTTOM_LEFT,
 					x1 - x - Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
 							TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
-			float y1 = y;
 			PDFUtil.renderLine(contentStream,
 					Settings.getColor(TrainingRecordPDFSettingCodes.FRAME_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.FRAME_COLOR), x1, y,
-					x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH),
-					y,
+					x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH), y,
 					Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_WIDTH));
 			y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_OFFSET_SIGNATURE_ANNOTATION, Bundle.TRAINING_RECORD_PDF,
 					TrainingRecordPDFDefaultSettings.Y_OFFSET_SIGNATURE_ANNOTATION);
 			y -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.TINY,
-					Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR), getSignatureLabel(),
-					x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH)
+					Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR),
+					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.DATE_ANNOTATION, PDFUtil.DEFAULT_LABEL),
+					x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH)
 							/ 2.0f,
 					y,
 					PDFUtil.Alignment.TOP_CENTER);
 			y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_FRAME_LOWER_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
 					TrainingRecordPDFDefaultSettings.Y_FRAME_LOWER_INDENT_SIGNATURE);
-			if (Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH) > 0.0f) {
-				y = y1;
-				x = x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_LENGTH)
-						+ Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE);
-				x1 = x + Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LABEL_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LABEL_WIDTH);
-				PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM,
-						Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR),
-						L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.DATE, PDFUtil.DEFAULT_LABEL), x, y,
-						PDFUtil.Alignment.BOTTOM_LEFT,
-						x1 - x - Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
-								TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE));
-				PDFUtil.renderLine(contentStream,
-						Settings.getColor(TrainingRecordPDFSettingCodes.FRAME_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.FRAME_COLOR), x1, y,
-						x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH), y,
-						Settings.getFloat(TrainingRecordPDFSettingCodes.SIGNATURE_LINE_WIDTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.SIGNATURE_LINE_WIDTH));
-				y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_OFFSET_SIGNATURE_ANNOTATION, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.Y_OFFSET_SIGNATURE_ANNOTATION);
-				y -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.TINY,
-						Settings.getColor(TrainingRecordPDFSettingCodes.TEXT_COLOR, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.TEXT_COLOR),
-						L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.DATE_ANNOTATION, PDFUtil.DEFAULT_LABEL),
-						x1 + Settings.getFloat(TrainingRecordPDFSettingCodes.DATE_LINE_LENGTH, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.DATE_LINE_LENGTH)
-								/ 2.0f,
-						y,
-						PDFUtil.Alignment.TOP_CENTER);
-				y -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_FRAME_LOWER_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.Y_FRAME_LOWER_INDENT_SIGNATURE);
-			}
+			height = Math.max(height, y0 - y);
+		}
+		return height;
+	}
+
+	@Override
+	public void drawPage(PDPageContentStream contentStream) throws Exception {
+		float y = Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_LOWER_MARGIN)
+				- Settings.getFloat(TrainingRecordPDFSettingCodes.Y_FRAME_UPPER_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.Y_FRAME_UPPER_INDENT_SIGNATURE);
+		float x = Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_LEFT_MARGIN)
+				+ Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE);
+		if (Settings.getBoolean(TrainingRecordPDFSettingCodes.STAFF_SIGNATURE, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.STAFF_SIGNATURE)
+				&& (!hasNextBlock() || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE))) {
+			y -= drawSignature(contentStream, x, y,
+					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.STAFF_SIGNATURE, PDFUtil.DEFAULT_LABEL), true,
+					getStaffSignatureLabel());
+		}
+		if (Settings.getBoolean(TrainingRecordPDFSettingCodes.LAST_INSTITUTION_SIGNATURE, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.LAST_INSTITUTION_SIGNATURE)
+				&& (!hasNextBlock() || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE))) {
+			y -= drawSignature(contentStream, x, y,
+					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.LAST_INSTITUTION_SIGNATURE, PDFUtil.DEFAULT_LABEL), true,
+					getLastInstitutionSignatureLabel());
 		}
 	}
 

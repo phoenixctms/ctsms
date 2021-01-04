@@ -7,6 +7,7 @@ public class TrainingRecordPDFBlockCursor extends PDFBlockCursor {
 
 	protected TrainingRecordPDFPainter painter;
 	protected StaffOutVO staff;
+	protected StaffOutVO lastInstitution;
 
 	public TrainingRecordPDFBlockCursor(TrainingRecordPDFPainter painter) {
 		this.painter = painter;
@@ -30,6 +31,14 @@ public class TrainingRecordPDFBlockCursor extends PDFBlockCursor {
 
 	public void setStaff(StaffOutVO staff) {
 		this.staff = staff;
+	}
+
+	public StaffOutVO getLastInstitution() {
+		return lastInstitution;
+	}
+
+	public void setLastInstitution(StaffOutVO lastInstitution) {
+		this.lastInstitution = lastInstitution;
 	}
 
 	public PDFJpeg getCheckboxCheckedImage() {

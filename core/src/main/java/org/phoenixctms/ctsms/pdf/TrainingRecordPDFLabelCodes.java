@@ -27,8 +27,10 @@ public interface TrainingRecordPDFLabelCodes {
 	//	public final static String SECTION_SUFFIX = "section_suffix";
 	public final static String PAGE_NUMBER = "page_number";
 	public final static String FOOTER_NAME = "footer_name";
-	public final static String SIGNATURE = "signature";
-	public final static String SIGNATURE_ANNOTATION = "signature_annotation";
+	public final static String STAFF_SIGNATURE = "staff_signature";
+	public final static String LAST_INSTITUTION_SIGNATURE = "last_institution_signature";
+	public final static String STAFF_SIGNATURE_ANNOTATION = "staff_signature_annotation";
+	public final static String LAST_INSTITUTION_SIGNATURE_ANNOTATION = "last_institution_signature_annotation";
 	public static final String DATE = "date";
 	public static final String DATE_ANNOTATION = "date_annotation";
 }
