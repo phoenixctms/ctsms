@@ -89,6 +89,17 @@ public class TrialDaoImpl
 	}
 
 	@Override
+	protected Collection<Trial> handleFindByStaffCoursesSorted(Long staffId, Boolean isRelevantForCourses) throws Exception {
+		org.hibernate.Criteria trialCriteria = createTrialCriteria(null);
+		trialCriteria.createCriteria("courses").createCriteria("participations").add(Restrictions.eq("staff.id", staffId.longValue()));
+		if (isRelevantForCourses != null) {
+			trialCriteria.createCriteria("status").add(Restrictions.eq("relevantForCourses", isRelevantForCourses.booleanValue()));
+		}
+		trialCriteria.addOrder(Order.asc("name"));
+		return CriteriaUtil.listDistinctRoot(trialCriteria, this, "name");
+	}
+
+	@Override
 	protected Collection<Trial> handleFindByEcrfs(Long departmentId, boolean withChargeOnly, PSFVO psf) throws Exception {
 		org.hibernate.Criteria trialCriteria = createTrialCriteria("trial0");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Trial.class, trialCriteria);
