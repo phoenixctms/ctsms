@@ -216,14 +216,6 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		}
 	}
 
-	public StreamedContent getCvPdfStreamedContent() throws Exception {
-		return WebUtil.getCvPdfStreamedContent(in.getStaffId());
-	}
-
-	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
-		return WebUtil.getTrainingRecordPdfStreamedContent(in.getStaffId());
-	}
-
 	public boolean getShowTerminalStateMessage() {
 		if (out != null && in.getStatusId() != null) {
 			Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
@@ -296,6 +288,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		statusEntryModel.updateRowCount();
 		cvSections = WebUtil.getCvSections(this.in.getCvSectionId());
 		trainingRecordSections = WebUtil.getTrainingRecordSections(this.in.getTrainingRecordSectionId());
+		courseTrials = getCourseTrials(in.getStaffId());
 		Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
 		if (out != null) {
 			try {
@@ -329,6 +322,11 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 		}
 		loadSelectedCvSection();
 		loadSelectedTrainingRecordSection();
+	}
+
+	@Override
+	public boolean isPerson() {
+		return WebUtil.isStaffPerson(out != null ? out.getStaff() : null);
 	}
 
 	@Override

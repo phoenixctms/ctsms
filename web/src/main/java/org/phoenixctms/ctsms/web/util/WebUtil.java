@@ -1585,21 +1585,6 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static StreamedContent getTrainingRecordPdfStreamedContent(Long staffId) throws Exception {
-		if (staffId != null) {
-			try {
-				TrainingRecordPDFVO cv = getServiceLocator().getStaffService().renderTrainingRecordPDF(getAuthentication(), staffId);
-				return new DefaultStreamedContent(new ByteArrayInputStream(cv.getDocumentDatas()), cv.getContentType().getMimeType(), cv.getFileName());
-			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-				throw e;
-			} catch (AuthenticationException e) {
-				publishException(e);
-				throw e;
-			}
-		}
-		return null;
-	}
-
 	public static CvPositionOutVO getCvPosition(Long cvPositionId) {
 		if (cvPositionId != null) {
 			try {
