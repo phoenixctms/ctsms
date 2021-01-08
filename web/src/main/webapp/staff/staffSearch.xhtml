@@ -76,8 +76,16 @@
 										disabled="#{!staffSearchBean.enableExports}"
 										icon="ctsms-menubar-icon ctsms-icon-pdf">
 										<p:fileDownload
-											value="#{staffSearchBean.trainingRecordPdfStreamedContent}" />											
+											value="#{staffSearchBean.getTrainingRecordPdfStreamedContent(false)}" />		
 									</p:menuitem>
+									<p:menuitem immediate="true" ajax="false"
+										value="#{stafflabels.search_open_all_trials_trainingrecords_button_label}"
+										process="@this,:search_form:tabView:criteria_input"
+										disabled="#{!staffSearchBean.enableExports}"
+										icon="ctsms-menubar-icon ctsms-icon-pdf">
+										<p:fileDownload
+											value="#{staffSearchBean.getTrainingRecordPdfStreamedContent(true)}" />											
+									</p:menuitem>									
 								</p:splitButton>
 							</ui:define>
 							<ui:define name="pickbutton">

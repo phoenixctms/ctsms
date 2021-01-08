@@ -3,7 +3,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<title>admin course participation status entries</title>
 </h:head>
@@ -635,6 +636,28 @@
 										<p:fileDownload
 											value="#{adminCourseParticipationStatusBean.courseCertificatesPdfStreamedContent}" />
 									</p:commandButton>
+									<p:splitButton immediate="true" ajax="false"
+										disabled="#{!adminCourseParticipationStatusBean.person}"
+										value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(false)}"
+										icon="ui-icon ui-icon-pdf">
+										<p:fileDownload
+											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(false)}" />
+										<p:menuitem immediate="true" ajax="false"
+											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(true)}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload
+												value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(true)}" />
+										</p:menuitem>
+										<c:forEach var="trial"
+											items="#{adminCourseParticipationStatusBean.courseTrials}">
+											<p:menuitem immediate="true" ajax="false"
+												value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfButtonLabel(trial)}"
+												icon="ctsms-menubar-icon ctsms-icon-pdf">
+												<p:fileDownload
+													value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfStreamedContent(trial.value)}" />
+											</p:menuitem>
+										</c:forEach>
+									</p:splitButton>									
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">

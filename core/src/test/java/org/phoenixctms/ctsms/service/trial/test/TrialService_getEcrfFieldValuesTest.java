@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfFieldValues</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, boolean, boolean, java.lang.String, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, boolean, boolean, java.lang.String, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getEcrfFieldValuesTest extends TrialServiceBaseTest {

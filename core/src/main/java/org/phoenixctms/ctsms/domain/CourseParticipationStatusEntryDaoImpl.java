@@ -282,13 +282,17 @@ public class CourseParticipationStatusEntryDaoImpl
 	}
 
 	@Override
-	protected Collection<CourseParticipationStatusEntry> handleFindByStaffTrainingRecordSection(Long staffId, Long trainingRecordSectionId, Boolean showTrainingRecord,
+	protected Collection<CourseParticipationStatusEntry> handleFindByStaffTrialsTrainingRecordSection(Long staffId, Set<Long> trialIds, Long trainingRecordSectionId,
+			Boolean showTrainingRecord,
 			Boolean pass, Boolean showTrainingRecordPreset, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria courseParticipationStatusEntryCriteria = createCourseParticipationStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(CourseParticipationStatusEntry.class, courseParticipationStatusEntryCriteria);
 		if (staffId != null) {
 			courseParticipationStatusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
+		}
+		if (trialIds != null && trialIds.size() > 0) {
+			criteriaMap.createCriteria("course").add(Restrictions.in("trial.id", trialIds));
 		}
 		if (showTrainingRecordPreset != null) {
 			criteriaMap.createCriteria("course").add(Restrictions.eq("showTrainingRecordPreset", showTrainingRecordPreset.booleanValue()));

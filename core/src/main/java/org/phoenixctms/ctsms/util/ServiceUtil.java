@@ -1262,11 +1262,16 @@ public final class ServiceUtil {
 		return painter;
 	}
 
-	public static TrainingRecordPDFPainter createTrainingRecordPDFPainter(Collection<StaffOutVO> staffVOs, StaffDao staffDao,
+	public static TrainingRecordPDFPainter createTrainingRecordPDFPainter(Collection<StaffOutVO> staffVOs, Set<Long> trialIds, boolean relevantTrialsOnly, StaffDao staffDao,
+			TrialDao trialDao,
 			StaffTagValueDao staffTagValueDao, TrainingRecordSectionDao trainingRecordSectionDao, CourseParticipationStatusEntryDao courseParticipationDao) throws Exception {
 		TrainingRecordPDFPainter painter = PDFPainterFactory.createTrainingRecordPDFPainter();
 		Collection allTrainingRecordSections = trainingRecordSectionDao.loadAllSorted(0, 0);
 		trainingRecordSectionDao.toTrainingRecordSectionVOCollection(allTrainingRecordSections);
+		HashSet<Long> allTrialIds = new HashSet<Long>();
+		if (!relevantTrialsOnly && trialIds != null) {
+			allTrialIds.addAll(trialIds);
+		}
 		if (staffVOs != null) {
 			ArrayList<StaffOutVO> personVOs = new ArrayList<StaffOutVO>(staffVOs.size());
 			//HashMap<Long, StaffAddressOutVO> addressVOMap = new HashMap<Long, StaffAddressOutVO>(staffVOs.size());
@@ -1280,6 +1285,15 @@ public final class ServiceUtil {
 					personVOs.add(staffVO);
 					//StaffAddressOutVO addressVO = findOrganisationCvAddress(staffVO, true, staffAddressDao);
 					//addressVOMap.put(staffVO.getId(), addressVO);
+					if (relevantTrialsOnly) {
+						Iterator<Trial> trialsIt = trialDao.findByStaffCoursesSorted(staffVO.getId(), true).iterator();
+						trialIds = new HashSet<Long>();
+						while (trialsIt.hasNext()) {
+							Long trialId = trialsIt.next().getId();
+							trialIds.add(trialId);
+							allTrialIds.add(trialId);
+						}
+					}
 					Collection staffTagValues = staffTagValueDao.findByStaffExcelTrainingRecordSorted(staffVO.getId(), null, true);
 					staffTagValueDao.toStaffTagValueOutVOCollection(staffTagValues);
 					staffTagValueVOMap.put(staffVO.getId(), staffTagValues);
@@ -1288,12 +1302,19 @@ public final class ServiceUtil {
 					Iterator<TrainingRecordSectionVO> sectionIt = allTrainingRecordSections.iterator();
 					while (sectionIt.hasNext()) {
 						TrainingRecordSectionVO sectionVO = sectionIt.next();
-						staffParticipationVOMap.put(sectionVO.getId(), loadTrainingRecordParticipations(staffVO.getId(), sectionVO.getId(), courseParticipationDao, staffDao));
+						staffParticipationVOMap.put(sectionVO.getId(),
+								loadTrainingRecordParticipations(staffVO.getId(), trialIds, sectionVO.getId(), courseParticipationDao, staffDao));
 					}
 					participationVOMap.put(staffVO.getId(), staffParticipationVOMap);
 				}
 			}
+			ArrayList<TrialOutVO> trialVOs = new ArrayList<TrialOutVO>(allTrialIds.size());
+			Iterator<Long> trialIdIt = allTrialIds.iterator();
+			while (trialIdIt.hasNext()) {
+				trialVOs.add(trialDao.toTrialOutVO(trialDao.load(trialIdIt.next())));
+			}
 			painter.setStaffVOs(personVOs);
+			painter.setTrialVOs(trialVOs);
 			painter.setParticipationVOMap(participationVOMap);
 			//painter.setAddressVOMap(addressVOMap);
 			painter.setStaffTagValueVOMap(staffTagValueVOMap);
@@ -3500,10 +3521,10 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	private static Collection<CourseParticipationStatusEntryOutVO> loadTrainingRecordParticipations(Long staffId, Long sectionId,
+	private static Collection<CourseParticipationStatusEntryOutVO> loadTrainingRecordParticipations(Long staffId, Set<Long> trialIds, Long sectionId,
 			CourseParticipationStatusEntryDao courseParticipationDao, StaffDao staffDao)
 			throws Exception {
-		Collection courseParticipations = courseParticipationDao.findByStaffTrainingRecordSection(staffId, sectionId, true, true, true, null);
+		Collection courseParticipations = courseParticipationDao.findByStaffTrialsTrainingRecordSection(staffId, trialIds, sectionId, true, true, true, null);
 		courseParticipationDao.toCourseParticipationStatusEntryOutVOCollection(courseParticipations);
 		ArrayList<CourseParticipationStatusEntryOutVO> result = new ArrayList<CourseParticipationStatusEntryOutVO>(courseParticipations.size());
 		Iterator it = courseParticipations.iterator();

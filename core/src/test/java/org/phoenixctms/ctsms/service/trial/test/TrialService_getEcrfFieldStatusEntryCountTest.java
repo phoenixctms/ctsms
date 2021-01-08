@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfFieldStatusEntryCount</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldStatusEntryCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue, java.lang.Long, java.lang.Long, java.lang.Long, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldStatusEntryCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getEcrfFieldStatusEntryCountTest extends TrialServiceBaseTest {

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>exportVisitSchedule</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#exportVisitSchedule(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#exportVisitSchedule(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.util.Date, java.util.Date)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_exportVisitScheduleTest extends TrialServiceBaseTest {

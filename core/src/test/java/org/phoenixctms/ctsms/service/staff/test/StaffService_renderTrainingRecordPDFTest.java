@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>renderTrainingRecordPDF</code> of service <code>StaffService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.staff.StaffService#renderTrainingRecordPDF(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.staff.StaffService#renderTrainingRecordPDF(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean)
  */
 @Test(groups={"service","StaffService"})
 public class StaffService_renderTrainingRecordPDFTest extends StaffServiceBaseTest {

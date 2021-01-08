@@ -87,12 +87,13 @@ public class StaffSearchBean extends SearchBeanBase {
 		}
 	}
 
-	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
+	public StreamedContent getTrainingRecordPdfStreamedContent(boolean allTrials) throws Exception {
 		clearCaches();
 		try {
-			TrainingRecordPDFVO cv = WebUtil.getServiceLocator().getSearchService().renderTrainingRecordPDFs(WebUtil.getAuthentication(), criteriaIn,
-					new HashSet<CriterionInVO>(criterionsIn), null);
-			return new DefaultStreamedContent(new ByteArrayInputStream(cv.getDocumentDatas()), cv.getContentType().getMimeType(), cv.getFileName());
+			TrainingRecordPDFVO trainingRecord = WebUtil.getServiceLocator().getSearchService().renderTrainingRecordPDFs(WebUtil.getAuthentication(), criteriaIn,
+					new HashSet<CriterionInVO>(criterionsIn), allTrials, null);
+			return new DefaultStreamedContent(new ByteArrayInputStream(trainingRecord.getDocumentDatas()), trainingRecord.getContentType().getMimeType(),
+					trainingRecord.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 			throw e;
