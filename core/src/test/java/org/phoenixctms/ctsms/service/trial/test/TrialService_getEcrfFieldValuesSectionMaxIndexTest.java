@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfFieldValuesSectionMaxIndex</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldValuesSectionMaxIndex(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfFieldValuesSectionMaxIndex(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.String)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getEcrfFieldValuesSectionMaxIndexTest extends TrialServiceBaseTest {

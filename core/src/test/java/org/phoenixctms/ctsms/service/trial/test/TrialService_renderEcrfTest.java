@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>renderEcrf</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#renderEcrf(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.lang.Long, boolean)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#renderEcrf(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.String, boolean)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_renderEcrfTest extends TrialServiceBaseTest {

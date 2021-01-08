@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>renderTrainingRecordPDFs</code> of service <code>SearchService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.SearchService#renderTrainingRecordPDFs(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.CriteriaInVO, org.phoenixctms.ctsms.vo.CriterionInVO, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.shared.SearchService#renderTrainingRecordPDFs(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.CriteriaInVO, org.phoenixctms.ctsms.vo.CriterionInVO, boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","SearchService"})
 public class SearchService_renderTrainingRecordPDFsTest extends SearchServiceBaseTest {

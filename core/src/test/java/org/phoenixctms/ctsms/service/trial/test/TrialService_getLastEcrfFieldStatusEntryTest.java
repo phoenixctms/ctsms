@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getLastEcrfFieldStatusEntry</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getLastEcrfFieldStatusEntry(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue, java.lang.Long, java.lang.Long, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getLastEcrfFieldStatusEntry(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue, java.lang.Long, java.lang.Long, java.lang.Long, java.lang.Long)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getLastEcrfFieldStatusEntryTest extends TrialServiceBaseTest {

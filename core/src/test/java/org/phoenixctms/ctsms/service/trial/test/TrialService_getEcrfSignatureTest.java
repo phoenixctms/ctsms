@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfSignature</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfSignature(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getEcrfSignature(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.Long)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getEcrfSignatureTest extends TrialServiceBaseTest {
