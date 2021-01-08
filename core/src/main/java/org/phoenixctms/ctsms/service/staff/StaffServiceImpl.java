@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.DutyRosterTurnCollisionFinder;
@@ -76,6 +77,7 @@ import org.phoenixctms.ctsms.domain.StaffTagValueDao;
 import org.phoenixctms.ctsms.domain.TeamMember;
 import org.phoenixctms.ctsms.domain.TeamMemberDao;
 import org.phoenixctms.ctsms.domain.Trial;
+import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
@@ -139,6 +141,7 @@ import org.phoenixctms.ctsms.vo.StaffTagValueInVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
 import org.phoenixctms.ctsms.vo.TrainingRecordPDFVO;
+import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vocycle.StaffReflexionGraph;
@@ -1874,18 +1877,26 @@ public class StaffServiceImpl
 		return result;
 	}
 
-	@Override
-	protected TrainingRecordPDFVO handleRenderTrainingRecordPDF(AuthenticationVO auth, Long staffId) throws Exception {
+	private TrainingRecordPDFVO renderTrainingRecordPDF(Long staffId, boolean relevantTrialsOnly, Set<Long> trialIds) throws Exception {
 		StaffDao staffDao = this.getStaffDao();
 		Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao);
 		if (!staff.isPerson()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_STAFF_NOT_PERSON);
 		}
+		TrialDao trialDao = this.getTrialDao();
+		if (trialIds != null) {
+			Iterator<Long> it = trialIds.iterator();
+			while (it.hasNext()) {
+				CheckIDUtil.checkTrialId(it.next(), trialDao);
+			}
+		}
 		ArrayList<StaffOutVO> staffVOs = new ArrayList<StaffOutVO>();
 		StaffOutVO staffVO = staffDao.toStaffOutVO(staff,
 				Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES));
 		staffVOs.add(staffVO);
-		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, this.getStaffDao(), this.getStaffTagValueDao(), this.getTrainingRecordSectionDao(),
+		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, trialIds, relevantTrialsOnly, this.getStaffDao(), trialDao,
+				this.getStaffTagValueDao(),
+				this.getTrainingRecordSectionDao(),
 				this.getCourseParticipationStatusEntryDao());
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
@@ -1894,6 +1905,16 @@ public class StaffServiceImpl
 		logSystemMessage(staff, staffVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.TRAINING_RECORD_PDF_RENDERED, result, null,
 				this.getJournalEntryDao());
 		return result;
+	}
+
+	@Override
+	protected TrainingRecordPDFVO handleRenderTrialTrainingRecordPDF(AuthenticationVO auth, Long staffId, Set<Long> trialIds) throws Exception {
+		return renderTrainingRecordPDF(staffId, false, trialIds);
+	}
+
+	@Override
+	protected TrainingRecordPDFVO handleRenderTrainingRecordPDF(AuthenticationVO auth, Long staffId, boolean allTrials) throws Exception {
+		return renderTrainingRecordPDF(staffId, !allTrials, null);
 	}
 
 	@Override
@@ -2302,5 +2323,14 @@ public class StaffServiceImpl
 				}
 			}
 		}
+	}
+
+	@Override
+	protected Collection<TrialOutVO> handleGetCourseTrials(AuthenticationVO auth, Long staffId) throws Exception {
+		CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
+		TrialDao trialDao = this.getTrialDao();
+		Collection trials = trialDao.findByStaffCoursesSorted(staffId, true);
+		trialDao.toTrialOutVOCollection(trials);
+		return trials;
 	}
 }
