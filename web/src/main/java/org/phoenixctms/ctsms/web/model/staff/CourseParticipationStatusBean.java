@@ -27,7 +27,6 @@ import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
-import org.primefaces.model.StreamedContent;
 
 @ManagedBean
 @ViewScoped
@@ -116,14 +115,6 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		return null;
 	}
 
-	public StreamedContent getCvPdfStreamedContent() throws Exception {
-		return WebUtil.getCvPdfStreamedContent(in.getStaffId());
-	}
-
-	public StreamedContent getTrainingRecordPdfStreamedContent() throws Exception {
-		return WebUtil.getTrainingRecordPdfStreamedContent(in.getStaffId());
-	}
-
 	public boolean getShowTerminalStateMessage() {
 		if (out != null && in.getStatusId() != null) {
 			Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
@@ -189,6 +180,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		statusEntryModel.updateRowCount();
 		cvSections = WebUtil.getCvSections(this.in.getCvSectionId());
 		trainingRecordSections = WebUtil.getTrainingRecordSections(this.in.getTrainingRecordSectionId());
+		courseTrials = getCourseTrials(in.getStaffId()); //in case of deletion
 		Collection<CourseParticipationStatusTypeVO> statusTypeVOs = null;
 		if (out != null) {
 			try {
@@ -240,6 +232,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		return isCreated();
 	}
 
+	@Override
 	public boolean isPerson() {
 		return WebUtil.isStaffPerson(staff);
 	}
