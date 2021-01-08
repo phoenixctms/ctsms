@@ -773,6 +773,9 @@ public interface MessageCodes {
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_LABEL = "travel_expenses_visit_schedule_label";
 	public static final String REIMBURSEMENTS_TRIAL_LABEL = "reimbursements_trial_label";
 	public static final String REIMBURSEMENTS_NO_TRIAL_LABEL = "reimbursements_no_trial_label";
+	public static final String TRAINING_RECORD_TRIAL_LABEL = "training_record_trial_label";
+	public static final String TRAINING_RECORD_ALL_TRIALS_LABEL = "training_record_all_trials_label";
+	public static final String TRAINING_RECORD_LABEL = "training_record_label";
 	public static final String TRAVEL_TICKET_TYPES = "travel_ticket_types";
 	public static final String EMPTY_TRAVEL_TICKET_TYPE = "empty_travel_ticket_type";
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_ALPHA_ID = "criterion_item_tip_alpha_id_alpha_id";
