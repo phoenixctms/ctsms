@@ -27,6 +27,7 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
 import org.phoenixctms.ctsms.vo.TrainingRecordPDFVO;
 import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
+import org.phoenixctms.ctsms.vo.TrialOutVO;
 
 public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutput {
 
@@ -35,6 +36,7 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 	protected TrainingRecordPDFBlockCursor cursor;
 	protected TrainingRecordPDFVO pdfVO;
 	protected Collection<StaffOutVO> staffVOs;
+	protected Collection<TrialOutVO> trialVOs;
 	protected Collection<TrainingRecordSectionVO> allTrainingRecordSectionVOs;
 	protected HashMap<Long, HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>> participationVOMap;
 	protected HashMap<Long, Collection<StaffTagValueOutVO>> staffTagValueVOMap;
@@ -425,6 +427,7 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 				pageWidth - Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_RIGHT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_RIGHT_MARGIN)
 						- Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_LEFT_MARGIN));
 		cursor.setStaff(null);
+		cursor.setLastInstitution(null);
 		fontA = null;
 		fontB = null;
 		fontC = null;
@@ -473,6 +476,10 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 		this.staffVOs = staffVOs;
 	}
 
+	public void setTrialVOs(Collection<TrialOutVO> trialVOs) {
+		this.trialVOs = trialVOs;
+	}
+
 	@Override
 	public void startNewPage() {
 		super.startNewPage(!hasNextBlock() || BlockType.HEAD.equals(blocks.get(blockIndex).getType()));
@@ -496,9 +503,14 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 		pdfVO.setContentTimestamp(now);
 		pdfVO.setContentType(CoreUtil.getPDFMimeType());
 		pdfVO.setStafves(staffVOs);
+		pdfVO.setTrials(trialVOs);
 		StringBuilder fileName = new StringBuilder(TRAINING_RECORD_PDF_FILENAME_PREFIX);
 		if (staffVOs != null && staffVOs.size() == 1) {
 			fileName.append(staffVOs.iterator().next().getId());
+			fileName.append("_");
+		}
+		if (trialVOs != null && trialVOs.size() == 1) {
+			fileName.append(trialVOs.iterator().next().getId());
 			fileName.append("_");
 		}
 		fileName.append(CommonUtil.formatDate(now, CommonUtil.DIGITS_ONLY_DATETIME_PATTERN));
