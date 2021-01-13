@@ -948,9 +948,9 @@ public class SearchServiceImpl
 
 	@Override
 	protected TrainingRecordPDFVO handleRenderTrainingRecordPDFs(AuthenticationVO auth, CriteriaInVO criteria,
-			Set<CriterionInVO> criterions, boolean allTrials, PSFVO psf) throws Exception {
+			Set<CriterionInVO> criterions, boolean allTrials, boolean appendCertificates, PSFVO psf) throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
-		TrainingRecordPDFVO result = renderTrainingRecordPDFsHelper(instantCriteria, allTrials, psf);
+		TrainingRecordPDFVO result = renderTrainingRecordPDFsHelper(instantCriteria, allTrials, appendCertificates, psf);
 		logTrainingRecordExport(criteria.getId(), instantCriteria, result);
 		return result;
 	}
@@ -1867,11 +1867,11 @@ public class SearchServiceImpl
 		return painter.getPdfVO();
 	}
 
-	private TrainingRecordPDFVO renderTrainingRecordPDFsHelper(CriteriaInstantVO criteria, boolean allTrials, PSFVO psf) throws Exception {
+	private TrainingRecordPDFVO renderTrainingRecordPDFsHelper(CriteriaInstantVO criteria, boolean allTrials, boolean appendCertificates, PSFVO psf) throws Exception {
 		Collection<StaffOutVO> staffVOs = searchStaffHelper(criteria,
 				Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES),
 				psf);
-		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, null, !allTrials, this.getStaffDao(), this.getTrialDao(),
+		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, null, !allTrials, appendCertificates, this.getStaffDao(), this.getTrialDao(),
 				this.getStaffTagValueDao(),
 				this.getTrainingRecordSectionDao(),
 				this.getCourseParticipationStatusEntryDao());

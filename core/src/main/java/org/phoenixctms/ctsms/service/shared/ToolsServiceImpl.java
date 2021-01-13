@@ -1358,4 +1358,10 @@ public class ToolsServiceImpl
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
+
+	@Override
+	protected Integer handleGetCourseParticipationFileUploadSizeLimit() throws Exception {
+		return Settings.getIntNullable(SettingCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.COURSE_PARTICIPATION_FILE_SIZE_LIMIT);
+	}
 }
