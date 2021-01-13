@@ -98,7 +98,14 @@
 						value="#{applicationScopeBean.clipStringTrailing(job.vo.emailRecipients)}" />
 				</p:column>
 
-
+				<p:column sortBy="#{job.vo.hasFile}">
+					<f:facet name="header">
+						<h:outputText value="#{labels.job_job_list_has_file_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param name="value" value="#{job.vo.hasFile}" />
+					</ui:include>
+				</p:column>
 
 				<p:column sortBy="#{job.vo.modifiedTimestamp}"
 					filterBy="#{job.vo.modifiedTimestamp}">
@@ -153,9 +160,6 @@
 						</p:column>
 					</p:dataGrid>
 
-
-
-
 					<h:panelGrid columns="2" cellpadding="2"
 						columnClasses="ctsms-label-for-text-column,ctsms-text-column">
 
@@ -191,7 +195,7 @@
 							rendered="#{jobBean.emailRecipients}" />
 					</h:panelGrid>
 
-					<h:panelGrid columns="2" cellpadding="2"
+					<h:panelGrid columns="2" cellpadding="2" id="filelink"
 						columnClasses="ctsms-label-for-column,ctsms-text-column">
 
 						<h:outputLabel value="#{labels.job_status_label}" />
@@ -225,10 +229,10 @@
 							rendered="#{jobBean.inputFile and jobBean.createable}"
 							id="jobFileUpload"
 							fileUploadListener="#{jobBean.handleFileUpload}" mode="advanced"
-							update="clearfilebutton,filedownload,messages" multiple="false"
+							update="clearfilebutton,filelink,messages" multiple="false"
 							auto="true" label="#{labels.choose_file_button_label}"
 							styleClass="#{jobBean.type.encryptFile ? 'ctsms-upload-control-encryption' : (markUnEncrypted ? 'ctsms-upload-control-noencryption' : 'ctsms-upload-control')}"
-							sizeLimit="#{jobdBean.getUploadSizeLimit()}"
+							sizeLimit="#{jobBean.getUploadSizeLimit()}"
 							allowTypes="#{jobBean.allowTypes}" />
 
 					</h:panelGrid>
