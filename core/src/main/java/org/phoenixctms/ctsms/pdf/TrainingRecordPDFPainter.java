@@ -22,6 +22,7 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryFileVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
@@ -37,6 +38,7 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 	protected TrainingRecordPDFVO pdfVO;
 	protected Collection<StaffOutVO> staffVOs;
 	protected Collection<TrialOutVO> trialVOs;
+	protected HashMap<Long, Collection<CourseParticipationStatusEntryFileVO>> certificateFileVOMap;
 	protected Collection<TrainingRecordSectionVO> allTrainingRecordSectionVOs;
 	protected HashMap<Long, HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>> participationVOMap;
 	protected HashMap<Long, Collection<StaffTagValueOutVO>> staffTagValueVOMap;
@@ -169,15 +171,16 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 		float x = Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LEFT_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_LEFT_MARGIN)
 				+ Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
 						TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE);
+		boolean isLastBlock = !hasNextBlock() || BlockType.HEAD.equals(blocks.get(blockIndex).getType());
 		if (Settings.getBoolean(TrainingRecordPDFSettingCodes.STAFF_SIGNATURE, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.STAFF_SIGNATURE)
-				&& (!hasNextBlock() || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
+				&& (isLastBlock || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
 						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE))) {
 			y -= drawSignature(contentStream, x, y,
 					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.STAFF_SIGNATURE, PDFUtil.DEFAULT_LABEL), true,
 					getStaffSignatureLabel());
 		}
 		if (Settings.getBoolean(TrainingRecordPDFSettingCodes.LAST_INSTITUTION_SIGNATURE, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.LAST_INSTITUTION_SIGNATURE)
-				&& (!hasNextBlock() || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
+				&& (isLastBlock || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
 						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE))) {
 			y -= drawSignature(contentStream, x, y,
 					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.LAST_INSTITUTION_SIGNATURE, PDFUtil.DEFAULT_LABEL), true,
@@ -453,6 +456,10 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 		this.participationVOMap = participationVOMap;
 	}
 
+	public void setCertificateFileVOMap(HashMap<Long, Collection<CourseParticipationStatusEntryFileVO>> certificateFileVOMap) {
+		this.certificateFileVOMap = certificateFileVOMap;
+	}
+
 	public void setStaffTagValueVOMap(HashMap<Long, Collection<StaffTagValueOutVO>> staffTagValueVOMap) {
 		this.staffTagValueVOMap = staffTagValueVOMap;
 	}
@@ -525,5 +532,26 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 
 	public PDFJpeg getCheckboxUncheckedImage() {
 		return checkboxUncheckedImage;
+	}
+
+	@Override
+	public Collection<byte[]> getAppendDocuments() {
+		ArrayList<byte[]> result = null;
+		if (!hasNextBlock() || BlockType.HEAD.equals(blocks.get(blockIndex).getType())) {
+			if (certificateFileVOMap != null && cursor.getStaff() != null) {
+				Collection<CourseParticipationStatusEntryFileVO> certificateFiles = certificateFileVOMap.get(cursor.getStaff().getId());
+				if (certificateFiles != null) {
+					result = new ArrayList<byte[]>(certificateFiles.size());
+					Iterator<CourseParticipationStatusEntryFileVO> certificateFilesIt = certificateFiles.iterator();
+					while (certificateFilesIt.hasNext()) {
+						CourseParticipationStatusEntryFileVO certificateFile = certificateFilesIt.next();
+						if (CoreUtil.PDF_MIMETYPE_STRING.contentEquals(certificateFile.getContentType().getMimeType())) {
+							result.add(certificateFile.getDatas());
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 }
