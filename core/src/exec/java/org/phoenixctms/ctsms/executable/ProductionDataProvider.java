@@ -414,7 +414,8 @@ public class ProductionDataProvider {
 			boolean cancel,
 			boolean pass,
 			boolean relevantForCourseAppointments,
-			boolean notify) {
+			boolean notify,
+			boolean fileRequired) {
 		CourseParticipationStatusType courseParticipationType = CourseParticipationStatusType.Factory.newInstance();
 		courseParticipationType.setNameL10nKey(nameL10nKey);
 		courseParticipationType.setColor(color);
@@ -427,6 +428,7 @@ public class ProductionDataProvider {
 		courseParticipationType.setPass(pass);
 		courseParticipationType.setRelevantForCourseAppointments(relevantForCourseAppointments);
 		courseParticipationType.setNotify(notify);
+		courseParticipationType.setFileRequired(fileRequired);
 		courseParticipationType = courseParticipationStatusTypeDao.create(courseParticipationType);
 		return courseParticipationType;
 	}
@@ -435,35 +437,35 @@ public class ProductionDataProvider {
 		CourseParticipationStatusType passedParticipationStatusType = createCourseParticipationStatusType("passed", Color.LIGHTGREEN,
 				false, false, false, false,
 				false, false, true, false,
-				true);
+				true, false);
 		CourseParticipationStatusType failedParticipationStatusType = createCourseParticipationStatusType("failed", Color.RED,
 				false, false, false, false,
 				false, false, false, false,
-				true);
+				true, false);
 		CourseParticipationStatusType cancelledParticipationStatusType = createCourseParticipationStatusType("cancelled", Color.DARKORANGE,
 				false, false, false, false,
 				false, true, false, false,
-				true);
+				true, false);
 		CourseParticipationStatusType unregisteredParticipationStatusType = createCourseParticipationStatusType("unregistered", Color.LIGHTGREY,
 				false, false, false, false,
 				false, false, false, false,
-				true);
+				true, false);
 		CourseParticipationStatusType absentParticipationStatusType = createCourseParticipationStatusType("absent", Color.DARKORANGE,
 				false, false, false, false,
 				false, false, false, false,
-				true);
+				true, false);
 		CourseParticipationStatusType acknowledgedParticipationStatusType = createCourseParticipationStatusType("acknowledged", Color.ORANGE,
 				false, true, false, false,
 				true, false, false, true,
-				true);
+				true, false);
 		CourseParticipationStatusType invitedParticipationStatusType = createCourseParticipationStatusType("invited", Color.YELLOW,
 				false, false, false, true,
 				false, false, false, true,
-				true);
+				true, false);
 		CourseParticipationStatusType registeredParticipationStatusType = createCourseParticipationStatusType("registered", Color.ORANGE,
 				false, false, true, false,
 				false, false, false, true,
-				true);
+				true, false);
 		updateCourseParticipationStatusType(
 				passedParticipationStatusType,
 				getCourseParticipationTransitions(passedParticipationStatusType),
