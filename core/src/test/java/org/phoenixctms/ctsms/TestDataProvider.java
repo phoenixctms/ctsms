@@ -32,6 +32,7 @@ public class TestDataProvider extends ProductionDataProvider {
 		createMimeTypes(FileModule.STAFF_IMAGE);
 		createMimeTypes(FileModule.PROBAND_IMAGE);
 		createMimeTypes(FileModule.JOB_FILE);
+		createMimeTypes(FileModule.COURSE_CERTIFICATE);
 	}
 
 	public void createMimeTypes(FileModule module) {
