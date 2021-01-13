@@ -142,6 +142,15 @@
 							<ui:param name="value" value="#{statusEntry.vo.showCommentTrainingRecord}" />
 						</ui:include>
 					</p:column>
+					<p:column sortBy="#{statusEntry.vo.hasFile}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText value="#{courselabels.admin_course_participation_status_courseparticipationstatus_list_has_file_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param name="value" value="#{statusEntry.vo.hasFile}" />
+						</ui:include>
+					</p:column>					
 					<p:column>
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
@@ -360,7 +369,7 @@
 						</f:facet>
 						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+							rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-input-tied-row,ctsms-fileupload-row,ctsms-message-row,ctsms-toolbar-row">
 							<h:panelGrid columns="9" cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 								<h:outputLabel for="participationStaff"
@@ -580,7 +589,32 @@
 									</p:tooltip>
 								</h:panelGroup>
 							</h:panelGrid>
-							<p:messages />
+							<h:panelGrid id="filelink" columns="2" cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-text-column">
+								<h:outputLabel
+									value="#{courselabels.admin_course_participation_file_label}" />
+								<p:commandLink immediate="true" id="filedownload"
+									rendered="#{adminCourseParticipationStatusBean.hasFile}"
+									ajax="false" disabled="#{!adminCourseParticipationStatusBean.hasFile}"
+									styleClass="#{adminCourseParticipationStatusBean.hasFile ? 'ctsms-field-icon ctsms-mimetype-unknown ' : ''}#{adminCourseParticipationStatusBean.courseParticipationFile.contentType.nodeStyleClass}"
+									title="#{labels.file_download_tooltip} #{adminCourseParticipationStatusBean.fileDownloadLinkLabel}">
+									<h:outputText value="#{adminCourseParticipationStatusBean.fileDownloadLinkLabel}" />
+									<p:fileDownload value="#{adminCourseParticipationStatusBean.fileStreamedContent}" />
+								</p:commandLink>
+							</h:panelGrid>
+							<h:panelGrid  columns="1" cellpadding="0"
+								styleClass="ctsms-input-panelgrid">
+								<p:fileUpload
+									rendered="#{adminCourseParticipationStatusBean.createable or adminCourseParticipationStatusBean.editable}"
+									id="fileupload"
+									fileUploadListener="#{adminCourseParticipationStatusBean.handleFileUpload}" mode="advanced"
+									update="clearfilebutton,filelink,messages" multiple="false"
+									auto="true" label="#{labels.choose_file_button_label}"
+									styleClass="ctsms-upload-control"
+									sizeLimit="#{adminCourseParticipationStatusBean.getUploadSizeLimit()}"
+									allowTypes="#{adminCourseParticipationStatusBean.allowTypes}" />
+							</h:panelGrid>
+							<p:messages id="messages"/>
 							<p:toolbar>
 								<p:toolbarGroup align="left">
 									<h:outputText styleClass="ctsms-toolbar-text"
@@ -588,6 +622,12 @@
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">
+									<p:commandButton process="@this" id="clearfilebutton"
+										value="#{courselabels.clear_course_participation_file_label}"
+										actionListener="#{adminCourseParticipationStatusBean.clearFile}"
+										icon="ui-icon ui-icon-close" ajax="true"
+										disabled="#{(!adminCourseParticipationStatusBean.createable and !adminCourseParticipationStatusBean.editable) or !adminCourseParticipationStatusBean.hasFile}"
+										update="filelink,fileupload,messages,clearfilebutton" />
 									<p:commandButton process="@this"
 										title="#{labels.reset_button_label}"
 										actionListener="#{adminCourseParticipationStatusBean.reset}"
@@ -638,23 +678,48 @@
 									</p:commandButton>
 									<p:splitButton immediate="true" ajax="false"
 										disabled="#{!adminCourseParticipationStatusBean.person}"
-										value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(false)}"
+										value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(false,false)}"
 										icon="ui-icon ui-icon-pdf">
 										<p:fileDownload
-											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(false)}" />
+											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(false,false)}" />
+										
 										<p:menuitem immediate="true" ajax="false"
-											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(true)}"
+											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(true,false)}"
 											icon="ctsms-menubar-icon ctsms-icon-pdf">
 											<p:fileDownload
-												value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(true)}" />
+												value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(true,false)}" />
 										</p:menuitem>
+										
 										<c:forEach var="trial"
 											items="#{adminCourseParticipationStatusBean.courseTrials}">
 											<p:menuitem immediate="true" ajax="false"
-												value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfButtonLabel(trial)}"
+												value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfButtonLabel(trial,false)}"
 												icon="ctsms-menubar-icon ctsms-icon-pdf">
 												<p:fileDownload
-													value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfStreamedContent(trial.value)}" />
+													value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfStreamedContent(trial.value,false)}" />
+											</p:menuitem>
+											
+										</c:forEach>
+										<p:menuitem immediate="true" ajax="false"
+											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(false,true)}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload
+												value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(false,true)}" />
+										</p:menuitem>
+										<p:menuitem immediate="true" ajax="false"
+											value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfButtonLabel(true,true)}"
+											icon="ctsms-menubar-icon ctsms-icon-pdf">
+											<p:fileDownload
+												value="#{adminCourseParticipationStatusBean.getTrainingRecordPdfStreamedContent(true,true)}" />
+										</p:menuitem>
+										<c:forEach var="trial"
+											items="#{adminCourseParticipationStatusBean.courseTrials}">
+
+											<p:menuitem immediate="true" ajax="false"
+												value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfButtonLabel(trial,true)}"
+												icon="ctsms-menubar-icon ctsms-icon-pdf">
+												<p:fileDownload
+													value="#{adminCourseParticipationStatusBean.getTrialTrainingRecordPdfStreamedContent(trial.value,true)}" />
 											</p:menuitem>
 										</c:forEach>
 									</p:splitButton>									
