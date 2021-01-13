@@ -288,6 +288,7 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = "mass_mail_mime_message_max_age_seconds";
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "resolve_mail_address_domain_name";
 	public static final String JOB_FILE_SIZE_LIMIT = "job_file_size_limit";
+	public static final String COURSE_PARTICIPATION_FILE_SIZE_LIMIT = "course_participation_file_size_limit";
 	public static final String DB_TOOL = "db_tool";
 	public static final String ECRF_PROCESS_PL = "ecrf_process_pl";
 	public static final String INQUIRY_PROCESS_PL = "inquiry_process_pl";

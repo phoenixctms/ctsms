@@ -239,6 +239,7 @@ public final class DefaultSettings {
 	public static final Long MASS_MAIL_MIME_MESSAGE_MAX_AGE_SECONDS = 60l * 60l;
 	public static final String RESOLVE_MAIL_ADDRESS_DOMAIN_NAME = "phoenix";
 	public static final Integer JOB_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
+	public static final Integer COURSE_PARTICIPATION_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 	public static final String DB_TOOL = "dbtool";
 	public static final String ECRF_PROCESS_PL = "process";
 	public static final String INQUIRY_PROCESS_PL = "process";
