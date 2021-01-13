@@ -73,4 +73,24 @@ public class CourseParticipationStatusEntryDaoTransformTest extends DaoTransform
     Assert.fail("Test 'CourseParticipationStatusEntryDaoTransformTest.testCvPositionPDFVOToEntity' not implemented!");
   }
 
+  /**
+   * Test for method CourseParticipationStatusEntryDao.toCourseParticipationStatusEntryFileVO
+   *
+   * @see org.phoenixctms.ctsms.domain.CourseParticipationStatusEntryDao#toCourseParticipationStatusEntryFileVO(org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry source, org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryFileVO target)
+   */
+  @Test
+  public void testToCourseParticipationStatusEntryFileVO() {
+    Assert.fail("Test 'CourseParticipationStatusEntryDaoTransformTest.testToCourseParticipationStatusEntryFileVO' not implemented!");
+  }
+
+    /**
+   * Test for method courseParticipationStatusEntryFileVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.CourseParticipationStatusEntryDao#courseParticipationStatusEntryFileVOToEntity(org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryFileVO source, org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry target, boolean copyIfNull)
+   */
+  @Test
+  public void testCourseParticipationStatusEntryFileVOToEntity() {
+    Assert.fail("Test 'CourseParticipationStatusEntryDaoTransformTest.testCourseParticipationStatusEntryFileVOToEntity' not implemented!");
+  }
+
 }
