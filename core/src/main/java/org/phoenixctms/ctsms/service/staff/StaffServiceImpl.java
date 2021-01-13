@@ -1839,7 +1839,7 @@ public class StaffServiceImpl
 			throws Exception {
 		ServiceUtil.checkAddCourseParticipationStatusEntryInput(newCourseParticipationStatusEntry, false, true,
 				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getCourseParticipationStatusTypeDao(),
-				this.getCourseParticipationStatusEntryDao());
+				this.getCourseParticipationStatusEntryDao(), this.getMimeTypeDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -1877,7 +1877,7 @@ public class StaffServiceImpl
 		return result;
 	}
 
-	private TrainingRecordPDFVO renderTrainingRecordPDF(Long staffId, boolean relevantTrialsOnly, Set<Long> trialIds) throws Exception {
+	private TrainingRecordPDFVO renderTrainingRecordPDF(Long staffId, Set<Long> trialIds, boolean relevantTrialsOnly, boolean appendCertificates) throws Exception {
 		StaffDao staffDao = this.getStaffDao();
 		Staff staff = CheckIDUtil.checkStaffId(staffId, staffDao);
 		if (!staff.isPerson()) {
@@ -1894,7 +1894,7 @@ public class StaffServiceImpl
 		StaffOutVO staffVO = staffDao.toStaffOutVO(staff,
 				Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES));
 		staffVOs.add(staffVO);
-		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, trialIds, relevantTrialsOnly, this.getStaffDao(), trialDao,
+		TrainingRecordPDFPainter painter = ServiceUtil.createTrainingRecordPDFPainter(staffVOs, trialIds, relevantTrialsOnly, appendCertificates, this.getStaffDao(), trialDao,
 				this.getStaffTagValueDao(),
 				this.getTrainingRecordSectionDao(),
 				this.getCourseParticipationStatusEntryDao());
@@ -1908,13 +1908,13 @@ public class StaffServiceImpl
 	}
 
 	@Override
-	protected TrainingRecordPDFVO handleRenderTrialTrainingRecordPDF(AuthenticationVO auth, Long staffId, Set<Long> trialIds) throws Exception {
-		return renderTrainingRecordPDF(staffId, false, trialIds);
+	protected TrainingRecordPDFVO handleRenderTrialTrainingRecordPDF(AuthenticationVO auth, Long staffId, Set<Long> trialIds, boolean appendCertificates) throws Exception {
+		return renderTrainingRecordPDF(staffId, trialIds, false, appendCertificates);
 	}
 
 	@Override
-	protected TrainingRecordPDFVO handleRenderTrainingRecordPDF(AuthenticationVO auth, Long staffId, boolean allTrials) throws Exception {
-		return renderTrainingRecordPDF(staffId, !allTrials, null);
+	protected TrainingRecordPDFVO handleRenderTrainingRecordPDF(AuthenticationVO auth, Long staffId, boolean allTrials, boolean appendCertificates) throws Exception {
+		return renderTrainingRecordPDF(staffId, null, !allTrials, appendCertificates);
 	}
 
 	@Override
@@ -2214,7 +2214,7 @@ public class StaffServiceImpl
 				courseParticipationStatusEntryDao);
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		ServiceUtil.checkUpdateCourseParticipationStatusEntryInput(originalCourseParticipation, modifiedCourseParticipationStatusEntry, false,
-				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao());
+				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao(), this.getMimeTypeDao());
 		CourseParticipationStatusEntryOutVO original = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(originalCourseParticipation);
 		CourseParticipationStatusType originalCourseParticipationStatusType = originalCourseParticipation.getStatus();
 		courseParticipationStatusTypeDao.evict(originalCourseParticipationStatusType);

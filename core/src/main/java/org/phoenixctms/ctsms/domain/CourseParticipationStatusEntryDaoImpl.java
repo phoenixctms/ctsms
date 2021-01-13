@@ -17,6 +17,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.pdf.CVPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.CVPDFLabelCodes;
@@ -30,11 +31,13 @@ import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
+import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryFileVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusTypeVO;
 import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
 import org.phoenixctms.ctsms.vo.CvSectionVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
@@ -106,6 +109,15 @@ public class CourseParticipationStatusEntryDaoImpl
 			if (staff != null) {
 				staff.removeParticipations(target);
 			}
+		}
+		if (source.getDatas() != null && source.getDatas().length > 0) {
+			target.setData(source.getDatas());
+			target.setFileSize((long) source.getDatas().length);
+			target.setContentType(this.getMimeTypeDao().findByMimeTypeModule(source.getMimeType(), FileModule.COURSE_CERTIFICATE).iterator().next());
+		} else if (copyIfNull) {
+			target.setData(null);
+			target.setFileSize(0l);
+			target.setContentType(null);
 		}
 	}
 
@@ -487,6 +499,7 @@ public class CourseParticipationStatusEntryDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
+		target.setHasFile(source.getFileSize() != null && source.getFileSize() > 0l);
 	}
 
 	/**
@@ -539,5 +552,78 @@ public class CourseParticipationStatusEntryDaoImpl
 			}
 		}
 		target.setCourseParticipation(true);
+	}
+
+	private CourseParticipationStatusEntry loadCourseParticipationStatusEntryFromCourseParticipationStatusEntryFileVO(
+			CourseParticipationStatusEntryFileVO courseParticipationStatusEntryFileVO) {
+		CourseParticipationStatusEntry courseParticipationStatusEntry = this.load(courseParticipationStatusEntryFileVO.getId());
+		if (courseParticipationStatusEntry == null) {
+			courseParticipationStatusEntry = CourseParticipationStatusEntry.Factory.newInstance();
+		}
+		return courseParticipationStatusEntry;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public CourseParticipationStatusEntry courseParticipationStatusEntryFileVOToEntity(CourseParticipationStatusEntryFileVO courseParticipationStatusEntryFileVO) {
+		CourseParticipationStatusEntry entity = this.loadCourseParticipationStatusEntryFromCourseParticipationStatusEntryFileVO(courseParticipationStatusEntryFileVO);
+		this.courseParticipationStatusEntryFileVOToEntity(courseParticipationStatusEntryFileVO, entity, true);
+		return entity;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public void courseParticipationStatusEntryFileVOToEntity(
+			CourseParticipationStatusEntryFileVO source,
+			CourseParticipationStatusEntry target,
+			boolean copyIfNull) {
+		super.courseParticipationStatusEntryFileVOToEntity(source, target, copyIfNull);
+		MimeTypeVO contentTypeVO = source.getContentType();
+		UserOutVO modifiedUserVO = source.getModifiedUser();
+		if (contentTypeVO != null) {
+			target.setContentType(this.getMimeTypeDao().mimeTypeVOToEntity(contentTypeVO));
+		} else if (copyIfNull) {
+			target.setContentType(null);
+		}
+		if (modifiedUserVO != null) {
+			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
+		} else if (copyIfNull) {
+			target.setModifiedUser(null);
+		}
+		if (copyIfNull || source.getDatas() != null) {
+			target.setData(source.getDatas());
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public CourseParticipationStatusEntryFileVO toCourseParticipationStatusEntryFileVO(final CourseParticipationStatusEntry entity) {
+		return super.toCourseParticipationStatusEntryFileVO(entity);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public void toCourseParticipationStatusEntryFileVO(
+			CourseParticipationStatusEntry source,
+			CourseParticipationStatusEntryFileVO target) {
+		super.toCourseParticipationStatusEntryFileVO(source, target);
+		MimeType contentType = source.getContentType();
+		User modifiedUser = source.getModifiedUser();
+		target.setHasFile(source.getFileSize() != null && source.getFileSize() > 0l);
+		if (contentType != null) {
+			target.setContentType(this.getMimeTypeDao().toMimeTypeVO(contentType));
+		}
+		if (modifiedUser != null) {
+			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
+		}
+		target.setDatas(source.getData());
 	}
 }

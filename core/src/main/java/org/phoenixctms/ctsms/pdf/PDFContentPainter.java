@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.util.Collection;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
@@ -50,5 +52,9 @@ public interface PDFContentPainter {
 
 	public void startNewPage();
 
+	public void startNewPages(int pageCount);
+
 	public void updateCursor();
+
+	public Collection<byte[]> getAppendDocuments();
 }

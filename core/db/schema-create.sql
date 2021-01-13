@@ -197,12 +197,16 @@
         SHOW_TRAINING_RECORD BOOLEAN not null,
         SHOW_COMMENT_TRAINING_RECORD BOOLEAN not null,
         VERSION BIGINT not null,
+        FILE_NAME CHARACTER VARYING(1024),
+        FILE_SIZE BIGINT,
+        DATA BYTEA,
         CV_SECTION_FK BIGINT,
         TRAINING_RECORD_SECTION_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
         COURSE_FK BIGINT not null,
         STATUS_FK BIGINT not null,
         STAFF_FK BIGINT not null,
+        CONTENT_TYPE_FK BIGINT,
         primary key (ID)
     );
 
@@ -219,6 +223,7 @@
         PASS BOOLEAN not null,
         NOTIFY BOOLEAN not null,
         RELEVANT_FOR_COURSE_APPOINTMENTS BOOLEAN not null,
+        FILE_REQUIRED BOOLEAN not null,
         primary key (ID)
     );
 
@@ -2267,6 +2272,11 @@
         add constraint COURSE_PARTICIPATION_STATUS_ENTRY_CV_SECTION_FKC 
         foreign key (CV_SECTION_FK) 
         references CV_SECTION;
+
+    alter table COURSE_PARTICIPATION_STATUS_ENTRY 
+        add constraint COURSE_PARTICIPATION_STATUS_ENTRY_CONTENT_TYPE_FKC 
+        foreign key (CONTENT_TYPE_FK) 
+        references MIME_TYPE;
 
     alter table COURSE_PARTICIPATION_STATUS_ENTRY 
         add constraint COURSE_PARTICIPATION_STATUS_ENTRY_COURSE_FKC 

@@ -24,10 +24,7 @@ public class PDFMerger implements PDFOutput {
 	private PDFMergerUtility merger;
 	private FileDao fileDao;
 	public final static String AGGREGATED_PDF_FILES_FILENAME_PREFIX = "aggregated_pdfs_";
-	static {
-		System.setProperty("org.apache.pdfbox.baseParser.pushBackSize",
-				Integer.toString(Settings.getInt(SettingCodes.PDFBOX_PUSH_BACK_SIZE, Bundle.SETTINGS, DefaultSettings.PDFBOX_PUSH_BACK_SIZE)));
-	}
+
 
 	public PDFMerger(FileDao fileDao) {
 		merger = new PDFMergerUtility();

@@ -70,6 +70,14 @@ public interface ServiceExceptionCodes {
 	public final static String COURSE_PARTICIPATION_INVALID_NEW_PARTICIPATION_STATUS_TYPE = "course_participation_invalid_new_participation_status_type";
 	public final static String COURSE_PARTICIPATION_STAFF_CHANGED = "course_participation_staff_changed";
 	public final static String COURSE_PARTICIPATION_COURSE_CHANGED = "course_participation_course_changed";
+	public static final String COURSE_PARTICIPATION_FILE_SIZE_LIMIT_EXCEEDED = "course_participation_file_size_limit_exceeded";
+	public static final String COURSE_PARTICIPATION_FILE_REQUIRED = "course_participation_file_required";
+	public static final String COURSE_PARTICIPATION_FILE_MIME_TYPE_NOT_NULL = "course_participation_file_mime_type_not_null";
+	public static final String COURSE_PARTICIPATION_FILE_NAME_NOT_NULL = "course_participation_file_name_not_null";
+	public static final String COURSE_PARTICIPATION_FILE_NAME_REQUIRED = "course_participation_file_name_required";
+	public static final String COURSE_PARTICIPATION_FILE_NOT_NULL = "course_participation_file_not_null";
+	public static final String COURSE_PARTICIPATION_FILE_MIME_TYPE_REQUIRED = "course_participation_file_mime_type_required";
+	public static final String COURSE_PARTICIPATION_FILE_MIME_TYPE_UNKNOWN = "course_participation_file_mime_type_unknown";
 	public final static String INVALID_COURSE_ID = "invalid_course_id";
 	public final static String INVALID_COURSE_CATEGORY_ID = "invalid_course_category_id";
 	public final static String INVALID_LECTURER_COMPETENCE_ID = "invalid_lecturer_competence_id";

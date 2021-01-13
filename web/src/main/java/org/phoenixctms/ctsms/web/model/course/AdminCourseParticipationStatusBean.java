@@ -67,6 +67,9 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 			in.setTrainingRecordSectionId(null);
 			in.setShowTrainingRecord(false);
 			in.setShowCommentTrainingRecord(false);
+			in.setDatas(null);
+			in.setFileName(null);
+			in.setMimeType(null);
 		}
 	}
 
@@ -279,7 +282,7 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 	}
 
 	@Override
-	protected void initSets() {
+	protected void initSpecificSets() {
 		collidingStaffStatusEntryModelCache.clear();
 		collidingDutyRosterTurnModelCache.clear();
 		collidingInventoryBookingModelCache.clear();

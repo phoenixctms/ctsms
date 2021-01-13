@@ -77,6 +77,7 @@ import org.phoenixctms.ctsms.vo.CourseCertificatePDFVO;
 import org.phoenixctms.ctsms.vo.CourseInVO;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipantListPDFVO;
+import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryFileVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
@@ -130,7 +131,7 @@ public class CourseServiceImpl
 			Timestamp now, User user) throws Exception {
 		ServiceUtil.checkAddCourseParticipationStatusEntryInput(newCourseParticipationStatusEntry, true, null,
 				this.getStaffDao(), this.getCourseDao(), this.getCvSectionDao(), this.getTrainingRecordSectionDao(), this.getCourseParticipationStatusTypeDao(),
-				this.getCourseParticipationStatusEntryDao());
+				this.getCourseParticipationStatusEntryDao(), this.getMimeTypeDao());
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = courseParticipationStatusEntryDao.courseParticipationStatusEntryInVOToEntity(newCourseParticipationStatusEntry);
 		CoreUtil.modifyVersion(courseParticipation, now, user);
@@ -409,6 +410,9 @@ public class CourseServiceImpl
 				newCourseParticipationStatusEntry.setShowCommentTrainingRecord(course.isShowCommentTrainingRecordPreset());
 				newCourseParticipationStatusEntry.setStaffId(staffId);
 				newCourseParticipationStatusEntry.setStatusId(statusType.getId());
+				newCourseParticipationStatusEntry.setDatas(null);
+				newCourseParticipationStatusEntry.setFileName(null);
+				newCourseParticipationStatusEntry.setMimeType(null);
 				try {
 					result.add(addCourseParticipationStatusEntry(newCourseParticipationStatusEntry, now, user));
 				} catch (ServiceException e) {
@@ -454,7 +458,7 @@ public class CourseServiceImpl
 				courseParticipationStatusEntryDao);
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		ServiceUtil.checkUpdateCourseParticipationStatusEntryInput(originalCourseParticipation, modifiedCourseParticipationStatusEntry, true,
-				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, courseParticipationStatusEntryDao);
+				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, courseParticipationStatusEntryDao, this.getMimeTypeDao());
 		CourseParticipationStatusEntryOutVO original = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(originalCourseParticipation);
 		CourseParticipationStatusType originalCourseParticipationStatusType = originalCourseParticipation.getStatus();
 		courseParticipationStatusTypeDao.evict(originalCourseParticipationStatusType);
@@ -844,6 +848,7 @@ public class CourseServiceImpl
 		participationDummy.setStatus(null);
 		participationDummy.setVersion(0l);
 		participationDummy.setComment(courseVO.getCvCommentPreset());
+		participationDummy.setHasFile(false);
 		ArrayList<CourseParticipationStatusEntryOutVO> participantVOs = new ArrayList<CourseParticipationStatusEntryOutVO>();
 		participantVOs.add(participationDummy);
 		CourseCertificatePDFPainter painter = ServiceUtil.createCourseCertificatePDFPainter(participantVOs, this.getStaffDao(), this.getStaffAddressDao(), this.getLecturerDao(),
@@ -1016,5 +1021,13 @@ public class CourseServiceImpl
 						.getParticipationDeadline()) <= 0))) {
 			this.getNotificationDao().addNewCourseNotification(course, now, null);
 		}
+	}
+
+	@Override
+	protected CourseParticipationStatusEntryFileVO handleGetCourseParticipationStatusEntryFile(AuthenticationVO auth, Long courseParticipationStatusEntryId) throws Exception {
+		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
+		CourseParticipationStatusEntry courseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(courseParticipationStatusEntryId, courseParticipationStatusEntryDao);
+		CourseParticipationStatusEntryFileVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryFileVO(courseParticipation);
+		return result;
 	}
 }

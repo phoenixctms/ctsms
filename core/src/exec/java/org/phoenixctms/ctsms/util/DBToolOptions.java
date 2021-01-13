@@ -70,6 +70,7 @@ public final class DBToolOptions {
 	public static final String IMPORT_MIME_STAFF_IMAGE_OPT = "imsi";
 	public static final String IMPORT_MIME_PROBAND_IMAGE_OPT = "impi";
 	public static final String IMPORT_MIME_JOB_FILE_OPT = "imjf";
+	public static final String IMPORT_MIME_COURSE_CERTIFICATE_OPT = "imcc";
 	public static final String IMPORT_ZIP_OPT = "iz";
 	public static final String IMPORT_STREET_OPT = "is";
 	public static final String IMPORT_TITLE_OPT = "it";
@@ -217,6 +218,9 @@ public final class DBToolOptions {
 				allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_JOB_FILE_OPT, "import_mime_job_file", "import job data file mime types from csv/text file", 1,
 				allLockIds));
+		tasks.addOption(
+				registerTaskOption(IMPORT_MIME_COURSE_CERTIFICATE_OPT, "import_mime_course_certificate_file", "import course certificate file mime types from csv/text file", 1,
+						allLockIds));
 		tasks.addOption(registerTaskOption(HELP_OPT, "help", "print help", 0));
 		tasks.addOption(registerTaskOption(CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT, "change_department_password_interactive", "change department password (interactive)", 0));
 		tasks.addOption(registerTaskOption(CREATE_DEPARTMENT_INTERACTIVE_OPT, "create_department_interactive", "create new department (interactive)", 0));

@@ -46,6 +46,9 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 			in.setShowCommentTrainingRecord(false);
 			in.setStaffId(staffId);
 			in.setStatusId(null);
+			in.setDatas(null);
+			in.setFileName(null);
+			in.setMimeType(null);
 		}
 	}
 
@@ -170,7 +173,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 	}
 
 	@Override
-	protected void initSets() {
+	protected void initSpecificSets() {
 		today = new Date();
 		collidingStaffStatusEntryModelCache.clear();
 		collidingDutyRosterTurnModelCache.clear();

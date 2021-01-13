@@ -15,8 +15,17 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 
 public final class PDFUtil {
+
+	static {
+		System.setProperty("org.apache.pdfbox.baseParser.pushBackSize",
+				Integer.toString(Settings.getInt(SettingCodes.PDFBOX_PUSH_BACK_SIZE, Bundle.SETTINGS, DefaultSettings.PDFBOX_PUSH_BACK_SIZE)));
+	}
 
 	public enum Alignment {
 		TOP_LEFT, TOP_CENTER, TOP_RIGHT, MIDDLE_LEFT, MIDDLE_CENTER, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT

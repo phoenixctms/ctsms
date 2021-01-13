@@ -300,6 +300,11 @@ public class DBTool {
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.JOB_FILE, false) > 0l;
+				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT),
+							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.COURSE_CERTIFICATE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT);
 					dbTool.getJobOutput().printPrelude(job);

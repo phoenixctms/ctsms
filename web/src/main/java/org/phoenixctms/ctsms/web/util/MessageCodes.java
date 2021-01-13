@@ -776,6 +776,9 @@ public interface MessageCodes {
 	public static final String TRAINING_RECORD_TRIAL_LABEL = "training_record_trial_label";
 	public static final String TRAINING_RECORD_ALL_TRIALS_LABEL = "training_record_all_trials_label";
 	public static final String TRAINING_RECORD_LABEL = "training_record_label";
+	public static final String TRAINING_RECORD_CERTIFICATES_TRIAL_LABEL = "training_record_certificates_trial_label";
+	public static final String TRAINING_RECORD_CERTIFICATES_ALL_TRIALS_LABEL = "training_record_certificates_all_trials_label";
+	public static final String TRAINING_RECORD_CERTIFICATES_LABEL = "training_record_certificates_label";
 	public static final String TRAVEL_TICKET_TYPES = "travel_ticket_types";
 	public static final String EMPTY_TRAVEL_TICKET_TYPE = "empty_travel_ticket_type";
 	public static final String CRITERION_ITEM_TIP_ALPHA_ID_ALPHA_ID = "criterion_item_tip_alpha_id_alpha_id";

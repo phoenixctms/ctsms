@@ -49,6 +49,7 @@ import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
@@ -94,104 +95,7 @@ import org.phoenixctms.ctsms.util.date.BookingDuration;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.util.date.ShiftDuration;
-import org.phoenixctms.ctsms.vo.AddressTypeVO;
-import org.phoenixctms.ctsms.vo.AspSubstanceVO;
-import org.phoenixctms.ctsms.vo.BankAccountOutVO;
-import org.phoenixctms.ctsms.vo.CourseOutVO;
-import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryInVO;
-import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
-import org.phoenixctms.ctsms.vo.CriteriaOutVO;
-import org.phoenixctms.ctsms.vo.CriterionInVO;
-import org.phoenixctms.ctsms.vo.CriterionInstantVO;
-import org.phoenixctms.ctsms.vo.CriterionOutVO;
-import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
-import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
-import org.phoenixctms.ctsms.vo.CriterionTieVO;
-import org.phoenixctms.ctsms.vo.CvPositionPDFVO;
-import org.phoenixctms.ctsms.vo.CvSectionVO;
-import org.phoenixctms.ctsms.vo.DepartmentVO;
-import org.phoenixctms.ctsms.vo.DiagnosisOutVO;
-import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldStatusQueueCountVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
-import org.phoenixctms.ctsms.vo.ECRFFieldValuesOutVO;
-import org.phoenixctms.ctsms.vo.ECRFOutVO;
-import org.phoenixctms.ctsms.vo.ECRFPDFVO;
-import org.phoenixctms.ctsms.vo.ECRFProgressVO;
-import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
-import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
-import org.phoenixctms.ctsms.vo.InputFieldImageVO;
-import org.phoenixctms.ctsms.vo.InputFieldOutVO;
-import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
-import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
-import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
-import org.phoenixctms.ctsms.vo.InquiryOutVO;
-import org.phoenixctms.ctsms.vo.InquiryValueInVO;
-import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
-import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
-import org.phoenixctms.ctsms.vo.InquiryValuesOutVO;
-import org.phoenixctms.ctsms.vo.InventoryBookingDurationSummaryDetailVO;
-import org.phoenixctms.ctsms.vo.InventoryBookingDurationSummaryVO;
-import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
-import org.phoenixctms.ctsms.vo.InventoryOutVO;
-import org.phoenixctms.ctsms.vo.LecturerCompetenceVO;
-import org.phoenixctms.ctsms.vo.LecturerOutVO;
-import org.phoenixctms.ctsms.vo.MassMailOutVO;
-import org.phoenixctms.ctsms.vo.MassMailRecipientInVO;
-import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
-import org.phoenixctms.ctsms.vo.MedicationOutVO;
-import org.phoenixctms.ctsms.vo.MoneyTransferByBankAccountSummaryDetailVO;
-import org.phoenixctms.ctsms.vo.MoneyTransferByCostTypeSummaryDetailVO;
-import org.phoenixctms.ctsms.vo.MoneyTransferByPaymentMethodSummaryDetailVO;
-import org.phoenixctms.ctsms.vo.MoneyTransferOutVO;
-import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
-import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.vo.PasswordInVO;
-import org.phoenixctms.ctsms.vo.PasswordOutVO;
-import org.phoenixctms.ctsms.vo.PermissionProfileVO;
-import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
-import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
-import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
-import org.phoenixctms.ctsms.vo.ProbandInVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagValuesOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryTagsPDFVO;
-import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
-import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
-import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
-import org.phoenixctms.ctsms.vo.ProbandOutVO;
-import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
-import org.phoenixctms.ctsms.vo.ProcedureOutVO;
-import org.phoenixctms.ctsms.vo.RandomizationListCodeInVO;
-import org.phoenixctms.ctsms.vo.RandomizationListCodeValueVO;
-import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
-import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
-import org.phoenixctms.ctsms.vo.ShiftDurationSummaryDetailVO;
-import org.phoenixctms.ctsms.vo.ShiftDurationSummaryVO;
-import org.phoenixctms.ctsms.vo.SignatureVO;
-import org.phoenixctms.ctsms.vo.StaffAddressOutVO;
-import org.phoenixctms.ctsms.vo.StaffImageOutVO;
-import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
-import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
-import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.vo.TrialTagValueOutVO;
-import org.phoenixctms.ctsms.vo.UserInVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
-import org.phoenixctms.ctsms.vo.UserSettingsInVO;
-import org.phoenixctms.ctsms.vo.VisitOutVO;
-import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
-import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
-import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.vo.*;
 
 public final class ServiceUtil {
 
@@ -573,10 +477,43 @@ public final class ServiceUtil {
 		}
 	}
 
+	private static void checkAddCourseParticipationStatusEntryInputFile(byte[] data, String mimeType, String fileName, CourseParticipationStatusType statusType,
+			MimeTypeDao mimeTypeDao) throws ServiceException {
+		if (data == null || data.length == 0) {
+			if (statusType.isFileRequired()) { //course.isCertificate() && 
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_REQUIRED);
+			} else {
+				if (mimeType != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_MIME_TYPE_NOT_NULL);
+				}
+				if (fileName != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_NAME_NOT_NULL);
+				}
+			}
+		} else {
+			Integer dataFileSizeLimit = Settings.getIntNullable(SettingCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT, Bundle.SETTINGS,
+					DefaultSettings.COURSE_PARTICIPATION_FILE_SIZE_LIMIT);
+			if (dataFileSizeLimit != null && data.length > dataFileSizeLimit) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(dataFileSizeLimit));
+			}
+			if (mimeType == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_MIME_TYPE_REQUIRED);
+			}
+			Iterator<MimeType> it = mimeTypeDao.findByMimeTypeModule(mimeType, FileModule.COURSE_CERTIFICATE).iterator();
+			if (!it.hasNext()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_MIME_TYPE_UNKNOWN, mimeType);
+			}
+			if (CommonUtil.isEmptyString(fileName)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_NAME_REQUIRED);
+			}
+		}
+	}
+
 	public static void checkAddCourseParticipationStatusEntryInput(CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin, Boolean selfRegistration,
 			StaffDao staffDao, CourseDao courseDao, CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao,
 			CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
-			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
+			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao,
+			MimeTypeDao mimeTypeDao) throws ServiceException {
 		// referential checks
 		Staff staff = CheckIDUtil.checkStaffId(courseParticipationIn.getStaffId(), staffDao);
 		Course course = CheckIDUtil.checkCourseId(courseParticipationIn.getCourseId(), courseDao, LockMode.PESSIMISTIC_WRITE);
@@ -637,6 +574,8 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_INVALID_INITIAL_PARTICIPATION_STATUS_TYPE,
 					L10nUtil.getCourseParticipationStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
+		checkAddCourseParticipationStatusEntryInputFile(courseParticipationIn.getDatas(), courseParticipationIn.getMimeType(), courseParticipationIn.getFileName(), state,
+				mimeTypeDao);
 	}
 
 	private static void checkAddMassMailRecipientInput(MassMailRecipientInVO massMailRecipientIn, MassMailDao massMailDao, ProbandDao probandDao, TrialDao trialDao,
@@ -1052,7 +991,7 @@ public final class ServiceUtil {
 	public static void checkUpdateCourseParticipationStatusEntryInput(CourseParticipationStatusEntry originalCourseParticipation,
 			CourseParticipationStatusEntryInVO courseParticipationIn, boolean admin,
 			CvSectionDao cvSectionDao, TrainingRecordSectionDao trainingRecordSectionDao, CourseParticipationStatusTypeDao courseParticipationStatusTypeDao,
-			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao) throws ServiceException {
+			CourseParticipationStatusEntryDao courseParticipationStatusEntryDao, MimeTypeDao mimeTypeDao) throws ServiceException {
 		// referential checks
 		if (courseParticipationIn.getCvSectionId() != null) {
 			CheckIDUtil.checkCvSectionId(courseParticipationIn.getCvSectionId(), cvSectionDao);
@@ -1101,6 +1040,8 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_INVALID_NEW_PARTICIPATION_STATUS_TYPE,
 					L10nUtil.getCourseParticipationStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
+		checkAddCourseParticipationStatusEntryInputFile(courseParticipationIn.getDatas(), courseParticipationIn.getMimeType(), courseParticipationIn.getFileName(), state,
+				mimeTypeDao);
 	}
 
 	public static void checkUserInput(UserInVO userIn, User originalUser, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao) throws Exception {
@@ -1262,7 +1203,8 @@ public final class ServiceUtil {
 		return painter;
 	}
 
-	public static TrainingRecordPDFPainter createTrainingRecordPDFPainter(Collection<StaffOutVO> staffVOs, Set<Long> trialIds, boolean relevantTrialsOnly, StaffDao staffDao,
+	public static TrainingRecordPDFPainter createTrainingRecordPDFPainter(Collection<StaffOutVO> staffVOs, Set<Long> trialIds, boolean relevantTrialsOnly,
+			boolean appendCertificates, StaffDao staffDao,
 			TrialDao trialDao,
 			StaffTagValueDao staffTagValueDao, TrainingRecordSectionDao trainingRecordSectionDao, CourseParticipationStatusEntryDao courseParticipationDao) throws Exception {
 		TrainingRecordPDFPainter painter = PDFPainterFactory.createTrainingRecordPDFPainter();
@@ -1277,6 +1219,8 @@ public final class ServiceUtil {
 			//HashMap<Long, StaffAddressOutVO> addressVOMap = new HashMap<Long, StaffAddressOutVO>(staffVOs.size());
 			HashMap<Long, Collection<StaffTagValueOutVO>> staffTagValueVOMap = new HashMap<Long, Collection<StaffTagValueOutVO>>(staffVOs.size());
 			HashMap<Long, HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>> participationVOMap = new HashMap<Long, HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>>(
+					staffVOs.size());
+			HashMap<Long, Collection<CourseParticipationStatusEntryFileVO>> certificateFileVOMap = new HashMap<Long, Collection<CourseParticipationStatusEntryFileVO>>(
 					staffVOs.size());
 			Iterator<StaffOutVO> staffIt = staffVOs.iterator();
 			while (staffIt.hasNext()) {
@@ -1299,13 +1243,18 @@ public final class ServiceUtil {
 					staffTagValueVOMap.put(staffVO.getId(), staffTagValues);
 					HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> staffParticipationVOMap = new HashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>(
 							allTrainingRecordSections.size());
+					ArrayList<CourseParticipationStatusEntryFileVO> certificateFiles = null;
+					if (appendCertificates) {
+						certificateFiles = new ArrayList<CourseParticipationStatusEntryFileVO>();
+					}
 					Iterator<TrainingRecordSectionVO> sectionIt = allTrainingRecordSections.iterator();
 					while (sectionIt.hasNext()) {
 						TrainingRecordSectionVO sectionVO = sectionIt.next();
 						staffParticipationVOMap.put(sectionVO.getId(),
-								loadTrainingRecordParticipations(staffVO.getId(), trialIds, sectionVO.getId(), courseParticipationDao, staffDao));
+								loadTrainingRecordParticipations(certificateFiles, staffVO.getId(), trialIds, sectionVO.getId(), courseParticipationDao, staffDao));
 					}
 					participationVOMap.put(staffVO.getId(), staffParticipationVOMap);
+					certificateFileVOMap.put(staffVO.getId(), certificateFiles);
 				}
 			}
 			ArrayList<TrialOutVO> trialVOs = new ArrayList<TrialOutVO>(allTrialIds.size());
@@ -1316,6 +1265,7 @@ public final class ServiceUtil {
 			painter.setStaffVOs(personVOs);
 			painter.setTrialVOs(trialVOs);
 			painter.setParticipationVOMap(participationVOMap);
+			painter.setCertificateFileVOMap(certificateFileVOMap);
 			//painter.setAddressVOMap(addressVOMap);
 			painter.setStaffTagValueVOMap(staffTagValueVOMap);
 		}
@@ -3521,7 +3471,8 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	private static Collection<CourseParticipationStatusEntryOutVO> loadTrainingRecordParticipations(Long staffId, Set<Long> trialIds, Long sectionId,
+	private static Collection<CourseParticipationStatusEntryOutVO> loadTrainingRecordParticipations(ArrayList<CourseParticipationStatusEntryFileVO> certificateFiles, Long staffId,
+			Set<Long> trialIds, Long sectionId,
 			CourseParticipationStatusEntryDao courseParticipationDao, StaffDao staffDao)
 			throws Exception {
 		Collection courseParticipations = courseParticipationDao.findByStaffTrialsTrainingRecordSection(staffId, trialIds, sectionId, true, true, true, null);
@@ -3534,6 +3485,9 @@ public final class ServiceUtil {
 				participationVO.getCourse().setInstitution(staffDao.toStaffOutVO(staffDao.load(participationVO.getCourse().getInstitution().getId()),
 						Settings.getInt(TrainingRecordPDFSettingCodes.GRAPH_MAX_STAFF_INSTANCES, Bundle.TRAINING_RECORD_PDF,
 								TrainingRecordPDFDefaultSettings.GRAPH_MAX_STAFF_INSTANCES)));
+			}
+			if (certificateFiles != null && participationVO.getHasFile()) {
+				certificateFiles.add(courseParticipationDao.toCourseParticipationStatusEntryFileVO(courseParticipationDao.load(participationVO.getId())));
 			}
 			result.add(participationVO);
 		}

@@ -75,7 +75,7 @@ public class TrainingRecordPDFBlock {
 				if (course.getInstitution() != null) {
 					hasInstitutions = true;
 				}
-				if (hasCourseCertificate(course)) {
+				if (course.getCertificate()) {
 					hasCertificates = true;
 				}
 				lastInstitution = course.getInstitution();
@@ -578,7 +578,7 @@ public class TrainingRecordPDFBlock {
 									- Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
 											TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
 							y5 -= renderHasCourseCertificate(x5,
-									y5, contentStream, cursor, participation.getCourse());
+									y5, contentStream, cursor, participation);
 							y5 -= Settings.getFloat(TrainingRecordPDFSettingCodes.Y_SECTION_TABLE_FRAME_INDENT, Bundle.TRAINING_RECORD_PDF,
 									TrainingRecordPDFDefaultSettings.Y_SECTION_TABLE_FRAME_INDENT);
 						} else {
@@ -678,21 +678,19 @@ public class TrainingRecordPDFBlock {
 		return height;
 	}
 
-	private static boolean hasCourseCertificate(CourseOutVO course) {
-		if (course != null && course.getCertificate()) { //todo: check for uploaded certificate ...
-			return true;
-		}
-		return false;
-	}
-
-	private static float renderHasCourseCertificate(float x, float y, PDPageContentStream contentStream, TrainingRecordPDFBlockCursor cursor, CourseOutVO course) throws Exception {
-		PDFJpeg ximage;
-		if (hasCourseCertificate(course)) {
-			ximage = cursor.getCheckboxCheckedImage();
+	private static float renderHasCourseCertificate(float x, float y, PDPageContentStream contentStream, TrainingRecordPDFBlockCursor cursor,
+			CourseParticipationStatusEntryOutVO participation) throws Exception {
+		if (participation != null && participation.getCourse().getCertificate()) {
+			PDFJpeg ximage;
+			if (participation.getHasFile()) {
+				ximage = cursor.getCheckboxCheckedImage();
+			} else {
+				ximage = cursor.getCheckboxUncheckedImage();
+			}
+			PDFUtil.renderImage(contentStream, ximage, x, y, Alignment.TOP_CENTER);
+			return ximage.getHeightPoints();
 		} else {
-			ximage = cursor.getCheckboxUncheckedImage();
+			return 0.0f;
 		}
-		PDFUtil.renderImage(contentStream, ximage, x, y, Alignment.TOP_CENTER);
-		return ximage.getHeightPoints();
 	}
 }
