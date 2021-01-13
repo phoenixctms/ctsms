@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.pdf;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -127,5 +128,14 @@ public abstract class PDFPainterBase implements PDFContentPainter {
 		} else {
 			totalPageCounts.set(totalPageCounts.size() - 1, totalPageCounts.get(totalPageCounts.size() - 1) + 1);
 		}
+	}
+
+	public Collection<byte[]> getAppendDocuments() {
+		return null;
+	}
+
+	public void startNewPages(int pageCount) {
+		pageNum += pageCount;
+		totalPageCounts.set(totalPageCounts.size() - 1, totalPageCounts.get(totalPageCounts.size() - 1) + pageCount);
 	}
 }

@@ -1,7 +1,10 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.pdfbox.pdfwriter.COSWriter;
@@ -9,6 +12,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.util.PDFMergerUtility;
 import org.phoenixctms.ctsms.pdf.PDFContentPainter.PageOrientation;
 
 public class PDFImprinter {
@@ -17,6 +21,7 @@ public class PDFImprinter {
 	private PDFOutput output;
 	private ByteArrayOutputStream pdfStream;
 	private PDDocument doc;
+	private PDFMergerUtility appender;
 	private PDPage page;
 	private PDPageContentStream contentStream;
 	private PDDocument templateDoc;
@@ -114,6 +119,7 @@ public class PDFImprinter {
 		templateDoc = null;
 		templatePages = null;
 		doc = null;
+		appender = null;
 		page = null;
 		contentStream = null;
 		try {
@@ -151,6 +157,7 @@ public class PDFImprinter {
 				}
 				painter.drawPage(contentStream);
 				closeContentStream();
+				appendPages();
 			} else {
 				createPage(1);
 			}
@@ -192,5 +199,36 @@ public class PDFImprinter {
 
 	public void setPainter(PDFContentPainter painter) {
 		this.painter = painter;
+	}
+
+	private PDFMergerUtility getAppender() {
+		if (appender == null) {
+			appender = new PDFMergerUtility();
+			appender.setIgnoreAcroFormErrors(true);
+		}
+		return appender;
+	}
+
+	private void appendPages() throws Exception {
+		if (painter != null) {
+			Collection<byte[]> documentDatas = painter.getAppendDocuments();
+			if (documentDatas != null) {
+				Iterator<byte[]> it = documentDatas.iterator();
+				while (it.hasNext()) {
+					ByteArrayInputStream documentStream = new ByteArrayInputStream(it.next());
+					PDDocument document = null;
+					try {
+						document = PDDocument.load(documentStream);
+						getAppender().appendDocument(doc, document);
+						painter.startNewPages(document.getNumberOfPages());
+					} finally {
+						if (document != null) {
+							document.close();
+						}
+					}
+					documentStream.close();
+				}
+			}
+		}
 	}
 }
