@@ -92,6 +92,14 @@
 						</ui:include>
 					</p:column>
 					<ui:include src="../shared/teamMemberTableColumns.xhtml" />
+					<p:column style="width:32px;white-space:nowrap;">
+						<p:commandButton immediate="true" ajax="false"
+							title="#{triallabels.open_trial_training_record_button_labe}"
+							icon="ui-icon ui-icon-pdf">
+							<p:fileDownload
+								value="#{teamMemberBean.getTrialTrainingRecordPdfStreamedContent(teamMember.vo,true)}" />
+						</p:commandButton>
+					</p:column>
 					<p:rowExpansion>
 						<p:panel>
 							<ui:include

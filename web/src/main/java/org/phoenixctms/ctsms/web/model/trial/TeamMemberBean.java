@@ -455,4 +455,8 @@ public class TeamMemberBean extends ManagedBeanBase {
 		}
 		return ERROR_OUTCOME;
 	}
+
+	public StreamedContent getTrialTrainingRecordPdfStreamedContent(TeamMemberOutVO teamMember, boolean appendCertificates) throws Exception {
+		return WebUtil.getTrialTrainingRecordPdfStreamedContent(teamMember != null ? teamMember.getStaff().getId() : null, in.getTrialId(), appendCertificates);
+	}
 }

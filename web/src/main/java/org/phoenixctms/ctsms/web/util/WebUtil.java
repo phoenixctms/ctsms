@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -14,6 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -1381,10 +1383,10 @@ public final class WebUtil {
 	public static Long getBankAccountCount(Long probandId) {
 		if (probandId != null) {
 			try {
-				return WebUtil.getServiceLocator().getProbandService().getBankAccountCount(WebUtil.getAuthentication(), probandId);
+				return getServiceLocator().getProbandService().getBankAccountCount(getAuthentication(), probandId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -1822,10 +1824,10 @@ public final class WebUtil {
 	public static Long getDiagnosisCount(Long probandId) {
 		if (probandId != null) {
 			try {
-				return WebUtil.getServiceLocator().getProbandService().getDiagnosisCount(WebUtil.getAuthentication(), probandId);
+				return getServiceLocator().getProbandService().getDiagnosisCount(getAuthentication(), probandId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -2070,7 +2072,7 @@ public final class WebUtil {
 			return getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(getAuthentication());
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
+			publishException(e);
 		}
 		return new ArrayList<ECRFStatusTypeVO>();
 	}
@@ -2728,10 +2730,10 @@ public final class WebUtil {
 	public static Long getMedicationCount(Long probandId, Long diagnosisId, Long procedureId) {
 		if (probandId != null || diagnosisId != null || procedureId != null) {
 			try {
-				return WebUtil.getServiceLocator().getProbandService().getMedicationCount(WebUtil.getAuthentication(), probandId, diagnosisId, procedureId);
+				return getServiceLocator().getProbandService().getMedicationCount(getAuthentication(), probandId, diagnosisId, procedureId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -3078,10 +3080,10 @@ public final class WebUtil {
 	public static Long getProbandGroupCount(Long trialId) {
 		if (trialId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getProbandGroupCount(WebUtil.getAuthentication(), trialId);
+				return getServiceLocator().getTrialService().getProbandGroupCount(getAuthentication(), trialId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -3137,6 +3139,27 @@ public final class WebUtil {
 			} catch (ServiceException e) {
 				throw e;
 			} catch (IllegalArgumentException e) {
+				throw e;
+			}
+		}
+		return null;
+	}
+
+	public static StreamedContent getTrialTrainingRecordPdfStreamedContent(Long staffId, Long trialId, boolean appendCertificates) throws Exception {
+		Set<Long> trialIds = new HashSet<Long>(1);
+		if (trialId != null) {
+			trialIds.add(trialId);
+		}
+		if (staffId != null) {
+			try {
+				TrainingRecordPDFVO trainingRecord = getServiceLocator().getStaffService().renderTrialTrainingRecordPDF(getAuthentication(), staffId,
+						trialIds, appendCertificates);
+				return new DefaultStreamedContent(new ByteArrayInputStream(trainingRecord.getDocumentDatas()), trainingRecord.getContentType().getMimeType(),
+						trainingRecord.getFileName());
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				throw e;
+			} catch (AuthenticationException e) {
+				publishException(e);
 				throw e;
 			}
 		}
@@ -3290,10 +3313,10 @@ public final class WebUtil {
 	public static Long getProcedureCount(Long probandId) {
 		if (probandId != null) {
 			try {
-				return WebUtil.getServiceLocator().getProbandService().getProcedureCount(WebUtil.getAuthentication(), probandId);
+				return getServiceLocator().getProbandService().getProcedureCount(getAuthentication(), probandId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -3731,10 +3754,10 @@ public final class WebUtil {
 	public static TimeZoneVO getTimeZone(String timeZoneID) {
 		if (timeZoneID != null) {
 			try {
-				return WebUtil.getServiceLocator().getSelectionSetService().getTimeZone(WebUtil.getAuthentication(), timeZoneID);
+				return getServiceLocator().getSelectionSetService().getTimeZone(getAuthentication(), timeZoneID);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -3940,7 +3963,7 @@ public final class WebUtil {
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			return false;
 		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
+			publishException(e);
 			return false;
 		}
 		boolean warning = false;
@@ -4287,10 +4310,10 @@ public final class WebUtil {
 	public static Long getVisitCount(Long trialId) {
 		if (trialId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getVisitCount(WebUtil.getAuthentication(), trialId);
+				return getServiceLocator().getTrialService().getVisitCount(getAuthentication(), trialId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+				publishException(e);
 			}
 		}
 		return null;
@@ -4907,7 +4930,7 @@ public final class WebUtil {
 	}
 
 	public static void clearResourceBundleCache() throws Exception {
-		WebUtil.getServiceLocator().getToolsService().clearResourceBundleCache();
+		getServiceLocator().getToolsService().clearResourceBundleCache();
 		//https://stackoverflow.com/questions/4325164/how-to-reload-resource-bundle-in-web-application
 		ResourceBundle.clearCache(Thread.currentThread().getContextClassLoader());
 		Iterator<ApplicationResourceBundle> it = ApplicationAssociate.getCurrentInstance().getResourceBundles().values().iterator();

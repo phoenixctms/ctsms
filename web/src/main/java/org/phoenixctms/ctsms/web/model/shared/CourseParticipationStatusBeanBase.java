@@ -4,9 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
@@ -161,24 +159,7 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	}
 
 	public StreamedContent getTrialTrainingRecordPdfStreamedContent(Long trialId, boolean appendCertificates) throws Exception {
-		Set<Long> trialIds = new HashSet<Long>(1);
-		if (trialId != null) {
-			trialIds.add(trialId);
-		}
-		if (in.getStaffId() != null) {
-			try {
-				TrainingRecordPDFVO trainingRecord = WebUtil.getServiceLocator().getStaffService().renderTrialTrainingRecordPDF(WebUtil.getAuthentication(), in.getStaffId(),
-						trialIds, appendCertificates);
-				return new DefaultStreamedContent(new ByteArrayInputStream(trainingRecord.getDocumentDatas()), trainingRecord.getContentType().getMimeType(),
-						trainingRecord.getFileName());
-			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-				throw e;
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
-				throw e;
-			}
-		}
-		return null;
+		return WebUtil.getTrialTrainingRecordPdfStreamedContent(in.getStaffId(), trialId, appendCertificates);
 	}
 
 	protected static ArrayList<SelectItem> getCourseTrials(Long staffId) {
