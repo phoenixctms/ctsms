@@ -29,9 +29,12 @@ import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -181,7 +184,8 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	protected static ArrayList<SelectItem> getCourseTrials(Long staffId) {
 		Collection<TrialOutVO> trialVOs = null;
 		ArrayList<SelectItem> trials;
-		if (staffId != null) {
+		if (staffId != null
+				&& Settings.getBoolean(SettingCodes.SHOW_TRIAL_TRAINING_RECORD_MENUITEMS, Settings.Bundle.SETTINGS, DefaultSettings.SHOW_TRIAL_TRAINING_RECORD_MENUITEMS)) {
 			try {
 				trialVOs = WebUtil.getServiceLocator().getStaffService().getCourseTrials(WebUtil.getAuthentication(), staffId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {

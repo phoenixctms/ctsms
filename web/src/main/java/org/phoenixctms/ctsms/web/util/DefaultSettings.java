@@ -665,6 +665,7 @@ public final class DefaultSettings {
 	public static final boolean USER_ENABLE_PROBAND_MODULE_PRESET = true;
 	public static final boolean USER_ENABLE_MASS_MAIL_MODULE_PRESET = true;
 	public static final boolean USER_ENABLE_USER_MODULE_PRESET = true;
+	public static final boolean SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = false;
 
 	private DefaultSettings() {
 	}
