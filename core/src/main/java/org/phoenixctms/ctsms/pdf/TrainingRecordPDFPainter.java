@@ -172,16 +172,17 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 				+ Settings.getFloat(TrainingRecordPDFSettingCodes.X_FRAME_INDENT_SIGNATURE, Bundle.TRAINING_RECORD_PDF,
 						TrainingRecordPDFDefaultSettings.X_FRAME_INDENT_SIGNATURE);
 		boolean isLastBlock = !hasNextBlock() || BlockType.HEAD.equals(blocks.get(blockIndex).getType());
+		boolean hasSection = blockIndex > 0 ? BlockType.SECTION.equals(blocks.get(blockIndex - 1).getType()) : false;
 		if (Settings.getBoolean(TrainingRecordPDFSettingCodes.STAFF_SIGNATURE, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.STAFF_SIGNATURE)
-				&& (isLastBlock || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE))) {
+				&& (isLastBlock || (hasSection && Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE)))) {
 			y -= drawSignature(contentStream, x, y,
 					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.STAFF_SIGNATURE, PDFUtil.DEFAULT_LABEL), true,
 					getStaffSignatureLabel());
 		}
 		if (Settings.getBoolean(TrainingRecordPDFSettingCodes.LAST_INSTITUTION_SIGNATURE, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.LAST_INSTITUTION_SIGNATURE)
-				&& (isLastBlock || Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
-						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE))) {
+				&& (isLastBlock || (hasSection && Settings.getBoolean(TrainingRecordPDFSettingCodes.SIGNATURE_PER_PAGE, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.SIGNATURE_PER_PAGE)))) {
 			y -= drawSignature(contentStream, x, y,
 					L10nUtil.getTrainingRecordPDFLabel(Locales.TRAINING_RECORD_PDF, TrainingRecordPDFLabelCodes.LAST_INSTITUTION_SIGNATURE, PDFUtil.DEFAULT_LABEL), true,
 					getLastInstitutionSignatureLabel());
