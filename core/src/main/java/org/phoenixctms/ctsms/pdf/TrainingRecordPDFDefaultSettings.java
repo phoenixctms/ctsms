@@ -53,6 +53,7 @@ public final class TrainingRecordPDFDefaultSettings {
 	public static final Color FRAME_COLOR = Color.BLACK;
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public static final boolean SECTION_NEW_PAGE_PER_TRIAL = false;
+	public static final boolean SECTION_NEW_PAGE_PER_COURSE = false;
 	public static final boolean STAFF_SIGNATURE = true;
 	public static final boolean LAST_INSTITUTION_SIGNATURE = false;
 	public static final boolean SIGNATURE_PER_PAGE = true;

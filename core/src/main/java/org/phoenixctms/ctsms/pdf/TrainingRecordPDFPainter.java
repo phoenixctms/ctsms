@@ -355,7 +355,16 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 								TrainingRecordSectionVO sectionVO = sectionIt.next();
 								Collection<CourseParticipationStatusEntryOutVO> participations = staffParticipationVOMap.get(sectionVO.getId());
 								if (participations != null && participations.size() > 0) {
-									if (Settings.getBoolean(TrainingRecordPDFSettingCodes.SECTION_NEW_PAGE_PER_TRIAL, Bundle.TRAINING_RECORD_PDF,
+									if (Settings.getBoolean(TrainingRecordPDFSettingCodes.SECTION_NEW_PAGE_PER_COURSE, Bundle.TRAINING_RECORD_PDF,
+											TrainingRecordPDFDefaultSettings.SECTION_NEW_PAGE_PER_COURSE)) {
+										Iterator<CourseParticipationStatusEntryOutVO> participationsIt = participations.iterator();
+										while (participationsIt.hasNext()) {
+											Collection<CourseParticipationStatusEntryOutVO> courseParticipations = new ArrayList<CourseParticipationStatusEntryOutVO>(1);
+											courseParticipations.add(participationsIt.next());
+											blocks.add(new TrainingRecordPDFBlock(BlockType.NEW_PAGE));
+											blocks.add(new TrainingRecordPDFBlock(sectionVO, courseParticipations));
+										}
+									} else if (Settings.getBoolean(TrainingRecordPDFSettingCodes.SECTION_NEW_PAGE_PER_TRIAL, Bundle.TRAINING_RECORD_PDF,
 											TrainingRecordPDFDefaultSettings.SECTION_NEW_PAGE_PER_TRIAL)) {
 										Iterator<CourseParticipationStatusEntryOutVO> participationsIt = participations.iterator();
 										LinkedHashMap<Long, Collection<CourseParticipationStatusEntryOutVO>> trialParticipationVOMap = new LinkedHashMap<Long, Collection<CourseParticipationStatusEntryOutVO>>();
