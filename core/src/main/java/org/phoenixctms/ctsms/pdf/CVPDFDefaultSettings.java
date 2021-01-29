@@ -49,6 +49,7 @@ public final class CVPDFDefaultSettings {
 	public static final boolean IMAGE_CENTERED = false;
 	public static final float Y_IMAGE_INDENT = 15.0f;
 	public static final float X_IMAGE_INDENT = 15.0f;
+	public static final boolean PASSED_COURSES_ONLY = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 

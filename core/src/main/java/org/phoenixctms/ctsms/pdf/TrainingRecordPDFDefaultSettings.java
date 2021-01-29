@@ -57,6 +57,7 @@ public final class TrainingRecordPDFDefaultSettings {
 	public static final boolean STAFF_SIGNATURE = true;
 	public static final boolean LAST_INSTITUTION_SIGNATURE = false;
 	public static final boolean SIGNATURE_PER_PAGE = true;
+	public static final boolean PASSED_COURSES_ONLY = true;
 	public static final String PAINTER_CLASS = null;
 	public static final boolean INSTITUTION_STAFF_PATH = true;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;

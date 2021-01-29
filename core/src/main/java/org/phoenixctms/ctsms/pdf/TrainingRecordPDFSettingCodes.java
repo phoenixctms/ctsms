@@ -62,4 +62,5 @@ public interface TrainingRecordPDFSettingCodes {
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String INSTITUTION_STAFF_PATH = "institution_staff_path";
+	public static final String PASSED_COURSES_ONLY = "passed_courses_only";
 }

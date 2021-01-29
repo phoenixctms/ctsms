@@ -48,4 +48,5 @@ public interface CVPDFSettingCodes {
 	public static final String IMAGE_CENTERED = "image_centered";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String PASSED_COURSES_ONLY = "passed_courses_only";
 }

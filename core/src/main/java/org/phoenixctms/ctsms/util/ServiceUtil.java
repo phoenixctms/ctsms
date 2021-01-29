@@ -69,7 +69,9 @@ import org.phoenixctms.ctsms.excel.VisitScheduleExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.VisitScheduleExcelWriter;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.pdf.CVPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.CVPDFPainter;
+import org.phoenixctms.ctsms.pdf.CVPDFSettingCodes;
 import org.phoenixctms.ctsms.pdf.CourseCertificatePDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.CourseCertificatePDFPainter;
 import org.phoenixctms.ctsms.pdf.CourseCertificatePDFSettingCodes;
@@ -3461,7 +3463,10 @@ public final class ServiceUtil {
 	public static Collection<CvPositionPDFVO> loadCvPositions(Long staffId, Long sectionId, CvPositionDao cvPositionDao, CourseParticipationStatusEntryDao courseParticipationDao)
 			throws Exception {
 		Collection cvPositions = cvPositionDao.findByStaffSection(staffId, sectionId, true, null);
-		Collection courseParticipations = courseParticipationDao.findByStaffCvSection(staffId, sectionId, true, true, true, null);
+		Collection courseParticipations = courseParticipationDao.findByStaffCvSection(staffId, sectionId, true,
+				Settings.getBoolean(CVPDFSettingCodes.PASSED_COURSES_ONLY, Bundle.CV_PDF,
+						CVPDFDefaultSettings.PASSED_COURSES_ONLY) ? true : null,
+				true, null);
 		cvPositionDao.toCvPositionPDFVOCollection(cvPositions);
 		courseParticipationDao.toCvPositionPDFVOCollection(courseParticipations);
 		ArrayList<CvPositionPDFVO> result = new ArrayList<CvPositionPDFVO>(cvPositions.size() + courseParticipations.size());
@@ -3475,7 +3480,10 @@ public final class ServiceUtil {
 			Set<Long> trialIds, Long sectionId,
 			CourseParticipationStatusEntryDao courseParticipationDao, StaffDao staffDao)
 			throws Exception {
-		Collection courseParticipations = courseParticipationDao.findByStaffTrialsTrainingRecordSection(staffId, trialIds, sectionId, true, true, true, null);
+		Collection courseParticipations = courseParticipationDao.findByStaffTrialsTrainingRecordSection(staffId, trialIds, sectionId, true,
+				Settings.getBoolean(TrainingRecordPDFSettingCodes.PASSED_COURSES_ONLY, Bundle.TRAINING_RECORD_PDF,
+						TrainingRecordPDFDefaultSettings.PASSED_COURSES_ONLY) ? true : null,
+				true, null);
 		courseParticipationDao.toCourseParticipationStatusEntryOutVOCollection(courseParticipations);
 		ArrayList<CourseParticipationStatusEntryOutVO> result = new ArrayList<CourseParticipationStatusEntryOutVO>(courseParticipations.size());
 		Iterator it = courseParticipations.iterator();
