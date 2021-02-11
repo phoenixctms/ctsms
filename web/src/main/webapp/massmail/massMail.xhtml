@@ -17,6 +17,9 @@
 			name="windowName"
 			value="#{massMailBean.windowName}" />
 		<ui:define name="content">
+			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
+				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.massMailTabTitles)}" />
+			</ui:include>
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -25,7 +28,7 @@
 					id="tabView"
 					dynamic="true" cache="false"
 					widgetVar="massMailTabView"
-					onTabShow="handleMassMailTabChange(index.index())"
+					onTabShow="handleMassMailTabChange(transposeTabIndex(index.index()))"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="massMailmain"
@@ -36,6 +39,7 @@
 					</p:tab>
 					<p:tab
 						id="massmailrecipients"
+						rendered="#{sessionScopeBean.isTabVisible('massmailrecipients')}"
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT'))}">
@@ -43,6 +47,7 @@
 					</p:tab>
 					<p:tab
 						id="massmailfiles"
+						rendered="#{sessionScopeBean.isTabVisible('massmailfiles')}"
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT'))}">
@@ -50,6 +55,7 @@
 					</p:tab>					
 					<p:tab
 						id="massmailjournal"
+						rendered="#{sessionScopeBean.isTabVisible('massmailjournal')}"
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT'))}">

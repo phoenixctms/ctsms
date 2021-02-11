@@ -17,6 +17,9 @@
 			name="windowName"
 			value="#{staffBean.windowName}" />
 		<ui:define name="content">
+			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
+				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.staffTabTitles)}" />
+			</ui:include>		
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -25,7 +28,7 @@
 					id="tabView"
 					dynamic="true" cache="false"
 					widgetVar="staffTabView"
-					onTabShow="handleStaffTabChange(index.index())"
+					onTabShow="handleStaffTabChange(transposeTabIndex(index.index()))"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="staffmain"
@@ -36,6 +39,7 @@
 					</p:tab>
 					<p:tab
 						id="staffimage"
+						rendered="#{sessionScopeBean.isTabVisible('staffimage')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_IMAGE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_IMAGE_COUNT'))}">
@@ -43,6 +47,7 @@
 					</p:tab>
 					<p:tab
 						id="stafftags"
+						rendered="#{sessionScopeBean.isTabVisible('stafftags')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_TAG_VALUE_COUNT'))}">
@@ -50,6 +55,7 @@
 					</p:tab>
 					<p:tab
 						id="staffcontactdetails"
+						rendered="#{sessionScopeBean.isTabVisible('staffcontactdetails')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_CONTACT_DETAIL_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_CONTACT_DETAIL_VALUE_COUNT'))}">
@@ -57,6 +63,7 @@
 					</p:tab>
 					<p:tab
 						id="staffaddresses"
+						rendered="#{sessionScopeBean.isTabVisible('staffaddresses')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_ADDRESS_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_ADDRESS_COUNT'))}">
@@ -64,6 +71,7 @@
 					</p:tab>
 					<p:tab
 						id="staffstatus"
+						rendered="#{sessionScopeBean.isTabVisible('staffstatus')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_STATUS_ENTRY_COUNT'))}">
@@ -71,20 +79,23 @@
 					</p:tab>
 					<p:tab
 						id="staffdutyrosterturns"
+						rendered="#{sessionScopeBean.isTabVisible('staffdutyrosterturns')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_DUTY_ROSTER_TURN_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_DUTY_ROSTER_TURN_COUNT'))}">
 						<ui:include src="/META-INF/includes/staff/staffDutyRosterTurn.xhtml" />
 					</p:tab>
 					<p:tab
-						id="cvPositions"
+						id="cvpositions"
+						rendered="#{sessionScopeBean.isTabVisible('cvpositions')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_CV_POSITION_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_CV_POSITION_COUNT'))}">
 						<ui:include src="/META-INF/includes/staff/cvPosition.xhtml" />
 					</p:tab>
 					<p:tab
-						id="courseParticipationStatus"
+						id="courseparticipationstatus"
+						rendered="#{sessionScopeBean.isTabVisible('courseparticipationstatus')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT'))}">
@@ -92,13 +103,15 @@
 					</p:tab>
 					<p:tab
 						id="staffassociations"
+						rendered="#{sessionScopeBean.isTabVisible('staffassociations')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="tsms-tabtitle"
-						title="#{stafflabels.staff_associations_tab_label}">
+						title="#{messages.staff_associations_tab_label}">
 						<ui:include src="/META-INF/includes/staff/staffAssociation.xhtml" />
 					</p:tab>
 					<p:tab
 						id="staffhyperlinks"
+						rendered="#{sessionScopeBean.isTabVisible('staffhyperlinks')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_HYPERLINK_COUNT'))}">
@@ -106,6 +119,7 @@
 					</p:tab>
 					<p:tab
 						id="stafffiles"
+						rendered="#{sessionScopeBean.isTabVisible('stafffiles')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_FILE_COUNT'))}">
@@ -113,6 +127,7 @@
 					</p:tab>
 					<p:tab
 						id="staffjournal"
+						rendered="#{sessionScopeBean.isTabVisible('staffjournal')}"
 						disabled="#{!staffBean.created}"
 						titleStyleClass="#{staffBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_STAFF_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_STAFF_JOURNAL_ENTRY_COUNT'))}">
