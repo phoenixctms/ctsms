@@ -172,90 +172,90 @@ function handleUpdateTrialParticipationListTabTitles(xhr, status, args) {
 function handleUpdateProbandTabTitles(xhr, status, args) {
 
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
-		probandTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
+		probandTabView.emphasizeTab(reverseTabIndex(0), _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 
 	if (_testPropertyExists(args, AJAX_PROBAND_IMAGE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_IMAGE_COUNT)) {
-		probandTabView.setTabTitle(1, decodeBase64(args[AJAX_PROBAND_IMAGE_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(1, args[AJAX_PROBAND_IMAGE_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(1), decodeBase64(args[AJAX_PROBAND_IMAGE_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_PROBAND_IMAGE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_TAG_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_TAG_VALUE_COUNT)) {
-		probandTabView.setTabTitle(2, decodeBase64(args[AJAX_PROBAND_TAG_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(2, args[AJAX_PROBAND_TAG_VALUE_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_PROBAND_TAG_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_PROBAND_TAG_VALUE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_CONTACT_DETAIL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT)) {
-		probandTabView.setTabTitle(3, decodeBase64(args[AJAX_PROBAND_CONTACT_DETAIL_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(3, args[AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(3), decodeBase64(args[AJAX_PROBAND_CONTACT_DETAIL_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(3), args[AJAX_PROBAND_CONTACT_DETAIL_VALUE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_RECIPIENT_COUNT)) {
-		probandTabView.setTabTitle(4, decodeBase64(args[AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(4, args[AJAX_PROBAND_RECIPIENT_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_PROBAND_RECIPIENT_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_PROBAND_RECIPIENT_COUNT] == 0);
 	}	
 	if (_testPropertyExists(args, AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_ADDRESS_COUNT)) {
-		probandTabView.setTabTitle(5, decodeBase64(args[AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(5, args[AJAX_PROBAND_ADDRESS_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_PROBAND_ADDRESS_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_PROBAND_ADDRESS_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_PROBAND_STATUS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_STATUS_ENTRY_COUNT)) {
-		probandTabView.setTabTitle(6, decodeBase64(args[AJAX_PROBAND_STATUS_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(6, args[AJAX_PROBAND_STATUS_ENTRY_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(6), decodeBase64(args[AJAX_PROBAND_STATUS_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(6), args[AJAX_PROBAND_STATUS_ENTRY_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_INVENTORY_BOOKING_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_INVENTORY_BOOKING_COUNT)) {
-		probandTabView.setTabTitle(7, decodeBase64(args[AJAX_PROBAND_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(7, args[AJAX_PROBAND_INVENTORY_BOOKING_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(7), decodeBase64(args[AJAX_PROBAND_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(7), args[AJAX_PROBAND_INVENTORY_BOOKING_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_DIAGNOSIS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_DIAGNOSIS_COUNT)) {
-		probandTabView.setTabTitle(8, decodeBase64(args[AJAX_DIAGNOSIS_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(8, args[AJAX_DIAGNOSIS_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(8), decodeBase64(args[AJAX_DIAGNOSIS_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(8), args[AJAX_DIAGNOSIS_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROCEDURE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROCEDURE_COUNT)) {
-		probandTabView.setTabTitle(9, decodeBase64(args[AJAX_PROCEDURE_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(9, args[AJAX_PROCEDURE_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(9), decodeBase64(args[AJAX_PROCEDURE_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(9), args[AJAX_PROCEDURE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_MEDICATION_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MEDICATION_COUNT)) {
-		probandTabView.setTabTitle(10, decodeBase64(args[AJAX_MEDICATION_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(10, args[AJAX_MEDICATION_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(10), decodeBase64(args[AJAX_MEDICATION_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(10), args[AJAX_MEDICATION_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INQUIRY_VALUE_COUNT)) {
-		probandTabView.setTabTitle(11, decodeBase64(args[AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64]));
+		probandTabView.setTabTitle(reverseTabIndex(11), decodeBase64(args[AJAX_INQUIRY_VALUE_TAB_TITLE_BASE64]));
 		//inverse here
-		probandTabView.emphasizeTab(11, args[AJAX_INQUIRY_VALUE_COUNT] > 0);
+		probandTabView.emphasizeTab(reverseTabIndex(11), args[AJAX_INQUIRY_VALUE_COUNT] > 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_TRIAL_PARTICIPATION_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_PARTICIPATION_COUNT)) {
-		probandTabView.setTabTitle(12, decodeBase64(args[AJAX_TRIAL_PARTICIPATION_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(12, args[AJAX_TRIAL_PARTICIPATION_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(12), decodeBase64(args[AJAX_TRIAL_PARTICIPATION_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(12), args[AJAX_TRIAL_PARTICIPATION_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_VISIT_SCHEDULE_ITEM_COUNT)) {
-		probandTabView.setTabTitle(13, decodeBase64(args[AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64]));
+		probandTabView.setTabTitle(reverseTabIndex(13), decodeBase64(args[AJAX_PROBAND_VISIT_SCHEDULE_TAB_TITLE_BASE64]));
 
 	}
 
 
 	if (_testPropertyExists(args, AJAX_BANK_ACCOUNT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_BANK_ACCOUNT_COUNT)) {
-		probandTabView.setTabTitle(15, decodeBase64(args[AJAX_BANK_ACCOUNT_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(15, args[AJAX_BANK_ACCOUNT_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(15), decodeBase64(args[AJAX_BANK_ACCOUNT_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(15), args[AJAX_BANK_ACCOUNT_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_MONEY_TRANSFER_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MONEY_TRANSFER_COUNT)) {
-		probandTabView.setTabTitle(16, decodeBase64(args[AJAX_MONEY_TRANSFER_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(16, args[AJAX_MONEY_TRANSFER_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(16), decodeBase64(args[AJAX_MONEY_TRANSFER_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(16), args[AJAX_MONEY_TRANSFER_COUNT] == 0);
 	}
 
 
 	if (_testPropertyExists(args, AJAX_PROBAND_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_JOB_COUNT)) {
-		probandTabView.setTabTitle(17, decodeBase64(args[AJAX_PROBAND_JOB_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(17, args[AJAX_PROBAND_JOB_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(17), decodeBase64(args[AJAX_PROBAND_JOB_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(17), args[AJAX_PROBAND_JOB_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_FILE_COUNT)) {
-		probandTabView.setTabTitle(18, decodeBase64(args[AJAX_PROBAND_FILE_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(18, args[AJAX_PROBAND_FILE_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(18), decodeBase64(args[AJAX_PROBAND_FILE_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(18), args[AJAX_PROBAND_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_JOURNAL_ENTRY_COUNT)) {
-		probandTabView.setTabTitle(19, decodeBase64(args[AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64]));
-		probandTabView.emphasizeTab(19, args[AJAX_PROBAND_JOURNAL_ENTRY_COUNT] == 0);
+		probandTabView.setTabTitle(reverseTabIndex(19), decodeBase64(args[AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64]));
+		probandTabView.emphasizeTab(reverseTabIndex(19), args[AJAX_PROBAND_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

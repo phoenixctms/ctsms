@@ -71,22 +71,22 @@ function handleInputFieldChanged(xhr, status, args) {
 function handleUpdateInputFieldTabTitles(xhr, status, args) {
 
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
-		inputFieldTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
+		inputFieldTabView.emphasizeTab(reverseTabIndex(0), _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 
 	if (_testPropertyExists(args, AJAX_SELECTION_SET_VALUE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_SELECTION_SET_VALUE_COUNT)) {
-		inputFieldTabView.setTabTitle(1, decodeBase64(args[AJAX_SELECTION_SET_VALUE_TAB_TITLE_BASE64]));
-		inputFieldTabView.emphasizeTab(1, args[AJAX_SELECTION_SET_VALUE_COUNT] == 0);
+		inputFieldTabView.setTabTitle(reverseTabIndex(1), decodeBase64(args[AJAX_SELECTION_SET_VALUE_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_SELECTION_SET_VALUE_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INPUT_FIELD_JOB_COUNT)) {
-		inputFieldTabView.setTabTitle(4, decodeBase64(args[AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64]));
-		inputFieldTabView.emphasizeTab(4, args[AJAX_INPUT_FIELD_JOB_COUNT] == 0);
+		inputFieldTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_INPUT_FIELD_JOB_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_INPUT_FIELD_JOB_COUNT] == 0);
 	}
 	
 	if (_testPropertyExists(args, AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT)) {
-		inputFieldTabView.setTabTitle(5, decodeBase64(args[AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64]));
-		inputFieldTabView.emphasizeTab(5, args[AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT] == 0);
+		inputFieldTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64]));
+		inputFieldTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

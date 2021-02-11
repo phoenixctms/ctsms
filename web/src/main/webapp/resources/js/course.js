@@ -76,34 +76,34 @@ function handleCourseChanged(xhr, status, args) {
 
 function handleUpdateCourseTabTitles(xhr, status, args) {
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
-		courseTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
+		courseTabView.emphasizeTab(reverseTabIndex(0), _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 	if (_testPropertyExists(args, AJAX_LECTURER_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_LECTURER_COUNT)) {
-		courseTabView.setTabTitle(1, decodeBase64(args[AJAX_LECTURER_TAB_TITLE_BASE64]));
-		courseTabView.emphasizeTab(1, args[AJAX_LECTURER_COUNT] == 0);
+		courseTabView.setTabTitle(reverseTabIndex(1), decodeBase64(args[AJAX_LECTURER_TAB_TITLE_BASE64]));
+		courseTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_LECTURER_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_COURSE_INVENTORY_BOOKING_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_COURSE_INVENTORY_BOOKING_COUNT)) {
-		courseTabView.setTabTitle(2, decodeBase64(args[AJAX_COURSE_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
-		courseTabView.emphasizeTab(2, args[AJAX_COURSE_INVENTORY_BOOKING_COUNT] == 0);
+		courseTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_COURSE_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
+		courseTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_COURSE_INVENTORY_BOOKING_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_TAB_TITLE_BASE64)
 	        && _testPropertyExists(args, AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT)) {
-		courseTabView.setTabTitle(3, decodeBase64(args[AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_TAB_TITLE_BASE64]));
-		courseTabView.emphasizeTab(3, args[AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT] == 0);
+		courseTabView.setTabTitle(reverseTabIndex(3), decodeBase64(args[AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_TAB_TITLE_BASE64]));
+		courseTabView.emphasizeTab(reverseTabIndex(3), args[AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_COURSE_HYPERLINK_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_COURSE_HYPERLINK_COUNT)) {
-		courseTabView.setTabTitle(4, decodeBase64(args[AJAX_COURSE_HYPERLINK_TAB_TITLE_BASE64]));
-		courseTabView.emphasizeTab(4, args[AJAX_COURSE_HYPERLINK_COUNT] == 0);
+		courseTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_COURSE_HYPERLINK_TAB_TITLE_BASE64]));
+		courseTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_COURSE_HYPERLINK_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_COURSE_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_COURSE_FILE_COUNT)) {
-		courseTabView.setTabTitle(5, decodeBase64(args[AJAX_COURSE_FILE_TAB_TITLE_BASE64]));
-		courseTabView.emphasizeTab(5, args[AJAX_COURSE_FILE_COUNT] == 0);
+		courseTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_COURSE_FILE_TAB_TITLE_BASE64]));
+		courseTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_COURSE_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_COURSE_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_COURSE_JOURNAL_ENTRY_COUNT)) {
-		courseTabView.setTabTitle(6, decodeBase64(args[AJAX_COURSE_JOURNAL_TAB_TITLE_BASE64]));
-		courseTabView.emphasizeTab(6, args[AJAX_COURSE_JOURNAL_ENTRY_COUNT] == 0);
+		courseTabView.setTabTitle(reverseTabIndex(6), decodeBase64(args[AJAX_COURSE_JOURNAL_TAB_TITLE_BASE64]));
+		courseTabView.emphasizeTab(reverseTabIndex(6), args[AJAX_COURSE_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }
