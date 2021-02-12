@@ -419,18 +419,14 @@
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row">
 								<h:panelGrid
-									columns="3"
+									columns="6"
 									cellpadding="2"
-									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-
+									columnClasses="ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
 									<ui:include src="../shared/userModulesBaseInput.xhtml" >
 										<ui:param
-											name="in"
-											value="#{userBean.in}" />
+											name="bean"
+											value="#{userBean}" />
 									</ui:include>
-								
-
-							
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>

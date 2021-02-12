@@ -14,8 +14,8 @@
 			value="#{userlabels.user_enable_inventory_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableInventoryModule"
-				value="#{in.enableInventoryModule}">
-				<p:ajax />
+				value="#{bean.in.enableInventoryModule}">
+				<p:ajax update="inventoryModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableInventoryModule">
 				<h:outputText value="#{userlabels.user_enable_inventory_module_tooltip}"
@@ -23,13 +23,33 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="enableInventoryModule" />
-
+		
+		<h:outputLabel for="inventoryModuleTabs" value="#{userlabels.user_inventory_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="inventoryModuleTabs"
+				value="#{bean.inventoryVisibleTabList}"
+				label="#{userlabels.user_inventory_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableInventoryModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.inventoryTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="inventoryModuleTabs">
+				<h:outputText value="#{userlabels.user_inventory_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="inventoryModuleTabs" />
+		
 		<h:outputLabel for="enableStaffModule"
 			value="#{userlabels.user_enable_staff_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableStaffModule"
-				value="#{in.enableStaffModule}">
-				<p:ajax />
+				value="#{bean.in.enableStaffModule}">
+				<p:ajax update="staffModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableStaffModule">
 				<h:outputText value="#{userlabels.user_enable_staff_module_tooltip}"
@@ -37,13 +57,33 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="enableStaffModule" />
+		
+		<h:outputLabel for="staffModuleTabs" value="#{userlabels.user_staff_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="staffModuleTabs"
+				value="#{bean.staffVisibleTabList}"
+				label="#{userlabels.user_staff_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableStaffModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.staffTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="staffModuleTabs">
+				<h:outputText value="#{userlabels.user_staff_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="staffModuleTabs" />
 
 		<h:outputLabel for="enableCourseModule"
 			value="#{userlabels.user_enable_course_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableCourseModule"
-				value="#{in.enableCourseModule}">
-				<p:ajax />
+				value="#{bean.in.enableCourseModule}">
+				<p:ajax update="courseModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableCourseModule">
 				<h:outputText value="#{userlabels.user_enable_course_module_tooltip}"
@@ -52,12 +92,32 @@
 		</h:panelGroup>
 		<p:message for="enableCourseModule" />
 		
+		<h:outputLabel for="courseModuleTabs" value="#{userlabels.user_course_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="courseModuleTabs"
+				value="#{bean.courseVisibleTabList}"
+				label="#{userlabels.user_course_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableCourseModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.courseTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="courseModuleTabs">
+				<h:outputText value="#{userlabels.user_course_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="courseModuleTabs" />
+		
 		<h:outputLabel for="enableTrialModule"
 			value="#{userlabels.user_enable_trial_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableTrialModule"
-				value="#{in.enableTrialModule}">
-				<p:ajax />
+				value="#{bean.in.enableTrialModule}">
+				<p:ajax update="trialModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableTrialModule">
 				<h:outputText value="#{userlabels.user_enable_trial_module_tooltip}"
@@ -66,13 +126,32 @@
 		</h:panelGroup>
 		<p:message for="enableTrialModule" />
 		
+		<h:outputLabel for="trialModuleTabs" value="#{userlabels.user_trial_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="trialModuleTabs"
+				value="#{bean.trialVisibleTabList}"
+				label="#{userlabels.user_trial_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableTrialModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.trialTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="trialModuleTabs">
+				<h:outputText value="#{userlabels.user_trial_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="trialModuleTabs" />
 		
 		<h:outputLabel for="enableInputFieldModule"
 			value="#{userlabels.user_enable_input_field_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableInputFieldModule"
-				value="#{in.enableInputFieldModule}">
-				<p:ajax />
+				value="#{bean.in.enableInputFieldModule}">
+				<p:ajax update="inputFieldModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableInputFieldModule">
 				<h:outputText value="#{userlabels.user_enable_input_field_module_tooltip}"
@@ -81,13 +160,33 @@
 		</h:panelGroup>
 		<p:message for="enableInputFieldModule" />
 		
+		<h:outputLabel for="inputFieldModuleTabs" value="#{userlabels.user_input_field_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="inputFieldModuleTabs"
+				value="#{bean.inputFieldVisibleTabList}"
+				label="#{userlabels.user_input_field_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableInputFieldModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.inputFieldTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="inputFieldModuleTabs">
+				<h:outputText value="#{userlabels.user_input_field_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="inputFieldModuleTabs" />
+		
 		
 		<h:outputLabel for="enableProbandModule"
 			value="#{userlabels.user_enable_proband_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableProbandModule"
-				value="#{in.enableProbandModule}">
-				<p:ajax />
+				value="#{bean.in.enableProbandModule}">
+				<p:ajax update="probandModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableProbandModule">
 				<h:outputText value="#{userlabels.user_enable_proband_module_tooltip}"
@@ -96,12 +195,32 @@
 		</h:panelGroup>
 		<p:message for="enableProbandModule" />
 		
+		<h:outputLabel for="probandModuleTabs" value="#{userlabels.user_proband_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="probandModuleTabs"
+				value="#{bean.probandVisibleTabList}"
+				label="#{userlabels.user_proband_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableTrialModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.probandTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="probandModuleTabs">
+				<h:outputText value="#{userlabels.user_proband_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="probandModuleTabs" />
+		
 		<h:outputLabel for="enableMassMailModule"
 			value="#{userlabels.user_enable_mass_mail_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableMassMailModule"
-				value="#{in.enableMassMailModule}">
-				<p:ajax />
+				value="#{bean.in.enableMassMailModule}">
+				<p:ajax update="massMailModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableMassMailModule">
 				<h:outputText value="#{userlabels.user_enable_mass_mail_module_tooltip}"
@@ -110,13 +229,33 @@
 		</h:panelGroup>
 		<p:message for="enableMassMailModule" />
 		
+		<h:outputLabel for="massMailModuleTabs" value="#{userlabels.user_mass_mail_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="massMailModuleTabs"
+				value="#{bean.massMailVisibleTabList}"
+				label="#{userlabels.user_mass_mail_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableMassMailModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.massMailTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="massMailModuleTabs">
+				<h:outputText value="#{userlabels.user_mass_mail_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="massMailModuleTabs" />
+		
 		
 		<h:outputLabel for="enableUserModule"
 			value="#{userlabels.user_enable_user_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableUserModule"
-				value="#{in.enableUserModule}">
-				<p:ajax />
+				value="#{bean.in.enableUserModule}">
+				<p:ajax update="userModuleTabs"/>
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="enableUserModule">
 				<h:outputText value="#{userlabels.user_enable_user_module_tooltip}"
@@ -124,6 +263,26 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="enableUserModule" />
+		
+		<h:outputLabel for="userModuleTabs" value="#{userlabels.user_user_module_tabs_label}" />
+		<h:panelGroup>
+			<p:selectManyCheckbox id="userModuleTabs"
+				value="#{bean.userVisibleTabList}"
+				label="#{userlabels.user_user_module_tabs}"
+				required="false"
+				disabled="#{!bean.in.enableUserModule}"
+				layout="pageDirection">
+				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.userTabTitles)}"
+					var="selectItem" itemLabel="#{selectItem.label}"
+					itemValue="#{selectItem.value}" />
+				<p:ajax />
+			</p:selectManyCheckbox>
+			<p:tooltip rendered="#{enableTooltips}" for="userModuleTabs">
+				<h:outputText value="#{userlabels.user_user_module_tabs_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="userModuleTabs" />
 
 	</ui:composition>
 </h:body>

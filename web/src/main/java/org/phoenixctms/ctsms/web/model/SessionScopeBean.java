@@ -1543,7 +1543,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		if (tabList != null && tabList.length() > 0) {
 			String[] tabIds = WebUtil.TAB_ID_SEPARATOR_REGEXP.split(tabList, -1);
 			for (int i = 0; i < tabIds.length; i++) {
-				if (tabIds[i].length() > 0) {
+				if (tabIds[i].trim().length() > 0) {
 					result.add(tabIds[i].trim());
 				}
 			}

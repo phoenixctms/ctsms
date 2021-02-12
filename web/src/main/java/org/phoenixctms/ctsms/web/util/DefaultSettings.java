@@ -665,6 +665,14 @@ public final class DefaultSettings {
 	public static final boolean USER_ENABLE_PROBAND_MODULE_PRESET = true;
 	public static final boolean USER_ENABLE_MASS_MAIL_MODULE_PRESET = true;
 	public static final boolean USER_ENABLE_USER_MODULE_PRESET = true;
+	public static final String VISIBLE_INVENTORY_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_STAFF_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_COURSE_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_TRIAL_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_INPUT_FIELD_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_PROBAND_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_MASS_MAIL_TAB_LIST_PRESET = null;
+	public static final String VISIBLE_USER_TAB_LIST_PRESET = null;
 	public static final boolean SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = false;
 
 	private DefaultSettings() {

@@ -177,6 +177,14 @@ public interface SettingCodes {
 	public final static String USER_ENABLE_PROBAND_MODULE_PRESET = "user_enable_proband_module_preset";
 	public final static String USER_ENABLE_MASS_MAIL_MODULE_PRESET = "user_enable_mass_mail_module_preset";
 	public final static String USER_ENABLE_USER_MODULE_PRESET = "user_enable_user_module_preset";
+	public final static String VISIBLE_INVENTORY_TAB_LIST_PRESET = "visible_inventory_tab_list_preset";
+	public final static String VISIBLE_STAFF_TAB_LIST_PRESET = "visible_staff_tab_list_preset";
+	public final static String VISIBLE_COURSE_TAB_LIST_PRESET = "visible_course_tab_list_preset";
+	public final static String VISIBLE_TRIAL_TAB_LIST_PRESET = "visible_trial_tab_list_preset";
+	public final static String VISIBLE_INPUT_FIELD_TAB_LIST_PRESET = "visible_input_field_tab_list_preset";
+	public final static String VISIBLE_PROBAND_TAB_LIST_PRESET = "visible_proband_tab_list_preset";
+	public final static String VISIBLE_MASS_MAIL_TAB_LIST_PRESET = "visible_mass_mail_tab_list_preset";
+	public final static String VISIBLE_USER_TAB_LIST_PRESET = "visible_user_tab_list_preset";
 	public final static String USER_LOCALE_PRESET = "user_locale_preset";
 	public final static String USER_TIME_ZONE_PRESET = "user_time_zone_preset";
 	public final static String USER_THEME_PRESET = "user_theme_preset";
