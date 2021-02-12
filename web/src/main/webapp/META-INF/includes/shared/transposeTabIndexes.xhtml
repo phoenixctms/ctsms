@@ -18,7 +18,7 @@
    var newIndex = 0;
    <c:forEach var="tabTitle" items="#{tabTitles}">
    oldIndex++;
-   if (#{sessionScopeBean.isTabVisible(tabTitle.key)}) {
+   if (#{visibleTabSet.contains(tabTitle.key)}) {
        newIndex++;
        transposeIndexMap[newIndex] = oldIndex;
        reverseIndexMap[oldIndex] = newIndex;

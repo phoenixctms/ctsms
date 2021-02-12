@@ -19,6 +19,7 @@
 		<ui:define name="content">
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.inputFieldTabTitles)}" />
+				<ui:param name="visibleTabSet" value="#{sessionScopeBean.inputFieldVisibleTabSet}" />
 			</ui:include>		
 			<h:panelGrid
 				columns="1"
@@ -39,7 +40,7 @@
 					</p:tab>
 					<p:tab
 						id="inputfieldselectionsetvalue"
-						rendered="#{sessionScopeBean.isTabVisible('inputfieldselectionsetvalue')}"
+						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfieldselectionsetvalue')}"
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_SELECTION_SET_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_SELECTION_SET_VALUE_COUNT'))}">
@@ -47,7 +48,7 @@
 					</p:tab>
 					<p:tab
 						id="inputfielddummy"
-						rendered="#{sessionScopeBean.isTabVisible('inputfielddummy')}"
+						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfielddummy')}"
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{messages.input_field_preview_tab_label}">
@@ -55,7 +56,7 @@
 					</p:tab>
 					<p:tab
 						id="inputfieldassociations"
-						rendered="#{sessionScopeBean.isTabVisible('inputfieldassociations')}"
+						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfieldassociations')}"
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{messages.input_field_associations_tab_label}">
@@ -63,7 +64,7 @@
 					</p:tab>
 					<p:tab
 						id="inputfieldjobs"
-						rendered="#{sessionScopeBean.isTabVisible('inputfieldjobs')}"
+						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfieldjobs')}"
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOB_COUNT'))}">
@@ -71,7 +72,7 @@
 					</p:tab>
 					<p:tab
 						id="inputfieldjournal"
-						rendered="#{sessionScopeBean.isTabVisible('inputfieldjournal')}"
+						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfieldjournal')}"
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT'))}">

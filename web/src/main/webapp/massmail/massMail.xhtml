@@ -19,6 +19,7 @@
 		<ui:define name="content">
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.massMailTabTitles)}" />
+				<ui:param name="visibleTabSet" value="#{sessionScopeBean.massMailVisibleTabSet}" />
 			</ui:include>
 			<h:panelGrid
 				columns="1"
@@ -39,7 +40,7 @@
 					</p:tab>
 					<p:tab
 						id="massmailrecipients"
-						rendered="#{sessionScopeBean.isTabVisible('massmailrecipients')}"
+						rendered="#{sessionScopeBean.massMailVisibleTabSet.contains('massmailrecipients')}"
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT'))}">
@@ -47,7 +48,7 @@
 					</p:tab>
 					<p:tab
 						id="massmailfiles"
-						rendered="#{sessionScopeBean.isTabVisible('massmailfiles')}"
+						rendered="#{sessionScopeBean.massMailVisibleTabSet.contains('massmailfiles')}"
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT'))}">
@@ -55,7 +56,7 @@
 					</p:tab>					
 					<p:tab
 						id="massmailjournal"
-						rendered="#{sessionScopeBean.isTabVisible('massmailjournal')}"
+						rendered="#{sessionScopeBean.massMailVisibleTabSet.contains('massmailjournal')}"
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT'))}">

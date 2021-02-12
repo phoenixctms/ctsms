@@ -19,6 +19,7 @@
 		<ui:define name="content">
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.courseTabTitles)}" />
+				<ui:param name="visibleTabSet" value="#{sessionScopeBean.courseVisibleTabSet}" />
 			</ui:include>
 			<h:panelGrid
 				columns="1"
@@ -39,48 +40,48 @@
 					</p:tab>
 					<p:tab
 						id="lecturers"
+						rendered="#{sessionScopeBean.courseVisibleTabSet.contains('lecturers')}"
 						disabled="#{!courseBean.created}"
-						rendered="#{sessionScopeBean.isTabVisible('lecturers')}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_LECTURER_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_LECTURER_COUNT'))}">
 						<ui:include src="/META-INF/includes/course/lecturer.xhtml" />
 					</p:tab>
 					<p:tab
 						id="courseinventorybookings"
+						rendered="#{sessionScopeBean.courseVisibleTabSet.contains('courseinventorybookings')}"						
 						disabled="#{!courseBean.created}"
-						rendered="#{sessionScopeBean.isTabVisible('courseinventorybookings')}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_INVENTORY_BOOKING_COUNT'))}">
 						<ui:include src="/META-INF/includes/course/courseInventoryBooking.xhtml" />
 					</p:tab>
 					<p:tab
 						id="admincourseparticipationstatus"
+						rendered="#{sessionScopeBean.courseVisibleTabSet.contains('admincourseparticipationstatus')}"
 						disabled="#{!courseBean.created}"
-						rendered="#{sessionScopeBean.isTabVisible('admincourseparticipationstatus')}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT'))}">
 						<ui:include src="/META-INF/includes/course/adminCourseParticipationStatus.xhtml" />
 					</p:tab>
 					<p:tab
 						id="coursehyperlinks"
+						rendered="#{sessionScopeBean.courseVisibleTabSet.contains('coursehyperlinks')}"
 						disabled="#{!courseBean.created}"
-						rendered="#{sessionScopeBean.isTabVisible('coursehyperlinks')}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_HYPERLINK_COUNT'))}">
 						<ui:include src="/META-INF/includes/course/courseHyperlink.xhtml" />
 					</p:tab>
 					<p:tab
 						id="coursefiles"
+						rendered="#{sessionScopeBean.courseVisibleTabSet.contains('coursefiles')}"
 						disabled="#{!courseBean.created}"
-						rendered="#{sessionScopeBean.isTabVisible('coursefiles')}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_FILE_COUNT'))}">
 						<ui:include src="/META-INF/includes/course/courseFile.xhtml" />
 					</p:tab>
 					<p:tab
 						id="coursejournal"
+						rendered="#{sessionScopeBean.courseVisibleTabSet.contains('coursejournal')}"
 						disabled="#{!courseBean.created}"
-						rendered="#{sessionScopeBean.isTabVisible('coursejournal')}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_JOURNAL_ENTRY_COUNT'))}">
 						<ui:include src="/META-INF/includes/course/courseJournal.xhtml" />

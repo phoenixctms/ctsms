@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -940,6 +942,14 @@ public class SessionScopeBean implements FilterItemsStore {
 		probandTabTitleMap = null;
 		massMailTabTitleMap = null;
 		userTabTitleMap = null;
+		inventoryVisibleTabSet = null;
+		staffVisibleTabSet = null;
+		courseVisibleTabSet = null;
+		trialVisibleTabSet = null;
+		inputFieldVisibleTabSet = null;
+		probandVisibleTabSet = null;
+		massMailVisibleTabSet = null;
+		userVisibleTabSet = null;
 	}
 
 	public synchronized boolean isAuthenticationFailed() {
@@ -1384,8 +1394,16 @@ public class SessionScopeBean implements FilterItemsStore {
 	private Map<String, String> probandTabTitleMap;
 	private Map<String, String> massMailTabTitleMap;
 	private Map<String, String> userTabTitleMap;
+	private Set<String> inventoryVisibleTabSet;
+	private Set<String> staffVisibleTabSet;
+	private Set<String> courseVisibleTabSet;
+	private Set<String> trialVisibleTabSet;
+	private Set<String> inputFieldVisibleTabSet;
+	private Set<String> probandVisibleTabSet;
+	private Set<String> massMailVisibleTabSet;
+	private Set<String> userVisibleTabSet;
 
-	public Map getInventoryTabTitles() {
+	public synchronized Map getInventoryTabTitles() {
 		if (inventoryTabTitleMap == null) {
 			inventoryTabTitleMap = new LinkedHashMap<String, String>();
 			inventoryTabTitleMap.put("inventorytags", Messages.getString(MessageCodes.INVENTORY_TAGS_TAB_TITLE));
@@ -1399,7 +1417,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return inventoryTabTitleMap;
 	}
 
-	public Map getStaffTabTitles() {
+	public synchronized Map getStaffTabTitles() {
 		if (staffTabTitleMap == null) {
 			staffTabTitleMap = new LinkedHashMap<String, String>();
 			staffTabTitleMap.put("staffimage", Messages.getString(MessageCodes.STAFF_IMAGE_TAB_TITLE));
@@ -1418,7 +1436,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return staffTabTitleMap;
 	}
 
-	public Map getCourseTabTitles() {
+	public synchronized Map getCourseTabTitles() {
 		if (courseTabTitleMap == null) {
 			courseTabTitleMap = new LinkedHashMap<String, String>();
 			courseTabTitleMap.put("lecturers", Messages.getString(MessageCodes.LECTURERS_TAB_TITLE));
@@ -1431,7 +1449,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return courseTabTitleMap;
 	}
 
-	public Map getTrialTabTitles() {
+	public synchronized Map getTrialTabTitles() {
 		if (trialTabTitleMap == null) {
 			trialTabTitleMap = new LinkedHashMap<String, String>();
 			trialTabTitleMap.put("trialtags", Messages.getString(MessageCodes.TRIAL_TAGS_TAB_TITLE));
@@ -1461,7 +1479,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return trialTabTitleMap;
 	}
 
-	public Map getInputFieldTabTitles() {
+	public synchronized Map getInputFieldTabTitles() {
 		if (inputFieldTabTitleMap == null) {
 			inputFieldTabTitleMap = new LinkedHashMap<String, String>();
 			inputFieldTabTitleMap.put("inputfieldselectionsetvalue", Messages.getString(MessageCodes.SELECTION_SET_VALUES_TAB_TITLE));
@@ -1473,7 +1491,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return inputFieldTabTitleMap;
 	}
 
-	public Map getProbandTabTitles() {
+	public synchronized Map getProbandTabTitles() {
 		if (probandTabTitleMap == null) {
 			probandTabTitleMap = new LinkedHashMap<String, String>();
 			probandTabTitleMap.put("probandimage", Messages.getString(MessageCodes.PROBAND_IMAGE_TAB_TITLE));
@@ -1499,17 +1517,17 @@ public class SessionScopeBean implements FilterItemsStore {
 		return probandTabTitleMap;
 	}
 
-	public Map getMassMailTabTitles() {
+	public synchronized Map getMassMailTabTitles() {
 		if (massMailTabTitleMap == null) {
 			massMailTabTitleMap = new LinkedHashMap<String, String>();
-			massMailTabTitleMap.put("massmailrecipients", Messages.getString(MessageCodes.MASS_MAIL_RECIPIENT_TITLE));
+			massMailTabTitleMap.put("massmailrecipients", Messages.getString(MessageCodes.MASS_MAIL_RECIPIENTS_TAB_TITLE));
 			massMailTabTitleMap.put("massmailfiles", Messages.getString(MessageCodes.MASS_MAIL_FILES_TAB_TITLE));
 			massMailTabTitleMap.put("massmailjournal", Messages.getString(MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE));
 		}
 		return massMailTabTitleMap;
 	}
 
-	public Map getUserTabTitles() {
+	public synchronized Map getUserTabTitles() {
 		if (userTabTitleMap == null) {
 			userTabTitleMap = new LinkedHashMap<String, String>();
 			userTabTitleMap.put("setpassword", Messages.getString(MessageCodes.PASSWORD_TAB_TITLE));
@@ -1520,7 +1538,88 @@ public class SessionScopeBean implements FilterItemsStore {
 		return userTabTitleMap;
 	}
 
-	public boolean isTabVisible(String tabId) {
-		return true; //"coursejournal".equals(tabId);
+	private HashSet<String> getVisibleTabSet(String tabList) {
+		HashSet<String> result = new HashSet<String>();
+		if (tabList != null && tabList.length() > 0) {
+			String[] tabIds = WebUtil.TAB_ID_SEPARATOR_REGEXP.split(tabList, -1);
+			for (int i = 0; i < tabIds.length; i++) {
+				if (tabIds[i].length() > 0) {
+					result.add(tabIds[i].trim());
+				}
+			}
+		}
+		return result;
+	}
+
+	public synchronized Set<String> getInventoryVisibleTabSet() {
+		if (inventoryVisibleTabSet == null) {
+			if (logon != null) {
+				inventoryVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleInventoryTabList());
+			}
+		}
+		return inventoryVisibleTabSet;
+	}
+
+	public synchronized Set<String> getStaffVisibleTabSet() {
+		if (staffVisibleTabSet == null) {
+			if (logon != null) {
+				staffVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleStaffTabList());
+			}
+		}
+		return staffVisibleTabSet;
+	}
+
+	public synchronized Set<String> getCourseVisibleTabSet() {
+		if (courseVisibleTabSet == null) {
+			if (logon != null) {
+				courseVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleCourseTabList());
+			}
+		}
+		return courseVisibleTabSet;
+	}
+
+	public synchronized Set<String> getTrialVisibleTabSet() {
+		if (trialVisibleTabSet == null) {
+			if (logon != null) {
+				trialVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleTrialTabList());
+			}
+		}
+		return trialVisibleTabSet;
+	}
+
+	public synchronized Set<String> getInputFieldVisibleTabSet() {
+		if (inputFieldVisibleTabSet == null) {
+			if (logon != null) {
+				inputFieldVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleInputFieldTabList());
+			}
+		}
+		return inputFieldVisibleTabSet;
+	}
+
+	public synchronized Set<String> getProbandVisibleTabSet() {
+		if (probandVisibleTabSet == null) {
+			if (logon != null) {
+				probandVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleProbandTabList());
+			}
+		}
+		return probandVisibleTabSet;
+	}
+
+	public synchronized Set<String> getMassMailVisibleTabSet() {
+		if (massMailVisibleTabSet == null) {
+			if (logon != null) {
+				massMailVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleMassMailTabList());
+			}
+		}
+		return massMailVisibleTabSet;
+	}
+
+	public synchronized Set<String> getUserVisibleTabSet() {
+		if (userVisibleTabSet == null) {
+			if (logon != null) {
+				userVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleUserTabList());
+			}
+		}
+		return userVisibleTabSet;
 	}
 }

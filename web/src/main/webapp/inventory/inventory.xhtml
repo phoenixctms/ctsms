@@ -19,6 +19,7 @@
 		<ui:define name="content">
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.inventoryTabTitles)}" />
+				<ui:param name="visibleTabSet" value="#{sessionScopeBean.inventoryVisibleTabSet}" />
 			</ui:include>		
 			<h:panelGrid
 				columns="1"
@@ -39,7 +40,7 @@
 					</p:tab>
 					<p:tab
 						id="inventorytags"
-						rendered="#{sessionScopeBean.isTabVisible('inventorytags')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventorytags')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_TAG_VALUE_COUNT'))}">
@@ -47,7 +48,7 @@
 					</p:tab>
 					<p:tab
 						id="inventorystatus"
-						rendered="#{sessionScopeBean.isTabVisible('inventorystatus')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventorystatus')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_STATUS_ENTRY_COUNT'))}">
@@ -55,7 +56,7 @@
 					</p:tab>
 					<p:tab
 						id="inventorymaintenance"
-						rendered="#{sessionScopeBean.isTabVisible('inventorymaintenance')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventorymaintenance')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT'))}">
@@ -63,7 +64,7 @@
 					</p:tab>
 					<p:tab
 						id="inventorybookings"
-						rendered="#{sessionScopeBean.isTabVisible('inventorybookings')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventorybookings')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_BOOKING_COUNT'))}">
@@ -71,7 +72,7 @@
 					</p:tab>
 					<p:tab
 						id="inventorybookingsummary"
-						rendered="#{sessionScopeBean.isTabVisible('inventorybookingsummary')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventorybookingsummary')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="tsms-tabtitle"
 						title="#{messages.inventory_booking_summary_tab_label}">
@@ -79,7 +80,7 @@
 					</p:tab>
 					<p:tab
 						id="inventoryhyperlinks"
-						rendered="#{sessionScopeBean.isTabVisible('inventoryhyperlinks')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventoryhyperlinks')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_HYPERLINK_COUNT'))}">
@@ -87,7 +88,7 @@
 					</p:tab>
 					<p:tab
 						id="inventoryfiles"
-						rendered="#{sessionScopeBean.isTabVisible('inventoryfiles')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventoryfiles')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_FILE_COUNT'))}">
@@ -95,7 +96,7 @@
 					</p:tab>
 					<p:tab
 						id="inventoryjournal"
-						rendered="#{sessionScopeBean.isTabVisible('inventoryjournal')}"
+						rendered="#{sessionScopeBean.inventoryVisibleTabSet.contains('inventoryjournal')}"
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_JOURNAL_ENTRY_COUNT'))}">
