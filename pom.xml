@@ -438,6 +438,14 @@
 					<groupId>org.sonarsource.scanner.maven</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>3.6.0.1398</version>
+					<executions>
+						<execution>
+							<phase>verify</phase>
+							<goals>
+								<goal>sonar</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -522,6 +530,12 @@
 		<module>web</module>
 	</modules>
 	<properties>
+	    <!-- SonarCloud properties -->
+		<sonar.sources>.</sonar.sources>
+		<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
+		<!-- <sonar.projectKey>phoenixctms_ctsms</sonar.projectKey> -->
+		<sonar.organization>phoenixctms</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<!-- SonarQube apparently has a problem with .xml files -->
 		<sonar.exclusions> **/*.xml</sonar.exclusions>
 		<andromda.version>3.4</andromda.version>
