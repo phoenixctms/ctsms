@@ -535,6 +535,7 @@
 		<sonar.organization>phoenixctms</sonar.organization>
 		<sonar.projectKey>phoenixctms_ctsms</sonar.projectKey>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
 		<!-- SonarQube apparently has a problem with .xml files -->
 		<sonar.exclusions> **/*.xml</sonar.exclusions>
 		<andromda.version>3.4</andromda.version>
