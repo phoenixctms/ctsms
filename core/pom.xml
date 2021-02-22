@@ -10,6 +10,11 @@
 	<artifactId>ctsms-core</artifactId>
 	<packaging>jar</packaging>
 	<name>Clinical Trial Site Management System Core Business Tier</name>
+	<properties>
+		<sonar.sources>.</sonar.sources>
+		<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
+		<sonar.projectKey>phoenixctms_ctsms_core</sonar.projectKey>		
+	</properties>	
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
