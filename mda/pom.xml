@@ -73,9 +73,9 @@
 		</plugins>
 	</build>
 	<properties>
-		<mda.sonar.moduleKey>phoenixctms_mda</mda.sonar.moduleKey>
-		<mda.sonar.sources>.</mda.sonar.sources>
-		<mda.sonar.inclusions>src/main/java/**,src/main/resources/**</mda.sonar.inclusions>	
+		<sonar.projectKey>phoenixctms_ctsms_mda</sonar.projectKey>
+		<!-- <sonar.sources>.</sonar.sources> -->
+		<!-- <sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions> -->	
 		<!-- Avoid JDK6 XJC runtime error on wdsl2java from conflicting Jaxb2.2 -->
 		<!-- Versioned independently from CXF core, only used for wsdl2java -->
 		<cxf.xjc.version>2.3.2</cxf.xjc.version>
