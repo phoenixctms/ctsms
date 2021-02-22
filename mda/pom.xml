@@ -13,6 +13,11 @@
 	<artifactId>ctsms-mda</artifactId>
 	<packaging>pom</packaging>
 	<name>Clinical Trial Site Management System MDA</name>
+	<properties>
+		<sonar.sources>.</sonar.sources>
+		<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
+		<sonar.projectKey>phoenixctms_ctsms_mda</sonar.projectKey>		
+	</properties>		
 	<dependencies>
 		<dependency>
 			<groupId>org.andromda.profiles.uml2</groupId>
