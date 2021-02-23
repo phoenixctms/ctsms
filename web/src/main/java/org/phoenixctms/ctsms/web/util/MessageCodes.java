@@ -540,6 +540,7 @@ public interface MessageCodes {
 	public final static String MAINTENANCE_ITEMS_TAB_TITLE = "maintenance_items_tab_title";
 	public final static String MAINTENANCE_ITEMS_TAB_TITLE_WITH_COUNT = "maintenance_items_tab_title_with_count";
 	public final static String INVENTORY_BOOKINGS_TAB_TITLE = "inventory_bookings_tab_title";
+	public final static String INVENTORY_BOOKING_SUMMARY_TAB_LABEL = "inventory_booking_summary_tab_label";
 	public final static String INVENTORY_BOOKINGS_TAB_TITLE_WITH_COUNT = "inventory_bookings_tab_title_with_count";
 	public final static String INVENTORY_HYPERLINKS_TAB_TITLE = "inventory_hyperlinks_tab_title";
 	public final static String INVENTORY_HYPERLINKS_TAB_TITLE_WITH_COUNT = "inventory_hyperlinks_tab_title_with_count";
@@ -563,6 +564,7 @@ public interface MessageCodes {
 	public static final String CV_POSITIONS_TAB_TITLE_WITH_COUNT = "cv_positions_tab_title_with_count";
 	public static final String COURSE_PARTICIPATION_STATUS_TAB_TITLE = "course_participation_status_tab_title";
 	public static final String COURSE_PARTICIPATION_STATUS_TAB_TITLE_WITH_COUNT = "course_participation_status_tab_title_with_count";
+	public static final String STAFF_ASSOCIATIONS_TAB_LABEL = "staff_associations_tab_label";
 	public final static String STAFF_HYPERLINKS_TAB_TITLE = "staff_hyperlinks_tab_title";
 	public final static String STAFF_HYPERLINKS_TAB_TITLE_WITH_COUNT = "staff_hyperlinks_tab_title_with_count";
 	public final static String STAFF_FILES_TAB_TITLE = "staff_files_tab_title";
@@ -602,14 +604,18 @@ public interface MessageCodes {
 	public final static String STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE = "stratification_randomization_lists_tab_title";
 	public final static String STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE_WITH_COUNT = "stratification_randomization_lists_tab_title_with_count";
 	public final static String INQUIRIES_TAB_TITLE = "inquiries_tab_title";
+	public final static String TRIAL_INQUIRY_VALUE_DUMMY_TAB_LABEL = "trial_inquiry_value_dummy_tab_label";
 	public final static String INQUIRIES_TAB_TITLE_WITH_COUNT = "inquiries_tab_title_with_count";
 	public final static String ECRFS_TAB_TITLE = "ecrfs_tab_title";
 	public final static String ECRFS_TAB_TITLE_WITH_COUNT = "ecrfs_tab_title_with_count";
 	public final static String ECRF_FIELDS_TAB_TITLE = "ecrf_fields_tab_title";
 	public final static String ECRF_FIELDS_TAB_TITLE_WITH_COUNT = "ecrf_fields_tab_title_with_count";
 	public final static String ECRF_FIELD_STATUS_TAB_TITLE = "ecrf_field_status_tab_title";
+	public final static String REIMBURSEMENTS_TAB_LABEL = "reimbursements_tab_label";
+	public final static String TRIAL_ASSOCIATIONS_TAB_LABEL = "trial_associations_tab_label";
 	public final static String ECRF_FIELD_STATUS_TAB_TITLE_WITH_COUNT = "ecrf_field_status_tab_title_with_count";
 	public final static String PROBAND_LIST_TAB_TITLE = "proband_list_tab_title";
+	public final static String TRIALECRFSTATUSENTRIES_TAB_LABEL = "trialecrfstatusentries_tab_label";
 	public final static String PROBAND_LIST_TAB_TITLE_WITH_COUNT = "proband_list_tab_title_with_count";
 	public final static String TRIAL_HYPERLINKS_TAB_TITLE = "trial_hyperlinks_tab_title";
 	public final static String TRIAL_HYPERLINKS_TAB_TITLE_WITH_COUNT = "trial_hyperlinks_tab_title_with_count";
@@ -646,6 +652,7 @@ public interface MessageCodes {
 	public final static String TRIAL_PARTICIPATIONS_TAB_TITLE = "trial_participations_tab_title";
 	public final static String TRIAL_PARTICIPATIONS_TAB_TITLE_WITH_COUNT = "trial_participations_tab_title_with_count";
 	public final static String PROBAND_VISIT_SCHEDULE_TAB_TITLE = "proband_visit_schedule_tab_title";
+	public final static String PROBANDECRFSTATUSENTRIES_TAB_LABEL = "proband_visit_schedule_tab_title";
 	public final static String PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT = "proband_visit_schedule_tab_title_with_count";
 	public final static String INQUIRY_VALUES_TAB_TITLE = "inquiry_values_tab_title";
 	public final static String INQUIRY_VALUES_TAB_TITLE_WITH_COUNT = "inquiry_values_tab_title_with_count";
@@ -664,11 +671,14 @@ public interface MessageCodes {
 	public final static String PASSWORD_TAB_TITLE = "password_tab_title";
 	public final static String PASSWORD_TAB_TITLE_WITH_COUNT = "password_tab_title_with_count";
 	public final static String USER_PERMISSION_PROFILES_TAB_TITLE = "user_permission_profiles_tab_title";
+	public final static String USER_ACTIVITY_TAB_LABEL = "user_activity_tab_label";
 	public final static String USER_PERMISSION_PROFILES_TAB_TITLE_WITH_COUNT = "user_permission_profiles_tab_title_with_count";
 	public final static String USER_JOURNAL_TAB_TITLE = "user_journal_tab_title";
 	public final static String USER_JOURNAL_TAB_TITLE_WITH_COUNT = "user_journal_tab_title_with_count";
 	public final static String SELECTION_SET_VALUES_TAB_TITLE = "selection_set_values_tab_title";
 	public final static String SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT = "selection_set_values_tab_title_with_count";
+	public final static String INPUT_FIELD_PREVIEW_TAB_LABEL = "input_field_preview_tab_label";
+	public final static String INPUT_FIELD_ASSOCIATIONS_TAB_LABEL = "input_field_associations_tab_label";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE = "input_field_journal_tab_title";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT = "input_field_journal_tab_title_with_count";
 	public final static String INPUT_FIELD_JOBS_TAB_TITLE = "input_field_jobs_tab_title";

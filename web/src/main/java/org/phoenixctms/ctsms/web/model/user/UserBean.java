@@ -63,13 +63,21 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setDecrypt(out.getDecrypt());
 			in.setDecryptUntrusted(out.getDecryptUntrusted());
 			in.setEnableInventoryModule(out.getEnableInventoryModule());
+			in.setVisibleInventoryTabList(out.getVisibleInventoryTabList());
 			in.setEnableStaffModule(out.getEnableStaffModule());
+			in.setVisibleStaffTabList(out.getVisibleStaffTabList());
 			in.setEnableCourseModule(out.getEnableCourseModule());
+			in.setVisibleCourseTabList(out.getVisibleCourseTabList());
 			in.setEnableTrialModule(out.getEnableTrialModule());
+			in.setVisibleTrialTabList(out.getVisibleTrialTabList());
 			in.setEnableInputFieldModule(out.getEnableInputFieldModule());
+			in.setVisibleInputFieldTabList(out.getVisibleInputFieldTabList());
 			in.setEnableProbandModule(out.getEnableProbandModule());
+			in.setVisibleProbandTabList(out.getVisibleProbandTabList());
 			in.setEnableMassMailModule(out.getEnableMassMailModule());
+			in.setVisibleMassMailTabList(out.getVisibleMassMailTabList());
 			in.setEnableUserModule(out.getEnableUserModule());
+			in.setVisibleUserTabList(out.getVisibleUserTabList());
 			in.setAuthMethod(methodVO == null ? null : methodVO.getMethod());
 			in.setName(out.getName());
 			in.setTimeZone(out.getTimeZone());
@@ -92,14 +100,23 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setDecryptUntrusted(Settings.getBoolean(SettingCodes.USER_DECRYPT_UNTRUSTED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_UNTRUSTED_PRESET));
 			in.setEnableInventoryModule(
 					Settings.getBoolean(SettingCodes.USER_ENABLE_INVENTORY_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_INVENTORY_MODULE_PRESET));
+			in.setVisibleInventoryTabList(Settings.getString(SettingCodes.VISIBLE_INVENTORY_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_INVENTORY_TAB_LIST_PRESET));
 			in.setEnableStaffModule(Settings.getBoolean(SettingCodes.USER_ENABLE_STAFF_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_STAFF_MODULE_PRESET));
+			in.setVisibleStaffTabList(Settings.getString(SettingCodes.VISIBLE_STAFF_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_STAFF_TAB_LIST_PRESET));
 			in.setEnableCourseModule(Settings.getBoolean(SettingCodes.USER_ENABLE_COURSE_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_COURSE_MODULE_PRESET));
+			in.setVisibleCourseTabList(Settings.getString(SettingCodes.VISIBLE_COURSE_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_COURSE_TAB_LIST_PRESET));
 			in.setEnableTrialModule(Settings.getBoolean(SettingCodes.USER_ENABLE_TRIAL_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_TRIAL_MODULE_PRESET));
+			in.setVisibleTrialTabList(Settings.getString(SettingCodes.VISIBLE_TRIAL_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_TRIAL_TAB_LIST_PRESET));
 			in.setEnableInputFieldModule(
 					Settings.getBoolean(SettingCodes.USER_ENABLE_INPUT_FIELD_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_INPUT_FIELD_MODULE_PRESET));
+			in.setVisibleInputFieldTabList(
+					Settings.getString(SettingCodes.VISIBLE_INPUT_FIELD_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_INPUT_FIELD_TAB_LIST_PRESET));
 			in.setEnableProbandModule(Settings.getBoolean(SettingCodes.USER_ENABLE_PROBAND_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_PROBAND_MODULE_PRESET));
+			in.setVisibleProbandTabList(Settings.getString(SettingCodes.VISIBLE_PROBAND_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_PROBAND_TAB_LIST_PRESET));
 			in.setEnableMassMailModule(Settings.getBoolean(SettingCodes.USER_ENABLE_MASS_MAIL_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_MASS_MAIL_MODULE_PRESET));
+			in.setVisibleMassMailTabList(Settings.getString(SettingCodes.VISIBLE_MASS_MAIL_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_MASS_MAIL_TAB_LIST_PRESET));
 			in.setEnableUserModule(Settings.getBoolean(SettingCodes.USER_ENABLE_USER_MODULE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_ENABLE_USER_MODULE_PRESET));
+			in.setVisibleUserTabList(Settings.getString(SettingCodes.VISIBLE_USER_TAB_LIST_PRESET, Bundle.SETTINGS, DefaultSettings.VISIBLE_USER_TAB_LIST_PRESET));
 			in.setAuthMethod(Settings.getAuthenticationType(SettingCodes.USER_AUTH_METHOD_PRESET, Bundle.SETTINGS, DefaultSettings.USER_AUTH_METHOD_PRESET));
 			in.setName(Messages.getString(MessageCodes.USER_NAME_PRESET));
 			in.setTimeZone(Settings.getString(SettingCodes.USER_TIME_ZONE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TIME_ZONE_PRESET));
@@ -750,5 +767,112 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	public String getOldDepartmentPasswordLabel() {
 		return Messages.getMessage(MessageCodes.USER_OLD_DEPARTMENT_PASSWORD_LABEL, out != null ? out.getDepartment().getName() : null);
+	}
+
+	public List<String> getInventoryVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleInventoryTabList() : null);
+	}
+
+	public void setInventoryVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleInventoryTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getStaffVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleStaffTabList() : null);
+	}
+
+	public void setStaffVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleStaffTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getCourseVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleCourseTabList() : null);
+	}
+
+	public void setCourseVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleCourseTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getTrialVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleTrialTabList() : null);
+	}
+
+	public void setTrialVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleTrialTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getInputFieldVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleInputFieldTabList() : null);
+	}
+
+	public void setInputFieldVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleInputFieldTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getProbandVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleProbandTabList() : null);
+	}
+
+	public void setProbandVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleProbandTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getMassMailVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleMassMailTabList() : null);
+	}
+
+	public void setMassMailVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleMassMailTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	public List<String> getUserVisibleTabList() {
+		return visibleTabListToList(in != null ? in.getVisibleUserTabList() : null);
+	}
+
+	public void setUserVisibleTabList(List<String> tabList) {
+		if (in != null) {
+			in.setVisibleUserTabList(visibleTabListToString(tabList));
+		}
+	}
+
+	private List<String> visibleTabListToList(String tabList) {
+		ArrayList<String> result = new ArrayList<String>();
+		if (tabList != null && tabList.length() > 0) {
+			String[] tabIds = WebUtil.TAB_ID_SEPARATOR_REGEXP.split(tabList, -1);
+			for (int i = 0; i < tabIds.length; i++) {
+				if (tabIds[i].trim().length() > 0) {
+					result.add(tabIds[i].trim());
+				}
+			}
+		}
+		return result;
+	}
+
+	private String visibleTabListToString(List<String> tabList) {
+		StringBuilder result = new StringBuilder();
+		if (tabList != null && tabList.size() > 0) {
+			Iterator<String> it = tabList.iterator();
+			while (it.hasNext()) {
+				if (result.length() > 0) {
+					result.append(WebUtil.TAB_ID_SEPARATOR_STRING);
+				}
+				result.append(it.next());
+			}
+		}
+		return result.toString();
 	}
 }

@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -20,6 +21,7 @@ import javax.el.ValueExpression;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import org.phoenixctms.ctsms.js.JsUtil;
@@ -588,6 +590,19 @@ public class ApplicationScopeBean {
 
 	public List<Map.Entry<?, ?>> mapToList(Map<?, ?> map) {
 		return (map != null ? new ArrayList<Map.Entry<?, ?>>(map.entrySet()) : null);
+	}
+
+	public List<SelectItem> mapToSelectItems(Map<?, ?> map) {
+		if (map != null) {
+			ArrayList<SelectItem> result = new ArrayList<SelectItem>();
+			Iterator<?> it = map.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<?, ?> item = (Entry<?, ?>) it.next();
+				result.add(new SelectItem(item.getKey(), (String) item.getValue()));
+			}
+			return result;
+		}
+		return null;
 	}
 
 	public String massMailToColor(MassMailOutVO massMail) {

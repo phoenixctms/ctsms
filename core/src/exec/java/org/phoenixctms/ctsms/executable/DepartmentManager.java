@@ -29,6 +29,9 @@ import org.phoenixctms.ctsms.security.PasswordPolicy;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.ExecDefaultSettings;
+import org.phoenixctms.ctsms.util.ExecSettingCodes;
+import org.phoenixctms.ctsms.util.ExecSettings;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -186,13 +189,24 @@ public class DepartmentManager {
 		newUser.setDecrypt(true);
 		newUser.setDecryptUntrusted(false);
 		newUser.setEnableInventoryModule(true);
+		newUser.setVisibleInventoryTabList(
+				ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_INVENTORY_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_INVENTORY_TAB_LIST_PRESET));
 		newUser.setEnableStaffModule(true);
+		newUser.setVisibleStaffTabList(ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_STAFF_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_STAFF_TAB_LIST_PRESET));
 		newUser.setEnableCourseModule(true);
+		newUser.setVisibleCourseTabList(ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_COURSE_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_COURSE_TAB_LIST_PRESET));
 		newUser.setEnableTrialModule(true);
+		newUser.setVisibleTrialTabList(ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_TRIAL_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_TRIAL_TAB_LIST_PRESET));
 		newUser.setEnableInputFieldModule(true);
+		newUser.setVisibleInputFieldTabList(
+				ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_INPUT_FIELD_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_INPUT_FIELD_TAB_LIST_PRESET));
 		newUser.setEnableProbandModule(true);
+		newUser.setVisibleProbandTabList(ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_PROBAND_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_PROBAND_TAB_LIST_PRESET));
 		newUser.setEnableMassMailModule(true);
+		newUser.setVisibleMassMailTabList(
+				ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_MASS_MAIL_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_MASS_MAIL_TAB_LIST_PRESET));
 		newUser.setEnableUserModule(true);
+		newUser.setVisibleUserTabList(ExecSettings.getString(ExecSettingCodes.USER_VISIBLE_USER_TAB_LIST_PRESET, ExecDefaultSettings.USER_VISIBLE_USER_TAB_LIST_PRESET));
 		newUser.setAuthMethod(AuthenticationType.LOCAL);
 		newUser.setDepartmentId(departmentId);
 		newUser.setName(name);

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>transpose tab indexes functions</title>
+</h:head>
+<h:body>
+	<ui:composition>
+ <script type="text/javascript">
+   var transposeIndexMap = [];
+   var reverseIndexMap = [];
+   var oldIndex = 0;
+   var newIndex = 0;
+   <c:forEach var="tabTitle" items="#{tabTitles}">
+   oldIndex++;
+   if (#{visibleTabSet.contains(tabTitle.key)}) {
+       newIndex++;
+       transposeIndexMap[newIndex] = oldIndex;
+       reverseIndexMap[oldIndex] = newIndex;
+   }
+   </c:forEach>
+   function transposeTabIndex(index) {
+   	return transposeIndexMap[index];
+   }
+   function reverseTabIndex(index) {
+   	return reverseIndexMap[index];
+   } 
+</script>
+	</ui:composition>
+</h:body>
+</html>

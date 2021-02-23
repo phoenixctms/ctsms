@@ -9,9 +9,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -931,6 +934,22 @@ public class SessionScopeBean implements FilterItemsStore {
 		filterMassMailTypes = null;
 		filterLocales = null;
 		policy = null;
+		inventoryTabTitleMap = null;
+		staffTabTitleMap = null;
+		courseTabTitleMap = null;
+		trialTabTitleMap = null;
+		inputFieldTabTitleMap = null;
+		probandTabTitleMap = null;
+		massMailTabTitleMap = null;
+		userTabTitleMap = null;
+		inventoryVisibleTabSet = null;
+		staffVisibleTabSet = null;
+		courseVisibleTabSet = null;
+		trialVisibleTabSet = null;
+		inputFieldVisibleTabSet = null;
+		probandVisibleTabSet = null;
+		massMailVisibleTabSet = null;
+		userVisibleTabSet = null;
 	}
 
 	public synchronized boolean isAuthenticationFailed() {
@@ -1365,5 +1384,242 @@ public class SessionScopeBean implements FilterItemsStore {
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), success);
 		}
+	}
+
+	private Map<String, String> inventoryTabTitleMap;
+	private Map<String, String> staffTabTitleMap;
+	private Map<String, String> courseTabTitleMap;
+	private Map<String, String> trialTabTitleMap;
+	private Map<String, String> inputFieldTabTitleMap;
+	private Map<String, String> probandTabTitleMap;
+	private Map<String, String> massMailTabTitleMap;
+	private Map<String, String> userTabTitleMap;
+	private Set<String> inventoryVisibleTabSet;
+	private Set<String> staffVisibleTabSet;
+	private Set<String> courseVisibleTabSet;
+	private Set<String> trialVisibleTabSet;
+	private Set<String> inputFieldVisibleTabSet;
+	private Set<String> probandVisibleTabSet;
+	private Set<String> massMailVisibleTabSet;
+	private Set<String> userVisibleTabSet;
+
+	public synchronized Map getInventoryTabTitles() {
+		if (inventoryTabTitleMap == null) {
+			inventoryTabTitleMap = new LinkedHashMap<String, String>();
+			inventoryTabTitleMap.put("inventorytags", Messages.getString(MessageCodes.INVENTORY_TAGS_TAB_TITLE));
+			inventoryTabTitleMap.put("inventorystatus", Messages.getString(MessageCodes.INVENTORY_STATUS_TAB_TITLE));
+			inventoryTabTitleMap.put("inventorymaintenance", Messages.getString(MessageCodes.MAINTENANCE_ITEMS_TAB_TITLE));
+			inventoryTabTitleMap.put("inventorybookings", Messages.getString(MessageCodes.INVENTORY_BOOKINGS_TAB_TITLE));
+			inventoryTabTitleMap.put("inventorybookingsummary", Messages.getString(MessageCodes.INVENTORY_BOOKING_SUMMARY_TAB_LABEL));
+			inventoryTabTitleMap.put("inventoryhyperlinks", Messages.getString(MessageCodes.INVENTORY_HYPERLINKS_TAB_TITLE));
+			inventoryTabTitleMap.put("inventoryjournal", Messages.getString(MessageCodes.INVENTORY_JOURNAL_TAB_TITLE));
+		}
+		return inventoryTabTitleMap;
+	}
+
+	public synchronized Map getStaffTabTitles() {
+		if (staffTabTitleMap == null) {
+			staffTabTitleMap = new LinkedHashMap<String, String>();
+			staffTabTitleMap.put("staffimage", Messages.getString(MessageCodes.STAFF_IMAGE_TAB_TITLE));
+			staffTabTitleMap.put("stafftags", Messages.getString(MessageCodes.STAFF_TAGS_TAB_TITLE));
+			staffTabTitleMap.put("staffcontactdetails", Messages.getString(MessageCodes.STAFF_CONTACT_DETAILS_TAB_TITLE));
+			staffTabTitleMap.put("staffaddresses", Messages.getString(MessageCodes.STAFF_ADDRESSES_TAB_TITLE));
+			staffTabTitleMap.put("staffstatus", Messages.getString(MessageCodes.STAFF_STATUS_TAB_TITLE));
+			staffTabTitleMap.put("staffdutyrosterturns", Messages.getString(MessageCodes.STAFF_STATUS_TAB_TITLE));
+			staffTabTitleMap.put("cvpositions", Messages.getString(MessageCodes.CV_POSITIONS_TAB_TITLE));
+			staffTabTitleMap.put("courseparticipationstatus", Messages.getString(MessageCodes.COURSE_PARTICIPATION_STATUS_TAB_TITLE));
+			staffTabTitleMap.put("staffassociations", Messages.getString(MessageCodes.STAFF_ASSOCIATIONS_TAB_LABEL));
+			staffTabTitleMap.put("staffhyperlinks", Messages.getString(MessageCodes.STAFF_HYPERLINKS_TAB_TITLE));
+			staffTabTitleMap.put("stafffiles", Messages.getString(MessageCodes.STAFF_FILES_TAB_TITLE));
+			staffTabTitleMap.put("staffjournal", Messages.getString(MessageCodes.STAFF_JOURNAL_TAB_TITLE));
+		}
+		return staffTabTitleMap;
+	}
+
+	public synchronized Map getCourseTabTitles() {
+		if (courseTabTitleMap == null) {
+			courseTabTitleMap = new LinkedHashMap<String, String>();
+			courseTabTitleMap.put("lecturers", Messages.getString(MessageCodes.LECTURERS_TAB_TITLE));
+			courseTabTitleMap.put("courseinventorybookings", Messages.getString(MessageCodes.COURSE_INVENTORY_BOOKINGS_TAB_TITLE));
+			courseTabTitleMap.put("admincourseparticipationstatus", Messages.getString(MessageCodes.COURSE_INVENTORY_BOOKINGS_TAB_TITLE));
+			courseTabTitleMap.put("coursehyperlinks", Messages.getString(MessageCodes.COURSE_HYPERLINKS_TAB_TITLE));
+			courseTabTitleMap.put("coursefiles", Messages.getString(MessageCodes.COURSE_FILES_TAB_TITLE));
+			courseTabTitleMap.put("coursejournal", Messages.getString(MessageCodes.COURSE_JOURNAL_TAB_TITLE));
+		}
+		return courseTabTitleMap;
+	}
+
+	public synchronized Map getTrialTabTitles() {
+		if (trialTabTitleMap == null) {
+			trialTabTitleMap = new LinkedHashMap<String, String>();
+			trialTabTitleMap.put("trialtags", Messages.getString(MessageCodes.TRIAL_TAGS_TAB_TITLE));
+			trialTabTitleMap.put("teammembers", Messages.getString(MessageCodes.TEAM_MEMBERS_TAB_TITLE));
+			trialTabTitleMap.put("timelineevents", Messages.getString(MessageCodes.TIMELINE_EVENTS_TAB_TITLE));
+			trialTabTitleMap.put("trialinventorybookings", Messages.getString(MessageCodes.TRIAL_INVENTORY_BOOKINGS_TAB_TITLE));
+			trialTabTitleMap.put("visits", Messages.getString(MessageCodes.VISITS_TAB_TITLE));
+			trialTabTitleMap.put("probandgroups", Messages.getString(MessageCodes.PROBAND_GROUPS_TAB_TITLE));
+			trialTabTitleMap.put("visitschedule", Messages.getString(MessageCodes.VISIT_SCHEDULE_TAB_TITLE));
+			trialTabTitleMap.put("trialdutyrosterturns", Messages.getString(MessageCodes.TRIAL_DUTY_ROSTER_TURNS_TAB_TITLE));
+			trialTabTitleMap.put("probandlistentrytags", Messages.getString(MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE));
+			trialTabTitleMap.put("randomizationlists", Messages.getString(MessageCodes.STRATIFICATION_RANDOMIZATION_LISTS_TAB_TITLE));
+			trialTabTitleMap.put("inquiries", Messages.getString(MessageCodes.INQUIRIES_TAB_TITLE));
+			trialTabTitleMap.put("inquiryvaluesdummy", Messages.getString(MessageCodes.TRIAL_INQUIRY_VALUE_DUMMY_TAB_LABEL));
+			trialTabTitleMap.put("ecrfs", Messages.getString(MessageCodes.ECRFS_TAB_TITLE));
+			trialTabTitleMap.put("ecrffields", Messages.getString(MessageCodes.ECRF_FIELDS_TAB_TITLE));
+			trialTabTitleMap.put("probandlistentries", Messages.getString(MessageCodes.PROBAND_LIST_TAB_TITLE));
+			trialTabTitleMap.put("trialecrfstatusentries", Messages.getString(MessageCodes.TRIALECRFSTATUSENTRIES_TAB_LABEL));
+			trialTabTitleMap.put("trialecrffieldstatusentries", Messages.getString(MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE));
+			trialTabTitleMap.put("reimbursements", Messages.getString(MessageCodes.REIMBURSEMENTS_TAB_LABEL));
+			trialTabTitleMap.put("trialassociations", Messages.getString(MessageCodes.TRIAL_ASSOCIATIONS_TAB_LABEL));
+			trialTabTitleMap.put("trialhyperlinks", Messages.getString(MessageCodes.TRIAL_HYPERLINKS_TAB_TITLE));
+			trialTabTitleMap.put("trialjobs", Messages.getString(MessageCodes.TRIAL_JOBS_TAB_TITLE));
+			trialTabTitleMap.put("trialfiles", Messages.getString(MessageCodes.TRIAL_FILES_TAB_TITLE));
+			trialTabTitleMap.put("trialjournal", Messages.getString(MessageCodes.TRIAL_JOURNAL_TAB_TITLE));
+		}
+		return trialTabTitleMap;
+	}
+
+	public synchronized Map getInputFieldTabTitles() {
+		if (inputFieldTabTitleMap == null) {
+			inputFieldTabTitleMap = new LinkedHashMap<String, String>();
+			inputFieldTabTitleMap.put("inputfieldselectionsetvalue", Messages.getString(MessageCodes.SELECTION_SET_VALUES_TAB_TITLE));
+			inputFieldTabTitleMap.put("inputfielddummy", Messages.getString(MessageCodes.INPUT_FIELD_PREVIEW_TAB_LABEL));
+			inputFieldTabTitleMap.put("inputfieldassociations", Messages.getString(MessageCodes.INPUT_FIELD_ASSOCIATIONS_TAB_LABEL));
+			inputFieldTabTitleMap.put("inputfieldjobs", Messages.getString(MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE));
+			inputFieldTabTitleMap.put("inputfieldjournal", Messages.getString(MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE));
+		}
+		return inputFieldTabTitleMap;
+	}
+
+	public synchronized Map getProbandTabTitles() {
+		if (probandTabTitleMap == null) {
+			probandTabTitleMap = new LinkedHashMap<String, String>();
+			probandTabTitleMap.put("probandimage", Messages.getString(MessageCodes.PROBAND_IMAGE_TAB_TITLE));
+			probandTabTitleMap.put("probandtags", Messages.getString(MessageCodes.PROBAND_TAGS_TAB_TITLE));
+			probandTabTitleMap.put("probandcontactdetails", Messages.getString(MessageCodes.PROBAND_CONTACT_DETAILS_TAB_TITLE));
+			probandTabTitleMap.put("probandrecipients", Messages.getString(MessageCodes.PROBAND_RECIPIENTS_TAB_TITLE));
+			probandTabTitleMap.put("probandaddresses", Messages.getString(MessageCodes.PROBAND_ADDRESSES_TAB_TITLE));
+			probandTabTitleMap.put("probandstatus", Messages.getString(MessageCodes.PROBAND_STATUS_TAB_TITLE));
+			probandTabTitleMap.put("probandinventorybookings", Messages.getString(MessageCodes.PROBAND_INVENTORY_BOOKINGS_TAB_TITLE));
+			probandTabTitleMap.put("diagnoses", Messages.getString(MessageCodes.DIAGNOSES_TAB_TITLE));
+			probandTabTitleMap.put("procedures", Messages.getString(MessageCodes.PROCEDURES_TAB_TITLE));
+			probandTabTitleMap.put("medications", Messages.getString(MessageCodes.MEDICATIONS_TAB_TITLE));
+			probandTabTitleMap.put("inquiryvalues", Messages.getString(MessageCodes.INQUIRY_VALUES_TAB_TITLE));
+			probandTabTitleMap.put("trialparticipations", Messages.getString(MessageCodes.TRIAL_PARTICIPATIONS_TAB_TITLE));
+			probandTabTitleMap.put("probandvisitschedule", Messages.getString(MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE));
+			probandTabTitleMap.put("probandecrfstatusentries", Messages.getString(MessageCodes.PROBANDECRFSTATUSENTRIES_TAB_LABEL));
+			probandTabTitleMap.put("bankaccounts", Messages.getString(MessageCodes.BANK_ACCOUNTS_TAB_TITLE));
+			probandTabTitleMap.put("moneytransfers", Messages.getString(MessageCodes.MONEY_TRANSFERS_TAB_TITLE));
+			probandTabTitleMap.put("probandjobs", Messages.getString(MessageCodes.PROBAND_JOBS_TAB_TITLE));
+			probandTabTitleMap.put("probandfiles", Messages.getString(MessageCodes.PROBAND_FILES_TAB_TITLE));
+			probandTabTitleMap.put("probandjournal", Messages.getString(MessageCodes.PROBAND_JOURNAL_TAB_TITLE));
+		}
+		return probandTabTitleMap;
+	}
+
+	public synchronized Map getMassMailTabTitles() {
+		if (massMailTabTitleMap == null) {
+			massMailTabTitleMap = new LinkedHashMap<String, String>();
+			massMailTabTitleMap.put("massmailrecipients", Messages.getString(MessageCodes.MASS_MAIL_RECIPIENTS_TAB_TITLE));
+			massMailTabTitleMap.put("massmailfiles", Messages.getString(MessageCodes.MASS_MAIL_FILES_TAB_TITLE));
+			massMailTabTitleMap.put("massmailjournal", Messages.getString(MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE));
+		}
+		return massMailTabTitleMap;
+	}
+
+	public synchronized Map getUserTabTitles() {
+		if (userTabTitleMap == null) {
+			userTabTitleMap = new LinkedHashMap<String, String>();
+			userTabTitleMap.put("setpassword", Messages.getString(MessageCodes.PASSWORD_TAB_TITLE));
+			userTabTitleMap.put("setpermissions", Messages.getString(MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE));
+			userTabTitleMap.put("useractivity", Messages.getString(MessageCodes.USER_ACTIVITY_TAB_LABEL));
+			userTabTitleMap.put("userjournal", Messages.getString(MessageCodes.USER_JOURNAL_TAB_TITLE));
+		}
+		return userTabTitleMap;
+	}
+
+	private HashSet<String> getVisibleTabSet(String tabList) {
+		HashSet<String> result = new HashSet<String>();
+		if (tabList != null && tabList.length() > 0) {
+			String[] tabIds = WebUtil.TAB_ID_SEPARATOR_REGEXP.split(tabList, -1);
+			for (int i = 0; i < tabIds.length; i++) {
+				if (tabIds[i].trim().length() > 0) {
+					result.add(tabIds[i].trim());
+				}
+			}
+		}
+		return result;
+	}
+
+	public synchronized Set<String> getInventoryVisibleTabSet() {
+		if (inventoryVisibleTabSet == null) {
+			if (logon != null) {
+				inventoryVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleInventoryTabList());
+			}
+		}
+		return inventoryVisibleTabSet;
+	}
+
+	public synchronized Set<String> getStaffVisibleTabSet() {
+		if (staffVisibleTabSet == null) {
+			if (logon != null) {
+				staffVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleStaffTabList());
+			}
+		}
+		return staffVisibleTabSet;
+	}
+
+	public synchronized Set<String> getCourseVisibleTabSet() {
+		if (courseVisibleTabSet == null) {
+			if (logon != null) {
+				courseVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleCourseTabList());
+			}
+		}
+		return courseVisibleTabSet;
+	}
+
+	public synchronized Set<String> getTrialVisibleTabSet() {
+		if (trialVisibleTabSet == null) {
+			if (logon != null) {
+				trialVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleTrialTabList());
+			}
+		}
+		return trialVisibleTabSet;
+	}
+
+	public synchronized Set<String> getInputFieldVisibleTabSet() {
+		if (inputFieldVisibleTabSet == null) {
+			if (logon != null) {
+				inputFieldVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleInputFieldTabList());
+			}
+		}
+		return inputFieldVisibleTabSet;
+	}
+
+	public synchronized Set<String> getProbandVisibleTabSet() {
+		if (probandVisibleTabSet == null) {
+			if (logon != null) {
+				probandVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleProbandTabList());
+			}
+		}
+		return probandVisibleTabSet;
+	}
+
+	public synchronized Set<String> getMassMailVisibleTabSet() {
+		if (massMailVisibleTabSet == null) {
+			if (logon != null) {
+				massMailVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleMassMailTabList());
+			}
+		}
+		return massMailVisibleTabSet;
+	}
+
+	public synchronized Set<String> getUserVisibleTabSet() {
+		if (userVisibleTabSet == null) {
+			if (logon != null) {
+				userVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleUserTabList());
+			}
+		}
+		return userVisibleTabSet;
 	}
 }

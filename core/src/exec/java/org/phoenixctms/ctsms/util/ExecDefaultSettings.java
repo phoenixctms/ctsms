@@ -20,6 +20,14 @@ public class ExecDefaultSettings {
 	public static final VariablePeriod EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OFFSET_PERIOD = VariablePeriod.EXPLICIT;
 	public static final long EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OFFSET_PERIOD_DAYS = 0l;
 	public static final RangePeriod EXPORT_VISIT_SCHEDULE_APPOINTMENTS_RANGE_PERIOD = RangePeriod.DAY;
+	public static final String USER_VISIBLE_INVENTORY_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_STAFF_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_COURSE_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_TRIAL_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_INPUT_FIELD_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_PROBAND_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_MASS_MAIL_TAB_LIST_PRESET = null;
+	public static final String USER_VISIBLE_USER_TAB_LIST_PRESET = null;
 
 	private ExecDefaultSettings() {
 	}

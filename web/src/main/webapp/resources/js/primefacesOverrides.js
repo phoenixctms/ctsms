@@ -520,12 +520,12 @@ PrimeFaces.widget.InputText.prototype.disable = function() {
 }
 
 PrimeFaces.widget.TabView.prototype.setTabTitle = function(index, title) {
-  if (index >= 0 && index < this.getLength()) {
+  if (index != null && index >= 0 && index < this.getLength()) {
     this.navContainer.children()[index].firstChild.firstChild.nodeValue = title;
   }
 }
 PrimeFaces.widget.TabView.prototype.emphasizeTab = function(index, emphasize) {
-  if (index >= 0 && index < this.getLength()) {
+  if (index != null && index >= 0 && index < this.getLength()) {
     var tabTitle = this.navContainer.children()[index];
     tabTitle.className = tabTitle.className.replace(/(?:^|\s)ctsms-tabtitle-emphasized(?!\S)/g, '');
     tabTitle.className = tabTitle.className.replace(/(?:^|\s)ctsms-tabtitle(?!\S)/g, '');
@@ -540,7 +540,7 @@ PrimeFaces.widget.TabView.prototype.emphasizeTab = function(index, emphasize) {
 }
 
 PrimeFaces.widget.TabView.prototype.getTabTitle = function(index) {
-  if (index >= 0 && index < this.getLength()) {
+  if (index != null && index >= 0 && index < this.getLength()) {
     return this.navContainer.children()[index].firstChild.firstChild.nodeValue;
   } else {
     return '';

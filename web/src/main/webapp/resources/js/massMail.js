@@ -61,22 +61,22 @@ function handleMassMailChanged(xhr, status, args) {
 function handleUpdateMassMailTabTitles(xhr, status, args) {
 
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
-		massMailTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
+		massMailTabView.emphasizeTab(reverseTabIndex(0), _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 
 	if (_testPropertyExists(args, AJAX_MASS_MAIL_RECIPIENT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MASS_MAIL_RECIPIENT_COUNT)) {
-		massMailTabView.setTabTitle(1, decodeBase64(args[AJAX_MASS_MAIL_RECIPIENT_TAB_TITLE_BASE64]));
-		massMailTabView.emphasizeTab(1, args[AJAX_MASS_MAIL_RECIPIENT_COUNT] == 0);
+		massMailTabView.setTabTitle(reverseTabIndex(1), decodeBase64(args[AJAX_MASS_MAIL_RECIPIENT_TAB_TITLE_BASE64]));
+		massMailTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_MASS_MAIL_RECIPIENT_COUNT] == 0);
 	}
 	
 	if (_testPropertyExists(args, AJAX_MASS_MAIL_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MASS_MAIL_FILE_COUNT)) {
-		massMailTabView.setTabTitle(2, decodeBase64(args[AJAX_MASS_MAIL_FILE_TAB_TITLE_BASE64]));
-		massMailTabView.emphasizeTab(2, args[AJAX_MASS_MAIL_FILE_COUNT] == 0);
+		massMailTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_MASS_MAIL_FILE_TAB_TITLE_BASE64]));
+		massMailTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_MASS_MAIL_FILE_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT)) {
-		massMailTabView.setTabTitle(3, decodeBase64(args[AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64]));
-		massMailTabView.emphasizeTab(3, args[AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT] == 0);
+		massMailTabView.setTabTitle(reverseTabIndex(3), decodeBase64(args[AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64]));
+		massMailTabView.emphasizeTab(reverseTabIndex(3), args[AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

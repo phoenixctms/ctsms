@@ -100,6 +100,8 @@ public final class WebUtil {
 	public static final String MENU_BOLD_STYLECLASS = "ctsms-menu-bold";
 	public final static String ID_SEPARATOR_STRING = ",";
 	public final static Pattern ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(ID_SEPARATOR_STRING));
+	public final static String TAB_ID_SEPARATOR_STRING = ",";
+	public final static Pattern TAB_ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(TAB_ID_SEPARATOR_STRING));
 	public final static int FACES_INITIAL_ROW_INDEX = 0;
 	private final static String REFERER_HEADER_NAME = "Referer";
 	public final static String EVENT_CONTEXT_VIEW_ID = "viewId";

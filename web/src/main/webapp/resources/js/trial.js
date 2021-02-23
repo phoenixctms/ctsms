@@ -209,86 +209,86 @@ function handleUpdateProbandListTabTitles(xhr, status, args) {
 function handleUpdateTrialTabTitles(xhr, status, args) {
 
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
-		trialTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
+		trialTabView.emphasizeTab(reverseTabIndex(0), _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 
 	if (_testPropertyExists(args, AJAX_TRIAL_TAG_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_TAG_VALUE_COUNT)) {
-		trialTabView.setTabTitle(1, decodeBase64(args[AJAX_TRIAL_TAG_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(1, args[AJAX_TRIAL_TAG_VALUE_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(1), decodeBase64(args[AJAX_TRIAL_TAG_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_TRIAL_TAG_VALUE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TEAM_MEMBER_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TEAM_MEMBER_COUNT)) {
-		trialTabView.setTabTitle(2, decodeBase64(args[AJAX_TEAM_MEMBER_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(2, args[AJAX_TEAM_MEMBER_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_TEAM_MEMBER_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_TEAM_MEMBER_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TIMELINE_EVENT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TIMELINE_EVENT_COUNT)) {
-		trialTabView.setTabTitle(3, decodeBase64(args[AJAX_TIMELINE_EVENT_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(3, args[AJAX_TIMELINE_EVENT_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(3), decodeBase64(args[AJAX_TIMELINE_EVENT_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(3), args[AJAX_TIMELINE_EVENT_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_INVENTORY_BOOKING_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_INVENTORY_BOOKING_COUNT)) {
-		trialTabView.setTabTitle(4, decodeBase64(args[AJAX_TRIAL_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(4, args[AJAX_TRIAL_INVENTORY_BOOKING_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_TRIAL_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_TRIAL_INVENTORY_BOOKING_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_VISIT_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_VISIT_COUNT)) {
-		trialTabView.setTabTitle(5, decodeBase64(args[AJAX_VISIT_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(5, args[AJAX_VISIT_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(5), decodeBase64(args[AJAX_VISIT_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(5), args[AJAX_VISIT_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_GROUP_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_GROUP_COUNT)) {
-		trialTabView.setTabTitle(6, decodeBase64(args[AJAX_PROBAND_GROUP_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(6, args[AJAX_PROBAND_GROUP_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(6), decodeBase64(args[AJAX_PROBAND_GROUP_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(6), args[AJAX_PROBAND_GROUP_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_VISIT_SCHEDULE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_VISIT_SCHEDULE_ITEM_COUNT)) {
-		trialTabView.setTabTitle(7, decodeBase64(args[AJAX_VISIT_SCHEDULE_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(7, args[AJAX_VISIT_SCHEDULE_ITEM_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(7), decodeBase64(args[AJAX_VISIT_SCHEDULE_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(7), args[AJAX_VISIT_SCHEDULE_ITEM_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_DUTY_ROSTER_TURN_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT)) {
-		trialTabView.setTabTitle(8, decodeBase64(args[AJAX_TRIAL_DUTY_ROSTER_TURN_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(8, args[AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(8), decodeBase64(args[AJAX_TRIAL_DUTY_ROSTER_TURN_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(8), args[AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_LIST_ENTRY_TAG_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_LIST_ENTRY_TAG_COUNT)) {
-		trialTabView.setTabTitle(9, decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAG_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(9, args[AJAX_PROBAND_LIST_ENTRY_TAG_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(9), decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAG_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(9), args[AJAX_PROBAND_LIST_ENTRY_TAG_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT)) {
-		trialTabView.setTabTitle(10, decodeBase64(args[AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(10, args[AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(10), decodeBase64(args[AJAX_STRATIFICATION_RANDOMIZATION_LIST_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(10), args[AJAX_STRATIFICATION_RANDOMIZATION_LIST_COUNT] == 0);
 	}	
 	if (_testPropertyExists(args, AJAX_INQUIRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INQUIRY_COUNT)) {
-		trialTabView.setTabTitle(11, decodeBase64(args[AJAX_INQUIRY_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(11, args[AJAX_INQUIRY_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(11), decodeBase64(args[AJAX_INQUIRY_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(11), args[AJAX_INQUIRY_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_ECRF_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ECRF_COUNT)) {
-		trialTabView.setTabTitle(13, decodeBase64(args[AJAX_ECRF_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(13, args[AJAX_ECRF_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(13), decodeBase64(args[AJAX_ECRF_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(13), args[AJAX_ECRF_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_ECRF_FIELD_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ECRF_FIELD_COUNT)) {
-		trialTabView.setTabTitle(14, decodeBase64(args[AJAX_ECRF_FIELD_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(14, args[AJAX_ECRF_FIELD_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(14), decodeBase64(args[AJAX_ECRF_FIELD_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(14), args[AJAX_ECRF_FIELD_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_PROBAND_LIST_ENTRY_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_PROBAND_LIST_ENTRY_COUNT)) {
-		trialTabView.setTabTitle(15, decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(15, args[AJAX_PROBAND_LIST_ENTRY_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(15), decodeBase64(args[AJAX_PROBAND_LIST_ENTRY_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(15), args[AJAX_PROBAND_LIST_ENTRY_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_ECRF_FIELD_STATUS_COUNT)) {
-		trialTabView.setTabTitle(17, decodeBase64(args[AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(17, args[AJAX_ECRF_FIELD_STATUS_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(17), decodeBase64(args[AJAX_ECRF_FIELD_STATUS_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(17), args[AJAX_ECRF_FIELD_STATUS_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_HYPERLINK_COUNT)) {
-		trialTabView.setTabTitle(20, decodeBase64(args[AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(20, args[AJAX_TRIAL_HYPERLINK_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(20), decodeBase64(args[AJAX_TRIAL_HYPERLINK_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(20), args[AJAX_TRIAL_HYPERLINK_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_JOB_COUNT)) {
-		trialTabView.setTabTitle(21, decodeBase64(args[AJAX_TRIAL_JOB_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(21, args[AJAX_TRIAL_JOB_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(21), decodeBase64(args[AJAX_TRIAL_JOB_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(21), args[AJAX_TRIAL_JOB_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_FILE_COUNT)) {
-		trialTabView.setTabTitle(22, decodeBase64(args[AJAX_TRIAL_FILE_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(22, args[AJAX_TRIAL_FILE_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(22), decodeBase64(args[AJAX_TRIAL_FILE_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(22), args[AJAX_TRIAL_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_TRIAL_JOURNAL_ENTRY_COUNT)) {
-		trialTabView.setTabTitle(23, decodeBase64(args[AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64]));
-		trialTabView.emphasizeTab(23, args[AJAX_TRIAL_JOURNAL_ENTRY_COUNT] == 0);
+		trialTabView.setTabTitle(reverseTabIndex(23), decodeBase64(args[AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64]));
+		trialTabView.emphasizeTab(reverseTabIndex(23), args[AJAX_TRIAL_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

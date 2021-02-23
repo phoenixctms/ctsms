@@ -93,37 +93,37 @@ function handleInventoryChanged(xhr, status, args) {
 
 function handleUpdateInventoryTabTitles(xhr, status, args) {
 	if (_testPropertyExists(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_ROOT_ENTITY_CREATED)) {
-		inventoryTabView.emphasizeTab(0, _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
+		inventoryTabView.emphasizeTab(reverseTabIndex(0), _testFlag(args, AJAX_OPERATION_SUCCESS) && !args[AJAX_ROOT_ENTITY_CREATED]);
 	}
 	if (_testPropertyExists(args, AJAX_INVENTORY_TAG_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_TAG_VALUE_COUNT)) {
-		inventoryTabView.setTabTitle(1, decodeBase64(args[AJAX_INVENTORY_TAG_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(1, args[AJAX_INVENTORY_TAG_VALUE_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(1), decodeBase64(args[AJAX_INVENTORY_TAG_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(1), args[AJAX_INVENTORY_TAG_VALUE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_INVENTORY_STATUS_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_STATUS_ENTRY_COUNT)) {
-		inventoryTabView.setTabTitle(2, decodeBase64(args[AJAX_INVENTORY_STATUS_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(2, args[AJAX_INVENTORY_STATUS_ENTRY_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(2), decodeBase64(args[AJAX_INVENTORY_STATUS_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(2), args[AJAX_INVENTORY_STATUS_ENTRY_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_INVENTORY_MAINTENANCE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT)) {
-		inventoryTabView.setTabTitle(3, decodeBase64(args[AJAX_INVENTORY_MAINTENANCE_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(3, args[AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(3), decodeBase64(args[AJAX_INVENTORY_MAINTENANCE_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(3), args[AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_INVENTORY_BOOKING_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_BOOKING_COUNT)) {
-		inventoryTabView.setTabTitle(4, decodeBase64(args[AJAX_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(4, args[AJAX_INVENTORY_BOOKING_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(4), decodeBase64(args[AJAX_INVENTORY_BOOKING_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(4), args[AJAX_INVENTORY_BOOKING_COUNT] == 0);
 	}
 
 	if (_testPropertyExists(args, AJAX_INVENTORY_HYPERLINK_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_HYPERLINK_COUNT)) {
-		inventoryTabView.setTabTitle(6, decodeBase64(args[AJAX_INVENTORY_HYPERLINK_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(6, args[AJAX_INVENTORY_HYPERLINK_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(6), decodeBase64(args[AJAX_INVENTORY_HYPERLINK_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(6), args[AJAX_INVENTORY_HYPERLINK_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_INVENTORY_FILE_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_FILE_COUNT)) {
-		inventoryTabView.setTabTitle(7, decodeBase64(args[AJAX_INVENTORY_FILE_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(7, args[AJAX_INVENTORY_FILE_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(7), decodeBase64(args[AJAX_INVENTORY_FILE_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(7), args[AJAX_INVENTORY_FILE_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_INVENTORY_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_INVENTORY_JOURNAL_ENTRY_COUNT)) {
-		inventoryTabView.setTabTitle(8, decodeBase64(args[AJAX_INVENTORY_JOURNAL_TAB_TITLE_BASE64]));
-		inventoryTabView.emphasizeTab(8, args[AJAX_INVENTORY_JOURNAL_ENTRY_COUNT] == 0);
+		inventoryTabView.setTabTitle(reverseTabIndex(8), decodeBase64(args[AJAX_INVENTORY_JOURNAL_TAB_TITLE_BASE64]));
+		inventoryTabView.emphasizeTab(reverseTabIndex(8), args[AJAX_INVENTORY_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }
