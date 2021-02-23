@@ -1522,6 +1522,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						case MASS_MAIL_JOURNAL:
 							return DBModule.MASS_MAIL_DB;
 						case CRITERIA_JOURNAL:
+						default:
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 									permission.getParameterGetter(), journalModule == null ? null : L10nUtil.getJournalModuleName(Locales.USER, journalModule.name()));
 					}

@@ -2191,6 +2191,7 @@ function BasicView(element, calendar, viewName) {
 	var dayColFormat;
 	var showWeekNumbers;
 	var weekNumberOnClick;
+	var dateOnClick;
 	var weekNumberTitle;
 	var weekNumberFormat;
 

@@ -1492,7 +1492,7 @@ PrimeFaces.widget.AutoComplete.prototype.setValue = function(value) {
   _self.hinput.val(value);
   if (_self.cfg.forceSelection) {
 
-    valid = false;
+    var valid = false;
 
     for ( var i = 0; i < _self.cachedResults.length; i++) {
       if (_self.cachedResults[i] == value) {

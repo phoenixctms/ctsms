@@ -577,7 +577,7 @@ public class UserServiceImpl
 			messageParameters.put(NotificationMessageTemplateParameters.NEW_USER, originalUser == null || passwordCount == 0);
 			messageParameters.put(NotificationMessageTemplateParameters.LOCAL_AUTH_METHOD, AuthenticationType.LOCAL.equals(user.getAuthMethod()));
 			messageParameters.put(NotificationMessageTemplateParameters.LDAP_AUTH_METHOD,
-					AuthenticationType.LDAP1.equals(user.getAuthMethod()) | AuthenticationType.LDAP2.equals(user.getAuthMethod()));
+					AuthenticationType.LDAP1.equals(user.getAuthMethod()) || AuthenticationType.LDAP2.equals(user.getAuthMethod()));
 			this.getNotificationDao().addNotification(user, now, messageParameters);
 		} else {
 			ServiceUtil.cancelNotifications(user.getNotifications(), this.getNotificationDao(), org.phoenixctms.ctsms.enumeration.NotificationType.USER_ACCOUNT);
