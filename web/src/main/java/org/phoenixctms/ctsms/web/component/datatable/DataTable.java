@@ -22,20 +22,20 @@ import org.primefaces.component.subtable.SubTable;
  */
 public class DataTable extends org.primefaces.component.datatable.DataTable {
 
-	private ArrayList<Column> columns;
+	private ArrayList<Column> visibleColumns;
 
 	public List<Column> getColumns() {
-		if (columns == null) {
-			columns = new ArrayList<Column>();
+		if (visibleColumns == null) {
+			visibleColumns = new ArrayList<Column>();
 			for (UIComponent child : this.getChildren()) {
 				if (child.isRendered()
 						&& child instanceof Column
 						&& ColumnManagementBean.isVisible((Column) child)) {
-					columns.add((Column) child);
+					visibleColumns.add((Column) child);
 				}
 			}
 		}
-		return columns;
+		return visibleColumns;
 	}
 
 	public List<Column> getAllColumns() {

@@ -193,6 +193,7 @@ public class JournalBean extends ManagedBeanBase {
 				case INPUT_FIELD_JOURNAL:
 					WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT,
 							MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT, new Long(journalEntryModel.getRowCount()));
+					break;
 				case MASS_MAIL_JOURNAL:
 					WebUtil.appendRequestContextCallbackTabTitleArgs(null, JSValues.AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT,
 							MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE, MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT, new Long(journalEntryModel.getRowCount()));

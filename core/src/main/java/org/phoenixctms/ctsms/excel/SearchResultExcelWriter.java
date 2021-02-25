@@ -395,6 +395,7 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 				case MASS_MAIL_DB:
 					templateSpreadSheetName = Settings.getString(SearchResultExcelSettingCodes.MASS_MAIL_SPREADSHEET_NAME, Bundle.SEARCH_RESULT_EXCEL,
 							SearchResultExcelDefaultSettings.MASS_MAIL_SPREADSHEET_NAME);
+					break;
 				default:
 			}
 		}

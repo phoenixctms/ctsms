@@ -624,10 +624,6 @@ public class ApplicationScopeBean {
 		return WebUtil.quoteJSString(string, true);
 	}
 
-	public String quoteJSString(String value, boolean quotes) {
-		return WebUtil.quoteJSString(value, true);
-	}
-
 	public String repeatString(String string, String separator, int n) {
 		StringBuilder result = new StringBuilder();
 		boolean emptySeparator = CommonUtil.isEmptyString(separator);
