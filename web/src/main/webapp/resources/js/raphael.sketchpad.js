@@ -385,10 +385,10 @@ var hasTouchSupport = "ontouchstart" in document.documentElement || (/iphone|ipa
 			_change_fn();
 		};
 
-		var _strokedrawn_fn = function() { return false; };
+		var _strokedrawn_fn = function(stroke) { return false; };
 		self.strokedrawn = function(fn) {
 			if (fn == null || fn === undefined) {
-				_strokedrawn_fn = function() { return false; };
+				_strokedrawn_fn = function(stroke) { return false; };
 			} else if (typeof fn == "function") {
 				_strokedrawn_fn = fn;
 			}
@@ -400,10 +400,10 @@ var hasTouchSupport = "ontouchstart" in document.documentElement || (/iphone|ipa
 			return _strokedrawn_fn(stroke);
 		}
 
-		var _patchstroke_fn = function() { return false; };
+		var _patchstroke_fn = function(stroke) { return false; };
 		self.patchstroke = function(fn) {
 			if (fn == null || fn === undefined) {
-				_patchstroke_fn = function() { return false; };
+				_patchstroke_fn = function(stroke) { return false; };
 			} else if (typeof fn == "function") {
 				_patchstroke_fn = fn;
 			}
