@@ -905,13 +905,15 @@ public class FileDaoImpl
 		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
 			InputStream fileStream = null;
+			InputStream fileInputStream = null;
+			InputStream decryptionStream = null;
 			try {
 				if (!CoreUtil.isPassDecryption()) {
 					throw new Exception();
 				}
 				if (source.isExternalFile()) {
-					target.setDatas(CommonUtil.inputStreamToByteArray(fileStream = new VerifyMD5InputStream(CryptoUtil.createDecryptionStream(source.getDataIv(),
-							CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5())));
+					target.setDatas(CommonUtil.inputStreamToByteArray(fileStream = new VerifyMD5InputStream(decryptionStream = CryptoUtil.createDecryptionStream(source.getDataIv(),
+							fileInputStream = CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5())));
 				} else {
 					target.setDatas(CryptoUtil.verifyMD5(CryptoUtil.decrypt(source.getDataIv(), source.getData()), source.getMd5()));
 				}
@@ -924,6 +926,18 @@ public class FileDaoImpl
 				target.setFileName(null);
 				target.setDecrypted(false);
 			} finally {
+				if (fileInputStream != null) {
+					try {
+						fileInputStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+				if (decryptionStream != null) {
+					try {
+						decryptionStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
 				if (fileStream != null) {
 					try {
 						fileStream.close(); //silence sonarcloud
@@ -934,13 +948,21 @@ public class FileDaoImpl
 		} else {
 			if (source.isExternalFile()) {
 				InputStream fileStream = null;
+				InputStream fileInputStream = null;
 				try {
 					target.setDatas(
-							CommonUtil.inputStreamToByteArray(fileStream = new VerifyMD5InputStream(CoreUtil.createFileServiceFileInputStream(source.getExternalFileName()), source
-									.getMd5())));
+							CommonUtil.inputStreamToByteArray(
+									fileStream = new VerifyMD5InputStream(fileInputStream = CoreUtil.createFileServiceFileInputStream(source.getExternalFileName()), source
+											.getMd5())));
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				} finally {
+					if (fileInputStream != null) {
+						try {
+							fileInputStream.close(); //silence sonarcloud
+						} catch (IOException e) {
+						}
+					}
 					if (fileStream != null) {
 						try {
 							fileStream.close(); //silence sonarcloud
@@ -1103,18 +1125,21 @@ public class FileDaoImpl
 		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
 			InputStream fileStream = null;
+			InputStream fileInputStream = null;
+			InputStream decryptionStream = null;
 			try {
 				if (!CoreUtil.isPassDecryption()) {
 					throw new Exception();
 				}
 				if (source.isExternalFile()) {
-					target.setStream(fileStream = new VerifyMD5InputStream(CryptoUtil.createDecryptionStream(source.getDataIv(),
-							CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5()));
+					target.setStream(fileStream = new VerifyMD5InputStream(decryptionStream = CryptoUtil.createDecryptionStream(source.getDataIv(),
+							fileInputStream = CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5()));
 				} else {
 					if (source.getData() != null) {
 						target.setStream(
-								fileStream = new VerifyMD5InputStream(CryptoUtil.createDecryptionStream(source.getDataIv(), new ByteArrayInputStream(source.getData())), source
-										.getMd5()));
+								fileStream = new VerifyMD5InputStream(
+										decryptionStream = CryptoUtil.createDecryptionStream(source.getDataIv(), new ByteArrayInputStream(source.getData())), source
+												.getMd5()));
 					}
 				}
 				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
@@ -1132,6 +1157,18 @@ public class FileDaoImpl
 				target.setFileName(null);
 				target.setDecrypted(false);
 			} finally {
+				if (fileInputStream != null) {
+					try {
+						fileInputStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+				if (decryptionStream != null) {
+					try {
+						decryptionStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
 				if (fileStream != null) {
 					try {
 						fileStream.close(); //silence sonarcloud

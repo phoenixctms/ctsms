@@ -731,9 +731,11 @@ public class FileServiceImpl
 			try {
 				cipherStream = CryptoUtil.createEncryptionStream(externalFileWriter);
 			} finally {
-				try {
-					cipherStream.close(); //silence sonarcloud
-				} catch (IOException e) {
+				if (cipherStream != null) {
+					try {
+						cipherStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
 				}
 			}
 			file.setDataIv(cipherStream.getIv());
