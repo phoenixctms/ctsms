@@ -185,8 +185,9 @@ public final class ExecUtil {
 		if (!CommonUtil.isEmptyString(lockFileName)) {
 			// https://stackoverflow.com/questions/7036108/prevent-launching-multiple-instances-of-a-java-application
 			File file = new File(lockFileName);
+			FileChannel fc = null;
 			try {
-				FileChannel fc = FileChannel.open(file.toPath(),
+				fc = FileChannel.open(file.toPath(),
 						StandardOpenOption.CREATE,
 						StandardOpenOption.WRITE);
 				FileLock lock = fc.tryLock();
@@ -195,6 +196,13 @@ public final class ExecUtil {
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
+			} finally {
+				if (fc != null) {
+					try {
+						fc.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
 			}
 		}
 	}

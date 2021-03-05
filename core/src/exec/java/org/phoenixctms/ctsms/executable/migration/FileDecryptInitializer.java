@@ -22,8 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class FileDecryptInitializer extends EncryptedFieldInitializer {
 
 	private static String decryptExternalFile(File file) throws Exception {
-		InputStream fileStream = new VerifyMD5InputStream(
-				CryptoUtil.createDecryptionStream(file.getDataIv(), CoreUtil.createFileServiceFileInputStream(file.getExternalFileName())), file.getMd5());
+		InputStream fileStream = null;
+		InputStream fileInputStream = null;
+		InputStream decryptionStream = null;
 		String newFileName = CoreUtil.createExternalFileName(CoreUtil.getExternalFileDirectoryPrefix(file.getModule()), file.getFileName());
 		java.io.File externalFile = new java.io.File(CoreUtil.getFileServiceExternalFilename(newFileName));
 		FileOutputStream externalFileStream = new FileOutputStream(externalFile);
@@ -31,6 +32,9 @@ public class FileDecryptInitializer extends EncryptedFieldInitializer {
 		long totalRead = 0;
 		byte[] block = new byte[CommonUtil.INPUTSTREAM_BUFFER_BLOCKSIZE];
 		try {
+			fileStream = new VerifyMD5InputStream(
+					decryptionStream = CryptoUtil.createDecryptionStream(file.getDataIv(), fileInputStream = CoreUtil.createFileServiceFileInputStream(file.getExternalFileName())),
+					file.getMd5());
 			while ((nRead = fileStream.read(block, 0, block.length)) != -1) {
 				externalFileStream.write(block, 0, nRead);
 				totalRead += nRead;
@@ -39,9 +43,23 @@ public class FileDecryptInitializer extends EncryptedFieldInitializer {
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			try {
-				fileStream.close();
-			} catch (IOException e) {
+			if (fileInputStream != null) {
+				try {
+					fileInputStream.close(); //silence sonarcloud
+				} catch (IOException e) {
+				}
+			}
+			if (decryptionStream != null) {
+				try {
+					decryptionStream.close(); //silence sonarcloud
+				} catch (IOException e) {
+				}
+			}
+			if (fileStream != null) {
+				try {
+					fileStream.close(); //silence sonarcloud
+				} catch (IOException e) {
+				}
 			}
 			try {
 				externalFileStream.close();

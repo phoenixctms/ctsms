@@ -8,6 +8,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -903,13 +904,16 @@ public class FileDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
+			InputStream fileStream = null;
+			InputStream fileInputStream = null;
+			InputStream decryptionStream = null;
 			try {
 				if (!CoreUtil.isPassDecryption()) {
 					throw new Exception();
 				}
 				if (source.isExternalFile()) {
-					target.setDatas(CommonUtil.inputStreamToByteArray(new VerifyMD5InputStream(CryptoUtil.createDecryptionStream(source.getDataIv(),
-							CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5())));
+					target.setDatas(CommonUtil.inputStreamToByteArray(fileStream = new VerifyMD5InputStream(decryptionStream = CryptoUtil.createDecryptionStream(source.getDataIv(),
+							fileInputStream = CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5())));
 				} else {
 					target.setDatas(CryptoUtil.verifyMD5(CryptoUtil.decrypt(source.getDataIv(), source.getData()), source.getMd5()));
 				}
@@ -921,14 +925,50 @@ public class FileDaoImpl
 				target.setDatas(null);
 				target.setFileName(null);
 				target.setDecrypted(false);
+			} finally {
+				if (fileInputStream != null) {
+					try {
+						fileInputStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+				if (decryptionStream != null) {
+					try {
+						decryptionStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+				if (fileStream != null) {
+					try {
+						fileStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
 			}
 		} else {
 			if (source.isExternalFile()) {
+				InputStream fileStream = null;
+				InputStream fileInputStream = null;
 				try {
-					target.setDatas(CommonUtil.inputStreamToByteArray(new VerifyMD5InputStream(CoreUtil.createFileServiceFileInputStream(source.getExternalFileName()), source
-							.getMd5())));
+					target.setDatas(
+							CommonUtil.inputStreamToByteArray(
+									fileStream = new VerifyMD5InputStream(fileInputStream = CoreUtil.createFileServiceFileInputStream(source.getExternalFileName()), source
+											.getMd5())));
 				} catch (Exception e) {
 					throw new RuntimeException(e);
+				} finally {
+					if (fileInputStream != null) {
+						try {
+							fileInputStream.close(); //silence sonarcloud
+						} catch (IOException e) {
+						}
+					}
+					if (fileStream != null) {
+						try {
+							fileStream.close(); //silence sonarcloud
+						} catch (IOException e) {
+						}
+					}
 				}
 			} else {
 				try {
@@ -1084,17 +1124,22 @@ public class FileDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
+			InputStream fileStream = null;
+			InputStream fileInputStream = null;
+			InputStream decryptionStream = null;
 			try {
 				if (!CoreUtil.isPassDecryption()) {
 					throw new Exception();
 				}
 				if (source.isExternalFile()) {
-					target.setStream(new VerifyMD5InputStream(CryptoUtil.createDecryptionStream(source.getDataIv(),
-							CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5()));
+					target.setStream(fileStream = new VerifyMD5InputStream(decryptionStream = CryptoUtil.createDecryptionStream(source.getDataIv(),
+							fileInputStream = CoreUtil.createFileServiceFileInputStream(source.getExternalFileName())), source.getMd5()));
 				} else {
 					if (source.getData() != null) {
-						target.setStream(new VerifyMD5InputStream(CryptoUtil.createDecryptionStream(source.getDataIv(), new ByteArrayInputStream(source.getData())), source
-								.getMd5()));
+						target.setStream(
+								fileStream = new VerifyMD5InputStream(
+										decryptionStream = CryptoUtil.createDecryptionStream(source.getDataIv(), new ByteArrayInputStream(source.getData())), source
+												.getMd5()));
 					}
 				}
 				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
@@ -1111,13 +1156,40 @@ public class FileDaoImpl
 				target.setStream(null);
 				target.setFileName(null);
 				target.setDecrypted(false);
+			} finally {
+				if (fileInputStream != null) {
+					try {
+						fileInputStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+				if (decryptionStream != null) {
+					try {
+						decryptionStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+				if (fileStream != null) {
+					try {
+						fileStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
 			}
 		} else {
 			if (source.isExternalFile()) {
+				InputStream fileStream = null;
 				try {
-					target.setStream(new VerifyMD5InputStream(CoreUtil.createFileServiceFileInputStream(source.getExternalFileName()), source.getMd5()));
+					target.setStream(fileStream = new VerifyMD5InputStream(CoreUtil.createFileServiceFileInputStream(source.getExternalFileName()), source.getMd5()));
 				} catch (Exception e) {
 					throw new RuntimeException(e);
+				} finally {
+					if (fileStream != null) {
+						try {
+							fileStream.close(); //silence sonarcloud
+						} catch (IOException e) {
+						}
+					}
 				}
 			} else {
 				if (source.getData() != null) {

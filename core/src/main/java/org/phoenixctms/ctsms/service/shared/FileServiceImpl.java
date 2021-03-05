@@ -708,7 +708,15 @@ public class FileServiceImpl
 		String fileName = CoreUtil.createExternalFileName(CoreUtil.getExternalFileDirectoryPrefix(file.getModule()), fileStream.getFileName());
 		java.io.File externalFile = new java.io.File(CoreUtil.getFileServiceExternalFilename(fileName));
 		mkDir(externalFile);
-		FileOutputStream externalFileWriter = new FileOutputStream(externalFile);
+		FileOutputStream externalFileWriter = null;
+		try {
+			externalFileWriter = new FileOutputStream(externalFile);
+		} finally {
+			try {
+				externalFileWriter.close(); //silence sonarcloud
+			} catch (IOException e) {
+			}
+		}
 		long usableSpace;
 		if (fileStream.getSize() != null && fileStream.getSize() > (usableSpace = externalFile.getUsableSpace())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INSUFFICIENT_SPACE_LEFT_ON_DISK, CommonUtil.humanReadableByteCount(usableSpace));
@@ -719,7 +727,17 @@ public class FileServiceImpl
 			file.setFileNameIv(cipherText.getIv());
 			file.setEncryptedFileName(cipherText.getCipherText());
 			file.setFileNameHash(CryptoUtil.hashForSearch(fileStream.getFileName()));
-			CipherStream cipherStream = CryptoUtil.createEncryptionStream(externalFileWriter);
+			CipherStream cipherStream = null;
+			try {
+				cipherStream = CryptoUtil.createEncryptionStream(externalFileWriter);
+			} finally {
+				if (cipherStream != null) {
+					try {
+						cipherStream.close(); //silence sonarcloud
+					} catch (IOException e) {
+					}
+				}
+			}
 			file.setDataIv(cipherStream.getIv());
 			externalFileStream = cipherStream;
 			file.setFileName(null);
