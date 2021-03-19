@@ -652,7 +652,7 @@ public interface MessageCodes {
 	public final static String TRIAL_PARTICIPATIONS_TAB_TITLE = "trial_participations_tab_title";
 	public final static String TRIAL_PARTICIPATIONS_TAB_TITLE_WITH_COUNT = "trial_participations_tab_title_with_count";
 	public final static String PROBAND_VISIT_SCHEDULE_TAB_TITLE = "proband_visit_schedule_tab_title";
-	public final static String PROBANDECRFSTATUSENTRIES_TAB_LABEL = "proband_visit_schedule_tab_title";
+	public final static String PROBANDECRFSTATUSENTRIES_TAB_LABEL = "probandecrfstatusentries_tab_label";
 	public final static String PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT = "proband_visit_schedule_tab_title_with_count";
 	public final static String INQUIRY_VALUES_TAB_TITLE = "inquiry_values_tab_title";
 	public final static String INQUIRY_VALUES_TAB_TITLE_WITH_COUNT = "inquiry_values_tab_title_with_count";
