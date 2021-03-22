@@ -17,7 +17,8 @@ public abstract class FileReEncrypter<T> extends ReEncrypter<T> {
 
 	@Override
 	protected void reEncrypt(T item, SecretKey oldDepartmentKey, SecretKey newDepartmentKey) throws Exception {
-		InputStream plainTextStream = null;
+		InputStream plainTextStream = new VerifyMD5InputStream(
+				CryptoUtil.createDecryptionStream(getIv(item), oldDepartmentKey, CoreUtil.createFileServiceFileInputStream(getExternalFileName(item))), getMd5(item));
 		String newFileName = CoreUtil.createExternalFileName(CoreUtil.getExternalFileDirectoryPrefix(getModule(item)), getExternalFileName(item));
 		java.io.File externalFile = new java.io.File(CoreUtil.getFileServiceExternalFilename(newFileName));
 		CipherStream cipherStream = CryptoUtil.createEncryptionStream(newDepartmentKey, new FileOutputStream(externalFile));
@@ -25,19 +26,15 @@ public abstract class FileReEncrypter<T> extends ReEncrypter<T> {
 		long totalRead = 0;
 		byte[] block = new byte[CommonUtil.INPUTSTREAM_BUFFER_BLOCKSIZE];
 		try {
-			plainTextStream = new VerifyMD5InputStream(
-					CryptoUtil.createDecryptionStream(getIv(item), oldDepartmentKey, CoreUtil.createFileServiceFileInputStream(getExternalFileName(item))), getMd5(item));
 			while ((nRead = plainTextStream.read(block, 0, block.length)) != -1) {
 				cipherStream.write(block, 0, nRead);
 				totalRead += nRead;
 			}
 			cipherStream.flush();
 		} finally {
-			if (plainTextStream != null) {
-				try {
-					plainTextStream.close(); //silence sonarcloud
-				} catch (IOException e) {
-				}
+			try {
+				plainTextStream.close();
+			} catch (IOException e) {
 			}
 			try {
 				cipherStream.close();
