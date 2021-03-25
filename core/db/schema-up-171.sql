@@ -20,7 +20,7 @@ update COURSE_PARTICIPATION_STATUS_TYPE set FILE_REQUIRED = 'f';
 alter table COURSE_PARTICIPATION_STATUS_TYPE alter FILE_REQUIRED set not null;
 
 
-update USERS set VISIBLE_INVENTORY_TAB_LIST = 'inventorytags,inventorystatus,inventorymaintenance,inventorybookings,inventorybookingsummary,inventoryhyperlinks,inventoryjournal';
+update USERS set VISIBLE_INVENTORY_TAB_LIST = 'inventorytags,inventorystatus,inventorymaintenance,inventorybookings,inventorybookingsummary,inventoryhyperlinks,inventoryfiles,inventoryjournal';
 update USERS set VISIBLE_STAFF_TAB_LIST = 'staffimage,stafftags,staffcontactdetails,staffaddresses,staffstatus,staffdutyrosterturns,cvpositions,courseparticipationstatus,staffassociations,staffhyperlinks,stafffiles,staffjournal';
 update USERS set VISIBLE_COURSE_TAB_LIST = 'lecturers,courseinventorybookings,admincourseparticipationstatus,coursehyperlinks,coursefiles,coursejournal';
 update USERS set VISIBLE_TRIAL_TAB_LIST = 'trialtags,teammembers,timelineevents,trialinventorybookings,visits,probandgroups,visitschedule,trialdutyrosterturns,probandlistentrytags,randomizationlists,inquiries,inquiryvaluesdummy,ecrfs,ecrffields,probandlistentries,trialecrfstatusentries,trialecrffieldstatusentries,reimbursements,trialassociations,trialhyperlinks,trialjobs,trialfiles,trialjournal';

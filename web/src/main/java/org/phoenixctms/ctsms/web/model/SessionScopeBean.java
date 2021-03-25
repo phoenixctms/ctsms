@@ -1412,6 +1412,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			inventoryTabTitleMap.put("inventorybookings", Messages.getString(MessageCodes.INVENTORY_BOOKINGS_TAB_TITLE));
 			inventoryTabTitleMap.put("inventorybookingsummary", Messages.getString(MessageCodes.INVENTORY_BOOKING_SUMMARY_TAB_LABEL));
 			inventoryTabTitleMap.put("inventoryhyperlinks", Messages.getString(MessageCodes.INVENTORY_HYPERLINKS_TAB_TITLE));
+			inventoryTabTitleMap.put("inventoryfiles", Messages.getString(MessageCodes.INVENTORY_FILES_TAB_TITLE));
 			inventoryTabTitleMap.put("inventoryjournal", Messages.getString(MessageCodes.INVENTORY_JOURNAL_TAB_TITLE));
 		}
 		return inventoryTabTitleMap;
