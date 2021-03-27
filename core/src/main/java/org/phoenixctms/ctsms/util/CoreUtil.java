@@ -1,11 +1,13 @@
 package org.phoenixctms.ctsms.util;
 
 import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -999,7 +1001,16 @@ public final class CoreUtil {
 					Settings.getString(SettingCodes.ECRF_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_PROCESS_PL));
 			Process process = Runtime.getRuntime().exec(command);
-			if (blocking) {
+			if (!process.isAlive()) {
+				try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+					String line;
+					if ((line = errorReader.readLine()) != null) {
+						throw new Exception(line);
+					}
+				} catch (final IOException e) {
+					throw e;
+				}
+			} else if (blocking) {
 				process.waitFor();
 			}
 			return process;
