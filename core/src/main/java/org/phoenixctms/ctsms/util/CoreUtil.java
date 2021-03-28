@@ -33,6 +33,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
@@ -165,6 +166,7 @@ public final class CoreUtil {
 	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
 	public final static Set<String> SYSTEM_MESSAGE_CODES = createSystemMessageCodeSet();
 	private static String PRNG_CLASS_DESCRIPTION = "{0} ({1})";
+	private final static long JOB_EXIST_VALUE_WAIT_MILLISECONDS = 1000l;
 
 	private static void addExcludedField(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {
 		if (fieldMap.containsKey(vo)) {
@@ -1001,17 +1003,27 @@ public final class CoreUtil {
 					Settings.getString(SettingCodes.ECRF_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_PROCESS_PL));
 			Process process = Runtime.getRuntime().exec(command);
-			if (!process.isAlive()) {
-				try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-					String line;
-					if ((line = errorReader.readLine()) != null) {
-						throw new Exception(line);
-					}
-				} catch (final IOException e) {
-					throw e;
-				}
-			} else if (blocking) {
+			if (blocking) {
 				process.waitFor();
+			} else {
+				process.waitFor(JOB_EXIST_VALUE_WAIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+			}
+			try {
+				if (process.exitValue() != 0) {
+					// failed
+					try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+						String line;
+						if ((line = errorReader.readLine()) != null) {
+							throw new Exception(line);
+						}
+					} catch (final IOException e) {
+						throw e;
+					}
+					//} else {
+					// ok
+				}
+			} catch (IllegalThreadStateException e) {
+				// still running
 			}
 			return process;
 		} catch (Exception e) {
