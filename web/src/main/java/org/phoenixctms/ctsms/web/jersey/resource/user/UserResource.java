@@ -68,10 +68,11 @@ public class UserResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public NoShortcutSerializationWrapper<UserOutVO> deleteUser(@PathParam("id") Long id, @QueryParam("reason") String reason)
+	public NoShortcutSerializationWrapper<UserOutVO> deleteUser(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService()
-				.deleteUser(auth, id, Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE), false, reason,
+				.deleteUser(auth, id, Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE), force != null ? force : false,
+						reason,
 						MAX_GRAPH_USER_INSTANCES));
 	}
 

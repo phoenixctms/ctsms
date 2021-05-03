@@ -100,12 +100,13 @@ public final class InventoryResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public InventoryOutVO deleteInventory(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
+	public InventoryOutVO deleteInventory(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil
 				.getServiceLocator()
 				.getInventoryService()
 				.deleteInventory(auth, id, Settings.getBoolean(SettingCodes.INVENTORY_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INVENTORY_DEFERRED_DELETE),
-						false, reason,
+						force != null ? force : false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_PARENT_DEPTH),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_INVENTORY_CHILDREN_DEPTH));

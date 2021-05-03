@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="inputfield")
+@Api(value = "inputfield")
 @Path("/inputfieldselectionsetvalue")
 public final class SelectionSetValueResource {
 
@@ -43,11 +43,12 @@ public final class SelectionSetValueResource {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public InputFieldSelectionSetValueOutVO deleteSelectionSetValue(@PathParam("id") Long id, @QueryParam("reason") String reason)
+	public InputFieldSelectionSetValueOutVO deleteSelectionSetValue(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService()
 				.deleteSelectionSetValue(auth, id,
-						Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE), false, reason);
+						Settings.getBoolean(SettingCodes.SELECTION_SET_VALUE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.SELECTION_SET_VALUE_DEFERRED_DELETE),
+						force != null ? force : false, reason);
 	}
 
 	@GET

@@ -106,12 +106,13 @@ public class StaffResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public StaffOutVO deleteStaff(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
+	public StaffOutVO deleteStaff(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil
 				.getServiceLocator()
 				.getStaffService()
 				.deleteStaff(auth, id, Settings.getBoolean(SettingCodes.STAFF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.STAFF_DEFERRED_DELETE),
-						false, reason,
+						force != null ? force : false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_PARENT_DEPTH),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_STAFF_CHILDREN_DEPTH));
