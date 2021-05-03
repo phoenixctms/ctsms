@@ -1000,8 +1000,9 @@ public final class CoreUtil {
 					null, null,
 					null,
 					null,
-					Settings.getString(SettingCodes.ECRF_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_PROCESS_PL),
-					Settings.getString(SettingCodes.INQUIRY_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_PROCESS_PL));
+					Settings.getString(SettingCodes.ECRF_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_EXPORTER_PROCESS_PL),
+					Settings.getString(SettingCodes.INQUIRY_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXPORTER_PROCESS_PL),
+					Settings.getString(SettingCodes.ECRF_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_IMPORTER_PROCESS_PL));
 			Process process = Runtime.getRuntime().exec(command);
 			if (blocking) {
 				process.waitFor();

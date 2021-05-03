@@ -290,8 +290,9 @@ public interface SettingCodes {
 	public static final String JOB_FILE_SIZE_LIMIT = "job_file_size_limit";
 	public static final String COURSE_PARTICIPATION_FILE_SIZE_LIMIT = "course_participation_file_size_limit";
 	public static final String DB_TOOL = "db_tool";
-	public static final String ECRF_PROCESS_PL = "ecrf_process_pl";
-	public static final String INQUIRY_PROCESS_PL = "inquiry_process_pl";
+	public static final String ECRF_EXPORTER_PROCESS_PL = "ecrf_exporter_process_pl";
+	public static final String ECRF_IMPORTER_PROCESS_PL = "ecrf_importer_process_pl";
+	public static final String INQUIRY_EXPORTER_PROCESS_PL = "inquiry_exporter_process_pl";
 	public static final String OBFUSCATE_BROKEN_RANDOMIZATION_CODES = "obfuscate_broken_randomization_codes";
 	public static final String ECRF_COPY_REVISION_PATTERN = "ecrf_copy_revision_pattern";
 }
