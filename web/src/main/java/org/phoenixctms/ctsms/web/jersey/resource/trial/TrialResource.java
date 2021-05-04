@@ -126,7 +126,7 @@ public class TrialResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/probandlistentrymaxposition")
-	public long getProbandListEntryMaxPosition(@PathParam("id") Long id)
+	public Long getProbandListEntryMaxPosition(@PathParam("id") Long id)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().getProbandListEntryMaxPosition(auth, id);
 	}
