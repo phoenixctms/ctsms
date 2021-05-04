@@ -2775,6 +2775,19 @@ public class ProductionDataProvider {
 				true);
 		createJobType(
 				JobModule.TRIAL_JOB,
+				"import_ecrf_data",
+				"import_ecrf_data",
+				"{12} --task=cleanup_all --task=import_ecrf_data_horizontal --task=cleanup_all -id={1} -auth={4} -jid={5} --force --skip-errors",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
 				"export_inquiry_data",
 				"export_inquiry_data",
 				"{11} --task=cleanup_all --task=export_inquiry_data_vertical --task=export_inquiry_data_horizontal --task=publish_inquiry_data_sqlite --task=publish_inquiry_data_horizontal_csv --task=publish_inquiry_data_xls --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --force",

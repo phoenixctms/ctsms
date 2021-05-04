@@ -28,3 +28,22 @@ update USERS set VISIBLE_PROBAND_TAB_LIST = 'probandimage,probandtags,probandcon
 update USERS set VISIBLE_INPUT_FIELD_TAB_LIST = 'inputfieldselectionsetvalue,inputfielddummy,inputfieldassociations,inputfieldjobs,inputfieldjournal';
 update USERS set VISIBLE_MASS_MAIL_TAB_LIST = 'massmailrecipients,massmailfiles,massmailjournal';
 update USERS set VISIBLE_USER_TAB_LIST = 'setpassword,setpermissions,useractivity,userjournal';
+
+insert into JOB_TYPE 
+(id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+values (
+nextval('hibernate_sequence'), 
+'TRIAL_JOB',
+'import_ecrf_data',
+'import_ecrf_data',
+'{12} --task=cleanup_all --task=import_ecrf_data_horizontal --task=cleanup_all -id={1} -auth={4} -jid={5} --force --skip-errors',
+'t',
+'f',
+'f',
+'f',
+'t',
+'f',
+'f',
+'t',
+null
+);
