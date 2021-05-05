@@ -18,17 +18,19 @@ public class EcrfRowWriter extends RowWriter {
 	private final static int PROBAND_GROUPS_COLUMN_INDEX = 2;
 	private final static int VISITS_COLUMN_INDEX = 3;
 	private final static int ACTIVE_COLUMN_INDEX = 4;
-	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 5;
-	private final static int EXTERNAL_ID_COLUMN_INDEX = 6;
-	private final static int TITLE_COLUMN_INDEX = 7;
-	private final static int DESCRIPTION_COLUMN_INDEX = 8;
-	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9;
-	private final static int CHARGE_COLUMN_INDEX = 10;
+	private final static int DISABLED_COLUMN_INDEX = 5;
+	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 6;
+	private final static int EXTERNAL_ID_COLUMN_INDEX = 7;
+	private final static int TITLE_COLUMN_INDEX = 8;
+	private final static int DESCRIPTION_COLUMN_INDEX = 9;
+	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 10;
+	private final static int CHARGE_COLUMN_INDEX = 11;
 	private int nameColumnIndex;
 	private int revisionColumnIndex;
 	private int probandGroupsColumnIndex;
 	private int visitsColumnIndex;
 	private int activeColumnIndex;
+	private int disabledColumnIndex;
 	private int enableBrowserFieldCalculationColumnIndex;
 	private int externalIdColumnIndex;
 	private int titleColumnIndex;
@@ -63,6 +65,8 @@ public class EcrfRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(visitsColumnIndex, maxColumnIndex);
 		activeColumnIndex = ACTIVE_COLUMN_INDEX;
 		maxColumnIndex = Math.max(activeColumnIndex, maxColumnIndex);
+		disabledColumnIndex = DISABLED_COLUMN_INDEX;
+		maxColumnIndex = Math.max(disabledColumnIndex, maxColumnIndex);
 		enableBrowserFieldCalculationColumnIndex = ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX;
 		maxColumnIndex = Math.max(enableBrowserFieldCalculationColumnIndex, maxColumnIndex);
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
@@ -112,6 +116,7 @@ public class EcrfRowWriter extends RowWriter {
 			}
 			values[visitsColumnIndex] = sb.toString();
 			values[activeColumnIndex] = Boolean.toString(ecrf.getActive());
+			values[disabledColumnIndex] = Boolean.toString(ecrf.getDisabled());
 			values[enableBrowserFieldCalculationColumnIndex] = Boolean.toString(ecrf.getEnableBrowserFieldCalculation());
 			values[externalIdColumnIndex] = ecrf.getExternalId();
 			values[titleColumnIndex] = ecrf.getTitle();

@@ -35,17 +35,19 @@ public class EcrfRowProcessor extends RowProcessor {
 	private final static int PROBAND_GROUPS_COLUMN_INDEX = 2;
 	private final static int VISITS_COLUMN_INDEX = 3;
 	private final static int ACTIVE_COLUMN_INDEX = 4;
-	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 5;
-	private final static int EXTERNAL_ID_COLUMN_INDEX = 6;
-	private final static int TITLE_COLUMN_INDEX = 7;
-	private final static int DESCRIPTION_COLUMN_INDEX = 8;
-	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 9;
-	private final static int CHARGE_COLUMN_INDEX = 10;
+	private final static int DISABLED_COLUMN_INDEX = 5;
+	private final static int ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX = 6;
+	private final static int EXTERNAL_ID_COLUMN_INDEX = 7;
+	private final static int TITLE_COLUMN_INDEX = 8;
+	private final static int DESCRIPTION_COLUMN_INDEX = 9;
+	private final static int ENROLLMENT_STATUS_COLUMN_INDEX = 10;
+	private final static int CHARGE_COLUMN_INDEX = 11;
 	private int nameColumnIndex;
 	private int revisionColumnIndex;
 	private int probandGroupsColumnIndex;
 	private int visitsColumnIndex;
 	private int activeColumnIndex;
+	private int disabledColumnIndex;
 	private int enableBrowserFieldCalculationColumnIndex;
 	private int externalIdColumnIndex;
 	private int titleColumnIndex;
@@ -78,6 +80,10 @@ public class EcrfRowProcessor extends RowProcessor {
 
 	private String getActive(String[] values) {
 		return getColumnValue(values, activeColumnIndex);
+	}
+
+	private String getDisabled(String[] values) {
+		return getColumnValue(values, disabledColumnIndex);
 	}
 
 	private String getCharge(String[] values) {
@@ -210,6 +216,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		probandGroupsColumnIndex = PROBAND_GROUPS_COLUMN_INDEX;
 		visitsColumnIndex = VISITS_COLUMN_INDEX;
 		activeColumnIndex = ACTIVE_COLUMN_INDEX;
+		disabledColumnIndex = DISABLED_COLUMN_INDEX;
 		enableBrowserFieldCalculationColumnIndex = ENABLE_BROWSER_FIELD_CALCULATION_COLUMN_INDEX;
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
 		titleColumnIndex = TITLE_COLUMN_INDEX;
@@ -231,6 +238,7 @@ public class EcrfRowProcessor extends RowProcessor {
 				.append(getProbandGroups(values))
 				.append(getVisits(values))
 				.append(getActive(values))
+				.append(getDisabled(values))
 				.append(getEnableBrowserFieldCalculation(values))
 				.append(getExternalId(values))
 				.append(getTitle(values))
@@ -279,6 +287,7 @@ public class EcrfRowProcessor extends RowProcessor {
 			}
 		}
 		ecrfIn.setActive(Boolean.parseBoolean(getActive(values)));
+		ecrfIn.setDisabled(Boolean.parseBoolean(getDisabled(values)));
 		ecrfIn.setEnableBrowserFieldCalculation(Boolean.parseBoolean(getEnableBrowserFieldCalculation(values)));
 		ecrfIn.setExternalId(getExternalId(values));
 		ecrfIn.setTitle(getTitle(values));
