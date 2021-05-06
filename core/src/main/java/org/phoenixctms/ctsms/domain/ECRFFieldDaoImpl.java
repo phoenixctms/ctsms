@@ -35,10 +35,14 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public class ECRFFieldDaoImpl
 		extends ECRFFieldDaoBase {
 
-	private static void applySortOrders(org.hibernate.Criteria ecrfFieldCriteria) {
+	private static void applySortOrders(org.hibernate.Criteria ecrfFieldCriteria, org.hibernate.Criteria ecrfCriteria) {
 		if (ecrfFieldCriteria != null) {
 			ecrfFieldCriteria.addOrder(Order.asc("trial"));
-			ecrfFieldCriteria.addOrder(Order.asc("ecrf"));
+			if (ecrfCriteria != null) {
+				ecrfFieldCriteria.addOrder(Order.asc(ecrfCriteria.getAlias() + ".name"));
+			} else {
+				ecrfFieldCriteria.addOrder(Order.asc("ecrf"));
+			}
 			ecrfFieldCriteria.addOrder(Order.asc("section"));
 			ecrfFieldCriteria.addOrder(Order.asc("position"));
 		}
@@ -196,16 +200,17 @@ public class ECRFFieldDaoImpl
 	@Override
 	protected Collection<ECRFField> handleFindAllSorted() throws Exception {
 		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
-		applySortOrders(ecrfFieldCriteria);
+		org.hibernate.Criteria ecrfCriteria = ecrfFieldCriteria.createCriteria("ecrf", "ecrf0", CriteriaSpecification.INNER_JOIN);
+		applySortOrders(ecrfFieldCriteria, ecrfCriteria);
 		return ecrfFieldCriteria.list();
 	}
 
 	@Override
 	protected Collection<ECRFField> handleFindAllSorted(String nameInfix, Integer limit) throws Exception {
 		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
+		org.hibernate.Criteria ecrfCriteria = ecrfFieldCriteria.createCriteria("ecrf", "ecrf0", CriteriaSpecification.INNER_JOIN);
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = ecrfFieldCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
-			org.hibernate.Criteria ecrfCriteria = ecrfFieldCriteria.createCriteria("ecrf", "ecrf0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = ecrfFieldCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
 			ecrfFieldCriteria.add(Restrictions.or(
 					(new CategoryCriterion(nameInfix, "section", MatchMode.ANYWHERE)).getRestriction(),
@@ -215,7 +220,7 @@ public class ECRFFieldDaoImpl
 									(new CategoryCriterion(nameInfix, "ecrf0.name", MatchMode.ANYWHERE)).getRestriction(),
 									(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction()))));
 		}
-		applySortOrders(ecrfFieldCriteria);
+		applySortOrders(ecrfFieldCriteria, ecrfCriteria);
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.ECRF_FIELD_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
 				DefaultSettings.ECRF_FIELD_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), ecrfFieldCriteria);
 		return ecrfFieldCriteria.list();
@@ -276,9 +281,13 @@ public class ECRFFieldDaoImpl
 				ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("jsVariableName", ""), Restrictions.isNull("jsVariableName")));
 			}
 		}
+		org.hibernate.Criteria ecrfCriteria = null;
+		if (sort) {
+			ecrfCriteria = criteriaMap.createCriteria("ecrf", "ecrf0", CriteriaSpecification.INNER_JOIN);
+		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			applySortOrders(ecrfFieldCriteria);
+			applySortOrders(ecrfFieldCriteria, ecrfCriteria);
 		}
 		return ecrfFieldCriteria.list();
 	}
@@ -303,9 +312,13 @@ public class ECRFFieldDaoImpl
 				ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("jsVariableName", ""), Restrictions.isNull("jsVariableName")));
 			}
 		}
+		org.hibernate.Criteria ecrfCriteria = null;
+		if (sort) {
+			ecrfCriteria = criteriaMap.createCriteria("ecrf", "ecrf0", CriteriaSpecification.INNER_JOIN);
+		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		if (sort) {
-			applySortOrders(ecrfFieldCriteria);
+			applySortOrders(ecrfFieldCriteria, ecrfCriteria);
 		}
 		return ecrfFieldCriteria.list();
 	}
