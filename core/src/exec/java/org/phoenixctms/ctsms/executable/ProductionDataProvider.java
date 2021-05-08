@@ -2777,7 +2777,7 @@ public class ProductionDataProvider {
 				JobModule.TRIAL_JOB,
 				"import_ecrf_data",
 				"import_ecrf_data",
-				"{12} --task=cleanup_all --task=import_ecrf_data_horizontal --task=cleanup_all -id={1} -auth={4} -jid={5} --force --skip-errors",
+				"{12} --task=cleanup --task=import_ecrf_data_horizontal --task=cleanup -id={1} -auth={4} -jid={5} --force --skip-errors",
 				true,
 				false,
 				false,
