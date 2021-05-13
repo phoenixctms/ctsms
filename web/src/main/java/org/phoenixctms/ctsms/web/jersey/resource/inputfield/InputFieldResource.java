@@ -92,10 +92,11 @@ public final class InputFieldResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public InputFieldOutVO deleteInputField(@PathParam("id") Long id, @QueryParam("reason") String reason)
+	public InputFieldOutVO deleteInputField(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService()
-				.deleteInputField(auth, id, Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE), false,
+				.deleteInputField(auth, id, Settings.getBoolean(SettingCodes.INPUT_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_DEFERRED_DELETE),
+						force != null ? force : false,
 						reason);
 	}
 

@@ -43,9 +43,11 @@ public class EcrfResource {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public ECRFOutVO deleteEcrf(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
+	public ECRFOutVO deleteEcrf(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService()
-				.deleteEcrf(auth, id, Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE), false, reason);
+				.deleteEcrf(auth, id, Settings.getBoolean(SettingCodes.ECRF_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_DEFERRED_DELETE), force != null ? force : false,
+						reason);
 	}
 
 	@GET

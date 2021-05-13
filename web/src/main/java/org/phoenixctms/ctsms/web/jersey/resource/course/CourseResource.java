@@ -97,10 +97,11 @@ public final class CourseResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public CourseOutVO deleteCourse(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
+	public CourseOutVO deleteCourse(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getCourseService()
 				.deleteCourse(auth, id, Settings.getBoolean(SettingCodes.COURSE_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.COURSE_DEFERRED_DELETE),
-						false, reason,
+						force != null ? force : false, reason,
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_COURSE_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_COURSE_INSTANCES),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_PRECEDING_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_PRECEDING_DEPTH),
 						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_RENEWALS_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_RENEWALS_DEPTH));

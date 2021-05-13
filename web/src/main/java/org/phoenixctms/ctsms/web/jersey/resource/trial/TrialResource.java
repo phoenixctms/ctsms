@@ -95,9 +95,11 @@ public class TrialResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public TrialOutVO deleteTrial(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
+	public TrialOutVO deleteTrial(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService()
-				.deleteTrial(auth, id, Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE), false, reason);
+				.deleteTrial(auth, id, Settings.getBoolean(SettingCodes.TRIAL_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.TRIAL_DEFERRED_DELETE),
+						force != null ? force : false, reason);
 	}
 
 	@Override
@@ -119,6 +121,14 @@ public class TrialResource extends ServiceResourceBase {
 	public long getInquiryMaxSelectionSetValueCount(@PathParam("id") Long id)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getInputFieldService().getInquiryMaxSelectionSetValueCount(auth, id);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/probandlistentrymaxposition")
+	public Long getProbandListEntryMaxPosition(@PathParam("id") Long id)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getTrialService().getProbandListEntryMaxPosition(auth, id);
 	}
 
 	@GET

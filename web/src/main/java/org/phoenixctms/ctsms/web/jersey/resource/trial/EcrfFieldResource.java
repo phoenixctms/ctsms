@@ -26,7 +26,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="trial")
+@Api(value = "trial")
 @Path("/ecrffield")
 public class EcrfFieldResource {
 
@@ -43,9 +43,11 @@ public class EcrfFieldResource {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
-	public ECRFFieldOutVO deleteEcrfField(@PathParam("id") Long id, @QueryParam("reason") String reason) throws AuthenticationException, AuthorisationException, ServiceException {
+	public ECRFFieldOutVO deleteEcrfField(@PathParam("id") Long id, @QueryParam("force") Boolean force, @QueryParam("reason") String reason)
+			throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService()
-				.deleteEcrfField(auth, id, Settings.getBoolean(SettingCodes.ECRF_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_DEFERRED_DELETE), false,
+				.deleteEcrfField(auth, id, Settings.getBoolean(SettingCodes.ECRF_FIELD_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_DEFERRED_DELETE),
+						force != null ? force : false,
 						reason);
 	}
 

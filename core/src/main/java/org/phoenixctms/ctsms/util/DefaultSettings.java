@@ -241,8 +241,9 @@ public final class DefaultSettings {
 	public static final Integer JOB_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 	public static final Integer COURSE_PARTICIPATION_FILE_SIZE_LIMIT = 5 * 1024 * 1024;
 	public static final String DB_TOOL = "dbtool";
-	public static final String ECRF_PROCESS_PL = "process";
-	public static final String INQUIRY_PROCESS_PL = "process";
+	public static final String ECRF_EXPORTER_PROCESS_PL = "process";
+	public static final String ECRF_IMPORTER_PROCESS_PL = "process";
+	public static final String INQUIRY_EXPORTER_PROCESS_PL = "process";
 	public static final boolean OBFUSCATE_BROKEN_RANDOMIZATION_CODES = true;
 	public static final String ECRF_COPY_REVISION_PATTERN = "copy {0}";
 	static {

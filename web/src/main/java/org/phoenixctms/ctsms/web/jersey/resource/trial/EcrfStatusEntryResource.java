@@ -43,9 +43,9 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/{ecrfId}/ecrffieldvalues")
 	public Collection<ECRFFieldValueOutVO> clearEcrfFieldValues(@PathParam("listEntryId") Long listEntryId,
-			@PathParam("ecrfId") Long ecrfId, @QueryParam("visit_id") Long visitId)
+			@PathParam("ecrfId") Long ecrfId, @QueryParam("visit_id") Long visitId, @QueryParam("section") String section)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(auth, listEntryId, ecrfId, visitId);
+		return WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(auth, listEntryId, ecrfId, visitId, section);
 	}
 	//@GET
 	//@Produces({ MediaType.APPLICATION_JSON })
