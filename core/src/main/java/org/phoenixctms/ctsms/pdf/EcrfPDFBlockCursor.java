@@ -200,6 +200,9 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 				this.indexBlock = block;
 			} else if (BlockType.NEW_ECRF.equals(block.getType())) {
 				this.ecrfBlock = block;
+			} else if (BlockType.LIST_ENTRY_TAG_VALUE.equals(block.getType())) {
+				this.sectionBlock = null;
+				this.indexBlock = null;
 			}
 		}
 	}
