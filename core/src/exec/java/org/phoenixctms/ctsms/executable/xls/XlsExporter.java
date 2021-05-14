@@ -81,6 +81,7 @@ public class XlsExporter {
 			}
 			context.setWorkbook(workbook);
 			writer.init();
+			writer.printHeaderRow();
 			writer.printRows();
 			workbook.write();
 			workbook.close();

@@ -88,6 +88,27 @@ public class EcrfRowWriter extends RowWriter {
 		printRows(trialService.getEcrfList(context.getAuth(), context.getEntityId(this), null, true, null));
 	}
 
+	@Override
+	public void printHeaderRow() throws Exception {
+		String[] values = new String[maxColumnIndex + 1];
+		values[nameColumnIndex] = "name";
+		values[revisionColumnIndex] = "revision";
+		values[probandGroupsColumnIndex] = "proband groups";
+		values[visitsColumnIndex] = "visits";
+		values[activeColumnIndex] = "display";
+		values[disabledColumnIndex] = "disabled";
+		values[enableBrowserFieldCalculationColumnIndex] = "as-you-type";
+		values[externalIdColumnIndex] = "external id";
+		values[titleColumnIndex] = "title";
+		values[descriptionColumnIndex] = "description";
+		values[enrollmentStatusColumnIndex] = "enrollment status to switch to";
+		values[chargeColumnIndex] = "charge";
+		printRow(values, true);
+		context.getExporter().getEcrfFieldRowWriter().printHeaderRow();
+		context.getExporter().getInputFieldRowWriter().printHeaderRow();
+		context.getExporter().getSelectionSetValueRowWriter().printHeaderRow();
+	}
+
 	public void printRows(Collection<ECRFOutVO> ecrfs) throws Throwable {
 		Iterator<ECRFOutVO> ecrfsIt = ecrfs.iterator();
 		while (ecrfsIt.hasNext()) {

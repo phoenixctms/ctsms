@@ -25,33 +25,39 @@ public class InputFieldRowWriter extends RowWriter {
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 4;
 	private final static int FIELD_TYPE_COLUMN_INDEX = 5;
 	private final static int COMMENT_COLUMN_INDEX = 6;
-	private final static int TEXT_PRESET_COLUMN_INDEX = 7;
-	private final static int BOOLEAN_PRESET_COLUMN_INDEX = 7;
-	private final static int LONG_PRESET_COLUMN_INDEX = 7;
-	private final static int FLOAT_PRESET_COLUMN_INDEX = 7;
-	private final static int DATE_PRESET_COLUMN_INDEX = 7;
-	private final static int TIME_PRESET_COLUMN_INDEX = 7;
-	private final static int TIMESTAMP_PRESET_COLUMN_INDEX = 7;
+	private final static int PRESET_COLUMN_INDEX = 7;
+	private final static int TEXT_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
+	private final static int BOOLEAN_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
+	private final static int LONG_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
+	private final static int FLOAT_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
+	private final static int DATE_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
+	private final static int TIME_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
+	private final static int TIMESTAMP_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int VALIDATION_ERROR_MSG_COLUMN_INDEX = 8;
-	private final static int REGEXP_COLUMN_INDEX = 9;
-	private final static int LEARN_COLUMN_INDEX = 9;
-	private final static int STRICT_COLUMN_INDEX = 10;
-	private final static int MIN_SELECTIONS_COLUMN_INDEX = 9;
-	private final static int MAX_SELECTIONS_COLUMN_INDEX = 10;
-	private final static int LONG_LOWER_LIMIT_COLUMN_INDEX = 9;
-	private final static int LONG_UPPER_LIMIT_COLUMN_INDEX = 10;
-	private final static int FLOAT_LOWER_LIMIT_COLUMN_INDEX = 9;
-	private final static int FLOAT_UPPER_LIMIT_COLUMN_INDEX = 10;
-	private final static int MIN_DATE_COLUMN_INDEX = 9;
-	private final static int MAX_DATE_COLUMN_INDEX = 10;
-	private final static int MIN_TIMESTAMP_COLUMN_INDEX = 9;
-	private final static int MAX_TIMESTAMP_COLUMN_INDEX = 10;
-	private final static int USER_TIME_ZONE_COLUMN_INDEX = 11;
-	private final static int MIN_TIME_COLUMN_INDEX = 9;
-	private final static int MAX_TIME_COLUMN_INDEX = 10;
-	private final static int WIDTH_COLUMN_INDEX = 11;
-	private final static int HEIGHT_COLUMN_INDEX = 12;
-	private final static int FILE_NAME_COLUMN_INDEX = 13;
+	private final static int PARAM_1_COLUMN_INDEX = 9;
+	private final static int PARAM_2_COLUMN_INDEX = 10;
+	private final static int PARAM_3_COLUMN_INDEX = 11;
+	private final static int PARAM_4_COLUMN_INDEX = 12;
+	private final static int PARAM_5_COLUMN_INDEX = 13;
+	private final static int REGEXP_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int MIN_SELECTIONS_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int MAX_SELECTIONS_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int LONG_LOWER_LIMIT_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int LONG_UPPER_LIMIT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int FLOAT_LOWER_LIMIT_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int FLOAT_UPPER_LIMIT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int MIN_DATE_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int MAX_DATE_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int MIN_TIMESTAMP_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int MAX_TIMESTAMP_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int USER_TIME_ZONE_COLUMN_INDEX = PARAM_3_COLUMN_INDEX;
+	private final static int MIN_TIME_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int MAX_TIME_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int WIDTH_COLUMN_INDEX = PARAM_3_COLUMN_INDEX;
+	private final static int HEIGHT_COLUMN_INDEX = PARAM_4_COLUMN_INDEX;
+	private final static int FILE_NAME_COLUMN_INDEX = PARAM_5_COLUMN_INDEX;
 	private int nameColumnIndex;
 	private int titleColumnIndex;
 	private int localizedColumnIndex;
@@ -59,6 +65,7 @@ public class InputFieldRowWriter extends RowWriter {
 	private int externalIdColumnIndex;
 	private int fieldTypeColumnIndex;
 	private int commentColumnIndex;
+	private int presetColumnIndex;
 	private int textPresetColumnIndex;
 	private int booleanPresetColumnIndex;
 	private int longPresetColumnIndex;
@@ -67,6 +74,11 @@ public class InputFieldRowWriter extends RowWriter {
 	private int timestampPresetColumnIndex;
 	private int timePresetColumnIndex;
 	private int validationErrorMsgColumnIndex;
+	private int param1ColumnIndex;
+	private int param2ColumnIndex;
+	private int param3ColumnIndex;
+	private int param4ColumnIndex;
+	private int param5ColumnIndex;
 	private int regExpColumnIndex;
 	private int learnColumnIndex;
 	private int strictColumnIndex;
@@ -124,6 +136,8 @@ public class InputFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(fieldTypeColumnIndex, maxColumnIndex);
 		commentColumnIndex = COMMENT_COLUMN_INDEX;
 		maxColumnIndex = Math.max(commentColumnIndex, maxColumnIndex);
+		presetColumnIndex = PRESET_COLUMN_INDEX;
+		maxColumnIndex = Math.max(presetColumnIndex, maxColumnIndex);
 		textPresetColumnIndex = TEXT_PRESET_COLUMN_INDEX;
 		maxColumnIndex = Math.max(textPresetColumnIndex, maxColumnIndex);
 		booleanPresetColumnIndex = BOOLEAN_PRESET_COLUMN_INDEX;
@@ -140,6 +154,16 @@ public class InputFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(timePresetColumnIndex, maxColumnIndex);
 		validationErrorMsgColumnIndex = VALIDATION_ERROR_MSG_COLUMN_INDEX;
 		maxColumnIndex = Math.max(validationErrorMsgColumnIndex, maxColumnIndex);
+		param1ColumnIndex = PARAM_1_COLUMN_INDEX;
+		maxColumnIndex = Math.max(param1ColumnIndex, maxColumnIndex);
+		param2ColumnIndex = PARAM_2_COLUMN_INDEX;
+		maxColumnIndex = Math.max(param2ColumnIndex, maxColumnIndex);
+		param3ColumnIndex = PARAM_3_COLUMN_INDEX;
+		maxColumnIndex = Math.max(param3ColumnIndex, maxColumnIndex);
+		param4ColumnIndex = PARAM_4_COLUMN_INDEX;
+		maxColumnIndex = Math.max(param4ColumnIndex, maxColumnIndex);
+		param5ColumnIndex = PARAM_5_COLUMN_INDEX;
+		maxColumnIndex = Math.max(param5ColumnIndex, maxColumnIndex);
 		regExpColumnIndex = REGEXP_COLUMN_INDEX;
 		maxColumnIndex = Math.max(regExpColumnIndex, maxColumnIndex);
 		learnColumnIndex = LEARN_COLUMN_INDEX;
@@ -189,6 +213,26 @@ public class InputFieldRowWriter extends RowWriter {
 	@Override
 	public void printRows() throws Throwable {
 		printRows(inputFieldService.getInputField(context.getAuth(), context.getEntityId(this)));
+	}
+
+	@Override
+	public void printHeaderRow() throws Exception {
+		String[] values = new String[maxColumnIndex + 1];
+		values[nameColumnIndex] = "name";
+		values[titleColumnIndex] = "title";
+		values[localizedColumnIndex] = "localized";
+		values[categoryColumnIndex] = "category";
+		values[externalIdColumnIndex] = "external id";
+		values[fieldTypeColumnIndex] = "field type";
+		values[commentColumnIndex] = "comment";
+		values[presetColumnIndex] = "preset value";
+		values[validationErrorMsgColumnIndex] = "validation error message";
+		values[param1ColumnIndex] = "param1 (lower limit/min selections/learn/regexp)";
+		values[param2ColumnIndex] = "param2 (upper limit/max selections/strict)";
+		values[param3ColumnIndex] = "param3 (in user timezone/sketch width)";
+		values[param4ColumnIndex] = "param4 (sketch height)";
+		values[param5ColumnIndex] = "param5 (sketch bg filename)";
+		printRow(values, true);
 	}
 
 	public void printRows(InputFieldOutVO inputField) throws Throwable {

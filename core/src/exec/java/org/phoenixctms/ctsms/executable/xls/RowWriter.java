@@ -94,6 +94,9 @@ public abstract class RowWriter {
 
 	public abstract void printRows() throws Throwable;
 
+	public void printHeaderRow() throws Exception {
+	}
+
 	public void setCommentChar(String commentChar) {
 		this.commentChar = commentChar;
 	}

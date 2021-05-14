@@ -65,6 +65,19 @@ public class SelectionSetValueRowWriter extends RowWriter {
 		printRows(inputFieldService.getSelectionSetValueList(context.getAuth(), context.getEntityId(this), null, null));
 	}
 
+	@Override
+	public void printHeaderRow() throws Exception {
+		String[] values = new String[maxColumnIndex + 1];
+		values[fieldNameColumnIndex] = "input field name";
+		values[nameColumnIndex] = "name";
+		values[valueColumnIndex] = "value";
+		values[localizedColumnIndex] = "localized";
+		values[presetColumnIndex] = "is preset";
+		values[strokesIdColumnIndex] = "strokes id";
+		values[inkRegionsColumnIndex] = "ink regions";
+		printRow(values, true);
+	}
+
 	public void printRows(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) throws Throwable {
 		Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
 		while (it.hasNext()) {

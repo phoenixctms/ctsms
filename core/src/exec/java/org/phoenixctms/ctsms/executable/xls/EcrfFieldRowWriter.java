@@ -109,6 +109,29 @@ public class EcrfFieldRowWriter extends RowWriter {
 		printRows(trialService.getEcrfFieldList(context.getAuth(), null, context.getEntityId(this), true, null));
 	}
 
+	@Override
+	public void printHeaderRow() throws Exception {
+		String[] values = new String[maxColumnIndex + 1];
+		values[ecrfNameColumnIndex] = "eCRF name";
+		values[ecrfRevisionColumnIndex] = "eCRF revision";
+		values[sectionColumnIndex] = "section";
+		values[positionColumnIndex] = "position";
+		values[externalIdColumnIndex] = "external id";
+		values[inputFieldNameColumnIndex] = "input field name";
+		values[titleColumnIndex] = "title";
+		values[commentColumnIndex] = "comment";
+		values[seriesColumnIndex] = "series";
+		values[optionalColumnIndex] = "optional";
+		values[disabledColumnIndex] = "disabled";
+		values[auditTrailColumnIndex] = "audit trail";
+		values[reasonForChangeRequiredColumnIndex] = "reason for change required";
+		values[jsVariableNameColumnIndex] = "variable name";
+		values[jsValueExpressionColumnIndex] = "value expression";
+		values[jsOutputExpressionColumnIndex] = "output expression";
+		values[notifyColumnIndex] = "notify input validation messages";
+		printRow(values, true);
+	}
+
 	public void printRows(Collection<ECRFFieldOutVO> ecrfFields) throws Throwable {
 		Iterator<ECRFFieldOutVO> it = ecrfFields.iterator();
 		while (it.hasNext()) {
