@@ -752,7 +752,7 @@ public class DBTool {
 				} else if (line.hasOption(DBToolOptions.HELP_OPT)) {
 					dbTool.getJobOutput().printPrelude(DBToolOptions.getTaskAndLockProcess(DBToolOptions.HELP_OPT));
 					HelpFormatter formatter = new HelpFormatter();
-					formatter.printHelp("dbtool [task <arg>] [option1 <arg> option2 <arg> ...]", DBToolOptions.options);
+					formatter.printHelp(2 * formatter.getWidth(), "dbtool [task <arg>] [option1 <arg> option2 <arg> ...]", "", DBToolOptions.options, "");
 				} else if (line.hasOption(DBToolOptions.IMPORT_ICD_SYSTEMATICS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ICD_SYSTEMATICS_OPT);
 					dbTool.getJobOutput().printPrelude(job);
