@@ -1212,7 +1212,7 @@ var FieldCalculation = FieldCalculation || {};
 			return null;
 	    }
 		var regexp = _getLocalizedMessage('customPartialTimePartRegExp',locale);
-		var minuteRequired = (typeof(minuteRequired) == typeof(true) ? minuteRequired : (minuteRequired != null && minuteRequired == "required"));
+		var minuteRequired = (typeof(nkMinute) == typeof(true) ? nkMinute : (nkMinute != null && nkMinute == "required"));
 		if (regexp.test(ary[0])) {
 			if (regexp.test(ary[1]) && !minuteRequired) {
 
