@@ -20,13 +20,13 @@ jobs:
         # `POSTGRES_HOST` is `postgres`
         env:
           # optional (defaults to `postgres`)
-          POSTGRES_DB: ctsms
+          POSTGRES_DB: postgres
           # required
-          POSTGRES_PASSWORD: ctsms
+          POSTGRES_PASSWORD: postgres
           # optional (defaults to `5432`)
           POSTGRES_PORT: 5432
           # optional (defaults to `postgres`)
-          POSTGRES_USER: ctsms
+          POSTGRES_USER: postgres
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432
