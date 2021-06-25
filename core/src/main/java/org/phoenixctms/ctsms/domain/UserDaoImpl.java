@@ -156,11 +156,15 @@ public class UserDaoImpl
 		super.toUserInVO(source, target);
 		Department department = source.getDepartment();
 		Staff identity = source.getIdentity();
+		User parent = source.getParent();
 		if (department != null) {
 			target.setDepartmentId(department.getId());
 		}
 		if (identity != null) {
 			target.setIdentityId(identity.getId());
+		}
+		if (parent != null) {
+			target.setParentId(parent.getId());
 		}
 	}
 
@@ -230,6 +234,7 @@ public class UserDaoImpl
 		super.userInVOToEntity(source, target, copyIfNull);
 		Long departmentId = source.getDepartmentId();
 		Long identityId = source.getIdentityId();
+		Long parentId = source.getParentId();
 		if (departmentId != null) {
 			Department department = this.getDepartmentDao().load(departmentId);
 			target.setDepartment(department);
@@ -250,6 +255,20 @@ public class UserDaoImpl
 			target.setIdentity(null);
 			if (identity != null) {
 				identity.removeAccounts(target);
+			}
+		}
+		if (parentId != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
+			User parent = this.load(parentId);
+			target.setParent(parent);
+			parent.addChildren(target);
+		} else if (copyIfNull) {
+			User parent = target.getParent();
+			target.setParent(null);
+			if (parent != null) {
+				parent.removeChildren(target);
 			}
 		}
 	}
@@ -274,6 +293,7 @@ public class UserDaoImpl
 			boolean copyIfNull) {
 		super.userOutVOToEntity(source, target, copyIfNull);
 		StaffOutVO identityVO = source.getIdentity();
+		UserOutVO parentVO = source.getParent();
 		AuthenticationTypeVO authMethodVO = source.getAuthMethod();
 		if (identityVO != null) {
 			Staff identity = this.getStaffDao().staffOutVOToEntity(identityVO);
@@ -290,6 +310,20 @@ public class UserDaoImpl
 			target.setAuthMethod(authMethodVO.getMethod());
 		} else if (copyIfNull) {
 			target.setAuthMethod(null);
+		}
+		if (parentVO != null) {
+			if (target.getParent() != null) {
+				target.getParent().removeChildren(target);
+			}
+			User parent = this.userOutVOToEntity(parentVO);
+			target.setParent(parent);
+			parent.addChildren(target);
+		} else if (copyIfNull) {
+			User parent = target.getParent();
+			target.setParent(null);
+			if (parent != null) {
+				parent.removeChildren(target);
+			}
 		}
 	}
 

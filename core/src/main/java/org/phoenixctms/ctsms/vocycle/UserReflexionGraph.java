@@ -2,15 +2,24 @@ package org.phoenixctms.ctsms.vocycle;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
 
+import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.UserDaoImpl;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
+import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 
@@ -22,11 +31,16 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 	private int maxInstances;
 	private int parentDepth;
 	private int childrenDepth;
+	private UserDao userDao;
 	private UserDaoImpl userDaoImpl;
 	private DepartmentDao departmentDao;
 	public final static int DEFAULT_MAX_INSTANCES = 1;
 	private final static int DEFAULT_PARENT_DEPTH = Integer.MAX_VALUE >> 1;
 	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
+
+	public UserReflexionGraph(UserDao userDao) {
+		this.userDao = userDao;
+	}
 
 	public UserReflexionGraph(UserDaoImpl userDaoImpl, DepartmentDao departmentDao, Integer... maxInstances) {
 		this.maxInstances = maxInstances != null && maxInstances.length > 0 ? (maxInstances[0] == null ? DEFAULT_MAX_INSTANCES : maxInstances[0]) : DEFAULT_MAX_INSTANCES;
@@ -38,7 +52,7 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 
 	@Override
 	protected User aquireWriteLock(Long id) throws ServiceException {
-		return null;
+		return userDao.load(id, LockMode.PESSIMISTIC_WRITE);
 	}
 
 	@Override
@@ -54,6 +68,14 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 	@Override
 	protected Collection<User> getEntityChildren(User source) {
 		return null;
+		Collection<User> children = source.getChildren();
+		if (children.size() > 1) {
+			TreeSet<User> result = new TreeSet<User>(new UserComparator());
+			result.addAll(children);
+			return result;
+		} else {
+			return children;
+		}
 	}
 
 	@Override
@@ -78,12 +100,12 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 
 	@Override
 	protected User getParent(User source) {
-		return source.getModifiedUser();
+		return source.getParent();
 	}
 
 	@Override
 	protected Collection<UserOutVO> getVOChildren(UserOutVO target) {
-		return null;
+		return target.getChildren();
 	}
 
 	@Override
@@ -98,7 +120,8 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 
 	@Override
 	protected boolean limitInstances() {
-		return LIMIT_INSTANCES; // load entire modified user graph, traverse back to root user (created by self)
+		return LIMIT_INSTANCES;
+		// load entire modified user graph, traverse back to root user (created by self)
 	}
 
 	@Override
@@ -117,7 +140,18 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 
 	@Override
 	protected void setParent(UserOutVO target, UserOutVO parentVO) {
-		target.setModifiedUser(parentVO);
+		target.setParent(parentVO);
+	}
+
+	@Override
+	protected void throwGraphLoopException(List<User> path) throws ServiceException {
+		Iterator<User> it = path.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (it.hasNext()) {
+			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.xLOOP_PATH_INVENTORY_LABEL, DefaultMessages.LOOP_PATH_INVENTORY_LABEL,
+					CommonUtil.inventoryOutVOToString(inventoryDao.toInventoryOutVO(it.next()))));
+		}
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.xINVENTORY_GRAPH_LOOP, sb.toString());
 	}
 
 	@Override
@@ -128,6 +162,13 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 				voMapPut(StaffOutVO.class, identity.getId(), new StaffOutVO(), true, voMap);
 			}
 			target.setIdentity((StaffOutVO) voMapGet(StaffOutVO.class, identity.getId(), voMap));
+		}
+		User modifiedUser = source.getModifiedUser();
+		if (modifiedUser != null) {
+			if (!voMapContainsKey(UserOutVO.class, modifiedUser.getId(), voMap)) {
+				voMapPut(UserOutVO.class, modifiedUser.getId(), new UserOutVO(), true, voMap);
+			}
+			target.setModifiedUser((UserOutVO) voMapGet(UserOutVO.class, modifiedUser.getId(), voMap));
 		}
 		userDaoImpl.toUserOutVOBase(source, target);
 		Department department = source.getDepartment();

@@ -1080,13 +1080,19 @@ public final class ServiceUtil {
 				mimeTypeDao);
 	}
 
-	public static void checkUserInput(UserInVO userIn, User originalUser, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao) throws Exception {
+	public static void checkUserInput(UserInVO userIn, User originalUser, String plainDepartmentPassword, DepartmentDao departmentDao, StaffDao staffDao, UserDao userDao)
+			throws Exception {
 		Department department = CheckIDUtil.checkDepartmentId(userIn.getDepartmentId(), departmentDao);
 		if (!CryptoUtil.checkDepartmentPassword(department, plainDepartmentPassword)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DEPARTMENT_PASSWORD_WRONG);
 		}
 		if (userIn.getIdentityId() != null) {
 			CheckIDUtil.checkStaffId(userIn.getIdentityId(), staffDao);
+		}
+		if (userIn.getParentId() != null) {
+			if (userDao.load(userIn.getParentId(), LockMode.PESSIMISTIC_WRITE) == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_PARENT_USER_ID, userIn.getParentId().toString());
+			}
 		}
 		if (userIn.getDecryptUntrusted() && !userIn.getDecrypt()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DECRYPT_FLAG_NOT_SET);

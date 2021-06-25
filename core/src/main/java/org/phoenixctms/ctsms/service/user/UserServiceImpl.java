@@ -66,6 +66,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileInVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
 import org.phoenixctms.ctsms.vo.UserSettingsInVO;
+import org.phoenixctms.ctsms.vocycle.UserReflexionGraph;
 
 /**
  * @see org.phoenixctms.ctsms.service.user.UserService
@@ -151,7 +152,8 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, String plainDepartmentPassword, Integer maxInstances) throws Exception {
+	protected UserOutVO handleAddUser(AuthenticationVO auth, UserInVO newUser, String plainDepartmentPassword, Integer maxInstances, Integer maxParentDepth,
+			Integer maxChildrenDepth) throws Exception {
 		UserDao userDao = this.getUserDao();
 		ServiceUtil.checkUsernameExists(newUser.getName(), userDao);
 		if (plainDepartmentPassword == null) {
@@ -165,7 +167,7 @@ public class UserServiceImpl
 		ServiceUtil.createKeyPair(user, plainDepartmentPassword, this.getKeyPairDao());
 		user = userDao.create(user);
 		notifyUserAccount(user, null, now);
-		UserOutVO result = userDao.toUserOutVO(user, maxInstances);
+		UserOutVO result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, journalEntryDao);
 		Staff identity = user.getIdentity();
@@ -198,7 +200,8 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleDeleteUser(AuthenticationVO auth, Long userId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances) throws Exception {
+	protected UserOutVO handleDeleteUser(AuthenticationVO auth, Long userId, boolean defer, boolean force, String deferredDeleteReason, Integer maxInstances,
+			Integer maxParentDepth, Integer maxChildrenDepth) throws Exception {
 		UserDao userDao = this.getUserDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		User modified = CoreUtil.getUser();
@@ -209,7 +212,7 @@ public class UserServiceImpl
 			if (originalUser.equals(modified)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_ACTIVE_USER);
 			}
-			UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances);
+			UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances, maxParentDepth, maxChildrenDepth);
 			userDao.evict(originalUser);
 			User user = CheckIDUtil.checkUserId(userId, userDao, LockMode.PESSIMISTIC_WRITE);
 			if (CommonUtil.isEmptyString(deferredDeleteReason)) {
@@ -219,7 +222,7 @@ public class UserServiceImpl
 			user.setDeferredDeleteReason(deferredDeleteReason);
 			CoreUtil.modifyVersion(user, user.getVersion(), now, user); // no opt. locking
 			userDao.update(user);
-			result = userDao.toUserOutVO(user, maxInstances);
+			result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 			logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_MARKED_FOR_DELETION, result, original, journalEntryDao);
 			Staff identity = user.getIdentity();
 			if (identity != null) {
@@ -231,7 +234,7 @@ public class UserServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_ACTIVE_USER);
 			}
 			checkActivityCount(userId, journalEntryDao);
-			result = userDao.toUserOutVO(user, maxInstances);
+			result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 			NotificationDao notificationDao = this.getNotificationDao();
 			NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
 			Iterator<JournalEntry> journalEntriesIt = user.getJournalEntries().iterator();
@@ -279,6 +282,21 @@ public class UserServiceImpl
 			}
 			ServiceUtil.removeNotifications(user.getNotifications(), notificationDao, notificationRecipientDao);
 			KeyPair keyPair = user.getKeyPair();
+			Iterator<User> childrenIt = user.getChildren().iterator();
+			while (childrenIt.hasNext()) {
+				User child = childrenIt.next();
+				child.setParent(null);
+				CoreUtil.modifyVersion(child, child.getVersion(), now, user);
+				userDao.update(child);
+				UserOutVO childVO = userDao.toUserOutVO(child);
+			}
+			user.getChildren().clear();
+			User parent = user.getParent();
+			if (parent != null) {
+				parent.removeChildren(user);
+				user.setParent(null);
+				userDao.update(parent);
+			}
 			userDao.remove(user);
 			this.getKeyPairDao().remove(keyPair);
 			logSystemMessage(modified, result, now, modified, SystemMessageCodes.USER_DELETED, result, null, journalEntryDao);
@@ -364,10 +382,10 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleGetUser(AuthenticationVO auth, Long userId, Integer maxInstances) throws Exception {
+	protected UserOutVO handleGetUser(AuthenticationVO auth, Long userId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) throws Exception {
 		UserDao userDao = this.getUserDao();
 		User user = CheckIDUtil.checkUserId(userId, userDao);
-		UserOutVO result = userDao.toUserOutVO(user, maxInstances);
+		UserOutVO result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 		return result;
 	}
 
@@ -531,7 +549,8 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, String plainNewDepartmentPassword, String plainOldDepartmentPassword, Integer maxInstances)
+	protected UserOutVO handleUpdateUser(AuthenticationVO auth, UserInVO modifiedUser, String plainNewDepartmentPassword, String plainOldDepartmentPassword, Integer maxInstances,
+			Integer maxParentDepth, Integer maxChildrenDepth)
 			throws Exception {
 		UserDao userDao = this.getUserDao();
 		User originalUser = CheckIDUtil.checkUserId(modifiedUser.getId(), userDao, LockMode.PESSIMISTIC_WRITE);
@@ -548,9 +567,10 @@ public class UserServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.OLD_DEPARTMENT_PASSWORD_WRONG);
 			}
 		}
-		UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances);
+		UserOutVO original = userDao.toUserOutVO(originalUser, maxInstances, maxParentDepth, maxChildrenDepth);
 		userDao.evict(originalUser);
 		User user = userDao.userInVOToEntity(modifiedUser);
+		checkUserLoop(user);
 		if (departmentChanged) {
 			ServiceUtil.updateUserDepartmentPassword(user, plainNewDepartmentPassword, plainOldDepartmentPassword, this.getKeyPairDao(), this.getPasswordDao());
 		}
@@ -559,7 +579,7 @@ public class UserServiceImpl
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		notifyUserAccount(user, originalUser, now);
-		UserOutVO result = userDao.toUserOutVO(user, maxInstances);
+		UserOutVO result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_UPDATED, result, original, journalEntryDao);
 		Staff identity = user.getIdentity();
@@ -567,6 +587,10 @@ public class UserServiceImpl
 			logSystemMessage(identity, result, now, modified, SystemMessageCodes.USER_UPDATED, result, original, journalEntryDao);
 		}
 		return result;
+	}
+
+	private void checkUserLoop(User user) throws ServiceException {
+		(new UserReflexionGraph(this.getUserDao())).checkGraphLoop(user, true, false);
 	}
 
 	private void notifyUserAccount(User user, User originalUser, Date now) throws Exception {
