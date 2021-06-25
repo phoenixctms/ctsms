@@ -20,25 +20,22 @@ jobs:
         # `POSTGRES_HOST` is `postgres`
         env:
           # optional (defaults to `postgres`)
-          POSTGRES_DB: postgres_db
+          POSTGRES_DB: ctsms
           # required
-          POSTGRES_PASSWORD: postgres_password
+          POSTGRES_PASSWORD: ctsms
           # optional (defaults to `5432`)
           POSTGRES_PORT: 5432
           # optional (defaults to `postgres`)
-          POSTGRES_USER: postgres_user
+          POSTGRES_USER: ctsms
         ports:
           # maps tcp port 5432 on service container to the host
           - 5432:5432
         # set health checks to wait until postgres has started
         options: >-
-          --health-cmd pg_isready
+         --health-cmd pg_isready
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
-
-
     steps:
       - uses: actions/checkout@v2
         with:
@@ -54,8 +51,16 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build
-        run: mvn -B install -DskipTests
+        run: mvn -B compile -DskipTests
+      - name: Extract .war
+        run: jar -xvf /home/runner/work/ctsms/ctsms/web/target/ctsms-1.7.0.war
       - name: Install PostgreSQL client
         run: |
-          apt-get update
-          apt-get install --yes postgresql-client
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client
+      - name: Generate DB schema
+        run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
+      - name: Create DB schema
+        run: |
+          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
+          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
