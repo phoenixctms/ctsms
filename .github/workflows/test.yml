@@ -25,8 +25,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build
         run: mvn -B install -DskipTests
-      - name: Extract .war
-        run: jar -xvf /home/runner/work/ctsms/ctsms/web/target/ctsms-1.7.0.war
       - name: Install PostgreSQL
         run: |
           sudo useradd ctsms -p '*' --groups sudo
@@ -42,3 +40,6 @@ jobs:
           sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
+      - name: Init DB
+        run: |
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
