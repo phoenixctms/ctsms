@@ -45,5 +45,7 @@ jobs:
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
       - name: Init DB
         run: |
+          mkdir /ctsms
+          chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
