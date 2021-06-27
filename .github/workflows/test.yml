@@ -24,7 +24,7 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build
-        if: 0
+        #if: 0
         run: mvn -B install -DskipTests
       - name: Install PostgreSQL
         run: |
@@ -33,10 +33,10 @@ jobs:
           sudo apt-get install --yes postgresql
           sudo service postgresql start
       - name: Generate DB schema
-        if: 0
+        #if: 0
         run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
       - name: Create DB schema
-        if: 0
+        #if: 0
         run: |
           sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
           sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
