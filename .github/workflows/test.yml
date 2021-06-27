@@ -33,8 +33,10 @@ jobs:
           sudo apt-get install --yes postgresql
           sudo service postgresql start
       - name: Generate DB schema
+        if: 0
         run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
       - name: Create DB schema
+        if: 0
         run: |
           sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
           sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
