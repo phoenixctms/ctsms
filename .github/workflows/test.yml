@@ -71,7 +71,20 @@ jobs:
       - name: Setup degrees and titles
         if: 0
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -it /ctsms/master_data/titles.csv -e ISO-8859-1 
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -it /ctsms/master_data/titles.csv -e ISO-8859-1
+      - name: Setup mime types
+        run: |
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imi /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ims /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imc /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imt /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1          
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
