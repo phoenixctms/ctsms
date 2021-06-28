@@ -24,10 +24,10 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build
-        #if: 0
+        if: 0
         run: mvn -B install -DskipTests
       - name: Generate DB schema
-        #if: 0
+        if: 0
         run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
       - name: Create 'ctsms' user
         run: |
@@ -76,7 +76,7 @@ jobs:
           sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
-          cat /ctsms/properties/ctsms-applicationcontext.properties
+          cat /ctsms/properties/ctsms-job-mail-sender.properties
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
