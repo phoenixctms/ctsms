@@ -13,10 +13,10 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get -y install sudo wget curl lsb-release gnupg
+          sudo apt-get -y install sudo wget curl lsb-release gnupg 
       - name: Create 'ctsms' user
         run: |
-          useradd ctsms -p '*' --groups sudo
+          sudo useradd ctsms -p '*' --groups sudo
       - name: Download master data
         run: |        
           sudo mkdir /ctsms
