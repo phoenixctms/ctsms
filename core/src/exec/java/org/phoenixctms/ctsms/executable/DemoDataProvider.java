@@ -772,9 +772,10 @@ public class DemoDataProvider {
 		newCourse.setDescription("description for " + newCourse.getName());
 		newCourse.setStart(start);
 		newCourse.setStop(stop);
+		String cvTitle = "Course " + (departmentNum + 1) + "-" + (courseNum + 1);
 		if (getRandomBoolean(50)) {
 			newCourse.setShowCvPreset(true);
-			newCourse.setCvTitle("Course " + (departmentNum + 1) + "-" + (courseNum + 1));
+			newCourse.setCvTitle(cvTitle);
 			if (getRandomBoolean(50)) {
 				newCourse.setShowCommentCvPreset(true);
 				newCourse.setCvCommentPreset("CV comment for " + newCourse.getCvTitle());
@@ -787,7 +788,7 @@ public class DemoDataProvider {
 		}
 		if (getRandomBoolean(50)) {
 			newCourse.setShowTrainingRecordPreset(true);
-			//newCourse.setCvTitle(cvTitle);
+			newCourse.setCvTitle(cvTitle);
 			if (getRandomBoolean(50)) {
 				newCourse.setShowCommentTrainingRecordPreset(true);
 				if (CommonUtil.isEmptyString(newCourse.getCvCommentPreset())) {

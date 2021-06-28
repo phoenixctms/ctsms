@@ -10,25 +10,6 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     steps:
-      - name: Install tools
-        if: 0
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install sudo wget curl lsb-release gnupg 
-      - name: Create 'ctsms' user
-        run: |
-          sudo useradd ctsms -p '*' --groups sudo
-      - name: Download master data
-        run: |        
-          sudo mkdir /ctsms
-          sudo wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
-          sudo tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
-          sudo rm /ctsms/config.tar.gz -f          
-          sudo wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
-          sudo mkdir /ctsms/master_data
-          sudo tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
-          sudo rm /ctsms/master-data.tar.gz -f
-          sudo chown ctsms:ctsms /ctsms -R  
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -45,13 +26,16 @@ jobs:
       - name: Build
         #if: 0
         run: mvn -B install -DskipTests
+      - name: Generate DB schema
+        #if: 0
+        run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
+      - name: Create 'ctsms' user
+        run: |
+          sudo useradd ctsms -p '*' --groups sudo
       - name: Start PostgreSQL
         run: |
           #sudo apt-get install --yes postgresql
           sudo service postgresql start
-      - name: Generate DB schema
-        #if: 0
-        run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
       - name: Create DB schema
         #if: 0
         run: |
@@ -60,11 +44,22 @@ jobs:
           sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
+      - name: Download master data
+        run: |        
+          sudo mkdir /ctsms
+          sudo wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
+          sudo tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
+          sudo rm /ctsms/config.tar.gz -f          
+          sudo wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
+          sudo mkdir /ctsms/master_data
+          sudo tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
+          sudo rm /ctsms/master-data.tar.gz -f
+          sudo chown ctsms:ctsms /ctsms -R            
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
-      - name: Init DB
+      - name: Initialize DB
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
       - name: Setup query criteria
@@ -74,6 +69,7 @@ jobs:
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv        
       - name: Setup degrees and titles
+        if: 0
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -it /ctsms/master_data/titles.csv -e ISO-8859-1 
       - name: Run testsuite
