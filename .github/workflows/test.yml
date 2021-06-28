@@ -65,7 +65,10 @@ jobs:
           MAIL_SENDER_PASSWORD: ${{ secrets.MAIL_SENDER_PASSWORD }}
           MAIL_SENDER_AUTH: ${{ secrets.MAIL_SENDER_AUTH }}
           MAIL_SENDER_STARTTLS: ${{ secrets.MAIL_SENDER_STARTTLS }}
+          MAIL_SENDER_ADDRESS: ${{ secrets.MAIL_SENDER_ADDRESS }}
         run: |
+          sudo echo "email_exec_from_address=$MAIL_SENDER_ADDRESS" >> /ctsms/properties/ctsms-settings.properties
+          sudo echo "email_exec_from_name=Phoenix CTSMS Automated Tests" >> /ctsms/properties/ctsms-settings.properties
           sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
           sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
           sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /ctsms/properties/ctsms-applicationcontext.properties
