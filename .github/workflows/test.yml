@@ -64,7 +64,7 @@ jobs:
           MAIL_SENDER_USERNAME: ${{ secrets.MAIL_SENDER_USERNAME }}
           MAIL_SENDER_PASSWORD: ${{ secrets.MAIL_SENDER_PASSWORD }}
           MAIL_SENDER_AUTH: ${{ secrets.MAIL_SENDER_AUTH }}
-          MAIL_SENDER_STARTTLS: ${{ secrets.STARTTLS }}
+          MAIL_SENDER_STARTTLS: ${{ secrets.MAIL_SENDER_STARTTLS }}
         run: |
           sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
           sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
@@ -76,7 +76,6 @@ jobs:
           sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
-          cat /ctsms/properties/ctsms-job-mail-sender.properties
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
