@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install tools
+        if: 0
         run: |
           sudo apt-get update
           sudo apt-get -y install sudo wget curl lsb-release gnupg 
@@ -44,9 +45,9 @@ jobs:
       - name: Build
         #if: 0
         run: mvn -B install -DskipTests
-      - name: Install PostgreSQL
+      - name: Start PostgreSQL
         run: |
-          sudo apt-get install --yes postgresql
+          #sudo apt-get install --yes postgresql
           sudo service postgresql start
       - name: Generate DB schema
         #if: 0
@@ -69,9 +70,12 @@ jobs:
       - name: Setup query criteria
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
-      - name: Setup service method permission
+      - name: Setup service method permissions
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv         
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv        
+      - name: Setup degrees and titles
+        run: |
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -it /ctsms/master_data/titles.csv -e ISO-8859-1 
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
