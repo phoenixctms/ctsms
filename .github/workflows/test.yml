@@ -51,3 +51,6 @@ jobs:
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
+      - name: Run testsuite
+        run: |
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
