@@ -54,7 +54,28 @@ jobs:
           sudo mkdir /ctsms/master_data
           sudo tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
           sudo rm /ctsms/master-data.tar.gz -f
-          sudo chown ctsms:ctsms /ctsms -R            
+          sudo chown ctsms:ctsms /ctsms -R
+          sudo chmod 777 /ctsms -R
+      - name: Configure email sender
+        env:
+          MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
+          MAIL_SENDER_PORT: ${{ secrets.MAIL_SENDER_PORT }}
+          MAIL_SENDER_PROTOCOL: ${{ secrets.MAIL_SENDER_PROTOCOL }}
+          MAIL_SENDER_USERNAME: ${{ secrets.MAIL_SENDER_USERNAME }}
+          MAIL_SENDER_PASSWORD: ${{ secrets.MAIL_SENDER_PASSWORD }}
+          MAIL_SENDER_AUTH: ${{ secrets.MAIL_SENDER_AUTH }}
+          MAIL_SENDER_STARTTLS: ${{ secrets.STARTTLS }}
+        run: |
+          sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_username=$MAIL_SENDER_USERNAME" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_password=$MAIL_SENDER_PASSWORD" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo touch /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chown ctsms:ctsms /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
@@ -87,4 +108,4 @@ jobs:
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1          
       - name: Run testsuite
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er rkrenn@phoenixctms.org
