@@ -111,4 +111,4 @@ jobs:
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1          
       - name: Run testsuite
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er rkrenn@phoenixctms.org
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
