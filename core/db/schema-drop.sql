@@ -960,6 +960,9 @@
         drop constraint users_MODIFIED_USER_FKC;
 
     alter table users 
+        drop constraint users_PARENT_FKC;
+
+    alter table users 
         drop constraint users_IDENTITY_FKC;
 
     alter table users 
