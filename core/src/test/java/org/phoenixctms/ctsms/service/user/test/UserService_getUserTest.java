@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getUser</code> of service <code>UserService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.user.UserService#getUser(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.user.UserService#getUser(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Integer, java.lang.Integer, java.lang.Integer)
  */
 @Test(groups={"service","UserService"})
 public class UserService_getUserTest extends UserServiceBaseTest {
