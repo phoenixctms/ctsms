@@ -7,12 +7,14 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 
 /**
  * @see Permission
@@ -28,12 +30,12 @@ public class PermissionDaoImpl
 	@Override
 	protected Collection<Permission> handleFindByServiceMethodUser(
 			String serviceMethod, Long userId, Boolean profilePermissionActive,
-			Boolean userPermissionProfileActive) throws Exception {
+			Boolean userPermissionProfileActive, Set<PermissionProfile> profiles) throws Exception {
 		org.hibernate.Criteria permissionCritria = createPermissionCriteria();
 		if (serviceMethod != null) {
 			permissionCritria.add(Restrictions.eq("serviceMethod", serviceMethod));
 		}
-		if (userId != null || profilePermissionActive != null || userPermissionProfileActive != null) {
+		if (userId != null || profilePermissionActive != null || userPermissionProfileActive != null || profiles != null) {
 			org.hibernate.Criteria profilePermissionCritria = permissionCritria.createCriteria("profilePermissions", CriteriaSpecification.LEFT_JOIN);
 			if (profilePermissionActive != null) {
 				profilePermissionCritria.add(Restrictions.eq("active", profilePermissionActive.booleanValue()));
@@ -48,6 +50,8 @@ public class PermissionDaoImpl
 					subQuery.add(Restrictions.eq("active", userPermissionProfileActive.booleanValue()));
 				}
 				profilePermissionCritria.add(Subqueries.propertyIn("profile", subQuery));
+			} else if (profiles != null) {
+				profilePermissionCritria.add(Restrictions.in("profile", profiles));
 			}
 		}
 		return permissionCritria.list();
