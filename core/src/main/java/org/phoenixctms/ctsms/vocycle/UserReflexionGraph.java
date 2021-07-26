@@ -2,17 +2,21 @@ package org.phoenixctms.ctsms.vocycle;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.compare.UserComparator;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.UserDaoImpl;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
@@ -37,6 +41,8 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 	public final static int DEFAULT_MAX_INSTANCES = 1;
 	private final static int DEFAULT_PARENT_DEPTH = Integer.MAX_VALUE >> 1;
 	private final static int DEFAULT_CHILDREN_DEPTH = Integer.MAX_VALUE >> 1;
+	private final static String STRING_LIST_SEPARATOR = ",";
+	private final static Pattern STRING_LIST_REGEXP = Pattern.compile(Pattern.quote(STRING_LIST_SEPARATOR));
 
 	public UserReflexionGraph(UserDao userDao) {
 		this.userDao = userDao;
@@ -67,7 +73,6 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 
 	@Override
 	protected Collection<User> getEntityChildren(User source) {
-		return null;
 		Collection<User> children = source.getChildren();
 		if (children.size() > 1) {
 			TreeSet<User> result = new TreeSet<User>(new UserComparator());
@@ -148,14 +153,13 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 		Iterator<User> it = path.iterator();
 		StringBuilder sb = new StringBuilder();
 		while (it.hasNext()) {
-			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.xLOOP_PATH_INVENTORY_LABEL, DefaultMessages.LOOP_PATH_INVENTORY_LABEL,
-					CommonUtil.inventoryOutVOToString(inventoryDao.toInventoryOutVO(it.next()))));
+			appendLoopPath(sb, L10nUtil.getMessage(MessageCodes.LOOP_PATH_USER_LABEL, DefaultMessages.LOOP_PATH_USER_LABEL,
+					CommonUtil.userOutVOToString(userDao.toUserOutVO(it.next()))));
 		}
-		throw L10nUtil.initServiceException(ServiceExceptionCodes.xINVENTORY_GRAPH_LOOP, sb.toString());
+		throw L10nUtil.initServiceException(ServiceExceptionCodes.USER_GRAPH_LOOP, sb.toString());
 	}
 
-	@Override
-	protected void toVORemainingFields(User source, UserOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
+	private void toVORemainingFields(User source, UserOutVO target, boolean loadModifiedUser, HashMap<Class, HashMap<Long, Object>> voMap) {
 		Staff identity = source.getIdentity();
 		if (identity != null) {
 			if (!voMapContainsKey(StaffOutVO.class, identity.getId(), voMap)) {
@@ -163,12 +167,13 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 			}
 			target.setIdentity((StaffOutVO) voMapGet(StaffOutVO.class, identity.getId(), voMap));
 		}
-		User modifiedUser = source.getModifiedUser();
-		if (modifiedUser != null) {
-			if (!voMapContainsKey(UserOutVO.class, modifiedUser.getId(), voMap)) {
-				voMapPut(UserOutVO.class, modifiedUser.getId(), new UserOutVO(), true, voMap);
+		if (loadModifiedUser) { //cut modifiedUser cycle
+			User modifiedUser = source.getModifiedUser();
+			if (modifiedUser != null) {
+				UserOutVO modifiedUserVO = newVO();
+				toVORemainingFields(modifiedUser, modifiedUserVO, false, voMap);
+				target.setModifiedUser(modifiedUserVO);
 			}
-			target.setModifiedUser((UserOutVO) voMapGet(UserOutVO.class, modifiedUser.getId(), voMap));
 		}
 		userDaoImpl.toUserOutVOBase(source, target);
 		Department department = source.getDepartment();
@@ -176,5 +181,71 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 			target.setDepartment(departmentDao.toDepartmentVO(department));
 		}
 		target.setAuthMethod(L10nUtil.createAuthenticationTypeVO(Locales.USER, source.getAuthMethod()));
+		target.setChildrenCount(userDaoImpl.getChildrenCount(source.getId()));
+		target.setInheritedProperties(getInheritedProperties(source.getInheritedPropertyList()));
+		target.setInheritedPermissionProfileGroups(getInheritedPermissionProfileGroups(source.getInheritedPermissionProfileGroupList()));
+	}
+
+	public static String toInheritedPropertyList(Collection<String> inheritedProperties) {
+		StringBuilder sb = new StringBuilder();
+		if (inheritedProperties != null) {
+			Iterator<String> it = inheritedProperties.iterator();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(STRING_LIST_SEPARATOR);
+				}
+				String inheritedProperty = it.next();
+				sb.append(inheritedProperty);
+			}
+		}
+		return sb.toString();
+	}
+
+	public static String toInheritedPermissionProfileGroupList(Collection<PermissionProfileGroup> inheritedPermissionProfileGroups) {
+		StringBuilder sb = new StringBuilder();
+		if (inheritedPermissionProfileGroups != null) {
+			Iterator<PermissionProfileGroup> it = inheritedPermissionProfileGroups.iterator();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(STRING_LIST_SEPARATOR);
+				}
+				PermissionProfileGroup inheritedPermissionProfileGroup = it.next();
+				sb.append(inheritedPermissionProfileGroup.value());
+			}
+		}
+		return sb.toString();
+	}
+
+	public static HashSet<String> getInheritedProperties(String inheritedPropertyList) {
+		HashSet<String> inheritedProperties;
+		if (!CommonUtil.isEmptyString(inheritedPropertyList)) {
+			String[] list = STRING_LIST_REGEXP.split(inheritedPropertyList, -1);
+			inheritedProperties = new HashSet<String>(list.length);
+			for (int i = 0; i < list.length; i++) {
+				inheritedProperties.add(list[i]);
+			}
+		} else {
+			inheritedProperties = new HashSet<String>();
+		}
+		return inheritedProperties;
+	}
+
+	public static HashSet<PermissionProfileGroup> getInheritedPermissionProfileGroups(String inheritedPermissionProfileGroupList) {
+		HashSet<PermissionProfileGroup> inheritedPermissionProfileGroups;
+		if (!CommonUtil.isEmptyString(inheritedPermissionProfileGroupList)) {
+			String[] list = STRING_LIST_REGEXP.split(inheritedPermissionProfileGroupList, -1);
+			inheritedPermissionProfileGroups = new HashSet<PermissionProfileGroup>(list.length);
+			for (int i = 0; i < list.length; i++) {
+				inheritedPermissionProfileGroups.add(PermissionProfileGroup.fromString(list[i]));
+			}
+		} else {
+			inheritedPermissionProfileGroups = new HashSet<PermissionProfileGroup>();
+		}
+		return inheritedPermissionProfileGroups;
+	}
+
+	@Override
+	protected void toVORemainingFields(User source, UserOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
+		toVORemainingFields(source, target, this.maxInstances > 1, voMap);
 	}
 }

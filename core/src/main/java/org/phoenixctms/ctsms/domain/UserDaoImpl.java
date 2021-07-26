@@ -13,16 +13,21 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 
 import org.hibernate.Query;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.QueryUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.AuthenticationTypeVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.vocycle.DeferredVO;
@@ -38,6 +43,13 @@ public class UserDaoImpl
 	private org.hibernate.Criteria createUserCriteria() {
 		org.hibernate.Criteria userCriteria = this.getSession().createCriteria(User.class);
 		return userCriteria;
+	}
+
+	@Override
+	protected long handleGetChildrenCount(Long userId) throws Exception {
+		org.hibernate.Criteria userCriteria = createUserCriteria();
+		userCriteria.add(Restrictions.eq("parent.id", userId.longValue()));
+		return (Long) userCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	/**
@@ -97,16 +109,16 @@ public class UserDaoImpl
 	}
 
 	private void loadDeferredStaffOutVOs(HashMap<Class, HashMap<Long, Object>> voMap) {
-		HashMap<Long, Object> identityVOMap = voMap.get(StaffOutVO.class);
+		HashMap<Long, Object> staffVOMap = voMap.get(StaffOutVO.class);
 		StaffDao staffDao = this.getStaffDao();
-		if (identityVOMap != null) {
-			Iterator<Entry<Long, Object>> identityVOMapIt = (new HashSet<Entry<Long, Object>>(identityVOMap.entrySet())).iterator();
-			while (identityVOMapIt.hasNext()) {
-				Entry<Long, Object> identityVO = identityVOMapIt.next();
-				DeferredVO deferredVO = (DeferredVO) identityVO.getValue();
+		if (staffVOMap != null) {
+			Iterator<Entry<Long, Object>> staffVOMapIt = (new HashSet<Entry<Long, Object>>(staffVOMap.entrySet())).iterator();
+			while (staffVOMapIt.hasNext()) {
+				Entry<Long, Object> staffVO = staffVOMapIt.next();
+				DeferredVO deferredVO = (DeferredVO) staffVO.getValue();
 				if (deferredVO.isDeferred()) {
 					deferredVO.setDeferred(false);
-					staffDao.toStaffOutVO(staffDao.load(identityVO.getKey()), (StaffOutVO) deferredVO.getVo(), voMap, identityVOMap.size(), 0, 0);
+					staffDao.toStaffOutVO(staffDao.load(staffVO.getKey()), (StaffOutVO) deferredVO.getVo(), voMap, staffVOMap.size(), 0, 0);
 				}
 			}
 		}
@@ -271,6 +283,14 @@ public class UserDaoImpl
 				parent.removeChildren(target);
 			}
 		}
+		Collection inheritedProperties;
+		if ((inheritedProperties = source.getInheritedProperties()).size() > 0 || copyIfNull) {
+			target.setInheritedPropertyList(UserReflexionGraph.toInheritedPropertyList(inheritedProperties));
+		}
+		Collection inheritedPermissionProfileGroups;
+		if ((inheritedPermissionProfileGroups = source.getInheritedPermissionProfileGroups()).size() > 0 || copyIfNull) {
+			target.setInheritedPermissionProfileGroupList(UserReflexionGraph.toInheritedPermissionProfileGroupList(inheritedPermissionProfileGroups));
+		}
 	}
 
 	/**
@@ -361,6 +381,12 @@ public class UserDaoImpl
 			User target,
 			boolean copyIfNull) {
 		super.userSettingsInVOToEntity(source, target, copyIfNull);
+		if (source.getInheritedProperties().size() > 0 || copyIfNull) {
+			Collection inheritedProperties = UserReflexionGraph.getInheritedProperties(target.getInheritedPropertyList());
+			inheritedProperties.removeAll(CommonUtil.USER_SETTINGS_INHERITABLE_PROPERTIES);
+			inheritedProperties.addAll(source.getInheritedProperties());
+			target.setInheritedPropertyList(UserReflexionGraph.toInheritedPropertyList(inheritedProperties));
+		}
 	}
 
 	/**
@@ -378,5 +404,110 @@ public class UserDaoImpl
 			user = User.Factory.newInstance();
 		}
 		return user;
+	}
+
+	private User loadUserFromUserInheritedVO(UserInheritedVO userInheritedVO) {
+		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadUserFromUserInheritedVO(UserInheritedVO) not yet implemented.");
+	}
+
+	@Override
+	public User userInheritedVOToEntity(UserInheritedVO userInheritedVO) {
+		User entity = this.loadUserFromUserInheritedVO(userInheritedVO);
+		this.userInheritedVOToEntity(userInheritedVO, entity, true);
+		return entity;
+	}
+
+	@Override
+	public void userInheritedVOToEntity(
+			UserInheritedVO source,
+			User target,
+			boolean copyIfNull) {
+		super.userInheritedVOToEntity(source, target, copyIfNull);
+	}
+
+	@Override
+	public UserInheritedVO toUserInheritedVO(final User entity) {
+		return super.toUserInheritedVO(entity);
+	}
+
+	@Override
+	public void toUserInheritedVO(
+			User source,
+			UserInheritedVO target) {
+		super.toUserInheritedVO(source, target);
+		Staff identity = source.getIdentity();
+		if (identity != null) {
+			target.setIdentity(this.getStaffDao().toStaffOutVO(identity));
+		}
+		Department department = source.getDepartment();
+		if (department != null) {
+			target.setDepartment(this.getDepartmentDao().toDepartmentVO(department));
+		}
+		target.setAuthMethod(L10nUtil.createAuthenticationTypeVO(Locales.USER, source.getAuthMethod()));
+		HashMap<Long, HashSet<String>> inheritPropertyMap = new HashMap<Long, HashSet<String>>();
+		setInheritedProperty(source, target, "enableInventoryModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableStaffModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableCourseModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableTrialModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableInputFieldModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableProbandModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableMassMailModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "enableUserModule", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleInventoryTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleStaffTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleCourseTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleTrialTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleProbandTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleInputFieldTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleUserTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "visibleMassMailTabList", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "decrypt", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "decryptUntrusted", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "locked", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "timeZone", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "locale", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "showTooltips", Boolean.TYPE, inheritPropertyMap);
+		setInheritedProperty(source, target, "theme", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "decimalSeparator", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "dateFormat", String.class, inheritPropertyMap);
+	}
+
+	private static boolean isInherited(User user, String propertyName, HashMap<Long, HashSet<String>> inheritPropertyMap) {
+		HashSet<String> inheritedPropertyList;
+		if (inheritPropertyMap.containsKey(user.getId())) {
+			inheritedPropertyList = inheritPropertyMap.get(user.getId());
+		} else {
+			inheritedPropertyList = UserReflexionGraph.getInheritedProperties(user.getInheritedPropertyList());
+			inheritPropertyMap.put(user.getId(), inheritedPropertyList);
+		}
+		return inheritedPropertyList.contains(propertyName);
+	}
+
+	private static void setInheritedProperty(User source, UserInheritedVO target, String propertyName, Class type, HashMap<Long, HashSet<String>> inheritPropertyMap) {
+		try {
+			if (isInherited(source, propertyName, inheritPropertyMap)) {
+				User parent = source.getParent();
+				if (parent != null) {
+					CommonUtil.getPropertySetter(UserInheritedVO.class, propertyName, type).invoke(target,
+							getInheritedProperty(parent, propertyName, inheritPropertyMap));
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static Object getInheritedProperty(User user, String propertyName, HashMap<Long, HashSet<String>> inheritPropertyMap) {
+		try {
+			if (isInherited(user, propertyName, inheritPropertyMap)) {
+				User parent = user.getParent();
+				if (parent != null) {
+					return getInheritedProperty(parent, propertyName, inheritPropertyMap);
+				}
+			}
+			return CommonUtil.getPropertyGetter(User.class, propertyName).invoke(user);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

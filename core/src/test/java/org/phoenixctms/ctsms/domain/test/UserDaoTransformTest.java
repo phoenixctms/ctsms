@@ -73,4 +73,24 @@ public class UserDaoTransformTest extends DaoTransformTestBase {
     Assert.fail("Test 'UserDaoTransformTest.testUserSettingsInVOToEntity' not implemented!");
   }
 
+  /**
+   * Test for method UserDao.toUserInheritedVO
+   *
+   * @see org.phoenixctms.ctsms.domain.UserDao#toUserInheritedVO(org.phoenixctms.ctsms.domain.User source, org.phoenixctms.ctsms.vo.UserInheritedVO target)
+   */
+  @Test
+  public void testToUserInheritedVO() {
+    Assert.fail("Test 'UserDaoTransformTest.testToUserInheritedVO' not implemented!");
+  }
+
+    /**
+   * Test for method userInheritedVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.UserDao#userInheritedVOToEntity(org.phoenixctms.ctsms.vo.UserInheritedVO source, org.phoenixctms.ctsms.domain.User target, boolean copyIfNull)
+   */
+  @Test
+  public void testUserInheritedVOToEntity() {
+    Assert.fail("Test 'UserDaoTransformTest.testUserInheritedVOToEntity' not implemented!");
+  }
+
 }
