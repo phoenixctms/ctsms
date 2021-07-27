@@ -98,6 +98,7 @@ import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.util.date.ShiftDuration;
 import org.phoenixctms.ctsms.vo.*;
+import org.phoenixctms.ctsms.vocycle.UserReflexionGraph;
 
 public final class ServiceUtil {
 
@@ -1098,10 +1099,26 @@ public final class ServiceUtil {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DECRYPT_FLAG_NOT_SET);
 		}
 		checkUserSettingsInput(userIn.getLocale(), userIn.getTimeZone(), userIn.getDecimalSeparator(), userIn.getDateFormat(), originalUser);
+		Iterator<String> it = userIn.getInheritedProperties().iterator();
+		while (it.hasNext()) {
+			String inheritedProperty = it.next();
+			if (!CommonUtil.USER_INHERITABLE_PROPERTIES.contains(inheritedProperty)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INHERITED_USER_PROPERTY,
+						inheritedProperty);
+			}
+		}
 	}
 
 	public static void checkUserSettingsInput(UserSettingsInVO userIn, User originalUser) throws Exception {
 		checkUserSettingsInput(userIn.getLocale(), userIn.getTimeZone(), userIn.getDecimalSeparator(), userIn.getDateFormat(), originalUser);
+		Iterator<String> it = userIn.getInheritedProperties().iterator();
+		while (it.hasNext()) {
+			String inheritedProperty = it.next();
+			if (!CommonUtil.USER_SETTINGS_INHERITABLE_PROPERTIES.contains(inheritedProperty)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INHERITED_USER_PROPERTY,
+						inheritedProperty);
+			}
+		}
 	}
 
 	private static void checkUserSettingsInput(String locale, String timeZone, String decimalSeparator, String dateFormat, User originalUser) throws Exception {
@@ -3241,6 +3258,29 @@ public final class ServiceUtil {
 		return result;
 	}
 
+	public static Collection<UserPermissionProfile> getInheritedUserPermissionProfiles(User user, PermissionProfileGroup profileGroup, Boolean active,
+			HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap, UserPermissionProfileDao userPermissionProfileDao) {
+		if (isPermissionProfileGroupInherited(user, profileGroup, inheritPermissionProfileGroupMap)) {
+			User parent = user.getParent();
+			if (parent != null) {
+				return getInheritedUserPermissionProfiles(parent, profileGroup, active, inheritPermissionProfileGroupMap, userPermissionProfileDao);
+			}
+		}
+		return userPermissionProfileDao.findByUserProfileGroup(user.getId(), null, profileGroup, active);
+	}
+
+	private static boolean isPermissionProfileGroupInherited(User user, PermissionProfileGroup profileGroup,
+			HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap) {
+		HashSet<PermissionProfileGroup> inheritedPermissionProfileGroupList;
+		if (inheritPermissionProfileGroupMap.containsKey(user.getId())) {
+			inheritedPermissionProfileGroupList = inheritPermissionProfileGroupMap.get(user.getId());
+		} else {
+			inheritedPermissionProfileGroupList = UserReflexionGraph.getInheritedPermissionProfileGroups(user.getInheritedPermissionProfileGroupList());
+			inheritPermissionProfileGroupMap.put(user.getId(), inheritedPermissionProfileGroupList);
+		}
+		return inheritedPermissionProfileGroupList.contains(profileGroup);
+	}
+
 	public static Collection<ProbandListEntryTagValueJsonVO> getProbandListEntryTagJsonValues(Collection<Map> probandListEntryTagValues, boolean filterJsValues,
 			ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
 		ArrayList<ProbandListEntryTagValueJsonVO> result = new ArrayList<ProbandListEntryTagValueJsonVO>(probandListEntryTagValues.size());
@@ -3652,6 +3692,15 @@ public final class ServiceUtil {
 			return null;
 		}
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
+	}
+
+	public static JournalEntry logSystemMessage(User user, UserInheritedVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+			JournalEntryDao journalEntryDao) throws Exception {
+		if (user == null) {
+			return null;
+		}
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userInheritedVOToString(userVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 

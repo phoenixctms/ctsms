@@ -62,6 +62,7 @@ import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileInVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
@@ -83,8 +84,10 @@ public class UserServiceImpl
 
 	private static void checkPermissionProfileGroupConsistency(User user, UserPermissionProfileDao userPermissionProfileDao) throws ServiceException {
 		PermissionProfileGroup[] profileGroups = PermissionProfileGroup.values();
+		HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap = new HashMap<Long, HashSet<PermissionProfileGroup>>();
 		for (int i = 0; i < profileGroups.length; i++) {
-			if (userPermissionProfileDao.getCount(user.getId(), null, profileGroups[i], true) != 1) {
+			if (ServiceUtil.getInheritedUserPermissionProfiles(user, profileGroups[i],
+					true, inheritPermissionProfileGroupMap, userPermissionProfileDao).size() != 1) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INCONSISTENT_GROUP_PERMISSION_PROFILES, user.getName(),
 						L10nUtil.getPermissionProfileGroupName(Locales.USER, profileGroups[i].name()));
 			}
@@ -101,15 +104,6 @@ public class UserServiceImpl
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.STAFF_JOURNAL, null)) });
 	}
 
-	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-			JournalEntryDao journalEntryDao) throws Exception {
-		if (user == null) {
-			return null;
-		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
-	}
-
 	private UserPermissionProfileOutVO addUpdateUserPermissionProfile(UserPermissionProfileInVO userPermissionProfileIn, Timestamp now, User user) throws Exception {
 		UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
 		Long id = userPermissionProfileIn.getId();
@@ -122,7 +116,8 @@ public class UserServiceImpl
 			CoreUtil.modifyVersion(userPermissionProfile, now, user);
 			userPermissionProfile = userPermissionProfileDao.create(userPermissionProfile);
 			result = userPermissionProfileDao.toUserPermissionProfileOutVO(userPermissionProfile);
-			logSystemMessage(userPermissionProfile.getUser(), result.getUser(), now, user, SystemMessageCodes.USER_PERMISSION_PROFILE_CREATED, result, null, journalEntryDao);
+			ServiceUtil.logSystemMessage(userPermissionProfile.getUser(), result.getUser(), now, user, SystemMessageCodes.USER_PERMISSION_PROFILE_CREATED, result, null,
+					journalEntryDao);
 		} else {
 			UserPermissionProfile originalUserPermissionProfile = CheckIDUtil.checkUserPermissionProfileId(id, userPermissionProfileDao);
 			checkUserPermissionProfileInput(userPermissionProfileIn); // access original associations before evict
@@ -135,7 +130,7 @@ public class UserServiceImpl
 				CoreUtil.modifyVersion(originalUserPermissionProfile, userPermissionProfile, now, user);
 				userPermissionProfileDao.update(userPermissionProfile);
 				result = userPermissionProfileDao.toUserPermissionProfileOutVO(userPermissionProfile);
-				logSystemMessage(userPermissionProfile.getUser(), result.getUser(), now, user, SystemMessageCodes.USER_PERMISSION_PROFILE_UPDATED, result, original,
+				ServiceUtil.logSystemMessage(userPermissionProfile.getUser(), result.getUser(), now, user, SystemMessageCodes.USER_PERMISSION_PROFILE_UPDATED, result, original,
 						journalEntryDao);
 			} else {
 				result = userPermissionProfileDao.toUserPermissionProfileOutVO(originalUserPermissionProfile);
@@ -159,7 +154,7 @@ public class UserServiceImpl
 		if (plainDepartmentPassword == null) {
 			plainDepartmentPassword = getPlainDepartmentPassword();
 		}
-		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao(), this.getUserDao());
 		User user = userDao.userInVOToEntity(newUser);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User modified = CoreUtil.getUser();
@@ -169,7 +164,7 @@ public class UserServiceImpl
 		notifyUserAccount(user, null, now);
 		UserOutVO result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, journalEntryDao);
+		ServiceUtil.logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, journalEntryDao);
 		Staff identity = user.getIdentity();
 		if (identity != null) {
 			logSystemMessage(identity, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, journalEntryDao);
@@ -223,7 +218,7 @@ public class UserServiceImpl
 			CoreUtil.modifyVersion(user, user.getVersion(), now, user); // no opt. locking
 			userDao.update(user);
 			result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
-			logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_MARKED_FOR_DELETION, result, original, journalEntryDao);
+			ServiceUtil.logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_MARKED_FOR_DELETION, result, original, journalEntryDao);
 			Staff identity = user.getIdentity();
 			if (identity != null) {
 				logSystemMessage(identity, result, now, modified, SystemMessageCodes.USER_MARKED_FOR_DELETION, result, original, journalEntryDao);
@@ -299,7 +294,7 @@ public class UserServiceImpl
 			}
 			userDao.remove(user);
 			this.getKeyPairDao().remove(keyPair);
-			logSystemMessage(modified, result, now, modified, SystemMessageCodes.USER_DELETED, result, null, journalEntryDao);
+			ServiceUtil.logSystemMessage(modified, result, now, modified, SystemMessageCodes.USER_DELETED, result, null, journalEntryDao);
 		}
 		return result;
 	}
@@ -373,10 +368,20 @@ public class UserServiceImpl
 
 	@Override
 	protected Collection<UserPermissionProfileOutVO> handleGetPermissionProfiles(
-			AuthenticationVO auth, Long userId, PermissionProfileGroup profileGroup, Boolean active) throws Exception {
+			AuthenticationVO auth, Long userId, PermissionProfileGroup profileGroup, Boolean active, boolean inherited) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
 		UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
-		Collection userPermissionProfiles = userPermissionProfileDao.findByUserProfileGroup(user.getId(), null, profileGroup, active);
+		Collection userPermissionProfiles;
+		if (inherited) {
+			userPermissionProfiles = new ArrayList<UserPermissionProfile>();
+			HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap = new HashMap<Long, HashSet<PermissionProfileGroup>>();
+			for (int i = 0; i < PermissionProfileGroup.values().length; i++) {
+				userPermissionProfiles.addAll(ServiceUtil.getInheritedUserPermissionProfiles(user, PermissionProfileGroup.values()[i],
+						active, inheritPermissionProfileGroupMap, userPermissionProfileDao));
+			}
+		} else {
+			userPermissionProfiles = userPermissionProfileDao.findByUserProfileGroup(user.getId(), null, profileGroup, active);
+		}
 		userPermissionProfileDao.toUserPermissionProfileOutVOCollection(userPermissionProfiles);
 		return userPermissionProfiles;
 	}
@@ -430,11 +435,10 @@ public class UserServiceImpl
 
 	@Override
 	protected Collection<UserPermissionProfileOutVO> handleSetPermissionProfiles(
-			AuthenticationVO auth, Set<UserPermissionProfileInVO> userPermissionProfilesIn)
+			AuthenticationVO auth, Set<UserPermissionProfileInVO> userPermissionProfilesIn, Set<PermissionProfileGroup> inheritedPermissionProfileGroups)
 			throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
-		User user = CoreUtil.getUser();
-		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
+		User modified = CoreUtil.getUser();
 		ArrayList<UserPermissionProfileOutVO> result;
 		ServiceException firstException = null;
 		HashMap<String, String> errorMessagesMap = new HashMap<String, String>();
@@ -446,7 +450,7 @@ public class UserServiceImpl
 			while (userPermissionProfilesInIt.hasNext()) {
 				UserPermissionProfileInVO userPermissionProfileIn = userPermissionProfilesInIt.next();
 				try {
-					result.add(addUpdateUserPermissionProfile(userPermissionProfileIn, now, user));
+					result.add(addUpdateUserPermissionProfile(userPermissionProfileIn, now, modified));
 					userIds.add(userPermissionProfileIn.getUserId());
 				} catch (ServiceException e) {
 					if (firstException == null) {
@@ -463,11 +467,57 @@ public class UserServiceImpl
 			result = new ArrayList<UserPermissionProfileOutVO>();
 		}
 		UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Iterator<Long> userIdsIt = userIds.iterator();
 		while (userIdsIt.hasNext()) {
-			checkPermissionProfileGroupConsistency(userDao.load(userIdsIt.next()), userPermissionProfileDao);
+			User user = userDao.load(userIdsIt.next(), LockMode.PESSIMISTIC_WRITE);
+			UserOutVO original = userDao.toUserOutVO(user);
+			user.setInheritedPermissionProfileGroupList(UserReflexionGraph.toInheritedPermissionProfileGroupList(inheritedPermissionProfileGroups));
+			checkPermissionProfileGroupConsistency(user, userPermissionProfileDao);
+			CoreUtil.modifyVersion(user, user.getVersion(), now, modified);
+			userDao.update(user);
+			UserOutVO userVO = userDao.toUserOutVO(user);
+			ServiceUtil.logSystemMessage(user, userVO, now, modified, SystemMessageCodes.USER_UPDATED, userVO, original, journalEntryDao);
 		}
 		return result;
+	}
+
+	@Override
+	protected boolean handleIsPropertiesAncestor(AuthenticationVO auth,
+			Long userId, Long parentId) throws Exception {
+		UserDao userDao = this.getUserDao();
+		User user = CheckIDUtil.checkUserId(userId, userDao, LockMode.PESSIMISTIC_WRITE);
+		User parent = CheckIDUtil.checkUserId(parentId, userDao);
+		do {
+			if (parent.equals(user)) {
+				return true;
+			}
+			if (CommonUtil.isEmptyString(user.getInheritedPropertyList())) {
+				user = null;
+			} else {
+				user = user.getParent();
+			}
+		} while (user != null);
+		return false;
+	}
+
+	@Override
+	protected boolean handleIsPermissionProfileGroupsAncestor(AuthenticationVO auth,
+			Long userId, Long parentId) throws Exception {
+		UserDao userDao = this.getUserDao();
+		User user = CheckIDUtil.checkUserId(userId, userDao, LockMode.PESSIMISTIC_WRITE);
+		User parent = CheckIDUtil.checkUserId(parentId, userDao);
+		do {
+			if (parent.equals(user)) {
+				return true;
+			}
+			if (CommonUtil.isEmptyString(user.getInheritedPermissionProfileGroupList())) {
+				user = null;
+			} else {
+				user = user.getParent();
+			}
+		} while (user != null);
+		return false;
 	}
 
 	@Override
@@ -486,7 +536,7 @@ public class UserServiceImpl
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.LOCALE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.LOCALE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -505,7 +555,7 @@ public class UserServiceImpl
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.SHOW_TOOLTIPS_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.SHOW_TOOLTIPS_UPDATED, result.getUser(), original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -524,7 +574,7 @@ public class UserServiceImpl
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.THEME_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.THEME_UPDATED, result.getUser(), original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -544,7 +594,7 @@ public class UserServiceImpl
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.TIME_ZONE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.TIME_ZONE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -560,7 +610,7 @@ public class UserServiceImpl
 		if (plainOldDepartmentPassword == null) {
 			plainOldDepartmentPassword = getPlainDepartmentPassword();
 		}
-		ServiceUtil.checkUserInput(modifiedUser, originalUser, plainNewDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(modifiedUser, originalUser, plainNewDepartmentPassword, this.getDepartmentDao(), this.getStaffDao(), this.getUserDao());
 		boolean departmentChanged = !originalUser.getDepartment().getId().equals(modifiedUser.getDepartmentId());
 		if (departmentChanged) {
 			if (!CryptoUtil.checkDepartmentPassword(originalUser.getDepartment(), plainOldDepartmentPassword)) {
@@ -581,7 +631,7 @@ public class UserServiceImpl
 		notifyUserAccount(user, originalUser, now);
 		UserOutVO result = userDao.toUserOutVO(user, maxInstances, maxParentDepth, maxChildrenDepth);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_UPDATED, result, original, journalEntryDao);
+		ServiceUtil.logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_UPDATED, result, original, journalEntryDao);
 		Staff identity = user.getIdentity();
 		if (identity != null) {
 			logSystemMessage(identity, result, now, modified, SystemMessageCodes.USER_UPDATED, result, original, journalEntryDao);
@@ -628,7 +678,8 @@ public class UserServiceImpl
 			dataTableColumnDao.create(column);
 			result.getColumns().add(dataTableColumnDao.toDataTableColumnVO(column));
 		}
-		logSystemMessage(user, this.getUserDao().toUserOutVO(user), now, user, SystemMessageCodes.USER_DATA_TABLE_COLUMNS_UPDATED, result, original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, this.getUserDao().toUserOutVO(user), now, user, SystemMessageCodes.USER_DATA_TABLE_COLUMNS_UPDATED, result, original,
+				this.getJournalEntryDao());
 		return result;
 	}
 
@@ -664,7 +715,8 @@ public class UserServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		DataTableColumnsVO result = new DataTableColumnsVO();
 		result.getColumns().addAll(deleteDataTableColumns(user, tableName, columnName));
-		logSystemMessage(user, this.getUserDao().toUserOutVO(user), now, user, SystemMessageCodes.USER_DATA_TABLE_COLUMNS_CLEARED, result, null, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, this.getUserDao().toUserOutVO(user), now, user, SystemMessageCodes.USER_DATA_TABLE_COLUMNS_CLEARED, result, null,
+				this.getJournalEntryDao());
 		return result;
 	}
 
@@ -689,7 +741,15 @@ public class UserServiceImpl
 		notifyUserAccount(user, originalUser, now);
 		UserOutVO result = userDao.toUserOutVO(user);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_SETTINGS_UPDATED, result, original, journalEntryDao);
+		ServiceUtil.logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_SETTINGS_UPDATED, result, original, journalEntryDao);
+		return result;
+	}
+
+	@Override
+	protected UserInheritedVO handleGetInheritedUser(AuthenticationVO auth, Long userId) throws Exception {
+		UserDao userDao = this.getUserDao();
+		User user = CheckIDUtil.checkUserId(userId, userDao);
+		UserInheritedVO result = userDao.toUserInheritedVO(user);
 		return result;
 	}
 }
