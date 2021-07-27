@@ -5373,7 +5373,7 @@ public class TrialServiceImpl
 					ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 							SystemMessageCodes.PROBAND_APPOINTMENT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
 				} else {
-					ServiceUtil.logSystemMessage(CoreUtil.getUser(), null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+					ServiceUtil.logSystemMessage(CoreUtil.getUser(), (UserOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 							SystemMessageCodes.PROBAND_APPOINTMENT_SCHEDULE_EXPORTED, result,
 							null, this.getJournalEntryDao());
 				}
