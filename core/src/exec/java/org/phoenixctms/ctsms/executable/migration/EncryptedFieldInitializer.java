@@ -31,7 +31,7 @@ public abstract class EncryptedFieldInitializer {
 	private Authenticator authenticator;
 
 	protected void authenticate(AuthenticationVO auth) throws Exception {
-		UserOutVO userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null);
+		UserOutVO userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null, null, null);
 		authenticator.authenticate(auth, false);
 		UserContext context = CoreUtil.getUserContext();
 		Department department = departmentDao.load(userVO.getDepartment().getId());
