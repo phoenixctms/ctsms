@@ -12,11 +12,13 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 
 public class UserContext extends VOCacheContext {
 
 	private static final long serialVersionUID = 1L;
 	private User user;
+	private UserInheritedVO inheritedUser;
 	private Password lastPassword;
 	private String plainPassword;
 	private String host;
@@ -44,10 +46,11 @@ public class UserContext extends VOCacheContext {
 		reset();
 	}
 
-	public UserContext(User user, Password lastPassword, String plainPassword, String host, String realm) {
+	public UserContext(User user, UserInheritedVO inheritedUser, Password lastPassword, String plainPassword, String host, String realm) {
 		super();
 		reset();
 		this.user = user;
+		this.inheritedUser = inheritedUser;
 		this.lastPassword = lastPassword;
 		this.plainPassword = plainPassword;
 		this.host = host;
@@ -55,16 +58,16 @@ public class UserContext extends VOCacheContext {
 	}
 
 	public String getDateFormat() {
-		if (!isDateFormatSet && user != null) {
-			dateFormat = user.getDateFormat();
+		if (!isDateFormatSet && inheritedUser != null) {
+			dateFormat = inheritedUser.getDateFormat();
 			isDateFormatSet = true;
 		}
 		return dateFormat;
 	}
 
 	public String getDecimalSeparator() {
-		if (!isDecimalSeparatorSet && user != null) {
-			decimalSeparator = user.getDecimalSeparator();
+		if (!isDecimalSeparatorSet && inheritedUser != null) {
+			decimalSeparator = inheritedUser.getDecimalSeparator();
 			isDecimalSeparatorSet = true;
 		}
 		return decimalSeparator;
@@ -87,9 +90,9 @@ public class UserContext extends VOCacheContext {
 	}
 
 	public Locale getLocale() {
-		if (!isLocaleSet && user != null) {
+		if (!isLocaleSet && inheritedUser != null) {
 			try {
-				locale = CommonUtil.localeFromString(user.getLocale());
+				locale = CommonUtil.localeFromString(inheritedUser.getLocale());
 			} catch (Exception e) {
 				locale = null;
 			}
@@ -132,8 +135,8 @@ public class UserContext extends VOCacheContext {
 	}
 
 	public TimeZone getTimeZone() {
-		if (!isTimeZoneSet && user != null) {
-			timeZone = CommonUtil.timeZoneFromString(user.getTimeZone());
+		if (!isTimeZoneSet && inheritedUser != null) {
+			timeZone = CommonUtil.timeZoneFromString(inheritedUser.getTimeZone());
 			isTimeZoneSet = true;
 		}
 		return timeZone;
@@ -141,6 +144,10 @@ public class UserContext extends VOCacheContext {
 
 	public User getUser() {
 		return user;
+	}
+
+	public UserInheritedVO getInheritedUser() {
+		return inheritedUser;
 	}
 
 	public boolean isTrustedHost() {
@@ -154,6 +161,7 @@ public class UserContext extends VOCacheContext {
 	public void reset() {
 		super.reset();
 		this.user = null;
+		this.inheritedUser = null;
 		this.lastPassword = null;
 		this.plainPassword = null;
 		this.host = null;
@@ -215,9 +223,10 @@ public class UserContext extends VOCacheContext {
 		this.realm = realm;
 	}
 
-	public void setUser(User user) {
+	public void setUser(User user, UserInheritedVO inheritedUser) {
 		reset();
 		this.user = user;
+		this.inheritedUser = inheritedUser;
 	}
 
 	@Override
