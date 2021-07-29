@@ -159,11 +159,11 @@ public final class CoreUtil {
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedUser");
 		VO_VERSION_EQUALS_EXCLUDES.add("*.getModifiedTimestamp");
 	}
-	private static final String ENTITY_VERSION_GETTER_METHOD_NAME = "getVersion";
-	private static final String ENTITY_VERSION_SETTER_METHOD_NAME = "setVersion";
-	private static final String ENTITY_MODIFIED_USER_GETTER_METHOD_NAME = "getModifiedUser";
-	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = "setModifiedUser";
-	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = "setModifiedTimestamp";
+	private static final String ENTITY_VERSION_GETTER_METHOD_NAME = CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX + "Version";
+	private static final String ENTITY_VERSION_SETTER_METHOD_NAME = CommonUtil.SET_PROPERTY_METHOD_NAME_PREFIX + "Version";
+	private static final String ENTITY_MODIFIED_USER_GETTER_METHOD_NAME = CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX + "ModifiedUser";
+	private static final String ENTITY_MODIFIED_USER_SETTER_METHOD_NAME = CommonUtil.SET_PROPERTY_METHOD_NAME_PREFIX + "ModifiedUser";
+	private static final String ENTITY_MODIFIED_TIMESTAMP_SETTER_METHOD_NAME = CommonUtil.SET_PROPERTY_METHOD_NAME_PREFIX + "ModifiedTimestamp";
 	public final static Set<String> SYSTEM_MESSAGE_CODES = createSystemMessageCodeSet();
 	private static String PRNG_CLASS_DESCRIPTION = "{0} ({1})";
 	private final static long JOB_EXIST_VALUE_WAIT_MILLISECONDS = 1000l;
@@ -888,16 +888,16 @@ public final class CoreUtil {
 		UserContext userContext = getUserContext();
 		if (CommonUtil.isEmptyString(userContext.getRealm())) {
 			// skip trusted host check when using dbtool:
-			return userContext.getUser().isDecrypt();
+			return userContext.getInheritedUser().isDecrypt();
 		} else if (PASS_DECRYPTION_REALMS.contains(userContext.getRealm())
 				&& Settings.getBoolean(SettingCodes.SIGNUP_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS, DefaultSettings.SIGNUP_FROM_UNTRUSTED_HOSTS)) {
 			// skip trusted host check for method used by signup (if enabled):
-			return userContext.getUser().isDecrypt();
+			return userContext.getInheritedUser().isDecrypt();
 		} else {
-			if (userContext.getUser().isDecryptUntrusted()
+			if (userContext.getInheritedUser().isDecryptUntrusted()
 					&& Settings.getBoolean(SettingCodes.DECRYPT_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS, DefaultSettings.DECRYPT_FROM_UNTRUSTED_HOSTS)) {
 				return true;
-			} else if (userContext.getUser().isDecrypt() && userContext.isTrustedHost()) {
+			} else if (userContext.getInheritedUser().isDecrypt() && userContext.isTrustedHost()) {
 				return true;
 			} else {
 				return false;
@@ -942,7 +942,7 @@ public final class CoreUtil {
 			} catch (Throwable t) {
 			}
 		}
-		getUserContext().setUser(user);
+		getUserContext().setUser(user, userDao.toUserInheritedVO(user));
 	}
 
 	public static String toXML(Object obj, boolean excludeEncryptedFields) throws Exception {
