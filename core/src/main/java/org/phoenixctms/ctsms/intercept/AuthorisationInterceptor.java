@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -84,6 +85,7 @@ import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.TrialTagValueDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
+import org.phoenixctms.ctsms.domain.UserPermissionProfile;
 import org.phoenixctms.ctsms.domain.UserPermissionProfileDao;
 import org.phoenixctms.ctsms.domain.VisitDao;
 import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
@@ -92,6 +94,8 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterOverride;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterRestriction;
 import org.phoenixctms.ctsms.util.AssociationPath;
@@ -288,7 +292,16 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			if (user == null) {
 				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NOT_AUTHENTICATED);
 			}
-			Collection<Permission> permissions = permissionDao.findByServiceMethodUser(CoreUtil.getServiceMethodName(method), user.getId(), true, true);
+			HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap = new HashMap<Long, HashSet<PermissionProfileGroup>>();
+			HashSet<PermissionProfile> profiles = new HashSet<PermissionProfile>(PermissionProfileGroup.values().length);
+			for (int i = 0; i < PermissionProfileGroup.values().length; i++) {
+				Iterator<UserPermissionProfile> userPermissionProfilesIt = ServiceUtil.getInheritedUserPermissionProfiles(user, PermissionProfileGroup.values()[i],
+						true, inheritPermissionProfileGroupMap, this.userPermissionProfileDao).iterator();
+				while (userPermissionProfilesIt.hasNext()) {
+					profiles.add(userPermissionProfilesIt.next().getProfile());
+				}
+			}
+			Collection<Permission> permissions = permissionDao.findByServiceMethodUser(CoreUtil.getServiceMethodName(method), null, true, null, profiles);
 			if (permissions.size() == 0) {
 				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_PERMISSIONS);
 			}
