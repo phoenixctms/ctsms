@@ -58,7 +58,7 @@ public class Authenticator {
 				throw e;
 			}
 			UserContext userContext = CoreUtil.getUserContext();
-			userContext.setUser(user);
+			userContext.setUser(user, userDao.toUserInheritedVO(user));
 			userContext.setHost(auth.getHost());
 			userContext.setRealm(realm);
 			if (user == null) {
@@ -67,7 +67,7 @@ public class Authenticator {
 			if (user.isDeferredDelete()) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.USER_MARKED_FOR_DELETION, auth.getUsername());
 			}
-			if (user.isLocked()) {
+			if (userContext.getInheritedUser().getLocked()) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.USER_LOCKED, auth.getUsername());
 			}
 			switch (user.getAuthMethod()) {
