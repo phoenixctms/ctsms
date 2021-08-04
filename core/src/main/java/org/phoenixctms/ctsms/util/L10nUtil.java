@@ -65,7 +65,7 @@ public final class L10nUtil {
 		EN
 	}
 
-	private final static String CREATE_ENUMERATION_VO_METHOD_PREFIX = "create";
+	private final static String CREATE_ENUMERATION_VO_METHOD_NAME_PREFIX = "create";
 	private static String departmentsBundleBasename;
 	private static String inventoryCategoriesBundleBasename;
 	private static String inventoryStatusTypesBundleBasename;
@@ -235,7 +235,7 @@ public final class L10nUtil {
 	}
 
 	public static Object createEnumerationVO(Locales locale, String enumName, Object enumItem) throws Exception {
-		return AssociationPath.findMethod(CREATE_ENUMERATION_VO_METHOD_PREFIX + CoreUtil.getEnumerationValueObjectName(enumName), false,
+		return AssociationPath.findMethod(CREATE_ENUMERATION_VO_METHOD_NAME_PREFIX + CoreUtil.getEnumerationValueObjectName(enumName), false,
 				L10nUtil.class.getMethods()).invoke(null, locale, enumItem);
 	}
 
