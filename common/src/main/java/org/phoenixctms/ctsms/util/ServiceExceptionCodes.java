@@ -35,6 +35,7 @@ public interface ServiceExceptionCodes {
 	public final static String STAFF_GRAPH_LOOP = "staff_graph_loop";
 	public final static String PROBAND_GRAPH_LOOP = "proband_graph_loop";
 	public final static String TIMELINE_EVENT_GRAPH_LOOP = "timeline_event_graph_loop";
+	public final static String USER_GRAPH_LOOP = "user_graph_loop";
 	public final static String INVALID_DEPARTMENT_ID = "invalid_department_id";
 	public final static String INVALID_INVENTORY_ID = "invalid_inventory_id";
 	public final static String INVALID_INVENTORY_CATEGORY_ID = "invalid_inventory_category_id";
@@ -165,7 +166,9 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_LOCALE = "invalid_locale";
 	public final static String INVALID_TIME_ZONE = "invalid_time_zone";
 	public final static String DEPARTMENT_PASSWORD_WRONG = "department_password_wrong";
+	public final static String INVALID_PARENT_USER_ID = "invalid_parent_user_id";
 	public final static String DECRYPT_FLAG_NOT_SET = "decrypt_flag_not_set";
+	public static final String INVALID_INHERITED_USER_PROPERTY = "invalid_inherited_user_property";
 	public final static String INVALID_DATE_FORMAT_PATTERN = "invalid_date_format_pattern";
 	public final static String INVALID_DECIMAL_SEPARATOR = "invalid_decimal_separator";
 	public final static String INPUT_FIELD_VALUE_REQUIRED = "input_field_value_required";
