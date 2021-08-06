@@ -16,6 +16,8 @@
    var reverseIndexMap = [];
    var oldIndex = 0;
    var newIndex = 0;
+   transposeIndexMap[newIndex] = oldIndex;
+   reverseIndexMap[oldIndex] = newIndex;
    <c:forEach var="tabTitle" items="#{tabTitles}">
    oldIndex++;
    if (#{visibleTabSet.contains(tabTitle.key)}) {
