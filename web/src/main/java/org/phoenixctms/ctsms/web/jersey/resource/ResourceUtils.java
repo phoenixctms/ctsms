@@ -13,7 +13,7 @@ public final class ResourceUtils {
 	public static final Integer LIST_GRAPH_MAX_INVENTORY_INSTANCES = 2;
 	public static final Integer LIST_GRAPH_MAX_STAFF_INSTANCES = 2;
 	public static final Integer LIST_GRAPH_MAX_COURSE_INSTANCES = 1;
-	public static final Integer LIST_GRAPH_MAX_USER_INSTANCES = 1;
+	public static final Integer LIST_GRAPH_MAX_USER_INSTANCES = 2;
 	public static final Integer LIST_GRAPH_MAX_PROBAND_INSTANCES = 1;
 	private static final MethodTransfilter RESOURCE_METHOD_TRANSFILTER = MethodTransfilter.DEFAULT_TRANSFILTER;
 

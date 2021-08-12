@@ -12,6 +12,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -23,7 +24,7 @@ import com.sun.jersey.api.NotFoundException;
 
 public abstract class ServiceResourceBase {
 
-	private final static Pattern GET_LIST_METHOD_NAME_REGEXP = Pattern.compile("^get(.+)List$");
+	private final static Pattern GET_LIST_METHOD_NAME_REGEXP = Pattern.compile("^" + CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX + "(.+)List$");
 
 	protected final static ArgsUriPart getArgsUriPart(Class<?> serviceInterface, String resource, AuthenticationVO auth, String rootEntityIdMethodParamName,
 			MethodTransfilter getListMethodNameTransformer, Long id, PSFUriPart psf) {
