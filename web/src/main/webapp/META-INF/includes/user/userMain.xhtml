@@ -36,380 +36,538 @@
 				name="changeUserByJournalEntry"
 				actionListener="#{userBean.change(journalBean.in.userId)}"
 				oncomplete="handleUserChanged(xhr, status, args)"
-				update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+				update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+
+			<p:remoteCommand
+				process="@this"
+				name="changeUserByTreeNode"
+				actionListener="#{userBean.changeByNode()}"
+				oncomplete="handleUserChanged(xhr, status, args)"
+				update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+				
 			<p:remoteCommand
 				process="@this"
 				name="refreshUser"
 				actionListener="#{userBean.load}"
 				oncomplete="handleUserChanged(xhr, status, args)"
-				update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />				
+				update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />		
+
+			<p:remoteCommand
+				process="@this"
+				name="clearInheritedPropertiesTooltips"
+				actionListener="#{userBean.clearInheritedPropertiesTooltips}"
+				update="@([id$=\'inherit_input\'],[id$=\'ModuleTabs\'])" />		
+						
 			<h:panelGrid
-				columns="1"
+				columns="2"
 				cellpadding="0"
-				styleClass="ctsms-content-panelgrid">
+				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
+				columnClasses="ctsms-user-tree-column,ctsms-user-input-column">
+				<p:panel styleClass="ctsms-panel-maxheight">
+					<f:facet name="header">
+						<h:outputText value="#{userBean.userTreeLabel}" />
+					</f:facet>
+					<p:tree
+						id="user_tree"
+						value="#{userBean.userRoot}"
+						styleClass="ctsms-user-tree"
+						var="user"
+						dynamic="false"
+						expanded="true">
+						<p:treeNode type="#{applicationScopeBean.parentNodeType}">
+							<ui:include src="../shared/treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="#{empty user.identity ? '' : user.identity.category.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="#{user.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-user-tree-node-parent"
+								onclick="changeUserByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('USER_ID')}:#{user.id}}));"> <h:outputText
+									value="#{applicationScopeBean.clipStringMid(user.name)} (#{user.childrenCount})" />
+							</span>
+						</p:treeNode>
+						<p:treeNode type="#{applicationScopeBean.leafNodeType}">
+							<ui:include src="../shared/treeIcon.xhtml">
+								<ui:param
+									name="iconClass"
+									value="#{empty user.identity ? '' : user.identity.category.nodeStyleClass}" />
+							</ui:include>
+							<span
+								class="#{user.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-user-tree-node-leaf"
+								onclick="changeUserByTreeNode(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('USER_ID')}:#{user.id}}));"> <h:outputText
+									value="#{applicationScopeBean.clipStringMid(user.name)}" />
+							</span>
+						</p:treeNode>
+					</p:tree>
+				</p:panel>
 				<p:panel
 					id="user_input"
-					rendered="#{sessionScopeBean.loggedIn}">
+					rendered="#{sessionScopeBean.loggedIn}"
+					styleClass="ctsms-panel-maxheight">
 					<f:facet name="header">
 						<h:outputText value="#{userBean.title}" />
 					</f:facet>
 					<h:panelGrid
 						columns="1"
 						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
+						styleClass="ctsms-user-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-row,ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="6"
-							cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="authMethod"
-								value="#{userlabels.user_auth_method_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="authMethod"
-									value="#{userBean.authMethod.authenticationType}"
-									required="true"
-									label="#{userlabels.user_auth_method}"
-									styleClass="ctsms-control">
-									<f:selectItems
-										value="#{userBean.authMethod.authenticationTypes}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax
-										listener="#{userBean.handleAuthMethodChange}"
-										update=":tabView:usermain_form:user_input" />
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="authMethod">
-									<h:outputText
-										value="#{userlabels.user_auth_method_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="authMethod" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="username"
-								value="#{userlabels.user_name_label}" />
-							<h:panelGroup>
-								<p:inputText
-									id="username"
-									value="#{userBean.in.name}"
-									required="true"
-									label="#{userlabels.user_name}"
-									styleClass="ctsms-control">
-									<p:ajax
-										event="keyup"
-										listener="#{userBean.handleNameKeyUp}"
-										update="remoteUserMessage" />
-									<p:ajax
-										listener="#{userBean.handleNameKeyUp}"
-										update="remoteUserMessage" />
-								</p:inputText>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="username">
-									<h:outputText
-										value="#{userlabels.user_name_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="username" />
-							<h:outputLabel
-								rendered="#{userBean.ldap1}"
-								for="ldapEntry1"
-								value="#{userlabels.user_ldapentry1_label}" />
-							<h:panelGroup rendered="#{userBean.ldap1}">
-								<p:autoComplete
-									id="ldapEntry1"
-									required="false"
-									value="#{userBean.ldapEntry1}"
-									label="#{userlabels.user_ldapentry1}"
-									styleClass="ctsms-control-larger"
-									minQueryLength="#{autoCompleteMinQueryLengthLdapEntry}"
-									maxResults="#{autoCompleteMaxResultsLdapEntry}"
-									queryDelay="#{autoCompleteQueryDelayLdapEntry}"
-									dropdown="#{autoCompleteDropdownLdapEntry}"
-									global="#{autoCompleteGlobalLdapEntry}"
-									scrollHeight="#{autoCompleteScrollHeightLdapEntry}"
-									completeMethod="#{userBean.completeLdapEntry1}"
-									forceSelection="true"
-									var="ldapEntry"
-									itemValue="#{ldapEntry}"
-									itemLabel="#{ldapEntry.username}"
-									converter="ctsms.LdapEntry1">
-									<p:ajax
-										listener="#{userBean.handleLdapEntry1Select}"
-										event="itemSelect"
-										process="@this"
-										update="username,remoteUserMessage" />
-									<p:column>
-										<h:outputText value="#{ldapEntry.username}" />
-									</p:column>
-									<p:column>
-										<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.attributes['fullName'],128)}" />
-									</p:column>
-									<f:facet name="itemtip">
-										<h:panelGrid
-											columns="1"
-											cellpadding="0"
-											styleClass="ctsms-ldapentry-itemtip-panelgrid">
-											<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.absoluteDn,96)}" />
-											<h:panelGroup>
-												<ul>
-													<ui:repeat
-														value="#{applicationScopeBean.mapToList(ldapEntry.attributes)}"
-														var="attribute">
-														<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(attribute.value,96)}" /></li>
-													</ui:repeat>
-												</ul>
-											</h:panelGroup>
-										</h:panelGrid>
-									</f:facet>
-								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="ldapEntry1">
-									<h:outputText
-										value="#{userlabels.user_ldapentry1_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message
-								rendered="#{userBean.ldap1}"
-								for="ldapEntry1" />
-							<h:outputLabel
-								rendered="#{userBean.ldap2}"
-								for="ldapEntry2"
-								value="#{userlabels.user_ldapentry2_label}" />
-							<h:panelGroup rendered="#{userBean.ldap2}">
-								<p:autoComplete
-									id="ldapEntry2"
-									required="false"
-									value="#{userBean.ldapEntry2}"
-									label="#{userlabels.user_ldapentry2}"
-									styleClass="ctsms-control-larger"
-									minQueryLength="#{autoCompleteMinQueryLengthLdapEntry}"
-									maxResults="#{autoCompleteMaxResultsLdapEntry}"
-									queryDelay="#{autoCompleteQueryDelayLdapEntry}"
-									dropdown="#{autoCompleteDropdownLdapEntry}"
-									global="#{autoCompleteGlobalLdapEntry}"
-									scrollHeight="#{autoCompleteScrollHeightLdapEntry}"
-									completeMethod="#{userBean.completeLdapEntry2}"
-									forceSelection="true"
-									var="ldapEntry"
-									itemValue="#{ldapEntry}"
-									itemLabel="#{ldapEntry.username}"
-									converter="ctsms.LdapEntry2">
-									<p:ajax
-										listener="#{userBean.handleLdapEntry2Select}"
-										event="itemSelect"
-										process="@this"
-										update="username,remoteUserMessage" />
-									<p:column>
-										<h:outputText value="#{ldapEntry.username}" />
-									</p:column>
-									<p:column>
-										<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.attributes['fullName'],128)}" />
-									</p:column>
-									<f:facet name="itemtip">
-										<h:panelGrid
-											columns="1"
-											cellpadding="0"
-											styleClass="ctsms-ldapentry-itemtip-panelgrid">
-											<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.absoluteDn,96)}" />
-											<h:panelGroup>
-												<ul>
-													<ui:repeat
-														value="#{applicationScopeBean.mapToList(ldapEntry.attributes)}"
-														var="attribute">
-														<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(attribute.value,96)}" /></li>
-													</ui:repeat>
-												</ul>
-											</h:panelGroup>
-										</h:panelGrid>
-									</f:facet>
-								</p:autoComplete>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="ldapEntry2">
-									<h:outputText
-										value="#{userlabels.user_ldapentry2_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message
-								rendered="#{userBean.ldap2}"
-								for="ldapEntry2" />
-							<h:outputLabel rendered="#{!userBean.ldap1 and !userBean.ldap2}" />
-							<h:outputText
-								rendered="#{!userBean.ldap1 and !userBean.ldap2}"
-								value="" />
-							<h:outputLabel rendered="#{!userBean.ldap1 and !userBean.ldap2}" />
-							<h:outputLabel />
-							<h:outputText
-								id="remoteUserMessage"
-								styleClass="#{empty userBean.remoteUserOk ? '' : (userBean.remoteUserOk ? 'ctsms-text-green' : 'ctsms-text-red')}"
-								value="#{userBean.remoteUserMessage}" />
-							<h:outputLabel />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="department"
-								value="#{userlabels.user_department_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu
-									id="department"
-									value="#{userBean.in.departmentId}"
-									required="true"
-									label="#{userlabels.user_department}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{userBean.departments}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax process="@this" update="toolbar,useradd_departmentpassword,userupdate_departmentpassword"/>
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="department">
-									<h:outputText
-										value="#{userlabels.user_department_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="department" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="identity"
-								value="#{userlabels.user_identity_label}" />
-							<h:panelGrid
-								columns="5"
-								cellpadding="0">
-								<h:panelGroup>
-									<h:inputHidden
-										id="identity"
-										required="false"
-										value="#{userBean.in.identityId}">
-										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton
-										id="identityName"
-										value="#{applicationScopeBean.clipStringPicker(userBean.identityName)}"
-										title="#{userlabels.user_identity_tooltip}#{labels.open_staff_button_label}"
-										styleClass="ctsms-picker"
-										icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedStaff('tabView:usermain_form:identity')" />
-								</h:panelGroup>
-								<p:commandButton
-									title="#{labels.pick_active_identity_staff_button_label}"
-									icon="ui-icon ui-icon-person"
-									type="button"
-									disabled="#{!sessionScopeBean.hasUserIdentity}"
-									onclick="setIDAjax('tabView:usermain_form:identity',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},'tabView:usermain_form:identityName','#{sessionScopeBean.userIdentityName}')" />
-								<p:commandButton
-									title="#{labels.pick_staff_button_label}"
-									icon="ui-icon ui-icon-search"
-									type="button"
-									onclick="openStaffPickerAjax('tabView:usermain_form:identity','tabView:usermain_form:identityName')" />
-								<p:commandButton
-									title="#{labels.clear_staff_button_label}"
-									icon="ui-icon ui-icon-close"
-									type="button"
-									onclick="clearIDAjax('tabView:usermain_form:identity','tabView:usermain_form:identityName','#{applicationScopeBean.noStaffPickedMessage}')" />
-								<p:commandButton
-									title="#{messages.create_new_staff}"
-									icon="ui-icon ui-icon-plusthick"
-									type="button"
-									onclick="openNewStaff()" />
-							</h:panelGrid>
-							<p:message for="identity" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							
-							
-							<h:outputLabel
-								for="locked"
-								value="#{userlabels.user_locked_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="locked"
-									value="#{userBean.in.locked}">
-									<p:ajax />
-								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="locked">
-									<h:outputText
-										value="#{userlabels.user_locked_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="locked" />
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="decrypt"
-								value="#{userlabels.user_decrypt_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="decrypt"
-									value="#{userBean.in.decrypt}">
-									<p:ajax />
-								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="decrypt">
-									<h:outputText
-										value="#{userlabels.user_decrypt_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="decrypt" />
-							
-							<h:outputLabel />
-							<h:outputText value="" />
-							<h:outputLabel />
-							<h:outputLabel
-								for="decryptUntrusted"
-								value="#{userlabels.user_decrypt_untrusted_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox
-									id="decryptUntrusted"
-									disabled="#{!userBean.decryptFromUntrustedHosts}"
-									value="#{userBean.in.decryptUntrusted}">
-									<p:ajax />
-								</p:selectBooleanCheckbox>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="decryptUntrusted">
-									<h:outputText
-										value="#{userlabels.user_decrypt_untrusted_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="decryptUntrusted" />
-							</h:panelGrid>
-
 						<p:fieldset
 							toggleable="true"
 							collapsed="false">
+							<f:facet name="legend">
+								<h:outputText value="#{userlabels.user_main_field_set}" />
+							</f:facet>
+							<h:panelGrid
+								columns="7"
+								cellpadding="2"
+								columnClasses="ctsms-checkbox-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								
+								<h:outputLabel />
+								<h:outputLabel
+									for="authMethod"
+									value="#{userlabels.user_auth_method_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="authMethod"
+										value="#{userBean.authMethod.authenticationType}"
+										required="true"
+										label="#{userlabels.user_auth_method}"
+										styleClass="ctsms-control">
+										<f:selectItems
+											value="#{userBean.authMethod.authenticationTypes}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax
+											listener="#{userBean.handleAuthMethodChange}"
+											update=":tabView:usermain_form:user_input" />
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="authMethod">
+										<h:outputText
+											value="#{userlabels.user_auth_method_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="authMethod" />
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
+								<h:outputLabel />
+								<h:outputLabel
+									for="username"
+									value="#{userlabels.user_name_label}" />
+								<h:panelGroup>
+									<p:inputText
+										id="username"
+										value="#{userBean.in.name}"
+										required="true"
+										label="#{userlabels.user_name}"
+										styleClass="ctsms-control">
+										<p:ajax
+											event="keyup"
+											listener="#{userBean.handleNameKeyUp}"
+											update="remoteUserMessage" />
+										<p:ajax
+											listener="#{userBean.handleNameKeyUp}"
+											update="remoteUserMessage" />
+									</p:inputText>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="username">
+										<h:outputText
+											value="#{userlabels.user_name_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="username" />
+								<h:outputLabel
+									rendered="#{userBean.ldap1}"
+									for="ldapEntry1"
+									value="#{userlabels.user_ldapentry1_label}" />
+								<h:panelGroup rendered="#{userBean.ldap1}">
+									<p:autoComplete
+										id="ldapEntry1"
+										required="false"
+										value="#{userBean.ldapEntry1}"
+										label="#{userlabels.user_ldapentry1}"
+										styleClass="ctsms-control-larger"
+										minQueryLength="#{autoCompleteMinQueryLengthLdapEntry}"
+										maxResults="#{autoCompleteMaxResultsLdapEntry}"
+										queryDelay="#{autoCompleteQueryDelayLdapEntry}"
+										dropdown="#{autoCompleteDropdownLdapEntry}"
+										global="#{autoCompleteGlobalLdapEntry}"
+										scrollHeight="#{autoCompleteScrollHeightLdapEntry}"
+										completeMethod="#{userBean.completeLdapEntry1}"
+										forceSelection="true"
+										var="ldapEntry"
+										itemValue="#{ldapEntry}"
+										itemLabel="#{ldapEntry.username}"
+										converter="ctsms.LdapEntry1">
+										<p:ajax
+											listener="#{userBean.handleLdapEntry1Select}"
+											event="itemSelect"
+											process="@this"
+											update="username,remoteUserMessage" />
+										<p:column>
+											<h:outputText value="#{ldapEntry.username}" />
+										</p:column>
+										<p:column>
+											<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.attributes['fullName'],128)}" />
+										</p:column>
+										<f:facet name="itemtip">
+											<h:panelGrid
+												columns="1"
+												cellpadding="0"
+												styleClass="ctsms-ldapentry-itemtip-panelgrid">
+												<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.absoluteDn,96)}" />
+												<h:panelGroup>
+													<ul>
+														<ui:repeat
+															value="#{applicationScopeBean.mapToList(ldapEntry.attributes)}"
+															var="attribute">
+															<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(attribute.value,96)}" /></li>
+														</ui:repeat>
+													</ul>
+												</h:panelGroup>
+											</h:panelGrid>
+										</f:facet>
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ldapEntry1">
+										<h:outputText
+											value="#{userlabels.user_ldapentry1_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{userBean.ldap1}"
+									for="ldapEntry1" />
+								<h:outputLabel
+									rendered="#{userBean.ldap2}"
+									for="ldapEntry2"
+									value="#{userlabels.user_ldapentry2_label}" />
+								<h:panelGroup rendered="#{userBean.ldap2}">
+									<p:autoComplete
+										id="ldapEntry2"
+										required="false"
+										value="#{userBean.ldapEntry2}"
+										label="#{userlabels.user_ldapentry2}"
+										styleClass="ctsms-control-larger"
+										minQueryLength="#{autoCompleteMinQueryLengthLdapEntry}"
+										maxResults="#{autoCompleteMaxResultsLdapEntry}"
+										queryDelay="#{autoCompleteQueryDelayLdapEntry}"
+										dropdown="#{autoCompleteDropdownLdapEntry}"
+										global="#{autoCompleteGlobalLdapEntry}"
+										scrollHeight="#{autoCompleteScrollHeightLdapEntry}"
+										completeMethod="#{userBean.completeLdapEntry2}"
+										forceSelection="true"
+										var="ldapEntry"
+										itemValue="#{ldapEntry}"
+										itemLabel="#{ldapEntry.username}"
+										converter="ctsms.LdapEntry2">
+										<p:ajax
+											listener="#{userBean.handleLdapEntry2Select}"
+											event="itemSelect"
+											process="@this"
+											update="username,remoteUserMessage" />
+										<p:column>
+											<h:outputText value="#{ldapEntry.username}" />
+										</p:column>
+										<p:column>
+											<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.attributes['fullName'],128)}" />
+										</p:column>
+										<f:facet name="itemtip">
+											<h:panelGrid
+												columns="1"
+												cellpadding="0"
+												styleClass="ctsms-ldapentry-itemtip-panelgrid">
+												<h:outputText value="#{applicationScopeBean.clipStringTrailing(ldapEntry.absoluteDn,96)}" />
+												<h:panelGroup>
+													<ul>
+														<ui:repeat
+															value="#{applicationScopeBean.mapToList(ldapEntry.attributes)}"
+															var="attribute">
+															<li><h:outputText value="#{applicationScopeBean.clipStringTrailing(attribute.value,96)}" /></li>
+														</ui:repeat>
+													</ul>
+												</h:panelGroup>
+											</h:panelGrid>
+										</f:facet>
+									</p:autoComplete>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="ldapEntry2">
+										<h:outputText
+											value="#{userlabels.user_ldapentry2_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{userBean.ldap2}"
+									for="ldapEntry2" />
+								<h:outputLabel rendered="#{!userBean.ldap1 and !userBean.ldap2}" />
+								<h:outputText
+									rendered="#{!userBean.ldap1 and !userBean.ldap2}"
+									value="" />
+								<h:outputLabel rendered="#{!userBean.ldap1 and !userBean.ldap2}" />
+								
+								<h:outputLabel />
+								<h:outputLabel />
+								<h:outputText
+									id="remoteUserMessage"
+									styleClass="#{empty userBean.remoteUserOk ? '' : (userBean.remoteUserOk ? 'ctsms-text-green' : 'ctsms-text-red')}"
+									value="#{userBean.remoteUserMessage}" />
+								<h:outputLabel />
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
+								<h:outputLabel />
+								<h:outputLabel
+									for="department"
+									value="#{userlabels.user_department_label}" />
+								<h:panelGroup>
+									<p:selectOneMenu
+										id="department"
+										value="#{userBean.in.departmentId}"
+										required="true"
+										label="#{userlabels.user_department}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem
+											itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{userBean.departments}"
+											var="selectItem"
+											itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax process="@this" update="toolbar,useradd_departmentpassword,userupdate_departmentpassword"/>
+									</p:selectOneMenu>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="department">
+										<h:outputText
+											value="#{userlabels.user_department_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="department" />
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
+								<h:panelGroup id="locked_inherit_input">
+									<p:selectBooleanCheckbox
+										id="inherit_locked"
+										value="#{userBean.inheritedPropertiesMap['locked']}">
+										<p:ajax process="@this" update="locked"/>
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inherit_locked">
+										<h:outputText
+											value="#{userBean.getInheritedPropertyTooltip('locked')}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								
+								<h:outputLabel
+									for="locked"
+									value="#{userlabels.user_locked_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+									    disabled="#{userBean.inheritedPropertiesMap['locked']}"
+										id="locked"
+										value="#{userBean.in.locked}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="locked">
+										<h:outputText
+											value="#{userBean.getInheritedPropertyTooltip('decrypt')}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="locked" />
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+
+                                <h:panelGroup id="decrypt_inherit_input">
+									<p:selectBooleanCheckbox
+										id="inherit_decrypt"
+										value="#{userBean.inheritedPropertiesMap['decrypt']}">
+										<p:ajax process="@this" update="decrypt"/>
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inherit_decrypt">
+										<h:outputText
+											value="#{userBean.getInheritedPropertyTooltip('decrypt')}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:outputLabel
+									for="decrypt"
+									value="#{userlabels.user_decrypt_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+									    disabled="#{userBean.inheritedPropertiesMap['decrypt']}"
+										id="decrypt"
+										value="#{userBean.in.decrypt}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="decrypt">
+										<h:outputText
+											value="#{userlabels.user_decrypt_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="decrypt" />
+								
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
+								<h:panelGroup id="decryptUntrusted_inherit_input">
+									<p:selectBooleanCheckbox
+										id="inherit_decryptUntrusted"
+										disabled="#{!userBean.decryptFromUntrustedHosts}"
+										value="#{userBean.inheritedPropertiesMap['decryptUntrusted']}">
+										<p:ajax process="@this" update="decryptUntrusted"/>
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inherit_decryptUntrusted">
+										<h:outputText
+											value="#{userBean.getInheritedPropertyTooltip('decryptUntrusted')}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<h:outputLabel
+									for="decryptUntrusted"
+									value="#{userlabels.user_decrypt_untrusted_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="decryptUntrusted"
+										disabled="#{!userBean.decryptFromUntrustedHosts or userBean.inheritedPropertiesMap['decrypt']}"
+										value="#{userBean.in.decryptUntrusted}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="decryptUntrusted">
+										<h:outputText
+											value="#{userlabels.user_decrypt_untrusted_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="decryptUntrusted" />
+								
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
+								<h:outputLabel />
+								<h:outputLabel
+									for="identity"
+									value="#{userlabels.user_identity_label}" />
+								<h:panelGrid
+									columns="5"
+									cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden
+											id="identity"
+											required="false"
+											value="#{userBean.in.identityId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton
+											id="identityName"
+											value="#{applicationScopeBean.clipStringPicker(userBean.identityName)}"
+											title="#{userlabels.user_identity_tooltip}#{labels.open_staff_button_label}"
+											styleClass="ctsms-picker"
+											icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedStaff('tabView:usermain_form:identity')" />
+									</h:panelGroup>
+									<p:commandButton
+										title="#{labels.pick_active_identity_staff_button_label}"
+										icon="ui-icon ui-icon-person"
+										type="button"
+										disabled="#{!sessionScopeBean.hasUserIdentity}"
+										onclick="setIDAjax('tabView:usermain_form:identity',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},'tabView:usermain_form:identityName','#{sessionScopeBean.userIdentityName}')" />
+									<p:commandButton
+										title="#{labels.pick_staff_button_label}"
+										icon="ui-icon ui-icon-search"
+										type="button"
+										onclick="openStaffPickerAjax('tabView:usermain_form:identity','tabView:usermain_form:identityName')" />
+									<p:commandButton
+										title="#{labels.clear_staff_button_label}"
+										icon="ui-icon ui-icon-close"
+										type="button"
+										onclick="clearIDAjax('tabView:usermain_form:identity','tabView:usermain_form:identityName','#{applicationScopeBean.noStaffPickedMessage}')" />
+									<p:commandButton
+										title="#{messages.create_new_staff}"
+										icon="ui-icon ui-icon-plusthick"
+										type="button"
+										onclick="openNewStaff()" />
+								</h:panelGrid>
+								<p:message for="identity" />
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
+								<h:outputLabel />
+								<h:outputLabel
+									for="parent"
+									value="#{userlabels.user_parent_label}" />
+								<h:panelGrid
+									columns="3"
+									cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden
+											id="parent"
+											required="false"
+											value="#{userBean.in.parentId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton
+											id="parentName"
+											value="#{applicationScopeBean.clipStringPicker(userBean.parentName)}"
+											title="#{userlabels.user_parent_tooltip}#{labels.open_user_button_label}"
+											styleClass="ctsms-picker"
+											icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedUser('tabView:usermain_form:parent')" />
+									</h:panelGroup>
+									<p:commandButton
+										title="#{labels.pick_user_button_label}"
+										icon="ui-icon ui-icon-search"
+										type="button"
+										onclick="openUserPickerAjax('tabView:usermain_form:parent','tabView:usermain_form:parentName','clearInheritedPropertiesTooltips')" />
+									<p:commandButton
+										title="#{labels.clear_user_button_label}"
+										icon="ui-icon ui-icon-close"
+										type="button"
+										onclick="clearIDAjax('tabView:usermain_form:parent','tabView:usermain_form:parentName','#{applicationScopeBean.noUserPickedMessage}','clearInheritedPropertiesTooltips')" />
+								</h:panelGrid>
+								<p:message for="parent" />
+																
+							</h:panelGrid>
+						</p:fieldset>
+						<p:fieldset
+							toggleable="true"
+							collapsed="true">
 							<f:facet name="legend">
 								<h:outputText value="#{userlabels.user_modules_field_set}" />
 							</f:facet>
@@ -419,9 +577,9 @@
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row">
 								<h:panelGrid
-									columns="6"
+									columns="8"
 									cellpadding="2"
-									columnClasses="ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
+									columnClasses="ctsms-checkbox-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-checkbox-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
 									<ui:include src="../shared/userModulesBaseInput.xhtml" >
 										<ui:param
 											name="bean"
@@ -443,13 +601,13 @@
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row">
 								<h:panelGrid
-									columns="3"
+									columns="4"
 									cellpadding="2"
-									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									columnClasses="ctsms-checkbox-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 
 									<ui:include src="../shared/userSettingsBaseInput.xhtml" >
 										<ui:param
-											name="settingsBean"
+											name="bean"
 											value="#{userBean}" />
 									</ui:include>
 
@@ -486,7 +644,7 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="false"
-									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+									update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 								<p:commandButton
 									rendered="#{!userBean.created and !userBean.newDepartmentPasswordRequired}"
 									process="@this,user_input"
@@ -497,7 +655,7 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.createable}"
-									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+									update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 								<p:commandButton
 									rendered="#{userBean.created and !userBean.newDepartmentPasswordRequired}"
 									process="@this"
@@ -506,11 +664,6 @@
 									disabled="#{!userBean.createable}"
 									icon="ui-icon ui-icon-plusthick"
 									type="button" />
-									
-									
-									
-									
-									
 								<p:commandButton
 									rendered="#{userBean.newDepartmentPasswordRequired}"
 									process="@this"
@@ -519,10 +672,6 @@
 									disabled="#{!userBean.createable}"
 									icon="ui-icon ui-icon-plusthick"
 									type="button" />
-									
-									
-									
-									
 								<p:commandButton
 									rendered="#{!userBean.newDepartmentPasswordRequired and !userBean.oldDepartmentPasswordRequired}"
 									process="@this,user_input"
@@ -533,8 +682,7 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.editable}"
-									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
-									
+									update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 								<p:commandButton
 									rendered="#{userBean.newDepartmentPasswordRequired or userBean.oldDepartmentPasswordRequired}"
 									process="@this"
@@ -542,8 +690,7 @@
 									onclick="userUpdateDepartmentPasswordDialog.show()"
 									disabled="#{!userBean.editable}"
 									icon="ui-icon ui-icon-disk"
-									type="button" />
-									
+									type="button" />									
 								<p:commandButton 
 									process="@this"
 									value="#{labels.restore_table_column_defaults_button_label}"
@@ -553,7 +700,6 @@
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.editable or userBean.tableColumnCount == 0}"
 									update="user_table_column_count_message,user_messages" />
-
 								<p:commandButton
 									process="@this"
 									value="#{labels.delete_button_label}"
@@ -569,7 +715,7 @@
 									ajax="true"
 									oncomplete="handleUserChanged(xhr, status, args)"
 									disabled="#{!userBean.created}"
-									update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+									update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
@@ -630,7 +776,7 @@
 					onclick="userDeleteConfirmation.hide()"
 					ajax="true"
 					oncomplete="handleUserChanged(xhr, status, args)"
-					update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+					update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 				<p:commandButton
 					value="#{labels.no_button_label}"
 					onclick="userDeleteConfirmation.hide()"
@@ -653,157 +799,152 @@
 					onclick="userAddConfirmation.hide()"
 					ajax="true"
 					oncomplete="handleUserChanged(xhr, status, args)"
-					update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />
+					update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />
 				<p:commandButton
 					value="#{labels.no_button_label}"
 					onclick="userAddConfirmation.hide()"
 					type="button" />
 			</p:confirmDialog>
 			
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				id="useradd_departmentpassword"
+				widgetVar="userAddDepartmentPasswordDialog">
+				<f:facet name="message">
+					<h:outputText
+						value="#{userBean.created ? userlabels.user_add_confirmation_dialog_message : ''}#{userBean.created ? labels.br : ''}#{userlabels.user_department_password_prompt_dialog_message}"
+						escape="false" />
+					
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+						<h:panelGrid
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+								for="newDepartmentPasswordAdd"
+								value="#{userBean.newDepartmentPasswordLabel}" />
+							<h:panelGroup>
+								<p:password
+									id="newDepartmentPasswordAdd"
+									widgetVar="userAddNewDepartmentPassword"
+									required="false"
+									feedback="false"
+									redisplay="false"
+									label="#{userlabels.user_new_department_password}"
+									styleClass="ctsms-password" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="newDepartmentPasswordAdd">
+									<h:outputText
+										value="#{userlabels.user_new_department_password_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="newDepartmentPasswordAdd" />
+						</h:panelGrid>
+					</h:panelGrid>
+				</f:facet>
+				<p:commandButton
+					process="@this,user_input"
+					id="addPassword"
+					value="#{userBean.created ? labels.yes_button_label : labels.ok_button_label}"
+					actionListener="#{userBean.add}"
+					onstart="setHiddenField('tabView:usermain_form:newDepartmentPassword',userAddNewDepartmentPassword.getValue());userAddDepartmentPasswordDialog.hide();"
+					ajax="true"
+					oncomplete="handleUserChanged(xhr, status, args)"
+					update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
+				<p:commandButton
+					value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
+					onclick="userAddDepartmentPasswordDialog.hide();userAddNewDepartmentPassword.setValue('');"
+					type="button" />
+			</p:confirmDialog>		
 			
-				<p:confirmDialog
-					appendToBody="false"
-					severity="info"
-					id="useradd_departmentpassword"
-					widgetVar="userAddDepartmentPasswordDialog">
-					<f:facet name="message">
-						<h:outputText
-							value="#{userBean.created ? userlabels.user_add_confirmation_dialog_message : ''}#{userBean.created ? labels.br : ''}#{userlabels.user_department_password_prompt_dialog_message}"
-							escape="false" />
-						
+			<p:confirmDialog
+				appendToBody="false"
+				severity="info"
+				id="userupdate_departmentpassword"
+				widgetVar="userUpdateDepartmentPasswordDialog">
+				<f:facet name="message">
+					<h:outputText
+						value="#{userlabels.user_department_password_prompt_dialog_message}"
+						escape="false" />
+					<h:panelGrid
+						columns="1"
+						cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						rowClasses="ctsms-input-row">
+
 						<h:panelGrid
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-row">
-							<h:panelGrid
-								columns="3"
-								cellpadding="2"
-								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-									for="newDepartmentPasswordAdd"
-									value="#{userBean.newDepartmentPasswordLabel}" />
-								<h:panelGroup>
-									<p:password
-										id="newDepartmentPasswordAdd"
-										widgetVar="userAddNewDepartmentPassword"
-										required="false"
-										feedback="false"
-										redisplay="false"
-										label="#{userlabels.user_new_department_password}"
-										styleClass="ctsms-password" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="newDepartmentPasswordAdd">
-										<h:outputText
-											value="#{userlabels.user_new_department_password_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="newDepartmentPasswordAdd" />
-							</h:panelGrid>
+							columns="3"
+							cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel
+							    rendered="#{userBean.newDepartmentPasswordRequired}"
+								for="newDepartmentPasswordUpdate"
+								value="#{userBean.newDepartmentPasswordLabel}" />
+							<h:panelGroup rendered="#{userBean.newDepartmentPasswordRequired}">
+								<p:password
+									id="newDepartmentPasswordUpdate"
+									widgetVar="userUpdateNewDepartmentPassword"
+									required="false"
+									feedback="false"
+									redisplay="false"
+									label="#{userlabels.user_new_department_password}"
+									styleClass="ctsms-password" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="newDepartmentPasswordUpdate">
+									<h:outputText
+										value="#{userlabels.user_new_department_password_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message rendered="#{userBean.newDepartmentPasswordRequired}" for="newDepartmentPasswordUpdate" />
+							<h:outputLabel
+								rendered="#{userBean.oldDepartmentPasswordRequired}"
+								for="oldDepartmentPasswordUpdate"
+								value="#{userBean.oldDepartmentPasswordLabel}" />
+							<h:panelGroup rendered="#{userBean.oldDepartmentPasswordRequired}">
+								<p:password
+									id="oldDepartmentPasswordUpdate"
+									widgetVar="userUpdateOldDepartmentPassword"
+									required="false"
+									feedback="false"
+									redisplay="false"
+									label="#{userlabels.user_old_department_password}"
+									styleClass="ctsms-password" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="oldDepartmentPasswordUpdate">
+									<h:outputText
+										value="#{userlabels.user_old_department_password_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message rendered="#{userBean.oldDepartmentPasswordRequired}" for="oldDepartmentPasswordUpdate" />								
 						</h:panelGrid>
-					</f:facet>
-					<p:commandButton
-						process="@this,user_input"
-						id="addPassword"
-						value="#{userBean.created ? labels.yes_button_label : labels.ok_button_label}"
-						actionListener="#{userBean.add}"
-						onstart="setHiddenField('tabView:usermain_form:newDepartmentPassword',userAddNewDepartmentPassword.getValue());userAddDepartmentPasswordDialog.hide();"
-						ajax="true"
-						oncomplete="handleUserChanged(xhr, status, args)"
-						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
-					<p:commandButton
-						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
-						onclick="userAddDepartmentPasswordDialog.hide();userAddNewDepartmentPassword.setValue('');"
-						type="button" />
-				</p:confirmDialog>		
-				
-				
-				
-				<p:confirmDialog
-					appendToBody="false"
-					severity="info"
-					id="userupdate_departmentpassword"
-					widgetVar="userUpdateDepartmentPasswordDialog">
-					<f:facet name="message">
-						<h:outputText
-							value="#{userlabels.user_department_password_prompt_dialog_message}"
-							escape="false" />
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
-							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-row">
-						
-							<h:panelGrid
-								columns="3"
-								cellpadding="2"
-								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-								<h:outputLabel
-								    rendered="#{userBean.newDepartmentPasswordRequired}"
-									for="newDepartmentPasswordUpdate"
-									value="#{userBean.newDepartmentPasswordLabel}" />
-								<h:panelGroup rendered="#{userBean.newDepartmentPasswordRequired}">
-									<p:password
-										id="newDepartmentPasswordUpdate"
-										widgetVar="userUpdateNewDepartmentPassword"
-										required="false"
-										feedback="false"
-										redisplay="false"
-										label="#{userlabels.user_new_department_password}"
-										styleClass="ctsms-password" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="newDepartmentPasswordUpdate">
-										<h:outputText
-											value="#{userlabels.user_new_department_password_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message rendered="#{userBean.newDepartmentPasswordRequired}" for="newDepartmentPasswordUpdate" />
-								<h:outputLabel
-									rendered="#{userBean.oldDepartmentPasswordRequired}"
-									for="oldDepartmentPasswordUpdate"
-									value="#{userBean.oldDepartmentPasswordLabel}" />
-								<h:panelGroup rendered="#{userBean.oldDepartmentPasswordRequired}">
-									<p:password
-										id="oldDepartmentPasswordUpdate"
-										widgetVar="userUpdateOldDepartmentPassword"
-										required="false"
-										feedback="false"
-										redisplay="false"
-										label="#{userlabels.user_old_department_password}"
-										styleClass="ctsms-password" />
-									<p:tooltip
-										rendered="#{enableTooltips}"
-										for="oldDepartmentPasswordUpdate">
-										<h:outputText
-											value="#{userlabels.user_old_department_password_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message rendered="#{userBean.oldDepartmentPasswordRequired}" for="oldDepartmentPasswordUpdate" />								
-							</h:panelGrid>
-						</h:panelGrid>
-					</f:facet>
-					<p:commandButton
-						process="@this,user_input"
-						id="updatePassword"
-						value="#{labels.ok_button_label}"
-						actionListener="#{userBean.update}"
-						onstart="if('userUpdateNewDepartmentPassword' in window){setHiddenField('tabView:usermain_form:newDepartmentPassword',userUpdateNewDepartmentPassword.getValue());}if('userUpdateOldDepartmentPassword' in window){setHiddenField('tabView:usermain_form:oldDepartmentPassword',userUpdateOldDepartmentPassword.getValue());}userUpdateDepartmentPasswordDialog.hide();"
-						ajax="true"
-						oncomplete="handleUserChanged(xhr, status, args)"
-						update="user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
-					<p:commandButton
-						value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
-						onclick="userUpdateDepartmentPasswordDialog.hide();if('userUpdateNewDepartmentPassword' in window){userUpdateNewDepartmentPassword.setValue('');}if('userUpdateOldDepartmentPassword' in window){userUpdateOldDepartmentPassword.setValue('');}"
-						type="button" />
-				</p:confirmDialog>
+					</h:panelGrid>
+				</f:facet>
+				<p:commandButton
+					process="@this,user_input"
+					id="updatePassword"
+					value="#{labels.ok_button_label}"
+					actionListener="#{userBean.update}"
+					onstart="if('userUpdateNewDepartmentPassword' in window){setHiddenField('tabView:usermain_form:newDepartmentPassword',userUpdateNewDepartmentPassword.getValue());}if('userUpdateOldDepartmentPassword' in window){setHiddenField('tabView:usermain_form:oldDepartmentPassword',userUpdateOldDepartmentPassword.getValue());}userUpdateDepartmentPasswordDialog.hide();"
+					ajax="true"
+					oncomplete="handleUserChanged(xhr, status, args)"
+					update="user_tree,user_input,useradd_departmentpassword,userupdate_departmentpassword" />					
+				<p:commandButton
+					value="#{userBean.created ? labels.no_button_label : labels.cancel_button_label}"
+					onclick="userUpdateDepartmentPasswordDialog.hide();if('userUpdateNewDepartmentPassword' in window){userUpdateNewDepartmentPassword.setValue('');}if('userUpdateOldDepartmentPassword' in window){userUpdateOldDepartmentPassword.setValue('');}"
+					type="button" />
+			</p:confirmDialog>
 								
-			
-			
 		</h:form>
 	</ui:composition>
 </h:body>
