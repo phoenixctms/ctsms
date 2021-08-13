@@ -26,10 +26,13 @@ import org.phoenixctms.ctsms.vo.LdapEntryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelector;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelectorListener;
+import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
+import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -41,18 +44,20 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.TreeNode;
 
 @ManagedBean
 @ViewScoped
 public class UserBean extends UserSettingsBeanBase implements AuthenticationTypeSelectorListener {
 
 	private static final int AUTH_METHOD_PROPERTY_ID = 1;
-	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
+	//private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
 
 	public static void copyUserOutToIn(UserInVO in, UserOutVO out) {
 		if (in != null && out != null) {
 			DepartmentVO departmentVO = out.getDepartment();
 			StaffOutVO identityVO = out.getIdentity();
+			UserOutVO parentVO = out.getParent();
 			AuthenticationTypeVO methodVO = out.getAuthMethod();
 			in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
 			in.setId(out.getId());
@@ -80,19 +85,78 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setVisibleUserTabList(out.getVisibleUserTabList());
 			in.setAuthMethod(methodVO == null ? null : methodVO.getMethod());
 			in.setName(out.getName());
+			in.setParentId(parentVO == null ? null : parentVO.getId());
 			in.setTimeZone(out.getTimeZone());
 			in.setDateFormat(out.getDateFormat());
 			in.setDecimalSeparator(out.getDecimalSeparator());
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
+			in.getInheritedProperties().clear();
+			Iterator<String> it = out.getInheritedProperties().iterator();
+			while (it.hasNext()) {
+				String property = it.next();
+				if (CommonUtil.USER_INHERITABLE_PROPERTIES.contains(property)) {
+					in.getInheritedProperties().add(property);
+				}
+			}
+			in.getInheritedPermissionProfileGroups().clear();
+			in.getInheritedPermissionProfileGroups().addAll(out.getInheritedPermissionProfileGroups());
 		}
 	}
 
-	public static void initUserDefaultValues(UserInVO in, UserOutVO user) {
+	private static UserOutVO createUserOutFromIn(UserInVO in) {
+		UserOutVO result = new UserOutVO();
+		if (in != null) {
+			AuthenticationTypeVO authMethodVO = null;
+			try {
+				authMethodVO = WebUtil.getServiceLocator().getToolsService().getLocalizedAuthenticationType(WebUtil.getAuthentication(), in.getAuthMethod());
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+			result.setName(in.getName());
+			result.setName(CommonUtil.getUserName(result));
+			result.setAuthMethod(authMethodVO);
+			result.setLocale(in.getLocale());
+			result.setShowTooltips(in.getShowTooltips());
+			result.setLocked(in.getLocked());
+			result.setDecrypt(in.getDecrypt());
+			result.setDecryptUntrusted(in.getDecryptUntrusted());
+			result.setEnableInventoryModule(in.getEnableInventoryModule());
+			result.setVisibleInventoryTabList(in.getVisibleInventoryTabList());
+			result.setEnableStaffModule(in.getEnableStaffModule());
+			result.setVisibleStaffTabList(in.getVisibleStaffTabList());
+			result.setEnableCourseModule(in.getEnableCourseModule());
+			result.setVisibleCourseTabList(in.getVisibleCourseTabList());
+			result.setEnableTrialModule(in.getEnableTrialModule());
+			result.setVisibleTrialTabList(in.getVisibleTrialTabList());
+			result.setEnableInputFieldModule(in.getEnableInputFieldModule());
+			result.setVisibleInputFieldTabList(in.getVisibleInputFieldTabList());
+			result.setEnableProbandModule(in.getEnableProbandModule());
+			result.setVisibleProbandTabList(in.getVisibleProbandTabList());
+			result.setEnableMassMailModule(in.getEnableMassMailModule());
+			result.setVisibleMassMailTabList(in.getVisibleMassMailTabList());
+			result.setEnableUserModule(in.getEnableUserModule());
+			result.setVisibleUserTabList(in.getVisibleUserTabList());
+			//result.setAuthMethod(methodVO == null ? null : methodVO.getMethod());
+			result.setTimeZone(in.getTimeZone());
+			result.setDateFormat(in.getDateFormat());
+			result.setDecimalSeparator(in.getDecimalSeparator());
+			result.setTheme(in.getTheme());
+			result.getInheritedProperties().clear();
+			result.getInheritedProperties().addAll(in.getInheritedProperties());
+			result.getInheritedPermissionProfileGroups().clear();
+			result.getInheritedPermissionProfileGroups().addAll(in.getInheritedPermissionProfileGroups());
+		}
+		return result;
+	}
+
+	public static void initUserDefaultValues(UserInVO in, UserInheritedVO user) {
 		if (in != null) {
 			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
 			in.setId(null);
 			in.setIdentityId(null);
+			in.setParentId(null);
 			in.setLocale(Settings.getString(SettingCodes.USER_LOCALE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCALE_PRESET));
 			in.setShowTooltips(Settings.getBoolean(SettingCodes.USER_SHOW_TOOLTIPS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_SHOW_TOOLTIPS_PRESET));
 			in.setLocked(Settings.getBoolean(SettingCodes.USER_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_PRESET));
@@ -124,6 +188,8 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setDecimalSeparator(Messages.getString(MessageCodes.USER_DECIMAL_SEPARATOR_PRESET));
 			in.setVersion(null);
 			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
+			in.getInheritedProperties().clear();
+			in.getInheritedPermissionProfileGroups().clear();
 		}
 	}
 
@@ -141,6 +207,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	private String newDepartmentPassword;
 	private String oldDepartmentPassword;
 	private boolean decryptFromUntrustedHosts;
+	private TreeNode userRoot;
 
 	public UserBean() {
 		super();
@@ -152,6 +219,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		ldapEntry1 = null;
 		ldapEntry2 = null;
 		decryptFromUntrustedHosts = false;
+		DefaultTreeNode userRoot = new DefaultTreeNode("user_root", null);
+		userRoot.setExpanded(true);
+		userRoot.setType(WebUtil.PARENT_NODE_TYPE);
+		this.userRoot = userRoot;
 		try {
 			decryptFromUntrustedHosts = WebUtil.getServiceLocator().getToolsService().isDecryptFromUntrustedHosts();
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -171,7 +242,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getUserService().addUser(WebUtil.getAuthentication(), in, newDepartmentPassword, MAX_GRAPH_USER_INSTANCES);
+			out = WebUtil.getServiceLocator().getUserService().addUser(WebUtil.getAuthentication(), in, newDepartmentPassword,
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
@@ -192,7 +266,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
-		if ((UPDATE_OUTCOME.equals(outcome) || DELETE_OUTCOME.equals(outcome)) && WebUtil.isUserIdLoggedIn(in.getId())) {
+		if ((UPDATE_OUTCOME.equals(outcome) || DELETE_OUTCOME.equals(outcome)) && WebUtil.isPropertiesDescendantLoggedIn(in.getId())) {
 			WebUtil.logout();
 		} else {
 			RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -217,7 +291,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		out = null;
 		if (id != null) {
 			try {
-				out = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), id, MAX_GRAPH_USER_INSTANCES);
+				out = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), id,
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
@@ -250,6 +327,18 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		return new ArrayList<LdapEntryVO>();
 	}
 
+	public void changeByNode() {
+		Long userId = WebUtil.getLongParamValue(GetParamNames.USER_ID);
+		if (userId != null) {
+			change(userId.toString());
+		} else {
+			this.out = null;
+			this.initIn();
+			initSets();
+			appendRequestContextCallbackArgs(true);
+		}
+	}
+
 	@Override
 	public String deleteAction() {
 		return deleteAction(in.getId());
@@ -261,7 +350,9 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			out = WebUtil.getServiceLocator().getUserService().deleteUser(WebUtil.getAuthentication(), id,
 					Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE),
 					false, deferredDeleteReason,
-					MAX_GRAPH_USER_INSTANCES);
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
@@ -276,6 +367,14 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	private UserOutVO findUserRoot(UserOutVO user) {
+		if (user.getParent() == null) {
+			return user;
+		} else {
+			return findUserRoot(user.getParent());
+		}
 	}
 
 	@Override
@@ -316,6 +415,30 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		return ldapEntry2;
 	}
 
+	public TreeNode getUserRoot() {
+		return userRoot;
+	}
+
+	public String getUserTreeLabel() {
+		Integer graphMaxUserInstances = Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES);
+		Integer graphMaxUserParentDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS,
+				DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH);
+		Integer graphMaxUserChildrenDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS,
+				DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH);
+		if (graphMaxUserInstances == null && graphMaxUserParentDepth == null && graphMaxUserChildrenDepth == null) {
+			return Messages.getString(MessageCodes.USER_TREE_LABEL);
+		} else if (graphMaxUserInstances != null && graphMaxUserParentDepth == null && graphMaxUserChildrenDepth == null) {
+			return Messages.getMessage(MessageCodes.USER_TREE_MAX_LABEL, graphMaxUserInstances);
+		} else if (graphMaxUserInstances == null && (graphMaxUserParentDepth != null || graphMaxUserChildrenDepth != null)) {
+			return Messages.getMessage(MessageCodes.USER_TREE_LEVELS_LABEL, graphMaxUserParentDepth != null ? graphMaxUserParentDepth : "\u221E",
+					graphMaxUserChildrenDepth != null ? graphMaxUserChildrenDepth : "\u221E");
+		} else {
+			return Messages.getMessage(MessageCodes.USER_TREE_MAX_LEVELS_LABEL, graphMaxUserInstances,
+					graphMaxUserParentDepth != null ? graphMaxUserParentDepth : "\u221E",
+					graphMaxUserChildrenDepth != null ? graphMaxUserChildrenDepth : "\u221E");
+		}
+	}
+
 	@Override
 	public String getModifiedAnnotation() {
 		if (out != null) {
@@ -327,6 +450,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	public UserOutVO getOut() {
 		return out;
+	}
+
+	public String getParentName() {
+		return WebUtil.userIdToName(in.getParentId());
 	}
 
 	public String getRemoteUserMessage() {
@@ -444,7 +571,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (out != null) {
 			try {
 				Collection<UserPermissionProfileOutVO> userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService()
-						.getPermissionProfiles(WebUtil.getAuthentication(), in.getId(), null, null);
+						.getPermissionProfiles(WebUtil.getAuthentication(), in.getId(), null, null, true);
 				count = userPermissionProfilesOut == null ? null : new Long(userPermissionProfilesOut.size());
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -458,12 +585,27 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		tabCountMap.put(JSValues.AJAX_USER_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_USER_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.USER_JOURNAL_TAB_TITLE, MessageCodes.USER_JOURNAL_TAB_TITLE_WITH_COUNT, count));
+		userRoot.getChildren().clear();
+		if (out != null) {
+			Integer maxDepth = Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH);
+			try {
+				maxDepth += Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH);
+			} catch (NullPointerException e) {
+				maxDepth = null;
+			}
+			userOutVOtoTreeNode(findUserRoot(out), userRoot, out, new ArrayList<IDVOTreeNode>(),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+					maxDepth, null, 0);
+		} else {
+			IDVOTreeNode loose = new IDVOTreeNode(createUserOutFromIn(in), userRoot);
+			loose.setType(WebUtil.LEAF_NODE_TYPE);
+		}
 		ldapEntry1 = null;
 		ldapEntry2 = null;
 		loadRemoteUserInfo();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
-		if (WebUtil.isUserIdLoggedIn(in.getId())) {
-			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
+		if (WebUtil.isPropertiesDescendantLoggedIn(in.getId())) {
+			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ANCESTOR_OF_ACTIVE_USER);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
@@ -481,6 +623,53 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, it.next());
 			}
 		}
+	}
+
+	private IDVOTreeNode userOutVOtoTreeNode(UserOutVO user, TreeNode parent, UserOutVO selected, ArrayList<IDVOTreeNode> nodes, Integer limit,
+			Integer maxDepth, ArrayList<Object[]> deferred, int depth) {
+		if ((limit == null || nodes.size() < limit.intValue()) && (maxDepth == null || depth <= maxDepth.intValue())) {
+			IDVOTreeNode node = new IDVOTreeNode(user, parent);
+			nodes.add(node);
+			if (selected != null && user.getId() == selected.getId()) {
+				node.setSelected(true);
+				parent.setExpanded(true);
+			}
+			if (user.getChildrenCount() > 0L) {
+				node.setType(WebUtil.PARENT_NODE_TYPE);
+			} else {
+				node.setType(WebUtil.LEAF_NODE_TYPE);
+			}
+			node.setSelectable(true);
+			Collection<UserOutVO> children = user.getChildren();
+			Iterator<UserOutVO> it = children.iterator();
+			if (Settings.getBoolean(SettingCodes.GRAPH_USER_BREADTH_FIRST, Bundle.SETTINGS, DefaultSettings.GRAPH_USER_BREADTH_FIRST)) {
+				if (deferred == null) {
+					deferred = new ArrayList<Object[]>(children.size());
+					while (it.hasNext()) {
+						userOutVOtoTreeNode(it.next(), node, selected, nodes, limit, maxDepth, deferred, depth + 1);
+					}
+					Iterator<Object[]> deferredIt = deferred.iterator();
+					while (deferredIt.hasNext()) {
+						Object[] newNode = deferredIt.next();
+						userOutVOtoTreeNode((UserOutVO) newNode[0], (IDVOTreeNode) newNode[1], selected, nodes, limit, maxDepth, null, (Integer) newNode[2]);
+					}
+				} else {
+					while (it.hasNext()) {
+						Object[] newNode = new Object[3];
+						newNode[0] = it.next();
+						newNode[1] = node;
+						newNode[2] = depth + 1;
+						deferred.add(newNode);
+					}
+				}
+			} else {
+				while (it.hasNext()) {
+					userOutVOtoTreeNode(it.next(), node, selected, nodes, limit, maxDepth, null, depth + 1);
+				}
+			}
+			return node;
+		}
+		return null;
 	}
 
 	@Override
@@ -512,7 +701,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	@Override
 	public boolean isRemovable() {
-		return WebUtil.getModuleEnabled(DBModule.USER_DB) && isCreated() && !WebUtil.isUserIdLoggedIn(in.getId());
+		return WebUtil.getModuleEnabled(DBModule.USER_DB) && isCreated() && !WebUtil.isPropertiesDescendantLoggedIn(in.getId());
 	}
 
 	public boolean isTabEmphasized(String tab) {
@@ -528,7 +717,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	public String loadAction(Long id) {
 		out = null;
 		try {
-			out = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), id, MAX_GRAPH_USER_INSTANCES);
+			out = WebUtil.getServiceLocator().getUserService().getUser(WebUtil.getAuthentication(), id,
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
 			return LOAD_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -624,7 +816,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		UserInVO backup = new UserInVO(in);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, newDepartmentPassword, oldDepartmentPassword, MAX_GRAPH_USER_INSTANCES);
+			out = WebUtil.getServiceLocator().getUserService().updateUser(WebUtil.getAuthentication(), in, newDepartmentPassword, oldDepartmentPassword,
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_INSTANCES),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_PARENT_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_USER_CHILDREN_DEPTH));
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
@@ -644,8 +839,13 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	@Override
-	public Long getUserId() {
+	protected Long getUserId() {
 		return in != null ? in.getId() : null;
+	}
+
+	@Override
+	protected Long getParentId() {
+		return in != null ? in.getParentId() : null;
 	}
 
 	@Override
@@ -849,20 +1049,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		}
 	}
 
-	private List<String> visibleTabListToList(String tabList) {
-		ArrayList<String> result = new ArrayList<String>();
-		if (tabList != null && tabList.length() > 0) {
-			String[] tabIds = WebUtil.TAB_ID_SEPARATOR_REGEXP.split(tabList, -1);
-			for (int i = 0; i < tabIds.length; i++) {
-				if (tabIds[i].trim().length() > 0) {
-					result.add(tabIds[i].trim());
-				}
-			}
-		}
-		return result;
-	}
-
-	private String visibleTabListToString(List<String> tabList) {
+	private static String visibleTabListToString(List<String> tabList) {
 		StringBuilder result = new StringBuilder();
 		if (tabList != null && tabList.size() > 0) {
 			Iterator<String> it = tabList.iterator();
@@ -874,5 +1061,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			}
 		}
 		return result.toString();
+	}
+
+	@Override
+	protected Collection<String> getInheritedProperties() {
+		return in != null ? in.getInheritedProperties() : null;
 	}
 }
