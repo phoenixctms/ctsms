@@ -360,6 +360,40 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void appendDistinctProbandContactColumnValues(Collection contactDetails,
+			HashMap<String, Object> fieldRow,
+			boolean aggregateContactDetails,
+			String emailContactDetailsColumnName,
+			String phoneContactDetailsColumnName) {
+		Iterator<ProbandContactDetailValueOutVO> contactDetailsIt = contactDetails.iterator();
+		String fieldKey;
+		while (contactDetailsIt.hasNext()) {
+			ProbandContactDetailValueOutVO contactDetailOutVO = contactDetailsIt.next();
+			StringBuilder fieldValue;
+			if (aggregateContactDetails) {
+				if (contactDetailOutVO.getType().isEmail()) {
+					fieldKey = emailContactDetailsColumnName;
+				} else if (contactDetailOutVO.getType().isPhone()) {
+					fieldKey = phoneContactDetailsColumnName;
+				} else {
+					continue;
+				}
+			} else {
+				fieldKey = contactDetailOutVO.getType().getName();
+			}
+			if (fieldRow.containsKey(fieldKey)) {
+				fieldValue = new StringBuilder((String) fieldRow.get(fieldKey));
+			} else {
+				fieldValue = new StringBuilder();
+			}
+			if (fieldValue.length() > 0) {
+				fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
+			}
+			fieldValue.append(contactDetailOutVO.getValue());
+			fieldRow.put(fieldKey, fieldValue.toString());
+		}
+	}
+
 	public static void appendDistinctProbandAddressColumnValues(Collection addresses,
 			HashMap<String, Object> fieldRow,
 			boolean aggregateAddresses,

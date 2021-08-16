@@ -143,8 +143,6 @@ import org.phoenixctms.ctsms.vo.InventoryTagVO;
 import org.phoenixctms.ctsms.vo.InventoryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
-import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagVO;
@@ -1515,6 +1513,10 @@ public class SearchServiceImpl
 				SearchResultExcelDefaultSettings.SHOW_PROBAND_CONTACT_DETAILS);
 		boolean showAddresses = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_PROBAND_ADDRESSES, Bundle.SEARCH_RESULT_EXCEL,
 				SearchResultExcelDefaultSettings.SHOW_PROBAND_ADDRESSES);
+		boolean aggregateAddresses = Settings.getBoolean(SearchResultExcelSettingCodes.AGGREGATE_PROBAND_ADDRESSES, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.AGGREGATE_PROBAND_ADDRESSES);
+		boolean aggregateContactDetails = Settings.getBoolean(SearchResultExcelSettingCodes.AGGREGATE_PROBAND_CONTACT_DETAILS, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.AGGREGATE_PROBAND_CONTACT_DETAILS);
 		boolean showInquiries = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_INQUIRIES, Bundle.SEARCH_RESULT_EXCEL,
 				SearchResultExcelDefaultSettings.SHOW_INQUIRIES);
 		boolean showAllInquiries = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_ALL_INQUIRIES, Bundle.SEARCH_RESULT_EXCEL,
@@ -1538,18 +1540,31 @@ public class SearchServiceImpl
 				: new ArrayList();
 		inquiryDao.toInquiryOutVOCollection(inquiries);
 		if (CoreUtil.isPassDecryption()) {
-			distinctColumnNames.ensureCapacity(probandTags.size() + contactDetailTypes.size() + addressTypes.size());
+			distinctColumnNames.ensureCapacity(probandTags.size()
+					+ (aggregateContactDetails ? 2 : contactDetailTypes.size())
+					+ (aggregateAddresses ? 3 : addressTypes.size()));
 			Iterator<ProbandTagVO> probandTagsIt = probandTags.iterator();
 			while (probandTagsIt.hasNext()) {
 				distinctColumnNames.add(probandTagsIt.next().getName());
 			}
-			Iterator<ContactDetailTypeVO> contactDetailTypesIt = contactDetailTypes.iterator();
-			while (contactDetailTypesIt.hasNext()) {
-				distinctColumnNames.add(contactDetailTypesIt.next().getName());
+			if (aggregateContactDetails) {
+				distinctColumnNames.add(SearchResultExcelWriter.getEmailContactDetailsColumnName());
+				distinctColumnNames.add(SearchResultExcelWriter.getPhoneContactDetailsColumnName());
+			} else {
+				Iterator<ContactDetailTypeVO> contactDetailTypesIt = contactDetailTypes.iterator();
+				while (contactDetailTypesIt.hasNext()) {
+					distinctColumnNames.add(contactDetailTypesIt.next().getName());
+				}
 			}
-			Iterator<AddressTypeVO> addressTypesIt = addressTypes.iterator();
-			while (addressTypesIt.hasNext()) {
-				distinctColumnNames.add(addressTypesIt.next().getName());
+			if (aggregateAddresses) {
+				distinctColumnNames.add(SearchResultExcelWriter.getStreetsColumnName());
+				distinctColumnNames.add(SearchResultExcelWriter.getZipCodesColumnName());
+				distinctColumnNames.add(SearchResultExcelWriter.getCityNamesColumnName());
+			} else {
+				Iterator<AddressTypeVO> addressTypesIt = addressTypes.iterator();
+				while (addressTypesIt.hasNext()) {
+					distinctColumnNames.add(addressTypesIt.next().getName());
+				}
 			}
 		}
 		Iterator<InquiryOutVO> inquiriesIt;
@@ -1580,41 +1595,22 @@ public class SearchServiceImpl
 				fieldValue.append(tagValueOutVO.getValue());
 				fieldRow.put(tagValueOutVO.getTag().getName(), fieldValue.toString());
 			}
-			Collection probandContacts = showContactDetails ? probandContactDetailValueDao.findByProband(probandVO.getId(), null, false, null, null, null)
+			Collection probandContactDetails = showContactDetails ? probandContactDetailValueDao.findByProband(probandVO.getId(), null, false, null, null, null)
 					: new ArrayList<ProbandContactDetailValue>();
-			probandContactDetailValueDao.toProbandContactDetailValueOutVOCollection(probandContacts);
-			Iterator<ProbandContactDetailValueOutVO> probandContactsIt = probandContacts.iterator();
-			while (probandContactsIt.hasNext()) {
-				ProbandContactDetailValueOutVO probandContactDetailValueOutVO = probandContactsIt.next();
-				StringBuilder fieldValue;
-				if (fieldRow.containsKey(probandContactDetailValueOutVO.getType().getName())) {
-					fieldValue = new StringBuilder((String) fieldRow.get(probandContactDetailValueOutVO.getType().getName()));
-				} else {
-					fieldValue = new StringBuilder();
-				}
-				if (fieldValue.length() > 0) {
-					fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
-				}
-				fieldValue.append(probandContactDetailValueOutVO.getValue());
-				fieldRow.put(probandContactDetailValueOutVO.getType().getName(), fieldValue.toString());
-			}
+			probandContactDetailValueDao.toProbandContactDetailValueOutVOCollection(probandContactDetails);
+			ServiceUtil.appendDistinctProbandContactColumnValues(probandContactDetails,
+					fieldRow,
+					aggregateContactDetails,
+					SearchResultExcelWriter.getEmailContactDetailsColumnName(),
+					SearchResultExcelWriter.getPhoneContactDetailsColumnName());
 			Collection probandAddresses = showAddresses ? probandAddressDao.findByProband(probandVO.getId(), null, null, null, null) : new ArrayList<ProbandAddress>();
 			probandAddressDao.toProbandAddressOutVOCollection(probandAddresses);
-			Iterator<ProbandAddressOutVO> probandAddressesIt = probandAddresses.iterator();
-			while (probandAddressesIt.hasNext()) {
-				ProbandAddressOutVO probandAddressOutVO = probandAddressesIt.next();
-				StringBuilder fieldValue;
-				if (fieldRow.containsKey(probandAddressOutVO.getType().getName())) {
-					fieldValue = new StringBuilder((String) fieldRow.get(probandAddressOutVO.getType().getName()));
-				} else {
-					fieldValue = new StringBuilder();
-				}
-				if (fieldValue.length() > 0) {
-					fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
-				}
-				fieldValue.append(probandAddressOutVO.getName());
-				fieldRow.put(probandAddressOutVO.getType().getName(), fieldValue.toString());
-			}
+			ServiceUtil.appendDistinctProbandAddressColumnValues(probandAddresses,
+					fieldRow,
+					aggregateAddresses,
+					SearchResultExcelWriter.getStreetsColumnName(),
+					SearchResultExcelWriter.getZipCodesColumnName(),
+					SearchResultExcelWriter.getCityNamesColumnName());
 			HashMap<Long, InquiryValue> inquiryValueMap;
 			if (showInquiries) {
 				Collection<InquiryValue> inquiryValues = inquiryValueDao.findByTrialActiveProbandField(null, null, null, probandVO.getId(), null);
