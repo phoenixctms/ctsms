@@ -3,7 +3,12 @@ package org.phoenixctms.ctsms.web.model.user;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -12,10 +17,12 @@ import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileInVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
@@ -53,18 +60,29 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		}
 	}
 
+	private static final Integer GRAPH_MAX_USER_INSTANCES = 2;
+	private static final Integer GRAPH_MAX_USER_PARENT_DEPTH = 1;
+	private static final Integer GRAPH_MAX_USER_CHILDREN_DEPTH = 0;
+	private UserOutVO user;
+	private UserInheritedVO parent;
 	private Collection<UserPermissionProfileOutVO> userPermissionProfilesOut;
-	UserPermissionProfileModel userPermissionProfileModel;
+	private UserPermissionProfileModel userPermissionProfileModel;
 	private Long userId;
+	private Map<String, String> inheritedPermissionProfileGroupsMap;
+	private Set<String> parentPermissionProfiles;
+	private Map<String, PermissionProfileVO> parentPermissionProfileVOMap;
 
 	public UserPermissionProfileBean() {
 		super();
+		inheritedPermissionProfileGroupsMap = new HashMap<String, String>();
+		parentPermissionProfileVOMap = new HashMap<String, PermissionProfileVO>();
+		parentPermissionProfiles = new HashSet<String>();
 		userPermissionProfileModel = new UserPermissionProfileModel();
 	}
 
 	@Override
 	protected void appendRequestContextCallbackArgs(boolean operationSuccess, String outcome) {
-		if (UPDATE_OUTCOME.equals(outcome) && WebUtil.isUserIdLoggedIn(userId)) {
+		if (UPDATE_OUTCOME.equals(outcome) && WebUtil.isPermissionProfileGroupsDescendantLoggedIn(userId)) {
 			WebUtil.logout();
 		} else {
 			RequestContext requestContext = RequestContext.getCurrentInstance();
@@ -86,7 +104,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 	protected String changeAction(Long id) {
 		userPermissionProfilesOut = null;
 		try {
-			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), id, null, null);
+			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), id, null, null, false);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -153,11 +171,40 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
-		if (Messages.getMessageList().isEmpty()) {
-			if (WebUtil.isUserIdLoggedIn(userId)) {
-				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ACTIVE_USER);
+		user = WebUtil.getUser(userId, GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
+		parent = null;
+		inheritedPermissionProfileGroupsMap.clear();
+		parentPermissionProfiles.clear();
+		parentPermissionProfileVOMap.clear();
+		if (user != null) {
+			parent = WebUtil.getInheritedUser(user.getParent() != null ? user.getParent().getId() : null);
+			Iterator<PermissionProfileGroup> profileGroupIt = user.getInheritedPermissionProfileGroups().iterator();
+			while (profileGroupIt.hasNext()) {
+				inheritedPermissionProfileGroupsMap.put(profileGroupIt.next().name(), Boolean.TRUE.toString());
 			}
-			UserOutVO user = WebUtil.getUser(userId, null);
+			if (parent != null) {
+				Collection<UserPermissionProfileOutVO> parentUserPermissionProfiles = null;
+				try {
+					parentUserPermissionProfiles = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), parent.getId(), null, true,
+							true);
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				}
+				if (parentUserPermissionProfiles != null) {
+					Iterator<UserPermissionProfileOutVO> PermissionProfilesIt = parentUserPermissionProfiles.iterator();
+					while (PermissionProfilesIt.hasNext()) {
+						UserPermissionProfileOutVO permissionProfile = PermissionProfilesIt.next();
+						parentPermissionProfiles.add(permissionProfile.getProfile().getProfile().name());
+						parentPermissionProfileVOMap.put(permissionProfile.getProfile().getProfileGroup().getProfileGroup().name(), permissionProfile.getProfile());
+					}
+				}
+			}
+		}
+		if (Messages.getMessageList().isEmpty()) {
+			if (WebUtil.isPermissionProfileGroupsDescendantLoggedIn(userId)) {
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ANCESTOR_OF_ACTIVE_USER);
+			}
 			ArrayList<String> messageCodes = new ArrayList<String>();
 			if (WebUtil.getUserAuthMessages(user, null, messageCodes)) {
 				Iterator<String> it = messageCodes.iterator();
@@ -202,7 +249,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 	public String loadAction(Long id) {
 		userPermissionProfilesOut = null;
 		try {
-			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), id, null, null);
+			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService().getPermissionProfiles(WebUtil.getAuthentication(), id, null, null, false);
 			return LOAD_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -216,11 +263,29 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
+	private Set<PermissionProfileGroup> getInheritedPermissionProfileGroups() {
+		HashSet<PermissionProfileGroup> result = new HashSet<PermissionProfileGroup>();
+		if (parent != null) {
+			Iterator<Entry<String, String>> it = inheritedPermissionProfileGroupsMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry<String, String> inheritedPermissionProfileGroup = it.next();
+				if (Boolean.parseBoolean(inheritedPermissionProfileGroup.getValue())) {
+					result.add(PermissionProfileGroup.fromString(inheritedPermissionProfileGroup.getKey()));
+				}
+			}
+		}
+		return result;
+	}
+
+	public Map<String, String> getInheritedPermissionProfileGroupsMap() {
+		return inheritedPermissionProfileGroupsMap;
+	}
+
 	@Override
 	public String updateAction() {
 		try {
 			userPermissionProfilesOut = WebUtil.getServiceLocator().getUserService()
-					.setPermissionProfiles(WebUtil.getAuthentication(), userPermissionProfileModel.getPermissionProfilesIn());
+					.setPermissionProfiles(WebUtil.getAuthentication(), userPermissionProfileModel.getPermissionProfilesIn(), getInheritedPermissionProfileGroups());
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
@@ -232,5 +297,16 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public Set<String> getParentPermissionProfiles() {
+		return parentPermissionProfiles;
+	}
+
+	public String getInheritedPermissionProfileGroupTooltip(String profileGroup) {
+		if (parentPermissionProfileVOMap.containsKey(profileGroup)) {
+			return Messages.getMessage(MessageCodes.INHERITED_USER_PERMISSION_PROFILE_TOOLTIP, parentPermissionProfileVOMap.get(profileGroup).getProfileName());
+		}
+		return Messages.getString(MessageCodes.INHERIT_USER_PERMISSION_PROFILE_TOOLTIP);
 	}
 }
