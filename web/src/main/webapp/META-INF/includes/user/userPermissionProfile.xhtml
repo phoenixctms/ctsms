@@ -28,11 +28,29 @@
 								<f:facet name="header">
 									<h:outputText value="#{profileGroup.profileGroupName}" />
 								</f:facet>
+								
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="inherit_userpermissionprofile"
+										itemLabel="#{userPermissionProfileBean.getInheritedPermissionProfileGroupTooltip(null)}"
+										value="#{userPermissionProfileBean.inheritedPermissionProfileGroupsMap[profileGroup.profileGroup.name()]}">
+										<p:ajax process="@this" update="userpermissionprofile_input"/>
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips and not empty userPermissionProfileBean.getInheritedPermissionProfileGroupTooltip(profileGroup.profileGroup.name())}"
+										for="inherit_userpermissionprofile">
+										<h:outputText
+											value="#{userPermissionProfileBean.getInheritedPermissionProfileGroupTooltip(profileGroup.profileGroup.name())}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								
 								<p:selectOneRadio id="userpermissionprofile_input"
+								    disabled="#{userPermissionProfileBean.inheritedPermissionProfileGroupsMap[profileGroup.profileGroup.name()]}"
 									layout="pageDirection"
 									value="#{userPermissionProfileBean.userPermissionProfileModel[profileGroup.profileGroup.name()]}">
 									<f:selectItems
-										value="#{userPermissionProfileBean.userPermissionProfileModel.getPermissionProfiles(profileGroup.profileGroup.name())}"
+										value="#{userPermissionProfileBean.userPermissionProfileModel.getPermissionProfiles(profileGroup.profileGroup.name(),userPermissionProfileBean.parentPermissionProfiles)}"
 										var="selectItem" itemLabel="#{selectItem.label}"
 										itemValue="#{selectItem.value}" />
 									<p:ajax />
