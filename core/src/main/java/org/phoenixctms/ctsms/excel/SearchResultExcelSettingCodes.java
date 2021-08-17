@@ -94,6 +94,8 @@ public interface SearchResultExcelSettingCodes {
 	public static final String SHOW_ALL_INQUIRIES = "show_all_inquiries";
 	public static final String SHOW_ALL_INQUIRY_DATES = "show_all_inquiry_dates";
 	public static final String SHOW_EMPTY_INQUIRY_COLUMNS = "show_empty_inquiry_columns";
+	public static final String AGGREGATE_PROBAND_ADDRESSES = "aggregate_proband_addresses";
+	public static final String AGGREGATE_PROBAND_CONTACT_DETAILS = "aggregate_proband_contact_details";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 }

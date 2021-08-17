@@ -100,6 +100,8 @@ public final class SearchResultExcelDefaultSettings {
 	public static final boolean SHOW_PROBAND_TAGS = false;
 	public static final boolean SHOW_PROBAND_CONTACT_DETAILS = true;
 	public static final boolean SHOW_PROBAND_ADDRESSES = true;
+	public static final boolean AGGREGATE_PROBAND_ADDRESSES = false;
+	public static final boolean AGGREGATE_PROBAND_CONTACT_DETAILS = false;
 	public static final boolean SHOW_INQUIRIES = false;
 	public static final boolean SHOW_ALL_INQUIRIES = false;
 	public static final boolean SHOW_ALL_INQUIRY_DATES = false;

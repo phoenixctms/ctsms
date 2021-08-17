@@ -169,7 +169,6 @@ import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferOutVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferSummaryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.vo.ProbandContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupInVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandInVO;
@@ -4824,44 +4823,24 @@ public class TrialServiceImpl
 				fieldValue.append(tagValueOutVO.getValue());
 				fieldRow.put(fieldKey, fieldValue.toString());
 			}
-			Collection addresses = showAddresses ? probandAddressDao.findByProband(probandListEntryVO.getProband().getId(), null, null, null, null)
+			Collection probandAddresses = showAddresses ? probandAddressDao.findByProband(probandListEntryVO.getProband().getId(), null, null, null, null)
 					: new ArrayList<ProbandAddress>();
-			probandAddressDao.toProbandAddressOutVOCollection(addresses);
-			ServiceUtil.appendDistinctProbandAddressColumnValues(addresses,
+			probandAddressDao.toProbandAddressOutVOCollection(probandAddresses);
+			ServiceUtil.appendDistinctProbandAddressColumnValues(probandAddresses,
 					fieldRow,
 					aggregateAddresses,
 					ProbandListExcelWriter.getStreetsColumnName(),
 					ProbandListExcelWriter.getZipCodesColumnName(),
 					ProbandListExcelWriter.getCityNamesColumnName());
-			Collection contactDetails = showContactDetails ? probandContactDetailValueDao.findByProband(probandListEntryVO.getProband().getId(), null, false, null, null, null)
+			Collection probandContactDetails = showContactDetails
+					? probandContactDetailValueDao.findByProband(probandListEntryVO.getProband().getId(), null, false, null, null, null)
 					: new ArrayList<ProbandContactDetailValue>();
-			probandContactDetailValueDao.toProbandContactDetailValueOutVOCollection(contactDetails);
-			Iterator<ProbandContactDetailValueOutVO> contactDetailsIt = contactDetails.iterator();
-			while (contactDetailsIt.hasNext()) {
-				ProbandContactDetailValueOutVO contactDetailOutVO = contactDetailsIt.next();
-				StringBuilder fieldValue;
-				if (aggregateContactDetails) {
-					if (contactDetailOutVO.getType().isEmail()) {
-						fieldKey = ProbandListExcelWriter.getEmailContactDetailsColumnName();
-					} else if (contactDetailOutVO.getType().isPhone()) {
-						fieldKey = ProbandListExcelWriter.getPhoneContactDetailsColumnName();
-					} else {
-						continue;
-					}
-				} else {
-					fieldKey = contactDetailOutVO.getType().getName();
-				}
-				if (fieldRow.containsKey(fieldKey)) {
-					fieldValue = new StringBuilder((String) fieldRow.get(fieldKey));
-				} else {
-					fieldValue = new StringBuilder();
-				}
-				if (fieldValue.length() > 0) {
-					fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
-				}
-				fieldValue.append(contactDetailOutVO.getValue());
-				fieldRow.put(fieldKey, fieldValue.toString());
-			}
+			probandContactDetailValueDao.toProbandContactDetailValueOutVOCollection(probandContactDetails);
+			ServiceUtil.appendDistinctProbandContactColumnValues(probandContactDetails,
+					fieldRow,
+					aggregateContactDetails,
+					ProbandListExcelWriter.getEmailContactDetailsColumnName(),
+					ProbandListExcelWriter.getPhoneContactDetailsColumnName());
 			HashMap<Long, ProbandListEntryTagValue> listEntryTagValueMap;
 			if (showProbandListEntryTags) {
 				Collection<ProbandListEntryTagValue> listEntryTagValues = probandListEntryTagValueDao.findByListEntryListEntryTag(probandListEntryVO.getId(), null);

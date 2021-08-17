@@ -34,6 +34,26 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 				inquiry == null ? null : inquiry.getUniqueName(), inquiry == null ? null : CommonUtil.inputFieldOutVOToString(inquiry.getField()));
 	}
 
+	public static String getStreetsColumnName() {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
+	public static String getZipCodesColumnName() {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
+	public static String getCityNamesColumnName() {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.CITY_NAMES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
+	public static String getPhoneContactDetailsColumnName() {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.PHONE_CONTACT_DETAILS_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
+	public static String getEmailContactDetailsColumnName() {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.EMAIL_CONTACT_DETAILS_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
 	protected CriteriaInstantVO criteria;
 	protected DBModule module;
 	protected SearchResultExcelVO excelVO;
