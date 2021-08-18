@@ -23,12 +23,12 @@
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
 
-							<h:panelGrid columns="3" cellpadding="2"
-								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:panelGrid columns="4" cellpadding="2"
+								columnClasses="ctsms-checkbox-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 
 								<ui:include
 									src="/META-INF/includes/shared/userSettingsBaseInput.xhtml">
-									<ui:param name="settingsBean" value="#{userSettingsBean}" />
+									<ui:param name="bean" value="#{userSettingsBean}" />
 								</ui:include>
 
 							</h:panelGrid>

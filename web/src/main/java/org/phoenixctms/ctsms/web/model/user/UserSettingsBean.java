@@ -1,5 +1,8 @@
 package org.phoenixctms.ctsms.web.model.user;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -8,6 +11,8 @@ import javax.faces.bean.ViewScoped;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
@@ -21,6 +26,10 @@ import org.primefaces.context.RequestContext;
 @ViewScoped
 public class UserSettingsBean extends UserSettingsBeanBase {
 
+	private static final Integer GRAPH_MAX_USER_INSTANCES = 2;
+	private static final Integer GRAPH_MAX_USER_PARENT_DEPTH = 1;
+	private static final Integer GRAPH_MAX_USER_CHILDREN_DEPTH = 0;
+
 	public static void copyUserOutToIn(UserSettingsInVO in, UserOutVO out) {
 		if (in != null && out != null) {
 			in.setId(out.getId());
@@ -31,6 +40,14 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			in.setDecimalSeparator(out.getDecimalSeparator());
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
+			in.getInheritedProperties().clear();
+			Iterator<String> it = out.getInheritedProperties().iterator();
+			while (it.hasNext()) {
+				String property = it.next();
+				if (CommonUtil.USER_SETTINGS_INHERITABLE_PROPERTIES.contains(property)) {
+					in.getInheritedProperties().add(property);
+				}
+			}
 		}
 	}
 
@@ -63,7 +80,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 
 	@PostConstruct
 	private void init() {
-		out = WebUtil.getUser();
+		loadUser();
 		initIn();
 		initSets();
 	}
@@ -75,9 +92,17 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 		copyUserOutToIn(in, out);
 	}
 
+	private void loadUser() {
+		out = null;
+		UserInheritedVO userVO = WebUtil.getUser();
+		if (userVO != null) {
+			out = WebUtil.getUser(userVO.getId(), GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
+		}
+	}
+
 	@Override
 	public String resetAction() {
-		out = WebUtil.getUser();
+		loadUser();
 		initIn();
 		initSets();
 		return RESET_OUTCOME;
@@ -105,8 +130,16 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	}
 
 	@Override
-	public Long getUserId() {
+	protected Long getUserId() {
 		return in != null ? in.getId() : null;
+	}
+
+	@Override
+	protected Long getParentId() {
+		if (out != null && out.getParent() != null) {
+			return out.getParent().getId();
+		}
+		return null;
 	}
 
 	@Override
@@ -193,5 +226,10 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	@Override
 	public boolean isCreated() {
 		return WebUtil.getSessionScopeBean().isLoggedIn();
+	}
+
+	@Override
+	protected Collection<String> getInheritedProperties() {
+		return in != null ? in.getInheritedProperties() : null;
 	}
 }
