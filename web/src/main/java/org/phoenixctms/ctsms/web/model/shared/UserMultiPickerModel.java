@@ -12,6 +12,6 @@ public class UserMultiPickerModel extends MultiPickerModelBase<UserOutVO> {
 
 	@Override
 	protected UserOutVO loadSelectionElement(Long id) {
-		return WebUtil.getUser(id, null);
+		return WebUtil.getUser(id, null, null, null);
 	}
 }
