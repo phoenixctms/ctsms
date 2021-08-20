@@ -467,7 +467,7 @@ public class JournalBean extends ManagedBeanBase {
 		trial = (JournalModule.TRIAL_JOURNAL.equals(module) ? WebUtil.getTrial(entityId) : null);
 		proband = (JournalModule.PROBAND_JOURNAL.equals(module) ? WebUtil.getProband(entityId, null, null, null) : null);
 		criteria = (JournalModule.CRITERIA_JOURNAL.equals(module) ? WebUtil.getCriteria(entityId) : null);
-		user = (JournalModule.USER_JOURNAL.equals(module) ? WebUtil.getUser(entityId, null) : null);
+		user = (JournalModule.USER_JOURNAL.equals(module) ? WebUtil.getUser(entityId, null, null, null) : null);
 		inputField = (JournalModule.INPUT_FIELD_JOURNAL.equals(module) ? WebUtil.getInputField(entityId) : null);
 		massMail = (JournalModule.MASS_MAIL_JOURNAL.equals(module) ? WebUtil.getMassMail(entityId) : null);
 		journalEntryModel.setEntityId(entityId);

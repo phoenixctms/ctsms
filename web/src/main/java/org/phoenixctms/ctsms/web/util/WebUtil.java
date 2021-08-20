@@ -2246,13 +2246,25 @@ public final class WebUtil {
 		return "";
 	}
 
-	public static String getIdentityUserString(UserOutVO user) {
+	public static String getIdentityString(UserInheritedVO user) {
 		if (user != null) {
 			StaffOutVO identity = user.getIdentity();
 			if (identity != null) {
-				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.staffOutVOToString(identity), CommonUtil.userOutVOToString(user));
+				return CommonUtil.staffOutVOToString(identity);
 			} else {
-				return CommonUtil.userOutVOToString(user);
+				return CommonUtil.userInheritedVOToString(user);
+			}
+		}
+		return "";
+	}
+
+	public static String getIdentityUserString(UserInheritedVO user) {
+		if (user != null) {
+			StaffOutVO identity = user.getIdentity();
+			if (identity != null) {
+				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.staffOutVOToString(identity), CommonUtil.userInheritedVOToString(user));
+			} else {
+				return CommonUtil.userInheritedVOToString(user);
 			}
 		}
 		return "";
@@ -3493,6 +3505,16 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static String getLabelEmphasized(String label) {
+		StringBuilder sb = new StringBuilder();
+		if (!CommonUtil.isEmptyString(label)) {
+			sb.append("<em>");
+			sb.append(label);
+			sb.append("</em>");
+		}
+		return sb.toString();
+	}
+
 	public static ArrayList<SelectItem> getSexes() {
 		ArrayList<SelectItem> sexes;
 		Collection<SexVO> sexVOs = null;
@@ -3765,6 +3787,18 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static LocaleVO getLocale(String language) {
+		if (language != null) {
+			try {
+				return getServiceLocator().getSelectionSetService().getLocale(getAuthentication(), language);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
 	public static Long getTotalFileCount(FileModule module, Long id) {
 		if (module != null && id != null) {
 			try {
@@ -3924,7 +3958,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static UserOutVO getUser() {
+	public static UserInheritedVO getUser() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null) {
 			return sessionScopeBean.getUser();
@@ -3932,10 +3966,22 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static UserOutVO getUser(Long userId, Integer maxInstances) {
+	public static UserOutVO getUser(Long userId, Integer maxInstances, Integer maxParentDepth, Integer maxChildrenDepth) {
 		if (userId != null) {
 			try {
-				return getServiceLocator().getUserService().getUser(getAuthentication(), userId, maxInstances);
+				return getServiceLocator().getUserService().getUser(getAuthentication(), userId, maxInstances, maxParentDepth, maxChildrenDepth);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
+	public static UserInheritedVO getInheritedUser(Long userId) {
+		if (userId != null) {
+			try {
+				return getServiceLocator().getUserService().getInheritedUser(getAuthentication(), userId);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -3961,7 +4007,7 @@ public final class WebUtil {
 		try {
 			password = getServiceLocator().getUserService().getPassword(getAuthentication(), user.getId());
 			userPermissionProfilesOut = getServiceLocator().getUserService()
-					.getPermissionProfiles(getAuthentication(), user.getId(), null, true);
+					.getPermissionProfiles(getAuthentication(), user.getId(), null, true, true);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			return false;
 		} catch (AuthenticationException e) {
@@ -4038,6 +4084,18 @@ public final class WebUtil {
 				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.userOutVOToString(user), CommonUtil.staffOutVOToString(identity));
 			} else {
 				return CommonUtil.userOutVOToString(user);
+			}
+		}
+		return "";
+	}
+
+	public static String getUserIdentityString(UserInheritedVO user) {
+		if (user != null) {
+			StaffOutVO identity = user.getIdentity();
+			if (identity != null) {
+				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.userInheritedVOToString(user), CommonUtil.staffOutVOToString(identity));
+			} else {
+				return CommonUtil.userInheritedVOToString(user);
 			}
 		}
 		return "";
@@ -4471,6 +4529,13 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static Boolean isLocalAuthMethod(UserInheritedVO user) {
+		if (user != null) {
+			return AuthenticationType.LOCAL.equals(user.getAuthMethod().getMethod());
+		}
+		return null;
+	}
+
 	public static Boolean isLogonLimitExceeded(PasswordOutVO password) {
 		if (password != null && password.getLimitLogons()) {
 			return password.getSuccessfulLogons() >= password.getMaxSuccessfulLogons();
@@ -4624,8 +4689,40 @@ public final class WebUtil {
 		return false;
 	}
 
+	public static boolean isPropertiesDescendantLoggedIn(Long ancestorUserId) {
+		SessionScopeBean sessionScopeBean = null;
+		if (ancestorUserId != null && (sessionScopeBean = getSessionScopeBean()) != null) {
+			PasswordOutVO logon = sessionScopeBean.getLogon();
+			if (logon != null) {
+				try {
+					return getServiceLocator().getUserService().isPropertiesAncestor(getAuthentication(), logon.getUser().getId(), ancestorUserId);
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					publishException(e);
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isPermissionProfileGroupsDescendantLoggedIn(Long ancestorUserId) {
+		SessionScopeBean sessionScopeBean = null;
+		if (ancestorUserId != null && (sessionScopeBean = getSessionScopeBean()) != null) {
+			PasswordOutVO logon = sessionScopeBean.getLogon();
+			if (logon != null) {
+				try {
+					return getServiceLocator().getUserService().isPermissionProfileGroupsAncestor(getAuthentication(), logon.getUser().getId(), ancestorUserId);
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					publishException(e);
+				}
+			}
+		}
+		return false;
+	}
+
 	public static boolean isUserLocked(Long userId) {
-		UserOutVO user = getUser(userId, null);
+		UserOutVO user = getUser(userId, null, null, null);
 		if (user != null) {
 			return user.getLocked();
 		}
@@ -4892,7 +4989,7 @@ public final class WebUtil {
 			return getNoUserPickedMessage();
 		}
 		try {
-			UserOutVO user = getServiceLocator().getUserService().getUser(getAuthentication(), id, null);
+			UserOutVO user = getServiceLocator().getUserService().getUser(getAuthentication(), id, null, null, null);
 			return userOutVOToString(user);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
