@@ -14,7 +14,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.ActivityTagVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.web.component.tagcloud.DefaultTagCloudItem;
 import org.phoenixctms.ctsms.web.component.tagcloud.DefaultTagCloudModel;
 import org.phoenixctms.ctsms.web.component.tagcloud.TagCloudItem;
@@ -84,7 +84,7 @@ public class PortalModuleItem {
 
 	public void updateTagModel() {
 		tagModel.clear();
-		UserOutVO user = WebUtil.getUser();
+		UserInheritedVO user = WebUtil.getUser();
 		Collection<ActivityTagVO> activityTags = null;
 		try {
 			activityTags = WebUtil
@@ -93,7 +93,7 @@ public class PortalModuleItem {
 					.getActivityTags(WebUtil.getAuthentication(), module, null, null, user == null ? null : user.getDepartment().getId(),
 							Settings.getIntNullable(SettingCodes.MAX_TAG_CLOUD_ITEMS, Bundle.SETTINGS, DefaultSettings.MAX_TAG_CLOUD_ITEMS),
 							Settings.getBoolean(SettingCodes.LIMIT_JOURNAL_ENTRY_TAG_CLOUD, Bundle.SETTINGS, DefaultSettings.LIMIT_JOURNAL_ENTRY_TAG_CLOUD));
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
