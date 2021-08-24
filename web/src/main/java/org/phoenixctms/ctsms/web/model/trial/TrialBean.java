@@ -30,7 +30,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialRandomizationListVO;
 import org.phoenixctms.ctsms.vo.TrialStatusActionVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelector;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
@@ -53,7 +53,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	private static final int BLOCKING_PERIOD_PROPERTY_ID = 1;
 	private static final int RANDOMIZATION_MODE_PROPERTY_ID = 1;
 
-	public static void initTrialDefaultValues(TrialInVO in, UserOutVO user) {
+	public static void initTrialDefaultValues(TrialInVO in, UserInheritedVO user) {
 		if (in != null) {
 			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
 			in.setDescription(Messages.getString(MessageCodes.TRIAL_DESCRIPTION_PRESET));
