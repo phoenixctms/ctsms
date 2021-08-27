@@ -43,7 +43,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.web.component.datatable.ColumnManagementBean;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
@@ -834,7 +834,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return DynamicHomeMenu.getTrialHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized UserOutVO getUser() {
+	public synchronized UserInheritedVO getUser() {
 		if (logon != null) {
 			return logon.getUser();
 		}
@@ -857,7 +857,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getUserIdentityName() {
-		UserOutVO user;
+		UserInheritedVO user;
 		if (logon != null && (user = logon.getUser()) != null) {
 			StaffOutVO identity = user.getIdentity();
 			if (identity != null) {
@@ -1426,7 +1426,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			staffTabTitleMap.put("staffcontactdetails", Messages.getString(MessageCodes.STAFF_CONTACT_DETAILS_TAB_TITLE));
 			staffTabTitleMap.put("staffaddresses", Messages.getString(MessageCodes.STAFF_ADDRESSES_TAB_TITLE));
 			staffTabTitleMap.put("staffstatus", Messages.getString(MessageCodes.STAFF_STATUS_TAB_TITLE));
-			staffTabTitleMap.put("staffdutyrosterturns", Messages.getString(MessageCodes.STAFF_STATUS_TAB_TITLE));
+			staffTabTitleMap.put("staffdutyrosterturns", Messages.getString(MessageCodes.STAFF_DUTY_ROSTER_TURNS_TAB_TITLE));
 			staffTabTitleMap.put("cvpositions", Messages.getString(MessageCodes.CV_POSITIONS_TAB_TITLE));
 			staffTabTitleMap.put("courseparticipationstatus", Messages.getString(MessageCodes.COURSE_PARTICIPATION_STATUS_TAB_TITLE));
 			staffTabTitleMap.put("staffassociations", Messages.getString(MessageCodes.STAFF_ASSOCIATIONS_TAB_LABEL));
@@ -1442,7 +1442,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			courseTabTitleMap = new LinkedHashMap<String, String>();
 			courseTabTitleMap.put("lecturers", Messages.getString(MessageCodes.LECTURERS_TAB_TITLE));
 			courseTabTitleMap.put("courseinventorybookings", Messages.getString(MessageCodes.COURSE_INVENTORY_BOOKINGS_TAB_TITLE));
-			courseTabTitleMap.put("admincourseparticipationstatus", Messages.getString(MessageCodes.COURSE_INVENTORY_BOOKINGS_TAB_TITLE));
+			courseTabTitleMap.put("admincourseparticipationstatus", Messages.getString(MessageCodes.ADMIN_COURSE_PARTICIPATION_STATUS_TAB_TITLE));
 			courseTabTitleMap.put("coursehyperlinks", Messages.getString(MessageCodes.COURSE_HYPERLINKS_TAB_TITLE));
 			courseTabTitleMap.put("coursefiles", Messages.getString(MessageCodes.COURSE_FILES_TAB_TITLE));
 			courseTabTitleMap.put("coursejournal", Messages.getString(MessageCodes.COURSE_JOURNAL_TAB_TITLE));
@@ -1505,7 +1505,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			probandTabTitleMap.put("diagnoses", Messages.getString(MessageCodes.DIAGNOSES_TAB_TITLE));
 			probandTabTitleMap.put("procedures", Messages.getString(MessageCodes.PROCEDURES_TAB_TITLE));
 			probandTabTitleMap.put("medications", Messages.getString(MessageCodes.MEDICATIONS_TAB_TITLE));
-			probandTabTitleMap.put("inquiryvalues", Messages.getString(MessageCodes.INQUIRY_VALUES_TAB_TITLE));
+			probandTabTitleMap.put("inquiryvalues", Messages.getString(MessageCodes.INQUIRY_VALUES_TAB_LIST_TITLE));
 			probandTabTitleMap.put("trialparticipations", Messages.getString(MessageCodes.TRIAL_PARTICIPATIONS_TAB_TITLE));
 			probandTabTitleMap.put("probandvisitschedule", Messages.getString(MessageCodes.PROBAND_VISIT_SCHEDULE_TAB_TITLE));
 			probandTabTitleMap.put("probandecrfstatusentries", Messages.getString(MessageCodes.PROBANDECRFSTATUSENTRIES_TAB_LABEL));
