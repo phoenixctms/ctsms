@@ -20,7 +20,7 @@ public class AccountLazyModel extends LazyDataModelBase<UserOutVO> {
 		if (staffId != null) {
 			try {
 				return WebUtil.getServiceLocator().getStaffService().getAccounts(WebUtil.getAuthentication(), staffId, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -30,7 +30,7 @@ public class AccountLazyModel extends LazyDataModelBase<UserOutVO> {
 
 	@Override
 	protected UserOutVO getRowElement(Long id) {
-		return WebUtil.getUser(id, null);
+		return WebUtil.getUser(id, null, null, null);
 	}
 
 	public Long getStaffId() {
