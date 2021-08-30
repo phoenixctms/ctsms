@@ -21,7 +21,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public class AuthenticationFilter implements Filter {
 
-	private final static String GET_METHOD = "GET";
+	private final static String HTTP_GET_METHOD = "GET";
 	// http://stackoverflow.com/questions/3841361/jsf-http-session-login
 	private FilterConfig config;
 
@@ -34,7 +34,7 @@ public class AuthenticationFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
-		if (request.getMethod().equals(GET_METHOD)) {
+		if (request.getMethod().equals(HTTP_GET_METHOD)) {
 			HttpServletResponse response = (HttpServletResponse) res;
 			SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean(request);
 			if (sessionScopeBean == null || !sessionScopeBean.isLoggedIn()) {
