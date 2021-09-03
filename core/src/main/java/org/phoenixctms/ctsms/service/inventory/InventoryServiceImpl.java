@@ -97,6 +97,7 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vocycle.InventoryReflexionGraph;
 
 /**
@@ -835,7 +836,7 @@ public class InventoryServiceImpl
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new ExcelExporter(writer, writer)).write();
 		InventoryBookingsExcelVO result = writer.getExcelVO();
-		ServiceUtil.logSystemMessage(user, null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INVENTORY_BOOKINGS_EXPORTED, result,
+		ServiceUtil.logSystemMessage(user, (UserOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user, SystemMessageCodes.INVENTORY_BOOKINGS_EXPORTED, result,
 				null, this.getJournalEntryDao());
 		return result;
 	}

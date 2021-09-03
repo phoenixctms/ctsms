@@ -474,6 +474,7 @@ public interface MessageCodes {
 	public static final String LDAP_USER_CAN_LOGIN = "ldap_user_can_login";
 	public static final String EDITING_ACTIVE_USER = "editing_active_user";
 	public static final String EDITING_ACTIVE_USER_IDENTITY = "editing_active_user_identity";
+	public static final String EDITING_ANCESTOR_OF_ACTIVE_USER = "editing_ancestor_of_active_user";
 	public static final String RECENT_ENTITIES_MENU_LABEL = "recent_entities_menu_label";
 	public static final String INVENTORY_HOME_MENU_ITEM_LABEL = "inventory_home_menu_item_label";
 	public static final String STAFF_HOME_MENU_ITEM_LABEL = "staff_home_menu_item_label";
@@ -656,6 +657,7 @@ public interface MessageCodes {
 	public final static String PROBAND_VISIT_SCHEDULE_TAB_TITLE_WITH_COUNT = "proband_visit_schedule_tab_title_with_count";
 	public final static String INQUIRY_VALUES_TAB_TITLE = "inquiry_values_tab_title";
 	public final static String INQUIRY_VALUES_TAB_TITLE_WITH_COUNT = "inquiry_values_tab_title_with_count";
+	public final static String INQUIRY_VALUES_TAB_LIST_TITLE = "inquiry_values_tab_list_title";
 	public final static String PROBAND_FILES_TAB_TITLE = "proband_files_tab_title";
 	public final static String PROBAND_FILES_TAB_TITLE_WITH_COUNT = "proband_files_tab_title_with_count";
 	public final static String PROBAND_JOURNAL_TAB_TITLE = "proband_journal_tab_title";
@@ -668,6 +670,10 @@ public interface MessageCodes {
 	public final static String MASS_MAIL_FILES_TAB_TITLE_WITH_COUNT = "mass_mail_files_tab_title_with_count";
 	public final static String MASS_MAIL_JOURNAL_TAB_TITLE = "mass_mail_journal_tab_title";
 	public final static String MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT = "mass_mail_journal_tab_title_with_count";
+	public final static String USER_TREE_LABEL = "user_tree_label";
+	public final static String USER_TREE_MAX_LABEL = "user_tree_max_label";
+	public final static String USER_TREE_LEVELS_LABEL = "user_tree_levels_label";
+	public final static String USER_TREE_MAX_LEVELS_LABEL = "user_tree_max_levels_label";
 	public final static String PASSWORD_TAB_TITLE = "password_tab_title";
 	public final static String PASSWORD_TAB_TITLE_WITH_COUNT = "password_tab_title_with_count";
 	public final static String USER_PERMISSION_PROFILES_TAB_TITLE = "user_permission_profiles_tab_title";
@@ -894,4 +900,8 @@ public interface MessageCodes {
 	public static final String CODE_BREAK_TITLE = "code_break_title";
 	public static final String BOOKING_SCHEDULE_DATE_RANGE_PERIOD_DIALOG_TITLE = "booking_schedule_date_range_period_dialog_title";
 	public static final String DUTY_ROSTER_SCHEDULE_DATE_RANGE_PERIOD_DIALOG_TITLE = "duty_roster_schedule_date_range_period_dialog_title";
+	public static final String INHERITED_USER_PROPERTY_TOOLTIP = "inherited_user_property_tooltip";
+	public static final String INHERIT_USER_PROPERTY_TOOLTIP = "inherit_user_property_tooltip";
+	public static final String INHERITED_USER_PERMISSION_PROFILE_TOOLTIP = "inherited_user_permission_profile_tooltip";
+	public static final String INHERIT_USER_PERMISSION_PROFILE_TOOLTIP = "inherit_user_permission_profile_tooltip";
 }

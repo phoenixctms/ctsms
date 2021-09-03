@@ -49,7 +49,6 @@ import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.InventoryStatusEntry;
-import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.KeyPairDao;
 import org.phoenixctms.ctsms.domain.MaintenanceScheduleItem;
@@ -116,6 +115,7 @@ import org.phoenixctms.ctsms.vo.AlphaIdVO;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AspSubstanceVO;
 import org.phoenixctms.ctsms.vo.AspVO;
+import org.phoenixctms.ctsms.vo.AuthenticationTypeVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CalendarWeekVO;
 import org.phoenixctms.ctsms.vo.DBModuleVO;
@@ -144,6 +144,7 @@ import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
@@ -176,15 +177,14 @@ public class ToolsServiceImpl
 		}
 		return result;
 	}
-
-	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-			JournalEntryDao journalEntryDao) throws Exception {
-		if (user == null) {
-			return null;
-		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
-	}
+	//	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+	//			JournalEntryDao journalEntryDao) throws Exception {
+	//		if (user == null) {
+	//			return null;
+	//		}
+	//		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
+	//				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
+	//	}
 
 	private NotificationEmailSender notificationEmailSender;
 	private Authenticator authenticator;
@@ -240,7 +240,7 @@ public class ToolsServiceImpl
 	protected UserOutVO handleAddUser(UserInVO newUser, PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
 		UserDao userDao = this.getUserDao();
 		ServiceUtil.checkUsernameExists(newUser.getName(), userDao);
-		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao());
+		ServiceUtil.checkUserInput(newUser, null, plainDepartmentPassword, this.getDepartmentDao(), this.getStaffDao(), this.getUserDao());
 		if (!PasswordPolicy.USER.isAdminIgnorePolicy()) {
 			PasswordPolicy.USER.checkStrength(newPassword.getPassword());
 		}
@@ -255,7 +255,7 @@ public class ToolsServiceImpl
 		ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, now, null, newPassword.getPassword(), plainDepartmentPassword, passwordDao,
 				this.getJournalEntryDao());
 		UserOutVO result = userDao.toUserOutVO(user);
-		logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -278,7 +278,7 @@ public class ToolsServiceImpl
 			User user = usersIt.next();
 			userDao.lock(user, LockMode.PESSIMISTIC_WRITE);
 			ServiceUtil.updateUserDepartmentPassword(user, plainNewDepartmentPassword, plainOldDepartmentPassword, keyPairDao, passwordDao);
-			logSystemMessage(user, userDao.toUserOutVO(user), now, null, SystemMessageCodes.DEPARTMENT_PASSWORD_CHANGED, null, null, journalEntryDao);
+			ServiceUtil.logSystemMessage(user, userDao.toUserOutVO(user), now, null, SystemMessageCodes.DEPARTMENT_PASSWORD_CHANGED, null, null, journalEntryDao);
 		}
 	}
 
@@ -935,6 +935,12 @@ public class ToolsServiceImpl
 	}
 
 	@Override
+	protected AuthenticationTypeVO handleGetLocalizedAuthenticationType(AuthenticationVO auth, AuthenticationType authMethod) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return L10nUtil.createAuthenticationTypeVO(Locales.USER, authMethod);
+	}
+
+	@Override
 	protected InputFieldTypeVO handleGetLocalizedInputFieldType(AuthenticationVO auth, InputFieldType fieldType) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return L10nUtil.createInputFieldTypeVO(Locales.USER, fieldType);
@@ -1038,22 +1044,22 @@ public class ToolsServiceImpl
 		PasswordDao passwordDao = this.getPasswordDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		PasswordOutVO lastPasswordVO;
-		UserOutVO userVO;
+		UserInheritedVO userVO;
 		try {
 			lastPassword = authenticator.authenticate(auth, true);
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
 			userVO = lastPasswordVO.getUser();
-			logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);
+			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
 			lastPassword = CoreUtil.getLastPassword();
 			user = CoreUtil.getUser();
 			if (user != null) {
 				now = new Timestamp(System.currentTimeMillis());
 				lastPasswordVO = lastPassword != null ? passwordDao.toPasswordOutVO(lastPassword) : null;
-				userVO = lastPasswordVO != null ? lastPasswordVO.getUser() : this.getUserDao().toUserOutVO(user);
-				logSystemMessage(user, userVO, now, user, SystemMessageCodes.FAILED_LOGON, lastPasswordVO, null, journalEntryDao);
+				userVO = lastPasswordVO != null ? lastPasswordVO.getUser() : this.getUserDao().toUserInheritedVO(user);
+				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.FAILED_LOGON, lastPasswordVO, null, journalEntryDao);
 			}
 			throw e;
 		} finally {

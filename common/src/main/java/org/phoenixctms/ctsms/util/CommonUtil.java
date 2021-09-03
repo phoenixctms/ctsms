@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -83,7 +84,9 @@ import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialTypeVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.w3c.dom.DOMImplementation;
@@ -193,12 +196,15 @@ public final class CommonUtil {
 	}
 	public final static String BASE64_CHARSET = "UTF8";
 	public final static BundleControl BUNDLE_CONTROL = new BundleControl();
-	private final static String VO_ID_GETTER_METHOD_NAME = "getId";
-	private static final String ENTITY_ID_GETTER_METHOD_NAME = "getId";
-	private static final String VO_POSITION_GETTER_METHOD_NAME = "getPosition";
-	private static final String ENTITY_POSITION_GETTER_METHOD_NAME = "getPosition";
-	public final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^get"); // Pattern.compile("^((get)|(is))");
-	public final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((get)|(is))");
+	public final static String SET_PROPERTY_METHOD_NAME_PREFIX = "set";
+	public final static String GET_PROPERTY_METHOD_NAME_PREFIX = "get";
+	public final static String IS_PROPERTY_METHOD_NAME_PREFIX = "is";
+	private final static String VO_ID_GETTER_METHOD_NAME = GET_PROPERTY_METHOD_NAME_PREFIX + "Id";
+	private static final String ENTITY_ID_GETTER_METHOD_NAME = GET_PROPERTY_METHOD_NAME_PREFIX + "Id";
+	private static final String VO_POSITION_GETTER_METHOD_NAME = GET_PROPERTY_METHOD_NAME_PREFIX + "Position";
+	private static final String ENTITY_POSITION_GETTER_METHOD_NAME = GET_PROPERTY_METHOD_NAME_PREFIX + "Position";
+	public final static Pattern VO_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^" + GET_PROPERTY_METHOD_NAME_PREFIX); // Pattern.compile("^((get)|(is))");
+	public final static Pattern ENTITY_GETTER_METHOD_NAME_REGEXP = Pattern.compile("^((" + GET_PROPERTY_METHOD_NAME_PREFIX + ")|(" + IS_PROPERTY_METHOD_NAME_PREFIX + "))");
 	public final static boolean ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON = false;
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.FileModule> ENCRYPTED_FILE_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.FileModule>();
 	static {
@@ -252,6 +258,23 @@ public final class CommonUtil {
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
 	private static final String ECRF_NAME = "{0}";
 	private static final String ECRF_VISIT_NAME = "{0}@{1}";
+	public static Set<String> USER_INHERITABLE_PROPERTIES = new HashSet<String>();
+	public static Set<String> USER_SETTINGS_INHERITABLE_PROPERTIES = new HashSet<String>();
+	static {
+		MethodTransfilter transFilter = MethodTransfilter.getVoMethodTransfilter(false);
+		try {
+			Iterator<Method> it = AssociationPath.listMethods(UserInheritedVO.class, transFilter).iterator();
+			while (it.hasNext()) {
+				USER_INHERITABLE_PROPERTIES.add(transFilter.transform(it.next().getName()));
+			}
+			// derive properties allowed to inherit/override by any user directly from UserSettingsInVO:
+			it = AssociationPath.listMethods(UserSettingsInVO.class, transFilter).iterator();
+			while (it.hasNext()) {
+				USER_SETTINGS_INHERITABLE_PROPERTIES.add(transFilter.transform(it.next().getName()));
+			}
+		} catch (Exception e) {
+		}
+	}
 
 	public static String getEcrfVisitName(ECRFOutVO ecrfVO, VisitOutVO visitVO) {
 		return getEcrfVisitName(ecrfVO != null ? ecrfVO.getName() : null, visitVO != null ? visitVO.getToken() : null, ecrfVO != null ? ecrfVO.getVisits().size() : null);
@@ -1101,6 +1124,21 @@ public final class CommonUtil {
 		return (Long) entity.getClass().getMethod(ENTITY_ID_GETTER_METHOD_NAME).invoke(entity);
 	}
 
+	public static Method getPropertySetter(Class clazz, String propertyName, Class type) throws NoSuchMethodException, SecurityException {
+		String propertySetterMethodName = SET_PROPERTY_METHOD_NAME_PREFIX + capitalizeFirstChar(propertyName, true);
+		return clazz.getMethod(propertySetterMethodName, type);
+	}
+
+	public static Method getPropertyGetter(Class clazz, String propertyName) throws NoSuchMethodException, SecurityException {
+		String propertyGetterMethodName = GET_PROPERTY_METHOD_NAME_PREFIX + capitalizeFirstChar(propertyName, true);
+		try {
+			return clazz.getMethod(propertyGetterMethodName);
+		} catch (NoSuchMethodException e) {
+			propertyGetterMethodName = IS_PROPERTY_METHOD_NAME_PREFIX + capitalizeFirstChar(propertyName, true);
+			return clazz.getMethod(propertyGetterMethodName);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public static <T> T getDeclaredFieldValue(Object object, String fieldName) {
 		//https://stackoverflow.com/questions/4325164/how-to-reload-resource-bundle-in-web-application
@@ -1183,6 +1221,14 @@ public final class CommonUtil {
 		StringBuilder sb = new StringBuilder();
 		if (inventory != null) {
 			appendString(sb, inventory.getName(), "", "?");
+		}
+		return sb.toString();
+	}
+
+	public static final String getUserName(UserOutVO user) {
+		StringBuilder sb = new StringBuilder();
+		if (user != null) {
+			appendString(sb, user.getName(), "", "?");
 		}
 		return sb.toString();
 	}
@@ -2340,6 +2386,13 @@ public final class CommonUtil {
 	}
 
 	public static String userOutVOToString(UserOutVO user) {
+		if (user != null) {
+			return user.getName();
+		}
+		return null;
+	}
+
+	public static String userInheritedVOToString(UserInheritedVO user) {
 		if (user != null) {
 			return user.getName();
 		}

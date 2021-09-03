@@ -16,6 +16,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ public final class JsUtil {
 	public final static String VO_JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 	public static final GsonExclusionStrategy[] GSON_EXCLUSION_STRATEGIES = new GsonExclusionStrategy[] {
 			new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
+			new GsonExclusionStrategy(UserOutVO.class, "children"),
 			new GsonExclusionStrategy(StaffOutVO.class, "modifiedUser"),
 			new GsonExclusionStrategy(InventoryOutVO.class, "children"),
 			new GsonExclusionStrategy(StaffOutVO.class, "children"),
@@ -52,6 +54,19 @@ public final class JsUtil {
 
 			@Override
 			public JsonElement serialize(UserOutVO src, Type typeOfSrc, JsonSerializationContext context) {
+				JsonObject object = new JsonObject();
+				object.addProperty("id", src.getId());
+				object.addProperty("userName", src.getName());
+				object.addProperty("locale", src.getLocale());
+				object.addProperty("staffName", src.getIdentity() != null ? src.getIdentity().getName() : null);
+				object.addProperty("staffInitials", src.getIdentity() != null ? src.getIdentity().getInitials() : null);
+				return object;
+			}
+		});
+		GSON_SHORTCUT_SERIALISATIONS.put(UserInheritedVO.class, new JsonSerializer<UserInheritedVO>() {
+
+			@Override
+			public JsonElement serialize(UserInheritedVO src, Type typeOfSrc, JsonSerializationContext context) {
 				JsonObject object = new JsonObject();
 				object.addProperty("id", src.getId());
 				object.addProperty("userName", src.getName());

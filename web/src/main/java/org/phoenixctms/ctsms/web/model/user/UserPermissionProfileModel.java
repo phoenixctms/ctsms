@@ -91,7 +91,7 @@ public class UserPermissionProfileModel implements Map<String, String> {
 		return permissionProfileGroupVOs;
 	}
 
-	public ArrayList<SelectItem> getPermissionProfiles(String group) {
+	public ArrayList<SelectItem> getPermissionProfiles(String group, Set emphasize) {
 		ArrayList<SelectItem> result = new ArrayList<SelectItem>();
 		if (group != null) {
 			ArrayList<UserPermissionProfileInVO> groupProfiles = userPermissionProfileGroupMap.get(PermissionProfileGroup.fromString(group));
@@ -99,7 +99,11 @@ public class UserPermissionProfileModel implements Map<String, String> {
 				Iterator<UserPermissionProfileInVO> profilesIt = groupProfiles.iterator();
 				while (profilesIt.hasNext()) {
 					PermissionProfile profile = profilesIt.next().getProfile();
-					result.add(new SelectItem(profile.name(), permissionProfileVOMap.get(profile).getProfileName()));
+					if (emphasize != null && emphasize.contains(profile.name())) {
+						result.add(new SelectItem(profile.name(), WebUtil.getLabelEmphasized(permissionProfileVOMap.get(profile).getProfileName()), null, false, false));
+					} else {
+						result.add(new SelectItem(profile.name(), permissionProfileVOMap.get(profile).getProfileName()));
+					}
 				}
 			}
 		}

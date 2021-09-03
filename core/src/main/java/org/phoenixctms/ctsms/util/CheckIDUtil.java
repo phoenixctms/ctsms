@@ -8,8 +8,8 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 
 public final class CheckIDUtil {
 
-	private final static String CHECK_ENTITY_ID_METHOD_PREFIX = "check";
-	private final static String CHECK_ENTITY_ID_METHOD_SUFFIX = "Id";
+	private final static String CHECK_ENTITY_ID_METHOD_NAME_PREFIX = "check";
+	private final static String CHECK_ENTITY_ID_METHOD_NAME_SUFFIX = "Id";
 	private final static MethodTransfilter LOCK_MODE_METHOD_TRANSFILTER = getLockModeMethodTransfilter();
 	private final static MethodTransfilter NO_LOCK_MODE_METHOD_TRANSFILTER = getNoLockModeMethodTransfilter();
 
@@ -235,12 +235,12 @@ public final class CheckIDUtil {
 	}
 
 	public static Object checkEntityId(String entityName, Long id, Object dao) throws Exception {
-		return AssociationPath.findMethod(CHECK_ENTITY_ID_METHOD_PREFIX + entityName + CHECK_ENTITY_ID_METHOD_SUFFIX, NO_LOCK_MODE_METHOD_TRANSFILTER, false,
+		return AssociationPath.findMethod(CHECK_ENTITY_ID_METHOD_NAME_PREFIX + entityName + CHECK_ENTITY_ID_METHOD_NAME_SUFFIX, NO_LOCK_MODE_METHOD_TRANSFILTER, false,
 				CheckIDUtil.class.getMethods()).invoke(null, id, dao);
 	}
 
 	public static Object checkEntityId(String entityName, Long id, Object dao, LockMode lockMode) throws Exception {
-		return AssociationPath.findMethod(CHECK_ENTITY_ID_METHOD_PREFIX + entityName + CHECK_ENTITY_ID_METHOD_SUFFIX, LOCK_MODE_METHOD_TRANSFILTER, false,
+		return AssociationPath.findMethod(CHECK_ENTITY_ID_METHOD_NAME_PREFIX + entityName + CHECK_ENTITY_ID_METHOD_NAME_SUFFIX, LOCK_MODE_METHOD_TRANSFILTER, false,
 				CheckIDUtil.class.getMethods()).invoke(null, id, dao, lockMode);
 	}
 

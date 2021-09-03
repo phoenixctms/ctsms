@@ -17,7 +17,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
@@ -89,7 +89,7 @@ public abstract class RecentEntityMenuBase {
 		}
 	}
 
-	protected final void addRecentEntityMenu(MenuModel entityModel, UserOutVO user, int maxRecentEntities) {
+	protected final void addRecentEntityMenu(MenuModel entityModel, UserInheritedVO user, int maxRecentEntities) {
 		if (entityModel != null && user != null && maxRecentEntities > 0) {
 			String moduleValue = getDbModule().getValue();
 			Collection<JournalEntryOutVO> journalEntryVOs = null;

@@ -15,7 +15,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public class UserSearchResultLazyModel extends SearchResultLazyModel<UserOutVO> {
 
-	private static final Integer GRAPH_MAX_USER_INSTANCES = 1;
+	private static final Integer GRAPH_MAX_USER_INSTANCES = 2;
 
 	@Override
 	protected Collection<UserOutVO> getLazyResultWCount(PSFVO psf) {
@@ -38,6 +38,6 @@ public class UserSearchResultLazyModel extends SearchResultLazyModel<UserOutVO> 
 
 	@Override
 	protected UserOutVO getRowElement(Long id) {
-		return WebUtil.getUser(id, null);
+		return WebUtil.getUser(id, null, null, null);
 	}
 }

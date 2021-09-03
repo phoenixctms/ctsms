@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -49,6 +50,7 @@ import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
@@ -70,7 +72,7 @@ import org.primefaces.context.RequestContext;
 @ApplicationScoped
 public class ApplicationScopeBean {
 
-	private static final Map<Long, UserOutVO> activeUsers = new LinkedHashMap<Long, UserOutVO>();
+	private static final Map<Long, UserInheritedVO> activeUsers = new LinkedHashMap<Long, UserInheritedVO>();
 	private final static Pattern ALLOWED_LABEL_EXPRESSIONS_PATTERN_REGEXP = Pattern.compile("^[a-z0-9_]+\\.[a-z0-9_]+$");
 
 	public static String evalLabelEl(String labelEl) {
@@ -83,7 +85,7 @@ public class ApplicationScopeBean {
 		return labelEl;
 	}
 
-	public static final void registerActiveUser(UserOutVO user) {
+	public static final void registerActiveUser(UserInheritedVO user) {
 		synchronized (ApplicationScopeBean.class) {
 			if (user != null) {
 				activeUsers.put(user.getId(), user);
@@ -91,7 +93,7 @@ public class ApplicationScopeBean {
 		}
 	}
 
-	public static final void unregisterActiveUser(UserOutVO user) {
+	public static final void unregisterActiveUser(UserInheritedVO user) {
 		synchronized (ApplicationScopeBean.class) {
 			if (user != null) {
 				activeUsers.remove(user.getId());
@@ -187,10 +189,10 @@ public class ApplicationScopeBean {
 			int activeUsersCount;
 			activeUsersCount = activeUsers.size();
 			HashMap<Long, Integer> identityCountMap = new HashMap<Long, Integer>(activeUsersCount);
-			Iterator<UserOutVO> activeUsersIt = activeUsers.values().iterator();
+			Iterator<UserInheritedVO> activeUsersIt = activeUsers.values().iterator();
 			activeUsersIt = activeUsers.values().iterator();
 			while (activeUsersIt.hasNext()) {
-				UserOutVO user = activeUsersIt.next();
+				UserInheritedVO user = activeUsersIt.next();
 				StaffOutVO identity = user.getIdentity();
 				if (identity != null) {
 					int count;
@@ -204,7 +206,7 @@ public class ApplicationScopeBean {
 			}
 			activeUsersIt = activeUsers.values().iterator();
 			while (activeUsersIt.hasNext()) {
-				UserOutVO user = activeUsersIt.next();
+				UserInheritedVO user = activeUsersIt.next();
 				if (sb.length() > 0) {
 					sb.append(", ");
 				}
@@ -592,13 +594,21 @@ public class ApplicationScopeBean {
 		return (map != null ? new ArrayList<Map.Entry<?, ?>>(map.entrySet()) : null);
 	}
 
-	public List<SelectItem> mapToSelectItems(Map<?, ?> map) {
+	public List<SelectItem> mapToSelectItems(Map<?, ?> map, Set<?> emphasize) {
+		return mapToEmphasizedSelectItems(map, null);
+	}
+
+	public List<SelectItem> mapToEmphasizedSelectItems(Map<?, ?> map, List<?> emphasize) {
 		if (map != null) {
 			ArrayList<SelectItem> result = new ArrayList<SelectItem>();
 			Iterator<?> it = map.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry<?, ?> item = (Entry<?, ?>) it.next();
-				result.add(new SelectItem(item.getKey(), (String) item.getValue()));
+				if (emphasize != null && emphasize.contains(item.getKey())) {
+					result.add(new SelectItem(item.getKey(), WebUtil.getLabelEmphasized((String) item.getValue()), null, false, false));
+				} else {
+					result.add(new SelectItem(item.getKey(), (String) item.getValue()));
+				}
 			}
 			return result;
 		}

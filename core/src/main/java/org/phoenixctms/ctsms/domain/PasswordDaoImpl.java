@@ -190,7 +190,7 @@ public class PasswordDaoImpl
 		super.toPasswordOutVO(source, target);
 		User user = source.getUser();
 		if (user != null) {
-			target.setUser(this.getUserDao().toUserOutVO(user)); // ensure identity available for "logon"
+			target.setUser(this.getUserDao().toUserInheritedVO(user));
 		}
 		target.setValidityPeriod(L10nUtil.createVariablePeriodVO(Locales.USER, source.getValidityPeriod()));
 		if (target.isExpires()) {

@@ -684,7 +684,7 @@ public class DemoDataProvider {
 			modifiedUser.setVisibleUserTabList(null);
 			modifiedUser.setAuthMethod(user.getAuthMethod());
 			modifiedUser.setVersion(user.getVersion());
-			userVO = userService.updateUser(getRandomAuth(user.getDepartment().getId()), modifiedUser, null, null, null);
+			userVO = userService.updateUser(getRandomAuth(user.getDepartment().getId()), modifiedUser, null, null, null, null, null);
 			jobOutput.println("user " + userVO.getName() + " assigned to " + staff.getName());
 		}
 		return userVO;
@@ -1046,7 +1046,7 @@ public class DemoDataProvider {
 			DepartmentVO department = createDepartment(getDepartmentName(i), true, getDepartmentPassword(i));
 			this.departmentCount++;
 			for (int j = 0; j < usersPerDepartmentCount; j++) {
-				createUser(getUsername(i, j), getUserPassword(i, j), department.getId(), getDepartmentPassword(i));
+				createUser(getUsername(i, j), getUserPassword(i, j), department.getId(), getDepartmentPassword(i), null);
 			}
 		}
 	}
@@ -2457,7 +2457,7 @@ public class DemoDataProvider {
 		}
 	}
 
-	private UserOutVO createUser(String name, String password, long departmentId, String departmentPassword) throws Exception {
+	private UserOutVO createUser(String name, String password, long departmentId, String departmentPassword, Long parentId) throws Exception {
 		UserInVO newUser = new UserInVO();
 		newUser.setLocale(CommonUtil.localeToString(Locale.getDefault()));
 		newUser.setTimeZone(CommonUtil.timeZoneToString(TimeZone.getDefault()));
@@ -2484,6 +2484,7 @@ public class DemoDataProvider {
 		newUser.setEnableUserModule(true);
 		newUser.setVisibleUserTabList(null);
 		newUser.setAuthMethod(AuthenticationType.LOCAL);
+		newUser.setParentId(parentId);
 		PasswordInVO newPassword = new PasswordInVO();
 		ServiceUtil.applyLogonLimitations(newPassword);
 		newUser.setDepartmentId(departmentId);

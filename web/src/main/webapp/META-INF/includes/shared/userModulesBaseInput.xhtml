@@ -9,11 +9,27 @@
 </h:head>
 <h:body>
 	<ui:composition>
+	
+		<h:panelGroup id="enableInventoryModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableInventoryModule"
+				value="#{bean.inheritedPropertiesMap['enableInventoryModule']}">
+				<p:ajax process="@this" update="enableInventoryModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableInventoryModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableInventoryModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
 		<h:outputLabel for="enableInventoryModule"
 			value="#{userlabels.user_enable_inventory_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableInventoryModule"
+			    disabled="#{bean.inheritedPropertiesMap['enableInventoryModule']}"
 				value="#{bean.in.enableInventoryModule}">
 				<p:ajax update="inventoryModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -24,15 +40,30 @@
 		</h:panelGroup>
 		<p:message for="enableInventoryModule" />
 		
+		<h:panelGroup id="inventoryModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_inventoryModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleInventoryTabList']}">
+				<p:ajax process="@this" update="inventoryModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_inventoryModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleInventoryTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="inventoryModuleTabs" value="#{userlabels.user_inventory_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="inventoryModuleTabs"
 				value="#{bean.inventoryVisibleTabList}"
 				label="#{userlabels.user_inventory_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableInventoryModule}"
+				disabled="#{!bean.in.enableInventoryModule or bean.inheritedPropertiesMap['visibleInventoryTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.inventoryTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.inventoryTabTitles,bean.getParentInventoryVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -44,10 +75,26 @@
 		</h:panelGroup>
 		<p:message for="inventoryModuleTabs" />
 		
+		<h:panelGroup id="enableStaffModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableStaffModule"
+				value="#{bean.inheritedPropertiesMap['enableStaffModule']}">
+				<p:ajax process="@this" update="enableStaffModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableStaffModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableStaffModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="enableStaffModule"
 			value="#{userlabels.user_enable_staff_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableStaffModule"
+				disabled="#{bean.inheritedPropertiesMap['enableStaffModule']}"
 				value="#{bean.in.enableStaffModule}">
 				<p:ajax update="staffModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -58,15 +105,30 @@
 		</h:panelGroup>
 		<p:message for="enableStaffModule" />
 		
+		<h:panelGroup id="staffModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_staffModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleStaffTabList']}">
+				<p:ajax process="@this" update="staffModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_staffModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleStaffTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="staffModuleTabs" value="#{userlabels.user_staff_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="staffModuleTabs"
 				value="#{bean.staffVisibleTabList}"
 				label="#{userlabels.user_staff_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableStaffModule}"
+				disabled="#{!bean.in.enableStaffModule or bean.inheritedPropertiesMap['visibleStaffTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.staffTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.staffTabTitles,bean.getParentStaffVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -77,11 +139,27 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="staffModuleTabs" />
+		
+		<h:panelGroup id="enableCourseModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableCourseModule"
+				value="#{bean.inheritedPropertiesMap['enableCourseModule']}">
+				<p:ajax process="@this" update="enableCourseModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableCourseModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableCourseModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
 		<h:outputLabel for="enableCourseModule"
 			value="#{userlabels.user_enable_course_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableCourseModule"
+				disabled="#{bean.inheritedPropertiesMap['enableCourseModule']}"
 				value="#{bean.in.enableCourseModule}">
 				<p:ajax update="courseModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -92,15 +170,30 @@
 		</h:panelGroup>
 		<p:message for="enableCourseModule" />
 		
+		<h:panelGroup id="courseModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_courseModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleCourseTabList']}">
+				<p:ajax process="@this" update="courseModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_courseModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleCourseTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="courseModuleTabs" value="#{userlabels.user_course_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="courseModuleTabs"
 				value="#{bean.courseVisibleTabList}"
 				label="#{userlabels.user_course_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableCourseModule}"
+				disabled="#{!bean.in.enableCourseModule or bean.inheritedPropertiesMap['visibleCourseTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.courseTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.courseTabTitles,bean.getParentCourseVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -112,10 +205,26 @@
 		</h:panelGroup>
 		<p:message for="courseModuleTabs" />
 		
+		<h:panelGroup id="enableTrialModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableTrialModule"
+				value="#{bean.inheritedPropertiesMap['enableTrialModule']}">
+				<p:ajax process="@this" update="enableTrialModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableTrialModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableTrialModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="enableTrialModule"
 			value="#{userlabels.user_enable_trial_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableTrialModule"
+				disabled="#{bean.inheritedPropertiesMap['enableTrialModule']}"
 				value="#{bean.in.enableTrialModule}">
 				<p:ajax update="trialModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -126,15 +235,30 @@
 		</h:panelGroup>
 		<p:message for="enableTrialModule" />
 		
+		<h:panelGroup id="trialModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_trialModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleTrialTabList']}">
+				<p:ajax process="@this" update="trialModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_trialModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleTrialTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="trialModuleTabs" value="#{userlabels.user_trial_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="trialModuleTabs"
 				value="#{bean.trialVisibleTabList}"
 				label="#{userlabels.user_trial_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableTrialModule}"
+				disabled="#{!bean.in.enableTrialModule or bean.inheritedPropertiesMap['visibleTrialTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.trialTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.trialTabTitles,bean.getParentTrialVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -146,10 +270,26 @@
 		</h:panelGroup>
 		<p:message for="trialModuleTabs" />
 		
+		<h:panelGroup id="enableInputFieldModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableInputFieldModule"
+				value="#{bean.inheritedPropertiesMap['enableInputFieldModule']}">
+				<p:ajax process="@this" update="enableInputFieldModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableInputFieldModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableInputFieldModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="enableInputFieldModule"
 			value="#{userlabels.user_enable_input_field_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableInputFieldModule"
+				disabled="#{bean.inheritedPropertiesMap['enableInputFieldModule']}"
 				value="#{bean.in.enableInputFieldModule}">
 				<p:ajax update="inputFieldModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -160,15 +300,30 @@
 		</h:panelGroup>
 		<p:message for="enableInputFieldModule" />
 		
+		<h:panelGroup id="inputFieldModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_inputFieldModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleInputFieldTabList']}">
+				<p:ajax process="@this" update="inputFieldModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_inputFieldModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleInputFieldTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="inputFieldModuleTabs" value="#{userlabels.user_input_field_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="inputFieldModuleTabs"
 				value="#{bean.inputFieldVisibleTabList}"
 				label="#{userlabels.user_input_field_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableInputFieldModule}"
+				disabled="#{!bean.in.enableInputFieldModule or bean.inheritedPropertiesMap['visibleInputFieldTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.inputFieldTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.inputFieldTabTitles,bean.getParentInputFieldVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -180,11 +335,26 @@
 		</h:panelGroup>
 		<p:message for="inputFieldModuleTabs" />
 		
+		<h:panelGroup id="enableProbandModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableProbandModule"
+				value="#{bean.inheritedPropertiesMap['enableProbandModule']}">
+				<p:ajax process="@this" update="enableProbandModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableProbandModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableProbandModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 		
 		<h:outputLabel for="enableProbandModule"
 			value="#{userlabels.user_enable_proband_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableProbandModule"
+				disabled="#{bean.inheritedPropertiesMap['enableProbandModule']}"
 				value="#{bean.in.enableProbandModule}">
 				<p:ajax update="probandModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -195,15 +365,30 @@
 		</h:panelGroup>
 		<p:message for="enableProbandModule" />
 		
+		<h:panelGroup id="probandModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_probandModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleProbandTabList']}">
+				<p:ajax process="@this" update="probandModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_probandModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleProbandTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="probandModuleTabs" value="#{userlabels.user_proband_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="probandModuleTabs"
 				value="#{bean.probandVisibleTabList}"
 				label="#{userlabels.user_proband_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableTrialModule}"
+				disabled="#{!bean.in.enableTrialModule or bean.inheritedPropertiesMap['visibleProbandTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.probandTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.probandTabTitles,bean.getParentProbandVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -215,10 +400,26 @@
 		</h:panelGroup>
 		<p:message for="probandModuleTabs" />
 		
+		<h:panelGroup id="enableMassMailModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableMassMailModule"
+				value="#{bean.inheritedPropertiesMap['enableMassMailModule']}">
+				<p:ajax process="@this" update="enableMassMailModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableMassMailModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableMassMailModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="enableMassMailModule"
 			value="#{userlabels.user_enable_mass_mail_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableMassMailModule"
+				disabled="#{bean.inheritedPropertiesMap['enableMassMailModule']}"
 				value="#{bean.in.enableMassMailModule}">
 				<p:ajax update="massMailModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -229,15 +430,30 @@
 		</h:panelGroup>
 		<p:message for="enableMassMailModule" />
 		
+		<h:panelGroup id="massMailModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_massMailModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleMassMailTabList']}">
+				<p:ajax process="@this" update="massMailModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_massMailModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleMassMailTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="massMailModuleTabs" value="#{userlabels.user_mass_mail_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="massMailModuleTabs"
 				value="#{bean.massMailVisibleTabList}"
 				label="#{userlabels.user_mass_mail_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableMassMailModule}"
+				disabled="#{!bean.in.enableMassMailModule or bean.inheritedPropertiesMap['visibleMassMailTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.massMailTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.massMailTabTitles,bean.getParentMassMailVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
@@ -249,11 +465,26 @@
 		</h:panelGroup>
 		<p:message for="massMailModuleTabs" />
 		
+		<h:panelGroup id="enableUserModule_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_enableUserModule"
+				value="#{bean.inheritedPropertiesMap['enableUserModule']}">
+				<p:ajax process="@this" update="enableUserModule"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_enableUserModule">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('enableUserModule')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 		
 		<h:outputLabel for="enableUserModule"
 			value="#{userlabels.user_enable_user_module_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="enableUserModule"
+				disabled="#{bean.inheritedPropertiesMap['enableUserModule']}"
 				value="#{bean.in.enableUserModule}">
 				<p:ajax update="userModuleTabs"/>
 			</p:selectBooleanCheckbox>
@@ -264,15 +495,30 @@
 		</h:panelGroup>
 		<p:message for="enableUserModule" />
 		
+		<h:panelGroup id="userModuleTabs_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_userModuleTabs"
+				value="#{bean.inheritedPropertiesMap['visibleUserTabList']}">
+				<p:ajax process="@this" update="userModuleTabs"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_userModuleTabs">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('visibleUserTabList')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		
 		<h:outputLabel for="userModuleTabs" value="#{userlabels.user_user_module_tabs_label}" />
 		<h:panelGroup>
 			<p:selectManyCheckbox id="userModuleTabs"
 				value="#{bean.userVisibleTabList}"
 				label="#{userlabels.user_user_module_tabs}"
 				required="false"
-				disabled="#{!bean.in.enableUserModule}"
+				disabled="#{!bean.in.enableUserModule or bean.inheritedPropertiesMap['visibleUserTabList']}"
 				layout="pageDirection">
-				<f:selectItems value="#{applicationScopeBean.mapToSelectItems(sessionScopeBean.userTabTitles)}"
+				<f:selectItems value="#{applicationScopeBean.mapToEmphasizedSelectItems(sessionScopeBean.userTabTitles,bean.getParentUserVisibleTabList())}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />

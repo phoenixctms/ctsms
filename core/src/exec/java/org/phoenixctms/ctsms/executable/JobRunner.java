@@ -33,7 +33,7 @@ public class JobRunner {
 	}
 
 	public long processJobs(AuthenticationVO auth, Boolean daily, Boolean weekly, Boolean monthly) throws Exception {
-		UserOutVO userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null);
+		UserOutVO userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null, null, null);
 		jobOutput.println("department: " + userVO.getDepartment().getName());
 		String plainDepartmentPassword = CryptoUtil.decryptDepartmentPassword(authenticator.authenticate(auth, false), auth.getPassword());
 		long count = 0l;

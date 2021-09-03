@@ -298,7 +298,7 @@ public class ServiceMethods {
 	}
 
 	public void deleteUser(AuthenticationVO auth, Long id) throws Exception {
-		UserOutVO user = userService.deleteUser(auth, id, false, true, null, null);
+		UserOutVO user = userService.deleteUser(auth, id, false, true, null, null, null, null);
 		jobOutput.println("user ID " + Long.toString(user.getId()) + " '" + CommonUtil.userOutVOToString(user) + "' removed");
 	}
 

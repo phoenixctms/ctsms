@@ -280,6 +280,10 @@ public interface SettingCodes {
 	public static final String GRAPH_PROBAND_BREADTH_FIRST = "graph_proband_breadth_first";
 	public static final String GRAPH_MAX_PROBAND_PARENTS_DEPTH = "graph_max_proband_parents_depth";
 	public static final String GRAPH_MAX_PROBAND_CHILDREN_DEPTH = "graph_max_proband_children_depth";
+	public static final String GRAPH_MAX_USER_INSTANCES = "graph_max_USER_instances";
+	public static final String GRAPH_MAX_USER_PARENT_DEPTH = "graph_max_USER_parent_depth";
+	public static final String GRAPH_MAX_USER_CHILDREN_DEPTH = "graph_max_user_children_depth";
+	public static final String GRAPH_USER_BREADTH_FIRST = "graph_user_breadth_first";
 	public static final String API_GRAPH_MAX_STAFF_INSTANCES = "api_graph_max_staff_instances";
 	public static final String API_GRAPH_MAX_STAFF_PARENT_DEPTH = "api_graph_max_staff_parent_depth";
 	public static final String API_GRAPH_MAX_STAFF_CHILDREN_DEPTH = "api_graph_max_staff_children_depth";
@@ -292,6 +296,9 @@ public interface SettingCodes {
 	public static final String API_GRAPH_MAX_PROBAND_INSTANCES = "api_graph_max_proband_instances";
 	public static final String API_GRAPH_MAX_PROBAND_PARENTS_DEPTH = "api_graph_max_proband_parents_depth";
 	public static final String API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH = "api_graph_max_proband_children_depth";
+	public static final String API_GRAPH_MAX_USER_INSTANCES = "api_graph_max_user_instances";
+	public static final String API_GRAPH_MAX_USER_PARENT_DEPTH = "api_graph_max_user_parent_depth";
+	public static final String API_GRAPH_MAX_USER_CHILDREN_DEPTH = "api_graph_max_user_children_depth";
 	public static final String COURSE_DEFERRED_DELETE = "course_deferred_delete";
 	public static final String ECRF_DEFERRED_DELETE = "ecrf_deferred_delete";
 	public static final String ECRF_FIELD_DEFERRED_DELETE = "ecrf_field_deferred_delete";
@@ -508,4 +515,5 @@ public interface SettingCodes {
 	public static final String SHOW_THEME_MENU = "show_theme_menu";
 	public static final String SHOW_TOOLTIPS_MENU = "show_tooltips_menu";
 	public static final String SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = "show_trial_training_record_menuitems";
+	public final static String TAB_TITLE_LIST_CLIP_MAX_LENGTH = "tab_title_list_clip_max_length";
 }

@@ -2192,9 +2192,12 @@
         VISIBLE_MASS_MAIL_TAB_LIST CHARACTER VARYING(1024),
         ENABLE_USER_MODULE BOOLEAN not null,
         VISIBLE_USER_TAB_LIST CHARACTER VARYING(1024),
+        INHERITED_PROPERTY_LIST CHARACTER VARYING(1024),
+        INHERITED_PERMISSION_PROFILE_GROUP_LIST CHARACTER VARYING(1024),
         DEFERRED_DELETE BOOLEAN not null,
         DEFERRED_DELETE_REASON TEXT,
         IDENTITY_FK BIGINT,
+        PARENT_FK BIGINT,
         MODIFIED_USER_FK BIGINT,
         DEPARTMENT_FK BIGINT not null,
         KEY_PAIR_FK BIGINT not null unique,
@@ -3804,6 +3807,11 @@
     alter table users 
         add constraint users_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
+        references users;
+
+    alter table users 
+        add constraint users_PARENT_FKC 
+        foreign key (PARENT_FK) 
         references users;
 
     alter table users 

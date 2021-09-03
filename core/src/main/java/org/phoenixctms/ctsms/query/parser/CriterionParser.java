@@ -82,7 +82,8 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 				new ValueType[] { WhereTermValueType.VALUE_TYPE, SelectValueType.VALUE_TYPE },
 				SelectValueType.VALUE_TYPE));
 	}
-	private final static String GET_DAO_METHOD_PREFIX = "get";
+	private final static String GET_DAO_METHOD_PREFIX = CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX;
+	private final static String DEFAULT_GET_NAME_METHOD_NAME = CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX + "Name";
 	private final static boolean PRETTY_PRINT_SHOW_POSITION_NUMBERS = true;
 	private final static String PRETTY_PRINT_INDENTATION = "  ";
 	private final static String PRETTY_PRINT_EMPTY_VALUE = "";
@@ -742,10 +743,14 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 							if (property.getPicker() != null) {
 								criterionValue = getPickerCriterionValueString(property.getPicker(), token.getLongValue(), obfuscateCriterions);
 							} else if (!CommonUtil.isEmptyString(property.getEntityName())) {
+								String getNameMethodName = property.getGetNameMethodName();
+								if (CommonUtil.isEmptyString(getNameMethodName) && !CommonUtil.isEmptyString(property.getEntityName())) {
+									getNameMethodName = DEFAULT_GET_NAME_METHOD_NAME;
+								}
 								if (CoreUtil.isEnumerationClass(property.getEntityName())) {
-									criterionValue = getEnumerationCriterionValueString(property.getEntityName(), token.getStringValue(), property.getGetNameMethodName());
+									criterionValue = getEnumerationCriterionValueString(property.getEntityName(), token.getStringValue(), getNameMethodName);
 								} else {
-									criterionValue = getValueObjectCriterionValueString(property.getEntityName(), token.getLongValue(), property.getGetNameMethodName());
+									criterionValue = getValueObjectCriterionValueString(property.getEntityName(), token.getLongValue(), getNameMethodName);
 								}
 							} else {
 								criterionValue = getCriterionValueString(token, property);

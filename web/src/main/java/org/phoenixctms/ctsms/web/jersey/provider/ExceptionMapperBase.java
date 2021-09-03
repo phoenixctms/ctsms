@@ -5,6 +5,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
+
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
 
@@ -41,8 +43,8 @@ abstract class ExceptionMapperBase {
 		}
 	}
 
-	private final static String EXCEPTION_ERROR_CODE_GETTER_METHOD_NAME = "getErrorCode";
-	private final static String EXCEPTION_DATA_GETTER_METHOD_NAME = "getData";
+	private final static String EXCEPTION_ERROR_CODE_GETTER_METHOD_NAME = CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX + "ErrorCode";
+	private final static String EXCEPTION_DATA_GETTER_METHOD_NAME = CommonUtil.GET_PROPERTY_METHOD_NAME_PREFIX + "Data";
 
 	protected ResponseBuilder buildJsonResponse(int status, Throwable t) {
 		return Response.status(status).type(MediaType.APPLICATION_JSON).entity(new ExceptionJs(t));

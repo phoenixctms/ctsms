@@ -46,7 +46,7 @@ import io.swagger.annotations.ApiOperation;
 @Path("/user")
 public class UserResource extends ServiceResourceBase {
 
-	private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
+	//private final static Integer MAX_GRAPH_USER_INSTANCES = 2;
 	private final static JournalModule journalModule = JournalModule.USER_JOURNAL;
 	private final static Class<?> SERVICE_INTERFACE = UserService.class;
 	private final static String ROOT_ENTITY_ID_METHOD_PARAM_NAME = "userId";
@@ -62,7 +62,10 @@ public class UserResource extends ServiceResourceBase {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public NoShortcutSerializationWrapper<UserOutVO> addUser(AddUserWrapper in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return new NoShortcutSerializationWrapper<UserOutVO>(
-				WebUtil.getServiceLocator().getUserService().addUser(auth, in.getUser(), in.getPlainDepartmentPassword(), MAX_GRAPH_USER_INSTANCES));
+				WebUtil.getServiceLocator().getUserService().addUser(auth, in.getUser(), in.getPlainDepartmentPassword(),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_INSTANCES),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_CHILDREN_DEPTH)));
 	}
 
 	@DELETE
@@ -73,12 +76,28 @@ public class UserResource extends ServiceResourceBase {
 		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService()
 				.deleteUser(auth, id, Settings.getBoolean(SettingCodes.USER_DEFERRED_DELETE, Bundle.SETTINGS, DefaultSettings.USER_DEFERRED_DELETE), force != null ? force : false,
 						reason,
-						MAX_GRAPH_USER_INSTANCES));
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_INSTANCES),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_CHILDREN_DEPTH)));
 	}
 
 	@Override
 	protected AuthenticationVO getAuth() {
 		return auth;
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/children")
+	public Collection<UserOutVO> getChildren(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil
+				.getServiceLocator()
+				.getUserService()
+				.getUser(auth, id,
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_INSTANCES),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_PARENT_DEPTH),
+						Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_CHILDREN_DEPTH))
+				.getChildren();
 	}
 
 	@Override
@@ -119,7 +138,10 @@ public class UserResource extends ServiceResourceBase {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}")
 	public NoShortcutSerializationWrapper<UserOutVO> getUser(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
-		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService().getUser(auth, id, MAX_GRAPH_USER_INSTANCES));
+		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService().getUser(auth, id,
+				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_INSTANCES),
+				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_PARENT_DEPTH),
+				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_CHILDREN_DEPTH)));
 	}
 
 	@GET
@@ -152,6 +174,9 @@ public class UserResource extends ServiceResourceBase {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public NoShortcutSerializationWrapper<UserOutVO> updateUser(UpdateUserWrapper in) throws AuthenticationException, AuthorisationException, ServiceException {
 		return new NoShortcutSerializationWrapper<UserOutVO>(WebUtil.getServiceLocator().getUserService().updateUser(auth, in.getUser(), in.getPlainNewDepartmentPassword(),
-				in.getPlainOldDepartmentPassword(), MAX_GRAPH_USER_INSTANCES));
+				in.getPlainOldDepartmentPassword(),
+				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_INSTANCES, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_INSTANCES),
+				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_PARENT_DEPTH),
+				Settings.getIntNullable(SettingCodes.API_GRAPH_MAX_USER_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.API_GRAPH_MAX_USER_CHILDREN_DEPTH)));
 	}
 }

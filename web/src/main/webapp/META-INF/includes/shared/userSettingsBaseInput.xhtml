@@ -10,15 +10,30 @@
 <h:body>
 	<ui:composition>
 
+		<h:panelGroup id="locale_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_locale"
+				value="#{bean.inheritedPropertiesMap['locale']}">
+				<p:ajax process="@this" update="locale"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_locale">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('locale')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
 		<h:outputLabel for="locale" value="#{userlabels.user_locale_label}" />
 		<h:panelGroup>
-			<p:selectOneMenu id="locale" value="#{settingsBean.locale}"
+			<p:selectOneMenu id="locale" value="#{bean.locale}"
+				disabled="#{bean.inheritedPropertiesMap['locale']}"
 				required="true" label="#{userlabels.user_locale}"
 				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItems value="#{settingsBean.locales}" var="selectItem"
+				<f:selectItems value="#{bean.locales}" var="selectItem"
 					itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
@@ -29,12 +44,28 @@
 		</h:panelGroup>
 		<p:message for="locale" />
 
+		<h:panelGroup id="timeZone_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_timeZone"
+				value="#{bean.inheritedPropertiesMap['timeZone']}">
+				<p:ajax process="@this" update="timeZone"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_timeZone">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('timeZone')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+
 		<h:outputLabel for="timeZone"
 			value="#{userlabels.user_time_zone_label}" />
 		<h:panelGroup>
 
 			<p:autoComplete id="timeZone" required="false"
-				value="#{settingsBean.timeZone}"
+			    disabled="#{bean.inheritedPropertiesMap['timeZone']}"
+				value="#{bean.timeZone}"
 				label="#{userlabels.user_time_zone}" styleClass="ctsms-control"
 				minQueryLength="#{autoCompleteMinQueryLengthTimeZone}"
 				maxResults="#{autoCompleteMaxResultsTimeZone}"
@@ -42,14 +73,14 @@
 				dropdown="#{autoCompleteDropdownTimeZone}"
 				global="#{autoCompleteGlobalTimeZone}"
 				scrollHeight="#{autoCompleteScrollHeightTimeZone}"
-				completeMethod="#{settingsBean.completeTimeZone}"
+				completeMethod="#{bean.completeTimeZone}"
 				forceSelection="true" var="timezone" itemValue="#{timezone}"
 				itemLabel="#{timezone.name}" converter="ctsms.TimeZone">
 
 				<p:ajax process="@this" event="itemSelect"
-					listener="#{settingsBean.handleTimeZoneSelect}" />
+					listener="#{bean.handleTimeZoneSelect}" />
 				<p:ajax process="@this" event="itemUnselect"
-					listener="#{settingsBean.handleTimeZoneUnselect}" />
+					listener="#{bean.handleTimeZoneUnselect}" />
 			</p:autoComplete>
 
 
@@ -62,63 +93,105 @@
 		</h:panelGroup>
 		<p:message for="timeZone" />
 
+		<h:panelGroup id="dateFormat_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_dateFormat"
+				value="#{bean.inheritedPropertiesMap['dateFormat']}">
+				<p:ajax process="@this" update="dateFormat"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_dateFormat">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('dateFormat')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
-
-		<h:outputLabel for="dateformat"
+		<h:outputLabel for="dateFormat"
 			value="#{userlabels.user_dateformat_label}" />
 		<h:panelGroup>
 
-			<p:selectOneMenu id="dateformat" value="#{settingsBean.dateFormat}"
+			<p:selectOneMenu id="dateFormat" value="#{bean.dateFormat}"
+				disabled="#{bean.inheritedPropertiesMap['dateFormat']}"
 				required="false" label="#{userlabels.user_dateformat}"
 				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItems value="#{settingsBean.dateFormats}" var="selectItem"
+				<f:selectItems value="#{bean.dateFormats}" var="selectItem"
 					itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
-			<p:tooltip rendered="#{enableTooltips}" for="dateformat">
+			<p:tooltip rendered="#{enableTooltips}" for="dateFormat">
 				<h:outputText value="#{userlabels.user_dateformat_tooltip}"
 					escape="false" />
 			</p:tooltip>
 		</h:panelGroup>
-		<p:message for="dateformat" />
+		<p:message for="dateFormat" />
 
 
+		<h:panelGroup id="decimalSeparator_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_decimalSeparator"
+				value="#{bean.inheritedPropertiesMap['decimalSeparator']}">
+				<p:ajax process="@this" update="decimalSeparator"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_decimalSeparator">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('decimalSeparator')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
-
-		<h:outputLabel for="decimalseparator"
+		<h:outputLabel for="decimalSeparator"
 			value="#{userlabels.user_decimalseparator_label}" />
 		<h:panelGroup>
-			<p:selectOneMenu id="decimalseparator"
-				value="#{settingsBean.decimalSeparator}" required="false"
+			<p:selectOneMenu id="decimalSeparator"
+				disabled="#{bean.inheritedPropertiesMap['decimalSeparator']}"
+				value="#{bean.decimalSeparator}" required="false"
 				label="#{userlabels.user_decimalseparator}"
 				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItems value="#{settingsBean.decimalSeparators}"
+				<f:selectItems value="#{bean.decimalSeparators}"
 					var="selectItem" itemLabel="#{selectItem.label}"
 					itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
 
-			<p:tooltip rendered="#{enableTooltips}" for="decimalseparator">
+			<p:tooltip rendered="#{enableTooltips}" for="decimalSeparator">
 				<h:outputText value="#{userlabels.user_decimalseparator_tooltip}"
 					escape="false" />
 			</p:tooltip>
 		</h:panelGroup>
-		<p:message for="decimalseparator" />
+		<p:message for="decimalSeparator" />
 
-
+		<h:panelGroup id="theme_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_theme"
+				value="#{bean.inheritedPropertiesMap['theme']}">
+				<p:ajax process="@this" update="theme"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_theme">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('theme')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
 		<h:outputLabel for="theme" value="#{userlabels.user_theme_label}" />
 		<h:panelGroup>
-			<p:selectOneMenu id="theme" value="#{settingsBean.theme}"
+			<p:selectOneMenu id="theme" value="#{bean.theme}"
+			    disabled="#{bean.inheritedPropertiesMap['theme']}"
 				required="false" label="#{userlabels.user_theme}"
 				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItems value="#{settingsBean.themes}" var="selectItem"
+				<f:selectItems value="#{bean.themes}" var="selectItem"
 					itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
@@ -129,11 +202,27 @@
 		</h:panelGroup>
 		<p:message for="theme" />
 
+		<h:panelGroup id="showTooltips_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_showTooltips"
+				value="#{bean.inheritedPropertiesMap['showTooltips']}">
+				<p:ajax process="@this" update="showTooltips"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_showTooltips">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('showTooltips')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+
 		<h:outputLabel for="showTooltips"
 			value="#{userlabels.user_show_tooltips_label}" />
 		<h:panelGroup>
 			<p:selectBooleanCheckbox id="showTooltips"
-				value="#{settingsBean.showTooltips}">
+				disabled="#{bean.inheritedPropertiesMap['showTooltips']}"
+				value="#{bean.showTooltips}">
 				<p:ajax />
 			</p:selectBooleanCheckbox>
 			<p:tooltip rendered="#{enableTooltips}" for="showTooltips">
@@ -144,10 +233,10 @@
 		<p:message for="showTooltips" />
 
 
-
+		<h:outputLabel />
 		<h:outputLabel value="#{userlabels.user_table_column_count_label}" />
 		<h:outputText id="user_table_column_count_message"
-			value="#{settingsBean.tableColumnCount}" />
+			value="#{bean.tableColumnCount}" />
 		<h:outputLabel />
 
 

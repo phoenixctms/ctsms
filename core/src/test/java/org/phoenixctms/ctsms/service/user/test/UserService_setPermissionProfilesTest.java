@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>setPermissionProfiles</code> of service <code>UserService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.user.UserService#setPermissionProfiles(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.UserPermissionProfileInVO)
+ * @see org.phoenixctms.ctsms.service.user.UserService#setPermissionProfiles(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.vo.UserPermissionProfileInVO, org.phoenixctms.ctsms.enumeration.PermissionProfileGroup)
  */
 @Test(groups={"service","UserService"})
 public class UserService_setPermissionProfilesTest extends UserServiceBaseTest {

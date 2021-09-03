@@ -28,7 +28,7 @@ import org.phoenixctms.ctsms.vo.StaffCategoryVO;
 import org.phoenixctms.ctsms.vo.StaffImageOutVO;
 import org.phoenixctms.ctsms.vo.StaffInVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
@@ -123,7 +123,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		return result;
 	}
 
-	public static void initStaffDefaultValues(StaffInVO in, UserOutVO user) {
+	public static void initStaffDefaultValues(StaffInVO in, UserInheritedVO user) {
 		if (in != null) {
 			in.setAllocatable(Settings.getBoolean(SettingCodes.STAFF_ALLOCATABLE_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_ALLOCATABLE_PRESET));
 			in.setCategoryId(null);

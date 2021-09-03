@@ -201,6 +201,24 @@
 					</ui:include>
 				</p:column>
 				<p:column
+					sortBy="#{user.vo.parent}"
+					filterBy="#{user.vo.parent.name}">
+					<f:facet name="header">
+						<h:outputText value="#{userlabels.search_user_result_list_parent_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param
+							name="label"
+							value="#{user.vo.parent.name}" />
+						<ui:param
+							name="icon"
+							value="#{empty user.vo.parent.identity ? '' : user.vo.parent.identity.category.nodeStyleClass}" />
+						<ui:param
+							name="rendered"
+							value="true" />
+					</ui:include>
+				</p:column>
+				<p:column
 					filterBy="#{user.vo.identity.department.id}"
 					filterOptions="#{sessionScopeBean.filterDepartments}">
 					<f:facet name="header">

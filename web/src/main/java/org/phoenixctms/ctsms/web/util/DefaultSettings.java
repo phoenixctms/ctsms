@@ -439,6 +439,10 @@ public final class DefaultSettings {
 	public static final Integer GRAPH_MAX_PROBAND_INSTANCES = 100;
 	public static final Integer GRAPH_MAX_PROBAND_PARENTS_DEPTH = 2;
 	public static final Integer GRAPH_MAX_PROBAND_CHILDREN_DEPTH = 2;
+	public static final Integer GRAPH_MAX_USER_INSTANCES = 100;
+	public static final Integer GRAPH_MAX_USER_PARENT_DEPTH = 5;
+	public static final Integer GRAPH_MAX_USER_CHILDREN_DEPTH = 5;
+	public static final boolean GRAPH_USER_BREADTH_FIRST = true;
 	public static final Integer API_GRAPH_MAX_STAFF_INSTANCES = 100;
 	public static final Integer API_GRAPH_MAX_STAFF_PARENT_DEPTH = 5;
 	public static final Integer API_GRAPH_MAX_STAFF_CHILDREN_DEPTH = 5;
@@ -451,6 +455,9 @@ public final class DefaultSettings {
 	public static final Integer API_GRAPH_MAX_PROBAND_INSTANCES = 100;
 	public static final Integer API_GRAPH_MAX_PROBAND_PARENTS_DEPTH = 2;
 	public static final Integer API_GRAPH_MAX_PROBAND_CHILDREN_DEPTH = 2;
+	public static final Integer API_GRAPH_MAX_USER_INSTANCES = 100;
+	public static final Integer API_GRAPH_MAX_USER_PARENT_DEPTH = 5;
+	public static final Integer API_GRAPH_MAX_USER_CHILDREN_DEPTH = 5;
 	public static final boolean TIMELINE_SHOW_ALL_PRESET = false;
 	public static final boolean TIMELINE_SHOW_DESCRIPTION_PRESET = false;
 	public static final boolean TIMELINE_SHOW_START_STOP_PRESET = true;
@@ -674,6 +681,7 @@ public final class DefaultSettings {
 	public static final String VISIBLE_MASS_MAIL_TAB_LIST_PRESET = null;
 	public static final String VISIBLE_USER_TAB_LIST_PRESET = null;
 	public static final boolean SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = false;
+	public final static int TAB_TITLE_LIST_CLIP_MAX_LENGTH = 56;
 
 	private DefaultSettings() {
 	}
