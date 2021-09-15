@@ -203,6 +203,24 @@
 		    <version>1.3.1</version>
 		</dependency>		
 
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>0.11.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.11.2</version>
+		    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-gson</artifactId> <!-- or jjwt-jackson if Gson is preferred -->
+		    <version>0.11.2</version>
+		    <scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
