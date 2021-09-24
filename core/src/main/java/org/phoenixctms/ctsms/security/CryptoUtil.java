@@ -53,6 +53,7 @@ public final class CryptoUtil {
 	private static final int SYMMETRIC_KEY_LENGTH = 128;
 	private static final int SALT_LENGTH = 16;
 	private static final String ASYMMETRIC_ALGORITHM = "RSA";
+	private static final String PADDED_ASYMMETRIC_ALGORITHM = ASYMMETRIC_ALGORITHM + "/None/OAEPWITHSHA-256ANDMGF1PADDING";
 	private static final int ASYMMETRIC_KEY_LENGTH = 1024;
 	public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
 	public static final int SEED = 100; // (new Random()).nextInt(100);
@@ -108,25 +109,25 @@ public final class CryptoUtil {
 	}
 
 	private static Cipher getEncryptionCipher(PublicKey key) throws Exception {
-		Cipher cipher = Cipher.getInstance(ASYMMETRIC_ALGORITHM);
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		return cipher;
 	}
 
 	private static Cipher getDecryptionCipher(PrivateKey key) throws Exception {
-		Cipher cipher = Cipher.getInstance(ASYMMETRIC_ALGORITHM);
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		return cipher;
 	}
 
 	private static Cipher getEncryptionCipher(PrivateKey key) throws Exception {
-		Cipher cipher = Cipher.getInstance(ASYMMETRIC_ALGORITHM);
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		return cipher;
 	}
 
 	private static Cipher getDecryptionCipher(PublicKey key) throws Exception {
-		Cipher cipher = Cipher.getInstance(ASYMMETRIC_ALGORITHM);
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		return cipher;
 	}
