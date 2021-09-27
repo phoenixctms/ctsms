@@ -1370,4 +1370,14 @@ public class ToolsServiceImpl
 		return Settings.getIntNullable(SettingCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT, Bundle.SETTINGS,
 				DefaultSettings.COURSE_PARTICIPATION_FILE_SIZE_LIMIT);
 	}
+
+	@Override
+	protected String handleIssueJwt(AuthenticationVO auth, String realm, Long validityPeriodSecs) throws Exception {
+		return authenticator.issueJwt(auth, realm, validityPeriodSecs);
+	}
+
+	@Override
+	protected String[] handleVerifyJwt(String jwt) throws Exception {
+		return authenticator.verifyJwt(jwt);
+	}
 }

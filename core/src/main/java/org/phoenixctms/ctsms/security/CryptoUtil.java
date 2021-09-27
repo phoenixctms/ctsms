@@ -53,9 +53,14 @@ public final class CryptoUtil {
 	private static final int SYMMETRIC_KEY_LENGTH = 128;
 	private static final int SALT_LENGTH = 16;
 	private static final String ASYMMETRIC_ALGORITHM = "RSA";
+	private static final String PADDED_ASYMMETRIC_ALGORITHM = ASYMMETRIC_ALGORITHM + "/ECB/PKCS1Padding";
 	private static final int ASYMMETRIC_KEY_LENGTH = 1024;
 	public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
 	public static final int SEED = 100; // (new Random()).nextInt(100);
+	private static final String JWT_KEY_ALGORITHM = "PBKDF2WithHmacSHA1";
+	private static final String JWT_ALGORITHM = "HMACSHA256";
+	private static final int JWT_KEY_LENGTH = 256;
+	private static final int JWT_KEY_ITERATIONS = 1;
 
 	public static boolean checkDepartmentPassword(Department department, String plainDepartmentPassword) throws Exception {
 		return Arrays.equals(hashPassword(department.getDepartmentPasswordSalt(), plainDepartmentPassword), department.getDepartmentPasswordHash());
@@ -103,6 +108,46 @@ public final class CryptoUtil {
 		return keyGen.genKeyPair();
 	}
 
+	private static Cipher getEncryptionCipher(PublicKey key) throws Exception {
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+		return cipher;
+	}
+
+	private static Cipher getDecryptionCipher(PrivateKey key) throws Exception {
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
+		cipher.init(Cipher.DECRYPT_MODE, key);
+		return cipher;
+	}
+
+	private static Cipher getEncryptionCipher(PrivateKey key) throws Exception {
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
+		cipher.init(Cipher.ENCRYPT_MODE, key);
+		return cipher;
+	}
+
+	private static Cipher getDecryptionCipher(PublicKey key) throws Exception {
+		Cipher cipher = Cipher.getInstance(PADDED_ASYMMETRIC_ALGORITHM);
+		cipher.init(Cipher.DECRYPT_MODE, key);
+		return cipher;
+	}
+
+	public static byte[] encrypt(PublicKey key, byte[] plainText) throws Exception {
+		return encrypt(getEncryptionCipher(key), plainText);
+	}
+
+	public static byte[] decrypt(PrivateKey key, byte[] cipherText) throws Exception {
+		return decrypt(getDecryptionCipher(key), cipherText);
+	}
+
+	public static byte[] encrypt(PrivateKey key, byte[] plainText) throws Exception {
+		return encrypt(getEncryptionCipher(key), plainText);
+	}
+
+	public static byte[] decrypt(PublicKey key, byte[] cipherText) throws Exception {
+		return decrypt(getDecryptionCipher(key), cipherText);
+	}
+
 	private static SecretKey createPBEKey(byte[] salt, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		if (password == null || password.length() == 0) {
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.PBE_PASSWORD_ZERO_LENGTH_ERROR, DefaultMessages.PBE_PASSWORD_ZERO_LENGTH_ERROR));
@@ -110,6 +155,12 @@ public final class CryptoUtil {
 		SecretKeyFactory factory = SecretKeyFactory.getInstance(PBE_KEY_ALGORITHM);
 		PBEKey pbeKey = (PBEKey) factory.generateSecret(new PBEKeySpec(password.toCharArray(), salt, PBE_KEY_ITERATIONS, SYMMETRIC_KEY_LENGTH));
 		return new SecretKeySpec(pbeKey.getEncoded(), SYMMETRIC_ALGORITHM);
+	}
+
+	public static SecretKey createJwtKey(SecretKey departmentKey) throws InvalidKeySpecException, NoSuchAlgorithmException {
+		SecretKeyFactory factory = SecretKeyFactory.getInstance(JWT_KEY_ALGORITHM);
+		PBEKey pbeKey = (PBEKey) factory.generateSecret(new PBEKeySpec(null, departmentKey.getEncoded(), JWT_KEY_ITERATIONS, JWT_KEY_LENGTH));
+		return new SecretKeySpec(pbeKey.getEncoded(), JWT_ALGORITHM);
 	}
 
 	public static SecretKeySpec createRandomKey() throws NoSuchAlgorithmException {

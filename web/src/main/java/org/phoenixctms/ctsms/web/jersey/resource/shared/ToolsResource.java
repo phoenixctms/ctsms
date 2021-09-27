@@ -12,6 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -38,6 +39,10 @@ import org.phoenixctms.ctsms.web.jersey.resource.ArgsUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.wrapper.AddUserPasswordWrapper;
 import org.phoenixctms.ctsms.web.jersey.wrapper.NoShortcutSerializationWrapper;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import com.google.gson.JsonElement;
@@ -174,5 +179,14 @@ public final class ToolsResource {
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
 		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request));
+	}
+
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("login")
+	public Response issueJwt(@QueryParam("validity_secs") Long validityPeriodSecs) throws AuthenticationException, AuthorisationException, ServiceException {
+		return Response.ok(WebUtil.getServiceLocator().getToolsService().issueJwt(auth,
+				Settings.getString(SettingCodes.API_REALM, Bundle.SETTINGS, DefaultSettings.API_REALM),
+				validityPeriodSecs)).build();
 	}
 }
