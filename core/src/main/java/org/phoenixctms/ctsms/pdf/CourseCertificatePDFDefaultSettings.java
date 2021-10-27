@@ -6,7 +6,7 @@ import org.phoenixctms.ctsms.enumeration.Color;
 
 public final class CourseCertificatePDFDefaultSettings {
 
-	public static final String COURSE_DATE_TIME_PATTERN = "d. MMMM yyyy";
+	public static final String COURSE_DATE_PATTERN = "d. MMMM yyyy";
 	public final static boolean LANDSCAPE = false;
 	public final static float X_COLUMN_INDENT = 200.0f;
 	public final static float X_FRAME_INDENT = 2.5f;

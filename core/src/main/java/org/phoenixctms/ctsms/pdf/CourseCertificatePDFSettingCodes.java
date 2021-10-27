@@ -2,7 +2,7 @@ package org.phoenixctms.ctsms.pdf;
 
 public interface CourseCertificatePDFSettingCodes {
 
-	public final static String COURSE_DATE_TIME_PATTERN = "course_date_time_pattern";
+	public final static String COURSE_DATE_PATTERN = "course_date_pattern";
 	public final static String TEMPLATE_FILE_NAME = "template_file_name";
 	public final static String FONT_A = "font_a";
 	public final static String FONT_B = "font_b";
