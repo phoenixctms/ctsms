@@ -534,8 +534,9 @@ public class CourseParticipationStatusEntryDaoImpl
 					Locales.CV_PDF,
 					CVPDFLabelCodes.POSITION_COURSE_DATE,
 					CVPDFDefaultSettings.POSITION_COURSE_DATE_LABEL,
-					Settings.getSimpleDateFormat(CVPDFSettingCodes.POSITION_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.POSITION_DATE_PATTERN, Locales.CV_PDF).format(
-							course.getStop())));
+					Settings.getSimpleDateFormat(CVPDFSettingCodes.POSITION_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.POSITION_DATE_PATTERN, Locales.CV_PDF,
+							Settings.getBoolean(CVPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, CVPDFDefaultSettings.DATE_USER_TIME_ZONE)).format(
+									course.getStop())));
 			target.setLabel1(sb.toString());
 			Staff institution = course.getInstitution();
 			if (institution != null) {

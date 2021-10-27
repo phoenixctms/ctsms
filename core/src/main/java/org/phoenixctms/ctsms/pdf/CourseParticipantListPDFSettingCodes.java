@@ -3,8 +3,8 @@ package org.phoenixctms.ctsms.pdf;
 public interface CourseParticipantListPDFSettingCodes {
 
 	public final static String GRAPH_MAX_COURSE_INSTANCES = "graph_max_course_instances";
-	public final static String NOW_DATE_TIME_PATTERN = "now_date_time_pattern";
-	public final static String COURSE_DATE_TIME_PATTERN = "course_date_time_pattern";
+	public final static String NOW_DATE_PATTERN = "now_date_pattern";
+	public final static String COURSE_DATE_PATTERN = "course_date_pattern";
 	public final static String BOOKING_DATE_TIME_PATTERN = "booking_date_time_pattern";
 	public final static String TEMPLATE_FILE_NAME = "template_file_name";
 	public final static String FONT_A = "font_a";
