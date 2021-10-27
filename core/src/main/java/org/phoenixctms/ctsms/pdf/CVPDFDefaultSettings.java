@@ -52,6 +52,7 @@ public final class CVPDFDefaultSettings {
 	public static final boolean PASSED_COURSES_ONLY = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_USER_TIME_ZONE = true;
 
 	private CVPDFDefaultSettings() {
 	}

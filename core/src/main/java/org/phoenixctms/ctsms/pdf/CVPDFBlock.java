@@ -78,7 +78,8 @@ public class CVPDFBlock {
 
 	protected String getDateOfBirth() {
 		if (staff != null && staff.isPerson() && staff.getDateOfBirth() != null) {
-			return Settings.getSimpleDateFormat(CVPDFSettingCodes.DATE_OF_BIRTH_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.DATE_OF_BIRTH_DATE_PATTERN, Locales.CV_PDF)
+			return Settings
+					.getSimpleDateFormat(CVPDFSettingCodes.DATE_OF_BIRTH_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.DATE_OF_BIRTH_DATE_PATTERN, Locales.CV_PDF) //no usertimezone
 					.format(staff.getDateOfBirth());
 		}
 		return "";
@@ -117,7 +118,9 @@ public class CVPDFBlock {
 	protected String getSignatureLabel() {
 		if (staff != null && staff.isPerson()) {
 			return L10nUtil.getCVPDFLabel(Locales.CV_PDF, CVPDFLabelCodes.SIGNATURE_ANNOTATION, PDFUtil.DEFAULT_LABEL, CommonUtil.getCvStaffName(staff), now == null ? null
-					: Settings.getSimpleDateFormat(CVPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.CV_PDF)
+					: Settings
+							.getSimpleDateFormat(CVPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.CV_PDF,
+									Settings.getBoolean(CVPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, CVPDFDefaultSettings.DATE_USER_TIME_ZONE))
 							.format(now));
 		}
 		return "";
