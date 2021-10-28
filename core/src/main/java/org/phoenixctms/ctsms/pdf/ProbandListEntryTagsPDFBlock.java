@@ -87,9 +87,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getDateValueFormat() {
+	protected SimpleDateFormat getDateValueFormat(boolean isUserTimezone) {
 		return Settings.getSimpleDateFormat(ProbandListEntryTagsPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				ProbandListEntryTagsPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF);
+				ProbandListEntryTagsPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF, isUserTimezone);
 	}
 
 	@Override
@@ -210,7 +210,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	@Override
 	protected SimpleDateFormat getModifiedTimestampFormat() {
 		return Settings.getSimpleDateFormat(ProbandListEntryTagsPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				ProbandListEntryTagsPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF);
+				ProbandListEntryTagsPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF,
+				Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS,
+						ProbandListEntryTagsPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE));
 	}
 
 	@Override
@@ -275,9 +277,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getTimestampValueFormat() {
+	protected SimpleDateFormat getTimestampValueFormat(boolean isUserTimezone) {
 		return Settings.getSimpleDateFormat(ProbandListEntryTagsPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				ProbandListEntryTagsPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF);
+				ProbandListEntryTagsPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF, isUserTimezone);
 	}
 
 	@Override
@@ -292,9 +294,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getTimeValueFormat() {
+	protected SimpleDateFormat getTimeValueFormat(boolean isUserTimezone) {
 		return Settings.getSimpleDateFormat(ProbandListEntryTagsPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
-				ProbandListEntryTagsPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF);
+				ProbandListEntryTagsPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.PROBAND_LIST_ENTRY_TAGS_PDF, isUserTimezone);
 	}
 
 	@Override
@@ -430,7 +432,8 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 										ProbandListEntryTagsPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 										Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 										ProbandListEntryTagsPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-										Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
+										Locales.PROBAND_LIST_ENTRY_TAGS_PDF) //no usertimezone
+										.format(listEntry.getProband().getDateOfBirth()) : "",
 								listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 								listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 						cursor.getBlockX(),
@@ -455,7 +458,8 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 											ProbandListEntryTagsPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 											Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 											ProbandListEntryTagsPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-											Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
+											Locales.PROBAND_LIST_ENTRY_TAGS_PDF) //no usertimezone
+											.format(listEntry.getProband().getDateOfBirth()) : "",
 									listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 									listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 							cursor.getBlockCenterX(),
@@ -520,7 +524,8 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 												ProbandListEntryTagsPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 												Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 												ProbandListEntryTagsPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-												Locales.PROBAND_LIST_ENTRY_TAGS_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
+												Locales.PROBAND_LIST_ENTRY_TAGS_PDF) //no usertimezone
+												.format(listEntry.getProband().getDateOfBirth()) : "",
 										listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 										listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 								x + getXFrameIndent(),
@@ -572,7 +577,9 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 												ProbandListEntryTagsPDFSettingCodes.CONTENT_TIMESTAMP_DATETIME_PATTERN,
 												Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 												ProbandListEntryTagsPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
-												Locales.PROBAND_LIST_ENTRY_TAGS_PDF)
+												Locales.PROBAND_LIST_ENTRY_TAGS_PDF,
+												Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS,
+														ProbandListEntryTagsPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE))
 										.format(now)),
 						x + getXFrameIndent(),
 						y,
