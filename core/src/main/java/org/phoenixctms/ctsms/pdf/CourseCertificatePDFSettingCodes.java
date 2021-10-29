@@ -26,4 +26,5 @@ public interface CourseCertificatePDFSettingCodes {
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String DATE_USER_TIME_ZONE = "date_user_time_zone";
 }

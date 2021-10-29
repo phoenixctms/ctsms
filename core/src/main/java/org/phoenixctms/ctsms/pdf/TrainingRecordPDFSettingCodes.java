@@ -63,4 +63,6 @@ public interface TrainingRecordPDFSettingCodes {
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String INSTITUTION_STAFF_PATH = "institution_staff_path";
 	public static final String PASSED_COURSES_ONLY = "passed_courses_only";
+	public static final String USER_TIME_ZONE = "user_time_zone";
+	public static final String DATE_USER_TIME_ZONE = "date_user_time_zone";
 }
