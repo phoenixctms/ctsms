@@ -61,6 +61,7 @@ public final class TrainingRecordPDFDefaultSettings {
 	public static final String PAINTER_CLASS = null;
 	public static final boolean INSTITUTION_STAFF_PATH = true;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_USER_TIME_ZONE = true;
 
 	private TrainingRecordPDFDefaultSettings() {
 	}

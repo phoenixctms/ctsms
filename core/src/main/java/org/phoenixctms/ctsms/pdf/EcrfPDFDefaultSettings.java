@@ -78,6 +78,7 @@ public final class EcrfPDFDefaultSettings {
 	public static final boolean AUDIT_TRAIL = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_TIME_USER_TIME_ZONE = true;
 	static {
 		ECRF_FIELD_STATUS_QUEUES.add("VALIDATION");
 		ECRF_FIELD_STATUS_QUEUES.add("QUERY");

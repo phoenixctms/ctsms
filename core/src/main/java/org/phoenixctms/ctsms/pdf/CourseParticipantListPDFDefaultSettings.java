@@ -43,6 +43,8 @@ public final class CourseParticipantListPDFDefaultSettings {
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_TIME_USER_TIME_ZONE = true;
+	public static final boolean DATE_USER_TIME_ZONE = true;
 
 	private CourseParticipantListPDFDefaultSettings() {
 	}

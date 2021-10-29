@@ -71,6 +71,7 @@ public final class InquiriesPDFDefaultSettings {
 	public static final boolean SHOW_MODIFIED_LABEL = false;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_TIME_USER_TIME_ZONE = true;
 
 	private InquiriesPDFDefaultSettings() {
 	}
