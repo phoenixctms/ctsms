@@ -482,6 +482,14 @@ public final class Settings {
 		}
 	}
 
+	public static SimpleDateFormat getSimpleDateFormat(String key, Bundle bundle, String defaultValue, Locales locale, boolean isUserTimezone) {
+		SimpleDateFormat dateFormat = getSimpleDateFormat(key, bundle, defaultValue, locale);
+		if (isUserTimezone) {
+			dateFormat.setTimeZone(CoreUtil.getUserContext().getTimeZone());
+		}
+		return dateFormat;
+	}
+
 	public static String getString(String key, Bundle bundle, String defaultValue) {
 		return CommonUtil.getValue(key, getBundle(bundle), defaultValue);
 	}
