@@ -261,7 +261,9 @@ public class ReimbursementsPDFBlock {
 					getProbandName(true, true),
 					now == null ? null
 							: Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
-									ReimbursementsPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
+									ReimbursementsPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.REIMBURSEMENTS_PDF,
+									Settings.getBoolean(ReimbursementsPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, ReimbursementsPDFDefaultSettings.DATE_USER_TIME_ZONE))
+									.format(now));
 		}
 		return "";
 	}
@@ -437,7 +439,10 @@ public class ReimbursementsPDFBlock {
 						PDFUtil.DEFAULT_LABEL,
 						now == null ? null
 								: Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
+										ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF,
+										Settings.getBoolean(ReimbursementsPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS,
+												ReimbursementsPDFDefaultSettings.DATE_USER_TIME_ZONE))
+										.format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ReimbursementsPDFSettingCodes.FIRST_PAGE_DATE_Y, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.FIRST_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {
@@ -503,7 +508,10 @@ public class ReimbursementsPDFBlock {
 						PDFUtil.DEFAULT_LABEL,
 						now == null ? null
 								: Settings.getSimpleDateFormat(ReimbursementsPDFSettingCodes.DATE_PATTERN, Bundle.REIMBURSEMENTS_PDF,
-										ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF).format(now));
+										ReimbursementsPDFDefaultSettings.DATE_PATTERN, Locales.REIMBURSEMENTS_PDF,
+										Settings.getBoolean(ReimbursementsPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS,
+												ReimbursementsPDFDefaultSettings.DATE_USER_TIME_ZONE))
+										.format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ReimbursementsPDFSettingCodes.SECOND_PAGE_DATE_Y, Bundle.REIMBURSEMENTS_PDF, ReimbursementsPDFDefaultSettings.SECOND_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {
