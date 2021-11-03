@@ -194,7 +194,9 @@ public class ProbandLetterPDFBlock {
 						PDFUtil.DEFAULT_LABEL,
 						now == null ? null
 								: Settings.getSimpleDateFormat(ProbandLetterPDFSettingCodes.DATE_PATTERN, Bundle.PROBAND_LETTER_PDF,
-										ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF).format(now));
+										ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF,
+										Settings.getBoolean(ProbandLetterPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, ProbandLetterPDFDefaultSettings.DATE_USER_TIME_ZONE))
+										.format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ProbandLetterPDFSettingCodes.FIRST_PAGE_DATE_Y, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.FIRST_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {
@@ -222,7 +224,9 @@ public class ProbandLetterPDFBlock {
 						PDFUtil.DEFAULT_LABEL,
 						now == null ? null
 								: Settings.getSimpleDateFormat(ProbandLetterPDFSettingCodes.DATE_PATTERN, Bundle.PROBAND_LETTER_PDF,
-										ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF).format(now));
+										ProbandLetterPDFDefaultSettings.DATE_PATTERN, Locales.PROBAND_LETTER_PDF,
+										Settings.getBoolean(ProbandLetterPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, ProbandLetterPDFDefaultSettings.DATE_USER_TIME_ZONE))
+										.format(now));
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ProbandLetterPDFSettingCodes.SECOND_PAGE_DATE_Y, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.SECOND_PAGE_DATE_Y);
 				if (!CommonUtil.isEmptyString(line)) {

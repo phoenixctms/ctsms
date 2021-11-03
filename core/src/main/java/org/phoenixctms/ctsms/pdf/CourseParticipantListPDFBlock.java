@@ -98,7 +98,9 @@ public class CourseParticipantListPDFBlock {
 	protected String getBookingString(InventoryBookingOutVO booking) {
 		if (booking != null) {
 			DateFormat bookingDateFormat = Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.BOOKING_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-					CourseParticipantListPDFDefaultSettings.BOOKING_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF);
+					CourseParticipantListPDFDefaultSettings.BOOKING_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF,
+					Settings.getBoolean(CourseParticipantListPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS,
+							CourseParticipantListPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE));
 			return L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.BOOKING_FROM_TO, PDFUtil.DEFAULT_LABEL,
 					booking.getInventory().getName(), bookingDateFormat.format(booking.getStart()), bookingDateFormat.format(booking.getStop()));
 		}
@@ -148,8 +150,9 @@ public class CourseParticipantListPDFBlock {
 		if (course != null) {
 			Date start = course.getStart();
 			Date stop = course.getStop();
-			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.COURSE_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-					CourseParticipantListPDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF);
+			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.COURSE_DATE_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+					CourseParticipantListPDFDefaultSettings.COURSE_DATE_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF,
+					Settings.getBoolean(CourseParticipantListPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, CourseParticipantListPDFDefaultSettings.DATE_USER_TIME_ZONE));
 			if (start != null && stop != null) {
 				return L10nUtil.getCourseParticipantListPDFLabel(Locales.COURSE_PARTICIPANT_LIST_PDF, CourseParticipantListPDFLabelCodes.COURSE_FROM_TO, PDFUtil.DEFAULT_LABEL,
 						coursePeriodDateFormat.format(start), coursePeriodDateFormat.format(stop));
@@ -271,8 +274,11 @@ public class CourseParticipantListPDFBlock {
 						CourseParticipantListPDFLabelCodes.HEADLINE_LINE2,
 						PDFUtil.DEFAULT_LABEL,
 						now == null ? null
-								: Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-										CourseParticipantListPDFDefaultSettings.NOW_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF).format(now));
+								: Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.NOW_DATE_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF, Settings.getBoolean(
+												CourseParticipantListPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS,
+												CourseParticipantListPDFDefaultSettings.DATE_USER_TIME_ZONE))
+										.format(now));
 				x = cursor.getBlockCenterX();
 				y = cursor.getBlockY();
 				if (!CommonUtil.isEmptyString(line1)) {
@@ -313,8 +319,11 @@ public class CourseParticipantListPDFBlock {
 							Settings.getColor(CourseParticipantListPDFSettingCodes.TEXT_COLOR, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 									CourseParticipantListPDFDefaultSettings.TEXT_COLOR),
 							now == null ? ""
-									: Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_TIME_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-											CourseParticipantListPDFDefaultSettings.NOW_DATE_TIME_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF).format(now),
+									: Settings.getSimpleDateFormat(CourseParticipantListPDFSettingCodes.NOW_DATE_PATTERN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+											CourseParticipantListPDFDefaultSettings.NOW_DATE_PATTERN, Locales.COURSE_PARTICIPANT_LIST_PDF,
+											Settings.getBoolean(CourseParticipantListPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS,
+													CourseParticipantListPDFDefaultSettings.DATE_USER_TIME_ZONE))
+											.format(now),
 							x, y2,
 							PDFUtil.Alignment.TOP_LEFT);
 					y2 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,

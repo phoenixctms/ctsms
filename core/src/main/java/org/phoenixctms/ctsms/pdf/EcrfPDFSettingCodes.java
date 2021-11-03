@@ -91,4 +91,5 @@ public interface EcrfPDFSettingCodes {
 	public static final String SHOW_ALL_PROBAND_LIST_ENTRY_TAGS = "show_all_proband_list_entry_tags";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String DATE_TIME_USER_TIME_ZONE = "date_time_user_time_zone";
 }

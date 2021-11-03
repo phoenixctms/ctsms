@@ -77,7 +77,9 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 					now == null ? null
 							: Settings
 									.getSimpleDateFormat(TrainingRecordPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.TRAINING_RECORD_PDF,
-											TrainingRecordPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.TRAINING_RECORD_PDF)
+											TrainingRecordPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.TRAINING_RECORD_PDF,
+											Settings.getBoolean(TrainingRecordPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS,
+													TrainingRecordPDFDefaultSettings.DATE_USER_TIME_ZONE))
 									.format(now));
 		}
 		return "";
@@ -90,7 +92,9 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 					now == null ? null
 							: Settings
 									.getSimpleDateFormat(TrainingRecordPDFSettingCodes.SIGNATURE_DATE_PATTERN, Bundle.TRAINING_RECORD_PDF,
-											TrainingRecordPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.TRAINING_RECORD_PDF)
+											TrainingRecordPDFDefaultSettings.SIGNATURE_DATE_PATTERN, Locales.TRAINING_RECORD_PDF,
+											Settings.getBoolean(TrainingRecordPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS,
+													TrainingRecordPDFDefaultSettings.DATE_USER_TIME_ZONE))
 									.format(now));
 		}
 		return "";

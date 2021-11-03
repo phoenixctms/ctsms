@@ -49,4 +49,5 @@ public interface CVPDFSettingCodes {
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String PASSED_COURSES_ONLY = "passed_courses_only";
+	public static final String DATE_USER_TIME_ZONE = "date_user_time_zone";
 }

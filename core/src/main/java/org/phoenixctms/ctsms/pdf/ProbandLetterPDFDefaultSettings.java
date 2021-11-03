@@ -28,6 +28,7 @@ public final class ProbandLetterPDFDefaultSettings {
 	public static final float ADDRESS_Y = 680.0f;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_USER_TIME_ZONE = true;
 
 	private ProbandLetterPDFDefaultSettings() {
 	}

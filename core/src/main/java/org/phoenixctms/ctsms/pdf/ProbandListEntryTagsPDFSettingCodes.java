@@ -84,4 +84,5 @@ public interface ProbandListEntryTagsPDFSettingCodes {
 	public static final String SHOW_MODIFIED_LABEL = "show_modified_label";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String DATE_TIME_USER_TIME_ZONE = "date_time_user_time_zone";
 }

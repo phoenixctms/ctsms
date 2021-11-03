@@ -156,8 +156,9 @@ public class CourseCertificatePDFBlock {
 		if (course != null) {
 			Date start = course.getStart();
 			Date stop = course.getStop();
-			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseCertificatePDFSettingCodes.COURSE_DATE_TIME_PATTERN, Bundle.COURSE_CERTIFICATE_PDF,
-					CourseCertificatePDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_CERTIFICATE_PDF);
+			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseCertificatePDFSettingCodes.COURSE_DATE_PATTERN, Bundle.COURSE_CERTIFICATE_PDF,
+					CourseCertificatePDFDefaultSettings.COURSE_DATE_PATTERN, Locales.COURSE_CERTIFICATE_PDF,
+					Settings.getBoolean(CourseCertificatePDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, CourseCertificatePDFDefaultSettings.DATE_USER_TIME_ZONE));
 			if (start != null && stop != null) {
 				return L10nUtil.getCourseCertificatePDFLabel(Locales.COURSE_CERTIFICATE_PDF, CourseCertificatePDFLabelCodes.COURSE_FROM_TO, PDFUtil.DEFAULT_LABEL,
 						coursePeriodDateFormat.format(start), coursePeriodDateFormat.format(stop));
@@ -173,8 +174,9 @@ public class CourseCertificatePDFBlock {
 	protected String getCourseValidityString() {
 		if (course != null && course.getValidityPeriod() != null) {
 			String courseValidityString;
-			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseCertificatePDFSettingCodes.COURSE_DATE_TIME_PATTERN, Bundle.COURSE_CERTIFICATE_PDF,
-					CourseCertificatePDFDefaultSettings.COURSE_DATE_TIME_PATTERN, Locales.COURSE_CERTIFICATE_PDF);
+			DateFormat coursePeriodDateFormat = Settings.getSimpleDateFormat(CourseCertificatePDFSettingCodes.COURSE_DATE_PATTERN, Bundle.COURSE_CERTIFICATE_PDF,
+					CourseCertificatePDFDefaultSettings.COURSE_DATE_PATTERN, Locales.COURSE_CERTIFICATE_PDF,
+					Settings.getBoolean(CourseCertificatePDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, CourseCertificatePDFDefaultSettings.DATE_USER_TIME_ZONE));
 			if (!VariablePeriod.EXPLICIT.equals(course.getValidityPeriod().getPeriod())) {
 				courseValidityString = L10nUtil.getVariablePeriodName(Locales.COURSE_CERTIFICATE_PDF, course.getValidityPeriod().getPeriod().name());
 			} else {

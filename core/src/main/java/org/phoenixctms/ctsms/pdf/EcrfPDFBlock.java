@@ -55,12 +55,14 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 
 		@Override
 		protected DateFormat getDateFormat(boolean isUserTimeZone) {
-			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.ECRF_PDF);
+			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.ECRF_PDF,
+					isUserTimeZone);
 		}
 
 		@Override
 		protected DateFormat getDateTimeFormat(boolean isUserTimeZone) {
-			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.ECRF_PDF);
+			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.ECRF_PDF,
+					isUserTimeZone);
 		}
 
 		@Override
@@ -110,7 +112,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 
 		@Override
 		protected DateFormat getTimeFormat(boolean isUserTimeZone) {
-			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.ECRF_PDF);
+			return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.ECRF_PDF,
+					isUserTimeZone);
 		}
 
 		@Override
@@ -237,8 +240,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getDateValueFormat() {
-		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.ECRF_PDF);
+	protected SimpleDateFormat getDateValueFormat(boolean isUserTimeZone) {
+		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.DATE_VALUE_PATTERN, Locales.ECRF_PDF, isUserTimeZone);
 	}
 
 	@Override
@@ -354,7 +357,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 
 	@Override
 	protected SimpleDateFormat getModifiedTimestampFormat() {
-		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.ECRF_PDF);
+		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN, Locales.ECRF_PDF,
+				Settings.getBoolean(EcrfPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, EcrfPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE));
 	}
 
 	@Override
@@ -430,8 +434,9 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getTimestampValueFormat() {
-		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.ECRF_PDF);
+	protected SimpleDateFormat getTimestampValueFormat(boolean isUserTimeZone) {
+		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN, Locales.ECRF_PDF,
+				isUserTimeZone);
 	}
 
 	@Override
@@ -445,8 +450,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getTimeValueFormat() {
-		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.ECRF_PDF);
+	protected SimpleDateFormat getTimeValueFormat(boolean isUserTimeZone) {
+		return Settings.getSimpleDateFormat(EcrfPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.TIME_VALUE_PATTERN, Locales.ECRF_PDF, isUserTimeZone);
 	}
 
 	@Override
@@ -570,7 +575,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 										EcrfPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 										Bundle.ECRF_PDF,
 										EcrfPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-										Locales.ECRF_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
+										Locales.ECRF_PDF) //no usertimezone
+										.format(listEntry.getProband().getDateOfBirth()) : "",
 								listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 								listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 						cursor.getBlockX(),
@@ -646,7 +652,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 												EcrfPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 												Bundle.ECRF_PDF,
 												EcrfPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-												Locales.ECRF_PDF).format(listEntry.getProband().getDateOfBirth()) : "",
+												Locales.ECRF_PDF) //no usertimezone
+												.format(listEntry.getProband().getDateOfBirth()) : "",
 										listEntry.getProband().getYearOfBirth() != null ? Integer.toString(listEntry.getProband().getYearOfBirth()) : "",
 										listEntry.getProband().getAge() != null ? Integer.toString(listEntry.getProband().getAge()) : ""),
 								x + getXFrameIndent(),
@@ -741,7 +748,8 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 								EcrfPDFSettingCodes.CONTENT_TIMESTAMP_DATETIME_PATTERN,
 								Bundle.ECRF_PDF,
 								EcrfPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
-								Locales.ECRF_PDF).format(now)),
+								Locales.ECRF_PDF,
+								Settings.getBoolean(EcrfPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, EcrfPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE)).format(now)),
 						x + getXFrameIndent(),
 						y,
 						Alignment.TOP_LEFT,

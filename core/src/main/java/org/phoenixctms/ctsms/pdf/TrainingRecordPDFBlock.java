@@ -149,7 +149,9 @@ public class TrainingRecordPDFBlock {
 	protected static String getCourseStopString(CourseOutVO course) {
 		if (course != null) {
 			return Settings.getSimpleDateFormat(TrainingRecordPDFSettingCodes.COURSE_STOP_DATE_PATTERN, Bundle.TRAINING_RECORD_PDF,
-					TrainingRecordPDFDefaultSettings.COURSE_STOP_DATE_PATTERN, Locales.TRAINING_RECORD_PDF).format(course.getStop());
+					TrainingRecordPDFDefaultSettings.COURSE_STOP_DATE_PATTERN, Locales.TRAINING_RECORD_PDF,
+					Settings.getBoolean(TrainingRecordPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, TrainingRecordPDFDefaultSettings.DATE_USER_TIME_ZONE))
+					.format(course.getStop());
 		}
 		return "";
 	}

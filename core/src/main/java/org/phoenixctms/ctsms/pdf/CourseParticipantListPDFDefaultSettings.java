@@ -28,9 +28,9 @@ public final class CourseParticipantListPDFDefaultSettings {
 	public static final float BLOCKS_LOWER_MARGIN = PAGE_LOWER_MARGIN + Math.max(Y_FRAME_INDENT, Y_PARTICIPANT_TABLE_FRAME_INDENT) + 10.0f;
 	public static final float BLOCKS_LEFT_MARGIN = PAGE_LEFT_MARGIN + Math.max(X_FRAME_INDENT, X_PARTICIPANT_TABLE_FRAME_INDENT);
 	public static final float BLOCKS_RIGHT_MARGIN = PAGE_RIGHT_MARGIN + Math.max(X_FRAME_INDENT, X_PARTICIPANT_TABLE_FRAME_INDENT);
-	public static final String NOW_DATE_TIME_PATTERN = "d. MMMM yyyy";
+	public static final String NOW_DATE_PATTERN = "d. MMMM yyyy";
 	public static final String BOOKING_DATE_TIME_PATTERN = "d. MMMM yyyy HH:mm";
-	public static final String COURSE_DATE_TIME_PATTERN = "d. MMMM yyyy";
+	public static final String COURSE_DATE_PATTERN = "d. MMMM yyyy";
 	public static final Color TEXT_COLOR = Color.BLACK;
 	public static final Color FRAME_COLOR = Color.BLACK;
 	public static final Color PARTICIPANT_TABLE_TEXT_COLOR = Color.BLACK;
@@ -43,6 +43,8 @@ public final class CourseParticipantListPDFDefaultSettings {
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_TIME_USER_TIME_ZONE = true;
+	public static final boolean DATE_USER_TIME_ZONE = true;
 
 	private CourseParticipantListPDFDefaultSettings() {
 	}

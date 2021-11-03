@@ -107,9 +107,9 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getDateValueFormat() {
+	protected SimpleDateFormat getDateValueFormat(boolean isUserTimezone) {
 		return Settings.getSimpleDateFormat(InquiriesPDFSettingCodes.DATE_VALUE_PATTERN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.DATE_VALUE_PATTERN,
-				Locales.INQUIRIES_PDF);
+				Locales.INQUIRIES_PDF, isUserTimezone);
 	}
 
 	@Override
@@ -217,7 +217,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	@Override
 	protected SimpleDateFormat getModifiedTimestampFormat() {
 		return Settings.getSimpleDateFormat(InquiriesPDFSettingCodes.MODIFIED_TIMESTAMP_PATTERN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.MODIFIED_TIMESTAMP_PATTERN,
-				Locales.INQUIRIES_PDF);
+				Locales.INQUIRIES_PDF,
+				Settings.getBoolean(InquiriesPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, InquiriesPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE));
 	}
 
 	@Override
@@ -282,9 +283,9 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getTimestampValueFormat() {
+	protected SimpleDateFormat getTimestampValueFormat(boolean isUserTimezone) {
 		return Settings.getSimpleDateFormat(InquiriesPDFSettingCodes.TIMESTAMP_VALUE_PATTERN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.TIMESTAMP_VALUE_PATTERN,
-				Locales.INQUIRIES_PDF);
+				Locales.INQUIRIES_PDF, isUserTimezone);
 	}
 
 	@Override
@@ -298,9 +299,9 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected SimpleDateFormat getTimeValueFormat() {
+	protected SimpleDateFormat getTimeValueFormat(boolean isUserTimezone) {
 		return Settings.getSimpleDateFormat(InquiriesPDFSettingCodes.TIME_VALUE_PATTERN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.TIME_VALUE_PATTERN,
-				Locales.INQUIRIES_PDF);
+				Locales.INQUIRIES_PDF, isUserTimezone);
 	}
 
 	@Override
@@ -427,7 +428,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 										InquiriesPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 										Bundle.INQUIRIES_PDF,
 										InquiriesPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-										Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
+										Locales.INQUIRIES_PDF) //no usertimezone
+										.format(proband.getDateOfBirth()) : "",
 								proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth())
 										: "",
 								proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
@@ -451,7 +453,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 											InquiriesPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 											Bundle.INQUIRIES_PDF,
 											InquiriesPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-											Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
+											Locales.INQUIRIES_PDF) //no usertimezone
+											.format(proband.getDateOfBirth()) : "",
 									proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
 									proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
 							cursor.getBlockCenterX(),
@@ -507,7 +510,8 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 												InquiriesPDFSettingCodes.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
 												Bundle.INQUIRIES_PDF,
 												InquiriesPDFDefaultSettings.PROBAND_DATE_OF_BIRTH_DATE_PATTERN,
-												Locales.INQUIRIES_PDF).format(proband.getDateOfBirth()) : "",
+												Locales.INQUIRIES_PDF) //no usertimezone
+												.format(proband.getDateOfBirth()) : "",
 										proband.getYearOfBirth() != null ? Integer.toString(proband.getYearOfBirth()) : "",
 										proband.getAge() != null ? Integer.toString(proband.getAge()) : ""),
 								x + getXFrameIndent(),
@@ -546,7 +550,9 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 								InquiriesPDFSettingCodes.CONTENT_TIMESTAMP_DATETIME_PATTERN,
 								Bundle.INQUIRIES_PDF,
 								InquiriesPDFDefaultSettings.CONTENT_TIMESTAMP_DATETIME_PATTERN,
-								Locales.INQUIRIES_PDF).format(now)),
+								Locales.INQUIRIES_PDF,
+								Settings.getBoolean(InquiriesPDFSettingCodes.DATE_TIME_USER_TIME_ZONE, Bundle.SETTINGS, InquiriesPDFDefaultSettings.DATE_TIME_USER_TIME_ZONE))
+								.format(now)),
 						x + getXFrameIndent(),
 						y,
 						Alignment.TOP_LEFT,

@@ -78,7 +78,7 @@ public abstract class InputFieldPDFBlock {
 		}
 	}
 
-	protected abstract SimpleDateFormat getDateValueFormat();
+	protected abstract SimpleDateFormat getDateValueFormat(boolean isUserTimeZone);
 
 	protected abstract String getDateValueFormatPattern();
 
@@ -227,6 +227,18 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract boolean getRenderSketchImages();
 
+	private final boolean getDateTimeUserTimeZone() {
+		return inputField.getUserTimeZone();
+	}
+
+	private final boolean getDateUserTimeZone() {
+		return false;
+	}
+
+	private final boolean getTimeUserTimeZone() {
+		return false;
+	}
+
 	protected abstract String getSelectionSetValueLabel(String name, String value);
 
 	private Map<Long, String> getSelectionSetValueMap() {
@@ -317,7 +329,7 @@ public abstract class InputFieldPDFBlock {
 		}
 	}
 
-	protected abstract SimpleDateFormat getTimestampValueFormat();
+	protected abstract SimpleDateFormat getTimestampValueFormat(boolean isUserTimeZone);
 
 	protected abstract String getTimestampValueFormatPattern();
 
@@ -335,7 +347,7 @@ public abstract class InputFieldPDFBlock {
 		}
 	}
 
-	protected abstract SimpleDateFormat getTimeValueFormat();
+	protected abstract SimpleDateFormat getTimeValueFormat(boolean isUserTimeZone);
 
 	protected abstract String getTimeValueFormatPattern();
 
@@ -484,7 +496,7 @@ public abstract class InputFieldPDFBlock {
 				break;
 			case DATE:
 				value = getDateValue(blank);
-				dateFormat = getDateValueFormat();
+				dateFormat = getDateValueFormat(getDateUserTimeZone());
 				if (value != null) {
 					string = dateFormat.format((Date) value);
 				} else {
@@ -496,7 +508,7 @@ public abstract class InputFieldPDFBlock {
 				break;
 			case TIMESTAMP:
 				value = getTimestampValue(blank);
-				dateFormat = getTimestampValueFormat();
+				dateFormat = getTimestampValueFormat(getDateTimeUserTimeZone());
 				if (value != null) {
 					string = dateFormat.format((Date) value);
 				} else {
@@ -508,7 +520,7 @@ public abstract class InputFieldPDFBlock {
 				break;
 			case TIME:
 				value = getTimeValue(blank);
-				dateFormat = getTimeValueFormat();
+				dateFormat = getTimeValueFormat(getTimeUserTimeZone());
 				if (value != null) {
 					string = dateFormat.format((Date) value);
 				} else {

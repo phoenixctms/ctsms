@@ -9,8 +9,8 @@ public final class EcrfPDFDefaultSettings {
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public final static boolean LANDSCAPE = false;
 	public static final String PROBAND_DATE_OF_BIRTH_DATE_PATTERN = "d. MMMM yyyy";
-	public static final String CONTENT_TIMESTAMP_DATETIME_PATTERN = "d. MMMM yyyy HH:MM";
-	public static final String MODIFIED_TIMESTAMP_PATTERN = "d. MMMM yyyy HH:MM";
+	public static final String CONTENT_TIMESTAMP_DATETIME_PATTERN = "d. MMMM yyyy HH:mm";
+	public static final String MODIFIED_TIMESTAMP_PATTERN = "d. MMMM yyyy HH:mm";
 	public static final String DECIMAL_SEPARATOR = null;
 	public static final float PAGE_UPPER_MARGIN = 70.0f;
 	public static final float PAGE_LOWER_MARGIN = 60.0f;
@@ -78,6 +78,7 @@ public final class EcrfPDFDefaultSettings {
 	public static final boolean AUDIT_TRAIL = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final boolean DATE_TIME_USER_TIME_ZONE = true;
 	static {
 		ECRF_FIELD_STATUS_QUEUES.add("VALIDATION");
 		ECRF_FIELD_STATUS_QUEUES.add("QUERY");

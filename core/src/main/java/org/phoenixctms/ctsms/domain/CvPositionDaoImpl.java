@@ -345,7 +345,7 @@ public class CvPositionDaoImpl
 		Date start = source.getStart();
 		Date stop = source.getStop();
 		DateFormat cvPositionDateFormat = Settings.getSimpleDateFormat(CVPDFSettingCodes.POSITION_DATE_PATTERN, Bundle.CV_PDF, CVPDFDefaultSettings.POSITION_DATE_PATTERN,
-				Locales.CV_PDF);
+				Locales.CV_PDF, Settings.getBoolean(CVPDFSettingCodes.DATE_USER_TIME_ZONE, Bundle.SETTINGS, CVPDFDefaultSettings.DATE_USER_TIME_ZONE));
 		if (start != null && stop != null) {
 			sb.append(L10nUtil.getCVPDFLabel(Locales.CV_PDF, CVPDFLabelCodes.POSITION_FROM_TO, CVPDFDefaultSettings.POSITION_FROM_TO_LABEL, cvPositionDateFormat.format(start),
 					cvPositionDateFormat.format(stop)));
