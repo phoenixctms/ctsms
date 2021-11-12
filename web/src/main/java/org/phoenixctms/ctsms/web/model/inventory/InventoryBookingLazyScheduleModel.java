@@ -59,6 +59,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 	private boolean showMaintenanceItems;
 	private boolean showCourses;
 	private boolean showVisitSchedule;
+	private boolean showCollisions;
 	private Long showCollisionsThresholdDays;
 	private Long departmentId;
 	private Long inventoryCategoryId;
@@ -112,6 +113,8 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 				DefaultSettings.PROBAND_STATUS_IGNORE_OBSOLETE_PRESET));
 		setIgnoreObsoleteInventoryStatus(Settings.getBoolean(SettingCodes.INVENTORY_STATUS_IGNORE_OBSOLETE_PRESET, Bundle.SETTINGS,
 				DefaultSettings.INVENTORY_STATUS_IGNORE_OBSOLETE_PRESET));
+		showCollisions = Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_SHOW_COLLISIONS_PRESET);
 		StaffOutVO identity = WebUtil.getUserIdentity();
 		if (identity != null) {
 			if (Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ACTIVE_IDENTITY_PRESET, Bundle.SETTINGS,
@@ -212,7 +215,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			if (bookings != null) {
 				bookings = new ArrayList(bookings);
 				Collections.sort((ArrayList) bookings, new InventoryBookingIntervalScheduleComparator(false));
-				boolean showCollisions = (showCollisionsThresholdDays == null ? true
+				boolean loadCollisions = showCollisions && (showCollisionsThresholdDays == null ? true
 						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
 								showCollisionsThresholdDays, 1)) <= 0);
 				HashMap<Long, Color> trialColorMap = new HashMap<Long, Color>(bookings.size());
@@ -224,17 +227,17 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 						trialColorMap.put(booking.getTrial().getId(), trialColorsIt.next());
 					}
 					InventoryBookingEvent event = new InventoryBookingEvent(booking);
-					event.setCollidingInventoryStatusEntryCount(CollidingInventoryStatusEntryEagerModel.getCachedCollidingInventoryStatusEntryModel(booking, showCollisions,
+					event.setCollidingInventoryStatusEntryCount(CollidingInventoryStatusEntryEagerModel.getCachedCollidingInventoryStatusEntryModel(booking, loadCollisions,
 							collidingInventoryStatusEntryModelCache).getAllRowCount());
-					event.setCollidingStaffStatusEntryCount(CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(booking, showCollisions,
+					event.setCollidingStaffStatusEntryCount(CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(booking, loadCollisions,
 							collidingStaffStatusEntryModelCache).getAllRowCount());
-					event.setCollidingDutyRosterTurnCount(CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(booking, showCollisions,
+					event.setCollidingDutyRosterTurnCount(CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(booking, loadCollisions,
 							collidingDutyRosterTurnModelCache)
 							.getAllRowCount());
-					event.setCollidingProbandStatusEntryCount(CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(booking, showCollisions,
+					event.setCollidingProbandStatusEntryCount(CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(booking, loadCollisions,
 							collidingProbandStatusEntryModelCache).getAllRowCount());
 					event.setCollidingCourseParticipationStatusEntryCount(CollidingCourseParticipationStatusEntryEagerModel.getCachedCollidingCourseParticipationStatusEntryModel(
-							booking, showCollisions, collidingCourseParticipationStatusEntryModelCache).getAllRowCount());
+							booking, loadCollisions, collidingCourseParticipationStatusEntryModelCache).getAllRowCount());
 					event.setTrialColorMap(trialColorMap);
 					addEvent(event);
 				}
@@ -480,5 +483,13 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 
 	public void setVisitTypeId(Long visitTypeId) {
 		this.visitTypeId = visitTypeId;
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }
