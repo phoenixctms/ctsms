@@ -57,6 +57,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	private boolean showVisitSchedule;
 	private boolean showTimelineEvents;
 	private boolean showCourses;
+	private boolean showCollisions;
 	private boolean showProbandStatus;
 	private Long showCollisionsThresholdDays;
 	private Long staffNaCountLimit;
@@ -108,6 +109,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 		setIgnoreObsoleteProbandStatus(Settings.getBoolean(SettingCodes.PROBAND_STATUS_IGNORE_OBSOLETE_PRESET, Bundle.SETTINGS,
 				DefaultSettings.PROBAND_STATUS_IGNORE_OBSOLETE_PRESET));
 		setIgnoreObsoleteStaffStatus(Settings.getBoolean(SettingCodes.STAFF_STATUS_IGNORE_OBSOLETE_PRESET, Bundle.SETTINGS, DefaultSettings.STAFF_STATUS_IGNORE_OBSOLETE_PRESET));
+		showCollisions = Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_COLLISIONS_PRESET);
 		StaffOutVO identity = WebUtil.getUserIdentity();
 		if (identity != null) {
 			if (Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ACTIVE_IDENTITY_PRESET, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ACTIVE_IDENTITY_PRESET)) {
@@ -171,7 +174,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				}
 			}
 		}
-		if (staffNaCountLimit != null && (showCollisionsThresholdDays == null || to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
+		if (showCollisions && staffNaCountLimit != null && (showCollisionsThresholdDays == null || to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
 				showCollisionsThresholdDays, 1)) <= 0)) {
 			Collection<DateCountVO> staffNaCounts = null;
 			try {
@@ -201,16 +204,16 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			if (dutyRoster != null) {
 				dutyRoster = new ArrayList(dutyRoster);
 				Collections.sort((ArrayList) dutyRoster, new DutyRosterTurnIntervalScheduleComparator(false));
-				boolean showCollisions = (showCollisionsThresholdDays == null ? true
+				boolean loadCollisions = showCollisions && (showCollisionsThresholdDays == null ? true
 						: to.compareTo(WebUtil.addIntervals(from, VariablePeriod.EXPLICIT,
 								showCollisionsThresholdDays, 1)) <= 0);
 				Iterator<DutyRosterTurnOutVO> it = dutyRoster.iterator();
 				while (it.hasNext()) {
 					DutyRosterTurnOutVO dutyRosterTurn = it.next();
 					DutyRosterTurnEvent event = new DutyRosterTurnEvent(dutyRosterTurn);
-					event.setCollidingStaffStatusEntryCount(CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(dutyRosterTurn, showCollisions,
+					event.setCollidingStaffStatusEntryCount(CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(dutyRosterTurn, loadCollisions,
 							collidingStaffStatusEntryModelCache).getAllRowCount());
-					event.setCollidingInventoryBookingCount(CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(dutyRosterTurn, showCollisions,
+					event.setCollidingInventoryBookingCount(CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(dutyRosterTurn, loadCollisions,
 							collidingInventoryBookingModelCache).getAllRowCount());
 					addEvent(event);
 				}
@@ -395,6 +398,14 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 
 	public boolean isShowCourses() {
 		return showCourses;
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 
 	public boolean isShowDutyRoster() {
