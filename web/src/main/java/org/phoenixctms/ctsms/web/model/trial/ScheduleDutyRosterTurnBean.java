@@ -679,4 +679,80 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			throw e;
 		}
 	}
+
+	public boolean isEnableDepartmentFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_DEPARTMENT_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_DEPARTMENT_FILTER);
+	}
+
+	//----no: calendar_filter
+	public boolean isEnableTrialStatusTypeFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_TRIAL_STATUS_TYPE_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_TRIAL_STATUS_TYPE_FILTER);
+	}
+
+	//----no: trial_filter
+	public boolean isEnableTrialFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_TRIAL_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_TRIAL_FILTER);
+	}
+
+	public boolean isEnableStaffCategoryFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_STAFF_CATEGORY_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_STAFF_CATEGORY_FILTER);
+	}
+
+	//----no: teammember_filter
+	public boolean isEnableTeamMemberFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_TEAM_MEMBER_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_TEAM_MEMBER_FILTER);
+	}
+
+	public boolean isEnableVisitScheduleFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_VISIT_SCHEDULE_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_VISIT_SCHEDULE_FILTER);
+	}
+
+	public boolean isEnableVisitTypeFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_VISIT_TYPE_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_VISIT_TYPE_FILTER);
+	}
+
+	public boolean isEnableDutyRosterFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_DUTY_ROSTER_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_DUTY_ROSTER_FILTER);
+	}
+
+	public boolean isEnableTrialBookingsFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_TRIAL_BOOKINGS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_TRIAL_BOOKINGS_FILTER);
+	}
+
+	public boolean isEnableStaffStatusFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_STAFF_STATUS_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_STAFF_STATUS_FILTER);
+	}
+
+	public boolean isEnableCollisionsFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_COLLISIONS_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_COLLISIONS_FILTER);
+	}
+
+	public boolean isEnableProbandStatusFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_PROBAND_STATUS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_PROBAND_STATUS_FILTER);
+	}
+
+	public boolean isEnableCoursesFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_COURSES_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_COURSES_FILTER);
+	}
+
+	public boolean isEnableCourseBookingsFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_COURSE_BOOKINGS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_COURSE_BOOKINGS_FILTER);
+	}
+
+	public boolean isEnableTimelineEventsFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_TIMELINE_EVENTS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_TIMELINE_EVENTS_FILTER);
+	}
+
+	public boolean isEnableHolidayFilter() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_HOLIDAY_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_HOLIDAY_FILTER);
+	}
 }
