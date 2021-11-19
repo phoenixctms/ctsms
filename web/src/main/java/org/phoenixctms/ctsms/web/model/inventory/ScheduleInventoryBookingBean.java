@@ -564,4 +564,78 @@ public class ScheduleInventoryBookingBean extends InventoryBookingBeanBase {
 			throw e;
 		}
 	}
+
+	public boolean isEnableDepartmentFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_DEPARTMENT_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_DEPARTMENT_FILTER);
+	}
+
+	//----no: calendar_filter
+	public boolean isEnableInventoryCategoryFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_INVENTORY_CATEGORY_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_INVENTORY_CATEGORY_FILTER);
+	}
+
+	public boolean isEnableInventoryFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_INVENTORY_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_INVENTORY_FILTER);
+	}
+
+	public boolean isEnableProbandFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_PROBAND_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_PROBAND_FILTER);
+	}
+
+	public boolean isEnableCourseFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_COURSE_FILTER, Bundle.SETTINGS, DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_COURSE_FILTER);
+	}
+
+	public boolean isEnableTrialFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_TRIAL_FILTER, Bundle.SETTINGS, DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_TRIAL_FILTER);
+	}
+
+	public boolean isEnableResponsiblePersonFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_RESPONSIBLE_PERSON_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_RESPONSIBLE_PERSON_FILTER);
+	}
+
+	public boolean isEnableBookingsFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_BOOKINGS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_BOOKINGS_FILTER);
+	}
+
+	public boolean isEnableVisitScheduleFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_VISIT_SCHEDULE_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_VISIT_SCHEDULE_FILTER);
+	}
+
+	public boolean isEnableProbandStatusFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_PROBAND_STATUS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_PROBAND_STATUS_FILTER);
+	}
+
+	public boolean isEnableCoursesFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_COURSES_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_COURSES_FILTER);
+	}
+
+	public boolean isEnableInventoryStatusFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_INVENTORY_STATUS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_INVENTORY_STATUS_FILTER);
+	}
+
+	public boolean isEnableCollisionsFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_COLLISIONS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_COLLISIONS_FILTER);
+	}
+
+	public boolean isEnableMaintenanceItemsFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_MAINTENANCE_ITEMS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_MAINTENANCE_ITEMS_FILTER);
+	}
+
+	public boolean isEnableHolidaysFilter() {
+		return Settings.getBoolean(SettingCodes.INVENTORY_BOOKING_SCHEDULE_ENABLE_HOLIDAYS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_BOOKING_SCHEDULE_ENABLE_HOLIDAYS_FILTER);
+	}
 }
