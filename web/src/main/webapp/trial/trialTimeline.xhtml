@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -11,476 +10,385 @@
 </h:head>
 <h:body>
 	<ui:composition template="/META-INF/templates/trialHomeTemplate.xhtml">
-		<ui:param
-			name="title"
-			value="#{triallabels.trial_timeline_title}" />
+		<ui:param name="title" value="#{triallabels.trial_timeline_title}" />
 		<ui:define name="content">
-			<h:form id="trialtimeline_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-				<p:remoteCommand
-					process="@this,trial_filter"
-					name="changeTrial"
+			<h:form id="trialtimeline_form"
+				onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+				<p:remoteCommand process="@this,trial_filter" name="changeTrial"
 					actionListener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}"
 					update="trialtimeline" />
-				<p:remoteCommand
-					process="@this"
-					onstart="setSupressWait()"
+				<p:remoteCommand process="@this" onstart="setSupressWait()"
 					name="updateTrialTimelineRange"
 					actionListener="#{timelineTrialTimelineEventBean.handleUpdateTrialTimelineRange()}" />
-				<p:remoteCommand
-					process="@this"
-					name="addTrialTimelineEvent"
+				<p:remoteCommand process="@this" name="addTrialTimelineEvent"
 					onstart="setSupressWait()"
 					actionListener="#{timelineTrialTimelineEventBean.handleAddTrialTimelineEvent()}"
 					update="timelineevent_input,messages"
 					oncomplete="handleAddEditTrialTimelineEvent(xhr, status, args)" />
-				<p:remoteCommand
-					process="@this"
-					name="deleteTrialTimelineEvent"
+				<p:remoteCommand process="@this" name="deleteTrialTimelineEvent"
 					onstart="setSupressWait()"
 					actionListener="#{timelineTrialTimelineEventBean.handleDeleteTrialTimelineEvent()}"
 					update="trialtimeline,timelineevent_input,messages" />
 				<p:panel>
-					<h:panelGrid
-						columns="10"
-						cellpadding="2"
-						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-ajaxstatus-column">
-						<h:outputLabel
-							for="department_filter"
-							value="#{triallabels.trial_timeline_department_filter_label}" />
-						<h:panelGroup>
-							<p:selectOneMenu
-								id="department_filter"
-								value="#{timelineTrialTimelineEventBean.departmentId}"
-								required="false"
-								label="#{triallabels.trial_timeline_department_filter}"
-								styleClass="ctsms-control">
-								<f:converter converterId="ctsms.ID" />
-								<f:selectItem
-									itemLabel="#{labels.no_selection_label}"
-									itemValue="#{applicationScopeBean.noSelectionValue}" />
-								<f:selectItems
-									value="#{timelineTrialTimelineEventBean.departments}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
-									itemValue="#{selectItem.value}" />
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="department_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_department_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="department_filter" />
-						<h:outputLabel
-							for="trialStatusType_filter"
-							value="#{triallabels.trial_timeline_trial_status_type_filter_label}" />
-						<h:panelGroup>
-							<p:selectOneMenu
-								id="trialStatusType_filter"
-								value="#{timelineTrialTimelineEventBean.statusId}"
-								required="false"
-								label="#{triallabels.trial_timeline_trial_status_type_filter}"
-								styleClass="ctsms-control">
-								<f:converter converterId="ctsms.ID" />
-								<f:selectItems
-									value="#{sessionScopeBean.filterTrialStatusTypes}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
-									itemValue="#{selectItem.value}" />
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="trialStatusType_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_trial_status_type_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="trialStatusType_filter" />
-						<h:outputLabel
-							for="trial_filter"
-							value="#{triallabels.trial_timeline_trial_filter_label}" />
-						<h:panelGrid
-							columns="3"
-							cellpadding="0">
-							<h:panelGroup>
-								<h:inputHidden
-									id="trial_filter"
+					<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
+								cellpadding="0" columnClasses="ctsms-bottom-column,ctsms-bottom-column">
+						<h:panelGrid columns="9" cellpadding="2"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel for="department_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableDepartmentFilter}"
+								value="#{triallabels.trial_timeline_department_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableDepartmentFilter}">
+								<p:selectOneMenu id="department_filter"
+									value="#{timelineTrialTimelineEventBean.departmentId}"
 									required="false"
-									value="#{timelineTrialTimelineEventBean.trialId}">
+									label="#{triallabels.trial_timeline_department_filter}"
+									styleClass="ctsms-control">
 									<f:converter converterId="ctsms.ID" />
-								</h:inputHidden>
-								<p:commandButton
-									id="trial_filterName"
-									value="#{applicationScopeBean.clipStringPicker(timelineTrialTimelineEventBean.filterTrialName)}"
-									title="#{triallabels.trial_timeline_trial_filter_tooltip}#{labels.open_trial_button_label}"
-									styleClass="ctsms-picker"
-									icon="ui-icon ui-icon-extlink"
-									type="button"
-									onclick="openPickedTrial(':trialtimeline_form:trial_filter')" />
+									<f:selectItem itemLabel="#{labels.no_selection_label}"
+										itemValue="#{applicationScopeBean.noSelectionValue}" />
+									<f:selectItems
+										value="#{timelineTrialTimelineEventBean.departments}"
+										var="selectItem" itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectOneMenu>
+								<p:tooltip rendered="#{enableTooltips}" for="department_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_department_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
 							</h:panelGroup>
-							<p:commandButton
-								title="#{labels.pick_trial_button_label}"
-								icon="ui-icon ui-icon-search"
-								type="button"
-								onclick="openTrialPicker(':trialtimeline_form:trial_filter',':trialtimeline_form:trial_filterName','changeTrial')" />
-							<p:commandButton
-								title="#{labels.clear_trial_button_label}"
-								icon="ui-icon ui-icon-close"
-								type="button"
-								onclick="clearID(':trialtimeline_form:trial_filter',':trialtimeline_form:trial_filterName','#{applicationScopeBean.noTrialPickedMessage}','changeTrial')" />
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableDepartmentFilter}"
+								for="department_filter" />
+							<h:outputLabel for="trialStatusType_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableTrialStatusTypeFilter}"
+								value="#{triallabels.trial_timeline_trial_status_type_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableTrialStatusTypeFilter}">
+								<p:selectOneMenu id="trialStatusType_filter"
+									value="#{timelineTrialTimelineEventBean.statusId}"
+									required="false"
+									label="#{triallabels.trial_timeline_trial_status_type_filter}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItems
+										value="#{sessionScopeBean.filterTrialStatusTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectOneMenu>
+								<p:tooltip rendered="#{enableTooltips}"
+									for="trialStatusType_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_trial_status_type_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableTrialStatusTypeFilter}"
+								for="trialStatusType_filter" />
+							<h:outputLabel for="trial_filter"
+								value="#{triallabels.trial_timeline_trial_filter_label}" />
+							<h:panelGrid columns="3" cellpadding="0">
+								<h:panelGroup>
+									<h:inputHidden id="trial_filter" required="false"
+										value="#{timelineTrialTimelineEventBean.trialId}">
+										<f:converter converterId="ctsms.ID" />
+									</h:inputHidden>
+									<p:commandButton id="trial_filterName"
+										value="#{applicationScopeBean.clipStringPicker(timelineTrialTimelineEventBean.filterTrialName)}"
+										title="#{triallabels.trial_timeline_trial_filter_tooltip}#{labels.open_trial_button_label}"
+										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+										type="button"
+										onclick="openPickedTrial(':trialtimeline_form:trial_filter')" />
+								</h:panelGroup>
+								<p:commandButton title="#{labels.pick_trial_button_label}"
+									icon="ui-icon ui-icon-search" type="button"
+									onclick="openTrialPicker(':trialtimeline_form:trial_filter',':trialtimeline_form:trial_filterName','changeTrial')" />
+								<p:commandButton title="#{labels.clear_trial_button_label}"
+									icon="ui-icon ui-icon-close" type="button"
+									onclick="clearID(':trialtimeline_form:trial_filter',':trialtimeline_form:trial_filterName','#{applicationScopeBean.noTrialPickedMessage}','changeTrial')" />
+							</h:panelGrid>
+							<p:message for="trial_filter" />
+
+							<h:outputLabel for="showtimelineevents_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableShowTimelineEventsFilter}"
+								value="#{triallabels.trial_timeline_show_timeline_events_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableShowTimelineEventsFilter}">
+								<p:selectBooleanCheckbox id="showtimelineevents_filter"
+									value="#{timelineTrialTimelineEventBean.showTimelineEvents}">
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip rendered="#{enableTooltips}"
+									for="showtimelineevents_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_show_timeline_events_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableShowTimelineEventsFilter}"
+								for="showtimelineevents_filter" />
+							<h:outputLabel for="timelineeventtype_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableTimelineEventTypeFilter}"
+								value="#{triallabels.trial_timeline_timeline_event_type_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableTimelineEventTypeFilter}">
+								<p:selectOneMenu id="timelineeventtype_filter"
+									value="#{timelineTrialTimelineEventBean.typeId}"
+									required="false"
+									label="#{triallabels.trial_timeline_timeline_event_type_filter}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItems
+										value="#{sessionScopeBean.filterTimelineEventTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectOneMenu>
+								<p:tooltip rendered="#{enableTooltips}"
+									for="timelineeventtype_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_timeline_event_type_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableTimelineEventTypeFilter}"
+								for="timelineeventtype_filter" />
+							<h:outputLabel for="showall_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableShowAllFilter}"
+								value="#{triallabels.trial_timeline_show_all_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableShowAllFilter}">
+								<p:selectBooleanCheckbox id="showall_filter"
+									value="#{timelineTrialTimelineEventBean.showAll}">
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip rendered="#{enableTooltips}" for="showall_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_show_all_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableShowAllFilter}"
+								for="showall_filter" />
+
+							<h:outputLabel for="showvisitscheduleitems_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableShowVisitScheduleItemsFilter}"
+								value="#{triallabels.trial_timeline_show_visit_schedule_items_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableShowVisitScheduleItemsFilter}">
+								<p:selectBooleanCheckbox id="showvisitscheduleitems_filter"
+									value="#{timelineTrialTimelineEventBean.showVisitScheduleItems}">
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip rendered="#{enableTooltips}"
+									for="showvisitscheduleitems_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_show_visit_schedule_items_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableShowVisitScheduleItemsFilter}"
+								for="showvisitscheduleitems_filter" />
+							<h:outputLabel for="visitType_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableVisitTypeFilter}"
+								value="#{triallabels.trial_timeline_visit_type_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableVisitTypeFilter}">
+								<p:selectOneMenu id="visitType_filter"
+									value="#{timelineTrialTimelineEventBean.filterVisitTypeId}"
+									required="false"
+									label="#{triallabels.trial_timeline_visit_status_type_filter}"
+									styleClass="ctsms-control">
+									<f:converter converterId="ctsms.ID" />
+									<f:selectItems value="#{sessionScopeBean.filterVisitTypes}"
+										var="selectItem" itemLabel="#{selectItem.label}"
+										itemValue="#{selectItem.value}" />
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectOneMenu>
+								<p:tooltip rendered="#{enableTooltips}" for="visitType_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_visit_type_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableVisitTypeFilter}"
+								for="visitType_filter" />
+
+							<h:outputLabel for="showdescription_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableShowDescriptionFilter}"
+								value="#{triallabels.trial_timeline_show_description_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableShowDescriptionFilter}">
+								<p:selectBooleanCheckbox id="showdescription_filter"
+									value="#{timelineTrialTimelineEventBean.showDescription}">
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip rendered="#{enableTooltips}"
+									for="showdescription_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_show_description_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableShowDescriptionFilter}"
+								for="showdescription_filter" />
+							<h:outputLabel for="showstartstop_filter"
+								rendered="#{timelineTrialTimelineEventBean.enableShowStartStopFilter}"
+								value="#{triallabels.trial_timeline_show_start_stop_filter_label}" />
+							<h:panelGroup
+								rendered="#{timelineTrialTimelineEventBean.enableShowStartStopFilter}">
+								<p:selectBooleanCheckbox id="showstartstop_filter"
+									value="#{timelineTrialTimelineEventBean.showStartStop}">
+									<p:ajax update="trialtimeline"
+										listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip rendered="#{enableTooltips}"
+									for="showstartstop_filter">
+									<h:outputText
+										value="#{triallabels.trial_timeline_show_start_stop_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								rendered="#{timelineTrialTimelineEventBean.enableShowStartStopFilter}"
+								for="showstartstop_filter" />
 						</h:panelGrid>
-						<p:message for="trial_filter" />
-						<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-						<h:outputLabel
-							for="showtimelineevents_filter"
-							value="#{triallabels.trial_timeline_show_timeline_events_filter_label}" />
-						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="showtimelineevents_filter"
-								value="#{timelineTrialTimelineEventBean.showTimelineEvents}">
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="showtimelineevents_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_show_timeline_events_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="showtimelineevents_filter" />
-						<h:outputLabel
-							for="timelineeventtype_filter"
-							value="#{triallabels.trial_timeline_timeline_event_type_filter_label}" />
-						<h:panelGroup>
-							<p:selectOneMenu
-								id="timelineeventtype_filter"
-								value="#{timelineTrialTimelineEventBean.typeId}"
-								required="false"
-								label="#{triallabels.trial_timeline_timeline_event_type_filter}"
-								styleClass="ctsms-control">
-								<f:converter converterId="ctsms.ID" />
-								<f:selectItems
-									value="#{sessionScopeBean.filterTimelineEventTypes}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
-									itemValue="#{selectItem.value}" />
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="timelineeventtype_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_timeline_event_type_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="timelineeventtype_filter" />
-						<h:outputLabel
-							for="showall_filter"
-							value="#{triallabels.trial_timeline_show_all_filter_label}" />
-						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="showall_filter"
-								value="#{timelineTrialTimelineEventBean.showAll}">
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="showall_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_show_all_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="showall_filter" />
-						<h:outputText value="" />
-						<h:outputLabel
-							for="showvisitscheduleitems_filter"
-							value="#{triallabels.trial_timeline_show_visit_schedule_items_filter_label}" />
-						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="showvisitscheduleitems_filter"
-								value="#{timelineTrialTimelineEventBean.showVisitScheduleItems}">
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="showvisitscheduleitems_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_show_visit_schedule_items_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="showvisitscheduleitems_filter" />
-						<h:outputLabel
-							for="visitType_filter"
-							value="#{triallabels.trial_timeline_visit_type_filter_label}" />
-						<h:panelGroup>
-							<p:selectOneMenu
-								id="visitType_filter"
-								value="#{timelineTrialTimelineEventBean.filterVisitTypeId}"
-								required="false"
-								label="#{triallabels.trial_timeline_visit_status_type_filter}"
-								styleClass="ctsms-control">
-								<f:converter converterId="ctsms.ID" />
-								<f:selectItems
-									value="#{sessionScopeBean.filterVisitTypes}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
-									itemValue="#{selectItem.value}" />
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="visitType_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_visit_type_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="visitType_filter" />
-						<h:outputLabel />
-						<h:outputText value="" />
-						<h:outputLabel />
-						<h:outputText value="" />
-						<h:outputLabel
-							for="showdescription_filter"
-							value="#{triallabels.trial_timeline_show_description_filter_label}" />
-						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="showdescription_filter"
-								value="#{timelineTrialTimelineEventBean.showDescription}">
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="showdescription_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_show_description_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="showdescription_filter" />
-						<h:outputLabel
-							for="showstartstop_filter"
-							value="#{triallabels.trial_timeline_show_start_stop_filter_label}" />
-						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="showstartstop_filter"
-								value="#{timelineTrialTimelineEventBean.showStartStop}">
-								<p:ajax
-									update="trialtimeline"
-									listener="#{timelineTrialTimelineEventBean.handleDepartmentTypeStatusTrialChange}" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="showstartstop_filter">
-								<h:outputText
-									value="#{triallabels.trial_timeline_show_start_stop_filter_tooltip}"
-									escape="false" />
-							</p:tooltip>
-						</h:panelGroup>
-						<p:message for="showstartstop_filter" />
-						<h:outputLabel />
-						<h:outputText value="" />
-						<h:outputLabel />
-						<p:commandButton
-							process="@this"
-							title="#{triallabels.update_trial_timeline_button_title}"
-							actionListener="#{timelineTrialTimelineEventBean.updateTimelineModel}"
-							icon="ui-icon-refresh"
-							ajax="true"
-							update="trialtimeline" />
+						<h:panelGrid columns="2" cellpadding="2"
+							columnClasses="ctsms-ajaxstatus-column,ctsms-filters-button-column">
+							<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+							<p:commandButton process="@this"
+								title="#{triallabels.update_trial_timeline_button_title}"
+								actionListener="#{timelineTrialTimelineEventBean.updateTimelineModel}"
+								icon="ui-icon-refresh" ajax="true" update="trialtimeline" />
+						</h:panelGrid>
 					</h:panelGrid>
 				</p:panel>
-				<pe:timeline
-					id="trialtimeline"
+				<pe:timeline id="trialtimeline"
 					value="#{timelineTrialTimelineEventBean.timelineModel}"
-					height="auto"
-					styleClass="ctsms-trialtimeline"
-					widgetVar="trialTimeline"
-					selectable="true"
-					editable="true"
-					zoomable="true"
-					moveable="true"
+					height="auto" styleClass="ctsms-trialtimeline"
+					widgetVar="trialTimeline" selectable="true" editable="true"
+					zoomable="true" moveable="true"
 					stackEvents="#{not empty timelineTrialTimelineEventBean.trialId}"
 					start="#{timelineTrialTimelineEventBean.rangeStart}"
-					end="#{timelineTrialTimelineEventBean.rangeEnd}"
-					axisOnTop="true"
-					eventStyle="box"
-					groupsChangeable="false"
-					showCurrentTime="true"
-					showNavigation="true"
-					zoomMin="36000000"
-					zoomMax="94608000000"
-					eventMargin="10"
-					eventMarginAxis="10"
-					groupsOnRight="false"
-					snapEvents="true"
-					showMajorLabels="true"
-					showMinorLabels="true"
+					end="#{timelineTrialTimelineEventBean.rangeEnd}" axisOnTop="true"
+					eventStyle="box" groupsChangeable="false" showCurrentTime="true"
+					showNavigation="true" zoomMin="36000000" zoomMax="94608000000"
+					eventMargin="10" eventMarginAxis="10" groupsOnRight="false"
+					snapEvents="true" showMajorLabels="true" showMinorLabels="true"
 					showButtonNew="#{not empty timelineTrialTimelineEventBean.trialId}"
-					dragAreaWidth="10"
-					width="100%"
-					responsive="true"
+					dragAreaWidth="10" width="100%" responsive="true"
 					timeZone="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}"
-					locale="#{sessionScopeBean.locale}"
-					var="timelineEvent">
-					
-					<pe:javascript
-						event="rangechanged"
+					locale="#{sessionScopeBean.locale}" var="timelineEvent">
+
+					<pe:javascript event="rangechanged"
 						execute="if(handleTrialTimelineRangeChanged()){setSupressWait();changeTrial();}" />
-					<pe:javascript
-						event="add"
-						execute="handleTrialTimelineAdd()" />
-					<p:ajax
-						event="edit"
+					<pe:javascript event="add" execute="handleTrialTimelineAdd()" />
+					<p:ajax event="edit"
 						listener="#{timelineTrialTimelineEventBean.onEdit}"
-						onstart="setSupressWait()"
-						update="timelineevent_input,messages"
+						onstart="setSupressWait()" update="timelineevent_input,messages"
 						oncomplete="handleAddEditTrialTimelineEvent(xhr, status, args)" />
-					<p:ajax
-						event="change"
+					<p:ajax event="change"
 						listener="#{timelineTrialTimelineEventBean.onChange}"
 						update=":trialtimeline_form:trialtimeline,timelineevent_input,messages" />
 					<h:panelGrid
 						rendered="#{timelineEvent.vo['class'].simpleName == 'TimelineEventOutVO'}"
-						columns="1"
-						cellpadding="0"
+						columns="1" cellpadding="0"
 						styleClass="#{applicationScopeBean.timelineEventToColor(timelineEvent.vo)}#{defaultColorOpacity} ctsms-timeline-event-datagrid">
-						<h:outputText
-							styleClass="ctsms-timeline-event-startstop"
+						<h:outputText styleClass="ctsms-timeline-event-startstop"
 							rendered="#{timelineTrialTimelineEventBean.showStartStop}"
 							value="#{applicationScopeBean.timelineEventToStartStopString(timelineEvent.vo)}" />
-						<h:panelGrid
-							columns="3"
-							cellpadding="0">
-							<h:panelGroup styleClass="ctsms-timeline-event-icon #{timelineEvent.vo.type.nodeStyleClass}" />
+						<h:panelGrid columns="3" cellpadding="0">
+							<h:panelGroup
+								styleClass="ctsms-timeline-event-icon #{timelineEvent.vo.type.nodeStyleClass}" />
 							<h:outputText
 								styleClass="ctsms-timeline-importance-#{timelineEvent.vo.importance.importance.value}"
 								value="#{timelineEvent.vo.title}" />
-							<h:panelGroup styleClass="ui-icon #{timelineTrialTimelineEventBean.getDismissed(timelineEvent.vo) ? 'ui-icon-check' : 'ui-icon-pin-s'}" />
+							<h:panelGroup
+								styleClass="ui-icon #{timelineTrialTimelineEventBean.getDismissed(timelineEvent.vo) ? 'ui-icon-check' : 'ui-icon-pin-s'}" />
 						</h:panelGrid>
-						<h:outputText
-							styleClass="ctsms-timeline-event-description"
+						<h:outputText styleClass="ctsms-timeline-event-description"
 							rendered="#{not empty timelineEvent.vo.description and timelineTrialTimelineEventBean.showDescription}"
 							value="#{applicationScopeBean.clipStringTrailing(timelineEvent.vo.description,64)}" />
 					</h:panelGrid>
 					<h:panelGrid
 						rendered="#{timelineEvent.vo['class'].simpleName == 'VisitScheduleItemOutVO'}"
-						columns="1"
-						cellpadding="0"
+						columns="1" cellpadding="0"
 						styleClass="#{applicationScopeBean.visitToColor(timelineEvent.vo.visit)}#{rowBgColorAlpha} ctsms-timeline-event-datagrid">
-						<h:outputText
-							styleClass="ctsms-timeline-event-startstop"
+						<h:outputText styleClass="ctsms-timeline-event-startstop"
 							rendered="#{timelineTrialTimelineEventBean.showStartStop}"
 							value="#{timelineTrialTimelineEventBean.visitScheduleItemToStartStopString(timelineEvent.vo)}" />
-						<h:panelGrid
-							columns="1"
-							cellpadding="0">
-							<h:outputText
-								styleClass="ctsms-timeline-importance-lowest}"
+						<h:panelGrid columns="1" cellpadding="0">
+							<h:outputText styleClass="ctsms-timeline-importance-lowest}"
 								value="#{timelineEvent.vo.name}" />
 						</h:panelGrid>
-						<h:outputText
-							styleClass="ctsms-timeline-event-description"
+						<h:outputText styleClass="ctsms-timeline-event-description"
 							rendered="#{not empty timelineEvent.vo.visit.description and timelineTrialTimelineEventBean.showDescription}"
 							value="#{applicationScopeBean.clipStringTrailing(timelineEvent.vo.visit.description,64)}" />
 					</h:panelGrid>
 					<h:panelGrid
 						rendered="#{timelineEvent.vo['class'].simpleName == 'VisitScheduleAppointmentVO'}"
-						columns="1"
-						cellpadding="0"
+						columns="1" cellpadding="0"
 						styleClass="#{applicationScopeBean.visitToColor(timelineEvent.vo.visit)}#{rowBgColorAlpha} ctsms-timeline-event-datagrid">
-						<h:outputText
-							styleClass="ctsms-timeline-event-startstop"
+						<h:outputText styleClass="ctsms-timeline-event-startstop"
 							rendered="#{timelineTrialTimelineEventBean.showStartStop}"
 							value="#{timelineTrialTimelineEventBean.visitScheduleAppointmentToStartStopString(timelineEvent.vo)}" />
-						<h:panelGrid
-							columns="1"
-							cellpadding="0">
-							<h:outputText
-								styleClass="ctsms-timeline-importance-lowest}"
+						<h:panelGrid columns="1" cellpadding="0">
+							<h:outputText styleClass="ctsms-timeline-importance-lowest}"
 								value="#{timelineEvent.vo.name}" />
 						</h:panelGrid>
-						<h:outputText
-							styleClass="ctsms-timeline-event-description"
+						<h:outputText styleClass="ctsms-timeline-event-description"
 							rendered="#{not empty timelineEvent.vo.visit.description and timelineTrialTimelineEventBean.showDescription}"
 							value="#{applicationScopeBean.clipStringTrailing(timelineEvent.vo.visit.description,64)}" />
 					</h:panelGrid>
 				</pe:timeline>
-				<p:growl
-					id="messages"
-					showDetail="false" />
-				<p:dialog
-					widgetVar="trialTimelineDialog"
+				<p:growl id="messages" showDetail="false" />
+				<p:dialog widgetVar="trialTimelineDialog"
 					header="#{timelineTrialTimelineEventBean.title}"
-					showEffect="#{effect}"
-					hideEffect="#{effect}"
+					showEffect="#{effect}" hideEffect="#{effect}"
 					styleClass="ctsms-trialtimeline-dialog">
-					<h:panelGrid
-						id="timelineevent_input"
-						columns="1"
-						cellpadding="0"
+					<h:panelGrid id="timelineevent_input" columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
-						<h:panelGrid
-							columns="9"
-							cellpadding="2"
+						<h:panelGrid columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-							<h:outputLabel
-								for="trial"
+							<h:outputLabel for="trial"
 								value="#{triallabels.trial_timeline_trial_label}" />
-							<h:panelGrid
-								columns="3"
-								cellpadding="0">
+							<h:panelGrid columns="3" cellpadding="0">
 								<h:panelGroup>
-									<h:inputHidden
-										id="trial"
-										required="false"
+									<h:inputHidden id="trial" required="false"
 										value="#{timelineTrialTimelineEventBean.in.trialId}">
 										<f:converter converterId="ctsms.ID" />
 									</h:inputHidden>
-									<p:commandButton
-										id="trialName"
+									<p:commandButton id="trialName"
 										value="#{applicationScopeBean.clipStringPicker(timelineTrialTimelineEventBean.trialName)}"
 										title="#{triallabels.trial_timeline_trial_tooltip}#{labels.open_trial_button_label}"
-										styleClass="ctsms-picker"
-										icon="ui-icon ui-icon-extlink"
+										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
 										type="button"
 										onclick="openPickedTrial(':trialtimeline_form:trial')" />
 								</h:panelGroup>
-								<p:commandButton
-									title="#{labels.pick_trial_button_label}"
-									icon="ui-icon ui-icon-search"
-									type="button"
+								<p:commandButton title="#{labels.pick_trial_button_label}"
+									icon="ui-icon ui-icon-search" type="button"
 									onclick="openTrialPickerAjaxUpdate(':trialtimeline_form:trial',':trialtimeline_form:trialName',':trialtimeline_form:timelineeventtype')" />
-								<p:commandButton
-									title="#{labels.clear_trial_button_label}"
-									icon="ui-icon ui-icon-close"
-									type="button"
+								<p:commandButton title="#{labels.clear_trial_button_label}"
+									icon="ui-icon ui-icon-close" type="button"
 									onclick="clearIDAjaxUpdate(':trialtimeline_form:trial',':trialtimeline_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':trialtimeline_form:timelineeventtype')" />
 							</h:panelGrid>
 							<p:message for="trial" />
@@ -490,31 +398,24 @@
 							<h:outputLabel />
 							<h:outputText value="" />
 							<h:outputLabel />
-							<ui:include src="/META-INF/includes/shared/timelineEventInput.xhtml">
-								<ui:param
-									name="timelineEventBean"
+							<ui:include
+								src="/META-INF/includes/shared/timelineEventInput.xhtml">
+								<ui:param name="timelineEventBean"
 									value="#{timelineTrialTimelineEventBean}" />
 							</ui:include>
 						</h:panelGrid>
-						<h:panelGrid
-							columns="1"
-							cellpadding="0"
+						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-							<h:outputLabel
-								for="timelineeventdescription"
+							<h:outputLabel for="timelineeventdescription"
 								value="#{triallabels.timeline_event_description_label}" />
 							<h:panelGroup>
-								<p:inputTextarea
-									id="timelineeventdescription"
+								<p:inputTextarea id="timelineeventdescription"
 									value="#{timelineTrialTimelineEventBean.in.description}"
-									required="false"
-									autoResize="false"
-									styleClass="ctsms-textarea"
+									required="false" autoResize="false" styleClass="ctsms-textarea"
 									label="#{triallabels.timeline_event_description}">
 								</p:inputTextarea>
-								<p:tooltip
-									rendered="#{enableTooltips}"
+								<p:tooltip rendered="#{enableTooltips}"
 									for="timelineeventdescription">
 									<h:outputText
 										value="#{triallabels.timeline_event_description_tooltip}"
@@ -525,68 +426,52 @@
 						<p:messages id="timelineEventDialogMessages" />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
-								<h:outputText
-									styleClass="ctsms-toolbar-text"
+								<h:outputText styleClass="ctsms-toolbar-text"
 									value="#{timelineTrialTimelineEventBean.created ? timelineTrialTimelineEventBean.modifiedAnnotation : ''}" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<p:commandButton
-									process="@this"
-									value="#{labels.reset_button_label}"
-									onstart="setSupressWait()"
+								<p:commandButton process="@this"
+									value="#{labels.reset_button_label}" onstart="setSupressWait()"
 									actionListener="#{timelineTrialTimelineEventBean.reset}"
 									oncomplete="handleUpdateTrialTimelineDialogTitle(xhr, status, args)"
-									icon="ui-icon ui-icon-close"
-									ajax="true"
-									disabled="false"
+									icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 									update="trialtimeline,timelineevent_input" />
-								<p:commandButton
-									process="@this,timelineevent_input"
-									id="add"
-									value="#{labels.add_button_label}"
-									onstart="setSupressWait()"
+								<p:commandButton process="@this,timelineevent_input" id="add"
+									value="#{labels.add_button_label}" onstart="setSupressWait()"
 									actionListener="#{timelineTrialTimelineEventBean.add}"
 									oncomplete="handleUpdateTrialTimelineDialogTitle(xhr, status, args)"
-									icon="ui-icon ui-icon-plusthick"
-									ajax="true"
+									icon="ui-icon ui-icon-plusthick" ajax="true"
 									disabled="#{!timelineTrialTimelineEventBean.createable}"
 									update="trialtimeline,timelineevent_input" />
-								<p:commandButton
-									process="@this,timelineevent_input"
-									id="update"
+								<p:commandButton process="@this,timelineevent_input" id="update"
 									value="#{labels.update_button_label}"
 									onstart="setSupressWait()"
 									actionListener="#{timelineTrialTimelineEventBean.update}"
 									oncomplete="handleUpdateTrialTimelineDialogTitle(xhr, status, args)"
-									icon="ui-icon ui-icon-disk"
-									ajax="true"
+									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!timelineTrialTimelineEventBean.editable}"
 									update="trialtimeline,timelineevent_input" />
-								<p:commandButton
-									process="@this"
+								<p:commandButton process="@this"
 									value="#{labels.delete_button_label}"
 									onstart="setSupressWait()"
 									actionListener="#{timelineTrialTimelineEventBean.delete}"
 									oncomplete="handleUpdateTrialTimelineDialogTitle(xhr, status, args)"
-									icon="ui-icon ui-icon-trash"
-									ajax="true"
+									icon="ui-icon ui-icon-trash" ajax="true"
 									disabled="#{!timelineTrialTimelineEventBean.removable}"
 									update="trialtimeline,timelineevent_input" />
-								<p:commandButton
-									process="@this"
-									value="#{labels.load_button_label}"
-									onstart="setSupressWait()"
+								<p:commandButton process="@this"
+									value="#{labels.load_button_label}" onstart="setSupressWait()"
 									actionListener="#{timelineTrialTimelineEventBean.load}"
 									oncomplete="handleUpdateTrialTimelineDialogTitle(xhr, status, args)"
-									icon="ui-icon-refresh"
-									ajax="true"
+									icon="ui-icon-refresh" ajax="true"
 									disabled="#{!timelineTrialTimelineEventBean.created}"
 									update="trialtimeline,timelineevent_input" />
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
-								<ui:include src="/META-INF/includes/shared/toolbarAjaxStatus.xhtml" />
+								<ui:include
+									src="/META-INF/includes/shared/toolbarAjaxStatus.xhtml" />
 							</p:toolbarGroup>
 						</p:toolbar>
 					</h:panelGrid>
