@@ -82,7 +82,13 @@ public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
+		StaffOutVO staff = (out != null ? out.getStaff() : null);
+		if ((staff != null && in.getStaffId() != null && !in.getStaffId().equals(staff.getId()))
+				|| (staff == null && in.getStaffId() != null)) {
+			staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
+		} else if (staff != null && in.getStaffId() == null) {
+			staff = null;
+		}
 		if (staff != null) {
 			sb.append(CommonUtil.staffOutVOToString(staff));
 			if (in.getTypeId() != null || !CommonUtil.isEmptyString(in.getComment())) {
@@ -90,7 +96,13 @@ public class StaffStatusEvent extends ScheduleEventBase<StaffStatusEntryInVO> {
 			}
 		}
 		boolean appended = false;
-		StaffStatusTypeVO statusType = WebUtil.getStaffStatusType(in.getTypeId());
+		StaffStatusTypeVO statusType = (out != null ? out.getType() : null);
+		if (statusType != null && in.getTypeId() != null && !in.getTypeId().equals(statusType.getId())
+				|| (statusType == null && in.getTypeId() != null)) {
+			statusType = WebUtil.getStaffStatusType(in.getTypeId());
+		} else if (statusType != null && in.getTypeId() == null) {
+			statusType = null;
+		}
 		if (statusType != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

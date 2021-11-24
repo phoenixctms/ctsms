@@ -26,7 +26,7 @@ import org.primefaces.model.ScheduleEvent;
 public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInVO> {
 
 	private final static String EVENT_TITLE_SEPARATOR = "\n";
-	private InventoryBookingOutVO out;
+	protected InventoryBookingOutVO out;
 	private int collidingInventoryStatusEntryCount = 0;
 	private int collidingStaffStatusEntryCount = 0;
 	private int collidingDutyRosterTurnCount = 0;
@@ -93,7 +93,13 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 
 	@Override
 	public String getStyleClass() {
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		InventoryOutVO inventory = (out != null ? out.getInventory() : null);
+		if (inventory != null && in.getInventoryId() != null && !in.getInventoryId().equals(inventory.getId())
+				|| (inventory == null && in.getInventoryId() != null)) {
+			inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		} else if (inventory != null && in.getInventoryId() == null) {
+			inventory = null;
+		}
 		if (inventory != null) {
 			StringBuilder sb = new StringBuilder();
 			appendTrialColorStyleClass(inventory, sb, DEFAULT_COLOR_OPACITY);
@@ -120,7 +126,13 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		boolean appended = false;
-		ProbandOutVO proband = WebUtil.getProband(in.getProbandId(), null, null, null);
+		ProbandOutVO proband = (out != null ? out.getProband() : null);
+		if (proband != null && in.getProbandId() != null && !in.getProbandId().equals(proband.getId())
+				|| (proband == null && in.getProbandId() != null)) {
+			proband = WebUtil.getProband(in.getProbandId(), null, null, null);
+		} else if (proband != null && in.getProbandId() == null) {
+			proband = null;
+		}
 		if (proband != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
@@ -128,7 +140,13 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.probandOutVOToString(proband));
 			appended = true;
 		}
-		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
+		TrialOutVO trial = (out != null ? out.getTrial() : null);
+		if (trial != null && in.getTrialId() != null && !in.getTrialId().equals(trial.getId())
+				|| (trial == null && in.getTrialId() != null)) {
+			trial = WebUtil.getTrial(in.getTrialId());
+		} else if (trial != null && in.getTrialId() == null) {
+			trial = null;
+		}
 		if (trial != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
@@ -136,7 +154,13 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.trialOutVOToString(trial));
 			appended = true;
 		}
-		CourseOutVO course = WebUtil.getCourse(in.getCourseId(), null, null, null);
+		CourseOutVO course = (out != null ? out.getCourse() : null);
+		if (course != null && in.getCourseId() != null && !in.getCourseId().equals(course.getId())
+				|| (course == null && in.getCourseId() != null)) {
+			course = WebUtil.getCourse(in.getCourseId(), null, null, null);
+		} else if (course != null && in.getCourseId() == null) {
+			course = null;
+		}
 		if (course != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
@@ -144,7 +168,13 @@ public class InventoryBookingEvent extends ScheduleEventBase<InventoryBookingInV
 			sb.append(CommonUtil.courseOutVOToString(course));
 			appended = true;
 		}
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		InventoryOutVO inventory = (out != null ? out.getInventory() : null);
+		if (inventory != null && in.getInventoryId() != null && !in.getInventoryId().equals(inventory.getId())
+				|| (inventory == null && in.getInventoryId() != null)) {
+			inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		} else if (inventory != null && in.getInventoryId() == null) {
+			inventory = null;
+		}
 		if (inventory != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

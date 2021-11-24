@@ -82,7 +82,13 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		InventoryOutVO inventory = (out != null ? out.getInventory() : null);
+		if (inventory != null && in.getInventoryId() != null && !in.getInventoryId().equals(inventory.getId())
+				|| (inventory == null && in.getInventoryId() != null)) {
+			inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		} else if (inventory != null && in.getInventoryId() == null) {
+			inventory = null;
+		}
 		if (inventory != null) {
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
 			if (in.getTypeId() != null || in.getAddresseeId() != null || !CommonUtil.isEmptyString(in.getComment())) {
@@ -90,7 +96,13 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 			}
 		}
 		boolean appended = false;
-		InventoryStatusTypeVO statusType = WebUtil.getInventoryStatusType(in.getTypeId());
+		InventoryStatusTypeVO statusType = (out != null ? out.getType() : null);
+		if (statusType != null && in.getTypeId() != null && !in.getTypeId().equals(statusType.getId())
+				|| (statusType == null && in.getTypeId() != null)) {
+			statusType = WebUtil.getInventoryStatusType(in.getTypeId());
+		} else if (statusType != null && in.getTypeId() == null) {
+			statusType = null;
+		}
 		if (statusType != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
@@ -98,7 +110,13 @@ public class InventoryStatusEvent extends ScheduleEventBase<InventoryStatusEntry
 			sb.append(statusType.getName());
 			appended = true;
 		}
-		StaffOutVO addressee = WebUtil.getStaff(in.getAddresseeId(), null, null, null);
+		StaffOutVO addressee = (out != null ? out.getAddressee() : null);
+		if ((addressee != null && in.getAddresseeId() != null && !in.getAddresseeId().equals(addressee.getId()))
+				|| (addressee == null && in.getAddresseeId() != null)) {
+			addressee = WebUtil.getStaff(in.getAddresseeId(), null, null, null);
+		} else if (addressee != null && in.getAddresseeId() == null) {
+			addressee = null;
+		}
 		if (addressee != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
