@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.model.LazyDataModel;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.component.column.Column;
@@ -159,6 +160,18 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 			//} else {
 			//	System.out.println("cannot find: " + id);
 		}
+	}
+
+	public String getClientId() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		return getClientId(context);
+	}
+
+	public static boolean isRowExpansionRequest(String id) {
+		DataTable dataTable = (DataTable) WebUtil.findComponentById(id);
+		String clientId = CommonUtil.getDeclaredFieldValue(dataTable, "baseClientId");
+		FacesContext context = FacesContext.getCurrentInstance();
+		return context.getExternalContext().getRequestParameterMap().containsKey(clientId + "_rowExpansion");
 	}
 
 	private boolean usePageFromDataModel() {

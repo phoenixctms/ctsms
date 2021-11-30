@@ -2907,7 +2907,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	private static String getParamValue(FacesContext context, String paramName) {
+	public static String getParamValue(FacesContext context, String paramName) {
 		if (context != null && paramName != null && paramName.length() > 0) {
 			return context.getExternalContext().getRequestParameterMap().get(paramName);
 		}
