@@ -100,7 +100,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getProbandAddresses(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!probandAddressCache.containsKey(proband.getId())) {
 				Collection probandAddresses = null;
 				try {
@@ -123,7 +123,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getProbandContactDetailValues(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!probandContactDetailValueCache.containsKey(proband.getId())) {
 				Collection probandContactDetailValues = null;
 				try {
@@ -162,7 +162,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getProbandListStatus(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!probandListStatusCache.containsKey(proband.getId())) {
 				Collection probandListStatus = null;
 				try {
@@ -189,7 +189,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getProbandTagValues(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!probandTagValueCache.containsKey(proband.getId())) {
 				Collection probandTagValues = null;
 				try {
