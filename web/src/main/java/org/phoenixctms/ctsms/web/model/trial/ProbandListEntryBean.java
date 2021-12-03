@@ -27,6 +27,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandTagValueOutVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.shared.ProbandListEntryBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.ProbandListEntryModel;
@@ -224,7 +225,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	}
 
 	public Collection<IDVO> getProbandAddresses(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getDataTableId())) {
 			if (!probandAddressCache.containsKey(proband.getId())) {
 				Collection probandAddresses = null;
 				try {
@@ -247,7 +248,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	}
 
 	public Collection<IDVO> getProbandContactDetailValues(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getDataTableId())) {
 			if (!probandContactDetailValueCache.containsKey(proband.getId())) {
 				Collection probandContactDetailValues = null;
 				try {
@@ -283,7 +284,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	}
 
 	public Collection<IDVO> getProbandListStatus(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getDataTableId())) {
 			if (!probandListStatusCache.containsKey(proband.getId())) {
 				Collection<ProbandListStatusEntryOutVO> probandListStatus = null;
 				Collection probandListStatusFiltered = new ArrayList<ProbandListStatusEntryOutVO>();
@@ -321,7 +322,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	}
 
 	public Collection<IDVO> getProbandStatus(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getDataTableId())) {
 			if (!probandStatusCache.containsKey(proband.getId())) {
 				Collection probandStatus = null;
 				try {
@@ -344,7 +345,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 	}
 
 	public Collection<IDVO> getProbandTagValues(ProbandOutVO proband) {
-		if (proband != null) {
+		if (proband != null && DataTable.isRowExpansionRequest(getDataTableId())) {
 			if (!probandTagValueCache.containsKey(proband.getId())) {
 				Collection probandTagValues = null;
 				try {
