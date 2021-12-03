@@ -1140,15 +1140,30 @@ public final class CommonUtil {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T getDeclaredFieldValue(Object object, String fieldName) {
+	private static <T> T getDeclaredFieldValue(Object object, String fieldName, Class clazz) {
 		//https://stackoverflow.com/questions/4325164/how-to-reload-resource-bundle-in-web-application
 		try {
-			Field field = object.getClass().getDeclaredField(fieldName);
+			Field field = clazz.getDeclaredField(fieldName);
 			field.setAccessible(true);
 			return (T) field.get(object);
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getDeclaredFieldValue(Object object, String fieldName) {
+		return getDeclaredFieldValue(object, fieldName, object.getClass());
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getDeclaredFieldValue(Object object, Class superClass, String fieldName) {
+		//https://stackoverflow.com/questions/15420968/nosuchfieldexception-when-field-exists/69946642#69946642
+		Class clazz = object.getClass();
+		while (clazz != null && !clazz.equals(superClass)) {
+			clazz = clazz.getSuperclass();
+		}
+		return getDeclaredFieldValue(object, fieldName, clazz);
 	}
 
 	public static Long getEntityPosition(Object entity) throws Exception {

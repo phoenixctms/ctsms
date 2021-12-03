@@ -162,14 +162,9 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 		}
 	}
 
-	public String getClientId() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		return getClientId(context);
-	}
-
 	public static boolean isRowExpansionRequest(String id) {
 		DataTable dataTable = (DataTable) WebUtil.findComponentById(id);
-		String clientId = CommonUtil.getDeclaredFieldValue(dataTable, "baseClientId");
+		String clientId = CommonUtil.getDeclaredFieldValue(dataTable, javax.faces.component.UIData.class, "baseClientId");
 		FacesContext context = FacesContext.getCurrentInstance();
 		return context.getExternalContext().getRequestParameterMap().containsKey(clientId + "_rowExpansion");
 	}
