@@ -1380,4 +1380,19 @@ public class ToolsServiceImpl
 	protected String[] handleVerifyJwt(String jwt) throws Exception {
 		return authenticator.verifyJwt(jwt);
 	}
+
+	@Override
+	protected boolean handleIsProbandListEntryTagUserTimeZone(Long probandListEntryTagId) throws Exception {
+		return CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagId, this.getProbandListEntryTagDao()).getField().isUserTimeZone();
+	}
+
+	@Override
+	protected boolean handleIsInquiryUserTimeZone(Long inquiryId) throws Exception {
+		return CheckIDUtil.checkInquiryId(inquiryId, this.getInquiryDao()).getField().isUserTimeZone();
+	}
+
+	@Override
+	protected boolean handleIsEcrfFieldUserTimeZone(Long ecrfFieldId) throws Exception {
+		return CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao()).getField().isUserTimeZone();
+	}
 }
