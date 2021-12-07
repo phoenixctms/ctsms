@@ -783,6 +783,18 @@ public final class CommonUtil {
 		return sdf.format(date);
 	}
 
+	public static String formatDate(Date date, String pattern, TimeZone timeZone) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(timeZone);
+		return sdf.format(date);
+	}
+
+	public static String formatDate(Date date, String pattern, Locale locale, TimeZone timeZone) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
+		sdf.setTimeZone(timeZone);
+		return sdf.format(date);
+	}
+
 	public static String formatDecimal(String decimalValue, String userDecimalSeparator) {
 		if (decimalValue != null && userDecimalSeparator != null && userDecimalSeparator.length() > 0) {
 			return decimalValue.replace('.', userDecimalSeparator.charAt(0));
@@ -2079,6 +2091,26 @@ public final class CommonUtil {
 
 	public static Date parseDate(String date, String pattern, Locale locale) {
 		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	public static Date parseDate(String date, String pattern, TimeZone timeZone) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		sdf.setTimeZone(timeZone);
+		try {
+			return sdf.parse(date);
+		} catch (ParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+	}
+
+	public static Date parseDate(String date, String pattern, Locale locale, TimeZone timeZone) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern, locale);
+		sdf.setTimeZone(timeZone);
 		try {
 			return sdf.parse(date);
 		} catch (ParseException e) {
