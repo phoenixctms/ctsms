@@ -153,12 +153,13 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 			@Override
 			public JsonElement serialize(ECRFFieldValueOutVO src, Type typeOfSrc, JsonSerializationContext context) {
 				JsonObject json = (JsonObject) gson.toJsonTree(src);
-				if (src != null
-						&& !src.getEcrfField().getField().getUserTimeZone()) {
-					updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME, src.getTimestampValue());
+				if (src != null) {
+					if (!src.getEcrfField().getField().getUserTimeZone()) {
+						updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME, src.getTimestampValue());
+					}
+					updateFieldValueVODateValue(json, FIELD_VALUE_VO_DATE_FIELD_NAME, src.getDateValue());
+					updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIME_FIELD_NAME, src.getTimeValue());
 				}
-				updateFieldValueVODateValue(json, FIELD_VALUE_VO_DATE_FIELD_NAME, src.getDateValue());
-				updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIME_FIELD_NAME, src.getTimeValue());
 				return json;
 			}
 		});
@@ -167,12 +168,13 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 			@Override
 			public JsonElement serialize(ProbandListEntryTagValueOutVO src, Type typeOfSrc, JsonSerializationContext context) {
 				JsonObject json = (JsonObject) gson.toJsonTree(src);
-				if (src != null
-						&& !src.getTag().getField().getUserTimeZone()) {
-					updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME, src.getTimestampValue());
+				if (src != null) {
+					if (!src.getTag().getField().getUserTimeZone()) {
+						updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME, src.getTimestampValue());
+					}
+					updateFieldValueVODateValue(json, FIELD_VALUE_VO_DATE_FIELD_NAME, src.getDateValue());
+					updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIME_FIELD_NAME, src.getTimeValue());
 				}
-				updateFieldValueVODateValue(json, FIELD_VALUE_VO_DATE_FIELD_NAME, src.getDateValue());
-				updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIME_FIELD_NAME, src.getTimeValue());
 				return json;
 			}
 		});
@@ -181,12 +183,13 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 			@Override
 			public JsonElement serialize(InquiryValueOutVO src, Type typeOfSrc, JsonSerializationContext context) {
 				JsonObject json = (JsonObject) gson.toJsonTree(src);
-				if (src != null
-						&& !src.getInquiry().getField().getUserTimeZone()) {
-					updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME, src.getTimestampValue());
+				if (src != null) {
+					if (!src.getInquiry().getField().getUserTimeZone()) {
+						updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME, src.getTimestampValue());
+					}
+					updateFieldValueVODateValue(json, FIELD_VALUE_VO_DATE_FIELD_NAME, src.getDateValue());
+					updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIME_FIELD_NAME, src.getTimeValue());
 				}
-				updateFieldValueVODateValue(json, FIELD_VALUE_VO_DATE_FIELD_NAME, src.getDateValue());
-				updateFieldValueVODateValue(json, FIELD_VALUE_VO_TIME_FIELD_NAME, src.getTimeValue());
 				return json;
 			}
 		});
