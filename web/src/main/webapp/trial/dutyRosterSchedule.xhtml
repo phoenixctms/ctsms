@@ -14,10 +14,8 @@
 			value="#{triallabels.duty_roster_schedule_title}" />
 		<ui:define name="head">
 			<h:outputStylesheet name="staff.min.css" library="css" target="head" />
-			<h:outputStylesheet
-				name="mimetypes.min.css"
-				library="css"
-				target="head" />			
+			<h:outputStylesheet name="mimetypes.min.css" library="css"
+				target="head" />
 			<h:outputScript name="staff.min.js" library="js" target="head" />
 			<h:outputScript name="jquery.fullCalendar.min.js" library="js"
 				target="head" />
@@ -26,15 +24,16 @@
 			<h:form id="dutyrosterschedule_form">
 				<p:remoteCommand process="teammember_filter"
 					name="changeTeamMemberStaff"
+					rendered="#{scheduleDutyRosterTurnBean.enableTeamMemberFilter}"
 					actionListener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}"
 					oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
 				<p:remoteCommand process="trial_filter" name="changeTrial"
+					rendered="#{scheduleDutyRosterTurnBean.enableTrialFilter}"
 					actionListener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}"
 					oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
-				<p:remoteCommand process="@this"
-					name="openDateRangePeriodDialog"
+				<p:remoteCommand process="@this" name="openDateRangePeriodDialog"
 					onstart="setSupressWait()"
 					actionListener="#{scheduleDutyRosterTurnBean.updateDateRangePeriod}"
 					oncomplete="dateRangePeriodDialog.show()"
@@ -42,356 +41,457 @@
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
-						<h:panelGrid columns="13" cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-ajaxstatus-column">
-							<h:outputLabel for="department_filter"
-								value="#{triallabels.duty_roster_schedule_department_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="department_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.departmentId}"
-									required="false"
-									label="#{triallabels.duty_roster_schedule_department_filter}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItem itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{scheduleDutyRosterTurnBean.departments}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="calendar_filter,tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}" for="department_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_department_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="department_filter" />
-
-							<h:outputLabel for="calendar_filter"
-								value="#{triallabels.duty_roster_schedule_calendar_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="calendar_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.calendar}"
-									required="false"
-									label="#{triallabels.duty_roster_schedule_calendar_filter}"
-									styleClass="ctsms-control">
-									<f:selectItems
-										value="#{scheduleDutyRosterTurnBean.filterCalendars}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}" for="calendar_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_calendar_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="calendar_filter" />
-
-							<h:outputLabel for="trialStatusType_filter"
-								value="#{triallabels.duty_roster_schedule_trial_status_type_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="trialStatusType_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.statusId}"
-									required="false"
-									label="#{triallabels.duty_roster_schedule_trial_status_type_filter}"
-									styleClass="ctsms-control-smaller">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItems
-										value="#{sessionScopeBean.filterTrialStatusTypes}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="trialStatusType_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_trial_status_type_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="trialStatusType_filter" />
-							<h:outputLabel for="trial_filter"
-								value="#{triallabels.duty_roster_schedule_trial_filter_label}" />
-							<h:panelGrid columns="3" cellpadding="0">
-								<h:panelGroup>
-									<h:inputHidden id="trial_filter" required="false"
-										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.trialId}">
+						<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
+								cellpadding="0" columnClasses="ctsms-bottom-column,ctsms-bottom-column">
+							<h:panelGrid columns="12" cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel for="department_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableDepartmentFilter}"
+									value="#{triallabels.duty_roster_schedule_department_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableDepartmentFilter}">
+									<p:selectOneMenu id="department_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.departmentId}"
+										required="false"
+										label="#{triallabels.duty_roster_schedule_department_filter}"
+										styleClass="ctsms-control">
 										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="trial_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleDutyRosterTurnBean.dutyRosterScheduleModel.trialName)}"
-										title="#{triallabels.duty_roster_schedule_trial_filter_tooltip}#{labels.open_trial_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedTrial(':dutyrosterschedule_form:trial_filter')" />
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{scheduleDutyRosterTurnBean.departments}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="calendar_filter,tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}" for="department_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_department_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton title="#{labels.pick_trial_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openTrialPicker(':dutyrosterschedule_form:trial_filter',':dutyrosterschedule_form:trial_filterName','changeTrial')" />
-								<p:commandButton title="#{labels.clear_trial_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':dutyrosterschedule_form:trial_filter',':dutyrosterschedule_form:trial_filterName','#{applicationScopeBean.noTrialPickedMessage}','changeTrial')" />
-							</h:panelGrid>
-							<p:message for="trial_filter" />
-							<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-							<h:outputLabel for="staff_category_filter"
-								value="#{triallabels.duty_roster_schedule_staff_category_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="staff_category_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.staffCategoryId}"
-									required="false"
-									label="#{triallabels.duty_roster_schedule_staff_category_filter}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItem itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{scheduleDutyRosterTurnBean.staffCategories}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="staff_category_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_staff_category_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="staff_category_filter" />
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableDepartmentFilter}"
+									for="department_filter" />
 
-							<h:outputLabel for="teammember_filter"
-								value="#{triallabels.duty_roster_schedule_team_member_filter_label}" />
-							<h:panelGrid columns="4" cellpadding="0">
+								<h:outputLabel for="calendar_filter"
+									value="#{triallabels.duty_roster_schedule_calendar_filter_label}" />
 								<h:panelGroup>
-									<h:inputHidden id="teammember_filter" required="false"
-										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.teamMemberStaffId}">
-										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="teammember_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleDutyRosterTurnBean.dutyRosterScheduleModel.teamMemberStaffName)}"
-										title="#{triallabels.duty_roster_schedule_team_member_filter_tooltip}#{labels.open_staff_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedStaff(':dutyrosterschedule_form:teammember_filter')" />
+									<p:selectOneMenu id="calendar_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.calendar}"
+										required="false"
+										label="#{triallabels.duty_roster_schedule_calendar_filter}"
+										styleClass="ctsms-control">
+										<f:selectItems
+											value="#{scheduleDutyRosterTurnBean.filterCalendars}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}" for="calendar_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_calendar_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton
-									title="#{labels.pick_active_identity_staff_button_label}"
-									icon="ui-icon ui-icon-person" type="button"
-									disabled="#{!sessionScopeBean.hasUserIdentity}"
-									onclick="setID(':dutyrosterschedule_form:teammember_filter',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':dutyrosterschedule_form:teammember_filterName','#{sessionScopeBean.userIdentityName}','changeTeamMemberStaff')" />
-								<p:commandButton title="#{labels.pick_staff_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openStaffPicker(':dutyrosterschedule_form:teammember_filter',':dutyrosterschedule_form:teammember_filterName','changeTeamMemberStaff')" />
-								<p:commandButton title="#{labels.clear_staff_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':dutyrosterschedule_form:teammember_filter',':dutyrosterschedule_form:teammember_filterName','#{applicationScopeBean.noStaffPickedMessage}','changeTeamMemberStaff')" />
-							</h:panelGrid>
-							<p:message for="teammember_filter" />
-							
-							<h:outputLabel for="visit_schedule_filter"
-								value="#{triallabels.duty_roster_schedule_visit_schedule_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="visit_schedule_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showVisitSchedule}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="visit_schedule_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_visit_schedule_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="visit_schedule_filter" />
-							<h:outputLabel for="visitType_filter"
-								value="#{triallabels.duty_roster_schedule_visit_type_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="visitType_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.visitTypeId}"
-									required="false"
-									label="#{triallabels.duty_roster_schedule_visit_type_filter}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItems value="#{sessionScopeBean.filterVisitTypes}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}" for="visitType_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_visit_type_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="visitType_filter" />
-							
-							<h:outputText value="" />
-							
-							<h:outputLabel for="duty_roster_filter"
-								value="#{triallabels.duty_roster_schedule_duty_roster_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="duty_roster_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showDutyRoster}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}" for="duty_roster_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_duty_roster_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="duty_roster_filter" />
-							
-							<h:outputLabel for="trial_bookings_filter"
-								value="#{triallabels.duty_roster_schedule_trial_bookings_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="trial_bookings_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showTrialBookings}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="trial_bookings_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_trial_bookings_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="trial_bookings_filter" />
-							
-							<h:outputLabel for="staff_status_filter"
-								value="#{triallabels.duty_roster_schedule_staff_status_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="staff_status_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showStaffStatus}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="staff_status_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_staff_status_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="staff_status_filter" />
-							<h:outputLabel for="proband_status_filter"
-								value="#{triallabels.duty_roster_schedule_proband_status_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="proband_status_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showProbandStatus}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="proband_status_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_proband_status_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="proband_status_filter" />							
-							
-							<p:commandButton type="button"
-								onclick="calendarPrintPreview('#{labels.schedule_print_window_title}')"
-								title="#{labels.print_schedule_button_title}"
-								icon="ui-icon-print" />							
-													
-							<h:outputLabel for="courses_filter"
-								value="#{triallabels.duty_roster_schedule_courses_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="courses_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showCourses}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}" for="courses_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_courses_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="courses_filter" />								
-							
-							<h:outputLabel for="course_bookings_filter"
-								value="#{triallabels.duty_roster_schedule_course_bookings_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="course_bookings_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showCourseBookings}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="course_bookings_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_course_bookings_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="course_bookings_filter" />
+								<p:message for="calendar_filter" />
 
-							<h:outputLabel for="timeline_events_filter"
-								value="#{triallabels.duty_roster_schedule_timeline_events_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="timeline_events_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showTimelineEvents}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="timeline_events_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_timeline_events_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="timeline_events_filter" />
-							
-							<h:outputLabel for="holiday_filter"
-								value="#{triallabels.duty_roster_schedule_holidays_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="holiday_filter"
-									value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showHolidays}">
-									<p:ajax update="tabView"
-										oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}" for="holiday_filter">
-									<h:outputText
-										value="#{triallabels.duty_roster_schedule_holidays_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="holiday_filter" />
-							<p:commandButton type="button"
-								onclick="updateDutyRosterSchedule()"
-								title="#{triallabels.refresh_duty_roster_schedule_button_title}"
-								icon="ui-icon-refresh" />
+								<h:outputLabel for="trialStatusType_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialStatusTypeFilter}"
+									value="#{triallabels.duty_roster_schedule_trial_status_type_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialStatusTypeFilter}">
+									<p:selectOneMenu id="trialStatusType_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.statusId}"
+										required="false"
+										label="#{triallabels.duty_roster_schedule_trial_status_type_filter}"
+										styleClass="ctsms-control-smaller">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItems
+											value="#{sessionScopeBean.filterTrialStatusTypes}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="trialStatusType_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_trial_status_type_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialStatusTypeFilter}"
+									for="trialStatusType_filter" />
+								<h:outputLabel for="trial_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialFilter}"
+									value="#{triallabels.duty_roster_schedule_trial_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialFilter}"
+									columns="3" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="trial_filter" required="false"
+											value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.trialId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="trial_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleDutyRosterTurnBean.dutyRosterScheduleModel.trialName)}"
+											title="#{triallabels.duty_roster_schedule_trial_filter_tooltip}#{labels.open_trial_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedTrial(':dutyrosterschedule_form:trial_filter')" />
+									</h:panelGroup>
+									<p:commandButton title="#{labels.pick_trial_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openTrialPicker(':dutyrosterschedule_form:trial_filter',':dutyrosterschedule_form:trial_filterName','changeTrial')" />
+									<p:commandButton title="#{labels.clear_trial_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':dutyrosterschedule_form:trial_filter',':dutyrosterschedule_form:trial_filterName','#{applicationScopeBean.noTrialPickedMessage}','changeTrial')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialFilter}"
+									for="trial_filter" />
+
+
+
+
+
+
+								<h:outputLabel for="staff_category_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableStaffCategoryFilter}"
+									value="#{triallabels.duty_roster_schedule_staff_category_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableStaffCategoryFilter}">
+									<p:selectOneMenu id="staff_category_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.staffCategoryId}"
+										required="false"
+										label="#{triallabels.duty_roster_schedule_staff_category_filter}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{scheduleDutyRosterTurnBean.staffCategories}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="staff_category_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_staff_category_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableStaffCategoryFilter}"
+									for="staff_category_filter" />
+
+								<h:outputLabel for="teammember_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableTeamMemberFilter}"
+									value="#{triallabels.duty_roster_schedule_team_member_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleDutyRosterTurnBean.enableTeamMemberFilter}"
+									columns="4" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="teammember_filter" required="false"
+											value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.teamMemberStaffId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="teammember_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleDutyRosterTurnBean.dutyRosterScheduleModel.teamMemberStaffName)}"
+											title="#{triallabels.duty_roster_schedule_team_member_filter_tooltip}#{labels.open_staff_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedStaff(':dutyrosterschedule_form:teammember_filter')" />
+									</h:panelGroup>
+									<p:commandButton
+										title="#{labels.pick_active_identity_staff_button_label}"
+										icon="ui-icon ui-icon-person" type="button"
+										disabled="#{!sessionScopeBean.hasUserIdentity}"
+										onclick="setID(':dutyrosterschedule_form:teammember_filter',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':dutyrosterschedule_form:teammember_filterName','#{sessionScopeBean.userIdentityName}','changeTeamMemberStaff')" />
+									<p:commandButton title="#{labels.pick_staff_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openStaffPicker(':dutyrosterschedule_form:teammember_filter',':dutyrosterschedule_form:teammember_filterName','changeTeamMemberStaff')" />
+									<p:commandButton title="#{labels.clear_staff_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':dutyrosterschedule_form:teammember_filter',':dutyrosterschedule_form:teammember_filterName','#{applicationScopeBean.noStaffPickedMessage}','changeTeamMemberStaff')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableTeamMemberFilter}"
+									for="teammember_filter" />
+
+								<h:outputLabel for="visit_schedule_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableVisitScheduleFilter}"
+									value="#{triallabels.duty_roster_schedule_visit_schedule_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableVisitScheduleFilter}">
+									<p:selectBooleanCheckbox id="visit_schedule_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showVisitSchedule}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="visit_schedule_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_visit_schedule_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableVisitScheduleFilter}"
+									for="visit_schedule_filter" />
+								<h:outputLabel for="visitType_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableVisitTypeFilter}"
+									value="#{triallabels.duty_roster_schedule_visit_type_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableVisitTypeFilter}">
+									<p:selectOneMenu id="visitType_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.visitTypeId}"
+										required="false"
+										label="#{triallabels.duty_roster_schedule_visit_type_filter}"
+										styleClass="ctsms-control">
+										<f:converter converterId="ctsms.ID" />
+										<f:selectItems value="#{sessionScopeBean.filterVisitTypes}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}" for="visitType_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_visit_type_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableVisitTypeFilter}"
+									for="visitType_filter" />
+
+
+
+								<h:outputLabel for="duty_roster_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableDutyRosterFilter}"
+									value="#{triallabels.duty_roster_schedule_duty_roster_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableDutyRosterFilter}">
+									<p:selectBooleanCheckbox id="duty_roster_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showDutyRoster}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="duty_roster_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_duty_roster_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableDutyRosterFilter}"
+									for="duty_roster_filter" />
+
+								<h:outputLabel for="trial_bookings_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialBookingsFilter}"
+									value="#{triallabels.duty_roster_schedule_trial_bookings_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialBookingsFilter}">
+									<p:selectBooleanCheckbox id="trial_bookings_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showTrialBookings}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="trial_bookings_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_trial_bookings_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableTrialBookingsFilter}"
+									for="trial_bookings_filter" />
+
+								<h:outputLabel for="staff_status_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableStaffStatusFilter}"
+									value="#{triallabels.duty_roster_schedule_staff_status_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableStaffStatusFilter}">
+									<p:selectBooleanCheckbox id="staff_status_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showStaffStatus}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="staff_status_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_staff_status_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableStaffStatusFilter}"
+									for="staff_status_filter" />
+
+
+								<h:outputLabel for="collisions_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableCollisionsFilter}"
+									value="#{triallabels.duty_roster_schedule_collisions_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableCollisionsFilter}">
+									<p:selectBooleanCheckbox id="collisions_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showCollisions}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="collisions_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_collisions_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableCollisionsFilter}"
+									for="collisions_filter" />
+
+
+								<h:outputLabel for="proband_status_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableProbandStatusFilter}"
+									value="#{triallabels.duty_roster_schedule_proband_status_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableProbandStatusFilter}">
+									<p:selectBooleanCheckbox id="proband_status_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showProbandStatus}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="proband_status_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_proband_status_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableProbandStatusFilter}"
+									for="proband_status_filter" />
+
+
+
+								<h:outputLabel for="courses_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableCoursesFilter}"
+									value="#{triallabels.duty_roster_schedule_courses_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableCoursesFilter}">
+									<p:selectBooleanCheckbox id="courses_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showCourses}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="courses_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_courses_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableCoursesFilter}"
+									for="courses_filter" />
+
+								<h:outputLabel for="course_bookings_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableCourseBookingsFilter}"
+									value="#{triallabels.duty_roster_schedule_course_bookings_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableCourseBookingsFilter}">
+									<p:selectBooleanCheckbox id="course_bookings_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showCourseBookings}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="course_bookings_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_course_bookings_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableCourseBookingsFilter}"
+									for="course_bookings_filter" />
+
+								<h:outputLabel for="timeline_events_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableTimelineEventsFilter}"
+									value="#{triallabels.duty_roster_schedule_timeline_events_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableTimelineEventsFilter}">
+									<p:selectBooleanCheckbox id="timeline_events_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showTimelineEvents}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="timeline_events_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_timeline_events_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableTimelineEventsFilter}"
+									for="timeline_events_filter" />
+
+								<h:outputLabel for="holiday_filter"
+									rendered="#{scheduleDutyRosterTurnBean.enableHolidayFilter}"
+									value="#{triallabels.duty_roster_schedule_holidays_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleDutyRosterTurnBean.enableHolidayFilter}">
+									<p:selectBooleanCheckbox id="holiday_filter"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.showHolidays}">
+										<p:ajax update="tabView"
+											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="holiday_filter">
+										<h:outputText
+											value="#{triallabels.duty_roster_schedule_holidays_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleDutyRosterTurnBean.enableHolidayFilter}"
+									for="holiday_filter" />
+							</h:panelGrid>
+							<h:panelGrid columns="2" cellpadding="2"
+								columnClasses="ctsms-ajaxstatus-column,ctsms-filters-button-column">
+								<h:outputLabel />
+								<p:commandButton type="button"
+									onclick="calendarPrintPreview('#{labels.schedule_print_window_title}')"
+									title="#{labels.print_schedule_button_title}"
+									icon="ui-icon-print" />
+								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								<p:commandButton type="button"
+									onclick="updateDutyRosterSchedule()"
+									title="#{triallabels.refresh_duty_roster_schedule_button_title}"
+									icon="ui-icon-refresh" />
+							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>
 					<ctsms:schedule
@@ -720,57 +820,65 @@
 				<p:dialog widgetVar="dateRangePeriodDialog"
 					id="date_range_period_dialog"
 					header="#{scheduleDutyRosterTurnBean.dateRangePeriodDialogTitle}"
-					showEffect="#{effect}" hideEffect="#{effect}">			
-					
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						
-						<h:panelGrid columns="2"
-							cellpadding="2"
+					showEffect="#{effect}" hideEffect="#{effect}">
+
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+
+						<h:panelGrid columns="2" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column">
 
-							<h:outputText value="#{triallabels.duty_roster_schedule_proband_inventory_bookings_excel_label}" />
-							
-							<p:commandLink immediate="true" id="probandinventorybookingsexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+							<h:outputText
+								value="#{triallabels.duty_roster_schedule_proband_inventory_bookings_excel_label}" />
+
+							<p:commandLink immediate="true"
+								id="probandinventorybookingsexceldownload" ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleDutyRosterTurnBean.probandInventoryBookingsExcelStreamedContent}" />
+								<p:fileDownload
+									value="#{scheduleDutyRosterTurnBean.probandInventoryBookingsExcelStreamedContent}" />
 							</p:commandLink>
 
-							<h:outputText value="#{triallabels.duty_roster_schedule_course_inventory_bookings_excel_label}" />
-							
-							<p:commandLink immediate="true" id="courseinventorybookingsexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+							<h:outputText
+								value="#{triallabels.duty_roster_schedule_course_inventory_bookings_excel_label}" />
+
+							<p:commandLink immediate="true"
+								id="courseinventorybookingsexceldownload" ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleDutyRosterTurnBean.courseInventoryBookingsExcelStreamedContent}" />
+								<p:fileDownload
+									value="#{scheduleDutyRosterTurnBean.courseInventoryBookingsExcelStreamedContent}" />
 							</p:commandLink>
-							
-							<h:outputText value="#{triallabels.duty_roster_schedule_trial_inventory_bookings_excel_label}" />
-							
-							<p:commandLink immediate="true" id="trialinventorybookingsexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+
+							<h:outputText
+								value="#{triallabels.duty_roster_schedule_trial_inventory_bookings_excel_label}" />
+
+							<p:commandLink immediate="true"
+								id="trialinventorybookingsexceldownload" ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleDutyRosterTurnBean.trialInventoryBookingsExcelStreamedContent}" />
-							</p:commandLink>						
-							
-							<h:outputText value="#{triallabels.duty_roster_schedule_visit_schedule_excel_label}" />
-							
+								<p:fileDownload
+									value="#{scheduleDutyRosterTurnBean.trialInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>
+
+							<h:outputText
+								value="#{triallabels.duty_roster_schedule_visit_schedule_excel_label}" />
+
 							<p:commandLink immediate="true" id="visitscheduleexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleDutyRosterTurnBean.visitScheduleExcelStreamedContent}" />
+								<p:fileDownload
+									value="#{scheduleDutyRosterTurnBean.visitScheduleExcelStreamedContent}" />
 							</p:commandLink>
-							
+
 						</h:panelGrid>
 					</h:panelGrid>
-				</p:dialog>				
+				</p:dialog>
 			</h:form>
 		</ui:define>
 	</ui:composition>

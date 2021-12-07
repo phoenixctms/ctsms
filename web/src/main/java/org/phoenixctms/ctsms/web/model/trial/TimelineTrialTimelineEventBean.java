@@ -410,4 +410,52 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 		}
 		return "";
 	}
+
+	public boolean isEnableDepartmentFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_DEPARTMENT_FILTER, Bundle.SETTINGS, DefaultSettings.TIMELINE_ENABLE_DEPARTMENT_FILTER);
+	}
+
+	public boolean isEnableTrialStatusTypeFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_TRIAL_STATUS_TYPE_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_TRIAL_STATUS_TYPE_FILTER);
+	}
+	//----no: trial_filter
+	//	public boolean isEnableTrialFilter() {
+	//		return Settings.getBoolean(SettingCodes.TIMELINE_SCHEDULE_ENABLE_TRIAL_FILTER, Bundle.SETTINGS,
+	//				DefaultSettings.TIMELINE_SCHEDULE_ENABLE_TRIAL_FILTER);
+	//	}
+
+	public boolean isEnableShowTimelineEventsFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_TIMELINE_EVENTS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_TIMELINE_EVENTS_FILTER);
+	}
+
+	public boolean isEnableTimelineEventTypeFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_TIMELINE_EVENT_TYPE_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_TIMELINE_EVENT_TYPE_FILTER);
+	}
+
+	public boolean isEnableShowAllFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_SHOW_ALL_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_SHOW_ALL_FILTER);
+	}
+
+	public boolean isEnableShowVisitScheduleItemsFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_VISIT_SCHEDULE_ITEMS_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_VISIT_SCHEDULE_ITEMS_FILTER);
+	}
+
+	public boolean isEnableVisitTypeFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_VISIT_TYPE_FILTER, Bundle.SETTINGS, DefaultSettings.TIMELINE_ENABLE_VISIT_TYPE_FILTER);
+	}
+
+	public boolean isEnableShowDescriptionFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_DESCRIPTION_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_DESCRIPTION_FILTER);
+	}
+
+	public boolean isEnableShowStartStopFilter() {
+		return Settings.getBoolean(SettingCodes.TIMELINE_ENABLE_START_STOP_FILTER, Bundle.SETTINGS,
+				DefaultSettings.TIMELINE_ENABLE_START_STOP_FILTER);
+	}
 }

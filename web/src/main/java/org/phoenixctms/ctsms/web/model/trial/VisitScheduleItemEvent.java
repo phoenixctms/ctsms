@@ -80,7 +80,13 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 
 	@Override
 	public String getStyleClass() {
-		VisitOutVO visit = WebUtil.getVisit(in.getVisitId());
+		VisitOutVO visit = (out != null ? out.getVisit() : null);
+		if (visit != null && in.getVisitId() != null && !in.getVisitId().equals(visit.getId())
+				|| (visit == null && in.getVisitId() != null)) {
+			visit = WebUtil.getVisit(in.getVisitId());
+		} else if (visit != null && in.getVisitId() == null) {
+			visit = null;
+		}
 		if (visit != null) {
 			return WebUtil.colorToStyleClass(visit.getType().getColor(), COLOR_OPACITY);
 		}
@@ -90,7 +96,13 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
+		TrialOutVO trial = (out != null ? out.getTrial() : null);
+		if (trial != null && in.getTrialId() != null && !in.getTrialId().equals(trial.getId())
+				|| (trial == null && in.getTrialId() != null)) {
+			trial = WebUtil.getTrial(in.getTrialId());
+		} else if (trial != null && in.getTrialId() == null) {
+			trial = null;
+		}
 		if (trial != null) {
 			sb.append(CommonUtil.trialOutVOToString(trial));
 			if (in.getGroupId() != null || in.getVisitId() != null || !CommonUtil.isEmptyString(in.getToken())) {
@@ -98,8 +110,13 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 			}
 		}
 		boolean appended = false;
-		ProbandGroupOutVO probandGroup = null;
-		probandGroup = WebUtil.getProbandGroup(in.getGroupId());
+		ProbandGroupOutVO probandGroup = (out != null ? out.getGroup() : null);
+		if (probandGroup != null && in.getGroupId() != null && !in.getGroupId().equals(probandGroup.getId())
+				|| (probandGroup == null && in.getGroupId() != null)) {
+			probandGroup = WebUtil.getProbandGroup(in.getGroupId());
+		} else if (probandGroup != null && in.getGroupId() == null) {
+			probandGroup = null;
+		}
 		if (probandGroup != null) {
 			if (appended) {
 				sb.append(TOKEN_SEPARATOR_STRING);
@@ -107,8 +124,13 @@ public class VisitScheduleItemEvent extends ScheduleEventBase<VisitScheduleItemI
 			sb.append(probandGroup.getToken());
 			appended = true;
 		}
-		VisitOutVO visit = null;
-		visit = WebUtil.getVisit(in.getVisitId());
+		VisitOutVO visit = (out != null ? out.getVisit() : null);
+		if (visit != null && in.getVisitId() != null && !in.getVisitId().equals(visit.getId())
+				|| (visit == null && in.getVisitId() != null)) {
+			visit = WebUtil.getVisit(in.getVisitId());
+		} else if (visit != null && in.getVisitId() == null) {
+			visit = null;
+		}
 		if (visit != null) {
 			if (appended) {
 				sb.append(TOKEN_SEPARATOR_STRING);

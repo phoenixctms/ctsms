@@ -82,7 +82,13 @@ public class ProbandStatusEvent extends ScheduleEventBase<ProbandStatusEntryInVO
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		ProbandOutVO proband = WebUtil.getProband(in.getProbandId(), null, null, null);
+		ProbandOutVO proband = (out != null ? out.getProband() : null);
+		if (proband != null && in.getProbandId() != null && !in.getProbandId().equals(proband.getId())
+				|| (proband == null && in.getProbandId() != null)) {
+			proband = WebUtil.getProband(in.getProbandId(), null, null, null);
+		} else if (proband != null && in.getProbandId() == null) {
+			proband = null;
+		}
 		if (proband != null) {
 			sb.append(CommonUtil.probandOutVOToString(proband));
 			if (in.getTypeId() != null || !CommonUtil.isEmptyString(in.getComment())) {
@@ -90,7 +96,13 @@ public class ProbandStatusEvent extends ScheduleEventBase<ProbandStatusEntryInVO
 			}
 		}
 		boolean appended = false;
-		ProbandStatusTypeVO statusType = WebUtil.getProbandStatusType(in.getTypeId());
+		ProbandStatusTypeVO statusType = (out != null ? out.getType() : null);
+		if (statusType != null && in.getTypeId() != null && !in.getTypeId().equals(statusType.getId())
+				|| (statusType == null && in.getTypeId() != null)) {
+			statusType = WebUtil.getProbandStatusType(in.getTypeId());
+		} else if (statusType != null && in.getTypeId() == null) {
+			statusType = null;
+		}
 		if (statusType != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

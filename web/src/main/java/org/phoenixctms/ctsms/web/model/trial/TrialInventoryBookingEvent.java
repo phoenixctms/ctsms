@@ -34,7 +34,13 @@ public class TrialInventoryBookingEvent extends InventoryBookingEvent {
 
 	@Override
 	public String getStyleClass() {
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		InventoryOutVO inventory = (out != null ? out.getInventory() : null);
+		if (inventory != null && in.getInventoryId() != null && !in.getInventoryId().equals(inventory.getId())
+				|| (inventory == null && in.getInventoryId() != null)) {
+			inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		} else if (inventory != null && in.getInventoryId() == null) {
+			inventory = null;
+		}
 		if (inventory != null) {
 			StringBuilder sb = new StringBuilder();
 			appendTrialColorStyleClass(inventory, sb, COLOR_OPACITY);

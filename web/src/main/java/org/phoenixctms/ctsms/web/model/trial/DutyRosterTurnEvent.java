@@ -83,10 +83,23 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 	public String getStyleClass() {
 		boolean isDutySelfAllocationLocked = !in.isSelfAllocatable();
 		if (!isDutySelfAllocationLocked && in.getTrialId() != null) {
-			isDutySelfAllocationLocked = WebUtil.isDutySelfAllocationLocked(WebUtil.getTrial(in.getTrialId()), in.getStart(), in.getStaffId() != null);
+			TrialOutVO trial = (out != null ? out.getTrial() : null);
+			if (trial != null && in.getTrialId() != null && !in.getTrialId().equals(trial.getId())
+					|| (trial == null && in.getTrialId() != null)) {
+				trial = WebUtil.getTrial(in.getTrialId());
+			} else if (trial != null && in.getTrialId() == null) {
+				trial = null;
+			}
+			isDutySelfAllocationLocked = WebUtil.isDutySelfAllocationLocked(trial, in.getStart(), in.getStaffId() != null);
 		}
 		if (in.getStaffId() != null) {
-			StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
+			StaffOutVO staff = (out != null ? out.getStaff() : null);
+			if ((staff != null && in.getStaffId() != null && !in.getStaffId().equals(staff.getId()))
+					|| (staff == null && in.getStaffId() != null)) {
+				staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
+			} else if (staff != null && in.getStaffId() == null) {
+				staff = null;
+			}
 			if (staff != null) {
 				StringBuilder sb = new StringBuilder();
 				if (isDutySelfAllocationLocked) {
@@ -119,12 +132,24 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
 		boolean appended = false;
-		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
+		TrialOutVO trial = (out != null ? out.getTrial() : null);
+		if ((trial != null && in.getTrialId() != null && !in.getTrialId().equals(trial.getId()))
+				|| (trial == null && in.getTrialId() != null)) {
+			trial = WebUtil.getTrial(in.getTrialId());
+		} else if (trial != null && in.getTrialId() == null) {
+			trial = null;
+		}
 		if (trial != null) {
 			sb.append(CommonUtil.trialOutVOToString(trial));
 			appended = true;
 		}
-		VisitScheduleItemOutVO visitScheduleItem = WebUtil.getVisitScheduleItem(in.getVisitScheduleItemId());
+		VisitScheduleItemOutVO visitScheduleItem = (out != null ? out.getVisitScheduleItem() : null);
+		if ((visitScheduleItem != null && in.getVisitScheduleItemId() != null && !in.getVisitScheduleItemId().equals(visitScheduleItem.getId()))
+				|| (visitScheduleItem == null && in.getVisitScheduleItemId() != null)) {
+			visitScheduleItem = WebUtil.getVisitScheduleItem(in.getVisitScheduleItemId());
+		} else if (visitScheduleItem != null && in.getVisitScheduleItemId() == null) {
+			visitScheduleItem = null;
+		}
 		if (visitScheduleItem != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_HEAD_SEPARATOR);
@@ -142,7 +167,13 @@ public class DutyRosterTurnEvent extends ScheduleEventBase<DutyRosterTurnInVO> {
 			sb.append(in.getTitle());
 			appended = true;
 		}
-		StaffOutVO staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
+		StaffOutVO staff = (out != null ? out.getStaff() : null);
+		if ((staff != null && in.getStaffId() != null && !in.getStaffId().equals(staff.getId()))
+				|| (staff == null && in.getStaffId() != null)) {
+			staff = WebUtil.getStaff(in.getStaffId(), null, null, null);
+		} else if (staff != null && in.getStaffId() == null) {
+			staff = null;
+		}
 		if (staff != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);

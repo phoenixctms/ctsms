@@ -30,7 +30,13 @@ public class CourseInventoryBookingEvent extends InventoryBookingEvent {
 
 	@Override
 	public String getStyleClass() {
-		CourseOutVO course = WebUtil.getCourse(in.getCourseId(), null, null, null);
+		CourseOutVO course = (out != null ? out.getCourse() : null);
+		if (course != null && in.getCourseId() != null && !in.getCourseId().equals(course.getId())
+				|| (course == null && in.getCourseId() != null)) {
+			course = WebUtil.getCourse(in.getCourseId(), null, null, null);
+		} else if (course != null && in.getCourseId() == null) {
+			course = null;
+		}
 		if (course != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(WebUtil.colorToStyleClass(course.getCategory().getColor(), COLOR_OPACITY));

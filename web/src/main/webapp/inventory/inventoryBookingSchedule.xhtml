@@ -16,10 +16,8 @@
 		<ui:define name="head">
 			<h:outputStylesheet name="inventory.min.css" library="css"
 				target="head" />
-			<h:outputStylesheet
-				name="mimetypes.min.css"
-				library="css"
-				target="head" />				
+			<h:outputStylesheet name="mimetypes.min.css" library="css"
+				target="head" />
 			<h:outputScript name="inventory.min.js" library="js" target="head" />
 			<h:outputScript name="jquery.fullCalendar.min.js" library="js"
 				target="head" />
@@ -27,28 +25,32 @@
 		<ui:define name="content">
 			<h:form id="inventorybookingschedule_form">
 				<p:remoteCommand process="inventory_filter" name="changeInventory"
+					rendered="#{scheduleInventoryBookingBean.enableInventoryFilter}"
 					actionListener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}"
 					oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
 				<p:remoteCommand process="proband_filter" name="changeProband"
+					rendered="#{scheduleInventoryBookingBean.enableProbandFilter}"
 					actionListener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}"
 					oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
 				<p:remoteCommand process="course_filter" name="changeCourse"
+					rendered="#{scheduleInventoryBookingBean.enableCourseFilter}"
 					actionListener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}"
 					oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
 				<p:remoteCommand process="trial_filter" name="changeTrial"
+					rendered="#{scheduleInventoryBookingBean.enableTrialFilter}"
 					actionListener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}"
 					oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
 				<p:remoteCommand process="responsibleperson_filter"
 					name="changeResponsiblePerson"
+					rendered="#{scheduleInventoryBookingBean.enableResponsiblePersonFilter}"
 					actionListener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}"
 					oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
 					update="tabView" />
-				<p:remoteCommand process="@this"
-					name="openDateRangePeriodDialog"
+				<p:remoteCommand process="@this" name="openDateRangePeriodDialog"
 					onstart="setSupressWait()"
 					actionListener="#{scheduleInventoryBookingBean.updateDateRangePeriod}"
 					oncomplete="dateRangePeriodDialog.show()"
@@ -56,328 +58,420 @@
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
-						<h:panelGrid columns="10" cellpadding="2"
-							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-ajaxstatus-column">
-							<h:outputLabel for="department_filter"
-								value="#{inventorylabels.booking_schedule_department_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="department_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.departmentId}"
-									required="false"
-									label="#{inventorylabels.booking_schedule_department_filter}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItem itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{scheduleInventoryBookingBean.departments}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}" for="department_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_department_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="department_filter" />
-							<h:outputLabel for="calendar_filter"
-								value="#{inventorylabels.booking_schedule_calendar_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="calendar_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.calendar}"
-									required="false"
-									label="#{inventorylabels.booking_schedule_calendar_filter}"
-									styleClass="ctsms-control">
-									<f:selectItems
-										value="#{scheduleInventoryBookingBean.filterCalendars}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}" for="calendar_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_calendar_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="calendar_filter" />
-							<h:outputLabel for="inventory_category_filter"
-								value="#{inventorylabels.booking_schedule_inventory_category_filter_label}" />
-							<h:panelGroup>
-								<p:selectOneMenu id="inventory_category_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.inventoryCategoryId}"
-									required="false"
-									label="#{inventorylabels.booking_schedule_inventory_category_filter}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItems
-										value="#{sessionScopeBean.filterInventoryCategories}"
-										var="selectItem" itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectOneMenu>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="inventory_category_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_inventory_category_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="inventory_category_filter" />
-							<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
-							<h:outputLabel for="inventory_filter"
-								value="#{inventorylabels.booking_schedule_inventory_filter_label}" />
-							<h:panelGrid columns="3" cellpadding="0">
-								<h:panelGroup>
-									<h:inputHidden id="inventory_filter" required="false"
-										value="#{scheduleInventoryBookingBean.bookingScheduleModel.inventoryId}">
+						<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
+								cellpadding="0" columnClasses="ctsms-bottom-column,ctsms-bottom-column">
+							<h:panelGrid columns="9" cellpadding="2"
+								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:outputLabel for="department_filter"
+									rendered="#{scheduleInventoryBookingBean.enableDepartmentFilter}"
+									value="#{inventorylabels.booking_schedule_department_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableDepartmentFilter}">
+									<p:selectOneMenu id="department_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.departmentId}"
+										required="false"
+										label="#{inventorylabels.booking_schedule_department_filter}"
+										styleClass="ctsms-control">
 										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="inventory_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.inventoryName)}"
-										title="#{inventorylabels.booking_schedule_inventory_filter_tooltip}#{labels.open_inventory_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedInventory(':inventorybookingschedule_form:inventory_filter')" />
+										<f:selectItem itemLabel="#{labels.no_selection_label}"
+											itemValue="#{applicationScopeBean.noSelectionValue}" />
+										<f:selectItems
+											value="#{scheduleInventoryBookingBean.departments}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}" for="department_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_department_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton title="#{labels.pick_inventory_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openInventoryPicker(':inventorybookingschedule_form:inventory_filter',':inventorybookingschedule_form:inventory_filterName','changeInventory')" />
-								<p:commandButton title="#{labels.clear_inventory_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':inventorybookingschedule_form:inventory_filter',':inventorybookingschedule_form:inventory_filterName','#{applicationScopeBean.noInventoryPickedMessage}','changeInventory')" />
-							</h:panelGrid>
-							<p:message for="inventory_filter" />
-							<h:outputLabel for="proband_filter"
-								value="#{inventorylabels.booking_schedule_proband_filter_label}" />
-							<h:panelGrid columns="3" cellpadding="0">
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableDepartmentFilter}"
+									for="department_filter" />
+								<h:outputLabel for="calendar_filter"
+									value="#{inventorylabels.booking_schedule_calendar_filter_label}" />
 								<h:panelGroup>
-									<h:inputHidden id="proband_filter" required="false"
-										value="#{scheduleInventoryBookingBean.bookingScheduleModel.probandId}">
-										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="proband_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.probandName)}"
-										title="#{inventorylabels.booking_schedule_proband_filter_tooltip}#{labels.open_proband_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedProband(':inventorybookingschedule_form:proband_filter')" />
+									<p:selectOneMenu id="calendar_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.calendar}"
+										required="false"
+										label="#{inventorylabels.booking_schedule_calendar_filter}"
+										styleClass="ctsms-control">
+										<f:selectItems
+											value="#{scheduleInventoryBookingBean.filterCalendars}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}" for="calendar_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_calendar_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton title="#{labels.pick_proband_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openProbandPicker(':inventorybookingschedule_form:proband_filter',':inventorybookingschedule_form:proband_filterName','changeProband')" />
-								<p:commandButton title="#{labels.clear_proband_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':inventorybookingschedule_form:proband_filter',':inventorybookingschedule_form:proband_filterName','#{applicationScopeBean.noProbandPickedMessage}','changeProband')" />
-							</h:panelGrid>
-							<p:message for="proband_filter" />
-							<h:outputLabel for="course_filter"
-								value="#{inventorylabels.booking_schedule_course_filter_label}" />
-							<h:panelGrid columns="3" cellpadding="0">
-								<h:panelGroup>
-									<h:inputHidden id="course_filter" required="false"
-										value="#{scheduleInventoryBookingBean.bookingScheduleModel.courseId}">
+								<p:message for="calendar_filter" />
+								<h:outputLabel for="inventory_category_filter"
+									rendered="#{scheduleInventoryBookingBean.enableInventoryCategoryFilter}"
+									value="#{inventorylabels.booking_schedule_inventory_category_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableInventoryCategoryFilter}">
+									<p:selectOneMenu id="inventory_category_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.inventoryCategoryId}"
+										required="false"
+										label="#{inventorylabels.booking_schedule_inventory_category_filter}"
+										styleClass="ctsms-control">
 										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="course_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.courseName)}"
-										title="#{inventorylabels.booking_schedule_course_filter_tooltip}#{labels.open_course_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedCourse(':inventorybookingschedule_form:course_filter')" />
+										<f:selectItems
+											value="#{sessionScopeBean.filterInventoryCategories}"
+											var="selectItem" itemLabel="#{selectItem.label}"
+											itemValue="#{selectItem.value}" />
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectOneMenu>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="inventory_category_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_inventory_category_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton title="#{labels.pick_course_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openCoursePicker(':inventorybookingschedule_form:course_filter',':inventorybookingschedule_form:course_filterName','changeCourse')" />
-								<p:commandButton title="#{labels.clear_course_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':inventorybookingschedule_form:course_filter',':inventorybookingschedule_form:course_filterName','#{applicationScopeBean.noCoursePickedMessage}','changeCourse')" />
-							</h:panelGrid>
-							<p:message for="course_filter" />
-							<h:outputText value="" />
-							<h:outputLabel for="trial_filter"
-								value="#{inventorylabels.booking_schedule_trial_filter_label}" />
-							<h:panelGrid columns="3" cellpadding="0">
-								<h:panelGroup>
-									<h:inputHidden id="trial_filter" required="false"
-										value="#{scheduleInventoryBookingBean.bookingScheduleModel.trialId}">
-										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="trial_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.trialName)}"
-										title="#{inventorylabels.booking_schedule_trial_filter_tooltip}#{labels.open_trial_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedTrial(':inventorybookingschedule_form:trial_filter')" />
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableInventoryCategoryFilter}"
+									for="inventory_category_filter" />
+
+								<h:outputLabel for="inventory_filter"
+									rendered="#{scheduleInventoryBookingBean.enableInventoryFilter}"
+									value="#{inventorylabels.booking_schedule_inventory_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleInventoryBookingBean.enableInventoryFilter}"
+									columns="3" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="inventory_filter" required="false"
+											value="#{scheduleInventoryBookingBean.bookingScheduleModel.inventoryId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="inventory_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.inventoryName)}"
+											title="#{inventorylabels.booking_schedule_inventory_filter_tooltip}#{labels.open_inventory_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedInventory(':inventorybookingschedule_form:inventory_filter')" />
+									</h:panelGroup>
+									<p:commandButton title="#{labels.pick_inventory_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openInventoryPicker(':inventorybookingschedule_form:inventory_filter',':inventorybookingschedule_form:inventory_filterName','changeInventory')" />
+									<p:commandButton title="#{labels.clear_inventory_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':inventorybookingschedule_form:inventory_filter',':inventorybookingschedule_form:inventory_filterName','#{applicationScopeBean.noInventoryPickedMessage}','changeInventory')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableInventoryFilter}"
+									for="inventory_filter" />
+								<h:outputLabel for="proband_filter"
+									rendered="#{scheduleInventoryBookingBean.enableProbandFilter}"
+									value="#{inventorylabels.booking_schedule_proband_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleInventoryBookingBean.enableProbandFilter}"
+									columns="3" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="proband_filter" required="false"
+											value="#{scheduleInventoryBookingBean.bookingScheduleModel.probandId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="proband_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.probandName)}"
+											title="#{inventorylabels.booking_schedule_proband_filter_tooltip}#{labels.open_proband_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedProband(':inventorybookingschedule_form:proband_filter')" />
+									</h:panelGroup>
+									<p:commandButton title="#{labels.pick_proband_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openProbandPicker(':inventorybookingschedule_form:proband_filter',':inventorybookingschedule_form:proband_filterName','changeProband')" />
+									<p:commandButton title="#{labels.clear_proband_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':inventorybookingschedule_form:proband_filter',':inventorybookingschedule_form:proband_filterName','#{applicationScopeBean.noProbandPickedMessage}','changeProband')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableProbandFilter}"
+									for="proband_filter" />
+								<h:outputLabel for="course_filter"
+									rendered="#{scheduleInventoryBookingBean.enableCourseFilter}"
+									value="#{inventorylabels.booking_schedule_course_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleInventoryBookingBean.enableCourseFilter}"
+									columns="3" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="course_filter" required="false"
+											value="#{scheduleInventoryBookingBean.bookingScheduleModel.courseId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="course_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.courseName)}"
+											title="#{inventorylabels.booking_schedule_course_filter_tooltip}#{labels.open_course_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedCourse(':inventorybookingschedule_form:course_filter')" />
+									</h:panelGroup>
+									<p:commandButton title="#{labels.pick_course_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openCoursePicker(':inventorybookingschedule_form:course_filter',':inventorybookingschedule_form:course_filterName','changeCourse')" />
+									<p:commandButton title="#{labels.clear_course_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':inventorybookingschedule_form:course_filter',':inventorybookingschedule_form:course_filterName','#{applicationScopeBean.noCoursePickedMessage}','changeCourse')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableCourseFilter}"
+									for="course_filter" />
+
+								<h:outputLabel for="trial_filter"
+									rendered="#{scheduleInventoryBookingBean.enableTrialFilter}"
+									value="#{inventorylabels.booking_schedule_trial_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleInventoryBookingBean.enableTrialFilter}"
+									columns="3" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="trial_filter" required="false"
+											value="#{scheduleInventoryBookingBean.bookingScheduleModel.trialId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="trial_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.trialName)}"
+											title="#{inventorylabels.booking_schedule_trial_filter_tooltip}#{labels.open_trial_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedTrial(':inventorybookingschedule_form:trial_filter')" />
+									</h:panelGroup>
+									<p:commandButton title="#{labels.pick_trial_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openTrialPicker(':inventorybookingschedule_form:trial_filter',':inventorybookingschedule_form:trial_filterName','changeTrial')" />
+									<p:commandButton title="#{labels.clear_trial_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':inventorybookingschedule_form:trial_filter',':inventorybookingschedule_form:trial_filterName','#{applicationScopeBean.noTrialPickedMessage}','changeTrial')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableTrialFilter}"
+									for="trial_filter" />
+								<h:outputLabel for="responsibleperson_filter"
+									rendered="#{scheduleInventoryBookingBean.enableResponsiblePersonFilter}"
+									value="#{inventorylabels.booking_schedule_responsible_person_filter_label}" />
+								<h:panelGrid
+									rendered="#{scheduleInventoryBookingBean.enableResponsiblePersonFilter}"
+									columns="4" cellpadding="0">
+									<h:panelGroup>
+										<h:inputHidden id="responsibleperson_filter" required="false"
+											value="#{scheduleInventoryBookingBean.bookingScheduleModel.responsiblePersonId}">
+											<f:converter converterId="ctsms.ID" />
+										</h:inputHidden>
+										<p:commandButton id="responsibleperson_filterName"
+											value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.responsiblePersonName)}"
+											title="#{inventorylabels.booking_schedule_responsible_person_filter_tooltip}#{labels.open_staff_button_label}"
+											styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
+											type="button"
+											onclick="openPickedStaff(':inventorybookingschedule_form:responsibleperson_filter')" />
+									</h:panelGroup>
+									<p:commandButton
+										title="#{labels.pick_active_identity_staff_button_label}"
+										icon="ui-icon ui-icon-person" type="button"
+										disabled="#{!sessionScopeBean.hasUserIdentity}"
+										onclick="setID(':inventorybookingschedule_form:responsibleperson_filter',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':inventorybookingschedule_form:responsibleperson_filterName','#{sessionScopeBean.userIdentityName}','changeResponsiblePerson')" />
+									<p:commandButton title="#{labels.pick_staff_button_label}"
+										icon="ui-icon ui-icon-search" type="button"
+										onclick="openStaffPicker(':inventorybookingschedule_form:responsibleperson_filter',':inventorybookingschedule_form:responsibleperson_filterName','changeResponsiblePerson')" />
+									<p:commandButton title="#{labels.clear_staff_button_label}"
+										icon="ui-icon ui-icon-close" type="button"
+										onclick="clearID(':inventorybookingschedule_form:responsibleperson_filter',':inventorybookingschedule_form:responsibleperson_filterName','#{applicationScopeBean.noStaffPickedMessage}','changeResponsiblePerson')" />
+								</h:panelGrid>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableResponsiblePersonFilter}"
+									for="responsibleperson_filter" />
+								<h:outputLabel for="bookings_filter"
+									rendered="#{scheduleInventoryBookingBean.enableBookingsFilter}"
+									value="#{inventorylabels.booking_schedule_bookings_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableBookingsFilter}">
+									<p:selectBooleanCheckbox id="bookings_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showBookings}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="bookings_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_bookings_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton title="#{labels.pick_trial_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openTrialPicker(':inventorybookingschedule_form:trial_filter',':inventorybookingschedule_form:trial_filterName','changeTrial')" />
-								<p:commandButton title="#{labels.clear_trial_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':inventorybookingschedule_form:trial_filter',':inventorybookingschedule_form:trial_filterName','#{applicationScopeBean.noTrialPickedMessage}','changeTrial')" />
-							</h:panelGrid>
-							<p:message for="trial_filter" />
-							<h:outputLabel for="responsibleperson_filter"
-								value="#{inventorylabels.booking_schedule_responsible_person_filter_label}" />
-							<h:panelGrid columns="4" cellpadding="0">
-								<h:panelGroup>
-									<h:inputHidden id="responsibleperson_filter" required="false"
-										value="#{scheduleInventoryBookingBean.bookingScheduleModel.responsiblePersonId}">
-										<f:converter converterId="ctsms.ID" />
-									</h:inputHidden>
-									<p:commandButton id="responsibleperson_filterName"
-										value="#{applicationScopeBean.clipStringPicker(scheduleInventoryBookingBean.bookingScheduleModel.responsiblePersonName)}"
-										title="#{inventorylabels.booking_schedule_responsible_person_filter_tooltip}#{labels.open_staff_button_label}"
-										styleClass="ctsms-picker" icon="ui-icon ui-icon-extlink"
-										type="button"
-										onclick="openPickedStaff(':inventorybookingschedule_form:responsibleperson_filter')" />
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableBookingsFilter}"
+									for="bookings_filter" />
+
+								<h:outputLabel for="visit_schedule_filter"
+									rendered="#{scheduleInventoryBookingBean.enableVisitScheduleFilter}"
+									value="#{inventorylabels.booking_schedule_visit_schedule_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableVisitScheduleFilter}">
+									<p:selectBooleanCheckbox id="visit_schedule_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showVisitSchedule}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="visit_schedule_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_visit_schedule_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
 								</h:panelGroup>
-								<p:commandButton
-									title="#{labels.pick_active_identity_staff_button_label}"
-									icon="ui-icon ui-icon-person" type="button"
-									disabled="#{!sessionScopeBean.hasUserIdentity}"
-									onclick="setID(':inventorybookingschedule_form:responsibleperson_filter',#{sessionScopeBean.hasUserIdentity ? sessionScopeBean.userIdentity.id : 'null'},':inventorybookingschedule_form:responsibleperson_filterName','#{sessionScopeBean.userIdentityName}','changeResponsiblePerson')" />
-								<p:commandButton title="#{labels.pick_staff_button_label}"
-									icon="ui-icon ui-icon-search" type="button"
-									onclick="openStaffPicker(':inventorybookingschedule_form:responsibleperson_filter',':inventorybookingschedule_form:responsibleperson_filterName','changeResponsiblePerson')" />
-								<p:commandButton title="#{labels.clear_staff_button_label}"
-									icon="ui-icon ui-icon-close" type="button"
-									onclick="clearID(':inventorybookingschedule_form:responsibleperson_filter',':inventorybookingschedule_form:responsibleperson_filterName','#{applicationScopeBean.noStaffPickedMessage}','changeResponsiblePerson')" />
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableVisitScheduleFilter}"
+									for="visit_schedule_filter" />
+								<h:outputLabel for="proband_status_filter"
+									rendered="#{scheduleInventoryBookingBean.enableProbandStatusFilter}"
+									value="#{inventorylabels.booking_schedule_proband_status_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableProbandStatusFilter}">
+									<p:selectBooleanCheckbox id="proband_status_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showProbandStatus}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="proband_status_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_proband_status_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableProbandStatusFilter}"
+									for="proband_status_filter" />
+								<h:outputLabel for="courses_filter"
+									rendered="#{scheduleInventoryBookingBean.enableCoursesFilter}"
+									value="#{inventorylabels.booking_schedule_courses_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableCoursesFilter}">
+									<p:selectBooleanCheckbox id="courses_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showCourses}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="courses_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_courses_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableCoursesFilter}"
+									for="courses_filter" />
+
+								<h:outputLabel for="inventory_status_filter"
+									rendered="#{scheduleInventoryBookingBean.enableInventoryStatusFilter}"
+									value="#{inventorylabels.booking_schedule_inventory_status_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableInventoryStatusFilter}">
+									<p:selectBooleanCheckbox id="inventory_status_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showInventoryStatus}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="inventory_status_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_inventory_status_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableInventoryStatusFilter}"
+									for="inventory_status_filter" />
+
+								<h:outputLabel for="collisions_filter"
+									rendered="#{scheduleInventoryBookingBean.enableCollisionsFilter}"
+									value="#{inventorylabels.booking_schedule_collisions_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableCollisionsFilter}">
+									<p:selectBooleanCheckbox id="collisions_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showCollisions}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="collisions_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_collisions_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableCollisionsFilter}"
+									for="collisions_filter" />
+
+								<h:outputLabel for="maintenance_items_filter"
+									rendered="#{scheduleInventoryBookingBean.enableMaintenanceItemsFilter}"
+									value="#{inventorylabels.booking_schedule_maintenance_items_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableMaintenanceItemsFilter}">
+									<p:selectBooleanCheckbox id="maintenance_items_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showMaintenanceItems}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="maintenance_items_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_maintenance_items_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableMaintenanceItemsFilter}"
+									for="maintenance_items_filter" />
+								<h:outputLabel for="holidays_filter"
+									rendered="#{scheduleInventoryBookingBean.enableHolidaysFilter}"
+									value="#{inventorylabels.booking_schedule_holidays_filter_label}" />
+								<h:panelGroup
+									rendered="#{scheduleInventoryBookingBean.enableHolidaysFilter}">
+									<p:selectBooleanCheckbox id="holidays_filter"
+										value="#{scheduleInventoryBookingBean.bookingScheduleModel.showHolidays}">
+										<p:ajax update="tabView"
+											oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
+											listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="holidays_filter">
+										<h:outputText
+											value="#{inventorylabels.booking_schedule_holidays_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message
+									rendered="#{scheduleInventoryBookingBean.enableHolidaysFilter}"
+									for="holidays_filter" />
 							</h:panelGrid>
-							<p:message for="responsibleperson_filter" />
-							<h:outputLabel for="bookings_filter"
-								value="#{inventorylabels.booking_schedule_bookings_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="bookings_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showBookings}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}" for="bookings_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_bookings_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="bookings_filter" />
-							<h:outputText value="" />
-							<h:outputLabel for="visit_schedule_filter"
-								value="#{inventorylabels.booking_schedule_visit_schedule_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="visit_schedule_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showVisitSchedule}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="visit_schedule_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_visit_schedule_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="visit_schedule_filter" />
-							<h:outputLabel for="proband_status_filter"
-								value="#{inventorylabels.booking_schedule_proband_status_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="proband_status_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showProbandStatus}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="proband_status_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_proband_status_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="proband_status_filter" />
-							<h:outputLabel for="courses_filter"
-								value="#{inventorylabels.booking_schedule_courses_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="courses_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showCourses}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}" for="courses_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_courses_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="courses_filter" />
-							<p:commandButton type="button"
-								onclick="calendarPrintPreview('#{labels.schedule_print_window_title}')"
-								title="#{labels.print_schedule_button_title}"
-								icon="ui-icon-print" />
-							<h:outputLabel for="inventory_status_filter"
-								value="#{inventorylabels.booking_schedule_inventory_status_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="inventory_status_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showInventoryStatus}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="inventory_status_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_inventory_status_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="inventory_status_filter" />
-							<h:outputLabel for="maintenance_items_filter"
-								value="#{inventorylabels.booking_schedule_maintenance_items_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="maintenance_items_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showMaintenanceItems}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}"
-									for="maintenance_items_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_maintenance_items_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="maintenance_items_filter" />
-							<h:outputLabel for="holidays_filter"
-								value="#{inventorylabels.booking_schedule_holidays_filter_label}" />
-							<h:panelGroup>
-								<p:selectBooleanCheckbox id="holidays_filter"
-									value="#{scheduleInventoryBookingBean.bookingScheduleModel.showHolidays}">
-									<p:ajax update="tabView"
-										oncomplete="handleBookingDepartmentCategorySelected(xhr, status, args)"
-										listener="#{scheduleInventoryBookingBean.handleDepartmentCategoryChange}" />
-								</p:selectBooleanCheckbox>
-								<p:tooltip rendered="#{enableTooltips}" for="holidays_filter">
-									<h:outputText
-										value="#{inventorylabels.booking_schedule_holidays_filter_tooltip}"
-										escape="false" />
-								</p:tooltip>
-							</h:panelGroup>
-							<p:message for="holidays_filter" />
-							<p:commandButton type="button" onclick="updateBookingSchedule()"
-								title="#{inventorylabels.refresh_booking_schedule_button_title}"
-								icon="ui-icon-refresh" />
+							<h:panelGrid columns="2" cellpadding="2"
+								columnClasses="ctsms-ajaxstatus-column,ctsms-filters-button-column">
+								<h:outputLabel />
+								<p:commandButton type="button"
+									onclick="calendarPrintPreview('#{labels.schedule_print_window_title}')"
+									title="#{labels.print_schedule_button_title}"
+									icon="ui-icon-print" />
+								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								<p:commandButton type="button" onclick="updateBookingSchedule()"
+									title="#{inventorylabels.refresh_booking_schedule_button_title}"
+									icon="ui-icon-refresh" />
+							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>
 					<ctsms:schedule
@@ -663,54 +757,62 @@
 				<p:dialog widgetVar="dateRangePeriodDialog"
 					id="date_range_period_dialog"
 					header="#{scheduleInventoryBookingBean.dateRangePeriodDialogTitle}"
-					showEffect="#{effect}" hideEffect="#{effect}">			
-					
-					<h:panelGrid
-						columns="1"
-						cellpadding="0"
-						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row">
-						
-						<h:panelGrid columns="2"
-							cellpadding="2"
+					showEffect="#{effect}" hideEffect="#{effect}">
+
+					<h:panelGrid columns="1" cellpadding="0"
+						styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
+
+						<h:panelGrid columns="2" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column">
 
-							<h:outputText value="#{inventorylabels.booking_schedule_proband_inventory_bookings_excel_label}" />
-							
-							<p:commandLink immediate="true" id="probandinventorybookingsexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+							<h:outputText
+								value="#{inventorylabels.booking_schedule_proband_inventory_bookings_excel_label}" />
+
+							<p:commandLink immediate="true"
+								id="probandinventorybookingsexceldownload" ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleInventoryBookingBean.probandInventoryBookingsExcelStreamedContent}" />
+								<p:fileDownload
+									value="#{scheduleInventoryBookingBean.probandInventoryBookingsExcelStreamedContent}" />
 							</p:commandLink>
 
-							<h:outputText value="#{inventorylabels.booking_schedule_course_inventory_bookings_excel_label}" />
-							
-							<p:commandLink immediate="true" id="courseinventorybookingsexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+							<h:outputText
+								value="#{inventorylabels.booking_schedule_course_inventory_bookings_excel_label}" />
+
+							<p:commandLink immediate="true"
+								id="courseinventorybookingsexceldownload" ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleInventoryBookingBean.courseInventoryBookingsExcelStreamedContent}" />
+								<p:fileDownload
+									value="#{scheduleInventoryBookingBean.courseInventoryBookingsExcelStreamedContent}" />
 							</p:commandLink>
-							
-							<h:outputText value="#{inventorylabels.booking_schedule_trial_inventory_bookings_excel_label}" />
-							
-							<p:commandLink immediate="true" id="trialinventorybookingsexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+
+							<h:outputText
+								value="#{inventorylabels.booking_schedule_trial_inventory_bookings_excel_label}" />
+
+							<p:commandLink immediate="true"
+								id="trialinventorybookingsexceldownload" ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleInventoryBookingBean.trialInventoryBookingsExcelStreamedContent}" />
-							</p:commandLink>						
-							
-							<h:outputText value="#{inventorylabels.booking_schedule_visit_schedule_excel_label}" />
-							
+								<p:fileDownload
+									value="#{scheduleInventoryBookingBean.trialInventoryBookingsExcelStreamedContent}" />
+							</p:commandLink>
+
+							<h:outputText
+								value="#{inventorylabels.booking_schedule_visit_schedule_excel_label}" />
+
 							<p:commandLink immediate="true" id="visitscheduleexceldownload"
-								ajax="false" styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
+								ajax="false"
+								styleClass="ctsms-field-icon ctsms-mimetype-application-vnd-ms-excel"
 								title="#{labels.download_link_label}">
 								<h:outputText value="#{labels.download_link_label}" />
-								<p:fileDownload value="#{scheduleInventoryBookingBean.visitScheduleExcelStreamedContent}" />
+								<p:fileDownload
+									value="#{scheduleInventoryBookingBean.visitScheduleExcelStreamedContent}" />
 							</p:commandLink>
-							
+
 						</h:panelGrid>
 					</h:panelGrid>
 				</p:dialog>

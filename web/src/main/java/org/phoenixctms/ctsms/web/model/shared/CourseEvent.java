@@ -72,7 +72,13 @@ public class CourseEvent extends ScheduleEventBase<CourseInVO> {
 
 	@Override
 	public String getStyleClass() {
-		CourseCategoryVO category = WebUtil.getCourseCategory(in.getCategoryId());
+		CourseCategoryVO category = (out != null ? out.getCategory() : null);
+		if (category != null && in.getCategoryId() != null && !in.getCategoryId().equals(category.getId())
+				|| (category == null && in.getCategoryId() != null)) {
+			category = WebUtil.getCourseCategory(in.getCategoryId());
+		} else if (category != null && in.getCategoryId() == null) {
+			category = null;
+		}
 		if (category != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(WebUtil.colorToStyleClass(category.getColor(), COLOR_OPACITY));

@@ -76,7 +76,13 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 
 	@Override
 	public String getStyleClass() {
-		TimelineEventTypeVO eventType = WebUtil.getTimelineEventType(in.getTypeId());
+		TimelineEventTypeVO eventType = (out != null ? out.getType() : null);
+		if (eventType != null && in.getTypeId() != null && !in.getTypeId().equals(eventType.getId())
+				|| (eventType == null && in.getTypeId() != null)) {
+			eventType = WebUtil.getTimelineEventType(in.getTypeId());
+		} else if (eventType != null && in.getTypeId() == null) {
+			eventType = null;
+		}
 		if (eventType != null) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(WebUtil.colorToStyleClass(eventType.getColor(), COLOR_OPACITY));
@@ -94,7 +100,13 @@ public class TimelineEvent extends ScheduleEventBase<TimelineEventInVO> {
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		TrialOutVO trial = WebUtil.getTrial(in.getTrialId());
+		TrialOutVO trial = (out != null ? out.getTrial() : null);
+		if (trial != null && in.getTrialId() != null && !in.getTrialId().equals(trial.getId())
+				|| (trial == null && in.getTrialId() != null)) {
+			trial = WebUtil.getTrial(in.getTrialId());
+		} else if (trial != null && in.getTrialId() == null) {
+			trial = null;
+		}
 		if (trial != null) {
 			sb.append(CommonUtil.trialOutVOToString(trial));
 			if (!CommonUtil.isEmptyString(in.getTitle()) || !CommonUtil.isEmptyString(in.getDescription())) {

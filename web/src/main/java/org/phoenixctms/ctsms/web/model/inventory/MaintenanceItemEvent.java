@@ -84,7 +84,13 @@ public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleI
 	@Override
 	public String getTitle() {
 		StringBuilder sb = new StringBuilder();
-		InventoryOutVO inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		InventoryOutVO inventory = (out != null ? out.getInventory() : null);
+		if (inventory != null && in.getInventoryId() != null && !in.getInventoryId().equals(inventory.getId())
+				|| (inventory == null && in.getInventoryId() != null)) {
+			inventory = WebUtil.getInventory(in.getInventoryId(), null, null, null);
+		} else if (inventory != null && in.getInventoryId() == null) {
+			inventory = null;
+		}
 		if (inventory != null) {
 			sb.append(CommonUtil.inventoryOutVOToString(inventory));
 			if (in.getTypeId() != null || !CommonUtil.isEmptyString(in.getTitle())) {
@@ -92,7 +98,13 @@ public class MaintenanceItemEvent extends ScheduleEventBase<MaintenanceScheduleI
 			}
 		}
 		boolean appended = false;
-		MaintenanceTypeVO maintenanceType = WebUtil.getMaintenanceType(in.getTypeId());
+		MaintenanceTypeVO maintenanceType = (out != null ? out.getType() : null);
+		if (maintenanceType != null && in.getTypeId() != null && !in.getTypeId().equals(maintenanceType.getId())
+				|| (maintenanceType == null && in.getTypeId() != null)) {
+			maintenanceType = WebUtil.getMaintenanceType(in.getTypeId());
+		} else if (maintenanceType != null && in.getTypeId() == null) {
+			maintenanceType = null;
+		}
 		if (maintenanceType != null) {
 			if (appended) {
 				sb.append(EVENT_TITLE_SEPARATOR);
