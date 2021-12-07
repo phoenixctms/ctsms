@@ -125,7 +125,7 @@ public class Authenticator {
 	}
 
 	public Password authenticate(AuthenticationVO auth, boolean logon, String realm) throws Exception {
-		if (auth != null) {
+		if (auth != null && auth.getUsername() != null) {
 			User user = null;
 			try {
 				user = (User) userDao.searchUniqueName(UserDao.TRANSFORM_NONE, auth.getUsername());
