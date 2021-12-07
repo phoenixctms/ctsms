@@ -124,7 +124,7 @@ public class TrialSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getTeamMembers(TrialOutVO trial) {
-		if (trial != null) {
+		if (trial != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!teamMemberCache.containsKey(trial.getId())) {
 				Collection teamMembers = null;
 				try {
@@ -147,7 +147,7 @@ public class TrialSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getTimelineEvents(TrialOutVO trial) {
-		if (trial != null) {
+		if (trial != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!timelineEventCache.containsKey(trial.getId())) {
 				Collection timelineEvents = null;
 				try {
@@ -180,7 +180,7 @@ public class TrialSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getTrialTagValues(TrialOutVO trial) {
-		if (trial != null) {
+		if (trial != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!trialTagValueCache.containsKey(trial.getId())) {
 				Collection trialTagValues = null;
 				try {

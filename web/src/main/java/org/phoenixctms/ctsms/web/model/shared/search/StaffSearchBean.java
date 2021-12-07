@@ -147,7 +147,7 @@ public class StaffSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getStaffAddresses(StaffOutVO staff) {
-		if (staff != null) {
+		if (staff != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!staffAddressCache.containsKey(staff.getId())) {
 				Collection staffAddresses = null;
 				try {
@@ -170,7 +170,7 @@ public class StaffSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getStaffContactDetailValues(StaffOutVO staff) {
-		if (staff != null) {
+		if (staff != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!staffContactDetailValueCache.containsKey(staff.getId())) {
 				Collection staffContactDetailValues = null;
 				try {
@@ -198,7 +198,7 @@ public class StaffSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getStaffTagValues(StaffOutVO staff) {
-		if (staff != null) {
+		if (staff != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!staffTagValueCache.containsKey(staff.getId())) {
 				Collection staffTagValues = null;
 				try {

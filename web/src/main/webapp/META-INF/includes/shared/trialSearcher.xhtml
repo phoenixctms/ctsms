@@ -211,6 +211,7 @@
 					sortBy="#{trial.vo.dutySelfAllocationLockedUntil}"
 					filterBy="#{trial.vo.dutySelfAllocationLocked}"
 					filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:attribute name="visibleDefault" value = "false" />
 					<f:facet name="header">
 						<h:outputText value="#{triallabels.search_trial_result_list_duty_self_allocation_locked_column}" />
 					</f:facet>

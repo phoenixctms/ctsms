@@ -93,7 +93,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getEcrfFields(InputFieldOutVO inputField) {
-		if (inputField != null) {
+		if (inputField != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!ecrfFieldCache.containsKey(inputField.getId())) {
 				Collection ecrfFields = null;
 				try {
@@ -161,7 +161,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getInquiries(InputFieldOutVO inputField) {
-		if (inputField != null) {
+		if (inputField != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!inquiryCache.containsKey(inputField.getId())) {
 				Collection inquiries = null;
 				try {
@@ -207,7 +207,7 @@ public class InputFieldSearchBean extends SearchBeanBase {
 	}
 
 	public Collection<IDVO> getProbandListEntryTags(InputFieldOutVO inputField) {
-		if (inputField != null) {
+		if (inputField != null && DataTable.isRowExpansionRequest(getResultListId())) {
 			if (!listEntryTagCache.containsKey(inputField.getId())) {
 				Collection probandListEntryTags = null;
 				try {
