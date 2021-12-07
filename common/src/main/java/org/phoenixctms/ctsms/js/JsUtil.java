@@ -48,9 +48,9 @@ public final class JsUtil {
 			new GsonExclusionStrategy(ProbandOutVO.class, "children"),
 			new GsonExclusionStrategy(ProbandOutVO.class, "parents"),
 	};
-	public static final HashMap<Class, JsonSerializer> GSON_SHORTCUT_SERIALISATIONS = new HashMap<Class, JsonSerializer>();
+	public static final HashMap<Class, JsonSerializer> GSON_SHORTCUT_SERIALIZATIONS = new HashMap<Class, JsonSerializer>();
 	static {
-		GSON_SHORTCUT_SERIALISATIONS.put(UserOutVO.class, new JsonSerializer<UserOutVO>() {
+		GSON_SHORTCUT_SERIALIZATIONS.put(UserOutVO.class, new JsonSerializer<UserOutVO>() {
 
 			@Override
 			public JsonElement serialize(UserOutVO src, Type typeOfSrc, JsonSerializationContext context) {
@@ -63,7 +63,7 @@ public final class JsUtil {
 				return object;
 			}
 		});
-		GSON_SHORTCUT_SERIALISATIONS.put(UserInheritedVO.class, new JsonSerializer<UserInheritedVO>() {
+		GSON_SHORTCUT_SERIALIZATIONS.put(UserInheritedVO.class, new JsonSerializer<UserInheritedVO>() {
 
 			@Override
 			public JsonElement serialize(UserInheritedVO src, Type typeOfSrc, JsonSerializationContext context) {
@@ -77,13 +77,13 @@ public final class JsUtil {
 			}
 		});
 	}
-	private final static Gson INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
-			GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
+	private final static Gson INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER = registerTypeAdapters(new GsonBuilder(),
+			GSON_SHORTCUT_SERIALIZATIONS).setExclusionStrategies(GSON_EXCLUSION_STRATEGIES)
 					.serializeNulls()
 					.setDateFormat(INPUT_JSON_DATETIME_PATTERN)
 					.create();
-	private final static Gson VO_JSON_SERIALIZER = registerGsonTypeAdapters(new GsonBuilder(),
-			JsUtil.GSON_SHORTCUT_SERIALISATIONS).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
+	private final static Gson VO_JSON_SERIALIZER = registerTypeAdapters(new GsonBuilder(),
+			JsUtil.GSON_SHORTCUT_SERIALIZATIONS).setExclusionStrategies(JsUtil.GSON_EXCLUSION_STRATEGIES)
 					.serializeNulls()
 					.setDateFormat(VO_JSON_DATETIME_PATTERN)
 					.create();
@@ -112,11 +112,11 @@ public final class JsUtil {
 		return JsUtil.INPUT_FIELD_VARIABLE_VALUE_JSON_SERIALIZER.toJson(src);
 	}
 
-	public static GsonBuilder registerGsonTypeAdapters(GsonBuilder builder, HashMap<Class, JsonSerializer> serialisations) {
-		Iterator<Entry<Class, JsonSerializer>> it = serialisations.entrySet().iterator();
+	public static GsonBuilder registerTypeAdapters(GsonBuilder builder, HashMap<Class, ?> adapters) {
+		Iterator<?> it = adapters.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry<Class, JsonSerializer> shortcut = it.next();
-			builder.registerTypeAdapter(shortcut.getKey(), shortcut.getValue());
+			Entry shortcut = (Entry) it.next();
+			builder.registerTypeAdapter((Class) shortcut.getKey(), shortcut.getValue());
 		}
 		return builder;
 	}
