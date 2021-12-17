@@ -431,6 +431,7 @@ public final class DefaultSettings {
 	public final static boolean DATE_TIME_USER_TIME_ZONE = true;
 	public final static boolean DATE_USER_TIME_ZONE = true;
 	public final static boolean TIME_USER_TIME_ZONE = true;
+	public final static boolean FILTER_USER_TIME_ZONE = true;
 	public final static boolean CV_POSITION_SHOW_COMMENT_CV_PRESET = false;
 	public final static boolean CV_POSITION_SHOW_CV_PRESET = true;
 	public static final boolean BANK_ACCOUNT_ACTIVE_PRESET = true;

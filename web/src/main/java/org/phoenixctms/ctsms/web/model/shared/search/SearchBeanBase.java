@@ -875,8 +875,6 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 						// return eg. sessionScopeBean.visitScheduleDurations available in web-tier only
 						Collection selectionSetServiceMethodResult = null;
 						try {
-							float x = 0.5f;
-							x = x + x;
 							selectionItems = (ArrayList<SelectItem>) AssociationPath.invoke(propertyVO.getFilterItemsMethodName(), WebUtil.getSessionScopeBean(), false);
 						} catch (Exception e) {
 						}

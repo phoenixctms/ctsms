@@ -445,6 +445,9 @@ public class FileBean extends ManagedBeanBase {
 			sf.setSortOrder(true);
 		}
 		sf.setFilters(fileFilters);
+		if (Settings.getBoolean(SettingCodes.FILTER_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.FILTER_USER_TIME_ZONE)) {
+			sf.setFilterTimeZone(WebUtil.getTimeZone().getID());
+		}
 		return sf;
 	}
 
