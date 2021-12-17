@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.phoenixctms.ctsms.domain.Holiday;
 import org.phoenixctms.ctsms.domain.HolidayDao;
@@ -248,6 +249,15 @@ public final class DateCalc {
 			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
 			cal.set(Calendar.MILLISECOND, 999);
 			return cal.getTime();
+		}
+		return null;
+	}
+
+	public static Date convertTimezone(Date date, TimeZone from, TimeZone to) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar(from);
+			cal.setTime(date);
+			return new Date(cal.getTime().getTime() - from.getOffset(cal.getTime().getTime()) + to.getOffset(cal.getTime().getTime()));
 		}
 		return null;
 	}

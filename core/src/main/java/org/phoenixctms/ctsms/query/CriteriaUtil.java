@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import org.hibernate.Criteria;
@@ -97,7 +98,8 @@ public final class CriteriaUtil {
 		}
 	}
 
-	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value) throws Exception {
+	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value, String timeZone)
+			throws Exception {
 		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
 		if (pathClass != null) {
 			String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + filterFieldAssociationPath.getPropertyName());
@@ -106,7 +108,7 @@ public final class CriteriaUtil {
 						filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
 				criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
 				return applyFilter(altFilterFieldAssociationPath.getPropertyName(),
-						criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, null);
+						criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, null, timeZone);
 			}
 		}
 		return null;
@@ -228,7 +230,8 @@ public final class CriteriaUtil {
 				or);
 	}
 
-	private static org.hibernate.criterion.Criterion applyFilter(String propertyName, Class propertyClass, String value, org.hibernate.criterion.Criterion or) throws Exception {
+	private static org.hibernate.criterion.Criterion applyFilter(String propertyName, Class propertyClass, String value, org.hibernate.criterion.Criterion or, String timeZone)
+			throws Exception {
 		if (propertyClass.equals(String.class)) {
 			if (EXACT_STRING_FILTER_ENTITY_FIELDS.contains(propertyName)) {
 				return applyOr(Restrictions.eq(propertyName, new String(value)), or);
@@ -256,11 +259,22 @@ public final class CriteriaUtil {
 		} else if (propertyClass.equals(java.lang.Double.TYPE)) {
 			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDouble(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(Date.class)) {
-			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()))), or);
+			Date date;
+			if (!CommonUtil.isEmptyString(timeZone)) {
+				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+			} else {
+				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
+			}
+			return applyOr(Restrictions.eq(propertyName, date), or);
 		} else if (propertyClass.equals(Timestamp.class)) {
 			Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
-			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(DateCalc.getStartOfDay(date)), CommonUtil.dateToTimestamp(DateCalc.getEndOfDay(date))),
-					or);
+			Date from = DateCalc.getStartOfDay(date);
+			Date to = DateCalc.getEndOfDay(date);
+			if (!CommonUtil.isEmptyString(timeZone)) {
+				from = DateCalc.convertTimezone(from, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+				to = DateCalc.convertTimezone(to, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+			}
+			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)), or);
 		} else if (propertyClass.equals(VariablePeriod.class)) {
 			return applyOr(Restrictions.eq(propertyName, VariablePeriod.fromString(value)), or);
 		} else if (propertyClass.equals(AuthenticationType.class)) {
@@ -350,7 +364,7 @@ public final class CriteriaUtil {
 						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf.getFilterTimeZone()), psf.getFilterTimeZone()));
 					}
 				}
 				if (psf.getUpdateRowCount()) {
@@ -761,7 +775,7 @@ public final class CriteriaUtil {
 						}
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue())));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf.getFilterTimeZone()), psf.getFilterTimeZone()));
 					}
 				}
 				Long count = null;
