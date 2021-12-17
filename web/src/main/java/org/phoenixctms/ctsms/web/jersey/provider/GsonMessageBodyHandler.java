@@ -76,10 +76,8 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 	@Context
 	UriInfo uriInfo;
 
-	private TimeZone getTimezone() {
-		MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-		String timeZoneId = queryParams.getFirst(TIMEZONE_QUERY_PARAM);
-		if (!CommonUtil.isEmptyString(timeZoneId)) {
+	public static TimeZone getTimezone(String timeZoneId) {
+		if (ENABLE_TIMEZONE_CONVERSION && !CommonUtil.isEmptyString(timeZoneId)) {
 			TimeZone timeZone = CommonUtil.timeZoneFromString(timeZoneId);
 			if (timeZoneId.equals(timeZone.getID())) {
 				return timeZone;
@@ -91,6 +89,11 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 		return null;
 	}
 
+	private TimeZone getTimezone() {
+		MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+		return getTimezone(queryParams.getFirst(TIMEZONE_QUERY_PARAM));
+	}
+
 	//https://stackoverflow.com/questions/6873020/gson-date-format
 	private JsonSerializer getDateSerializer() {
 		return new JsonSerializer<Date>() {
@@ -99,11 +102,9 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 			public JsonElement serialize(Date src, Type typeOfSrc, JsonSerializationContext context) {
 				if (src != null) {
 					DateFormat dateFormat = new SimpleDateFormat(API_JSON_DATETIME_PATTERN);
-					if (ENABLE_TIMEZONE_CONVERSION) {
-						TimeZone timeZone = getTimezone();
-						if (timeZone != null) {
-							dateFormat.setTimeZone(timeZone);
-						}
+					TimeZone timeZone = getTimezone();
+					if (timeZone != null) {
+						dateFormat.setTimeZone(timeZone);
 					}
 					return new JsonPrimitive(dateFormat.format(src));
 				}
@@ -119,10 +120,7 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 			public Date deserialize(JsonElement json, Type typeOfT,
 					JsonDeserializationContext context) throws JsonParseException {
 				if (json != null) {
-					TimeZone timeZone = null;
-					if (ENABLE_TIMEZONE_CONVERSION) {
-						timeZone = getTimezone();
-					}
+					TimeZone timeZone = getTimezone();
 					if (timeZone != null) {
 						return CommonUtil.parseDate(json.getAsString(), API_JSON_DATETIME_PATTERN, timeZone);
 					} else {
