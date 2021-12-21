@@ -376,10 +376,70 @@ public final class QueryUtil {
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
-		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
+		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) {
+			CriterionInstantVO criterion = new CriterionInstantVO();
+			hqlWhereClause.append("(");
+			//BOOLEAN_HASH:
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" = ?");
-			queryValues.add(new QueryParameterValue(propertyClass, value));
+			criterion.setBooleanValue(new Boolean(value));
+			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.BOOLEAN_HASH, criterion));
+			//DATE_HASH:
+			try {
+				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat())); //, CommonUtil.timeZoneFromString(timeZone));
+				hqlWhereClause.append(" or ");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				criterion.setDateValue(date);
+				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.DATE_HASH, criterion));
+			} catch (IllegalArgumentException e) {
+			}
+			//TIME_HASH:
+			try {
+				Date time = CommonUtil.parseDate(value, CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()));
+				hqlWhereClause.append(" or ");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				criterion.setTimeValue(time);
+				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.TIME_HASH, criterion));
+			} catch (IllegalArgumentException e) {
+			}
+			//LONG_HASH:
+			try {
+				Long lng = new Long(value);
+				hqlWhereClause.append(" or ");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				criterion.setLongValue(lng);
+				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.LONG_HASH, criterion));
+			} catch (NumberFormatException e) {
+			}
+			//FLOAT_HASH:
+			Float flt = CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator());
+			if (flt != null) {
+				hqlWhereClause.append(" or ");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				criterion.setFloatValue(flt);
+				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.FLOAT_HASH, criterion));
+			}
+			//STRING_HASH:
+			hqlWhereClause.append(" or ");
+			hqlWhereClause.append(propertyName);
+			hqlWhereClause.append(" = ?");
+			criterion.setStringValue(value);
+			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+			//TIMESTAMP_HASH:
+			try {
+				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				hqlWhereClause.append(" or ");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				criterion.setTimestampValue(date);
+				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.TIMESTAMP_HASH, criterion));
+			} catch (IllegalArgumentException e) {
+			}
+			hqlWhereClause.append(")");
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(CommonUtil.INPUT_TYPE_NOT_SUPPORTED, propertyClass.toString()));
@@ -1489,8 +1549,8 @@ public final class QueryUtil {
 			query.setString(pos, EventImportance.fromString(value).name());
 		} else if (propertyClass.equals(JobStatus.class)) {
 			query.setString(pos, JobStatus.fromString(value).name());
-		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
-			query.setBinary(pos, CryptoUtil.hashForSearch(value));
+			//} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
+			//	query.setBinary(pos, CryptoUtil.hashForSearch(value));
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(CommonUtil.INPUT_TYPE_NOT_SUPPORTED, propertyClass.toString()));
