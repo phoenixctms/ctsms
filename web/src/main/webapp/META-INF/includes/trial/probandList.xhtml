@@ -166,6 +166,49 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
 						</p:column>
+						
+						
+						<p:column
+							sortBy="#{probandListEntry.vo.proband.personParticulars.yearOfBirth}"
+							filterBy="#{probandListEntry.vo.proband.personParticulars.dateOfBirthHash}"
+							rendered="#{probandListEntryBean.trial.type.person}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.proband_list_proband_list_proband_date_of_birth_column}" />
+							</f:facet>
+							<ui:include src="../shared/listIcon.xhtml">
+								<ui:param name="label"
+									value="#{probandListEntry.vo.proband.dateOfBirth}" />
+								<ui:param name="icon" value="ctsms-icon-decrypted" />
+								<ui:param name="rendered"
+									value="#{probandListEntry.vo.proband.decrypted}" />
+								<ui:param name="converter" value="ctsms.Date" />
+							</ui:include>
+							<ui:include src="../shared/listIcon.xhtml">
+								<ui:param name="label" value="#{labels.encrypted_date}" />
+								<ui:param name="icon" value="ctsms-icon-encrypted" />
+								<ui:param name="rendered"
+									value="#{!probandListEntry.vo.proband.decrypted}" />
+							</ui:include>
+						</p:column>
+
+						<p:column
+							sortBy="#{probandListEntry.vo.proband.animalParticulars.dateOfBirth}"
+							filterBy="#{probandListEntry.vo.proband.animalParticulars.dateOfBirth}"
+							rendered="#{!probandListEntryBean.trial.type.person}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.proband_list_proband_list_proband_date_of_birth_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntry.vo.proband.dateOfBirth}">
+								<f:converter converterId="ctsms.Date" />
+								<!-- <f:attribute name="timeZone"
+									value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" /> -->
+							</h:outputText>
+						</p:column>
+						
 
 						<p:column sortBy="#{probandListEntry.vo.rating}"
 							rendered="#{probandListEntryBean.showProbandListEntryRating}"
@@ -265,8 +308,8 @@
 												styleClass="ctsms-probandlist-rowexpansion-datalist-descriptiontext"
 												value="#{probandListEntry.vo.proband.dateOfBirth}">
 												<f:converter converterId="ctsms.Date" />
-												<f:attribute name="timeZone"
-													value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+												<!-- <f:attribute name="timeZone"
+													value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" /> -->
 											</h:outputText>
 										</dd>
 
