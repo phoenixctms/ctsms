@@ -134,6 +134,7 @@
 
 				<p:column filterBy="#{proband.vo.animalParticulars.animalName}"
 					sortBy="#{proband.vo.animalParticulars.animalName}">
+					<f:attribute name="visibleDefault" value="false" />
 					<f:facet name="header">
 						<h:outputText
 							value="#{probandlabels.search_proband_result_list_particulars_animal_name_column}" />
@@ -166,13 +167,46 @@
 					</ui:include>
 				</p:column>
 				<p:column>
-
 					<f:facet name="header">
 						<h:outputText
 							value="#{probandlabels.search_proband_result_list_gender_column}" />
 					</f:facet>
 					<h:outputText value="#{proband.vo.gender.name}" />
-
+				</p:column>
+				<p:column filterBy="#{proband.vo.personParticulars.dateOfBirthHash}"
+				    sortBy="#{proband.vo.personParticulars.yearOfBirth}">
+					<f:facet name="header">
+						<h:outputText
+							styleClass="ctsms-list-header-icon ctsms-icon-searchencrypted"
+							value="#{probandlabels.search_proband_result_list_particulars_date_of_birth_column}" />
+					</f:facet>
+					<ui:include src="listIcon.xhtml">
+						<ui:param name="label"
+							value="#{proband.vo.dateOfBirth}" />
+							<ui:param name="icon" value="ctsms-icon-decrypted" />
+							<ui:param name="rendered"
+								value="#{proband.vo.decrypted}" />
+							<ui:param name="converter" value="ctsms.Date" />
+					</ui:include>
+					<ui:include src="listIcon.xhtml">
+						<ui:param name="label" value="#{labels.encrypted_date}" />
+						<ui:param name="icon" value="ctsms-icon-encrypted" />
+						<ui:param name="rendered"
+							value="#{!proband.vo.decrypted}" />
+					</ui:include>
+				</p:column>
+				<p:column filterBy="#{proband.vo.animalParticulars.dateOfBirth}"
+					sortBy="#{proband.vo.animalParticulars.dateOfBirth}">
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText
+							value="#{probandlabels.search_proband_result_list_particulars_animal_date_of_birth_column}" />
+					</f:facet>
+					<h:outputText value="#{proband.vo.dateOfBirth}">
+						<f:converter converterId="ctsms.Date" />
+						<!-- <f:attribute name="timeZone"
+							value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" /> -->
+					</h:outputText>
 				</p:column>
 				<p:column>
 					<f:facet name="header">
@@ -217,8 +251,6 @@
 						value="#{proband.vo.rating}" stars="#{proband.vo.ratingMax}"
 						required="false" cancel="false" readonly="true" />
 				</p:column>
-
-
 				<p:column>
 					<f:facet name="header">
 						<h:outputText
@@ -228,13 +260,11 @@
 						<ui:param name="value"
 							value="#{proband.vo.privacyConsentStatus.autoDelete and proband.vo.category.delete}" />
 					</ui:include>
-
 				</p:column>
 				<p:column sortBy="#{proband.vo.privacyConsentStatus}"
 					filterBy="#{proband.vo.privacyConsentStatus.id}"
 					filterOptions="#{sessionScopeBean.filterPrivacyConsentStatusTypes}">
-					<f:attribute name="visibleDefault"
-						value="#{!probandSearchBean.picker}" />
+					<f:attribute name="visibleDefault" value="false" />
 					<f:facet name="header">
 						<h:outputText
 							value="#{probandlabels.search_proband_result_list_privacy_consent_status_column}" />
