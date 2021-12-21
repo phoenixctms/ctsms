@@ -187,6 +187,7 @@
 
 						<p:column
 							sortBy="#{probandListEntry.vo.proband.personParticulars.yearOfBirth}"
+							filterBy="#{probandListEntry.vo.proband.personParticulars.dateOfBirthHash}"
 							rendered="#{trialEcrfStatusEntryBean.trial.type.person}">
 							<f:facet name="header">
 								<h:outputText
@@ -218,8 +219,8 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntry.vo.proband.dateOfBirth}">
 								<f:converter converterId="ctsms.Date" />
-								<f:attribute name="timeZone"
-									value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+								<!-- <f:attribute name="timeZone"
+									value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" /> -->
 							</h:outputText>
 						</p:column>
 
