@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
@@ -303,8 +304,42 @@ public final class CriteriaUtil {
 			return applyOr(Restrictions.eq(propertyName, PaymentMethod.fromString(value)), or);
 		} else if (propertyClass.equals(VisitScheduleDateMode.class)) {
 			return applyOr(Restrictions.eq(propertyName, VisitScheduleDateMode.fromString(value)), or);
-		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) { // only string hashes supported, no boolean, float, etc...
-			return applyOr(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)), or);
+		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) {
+			Junction junction = Restrictions.disjunction();
+			//BOOLEAN_HASH:
+			junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(new Boolean(value))));
+			//DATE_HASH:
+			try {
+				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat())); //, CommonUtil.timeZoneFromString(timeZone));
+				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(date)));
+			} catch (IllegalArgumentException e) {
+			}
+			//TIME_HASH:
+			try {
+				Date time = CommonUtil.parseDate(value, CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()));
+				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(time)));
+			} catch (IllegalArgumentException e) {
+			}
+			//LONG_HASH:
+			try {
+				Long lng = new Long(value);
+				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(lng)));
+			} catch (NumberFormatException e) {
+			}
+			//FLOAT_HASH:
+			Float flt = CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator());
+			if (flt != null) {
+				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(flt)));
+			}
+			//STRING_HASH:
+			junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)));
+			//TIMESTAMP_HASH:
+			try {
+				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(date)));
+			} catch (IllegalArgumentException e) {
+			}
+			return applyOr(junction, or);
 		} else {
 			// illegal type...
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.CRITERIA_PROPERTY_TYPE_NOT_SUPPORTED, DefaultMessages.CRITERIA_PROPERTY_TYPE_NOT_SUPPORTED,
