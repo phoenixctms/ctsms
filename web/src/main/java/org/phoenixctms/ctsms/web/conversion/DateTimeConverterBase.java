@@ -15,6 +15,7 @@ public abstract class DateTimeConverterBase extends javax.faces.convert.DateTime
 
 	private void configure(UIComponent component) {
 		setLocale(WebUtil.getLocale());
+		setTimeZone(null);
 		Object timeZone = component.getAttributes().get("timeZone");
 		if (timeZone != null) {
 			if (timeZone instanceof String) {
