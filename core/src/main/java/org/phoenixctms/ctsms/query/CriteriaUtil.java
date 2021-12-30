@@ -261,19 +261,41 @@ public final class CriteriaUtil {
 			return applyOr(Restrictions.eq(propertyName, CommonUtil.parseDouble(value, CoreUtil.getUserContext().getDecimalSeparator())), or);
 		} else if (propertyClass.equals(Date.class)) {
 			Date date;
-			if (!CommonUtil.isEmptyString(timeZone)) {
-				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
-			} else {
+			try {
+				if (!CommonUtil.isEmptyString(timeZone)) {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				} else {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()));
+				}
+				Date from = date;
+				Date to = DateCalc.getBetweenTo(from);
+				return applyOr(Restrictions.between(propertyName, from, to), or);
+			} catch (IllegalArgumentException e) {
+				//if (!CommonUtil.isEmptyString(timeZone)) {
+				//	date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				//} else {
 				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
+				//}
+				return applyOr(Restrictions.eq(propertyName, date), or);
 			}
-			return applyOr(Restrictions.eq(propertyName, date), or);
 		} else if (propertyClass.equals(Timestamp.class)) {
-			Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
-			Date from = DateCalc.getStartOfDay(date);
-			Date to = DateCalc.getEndOfDay(date);
-			if (!CommonUtil.isEmptyString(timeZone)) {
-				from = DateCalc.convertTimezone(from, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
-				to = DateCalc.convertTimezone(to, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+			Date date, from, to;
+			try {
+				if (!CommonUtil.isEmptyString(timeZone)) {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				} else {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()));
+				}
+				from = date;
+				to = DateCalc.getBetweenTo(from);
+			} catch (IllegalArgumentException e) {
+				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
+				from = DateCalc.getStartOfDay(date);
+				to = DateCalc.getEndOfDay(date);
+				if (!CommonUtil.isEmptyString(timeZone)) {
+					from = DateCalc.convertTimezone(from, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+					to = DateCalc.convertTimezone(to, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+				}
 			}
 			return applyOr(Restrictions.between(propertyName, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)), or);
 		} else if (propertyClass.equals(VariablePeriod.class)) {

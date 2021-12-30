@@ -552,6 +552,31 @@ public final class DateCalc {
 		return null;
 	}
 
+	public static Date getBetweenTo(Date from) {
+		if (from != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(from);
+			int hour = cal.get(Calendar.HOUR_OF_DAY);
+			int minute = cal.get(Calendar.MINUTE);
+			int second = cal.get(Calendar.SECOND);
+			int millisecond = cal.get(Calendar.MILLISECOND);
+			if (minute == 0
+					&& second == 0
+					&& millisecond == 0) {
+				hour += 1;
+			} else if (second == 0
+					&& millisecond == 0) {
+				minute += 1;
+			} else if (millisecond == 0) {
+				second += 1;
+			}
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hour, minute, second);
+			cal.set(Calendar.MILLISECOND, millisecond);
+			return cal.getTime();
+		}
+		return null;
+	}
+
 	public static Date getStartOfWeek(Date date) {
 		if (date != null) {
 			GregorianCalendar cal = new GregorianCalendar();
