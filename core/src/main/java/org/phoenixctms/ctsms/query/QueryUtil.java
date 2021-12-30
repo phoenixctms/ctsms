@@ -282,28 +282,61 @@ public final class QueryUtil {
 			hqlWhereClause.append(" = ?");
 			queryValues.add(new QueryParameterValue(propertyClass, value));
 		} else if (propertyClass.equals(Date.class)) {
-			hqlWhereClause.append(propertyName);
-			hqlWhereClause.append(" = ?");
 			Date date;
-			if (!CommonUtil.isEmptyString(timeZone)) {
-				date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
-			} else {
-				date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()));
+			try {
+				if (!CommonUtil.isEmptyString(timeZone)) {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				} else {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()));
+				}
+				Date from = date;
+				Date to = DateCalc.getBetweenTo(from);
+				;
+				hqlWhereClause.append("(");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" >= ? and ");
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" <= ?)");
+				queryValues.add(new QueryParameterValue(propertyClass, CommonUtil.inputValueToString(from,
+						CoreUtil.getUserContext().getDateFormat(),
+						CoreUtil.getUserContext().getDecimalSeparator())));
+				queryValues.add(new QueryParameterValue(propertyClass, CommonUtil.inputValueToString(to,
+						CoreUtil.getUserContext().getDateFormat(),
+						CoreUtil.getUserContext().getDecimalSeparator())));
+			} catch (IllegalArgumentException e) {
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				//if (!CommonUtil.isEmptyString(timeZone)) {
+				//	date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				//} else {
+				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
+				//}
+				queryValues.add(new QueryParameterValue(propertyClass, CommonUtil.inputValueToString(date, CoreUtil.getUserContext().getDateFormat(),
+						CoreUtil.getUserContext().getDecimalSeparator())));
 			}
-			queryValues.add(new QueryParameterValue(propertyClass, CommonUtil.inputValueToString(date, CoreUtil.getUserContext().getDateFormat(),
-					CoreUtil.getUserContext().getDecimalSeparator())));
 		} else if (propertyClass.equals(Timestamp.class)) {
+			Date date, from, to;
 			hqlWhereClause.append("(");
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" >= ? and ");
 			hqlWhereClause.append(propertyName);
 			hqlWhereClause.append(" <= ?)");
-			Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
-			Date from = DateCalc.getStartOfDay(date);
-			Date to = DateCalc.getEndOfDay(date);
-			if (!CommonUtil.isEmptyString(timeZone)) {
-				from = DateCalc.convertTimezone(from, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
-				to = DateCalc.convertTimezone(to, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+			try {
+				if (!CommonUtil.isEmptyString(timeZone)) {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
+				} else {
+					date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()));
+				}
+				from = date;
+				to = DateCalc.getBetweenTo(from);
+			} catch (IllegalArgumentException e) {
+				date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat()));
+				from = DateCalc.getStartOfDay(date);
+				to = DateCalc.getEndOfDay(date);
+				if (!CommonUtil.isEmptyString(timeZone)) {
+					from = DateCalc.convertTimezone(from, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+					to = DateCalc.convertTimezone(to, CommonUtil.timeZoneFromString(timeZone), TimeZone.getDefault());
+				}
 			}
 			queryValues.add(new QueryParameterValue(Timestamp.class, CommonUtil.inputValueToString(CommonUtil.dateToTimestamp(from),
 					CoreUtil.getUserContext().getDateFormat(),
