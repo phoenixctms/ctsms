@@ -31,12 +31,19 @@ public final class ResourceUtils {
 		return sb.toString();
 	}
 
-	public static String popQueryParamValue(String parameter, MultivaluedMap<String, String> queryParameters) {
-		List<String> values = queryParameters.remove(parameter);
+	private static String getQueryParamValue(List<String> values) {
 		if (values != null && values.iterator().hasNext()) {
 			return values.iterator().next();
 		}
 		return null;
+	}
+
+	public static String getQueryParamValue(String parameter, MultivaluedMap<String, String> queryParameters) {
+		return getQueryParamValue(queryParameters.get(parameter));
+	}
+
+	public static String popQueryParamValue(String parameter, MultivaluedMap<String, String> queryParameters) {
+		return getQueryParamValue(queryParameters.remove(parameter));
 	}
 
 	private ResourceUtils() {
