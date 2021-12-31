@@ -225,7 +225,8 @@
 							columns="9" cellpadding="2"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 							<h:outputLabel for="probandgrouptoken"
-								value="#{triallabels.proband_group_token_label}" />
+							    styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								value="#{labels.noencryption_warning_short_label}#{triallabels.proband_group_token_label}" />
 							<h:panelGroup>
 								<p:inputText id="probandgrouptoken"
 									value="#{probandGroupBean.in.token}" required="true"
@@ -239,7 +240,8 @@
 							</h:panelGroup>
 							<p:message for="probandgrouptoken" />
 							<h:outputLabel for="probandgrouptitle"
-								value="#{triallabels.proband_group_title_label}" />
+							    styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								value="#{labels.noencryption_warning_short_label}#{triallabels.proband_group_title_label}" />
 							<h:panelGroup>
 								<p:inputText id="probandgrouptitle"
 									value="#{probandGroupBean.in.title}" required="true"
