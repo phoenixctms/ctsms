@@ -297,11 +297,11 @@
 				<version>4.13.1</version>
 				<scope>test</scope>
 			</dependency>
-			<dependency>
+			 <dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.16</version>
-			</dependency>
+				<version>1.2.17</version>
+			</dependency> 
 			<dependency>
 				<groupId>org.apache.xmlbeans</groupId>
 				<artifactId>xmlbeans</artifactId>
@@ -463,14 +463,14 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-enforcer-plugin</artifactId>
-				<version>3.0.0-M2</version>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<id>enforce-versions</id>
 						<goals>
 							<goal>enforce</goal>
 						</goals>
-						<inherited>false</inherited>
+						<!-- <inherited>false</inherited> -->
 						<configuration>
 							<rules>
 								<requireMavenVersion>
@@ -485,7 +485,13 @@
 									<banSnapshots>false</banSnapshots>
 									<phases>clean,deploy,site</phases>
 								</requirePluginVersions>
+								<bannedDependencies>
+			                        <excludes>
+			                            <exclude>org.apache.logging.log4j:log4j-core:(,2.15.0)</exclude>
+			                        </excludes>
+			                    </bannedDependencies>		
 							</rules>
+							<fail>true</fail>			
 						</configuration>
 					</execution>
 				</executions>
