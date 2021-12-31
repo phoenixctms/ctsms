@@ -130,9 +130,9 @@ public final class DateUtil {
 
 	public static DateFormat getDateFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
-		TimeZone timeZone = WebUtil.getTimeZone();
 		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputDatePattern(WebUtil.getDateFormat()), locale);
 		if (isUserTimeZone) {
+			TimeZone timeZone = WebUtil.getTimeZone();
 			dateFormat.setTimeZone(timeZone);
 		}
 		return dateFormat;
@@ -148,9 +148,9 @@ public final class DateUtil {
 
 	public static DateFormat getDateTimeFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
-		TimeZone timeZone = WebUtil.getTimeZone();
 		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputDateTimePattern(WebUtil.getDateFormat()), locale);
 		if (isUserTimeZone) {
+			TimeZone timeZone = WebUtil.getTimeZone();
 			dateFormat.setTimeZone(timeZone);
 		}
 		return dateFormat;
@@ -533,9 +533,9 @@ public final class DateUtil {
 
 	public static DateFormat getTimeFormat(boolean isUserTimeZone) {
 		Locale locale = WebUtil.getLocale();
-		TimeZone timeZone = WebUtil.getTimeZone();
 		DateFormat dateFormat = new SimpleDateFormat(CommonUtil.getInputTimePattern(WebUtil.getDateFormat()), locale);
 		if (isUserTimeZone) {
+			TimeZone timeZone = WebUtil.getTimeZone();
 			dateFormat.setTimeZone(timeZone);
 		}
 		return dateFormat;

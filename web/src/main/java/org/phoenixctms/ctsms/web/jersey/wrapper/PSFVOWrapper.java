@@ -14,6 +14,7 @@ public class PSFVOWrapper {
 	private Map filters;
 	private String sortBy;
 	private boolean ascending;
+	private String filterTimeZone;
 
 	public PSFVOWrapper(PSFVO psf) {
 		pageSize = psf.getPageSize();
@@ -26,5 +27,6 @@ public class PSFVOWrapper {
 		filters = psf.getFilters();
 		sortBy = psf.getSortField();
 		ascending = psf.getSortOrder();
+		filterTimeZone = psf.getFilterTimeZone();
 	}
 }

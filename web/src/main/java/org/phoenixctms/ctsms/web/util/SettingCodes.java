@@ -41,6 +41,7 @@ public interface SettingCodes {
 	public final static String TIME_USER_TIME_ZONE = "time_user_time_zone";
 	public final static String DATE_USER_TIME_ZONE = "date_user_time_zone";
 	public final static String DATE_TIME_USER_TIME_ZONE = "date_time_user_time_zone";
+	public final static String FILTER_USER_TIME_ZONE = "filter_user_time_zone";
 	public static final String SCHEDULE_TIME_PATTERN = "schedule_time_pattern";
 	public static final String SCHEDULE_RIGHT_HEADER_TEMPLATE = "schedule_right_header_template";
 	public final static String SHIFT_DURATION_SUMMARY_PERIOD_AFTER = "shift_duration_summary_period_after";

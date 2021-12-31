@@ -14,8 +14,12 @@ public class WebApplicationExceptionMapper extends ExceptionMapperBase implement
 
 	@Override
 	public Response toResponse(WebApplicationException ex) {
-		if (ex != null && ex.getCause() instanceof AuthorisationException) {
-			return buildJsonResponse(AuthorisationExceptionMapper.STATUS, ex.getCause()).build();
+		if (ex != null) {
+			if (ex.getCause() instanceof AuthorisationException) {
+				return buildJsonResponse(AuthorisationExceptionMapper.STATUS, ex.getCause()).build();
+			} else if (ex.getResponse() != null) {
+				return buildJsonResponse(ex.getResponse().getStatus(), ex).build();
+			}
 		}
 		return buildJsonResponse(Status.INTERNAL_SERVER_ERROR, ex).build();
 	}

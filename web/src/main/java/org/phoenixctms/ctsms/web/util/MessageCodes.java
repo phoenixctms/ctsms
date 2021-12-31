@@ -904,4 +904,5 @@ public interface MessageCodes {
 	public static final String INHERIT_USER_PROPERTY_TOOLTIP = "inherit_user_property_tooltip";
 	public static final String INHERITED_USER_PERMISSION_PROFILE_TOOLTIP = "inherited_user_permission_profile_tooltip";
 	public static final String INHERIT_USER_PERMISSION_PROFILE_TOOLTIP = "inherit_user_permission_profile_tooltip";
+	public static final String UNKNOWN_TIMEZONE = "unknown_timezone";
 }

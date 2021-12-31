@@ -14,6 +14,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
+import org.phoenixctms.ctsms.web.jersey.provider.GsonMessageBodyHandler;
 
 public class PSFUriPart extends PSFVO {
 
@@ -26,16 +27,17 @@ public class PSFUriPart extends PSFVO {
 	private static final String UPDATE_ROW_COUNT_QUERY_PARAM = "c";
 	private boolean slurp;
 	private HashSet<String> slurpExcludes;
-	public final static LinkedHashSet<NamedParameter> NAMED_QUERY_PARAMETERS = new LinkedHashSet<NamedParameter>();
-	public final static LinkedHashSet<NamedParameter> SLURPED_NAMED_QUERY_PARAMETERS = new LinkedHashSet<NamedParameter>();
+	private final static LinkedHashSet<NamedParameter> NAMED_QUERY_PARAMETERS = new LinkedHashSet<NamedParameter>();
+	public final static LinkedHashSet<NamedParameter> SLURPED_QUERY_PARAMETERS = new LinkedHashSet<NamedParameter>();
 	static {
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(ASCENDING_FIELD_QUERY_PARAM, String.class));
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(DESCENDING_FIELD_QUERY_PARAM, String.class));
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(PAGE_NUMBER_QUERY_PARAM, Integer.class));
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(PAGE_SIZE_QUERY_PARAM, Integer.class));
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(UPDATE_ROW_COUNT_QUERY_PARAM, Boolean.TYPE));
-		SLURPED_NAMED_QUERY_PARAMETERS.addAll(NAMED_QUERY_PARAMETERS);
-		SLURPED_NAMED_QUERY_PARAMETERS.add(new NamedParameter("*", String.class));
+		NAMED_QUERY_PARAMETERS.add(new NamedParameter(GsonMessageBodyHandler.TIMEZONE_QUERY_PARAM, String.class));
+		SLURPED_QUERY_PARAMETERS.addAll(NAMED_QUERY_PARAMETERS);
+		SLURPED_QUERY_PARAMETERS.add(new NamedParameter("*", String.class));
 	}
 
 	private static PSFUriPart updatePSF(PSFUriPart psf,
@@ -46,11 +48,12 @@ public class PSFUriPart extends PSFVO {
 				ResourceUtils.popQueryParamValue(PAGE_SIZE_QUERY_PARAM, queryParameters),
 				ResourceUtils.popQueryParamValue(PAGE_NUMBER_QUERY_PARAM, queryParameters),
 				ResourceUtils.popQueryParamValue(UPDATE_ROW_COUNT_QUERY_PARAM, queryParameters),
+				ResourceUtils.getQueryParamValue(GsonMessageBodyHandler.TIMEZONE_QUERY_PARAM, queryParameters),
 				queryParameters);
 	}
 
 	private static PSFUriPart updatePSF(PSFUriPart psf, String ascendingField, String descendingField, String pageSize, String pageNumber, String updateRowCount,
-			MultivaluedMap<String, String> filter) {
+			String timeZone, MultivaluedMap<String, String> filter) {
 		if (psf != null) {
 			if (!CommonUtil.isEmptyString(ascendingField)) {
 				psf.setSortField(ascendingField);
@@ -74,6 +77,11 @@ public class PSFUriPart extends PSFVO {
 						filters.put(param.getKey(), ResourceUtils.popQueryParamValue(param.getKey(), filter));
 					}
 				}
+			}
+			if (GsonMessageBodyHandler.getTimezone(timeZone) != null) {
+				psf.setFilterTimeZone(timeZone);
+			} else {
+				psf.setFilterTimeZone(null);
 			}
 			if (!CommonUtil.isEmptyString(pageSize)) {
 				try {
@@ -104,6 +112,7 @@ public class PSFUriPart extends PSFVO {
 		pageSize = DEFAULT_PAGE_SIZE;
 		slurp = true;
 		slurpExcludes = new HashSet<String>();
+		slurpExcludes.add(GsonMessageBodyHandler.TIMEZONE_QUERY_PARAM);
 		updateFirst();
 	}
 

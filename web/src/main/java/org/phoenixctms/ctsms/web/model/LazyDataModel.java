@@ -9,6 +9,11 @@ import java.util.Map;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
+import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.event.data.PageEvent;
 import org.primefaces.model.SortOrder;
 
@@ -120,6 +125,9 @@ public abstract class LazyDataModel<T> extends org.primefaces.model.LazyDataMode
 			preparedFilters = new HashMap<String, String>();
 		}
 		psf.setFilters(preparedFilters);
+		if (Settings.getBoolean(SettingCodes.FILTER_USER_TIME_ZONE, Bundle.SETTINGS, DefaultSettings.FILTER_USER_TIME_ZONE)) {
+			psf.setFilterTimeZone(WebUtil.getTimeZone().getID());
+		}
 		return psf;
 	}
 

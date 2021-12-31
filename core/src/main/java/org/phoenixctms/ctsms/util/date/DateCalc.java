@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.phoenixctms.ctsms.domain.Holiday;
 import org.phoenixctms.ctsms.domain.HolidayDao;
@@ -248,6 +249,15 @@ public final class DateCalc {
 			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
 			cal.set(Calendar.MILLISECOND, 999);
 			return cal.getTime();
+		}
+		return null;
+	}
+
+	public static Date convertTimezone(Date date, TimeZone from, TimeZone to) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar(from);
+			cal.setTime(date);
+			return new Date(cal.getTime().getTime() - from.getOffset(cal.getTime().getTime()) + to.getOffset(cal.getTime().getTime()));
 		}
 		return null;
 	}
@@ -538,6 +548,31 @@ public final class DateCalc {
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(date);
 			return (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
+		}
+		return null;
+	}
+
+	public static Date getBetweenTo(Date from) {
+		if (from != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(from);
+			int hour = cal.get(Calendar.HOUR_OF_DAY);
+			int minute = cal.get(Calendar.MINUTE);
+			int second = cal.get(Calendar.SECOND);
+			int millisecond = cal.get(Calendar.MILLISECOND);
+			if (minute == 0
+					&& second == 0
+					&& millisecond == 0) {
+				hour += 1;
+			} else if (second == 0
+					&& millisecond == 0) {
+				minute += 1;
+			} else if (millisecond == 0) {
+				second += 1;
+			}
+			cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), hour, minute, second);
+			cal.set(Calendar.MILLISECOND, millisecond);
+			return cal.getTime();
 		}
 		return null;
 	}

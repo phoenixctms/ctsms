@@ -190,7 +190,7 @@ public final class IndexResource {
 				}
 				returnTypeNode = createJsValuesPageNode(returnType, jsValuesReturnType);
 				if (hasUriInfo && HttpMethod.GET.equals(method.getHttpMethod())) {
-					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
+					queryParams.addAll(PSFUriPart.SLURPED_QUERY_PARAMETERS);
 				}
 				if (queryParams.size() > 0) {
 					methodNode.add(JS_QUERY_PARAMS_FIELD, createQueryParameterNode(queryParams));
@@ -203,13 +203,13 @@ public final class IndexResource {
 					returnType = Object.class;
 				}
 				returnTypeNode = createPageNode(returnType);
-				queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
+				queryParams.addAll(PSFUriPart.SLURPED_QUERY_PARAMETERS);
 				methodNode.add(JS_QUERY_PARAMS_FIELD, createQueryParameterNode(queryParams));
 				methodNode.add(JS_OUT_VO_FIELD, returnTypeNode);
 			} else {
 				returnTypeNode = createVOReturnTypeNode(returnType, method.getGenericReturnType());
 				if (FilePDFVO.class.equals(returnType)) {
-					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
+					queryParams.addAll(PSFUriPart.SLURPED_QUERY_PARAMETERS);
 				}
 				if (queryParams.size() > 0) {
 					methodNode.add(JS_QUERY_PARAMS_FIELD, createQueryParameterNode(queryParams));
@@ -405,7 +405,7 @@ public final class IndexResource {
 				String resource = joinUri(pathPrefix, args.getMethodTransfilter().transform(field.getName()));
 				Set<NamedParameter> queryParams = args.getNamedParameters(field.getName(), true);
 				if (addPsfQueryParams) {
-					queryParams.addAll(PSFUriPart.SLURPED_NAMED_QUERY_PARAMETERS);
+					queryParams.addAll(PSFUriPart.SLURPED_QUERY_PARAMETERS);
 				}
 				methodNode.add(JS_QUERY_PARAMS_FIELD, createQueryParameterNode(queryParams));
 				methodNode.add(JS_OUT_VO_FIELD, createVOReturnTypeNode(field.getReturnType(), field.getGenericReturnType()));

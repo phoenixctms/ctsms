@@ -352,6 +352,7 @@ public class CourseParticipationStatusEntryDaoImpl
 		if (psf != null) {
 			PSFVO sorterFilter = new PSFVO();
 			sorterFilter.setFilters(psf.getFilters());
+			sorterFilter.setFilterTimeZone(psf.getFilterTimeZone());
 			sorterFilter.setSortField(psf.getSortField());
 			sorterFilter.setSortOrder(psf.getSortOrder());
 			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter);

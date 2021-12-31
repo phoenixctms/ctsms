@@ -695,6 +695,7 @@ public class FileDaoImpl
 		if (psf != null) {
 			f = new PSFVO();
 			f.setFilters(psf.getFilters());
+			f.setFilterTimeZone(psf.getFilterTimeZone());
 		} else {
 			f = null;
 		}
