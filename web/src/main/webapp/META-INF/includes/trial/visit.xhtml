@@ -142,7 +142,8 @@
 							<h:outputText value="" />
 							<h:outputLabel />
 							<h:outputLabel for="visittoken"
-								value="#{triallabels.visit_token_label}" />
+							    styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								value="#{labels.noencryption_warning_short_label}#{triallabels.visit_token_label}" />
 							<h:panelGroup>
 								<p:inputText id="visittoken" value="#{visitBean.in.token}"
 									required="true" label="#{triallabels.visit_token}"
@@ -154,7 +155,8 @@
 							</h:panelGroup>
 							<p:message for="visittoken" />
 							<h:outputLabel for="visittitle"
-								value="#{triallabels.visit_title_label}" />
+							    styleClass="ctsms-field-icon ctsms-icon-noencryption"
+								value="#{labels.noencryption_warning_short_label}#{triallabels.visit_title_label}" />
 							<h:panelGroup>
 								<p:inputText id="visittitle" value="#{visitBean.in.title}"
 									required="true" label="#{triallabels.visit_title}"
