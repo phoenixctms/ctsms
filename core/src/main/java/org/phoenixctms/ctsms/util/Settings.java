@@ -390,7 +390,7 @@ public final class Settings {
 		ArrayList<String> value = CommonUtil.getValueStringList(key, getBundle(bundle), null);
 		if (value.size() > 0) {
 			try {
-				return ExcelCellFormat.fromString(value.get(0), value.get(1), value.get(2), value.get(3), value.get(4));
+				return ExcelCellFormat.fromStringList(value);
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			}
