@@ -32,7 +32,6 @@ import jxl.Cell;
 import jxl.biff.DisplayFormat;
 import jxl.format.CellFormat;
 import jxl.format.Colour;
-import jxl.write.DateTime;
 import jxl.write.NumberFormats;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
@@ -258,22 +257,24 @@ public final class ExcelUtil {
 					|| returnType.equals(Time.class)) { // should not be used by any out vo
 				if (f.isOverrideFormat()) {
 					WritableCellFormat cellFormat;
+					//https://www.logikdev.com/2010/01/18/writablefont-doesnt-like-to-be-static/
 					if (value != null && DateCalc.isTime((Date) value)) {
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_TIME_PATTERN), f, cellFormats);
 					} else if (value == null || DateCalc.isDatetime((Date) value)) {
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_TIME_PATTERN), f, cellFormats);
+						//DateCalc.convertTimezone((Date) value, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone())
 					} else {
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_PATTERN), f, cellFormats);
 					}
 					if (value == null) {
 						return new jxl.write.Blank(c, r, cellFormat);
 					}
-					return new jxl.write.DateTime(c, r, toGMT((Date) value), cellFormat, DateTime.GMT);
+					return new jxl.write.DateTime(c, r, toGMT((Date) value), cellFormat); //, DateTime.GMT);
 				} else {
 					if (value == null) {
 						return new jxl.write.Blank(c, r);
 					}
-					return new jxl.write.DateTime(c, r, toGMT((Date) value), DateTime.GMT);
+					return new jxl.write.DateTime(c, r, toGMT((Date) value)); //, DateTime.GMT);
 				}
 			} else if (returnType.equals(VariablePeriod.class)) {
 				if (f.isOverrideFormat()) {
@@ -447,7 +448,12 @@ public final class ExcelUtil {
 	private static String getFormatCode(boolean head, DisplayFormat format, Color bgColor) {
 		StringBuilder formatCode = new StringBuilder(head ? "h" : "r");
 		formatCode.append("-");
-		formatCode.append(format.getFormatIndex());
+		if (format instanceof jxl.write.DateFormat) {
+			formatCode.append("d");
+			formatCode.append(format.hashCode());
+		} else {
+			formatCode.append(format.getFormatIndex());
+		}
 		if (bgColor != null) {
 			formatCode.append("-");
 			formatCode.append(bgColor.name());
@@ -455,12 +461,17 @@ public final class ExcelUtil {
 		return formatCode.toString();
 	}
 
+	private static WritableCellFormat getCellFormat(DisplayFormat format, ExcelCellFormat f) {
+		WritableCellFormat cellFormat = new WritableCellFormat(f.getFont(), format);
+		setBgColor(cellFormat, f.getBgColor());
+		return cellFormat;
+	}
+
 	private static WritableCellFormat getHeadCellFormat(ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
 		WritableCellFormat cellFormat;
 		String formatCode = getFormatCode(true, NumberFormats.TEXT, f.getBgColor());
 		if (!cellFormats.containsKey(formatCode)) {
-			cellFormat = new WritableCellFormat(f.getFont(), NumberFormats.TEXT);
-			setBgColor(cellFormat, f.getBgColor());
+			cellFormat = getCellFormat(NumberFormats.TEXT, f);
 			cellFormats.put(formatCode, cellFormat);
 		} else {
 			cellFormat = cellFormats.get(formatCode);
@@ -472,8 +483,7 @@ public final class ExcelUtil {
 		WritableCellFormat cellFormat;
 		String formatCode = getFormatCode(false, format, f.getBgColor());
 		if (!cellFormats.containsKey(formatCode)) {
-			cellFormat = new WritableCellFormat(f.getFont(), format);
-			setBgColor(cellFormat, f.getBgColor());
+			cellFormat = getCellFormat(format, f);
 			cellFormats.put(formatCode, cellFormat);
 		} else {
 			cellFormat = cellFormats.get(formatCode);
@@ -533,6 +543,10 @@ public final class ExcelUtil {
 		try {
 			// convert to string and after that convert it back
 			final String date = DATE_FORMATTER_FROM_CURRENT.format(base);
+			//SimpleDateFormat dateFormat
+			//if (isUserTimezone) {
+			//	dateFormat.setTimeZone(CoreUtil.getUserContext().getTimeZone());
+			//} else
 			return DATE_FORMATTER_TO_GMT.parse(date);
 		} catch (ParseException e) {
 			return base;
