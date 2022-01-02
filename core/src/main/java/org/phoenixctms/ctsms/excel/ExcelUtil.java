@@ -2,7 +2,6 @@ package org.phoenixctms.ctsms.excel;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -10,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.SimpleTimeZone;
+import java.util.TimeZone;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
@@ -25,6 +25,7 @@ import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
@@ -102,7 +103,8 @@ public final class ExcelUtil {
 		return COLOR_MAPPING.get(color);
 	}
 
-	private static WritableCell createCell(Class returnType, int c, int r, Object value, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
+	private static WritableCell createCell(Class returnType, int c, int r, Object value, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats,
+			boolean isUserTimezone) {
 		if (returnType != null) {
 			if (returnType.equals(String.class)) {
 				if (f.isOverrideFormat()) {
@@ -255,26 +257,41 @@ public final class ExcelUtil {
 			} else if (returnType.equals(Date.class)
 					|| returnType.equals(Timestamp.class) // should not be used by any out vo
 					|| returnType.equals(Time.class)) { // should not be used by any out vo
-				if (f.isOverrideFormat()) {
-					WritableCellFormat cellFormat;
-					//https://www.logikdev.com/2010/01/18/writablefont-doesnt-like-to-be-static/
-					if (value != null && DateCalc.isTime((Date) value)) {
+				Date date = (Date) value;
+				WritableCellFormat cellFormat = null;
+				if (value != null && DateCalc.isTime((Date) value)) {
+					if (f.isOverrideFormat()) {
+						//https://www.logikdev.com/2010/01/18/writablefont-doesnt-like-to-be-static/
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_TIME_PATTERN), f, cellFormats);
-					} else if (value == null || DateCalc.isDatetime((Date) value)) {
+					}
+					if (isUserTimezone && f.isTimeUserTimezone()) {
+						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+					}
+				} else if (value == null || DateCalc.isDatetime((Date) value)) {
+					if (isUserTimezone && f.isOverrideFormat()) {
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_TIME_PATTERN), f, cellFormats);
-						//DateCalc.convertTimezone((Date) value, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone())
-					} else {
+					}
+					if (f.isDateTimeUserTimezone()) {
+						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+					}
+				} else {
+					if (f.isOverrideFormat()) {
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_PATTERN), f, cellFormats);
 					}
+					if (isUserTimezone && f.isDateUserTimezone()) {
+						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+					}
+				}
+				if (f.isOverrideFormat()) {
 					if (value == null) {
 						return new jxl.write.Blank(c, r, cellFormat);
 					}
-					return new jxl.write.DateTime(c, r, toGMT((Date) value), cellFormat); //, DateTime.GMT);
+					return new jxl.write.DateTime(c, r, date, cellFormat);
 				} else {
 					if (value == null) {
 						return new jxl.write.Blank(c, r);
 					}
-					return new jxl.write.DateTime(c, r, toGMT((Date) value)); //, DateTime.GMT);
+					return new jxl.write.DateTime(c, r, date);
 				}
 			} else if (returnType.equals(VariablePeriod.class)) {
 				if (f.isOverrideFormat()) {
@@ -505,7 +522,7 @@ public final class ExcelUtil {
 	}
 
 	public static boolean isWriteableType(Class returnType, HashMap<String, WritableCellFormat> cellFormats) {
-		return createCell(returnType, 0, 0, null, ExcelCellFormat.getDefaultRowFormat(), cellFormats) != null;
+		return createCell(returnType, 0, 0, null, ExcelCellFormat.getDefaultRowFormat(), cellFormats, false) != null;
 	}
 
 	public static String selectionSetValuesToString(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) {
@@ -538,26 +555,11 @@ public final class ExcelUtil {
 		}
 	}
 
-	public static Date toGMT(final Date base) {
-		// http://stackoverflow.com/questions/8579082/jxl-and-timezone-writing-an-excel
-		try {
-			// convert to string and after that convert it back
-			final String date = DATE_FORMATTER_FROM_CURRENT.format(base);
-			//SimpleDateFormat dateFormat
-			//if (isUserTimezone) {
-			//	dateFormat.setTimeZone(CoreUtil.getUserContext().getTimeZone());
-			//} else
-			return DATE_FORMATTER_TO_GMT.parse(date);
-		} catch (ParseException e) {
-			return base;
-		}
-		// seem to be the only solution
-	}
-
-	public static void writeCell(WritableSheet spreadSheet, int c, int r, Class returnType, Object value, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats)
+	public static void writeCell(WritableSheet spreadSheet, int c, int r, Class returnType, Object value, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats,
+			boolean isUserTimezone)
 			throws Exception {
 		if (spreadSheet != null) {
-			WritableCell cell = createCell(returnType, c, r, value, f, cellFormats);
+			WritableCell cell = createCell(returnType, c, r, value, f, cellFormats, isUserTimezone);
 			addCell(cell, spreadSheet, c, r, f);
 		}
 	}
