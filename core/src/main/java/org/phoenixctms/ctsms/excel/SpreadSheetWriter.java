@@ -110,9 +110,9 @@ public class SpreadSheetWriter {
 					columnIndex = c;
 				}
 				if (fieldValue != null) {
-					ExcelUtil.writeCell(spreadSheet, columnIndex.intValue(), r, fieldValue.getClass(), fieldValue, f, cellFormats);
+					ExcelUtil.writeCell(spreadSheet, columnIndex.intValue(), r, fieldValue.getClass(), fieldValue, f, cellFormats, false);
 				} else {
-					ExcelUtil.writeCell(spreadSheet, columnIndex.intValue(), r, String.class, null, f, cellFormats);
+					ExcelUtil.writeCell(spreadSheet, columnIndex.intValue(), r, String.class, null, f, cellFormats, false);
 				}
 			}
 		}
