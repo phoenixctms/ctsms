@@ -44,19 +44,19 @@ public class ExcelCellFormat {
 	private boolean isDateUserTimezone;
 	private boolean isDateTimeUserTimezone;
 	private WritableFont font;
-	private final static FontName DEFAULT_HEAD_FONT_NAME = WritableFont.ARIAL;
-	private final static int DEFAULT_HEAD_FONT_SIZE = 10;
-	private final static Color DEFAULT_HEAD_BG_COLOR = Color.LIGHTGRAY;
-	private final static boolean DEFAULT_HEAD_BOLD = true;
-	private final static ExcelCellFormat DEFAULT_HEAD_FORMAT = new ExcelCellFormat(DEFAULT_HEAD_FONT_NAME, DEFAULT_HEAD_FONT_SIZE, DEFAULT_HEAD_BOLD, DEFAULT_HEAD_BG_COLOR, true,
+	private static final FontName DEFAULT_HEAD_FONT_NAME = WritableFont.ARIAL;
+	private static final int DEFAULT_HEAD_FONT_SIZE = 10;
+	private static final Color DEFAULT_HEAD_BG_COLOR = Color.LIGHTGRAY;
+	private static final boolean DEFAULT_HEAD_BOLD = true;
+	private static final ExcelCellFormat DEFAULT_HEAD_FORMAT = new ExcelCellFormat(DEFAULT_HEAD_FONT_NAME, DEFAULT_HEAD_FONT_SIZE, DEFAULT_HEAD_BOLD, DEFAULT_HEAD_BG_COLOR, true,
 			false, false, false);
-	private final static boolean DEFAULT_TIME_USER_TIMEZONE = true;
-	private final static boolean DEFAULT_DATE_USER_TIMEZONE = true;
-	private final static boolean DEFAULT_DATE_TIME_USER_TIMEZONE = true;
-	private final static FontName DEFAULT_ROW_FONT_NAME = WritableFont.ARIAL;
-	private final static int DEFAULT_ROW_FONT_SIZE = 10;
-	private final static boolean DEFAULT_ROW_BOLD = false;
-	private final static ExcelCellFormat DEFAULT_ROW_FORMAT = new ExcelCellFormat(DEFAULT_ROW_FONT_NAME, DEFAULT_ROW_FONT_SIZE, DEFAULT_ROW_BOLD, null, true,
+	private static final boolean DEFAULT_TIME_USER_TIMEZONE = true;
+	private static final boolean DEFAULT_DATE_USER_TIMEZONE = true;
+	private static final boolean DEFAULT_DATE_TIME_USER_TIMEZONE = true;
+	private static final FontName DEFAULT_ROW_FONT_NAME = WritableFont.ARIAL;
+	private static final int DEFAULT_ROW_FONT_SIZE = 10;
+	private static final boolean DEFAULT_ROW_BOLD = false;
+	private static final ExcelCellFormat DEFAULT_ROW_FORMAT = new ExcelCellFormat(DEFAULT_ROW_FONT_NAME, DEFAULT_ROW_FONT_SIZE, DEFAULT_ROW_BOLD, null, true,
 			DEFAULT_TIME_USER_TIMEZONE, DEFAULT_DATE_USER_TIMEZONE, DEFAULT_DATE_TIME_USER_TIMEZONE);
 
 	public static ExcelCellFormat getDefaultHeadFormat() {
