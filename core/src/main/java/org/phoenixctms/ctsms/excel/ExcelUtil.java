@@ -2,13 +2,10 @@ package org.phoenixctms.ctsms.excel;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
@@ -70,15 +67,6 @@ public final class ExcelUtil {
 		COLOR_MAPPING.put(Color.GAINSBORO, Colour.GREY_25_PERCENT);
 		COLOR_MAPPING.put(Color.SALMON, Colour.CORAL);
 		COLOR_MAPPING.put(Color.LIGHTSKYBLUE, Colour.SKY_BLUE);
-	}
-	// formatter to convert from current timezone
-	private static final SimpleDateFormat DATE_FORMATTER_FROM_CURRENT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	// formatter to convert to GMT timezone
-	private static final SimpleDateFormat DATE_FORMATTER_TO_GMT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	static {
-		// initialize the GMT formatter
-		final Calendar cal = Calendar.getInstance(new SimpleTimeZone(0, "GMT"));
-		DATE_FORMATTER_TO_GMT.setCalendar(cal);
 	}
 
 	private static void addCell(WritableCell cell, WritableSheet spreadSheet, int c, int r, ExcelCellFormat f) throws WriteException {
