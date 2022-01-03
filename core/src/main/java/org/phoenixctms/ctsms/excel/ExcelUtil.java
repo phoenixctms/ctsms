@@ -268,10 +268,10 @@ public final class ExcelUtil {
 						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
 					}
 				} else if (value == null || DateCalc.isDatetime((Date) value)) {
-					if (isUserTimezone && f.isOverrideFormat()) {
+					if (f.isOverrideFormat()) {
 						cellFormat = getRowCellFormat(new jxl.write.DateFormat(EXCEL_DATE_TIME_PATTERN), f, cellFormats);
 					}
-					if (f.isDateTimeUserTimezone()) {
+					if (isUserTimezone && f.isDateTimeUserTimezone()) {
 						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
 					}
 				} else {
