@@ -69,7 +69,7 @@ public class VOColumn extends GraphEnumerator {
 	}
 
 	public void writeCell(WritableSheet spreadSheet, int c, int r, Object vo, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) throws Exception {
-		ExcelUtil.writeCell(spreadSheet, c, r, returnType, getValueOf(vo, null), f, cellFormats);
+		ExcelUtil.writeCell(spreadSheet, c, r, returnType, getValueOf(vo, null), f, cellFormats, true);
 	}
 
 	public void writeHead(WritableSheet spreadSheet, int c, int r, String columnTitle, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) throws Exception {

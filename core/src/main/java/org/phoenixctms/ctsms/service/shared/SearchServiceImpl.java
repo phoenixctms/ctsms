@@ -13,11 +13,13 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.compare.VOPositionComparator;
@@ -78,6 +80,7 @@ import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.excel.ExcelCellFormat;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
 import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
@@ -1525,6 +1528,8 @@ public class SearchServiceImpl
 				SearchResultExcelDefaultSettings.SHOW_ALL_INQUIRY_DATES);
 		boolean showEmptyInquiryColumns = Settings.getBoolean(SearchResultExcelSettingCodes.SHOW_EMPTY_INQUIRY_COLUMNS, Bundle.SEARCH_RESULT_EXCEL,
 				SearchResultExcelDefaultSettings.SHOW_EMPTY_INQUIRY_COLUMNS);
+		ExcelCellFormat rowCellFormat = Settings.getExcelCellFormat(SearchResultExcelSettingCodes.PROBAND_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+				SearchResultExcelDefaultSettings.PROBAND_ROW_FORMAT);
 		ProbandTagDao probandTagDao = this.getProbandTagDao();
 		Collection probandTags = showTags ? probandTagDao.findByPersonAnimalIdExcel(person, animal, null, true) : new ArrayList();
 		probandTagDao.toProbandTagVOCollection(probandTags);
@@ -1681,6 +1686,9 @@ public class SearchServiceImpl
 									break;
 								case TIMESTAMP:
 									fieldValue = inquiryValueVO.getTimestampValue();
+									if (inquiryVO.getField().isUserTimeZone()) {
+										fieldValue = DateCalc.convertTimezone((Date) fieldValue, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+									}
 									break;
 								case SKETCH:
 									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
@@ -1694,7 +1702,11 @@ public class SearchServiceImpl
 				}
 				if (showAllInquiryDates || inquiryVO.isExcelDate()) {
 					fieldKey = SearchResultExcelWriter.getInquiryDateColumnName(inquiryVO);
-					fieldRow.put(fieldKey, DateCalc.getStartOfDay(inquiryValueVO.getModifiedTimestamp()));
+					Date date = inquiryValueVO.getModifiedTimestamp();
+					if (rowCellFormat != null && rowCellFormat.isDateTimeUserTimezone()) {
+						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+					}
+					fieldRow.put(fieldKey, DateCalc.getStartOfDay(date));
 				}
 			}
 			distinctFieldRows.put(probandVO.getId(), fieldRow);

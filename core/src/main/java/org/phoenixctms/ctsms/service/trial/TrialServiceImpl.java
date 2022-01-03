@@ -28,6 +28,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -89,6 +90,7 @@ import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelDefaultSettings;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelWriter;
+import org.phoenixctms.ctsms.excel.ExcelCellFormat;
 import org.phoenixctms.ctsms.excel.ExcelExporter;
 import org.phoenixctms.ctsms.excel.ExcelUtil;
 import org.phoenixctms.ctsms.excel.ExcelWriterFactory;
@@ -4512,6 +4514,7 @@ public class TrialServiceImpl
 		boolean showICAge;
 		boolean showScreeningDate;
 		boolean showScreeningReason;
+		ExcelCellFormat rowCellFormat;
 		if (logLevel != null) {
 			switch (logLevel) {
 				case ENROLLMENT:
@@ -4547,6 +4550,8 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_SHOW_SCREENING_DATE);
 					showScreeningReason = Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_SHOW_SCREENING_REASON, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_SHOW_SCREENING_REASON);
+					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_FORMAT);
 					break;
 				case SCREENING:
 					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
@@ -4581,6 +4586,8 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.SCREENING_LOG_SHOW_SCREENING_DATE);
 					showScreeningReason = Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_SHOW_SCREENING_REASON, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.SCREENING_LOG_SHOW_SCREENING_REASON);
+					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_FORMAT);
 					break;
 				case PRE_SCREENING:
 					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
@@ -4615,6 +4622,8 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_SHOW_SCREENING_DATE);
 					showScreeningReason = Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SHOW_SCREENING_REASON, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_SHOW_SCREENING_REASON);
+					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_FORMAT);
 					break;
 				case SICL:
 					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.SICL_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
@@ -4646,6 +4655,8 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.SICL_SHOW_SCREENING_DATE);
 					showScreeningReason = Settings.getBoolean(ProbandListExcelSettingCodes.SICL_SHOW_SCREENING_REASON, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.SICL_SHOW_SCREENING_REASON);
+					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SICL_ROW_FORMAT);
 					break;
 				default:
 					showProbandListEntryTags = false;
@@ -4664,6 +4675,7 @@ public class TrialServiceImpl
 					showICAge = false;
 					showScreeningDate = false;
 					showScreeningReason = false;
+					rowCellFormat = null;
 					break;
 			}
 		} else {
@@ -4698,6 +4710,8 @@ public class TrialServiceImpl
 					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_SCREENING_DATE);
 			showScreeningReason = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_SHOW_SCREENING_REASON, Bundle.PROBAND_LIST_EXCEL,
 					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_SCREENING_REASON);
+			rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+					ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_FORMAT);
 		}
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(trialId, showAllProbandListEntryTags
@@ -4904,6 +4918,9 @@ public class TrialServiceImpl
 									break;
 								case TIMESTAMP:
 									fieldValue = listEntryTagValueVO.getTimestampValue();
+									if (listEntryTagVO.getField().isUserTimeZone()) {
+										fieldValue = DateCalc.convertTimezone((Date) fieldValue, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+									}
 									break;
 								case SKETCH:
 									fieldValue = ExcelUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
@@ -4917,7 +4934,11 @@ public class TrialServiceImpl
 				}
 				if (showAllProbandListEntryTagDates || listEntryTagVO.isExcelDate()) {
 					fieldKey = ProbandListExcelWriter.getProbandListEntryTagDateColumnName(listEntryTagVO);
-					fieldRow.put(fieldKey, DateCalc.getStartOfDay(listEntryTagValueVO.getModifiedTimestamp()));
+					Date date = listEntryTagValueVO.getModifiedTimestamp();
+					if (rowCellFormat != null && rowCellFormat.isDateTimeUserTimezone()) {
+						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+					}
+					fieldRow.put(fieldKey, DateCalc.getStartOfDay(date));
 				}
 			}
 			HashMap<Long, InquiryValue> inquiryValueMap;
@@ -4985,6 +5006,9 @@ public class TrialServiceImpl
 									break;
 								case TIMESTAMP:
 									fieldValue = inquiryValueVO.getTimestampValue();
+									if (inquiryVO.getField().isUserTimeZone()) {
+										fieldValue = DateCalc.convertTimezone((Date) fieldValue, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+									}
 									break;
 								case SKETCH:
 									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
@@ -4998,7 +5022,11 @@ public class TrialServiceImpl
 				}
 				if (showAllInquiryDates || inquiryVO.isExcelDate()) {
 					fieldKey = ProbandListExcelWriter.getInquiryDateColumnName(inquiryVO);
-					fieldRow.put(fieldKey, DateCalc.getStartOfDay(inquiryValueVO.getModifiedTimestamp()));
+					Date date = inquiryValueVO.getModifiedTimestamp();
+					if (rowCellFormat != null && rowCellFormat.isDateTimeUserTimezone()) {
+						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
+					}
+					fieldRow.put(fieldKey, DateCalc.getStartOfDay(date));
 				}
 			}
 			if (passDecryption) {
