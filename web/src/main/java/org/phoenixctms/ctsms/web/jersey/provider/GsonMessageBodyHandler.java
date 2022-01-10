@@ -134,13 +134,9 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 
 	private static void updateFieldValueVODateValue(JsonObject json, String fieldName, Date timestampValue) {
 		if (json != null && timestampValue != null) {
-			//TimeZone timeZone = getTimezone();
-			//if (timeZone != null) {
 			DateFormat dateFormat = new SimpleDateFormat(API_JSON_DATETIME_PATTERN);
-			//	dateFormat.setTimeZone(timeZone);
 			json.remove(fieldName);
 			json.add(fieldName, new JsonPrimitive(dateFormat.format(timestampValue)));
-			//}
 		}
 	}
 
@@ -203,20 +199,25 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 					JsonDeserializationContext context) throws JsonParseException {
 				ECRFFieldValueInVO in = gson.fromJson(json, ECRFFieldValueInVO.class);
 				if (in != null && json != null) {
-					if (in.getTimestampValue() != null) {
+					JsonElement value = json.getAsJsonObject().get(FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME);
+					if (value != null) {
 						boolean isUserTimeZone = false;
 						try {
 							isUserTimeZone = WebUtil.getServiceLocator().getToolsService().isEcrfFieldUserTimeZone(in.getEcrfFieldId());
 						} catch (AuthenticationException | AuthorisationException | ServiceException e) {
 						}
 						if (!isUserTimeZone) {
-							in.setTimestampValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
+							in.setTimestampValue(CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN));
 						}
+					} else {
+						in.setTimestampValue(null);
 					}
-					in.setDateValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_DATE_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
-					in.setTimeValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_TIME_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
+					//value = json.getAsJsonObject().get(FIELD_VALUE_VO_DATE_FIELD_NAME);
+					//in.setDateValue(value != null ? CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN) : null);
+					//value = json.getAsJsonObject().get(FIELD_VALUE_VO_TIME_FIELD_NAME);
+					//in.setTimeValue(value != null ? CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN) : null);
 				}
-				return null;
+				return in;
 			}
 		});
 		deserializations.put(ProbandListEntryTagValueInVO.class, new JsonDeserializer<ProbandListEntryTagValueInVO>() {
@@ -226,20 +227,25 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 					JsonDeserializationContext context) throws JsonParseException {
 				ProbandListEntryTagValueInVO in = gson.fromJson(json, ProbandListEntryTagValueInVO.class);
 				if (in != null && json != null) {
-					if (in.getTimestampValue() != null) {
+					JsonElement value = json.getAsJsonObject().get(FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME);
+					if (value != null) {
 						boolean isUserTimeZone = false;
 						try {
 							isUserTimeZone = WebUtil.getServiceLocator().getToolsService().isProbandListEntryTagUserTimeZone(in.getTagId());
 						} catch (AuthenticationException | AuthorisationException | ServiceException e) {
 						}
 						if (!isUserTimeZone) {
-							in.setTimestampValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
+							in.setTimestampValue(CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN));
 						}
+					} else {
+						in.setTimestampValue(null);
 					}
-					in.setDateValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_DATE_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
-					in.setTimeValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_TIME_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
+					//value = json.getAsJsonObject().get(FIELD_VALUE_VO_DATE_FIELD_NAME);
+					//in.setDateValue(value != null ? CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN) : null);
+					//value = json.getAsJsonObject().get(FIELD_VALUE_VO_TIME_FIELD_NAME);
+					//in.setTimeValue(value != null ? CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN) : null);
 				}
-				return null;
+				return in;
 			}
 		});
 		deserializations.put(InquiryValueInVO.class, new JsonDeserializer<InquiryValueInVO>() {
@@ -249,20 +255,25 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 					JsonDeserializationContext context) throws JsonParseException {
 				InquiryValueInVO in = gson.fromJson(json, InquiryValueInVO.class);
 				if (in != null && json != null) {
-					if (in.getTimestampValue() != null) {
+					JsonElement value = json.getAsJsonObject().get(FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME);
+					if (value != null) {
 						boolean isUserTimeZone = false;
 						try {
 							isUserTimeZone = WebUtil.getServiceLocator().getToolsService().isInquiryUserTimeZone(in.getInquiryId());
 						} catch (AuthenticationException | AuthorisationException | ServiceException e) {
 						}
 						if (!isUserTimeZone) {
-							in.setTimestampValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
+							in.setTimestampValue(CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN));
 						}
+					} else {
+						in.setTimestampValue(null);
 					}
-					in.setDateValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_DATE_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
-					in.setTimeValue(CommonUtil.parseDate(json.getAsJsonObject().get(FIELD_VALUE_VO_TIME_FIELD_NAME).getAsString(), API_JSON_DATETIME_PATTERN));
+					//value = json.getAsJsonObject().get(FIELD_VALUE_VO_DATE_FIELD_NAME);
+					//in.setDateValue(value != null ? CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN) : null);
+					//value = json.getAsJsonObject().get(FIELD_VALUE_VO_TIME_FIELD_NAME);
+					//in.setTimeValue(value != null ? CommonUtil.parseDate(value.getAsString(), API_JSON_DATETIME_PATTERN) : null);
 				}
-				return null;
+				return in;
 			}
 		});
 		return deserializations;

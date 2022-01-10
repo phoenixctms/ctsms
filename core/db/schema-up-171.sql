@@ -47,3 +47,7 @@ nextval('hibernate_sequence'),
 't',
 null
 );
+
+update JOB_TYPE set COMMAND_FORMAT = '{10} --task=cleanup_all --task=export_ecrf_data_vertical --task=export_ecrf_data_horizontal --task=publish_ecrf_data_sqlite --task=publish_ecrf_data_horizontal_csv --task=publish_ecrf_data_xls --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --force' where NAME_L10N_KEY = 'export_ecrf_data';
+update JOB_TYPE set COMMAND_FORMAT = '{11} --task=cleanup_all --task=export_inquiry_data_vertical --task=export_inquiry_data_horizontal --task=publish_inquiry_data_sqlite --task=publish_inquiry_data_horizontal_csv --task=publish_inquiry_data_xls --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --force' where NAME_L10N_KEY = 'export_inquiry_data';
+update JOB_TYPE set COMMAND_FORMAT = '{12} --task=cleanup --task=import_ecrf_data_horizontal --task=cleanup -id={1} -auth={4} -jid={5} -tz={6} --force --skip-errors' where NAME_L10N_KEY = 'import_ecrf_data';
