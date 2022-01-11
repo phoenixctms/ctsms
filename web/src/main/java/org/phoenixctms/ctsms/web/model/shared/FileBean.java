@@ -245,7 +245,7 @@ public class FileBean extends ManagedBeanBase {
 			}
 			if (init) {
 				initIn();
-				initSets();
+				initSets(true);
 			}
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
@@ -326,8 +326,7 @@ public class FileBean extends ManagedBeanBase {
 		}
 	}
 
-	@Override
-	protected String changeAction(Long id) {
+	private String changeFileAction(Long id, boolean updateTree) {
 		out = null;
 		if (id != null) {
 			try {
@@ -343,8 +342,13 @@ public class FileBean extends ManagedBeanBase {
 			}
 		}
 		initIn();
-		initSets();
+		initSets(updateTree);
 		return CHANGE_OUTCOME;
+	}
+
+	@Override
+	protected String changeAction(Long id) {
+		return changeFileAction(id, true);
 	}
 
 	private String changeAction(String param, FileModule module) {
@@ -357,7 +361,7 @@ public class FileBean extends ManagedBeanBase {
 		activeFilter = null;
 		publicFilter = null;
 		initIn();
-		initSets();
+		initSets(true);
 		return CHANGE_OUTCOME;
 	}
 
@@ -461,7 +465,7 @@ public class FileBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getFileService().deleteFile(WebUtil.getAuthentication(), id);
 			initIn();
-			initSets();
+			initSets(true);
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
@@ -493,7 +497,7 @@ public class FileBean extends ManagedBeanBase {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.BULK_DELETE_OPERATION_SUCCESSFUL, sf.getRowCount(), sf.getRowCount());
 			}
 			initIn();
-			initSets();
+			initSets(true);
 			out = null;
 			return BULK_DELETE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -722,7 +726,7 @@ public class FileBean extends ManagedBeanBase {
 			this.load(id);
 		} else {
 			initIn();
-			initSets();
+			initSets(true);
 		}
 	}
 
@@ -761,7 +765,7 @@ public class FileBean extends ManagedBeanBase {
 		streamIn = null;
 	}
 
-	private void initSets() {
+	private void initSets(boolean updateTree) {
 		inventory = (FileModule.INVENTORY_DOCUMENT.equals(module) ? WebUtil.getInventory(entityId, null, null, null) : null);
 		staff = (FileModule.STAFF_DOCUMENT.equals(module) ? WebUtil.getStaff(entityId, null, null, null) : null);
 		course = (FileModule.COURSE_DOCUMENT.equals(module) ? WebUtil.getCourse(entityId, null, null, null) : null);
@@ -770,8 +774,10 @@ public class FileBean extends ManagedBeanBase {
 		massMail = (FileModule.MASS_MAIL_DOCUMENT.equals(module) ? WebUtil.getMassMail(entityId) : null);
 		useFileEncryption = CommonUtil.getUseFileEncryption(module);
 		lastUploadedOut = null;
-		updateFileFolderTree(module, entityId);
-		updateLogicalFileSystemStats();
+		if (updateTree) {
+			updateFileFolderTree(module, entityId);
+			updateLogicalFileSystemStats();
+		}
 		allowTypes = WebUtil.getAllowedFileExtensionsPattern(module, null);
 		if (module != null) {
 			switch (module) {
@@ -986,7 +992,7 @@ public class FileBean extends ManagedBeanBase {
 			WebUtil.publishException(e);
 		} finally {
 			initIn();
-			initSets();
+			initSets(true);
 		}
 		return ERROR_OUTCOME;
 	}
@@ -1007,14 +1013,14 @@ public class FileBean extends ManagedBeanBase {
 	public String resetAction() {
 		out = null;
 		initIn();
-		initSets();
+		initSets(true);
 		return RESET_OUTCOME;
 	}
 
 	public void selectFileByNode() {
 		Long fileId = WebUtil.getLongParamValue(GetParamNames.FILE_ID);
 		if (fileId != null) {
-			change(fileId.toString());
+			actionPostProcess(changeFileAction(fileId, false));
 		} else {
 			String logicalPath = JsUtil.decodeBase64(WebUtil.getParamValue(GetParamNames.LOGICAL_PATH));
 			if (logicalPath != null) {
@@ -1023,7 +1029,7 @@ public class FileBean extends ManagedBeanBase {
 				// since this is an actionlistener of a command request, we allow deselection explicitly
 				this.out = null;
 				this.initIn();
-				initSets();
+				initSets(false);
 			}
 		}
 	}
@@ -1048,7 +1054,8 @@ public class FileBean extends ManagedBeanBase {
 		if (node != null) {
 			node.setSelected(false);
 			if (node.getData() instanceof FileOutVO) {
-				change(Long.toString(((FileOutVO) node.getData()).getId())); // we load the instance again, to refresh the tree hirarchy depth....
+				actionPostProcess(changeFileAction(((FileOutVO) node.getData()).getId(), false));
+				//change(Long.toString(((FileOutVO) node.getData()).getId())); // we load the instance again, to refresh the tree hirarchy depth....
 			} else if (node.getData() instanceof FileFolderVO) {
 				in.setLogicalPath(((FileFolderVO) node.getData()).getFolderPath());
 			}
@@ -1065,7 +1072,7 @@ public class FileBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getFileService().updateFile(WebUtil.getAuthentication(), in);
 			initIn();
-			initSets();
+			initSets(true);
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -1094,7 +1101,7 @@ public class FileBean extends ManagedBeanBase {
 				out = WebUtil.getServiceLocator().getFileService().updateFile(WebUtil.getAuthentication(), in, contentIn);
 			}
 			initIn();
-			initSets();
+			initSets(true);
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
