@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import javax.faces.model.SelectItem;
+
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
@@ -609,6 +611,21 @@ public final class DateUtil {
 
 	public static Date sanitizeTimelineTimestamp(boolean sub, Date date) {
 		return sanitizeClientTimestamp(sub, date);
+	}
+
+	public static SelectItem getDurationItem(Integer seconds, boolean signed, DurationUnitOfTime mostSignificant,
+			DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
+		if (seconds != null) {
+			return new SelectItem(seconds,
+					(signed ? getSignSymbol(seconds) : "") + getDurationString(seconds, mostSignificant, leastSignificant, leastSignificantDecimals));
+		}
+		return null;
+	}
+
+	public static SelectItem getDurationItem(String seconds, boolean signed, DurationUnitOfTime mostSignificant,
+			DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
+		return getDurationItem(new Integer(Integer.parseInt(seconds)), signed, mostSignificant,
+				leastSignificant, leastSignificantDecimals);
 	}
 
 	private DateUtil() {

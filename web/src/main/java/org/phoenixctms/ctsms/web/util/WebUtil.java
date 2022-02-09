@@ -3010,6 +3010,18 @@ public final class WebUtil {
 	}
 
 	public static ArrayList<SelectItem> getVisitScheduleDurations() {
+		return getVisitScheduleDurations((Set<Integer>) null);
+	}
+
+	public static ArrayList<SelectItem> getVisitScheduleDurations(Integer appendDuration) {
+		LinkedHashSet<Integer> append = new LinkedHashSet<Integer>(1);
+		if (appendDuration != null) {
+			append.add(appendDuration);
+		}
+		return getVisitScheduleDurations(append);
+	}
+
+	public static ArrayList<SelectItem> getVisitScheduleDurations(Set<Integer> append) {
 		return Settings.getDurationList(SettingCodes.VISIT_SCHEDULE_ITEM_DURATIONS, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_DURATIONS,
 				false,
 				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
@@ -3017,10 +3029,23 @@ public final class WebUtil {
 				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 				Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-						DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+						DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS),
+				append);
 	}
 
 	public static ArrayList<SelectItem> getVisitScheduleOffsets() {
+		return getVisitScheduleOffsets((Set<Integer>) null);
+	}
+
+	public static ArrayList<SelectItem> getVisitScheduleOffsets(Integer appendOffset) {
+		LinkedHashSet<Integer> append = new LinkedHashSet<Integer>(1);
+		if (appendOffset != null) {
+			append.add(appendOffset);
+		}
+		return getVisitScheduleOffsets(append);
+	}
+
+	public static ArrayList<SelectItem> getVisitScheduleOffsets(Set<Integer> append) {
 		return Settings.getDurationList(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSETS, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSETS,
 				true,
 				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
@@ -3028,7 +3053,8 @@ public final class WebUtil {
 				Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 						DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 				Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
-						DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
+						DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS),
+				append);
 	}
 
 	public static ProbandOutVO getProband(Long probandId, Integer maxInstances, Integer maxParentsDepth, Integer maxChildrenDepth) {
