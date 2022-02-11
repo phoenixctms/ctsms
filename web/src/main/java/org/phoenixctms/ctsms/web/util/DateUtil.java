@@ -266,7 +266,7 @@ public final class DateUtil {
 								months = delta;
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -285,12 +285,12 @@ public final class DateUtil {
 							days = delta;
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months * 30) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -310,17 +310,17 @@ public final class DateUtil {
 						hours = delta;
 					} else {
 						hours = (delta >= 24) ? delta % 24 : delta;
-						delta = delta / 24;
+						delta = (delta - hours) / 24;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = Math.floor(delta);
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days * 24) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months * 30 * 24) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -341,22 +341,22 @@ public final class DateUtil {
 					minutes = delta;
 				} else {
 					minutes = (delta >= 60) ? delta % 60 : delta;
-					delta = delta / 60;
+					delta = (delta - minutes) / 60;
 					if (DurationUnitOfTime.HOURS.equals(mostSignificant)) {
 						hours = Math.floor(delta);
 					} else {
 						hours = (delta >= 24) ? delta % 24 : delta;
-						delta = delta / 24;
+						delta = (delta - hours * 60) / 24;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = Math.floor(delta);
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days * 24 * 60) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months * 30 * 24 * 60) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -378,27 +378,27 @@ public final class DateUtil {
 				seconds = delta;
 			} else {
 				seconds = (delta >= 60) ? delta % 60 : delta;
-				delta = delta / 60;
+				delta = (delta - seconds) / 60;
 				if (DurationUnitOfTime.MINUTES.equals(mostSignificant)) {
 					minutes = Math.floor(delta);
 				} else {
 					minutes = (delta >= 60) ? delta % 60 : delta;
-					delta = delta / 60;
+					delta = (delta - minutes * 60) / 60;
 					if (DurationUnitOfTime.HOURS.equals(mostSignificant)) {
 						hours = Math.floor(delta);
 					} else {
 						hours = (delta >= 24) ? delta % 24 : delta;
-						delta = delta / 24;
+						delta = (delta - hours * 60 * 60) / 24;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = Math.floor(delta);
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days * 24 * 60 * 60) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months * 30 * 24 * 60 * 60) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
