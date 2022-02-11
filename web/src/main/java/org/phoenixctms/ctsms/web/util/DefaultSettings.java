@@ -164,27 +164,27 @@ public final class DefaultSettings {
 		for (int i = 0; i <= 24 * 60; i = i + 15) {
 			if (i == 0) {
 			} else if (i <= 60) {
-				VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 60));
+				VISIT_SCHEDULE_ITEM_DURATIONS.add(Integer.toString(i * 60));
 			} else if (i <= 720) {
 				if (i % 30 == 0) {
-					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 60));
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Integer.toString(i * 60));
 				}
 			} else {
 				if (i % 60 == 0) {
-					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 60));
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Integer.toString(i * 60));
 				}
 			}
 		}
 		for (int i = 2; i <= 7; i = i + 1) {
 			if (i <= 30) {
-				VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 24 * 60 * 60));
+				VISIT_SCHEDULE_ITEM_DURATIONS.add(Integer.toString(i * 24 * 60 * 60));
 			} else if (i <= 90) {
 				if (i % 10 == 0) {
-					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 24 * 60 * 60));
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Integer.toString(i * 24 * 60 * 60));
 				}
 			} else {
 				if (i % 30 == 0) {
-					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 24 * 60 * 60));
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Integer.toString(i * 24 * 60 * 60));
 				}
 			}
 		}
@@ -206,13 +206,13 @@ public final class DefaultSettings {
 		Collections.reverse(offsets);
 		Iterator<Integer> it = offsets.iterator();
 		while (it.hasNext()) {
-			VISIT_SCHEDULE_ITEM_OFFSETS.add(Long.toString(it.next() * -1));
+			VISIT_SCHEDULE_ITEM_OFFSETS.add(Integer.toString(it.next() * -1));
 		}
 		Collections.reverse(offsets);
 		VISIT_SCHEDULE_ITEM_OFFSETS.add("0");
 		it = offsets.iterator();
 		while (it.hasNext()) {
-			VISIT_SCHEDULE_ITEM_OFFSETS.add(Long.toString(it.next()));
+			VISIT_SCHEDULE_ITEM_OFFSETS.add(Integer.toString(it.next()));
 		}
 	}
 	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.DAYS;
