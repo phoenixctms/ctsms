@@ -175,6 +175,19 @@ public final class DefaultSettings {
 				}
 			}
 		}
+		for (int i = 2; i <= 7; i = i + 1) {
+			if (i <= 30) {
+				VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 24 * 60 * 60));
+			} else if (i <= 90) {
+				if (i % 10 == 0) {
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 24 * 60 * 60));
+				}
+			} else {
+				if (i % 30 == 0) {
+					VISIT_SCHEDULE_ITEM_DURATIONS.add(Long.toString(i * 24 * 60 * 60));
+				}
+			}
+		}
 		//by days:
 		ArrayList<Integer> offsets = new ArrayList<Integer>();
 		for (int i = 1; i <= 180; i = i + 1) {
@@ -202,7 +215,7 @@ public final class DefaultSettings {
 			VISIT_SCHEDULE_ITEM_OFFSETS.add(Long.toString(it.next()));
 		}
 	}
-	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.HOURS;
+	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.DAYS;
 	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.MINUTES;
 	public static final int VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS = 0;
 	public static final DurationUnitOfTime VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME = DurationUnitOfTime.DAYS;
