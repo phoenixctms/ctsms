@@ -4,6 +4,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.FacesConverter;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
@@ -18,14 +19,14 @@ public class VisitScheduleOffsetConverter extends DurationConverterBase {
 	@Override
 	public Object getAsObject(FacesContext context, UIComponent component, String value) {
 		try {
-			return DateUtil.getDurationItem(value, true,
+			return DateUtil.getDurationItem(CommonUtil.safeLongToInt(DateUtil.getDurationFromString(value)), true,
 					Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 					Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 					Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

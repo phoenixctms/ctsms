@@ -737,12 +737,6 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			in.setOffsetSeconds(null);
 		}
 	}
-	//	public ArrayList<SelectItem> getDurations() {
-	//		return durations;
-	//	}
-	//	public ArrayList<SelectItem> getOffsets() {
-	//		return offsets;
-	//	}
 
 	public List<IDVO> completeGroup(String query) {
 		try {
@@ -852,29 +846,23 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			}
 		}
 		try {
-			duration = DateUtil.getDurationItem(query, false,
+			duration = DateUtil.getDurationItem(CommonUtil.safeLongToInt(DateUtil.getDurationFromString(query)), false,
 					Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 					Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 					Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_DURATION_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			duration = null;
 		}
 		return result;
 	}
 
 	public void handleDurationSelect(SelectEvent event) {
-		//		try {
-		//			duration = (SelectItem) event.getObject();
-		//		} catch (Exception e) {
-		//			duration = null;
-		//		}
 	}
 
 	public void handleDurationUnselect(UnselectEvent event) {
-		//		duration = null;
 	}
 
 	private SelectItem offset;
@@ -909,28 +897,22 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			}
 		}
 		try {
-			offset = DateUtil.getDurationItem(query, true,
+			offset = DateUtil.getDurationItem(CommonUtil.safeLongToInt(DateUtil.getDurationFromString(query)), true,
 					Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_MOST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 					Settings.getDurationUnitOfTime(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME),
 					Settings.getInt(SettingCodes.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS, Bundle.SETTINGS,
 							DefaultSettings.VISIT_SCHEDULE_ITEM_OFFSET_LEAST_SIGNIFICANT_DURATION_UNIT_OF_TIME_DECIMALS));
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			offset = null;
 		}
 		return result;
 	}
 
 	public void handleOffsetSelect(SelectEvent event) {
-		//		try {
-		//			offset = (SelectItem) event.getObject();
-		//		} catch (Exception e) {
-		//			offset = null;
-		//		}
 	}
 
 	public void handleOffsetnUnselect(UnselectEvent event) {
-		//		offset = null;
 	}
 }
