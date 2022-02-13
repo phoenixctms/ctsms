@@ -84,7 +84,7 @@ public class FileServiceImpl
 				DefaultSettings.EXTERNAL_FILE_CONTENT_STREAM_THRESHOLD);
 		if (externalFileContentStreamThreshold != null && file.isExternalFile() && file.getSize() > externalFileContentStreamThreshold) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_CONTENT_STREAM_THRESHOLD_EXCEEDED,
-					CommonUtil.humanReadableByteCount(externalFileContentStreamThreshold));
+					CommonUtil.humanReadableByteCount(externalFileContentStreamThreshold, CoreUtil.getUser().getDecimalSeparator()));
 		}
 	}
 
@@ -197,7 +197,8 @@ public class FileServiceImpl
 		Integer externalFileContentSizeLimit = Settings.getIntNullable(SettingCodes.EXTERNAL_FILE_CONTENT_SIZE_LIMIT, Bundle.SETTINGS,
 				DefaultSettings.EXTERNAL_FILE_CONTENT_SIZE_LIMIT);
 		if (externalFileContentSizeLimit != null && fileContent.getDatas().length > externalFileContentSizeLimit) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_CONTENT_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(externalFileContentSizeLimit)); // "content size exceeds limit ({0})"
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_CONTENT_SIZE_LIMIT_EXCEEDED,
+					CommonUtil.humanReadableByteCount(externalFileContentSizeLimit, CoreUtil.getUser().getDecimalSeparator())); // "content size exceeds limit ({0})"
 		}
 	}
 
@@ -259,7 +260,8 @@ public class FileServiceImpl
 		checkMimeType(fileStream.getMimeType(), module);
 		Integer externalFileSizeLimit = Settings.getIntNullable(SettingCodes.EXTERNAL_FILE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.EXTERNAL_FILE_SIZE_LIMIT);
 		if (externalFileSizeLimit != null && fileStream.getSize() != null && fileStream.getSize() > externalFileSizeLimit) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(externalFileSizeLimit)); // "stream size will exceed limit ({0})"
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_SIZE_LIMIT_EXCEEDED,
+					CommonUtil.humanReadableByteCount(externalFileSizeLimit, CoreUtil.getUser().getDecimalSeparator())); // "stream size will exceed limit ({0})"
 		}
 	}
 
@@ -711,7 +713,8 @@ public class FileServiceImpl
 		FileOutputStream externalFileWriter = new FileOutputStream(externalFile);
 		long usableSpace;
 		if (fileStream.getSize() != null && fileStream.getSize() > (usableSpace = externalFile.getUsableSpace())) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INSUFFICIENT_SPACE_LEFT_ON_DISK, CommonUtil.humanReadableByteCount(usableSpace));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INSUFFICIENT_SPACE_LEFT_ON_DISK,
+					CommonUtil.humanReadableByteCount(usableSpace, CoreUtil.getUser().getDecimalSeparator()));
 		}
 		OutputStream externalFileStream;
 		if (CommonUtil.getUseFileEncryption(file.getModule())) {
@@ -743,7 +746,8 @@ public class FileServiceImpl
 				md5.update(block, 0, nRead);
 				totalRead += nRead;
 				if (externalFileSizeLimit != null && totalRead > externalFileSizeLimit) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(externalFileSizeLimit));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_SIZE_LIMIT_EXCEEDED,
+							CommonUtil.humanReadableByteCount(externalFileSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 				}
 			}
 			externalFileStream.flush();

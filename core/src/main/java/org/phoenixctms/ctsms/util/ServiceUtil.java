@@ -531,7 +531,8 @@ public final class ServiceUtil {
 			Integer dataFileSizeLimit = Settings.getIntNullable(SettingCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT, Bundle.SETTINGS,
 					DefaultSettings.COURSE_PARTICIPATION_FILE_SIZE_LIMIT);
 			if (dataFileSizeLimit != null && data.length > dataFileSizeLimit) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(dataFileSizeLimit));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_SIZE_LIMIT_EXCEEDED,
+						CommonUtil.humanReadableByteCount(dataFileSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 			}
 			if (mimeType == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.COURSE_PARTICIPATION_FILE_MIME_TYPE_REQUIRED);

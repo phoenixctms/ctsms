@@ -300,7 +300,7 @@ public class MassMailBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
-			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
+			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize, WebUtil.getDecimalSeparator()), totalFileCount);
 		}
 		return null;
 	}
@@ -355,7 +355,7 @@ public class MassMailBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
-			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
+			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize, WebUtil.getDecimalSeparator()), totalFileCount);
 		}
 		return null;
 	}
@@ -419,7 +419,7 @@ public class MassMailBean extends ManagedBeanBase {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
-			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
+			return Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize, WebUtil.getDecimalSeparator()), totalFileCount);
 		}
 		return null;
 	}

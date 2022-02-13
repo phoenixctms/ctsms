@@ -180,7 +180,8 @@ public class JobServiceImpl extends JobServiceBase {
 			} else {
 				Integer jobDataFileSizeLimit = Settings.getIntNullable(SettingCodes.JOB_FILE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.JOB_FILE_SIZE_LIMIT);
 				if (jobDataFileSizeLimit != null && data.length > jobDataFileSizeLimit) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(jobDataFileSizeLimit));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_SIZE_LIMIT_EXCEEDED,
+							CommonUtil.humanReadableByteCount(jobDataFileSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 				}
 				if (mimeType == null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.JOB_FILE_MIME_TYPE_REQUIRED);

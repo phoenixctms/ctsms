@@ -305,7 +305,8 @@ public class StaffServiceImpl
 			if (staffImage.getDatas() != null && staffImage.getDatas().length > 0) {
 				Integer staffImageSizeLimit = Settings.getIntNullable(SettingCodes.STAFF_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.STAFF_IMAGE_SIZE_LIMIT);
 				if (staffImageSizeLimit != null && staffImage.getDatas().length > staffImageSizeLimit) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_IMAGE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(staffImageSizeLimit));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_IMAGE_SIZE_LIMIT_EXCEEDED,
+							CommonUtil.humanReadableByteCount(staffImageSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 				}
 				if (staffImage.getMimeType() == null) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.STAFF_IMAGE_MIME_TYPE_REQUIRED);
