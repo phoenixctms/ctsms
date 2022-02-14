@@ -114,7 +114,7 @@ public final class DateUtil {
 		for (int j = 0; j < durationUnitsOfTime.length; j++) {
 			Pattern durationUnitOfTimeRegexp = getDurationUnitOfTimeRegexp(durationUnitsOfTime[j], decimalSeparator);
 			Double sum = null;
-			double seconds = 0.0;
+			int seconds = 0;
 			if (DurationUnitOfTime.SECONDS.equals(durationUnitsOfTime[j])) {
 				seconds = 1;
 			} else if (DurationUnitOfTime.MINUTES.equals(durationUnitsOfTime[j])) {
