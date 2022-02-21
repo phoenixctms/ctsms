@@ -232,7 +232,7 @@
 									id="visitscheduleappointments_list">
 
 									<p:column
-										sortBy="#{visitScheduleAppointment.vo.proband.nameSortable}">
+										sortBy="#{visitScheduleAppointment.proband.nameSortable}">
 
 										<f:facet name="header">
 											<h:outputText
@@ -240,38 +240,38 @@
 										</f:facet>
 										<ui:include src="../shared/listIcon.xhtml">
 											<ui:param name="label"
-												value="#{visitScheduleAppointment.vo.proband.name}" />
+												value="#{visitScheduleAppointment.proband.name}" />
 											<ui:param name="icon"
-												value="#{visitScheduleAppointment.vo.proband.category.nodeStyleClass}" />
+												value="#{visitScheduleAppointment.proband.category.nodeStyleClass}" />
 											<ui:param name="rendered"
-												value="#{visitScheduleAppointment.vo.proband.decrypted}" />
+												value="#{visitScheduleAppointment.proband.decrypted}" />
 										</ui:include>
 										<ui:include src="../shared/listIcon.xhtml">
 											<ui:param name="label"
-												value="#{visitScheduleAppointment.vo.proband.name}" />
+												value="#{visitScheduleAppointment.proband.name}" />
 											<ui:param name="icon" value="ctsms-icon-encrypted" />
 											<ui:param name="rendered"
-												value="#{!visitScheduleAppointment.vo.proband.decrypted}" />
+												value="#{!visitScheduleAppointment.proband.decrypted}" />
 										</ui:include>
 									</p:column>
 
-									<p:column sortBy="#{visitScheduleAppointment.vo.start}">
+									<p:column sortBy="#{visitScheduleAppointment.start}">
 										<f:facet name="header">
 											<h:outputText
 												value="#{triallabels.visitscheduleappointments_list_start_column}" />
 										</f:facet>
-										<h:outputText value="#{visitScheduleAppointment.vo.start}">
+										<h:outputText value="#{visitScheduleAppointment.start}">
 											<f:converter converterId="ctsms.DateTime" />
 											<f:attribute name="timeZone"
 												value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 										</h:outputText>
 									</p:column>
-									<p:column sortBy="#{visitScheduleAppointment.vo.stop}">
+									<p:column sortBy="#{visitScheduleAppointment.stop}">
 										<f:facet name="header">
 											<h:outputText
 												value="#{triallabels.visitscheduleappointments_list_stop_column}" />
 										</f:facet>
-										<h:outputText value="#{visitScheduleAppointment.vo.stop}">
+										<h:outputText value="#{visitScheduleAppointment.stop}">
 											<f:converter converterId="ctsms.DateTime" />
 											<f:attribute name="timeZone"
 												value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
@@ -707,17 +707,24 @@
 									value="#{triallabels.visit_schedule_duration_label}"
 									rendered="#{visitScheduleBean.durationVisible}" />
 								<h:panelGroup rendered="#{visitScheduleBean.durationVisible}">
-									<p:selectOneMenu id="visitscheduleitemduration"
-										value="#{visitScheduleBean.in.duration}" required="false"
-										disabled="#{visitScheduleBean.stale}"
+									<p:autoComplete id="visitscheduleitemduration" required="false"
+										value="#{visitScheduleBean.duration}"
 										label="#{triallabels.visit_schedule_duration}"
-										styleClass="ctsms-control">
-										<f:selectItem itemLabel="#{labels.no_selection_label}"
-											itemValue="#{applicationScopeBean.noSelectionValue}" />
-										<f:selectItems value="#{visitScheduleBean.durations}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-									</p:selectOneMenu>
+										styleClass="ctsms-control"
+										minQueryLength="#{autoCompleteMinQueryLengthDuration}"
+										maxResults="#{autoCompleteMaxResultsDuration}"
+										queryDelay="#{autoCompleteQueryDelayDuration}"
+										dropdown="#{autoCompleteDropdownDuration}"
+										global="#{autoCompleteGlobalDuration}"
+										scrollHeight="#{autoCompleteScrollHeightDuration}"
+										completeMethod="#{visitScheduleBean.completeDurations}"
+										forceSelection="false" var="selectItem" itemValue="#{selectItem}"
+										itemLabel="#{selectItem.label}" converter="ctsms.VisitScheduleDuration">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{visitScheduleBean.handleDurationSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{visitScheduleBean.handleDurationUnselect}" />
+									</p:autoComplete>
 									<p:tooltip rendered="#{enableTooltips}"
 										for="visitscheduleitemduration">
 										<h:outputText
@@ -732,7 +739,7 @@
 									value="#{triallabels.visit_schedule_offset_label}"
 									rendered="#{visitScheduleBean.offsetVisible}" />
 								<h:panelGroup rendered="#{visitScheduleBean.offsetVisible}">
-									<p:selectOneMenu id="visitscheduleitemoffset"
+									<!-- <p:selectOneMenu id="visitscheduleitemoffset"
 										value="#{visitScheduleBean.in.offsetSeconds}" required="false"
 										disabled="#{visitScheduleBean.stale}"
 										label="#{triallabels.visit_schedule_offset}"
@@ -742,7 +749,25 @@
 										<f:selectItems value="#{visitScheduleBean.offsets}"
 											var="selectItem" itemLabel="#{selectItem.label}"
 											itemValue="#{selectItem.value}" />
-									</p:selectOneMenu>
+									</p:selectOneMenu> -->
+									<p:autoComplete id="visitscheduleitemoffset" required="false"
+										value="#{visitScheduleBean.offset}"
+										label="#{triallabels.visit_schedule_offset}"
+										styleClass="ctsms-control"
+										minQueryLength="#{autoCompleteMinQueryLengthDuration}"
+										maxResults="#{autoCompleteMaxResultsDuration}"
+										queryDelay="#{autoCompleteQueryDelayDuration}"
+										dropdown="#{autoCompleteDropdownDuration}"
+										global="#{autoCompleteGlobalDuration}"
+										scrollHeight="#{autoCompleteScrollHeightDuration}"
+										completeMethod="#{visitScheduleBean.completeOffsets}"
+										forceSelection="false" var="selectItem" itemValue="#{selectItem}"
+										itemLabel="#{selectItem.label}" converter="ctsms.VisitScheduleOffset">
+										<p:ajax process="@this" event="itemSelect"
+											listener="#{visitScheduleBean.handleOffsetSelect}" />
+										<p:ajax process="@this" event="itemUnselect"
+											listener="#{visitScheduleBean.handleOffsetUnselect}" />
+									</p:autoComplete>
 									<p:tooltip rendered="#{enableTooltips}"
 										for="visitscheduleitemoffset">
 										<h:outputText

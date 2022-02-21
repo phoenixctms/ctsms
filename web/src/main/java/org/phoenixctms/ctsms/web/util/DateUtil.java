@@ -13,6 +13,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
@@ -53,6 +57,102 @@ public final class DateUtil {
 		cal.add(Calendar.DATE, days);
 		cal.add(Calendar.MINUTE, minutes);
 		return cal.getTime();
+	}
+
+	private static Pattern getDurationUnitOfTimeRegexp(DurationUnitOfTime unitOfTime, String decimalSeparator) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("^([+-]?\\d+(");
+		if (decimalSeparator != null && decimalSeparator.length() > 0) {
+			sb.append(Pattern.quote(decimalSeparator));
+		} else {
+			sb.append(Pattern.quote("."));
+		}
+		sb.append("\\d+)?)\\s*(");
+		switch (unitOfTime) {
+			case SECONDS:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.SECONDS_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.SECONDS_LABEL_SINGULAR)));
+				break;
+			case MINUTES:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.MINUTES_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.MINUTES_LABEL_SINGULAR)));
+				break;
+			case HOURS:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.HOURS_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.HOURS_LABEL_SINGULAR)));
+				break;
+			case DAYS:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.DAYS_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.DAYS_LABEL_SINGULAR)));
+				break;
+			case MONTHS:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.MONTHS_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.MONTHS_LABEL_SINGULAR)));
+				break;
+			case YEARS:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.YEARS_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.YEARS_LABEL_SINGULAR)));
+				break;
+			default:
+				return null;
+		}
+		sb.append(")$");
+		return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+	}
+
+	public static Long getDurationFromString(String durationString) {
+		Long duration = null;
+		String[] parts = Pattern.compile("(?<=[a-z])\\s*,\\s*", Pattern.CASE_INSENSITIVE).split(durationString, -1);
+		DurationUnitOfTime[] durationUnitsOfTime = DurationUnitOfTime.values();
+		String decimalSeparator = WebUtil.getDecimalSeparator();
+		for (int j = 0; j < durationUnitsOfTime.length; j++) {
+			Pattern durationUnitOfTimeRegexp = getDurationUnitOfTimeRegexp(durationUnitsOfTime[j], decimalSeparator);
+			Double sum = null;
+			int seconds = 0;
+			if (DurationUnitOfTime.SECONDS.equals(durationUnitsOfTime[j])) {
+				seconds = 1;
+			} else if (DurationUnitOfTime.MINUTES.equals(durationUnitsOfTime[j])) {
+				seconds = 60;
+			} else if (DurationUnitOfTime.HOURS.equals(durationUnitsOfTime[j])) {
+				seconds = 60 * 60;
+			} else if (DurationUnitOfTime.DAYS.equals(durationUnitsOfTime[j])) {
+				seconds = 60 * 60 * 24;
+			} else if (DurationUnitOfTime.MONTHS.equals(durationUnitsOfTime[j])) {
+				seconds = 60 * 60 * 24 * 30;
+			} else if (DurationUnitOfTime.YEARS.equals(durationUnitsOfTime[j])) {
+				seconds = 60 * 60 * 24 * 30 * 12;
+			}
+			if (durationUnitOfTimeRegexp != null) {
+				for (int i = 0; i < parts.length; i++) {
+					if (!CommonUtil.isEmptyString(parts[i])) {
+						Matcher matcher = durationUnitOfTimeRegexp.matcher(parts[i].trim());
+						while (matcher.find()) {
+							Double secs = CommonUtil.parseDouble(matcher.group(1), decimalSeparator);
+							if (secs != null) {
+								secs *= seconds;
+								if (sum == null) {
+									sum = 0.0;
+								}
+								sum += secs;
+							}
+						}
+					}
+				}
+			}
+			if (sum != null) {
+				if (duration == null) {
+					duration = 0l;
+				}
+				duration += (long) (double) sum;
+			}
+		}
+		return duration;
 	}
 
 	private static StringBuilder durationUnitOfTimeValueToStringBuilder(double value, int decimals, DurationUnitOfTime unitOfTime) {
@@ -98,7 +198,7 @@ public final class DateUtil {
 				sb.append(unitLabelPlural);
 			}
 		} else {
-			sb.append(String.format("%." + decimals + "f", value));
+			sb.append(CommonUtil.formatDecimal(String.format("%." + decimals + "f", value), WebUtil.getDecimalSeparator()));
 			sb.append(unitLabelPlural);
 		}
 		return sb;
@@ -264,7 +364,7 @@ public final class DateUtil {
 								months = delta;
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -283,12 +383,12 @@ public final class DateUtil {
 							days = delta;
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -308,17 +408,17 @@ public final class DateUtil {
 						hours = delta;
 					} else {
 						hours = (delta >= 24) ? delta % 24 : delta;
-						delta = delta / 24;
+						delta = (delta - hours) / 24;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = Math.floor(delta);
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -339,22 +439,22 @@ public final class DateUtil {
 					minutes = delta;
 				} else {
 					minutes = (delta >= 60) ? delta % 60 : delta;
-					delta = delta / 60;
+					delta = (delta - minutes) / 60;
 					if (DurationUnitOfTime.HOURS.equals(mostSignificant)) {
 						hours = Math.floor(delta);
 					} else {
 						hours = (delta >= 24) ? delta % 24 : delta;
-						delta = delta / 24;
+						delta = (delta - hours) / 24;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = Math.floor(delta);
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -376,27 +476,27 @@ public final class DateUtil {
 				seconds = delta;
 			} else {
 				seconds = (delta >= 60) ? delta % 60 : delta;
-				delta = delta / 60;
+				delta = (delta - seconds) / 60;
 				if (DurationUnitOfTime.MINUTES.equals(mostSignificant)) {
 					minutes = Math.floor(delta);
 				} else {
 					minutes = (delta >= 60) ? delta % 60 : delta;
-					delta = delta / 60;
+					delta = (delta - minutes) / 60;
 					if (DurationUnitOfTime.HOURS.equals(mostSignificant)) {
 						hours = Math.floor(delta);
 					} else {
 						hours = (delta >= 24) ? delta % 24 : delta;
-						delta = delta / 24;
+						delta = (delta - hours) / 24;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = Math.floor(delta);
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
-							delta = delta / 30;
+							delta = (delta - days) / 30;
 							if (DurationUnitOfTime.MONTHS.equals(mostSignificant)) {
 								months = Math.floor(delta);
 							} else {
 								months = (delta >= 12) ? delta % 12 : delta;
-								delta = delta / 12;
+								delta = (delta - months) / 12;
 								if (DurationUnitOfTime.YEARS.equals(mostSignificant)) {
 									years = Math.floor(delta);
 								} else {
@@ -609,6 +709,21 @@ public final class DateUtil {
 
 	public static Date sanitizeTimelineTimestamp(boolean sub, Date date) {
 		return sanitizeClientTimestamp(sub, date);
+	}
+
+	public static SelectItem getDurationItem(Integer seconds, boolean signed, DurationUnitOfTime mostSignificant,
+			DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
+		if (seconds != null) {
+			return new SelectItem(seconds,
+					(signed ? getSignSymbol(seconds) : "") + getDurationString(seconds, mostSignificant, leastSignificant, leastSignificantDecimals));
+		}
+		return null;
+	}
+
+	public static SelectItem getDurationItem(String seconds, boolean signed, DurationUnitOfTime mostSignificant,
+			DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
+		return getDurationItem(new Integer(Integer.parseInt(seconds)), signed, mostSignificant,
+				leastSignificant, leastSignificantDecimals);
 	}
 
 	private DateUtil() {

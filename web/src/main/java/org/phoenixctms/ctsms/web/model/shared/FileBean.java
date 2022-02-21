@@ -1143,9 +1143,10 @@ public class FileBean extends ManagedBeanBase {
 				}
 			}
 			fileCount = totalFileCount;
-			logicalFileSystemStats = Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize), totalFileCount);
+			logicalFileSystemStats = Messages.getMessage(MessageCodes.LOGICAL_FILE_SYSTEM_STATS_LABEL, CommonUtil.humanReadableByteCount(totalSize, WebUtil.getDecimalSeparator()),
+					totalFileCount);
 		} else {
-			fileCount = null;
+			fileCount = WebUtil.getTotalFileCount(module, entityId);
 			logicalFileSystemStats = null;
 		}
 	}

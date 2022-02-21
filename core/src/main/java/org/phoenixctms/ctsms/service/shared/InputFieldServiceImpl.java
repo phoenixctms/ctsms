@@ -483,7 +483,8 @@ public class InputFieldServiceImpl
 		} else {
 			Integer inputFieldInputSizeLimit = Settings.getIntNullable(SettingCodes.INPUT_FIELD_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_IMAGE_SIZE_LIMIT);
 			if (inputFieldInputSizeLimit != null && inputFieldIn.getDatas().length > inputFieldInputSizeLimit) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_IMAGE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(inputFieldInputSizeLimit));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_IMAGE_SIZE_LIMIT_EXCEEDED,
+						CommonUtil.humanReadableByteCount(inputFieldInputSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 			}
 			if (inputFieldIn.getMimeType() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_IMAGE_MIME_TYPE_REQUIRED);

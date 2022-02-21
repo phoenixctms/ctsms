@@ -1879,18 +1879,18 @@ public final class CommonUtil {
 		return null;
 	}
 
-	public static String humanReadableByteCount(long bytes) {
-		return humanReadableByteCount(bytes, false);
+	public static String humanReadableByteCount(long bytes, String userDecimalSeparator) {
+		return humanReadableByteCount(bytes, false, userDecimalSeparator);
 	}
 
-	public static String humanReadableByteCount(long bytes, boolean si) {
+	public static String humanReadableByteCount(long bytes, boolean si, String userDecimalSeparator) {
 		int unit = si ? 1000 : 1024;
 		if (bytes < unit) {
 			return bytes + " B";
 		}
 		int exp = (int) (Math.log(bytes) / Math.log(unit));
 		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+		return formatDecimal(String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre), userDecimalSeparator);
 	}
 
 	public static String inkValueToString(byte[] inkValue) throws UnsupportedEncodingException {

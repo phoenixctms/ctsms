@@ -105,7 +105,7 @@ public class ApplicationScopeBean {
 	}
 
 	public String byteCountToString(long size) {
-		return CommonUtil.humanReadableByteCount(size);
+		return CommonUtil.humanReadableByteCount(size, WebUtil.getDecimalSeparator());
 	}
 
 	public String clipStringLeading(String string) {

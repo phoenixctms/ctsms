@@ -4,11 +4,13 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -30,6 +32,7 @@ import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 public final class Settings {
 
 	public enum Bundle {
+
 		SETTINGS("settings"), WINDOWS("windows"), THEMES("themes");
 
 		private final String var;
@@ -178,18 +181,32 @@ public final class Settings {
 	}
 
 	public static ArrayList<SelectItem> getDurationList(String key, Bundle bundle, ArrayList<String> defaultValue, boolean signed, DurationUnitOfTime mostSignificant,
-			DurationUnitOfTime leastSignificant, int leastSignificantDecimals) {
+			DurationUnitOfTime leastSignificant, int leastSignificantDecimals, Set<Integer> append) {
 		ArrayList<SelectItem> durations = new ArrayList<SelectItem>();
-		Iterator<String> it = CommonUtil.getValueStringList(key, getBundle(bundle), defaultValue).iterator();
+		Iterator it = CommonUtil.getValueStringList(key, getBundle(bundle), defaultValue).iterator();
+		LinkedHashSet<Integer> appendDurations = new LinkedHashSet<Integer>();
+		if (append != null) {
+			appendDurations.addAll(append);
+		}
 		while (it.hasNext()) {
-			Integer duration;
+			SelectItem duration = null;
 			try {
-				duration = new Integer(Integer.parseInt(it.next()));
+				duration = DateUtil.getDurationItem((String) it.next(), signed, mostSignificant,
+						leastSignificant, leastSignificantDecimals);
 			} catch (NumberFormatException e) {
-				continue;
 			}
-			durations.add(new SelectItem(duration,
-					(signed ? DateUtil.getSignSymbol(duration) : "") + DateUtil.getDurationString(duration, mostSignificant, leastSignificant, leastSignificantDecimals)));
+			if (duration != null) {
+				durations.add(duration);
+				if (append != null && append.contains(duration.getValue())) {
+					appendDurations.remove(duration.getValue());
+				}
+			}
+		}
+		it = appendDurations.iterator();
+		while (it.hasNext()) {
+			SelectItem duration = DateUtil.getDurationItem((Integer) it.next(), signed, mostSignificant,
+					leastSignificant, leastSignificantDecimals);
+			durations.add(duration);
 		}
 		return durations;
 	}

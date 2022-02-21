@@ -542,7 +542,8 @@ public class ProbandServiceImpl
 		if (probandImage.getDatas() != null && probandImage.getDatas().length > 0) {
 			Integer probandImageSizeLimit = Settings.getIntNullable(SettingCodes.PROBAND_IMAGE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.PROBAND_IMAGE_SIZE_LIMIT);
 			if (probandImageSizeLimit != null && probandImage.getDatas().length > probandImageSizeLimit) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_IMAGE_SIZE_LIMIT_EXCEEDED, CommonUtil.humanReadableByteCount(probandImageSizeLimit));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_IMAGE_SIZE_LIMIT_EXCEEDED,
+						CommonUtil.humanReadableByteCount(probandImageSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 			}
 			if (probandImage.getMimeType() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_IMAGE_MIME_TYPE_REQUIRED);
