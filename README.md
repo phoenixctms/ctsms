@@ -32,10 +32,10 @@ This GitHub repository contains all tiers of the main JEE web application. Trans
 
 Build and Install
 -----
-1. Prepare a vanilla _Debian Stretch_ Linux instance (ie. from [debian-9.4.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.4.0-amd64-netinst.iso)):
+1. Prepare a vanilla _Debian Bullseye_ Linux instance (ie. from [debian-11.2.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.2.0-amd64-netinst.iso)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
-  * The procedure was also successfully tested with _Ubuntu 16.04_ (eg. as provided by Amazon E2C ami-2581aa40)
+  * The procedure was also successfully tested with latest _Ubuntu_
 2. Open a terminal and run the installer to automatically download, build and configure your Phoenix CTMS:
 
    ```bash
@@ -59,7 +59,7 @@ Eclipse IDE
 The following was tested on a vanilla Windows 10 VM.
 
 1. Prerequisites:
-* download and install a recent Java8 JDK (eg. Oracle JDK1.8.0 u201 64bit)
+* download and install a recent Java JDK (eg. Oracle JDK1.8.0 u201 64bit)
 * download and install git
 * download a recent Apache Maven (eg. apache-maven-3.6.0-bin.zip, extract to C:\apache-maven-3.6.0)
 
@@ -67,7 +67,7 @@ The following was tested on a vanilla Windows 10 VM.
 - add C:\Program Files\Java\jdk1.8.0_201\bin and C:\apache-maven-3.6.0\bin to "Path" variable
 - add new environment variable "JAVA_HOME" and set it to C:\Program Files\Java\jdk1.8.0_201
 
-3. Check out the Phoenix CTMS java webapp:
+3. Clone the Phoenix CTMS java webapp source code:
 * create folder C:\workspaces
 * open Command Prompt, change to C:\workspaces and run
 ```
@@ -79,7 +79,7 @@ mvn install -DskipTests
 ```
 
 4. Eclipse IDE:
-* download and run Eclipse Installer (2018-12 R), choose flavour "Eclipse IDE for Java EE Developers"
+* download and run Eclipse Installer (eg. 2020-06), choose flavour "Eclipse IDE for Java EE Developers"
 * launch Eclipse IDE and select workspace C:\workspaces
 * goto Window -> Preferences -> Installed JRE and add and select __JDK__ -JRE (=JAVA_HOME)
 * goto File -> Import... -> Maven -> Existing Maven Project select C:\workspaces\ctsms folder and press "Finish"
