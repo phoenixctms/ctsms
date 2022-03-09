@@ -33,8 +33,12 @@ public class JobRunner {
 	}
 
 	public long processJobs(AuthenticationVO auth, Boolean daily, Boolean weekly, Boolean monthly) throws Exception {
-		UserOutVO userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null, null, null);
-		jobOutput.println("department: " + userVO.getDepartment().getName());
+		UserOutVO userVO = null;
+		try {
+			userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null, null, null);
+			jobOutput.println("department: " + userVO.getDepartment().getName());
+		} catch (Exception e) {
+		}
 		String plainDepartmentPassword = CryptoUtil.decryptDepartmentPassword(authenticator.authenticate(auth, false), auth.getPassword());
 		long count = 0l;
 		Iterator<Job> jobsIt = jobDao.findPending(userVO.getDepartment().getId(), daily, weekly, monthly).iterator();
