@@ -33,7 +33,7 @@ import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
@@ -139,7 +139,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		return result;
 	}
 
-	public static void initCourseDefaultValues(CourseInVO in, UserInheritedVO user) {
+	public static void initCourseDefaultValues(CourseInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setCategoryId(null);
 			in.setSelfRegistration(Settings.getBoolean(SettingCodes.COURSE_SELF_REGISTRATION_PRESET, Bundle.SETTINGS, DefaultSettings.COURSE_SELF_REGISTRATION_PRESET));
@@ -654,7 +654,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		if (out != null) {
 			copyCourseOutToIn(in, out);
 		} else {
-			initCourseDefaultValues(in, WebUtil.getUser());
+			initCourseDefaultValues(in, WebUtil.getUser(false));
 		}
 	}
 

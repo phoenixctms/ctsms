@@ -50,7 +50,6 @@ import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
@@ -72,7 +71,7 @@ import org.primefaces.context.RequestContext;
 @ApplicationScoped
 public class ApplicationScopeBean {
 
-	private static final Map<Long, UserInheritedVO> activeUsers = new LinkedHashMap<Long, UserInheritedVO>();
+	private static final Map<Long, UserOutVO> activeUsers = new LinkedHashMap<Long, UserOutVO>();
 	private final static Pattern ALLOWED_LABEL_EXPRESSIONS_PATTERN_REGEXP = Pattern.compile("^[a-z0-9_]+\\.[a-z0-9_]+$");
 
 	public static String evalLabelEl(String labelEl) {
@@ -85,7 +84,7 @@ public class ApplicationScopeBean {
 		return labelEl;
 	}
 
-	public static final void registerActiveUser(UserInheritedVO user) {
+	public static final void registerActiveUser(UserOutVO user) {
 		synchronized (ApplicationScopeBean.class) {
 			if (user != null) {
 				activeUsers.put(user.getId(), user);
@@ -93,7 +92,7 @@ public class ApplicationScopeBean {
 		}
 	}
 
-	public static final void unregisterActiveUser(UserInheritedVO user) {
+	public static final void unregisterActiveUser(UserOutVO user) {
 		synchronized (ApplicationScopeBean.class) {
 			if (user != null) {
 				activeUsers.remove(user.getId());
@@ -189,10 +188,9 @@ public class ApplicationScopeBean {
 			int activeUsersCount;
 			activeUsersCount = activeUsers.size();
 			HashMap<Long, Integer> identityCountMap = new HashMap<Long, Integer>(activeUsersCount);
-			Iterator<UserInheritedVO> activeUsersIt = activeUsers.values().iterator();
-			activeUsersIt = activeUsers.values().iterator();
+			Iterator<UserOutVO> activeUsersIt = activeUsers.values().iterator();
 			while (activeUsersIt.hasNext()) {
-				UserInheritedVO user = activeUsersIt.next();
+				UserOutVO user = activeUsersIt.next();
 				StaffOutVO identity = user.getIdentity();
 				if (identity != null) {
 					int count;
@@ -206,7 +204,7 @@ public class ApplicationScopeBean {
 			}
 			activeUsersIt = activeUsers.values().iterator();
 			while (activeUsersIt.hasNext()) {
-				UserInheritedVO user = activeUsersIt.next();
+				UserOutVO user = activeUsersIt.next();
 				if (sb.length() > 0) {
 					sb.append(", ");
 				}

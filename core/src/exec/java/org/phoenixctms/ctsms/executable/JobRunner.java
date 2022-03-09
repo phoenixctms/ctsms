@@ -33,20 +33,26 @@ public class JobRunner {
 	}
 
 	public long processJobs(AuthenticationVO auth, Boolean daily, Boolean weekly, Boolean monthly) throws Exception {
-		UserOutVO userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null, null, null);
-		jobOutput.println("department: " + userVO.getDepartment().getName());
+		UserOutVO userVO = null;
+		try {
+			userVO = userService.getUser(auth, userDao.searchUniqueName(auth.getUsername()).getId(), null, null, null);
+			jobOutput.println("department: " + userVO.getDepartment().getName());
+		} catch (Exception e) {
+		}
 		String plainDepartmentPassword = CryptoUtil.decryptDepartmentPassword(authenticator.authenticate(auth, false), auth.getPassword());
 		long count = 0l;
-		Iterator<Job> jobsIt = jobDao.findPending(userVO.getDepartment().getId(), daily, weekly, monthly).iterator();
-		while (jobsIt.hasNext()) {
-			Job job = jobsIt.next();
-			jobOutput.println("running job ID " + Long.toString(job.getId()));
-			User jobUser = job.getModifiedUser();
-			AuthenticationVO jobUserAuth = new AuthenticationVO();
-			jobUserAuth.setUsername(jobUser.getName());
-			jobUserAuth.setPassword(CryptoUtil.decryptPassword(passwordDao.findLastPassword(jobUser.getId()), plainDepartmentPassword));
-			CoreUtil.launchJob(jobUserAuth, job, true);
-			count += 1l;
+		if (userVO != null) {
+			Iterator<Job> jobsIt = jobDao.findPending(userVO.getDepartment().getId(), daily, weekly, monthly).iterator();
+			while (jobsIt.hasNext()) {
+				Job job = jobsIt.next();
+				jobOutput.println("running job ID " + Long.toString(job.getId()));
+				User jobUser = job.getModifiedUser();
+				AuthenticationVO jobUserAuth = new AuthenticationVO();
+				jobUserAuth.setUsername(jobUser.getName());
+				jobUserAuth.setPassword(CryptoUtil.decryptPassword(passwordDao.findLastPassword(jobUser.getId()), plainDepartmentPassword));
+				CoreUtil.launchJob(jobUserAuth, job, true);
+				count += 1l;
+			}
 		}
 		jobOutput.println(count + " jobs executed");
 		return count;

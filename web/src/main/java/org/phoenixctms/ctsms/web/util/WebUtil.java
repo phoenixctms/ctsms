@@ -2246,25 +2246,13 @@ public final class WebUtil {
 		return "";
 	}
 
-	public static String getIdentityString(UserInheritedVO user) {
+	public static String getIdentityUserString(UserOutVO user) {
 		if (user != null) {
 			StaffOutVO identity = user.getIdentity();
 			if (identity != null) {
-				return CommonUtil.staffOutVOToString(identity);
+				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.staffOutVOToString(identity), CommonUtil.userOutVOToString(user));
 			} else {
-				return CommonUtil.userInheritedVOToString(user);
-			}
-		}
-		return "";
-	}
-
-	public static String getIdentityUserString(UserInheritedVO user) {
-		if (user != null) {
-			StaffOutVO identity = user.getIdentity();
-			if (identity != null) {
-				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.staffOutVOToString(identity), CommonUtil.userInheritedVOToString(user));
-			} else {
-				return CommonUtil.userInheritedVOToString(user);
+				return CommonUtil.userOutVOToString(user);
 			}
 		}
 		return "";
@@ -2781,32 +2769,35 @@ public final class WebUtil {
 
 	public static boolean getModuleEnabled(DBModule module) {
 		if (module != null) {
-			switch (module) {
-				case INVENTORY_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_INVENTORY_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INVENTORY_MODULE) &&
-							getUser().getEnableInventoryModule();
-				case STAFF_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_STAFF_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_STAFF_MODULE) &&
-							getUser().getEnableStaffModule();
-				case COURSE_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_COURSE_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_COURSE_MODULE) &&
-							getUser().getEnableCourseModule();
-				case TRIAL_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_MODULE) &&
-							getUser().getEnableTrialModule();
-				case PROBAND_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_MODULE) &&
-							getUser().getEnableProbandModule();
-				case INPUT_FIELD_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_INPUT_FIELD_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INPUT_FIELD_MODULE) &&
-							getUser().getEnableInputFieldModule();
-				case USER_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_USER_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_USER_MODULE) &&
-							getUser().getEnableUserModule();
-				case MASS_MAIL_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_MASS_MAIL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_MASS_MAIL_MODULE) &&
-							getUser().getEnableMassMailModule();
-				default:
+			UserOutVO user = getUser(true);
+			if (user != null) {
+				switch (module) {
+					case INVENTORY_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_INVENTORY_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INVENTORY_MODULE) &&
+								user.getEnableInventoryModule();
+					case STAFF_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_STAFF_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_STAFF_MODULE) &&
+								user.getEnableStaffModule();
+					case COURSE_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_COURSE_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_COURSE_MODULE) &&
+								user.getEnableCourseModule();
+					case TRIAL_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_MODULE) &&
+								user.getEnableTrialModule();
+					case PROBAND_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_MODULE) &&
+								user.getEnableProbandModule();
+					case INPUT_FIELD_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_INPUT_FIELD_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INPUT_FIELD_MODULE) &&
+								user.getEnableInputFieldModule();
+					case USER_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_USER_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_USER_MODULE) &&
+								user.getEnableUserModule();
+					case MASS_MAIL_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_MASS_MAIL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_MASS_MAIL_MODULE) &&
+								user.getEnableMassMailModule();
+					default:
+				}
 			}
 		}
 		return false;
@@ -3984,10 +3975,50 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static UserInheritedVO getUser() {
+	public static Long getUserId() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null) {
-			return sessionScopeBean.getUser();
+			UserOutVO user = sessionScopeBean.getUser();
+			if (user != null) {
+				return user.getId();
+			}
+		}
+		return null;
+	}
+
+	public static UserOutVO getUser(boolean inherit) {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			UserOutVO user = sessionScopeBean.getUser();
+			if (user != null && inherit) {
+				UserInheritedVO inheritedUser = sessionScopeBean.getLogon().getUser();
+				user.setEnableInventoryModule(inheritedUser.getEnableInventoryModule());
+				user.setEnableStaffModule(inheritedUser.getEnableStaffModule());
+				user.setEnableCourseModule(inheritedUser.getEnableCourseModule());
+				user.setEnableTrialModule(inheritedUser.getEnableTrialModule());
+				user.setEnableInputFieldModule(inheritedUser.getEnableInputFieldModule());
+				user.setEnableProbandModule(inheritedUser.getEnableProbandModule());
+				user.setEnableMassMailModule(inheritedUser.getEnableMassMailModule());
+				user.setEnableUserModule(inheritedUser.getEnableUserModule());
+				user.setVisibleInventoryTabList(inheritedUser.getVisibleInventoryTabList());
+				user.setVisibleStaffTabList(inheritedUser.getVisibleStaffTabList());
+				user.setVisibleCourseTabList(inheritedUser.getVisibleCourseTabList());
+				user.setVisibleTrialTabList(inheritedUser.getVisibleTrialTabList());
+				user.setVisibleProbandTabList(inheritedUser.getVisibleProbandTabList());
+				user.setVisibleInputFieldTabList(inheritedUser.getVisibleInputFieldTabList());
+				user.setVisibleUserTabList(inheritedUser.getVisibleUserTabList());
+				user.setVisibleMassMailTabList(inheritedUser.getVisibleMassMailTabList());
+				user.setDecrypt(inheritedUser.getDecrypt());
+				user.setDecryptUntrusted(inheritedUser.getDecryptUntrusted());
+				user.setLocked(inheritedUser.getLocked());
+				user.setTimeZone(inheritedUser.getTimeZone());
+				user.setLocale(inheritedUser.getLocale());
+				user.setShowTooltips(inheritedUser.getShowTooltips());
+				user.setTheme(inheritedUser.getTheme());
+				user.setDecimalSeparator(inheritedUser.getDecimalSeparator());
+				user.setDateFormat(inheritedUser.getDateFormat());
+			}
+			return user;
 		}
 		return null;
 	}
@@ -4110,18 +4141,6 @@ public final class WebUtil {
 				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.userOutVOToString(user), CommonUtil.staffOutVOToString(identity));
 			} else {
 				return CommonUtil.userOutVOToString(user);
-			}
-		}
-		return "";
-	}
-
-	public static String getUserIdentityString(UserInheritedVO user) {
-		if (user != null) {
-			StaffOutVO identity = user.getIdentity();
-			if (identity != null) {
-				return Messages.getMessage(MessageCodes.USER_IDENTITY_LABEL, CommonUtil.userInheritedVOToString(user), CommonUtil.staffOutVOToString(identity));
-			} else {
-				return CommonUtil.userInheritedVOToString(user);
 			}
 		}
 		return "";
@@ -4693,9 +4712,9 @@ public final class WebUtil {
 	public static boolean isUserIdentityIdLoggedIn(Long staffId) {
 		SessionScopeBean sessionScopeBean = null;
 		if (staffId != null && (sessionScopeBean = getSessionScopeBean()) != null) {
-			PasswordOutVO logon = sessionScopeBean.getLogon();
-			if (logon != null) {
-				StaffOutVO identity = logon.getUser().getIdentity();
+			UserOutVO user = sessionScopeBean.getUser();
+			if (user != null) {
+				StaffOutVO identity = user.getIdentity();
 				if (identity != null && staffId.longValue() == identity.getId()) {
 					return true;
 				}

@@ -25,7 +25,7 @@ import org.phoenixctms.ctsms.vo.InventoryCategoryVO;
 import org.phoenixctms.ctsms.vo.InventoryInVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
@@ -76,7 +76,7 @@ public class InventoryBean extends ManagedBeanBase {
 		return result;
 	}
 
-	public static void initInventoryDefaultValues(InventoryInVO in, UserInheritedVO user) {
+	public static void initInventoryDefaultValues(InventoryInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setBookable(Settings.getBoolean(SettingCodes.INVENTORY_BOOKABLE_PRESET, Bundle.SETTINGS, DefaultSettings.INVENTORY_BOOKABLE_PRESET));
 			in.setCategoryId(null);
@@ -359,7 +359,7 @@ public class InventoryBean extends ManagedBeanBase {
 		if (out != null) {
 			copyInventoryOutToIn(in, out);
 		} else {
-			initInventoryDefaultValues(in, WebUtil.getUser());
+			initInventoryDefaultValues(in, WebUtil.getUser(false));
 		}
 	}
 

@@ -12,7 +12,6 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserSettingsInVO;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
@@ -93,11 +92,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	}
 
 	private void loadUser() {
-		out = null;
-		UserInheritedVO userVO = WebUtil.getUser();
-		if (userVO != null) {
-			out = WebUtil.getUser(userVO.getId(), GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
-		}
+		out = WebUtil.getUser(WebUtil.getUserId(), GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
 	}
 
 	@Override
