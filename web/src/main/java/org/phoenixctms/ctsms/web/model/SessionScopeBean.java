@@ -43,7 +43,7 @@ import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.component.datatable.ColumnManagementBean;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
@@ -196,6 +196,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	// http://stackoverflow.com/questions/3841361/jsf-http-session-login
 	private AuthenticationVO auth;
 	private PasswordOutVO logon;
+	private UserOutVO user;
 	private String newPassword;
 	private String oldPassword;
 	private int failedAttempts;
@@ -210,6 +211,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		imageStore = new MaxSizeHashMap<Object, StreamedContent>(WebUtil.IMAGE_STORE_MAX_SIZE);
 		columnManager = new ColumnManagementBean();
 		logon = null;
+		user = null;
 		failedAttempts = 0;
 		authenticationFailed = false;
 		localPasswordRequired = false;
@@ -628,8 +630,8 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized boolean getHasUserIdentity() {
-		if (logon != null) {
-			return logon.getUser().getIdentity() != null;
+		if (user != null) {
+			return user.getIdentity() != null;
 		}
 		return false;
 	}
@@ -834,11 +836,8 @@ public class SessionScopeBean implements FilterItemsStore {
 		return DynamicHomeMenu.getTrialHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized UserInheritedVO getUser() {
-		if (logon != null) {
-			return logon.getUser();
-		}
-		return null;
+	public synchronized UserOutVO getUser() {
+		return user;
 	}
 
 	public synchronized MenuModel getUserEntityMenuModel() {
@@ -850,15 +849,14 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized StaffOutVO getUserIdentity() {
-		if (logon != null) {
-			return logon.getUser().getIdentity();
+		if (user != null) {
+			return user.getIdentity();
 		}
 		return null;
 	}
 
 	public synchronized String getUserIdentityName() {
-		UserInheritedVO user;
-		if (logon != null && (user = logon.getUser()) != null) {
+		if (user != null) {
 			StaffOutVO identity = user.getIdentity();
 			if (identity != null) {
 				return CommonUtil.staffOutVOToString(identity);
@@ -868,8 +866,8 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getUserIdentityString() {
-		if (logon != null) {
-			return WebUtil.getUserIdentityString(logon.getUser());
+		if (user != null) {
+			return WebUtil.getUserIdentityString(user);
 		}
 		return "";
 	}
@@ -1190,11 +1188,13 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized String login() {
 		logon = null;
+		user = null;
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth);
-			ApplicationScopeBean.registerActiveUser(logon.getUser());
+			user = WebUtil.getUser(logon.getUser().getId(), null, null, null);
+			ApplicationScopeBean.registerActiveUser(user);
 			WebUtil.setSessionTimeout();
 			failedAttempts = 0;
 			auth.setLocalPassword(null);
