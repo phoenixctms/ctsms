@@ -229,7 +229,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 						JsUtil.encodeBase64(JsUtil.voToJson(listEntry), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(groups), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
-						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
+						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser(true)), false));
 			}
 		}
 	}
