@@ -71,8 +71,6 @@ public final class JsUtil {
 				object.addProperty("id", src.getId());
 				object.addProperty("userName", src.getName());
 				object.addProperty("locale", src.getLocale());
-				object.addProperty("staffName", src.getIdentity() != null ? src.getIdentity().getName() : null);
-				object.addProperty("staffInitials", src.getIdentity() != null ? src.getIdentity().getInitials() : null);
 				return object;
 			}
 		});
