@@ -332,7 +332,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	}
 
 	public boolean isDepartmentPasswordRequired() {
-		return !WebUtil.getUser().getDepartment().getId().equals(user != null ? user.getDepartment().getId() : null);
+		return !WebUtil.getUser(false).getDepartment().getId().equals(user != null ? user.getDepartment().getId() : null);
 	}
 
 	public String getDepartmentPasswordLabel() {

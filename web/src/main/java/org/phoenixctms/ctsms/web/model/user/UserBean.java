@@ -26,7 +26,6 @@ import org.phoenixctms.ctsms.vo.LdapEntryVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelector;
@@ -151,7 +150,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		return result;
 	}
 
-	public static void initUserDefaultValues(UserInVO in, UserInheritedVO user) {
+	public static void initUserDefaultValues(UserInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setDepartmentId(user == null ? null : user.getDepartment().getId());
 			in.setId(null);
@@ -545,7 +544,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (out != null) {
 			copyUserOutToIn(in, out);
 		} else {
-			initUserDefaultValues(in, WebUtil.getUser());
+			initUserDefaultValues(in, WebUtil.getUser(false));
 		}
 	}
 
@@ -938,12 +937,13 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	public boolean isOldDepartmentPasswordRequired() {
 		return out != null
-				? !out.getDepartment().getId().equals(in != null ? in.getDepartmentId() : null) && !out.getDepartment().getId().equals(WebUtil.getUser().getDepartment().getId())
+				? !out.getDepartment().getId().equals(in != null ? in.getDepartmentId() : null)
+						&& !out.getDepartment().getId().equals(WebUtil.getUser(false).getDepartment().getId())
 				: false;
 	}
 
 	public boolean isNewDepartmentPasswordRequired() {
-		return in != null ? !WebUtil.getUser().getDepartment().getId().equals(in.getDepartmentId()) : false;
+		return in != null ? !WebUtil.getUser(false).getDepartment().getId().equals(in.getDepartmentId()) : false;
 	}
 
 	protected void sanitizeInVals() {

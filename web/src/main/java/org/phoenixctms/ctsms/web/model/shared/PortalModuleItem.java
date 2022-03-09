@@ -14,7 +14,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.ActivityTagVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.component.tagcloud.DefaultTagCloudItem;
 import org.phoenixctms.ctsms.web.component.tagcloud.DefaultTagCloudModel;
 import org.phoenixctms.ctsms.web.component.tagcloud.TagCloudItem;
@@ -84,7 +84,7 @@ public class PortalModuleItem {
 
 	public void updateTagModel() {
 		tagModel.clear();
-		UserInheritedVO user = WebUtil.getUser();
+		UserOutVO user = WebUtil.getUser(false);
 		Collection<ActivityTagVO> activityTags = null;
 		try {
 			activityTags = WebUtil

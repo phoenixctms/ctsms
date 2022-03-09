@@ -29,7 +29,7 @@ import org.phoenixctms.ctsms.vo.ProbandInVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
@@ -141,7 +141,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		return result;
 	}
 
-	public static void initProbandDefaultValues(ProbandInVO in, UserInheritedVO user) {
+	public static void initProbandDefaultValues(ProbandInVO in, UserOutVO user) {
 		if (in != null) {
 			ProbandCategoryVO categoryPreset = null;
 			try {
@@ -612,7 +612,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		if (out != null) {
 			copyProbandOutToIn(in, out);
 		} else {
-			initProbandDefaultValues(in, WebUtil.getUser());
+			initProbandDefaultValues(in, WebUtil.getUser(false));
 		}
 	}
 

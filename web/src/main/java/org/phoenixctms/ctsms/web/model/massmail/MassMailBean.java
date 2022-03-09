@@ -28,7 +28,7 @@ import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -95,7 +95,7 @@ public class MassMailBean extends ManagedBeanBase {
 		}
 	}
 
-	public static void initMassMailDefaultValues(MassMailInVO in, UserInheritedVO user) {
+	public static void initMassMailDefaultValues(MassMailInVO in, UserOutVO user) {
 		if (in != null) {
 			in.setId(null);
 			in.setName(Messages.getString(MessageCodes.MASS_MAIL_NAME_PRESET));
@@ -487,7 +487,7 @@ public class MassMailBean extends ManagedBeanBase {
 		if (out != null) {
 			copyMassMailOutToIn(in, out);
 		} else {
-			initMassMailDefaultValues(in, WebUtil.getUser());
+			initMassMailDefaultValues(in, WebUtil.getUser(false));
 		}
 	}
 
