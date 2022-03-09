@@ -435,14 +435,6 @@ public class UserDaoImpl
 			User source,
 			UserInheritedVO target) {
 		super.toUserInheritedVO(source, target);
-		Staff identity = source.getIdentity();
-		if (identity != null) {
-			target.setIdentity(this.getStaffDao().toStaffOutVO(identity));
-		}
-		Department department = source.getDepartment();
-		if (department != null) {
-			target.setDepartment(this.getDepartmentDao().toDepartmentVO(department));
-		}
 		target.setAuthMethod(L10nUtil.createAuthenticationTypeVO(Locales.USER, source.getAuthMethod()));
 		HashMap<Long, HashSet<String>> inheritPropertyMap = new HashMap<Long, HashSet<String>>();
 		setInheritedProperty(source, target, "enableInventoryModule", Boolean.TYPE, inheritPropertyMap);
