@@ -2769,32 +2769,35 @@ public final class WebUtil {
 
 	public static boolean getModuleEnabled(DBModule module) {
 		if (module != null) {
-			switch (module) {
-				case INVENTORY_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_INVENTORY_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INVENTORY_MODULE) &&
-							getUser(true).getEnableInventoryModule();
-				case STAFF_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_STAFF_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_STAFF_MODULE) &&
-							getUser(true).getEnableStaffModule();
-				case COURSE_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_COURSE_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_COURSE_MODULE) &&
-							getUser(true).getEnableCourseModule();
-				case TRIAL_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_MODULE) &&
-							getUser(true).getEnableTrialModule();
-				case PROBAND_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_MODULE) &&
-							getUser(true).getEnableProbandModule();
-				case INPUT_FIELD_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_INPUT_FIELD_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INPUT_FIELD_MODULE) &&
-							getUser(true).getEnableInputFieldModule();
-				case USER_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_USER_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_USER_MODULE) &&
-							getUser(true).getEnableUserModule();
-				case MASS_MAIL_DB:
-					return Settings.getBoolean(SettingCodes.ENABLE_MASS_MAIL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_MASS_MAIL_MODULE) &&
-							getUser(true).getEnableMassMailModule();
-				default:
+			UserOutVO user = getUser(true);
+			if (user != null) {
+				switch (module) {
+					case INVENTORY_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_INVENTORY_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INVENTORY_MODULE) &&
+								user.getEnableInventoryModule();
+					case STAFF_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_STAFF_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_STAFF_MODULE) &&
+								user.getEnableStaffModule();
+					case COURSE_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_COURSE_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_COURSE_MODULE) &&
+								user.getEnableCourseModule();
+					case TRIAL_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_TRIAL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_TRIAL_MODULE) &&
+								user.getEnableTrialModule();
+					case PROBAND_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_PROBAND_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_PROBAND_MODULE) &&
+								user.getEnableProbandModule();
+					case INPUT_FIELD_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_INPUT_FIELD_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_INPUT_FIELD_MODULE) &&
+								user.getEnableInputFieldModule();
+					case USER_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_USER_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_USER_MODULE) &&
+								user.getEnableUserModule();
+					case MASS_MAIL_DB:
+						return Settings.getBoolean(SettingCodes.ENABLE_MASS_MAIL_MODULE, Bundle.SETTINGS, DefaultSettings.ENABLE_MASS_MAIL_MODULE) &&
+								user.getEnableMassMailModule();
+					default:
+				}
 			}
 		}
 		return false;
