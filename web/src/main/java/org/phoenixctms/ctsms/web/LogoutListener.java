@@ -18,7 +18,7 @@ public class LogoutListener implements HttpSessionListener {
 	public void sessionDestroyed(HttpSessionEvent event) {
 		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean(event.getSession());
 		if (sessionScopeBean != null) {
-			ApplicationScopeBean.unregisterActiveUser(sessionScopeBean.getUser());
+			ApplicationScopeBean.unregisterActiveUser(sessionScopeBean.getInheritedUser());
 		}
 	}
 }

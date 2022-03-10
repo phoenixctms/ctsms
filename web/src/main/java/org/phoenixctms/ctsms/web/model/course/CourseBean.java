@@ -654,7 +654,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		if (out != null) {
 			copyCourseOutToIn(in, out);
 		} else {
-			initCourseDefaultValues(in, WebUtil.getUser(false));
+			initCourseDefaultValues(in, WebUtil.getUser());
 		}
 	}
 

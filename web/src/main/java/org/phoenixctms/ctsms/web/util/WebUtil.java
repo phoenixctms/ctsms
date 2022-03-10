@@ -1684,7 +1684,7 @@ public final class WebUtil {
 	public static String getDateFormat() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null && sessionScopeBean.getLogon() != null) {
-			return sessionScopeBean.getLogon().getUser().getDateFormat();
+			return sessionScopeBean.getLogon().getInheritedUser().getDateFormat();
 		}
 		return null;
 	}
@@ -1751,7 +1751,7 @@ public final class WebUtil {
 	public static String getDecimalSeparator() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null && sessionScopeBean.getLogon() != null) {
-			return sessionScopeBean.getLogon().getUser().getDecimalSeparator();
+			return sessionScopeBean.getLogon().getInheritedUser().getDecimalSeparator();
 		}
 		return null;
 	}
@@ -2769,7 +2769,7 @@ public final class WebUtil {
 
 	public static boolean getModuleEnabled(DBModule module) {
 		if (module != null) {
-			UserOutVO user = getUser(true);
+			UserOutVO user = getUser();
 			if (user != null) {
 				switch (module) {
 					case INVENTORY_DB:
@@ -3975,50 +3975,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long getUserId() {
+	public static UserOutVO getUser() {
 		SessionScopeBean sessionScopeBean = getSessionScopeBean();
 		if (sessionScopeBean != null) {
-			UserOutVO user = sessionScopeBean.getUser();
-			if (user != null) {
-				return user.getId();
-			}
-		}
-		return null;
-	}
-
-	public static UserOutVO getUser(boolean inherit) {
-		SessionScopeBean sessionScopeBean = getSessionScopeBean();
-		if (sessionScopeBean != null) {
-			UserOutVO user = sessionScopeBean.getUser();
-			if (user != null && inherit) {
-				UserInheritedVO inheritedUser = sessionScopeBean.getLogon().getUser();
-				user.setEnableInventoryModule(inheritedUser.getEnableInventoryModule());
-				user.setEnableStaffModule(inheritedUser.getEnableStaffModule());
-				user.setEnableCourseModule(inheritedUser.getEnableCourseModule());
-				user.setEnableTrialModule(inheritedUser.getEnableTrialModule());
-				user.setEnableInputFieldModule(inheritedUser.getEnableInputFieldModule());
-				user.setEnableProbandModule(inheritedUser.getEnableProbandModule());
-				user.setEnableMassMailModule(inheritedUser.getEnableMassMailModule());
-				user.setEnableUserModule(inheritedUser.getEnableUserModule());
-				user.setVisibleInventoryTabList(inheritedUser.getVisibleInventoryTabList());
-				user.setVisibleStaffTabList(inheritedUser.getVisibleStaffTabList());
-				user.setVisibleCourseTabList(inheritedUser.getVisibleCourseTabList());
-				user.setVisibleTrialTabList(inheritedUser.getVisibleTrialTabList());
-				user.setVisibleProbandTabList(inheritedUser.getVisibleProbandTabList());
-				user.setVisibleInputFieldTabList(inheritedUser.getVisibleInputFieldTabList());
-				user.setVisibleUserTabList(inheritedUser.getVisibleUserTabList());
-				user.setVisibleMassMailTabList(inheritedUser.getVisibleMassMailTabList());
-				user.setDecrypt(inheritedUser.getDecrypt());
-				user.setDecryptUntrusted(inheritedUser.getDecryptUntrusted());
-				user.setLocked(inheritedUser.getLocked());
-				user.setTimeZone(inheritedUser.getTimeZone());
-				user.setLocale(inheritedUser.getLocale());
-				user.setShowTooltips(inheritedUser.getShowTooltips());
-				user.setTheme(inheritedUser.getTheme());
-				user.setDecimalSeparator(inheritedUser.getDecimalSeparator());
-				user.setDateFormat(inheritedUser.getDateFormat());
-			}
-			return user;
+			return sessionScopeBean.getInheritedUser();
 		}
 		return null;
 	}
@@ -4574,13 +4534,6 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Boolean isLocalAuthMethod(UserInheritedVO user) {
-		if (user != null) {
-			return AuthenticationType.LOCAL.equals(user.getAuthMethod().getMethod());
-		}
-		return null;
-	}
-
 	public static Boolean isLogonLimitExceeded(PasswordOutVO password) {
 		if (password != null && password.getLimitLogons()) {
 			return password.getSuccessfulLogons() >= password.getMaxSuccessfulLogons();
@@ -4712,7 +4665,7 @@ public final class WebUtil {
 	public static boolean isUserIdentityIdLoggedIn(Long staffId) {
 		SessionScopeBean sessionScopeBean = null;
 		if (staffId != null && (sessionScopeBean = getSessionScopeBean()) != null) {
-			UserOutVO user = sessionScopeBean.getUser();
+			UserOutVO user = sessionScopeBean.getInheritedUser();
 			if (user != null) {
 				StaffOutVO identity = user.getIdentity();
 				if (identity != null && staffId.longValue() == identity.getId()) {
@@ -4727,7 +4680,7 @@ public final class WebUtil {
 		SessionScopeBean sessionScopeBean = null;
 		if (userId != null && (sessionScopeBean = getSessionScopeBean()) != null) {
 			PasswordOutVO logon = sessionScopeBean.getLogon();
-			if (logon != null && userId.longValue() == logon.getUser().getId()) {
+			if (logon != null && userId.longValue() == logon.getInheritedUser().getId()) {
 				return true;
 			}
 		}
@@ -4740,7 +4693,7 @@ public final class WebUtil {
 			PasswordOutVO logon = sessionScopeBean.getLogon();
 			if (logon != null) {
 				try {
-					return getServiceLocator().getUserService().isPropertiesAncestor(getAuthentication(), logon.getUser().getId(), ancestorUserId);
+					return getServiceLocator().getUserService().isPropertiesAncestor(getAuthentication(), logon.getInheritedUser().getId(), ancestorUserId);
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					publishException(e);
@@ -4756,7 +4709,7 @@ public final class WebUtil {
 			PasswordOutVO logon = sessionScopeBean.getLogon();
 			if (logon != null) {
 				try {
-					return getServiceLocator().getUserService().isPermissionProfileGroupsAncestor(getAuthentication(), logon.getUser().getId(), ancestorUserId);
+					return getServiceLocator().getUserService().isPermissionProfileGroupsAncestor(getAuthentication(), logon.getInheritedUser().getId(), ancestorUserId);
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					publishException(e);

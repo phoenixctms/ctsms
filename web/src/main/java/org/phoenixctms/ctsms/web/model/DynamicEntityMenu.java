@@ -574,7 +574,7 @@ public abstract class DynamicEntityMenu extends RecentEntityMenuBase {
 		MenuModel entityModel = new DefaultMenuModel();
 		String moduleValue = getDbModule().getValue();
 		if (WebUtil.getModuleEnabled(getDbModule())) {
-			addRecentEntityMenu(entityModel, sessionScopeBean.getUser(), maxRecentEntities);
+			addRecentEntityMenu(entityModel, sessionScopeBean.getInheritedUser(), maxRecentEntities);
 			addMenuItems(sessionScopeBean, entityModel);
 			addNewEntityMenuItem(entityModel);
 			MenuItem entityHomeMenuItem = new MenuItem();

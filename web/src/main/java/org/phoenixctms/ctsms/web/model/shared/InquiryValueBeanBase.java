@@ -206,7 +206,7 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_TRIAL_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(trial), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_ADDRESSES_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(getProbandAddresses()), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
-						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser(true)), false));
+						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
 			}
 		}
 	}

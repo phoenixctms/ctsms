@@ -612,7 +612,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		if (out != null) {
 			copyProbandOutToIn(in, out);
 		} else {
-			initProbandDefaultValues(in, WebUtil.getUser(false));
+			initProbandDefaultValues(in, WebUtil.getUser());
 		}
 	}
 

@@ -196,7 +196,6 @@ public class SessionScopeBean implements FilterItemsStore {
 	// http://stackoverflow.com/questions/3841361/jsf-http-session-login
 	private AuthenticationVO auth;
 	private PasswordOutVO logon;
-	private UserOutVO user;
 	private String newPassword;
 	private String oldPassword;
 	private int failedAttempts;
@@ -211,7 +210,6 @@ public class SessionScopeBean implements FilterItemsStore {
 		imageStore = new MaxSizeHashMap<Object, StreamedContent>(WebUtil.IMAGE_STORE_MAX_SIZE);
 		columnManager = new ColumnManagementBean();
 		logon = null;
-		user = null;
 		failedAttempts = 0;
 		authenticationFailed = false;
 		localPasswordRequired = false;
@@ -223,7 +221,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword);
 			auth.setPassword(newPassword);
 			initSets();
-			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getUser().getId()), true));
+			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getInheritedUser().getId()), true));
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -630,8 +628,8 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized boolean getHasUserIdentity() {
-		if (user != null) {
-			return user.getIdentity() != null;
+		if (logon != null) {
+			return logon.getInheritedUser().getIdentity() != null;
 		}
 		return false;
 	}
@@ -652,11 +650,11 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getInputDatePattern() {
-		return CommonUtil.getInputDatePattern(logon != null ? logon.getUser().getDateFormat() : null);
+		return CommonUtil.getInputDatePattern(logon != null ? logon.getInheritedUser().getDateFormat() : null);
 	}
 
 	public synchronized String getInputDateTimePattern() {
-		return CommonUtil.getInputDateTimePattern(logon != null ? logon.getUser().getDateFormat() : null);
+		return CommonUtil.getInputDateTimePattern(logon != null ? logon.getInheritedUser().getDateFormat() : null);
 	}
 
 	public synchronized MenuModel getInputFieldEntityMenuModel() {
@@ -681,7 +679,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Locale getLocale() {
 		if (logon != null) {
-			return CommonUtil.localeFromString(logon.getUser().getLocale());
+			return CommonUtil.localeFromString(logon.getInheritedUser().getLocale());
 		}
 		return Locale.getDefault();
 	}
@@ -811,7 +809,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized String getTheme() {
 		String theme = null;
 		if (logon != null) {
-			theme = logon.getUser().getTheme();
+			theme = logon.getInheritedUser().getTheme();
 		}
 		if (theme != null && theme.length() > 0) {
 			return theme;
@@ -822,7 +820,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized TimeZone getTimeZone() {
 		if (logon != null) {
-			return CommonUtil.timeZoneFromString(logon.getUser().getTimeZone());
+			return CommonUtil.timeZoneFromString(logon.getInheritedUser().getTimeZone());
 		}
 		return TimeZone.getDefault();
 	}
@@ -836,8 +834,11 @@ public class SessionScopeBean implements FilterItemsStore {
 		return DynamicHomeMenu.getTrialHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized UserOutVO getUser() {
-		return user;
+	public synchronized UserOutVO getInheritedUser() {
+		if (logon != null) {
+			return logon.getInheritedUser();
+		}
+		return null;
 	}
 
 	public synchronized MenuModel getUserEntityMenuModel() {
@@ -849,15 +850,15 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized StaffOutVO getUserIdentity() {
-		if (user != null) {
-			return user.getIdentity();
+		if (logon != null) {
+			return logon.getInheritedUser().getIdentity();
 		}
 		return null;
 	}
 
 	public synchronized String getUserIdentityName() {
-		if (user != null) {
-			StaffOutVO identity = user.getIdentity();
+		if (logon != null) {
+			StaffOutVO identity = logon.getInheritedUser().getIdentity();
 			if (identity != null) {
 				return CommonUtil.staffOutVOToString(identity);
 			}
@@ -866,8 +867,8 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getUserIdentityString() {
-		if (user != null) {
-			return WebUtil.getUserIdentityString(user);
+		if (logon != null) {
+			return WebUtil.getUserIdentityString(logon.getInheritedUser());
 		}
 		return "";
 	}
@@ -968,7 +969,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized boolean isLocalAuthMethod() {
 		if (logon != null) {
-			Boolean isLocal = WebUtil.isLocalAuthMethod(logon.getUser());
+			Boolean isLocal = WebUtil.isLocalAuthMethod(logon.getInheritedUser());
 			if (isLocal != null) {
 				return isLocal;
 			}
@@ -1009,7 +1010,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized boolean isShowTooltips() {
 		if (logon != null) {
-			return logon.getUser().getShowTooltips();
+			return logon.getInheritedUser().getShowTooltips();
 		}
 		return true;
 	}
@@ -1177,7 +1178,7 @@ public class SessionScopeBean implements FilterItemsStore {
 				userMenu.getChildren().add(changePasswordMenuItem);
 			}
 			MenuItem logoutMenuItem = new MenuItem();
-			logoutMenuItem.setValue(CommonUtil.clipString(Messages.getMessage(MessageCodes.LOGOUT_LABEL, logon.getUser().getName()), menuItemLabelClipMaxLength,
+			logoutMenuItem.setValue(CommonUtil.clipString(Messages.getMessage(MessageCodes.LOGOUT_LABEL, logon.getInheritedUser().getName()), menuItemLabelClipMaxLength,
 					CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.MID));
 			logoutMenuItem.addActionListener(WebUtil.createActionListenerMethodBinding("#{sessionScopeBean.logout()}")); // empty brackets required here...
 			logoutMenuItem.setIcon(WebUtil.MENUBAR_ICON_STYLECLASS + " ctsms-icon-exit");
@@ -1188,13 +1189,11 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized String login() {
 		logon = null;
-		user = null;
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth);
-			user = WebUtil.getUser(logon.getUser().getId(), null, null, null);
-			ApplicationScopeBean.registerActiveUser(user);
+			ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
 			WebUtil.setSessionTimeout();
 			failedAttempts = 0;
 			auth.setLocalPassword(null);
@@ -1555,7 +1554,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getInventoryVisibleTabSet() {
 		if (inventoryVisibleTabSet == null) {
 			if (logon != null) {
-				inventoryVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleInventoryTabList());
+				inventoryVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleInventoryTabList());
 			}
 		}
 		return inventoryVisibleTabSet;
@@ -1564,7 +1563,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getStaffVisibleTabSet() {
 		if (staffVisibleTabSet == null) {
 			if (logon != null) {
-				staffVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleStaffTabList());
+				staffVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleStaffTabList());
 			}
 		}
 		return staffVisibleTabSet;
@@ -1573,7 +1572,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getCourseVisibleTabSet() {
 		if (courseVisibleTabSet == null) {
 			if (logon != null) {
-				courseVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleCourseTabList());
+				courseVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleCourseTabList());
 			}
 		}
 		return courseVisibleTabSet;
@@ -1582,7 +1581,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getTrialVisibleTabSet() {
 		if (trialVisibleTabSet == null) {
 			if (logon != null) {
-				trialVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleTrialTabList());
+				trialVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleTrialTabList());
 			}
 		}
 		return trialVisibleTabSet;
@@ -1591,7 +1590,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getInputFieldVisibleTabSet() {
 		if (inputFieldVisibleTabSet == null) {
 			if (logon != null) {
-				inputFieldVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleInputFieldTabList());
+				inputFieldVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleInputFieldTabList());
 			}
 		}
 		return inputFieldVisibleTabSet;
@@ -1600,7 +1599,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getProbandVisibleTabSet() {
 		if (probandVisibleTabSet == null) {
 			if (logon != null) {
-				probandVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleProbandTabList());
+				probandVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleProbandTabList());
 			}
 		}
 		return probandVisibleTabSet;
@@ -1609,7 +1608,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getMassMailVisibleTabSet() {
 		if (massMailVisibleTabSet == null) {
 			if (logon != null) {
-				massMailVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleMassMailTabList());
+				massMailVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleMassMailTabList());
 			}
 		}
 		return massMailVisibleTabSet;
@@ -1618,7 +1617,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized Set<String> getUserVisibleTabSet() {
 		if (userVisibleTabSet == null) {
 			if (logon != null) {
-				userVisibleTabSet = getVisibleTabSet(logon.getUser().getVisibleUserTabList());
+				userVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleUserTabList());
 			}
 		}
 		return userVisibleTabSet;

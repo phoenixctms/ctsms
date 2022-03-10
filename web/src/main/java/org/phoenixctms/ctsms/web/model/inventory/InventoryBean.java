@@ -359,7 +359,7 @@ public class InventoryBean extends ManagedBeanBase {
 		if (out != null) {
 			copyInventoryOutToIn(in, out);
 		} else {
-			initInventoryDefaultValues(in, WebUtil.getUser(false));
+			initInventoryDefaultValues(in, WebUtil.getUser());
 		}
 	}
 

@@ -487,7 +487,7 @@ public class MassMailBean extends ManagedBeanBase {
 		if (out != null) {
 			copyMassMailOutToIn(in, out);
 		} else {
-			initMassMailDefaultValues(in, WebUtil.getUser(false));
+			initMassMailDefaultValues(in, WebUtil.getUser());
 		}
 	}
 
