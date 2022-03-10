@@ -144,7 +144,6 @@ import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
-import org.phoenixctms.ctsms.vo.UserInheritedVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
@@ -1044,13 +1043,13 @@ public class ToolsServiceImpl
 		PasswordDao passwordDao = this.getPasswordDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		PasswordOutVO lastPasswordVO;
-		UserInheritedVO userVO;
+		UserOutVO userVO;
 		try {
 			lastPassword = authenticator.authenticate(auth, true);
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
-			userVO = lastPasswordVO.getUser();
+			userVO = lastPasswordVO.getInheritedUser();
 			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
 			lastPassword = CoreUtil.getLastPassword();
@@ -1058,7 +1057,12 @@ public class ToolsServiceImpl
 			if (user != null) {
 				now = new Timestamp(System.currentTimeMillis());
 				lastPasswordVO = lastPassword != null ? passwordDao.toPasswordOutVO(lastPassword) : null;
-				userVO = lastPasswordVO != null ? lastPasswordVO.getUser() : this.getUserDao().toUserInheritedVO(user);
+				if (lastPasswordVO != null) {
+					userVO = lastPasswordVO.getInheritedUser();
+				} else {
+					userVO = this.getUserDao().toUserOutVO(user);
+					CommonUtil.copyInheritedUserToOut(this.getUserDao().toUserInheritedVO(user), userVO);
+				}
 				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.FAILED_LOGON, lastPasswordVO, null, journalEntryDao);
 			}
 			throw e;

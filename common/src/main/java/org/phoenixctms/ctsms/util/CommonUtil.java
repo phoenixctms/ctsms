@@ -68,6 +68,7 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
+import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -477,6 +478,71 @@ public final class CommonUtil {
 		int g = Integer.parseInt(hexValue.substring(2, 4), 16);
 		int b = Integer.parseInt(hexValue.substring(4, 6), 16);
 		return new java.awt.Color(r, g, b);
+	}
+
+	private static void copyInquiryValueInToOut(InquiryValueOutVO out, InquiryValueInVO in, InquiryOutVO inquiryVO, ProbandOutVO probandVO, UserOutVO modifiedUserVO, Date now) {
+		if (in != null && out != null) {
+			out.setId(in.getId()); // nullable!
+			out.setBooleanValue(in.getBooleanValue());
+			out.setDateValue(in.getDateValue());
+			out.setTimeValue(in.getTimeValue());
+			out.setFloatValue(in.getFloatValue());
+			out.setTextValue(in.getTextValue());
+			out.setTimestampValue(in.getTimestampValue());
+			out.setLongValue(in.getLongValue());
+			out.setInkValues(in.getInkValues());
+			out.setModifiedTimestamp(now);
+			out.setVersion(in.getVersion());
+			out.setProband(probandVO);
+			out.setModifiedUser(modifiedUserVO);
+			out.getSelectionValues().clear();
+			if (inquiryVO != null) {
+				out.setInquiry(inquiryVO);
+				InputFieldOutVO inputField = inquiryVO.getField();
+				if (inputField != null) {
+					HashSet<Long> ids = new HashSet<Long>(in.getSelectionValueIds());
+					Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
+					while (it.hasNext()) {
+						InputFieldSelectionSetValueOutVO selectionValue = it.next();
+						if (ids.contains(selectionValue.getId())) {
+							out.getSelectionValues().add(selectionValue);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public static void copyInheritedUserToOut(UserInheritedVO in, UserOutVO out) {
+		if (in != null && out != null) {
+			out.setId(in.getId());
+			out.setName(in.getName());
+			out.setEnableInventoryModule(in.getEnableInventoryModule());
+			out.setEnableStaffModule(in.getEnableStaffModule());
+			out.setEnableCourseModule(in.getEnableCourseModule());
+			out.setEnableTrialModule(in.getEnableTrialModule());
+			out.setEnableInputFieldModule(in.getEnableInputFieldModule());
+			out.setEnableProbandModule(in.getEnableProbandModule());
+			out.setEnableMassMailModule(in.getEnableMassMailModule());
+			out.setEnableUserModule(in.getEnableUserModule());
+			out.setVisibleInventoryTabList(in.getVisibleInventoryTabList());
+			out.setVisibleStaffTabList(in.getVisibleStaffTabList());
+			out.setVisibleCourseTabList(in.getVisibleCourseTabList());
+			out.setVisibleTrialTabList(in.getVisibleTrialTabList());
+			out.setVisibleProbandTabList(in.getVisibleProbandTabList());
+			out.setVisibleInputFieldTabList(in.getVisibleInputFieldTabList());
+			out.setVisibleUserTabList(in.getVisibleUserTabList());
+			out.setVisibleMassMailTabList(in.getVisibleMassMailTabList());
+			out.setDecrypt(in.getDecrypt());
+			out.setDecryptUntrusted(in.getDecryptUntrusted());
+			out.setLocked(in.getLocked());
+			out.setTimeZone(in.getTimeZone());
+			out.setLocale(in.getLocale());
+			out.setShowTooltips(in.getShowTooltips());
+			out.setTheme(in.getTheme());
+			out.setDecimalSeparator(in.getDecimalSeparator());
+			out.setDateFormat(in.getDateFormat());
+		}
 	}
 
 	public static void copyTrialOutToIn(TrialInVO in, TrialOutVO out) {
