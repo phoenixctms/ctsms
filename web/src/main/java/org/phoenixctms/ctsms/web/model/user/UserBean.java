@@ -544,7 +544,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		if (out != null) {
 			copyUserOutToIn(in, out);
 		} else {
-			initUserDefaultValues(in, WebUtil.getUser(false));
+			initUserDefaultValues(in, WebUtil.getUser());
 		}
 	}
 
@@ -938,12 +938,12 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	public boolean isOldDepartmentPasswordRequired() {
 		return out != null
 				? !out.getDepartment().getId().equals(in != null ? in.getDepartmentId() : null)
-						&& !out.getDepartment().getId().equals(WebUtil.getUser(false).getDepartment().getId())
+						&& !out.getDepartment().getId().equals(WebUtil.getUser().getDepartment().getId())
 				: false;
 	}
 
 	public boolean isNewDepartmentPasswordRequired() {
-		return in != null ? !WebUtil.getUser(false).getDepartment().getId().equals(in.getDepartmentId()) : false;
+		return in != null ? !WebUtil.getUser().getDepartment().getId().equals(in.getDepartmentId()) : false;
 	}
 
 	protected void sanitizeInVals() {

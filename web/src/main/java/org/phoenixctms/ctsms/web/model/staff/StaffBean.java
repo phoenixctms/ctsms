@@ -526,7 +526,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		if (out != null) {
 			copyStaffOutToIn(in, out);
 		} else {
-			initStaffDefaultValues(in, WebUtil.getUser(false));
+			initStaffDefaultValues(in, WebUtil.getUser());
 		}
 	}
 

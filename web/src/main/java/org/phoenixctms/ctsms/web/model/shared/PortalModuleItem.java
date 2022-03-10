@@ -84,7 +84,7 @@ public class PortalModuleItem {
 
 	public void updateTagModel() {
 		tagModel.clear();
-		UserOutVO user = WebUtil.getUser(false);
+		UserOutVO user = WebUtil.getUser();
 		Collection<ActivityTagVO> activityTags = null;
 		try {
 			activityTags = WebUtil

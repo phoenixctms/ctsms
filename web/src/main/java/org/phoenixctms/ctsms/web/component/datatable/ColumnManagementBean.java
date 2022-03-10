@@ -67,7 +67,7 @@ public class ColumnManagementBean {
 		} else {
 			if (tableColumnVOs == null) {
 				try {
-					tableColumnVOs = WebUtil.getServiceLocator().getUserService().getDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUserId(), dataTableClientId,
+					tableColumnVOs = WebUtil.getServiceLocator().getUserService().getDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUser().getId(), dataTableClientId,
 							null).getColumns();
 				} catch (ServiceException e) {
 				} catch (AuthenticationException e) {
@@ -189,7 +189,7 @@ public class ColumnManagementBean {
 		if (visibleCount > 0) {
 			try {
 				updateVisibleMap(dataTableClientId,
-						WebUtil.getServiceLocator().getUserService().setDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUserId(), in).getColumns());
+						WebUtil.getServiceLocator().getUserService().setDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUser().getId(), in).getColumns());
 				if (!FILTER_INVISIBLE) {
 					((DataTable) WebUtil.findComponentByClientId(dataTableClientId)).clearFilters();
 				}
@@ -216,7 +216,7 @@ public class ColumnManagementBean {
 	public void clear(ActionEvent ae) {
 		String dataTableClientId = (String) ae.getComponent().getAttributes().get("datatable_id");
 		try {
-			WebUtil.getServiceLocator().getUserService().clearDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUserId(), dataTableClientId, null);
+			WebUtil.getServiceLocator().getUserService().clearDataTableColumns(WebUtil.getAuthentication(), WebUtil.getUser().getId(), dataTableClientId, null);
 			clearVisibleMap(dataTableClientId);
 			if (!FILTER_INVISIBLE) {
 				((DataTable) WebUtil.findComponentByClientId(dataTableClientId)).clearFilters();

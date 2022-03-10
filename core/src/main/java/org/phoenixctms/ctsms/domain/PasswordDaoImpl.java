@@ -19,6 +19,7 @@ import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.ServiceUtil;
@@ -191,7 +192,8 @@ public class PasswordDaoImpl
 		super.toPasswordOutVO(source, target);
 		User user = source.getUser();
 		if (user != null) {
-			target.setUser(this.getUserDao().toUserInheritedVO(user));
+			target.setInheritedUser(this.getUserDao().toUserOutVO(user));
+			CommonUtil.copyInheritedUserToOut(this.getUserDao().toUserInheritedVO(user), target.getInheritedUser());
 		}
 		target.setValidityPeriod(L10nUtil.createVariablePeriodVO(Locales.USER, source.getValidityPeriod()));
 		if (target.isExpires()) {

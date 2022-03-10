@@ -92,7 +92,11 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	}
 
 	private void loadUser() {
-		out = WebUtil.getUser(WebUtil.getUserId(), GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
+		out = null;
+		UserOutVO user = WebUtil.getUser();
+		if (user != null) {
+			out = WebUtil.getUser(user.getId(), GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
+		}
 	}
 
 	@Override

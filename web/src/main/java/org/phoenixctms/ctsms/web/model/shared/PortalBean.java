@@ -191,7 +191,7 @@ public class PortalBean extends ManagedBeanBase {
 				case EXPIRING_PROBAND_AUTO_DELETE:
 					return "openProband(" + Long.toString(notification.getProband().getId()) + ")";
 				case EXPIRING_PASSWORD:
-					return "openUser(" + Long.toString(notification.getPassword().getUser().getId()) + ")";
+					return "openUser(" + Long.toString(notification.getPassword().getInheritedUser().getId()) + ")";
 				case TRIAL_STATUS_UPDATED:
 					return "openTrial(" + Long.toString(notification.getTrial().getId()) + ")";
 				case ECRF_STATUS_UPDATED:

@@ -674,7 +674,7 @@ public abstract class DynamicHomeMenu extends RecentEntityMenuBase {
 		MenuModel entityModel = new DefaultMenuModel();
 		String moduleValue = getDbModule().getValue();
 		if (WebUtil.getModuleEnabled(getDbModule())) {
-			addRecentEntityMenu(entityModel, sessionScopeBean.getUser(), maxRecentEntities);
+			addRecentEntityMenu(entityModel, sessionScopeBean.getInheritedUser(), maxRecentEntities);
 			addMenuItems(sessionScopeBean, entityModel);
 			MenuItem searchMenuItem = new MenuItem();
 			searchMenuItem.setValue(Messages.getString(MessageCodes.SEARCH_MENU_ITEM_LABEL));

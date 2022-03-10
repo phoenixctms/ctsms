@@ -37,15 +37,15 @@
 						</h:outputFormat>
 						<h:outputFormat rendered="#{!sessionScopeBean.hasUserIdentity}"
 							value="#{labels.user_welcome_message}">
-							<f:param value="#{sessionScopeBean.user.name}" />
+							<f:param value="#{sessionScopeBean.inheritedUser.name}" />
 						</h:outputFormat>
 						<h:outputFormat styleClass="ctsms-text-green"
-							rendered="#{sessionScopeBean.user.decryptUntrusted or applicationScopeBean.trustedHost}"
+							rendered="#{sessionScopeBean.inheritedUser.decryptUntrusted or applicationScopeBean.trustedHost}"
 							value="#{labels.trusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
 						<h:outputFormat styleClass="ctsms-text-red"
-							rendered="#{!sessionScopeBean.user.decryptUntrusted and !applicationScopeBean.trustedHost}"
+							rendered="#{!sessionScopeBean.inheritedUser.decryptUntrusted and !applicationScopeBean.trustedHost}"
 							value="#{labels.untrusted_host_message}">
 							<f:param value="#{applicationScopeBean.remoteHost}" />
 						</h:outputFormat>
@@ -54,13 +54,13 @@
 							value="#{labels.identity_department_message}">
 							<f:param value="#{sessionScopeBean.userIdentityName}" />
 							<f:param value="#{sessionScopeBean.userIdentity.department.name}" />
-							<f:param value="#{sessionScopeBean.user.name}" />
-							<f:param value="#{sessionScopeBean.user.department.name}" />
+							<f:param value="#{sessionScopeBean.inheritedUser.name}" />
+							<f:param value="#{sessionScopeBean.inheritedUser.department.name}" />
 						</h:outputFormat>
 						<h:outputFormat rendered="#{!sessionScopeBean.hasUserIdentity}"
 							value="#{labels.user_department_message}">
-							<f:param value="#{sessionScopeBean.user.name}" />
-							<f:param value="#{sessionScopeBean.user.department.name}" />
+							<f:param value="#{sessionScopeBean.inheritedUser.name}" />
+							<f:param value="#{sessionScopeBean.inheritedUser.department.name}" />
 						</h:outputFormat>
 					</h:panelGrid>
 				</h:panelGrid>

@@ -455,7 +455,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (out != null) {
 			CommonUtil.copyTrialOutToIn(in, out);
 		} else {
-			initTrialDefaultValues(in, WebUtil.getUser(false));
+			initTrialDefaultValues(in, WebUtil.getUser());
 		}
 	}
 
