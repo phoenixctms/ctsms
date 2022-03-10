@@ -535,8 +535,9 @@ public class UserServiceImpl
 		User modified = user;
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
+		UserOutVO modifiedVO = userDao.toUserOutVO(modified);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.LOCALE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, modifiedVO, now, modified, SystemMessageCodes.LOCALE_UPDATED, modifiedVO, original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -554,8 +555,9 @@ public class UserServiceImpl
 		User modified = user;
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
+		UserOutVO modifiedVO = userDao.toUserOutVO(modified);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.SHOW_TOOLTIPS_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, modifiedVO, now, modified, SystemMessageCodes.SHOW_TOOLTIPS_UPDATED, modifiedVO, original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -573,8 +575,9 @@ public class UserServiceImpl
 		User modified = user;
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
+		UserOutVO modifiedVO = userDao.toUserOutVO(modified);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.THEME_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, modifiedVO, now, modified, SystemMessageCodes.THEME_UPDATED, modifiedVO, original, this.getJournalEntryDao());
 		return result;
 	}
 
@@ -593,8 +596,9 @@ public class UserServiceImpl
 		User modified = user;
 		CoreUtil.modifyVersion(originalUser, user, now, modified);
 		userDao.update(user);
+		UserOutVO modifiedVO = userDao.toUserOutVO(modified);
 		PasswordOutVO result = this.getPasswordDao().toPasswordOutVO(lastPassword);
-		ServiceUtil.logSystemMessage(user, result.getUser(), now, modified, SystemMessageCodes.TIME_ZONE_UPDATED, result.getUser(), original, this.getJournalEntryDao());
+		ServiceUtil.logSystemMessage(user, modifiedVO, now, modified, SystemMessageCodes.TIME_ZONE_UPDATED, modifiedVO, original, this.getJournalEntryDao());
 		return result;
 	}
 

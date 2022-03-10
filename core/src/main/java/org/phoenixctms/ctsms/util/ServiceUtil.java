@@ -1883,7 +1883,7 @@ public final class ServiceUtil {
 			PasswordDao passwordDao, JournalEntryDao journalEntryDao) throws Exception {
 		password = createPassword(reset, password, user, timestamp, lastPassword, plainNewPassword, plainDepartmentPassword, passwordDao);
 		PasswordOutVO result = passwordDao.toPasswordOutVO(password);
-		logSystemMessage(user, result.getUser(), timestamp, CoreUtil.getUser(), SystemMessageCodes.PASSWORD_CREATED, result, null, journalEntryDao);
+		logSystemMessage(user, result.getInheritedUser(), timestamp, CoreUtil.getUser(), SystemMessageCodes.PASSWORD_CREATED, result, null, journalEntryDao);
 		return result;
 	}
 
@@ -3693,15 +3693,6 @@ public final class ServiceUtil {
 			return null;
 		}
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
-				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
-	}
-
-	public static JournalEntry logSystemMessage(User user, UserInheritedVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-			JournalEntryDao journalEntryDao) throws Exception {
-		if (user == null) {
-			return null;
-		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userInheritedVOToString(userVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 

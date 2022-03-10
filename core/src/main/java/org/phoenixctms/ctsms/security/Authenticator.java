@@ -201,7 +201,7 @@ public class Authenticator {
 						userContext.setLastPassword(lastPassword);
 						userContext.setPlainPassword(auth.getPassword());
 						PasswordOutVO passwordVO = passwordDao.toPasswordOutVO(lastPassword);
-						ServiceUtil.logSystemMessage(user, passwordVO.getUser(), now, CoreUtil.getUser(), SystemMessageCodes.LOCAL_PASSWORD_CREATED, passwordVO, null,
+						ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, CoreUtil.getUser(), SystemMessageCodes.LOCAL_PASSWORD_CREATED, passwordVO, null,
 								journalEntryDao);
 					} else {
 						throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.WRONG_LOCAL_PASSWORD, obfuscateWrongPassword(auth.getLocalPassword()));
