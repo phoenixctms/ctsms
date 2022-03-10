@@ -20,8 +20,6 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.QueryUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.L10nUtil;
-import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.vo.AuthenticationTypeVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -435,7 +433,6 @@ public class UserDaoImpl
 			User source,
 			UserInheritedVO target) {
 		super.toUserInheritedVO(source, target);
-		target.setAuthMethod(L10nUtil.createAuthenticationTypeVO(Locales.USER, source.getAuthMethod()));
 		HashMap<Long, HashSet<String>> inheritPropertyMap = new HashMap<Long, HashSet<String>>();
 		setInheritedProperty(source, target, "enableInventoryModule", Boolean.TYPE, inheritPropertyMap);
 		setInheritedProperty(source, target, "enableStaffModule", Boolean.TYPE, inheritPropertyMap);
