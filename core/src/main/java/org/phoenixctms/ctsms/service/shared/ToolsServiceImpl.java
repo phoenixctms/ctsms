@@ -251,7 +251,7 @@ public class ToolsServiceImpl
 		CoreUtil.modifyVersion(user, now, modified);
 		ServiceUtil.createKeyPair(user, plainDepartmentPassword, this.getKeyPairDao());
 		user = userDao.create(user);
-		ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, now, null, newPassword.getPassword(), plainDepartmentPassword, passwordDao,
+		ServiceUtil.createPassword(true, true, passwordDao.passwordInVOToEntity(newPassword), user, now, null, newPassword.getPassword(), plainDepartmentPassword, passwordDao,
 				this.getJournalEntryDao());
 		UserOutVO result = userDao.toUserOutVO(user);
 		ServiceUtil.logSystemMessage(user, result, now, modified, SystemMessageCodes.USER_CREATED, result, null, this.getJournalEntryDao());
