@@ -488,6 +488,15 @@
 			name="ecrfFieldDao"
 			ref="eCRFFieldDao" />
 	</bean>
+	
+	<bean
+		id="googleAuthenticator"
+		class="org.phoenixctms.ctsms.security.otp.GoogleAuthenticator">
+		<property
+			name="passwordDao"
+			ref="passwordDao" />
+	</bean>
+	
 	<bean
 		id="criterionIntermediateSetParser"
 		class="org.phoenixctms.ctsms.query.parser.CriterionIntermediateSetParser">
@@ -1038,6 +1047,9 @@
 		<property
 			name="variablePeriodNamesBundleBasename"
 			value="ctsms-variableperiodnames" />
+		<property
+			name="otpAuthenticatorTypeNamesBundleBasename"
+			value="ctsms-otpauthenticatortypenames" />
 		<property
 			name="inputFieldTypeNamesBundleBasename"
 			value="ctsms-inputfieldtypenames" />
