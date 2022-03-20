@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
@@ -217,17 +216,17 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized void changePassword() {
-		try {
-			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword);
-			auth.setPassword(newPassword);
-			initSets();
-			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getInheritedUser().getId()), true));
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		} catch (AuthenticationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-			WebUtil.publishException(e);
-		}
+		//		try {
+		//			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword);
+		//			auth.setPassword(newPassword);
+		//			initSets();
+		//			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getInheritedUser().getId()), true));
+		//		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		//			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		//		} catch (AuthenticationException e) {
+		//			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		//			WebUtil.publishException(e);
+		//		}
 	}
 
 	private void clearAuthenticationFailedMessage() {
