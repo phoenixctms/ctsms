@@ -91,6 +91,7 @@ import org.phoenixctms.ctsms.pdf.TrainingRecordPDFSettingCodes;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.EcrfSignature;
 import org.phoenixctms.ctsms.security.EntitySignature;
+import org.phoenixctms.ctsms.security.otp.OTPAuthenticator;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.date.BookingDuration;
@@ -468,6 +469,8 @@ public final class ServiceUtil {
 		password.setLimitWrongPasswordAttempts(Settings.getBoolean(SettingCodes.LOGON_LIMIT_WRONG_PASSWORD_ATTEMPTS, Settings.Bundle.SETTINGS, false));
 		password.setMaxWrongPasswordAttemptsSinceLastSuccessfulLogon(password.isLimitWrongPasswordAttempts() ? Settings.getLongNullable(
 				SettingCodes.LOGON_MAX_WRONG_PASSWORD_ATTEMPTS_SINCE_LAST_SUCCESSFUL_LOGON, Settings.Bundle.SETTINGS, null) : null);
+		password.setEnable2fa(Settings.getBoolean(SettingCodes.LOGON_ENABLE2FA, Settings.Bundle.SETTINGS, false));
+		password.setOtpType(password.isEnable2fa() ? Settings.getOtpAuthenticatorType(SettingCodes.LOGON_OTP_AUTHENTICATOR, Settings.Bundle.SETTINGS, null) : null);
 	}
 
 	public static void applyLogonLimitations(PasswordInVO password, Password lastPassword) {
@@ -485,6 +488,8 @@ public final class ServiceUtil {
 		password.setLimitWrongPasswordAttempts(lastPassword.isLimitWrongPasswordAttempts());
 		password.setMaxWrongPasswordAttemptsSinceLastSuccessfulLogon(
 				password.isLimitWrongPasswordAttempts() ? lastPassword.getMaxWrongPasswordAttemptsSinceLastSuccessfulLogon() : null);
+		password.setEnable2fa(lastPassword.isEnable2fa());
+		password.setOtpType(lastPassword.getOtpType());
 	}
 
 	public static void applyOneTimeLogonLimitation(PasswordInVO password) {
@@ -987,6 +992,11 @@ public final class ServiceUtil {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PASSWORD_NUMBER_OF_MAX_WRONG_PASSWORD_ATTEMPTS_LESS_THAN_ONE);
 			}
 		}
+		if (password.isEnable2fa()) {
+			if (password.getOtpType() == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PASSWORD_OTP_AUTHENTICATOR_REQUIRED);
+			}
+		}
 	}
 
 	public static void checkMassMailLocked(MassMail massMail) throws ServiceException {
@@ -1433,7 +1443,12 @@ public final class ServiceUtil {
 		Iterator<Password> passwordsIt = user.getPasswords().iterator();
 		while (passwordsIt.hasNext()) {
 			Password password = passwordsIt.next();
-			CryptoUtil.encryptPasswords(password, CryptoUtil.decryptPassword(password, plainOldDepartmentPassword), plainNewDepartmentPassword);
+			String plainPassword = CryptoUtil.decryptPassword(password, plainOldDepartmentPassword);
+			String otpSecret = null;
+			if (password.getEncryptedOtpSecret() != null) {
+				otpSecret = CryptoUtil.decryptOtpSecret(password, plainPassword);
+			}
+			CryptoUtil.encryptPasswords(password, plainPassword, plainNewDepartmentPassword, otpSecret);
 			passwordDao.update(password);
 		}
 	}
@@ -1861,27 +1876,42 @@ public final class ServiceUtil {
 		return model;
 	}
 
-	public static Password createPassword(boolean reset, Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword,
+	public static Password createPassword(boolean resetLogons, boolean resetOtpSecret, Password password, User user, Timestamp timestamp,
+			Password lastPassword, String plainNewPassword,
 			String plainDepartmentPassword,
 			PasswordDao passwordDao) throws Exception {
-		CryptoUtil.encryptPasswords(password, plainNewPassword, plainDepartmentPassword);
-		password.setSuccessfulLogons((reset || password.isProlongable() || lastPassword == null) ? 0l : lastPassword.getSuccessfulLogons());
+		String otpSecret = null;
+		if (!resetOtpSecret && password.getOtpType() != null && lastPassword != null) {
+			resetOtpSecret = !password.getOtpType().equals(lastPassword.getOtpType());
+		}
+		if (resetOtpSecret) {
+			if (password.getOtpType() != null) {
+				otpSecret = OTPAuthenticator.getInstance(password.getOtpType()).createOtpSecret();
+			}
+		} else {
+			if (lastPassword != null) {
+				otpSecret = CryptoUtil.decryptOtpSecret(lastPassword, CryptoUtil.decryptPassword(lastPassword, plainDepartmentPassword));
+			}
+		}
+		CryptoUtil.encryptPasswords(password, plainNewPassword, plainDepartmentPassword, otpSecret);
+		password.setSuccessfulLogons((resetLogons || password.isProlongable() || lastPassword == null) ? 0l : lastPassword.getSuccessfulLogons());
 		password.setWrongPasswordAttemptsSinceLastSuccessfulLogon(0l);
 		password.setLastLogonAttemptHost(null);
 		password.setLastLogonAttemptTimestamp(null);
 		password.setLastSuccessfulLogonHost(null);
 		password.setLastSuccessfulLogonTimestamp(null);
-		password.setTimestamp((reset || password.isProlongable() || lastPassword == null) ? timestamp : lastPassword.getTimestamp());
+		password.setTimestamp((resetLogons || password.isProlongable() || lastPassword == null) ? timestamp : lastPassword.getTimestamp());
 		password.setPreviousPassword(lastPassword);
 		password.setUser(user);
 		user.getPasswords().add(password);
 		return passwordDao.create(password);
 	}
 
-	public static PasswordOutVO createPassword(boolean reset, Password password, User user, Timestamp timestamp, Password lastPassword, String plainNewPassword,
+	public static PasswordOutVO createPassword(boolean resetLogons, boolean resetOtpSecret, Password password, User user, Timestamp timestamp, Password lastPassword,
+			String plainNewPassword,
 			String plainDepartmentPassword,
 			PasswordDao passwordDao, JournalEntryDao journalEntryDao) throws Exception {
-		password = createPassword(reset, password, user, timestamp, lastPassword, plainNewPassword, plainDepartmentPassword, passwordDao);
+		password = createPassword(resetLogons, resetOtpSecret, password, user, timestamp, lastPassword, plainNewPassword, plainDepartmentPassword, passwordDao);
 		PasswordOutVO result = passwordDao.toPasswordOutVO(password);
 		logSystemMessage(user, result.getInheritedUser(), timestamp, CoreUtil.getUser(), SystemMessageCodes.PASSWORD_CREATED, result, null, journalEntryDao);
 		return result;

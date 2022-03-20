@@ -196,7 +196,7 @@ public class Authenticator {
 						userContext.setPlainPassword(auth.getLocalPassword());
 						PasswordInVO localPassword = new PasswordInVO();
 						ServiceUtil.applyLogonLimitations(localPassword, lastPassword);
-						lastPassword = ServiceUtil.createPassword(false, passwordDao.passwordInVOToEntity(localPassword), user, now, lastPassword, auth.getPassword(),
+						lastPassword = ServiceUtil.createPassword(false, false, passwordDao.passwordInVOToEntity(localPassword), user, now, lastPassword, auth.getPassword(),
 								userContext.getPlainDepartmentPassword(), passwordDao);
 						userContext.setLastPassword(lastPassword);
 						userContext.setPlainPassword(auth.getPassword());

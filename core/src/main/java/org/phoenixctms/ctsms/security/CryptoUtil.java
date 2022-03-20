@@ -205,6 +205,13 @@ public final class CryptoUtil {
 		return (String) decryptValue(password.getDepartmentPasswordIv(), password.getDepartmentPasswordSalt(), plainPassword, password.getEncryptedDepartmentPassword());
 	}
 
+	public static String decryptOtpSecret(Password password, String plainPassword) throws Exception {
+		if (password.getEncryptedOtpSecret() != null) {
+			return (String) decryptValue(password.getOtpSecretIv(), password.getOtpSecretSalt(), plainPassword, password.getEncryptedOtpSecret());
+		}
+		return null;
+	}
+
 	public static String decryptPassword(Password password, String plainDepartmentPassword) throws Exception {
 		return (String) decryptValue(password.getPasswordIv(), password.getPasswordSalt(), plainDepartmentPassword, password.getEncryptedPassword());
 	}
@@ -281,7 +288,7 @@ public final class CryptoUtil {
 		return null;
 	}
 
-	public static void encryptPasswords(Password password, String plainPassword, String plainDepartmentPassword) throws Exception {
+	public static void encryptPasswords(Password password, String plainPassword, String plainDepartmentPassword, String otpSecret) throws Exception {
 		byte[] salt;
 		CipherText cipherText;
 		salt = createSalt();
@@ -297,6 +304,17 @@ public final class CryptoUtil {
 		password.setPasswordIv(cipherText.getIv());
 		password.setPasswordSalt(salt);
 		password.setEncryptedPassword(cipherText.getCipherText());
+		if (otpSecret != null) {
+			salt = createSalt();
+			cipherText = encryptValue(salt, plainPassword, otpSecret);
+			password.setOtpSecretIv(cipherText.getIv());
+			password.setOtpSecretSalt(salt);
+			password.setEncryptedOtpSecret(cipherText.getCipherText());
+		} else {
+			password.setOtpSecretIv(null);
+			password.setOtpSecretSalt(null);
+			password.setEncryptedOtpSecret(null);
+		}
 	}
 
 	public static void encryptPrivateKey(org.phoenixctms.ctsms.domain.KeyPair keyPair, byte[] plainPrivateKey, String plainDepartmentPassword) throws Exception {

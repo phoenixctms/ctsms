@@ -174,7 +174,7 @@ public class UserServiceImpl
 
 	@Override
 	protected PasswordOutVO handleAdminSetPassword(AuthenticationVO auth, Long userId,
-			PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
+			PasswordInVO newPassword, String plainDepartmentPassword, boolean resetOtpSecret) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao(), LockMode.PESSIMISTIC_WRITE);
 		if (plainDepartmentPassword == null) {
 			plainDepartmentPassword = getPlainDepartmentPassword();
@@ -189,7 +189,7 @@ public class UserServiceImpl
 			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, plainDepartmentPassword);
 		}
 		ServiceUtil.checkLogonLimitations(newPassword);
-		return ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
+		return ServiceUtil.createPassword(true, resetOtpSecret, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
 				newPassword.getPassword(),
 				plainDepartmentPassword, passwordDao, this.getJournalEntryDao());
 	}
@@ -413,7 +413,7 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword) throws Exception {
+	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword, boolean resetOtpSecret) throws Exception {
 		Password lastPassword = CoreUtil.getLastPassword();
 		User user = CoreUtil.getUser();
 		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
@@ -429,7 +429,8 @@ public class UserServiceImpl
 		ServiceUtil.applyLogonLimitations(newPassword, lastPassword);
 		ServiceUtil.checkLogonLimitations(newPassword);
 		PasswordDao passwordDao = this.getPasswordDao();
-		return ServiceUtil.createPassword(false, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword, plainNewPassword,
+		return ServiceUtil.createPassword(false, resetOtpSecret, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
+				plainNewPassword,
 				getPlainDepartmentPassword(), passwordDao, this.getJournalEntryDao());
 	}
 
@@ -755,5 +756,18 @@ public class UserServiceImpl
 		User user = CheckIDUtil.checkUserId(userId, userDao);
 		UserInheritedVO result = userDao.toUserInheritedVO(user);
 		return result;
+	}
+
+	@Override
+	protected String handleGetOTPSecret(AuthenticationVO auth, Long userId, String plainDepartmentPassword) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
+		}
+		Password password = this.getPasswordDao().findLastPassword(user.getId());
+		if (password != null) {
+			return CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword));
+		}
+		return null;
 	}
 }
