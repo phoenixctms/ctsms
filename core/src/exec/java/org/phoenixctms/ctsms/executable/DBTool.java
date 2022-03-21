@@ -64,7 +64,7 @@ public class DBTool {
 				password = line.getOptionValue(DBToolOptions.PASSWORD_OPT);
 			}
 		}
-		return new AuthenticationVO(username, password, null, "localhost");
+		return new AuthenticationVO(username, password, null, null, "localhost");
 	}
 
 	private static String getDepartmentL10nKeyOptionValue(CommandLine line, boolean required) throws Exception {

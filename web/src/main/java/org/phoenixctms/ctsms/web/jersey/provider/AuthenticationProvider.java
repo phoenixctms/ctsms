@@ -62,7 +62,7 @@ public class AuthenticationProvider
 		}
 		AuthenticationVO result;
 		if (credentials != null && credentials.length == 2) {
-			result = new AuthenticationVO(credentials[0], credentials[1], null, WebUtil.getRemoteHost(request));
+			result = new AuthenticationVO(credentials[0], credentials[1], null, null, WebUtil.getRemoteHost(request));
 		} else {
 			result = new AuthenticationVO();
 			result.setHost(WebUtil.getRemoteHost(request));
