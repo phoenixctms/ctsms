@@ -147,6 +147,7 @@ public interface DefaultMessages {
 	public static final String NOTIFICATION_TYPE_NAME = "<notification type name>";
 	public static final String NOTIFICATION_SUBJECT = "<notification subject>";
 	public static final String NOTIFICATION_MESSAGE_TEMPLATE = "";
+	public static final String OTP_REGISTRATION_INFO_MESSAGE_TEMPLATE = "";
 	public static final String VISIT_TYPE_NAME = "<visit type name>";
 	public static final String TRIAL_TAG_NAME = "<trial tag name>";
 	public static final String TRIAL_STATUS_TYPE_NAME = "<trial status type name>";
@@ -209,5 +210,5 @@ public interface DefaultMessages {
 	public static final String LOOP_PATH_USER_LABEL = "{0}";
 	public static final String UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE = "unsupported visit schedule date mode {0}";
 	public static final String UNSUPPORTED_RANGE_PERIOD = "range period {0} is not supported";
-	public static final String UNSUPPORTED_OTP_AUTHENTICATOR_TYPE = "unsupported OTP authenticator type {0}";
+	public static final String UNSUPPORTED_OTP_AUTHENTICATOR_TYPE = "unsupported OTP authentication service {0}";
 }

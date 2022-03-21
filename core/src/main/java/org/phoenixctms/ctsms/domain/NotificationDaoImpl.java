@@ -6,12 +6,6 @@
  */
 package org.phoenixctms.ctsms.domain;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -22,7 +16,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -37,7 +30,6 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
-import org.phoenixctms.ctsms.util.FileOverloads;
 import org.phoenixctms.ctsms.util.KeyValueString;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -53,7 +45,6 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.NotificationRecipientVO;
 import org.phoenixctms.ctsms.vo.NotificationVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
-import org.springframework.ui.velocity.VelocityEngineUtils;
 
 /**
  * @see Notification
@@ -321,29 +312,8 @@ public class NotificationDaoImpl
 	}
 
 	private String getMessage(Notification notification, Map messageParameters) throws Exception {
-		String messageVslFileName = L10nUtil.getNotificationMessageTemplate(Locales.NOTIFICATION, notification.getType().getMessageTemplateL10nKey());
-		if (messageVslFileName != null && messageVslFileName.length() > 0) {
-			Iterator<String> it = FileOverloads.PROPERTIES_SEARCH_PATHS.iterator();
-			while (it.hasNext()) {
-				try {
-					File messageVslFile = new java.io.File(it.next(), messageVslFileName);
-					FileInputStream stream = new FileInputStream(messageVslFile);
-					try {
-						StringWriter result = new StringWriter();
-						velocityEngine.evaluate(new VelocityContext(messageParameters), result, messageVslFile.getName(), new InputStreamReader(stream, TEMPLATE_ENCODING));
-						return result.toString();
-					} catch (IOException e) {
-					} finally {
-						stream.close();
-					}
-				} catch (FileNotFoundException e) {
-				} catch (SecurityException e) {
-				}
-			}
-			return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, messageVslFileName, TEMPLATE_ENCODING, messageParameters);
-		} else {
-			return null;
-		}
+		return ServiceUtil.getVslFileMessage(velocityEngine, L10nUtil.getNotificationMessageTemplate(Locales.NOTIFICATION, notification.getType().getMessageTemplateL10nKey()),
+				messageParameters, TEMPLATE_ENCODING);
 	}
 
 	private String getSubject(Notification notification, Map messageParameters) {
@@ -1074,6 +1044,11 @@ public class NotificationDaoImpl
 			throws Exception {
 		org.phoenixctms.ctsms.enumeration.NotificationType notificationType = org.phoenixctms.ctsms.enumeration.NotificationType.STAFF_INACTIVE_VISIT_SCHEDULE_ITEM;
 		ServiceUtil.cancelNotifications(getNotifications(visitScheduleItem), this, notificationType);
+		//xxxx
+		//Iterator<VisitScheduleItem> it = visitScheduleItem.getTrial().getVisitScheduleItems().iterator();
+		//while (it.hasNext()) {
+		//	ServiceUtil.cancelNotifications(getNotifications(it.next()), this, notificationType);
+		//}
 		Notification notification = Notification.Factory.newInstance();
 		notification.setVisitScheduleItem(visitScheduleItem);
 		addNotifications(visitScheduleItem, notification);

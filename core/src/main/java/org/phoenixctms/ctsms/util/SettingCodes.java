@@ -297,4 +297,6 @@ public interface SettingCodes {
 	public static final String INQUIRY_EXPORTER_PROCESS_PL = "inquiry_exporter_process_pl";
 	public static final String OBFUSCATE_BROKEN_RANDOMIZATION_CODES = "obfuscate_broken_randomization_codes";
 	public static final String ECRF_COPY_REVISION_PATTERN = "ecrf_copy_revision_pattern";
+	public static final String GOOGLE_AUTHENTICATOR_WINDOW = "google_authenticator_window";
+	public static final String GOOGLE_AUTHENTICATOR_STEP_SIZE_SECS = "google_authenticator_step_size_secs";
 }

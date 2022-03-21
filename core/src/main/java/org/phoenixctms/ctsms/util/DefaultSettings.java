@@ -246,6 +246,8 @@ public final class DefaultSettings {
 	public static final String INQUIRY_EXPORTER_PROCESS_PL = "process";
 	public static final boolean OBFUSCATE_BROKEN_RANDOMIZATION_CODES = true;
 	public static final String ECRF_COPY_REVISION_PATTERN = "copy {0}";
+	public static final int GOOGLE_AUTHENTICATOR_WINDOW = 3;
+	public static final int GOOGLE_AUTHENTICATOR_STEP_SIZE_SECS = 30;
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("QUERY");
