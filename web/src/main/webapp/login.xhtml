@@ -43,7 +43,26 @@
 					<h:panelGrid rendered="#{!sessionScopeBean.loggedIn}" columns="1"
 						cellpadding="0" styleClass="ctsms-login-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-input-row,ctsms-message-row,ctsms-message-row,ctsms-message-row,ctsms-message-row,ctsms-toolbar-row">
+						
 						<h:panelGrid columns="3" cellpadding="2"
+						    rendered="#{sessionScopeBean.otpRequired}"
+							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+							<h:outputLabel for="otp"
+								value="#{labels.login_otp_label}" />
+							<h:panelGroup>
+								<p:inputText id="otp" value="#{sessionScopeBean.otp}"
+									required="true" label="#{labels.login_otp}"
+									styleClass="ctsms-control" />
+								<p:tooltip rendered="true" for="otp">
+									<h:outputText value="#{labels.login_otp_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="otp" />
+						</h:panelGrid>
+						
+						<h:panelGrid columns="3" cellpadding="2"
+						    rendered="#{!sessionScopeBean.otpRequired}"
 							columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 							<h:outputLabel for="username"
 								value="#{labels.login_username_label}" />
@@ -89,7 +108,7 @@
 								style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}"
 								for="localPassword" />
 						</h:panelGrid>
-						<h:panelGrid rendered="#{sessionScopeBean.captchaRequired}"
+						<h:panelGrid rendered="#{!sessionScopeBean.otpRequired and sessionScopeBean.captchaRequired}"
 							columns="2" cellpadding="2"
 							columnClasses="ctsms-input-column,ctsms-message-for-column">
 							<ctsms:captcha required="false" id="captcha" secure="true"
@@ -99,7 +118,8 @@
 						</h:panelGrid>
 
 						<h:outputLink
-							rendered="#{!sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired}"
+							rendered="#{(!sessionScopeBean.otpRequired and !sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired)
+							            or (sessionScopeBean.otpRequired and XXXXXX)}"
 							value="http://phoenixctms.org">
 							<h:graphicImage style="border:0px;"
 								value="resources/images/phoenix_banner.png" />
@@ -135,12 +155,24 @@
 							<p:toolbarGroup align="right">
 								<p:commandButton value="#{labels.login_button_label}"
 									action="#{sessionScopeBean.login}"
+									rendered="#{!sessionScopeBean.otpRequired}"
 									icon="ui-icon ui-icon-arrowreturnthick-1-e" ajax="false"
 									disabled="false">
 									<f:param
 										name="#{applicationScopeBean.parameterName('REFERER')}"
 										value="#{refererBase64 == null ? '' : refererBase64}" />
 								</p:commandButton>
+								
+								<p:commandButton value="#{labels.login_button_label}"
+									action="#{sessionScopeBean.login}"
+									rendered="#{sessionScopeBean.otpRequired}"
+									icon="ui-icon ui-icon-arrowreturnthick-1-e" ajax="false"
+									disabled="false">
+									<f:param
+										name="#{applicationScopeBean.parameterName('REFERER')}"
+										value="#{refererBase64 == null ? '' : refererBase64}" />
+								</p:commandButton>
+								
 								<p:commandButton value="#{labels.reset_button_label}"
 									action="#{sessionScopeBean.resetLoginInputs}"
 									icon="ui-icon ui-icon-close" immediate="true" ajax="false"

@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
@@ -200,6 +201,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	private int failedAttempts;
 	private boolean authenticationFailed;
 	private boolean localPasswordRequired;
+	private boolean otpRequired;
 	private String authenticationFailedMessage;
 	private MenuModel userMenuModel;
 	private ColumnManagementBean columnManager;
@@ -212,21 +214,22 @@ public class SessionScopeBean implements FilterItemsStore {
 		failedAttempts = 0;
 		authenticationFailed = false;
 		localPasswordRequired = false;
+		otpRequired = false;
 		authenticationFailedMessage = null;
 	}
 
 	public synchronized void changePassword() {
-		//		try {
-		//			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword);
-		//			auth.setPassword(newPassword);
-		//			initSets();
-		//			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getInheritedUser().getId()), true));
-		//		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		//			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		//		} catch (AuthenticationException e) {
-		//			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
-		//			WebUtil.publishException(e);
-		//		}
+		try {
+			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword, false);
+			auth.setPassword(newPassword);
+			initSets();
+			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getInheritedUser().getId()), true));
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			WebUtil.publishException(e);
+		}
 	}
 
 	private void clearAuthenticationFailedMessage() {
@@ -976,12 +979,16 @@ public class SessionScopeBean implements FilterItemsStore {
 		return true;
 	}
 
+	public synchronized boolean isOtpRequired() {
+		return otpRequired;
+	}
+
 	public synchronized boolean isLocalPasswordRequired() {
 		return localPasswordRequired;
 	}
 
 	public synchronized boolean isLoggedIn() {
-		return logon != null;
+		return logon != null && !otpRequired;
 	}
 
 	public synchronized boolean isShowStatusBarInfo() {
@@ -1188,16 +1195,22 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized String login() {
 		logon = null;
+		otpRequired = false;
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth);
-			ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
-			WebUtil.setSessionTimeout();
-			failedAttempts = 0;
 			auth.setLocalPassword(null);
 			clearAuthenticationFailedMessage();
-			outcome = getLoginOutcome(true);
+			if (logon.getEnable2fa()) {
+				otpRequired = true;
+				outcome = getLoginOutcome(false);
+			} else {
+				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
+				WebUtil.setSessionTimeout();
+				failedAttempts = 0;
+				outcome = getLoginOutcome(true);
+			}
 		} catch (ServiceException e) {
 			failedAttempts++;
 			authenticationFailed = true;
@@ -1230,6 +1243,58 @@ public class SessionScopeBean implements FilterItemsStore {
 			outcome = getLoginOutcome(false);
 		} finally {
 			initSets();
+		}
+		return outcome;
+	}
+
+	public synchronized String verifyOtp() {
+		String outcome;
+		if (logon != null && otpRequired) {
+			try {
+				WebUtil.getServiceLocator().getUserService().verifyOTP(auth, logon.getInheritedUser().getId(), logon.getOtpSent(), null);
+				otpRequired = false;
+				auth.setOtp(null);
+				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
+				WebUtil.setSessionTimeout();
+				failedAttempts = 0;
+				outcome = getLoginOutcome(true);
+			} catch (ServiceException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				authenticationFailedMessage = e.getMessage();
+				outcome = getLoginOutcome(false);
+			} catch (AuthenticationException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				if (Settings.getBoolean(SettingCodes.HIDE_DETAILED_AUTHENTICATION_ERROR, Bundle.SETTINGS, DefaultSettings.HIDE_DETAILED_AUTHENTICATION_ERROR)) {
+					authenticationFailedMessage = Messages.getString(MessageCodes.OPAQUE_AUTHENTICATION_ERROR_MESSAGE);
+				} else {
+					authenticationFailedMessage = e.getMessage();
+				}
+				outcome = getLoginOutcome(false);
+			} catch (AuthorisationException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				authenticationFailedMessage = e.getMessage();
+				outcome = getLoginOutcome(false);
+			} catch (IllegalArgumentException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				authenticationFailedMessage = e.getMessage();
+				outcome = getLoginOutcome(false);
+			} finally {
+				initSets();
+			}
+		} else {
+			logon = null;
+			failedAttempts++;
+			authenticationFailed = true;
+			authenticationFailedMessage = e.getMessage();
+			outcome = getLoginOutcome(false);
 		}
 		return outcome;
 	}
@@ -1276,6 +1341,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		auth.setUsername(null);
 		auth.setPassword(null);
 		auth.setLocalPassword(null);
+		auth.setOtp(null);
 		clearAuthenticationFailedMessage();
 		return getLoginOutcome(false);
 	}
