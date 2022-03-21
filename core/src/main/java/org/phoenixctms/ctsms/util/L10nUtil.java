@@ -113,6 +113,7 @@ public final class L10nUtil {
 	private static String authenticationTypeNamesBundleBasename;
 	private static String variablePeriodNamesBundleBasename;
 	private static String otpAuthenticatorTypeNamesBundleBasename;
+	private static String otpRegistrationInfoMessageTemplatesBundleBasename;
 	private static String inputFieldTypeNamesBundleBasename;
 	private static String eventImportanceNamesBundleBasename;
 	private static String sexNamesBundleBasename;
@@ -735,6 +736,10 @@ public final class L10nUtil {
 
 	public static String getNotificationMessageTemplate(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, notificationMessageTemplatesBundleBasename), DefaultMessages.NOTIFICATION_MESSAGE_TEMPLATE);
+	}
+
+	public static String getOTPRegistrationInfoMessageTemplate(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, otpRegistrationInfoMessageTemplatesBundleBasename), DefaultMessages.OTP_REGISTRATION_INFO_MESSAGE_TEMPLATE);
 	}
 
 	public static String getNotificationSubject(Locales locale, String l10nKey, Object[] args) {
@@ -1737,6 +1742,13 @@ public final class L10nUtil {
 			String otpAuthenticatorTypeNamesBundleBasename) {
 		L10nUtil.otpAuthenticatorTypeNamesBundleBasename = otpAuthenticatorTypeNamesBundleBasename;
 		getBundle(Locales.DEFAULT, otpAuthenticatorTypeNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setOtpRegistrationInfoMessageTemplatesBundleBasename(
+			String otpRegistrationInfoMessageTemplatesBundleBasename) {
+		L10nUtil.otpRegistrationInfoMessageTemplatesBundleBasename = otpRegistrationInfoMessageTemplatesBundleBasename;
+		getBundle(Locales.DEFAULT, otpRegistrationInfoMessageTemplatesBundleBasename);
 	}
 
 	@Autowired(required = true)
