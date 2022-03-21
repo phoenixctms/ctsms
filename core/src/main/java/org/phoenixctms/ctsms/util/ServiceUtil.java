@@ -1,5 +1,9 @@
 package org.phoenixctms.ctsms.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -100,6 +104,7 @@ import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.util.date.ShiftDuration;
 import org.phoenixctms.ctsms.vo.*;
 import org.phoenixctms.ctsms.vocycle.UserReflexionGraph;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 public final class ServiceUtil {
 
@@ -995,6 +1000,8 @@ public final class ServiceUtil {
 		if (password.isEnable2fa()) {
 			if (password.getOtpType() == null) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PASSWORD_OTP_AUTHENTICATOR_REQUIRED);
+			} else {
+				OTPAuthenticator.getInstance(password.getOtpType()).checkLogonLimitations(password);
 			}
 		}
 	}
@@ -3169,6 +3176,31 @@ public final class ServiceUtil {
 
 	public static Date getLogonExpirationDate(Password password) {
 		return DateCalc.addInterval(getPasswordDate(password), password.getValidityPeriod(), password.getValidityPeriodDays());
+	}
+
+	public static String getVslFileMessage(VelocityEngine velocityEngine, String messageVslFileName, Map messageParameters, String encoding) throws Exception {
+		if (messageVslFileName != null && messageVslFileName.length() > 0) {
+			Iterator<String> it = FileOverloads.PROPERTIES_SEARCH_PATHS.iterator();
+			while (it.hasNext()) {
+				try {
+					java.io.File messageVslFile = new java.io.File(it.next(), messageVslFileName);
+					FileInputStream stream = new FileInputStream(messageVslFile);
+					try {
+						StringWriter result = new StringWriter();
+						velocityEngine.evaluate(new VelocityContext(messageParameters), result, messageVslFile.getName(), new InputStreamReader(stream, encoding));
+						return result.toString();
+					} catch (IOException e) {
+					} finally {
+						stream.close();
+					}
+				} catch (FileNotFoundException e) {
+				} catch (SecurityException e) {
+				}
+			}
+			return VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, messageVslFileName, encoding, messageParameters);
+		} else {
+			return null;
+		}
 	}
 
 	public static String getMassMailMessage(VelocityEngine velocityEngine, MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters,
