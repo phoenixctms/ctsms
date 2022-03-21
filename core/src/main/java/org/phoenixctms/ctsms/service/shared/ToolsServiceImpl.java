@@ -95,6 +95,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.security.Authenticator;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
+import org.phoenixctms.ctsms.security.otp.OTPAuthenticator;
 import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -176,14 +177,6 @@ public class ToolsServiceImpl
 		}
 		return result;
 	}
-	//	private static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
-	//			JournalEntryDao journalEntryDao) throws Exception {
-	//		if (user == null) {
-	//			return null;
-	//		}
-	//		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
-	//				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
-	//	}
 
 	private NotificationEmailSender notificationEmailSender;
 	private Authenticator authenticator;
@@ -1049,6 +1042,10 @@ public class ToolsServiceImpl
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
+			if (lastPassword.isEnable2fa()) {
+				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
+				lastPasswordVO.setOtpSent(otpAuthenticator.sendOtp(user));
+			}
 			userVO = lastPasswordVO.getInheritedUser();
 			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
