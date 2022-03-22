@@ -3900,7 +3900,7 @@ public final class WebUtil {
 		Long totalInquiryCount = 0L;
 		Long trialsWithoutInquiryValuesCount = null;
 		Collection<TrialOutVO> trialVOs = null;
-		if (ENABLE_INQUIRY_VALUE_COUNT && probandId != null) {
+		if ((ENABLE_INQUIRY_VALUE_COUNT || trials != null) && probandId != null) {
 			try {
 				trialVOs = getServiceLocator().getProbandService().getInquiryTrials(getAuthentication(), probandId, active, activeSignup);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
