@@ -136,6 +136,7 @@ public final class WebUtil {
 	private final static Pattern EL_ENUM_LIST_REGEXP = Pattern.compile(Pattern.quote(EL_ENUM_LIST_DEFAULT_SEPARATOR));
 	private final static boolean ENABLE_JOURNAL_COUNT = false;
 	private final static boolean ENABLE_INQUIRY_VALUE_COUNT = false;
+	private final static boolean ENABLE_VISIT_SCHEDULE_ITEM_COUNT = false;
 
 	public static Date addIntervals(Date date, VariablePeriod period, Long explicitDays, int n) {
 		try {
@@ -4423,7 +4424,7 @@ public final class WebUtil {
 	}
 
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId, boolean expand) {
-		if (trialId != null || probandId != null) {
+		if (ENABLE_VISIT_SCHEDULE_ITEM_COUNT && (trialId != null || probandId != null)) {
 			try {
 				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId, expand);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
