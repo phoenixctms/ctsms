@@ -134,6 +134,8 @@ public final class WebUtil {
 	private final static JsonParser JSON_PARSER = new JsonParser();
 	private final static String EL_ENUM_LIST_DEFAULT_SEPARATOR = ",";
 	private final static Pattern EL_ENUM_LIST_REGEXP = Pattern.compile(Pattern.quote(EL_ENUM_LIST_DEFAULT_SEPARATOR));
+	private final static boolean ENABLE_JOURNAL_COUNT = false;
+	private final static boolean ENABLE_INQUIRY_VALUE_COUNT = false;
 
 	public static Date addIntervals(Date date, VariablePeriod period, Long explicitDays, int n) {
 		try {
@@ -2502,7 +2504,7 @@ public final class WebUtil {
 	}
 
 	public static Long getJournalCount(JournalModule module, Long id) {
-		if (module != null && id != null) {
+		if (ENABLE_JOURNAL_COUNT && module != null && id != null) {
 			try {
 				return getServiceLocator().getJournalService().getJournalCount(getAuthentication(), module, id);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -3897,7 +3899,7 @@ public final class WebUtil {
 		Long totalInquiryCount = 0L;
 		Long trialsWithoutInquiryValuesCount = null;
 		Collection<TrialOutVO> trialVOs = null;
-		if (probandId != null) {
+		if (ENABLE_INQUIRY_VALUE_COUNT && probandId != null) {
 			try {
 				trialVOs = getServiceLocator().getProbandService().getInquiryTrials(getAuthentication(), probandId, active, activeSignup);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -4126,6 +4128,28 @@ public final class WebUtil {
 			variablePeriods = new ArrayList<SelectItem>();
 		}
 		return variablePeriods;
+	}
+
+	public static ArrayList<SelectItem> getOTPAuthenticatorTypes() {
+		ArrayList<SelectItem> types;
+		Collection<OTPAuthenticatorTypeVO> typeVOs = null;
+		try {
+			typeVOs = getServiceLocator().getSelectionSetService().getOTPAuthenticatorTypes(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (typeVOs != null) {
+			types = new ArrayList<SelectItem>(typeVOs.size());
+			Iterator<OTPAuthenticatorTypeVO> it = typeVOs.iterator();
+			while (it.hasNext()) {
+				OTPAuthenticatorTypeVO typeVO = it.next();
+				types.add(new SelectItem(typeVO.getType().name(), typeVO.getName()));
+			}
+		} else {
+			types = new ArrayList<SelectItem>();
+		}
+		return types;
 	}
 
 	public static ArrayList<SelectItem> getVariablePeriodsWoExplicit() {
