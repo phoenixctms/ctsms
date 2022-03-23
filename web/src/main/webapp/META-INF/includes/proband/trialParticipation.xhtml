@@ -165,7 +165,7 @@
 											rendered="#{not trialParticipationBean.randomization}"
 											id="addProbandListEntry" value="#{labels.add_button_label}"
 											actionListener="#{trialParticipationBean.add}"
-											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 											icon="ui-icon ui-icon-plusthick" ajax="true"
 											disabled="#{!trialParticipationBean.createable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
@@ -175,7 +175,7 @@
 											process="@this,probandlistentry_input"
 											id="addProbandListEntryNotRandomized"
 											actionListener="#{trialParticipationBean.add}"
-											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 											disabled="#{!trialParticipationBean.createable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView"
 											value="#{labels.add_button_label}"
@@ -184,7 +184,7 @@
 												process="@this,probandlistentry_input"
 												id="addProbandListEntryRandomized"
 												actionListener="#{trialParticipationBean.addRandomized}"
-												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 												disabled="#{!trialParticipationBean.createable}"
 												update=":tabView:trialparticipation_form:trialParticipationListTabView"
 												value="#{labels.add_randomize_button_label}"
@@ -197,7 +197,7 @@
 											id="updateProbandListEntry"
 											value="#{labels.update_button_label}"
 											actionListener="#{trialParticipationBean.update}"
-											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 											icon="ui-icon ui-icon-disk" ajax="true"
 											disabled="#{!trialParticipationBean.editable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
@@ -207,7 +207,7 @@
 											process="@this,probandlistentry_input"
 											id="updateProbandListEntryNotRandomized"
 											actionListener="#{trialParticipationBean.update}"
-											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 											disabled="#{!trialParticipationBean.editable}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView"
 											value="#{labels.update_button_label}"
@@ -216,7 +216,7 @@
 												process="@this,probandlistentry_input"
 												id="updateProbandListEntryRandomized"
 												actionListener="#{trialParticipationBean.updateRandomized}"
-												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+												oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 												disabled="#{!trialParticipationBean.editable}"
 												update=":tabView:trialparticipation_form:trialParticipationListTabView"
 												value="#{labels.update_randomize_button_label}"
@@ -232,7 +232,7 @@
 										<p:commandButton process="@this"
 											value="#{labels.load_button_label}"
 											actionListener="#{trialParticipationBean.load}"
-											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+											oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 											icon="ui-icon-refresh" ajax="true"
 											disabled="#{!trialParticipationBean.created}"
 											update=":tabView:trialparticipation_form:trialParticipationListTabView" />
@@ -286,7 +286,7 @@
 												id="addProbandListStatusEntry"
 												value="#{labels.add_button_label}"
 												actionListener="#{trialParticipationBean.probandListStatusEntryBean.add}"
-												oncomplete="trialParticipationList.filter()"
+												oncomplete="trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 												icon="ui-icon ui-icon-plusthick" ajax="true"
 												disabled="#{!trialParticipationBean.probandListStatusEntryBean.createable}"
 												update="probandliststatus_list,probandliststatus_input" />
@@ -295,7 +295,7 @@
 											<p:commandButton process="@this"
 												value="#{labels.delete_button_label}"
 												actionListener="#{trialParticipationBean.probandListStatusEntryBean.delete}"
-												oncomplete="trialParticipationList.filter()"
+												oncomplete="trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 												icon="ui-icon ui-icon-trash" ajax="true"
 												disabled="#{!trialParticipationBean.probandListStatusEntryBean.removable}"
 												update="probandliststatus_list,probandliststatus_input" />
@@ -326,7 +326,7 @@
 								<ui:param name="namingContainer"
 									value=":tabView:trialparticipation_form:trialParticipationListTabView" />
 								<ui:param name="updateProbandListWidget"
-									value="trialParticipationList.filter()" />
+									value="trialParticipationList.unselectAllRows();trialParticipationList.filter()" />
 
 							</ui:include>
 							<p:messages for="probandListEntryTagValueMessages" />
@@ -347,14 +347,14 @@
 										id="updateProbandListEntryTagValues"
 										value="#{labels.update_page_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.update}"
-										oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+										oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 										icon="ui-icon ui-icon-disk" ajax="true"
 										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable}"
 										update="tagvalue_input_grid" />
 									<p:commandButton process="@this"
 										value="#{labels.load_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.load}"
-										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 										icon="ui-icon-refresh" ajax="true"
 										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.created}"
 										update="tagvalue_input_grid" />
@@ -422,7 +422,7 @@
 				</f:facet>
 				<p:commandButton process="@this" value="#{labels.yes_button_label}"
 					actionListener="#{trialParticipationBean.delete}"
-					oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.filter()"
+					oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 					onclick="probandListEntryDeleteConfirmation.hide()" ajax="true"
 					update=":tabView:trialparticipation_form:trialParticipationListTabView" />
 				<p:commandButton value="#{labels.no_button_label}"
