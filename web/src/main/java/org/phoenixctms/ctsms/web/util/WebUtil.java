@@ -134,9 +134,7 @@ public final class WebUtil {
 	private final static JsonParser JSON_PARSER = new JsonParser();
 	private final static String EL_ENUM_LIST_DEFAULT_SEPARATOR = ",";
 	private final static Pattern EL_ENUM_LIST_REGEXP = Pattern.compile(Pattern.quote(EL_ENUM_LIST_DEFAULT_SEPARATOR));
-	private final static boolean ENABLE_JOURNAL_COUNT = false;
-	private final static boolean ENABLE_INQUIRY_VALUE_COUNT = false;
-	private final static boolean ENABLE_VISIT_SCHEDULE_ITEM_COUNT = false;
+	private final static boolean ENABLE_INQUIRY_VALUE_COUNT = true;
 
 	public static Date addIntervals(Date date, VariablePeriod period, Long explicitDays, int n) {
 		try {
@@ -2505,7 +2503,7 @@ public final class WebUtil {
 	}
 
 	public static Long getJournalCount(JournalModule module, Long id) {
-		if (ENABLE_JOURNAL_COUNT && module != null && id != null) {
+		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getJournalService().getJournalCount(getAuthentication(), module, id);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -4424,7 +4422,7 @@ public final class WebUtil {
 	}
 
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId, boolean expand) {
-		if (ENABLE_VISIT_SCHEDULE_ITEM_COUNT && (trialId != null || probandId != null)) {
+		if (trialId != null || probandId != null) {
 			try {
 				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId, expand);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
