@@ -11,6 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base32;
 import org.phoenixctms.ctsms.domain.Password;
 import org.phoenixctms.ctsms.domain.PasswordDao;
+import org.phoenixctms.ctsms.enumeration.OTPAuthenticatorType;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -20,10 +21,16 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 
 public class GoogleAuthenticator extends OTPAuthenticator {
 
+	private final static OTPAuthenticatorType TYPE = OTPAuthenticatorType.GOOGLE_AUTHENTICATOR;
+	public final static String BEAN_NAME = "googleAuthenticator";
 	private static final String SECRET_RANDOM_ALGORITHM = "SHA1PRNG";
 	private static final int SECRET_LENGTH = 20;
 	private static final String MAC_ALGORITHM = "HmacSHA1";
-	private PasswordDao XXXXpasswordDao = null;
+	private PasswordDao passwordDao;
+
+	protected GoogleAuthenticator() {
+		super();
+	}
 
 	@Override
 	public String createOtpSecret() throws NoSuchAlgorithmException {
@@ -36,8 +43,8 @@ public class GoogleAuthenticator extends OTPAuthenticator {
 	}
 
 	@Override
-	public boolean verifyOtp(String otpSecret, String otpEntered, String otpSent) throws InvalidKeyException, NumberFormatException, NoSuchAlgorithmException {
-		return verifyOtp(otpSecret, Long.parseLong(otpEntered), System.currentTimeMillis());
+	public boolean verifyOtp(String otpSecret, String otp, String otpToken) throws InvalidKeyException, NumberFormatException, NoSuchAlgorithmException {
+		return verifyOtp(otpSecret, Long.parseLong(otp), System.currentTimeMillis());
 	}
 
 	@Override
@@ -50,12 +57,12 @@ public class GoogleAuthenticator extends OTPAuthenticator {
 		if (otpSecret != null) {
 			messageParameters.put(OTPRegistrationInfoMessageTemplateParameters.OTP_SECRET, otpSecret);
 		}
-		Map model = createTemplateModel(messageParameters);
+		Map model = createTemplateModel(messageParameters, passwordDao.toPasswordOutVO(password));
 		return getOtpPRegistrationInfoMessage(model);
 	}
 
 	//https://thegreyblog.blogspot.com/2011/12/google-authenticator-using-it-in-your.html
-	private static boolean verifyOtp(String otpSecret, long code, long time) throws NoSuchAlgorithmException, InvalidKeyException {
+	private static boolean verifyOtp(String otpSecret, long otp, long time) throws NoSuchAlgorithmException, InvalidKeyException {
 		Base32 codec = new Base32();
 		byte[] secret = codec.decode(otpSecret);
 		//the window in time steps to tolerate for clock skew:
@@ -63,7 +70,7 @@ public class GoogleAuthenticator extends OTPAuthenticator {
 		for (int i = -((window - 1) / 2); i <= window / 2; ++i) {
 			long hash = verifyOtp(secret,
 					time / (Settings.getInt(SettingCodes.GOOGLE_AUTHENTICATOR_STEP_SIZE_SECS, Bundle.SETTINGS, DefaultSettings.GOOGLE_AUTHENTICATOR_STEP_SIZE_SECS) * 1000) + i);
-			if (hash == code) {
+			if (hash == otp) {
 				return true;
 			}
 		}
@@ -92,7 +99,12 @@ public class GoogleAuthenticator extends OTPAuthenticator {
 		return (int) truncatedHash;
 	}
 
+	@Override
+	protected OTPAuthenticatorType getType() {
+		return TYPE;
+	}
+
 	public void setPasswordDao(PasswordDao passwordDao) {
-		this.XXXXpasswordDao = passwordDao;
+		this.passwordDao = passwordDao;
 	}
 }
