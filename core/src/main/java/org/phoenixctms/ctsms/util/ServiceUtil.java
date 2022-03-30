@@ -1888,12 +1888,18 @@ public final class ServiceUtil {
 			String plainDepartmentPassword,
 			PasswordDao passwordDao) throws Exception {
 		String otpSecret = null;
+		if (lastPassword != null) {
+			password.setShowOtpRegistrationInfo(lastPassword.isShowOtpRegistrationInfo());
+		} else {
+			password.setShowOtpRegistrationInfo(false);
+		}
 		if (!resetOtpSecret && password.getOtpType() != null && lastPassword != null) {
 			resetOtpSecret = !password.getOtpType().equals(lastPassword.getOtpType());
 		}
 		if (resetOtpSecret) {
 			if (password.getOtpType() != null) {
 				otpSecret = OTPAuthenticator.getInstance(password.getOtpType()).createOtpSecret();
+				password.setShowOtpRegistrationInfo(true);
 			}
 		} else {
 			if (lastPassword != null) {

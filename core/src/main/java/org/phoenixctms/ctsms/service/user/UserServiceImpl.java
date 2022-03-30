@@ -46,7 +46,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
 import org.phoenixctms.ctsms.security.otp.OTPAuthenticator;
-import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
+import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -767,14 +767,15 @@ public class UserServiceImpl
 			plainDepartmentPassword = getPlainDepartmentPassword();
 		}
 		Password password = this.getPasswordDao().findLastPassword(user.getId());
-		if (password != null && password.getOtpType() != null) {
+		if (password != null && password.getOtpType() != null
+				&& password.isShowOtpRegistrationInfo()) {
 			return OTPAuthenticator.getInstance(password.getOtpType()).getOtpRegistrationInfo(password, plainDepartmentPassword);
 		}
 		return null;
 	}
 
 	@Override
-	protected void handleVerifyOTP(AuthenticationVO auth, Long userId, String otpSent, String plainDepartmentPassword) throws Exception {
+	protected void handleVerifyOTP(AuthenticationVO auth, Long userId, String otpToken, String plainDepartmentPassword) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
 		if (plainDepartmentPassword == null) {
 			plainDepartmentPassword = getPlainDepartmentPassword();
@@ -782,8 +783,11 @@ public class UserServiceImpl
 		Password password = this.getPasswordDao().findLastPassword(user.getId());
 		if (password != null && password.isEnable2fa()) {
 			if (!OTPAuthenticator.getInstance(password.getOtpType())
-					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpSent)) {
-				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.INVALID_OTP);
+					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpToken)) {
+				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_OTP);
+			} else if (password.isShowOtpRegistrationInfo()) {
+				password.setShowOtpRegistrationInfo(false);
+				this.getPasswordDao().update(password);
 			}
 		}
 	}
