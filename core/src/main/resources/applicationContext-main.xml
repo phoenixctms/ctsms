@@ -505,8 +505,6 @@
 			ref="eCRFFieldDao" />
 	</bean>
 	
-
-	
 	<bean
 		id="googleAuthenticator"
 		class="org.phoenixctms.ctsms.security.otp.GoogleAuthenticator">
@@ -821,6 +819,10 @@
 		<property
 			name="ecrfFieldStatusEntryDao"
 			ref="eCRFFieldStatusEntryDao" />
+	</bean>
+	<bean
+		id="coreUtil"
+		class="org.phoenixctms.ctsms.util.CoreUtil">
 	</bean>
 	<bean
 		id="l10nUtil"
