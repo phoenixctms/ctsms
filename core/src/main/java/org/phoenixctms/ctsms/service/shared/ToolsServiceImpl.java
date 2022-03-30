@@ -1044,7 +1044,7 @@ public class ToolsServiceImpl
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
 			if (lastPassword.isEnable2fa()) {
 				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
-				lastPasswordVO.setOtpSent(otpAuthenticator.sendOtp(user));
+				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));
 			}
 			userVO = lastPasswordVO.getInheritedUser();
 			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);

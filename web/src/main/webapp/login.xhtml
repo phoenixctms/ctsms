@@ -108,6 +108,7 @@
 								style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}"
 								for="localPassword" />
 						</h:panelGrid>
+						
 						<h:panelGrid rendered="#{!sessionScopeBean.otpRequired and sessionScopeBean.captchaRequired}"
 							columns="2" cellpadding="2"
 							columnClasses="ctsms-input-column,ctsms-message-for-column">
@@ -118,12 +119,21 @@
 						</h:panelGrid>
 
 						<h:outputLink
-							rendered="#{(!sessionScopeBean.otpRequired and !sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired)
-							            or (sessionScopeBean.otpRequired and XXXXXX)}"
+							rendered="#{!sessionScopeBean.otpRequired and !sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired}"
 							value="http://phoenixctms.org">
 							<h:graphicImage style="border:0px;"
 								value="resources/images/phoenix_banner.png" />
 						</h:outputLink>
+
+						<h:panelGrid rendered="#{sessionScopeBean.otpRequired}" columns="1" cellpadding="2" styleClass="ctsms-input-panelgrid">
+							<div id="otpRegistrationInfo"/>
+							<script>
+					            function setOtpRegistrationInfo(){
+					                document.getElementById('otpRegistrationInfo').innerHTML = #{applicationScopeBean.quoteJsString(sessionScopeBean.getOtpRegistrationInfo())};
+					            }
+					            setOtpRegistrationInfo();
+					        </script>
+						</h:panelGrid>
 
 						<p:messages globalOnly="true" />
 						<ui:include
@@ -164,7 +174,7 @@
 								</p:commandButton>
 								
 								<p:commandButton value="#{labels.login_button_label}"
-									action="#{sessionScopeBean.login}"
+									action="#{sessionScopeBean.verifyOtp}"
 									rendered="#{sessionScopeBean.otpRequired}"
 									icon="ui-icon ui-icon-arrowreturnthick-1-e" ajax="false"
 									disabled="false">
