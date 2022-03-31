@@ -1,0 +1,5 @@
+files:
+  - source: /core/src/main/resources/*.properties
+    ignore:
+      - /core/src/main/resources/*_de.properties
+    translation: /core/src/main/resources/%original_file_name%_%two_letters_code%.properties
