@@ -3,3 +3,18 @@ files:
     ignore:
       - /core/src/main/resources/*_de.properties
     translation: /core/src/main/resources/%file_name%_%two_letters_code%.properties
+  - source: /web/src/main/resources/org/phoenixctms/ctsms/web/
+    ignore:
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/user/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/trial/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/staff/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/proband/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/massmail/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/inventory/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/inputfield/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/course/*_de.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/settings.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/themes.properties
+      - /web/src/main/resources/org/phoenixctms/ctsms/web/windows.properties
+    translation: '%original_path%/%file_name%_%two_letters_code%.properties'
