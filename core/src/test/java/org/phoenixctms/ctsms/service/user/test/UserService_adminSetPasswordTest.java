@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>adminSetPassword</code> of service <code>UserService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.user.UserService#adminSetPassword(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.PasswordInVO, java.lang.String)
+ * @see org.phoenixctms.ctsms.service.user.UserService#adminSetPassword(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.vo.PasswordInVO, java.lang.String, boolean)
  */
 @Test(groups={"service","UserService"})
 public class UserService_adminSetPasswordTest extends UserServiceBaseTest {

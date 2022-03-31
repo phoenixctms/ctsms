@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>verifyOTP</code> of service <code>UserService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.user.UserService#verifyOTP(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.lang.String, java.lang.String)
+ * @see org.phoenixctms.ctsms.service.user.UserService#verifyOTP(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.lang.String)
  */
 @Test(groups={"service","UserService"})
 public class UserService_verifyOTPTest extends UserServiceBaseTest {
