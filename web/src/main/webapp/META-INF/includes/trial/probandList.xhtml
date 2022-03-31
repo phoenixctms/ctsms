@@ -651,7 +651,7 @@
 												rendered="#{not probandListEntryBean.randomization}"
 												id="addProbandListEntry" value="#{labels.add_button_label}"
 												actionListener="#{probandListEntryBean.add}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												icon="ui-icon ui-icon-plusthick" ajax="true"
 												disabled="#{!probandListEntryBean.createable}"
 												update=":tabView:probandlist_form:probandListTabView" />
@@ -661,7 +661,7 @@
 												process="@this,probandlistentry_input"
 												id="addProbandListEntryNotRandomized"
 												actionListener="#{probandListEntryBean.add}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												disabled="#{!probandListEntryBean.createable}"
 												update=":tabView:probandlist_form:probandListTabView"
 												value="#{labels.add_button_label}"
@@ -670,7 +670,7 @@
 													process="@this,probandlistentry_input"
 													id="addProbandListEntryRandomized"
 													actionListener="#{probandListEntryBean.addRandomized}"
-													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 													disabled="#{!probandListEntryBean.createable}"
 													update=":tabView:probandlist_form:probandListTabView"
 													value="#{labels.add_randomize_button_label}"
@@ -683,7 +683,7 @@
 												id="addProbandListEntryCreateProband"
 												value="#{labels.add_create_button_label}"
 												actionListener="#{probandListEntryBean.addCreateProband}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												icon="ui-icon ui-icon-plusthick" ajax="true"
 												disabled="#{!probandListEntryBean.createable}"
 												update=":tabView:probandlist_form:probandListTabView" />
@@ -693,7 +693,7 @@
 												process="@this,probandlistentry_input"
 												id="addProbandListEntryCreateProbandNotRandomized"
 												actionListener="#{probandListEntryBean.addCreateProband}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												disabled="#{!probandListEntryBean.createable}"
 												update=":tabView:probandlist_form:probandListTabView"
 												value="#{labels.add_create_button_label}"
@@ -702,7 +702,7 @@
 													process="@this,probandlistentry_input"
 													id="addProbandListEntryCreateProbandRandomized"
 													actionListener="#{probandListEntryBean.addCreateProbandRandomized}"
-													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 													disabled="#{!probandListEntryBean.createable}"
 													update=":tabView:probandlist_form:probandListTabView"
 													value="#{labels.add_create_randomize_button_label}"
@@ -716,7 +716,7 @@
 												id="updateProbandListEntry"
 												value="#{labels.update_button_label}"
 												actionListener="#{probandListEntryBean.update}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												icon="ui-icon ui-icon-disk" ajax="true"
 												disabled="#{!probandListEntryBean.editable}"
 												update=":tabView:probandlist_form:probandListTabView" />
@@ -726,7 +726,7 @@
 												process="@this,probandlistentry_input"
 												id="updateProbandListEntryNotRandomized"
 												actionListener="#{probandListEntryBean.update}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												disabled="#{!probandListEntryBean.editable}"
 												update=":tabView:probandlist_form:probandListTabView"
 												value="#{labels.update_button_label}"
@@ -735,7 +735,7 @@
 													process="@this,probandlistentry_input"
 													id="updateProbandListEntryRandomized"
 													actionListener="#{probandListEntryBean.updateRandomized}"
-													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+													oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 													disabled="#{!probandListEntryBean.editable}"
 													update=":tabView:probandlist_form:probandListTabView"
 													value="#{labels.update_randomize_button_label}"
@@ -747,7 +747,7 @@
 												value="#{labels.normalize_positions_button_label}"
 												title="#{labels.normalize_positions_button_title}"
 												actionListener="#{probandListEntryBean.normalizePositions}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												icon="ui-icon ui-icon-link" ajax="true"
 												disabled="#{!probandListEntryBean.createable}"
 												update=":tabView:probandlist_form:probandListTabView" />
@@ -759,7 +759,7 @@
 											<p:commandButton process="@this"
 												title="#{labels.load_button_label}"
 												actionListener="#{probandListEntryBean.load}"
-												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+												oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 												icon="ui-icon-refresh" ajax="true"
 												disabled="#{!probandListEntryBean.created}"
 												update=":tabView:probandlist_form:probandListTabView" />
@@ -822,14 +822,14 @@
 													id="addProbandListStatusEntry"
 													value="#{labels.add_button_label}"
 													actionListener="#{probandListEntryBean.probandListStatusEntryBean.add}"
-													oncomplete="probandList.filter()"
+													oncomplete="probandList.unselectAllRows();probandList.filter()"
 													icon="ui-icon ui-icon-plusthick" ajax="true"
 													disabled="#{!probandListEntryBean.probandListStatusEntryBean.createable}"
 													update="probandliststatus_list,probandliststatus_input" />
 												<p:commandButton process="@this"
 													value="#{labels.delete_button_label}"
 													actionListener="#{probandListEntryBean.probandListStatusEntryBean.delete}"
-													oncomplete="probandList.filter()"
+													oncomplete="probandList.unselectAllRows();probandList.filter()"
 													icon="ui-icon ui-icon-trash" ajax="true"
 													disabled="#{!probandListEntryBean.probandListStatusEntryBean.removable}"
 													update="probandliststatus_list,probandliststatus_input" />
@@ -860,7 +860,7 @@
 									<ui:param name="namingContainer"
 										value=":tabView:probandlist_form:probandListTabView" />
 									<ui:param name="updateProbandListWidget"
-										value="probandList.filter()" />
+										value="probandList.unselectAllRows();probandList.filter()" />
 								</ui:include>
 								<p:messages for="probandListEntryTagValueMessages" />
 								<p:toolbar>
@@ -880,14 +880,14 @@
 											id="updateProbandListEntryTagValues"
 											value="#{labels.update_page_button_label}"
 											actionListener="#{probandListEntryBean.probandListEntryTagValueBean.update}"
-											oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);probandList.filter()"
+											oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 											icon="ui-icon ui-icon-disk" ajax="true"
 											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.editable}"
 											update="tagvalue_input_grid" />
 										<p:commandButton process="@this"
 											value="#{labels.load_button_label}"
 											actionListener="#{probandListEntryBean.probandListEntryTagValueBean.load}"
-											oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+											oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 											icon="ui-icon-refresh" ajax="true"
 											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.created}"
 											update="tagvalue_input_grid" />
@@ -939,7 +939,7 @@
 				</f:facet>
 				<p:commandButton process="@this" value="#{labels.yes_button_label}"
 					actionListener="#{probandListEntryBean.delete}"
-					oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.filter()"
+					oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 					onclick="probandListEntryDeleteConfirmation.hide()" ajax="true"
 					update=":tabView:probandlist_form:probandListTabView" />
 				<p:commandButton value="#{labels.no_button_label}"
