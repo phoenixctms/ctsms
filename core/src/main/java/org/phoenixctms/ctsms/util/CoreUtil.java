@@ -71,10 +71,13 @@ import org.phoenixctms.ctsms.vo.ReimbursementsExcelVO;
 import org.phoenixctms.ctsms.vo.SearchResultExcelVO;
 import org.phoenixctms.ctsms.vo.TeamMembersExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.thoughtworks.xstream.XStream;
 
-public final class CoreUtil {
+public final class CoreUtil implements ApplicationContextAware {
 
 	public final static String OBFUSCATED_STRING = "********";
 	public final static String RANDOM_ALGORITHM = "SHA1PRNG";
@@ -167,6 +170,7 @@ public final class CoreUtil {
 	public final static Set<String> SYSTEM_MESSAGE_CODES = createSystemMessageCodeSet();
 	private static String PRNG_CLASS_DESCRIPTION = "{0} ({1})";
 	private final static long JOB_EXIST_VALUE_WAIT_MILLISECONDS = 1000l;
+	private static ApplicationContext applicationContext;
 
 	private static void addExcludedField(HashMap<Class, HashSet<String>> fieldMap, Class vo, String fieldName) {
 		if (fieldMap.containsKey(vo)) {
@@ -1035,5 +1039,14 @@ public final class CoreUtil {
 	}
 
 	private CoreUtil() {
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		CoreUtil.applicationContext = applicationContext;
+	}
+
+	public static ApplicationContext getApplicationContext() {
+		return applicationContext;
 	}
 }

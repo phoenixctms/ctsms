@@ -199,5 +199,6 @@ public class PasswordDaoImpl
 		if (target.isExpires()) {
 			target.setExpiration(ServiceUtil.getLogonExpirationDate(source));
 		}
+		target.setOtpType(L10nUtil.createOTPAuthenticatorTypeVO(Locales.USER, source.getOtpType()));
 	}
 }

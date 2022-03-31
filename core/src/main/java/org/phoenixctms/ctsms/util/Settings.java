@@ -27,6 +27,7 @@ import org.apache.pdfbox.pdmodel.font.PDTrueTypeFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
+import org.phoenixctms.ctsms.enumeration.OTPAuthenticatorType;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.excel.ExcelCellFormat;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -502,6 +503,15 @@ public final class Settings {
 		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
 		if (value != null && value.length() > 0) {
 			return VariablePeriod.fromString(value); // illegal arg exc!
+		} else {
+			return null;
+		}
+	}
+
+	public static OTPAuthenticatorType getOtpAuthenticatorType(String key, Bundle bundle, OTPAuthenticatorType defaultValue) {
+		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
+		if (value != null && value.length() > 0) {
+			return OTPAuthenticatorType.fromString(value); // illegal arg exc!
 		} else {
 			return null;
 		}

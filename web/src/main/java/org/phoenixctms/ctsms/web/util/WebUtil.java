@@ -4129,6 +4129,28 @@ public final class WebUtil {
 		return variablePeriods;
 	}
 
+	public static ArrayList<SelectItem> getOTPAuthenticatorTypes() {
+		ArrayList<SelectItem> types;
+		Collection<OTPAuthenticatorTypeVO> typeVOs = null;
+		try {
+			typeVOs = getServiceLocator().getSelectionSetService().getOTPAuthenticatorTypes(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (typeVOs != null) {
+			types = new ArrayList<SelectItem>(typeVOs.size());
+			Iterator<OTPAuthenticatorTypeVO> it = typeVOs.iterator();
+			while (it.hasNext()) {
+				OTPAuthenticatorTypeVO typeVO = it.next();
+				types.add(new SelectItem(typeVO.getType().name(), typeVO.getName()));
+			}
+		} else {
+			types = new ArrayList<SelectItem>();
+		}
+		return types;
+	}
+
 	public static ArrayList<SelectItem> getVariablePeriodsWoExplicit() {
 		ArrayList<SelectItem> variablePeriods;
 		Collection<VariablePeriodVO> periodVOs = null;

@@ -45,6 +45,8 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
+import org.phoenixctms.ctsms.security.otp.OTPAuthenticator;
+import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -174,7 +176,7 @@ public class UserServiceImpl
 
 	@Override
 	protected PasswordOutVO handleAdminSetPassword(AuthenticationVO auth, Long userId,
-			PasswordInVO newPassword, String plainDepartmentPassword) throws Exception {
+			PasswordInVO newPassword, String plainDepartmentPassword, boolean resetOtpSecret) throws Exception {
 		User user = CheckIDUtil.checkUserId(userId, this.getUserDao(), LockMode.PESSIMISTIC_WRITE);
 		if (plainDepartmentPassword == null) {
 			plainDepartmentPassword = getPlainDepartmentPassword();
@@ -189,7 +191,7 @@ public class UserServiceImpl
 			PasswordPolicy.USER.checkHistoryDistance(newPassword.getPassword(), lastPassword, plainDepartmentPassword);
 		}
 		ServiceUtil.checkLogonLimitations(newPassword);
-		return ServiceUtil.createPassword(true, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
+		return ServiceUtil.createPassword(true, resetOtpSecret, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
 				newPassword.getPassword(),
 				plainDepartmentPassword, passwordDao, this.getJournalEntryDao());
 	}
@@ -413,7 +415,7 @@ public class UserServiceImpl
 	}
 
 	@Override
-	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword) throws Exception {
+	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword, boolean resetOtpSecret) throws Exception {
 		Password lastPassword = CoreUtil.getLastPassword();
 		User user = CoreUtil.getUser();
 		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
@@ -429,7 +431,8 @@ public class UserServiceImpl
 		ServiceUtil.applyLogonLimitations(newPassword, lastPassword);
 		ServiceUtil.checkLogonLimitations(newPassword);
 		PasswordDao passwordDao = this.getPasswordDao();
-		return ServiceUtil.createPassword(false, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword, plainNewPassword,
+		return ServiceUtil.createPassword(false, resetOtpSecret, passwordDao.passwordInVOToEntity(newPassword), user, new Timestamp(System.currentTimeMillis()), lastPassword,
+				plainNewPassword,
 				getPlainDepartmentPassword(), passwordDao, this.getJournalEntryDao());
 	}
 
@@ -755,5 +758,37 @@ public class UserServiceImpl
 		User user = CheckIDUtil.checkUserId(userId, userDao);
 		UserInheritedVO result = userDao.toUserInheritedVO(user);
 		return result;
+	}
+
+	@Override
+	protected String handleGetOTPRegistrationInfo(AuthenticationVO auth, Long userId, String plainDepartmentPassword) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
+		}
+		Password password = this.getPasswordDao().findLastPassword(user.getId());
+		if (password != null && password.getOtpType() != null
+				&& password.isShowOtpRegistrationInfo()) {
+			return OTPAuthenticator.getInstance(password.getOtpType()).getOtpRegistrationInfo(password, plainDepartmentPassword);
+		}
+		return null;
+	}
+
+	@Override
+	protected void handleVerifyOTP(AuthenticationVO auth, Long userId, String otpToken, String plainDepartmentPassword) throws Exception {
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		if (plainDepartmentPassword == null) {
+			plainDepartmentPassword = getPlainDepartmentPassword();
+		}
+		Password password = this.getPasswordDao().findLastPassword(user.getId());
+		if (password != null && password.isEnable2fa()) {
+			if (!OTPAuthenticator.getInstance(password.getOtpType())
+					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpToken)) {
+				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_OTP);
+			} else if (password.isShowOtpRegistrationInfo()) {
+				password.setShowOtpRegistrationInfo(false);
+				this.getPasswordDao().update(password);
+			}
+		}
 	}
 }

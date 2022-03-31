@@ -56,6 +56,22 @@
 		</property>
 	</bean>
 	<bean
+		id="otpRegistrationInfoVelocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<props>
+				<prop key="resource.loader">class</prop>
+				<prop key="class.resource.loader.class">
+					org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+				</prop>
+				<!-- <prop key="eventhandler.referenceinsertion.class">org.apache.velocity.app.event.implement.EscapeHtmlReference</prop> 
+					<prop key="eventhandler.escape.html.match">/.*/</prop> -->
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding">UTF-8</prop>
+			</props>
+		</property>
+	</bean>
+	<bean
 		id="notificationMailSenderJavaMailBundle"
 		class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
 		<property
@@ -488,6 +504,18 @@
 			name="ecrfFieldDao"
 			ref="eCRFFieldDao" />
 	</bean>
+	
+	<bean
+		id="googleAuthenticator"
+		class="org.phoenixctms.ctsms.security.otp.GoogleAuthenticator">
+		<property
+			name="passwordDao"
+			ref="passwordDao" />
+		<property
+			name="velocityEngine"
+			ref="otpRegistrationInfoVelocityEngine" />
+	</bean>
+	
 	<bean
 		id="criterionIntermediateSetParser"
 		class="org.phoenixctms.ctsms.query.parser.CriterionIntermediateSetParser">
@@ -793,6 +821,10 @@
 			ref="eCRFFieldStatusEntryDao" />
 	</bean>
 	<bean
+		id="coreUtil"
+		class="org.phoenixctms.ctsms.util.CoreUtil">
+	</bean>
+	<bean
 		id="l10nUtil"
 		class="org.phoenixctms.ctsms.util.L10nUtil">
 		<property
@@ -1038,6 +1070,12 @@
 		<property
 			name="variablePeriodNamesBundleBasename"
 			value="ctsms-variableperiodnames" />
+		<property
+			name="otpAuthenticatorTypeNamesBundleBasename"
+			value="ctsms-otpauthenticatortypenames" />
+		<property
+			name="otpRegistrationInfoMessageTemplatesBundleBasename"
+			value="ctsms-otpregistrationinfomessagetemplates" />
 		<property
 			name="inputFieldTypeNamesBundleBasename"
 			value="ctsms-inputfieldtypenames" />

@@ -87,6 +87,8 @@ public interface SettingCodes {
 	public static final String LOGON_MAX_SUCCESSFUL_LOGONS = "logon_max_successful_logons";
 	public static final String LOGON_LIMIT_WRONG_PASSWORD_ATTEMPTS = "logon_limit_wrong_password_attempts";
 	public static final String LOGON_MAX_WRONG_PASSWORD_ATTEMPTS_SINCE_LAST_SUCCESSFUL_LOGON = "logon_max_wrong_password_attempts_since_last_successful_logon";
+	public static final String LOGON_ENABLE2FA = "logon_enable2fa";
+	public static final String LOGON_OTP_AUTHENTICATOR = "logon_otp_authenticator";
 	public static final String SUPPORTED_LOCALES = "supported_locales";
 	public static final String NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD = "notification_expiring_course_reminder_period";
 	public static final String NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD_DAYS = "notification_expiring_course_reminder_period_days";
@@ -295,4 +297,16 @@ public interface SettingCodes {
 	public static final String INQUIRY_EXPORTER_PROCESS_PL = "inquiry_exporter_process_pl";
 	public static final String OBFUSCATE_BROKEN_RANDOMIZATION_CODES = "obfuscate_broken_randomization_codes";
 	public static final String ECRF_COPY_REVISION_PATTERN = "ecrf_copy_revision_pattern";
+	public static final String GOOGLE_AUTHENTICATOR_WINDOW = "google_authenticator_window";
+	public static final String GOOGLE_AUTHENTICATOR_STEP_SIZE_SECS = "google_authenticator_step_size_secs";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_VO_DEPTH = "otp_registration_info_template_model_vo_depth";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_ENTITIES = "otp_registration_info_template_model_enumerate_entities";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_DATETIME_PATTERN = "otp_registration_info_template_model_datetime_pattern";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_DATE_PATTERN = "otp_registration_info_template_model_date_pattern";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_TIME_PATTERN = "otp_registration_info_template_model_time_pattern";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_DECIMAL_SEPARATOR = "otp_registration_info_template_model_decimal_separator";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS = "otp_registration_info_template_model_omit_encrypted_fields";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "otp_registration_info_template_model_enumerate_references";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "otp_registration_info_template_model_enumerate_collections";
+	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_MAPS = "otp_registration_info_template_model_enumerate_maps";
 }

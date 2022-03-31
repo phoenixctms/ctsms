@@ -199,6 +199,7 @@ public interface ServiceExceptionCodes {
 	public final static String PASSWORD_NUMBER_OF_MAX_SUCCESSFUL_LOGONS_REQUIRED = "password_number_of_max_successful_logons_required";
 	public final static String PASSWORD_NUMBER_OF_MAX_SUCCESSFUL_LOGONS_LESS_THAN_ONE = "password_number_of_max_successful_logons_less_than_one";
 	public final static String PASSWORD_NUMBER_OF_MAX_WRONG_PASSWORD_ATTEMPTS_REQUIRED = "password_number_of_max_wrong_password_attempts_required";
+	public final static String PASSWORD_OTP_AUTHENTICATOR_REQUIRED = "password_otp_authenticator_required";
 	public final static String PASSWORD_NUMBER_OF_MAX_WRONG_PASSWORD_ATTEMPTS_LESS_THAN_ONE = "password_number_of_max_wrong_password_attempts_less_than_one";
 	public final static String INVALID_PARENT_INVENTORY_ID = "invalid_parent_inventory_id";
 	public final static String INVALID_OWNER_STAFF_ID = "invalid_owner_staff_id";

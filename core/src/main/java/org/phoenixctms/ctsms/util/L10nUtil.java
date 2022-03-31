@@ -12,6 +12,7 @@ import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.OTPAuthenticatorType;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
@@ -31,6 +32,7 @@ import org.phoenixctms.ctsms.vo.EventImportanceVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.JobStatusVO;
 import org.phoenixctms.ctsms.vo.JournalModuleVO;
+import org.phoenixctms.ctsms.vo.OTPAuthenticatorTypeVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileGroupVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
@@ -110,6 +112,8 @@ public final class L10nUtil {
 	private static String messagesBundleBasename;
 	private static String authenticationTypeNamesBundleBasename;
 	private static String variablePeriodNamesBundleBasename;
+	private static String otpAuthenticatorTypeNamesBundleBasename;
+	private static String otpRegistrationInfoMessageTemplatesBundleBasename;
 	private static String inputFieldTypeNamesBundleBasename;
 	private static String eventImportanceNamesBundleBasename;
 	private static String sexNamesBundleBasename;
@@ -373,6 +377,19 @@ public final class L10nUtil {
 			variablePeriodVO = null;
 		}
 		return variablePeriodVO;
+	}
+
+	public static OTPAuthenticatorTypeVO createOTPAuthenticatorTypeVO(Locales locale, OTPAuthenticatorType type) {
+		OTPAuthenticatorTypeVO typeVO;
+		if (type != null) {
+			typeVO = new OTPAuthenticatorTypeVO();
+			typeVO.setType(type);
+			typeVO.setNameL10nKey(type.name());
+			typeVO.setName(getOTPAuthenticatorTypeName(locale, type.name()));
+		} else {
+			typeVO = null;
+		}
+		return typeVO;
 	}
 
 	public static String getAddressTypeName(Locales locale, String l10nKey) {
@@ -721,6 +738,10 @@ public final class L10nUtil {
 		return CommonUtil.getString(l10nKey, getBundle(locale, notificationMessageTemplatesBundleBasename), DefaultMessages.NOTIFICATION_MESSAGE_TEMPLATE);
 	}
 
+	public static String getOTPRegistrationInfoMessageTemplate(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, otpRegistrationInfoMessageTemplatesBundleBasename), DefaultMessages.OTP_REGISTRATION_INFO_MESSAGE_TEMPLATE);
+	}
+
 	public static String getNotificationSubject(Locales locale, String l10nKey, Object[] args) {
 		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, notificationSubjectsBundleBasename), DefaultMessages.NOTIFICATION_SUBJECT);
 	}
@@ -891,6 +912,10 @@ public final class L10nUtil {
 
 	public static String getVariablePeriodName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, variablePeriodNamesBundleBasename), DefaultMessages.VARIABLE_PERIOD_NAME);
+	}
+
+	public static String getOTPAuthenticatorTypeName(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, otpAuthenticatorTypeNamesBundleBasename), DefaultMessages.OTP_AUTHENTICATOR_TYPE_NAME);
 	}
 
 	public static ArrayList<String> getVisitScheduleExcelColumns(Locales locale, String l10nKey, ArrayList<String> defaultValue) {
@@ -1710,6 +1735,20 @@ public final class L10nUtil {
 			String variablePeriodNamesBundleBasename) {
 		L10nUtil.variablePeriodNamesBundleBasename = variablePeriodNamesBundleBasename;
 		getBundle(Locales.DEFAULT, variablePeriodNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setOtpAuthenticatorTypeNamesBundleBasename(
+			String otpAuthenticatorTypeNamesBundleBasename) {
+		L10nUtil.otpAuthenticatorTypeNamesBundleBasename = otpAuthenticatorTypeNamesBundleBasename;
+		getBundle(Locales.DEFAULT, otpAuthenticatorTypeNamesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setOtpRegistrationInfoMessageTemplatesBundleBasename(
+			String otpRegistrationInfoMessageTemplatesBundleBasename) {
+		L10nUtil.otpRegistrationInfoMessageTemplatesBundleBasename = otpRegistrationInfoMessageTemplatesBundleBasename;
+		getBundle(Locales.DEFAULT, otpRegistrationInfoMessageTemplatesBundleBasename);
 	}
 
 	@Autowired(required = true)

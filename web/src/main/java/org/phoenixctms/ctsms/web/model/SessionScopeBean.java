@@ -201,6 +201,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	private int failedAttempts;
 	private boolean authenticationFailed;
 	private boolean localPasswordRequired;
+	private boolean otpRequired;
 	private String authenticationFailedMessage;
 	private MenuModel userMenuModel;
 	private ColumnManagementBean columnManager;
@@ -213,12 +214,13 @@ public class SessionScopeBean implements FilterItemsStore {
 		failedAttempts = 0;
 		authenticationFailed = false;
 		localPasswordRequired = false;
+		otpRequired = false;
 		authenticationFailedMessage = null;
 	}
 
 	public synchronized void changePassword() {
 		try {
-			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword);
+			logon = WebUtil.getServiceLocator().getUserService().setPassword(auth, newPassword, oldPassword, false);
 			auth.setPassword(newPassword);
 			initSets();
 			logout(JsUtil.encodeBase64(WebUtil.createViewUrl(Urls.USER, false, GetParamNames.USER_ID, logon.getInheritedUser().getId()), true));
@@ -628,7 +630,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized boolean getHasUserIdentity() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			return logon.getInheritedUser().getIdentity() != null;
 		}
 		return false;
@@ -650,11 +652,11 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getInputDatePattern() {
-		return CommonUtil.getInputDatePattern(logon != null ? logon.getInheritedUser().getDateFormat() : null);
+		return CommonUtil.getInputDatePattern(logon != null && !otpRequired ? logon.getInheritedUser().getDateFormat() : null);
 	}
 
 	public synchronized String getInputDateTimePattern() {
-		return CommonUtil.getInputDateTimePattern(logon != null ? logon.getInheritedUser().getDateFormat() : null);
+		return CommonUtil.getInputDateTimePattern(logon != null && !otpRequired ? logon.getInheritedUser().getDateFormat() : null);
 	}
 
 	public synchronized MenuModel getInputFieldEntityMenuModel() {
@@ -678,7 +680,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized Locale getLocale() {
-		if (logon != null) {
+		if (logon != null) { // && !otpRequired) {
 			return CommonUtil.localeFromString(logon.getInheritedUser().getLocale());
 		}
 		return Locale.getDefault();
@@ -754,7 +756,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized String getStatusBarInfo() {
 		StringBuilder result = new StringBuilder();
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			AnnouncementVO announcementVO = getAnnouncement();
 			boolean announcementShown = false;
 			if (announcementVO != null) {
@@ -808,7 +810,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized String getTheme() {
 		String theme = null;
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			theme = logon.getInheritedUser().getTheme();
 		}
 		if (theme != null && theme.length() > 0) {
@@ -819,7 +821,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized TimeZone getTimeZone() {
-		if (logon != null) {
+		if (logon != null) { // && !otpRequired) {
 			return CommonUtil.timeZoneFromString(logon.getInheritedUser().getTimeZone());
 		}
 		return TimeZone.getDefault();
@@ -835,7 +837,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized UserOutVO getInheritedUser() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			return logon.getInheritedUser();
 		}
 		return null;
@@ -850,14 +852,14 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized StaffOutVO getUserIdentity() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			return logon.getInheritedUser().getIdentity();
 		}
 		return null;
 	}
 
 	public synchronized String getUserIdentityName() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			StaffOutVO identity = logon.getInheritedUser().getIdentity();
 			if (identity != null) {
 				return CommonUtil.staffOutVOToString(identity);
@@ -867,7 +869,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getUserIdentityString() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			return WebUtil.getUserIdentityString(logon.getInheritedUser());
 		}
 		return "";
@@ -968,7 +970,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized boolean isLocalAuthMethod() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			Boolean isLocal = WebUtil.isLocalAuthMethod(logon.getInheritedUser());
 			if (isLocal != null) {
 				return isLocal;
@@ -977,16 +979,20 @@ public class SessionScopeBean implements FilterItemsStore {
 		return true;
 	}
 
+	public synchronized boolean isOtpRequired() {
+		return otpRequired;
+	}
+
 	public synchronized boolean isLocalPasswordRequired() {
 		return localPasswordRequired;
 	}
 
 	public synchronized boolean isLoggedIn() {
-		return logon != null;
+		return logon != null && !otpRequired;
 	}
 
 	public synchronized boolean isShowStatusBarInfo() {
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			if (getAnnouncement() != null) {
 				return true;
 			}
@@ -1009,7 +1015,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized boolean isShowTooltips() {
-		if (logon != null) {
+		if (logon != null) { // && !otpRequired) {
 			return logon.getInheritedUser().getShowTooltips();
 		}
 		return true;
@@ -1017,7 +1023,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	private void loadUserMenuModel() {
 		userMenuModel = new DefaultMenuModel();
-		if (logon != null) {
+		if (logon != null && !otpRequired) {
 			int menuItemLabelClipMaxLength = Settings.getInt(SettingCodes.MENU_ITEM_LABEL_CLIP_MAX_LENGTH, Bundle.SETTINGS, DefaultSettings.MENU_ITEM_LABEL_CLIP_MAX_LENGTH);
 			Submenu userMenu = new Submenu();
 			userMenu.setLabel(CommonUtil.clipString(getUserIdentityString(), menuItemLabelClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
@@ -1189,16 +1195,23 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized String login() {
 		logon = null;
+		otpRequired = false;
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth);
-			ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
-			WebUtil.setSessionTimeout();
-			failedAttempts = 0;
 			auth.setLocalPassword(null);
 			clearAuthenticationFailedMessage();
-			outcome = getLoginOutcome(true);
+			if (logon.getEnable2fa()
+					&& Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED) && !WebUtil.isTrustedHost()) {
+				otpRequired = true;
+				outcome = getLoginOutcome(false);
+			} else {
+				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
+				WebUtil.setSessionTimeout();
+				failedAttempts = 0;
+				outcome = getLoginOutcome(true);
+			}
 		} catch (ServiceException e) {
 			failedAttempts++;
 			authenticationFailed = true;
@@ -1231,6 +1244,80 @@ public class SessionScopeBean implements FilterItemsStore {
 			outcome = getLoginOutcome(false);
 		} finally {
 			initSets();
+		}
+		return outcome;
+	}
+
+	public String getOtpRegistrationInfo() {
+		if (logon != null && otpRequired) {
+			try {
+				return WebUtil.getServiceLocator().getUserService().getOTPRegistrationInfo(auth, logon.getInheritedUser().getId(), null);
+			} catch (ServiceException e) {
+			} catch (AuthenticationException e) {
+			} catch (AuthorisationException e) {
+			} catch (IllegalArgumentException e) {
+			}
+		}
+		return null;
+	}
+
+	public synchronized String verifyOtp() {
+		String outcome;
+		if (logon != null && otpRequired) {
+			try {
+				WebUtil.getServiceLocator().getUserService().verifyOTP(auth, logon.getInheritedUser().getId(), logon.getOtpToken(), null);
+				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
+				WebUtil.setSessionTimeout();
+				failedAttempts = 0;
+				outcome = getLoginOutcome(true);
+			} catch (ServiceException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				authenticationFailedMessage = e.getMessage();
+				outcome = getLoginOutcome(false);
+			} catch (AuthenticationException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				if (Settings.getBoolean(SettingCodes.HIDE_DETAILED_AUTHENTICATION_ERROR, Bundle.SETTINGS, DefaultSettings.HIDE_DETAILED_AUTHENTICATION_ERROR)) {
+					authenticationFailedMessage = Messages.getString(MessageCodes.OPAQUE_AUTHENTICATION_ERROR_MESSAGE);
+				} else {
+					authenticationFailedMessage = e.getMessage();
+				}
+				outcome = getLoginOutcome(false);
+			} catch (AuthorisationException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				authenticationFailedMessage = e.getMessage();
+				outcome = getLoginOutcome(false);
+			} catch (IllegalArgumentException e) {
+				logon = null;
+				failedAttempts++;
+				authenticationFailed = true;
+				authenticationFailedMessage = e.getMessage();
+				outcome = getLoginOutcome(false);
+			} finally {
+				otpRequired = false;
+				auth.setOtp(null);
+				initSets();
+			}
+		} else {
+			logon = null;
+			otpRequired = false;
+			auth.setUsername(null);
+			auth.setPassword(null);
+			auth.setLocalPassword(null);
+			auth.setOtp(null);
+			clearAuthenticationFailedMessage();
+			initSets();
+			outcome = getLoginOutcome(false);
+			//logon = null;
+			//failedAttempts++;
+			//authenticationFailed = true;
+			//authenticationFailedMessage = Messages.getString(MessageCodes.AUTHENTICATION_ERROR_MESSAGE);
+			//outcome = getLoginOutcome(false);
 		}
 		return outcome;
 	}
@@ -1274,10 +1361,14 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String resetLoginInputs() {
+		logon = null;
+		otpRequired = false;
 		auth.setUsername(null);
 		auth.setPassword(null);
 		auth.setLocalPassword(null);
+		auth.setOtp(null);
 		clearAuthenticationFailedMessage();
+		initSets();
 		return getLoginOutcome(false);
 	}
 
@@ -1287,6 +1378,14 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized void setLocalPassword(String localPassword) {
 		auth.setLocalPassword(localPassword);
+	}
+
+	public synchronized void setOtp(String otp) {
+		auth.setOtp(otp);
+	}
+
+	public synchronized String getOtp() {
+		return auth.getOtp();
 	}
 
 	public synchronized void setNewPassword(String newPassword) {
@@ -1553,7 +1652,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getInventoryVisibleTabSet() {
 		if (inventoryVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				inventoryVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleInventoryTabList());
 			}
 		}
@@ -1562,7 +1661,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getStaffVisibleTabSet() {
 		if (staffVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				staffVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleStaffTabList());
 			}
 		}
@@ -1571,7 +1670,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getCourseVisibleTabSet() {
 		if (courseVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				courseVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleCourseTabList());
 			}
 		}
@@ -1580,7 +1679,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getTrialVisibleTabSet() {
 		if (trialVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				trialVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleTrialTabList());
 			}
 		}
@@ -1589,7 +1688,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getInputFieldVisibleTabSet() {
 		if (inputFieldVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				inputFieldVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleInputFieldTabList());
 			}
 		}
@@ -1598,7 +1697,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getProbandVisibleTabSet() {
 		if (probandVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				probandVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleProbandTabList());
 			}
 		}
@@ -1607,7 +1706,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getMassMailVisibleTabSet() {
 		if (massMailVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				massMailVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleMassMailTabList());
 			}
 		}
@@ -1616,7 +1715,7 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized Set<String> getUserVisibleTabSet() {
 		if (userVisibleTabSet == null) {
-			if (logon != null) {
+			if (logon != null && !otpRequired) {
 				userVisibleTabSet = getVisibleTabSet(logon.getInheritedUser().getVisibleUserTabList());
 			}
 		}

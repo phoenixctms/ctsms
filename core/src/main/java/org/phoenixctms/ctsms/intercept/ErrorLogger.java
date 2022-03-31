@@ -10,6 +10,7 @@ import org.phoenixctms.ctsms.enumeration.ExceptionType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.service.proband.ProbandService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.service.user.UserService;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -37,6 +38,8 @@ public class ErrorLogger implements ThrowsAdvice {
 					auth.setPassword(CoreUtil.OBFUSCATED_STRING);
 					passwords.add(auth.getLocalPassword());
 					auth.setLocalPassword(CoreUtil.OBFUSCATED_STRING);
+					//passwords.add(auth.getOtp());
+					//auth.setOtp(CoreUtil.OBFUSCATED_STRING);
 				} else if (args[i] instanceof PasswordInVO) {
 					PasswordInVO passwordInVO = (PasswordInVO) args[i];
 					passwords.add(passwordInVO.getPassword());
@@ -50,6 +53,11 @@ public class ErrorLogger implements ThrowsAdvice {
 				args[1] = CoreUtil.OBFUSCATED_STRING;
 				passwords.add((String) args[2]);
 				args[2] = CoreUtil.OBFUSCATED_STRING;
+			} else if (ProbandService.class.getName().equals(serviceName) && "updateProbandDepartmentPassword".equals(methodName)) {
+				passwords.add((String) args[3]);
+				args[3] = CoreUtil.OBFUSCATED_STRING;
+				passwords.add((String) args[4]);
+				args[4] = CoreUtil.OBFUSCATED_STRING;
 			} else if (ToolsService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
 				passwords.add((String) args[2]);
 				args[2] = CoreUtil.OBFUSCATED_STRING;
@@ -67,6 +75,12 @@ public class ErrorLogger implements ThrowsAdvice {
 				passwords.add((String) args[2]);
 				args[2] = CoreUtil.OBFUSCATED_STRING;
 			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
+				passwords.add((String) args[3]);
+				args[3] = CoreUtil.OBFUSCATED_STRING;
+			} else if (UserService.class.getName().equals(serviceName) && "getOTPRegistrationInfo".equals(methodName)) {
+				passwords.add((String) args[2]);
+				args[2] = CoreUtil.OBFUSCATED_STRING;
+			} else if (UserService.class.getName().equals(serviceName) && "verifyOTP".equals(methodName)) {
 				passwords.add((String) args[3]);
 				args[3] = CoreUtil.OBFUSCATED_STRING;
 			}
@@ -86,6 +100,8 @@ public class ErrorLogger implements ThrowsAdvice {
 					passwordIndex++;
 					auth.setLocalPassword(passwords.get(passwordIndex));
 					passwordIndex++;
+					//auth.setOtp(passwords.get(passwordIndex));
+					//passwordIndex++;
 				} else if (args[i] instanceof PasswordInVO) {
 					PasswordInVO passwordInVO = (PasswordInVO) args[i];
 					passwordInVO.setPassword(passwords.get(passwordIndex));
@@ -98,6 +114,11 @@ public class ErrorLogger implements ThrowsAdvice {
 				args[1] = passwords.get(passwordIndex);
 				passwordIndex++;
 				args[2] = passwords.get(passwordIndex);
+				passwordIndex++;
+			} else if (ProbandService.class.getName().equals(serviceName) && "updateProbandDepartmentPassword".equals(methodName)) {
+				args[3] = passwords.get(passwordIndex);
+				passwordIndex++;
+				args[4] = passwords.get(passwordIndex);
 				passwordIndex++;
 			} else if (ToolsService.class.getName().equals(serviceName) && "addUser".equals(methodName)) {
 				args[2] = passwords.get(passwordIndex);
@@ -116,6 +137,12 @@ public class ErrorLogger implements ThrowsAdvice {
 				args[2] = passwords.get(passwordIndex);
 				passwordIndex++;
 			} else if (UserService.class.getName().equals(serviceName) && "adminSetPassword".equals(methodName)) {
+				args[3] = passwords.get(passwordIndex);
+				passwordIndex++;
+			} else if (UserService.class.getName().equals(serviceName) && "getOTPRegistrationInfo".equals(methodName)) {
+				args[2] = passwords.get(passwordIndex);
+				passwordIndex++;
+			} else if (UserService.class.getName().equals(serviceName) && "verifyOTP".equals(methodName)) {
 				args[3] = passwords.get(passwordIndex);
 				passwordIndex++;
 			}

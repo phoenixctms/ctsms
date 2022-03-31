@@ -127,6 +127,7 @@ import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.OTPAuthenticatorType;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
@@ -186,6 +187,7 @@ import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
+import org.phoenixctms.ctsms.vo.OTPAuthenticatorTypeVO;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
@@ -1833,5 +1835,20 @@ public class SelectionSetServiceImpl
 	@Override
 	protected Collection<JobTypeVO> handleGetInputFieldJobTypes(AuthenticationVO auth) throws Exception {
 		return getJobTypesHelper(JobModule.INPUT_FIELD_JOB, null, null);
+	}
+
+	@Override
+	protected Collection<OTPAuthenticatorTypeVO> handleGetOTPAuthenticatorTypes(AuthenticationVO auth) throws Exception {
+		Collection<OTPAuthenticatorTypeVO> result;
+		OTPAuthenticatorType[] types = OTPAuthenticatorType.values();
+		if (types != null) {
+			result = new ArrayList<OTPAuthenticatorTypeVO>(types.length);
+			for (int i = 0; i < types.length; i++) {
+				result.add(L10nUtil.createOTPAuthenticatorTypeVO(Locales.USER, types[i]));
+			}
+		} else {
+			result = new ArrayList<OTPAuthenticatorTypeVO>();
+		}
+		return result;
 	}
 }

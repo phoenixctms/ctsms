@@ -10,15 +10,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.OTPAuthenticatorType;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.vo.OTPAuthenticatorTypeVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.OTPAuthenticatorTypeSelector;
+import org.phoenixctms.ctsms.web.model.OTPAuthenticatorTypeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelectorListener;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -30,13 +34,15 @@ import org.primefaces.context.RequestContext;
 
 @ManagedBean
 @ViewScoped
-public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelectorListener {
+public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelectorListener, OTPAuthenticatorTypeSelectorListener {
 
 	private static final int VALIDITY_PERIOD_PROPERTY_ID = 1;
+	private static final int OTP_AUTHENTICATOR_TYPE_PROPERTY_ID = 1;
 
 	public static void copyPasswordOutToIn(PasswordInVO in, PasswordOutVO out) {
 		if (in != null && out != null) {
 			VariablePeriodVO validityPeriodVO = out.getValidityPeriod();
+			OTPAuthenticatorTypeVO otpTyoeVO = out.getOtpType();
 			in.setExpires(out.getExpires());
 			in.setProlongable(out.getProlongable());
 			in.setLimitLogons(out.getLimitLogons());
@@ -46,6 +52,8 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			in.setPassword(null);
 			in.setValidityPeriod(validityPeriodVO == null ? null : validityPeriodVO.getPeriod());
 			in.setValidityPeriodDays(out.getValidityPeriodDays());
+			in.setEnable2fa(out.getEnable2fa());
+			in.setOtpType(otpTyoeVO == null ? null : otpTyoeVO.getType());
 		}
 	}
 
@@ -61,6 +69,8 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			in.setPassword(null);
 			in.setValidityPeriod(newPassword.getValidityPeriod());
 			in.setValidityPeriodDays(newPassword.getValidityPeriodDays());
+			in.setEnable2fa(newPassword.getEnable2fa());
+			in.setOtpType(newPassword.getOtpType());
 		}
 	}
 
@@ -71,17 +81,18 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 	private UserOutVO user;
 	private VariablePeriodSelector validity;
 	private String departmentPassword;
+	private OTPAuthenticatorTypeSelector otpType;
 
 	public PasswordBean() {
 		super();
 		setValidity(new VariablePeriodSelector(this, VALIDITY_PERIOD_PROPERTY_ID));
+		setOtpType(new OTPAuthenticatorTypeSelector(this, OTP_AUTHENTICATOR_TYPE_PROPERTY_ID));
 	}
 
-	@Override
-	public String addAction() {
+	public String addAction(boolean resetOtpSecret) {
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getUserService().adminSetPassword(WebUtil.getAuthentication(), userId, in, departmentPassword);
+			out = WebUtil.getServiceLocator().getUserService().adminSetPassword(WebUtil.getAuthentication(), userId, in, departmentPassword, resetOtpSecret);
 			initIn();
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
@@ -95,6 +106,19 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 			departmentPassword = null;
 		}
 		return ERROR_OUTCOME;
+	}
+
+	@Override
+	public String addAction() {
+		return addAction(false);
+	}
+
+	public final void addResetOtpSecret() {
+		actionPostProcess(addResetOtpSecretAction());
+	}
+
+	public String addResetOtpSecretAction() {
+		return addAction(true);
 	}
 
 	@Override
@@ -322,6 +346,14 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 		this.validity = validity;
 	}
 
+	public void setOtpType(OTPAuthenticatorTypeSelector otpType) {
+		this.otpType = otpType;
+	}
+
+	public OTPAuthenticatorTypeSelector getOtpType() {
+		return otpType;
+	}
+
 	private void sanitizeInVals() {
 		if (!in.getExpires()) {
 			in.setProlongable(false);
@@ -346,5 +378,25 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 
 	public void setDepartmentPassword(String departmentPassword) {
 		this.departmentPassword = departmentPassword;
+	}
+
+	@Override
+	public void setOtpAuthenticatorType(int property, OTPAuthenticatorType type) {
+		switch (property) {
+			case OTP_AUTHENTICATOR_TYPE_PROPERTY_ID:
+				this.in.setOtpType(type);
+				break;
+			default:
+		}
+	}
+
+	@Override
+	public OTPAuthenticatorType getOtpAuthenticatorType(int property) {
+		switch (property) {
+			case OTP_AUTHENTICATOR_TYPE_PROPERTY_ID:
+				return this.in.getOtpType();
+			default:
+				return OTPAuthenticatorTypeSelectorListener.NO_SELECTION_OTP_AUTHENTICATION_TYPE;
+		}
 	}
 }
