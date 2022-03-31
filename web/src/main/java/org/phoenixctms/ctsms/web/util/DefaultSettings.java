@@ -738,6 +738,7 @@ public final class DefaultSettings {
 	public static final String VISIBLE_USER_TAB_LIST_PRESET = null;
 	public static final boolean SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = false;
 	public final static int TAB_TITLE_LIST_CLIP_MAX_LENGTH = 56;
+	public static final boolean TRUSTED_HOST_2FA_REQUIRED = false;
 
 	private DefaultSettings() {
 	}
