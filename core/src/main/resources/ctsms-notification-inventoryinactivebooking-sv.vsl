@@ -1,0 +1,43 @@
+Dear $inventorybooking_onbehalfof_firstname,
+
+this is a notification for the following event:
+
+   $type
+
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
+
+   • Status type:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
+
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
+
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Status comment:
+
+$inventorystatusentry_comment
+
+Booking comment:
+
+$inventorybooking_comment
+
+Please prepare and/or take appropriate actions.
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name
