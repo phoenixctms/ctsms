@@ -1,0 +1,39 @@
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
+
+this is a notification for the following event:
+
+   $type
+
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
+
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
+
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
+
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
+
+Status comment:
+
+$staffstatusentry_comment
+
+Duty comment:
+
+$dutyrosterturn_comment
+
+Please prepare and/or take appropriate actions.
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name
