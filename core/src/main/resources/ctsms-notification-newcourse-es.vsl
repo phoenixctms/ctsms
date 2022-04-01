@@ -1,0 +1,27 @@
+Dear member of dept. $course_department,
+
+this is a notification for the following event:
+
+   $type
+
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
+
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
+
+Register for this course:
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name
