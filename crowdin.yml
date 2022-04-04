@@ -2,6 +2,12 @@ files:
   - source: /core/src/main/resources/*.properties
     ignore:
       - /core/src/main/resources/*_de.properties
+      - /core/src/main/resources/ctsms-applicationcontext.properties
+      - /core/src/main/resources/*settings.properties
+      - /core/src/main/resources/ctsms-dateformats.properties
+      - /core/src/main/resources/ctsms-job-mail-sender.properties
+      - /core/src/main/resources/ctsms-massmail-mail-sender.properties
+      - /core/src/main/resources/ctsms-notification-mail-sender.properties
     translation: /core/src/main/resources/%file_name%_%two_letters_code%.properties
   - source: /web/src/main/resources/org/phoenixctms/ctsms/web/
     ignore:
@@ -17,7 +23,7 @@ files:
       - /web/src/main/resources/org/phoenixctms/ctsms/web/settings.properties
       - /web/src/main/resources/org/phoenixctms/ctsms/web/themes.properties
       - /web/src/main/resources/org/phoenixctms/ctsms/web/windows.properties
-    translation: '/%original_path%/%file_name%_%two_letters_code%.properties'
+    translation: /%original_path%/%file_name%_%two_letters_code%.properties
   - source: /core/src/main/resources/*.vsl
     ignore:
       - /core/src/main/resources/*-de.vsl
