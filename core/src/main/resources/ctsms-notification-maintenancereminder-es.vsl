@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Estimado #if($notification.maintenance anceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-this is a notification for the following event:
+esta es una notificación para el siguiente evento:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Inventario:       $maintenancescheduleitem_inventory_name
+   • Depto de inventario.: $maintenancescheduleitem_inventory_department
+   • Gato de inventario:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Título: '$notification.maintenance ScheduleItem.title'
+   • Tipo:            $maintenancescheduleitem_type
+   • Fecha:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Contacto de la empresa: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Por favor prepare y/o tome las acciones apropiadas.
 
-Thank you!
+Gracias.
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instancia: $instance_name
