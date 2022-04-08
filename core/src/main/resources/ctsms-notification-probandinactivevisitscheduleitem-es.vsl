@@ -1,30 +1,30 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Estimado $visitscheduleitem_trial_name miembro del equipo de prueba o miembro del depto. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+esta es una notificación para el siguiente evento:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Probanda: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Gato de probanda:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Tipo de estado:   $probandstatusentry_type
+   • Estado de:   $probandstatusentry_start
+   • Estado a:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Prueba:         $visitscheduleitem_trial_name
+   • Visita:         $visitscheduleitem_name
+   • Visita de:    $visitscheduleitem_start
+   • Visitar a:      $visitscheduleitem_stop
 
-Please prepare and/or take appropriate actions.
+Por favor prepare y/o tome las acciones apropiadas.
 
-Thank you!
+Gracias.
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instancia: $instance_name
