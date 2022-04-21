@@ -115,7 +115,7 @@
                 <property name="connectionUrl">${jdbc.url}</property>
                 <property name="hibernateDialect">${hibernate.dialect}</property>
                 <!-- <property name="hibernatePoolSize">xxx</property> -->
-                <property name="hibernateHbm2DDLAuto">update</property>
+                <property name="hibernateHbm2DDLAuto">none</property>
                 <property name="hibernateQueryUseNamedParameters">true</property>
                 <property name="hibernateEnableCache">true</property>
                 <property name="sessionFactory">org.springframework.orm.hibernate3.LocalSessionFactoryBean</property>
