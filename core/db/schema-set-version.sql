@@ -1,7 +1,8 @@
+alter database ctsms owner to ctsms;
 
 create or replace function get_database_version()
 returns text as $$
-  select description from pg_shdescription join pg_database on objoid = pg_database.oid where datname = 'ctsms' limit 1;
+  select coalesce((select description from pg_shdescription join pg_database on objoid = pg_database.oid where datname = 'ctsms' limit 1),'000000000');
 $$ language sql stable;
 
 create or replace function set_database_version(text)
@@ -12,4 +13,4 @@ begin
 end
 $$ language plpgsql;
 
-select set_database_version('010800001');
+select set_database_version('010800011');
