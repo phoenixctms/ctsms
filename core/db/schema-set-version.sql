@@ -1,5 +1,3 @@
-alter database ctsms owner to ctsms;
-
 create or replace function get_database_version()
 returns text as $$
   select coalesce((select description from pg_shdescription join pg_database on objoid = pg_database.oid where datname = 'ctsms' limit 1),'000000000');
