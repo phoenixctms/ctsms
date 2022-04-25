@@ -1203,7 +1203,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			auth.setLocalPassword(null);
 			clearAuthenticationFailedMessage();
 			if (logon.getEnable2fa()
-					&& Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED) && !WebUtil.isTrustedHost()) {
+					&& (Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED) || !WebUtil.isTrustedHost())) {
 				otpRequired = true;
 				outcome = getLoginOutcome(false);
 			} else {
