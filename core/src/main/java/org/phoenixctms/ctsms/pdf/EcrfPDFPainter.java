@@ -733,8 +733,11 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				fileName.append(ecrfVOs.iterator().next().getId());
 				fileName.append("_");
 				if (visitVOs != null && visitVOs.size() == 1) {
-					fileName.append(visitVOs.iterator().next().getId());
-					fileName.append("_");
+					VisitOutVO visitVO = visitVOs.iterator().next();
+					if (visitVO != null) {
+						fileName.append(visitVO.getId());
+						fileName.append("_");
+					}
 				}
 			}
 			if (blank) {
