@@ -1265,7 +1265,7 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_INVALID, ecrfFieldIn.getJsVariableName());
 			}
 			if ((new EcrfFieldJsVariableNameCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE);
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE, ecrfFieldIn.getJsVariableName());
 			}
 		}
 		if (ecrfFieldIn.getNotify() && !hasJsValueExpression && !hasJsOutputExpression) {
