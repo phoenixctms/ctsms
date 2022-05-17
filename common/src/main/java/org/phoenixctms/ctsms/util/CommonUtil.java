@@ -1117,30 +1117,6 @@ public final class CommonUtil {
 		}
 	}
 
-	public static String getCvAddressBlock(StaffOutVO staff, StaffAddressOutVO address, String lineBreak) {
-		StringBuilder sb = new StringBuilder();
-		if (staff != null && address != null) {
-			ArrayList<String> organisationList = new ArrayList<String>();
-			populateOrganisationList(organisationList, staff);
-			Iterator<String> it = organisationList.iterator();
-			while (it.hasNext()) {
-				CommonUtil.appendString(sb, it.next(), lineBreak);
-			}
-			StringBuilder hed = new StringBuilder();
-			StringBuilder zc = new StringBuilder();
-			CommonUtil.appendString(sb, address.getStreetName(), lineBreak, "?");
-			CommonUtil.appendString(hed, address.getHouseNumber(), null, "?");
-			CommonUtil.appendString(hed, address.getEntrance(), "/");
-			CommonUtil.appendString(hed, address.getDoorNumber(), "/");
-			CommonUtil.appendString(sb, hed.toString(), " ");
-			CommonUtil.appendString(zc, address.getZipCode(), null, "?");
-			CommonUtil.appendString(zc, address.getCityName(), " ", "?");
-			CommonUtil.appendString(sb, zc.toString(), lineBreak);
-			CommonUtil.appendString(sb, address.getCountryName(), lineBreak);
-		}
-		return sb.toString();
-	}
-
 	public static String getCvStaffName(StaffOutVO staff) {
 		return getCvStaffName(staff, false, null);
 	}
@@ -2228,6 +2204,46 @@ public final class CommonUtil {
 			}
 			populateOrganisationList(organisationList, staff.getParent());
 		}
+	}
+
+	public static String getZipCity(String province, String zipCode, String cityName) {
+		StringBuilder zc = new StringBuilder();
+		if (CommonUtil.isEmptyString(province)) {
+			CommonUtil.appendString(zc, zipCode, null, "?");
+			CommonUtil.appendString(zc, cityName, " ", "?");
+		} else {
+			CommonUtil.appendString(zc, cityName, null, "?");
+			CommonUtil.appendString(zc, province, ", ", "?");
+			CommonUtil.appendString(zc, zipCode, " ", "?");
+		}
+		return zc.toString();
+	}
+
+	public static String getAddressBlock(StaffAddressOutVO address, ArrayList<String> organisationList, String lineBreak) {
+		StringBuilder sb = new StringBuilder();
+		if (address != null) {
+			if (organisationList != null) {
+				Iterator<String> it = organisationList.iterator();
+				while (it.hasNext()) {
+					CommonUtil.appendString(sb, it.next(), lineBreak);
+				}
+			}
+			StringBuilder hed = new StringBuilder();
+			CommonUtil.appendString(sb, address.getStreetName(), lineBreak, "?");
+			CommonUtil.appendString(hed, address.getHouseNumber(), null, "?");
+			CommonUtil.appendString(hed, address.getEntrance(), "/");
+			CommonUtil.appendString(hed, address.getDoorNumber(), "/");
+			CommonUtil.appendString(sb, hed.toString(), " ");
+			CommonUtil.appendString(sb, getZipCity(address.getProvince(), address.getZipCode(), address.getCityName()), lineBreak);
+			CommonUtil.appendString(sb, address.getCountryName(), lineBreak);
+		}
+		return sb.toString();
+	}
+
+	public static String getCvAddressBlock(StaffAddressOutVO address, StaffOutVO organisation, String lineBreak) {
+		ArrayList<String> organisationList = new ArrayList<String>();
+		populateOrganisationList(organisationList, organisation);
+		return getAddressBlock(address, organisationList, lineBreak);
 	}
 
 	public static String probandOutVOToString(ProbandOutVO proband) {

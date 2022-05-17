@@ -51,6 +51,12 @@ public class CourseCertificatePDFBlock {
 		}
 	}
 
+	protected String getAddress() {
+		ArrayList<String> organisationList = new ArrayList<String>();
+		populateOrganisationList(organisationList, institution);
+		return CommonUtil.getAddressBlock(address, organisationList, PDFUtil.PDF_LINE_BREAK);
+	}
+
 	protected CourseOutVO course;
 	protected TrialOutVO trial;
 	protected StaffOutVO participant;
@@ -105,30 +111,6 @@ public class CourseCertificatePDFBlock {
 	public CourseCertificatePDFBlock(TrialOutVO trial) {
 		this.trial = trial;
 		this.type = BlockType.TRIAL_TITLE;
-	}
-
-	protected String getAddress() {
-		StringBuilder sb = new StringBuilder();
-		if (institution != null && address != null) {
-			ArrayList<String> organisationList = new ArrayList<String>();
-			populateOrganisationList(organisationList, institution);
-			Iterator<String> it = organisationList.iterator();
-			while (it.hasNext()) {
-				CommonUtil.appendString(sb, it.next(), PDFUtil.PDF_LINE_BREAK);
-			}
-			StringBuilder hed = new StringBuilder();
-			StringBuilder zc = new StringBuilder();
-			CommonUtil.appendString(sb, address.getStreetName(), PDFUtil.PDF_LINE_BREAK, "?");
-			CommonUtil.appendString(hed, address.getHouseNumber(), null, "?");
-			CommonUtil.appendString(hed, address.getEntrance(), "/");
-			CommonUtil.appendString(hed, address.getDoorNumber(), "/");
-			CommonUtil.appendString(sb, hed.toString(), " ");
-			CommonUtil.appendString(zc, address.getZipCode(), null, "?");
-			CommonUtil.appendString(zc, address.getCityName(), " ", "?");
-			CommonUtil.appendString(sb, zc.toString(), PDFUtil.PDF_LINE_BREAK);
-			CommonUtil.appendString(sb, address.getCountryName(), PDFUtil.PDF_LINE_BREAK);
-		}
-		return sb.toString();
 	}
 
 	protected String getCourseCvTitle() {

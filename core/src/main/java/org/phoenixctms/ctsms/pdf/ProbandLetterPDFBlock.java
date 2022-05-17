@@ -124,10 +124,7 @@ public class ProbandLetterPDFBlock {
 	protected String getZipCodeCityName() {
 		if (address != null) {
 			if (address.isDecrypted()) {
-				StringBuilder sb = new StringBuilder();
-				CommonUtil.appendString(sb, address.getZipCode(), null, "?");
-				CommonUtil.appendString(sb, address.getCityName(), " ", "?");
-				return sb.toString();
+				return CommonUtil.getZipCity(address.getProvince(), address.getZipCode(), address.getCityName());
 			}
 		}
 		return "";
