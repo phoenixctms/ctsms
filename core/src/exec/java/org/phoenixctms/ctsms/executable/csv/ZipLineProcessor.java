@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ZipLineProcessor extends LineProcessor {
 
 	private final static int COUNTRY_NAME_COLUMN_INDEX = 0;
-	private final static int CITY_NAME_COLUMN_INDEX = 2;
-	private final static int ZIP_CODE_COLUMN_INDEX = 1;
+	private final static int PROVINCE_COLUMN_INDEX = 1;
+	private final static int ZIP_CODE_COLUMN_INDEX = 2;
+	private final static int CITY_NAME_COLUMN_INDEX = 3;
 	private final static String DEFAULT_ZIP_CODE_SEPARATOR_PATTERN = " ";
 	@Autowired
 	protected ZipDao zipDao;
 	private int countryNameColumnIndex;
+	private int provinceColumnIndex;
 	private int cityNameColumnIndex;
 	private int zipCodeColumnIndex;
 	private Pattern zipCodeSeparatorRegexp;
@@ -25,9 +27,10 @@ public class ZipLineProcessor extends LineProcessor {
 		super();
 	}
 
-	private Zip createZip(String countryName, String cityName, String zipCode) {
+	private Zip createZip(String countryName, String province, String cityName, String zipCode) {
 		Zip zip = Zip.Factory.newInstance();
 		zip.setCountryName(countryName);
+		zip.setProvince(province);
 		zip.setCityName(cityName);
 		zip.setZipCode(zipCode);
 		zip = zipDao.create(zip);
@@ -36,6 +39,10 @@ public class ZipLineProcessor extends LineProcessor {
 
 	private String getCityName(String[] values) {
 		return values[cityNameColumnIndex];
+	}
+
+	private String getProvince(String[] values) {
+		return values[provinceColumnIndex];
 	}
 
 	public int getCityNameColumnIndex() {
@@ -48,6 +55,14 @@ public class ZipLineProcessor extends LineProcessor {
 
 	public int getCountryNameColumnIndex() {
 		return countryNameColumnIndex;
+	}
+
+	public int getProvinceColumnIndex() {
+		return provinceColumnIndex;
+	}
+
+	public void setProvinceColumnIndex(int provinceColumnIndex) {
+		this.provinceColumnIndex = provinceColumnIndex;
 	}
 
 	private String getZipCode(String[] values) {
@@ -66,14 +81,16 @@ public class ZipLineProcessor extends LineProcessor {
 	public void init() {
 		super.init();
 		countryNameColumnIndex = COUNTRY_NAME_COLUMN_INDEX;
+		provinceColumnIndex = PROVINCE_COLUMN_INDEX;
 		cityNameColumnIndex = CITY_NAME_COLUMN_INDEX;
 		zipCodeColumnIndex = ZIP_CODE_COLUMN_INDEX;
 		this.setZipCodeSeparatorRegexpPattern(DEFAULT_ZIP_CODE_SEPARATOR_PATTERN);
 	}
 
-	private int lineHashCode(String countryName, String cityName, String zipCode) {
+	private int lineHashCode(String countryName, String province, String cityName, String zipCode) {
 		return new HashCodeBuilder(1249046965, -82296885)
 				.append(countryName)
+				.append(province)
 				.append(zipCode)
 				.append(cityName)
 				.toHashCode();
@@ -81,7 +98,7 @@ public class ZipLineProcessor extends LineProcessor {
 
 	@Override
 	protected int lineHashCode(String[] values) {
-		return lineHashCode(getCountryName(values), getCityName(values), getZipCode(values));
+		return lineHashCode(getCountryName(values), getProvince(values), getCityName(values), getZipCode(values));
 	}
 
 	@Override
@@ -95,8 +112,8 @@ public class ZipLineProcessor extends LineProcessor {
 			String[] zipCodes = zipCodeSeparatorRegexp.split(getZipCode(values), -1);
 			for (int i = 0; i < zipCodes.length; i++) {
 				if (zipCodes[i].length() > 0) {
-					if (!filterDupes || dupeCheck.add(lineHashCode(getCountryName(values), getCityName(values), zipCodes[i]))) {
-						createZip(getCountryName(values), getCityName(values), zipCodes[i]);
+					if (!filterDupes || dupeCheck.add(lineHashCode(getCountryName(values), getProvince(values), getCityName(values), zipCodes[i]))) {
+						createZip(getCountryName(values), getProvince(values), getCityName(values), zipCodes[i]);
 						rowCount++;
 					} else {
 						jobOutput.println("line " + lineNumber + ": dupe ignored - zip code: " + zipCodes[i]);
@@ -106,7 +123,7 @@ public class ZipLineProcessor extends LineProcessor {
 				}
 			}
 		} else {
-			createZip(getCountryName(values), getCityName(values), getZipCode(values));
+			createZip(getCountryName(values), getProvince(values), getCityName(values), getZipCode(values));
 			rowCount++;
 		}
 		return rowCount;
