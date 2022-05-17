@@ -7,7 +7,7 @@
 	xmlns:h="http://java.sun.com/jsf/html">
 <f:view contentType="text/html" locale="#{sessionScopeBean.locale}">
 	<f:event type="preRenderView"
-    	listener="#{facesContext.externalContext.response.setHeader('X-Frame-Options', 'deny')}" />
+		listener="#{facesContext.externalContext.response.setHeader('X-Frame-Options', 'deny')}" />
 	<h:head>
 		<f:facet name="first">
 			<meta http-equiv="X-UA-Compatible" content="IE=9" />
@@ -99,6 +99,13 @@
 		<ui:param name="autoCompleteDropdownCountry" value="false" />
 		<ui:param name="autoCompleteGlobalCountry" value="true" />
 		<ui:param name="autoCompleteScrollHeightCountry" value="220" />
+		<ui:param name="autoCompleteMinQueryLengthProvince" value="1" />
+		<ui:param name="autoCompleteMaxResultsProvince"
+			value="#{applicationScopeBean.integerMaxValue}" />
+		<ui:param name="autoCompleteQueryDelayProvince" value="300" />
+		<ui:param name="autoCompleteDropdownProvince" value="false" />
+		<ui:param name="autoCompleteGlobalProvince" value="true" />
+		<ui:param name="autoCompleteScrollHeightProvince" value="220" />
 		<ui:param name="autoCompleteMinQueryLengthCityName" value="1" />
 		<ui:param name="autoCompleteMaxResultsCityName"
 			value="#{applicationScopeBean.integerMaxValue}" />
@@ -180,7 +187,7 @@
 		<ui:param name="autoCompleteDropdownCategory" value="true" />
 		<ui:param name="autoCompleteGlobalCategory" value="true" />
 		<ui:param name="autoCompleteScrollHeightCategory" value="220" />
-		
+
 		<ui:param name="autoCompleteMinQueryLengthTimelineEvent" value="1" />
 		<ui:param name="autoCompleteMaxResultsTimelineEvent"
 			value="#{applicationScopeBean.integerMaxValue}" />
@@ -196,23 +203,25 @@
 		<ui:param name="autoCompleteDropdownProbandGroup" value="true" />
 		<ui:param name="autoCompleteGlobalProbandGroup" value="true" />
 		<ui:param name="autoCompleteScrollHeightProbandGroup" value="220" />
-		
+
 		<ui:param name="autoCompleteMinQueryLengthVisit" value="1" />
 		<ui:param name="autoCompleteMaxResultsVisit"
 			value="#{applicationScopeBean.integerMaxValue}" />
 		<ui:param name="autoCompleteQueryDelayVisit" value="300" />
 		<ui:param name="autoCompleteDropdownVisit" value="true" />
 		<ui:param name="autoCompleteGlobalVisit" value="true" />
-		<ui:param name="autoCompleteScrollHeightVisit" value="220" />		
-		
-		<ui:param name="autoCompleteMinQueryLengthProbandListEntryTag" value="1" />
+		<ui:param name="autoCompleteScrollHeightVisit" value="220" />
+
+		<ui:param name="autoCompleteMinQueryLengthProbandListEntryTag"
+			value="1" />
 		<ui:param name="autoCompleteMaxResultsProbandListEntryTag"
 			value="#{applicationScopeBean.integerMaxValue}" />
 		<ui:param name="autoCompleteQueryDelayProbandListEntryTag" value="300" />
 		<ui:param name="autoCompleteDropdownProbandListEntryTag" value="true" />
 		<ui:param name="autoCompleteGlobalProbandListEntryTag" value="true" />
-		<ui:param name="autoCompleteScrollHeightProbandListEntryTag" value="220" />
-		
+		<ui:param name="autoCompleteScrollHeightProbandListEntryTag"
+			value="220" />
+
 		<ui:param name="autoCompleteMinQueryDuration" value="1" />
 		<ui:param name="autoCompleteMaxResultsDuration"
 			value="#{applicationScopeBean.integerMaxValue}" />
@@ -220,7 +229,7 @@
 		<ui:param name="autoCompleteDropdownDuration" value="true" />
 		<ui:param name="autoCompleteGlobalDuration" value="true" />
 		<ui:param name="autoCompleteScrollHeightDuration" value="220" />
-		
+
 		<ui:param name="autoCompleteMinQueryLengthCoding" value="1" />
 		<ui:param name="autoCompleteMaxResultsCoding"
 			value="#{applicationScopeBean.integerMaxValue}" />
