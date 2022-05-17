@@ -15,6 +15,7 @@ public interface SearchResultExcelLabelCodes {
 	public static final String INQUIRY_HEAD = "inquiry_head";
 	public static final String INQUIRY_DATE_HEAD = "inquiry_date_head";
 	public static final String STREETS_HEAD = "streets_head";
+	public static final String PROVINCES_HEAD = "provinces_head";
 	public static final String ZIP_CODES_HEAD = "zip_codes_head";
 	public static final String CITY_NAMES_HEAD = "city_names_head";
 	public static final String EMAIL_CONTACT_DETAILS_HEAD = "email_contact_details_head";

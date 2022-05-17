@@ -82,6 +82,10 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
+	public static String getProvincesColumnName() {
+		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.PROVINCES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
 	public static String getZipCodesColumnName() {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
