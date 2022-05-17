@@ -1396,4 +1396,41 @@ public class ToolsServiceImpl
 	protected boolean handleIsEcrfFieldUserTimeZone(Long ecrfFieldId) throws Exception {
 		return CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao()).getField().isUserTimeZone();
 	}
+
+	@Override
+	protected Collection<String> handleCompleteCityName(AuthenticationVO auth, String cityNameInfix, String countryNameInfix,
+			String provinceInfix, String zipCodePrefix, Integer limit) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return this.getZipDao().findCityNames(countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix, limit);
+	}
+
+	@Override
+	protected Collection<String> handleCompleteStreetName(AuthenticationVO auth, String streetNameInfix, String countryName,
+			String province, String zipCode, String cityName, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return this.getStreetDao().findStreetNames(countryName, province, zipCode, cityName, streetNameInfix, limit);
+	}
+
+	@Override
+	protected Collection<String> handleCompleteZipCode(AuthenticationVO auth, String zipCodePrefix, String countryNameInfix,
+			String provinceInfix, String cityNameInfix, Integer limit) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return this.getZipDao().findZipCodes(countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix, limit);
+	}
+
+	@Override
+	protected Collection<String> handleCompleteZipCodeByStreetName(AuthenticationVO auth, String zipCodePrefix, String countryName,
+			String provinceInfix, String cityName, String streetName, Integer limit) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return this.getStreetDao().findZipCodes(countryName, provinceInfix, zipCodePrefix, cityName, streetName, limit);
+	}
+
+	@Override
+	protected Collection<String> handleCompleteProvince(AuthenticationVO auth,
+			String provinceInfix, String countryNameInfix, String zipCodePrefix, String cityNameInfix, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		return this.getZipDao().findProvinces(countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix, limit);
+	}
 }
