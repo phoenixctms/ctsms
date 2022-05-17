@@ -269,6 +269,42 @@ public final class WebUtil {
 		return new ArrayList<String>();
 	}
 
+	public static List<String> completeCityName(String countryName, String province, String zipCode, String query) {
+		Collection<String> cityNames = null;
+		try {
+			cityNames = getServiceLocator().getToolsService().completeCityName(getAuthentication(),
+					query, countryName, province, zipCode, null);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (cityNames != null) {
+			try {
+				return ((List<String>) cityNames);
+			} catch (ClassCastException e) {
+			}
+		}
+		return new ArrayList<String>();
+	}
+
+	public static List<String> completeProvince(String countryName, String zipCode, String cityName, String query) {
+		Collection<String> provinces = null;
+		try {
+			provinces = getServiceLocator().getToolsService().completeProvince(getAuthentication(),
+					query, countryName, zipCode, cityName, null);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (provinces != null) {
+			try {
+				return ((List<String>) provinces);
+			} catch (ClassCastException e) {
+			}
+		}
+		return new ArrayList<String>();
+	}
+
 	public static List<String> completeCountryName(String query) {
 		Collection<String> countryNames = null;
 		try {
@@ -320,6 +356,23 @@ public final class WebUtil {
 		return new ArrayList<String>();
 	}
 
+	public static List<String> completeStreetName(String countryName, String province, String zipCode, String cityName, String query) {
+		Collection<String> streetNames = null;
+		try {
+			streetNames = getServiceLocator().getToolsService().completeStreetName(getAuthentication(), query, countryName, province, zipCode, cityName, null);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (streetNames != null) {
+			try {
+				return ((List<String>) streetNames);
+			} catch (ClassCastException e) {
+			}
+		}
+		return new ArrayList<String>();
+	}
+
 	public static List<String> completeTitle(String query) {
 		Collection<String> titles = null;
 		try {
@@ -344,6 +397,27 @@ public final class WebUtil {
 				zipCodes = getServiceLocator().getToolsService().completeZipCodeByStreetName(getAuthentication(), query, countryName, cityName, streetName, null);
 			} else {
 				zipCodes = getServiceLocator().getToolsService().completeZipCode(getAuthentication(), query, countryName, cityName, null);
+			}
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (zipCodes != null) {
+			try {
+				return ((List<String>) zipCodes);
+			} catch (ClassCastException e) {
+			}
+		}
+		return new ArrayList<String>();
+	}
+
+	public static List<String> completeZipCode(String countryName, String query, String province, String cityName, String streetName) {
+		Collection<String> zipCodes = null;
+		try {
+			if (!CommonUtil.isEmptyString(countryName) && !CommonUtil.isEmptyString(province) && !CommonUtil.isEmptyString(cityName) && !CommonUtil.isEmptyString(streetName)) {
+				zipCodes = getServiceLocator().getToolsService().completeZipCodeByStreetName(getAuthentication(), query, countryName, province, cityName, streetName, null);
+			} else {
+				zipCodes = getServiceLocator().getToolsService().completeZipCode(getAuthentication(), query, countryName, province, cityName, null);
 			}
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
