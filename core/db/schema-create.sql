@@ -1227,6 +1227,9 @@
         ENCRYPTED_COUNTRY_NAME BYTEA not null unique,
         COUNTRY_NAME_IV BYTEA not null unique,
         COUNTRY_NAME_HASH BYTEA,
+        ENCRYPTED_PROVINCE BYTEA not null unique,
+        PROVINCE_IV BYTEA not null unique,
+        PROVINCE_HASH BYTEA,
         ENCRYPTED_ZIP_CODE BYTEA not null unique,
         ZIP_CODE_IV BYTEA not null unique,
         ZIP_CODE_HASH BYTEA,
@@ -1577,6 +1580,7 @@
     create table STAFF_ADDRESS (
         ID BIGINT not null,
         COUNTRY_NAME CHARACTER VARYING(1024) not null,
+        PROVINCE CHARACTER VARYING(1024),
         ZIP_CODE CHARACTER VARYING(1024) not null,
         CITY_NAME CHARACTER VARYING(1024) not null,
         STREET_NAME CHARACTER VARYING(1024) not null,
@@ -1678,6 +1682,7 @@
     create table STREET (
         ID BIGINT not null,
         COUNTRY_NAME CHARACTER VARYING(1024) not null,
+        PROVINCE CHARACTER VARYING(1024),
         ZIP_CODE CHARACTER VARYING(1024) not null,
         CITY_NAME CHARACTER VARYING(1024) not null,
         STREET_NAME CHARACTER VARYING(1024) not null,
@@ -1916,6 +1921,7 @@
     create table ZIP (
         ID BIGINT not null,
         COUNTRY_NAME CHARACTER VARYING(1024) not null,
+        PROVINCE CHARACTER VARYING(1024),
         ZIP_CODE CHARACTER VARYING(1024) not null,
         CITY_NAME CHARACTER VARYING(1024) not null,
         primary key (ID)
