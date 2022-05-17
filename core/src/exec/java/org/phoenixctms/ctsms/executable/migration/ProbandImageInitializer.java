@@ -15,13 +15,13 @@ import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 
-public class ProbandImageFieldInitializer extends EncryptedFieldInitializer {
+public class ProbandImageInitializer extends EncryptedFieldInitializer {
 
 	@Autowired
 	private ProbandContactParticularsDao probandContactParticularsDao;
 	private ChunkedDaoOperationAdapter<ProbandContactParticularsDao, ProbandContactParticulars> probandContactParticularsProcessor;
 
-	public ProbandImageFieldInitializer() {
+	public ProbandImageInitializer() {
 	}
 
 	@Override

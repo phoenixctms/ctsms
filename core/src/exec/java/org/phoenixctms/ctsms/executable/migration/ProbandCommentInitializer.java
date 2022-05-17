@@ -14,13 +14,13 @@ import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ProbandCommentFieldInitializer extends EncryptedFieldInitializer {
+public class ProbandCommentInitializer extends EncryptedFieldInitializer {
 
 	@Autowired
 	private ProbandContactParticularsDao probandContactParticularsDao;
 	private ChunkedDaoOperationAdapter<ProbandContactParticularsDao, ProbandContactParticulars> probandContactParticularsProcessor;
 
-	public ProbandCommentFieldInitializer() {
+	public ProbandCommentInitializer() {
 	}
 
 	@Override
