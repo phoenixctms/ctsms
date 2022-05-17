@@ -121,6 +121,7 @@ public final class DefaultSettings {
 	public static final Integer BIC_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer CITY_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer COUNTRY_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
+	public static final Integer PROVINCE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer CRITERIA_CATEGORY_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 10;
 	public static final Integer COUNTRY_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer INPUT_FIELD_CATEGORY_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 10;
