@@ -68,6 +68,33 @@ public class ProbandAddressDaoImpl
 
 			@Override
 			protected byte[] getIv(ProbandAddress item) {
+				return item.getProvinceIv();
+			}
+
+			@Override
+			protected byte[] getEncrypted(ProbandAddress item) {
+				return item.getEncryptedProvince();
+			}
+
+			@Override
+			protected void setIv(ProbandAddress item, byte[] iv) {
+				item.setProvinceIv(iv);
+			}
+
+			@Override
+			protected void setEncrypted(ProbandAddress item, byte[] cipherText) {
+				item.setEncryptedProvince(cipherText);
+			}
+
+			@Override
+			protected void setHash(ProbandAddress item, byte[] hash) {
+				item.setProvinceHash(hash);
+			}
+		});
+		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandAddress>() {
+
+			@Override
+			protected byte[] getIv(ProbandAddress item) {
 				return item.getZipCodeIv();
 			}
 
@@ -264,11 +291,8 @@ public class ProbandAddressDaoImpl
 		StringBuilder sb = new StringBuilder();
 		if (address != null) {
 			if (address.isDecrypted()) {
-				StringBuilder zc = new StringBuilder();
 				sb.append(CommonUtil.getStreetString(address.getStreetName(), address.getHouseNumber(), address.getEntrance(), address.getDoorNumber()));
-				CommonUtil.appendString(zc, address.getZipCode(), null, "?");
-				CommonUtil.appendString(zc, address.getCityName(), " ", "?");
-				CommonUtil.appendString(sb, zc.toString(), " - ");
+				CommonUtil.appendString(sb, CommonUtil.getZipCity(address.getProvince(), address.getZipCode(), address.getCityName()), " - ");
 			} else {
 				sb.append(L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_ADDRESS, DefaultMessages.ENCRYPTED_PROBAND_ADDRESS));
 			}
@@ -280,11 +304,8 @@ public class ProbandAddressDaoImpl
 		StringBuilder sb = new StringBuilder();
 		if (address != null) {
 			if (address.isDecrypted()) {
-				StringBuilder zc = new StringBuilder();
 				sb.append(CommonUtil.getStreetString(address.getStreetName(), address.getHouseNumber(), null, null));
-				CommonUtil.appendString(zc, address.getZipCode(), null, "?");
-				CommonUtil.appendString(zc, address.getCityName(), " ", "?");
-				CommonUtil.appendString(sb, zc.toString(), ", ");
+				CommonUtil.appendString(sb, CommonUtil.getZipCity(address.getProvince(), address.getZipCode(), address.getCityName()), ", ");
 			} else {
 			}
 		}
@@ -419,6 +440,12 @@ public class ProbandAddressDaoImpl
 				target.setEncryptedCountryName(cipherText.getCipherText());
 				target.setCountryNameHash(CryptoUtil.hashForSearch(source.getCountryName()));
 			}
+			if (copyIfNull || source.getProvince() != null) {
+				CipherText cipherText = CryptoUtil.encryptValue(source.getProvince());
+				target.setProvinceIv(cipherText.getIv());
+				target.setEncryptedProvince(cipherText.getCipherText());
+				target.setProvinceHash(CryptoUtil.hashForSearch(source.getProvince()));
+			}
 			if (copyIfNull || source.getZipCode() != null) {
 				CipherText cipherText = CryptoUtil.encryptValue(source.getZipCode());
 				target.setZipCodeIv(cipherText.getIv());
@@ -516,6 +543,12 @@ public class ProbandAddressDaoImpl
 				target.setEncryptedCountryName(cipherText.getCipherText());
 				target.setCountryNameHash(CryptoUtil.hashForSearch(source.getCountryName()));
 			}
+			if (copyIfNull || source.getProvince() != null) {
+				CipherText cipherText = CryptoUtil.encryptValue(source.getProvince());
+				target.setProvinceIv(cipherText.getIv());
+				target.setEncryptedProvince(cipherText.getCipherText());
+				target.setProvinceHash(CryptoUtil.hashForSearch(source.getProvince()));
+			}
 			if (copyIfNull || source.getZipCode() != null) {
 				CipherText cipherText = CryptoUtil.encryptValue(source.getZipCode());
 				target.setZipCodeIv(cipherText.getIv());
@@ -589,6 +622,7 @@ public class ProbandAddressDaoImpl
 		}
 		try {
 			target.setCountryName((String) CryptoUtil.decryptValue(source.getCountryNameIv(), source.getEncryptedCountryName()));
+			target.setProvince((String) CryptoUtil.decryptValue(source.getProvinceIv(), source.getEncryptedProvince()));
 			target.setZipCode((String) CryptoUtil.decryptValue(source.getZipCodeIv(), source.getEncryptedZipCode()));
 			target.setCityName((String) CryptoUtil.decryptValue(source.getCityNameIv(), source.getEncryptedCityName()));
 			target.setStreetName((String) CryptoUtil.decryptValue(source.getStreetNameIv(), source.getEncryptedStreetName()));
@@ -634,6 +668,7 @@ public class ProbandAddressDaoImpl
 				throw new Exception();
 			}
 			target.setCountryName((String) CryptoUtil.decryptValue(source.getCountryNameIv(), source.getEncryptedCountryName()));
+			target.setProvince((String) CryptoUtil.decryptValue(source.getProvinceIv(), source.getEncryptedProvince()));
 			target.setZipCode((String) CryptoUtil.decryptValue(source.getZipCodeIv(), source.getEncryptedZipCode()));
 			target.setCityName((String) CryptoUtil.decryptValue(source.getCityNameIv(), source.getEncryptedCityName()));
 			target.setStreetName((String) CryptoUtil.decryptValue(source.getStreetNameIv(), source.getEncryptedStreetName()));
@@ -644,6 +679,7 @@ public class ProbandAddressDaoImpl
 			target.setDecrypted(true);
 		} catch (Exception e) {
 			target.setCountryName(null);
+			target.setProvince(null);
 			target.setZipCode(null);
 			target.setCityName(null);
 			target.setStreetName(null);

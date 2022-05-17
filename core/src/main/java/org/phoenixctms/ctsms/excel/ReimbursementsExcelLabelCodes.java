@@ -27,6 +27,7 @@ public interface ReimbursementsExcelLabelCodes {
 	public static final String VOUCHER_VO_FIELD_COLUMNS = "voucher_vo_field_columns";
 	public static final String WIRE_TRANSFER_VO_FIELD_COLUMNS = "wire_transfer_vo_field_columns";
 	public static final String STREETS_HEAD = "streets_head";
+	public static final String PROVINCES_HEAD = "provinces_head";
 	public static final String ZIP_CODES_HEAD = "zip_codes_head";
 	public static final String CITY_NAMES_HEAD = "city_names_head";
 }

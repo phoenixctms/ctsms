@@ -174,6 +174,7 @@ public interface SettingCodes {
 	public static final String BANK_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "bank_name_autocomplete_default_result_limit";
 	public static final String BIC_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "bic_autocomplete_default_result_limit";
 	public static final String CITY_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "city_name_autocomplete_default_result_limit";
+	public static final String PROVINCE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "province_autocomplete_default_result_limit";
 	public static final String COUNTRY_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "country_autocomplete_default_result_limit";
 	public static final String CRITERIA_CATEGORY_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "criteria_category_autocomplete_default_result_limit";
 	public static final String COUNTRY_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "country_name_autocomplete_default_result_limit";

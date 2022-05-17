@@ -38,6 +38,10 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
+	public static String getProvincesColumnName() {
+		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.PROVINCES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
 	public static String getZipCodesColumnName() {
 		return L10nUtil.getSearchResultExcelLabel(Locales.USER, SearchResultExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}

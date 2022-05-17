@@ -84,15 +84,22 @@
 		id="serviceMethods"
 		class="org.phoenixctms.ctsms.executable.ServiceMethods" />
 	<bean
-		id="probandImageFieldInitializer"
-		class="org.phoenixctms.ctsms.executable.migration.ProbandImageFieldInitializer">
+		id="probandImageInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandImageInitializer">
 		<property
 			name="authenticator"
 			ref="authenticator" />
 	</bean>
 	<bean
-		id="probandCommentFieldInitializer"
-		class="org.phoenixctms.ctsms.executable.migration.ProbandCommentFieldInitializer">
+		id="probandCommentInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandCommentInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="probandAddressProvinceInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandAddressProvinceInitializer">
 		<property
 			name="authenticator"
 			ref="authenticator" />

@@ -59,6 +59,15 @@
 						</f:facet>
 						<h:outputText value="#{address.vo.countryName}" />
 					</p:column>
+					
+					<p:column rendered="#{probandAddressBean.showProvinceColumn}" >
+						<f:facet name="header">
+							<h:outputText
+								value="#{probandlabels.proband_address_probandaddress_list_province_code_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.province}" />
+					</p:column>
+					
 					<p:column>
 						<f:facet name="header">
 							<h:outputText
@@ -237,6 +246,51 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="countryName" />
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							<h:outputLabel
+								styleClass="ctsms-field-icon ctsms-icon-encryption"
+								rendered="#{probandAddressBean.showProvince}"
+								for="province" value="#{probandlabels.province_label}" />
+							<h:panelGroup rendered="#{probandAddressBean.showProvince}">
+								<p:autoComplete id="province"
+									value="#{probandAddressBean.in.province}"
+									forceSelection="#{probandAddressBean.strict}" required="false"
+									label="#{probandlabels.province}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthProvince}"
+									maxResults="#{autoCompleteMaxResultsProvince}"
+									queryDelay="#{autoCompleteQueryDelayProvince}"
+									dropdown="#{autoCompleteDropdownProvince}"
+									global="#{autoCompleteGlobalProvince}"
+									scrollHeight="#{autoCompleteScrollHeightProvince}"
+									completeMethod="#{probandAddressBean.completeProvince}">
+									<p:ajax
+										listener="#{probandAddressBean.handleProvinceSelect}"
+										event="itemSelect" process="@this" />
+									<p:ajax event="blur" process="@this" />
+								</p:autoComplete>
+								<p:tooltip rendered="#{enableTooltips}" for="province">
+									<h:outputText value="#{probandlabels.province_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="province" rendered="#{probandAddressBean.showProvince}"/>							
+							
+							
+							
+							
+							
+							
+							
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
 								for="cityName" value="#{probandlabels.city_name_label}" />
@@ -288,9 +342,9 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="zipCode" />
-							<h:outputLabel value="" />
-							<h:outputText value="" />
-							<h:outputLabel value="" />
+							<h:outputLabel value="" rendered="#{!probandAddressBean.showProvince}"/>
+							<h:outputText value="" rendered="#{!probandAddressBean.showProvince}"/>
+							<h:outputLabel value="" rendered="#{!probandAddressBean.showProvince}"/>
 							<h:outputLabel
 								styleClass="ctsms-field-icon ctsms-icon-encryption"
 								for="streetName" value="#{probandlabels.street_name_label}" />

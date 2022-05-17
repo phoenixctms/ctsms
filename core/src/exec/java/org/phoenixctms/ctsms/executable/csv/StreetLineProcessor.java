@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class StreetLineProcessor extends LineProcessor {
 
 	private final static int COUNTRY_NAME_COLUMN_INDEX = 0;
-	private final static int ZIP_CODE_COLUMN_INDEX = 1;
-	private final static int CITY_NAME_COLUMN_INDEX = 2;
-	private final static int STREET_NAME_COLUMN_INDEX = 3;
+	private final static int PROVINCE_COLUMN_INDEX = 1;
+	private final static int ZIP_CODE_COLUMN_INDEX = 2;
+	private final static int CITY_NAME_COLUMN_INDEX = 3;
+	private final static int STREET_NAME_COLUMN_INDEX = 4;
 	@Autowired
 	protected StreetDao streetDao;
 	private int countryNameColumnIndex;
+	private int provinceColumnIndex;
 	private int zipCodeColumnIndex;
 	private int cityNameColumnIndex;
 	private int streetNameColumnIndex;
@@ -26,6 +28,7 @@ public class StreetLineProcessor extends LineProcessor {
 	private Street createStreet(String[] values) {
 		Street street = Street.Factory.newInstance();
 		street.setCountryName(getCountryName(values));
+		street.setProvince(getProvince(values));
 		street.setCityName(getCityName(values));
 		street.setZipCode(getZipCode(values));
 		street.setStreetName(getStreetName(values));
@@ -43,6 +46,10 @@ public class StreetLineProcessor extends LineProcessor {
 
 	private String getCountryName(String[] values) {
 		return values[countryNameColumnIndex];
+	}
+
+	private String getProvince(String[] values) {
+		return values[provinceColumnIndex];
 	}
 
 	public int getCountryNameColumnIndex() {
@@ -69,6 +76,7 @@ public class StreetLineProcessor extends LineProcessor {
 	public void init() {
 		super.init();
 		countryNameColumnIndex = COUNTRY_NAME_COLUMN_INDEX;
+		provinceColumnIndex = PROVINCE_COLUMN_INDEX;
 		zipCodeColumnIndex = ZIP_CODE_COLUMN_INDEX;
 		cityNameColumnIndex = CITY_NAME_COLUMN_INDEX;
 		streetNameColumnIndex = STREET_NAME_COLUMN_INDEX;
@@ -78,6 +86,7 @@ public class StreetLineProcessor extends LineProcessor {
 	protected int lineHashCode(String[] values) {
 		return new HashCodeBuilder(1249046965, -82296885)
 				.append(getCountryName(values))
+				.append(getProvince(values))
 				.append(getCityName(values))
 				.append(getZipCode(values))
 				.append(getStreetName(values))
@@ -100,6 +109,14 @@ public class StreetLineProcessor extends LineProcessor {
 
 	public void setCountryNameColumnIndex(int countryNameColumnIndex) {
 		this.countryNameColumnIndex = countryNameColumnIndex;
+	}
+
+	public int getProvinceColumnIndex() {
+		return provinceColumnIndex;
+	}
+
+	public void setProvinceColumnIndex(int provinceColumnIndex) {
+		this.provinceColumnIndex = provinceColumnIndex;
 	}
 
 	public void setStreetNameColumnIndex(int streetNameColumnIndex) {

@@ -246,7 +246,7 @@ public class CVPDFBlock {
 						cursor.getFontB(),
 						PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR),
-						CommonUtil.getCvAddressBlock(staff, address, PDFUtil.PDF_LINE_BREAK),
+						CommonUtil.getCvAddressBlock(address, staff, PDFUtil.PDF_LINE_BREAK),
 						x,
 						y2,
 						PDFUtil.Alignment.TOP_LEFT,
@@ -323,7 +323,7 @@ public class CVPDFBlock {
 						+ Settings.getFloat(CVPDFSettingCodes.X_FRAME_INDENT, Bundle.CV_PDF, CVPDFDefaultSettings.X_FRAME_INDENT);
 				y2 -= PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), PDFUtil.FontSize.MEDIUM,
 						Settings.getColor(CVPDFSettingCodes.TEXT_COLOR, Bundle.CV_PDF, CVPDFDefaultSettings.TEXT_COLOR),
-						CommonUtil.getCvAddressBlock(staff, address, PDFUtil.PDF_LINE_BREAK), x, y2, PDFUtil.Alignment.TOP_LEFT,
+						CommonUtil.getCvAddressBlock(address, staff, PDFUtil.PDF_LINE_BREAK), x, y2, PDFUtil.Alignment.TOP_LEFT,
 						cursor.getBlockWidth() -
 								(ximage == null ? 0.0f
 										: ximage.getWidthPoints()

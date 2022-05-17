@@ -160,6 +160,7 @@ public interface MessageCodes {
 	public final static String STAFF_ADDRESS_HOUSE_NUMBER_PRESET = "staff_address_house_number_preset";
 	public final static String STAFF_ADDRESS_STREET_NAME_PRESET = "staff_address_street_name_preset";
 	public final static String STAFF_ADDRESS_ZIP_CODE_PRESET = "staff_address_zip_code_preset";
+	public final static String STAFF_ADDRESS_PROVINCE_PRESET = "staff_address_province_preset";
 	public static final String STAFF_STATUS_ENTRY_COMMENT_PRESET = "staff_status_entry_comment_preset";
 	public static final String DUTY_ROSTER_TURN_COMMENT_PRESET = "duty_roster_turn_comment_preset";
 	public static final String CV_POSITION_COMMENT_PRESET = "cv_position_comment_preset";
@@ -281,6 +282,7 @@ public interface MessageCodes {
 	public final static String PROBAND_ADDRESS_HOUSE_NUMBER_PRESET = "proband_address_house_number_preset";
 	public final static String PROBAND_ADDRESS_STREET_NAME_PRESET = "proband_address_street_name_preset";
 	public final static String PROBAND_ADDRESS_ZIP_CODE_PRESET = "proband_address_zip_code_preset";
+	public final static String PROBAND_ADDRESS_PROVINCE_PRESET = "proband_address_province_preset";
 	public final static String ACCOUNT_HOLDER_NAME_PRESET = "account_holder_name_preset";
 	public final static String ACCOUNT_NUMBER_PRESET = "account_number_preset";
 	public final static String BANK_CODE_NUMBER_PRESET = "bank_code_number_preset";

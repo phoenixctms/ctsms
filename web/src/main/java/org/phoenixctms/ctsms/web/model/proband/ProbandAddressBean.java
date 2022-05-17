@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AddressTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressInVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
@@ -58,6 +59,7 @@ public class ProbandAddressBean extends ManagedBeanBase {
 			in.setStreetName(out.getStreetName());
 			in.setTypeId(addressTypeVO == null ? null : addressTypeVO.getId());
 			in.setZipCode(out.getZipCode());
+			in.setProvince(out.getProvince());
 		}
 	}
 
@@ -77,6 +79,7 @@ public class ProbandAddressBean extends ManagedBeanBase {
 			in.setStreetName(Messages.getString(MessageCodes.PROBAND_ADDRESS_STREET_NAME_PRESET));
 			in.setTypeId(null);
 			in.setZipCode(Messages.getString(MessageCodes.PROBAND_ADDRESS_ZIP_CODE_PRESET));
+			in.setProvince(Messages.getString(MessageCodes.PROBAND_ADDRESS_PROVINCE_PRESET));
 		}
 	}
 
@@ -136,9 +139,18 @@ public class ProbandAddressBean extends ManagedBeanBase {
 		return CHANGE_OUTCOME;
 	}
 
+	public List<String> completeProvince(String query) {
+		this.in.setProvince(query);
+		return WebUtil.completeProvince(this.in.getCountryName(), this.in.getZipCode(), this.in.getCityName(), query);
+	}
+
 	public List<String> completeCityName(String query) {
 		this.in.setCityName(query);
-		return WebUtil.completeCityName(this.in.getCountryName(), this.in.getZipCode(), query);
+		if (isShowProvince()) {
+			return WebUtil.completeCityName(this.in.getCountryName(), this.in.getProvince(), this.in.getZipCode(), query);
+		} else {
+			return WebUtil.completeCityName(this.in.getCountryName(), this.in.getZipCode(), query);
+		}
 	}
 
 	public List<String> completeCountryName(String query) {
@@ -148,12 +160,20 @@ public class ProbandAddressBean extends ManagedBeanBase {
 
 	public List<String> completeStreetName(String query) {
 		this.in.setStreetName(query);
-		return WebUtil.completeStreetName(this.in.getCountryName(), this.in.getZipCode(), this.in.getCityName(), query);
+		if (isShowProvince()) {
+			return WebUtil.completeStreetName(this.in.getCountryName(), this.in.getProvince(), this.in.getZipCode(), this.in.getCityName(), query);
+		} else {
+			return WebUtil.completeStreetName(this.in.getCountryName(), this.in.getZipCode(), this.in.getCityName(), query);
+		}
 	}
 
 	public List<String> completeZipCode(String query) {
 		this.in.setZipCode(query);
-		return WebUtil.completeZipCode(this.in.getCountryName(), query, this.in.getCityName(), this.in.getStreetName());
+		if (isShowProvince()) {
+			return WebUtil.completeZipCode(this.in.getCountryName(), query, this.in.getProvince(), this.in.getCityName(), this.in.getStreetName());
+		} else {
+			return WebUtil.completeZipCode(this.in.getCountryName(), query, this.in.getCityName(), this.in.getStreetName());
+		}
 	}
 
 	@Override
@@ -269,6 +289,10 @@ public class ProbandAddressBean extends ManagedBeanBase {
 		in.setZipCode((String) event.getObject());
 	}
 
+	public void handleProvinceSelect(SelectEvent event) {
+		in.setProvince((String) event.getObject());
+	}
+
 	@PostConstruct
 	private void init() {
 		Long id = WebUtil.getLongParamValue(GetParamNames.PROBAND_ADDRESS_ID);
@@ -333,6 +357,15 @@ public class ProbandAddressBean extends ManagedBeanBase {
 
 	public boolean isStrict() {
 		return Settings.getBoolean(SettingCodes.PROBAND_ADDRESS_STRICT, Bundle.SETTINGS, DefaultSettings.PROBAND_ADDRESS_STRICT);
+	}
+
+	public boolean isShowProvince() {
+		return !CommonUtil.isEmptyString(in.getProvince())
+				|| Settings.getBoolean(SettingCodes.PROBAND_ADDRESS_SHOW_PROVINCE, Bundle.SETTINGS, DefaultSettings.PROBAND_ADDRESS_SHOW_PROVINCE);
+	}
+
+	public boolean isShowProvinceColumn() {
+		return Settings.getBoolean(SettingCodes.PROBAND_ADDRESS_SHOW_PROVINCE, Bundle.SETTINGS, DefaultSettings.PROBAND_ADDRESS_SHOW_PROVINCE);
 	}
 
 	@Override

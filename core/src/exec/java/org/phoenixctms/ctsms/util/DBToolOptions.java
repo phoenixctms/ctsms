@@ -144,6 +144,7 @@ public final class DBToolOptions {
 	public final static String INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT = "idplsr";
 	public final static String INITIALIZE_PROBAND_COMMENT_FIELDS_OPT = "ipcf";
 	public final static String INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT = "ijsmc";
+	public final static String INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT = "ipapf";
 	public static final String IMPORT_ALPHA_IDS_OPT = "iai";
 	public static final String IMPORT_ICD_SYSTEMATICS_OPT = "iis";
 	public static final String IMPORT_OPS_CODES_OPT = "ioc";
@@ -293,12 +294,15 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_IMAGE_FIELDS_OPT, "initialize_proband_image_fields", "(migration) initialize proband image fields", 0, allLockIds));
 		tasks.addOption(registerTaskOption(INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT, "initialize_decrypted_trial_documents_files",
 				"(migration) initialize decrypted trial documents and files", 0, allLockIds));
-		tasks.addOption(registerTaskOption(INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT, "initialize_decrypted_proband_list_status_reasons_opt",
+		tasks.addOption(registerTaskOption(INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT, "initialize_decrypted_proband_list_status_reasons",
 				"(migration) initialize decrypted enrollment status 'reason'", 0, allLockIds));
 		tasks.addOption(
 				registerTaskOption(INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, "initialize_proband_comment_fields", "(migration) initialize proband comment fields", 0, allLockIds));
 		tasks.addOption(registerTaskOption(INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT, "initialize_journal_system_message_codes",
 				"(migration) initialize journal system message code fields",
+				0, allLockIds));
+		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT, "initialize_proband_address_province_fields",
+				"(migration) initialize proband address province fields",
 				0, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ICD_SYSTEMATICS_OPT, "import_icd_systematics", "import icd systematics", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ALPHA_IDS_OPT, "import_alpha_ids", "import alpha ids", 1, allLockIds));

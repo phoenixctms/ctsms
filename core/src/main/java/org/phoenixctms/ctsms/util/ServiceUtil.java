@@ -405,6 +405,7 @@ public final class ServiceUtil {
 			HashMap<String, Object> fieldRow,
 			boolean aggregateAddresses,
 			String streetsColumnName,
+			String provincesColumnName,
 			String zipCodesColumnName,
 			String cityNamesColumnName) {
 		Iterator<ProbandAddressOutVO> addressesIt = addresses.iterator();
@@ -424,6 +425,17 @@ public final class ServiceUtil {
 				}
 				fieldValue
 						.append(CommonUtil.getStreetString(addressOutVO.getStreetName(), addressOutVO.getHouseNumber(), addressOutVO.getEntrance(), addressOutVO.getDoorNumber()));
+				fieldRow.put(fieldKey, fieldValue.toString());
+				fieldKey = provincesColumnName;
+				if (fieldRow.containsKey(fieldKey)) {
+					fieldValue = new StringBuilder((String) fieldRow.get(fieldKey));
+				} else {
+					fieldValue = new StringBuilder();
+				}
+				if (fieldValue.length() > 0) {
+					fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
+				}
+				fieldValue.append(addressOutVO.getProvince());
 				fieldRow.put(fieldKey, fieldValue.toString());
 				fieldKey = zipCodesColumnName;
 				if (fieldRow.containsKey(fieldKey)) {
@@ -2514,6 +2526,7 @@ public final class ServiceUtil {
 								fieldRow,
 								aggregateAddresses,
 								ReimbursementsExcelWriter.getStreetsColumnName(),
+								ReimbursementsExcelWriter.getProvincesColumnName(),
 								ReimbursementsExcelWriter.getZipCodesColumnName(),
 								ReimbursementsExcelWriter.getCityNamesColumnName());
 						distinctFieldRows.put(vo.getId(), fieldRow);
@@ -2539,6 +2552,7 @@ public final class ServiceUtil {
 						fieldRow,
 						aggregateAddresses,
 						ReimbursementsExcelWriter.getStreetsColumnName(),
+						ReimbursementsExcelWriter.getProvincesColumnName(),
 						ReimbursementsExcelWriter.getZipCodesColumnName(),
 						ReimbursementsExcelWriter.getCityNamesColumnName());
 				distinctFieldRows.put(vo.getId(), fieldRow);
@@ -2884,7 +2898,7 @@ public final class ServiceUtil {
 	}
 
 	public static String getCvAddressBlock(StaffOutVO staff, String lineBreak, StaffAddressDao staffAddressDao) {
-		return CommonUtil.getCvAddressBlock(staff, findOrganisationCvAddress(staff, true, staffAddressDao), lineBreak);
+		return CommonUtil.getCvAddressBlock(findOrganisationCvAddress(staff, true, staffAddressDao), staff, lineBreak);
 	}
 
 	public static String getCvStaffPathString(StaffOutVO staff) {

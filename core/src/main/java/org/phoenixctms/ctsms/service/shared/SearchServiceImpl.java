@@ -1614,6 +1614,7 @@ public class SearchServiceImpl
 					fieldRow,
 					aggregateAddresses,
 					SearchResultExcelWriter.getStreetsColumnName(),
+					SearchResultExcelWriter.getProvincesColumnName(),
 					SearchResultExcelWriter.getZipCodesColumnName(),
 					SearchResultExcelWriter.getCityNamesColumnName());
 			HashMap<Long, InquiryValue> inquiryValueMap;

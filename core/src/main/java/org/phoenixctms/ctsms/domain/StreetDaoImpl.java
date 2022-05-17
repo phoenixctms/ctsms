@@ -41,6 +41,23 @@ public class StreetDaoImpl
 		CategoryCriterion.apply(streetCriteria, new CategoryCriterion(streetNameInfix, "streetName", MatchMode.ANYWHERE));
 	}
 
+	private static void applyStreetCriterions(org.hibernate.Criteria streetCriteria, String countryName, String province,
+			String zipCode, String cityName, String streetNameInfix) {
+		if (!CommonUtil.isEmptyString(countryName)) {
+			streetCriteria.add(Restrictions.eq("countryName", countryName));
+		}
+		if (!CommonUtil.isEmptyString(province)) {
+			streetCriteria.add(Restrictions.eq("province", province));
+		}
+		if (!CommonUtil.isEmptyString(zipCode)) {
+			streetCriteria.add(Restrictions.eq("zipCode", zipCode));
+		}
+		if (!CommonUtil.isEmptyString(cityName)) {
+			streetCriteria.add(Restrictions.eq("cityName", cityName));
+		}
+		CategoryCriterion.apply(streetCriteria, new CategoryCriterion(streetNameInfix, "streetName", MatchMode.ANYWHERE));
+	}
+
 	private org.hibernate.Criteria createStreetCriteria() {
 		org.hibernate.Criteria streetCriteria = this.getSession().createCriteria(Street.class);
 		streetCriteria.setCacheable(true);
@@ -87,6 +104,67 @@ public class StreetDaoImpl
 		org.hibernate.Criteria streetCriteria = createStreetCriteria();
 		if (!CommonUtil.isEmptyString(countryName)) {
 			streetCriteria.add(Restrictions.eq("countryName", countryName));
+		}
+		CategoryCriterion.apply(streetCriteria, new CategoryCriterion(zipCodePrefix, "zipCode", MatchMode.START));
+		if (!CommonUtil.isEmptyString(cityName)) {
+			streetCriteria.add(Restrictions.eq("cityName", cityName));
+		}
+		if (!CommonUtil.isEmptyString(streetName)) {
+			streetCriteria.add(Restrictions.eq("streetName", streetName));
+		}
+		streetCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("zipCode", ""), Restrictions.isNull("zipCode"))));
+		streetCriteria.addOrder(Order.asc("zipCode"));
+		streetCriteria.setProjection(Projections.distinct(Projections.property("zipCode")));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.ZIP_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.ZIP_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				streetCriteria);
+		return streetCriteria.list();
+	}
+
+	@Override
+	protected Collection<String> handleFindStreetNames(String countryName, String province,
+			String zipCode, String cityName, String streetNameInfix, Integer limit)
+			throws Exception {
+		org.hibernate.Criteria streetCriteria = createStreetCriteria();
+		applyStreetCriterions(streetCriteria, countryName, province, zipCode, cityName, streetNameInfix);
+		streetCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("streetName", ""), Restrictions.isNull("streetName"))));
+		streetCriteria.addOrder(Order.asc("streetName"));
+		streetCriteria.setProjection(Projections.distinct(Projections.property("streetName")));
+		CriteriaUtil
+				.applyLimit(limit, Settings.getIntNullable(SettingCodes.STREET_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+						DefaultSettings.STREET_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), streetCriteria);
+		return streetCriteria.list();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	protected Collection<Street> handleFindStreets(String countryName, String province, String zipCode, String cityName, String streetNameInfix, Integer limit) {
+		org.hibernate.Criteria streetCriteria = createStreetCriteria();
+		applyStreetCriterions(streetCriteria, countryName, province, zipCode, cityName, streetNameInfix);
+		streetCriteria.addOrder(Order.asc("countryName"));
+		streetCriteria.addOrder(Order.asc("province"));
+		streetCriteria.addOrder(Order.asc("cityName"));
+		streetCriteria.addOrder(Order.asc("zipCode"));
+		streetCriteria.addOrder(Order.asc("streetName"));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.STREET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.STREET_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				streetCriteria);
+		return streetCriteria.list();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	protected Collection<String> handleFindZipCodes(String countryName, String province, String zipCodePrefix, String cityName, String streetName, Integer limit) {
+		org.hibernate.Criteria streetCriteria = createStreetCriteria();
+		if (!CommonUtil.isEmptyString(countryName)) {
+			streetCriteria.add(Restrictions.eq("countryName", countryName));
+		}
+		if (!CommonUtil.isEmptyString(province)) {
+			streetCriteria.add(Restrictions.eq("province", province));
 		}
 		CategoryCriterion.apply(streetCriteria, new CategoryCriterion(zipCodePrefix, "zipCode", MatchMode.START));
 		if (!CommonUtil.isEmptyString(cityName)) {

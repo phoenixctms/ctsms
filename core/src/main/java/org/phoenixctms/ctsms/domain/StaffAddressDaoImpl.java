@@ -29,11 +29,8 @@ public class StaffAddressDaoImpl
 	private static String getAddressString(StaffAddressOutVO address) {
 		StringBuilder sb = new StringBuilder();
 		if (address != null) {
-			StringBuilder zc = new StringBuilder();
 			sb.append(CommonUtil.getStreetString(address.getStreetName(), address.getHouseNumber(), address.getEntrance(), address.getDoorNumber()));
-			CommonUtil.appendString(zc, address.getZipCode(), null, "?");
-			CommonUtil.appendString(zc, address.getCityName(), " ", "?");
-			CommonUtil.appendString(sb, zc.toString(), " - ");
+			CommonUtil.appendString(sb, CommonUtil.getZipCity(address.getProvince(), address.getZipCode(), address.getCityName()), " - ");
 		}
 		return sb.toString();
 	}
@@ -41,11 +38,8 @@ public class StaffAddressDaoImpl
 	private static String getCivicString(StaffAddressOutVO address) {
 		StringBuilder sb = new StringBuilder();
 		if (address != null) {
-			StringBuilder zc = new StringBuilder();
 			sb.append(CommonUtil.getStreetString(address.getStreetName(), address.getHouseNumber(), null, null));
-			CommonUtil.appendString(zc, address.getZipCode(), null, "?");
-			CommonUtil.appendString(zc, address.getCityName(), " ", "?");
-			CommonUtil.appendString(sb, zc.toString(), ", ");
+			CommonUtil.appendString(sb, CommonUtil.getZipCity(address.getProvince(), address.getZipCode(), address.getCityName()), ", ");
 		}
 		return sb.toString();
 	}

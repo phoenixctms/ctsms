@@ -45,6 +45,10 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 		return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
+	public static String getProvincesColumnName() {
+		return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.PROVINCES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
 	public static String getZipCodesColumnName() {
 		return L10nUtil.getReimbursementsExcelLabel(Locales.USER, ReimbursementsExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}

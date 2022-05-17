@@ -56,6 +56,13 @@
 						</f:facet>
 						<h:outputText value="#{address.vo.countryName}" />
 					</p:column>
+					<p:column rendered="#{staffAddressBean.showProvinceColumn}" sortBy="#{address.vo.province}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{stafflabels.staff_address_staffaddress_list_province_column}" />
+						</f:facet>
+						<h:outputText value="#{address.vo.province}" />
+					</p:column>
 					<p:column sortBy="#{address.vo.zipCode}">
 						<f:facet name="header">
 							<h:outputText
@@ -197,6 +204,36 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="countryName" />
+							
+							
+							
+							<h:outputLabel for="province"
+							    rendered="#{staffAddressBean.showProvince}"
+								value="#{stafflabels.province_label}" />
+							<h:panelGroup rendered="#{staffAddressBean.showProvince}">
+								<p:autoComplete id="province"
+									value="#{staffAddressBean.in.province}"
+									forceSelection="#{staffAddressBean.strict}" required="false"
+									label="#{stafflabels.province}" styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthProvince}"
+									maxResults="#{autoCompleteMaxResultsProvince}"
+									queryDelay="#{autoCompleteQueryDelayProvince}"
+									dropdown="#{autoCompleteDropdownProvince}"
+									global="#{autoCompleteGlobalProvince}"
+									scrollHeight="#{autoCompleteScrollHeightProvince}"
+									completeMethod="#{staffAddressBean.completeProvince}">
+									<p:ajax listener="#{staffAddressBean.handleProvinceSelect}"
+										event="itemSelect" process="@this" />
+									<p:ajax event="blur" process="@this" />
+								</p:autoComplete>
+								<p:tooltip rendered="#{enableTooltips}" for="province">
+									<h:outputText value="#{stafflabels.province_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message for="province" rendered="#{staffAddressBean.showProvince}"/>
+							
+							
 							<h:outputLabel for="cityName"
 								value="#{stafflabels.city_name_label}" />
 							<h:panelGroup>
@@ -246,9 +283,10 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="zipCode" />
-							<h:outputLabel value="" />
-							<h:outputText value="" />
-							<h:outputLabel value="" />
+							<h:outputLabel value="" rendered="#{!staffAddressBean.showProvince}"/>
+							<h:outputText value="" rendered="#{!staffAddressBean.showProvince}"/>
+							<h:outputLabel value="" rendered="#{!staffAddressBean.showProvince}"/>
+
 							<h:outputLabel for="streetName"
 								value="#{stafflabels.street_name_label}" />
 							<h:panelGroup>

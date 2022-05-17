@@ -4844,6 +4844,7 @@ public class TrialServiceImpl
 					fieldRow,
 					aggregateAddresses,
 					ProbandListExcelWriter.getStreetsColumnName(),
+					ProbandListExcelWriter.getProvincesColumnName(),
 					ProbandListExcelWriter.getZipCodesColumnName(),
 					ProbandListExcelWriter.getCityNamesColumnName());
 			Collection probandContactDetails = showContactDetails
@@ -5223,6 +5224,16 @@ public class TrialServiceImpl
 					fieldValue.append(CommonUtil.getStreetString(addressOutVO.getStreetName(), addressOutVO.getHouseNumber(), addressOutVO.getEntrance(),
 							addressOutVO.getDoorNumber()));
 					fieldRow.put(fieldKey, fieldValue.toString());
+					fieldKey = TeamMembersExcelWriter.getProvincesColumnName();
+					if (fieldRow.containsKey(fieldKey)) {
+						fieldValue = new StringBuilder((String) fieldRow.get(fieldKey));
+					} else {
+						fieldValue = new StringBuilder();
+					}
+					if (fieldValue.length() > 0) {
+						fieldValue.append(ExcelUtil.EXCEL_LINE_BREAK);
+					}
+					fieldValue.append(addressOutVO.getProvince());
 					fieldKey = TeamMembersExcelWriter.getZipCodesColumnName();
 					if (fieldRow.containsKey(fieldKey)) {
 						fieldValue = new StringBuilder((String) fieldRow.get(fieldKey));

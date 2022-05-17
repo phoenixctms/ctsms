@@ -46,6 +46,10 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 		return L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.STREETS_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
+	public static String getProvincesColumnName() {
+		return L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.PROVINCES_HEAD, ExcelUtil.DEFAULT_LABEL);
+	}
+
 	public static String getZipCodesColumnName() {
 		return L10nUtil.getTeamMembersExcelLabel(Locales.USER, TeamMembersExcelLabelCodes.ZIP_CODES_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
