@@ -20,10 +20,15 @@ CREATE INDEX file_folder_preset_logical_path ON file_folder_preset (logical_path
 -- addresses:
 CREATE INDEX street_country_name_zip_code_street_name ON street (country_name,zip_code,street_name);
 CREATE INDEX street_country_name_city_name_street_name ON street (country_name,city_name,street_name);
+CREATE INDEX street_country_name_province_zip_code_street_name ON street (country_name,province,zip_code,street_name);
+CREATE INDEX street_country_name_province_city_name_street_name ON street (country_name,province,city_name,street_name);
 --CREATE INDEX street_country_name_city_name ON street (country_name,city_name);
+--CREATE INDEX street_country_name_province_city_name ON street (country_name,province,city_name);
 
 CREATE INDEX zip_country_name_city_name ON zip (country_name,city_name);
 CREATE INDEX zip_country_name_zip_code ON zip (country_name,zip_code);
+CREATE INDEX zip_country_name_province_city_name ON zip (country_name,province,city_name);
+CREATE INDEX zip_country_name_province_zip_code ON zip (country_name,province,zip_code);
 
 -- bank identification:
 CREATE INDEX bank_identification_bank_code_number ON bank_identification (bank_code_number);
