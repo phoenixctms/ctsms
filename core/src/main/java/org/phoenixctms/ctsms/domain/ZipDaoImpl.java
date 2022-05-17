@@ -13,6 +13,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
+import org.phoenixctms.ctsms.query.CategoryCriterion.EmptyPrefixModes;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.SettingCodes;
@@ -30,6 +31,15 @@ public class ZipDaoImpl
 			String zipCodePrefix, String cityNameInfix) {
 		CategoryCriterion.applyAnd(zipCriteria,
 				new CategoryCriterion(countryNameInfix, "countryName", MatchMode.ANYWHERE),
+				new CategoryCriterion(zipCodePrefix, "zipCode", MatchMode.START),
+				new CategoryCriterion(cityNameInfix, "cityName", MatchMode.ANYWHERE));
+	}
+
+	private static void applyZipCriterions(org.hibernate.Criteria zipCriteria, String countryNameInfix, String provinceInfix,
+			String zipCodePrefix, String cityNameInfix) {
+		CategoryCriterion.applyAnd(zipCriteria,
+				new CategoryCriterion(countryNameInfix, "countryName", MatchMode.ANYWHERE),
+				new CategoryCriterion(provinceInfix, "province", MatchMode.ANYWHERE, EmptyPrefixModes.ALL_ROWS),
 				new CategoryCriterion(zipCodePrefix, "zipCode", MatchMode.START),
 				new CategoryCriterion(cityNameInfix, "cityName", MatchMode.ANYWHERE));
 	}
@@ -73,6 +83,61 @@ public class ZipDaoImpl
 			String zipCodePrefix, String cityNameInfix, Integer limit) throws Exception {
 		org.hibernate.Criteria zipCriteria = createZipCriteria();
 		applyZipCriterions(zipCriteria, countryNameInfix, zipCodePrefix, cityNameInfix);
+		zipCriteria.addOrder(Order.asc("countryName"));
+		zipCriteria.addOrder(Order.asc("cityName"));
+		zipCriteria.addOrder(Order.asc("zipCode"));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.ZIP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.ZIP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), zipCriteria);
+		return zipCriteria.list();
+	}
+
+	@Override
+	protected Collection<String> handleFindCityNames(String countryNameInfix, String provinceInfix,
+			String zipCodePrefix, String cityNameInfix, Integer limit) throws Exception {
+		org.hibernate.Criteria zipCriteria = createZipCriteria();
+		applyZipCriterions(zipCriteria, countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix);
+		zipCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("cityName", ""), Restrictions.isNull("cityName"))));
+		zipCriteria.addOrder(Order.asc("cityName"));
+		zipCriteria.setProjection(Projections.distinct(Projections.property("cityName")));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.CITY_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.CITY_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				zipCriteria);
+		return zipCriteria.list();
+	}
+
+	@Override
+	protected Collection<String> handleFindProvinces(String countryNameInfix, String provinceInfix,
+			String zipCodePrefix, String cityNameInfix, Integer limit) throws Exception {
+		org.hibernate.Criteria zipCriteria = createZipCriteria();
+		applyZipCriterions(zipCriteria, countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix);
+		zipCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("province", ""), Restrictions.isNull("province"))));
+		zipCriteria.addOrder(Order.asc("province"));
+		zipCriteria.setProjection(Projections.distinct(Projections.property("province")));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.PROVINCE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.PROVINCE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				zipCriteria);
+		return zipCriteria.list();
+	}
+
+	@Override
+	protected Collection<String> handleFindZipCodes(String countryNameInfix, String provinceInfix,
+			String zipCodePrefix, String cityNameInfix, Integer limit) throws Exception {
+		org.hibernate.Criteria zipCriteria = createZipCriteria();
+		applyZipCriterions(zipCriteria, countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix);
+		zipCriteria.add(Restrictions.not(Restrictions.or(Restrictions.eq("zipCode", ""), Restrictions.isNull("zipCode"))));
+		zipCriteria.addOrder(Order.asc("zipCode"));
+		zipCriteria.setProjection(Projections.distinct(Projections.property("zipCode")));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.ZIP_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS, DefaultSettings.ZIP_CODE_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				zipCriteria);
+		return zipCriteria.list();
+	}
+
+	@Override
+	protected Collection<Zip> handleFindZips(String countryNameInfix, String provinceInfix,
+			String zipCodePrefix, String cityNameInfix, Integer limit) throws Exception {
+		org.hibernate.Criteria zipCriteria = createZipCriteria();
+		applyZipCriterions(zipCriteria, countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix);
 		zipCriteria.addOrder(Order.asc("countryName"));
 		zipCriteria.addOrder(Order.asc("cityName"));
 		zipCriteria.addOrder(Order.asc("zipCode"));
