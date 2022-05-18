@@ -272,7 +272,7 @@ public final class WebUtil {
 	public static List<String> completeCityName(String countryName, String province, String zipCode, String query) {
 		Collection<String> cityNames = null;
 		try {
-			cityNames = getServiceLocator().getToolsService().completeCityName(getAuthentication(),
+			cityNames = getServiceLocator().getToolsService().completeCityNameProvince(getAuthentication(),
 					query, countryName, province, zipCode, null);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
@@ -359,7 +359,7 @@ public final class WebUtil {
 	public static List<String> completeStreetName(String countryName, String province, String zipCode, String cityName, String query) {
 		Collection<String> streetNames = null;
 		try {
-			streetNames = getServiceLocator().getToolsService().completeStreetName(getAuthentication(), query, countryName, province, zipCode, cityName, null);
+			streetNames = getServiceLocator().getToolsService().completeStreetNameProvince(getAuthentication(), query, countryName, province, zipCode, cityName, null);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -415,9 +415,9 @@ public final class WebUtil {
 		Collection<String> zipCodes = null;
 		try {
 			if (!CommonUtil.isEmptyString(countryName) && !CommonUtil.isEmptyString(province) && !CommonUtil.isEmptyString(cityName) && !CommonUtil.isEmptyString(streetName)) {
-				zipCodes = getServiceLocator().getToolsService().completeZipCodeByStreetName(getAuthentication(), query, countryName, province, cityName, streetName, null);
+				zipCodes = getServiceLocator().getToolsService().completeZipCodeByStreetNameProvince(getAuthentication(), query, countryName, province, cityName, streetName, null);
 			} else {
-				zipCodes = getServiceLocator().getToolsService().completeZipCode(getAuthentication(), query, countryName, province, cityName, null);
+				zipCodes = getServiceLocator().getToolsService().completeZipCodeProvince(getAuthentication(), query, countryName, province, cityName, null);
 			}
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {

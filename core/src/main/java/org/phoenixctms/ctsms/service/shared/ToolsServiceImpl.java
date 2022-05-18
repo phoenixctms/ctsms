@@ -1398,14 +1398,14 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected Collection<String> handleCompleteCityName(AuthenticationVO auth, String cityNameInfix, String countryNameInfix,
+	protected Collection<String> handleCompleteCityNameProvince(AuthenticationVO auth, String cityNameInfix, String countryNameInfix,
 			String provinceInfix, String zipCodePrefix, Integer limit) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getZipDao().findCityNames(countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix, limit);
 	}
 
 	@Override
-	protected Collection<String> handleCompleteStreetName(AuthenticationVO auth, String streetNameInfix, String countryName,
+	protected Collection<String> handleCompleteStreetNameProvince(AuthenticationVO auth, String streetNameInfix, String countryName,
 			String province, String zipCode, String cityName, Integer limit)
 			throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
@@ -1413,14 +1413,14 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected Collection<String> handleCompleteZipCode(AuthenticationVO auth, String zipCodePrefix, String countryNameInfix,
+	protected Collection<String> handleCompleteZipCodeProvince(AuthenticationVO auth, String zipCodePrefix, String countryNameInfix,
 			String provinceInfix, String cityNameInfix, Integer limit) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getZipDao().findZipCodes(countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix, limit);
 	}
 
 	@Override
-	protected Collection<String> handleCompleteZipCodeByStreetName(AuthenticationVO auth, String zipCodePrefix, String countryName,
+	protected Collection<String> handleCompleteZipCodeByStreetNameProvince(AuthenticationVO auth, String zipCodePrefix, String countryName,
 			String provinceInfix, String cityName, String streetName, Integer limit) throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getStreetDao().findZipCodes(countryName, provinceInfix, zipCodePrefix, cityName, streetName, limit);

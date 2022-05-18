@@ -9,7 +9,6 @@ import org.phoenixctms.ctsms.compare.MethodComparator;
 public class MethodTransfilter {
 
 	public static final MethodTransfilter DEFAULT_TRANSFILTER = new MethodTransfilter();
-
 	protected final static Comparator<Method> METHOD_COMPARATOR = new MethodComparator(false);
 
 	public final static MethodTransfilter getEntityMethodTransfilter(final boolean lowerCaseFieldNames) {
