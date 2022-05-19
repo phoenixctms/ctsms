@@ -50,6 +50,7 @@ public class ProbandAddressProvinceInitializer extends EncryptedFieldInitializer
 						CipherText cipherText = CryptoUtil.encryptValue(null);
 						address.setProvinceIv(cipherText.getIv());
 						address.setEncryptedProvince(cipherText.getCipherText());
+						address.setProvinceHash(CryptoUtil.hashForSearch(null));
 						this.dao.update(address);
 						jobOutput.println("row updated");
 						inOut.put("updated", ((Long) inOut.get("updated")) + 1l);
