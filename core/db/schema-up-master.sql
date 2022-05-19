@@ -26,7 +26,8 @@ if get_database_version() < '010801010' then
   CREATE INDEX zip_country_name_province_city_name ON zip (country_name,province,city_name);
   CREATE INDEX zip_country_name_province_zip_code ON zip (country_name,province,zip_code);
 
-  select set_database_version('010801010');
+  perform set_database_version('010801010');
+  
 end if;
 
 end
