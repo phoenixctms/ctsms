@@ -1,0 +1,46 @@
+Estimado $ecrfstatusentry_listentry_trial_name miembro del equipo de prueba o miembro del depto. $ecrfstatusentry_listentry_trial_department,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Prueba:                $ecrfstatusentry_listentry_trial_name
+   • Departamento de prueba:     $ecrfstatusentry_listentry_trial_department
+   • Probanda: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
+   • eCRF:                 $ecrfstatusentry_ecrf_name
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Grupo de Probanda:        $notification.ecrfStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfStatusEntry.visit)
+   • Visit:                $notification.ecrfStatusEntry.visit.title
+#end
+
+   • Estado de eCRF:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Validación de entrada:     $ecrfstatusentry_validationresponsemsg
+   • Marca de tiempo de validación: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FALLADO")
+   • $ecrfstatusentry_validationresponsemsg
+   • Marca de tiempo:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Validación de entrada pendiente.
+#end
+
+   • Modificado: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+
+
+#if(!$notification.ecrfStatusEntry.status.done)
+Por favor, continúe con los siguientes pasos para completar la entrada de datos de eCRF.
+#sino
+La entrada de datos de eCRF se ha completado.
+#end
+
+Gracias.
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instancia: $instance_name
