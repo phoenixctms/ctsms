@@ -483,15 +483,18 @@ public class TrialServiceImpl
 			if (statusType.isSignup() && !trial.isSignupProbandList()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_SIGNUP_DISABLED);
 			}
+			ProbandOutVO probandVO = probandDao.toProbandOutVO(proband);
 			String reason = (listEntry.getGroup() != null ? L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
 					randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_CREATED : ProbandListStatusReasonCodes.LIST_ENTRY_CREATED,
 					randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED,
-					new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)),
+					new Object[] { CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON ? CommonUtil.probandOutVOToString(probandVO)
+							: CommonUtil.getProbandAlias(probandVO, null, L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)),
 							listEntry.getGroup().getTitle() })
 					: L10nUtil.getProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON,
 							randomized ? ProbandListStatusReasonCodes.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : ProbandListStatusReasonCodes.LIST_ENTRY_CREATED_NO_GROUP,
 							randomized ? DefaultProbandListStatusReasons.LIST_ENTRY_RANDOMIZED_AND_CREATED_NO_GROUP : DefaultProbandListStatusReasons.LIST_ENTRY_CREATED_NO_GROUP,
-							new Object[] { CommonUtil.probandOutVOToString(probandDao.toProbandOutVO(proband)) }));
+							new Object[] { CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON ? CommonUtil.probandOutVOToString(probandVO)
+									: CommonUtil.getProbandAlias(probandVO, null, L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME)) }));
 			if (!statusType.isReasonRequired() || !CommonUtil.isEmptyString(reason)) {
 				ProbandListStatusEntry statusEntry = ProbandListStatusEntry.Factory.newInstance();
 				statusEntry.setListEntry(listEntry);
