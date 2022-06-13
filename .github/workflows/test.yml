@@ -94,6 +94,9 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
+      - name: test perl selenium remote
+        run: |
+          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
 #      - name: Initialize DB
 #        run: |
 #          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
