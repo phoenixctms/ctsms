@@ -15,7 +15,6 @@ chmod +x /usr/bin/chromedriver
 wget https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
 #apt-get -y install xvfb 
 
-xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.141.59.jar 2>&1 &
 
 apt-get -y install cpanminus
 cpanm --notest Selenium::Remote::Driver 
