@@ -5,8 +5,8 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - '!l10n_master'    
+    branches-ignore:
+      - '!l10n_master'
 jobs:
   build:
     name: Build and Test
@@ -85,6 +85,9 @@ jobs:
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+      - name: Setup Selenium
+        run: |
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
       - name: Initialize DB
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
