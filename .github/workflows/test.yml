@@ -91,7 +91,7 @@ jobs:
           sudo apt-get install --yes tomcat9
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
-          systemctl stop tomcat9
+          systemctl status tomcat9
           rm /var/lib/tomcat9/webapps/ROOT/ -rf
           cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
           systemctl start tomcat9
