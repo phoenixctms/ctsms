@@ -25,12 +25,12 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-#      - name: Build
-#        #if: 0
-#        run: mvn -B install -DskipTests
-#      - name: Generate DB schema
-#        #if: 0
-#        run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
+      - name: Build
+        #if: 0
+        run: mvn -B install -DskipTests
+      - name: Generate DB schema
+        #if: 0
+        run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
       - name: Create 'ctsms' user
         run: |
           sudo useradd ctsms -p '*' --groups sudo
@@ -38,19 +38,19 @@ jobs:
         run: |
           #sudo apt-get install --yes postgresql
           sudo service postgresql start
-#      - name: Create DB schema
-#        #if: 0
-#        run: |
-#          sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
-#          sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
-#          sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
-#          sudo -u postgres psql postgres -c "ALTER DATABASE ctsms OWNER TO ctsms;"
-#          sudo -u postgres psql ctsms < /home/runner/work/ctsms/ctsms/core/db/dbtool.sql
-#          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
-#          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
-#          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-set-version.sql
-#          sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/13/main/postgresql.conf
-#          sudo service postgresql restart
+      - name: Create DB schema
+        #if: 0
+        run: |
+          sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
+          sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
+          sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
+          sudo -u postgres psql postgres -c "ALTER DATABASE ctsms OWNER TO ctsms;"
+          sudo -u postgres psql ctsms < /home/runner/work/ctsms/ctsms/core/db/dbtool.sql
+          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
+          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
+          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-set-version.sql
+          sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/13/main/postgresql.conf
+          sudo service postgresql restart
 #      - name: Download master data
 #        run: |        
 #          sudo mkdir /ctsms
@@ -89,14 +89,12 @@ jobs:
       - name: Start Tomcat
         run: |
           sudo apt-get install --yes tomcat9
-          systemctl status tomcat9
+          sudo systemctl stop tomcat9
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
-          systemctl status tomcat9
-          rm /var/lib/tomcat9/webapps/ROOT/ -rf
-          cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
-          systemctl start tomcat9
-          
+          sudo rm /var/lib/tomcat9/webapps/ROOT/ -rf
+          sudo cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
+          sudo systemctl start tomcat9
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
