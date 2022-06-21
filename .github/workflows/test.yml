@@ -89,6 +89,7 @@ jobs:
       - name: Start Tomcat
         run: |
           sudo apt-get install --yes tomcat9
+          systemctl status tomcat9
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
           systemctl status tomcat9
