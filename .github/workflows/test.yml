@@ -89,7 +89,13 @@ jobs:
       - name: Start Tomcat
         run: |
           sudo apt-get install --yes tomcat9
-          sudo service tomcat9 start
+          VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
+          systemctl stop tomcat9
+          rm /var/lib/tomcat9/webapps/ROOT/ -rf
+          cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
+          systemctl start tomcat9
+          
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
