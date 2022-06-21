@@ -93,8 +93,8 @@ jobs:
           sudo systemctl stop tomcat9
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
-          sudo rm /usr/share/tomcat9/webapps/ROOT/ -rf
-          sudo cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /usr/share/tomcat9/webapps/ROOT.war
+          sudo rm /var/lib/tomcat9/webapps/ROOT/ -rf
+          sudo cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
           sudo systemctl start tomcat9
       - name: Setup dbtool.sh
         run: |
