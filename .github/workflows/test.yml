@@ -41,6 +41,7 @@ jobs:
       - name: Create DB schema
         #if: 0
         run: |
+          sudo apt-get -q -y install postgresql-plperl
           sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
           sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
           sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
@@ -88,7 +89,7 @@ jobs:
 #          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
       - name: Start Tomcat
         run: |
-          sudo apt-get install --yes tomcat9
+          sudo apt-get -q -y install tomcat9
           sudo systemctl stop tomcat9
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
