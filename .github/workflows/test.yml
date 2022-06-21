@@ -50,7 +50,7 @@ jobs:
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
           sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-set-version.sql
-          sudo sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/13/main/postgresql.conf
+          sudo sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/12/main/postgresql.conf
           sudo service postgresql restart
 #      - name: Download master data
 #        run: |        
