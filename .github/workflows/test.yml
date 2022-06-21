@@ -94,7 +94,7 @@ jobs:
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
           sudo rm /var/lib/tomcat9/webapps/ROOT/ -rf
-          sudo cp /ctsms/build/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
+          sudo cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
           sudo systemctl start tomcat9
       - name: Setup dbtool.sh
         run: |
