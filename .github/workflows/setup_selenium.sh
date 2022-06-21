@@ -5,6 +5,7 @@
 #apt-get -y update
 #apt-get -y install google-chrome-stable
 
+#apt-get -y unzip
 wget --no-verbose https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 
