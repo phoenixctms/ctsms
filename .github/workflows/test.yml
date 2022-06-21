@@ -107,8 +107,9 @@ jobs:
           xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.141.59.jar 2>&1 &
       - name: test perl selenium remote
         run: |
-          sudo cat /var/lib/tomcat9/logs/catalina.out
+          
           perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
+          sudo cat /usr/share/tomcat9/logs/catalina.out
 #      - name: Initialize DB
 #        run: |
 #          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
