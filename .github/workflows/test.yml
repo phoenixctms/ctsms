@@ -88,7 +88,7 @@ jobs:
 #          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
       - name: Start Tomcat
         run: |
-          #sudo apt-get install --yes postgresql
+          sudo apt-get install --yes tomcat9
           sudo service tomcat9 start
       - name: Setup dbtool.sh
         run: |
