@@ -31,35 +31,14 @@ jobs:
       - name: Build
         #if: 0
         run: mvn -B install -DskipTests
-      - name: Setup PostgreSQL
+      - name: Setup database
         run: |
-          mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
-          sudo useradd ctsms -p '*' --groups sudo
-          #sudo apt-get install --yes postgresql
-          sudo apt-get -q -y install postgresql-plperl
-          sudo service postgresql start
-          sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
-          sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
-          sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
-          sudo -u postgres psql postgres -c "ALTER DATABASE ctsms OWNER TO ctsms;"
-          sudo -u postgres psql ctsms < /home/runner/work/ctsms/ctsms/core/db/dbtool.sql
-          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
-          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
-          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-set-version.sql
-          sudo sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/12/main/postgresql.conf
-          sudo service postgresql restart
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh 
       - name: Download master data
-        run: |        
-          sudo mkdir /ctsms
-          sudo wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
-          sudo tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
-          sudo rm /ctsms/config.tar.gz -f          
-          sudo wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
-          sudo mkdir /ctsms/master_data
-          sudo tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
-          sudo rm /ctsms/master-data.tar.gz -f
-          sudo chown ctsms:ctsms /ctsms -R
-          sudo chmod 777 /ctsms -R
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh  
       - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
@@ -71,55 +50,16 @@ jobs:
           MAIL_SENDER_STARTTLS: ${{ secrets.MAIL_SENDER_STARTTLS }}
           MAIL_SENDER_ADDRESS: ${{ secrets.MAIL_SENDER_ADDRESS }}
         run: |
-          sudo echo "email_exec_from_address=$MAIL_SENDER_ADDRESS" >> /ctsms/properties/ctsms-settings.properties
-          sudo echo "email_exec_from_name=Phoenix CTSMS Automated Tests" >> /ctsms/properties/ctsms-settings.properties
-          sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_username=$MAIL_SENDER_USERNAME" >> /ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_password=$MAIL_SENDER_PASSWORD" >> /ctsms/properties/ctsms-applicationcontext.properties
-          sudo touch /ctsms/properties/ctsms-job-mail-sender.properties
-          sudo chown ctsms:ctsms /ctsms/properties/ctsms-job-mail-sender.properties
-          sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
-          sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
-          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
-          sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_dbtool.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_dbtool.sh
       - name: Initialize DB
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
-      - name: Setup query criteria
-        run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
-      - name: Setup service method permissions
-        run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv        
-      - name: Setup degrees and titles
-        if: 0
-        run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -it /ctsms/master_data/titles.csv -e ISO-8859-1
-      - name: Setup mime types
-        run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ims /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imc /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imt /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1          
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
       - name: Setup Tomcat
         run: |
-          sudo apt-get -q -y install tomcat9
-          sudo systemctl stop tomcat9
-          VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
-          sudo rm /var/lib/tomcat9/webapps/ROOT/ -rf
-          sudo cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
-          sudo systemctl start tomcat9
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh  
       - name: Setup Selenium
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
@@ -130,7 +70,6 @@ jobs:
           
           perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
 
-
-#      - name: Run testsuite
-#        run: |
-#          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
+      - name: Run testsuite
+        run: |
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org

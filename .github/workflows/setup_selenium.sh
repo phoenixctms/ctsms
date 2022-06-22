@@ -16,6 +16,6 @@ chmod +x /usr/bin/chromedriver
 wget --no-verbose https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
 #apt-get -q -y install xvfb 
 
-
-apt-get -q -y install build-essential cpanminus
+#apt-get -q -y install build-essential
+apt-get -q -y install cpanminus
 cpanm --notest Selenium::Remote::Driver 
