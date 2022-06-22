@@ -96,6 +96,8 @@ jobs:
           sudo rm /var/lib/tomcat9/webapps/ROOT/ -rf
           sudo cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
           sudo systemctl start tomcat9
+          sudo systemctl status tomcat9
+          sudo cat /var/log/tomcat9/localhost.2022-06-22.log
       - name: Setup dbtool.sh
         run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
