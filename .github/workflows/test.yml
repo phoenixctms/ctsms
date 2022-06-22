@@ -109,7 +109,7 @@ jobs:
         run: |
           
           perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
-          sudo cat /var/log/tomcat9/catalina.out
+          cat /var/log/syslog
 #      - name: Initialize DB
 #        run: |
 #          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f

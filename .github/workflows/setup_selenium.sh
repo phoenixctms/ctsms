@@ -5,7 +5,7 @@
 #apt-get -y update
 #apt-get -y install google-chrome-stable
 
-#apt-get -y unzip
+#apt-get -q -y install unzip
 wget --no-verbose https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 
@@ -14,8 +14,8 @@ chown root:root /usr/bin/chromedriver
 chmod +x /usr/bin/chromedriver
 
 wget --no-verbose https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
-#apt-get -y install xvfb 
+#apt-get -q -y install xvfb 
 
 
-apt-get -q -y install cpanminus
+apt-get -q -y install build-essential cpanminus
 cpanm --notest Selenium::Remote::Driver 
