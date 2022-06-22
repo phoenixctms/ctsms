@@ -54,7 +54,7 @@ jobs:
           sudo wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
           sudo tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
           sudo rm /ctsms/config.tar.gz -f          
-          sudo --no-verbose wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
+          sudo wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
           sudo mkdir /ctsms/master_data
           sudo tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
           sudo rm /ctsms/master-data.tar.gz -f
