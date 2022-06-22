@@ -51,7 +51,7 @@ jobs:
       - name: Download master data
         run: |        
           sudo mkdir /ctsms
-          sudo --no-verbose wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
+          sudo wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
           sudo tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
           sudo rm /ctsms/config.tar.gz -f          
           sudo --no-verbose wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
