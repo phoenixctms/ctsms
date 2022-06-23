@@ -5,8 +5,8 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - '!l10n_master'    
+    branches-ignore:
+      - '!l10n_master'
 jobs:
   build:
     name: Build and Test
@@ -16,9 +16,12 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
+        run: |
+           sudo apt-get -q -y install default-jdk
+#         apt-get -q -y install libservlet3.1-java tomcat9
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11
       - name: Cache Maven packages
         uses: actions/cache@v1
         with:
@@ -28,37 +31,15 @@ jobs:
       - name: Build
         #if: 0
         run: mvn -B install -DskipTests
-      - name: Generate DB schema
-        #if: 0
-        run: mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
-      - name: Create 'ctsms' user
+      - name: Setup database
         run: |
-          sudo useradd ctsms -p '*' --groups sudo
-      - name: Start PostgreSQL
-        run: |
-          #sudo apt-get install --yes postgresql
-          sudo service postgresql start
-      - name: Create DB schema
-        #if: 0
-        run: |
-          sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
-          sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
-          sudo -u postgres psql postgres -c "GRANT ALL PRIVILEGES ON DATABASE ctsms to ctsms;"
-          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/schema-create.sql
-          sudo -u ctsms psql -U ctsms ctsms < /home/runner/work/ctsms/ctsms/core/db/index-create.sql
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh 
       - name: Download master data
-        run: |        
-          sudo mkdir /ctsms
-          sudo wget --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
-          sudo tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
-          sudo rm /ctsms/config.tar.gz -f          
-          sudo wget https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
-          sudo mkdir /ctsms/master_data
-          sudo tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
-          sudo rm /ctsms/master-data.tar.gz -f
-          sudo chown ctsms:ctsms /ctsms -R
-          sudo chmod 777 /ctsms -R
-      - name: Configure email sender
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh  
+      - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
           MAIL_SENDER_PORT: ${{ secrets.MAIL_SENDER_PORT }}
@@ -81,36 +62,26 @@ jobs:
           sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
-      - name: Setup dbtool.sh
-        run: |
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
       - name: Initialize DB
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -i -f
-      - name: Setup query criteria
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+      - name: Setup Tomcat
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -icp /ctsms/master_data/criterion_property_definitions.csv
-      - name: Setup service method permissions
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh  
+      - name: Setup Selenium
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ipd /ctsms/master_data/permission_definitions.csv        
-      - name: Setup degrees and titles
-        if: 0
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
+          xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.141.59.jar 2>&1 &
+      - name: test perl selenium remote
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -it /ctsms/master_data/titles.csv -e ISO-8859-1
-      - name: Setup mime types
-        run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ims /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imc /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imt /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -imcc /ctsms/master_data/mime.types -e ISO-8859-1          
+          
+          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
+
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
