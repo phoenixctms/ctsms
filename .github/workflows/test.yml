@@ -81,6 +81,12 @@ jobs:
         run: |
           
           perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
+          
+      - name: test java selenium remote
+        run: |
+        
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.testChrome 
 
       - name: Run testsuite
         run: |
