@@ -14,5 +14,6 @@ public class testChrome {
 		chromeOptions.addArguments("--no-sandbox");
 		ChromeDriver Chrom1 = new ChromeDriver(chromeOptions);
 		Chrom1.get("http://localhost:8080");
+		System.out.println(Chrom1.getPageSource());
 	}
 }
