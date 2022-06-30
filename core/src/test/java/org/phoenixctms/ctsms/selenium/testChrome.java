@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.selenium;
 
 import org.openqa.selenium.chrome.ChromeDriver;
 
+//https://tecadmin.net/setup-selenium-chromedriver-on-ubuntu/
 public class testChrome {
 
 	public static void main(String[] args) {
