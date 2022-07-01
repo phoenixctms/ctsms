@@ -153,7 +153,7 @@ public class ECRFFieldStatusEntryDaoImpl
 		DetachedCriteria subQuery = createEcrfFieldStatusEntryDetachedCriteria(ecrfFieldStatusEntryCriteria, probandListEntryCriteria, ecrfFieldCriteria, queue, probandListEntryId,
 				ecrfFieldId);
 		if (visitCriteria == null) {
-			visitCriteria = ecrfFieldStatusEntryCriteria.createCriteria("visit", "visit0");
+			visitCriteria = ecrfFieldStatusEntryCriteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
 		}
 		subQuery.add(Restrictions.or(Restrictions.and(Restrictions.isNull("visit.id"), Restrictions.isNull(visitCriteria.getAlias() + ".id")),
 				Restrictions.eqProperty("visit.id", visitCriteria.getAlias() + ".id")));
@@ -747,7 +747,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			if (last) {
 				// uncorrelated - fast:
 				// value with max id only:
-				visitCriteria = ecrfFieldStatusEntryCriteria.createCriteria("visit", "visit0");
+				visitCriteria = ecrfFieldStatusEntryCriteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
 				applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, listEntryCriteria, visitCriteria, ecrfFieldCriteria, queue, probandListEntryId, null);
 			}
 		}
@@ -804,7 +804,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			if (last) {
 				// uncorrelated - fast:
 				// value with max id only:
-				visitCriteria = ecrfFieldStatusEntryCriteria.createCriteria("visit", "visit0");
+				visitCriteria = ecrfFieldStatusEntryCriteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
 				applyEcrfFieldStatusEntryMaxIdSubCriteria(ecrfFieldStatusEntryCriteria, listEntryCriteria, visitCriteria, ecrfFieldCriteria, queue, probandListEntryId, null);
 			}
 		}
