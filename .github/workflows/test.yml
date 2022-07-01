@@ -34,11 +34,11 @@ jobs:
       - name: Setup database
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
-          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh 
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
       - name: Download master data
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
-          sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh  
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
       - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
@@ -71,17 +71,20 @@ jobs:
       - name: Setup Tomcat
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
-          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh  
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
       - name: Setup Selenium
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh
           xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.141.59.jar 2>&1 &
-      - name: test perl selenium remote
+          sleep 5
+#      - name: test perl selenium remote
+#        run: |
+#          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
+      - name: test java selenium remote
         run: |
-          
-          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
-
+          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.testChrome
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
