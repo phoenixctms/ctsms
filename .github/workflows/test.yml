@@ -79,13 +79,13 @@ jobs:
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh
           xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-3.141.59.jar 2>&1 &
           sleep 5
-#      - name: test perl selenium remote
-#        run: |
-#          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
+      - name: test perl selenium remote
+        run: |
+          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
       - name: test java selenium remote
         run: |
-#          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh testChrome
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.testChrome
+#          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh testChrome
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
