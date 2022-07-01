@@ -84,6 +84,7 @@ jobs:
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
       - name: test java selenium remote
         run: |
+          mvn dependency:tree
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.testChrome
 #          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh testChrome
       - name: Run testsuite
