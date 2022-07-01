@@ -164,7 +164,7 @@ public class ECRFFieldValueDaoImpl
 			Long probandListEntryId, Long ecrfFieldId) {
 		DetachedCriteria subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, probandListEntryCriteria, ecrfFieldCriteria, probandListEntryId, ecrfFieldId);
 		if (visitCriteria == null) {
-			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0");
+			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
 		}
 		subQuery.add(Restrictions.or(Restrictions.and(Restrictions.isNull("visit.id"), Restrictions.isNull(visitCriteria.getAlias() + ".id")),
 				Restrictions.eqProperty("visit.id", visitCriteria.getAlias() + ".id")));
@@ -761,7 +761,7 @@ public class ECRFFieldValueDaoImpl
 			}
 			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId, null);
 		} else {
-			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0");
+			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
 			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, visitCriteria, ecrfFieldCriteria, probandListEntryId, null);
 		}
 		subQuery.setProjection(Projections.rowCount());
@@ -810,7 +810,7 @@ public class ECRFFieldValueDaoImpl
 			}
 			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, ecrfFieldCriteria, probandListEntryId, visitId, null);
 		} else {
-			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0");
+			visitCriteria = ecrfFieldValueCriteria.createCriteria("visit", "visit0", CriteriaSpecification.LEFT_JOIN);
 			subQuery = createEcrfFieldValueDetachedCriteria(ecrfFieldValueCriteria, listEntryCriteria, visitCriteria, ecrfFieldCriteria, probandListEntryId, null);
 		}
 		subQuery.setProjection(Projections.rowCount());
