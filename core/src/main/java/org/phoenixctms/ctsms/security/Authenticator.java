@@ -147,6 +147,13 @@ public class Authenticator {
 			if (userContext.getInheritedUser().getLocked()) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.USER_LOCKED, auth.getUsername());
 			}
+			if (userContext.getInheritedUser().getLockedUntrusted() && !CoreUtil.checkHostIp(auth.getHost())) {
+				if (CommonUtil.isEmptyString(auth.getHost())) {
+					throw L10nUtil.initAuthorisationException(AuthenticationExceptionCodes.NO_HOST, auth.getUsername());
+				} else {
+					throw L10nUtil.initAuthorisationException(AuthenticationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, auth.getUsername(), auth.getHost());
+				}
+			}
 			switch (user.getAuthMethod()) {
 				case LOCAL:
 					return authenticateLocal(auth, user, logon);
