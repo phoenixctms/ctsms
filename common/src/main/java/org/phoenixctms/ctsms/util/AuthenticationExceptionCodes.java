@@ -11,6 +11,8 @@ public interface AuthenticationExceptionCodes {
 	public final static String UNKNOWN_USER = "unknown_user";
 	public final static String USER_MARKED_FOR_DELETION = "user_marked_for_deletion";
 	public final static String USER_LOCKED = "user_locked";
+	public final static String NO_HOST = "no_host";
+	public final static String HOST_NOT_ALLOWED_OR_UNKNOWN_HOST = "host_not_allowed_or_unknown_host";
 	public final static String WRONG_LOCAL_PASSWORD = "wrong_local_password";
 	public static final String WRONG_PASSWORD = "wrong_password";
 	public final static String WRONG_PASSWORD_ATTEMPT_LIMIT_EXCEEDED = "wrong_password_attempt_limit_exceeded";
