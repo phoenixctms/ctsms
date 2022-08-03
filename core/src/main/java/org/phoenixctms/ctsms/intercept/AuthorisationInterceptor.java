@@ -333,7 +333,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 							}
 							try {
 								if (checkIpRanges) {
-									CoreUtil.checkHostIp(permission.getIpRanges(), permission.getServiceMethod());
+									checkHostIp(permission.getIpRanges(), permission.getServiceMethod());
 								}
 								if (parameterValue == null) {
 									checkParameterRestriction(null, permission, restriction, user);
@@ -362,7 +362,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					}
 				} else if (permission.getParameterSetter() != null) {
 					if (checkIpRanges) {
-						CoreUtil.checkHostIp(permission.getIpRanges(), permission.getServiceMethod());
+						checkHostIp(permission.getIpRanges(), permission.getServiceMethod());
 					}
 					ServiceMethodParameterOverride override = permission.getOverride();
 					if (override != null) {
@@ -532,6 +532,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					String[] serviceMethodNameParameter = DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP.split(disjunctionGroup, -1);
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_DISJUNCTIVE_RESTRICTION_NOT_SATISFIED, (Object[]) serviceMethodNameParameter);
 				}
+			}
+		}
+	}
+
+	private static void checkHostIp(String ipRanges, String serviceMethod) throws Exception {
+		String host = CoreUtil.getHost();
+		if (!CoreUtil.checkHostIp(host, ipRanges)) {
+			if (CommonUtil.isEmptyString(host)) {
+				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_HOST, serviceMethod);
+			} else {
+				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, serviceMethod, host);
 			}
 		}
 	}

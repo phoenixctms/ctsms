@@ -207,25 +207,10 @@ public final class CoreUtil implements ApplicationContextAware {
 		}
 	}
 
-	public static boolean checkHostIp(String host) {
-		try {
-			checkHostIp(host,
-					Settings.getString(SettingCodes.TRUSTED_IP_RANGES, Bundle.SETTINGS, DefaultSettings.TRUSTED_IP_RANGES),
-					null);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public static void checkHostIp(String ipRanges, String serviceMethod) throws Exception {
-		checkHostIp(getHost(), ipRanges, serviceMethod);
-	}
-
-	private static void checkHostIp(String host, String ipRanges, String serviceMethod) throws Exception {
+	public static boolean checkHostIp(String host, String ipRanges) {
 		if (!CommonUtil.isEmptyString(ipRanges)) {
 			if (CommonUtil.isEmptyString(host)) {
-				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_HOST, serviceMethod);
+				return false;
 			}
 			Iterator<String[]> it = IPAddressValidation.splitIpRanges(ipRanges).iterator();
 			boolean ipAllowed = false;
@@ -236,9 +221,14 @@ public final class CoreUtil implements ApplicationContextAware {
 				}
 			}
 			if (!ipAllowed) {
-				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, serviceMethod, host);
+				return false;
 			}
 		}
+		return true;
+	}
+
+	public static boolean checkHostIp(String host) {
+		return checkHostIp(host, Settings.getString(SettingCodes.TRUSTED_IP_RANGES, Bundle.SETTINGS, DefaultSettings.TRUSTED_IP_RANGES));
 	}
 
 	public static boolean checkSupportedLocale(String language) {
