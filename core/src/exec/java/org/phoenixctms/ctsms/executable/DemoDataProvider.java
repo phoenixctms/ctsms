@@ -349,7 +349,7 @@ public class DemoDataProvider {
 		ALL_TRIALS("all trials"),
 		ALL_PROBANDS("all probands"),
 		ALL_INPUTFIELDS("all inputfields"),
-		ALL_MASSMAILS("all_massmails"),
+		ALL_MASSMAILS("all massmails"),
 		ALL_USERS("all users"),
 		SUBJECTS_1("subjects_1");
 
@@ -663,6 +663,7 @@ public class DemoDataProvider {
 			modifiedUser.setDecimalSeparator(user.getDecimalSeparator());
 			modifiedUser.setTheme(user.getTheme());
 			modifiedUser.setLocked(user.isLocked());
+			modifiedUser.setLockedUntrusted(user.isLockedUntrusted());
 			modifiedUser.setShowTooltips(user.isShowTooltips());
 			modifiedUser.setDecrypt(user.isDecrypt());
 			modifiedUser.setDecryptUntrusted(user.isDecryptUntrusted());
@@ -2464,6 +2465,7 @@ public class DemoDataProvider {
 		newUser.setDateFormat(null);
 		newUser.setDecimalSeparator(null);
 		newUser.setLocked(false);
+		newUser.setLockedUntrusted(false);
 		newUser.setShowTooltips(false);
 		newUser.setDecrypt(true);
 		newUser.setDecryptUntrusted(false);

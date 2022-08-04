@@ -536,6 +536,7 @@ public final class CommonUtil {
 			out.setDecrypt(in.getDecrypt());
 			out.setDecryptUntrusted(in.getDecryptUntrusted());
 			out.setLocked(in.getLocked());
+			out.setLockedUntrusted(in.getLockedUntrusted());
 			out.setTimeZone(in.getTimeZone());
 			out.setLocale(in.getLocale());
 			out.setShowTooltips(in.getShowTooltips());

@@ -185,6 +185,7 @@ public class DepartmentManager {
 		newUser.setDateFormat(null);
 		newUser.setDecimalSeparator(null);
 		newUser.setLocked(false);
+		newUser.setLockedUntrusted(false);
 		newUser.setShowTooltips(true);
 		newUser.setDecrypt(true);
 		newUser.setDecryptUntrusted(false);
