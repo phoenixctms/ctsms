@@ -4816,14 +4816,6 @@ public final class WebUtil {
 		return false;
 	}
 
-	public static boolean isUserLocked(Long userId) {
-		UserOutVO user = getUser(userId, null, null, null);
-		if (user != null) {
-			return user.getLocked();
-		}
-		return false;
-	}
-
 	public static Boolean isWrongPasswordAttemtpsLimitExceeded(PasswordOutVO password) {
 		if (password != null && password.getLimitWrongPasswordAttempts()) {
 			return password.getWrongPasswordAttemptsSinceLastSuccessfulLogon() >= password.getMaxWrongPasswordAttemptsSinceLastSuccessfulLogon();

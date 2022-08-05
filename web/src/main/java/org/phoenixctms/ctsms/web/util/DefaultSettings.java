@@ -320,6 +320,7 @@ public final class DefaultSettings {
 	public static final boolean SKETCH_REGIONS_VISIBLE = false;
 	public static final boolean INPUT_FIELD_SELECTION_SET_VALUE_LOCALIZED_PRESET = false;
 	public final static boolean USER_LOCKED_PRESET = false;
+	public final static boolean USER_LOCKED_UNTRUSTED_PRESET = false;
 	public final static boolean USER_DECRYPT_PRESET = true;
 	public final static boolean USER_DECRYPT_UNTRUSTED_PRESET = false;
 	public static final String USER_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
