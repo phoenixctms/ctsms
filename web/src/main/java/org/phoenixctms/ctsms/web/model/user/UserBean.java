@@ -64,6 +64,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setLocale(out.getLocale());
 			in.setShowTooltips(out.getShowTooltips());
 			in.setLocked(out.getLocked());
+			in.setLockedUntrusted(out.getLockedUntrusted());
 			in.setDecrypt(out.getDecrypt());
 			in.setDecryptUntrusted(out.getDecryptUntrusted());
 			in.setEnableInventoryModule(out.getEnableInventoryModule());
@@ -119,6 +120,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			result.setLocale(in.getLocale());
 			result.setShowTooltips(in.getShowTooltips());
 			result.setLocked(in.getLocked());
+			result.setLockedUntrusted(in.getLockedUntrusted());
 			result.setDecrypt(in.getDecrypt());
 			result.setDecryptUntrusted(in.getDecryptUntrusted());
 			result.setEnableInventoryModule(in.getEnableInventoryModule());
@@ -159,6 +161,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setLocale(Settings.getString(SettingCodes.USER_LOCALE_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCALE_PRESET));
 			in.setShowTooltips(Settings.getBoolean(SettingCodes.USER_SHOW_TOOLTIPS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_SHOW_TOOLTIPS_PRESET));
 			in.setLocked(Settings.getBoolean(SettingCodes.USER_LOCKED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_PRESET));
+			in.setLockedUntrusted(Settings.getBoolean(SettingCodes.USER_LOCKED_UNTRUSTED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_LOCKED_UNTRUSTED_PRESET));
 			in.setDecrypt(Settings.getBoolean(SettingCodes.USER_DECRYPT_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_PRESET));
 			in.setDecryptUntrusted(Settings.getBoolean(SettingCodes.USER_DECRYPT_UNTRUSTED_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DECRYPT_UNTRUSTED_PRESET));
 			in.setEnableInventoryModule(

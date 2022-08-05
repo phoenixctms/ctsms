@@ -400,6 +400,48 @@
 								<h:outputText value="" />
 								<h:outputLabel />
 
+
+
+
+								<h:panelGroup id="locked_untrusted_inherit_input">
+									<p:selectBooleanCheckbox
+										id="inherit_lockedUntrusted"
+										value="#{userBean.inheritedPropertiesMap['lockedUntrusted']}">
+										<p:ajax process="@this" update="lockedUntrusted"/>
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="inherit_lockedUntrusted">
+										<h:outputText
+											value="#{userBean.getInheritedPropertyTooltip('lockedUntrusted')}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								
+								<h:outputLabel
+									for="lockedUntrusted"
+									value="#{userlabels.user_locked_untrusted_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+									    disabled="#{userBean.inheritedPropertiesMap['lockedUntrusted']}"
+										id="lockedUntrusted"
+										value="#{userBean.in.lockedUntrusted}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip
+										rendered="#{enableTooltips}"
+										for="lockedUntrusted">
+										<h:outputText
+											value="#{userlabels.user_locked_untrusted_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="lockedUntrusted" />
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+
+
                                 <h:panelGroup id="decrypt_inherit_input">
 									<p:selectBooleanCheckbox
 										id="inherit_decrypt"
