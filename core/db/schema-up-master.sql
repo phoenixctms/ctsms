@@ -30,5 +30,15 @@ if get_database_version() < '010801010' then
   
 end if;
 
+if get_database_version() < '010801020' then
+
+  ALTER TABLE users ADD COLUMN locked_untrusted BOOLEAN;
+  UPDATE users SET locked_untrusted = 'f';
+  ALTER TABLE users ALTER locked_untrusted SET NOT NULL;
+  
+  perform set_database_version('010801020');
+  
+end if;
+
 end
 $$;
