@@ -5,5 +5,4 @@ AS $$
     my ($args) = @_;
     my $cmd = "/ctsms/build/ctsms/core/db/dbtool.sh" . join(" ", @$args);
     return qx $cmd;
-    #return system("/ctsms/build/ctsms/core/db/dbtool.sh",@$args);
 $$ LANGUAGE plperlu;
