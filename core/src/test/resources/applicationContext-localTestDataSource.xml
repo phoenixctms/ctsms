@@ -11,6 +11,9 @@
 		<property
 			name="driverClassName"
 			value="org.postgresql.Driver" />
+		<!-- <property name="url" value="${database_connection_url}" />
+	    <property name="username" value="${database_username}" />
+	    <property name="password" value="${database_password}" /> -->
 		<property
 			name="username"
 			value="ctsms" />
@@ -19,7 +22,7 @@
 			value="ctsms" />
 		<property
 			name="url"
-			value="jdbc:postgresql://localhost/ctsms_test" />
+			value="jdbc:postgresql://localhost/ctsms_test" /> 
 	</bean>
 	<!-- (local) Transaction Manager -->
 	<bean
