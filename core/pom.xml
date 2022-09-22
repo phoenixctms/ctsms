@@ -132,11 +132,11 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 		<!-- <dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -158,6 +158,18 @@
 		    <artifactId>selenium-chrome-driver</artifactId>
 		    <scope>test</scope>
 		</dependency>	
+		
+		<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-support</artifactId>
+			    <scope>test</scope>
+</dependency>
+
+ <!--  <dependency>
+    <groupId>com.github.stephenc.monte</groupId>
+    <artifactId>monte-screen-recorder</artifactId>
+    <scope>test</scope>
+</dependency>  -->
 
 		<dependency>
 			<groupId>commons-cli</groupId>
