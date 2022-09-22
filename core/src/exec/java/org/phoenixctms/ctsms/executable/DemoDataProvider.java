@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.executable;
 
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -89,6 +88,10 @@ import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.service.staff.StaffService;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.service.user.UserService;
+import org.phoenixctms.ctsms.test.InkStroke;
+import org.phoenixctms.ctsms.test.InputFieldValuesEnum;
+import org.phoenixctms.ctsms.test.InputFieldsEnum;
+import org.phoenixctms.ctsms.test.SearchCriteriaEnum;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
@@ -159,7 +162,7 @@ import org.springframework.core.io.ClassPathResource;
 
 public class DemoDataProvider {
 
-	private enum InputFields {
+	private enum InputFields implements InputFieldsEnum {
 
 		HEIGHT("Körpergröße"),
 		WEIGHT("Körpergewicht"),
@@ -191,8 +194,8 @@ public class DemoDataProvider {
 		LIVER_DISEASE("Lebererkrankung"),
 		ANEMIA_YN("Anemie J/N"), // anemiaYN
 		ANEMIA("Anemie"),
-		IMMUNE_MEDAITED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
-		IMMUNE_MEDAITED_DISEASE("Autoimmunerkrankung"),
+		IMMUNE_MEDIATED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
+		IMMUNE_MEDIATED_DISEASE("Autoimmunerkrankung"),
 		GESTATION_YN("schwanger, stillen etc. J/N"), // gestationYN
 		GESTATION("schwanger, stillen etc."),
 		GESTATION_TYPE("schwanger, stillen etc. Auswahl"),
@@ -259,7 +262,7 @@ public class DemoDataProvider {
 		}
 	}
 
-	private enum InputFieldValues {
+	private enum InputFieldValues implements InputFieldValuesEnum {
 
 		TYP_1_DIABETES("Typ 1 Diabetes"),
 		TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"),
@@ -341,7 +344,7 @@ public class DemoDataProvider {
 		}
 	}
 
-	public enum SearchCriteria {
+	public enum SearchCriteria implements SearchCriteriaEnum {
 
 		ALL_INVENTORY("all inventory"),
 		ALL_STAFF("all staff"),
@@ -416,7 +419,7 @@ public class DemoDataProvider {
 			CriterionInVO newCriterion = new CriterionInVO();
 			newCriterion.setTieId(junction != null ? d.criterionTieDao.searchUniqueTie(junction).getId() : null);
 			CriterionProperty p = CommonUtil.isEmptyString(property) ? null
-					: (new ArrayList<CriterionProperty>(criterionPropertyDao.search(new Search(new SearchParameter[] {
+					: (new ArrayList<CriterionProperty>(d.criterionPropertyDao.search(new Search(new SearchParameter[] {
 							new SearchParameter("module", module, SearchParameter.EQUAL_COMPARATOR),
 							new SearchParameter("property", property, SearchParameter.EQUAL_COMPARATOR),
 					})))).iterator().next();
@@ -445,67 +448,6 @@ public class DemoDataProvider {
 				newCriterion.setTimestampValue(null);
 			}
 			return newCriterion;
-		}
-	}
-
-	private final class Stroke {
-
-		private final static String INK_VALUE_CHARSET = "UTF8";
-		public String color;
-		public String path;
-		public String strokesId;
-		public String value;
-		public boolean valueSet;
-
-		private Stroke() {
-			color = null;
-			path = null;
-			strokesId = CommonUtil.generateUUID();
-			value = null;
-			valueSet = false;
-		}
-
-		public Stroke(String path) {
-			this();
-			this.color = "#00ff00";
-			this.path = path;
-		}
-
-		public Stroke(String path, String value) {
-			this(path);
-			setValue(value);
-		}
-
-		public Stroke(String color, String path, String value) {
-			this();
-			this.color = color;
-			this.path = path;
-			setValue(value);
-		}
-
-		public byte[] getBytes() throws UnsupportedEncodingException {
-			return toString().getBytes(INK_VALUE_CHARSET);
-		}
-
-		private void setValue(String value) {
-			this.value = value;
-			valueSet = true;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("[{" +
-					"\"fill\": \"%s\"," +
-					"\"stroke\": \"%s\"," +
-					"\"path\": \"%s\"," +
-					"\"stroke-opacity\": 0.4," +
-					"\"stroke-width\": 2," +
-					"\"stroke-linecap\": \"round\"," +
-					"\"stroke-linejoin\": \"round\"," +
-					"\"transform\": []," +
-					"\"type\": \"path\"," +
-					"\"fill-opacity\": 0.2," +
-					"\"strokes-id\": \"%s\"}]", color, color, path, strokesId);
 		}
 	}
 
@@ -594,12 +536,12 @@ public class DemoDataProvider {
 		year = Calendar.getInstance().get(Calendar.YEAR);
 	}
 
-	private void addInkRegions(AuthenticationVO auth, InputFieldOutVO inputField, TreeMap<InputFieldValues, Stroke> inkRegions) throws Exception {
+	private void addInkRegions(AuthenticationVO auth, InputFieldOutVO inputField, TreeMap<InputFieldValues, InkStroke> inkRegions) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
-		Iterator<Entry<InputFieldValues, Stroke>> it = inkRegions.entrySet().iterator();
+		Iterator<Entry<InputFieldValues, InkStroke>> it = inkRegions.entrySet().iterator();
 		while (it.hasNext()) {
-			Entry<InputFieldValues, Stroke> inkRegion = it.next();
-			Stroke stroke = inkRegion.getValue();
+			Entry<InputFieldValues, InkStroke> inkRegion = it.next();
+			InkStroke stroke = inkRegion.getValue();
 			InputFieldSelectionSetValueInVO newSelectionSetValue = new InputFieldSelectionSetValueInVO();
 			newSelectionSetValue.setFieldId(inputField.getId());
 			newSelectionSetValue.setName(inkRegion.getKey().toString());
@@ -1856,7 +1798,7 @@ public class DemoDataProvider {
 	}
 
 	private InputFieldOutVO createSketchField(AuthenticationVO auth, String name, String category, String title, String comment, String resourceFileName,
-			TreeMap<InputFieldValues, Stroke> inkRegions,
+			TreeMap<InputFieldValues, InkStroke> inkRegions,
 			Integer minSelections, Integer maxSelections, String validationErrorMessage) throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -2284,11 +2226,11 @@ public class DemoDataProvider {
 			inquiries.add(createInquiry(auth, InputFields.ANEMIA_YN, trial, "03 - Krankheitsgeschichte", 13, true, true, false, false, true, true, null, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.ANEMIA, trial, "03 - Krankheitsgeschichte", 14, true, true, true, false, true, true, null, null, null, null, null));
 			inquiries
-					.add(createInquiry(auth, InputFields.IMMUNE_MEDAITED_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 15, true, true, false, false, true, true, null, null, null,
+					.add(createInquiry(auth, InputFields.IMMUNE_MEDIATED_DISEASE_YN, trial, "03 - Krankheitsgeschichte", 15, true, true, false, false, true, true, null, null, null,
 							null,
 							null));
 			inquiries.add(
-					createInquiry(auth, InputFields.IMMUNE_MEDAITED_DISEASE, trial, "03 - Krankheitsgeschichte", 16, true, true, true, false, true, true, null, null, null, null,
+					createInquiry(auth, InputFields.IMMUNE_MEDIATED_DISEASE, trial, "03 - Krankheitsgeschichte", 16, true, true, true, false, true, true, null, null, null, null,
 							null));
 			inquiries
 					.add(createInquiry(auth, InputFields.GESTATION_YN, trial, "03 - Krankheitsgeschichte", 17, true, true, false, false, true, true, null, null, null, null, null));
@@ -2711,9 +2653,9 @@ public class DemoDataProvider {
 					return createCheckBoxField(auth, name, inquiryQuestionsCategory, "Anämie (Blutarmut):", null, false);
 				case ANEMIA:
 					return createMultiLineTextField(auth, name, inquiryQuestionsCategory, "Anämie (Blutarmut):", null, null, null, null);
-				case IMMUNE_MEDAITED_DISEASE_YN:
+				case IMMUNE_MEDIATED_DISEASE_YN:
 					return createCheckBoxField(auth, name, inquiryQuestionsCategory, "Autoimmunerkrankung:", null, false);
-				case IMMUNE_MEDAITED_DISEASE:
+				case IMMUNE_MEDIATED_DISEASE:
 					return createMultiLineTextField(auth, name, inquiryQuestionsCategory, "Autoimmunerkrankung:", null, null, null, null);
 				case GESTATION_YN:
 					return createCheckBoxField(auth, name, inquiryQuestionsCategory, "schwanger, stillen etc.", null, false);
@@ -2849,46 +2791,55 @@ public class DemoDataProvider {
 							"HbA1C in mmol/mol requires a decimal value between 20.0 and 130.0 mmol/mol.");
 				case MANNEQUIN:
 					return createSketchField(auth, name, inquiryQuestionsCategory, "Joints:", "",
-							"mannequin.png", new TreeMap<InputFieldValues, Stroke>() {
+							"mannequin.png", new TreeMap<InputFieldValues, InkStroke>() {
 
 								{
-									put(InputFieldValues.SHOULDER_RIGHT, new Stroke("M111.91619,64.773336L134.22667,64.773336L134.22667,86.512383L111.91619,86.512383Z"));
-									put(InputFieldValues.SHOULDER_LEFT, new Stroke("M196.2019,66.916193L218.51238,66.916193L218.51238,88.65524L196.2019,88.65524Z"));
-									put(InputFieldValues.ELLBOW_RIGHT, new Stroke("M114.05904,111.20191L136.36952,111.20191L136.36952,132.94095L114.05904,132.94095Z"));
-									put(InputFieldValues.ELLBOW_LEFT, new Stroke("M197.63047,113.34477L219.94095,113.34477L219.94095,135.08381L197.63047,135.08381Z"));
-									put(InputFieldValues.WRIST_RIGHT, new Stroke("M94.773327,156.9162L117.08381,156.9162L117.08381,178.65524L94.773327,178.65524Z"));
-									put(InputFieldValues.WRIST_LEFT, new Stroke("M215.48761,161.20191L237.7981,161.20191L237.7981,182.94095L215.48761,182.94095Z"));
-									put(InputFieldValues.THUMB_BASE_RIGHT, new Stroke("M29.891238,214.89125L49.823043,214.89125L49.823043,254.9659L29.891238,254.9659Z"));
-									put(InputFieldValues.THUMB_MIDDLE_RIGHT, new Stroke("M9.0200169,246.16289L29.265697,246.16289L29.265697,265.83713L9.0200169,265.83713Z"));
-									put(InputFieldValues.THUMB_BASE_LEFT, new Stroke("M282.0341,217.03411L301.9659,217.03411L301.9659,257.10876L282.0341,257.10876Z"));
-									put(InputFieldValues.THUMB_MIDDLE_LEFT, new Stroke("M301.87716,250.4486L322.12284,250.4486L322.12284,270.12284L301.87716,270.12284Z"));
-									put(InputFieldValues.INDEX_FINGER_BASE_RIGHT, new Stroke("M28.305731,271.87717L48.551411,271.87717L48.551411,291.55141L28.305731,291.55141Z"));
+									put(InputFieldValues.SHOULDER_RIGHT, new InkStroke("M111.91619,64.773336L134.22667,64.773336L134.22667,86.512383L111.91619,86.512383Z"));
+									put(InputFieldValues.SHOULDER_LEFT, new InkStroke("M196.2019,66.916193L218.51238,66.916193L218.51238,88.65524L196.2019,88.65524Z"));
+									put(InputFieldValues.ELLBOW_RIGHT, new InkStroke("M114.05904,111.20191L136.36952,111.20191L136.36952,132.94095L114.05904,132.94095Z"));
+									put(InputFieldValues.ELLBOW_LEFT, new InkStroke("M197.63047,113.34477L219.94095,113.34477L219.94095,135.08381L197.63047,135.08381Z"));
+									put(InputFieldValues.WRIST_RIGHT, new InkStroke("M94.773327,156.9162L117.08381,156.9162L117.08381,178.65524L94.773327,178.65524Z"));
+									put(InputFieldValues.WRIST_LEFT, new InkStroke("M215.48761,161.20191L237.7981,161.20191L237.7981,182.94095L215.48761,182.94095Z"));
+									put(InputFieldValues.THUMB_BASE_RIGHT, new InkStroke("M29.891238,214.89125L49.823043,214.89125L49.823043,254.9659L29.891238,254.9659Z"));
+									put(InputFieldValues.THUMB_MIDDLE_RIGHT, new InkStroke("M9.0200169,246.16289L29.265697,246.16289L29.265697,265.83713L9.0200169,265.83713Z"));
+									put(InputFieldValues.THUMB_BASE_LEFT, new InkStroke("M282.0341,217.03411L301.9659,217.03411L301.9659,257.10876L282.0341,257.10876Z"));
+									put(InputFieldValues.THUMB_MIDDLE_LEFT, new InkStroke("M301.87716,250.4486L322.12284,250.4486L322.12284,270.12284L301.87716,270.12284Z"));
+									put(InputFieldValues.INDEX_FINGER_BASE_RIGHT,
+											new InkStroke("M28.305731,271.87717L48.551411,271.87717L48.551411,291.55141L28.305731,291.55141Z"));
 									put(InputFieldValues.INDEX_FINGER_MIDDLE_RIGHT,
-											new Stroke("M22.591445,294.73431L42.837125,294.73431L42.837125,314.40855L22.591445,314.40855Z"));
-									put(InputFieldValues.MIDDLE_FINGER_BASE_RIGHT, new Stroke("M48.305731,276.16288L68.551411,276.16288L68.551411,295.83712L48.305731,295.83712Z"));
+											new InkStroke("M22.591445,294.73431L42.837125,294.73431L42.837125,314.40855L22.591445,314.40855Z"));
+									put(InputFieldValues.MIDDLE_FINGER_BASE_RIGHT,
+											new InkStroke("M48.305731,276.16288L68.551411,276.16288L68.551411,295.83712L48.305731,295.83712Z"));
 									put(InputFieldValues.MIDDLE_FINGER_MIDDLE_RIGHT,
-											new Stroke("M44.734302,298.30574L64.979982,298.30574L64.979982,317.97998L44.734302,317.97998Z"));
-									put(InputFieldValues.RING_FINGER_BASE_RIGHT, new Stroke("M66.162873,279.02003L86.408553,279.02003L86.408553,298.69427L66.162873,298.69427Z"));
-									put(InputFieldValues.RING_FINGER_MIDDLE_RIGHT, new Stroke("M65.448587,302.59146L85.694267,302.59146L85.694267,322.2657L65.448587,322.2657Z"));
-									put(InputFieldValues.LITTLE_FINGER_BASE_RIGHT, new Stroke("M85.448587,276.16289L105.69427,276.16289L105.69427,295.83713L85.448587,295.83713Z"));
+											new InkStroke("M44.734302,298.30574L64.979982,298.30574L64.979982,317.97998L44.734302,317.97998Z"));
+									put(InputFieldValues.RING_FINGER_BASE_RIGHT,
+											new InkStroke("M66.162873,279.02003L86.408553,279.02003L86.408553,298.69427L66.162873,298.69427Z"));
+									put(InputFieldValues.RING_FINGER_MIDDLE_RIGHT,
+											new InkStroke("M65.448587,302.59146L85.694267,302.59146L85.694267,322.2657L65.448587,322.2657Z"));
+									put(InputFieldValues.LITTLE_FINGER_BASE_RIGHT,
+											new InkStroke("M85.448587,276.16289L105.69427,276.16289L105.69427,295.83713L85.448587,295.83713Z"));
 									put(InputFieldValues.LITTLE_FINGER_MIDDLE_RIGHT,
-											new Stroke("M87.591444,299.02003L107.83713,299.02003L107.83713,318.69427L87.591444,318.69427Z"));
-									put(InputFieldValues.INDEX_FINGER_BASE_LEFT, new Stroke("M281.16287,274.73432L301.40856,274.73432L301.40856,294.40856L281.16287,294.40856Z"));
-									put(InputFieldValues.INDEX_FINGER_MIDDLE_LEFT, new Stroke("M286.16287,296.16289L306.40856,296.16289L306.40856,315.83713L286.16287,315.83713Z"));
-									put(InputFieldValues.MIDDLE_FINGER_BASE_LEFT, new Stroke("M262.59144,279.73432L282.83713,279.73432L282.83713,299.40856L262.59144,299.40856Z"));
-									put(InputFieldValues.MIDDLE_FINGER_MIDDLE_LEFT, new Stroke("M264.02001,301.87718L284.2657,301.87718L284.2657,321.55142L264.02001,321.55142Z"));
-									put(InputFieldValues.RING_FINGER_BASE_LEFT, new Stroke("M244.7343,282.59147L264.97999,282.59147L264.97999,302.26571L244.7343,302.26571Z"));
-									put(InputFieldValues.RING_FINGER_MIDDLE_LEFT, new Stroke("M244.02001,304.02004L264.2657,304.02004L264.2657,323.69428L244.02001,323.69428Z"));
-									put(InputFieldValues.LITTLE_FINGER_BASE_LEFT, new Stroke("M224.7343,279.02004L244.97999,279.02004L244.97999,298.69428L224.7343,298.69428Z"));
-									put(InputFieldValues.LITTLE_FINGER_MIDDLE_LEFT, new Stroke("M224.02001,301.1629L244.2657,301.1629L244.2657,320.83714L224.02001,320.83714Z"));
-									put(InputFieldValues.KNEE_RIGHT, new Stroke("M133.4355,241.29267L161.27879,241.29267L161.27879,267.13594L133.4355,267.13594Z"));
-									put(InputFieldValues.KNEE_LEFT, new Stroke("M166.29264,242.00696L194.13593,242.00696L194.13593,267.85023L166.29264,267.85023Z"));
+											new InkStroke("M87.591444,299.02003L107.83713,299.02003L107.83713,318.69427L87.591444,318.69427Z"));
+									put(InputFieldValues.INDEX_FINGER_BASE_LEFT,
+											new InkStroke("M281.16287,274.73432L301.40856,274.73432L301.40856,294.40856L281.16287,294.40856Z"));
+									put(InputFieldValues.INDEX_FINGER_MIDDLE_LEFT,
+											new InkStroke("M286.16287,296.16289L306.40856,296.16289L306.40856,315.83713L286.16287,315.83713Z"));
+									put(InputFieldValues.MIDDLE_FINGER_BASE_LEFT,
+											new InkStroke("M262.59144,279.73432L282.83713,279.73432L282.83713,299.40856L262.59144,299.40856Z"));
+									put(InputFieldValues.MIDDLE_FINGER_MIDDLE_LEFT,
+											new InkStroke("M264.02001,301.87718L284.2657,301.87718L284.2657,321.55142L264.02001,321.55142Z"));
+									put(InputFieldValues.RING_FINGER_BASE_LEFT, new InkStroke("M244.7343,282.59147L264.97999,282.59147L264.97999,302.26571L244.7343,302.26571Z"));
+									put(InputFieldValues.RING_FINGER_MIDDLE_LEFT, new InkStroke("M244.02001,304.02004L264.2657,304.02004L264.2657,323.69428L244.02001,323.69428Z"));
+									put(InputFieldValues.LITTLE_FINGER_BASE_LEFT, new InkStroke("M224.7343,279.02004L244.97999,279.02004L244.97999,298.69428L224.7343,298.69428Z"));
+									put(InputFieldValues.LITTLE_FINGER_MIDDLE_LEFT, new InkStroke("M224.02001,301.1629L244.2657,301.1629L244.2657,320.83714L224.02001,320.83714Z"));
+									put(InputFieldValues.KNEE_RIGHT, new InkStroke("M133.4355,241.29267L161.27879,241.29267L161.27879,267.13594L133.4355,267.13594Z"));
+									put(InputFieldValues.KNEE_LEFT, new InkStroke("M166.29264,242.00696L194.13593,242.00696L194.13593,267.85023L166.29264,267.85023Z"));
 								}
 							},
 							0, 28, "Mark up to 28 joints.");
 				case VAS:
 					return createSketchField(auth, name, inquiryQuestionsCategory, "Visual Analogue Scale:", "",
-							"vas.png", new TreeMap<InputFieldValues, Stroke>() {
+							"vas.png", new TreeMap<InputFieldValues, InkStroke>() {
 
 								{
 									final int VAS_STEPS = 10;
@@ -2905,7 +2856,7 @@ public class DemoDataProvider {
 										float x1 = VAS_X_OFFSET + i * VAS_LENGTH / VAS_STEPS;
 										float x2 = VAS_X_OFFSET + (i + 1) * VAS_LENGTH / VAS_STEPS;
 										int colorIndex = i * VAS_COLORS.length / VAS_STEPS;
-										put(InputFieldValues.valueOf(String.format("VAS_%d", i + 1)), new Stroke(VAS_COLORS[colorIndex], "M" + x1 + ",10L" + x2 + ",10L" + x2
+										put(InputFieldValues.valueOf(String.format("VAS_%d", i + 1)), new InkStroke(VAS_COLORS[colorIndex], "M" + x1 + ",10L" + x2 + ",10L" + x2
 												+ ",50L" + x1 + ",50Z", Float.toString(value)));
 									}
 								}
