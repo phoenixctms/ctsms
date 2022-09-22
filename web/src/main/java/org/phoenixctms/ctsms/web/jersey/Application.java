@@ -1,12 +1,9 @@
 package org.phoenixctms.ctsms.web.jersey;
 
-import io.swagger.jaxrs.config.BeanConfig;
-
 import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
@@ -15,6 +12,8 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
+
+import io.swagger.jaxrs.config.BeanConfig;
 
 public class Application extends PackagesResourceConfig {
 
@@ -25,7 +24,7 @@ public class Application extends PackagesResourceConfig {
 	}
 
 	public Application() {
-		super(Settings.WEB_ROOT_PACKAGE_NAME + ".jersey");
+		super(Settings.WEB_ROOT_PACKAGE_NAME + ".jersey"); //Jersey 1.19 class bytecode reader is hardcoded for 1.8 .class files
 		BeanConfig beanConfig = new BeanConfig();
 		beanConfig.setSchemes(new String[] { WebUtil.getHttpScheme() });
 		beanConfig.setHost(WebUtil.getHttpHost());
