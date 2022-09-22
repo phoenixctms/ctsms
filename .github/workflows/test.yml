@@ -85,7 +85,7 @@ jobs:
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
       - name: test java selenium remote
         run: |
-          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.testChrome
+          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
