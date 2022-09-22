@@ -6,6 +6,9 @@
 	<import resource="applicationContext.xml" />
 	<import resource="applicationContext-main.xml" />
 	<import resource="applicationContext-localTestDataSource.xml" /> <!-- last beandef wins -->
+	<import resource="applicationContext-localDataSource.xml" /> 
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />	
 	<bean
 		id="testDataProvider"
 		class="org.phoenixctms.ctsms.TestDataProvider">
