@@ -6,14 +6,16 @@
 #apt-get -y install google-chrome-stable
 
 #apt-get -q -y install unzip
-wget --no-verbose https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+#wget --no-verbose https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+wget --no-verbose https://chromedriver.storage.googleapis.com/105.0.5195.52/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 
 mv chromedriver /usr/bin/chromedriver
 chown root:root /usr/bin/chromedriver
 chmod +x /usr/bin/chromedriver
 
-wget --no-verbose https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
+#wget --no-verbose https://selenium-release.storage.googleapis.com/3.141/selenium-server-standalone-3.141.59.jar
+wget --no-verbose https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.4.0/selenium-server-4.4.0.jar
 #apt-get -q -y install xvfb 
 
 ##apt-get -q -y install build-essential
