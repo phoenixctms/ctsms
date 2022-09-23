@@ -651,6 +651,8 @@
 		<!-- SCM user ID and Password here, or in user specific settings.xml file -->
 		<username></username>
 		<password></password>
+		<!-- https://stackoverflow.com/questions/51124987/change-the-maven-surefire-reportsdirectory-using-command-line -->
+		<surefireReportsDirectory/><!-- Empty means use the default value. -->
 	</properties>
 	<profiles>
 		<profile>
@@ -741,6 +743,7 @@
 							<configuration>
 								<skipTests>${skipTests}</skipTests>
 								<failIfNoTests>false</failIfNoTests>
+								<reportsDirectory>${surefireReportsDirectory}</reportsDirectory>
 							</configuration>
 						</plugin>
 						<plugin>
