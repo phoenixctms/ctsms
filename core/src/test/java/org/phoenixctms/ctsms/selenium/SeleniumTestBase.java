@@ -31,6 +31,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.TestDataProvider;
 import org.phoenixctms.ctsms.test.OutputLogger;
+import org.phoenixctms.ctsms.test.ReportEmailSender;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.slf4j.Logger;
@@ -42,6 +43,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.TestRunner;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
@@ -61,6 +63,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private Date now = new Date();
 	private ApplicationContext applicationContext;
 	private TestDataProvider testDataProvider;
+	private ReportEmailSender reportEmailSender;
 	//	private ScreenRecorder screenRecorder;
 	//	private int movieCount = 0;
 
@@ -70,6 +73,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			testDataProvider.setLog(this);
 		}
 		return testDataProvider;
+	}
+
+	protected ReportEmailSender getReportEmailSender() {
+		if (reportEmailSender == null) {
+			reportEmailSender = getApplicationContext().getBean(ReportEmailSender.class);
+			//testDataProvider.setLog(this);
+		}
+		return reportEmailSender;
 	}
 
 	protected ApplicationContext getApplicationContext() {
@@ -93,13 +104,13 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			props.setProperty("log4j.appender.SELENIUM.file", new File(getLogPath(), this.getClass().getSimpleName() + "_" + getTimestamp() + ".log").getAbsolutePath());
+			props.setProperty("log4j.appender.SELENIUM.file", new File(getTestDirectory(), this.getClass().getSimpleName() + "_" + getTimestamp() + ".log").getAbsolutePath());
 			PropertyConfigurator.configure(props);
 			logger = LoggerFactory.getLogger("selenium");
 			//			logger.ge
-			//			if (!CommonUtil.isEmptyString(getLogPath())) {
+			//			if (!CommonUtil.isEmptyString(getTestDirectory())) {
 			//				try {
-			//					logger.addHandler(new FileHandler(new File(getLogPath(), logger.getName()).getAbsolutePath() + "_" + getTimestamp() + ".log"));
+			//					logger.addHandler(new FileHandler(new File(getTestDirectory(), logger.getName()).getAbsolutePath() + "_" + getTimestamp() + ".log"));
 			//				} catch (Exception e) {
 			//					e.printStackTrace();
 			//				}
@@ -109,13 +120,17 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		return logger;
 	}
 
-	protected String getLogPath() {
-		return System.getProperty("ctsms.log.path");
+	protected String getTestDirectory() {
+		return System.getProperty("ctsms.test.directory");
+	}
+
+	protected String getWindowSize() {
+		return System.getProperty("ctsms.test.windowsize");
 	}
 
 	protected String getUrl(String urlPath) {
 		StringBuilder sb = new StringBuilder();
-		String baseUrl = System.getProperty("ctsms.base.url");
+		String baseUrl = System.getProperty("ctsms.test.baseurl");
 		if (CommonUtil.isEmptyString(baseUrl)) {
 			baseUrl = "http://localhost:8080";
 		}
@@ -169,7 +184,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	//							Rational.valueOf(15), org.monte.media.VideoFormatKeys.QualityKey, 1.0f, FormatKeys.KeyFrameIntervalKey, 15 * 60),
 	//					new Format(FormatKeys.MediaTypeKey, FormatKeys.MediaType.VIDEO, FormatKeys.EncodingKey, "black", FormatKeys.FrameRateKey, Rational.valueOf(30)),
 	//					(Format) null,
-	//					new File(getLogPath())) {
+	//					new File(getTestDirectory())) {
 	//
 	//				@Override
 	//				protected File createMovieFile(Format fileFormat) throws IOException {
@@ -208,12 +223,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	protected void createScreenshot(String name) {
 		File screenshot = getChromeDriver().getScreenshotAs(OutputType.FILE);
 		screenshotCount += 1;
-		if (!CommonUtil.isEmptyString(getLogPath())) {
+		if (!CommonUtil.isEmptyString(getTestDirectory())) {
 			File dest;
 			if (CommonUtil.isEmptyString(name)) {
-				dest = new File(getLogPath(), String.format("%s_%03d_%s.png", this.getClass().getSimpleName(), screenshotCount, getTimestamp()));
+				dest = new File(getTestDirectory(), String.format("%s_%03d_%s.png", this.getClass().getSimpleName(), screenshotCount, getTimestamp()));
 			} else {
-				dest = new File(getLogPath(), String.format("%s_%s_%s.png", this.getClass().getSimpleName(), name, getTimestamp()));
+				dest = new File(getTestDirectory(), String.format("%s_%s_%s.png", this.getClass().getSimpleName(), name, getTimestamp()));
 			}
 			if (screenshot.renameTo(dest)) {
 				info("screenshot created: " + dest.getAbsolutePath());
@@ -230,7 +245,10 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			ChromeOptions chromeOptions = new ChromeOptions();
 			chromeOptions.addArguments("--headless");
 			chromeOptions.addArguments("--no-sandbox");
-			chromeOptions.addArguments("--window-size=3840,2160");
+			String windowSize = getWindowSize();
+			if (!CommonUtil.isEmptyString(windowSize)) {
+				chromeOptions.addArguments("--window-size=" + windowSize); //3840,2160");
+			}
 			driver = new ChromeDriver(chromeOptions);
 			info("chrome driver created");
 		}
@@ -311,7 +329,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='" + id + "']//label[contains(text(), '" + itemLabel + "')]")))
 				.click();
-		info("select many option '" + itemLabel + "' selected: " + id);
+		info("selectmany option '" + itemLabel + "' selected: " + id);
 	}
 
 	protected String getFieldIdByLabel(String inputFieldLabel) {
@@ -342,7 +360,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//		}
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_panel']/ul/li[contains(text(), '" + itemLabel + "')]"))).click();
-		info("select one menu option '" + itemLabel + "' selected: " + id);
+		info("selectonemenu option '" + itemLabel + "' selected: " + id);
 	}
 
 	protected void clickCheckbox(String id) {
@@ -362,7 +380,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.id(id))).click();
 		waitForAjax();
-		info("menu item clicked: " + id);
+		info("menuitem clicked: " + id);
 	}
 
 	protected void switchToWindow(String windowName) {
@@ -499,10 +517,19 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		TestRunner runner = (TestRunner) context;
 		runner.setTestName(this.getClass().getSimpleName());
 		info("set test name '" + context.getName() + "'");
-		runner.setOutputDirectory(getLogPath());
+		runner.setOutputDirectory(getTestDirectory());
 		info("set test output directory: " + context.getOutputDirectory());
 		//		   String path=System.getProperty("user.dir");
 		//		   runner.setOutputDirectory(path+"/output-testng");
+	}
+
+	@AfterTest
+	public void sendResults(ITestContext context) throws Exception {
+		TestRunner runner = (TestRunner) context;
+		if (!CommonUtil.isEmptyString(getReportEmailSender().getEmailRecipients())) {
+			info("sending test results to: " + getReportEmailSender().getEmailRecipients());
+		}
+		getReportEmailSender().send("testsubject", "testmessage");
 	}
 
 	protected String getTestId() {
