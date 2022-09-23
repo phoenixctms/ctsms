@@ -19,4 +19,47 @@
 			name="mailSender"
 			ref="jobMailSender" />
 	</bean>
+	<bean
+		id="jobMailSenderJavaMailBundle"
+		class="org.phoenixctms.ctsms.util.ResourceBundleConverter">
+		<property
+			name="basename"
+			value="ctsms-job-mail-sender" />
+	</bean>
+	<bean
+		id="jobMailSenderJavaMailProperties"
+		factory-bean="jobMailSenderJavaMailBundle"
+		factory-method="getProperties" />
+	<bean
+		id="jobMailSenderJavaMailPropertiesFactory"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<ref local="jobMailSenderJavaMailProperties" />
+		</property>
+	</bean>
+	<bean
+		id="jobMailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property
+			name="host"
+			value="${job_mail_sender_host}" />
+		<property
+			name="port"
+			value="${job_mail_sender_port}" />
+		<property
+			name="defaultEncoding"
+			value="UTF-8" />
+		<property
+			name="protocol"
+			value="${job_mail_sender_protocol}" />
+		<property
+			name="username"
+			value="${job_mail_sender_username}" />
+		<property
+			name="password"
+			value="${job_mail_sender_password}" />
+		<property
+			name="javaMailProperties"
+			ref="jobMailSenderJavaMailPropertiesFactory" />
+	</bean>	
 </beans>
