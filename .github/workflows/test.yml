@@ -31,7 +31,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build
         #if: 0
-        run: mvn -B install -DskipTests
+        run: mvn install -DskipTests --no-transfer-progress
       - name: Setup database
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
@@ -85,7 +85,7 @@ jobs:
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
       - name: test java selenium remote
         run: |
-          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband
+          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.CandidateSelectionTest
       - name: Run testsuite
         run: |
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
