@@ -71,12 +71,10 @@ public class BundleControl extends Control {
 				try {
 					bundle = new ChildPropertyResourceBundle(new InputStreamReader(stream, ENCODING), bundle);
 				} catch (IOException e) {
-
 				} finally {
 					stream.close();
 				}
 			} catch (FileNotFoundException | SecurityException e) {
-
 			}
 		}
 		return bundle;

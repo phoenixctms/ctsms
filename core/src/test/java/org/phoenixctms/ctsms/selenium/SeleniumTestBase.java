@@ -102,7 +102,8 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				props.load(configStream);
 				configStream.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
+				System.err.println(e);
 			}
 			props.setProperty("log4j.appender.SELENIUM.file", new File(getTestDirectory(), this.getClass().getSimpleName() + "_" + getTimestamp() + ".log").getAbsolutePath());
 			PropertyConfigurator.configure(props);
