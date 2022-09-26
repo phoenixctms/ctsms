@@ -88,4 +88,6 @@ jobs:
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.CandidateSelectionTest
       - name: Run testsuite
         run: |
+          cat /var/lib/tomcat9/webapps/logs/catalina.out
+          cat /ctsms/properties/ctsms-settings.properties
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
