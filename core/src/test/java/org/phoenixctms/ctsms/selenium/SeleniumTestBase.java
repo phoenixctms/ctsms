@@ -33,6 +33,7 @@ import org.phoenixctms.ctsms.TestDataProvider;
 import org.phoenixctms.ctsms.test.OutputLogger;
 import org.phoenixctms.ctsms.test.ReportEmailSender;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Compress;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.TestRunner;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -459,11 +461,13 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	@Override
 	public void info(String msg) {
+		Reporter.log(msg, 0, false);
 		getLogger().info(msg);
 	}
 
 	@Override
 	public void error(String msg) {
+		Reporter.log(msg, 0, false);
 		getLogger().error(msg);
 		throw new Error(msg);
 	}
@@ -530,6 +534,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		if (!CommonUtil.isEmptyString(getReportEmailSender().getEmailRecipients())) {
 			info("sending test results to: " + getReportEmailSender().getEmailRecipients());
 		}
+		getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
 		getReportEmailSender().send("testsubject", "testmessage");
 	}
 
