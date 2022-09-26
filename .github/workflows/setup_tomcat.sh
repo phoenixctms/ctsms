@@ -11,4 +11,5 @@ sed -r -i "s|# Security|# Security\\nReadWritePaths=/ctsms/external_files/|" /et
 chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
+systemctl daemon-reload
 systemctl start tomcat9
