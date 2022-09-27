@@ -19,23 +19,23 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get -q -y install default-jdk
-#         apt-get -q -y install libservlet3.1-java tomcat9
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 11
-#      - name: Cache Maven packages
-#        uses: actions/cache@v1
-#        with:
-#          path: ~/.m2
-#          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: ${{ runner.os }}-m2
-#      - name: Build
-#        #if: 0
-#        run: mvn install -DskipTests --no-transfer-progress
-#      - name: Setup database
-#        run: |
-#          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
-#          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+         apt-get -q -y install libservlet3.1-java tomcat9
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build
+        #if: 0
+        run: mvn install -DskipTests --no-transfer-progress
+      - name: Setup database
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
       - name: Download master data
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
@@ -58,17 +58,17 @@ jobs:
           sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /ctsms/properties/ctsms-applicationcontext.properties
           sudo echo "job_mail_sender_username=$MAIL_SENDER_USERNAME" >> /ctsms/properties/ctsms-applicationcontext.properties
           sudo echo "job_mail_sender_password=$MAIL_SENDER_PASSWORD" >> /ctsms/properties/ctsms-applicationcontext.properties
-#          sudo touch /ctsms/properties/ctsms-job-mail-sender.properties
-#          sudo chown ctsms:ctsms /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo touch /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chown ctsms:ctsms /ctsms/properties/ctsms-job-mail-sender.properties
           sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
-#          sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
-#          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
-#      - name: Initialize DB
-#        run: |
-#          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
-#          /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+          sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+      - name: Initialize DB
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
       - name: Setup Tomcat
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
