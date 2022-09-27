@@ -56,7 +56,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private final static String PROBAND_ENTITY_WINDOW_NAME = "proband_entity_";
 	private final static Pattern PROBAND_ENTITY_WINDOW_NAME_REGEXP = Pattern.compile("^" + PROBAND_ENTITY_WINDOW_NAME + "(\\d+)$");
 	//private final static String SEARCH_RESULT_COUNT_MESSAGE = "Search result for query";
-	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+,\\d+) [A-Za-z()]+$");
+	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+(,\\d+)?) [A-Za-z()]+$");
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
 	private ChromeDriver driver;
@@ -477,13 +477,13 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	@Override
 	public void info(String msg) {
-		Reporter.log(msg, 0, false);
+		Reporter.log(msg + "\n", 0, false);
 		getLogger().info(msg);
 	}
 
 	@Override
 	public void error(String msg) {
-		Reporter.log(msg, 0, false);
+		Reporter.log(msg + "\n", 0, false);
 		getLogger().error(msg);
 		throw new Error(msg);
 	}
