@@ -15,7 +15,7 @@ public class ReportEmailSender extends JobEmailSenderBase {
 		reset();
 	}
 
-	public String getEmailRecipients() {
+	public static String getEmailRecipients() {
 		return System.getProperty("ctsms.test.emailrecipients");
 	}
 
