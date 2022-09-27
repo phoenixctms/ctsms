@@ -251,10 +251,16 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			}
 			if (screenshot.renameTo(dest)) {
 				info("screenshot created: " + dest.getAbsolutePath());
+				Reporter.setEscapeHtml(false);
+				//Reporter.log("screenshot created: <a href=\"file:///" + dest.getName() + "\">" + dest.getName() + "</a>");
+				Reporter.log("<img src=\"" + dest.getName() + "\">");
 				return;
 			}
 		}
 		info("screenshot created: " + screenshot.getAbsolutePath());
+		Reporter.setEscapeHtml(false);
+		//Reporter.log("screenshot created: <a href=\"file:///" + screenshot.getName() + "\">" + screenshot.getName() + "</a>");
+		Reporter.log("<img src=\"" + screenshot.getName() + "\">");
 	}
 
 	protected ChromeDriver getChromeDriver() {
@@ -475,15 +481,22 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		getLogger().debug(msg);
 	}
 
+	public void info(String msg, boolean escapeHtml) {
+		Reporter.setEscapeHtml(escapeHtml);
+		info(msg);
+	}
+
 	@Override
 	public void info(String msg) {
-		Reporter.log(msg + "\n", 0, false);
+		Reporter.setEscapeHtml(true);
+		Reporter.log(msg, 0, false);
 		getLogger().info(msg);
 	}
 
 	@Override
 	public void error(String msg) {
-		Reporter.log(msg + "\n", 0, false);
+		Reporter.setEscapeHtml(true);
+		Reporter.log(msg, 0, false);
 		getLogger().error(msg);
 		throw new Error(msg);
 	}
