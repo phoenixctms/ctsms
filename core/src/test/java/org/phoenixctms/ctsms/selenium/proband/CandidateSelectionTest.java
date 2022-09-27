@@ -26,9 +26,7 @@ import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Test;
 
 @Listeners(CandidateSelectionTest.class)
 public class CandidateSelectionTest extends SeleniumTestBase {
@@ -252,166 +250,165 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			return value;
 		}
 	}
-
-	@BeforeClass
-	public void init_00_setup_department() throws Exception {
-		String departmentName = "dept-" + getTestId();
-		departmentPassword = departmentName;
-		department = getTestDataProvider().createDepartment(departmentName, true, departmentPassword);
-	}
-
-	@BeforeClass
-	public void init_01_setup_user() throws Exception {
-		userName = "user-" + getTestId();
-		userPassword = userName;
-		UserOutVO user = createUser(userName, userPassword, department.getId(), departmentPassword);
-		setProviderAuth(userName, userPassword);
-	}
-
-	@BeforeClass
-	public void init_02_setup_trial() throws Exception {
-		String trialName = "trial-" + getTestId();
-		trial = createTrial(trialName, department.getId());
-	}
-
-	@BeforeClass
-	public void init_03_setup_inquiry_form() throws Throwable {
-		ArrayList<InquiryOutVO> inquiries = createInquiryForm(trial);
-	}
-
-	@BeforeClass
-	public void init_04_setup_proband_criteria() throws Throwable {
-		criteriaCategory = getTestId();
-		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
-	}
-
-	@Test
-	public void test_01_open_proband_page() {
-		load(getUrl("/proband/proband.jsf"));
-	}
-
-	@Test
-	public void test_02_login() {
-		login(userName, userPassword);
-	}
-
-	@Test
-	public void test_03_create_proband() {
-		String subjectId = "subject-" + String.format("%03d", probandIds.size() + 1) + "-" + getTestId();
-		info("subject id: " + subjectId);
-		clickCheckbox("tabView:probandmain_form:blinded");
-		sendKeys("tabView:probandmain_form:alias", subjectId);
-		clickButton("tabView:probandmain_form:add");
-		if (waitForAddOperationSuccessful("tabView:probandmain_form")) {
-			Long probandId = getProbandIdFromProbandEntityWindowName(getWindowName());
-			testOK("proband ID " + probandId.toString() + " created: " + subjectId);
-			probandIds.add(probandId);
-			expectedProbandIds.add(probandId);
-			return;
-		} else {
-			testFailed("creating proband failed: " + subjectId);
-			return;
-		}
-	}
-
-	@Test
-	public void test_04_load_inquiry_form() {
-		clickTab("tabView:inquiryvalues");
-		clickSelectOneMenu("tabView:inquiryvalue_form:inquiriestrial", trial.getName());
-	}
-
-	@Test
-	public void test_05_enter_inquiry_values() {
-		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
-		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
-		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
-		//		clickSelectMany(getFieldIdByLabel("Grunderkrankung"), "Lifestyle");
-		clickButton("tabView:inquiryvalue_form:update");
-		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
-			//createScreenshot();
-			testOK("inquiry values saved");
-			return;
-		} else {
-			testFailed("saving inquiry values failed");
-			return;
-		}
-		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
-		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
-		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
-		//		clickSelectMany(getFieldIdByLabel("Grunderkrankung"), "Lifestyle");
-		//		clickButton("tabView:inquiryvalue_form:update");
-		//		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
-		//			//createScreenshot();
-		//			testOK("inquiry values saved");
-		//			return;
-		//		} else {
-		//			testFailed("saving inquiry values failed");
-		//			return;
-		//		}
-	}
-
-	@Test
-	public void test_06_create_probands() {
-		for (int i = 2; i <= PROBAND_COUNT; i++) {
-			//info("entering proband " + i + "...");
-			clickMenuItem("menubar_form:newEntityMenuItem_proband");
-			closeWindow(getWindowName());
-			switchToWindow(getNewProbandEntityWindowName());
-			test_03_create_proband();
-			test_04_load_inquiry_form();
-			test_05_enter_inquiry_values();
-		}
-	}
-
-	@Test
-	public void test_07_open_proband_search_page() throws Throwable {
-		CriteriaOutVO criteria = getCriteria(SearchCriteria.TEST, criteriaCategory);
-		load(getUrl("/proband/probandSearch.jsf?criteriaid=" + criteria.getId())); //8368105
-	}
-
-	@Test
-	public void test_08_search_probands_result_size() throws Throwable {
-		clickButton(getButtonIdByLabel("Perform search"));
-		Long count = getCountFromDatatableHead("search_form:proband_result_list");
-		if (expectedProbandIds.size() == count) {
-			testOK("search returns expected number of items");
-			return;
-		} else {
-			testFailed("search returns different number of items");
-			return;
-		}
-	}
-
-	@Test
-	public void test_09_search_probands_all_expected_probands() throws Throwable {
-		do {
-			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
-		} while (clickDatatableNextPage("search_form:proband_result_list"));
-		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
-		diff.addAll(expectedProbandIds);
-		diff.removeAll(actualProbandIds);
-		if (diff.size() == 0) {
-			testOK("search returned all expected probands");
-			return;
-		} else {
-			testFailed("search did not return expected proband IDs: " + diff.toString());
-			return;
-		}
-	}
-
-	@Test
-	public void test_10_search_probands_no_unexpected_probands() throws Throwable {
-		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
-		diff.addAll(actualProbandIds);
-		diff.removeAll(expectedProbandIds);
-		if (diff.size() == 0) {
-			testOK("search returned no unexpected probands");
-			return;
-		} else {
-			testFailed("search returned unexpected proband IDs: " + diff.toString());
-			return;
-		}
-	}
+	//	@BeforeClass
+	//	public void init_00_setup_department() throws Exception {
+	//		String departmentName = "dept-" + getTestId();
+	//		departmentPassword = departmentName;
+	//		department = getTestDataProvider().createDepartment(departmentName, true, departmentPassword);
+	//	}
+	//
+	//	@BeforeClass
+	//	public void init_01_setup_user() throws Exception {
+	//		userName = "user-" + getTestId();
+	//		userPassword = userName;
+	//		UserOutVO user = createUser(userName, userPassword, department.getId(), departmentPassword);
+	//		setProviderAuth(userName, userPassword);
+	//	}
+	//
+	//	@BeforeClass
+	//	public void init_02_setup_trial() throws Exception {
+	//		String trialName = "trial-" + getTestId();
+	//		trial = createTrial(trialName, department.getId());
+	//	}
+	//
+	//	@BeforeClass
+	//	public void init_03_setup_inquiry_form() throws Throwable {
+	//		ArrayList<InquiryOutVO> inquiries = createInquiryForm(trial);
+	//	}
+	//
+	//	@BeforeClass
+	//	public void init_04_setup_proband_criteria() throws Throwable {
+	//		criteriaCategory = getTestId();
+	//		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
+	//	}
+	//
+	//	@Test
+	//	public void test_01_open_proband_page() {
+	//		load(getUrl("/proband/proband.jsf"));
+	//	}
+	//
+	//	@Test
+	//	public void test_02_login() {
+	//		login(userName, userPassword);
+	//	}
+	//
+	//	@Test
+	//	public void test_03_create_proband() {
+	//		String subjectId = "subject-" + String.format("%03d", probandIds.size() + 1) + "-" + getTestId();
+	//		info("subject id: " + subjectId);
+	//		clickCheckbox("tabView:probandmain_form:blinded");
+	//		sendKeys("tabView:probandmain_form:alias", subjectId);
+	//		clickButton("tabView:probandmain_form:add");
+	//		if (waitForAddOperationSuccessful("tabView:probandmain_form")) {
+	//			Long probandId = getProbandIdFromProbandEntityWindowName(getWindowName());
+	//			testOK("proband ID " + probandId.toString() + " created: " + subjectId);
+	//			probandIds.add(probandId);
+	//			expectedProbandIds.add(probandId);
+	//			return;
+	//		} else {
+	//			testFailed("creating proband failed: " + subjectId);
+	//			return;
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_04_load_inquiry_form() {
+	//		clickTab("tabView:inquiryvalues");
+	//		clickSelectOneMenu("tabView:inquiryvalue_form:inquiriestrial", trial.getName());
+	//	}
+	//
+	//	@Test
+	//	public void test_05_enter_inquiry_values() {
+	//		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
+	//		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
+	//		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
+	//		//		clickSelectMany(getFieldIdByLabel("Grunderkrankung"), "Lifestyle");
+	//		clickButton("tabView:inquiryvalue_form:update");
+	//		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
+	//			//createScreenshot();
+	//			testOK("inquiry values saved");
+	//			return;
+	//		} else {
+	//			testFailed("saving inquiry values failed");
+	//			return;
+	//		}
+	//		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
+	//		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
+	//		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
+	//		//		clickSelectMany(getFieldIdByLabel("Grunderkrankung"), "Lifestyle");
+	//		//		clickButton("tabView:inquiryvalue_form:update");
+	//		//		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
+	//		//			//createScreenshot();
+	//		//			testOK("inquiry values saved");
+	//		//			return;
+	//		//		} else {
+	//		//			testFailed("saving inquiry values failed");
+	//		//			return;
+	//		//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_06_create_probands() {
+	//		for (int i = 2; i <= PROBAND_COUNT; i++) {
+	//			//info("entering proband " + i + "...");
+	//			clickMenuItem("menubar_form:newEntityMenuItem_proband");
+	//			closeWindow(getWindowName());
+	//			switchToWindow(getNewProbandEntityWindowName());
+	//			test_03_create_proband();
+	//			test_04_load_inquiry_form();
+	//			test_05_enter_inquiry_values();
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_07_open_proband_search_page() throws Throwable {
+	//		CriteriaOutVO criteria = getCriteria(SearchCriteria.TEST, criteriaCategory);
+	//		load(getUrl("/proband/probandSearch.jsf?criteriaid=" + criteria.getId())); //8368105
+	//	}
+	//
+	//	@Test
+	//	public void test_08_search_probands_result_size() throws Throwable {
+	//		clickButton(getButtonIdByLabel("Perform search"));
+	//		Long count = getCountFromDatatableHead("search_form:proband_result_list");
+	//		if (expectedProbandIds.size() == count) {
+	//			testOK("search returns expected number of items");
+	//			return;
+	//		} else {
+	//			testFailed("search returns different number of items");
+	//			return;
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_09_search_probands_all_expected_probands() throws Throwable {
+	//		do {
+	//			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
+	//		} while (clickDatatableNextPage("search_form:proband_result_list"));
+	//		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
+	//		diff.addAll(expectedProbandIds);
+	//		diff.removeAll(actualProbandIds);
+	//		if (diff.size() == 0) {
+	//			testOK("search returned all expected probands");
+	//			return;
+	//		} else {
+	//			testFailed("search did not return expected proband IDs: " + diff.toString());
+	//			return;
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_10_search_probands_no_unexpected_probands() throws Throwable {
+	//		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
+	//		diff.addAll(actualProbandIds);
+	//		diff.removeAll(expectedProbandIds);
+	//		if (diff.size() == 0) {
+	//			testOK("search returned no unexpected probands");
+	//			return;
+	//		} else {
+	//			testFailed("search returned unexpected proband IDs: " + diff.toString());
+	//			return;
+	//		}
+	//	}
 
 	private UserOutVO createUser(String name, String password, long departmentId, String departmentPassword) throws Exception {
 		UserInVO newUser = new UserInVO();

@@ -68,6 +68,22 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private ReportEmailSender reportEmailSender;
 	//	private ScreenRecorder screenRecorder;
 	//	private int movieCount = 0;
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			public void run() {
+				//System.out.println("Shutdown Hook is running !");
+				try {
+					(new SeleniumTestBase() {
+					}).sendReportEmail();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					//e.printStackTrace();
+					System.err.println(e);
+				}
+			}
+		});
+	}
 
 	protected TestDataProvider getTestDataProvider() {
 		if (testDataProvider == null) {
@@ -123,15 +139,15 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		return logger;
 	}
 
-	protected String getTestDirectory() {
+	protected static String getTestDirectory() {
 		return System.getProperty("ctsms.test.directory");
 	}
 
-	protected String getWindowSize() {
+	protected static String getWindowSize() {
 		return System.getProperty("ctsms.test.windowsize");
 	}
 
-	protected String getUrl(String urlPath) {
+	protected static String getUrl(String urlPath) {
 		StringBuilder sb = new StringBuilder();
 		String baseUrl = System.getProperty("ctsms.test.baseurl");
 		if (CommonUtil.isEmptyString(baseUrl)) {
@@ -529,11 +545,16 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	@AfterTest
-	public void sendResults(ITestContext context) throws Exception {
-		TestRunner runner = (TestRunner) context;
-		if (!CommonUtil.isEmptyString(getReportEmailSender().getEmailRecipients())) {
-			info("sending test results to: " + getReportEmailSender().getEmailRecipients());
+	public void logReportRecipients(ITestContext context) throws Exception {
+		//TestRunner runner = (TestRunner) context;
+		if (!CommonUtil.isEmptyString(ReportEmailSender.getEmailRecipients())) {
+			info("sending test results to: " + ReportEmailSender.getEmailRecipients());
 		}
+		//getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
+		//getReportEmailSender().send("testsubject", "testmessage");
+	}
+
+	void sendReportEmail() throws Exception {
 		getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
 		getReportEmailSender().send("testsubject", "testmessage");
 	}
