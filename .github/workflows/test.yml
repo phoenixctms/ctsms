@@ -82,9 +82,10 @@ jobs:
 #      - name: test perl selenium remote
 #        run: |
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
-      - name: test java selenium remote
+      - name: Load Demo Data
         run: |
-          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.CandidateSelectionTest
-      - name: Run testsuite
+#          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
+          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
+      - name: Run testsuites
         run: |
-          sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f -er git@phoenixctms.org
+          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.CandidateSelectionTest rkrenn@phoenixctms.org

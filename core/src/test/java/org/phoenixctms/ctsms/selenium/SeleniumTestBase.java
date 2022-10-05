@@ -66,9 +66,11 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private ApplicationContext applicationContext;
 	private TestDataProvider testDataProvider;
 	private ReportEmailSender reportEmailSender;
+	private static ArrayList<ITestContext> results;
 	//	private ScreenRecorder screenRecorder;
 	//	private int movieCount = 0;
 	static {
+		results = new ArrayList<ITestContext>();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			public void run() {
@@ -547,10 +549,15 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	@BeforeTest
-	public void setOutputDirectory(ITestContext context) {
+	public void setTestName(ITestContext context) {
 		TestRunner runner = (TestRunner) context;
 		runner.setTestName(this.getClass().getSimpleName());
 		info("set test name '" + context.getName() + "'");
+	}
+
+	@BeforeTest
+	public void setOutputDirectory(ITestContext context) {
+		TestRunner runner = (TestRunner) context;
 		runner.setOutputDirectory(getTestDirectory());
 		info("set test output directory: " + context.getOutputDirectory());
 		//		   String path=System.getProperty("user.dir");
@@ -559,7 +566,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	@AfterTest
 	public void logReportRecipients(ITestContext context) throws Exception {
-		//TestRunner runner = (TestRunner) context;
+		TestRunner runner = (TestRunner) context;
 		if (!CommonUtil.isEmptyString(ReportEmailSender.getEmailRecipients())) {
 			info("sending test results to: " + ReportEmailSender.getEmailRecipients());
 		}
@@ -567,9 +574,40 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//getReportEmailSender().send("testsubject", "testmessage");
 	}
 
+	@AfterTest
+	public synchronized void storeResults(ITestContext context) throws Exception {
+		results.add(context);
+	}
+
 	void sendReportEmail() throws Exception {
 		getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
-		getReportEmailSender().send("testsubject", "testmessage");
+		boolean failure = false;
+		StringBuilder body = new StringBuilder();
+		Iterator<ITestContext> it = results.iterator();
+		body.append(System.getProperty("github.workflow.url"));
+		while (it.hasNext()) {
+			ITestContext context = it.next();
+			if (context.getFailedTests().size() > 0) {
+				failure = true;
+			}
+			Iterator<ITestResult> resultsIt = context.getPassedTests().getAllResults().iterator();
+			while (resultsIt.hasNext()) {
+				ITestResult result = resultsIt.next();
+				if (body.length() > 0) {
+					body.append("\n");
+				}
+				body.append("OK: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getTestName());
+			}
+			resultsIt = context.getFailedTests().getAllResults().iterator();
+			while (resultsIt.hasNext()) {
+				ITestResult result = resultsIt.next();
+				if (body.length() > 0) {
+					body.append("\n");
+				}
+				body.append("FAILED: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getTestName());
+			}
+		}
+		getReportEmailSender().send(failure ? "Tests Passed" : "Tests FAILED", body.toString());
 	}
 
 	protected String getTestId() {
