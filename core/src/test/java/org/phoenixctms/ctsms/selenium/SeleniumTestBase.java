@@ -596,7 +596,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				if (body.length() > 0) {
 					body.append("\n");
 				}
-				body.append("OK: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getTestName());
+				body.append("OK: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
 			}
 			resultsIt = context.getFailedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
@@ -604,10 +604,10 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				if (body.length() > 0) {
 					body.append("\n");
 				}
-				body.append("FAILED: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getTestName());
+				body.append("FAILED: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
 			}
 		}
-		getReportEmailSender().send(failure ? "Tests Passed" : "Tests FAILED", body.toString());
+		getReportEmailSender().send(failure ? "Tests FAILED" : "Tests Passed", body.toString());
 	}
 
 	protected String getTestId() {
