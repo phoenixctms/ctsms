@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -582,9 +583,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	void sendReportEmail() throws Exception {
 		getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
 		boolean failure = false;
-		StringBuilder body = new StringBuilder();
 		Iterator<ITestContext> it = results.iterator();
-		body.append(System.getProperty("github.workflow.url"));
+		ArrayList<String> okTests = new ArrayList<String>();
+		ArrayList<String> failedTests = new ArrayList<String>();
 		while (it.hasNext()) {
 			ITestContext context = it.next();
 			if (context.getFailedTests().size() > 0) {
@@ -593,21 +594,32 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			Iterator<ITestResult> resultsIt = context.getPassedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				if (body.length() > 0) {
-					body.append("\n");
-				}
-				body.append("OK: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
+				okTests.add(result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
 			}
 			resultsIt = context.getFailedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				if (body.length() > 0) {
-					body.append("\n");
-				}
-				body.append("FAILED: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
+				failedTests.add(result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
 			}
 		}
-		getReportEmailSender().send(failure ? "Tests FAILED" : "Tests Passed", body.toString());
+		Collections.sort(okTests);
+		Collections.sort(failedTests);
+		StringBuilder body = new StringBuilder();
+		String workflowUrl = System.getProperty("github.workflow.url");
+		if (CommonUtil.isEmptyString(workflowUrl)) {
+			body.append("Test results from workflow run:");
+		} else {
+			body.append("Test results from workflow run " + workflowUrl + ":");
+		}
+		if (okTests.size() > 0) {
+			body.append("\n\n");
+			body.append(String.join("\n", okTests));
+		}
+		if (failedTests.size() > 0) {
+			body.append("\n\n");
+			body.append(String.join("\n", failedTests));
+		}
+		getReportEmailSender().send(failure ? "Tests FAILED" : "Tests passed", body.toString());
 	}
 
 	protected String getTestId() {
