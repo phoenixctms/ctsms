@@ -619,7 +619,34 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			body.append("\n\n");
 			body.append(String.join("\n", failedTests));
 		}
-		getReportEmailSender().send(failure ? "Tests FAILED" : "Tests passed", body.toString());
+		StringBuilder subject = new StringBuilder("E2E usecase validation tests ");
+		if (failure) {
+			subject.append("passed");
+		} else {
+			subject.append("FAILED");
+		}
+		String version = System.getProperty("ctsms.test.version");
+		String branch = System.getProperty("git.branch");
+		String commit = System.getProperty("git.commit");
+		if (!CommonUtil.isEmptyString(version) || !CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
+			subject.append(": ");
+		}
+		if (!CommonUtil.isEmptyString(version)) {
+			subject.append(version);
+			if (!CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
+				subject.append(" ");
+			}
+		}
+		if (!CommonUtil.isEmptyString(branch)) {
+			subject.append(branch);
+			if (!CommonUtil.isEmptyString(commit)) {
+				subject.append("/");
+			}
+		}
+		if (!CommonUtil.isEmptyString(commit)) {
+			subject.append(commit);
+		}
+		getReportEmailSender().send(subject.toString(), body.toString());
 	}
 
 	protected String getTestId() {
