@@ -621,9 +621,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		}
 		StringBuilder subject = new StringBuilder("E2E usecase validation tests ");
 		if (failure) {
-			subject.append("passed");
-		} else {
 			subject.append("FAILED");
+		} else {
+			subject.append("passed");
 		}
 		String version = System.getProperty("ctsms.test.version");
 		String branch = System.getProperty("git.branch");
