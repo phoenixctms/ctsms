@@ -533,6 +533,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	@Override
 	public void onStart(ITestContext context) {
+		info("test class '" + this.getClass().getCanonicalName() + "' instantiated");
 		//TestRunner runner = (TestRunner) context;
 		//info("starting test '" + context.getName() + "'");
 		//		try {
@@ -597,12 +598,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			Iterator<ITestResult> resultsIt = context.getPassedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				okTests.add("OK: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
+				okTests.add("OK: " + result.getTestClass().getName() + "#" + result.getName());
 			}
 			resultsIt = context.getFailedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				failedTests.add("FAILED: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
+				failedTests.add("FAILED: " + result.getTestClass().getName() + "#" + result.getName());
 			}
 		}
 		Collections.sort(okTests);
@@ -624,24 +625,22 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		} else {
 			body.append("All tests passed.");
 		}
-		StringBuilder subject = new StringBuilder("E2E usecase validation tests ");
+		String version = System.getProperty("ctsms.test.version");
+		if (!CommonUtil.isEmptyString(version)) {
+			body.append("\n\n");
+			body.append("Phoenix CTMS Version " + version);
+		}
+		StringBuilder subject = new StringBuilder("E2E usecase validation ");
 		if (failure) {
 			subject.append("FAILURE");
 		} else {
 			subject.append("SUCCESS");
 		}
-		String version = System.getProperty("ctsms.test.version");
 		//https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
 		String branch = System.getProperty("git.branch");
 		String commit = System.getProperty("git.commit");
-		if (!CommonUtil.isEmptyString(version) || !CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
+		if (!CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
 			subject.append(": ");
-		}
-		if (!CommonUtil.isEmptyString(version)) {
-			subject.append(version);
-			if (!CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
-				subject.append(" ");
-			}
 		}
 		if (!CommonUtil.isEmptyString(branch)) {
 			subject.append(branch);
@@ -736,7 +735,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	@Override
 	public void onFinish(ITestContext context) {
-		info("finalizing test class '" + context.getName() + "'");
+		info("finalizing test class '" + this.getClass().getCanonicalName() + "'");
 		//		try {
 		//			getScreenRecorder().stop();
 		//		} catch (HeadlessException e) {
