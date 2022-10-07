@@ -47,6 +47,7 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestRunner;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
@@ -549,7 +550,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//		}
 	}
 
-	@BeforeTest
+	@BeforeClass
 	public void setTestName(ITestContext context) {
 		TestRunner runner = (TestRunner) context;
 		runner.setTestName(this.getClass().getSimpleName());
@@ -611,13 +612,15 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		} else {
 			body.append("Test results from workflow run " + workflowUrl + ":");
 		}
-		if (okTests.size() > 0) {
-			body.append("\n\n");
-			body.append(String.join("\n", okTests));
-		}
+		//if (okTests.size() > 0) {
+		//	body.append("\n\n");
+		//	body.append(String.join("\n", okTests));
+		//}
+		body.append("\n\n");
 		if (failedTests.size() > 0) {
-			body.append("\n\n");
 			body.append(String.join("\n", failedTests));
+		} else {
+			body.append("All tests passed.");
 		}
 		StringBuilder subject = new StringBuilder("E2E usecase validation tests ");
 		if (failure) {
