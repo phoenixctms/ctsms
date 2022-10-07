@@ -621,9 +621,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		}
 		StringBuilder subject = new StringBuilder("E2E usecase validation tests ");
 		if (failure) {
-			subject.append("FAILED");
+			subject.append("FAILURE");
 		} else {
-			subject.append("passed");
+			subject.append("SUCCESS");
 		}
 		String version = System.getProperty("ctsms.test.version");
 		//https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
