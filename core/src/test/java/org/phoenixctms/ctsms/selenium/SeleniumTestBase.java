@@ -594,12 +594,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			Iterator<ITestResult> resultsIt = context.getPassedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				okTests.add(result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
+				okTests.add("OK: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
 			}
 			resultsIt = context.getFailedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				failedTests.add(result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
+				failedTests.add("FAILED: " + result.getTestClass().getRealClass().getSimpleName() + "." + result.getName());
 			}
 		}
 		Collections.sort(okTests);
@@ -626,6 +626,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			subject.append("passed");
 		}
 		String version = System.getProperty("ctsms.test.version");
+		//https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
 		String branch = System.getProperty("git.branch");
 		String commit = System.getProperty("git.commit");
 		if (!CommonUtil.isEmptyString(version) || !CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
