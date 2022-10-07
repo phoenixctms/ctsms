@@ -47,7 +47,6 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestRunner;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
@@ -550,11 +549,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//		}
 	}
 
-	@BeforeClass
+	@BeforeTest
 	public void setTestName(ITestContext context) {
-		TestRunner runner = (TestRunner) context;
-		runner.setTestName(this.getClass().getSimpleName());
-		info("set test name '" + context.getName() + "'");
+		String name = System.getProperty("ctsms.test.name");
+		if (!CommonUtil.isEmptyString(name)) {
+			TestRunner runner = (TestRunner) context;
+			runner.setTestName(name);
+			info("set test name '" + context.getName() + "'");
+		}
 	}
 
 	@BeforeTest
