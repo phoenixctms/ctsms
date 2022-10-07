@@ -72,7 +72,7 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
-      - name: Setup Selenium
+      - name: Setup ChromeDriver
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
