@@ -46,9 +46,9 @@ import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestRunner;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
@@ -503,14 +503,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	//private boolean onStart = true;
-	private boolean onTestStart;
-	private boolean onTestSuccess;
-	private boolean onTestFailure;
-	private boolean onTestSkipped;
-	private boolean onTestFailedButWithinSuccessPercentage;
+	private boolean onTestStart = true;
+	private boolean onTestSuccess = true;
+	private boolean onTestFailure = true;
+	private boolean onTestSkipped = true;
+	private boolean onTestFailedButWithinSuccessPercentage = true;
 	//private boolean onFinish = true;
 
-	@BeforeMethod
+	@AfterMethod
 	private void resetITestResultEvents() {
 		onTestStart = true;
 		onTestSuccess = true;
