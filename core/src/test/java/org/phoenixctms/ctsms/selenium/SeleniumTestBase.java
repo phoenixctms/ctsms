@@ -472,12 +472,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	protected void testOK(String msg) {
 		info(msg);
-		Assert.assertTrue(true, msg);
+		//Assert.assertTrue(true, msg);
 	}
 
 	protected void testFailed(String msg) {
 		info(msg);
-		Assert.assertTrue(false, msg);
+		Assert.fail(msg);
 	}
 
 	@Override
