@@ -48,6 +48,7 @@ import org.testng.Reporter;
 import org.testng.TestRunner;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
@@ -145,10 +146,6 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	protected static String getTestDirectory() {
 		return System.getProperty("ctsms.test.directory");
-	}
-
-	protected static String getWindowSize() {
-		return System.getProperty("ctsms.test.windowsize");
 	}
 
 	protected static String getUrl(String urlPath) {
@@ -274,7 +271,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			ChromeOptions chromeOptions = new ChromeOptions();
 			chromeOptions.addArguments("--headless");
 			chromeOptions.addArguments("--no-sandbox");
-			String windowSize = getWindowSize();
+			String windowSize = System.getProperty("ctsms.test.windowsize");
 			if (!CommonUtil.isEmptyString(windowSize)) {
 				chromeOptions.addArguments("--window-size=" + windowSize); //3840,2160");
 			}
@@ -506,12 +503,21 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	//private boolean onStart = true;
-	private boolean onTestStart = true;
-	private boolean onTestSuccess = true;
-	private boolean onTestFailure = true;
-	private boolean onTestSkipped = true;
-	private boolean onTestFailedButWithinSuccessPercentage = true;
+	private boolean onTestStart;
+	private boolean onTestSuccess;
+	private boolean onTestFailure;
+	private boolean onTestSkipped;
+	private boolean onTestFailedButWithinSuccessPercentage;
 	//private boolean onFinish = true;
+
+	@BeforeMethod
+	private void resetITestResultEvents() {
+		onTestStart = true;
+		onTestSuccess = true;
+		onTestFailure = true;
+		onTestSkipped = true;
+		onTestFailedButWithinSuccessPercentage = true;
+	}
 
 	@Override
 	public void onTestStart(ITestResult result) {
