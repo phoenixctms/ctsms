@@ -47,6 +47,7 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestRunner;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
@@ -529,6 +530,11 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	@Override
 	public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
 		((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' SKIPPED");
+	}
+
+	@BeforeClass
+	public void init_000() {
+		info("enter test class " + this.getClass().getCanonicalName());
 	}
 
 	@Override
