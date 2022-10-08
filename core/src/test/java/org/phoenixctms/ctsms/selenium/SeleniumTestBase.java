@@ -510,8 +510,8 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private boolean onTestFailedButWithinSuccessPercentage = true;
 	//private boolean onFinish = true;
 
-	@AfterMethod
-	private void resetITestResultEvents() {
+	@AfterMethod(alwaysRun = true)
+	public void resetITestResultEvents() {
 		onTestStart = true;
 		onTestSuccess = true;
 		onTestFailure = true;
