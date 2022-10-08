@@ -505,31 +505,54 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		throw new Error(msg);
 	}
 
+	//private boolean onStart = true;
+	private boolean onTestStart = true;
+	private boolean onTestSuccess = true;
+	private boolean onTestFailure = true;
+	private boolean onTestSkipped = true;
+	private boolean onTestFailedButWithinSuccessPercentage = true;
+	//private boolean onFinish = true;
+
 	@Override
 	public void onTestStart(ITestResult result) {
-		((SeleniumTestBase) result.getInstance()).info("starting test '" + result.getName() + "'");
+		if (((SeleniumTestBase) result.getInstance()).onTestStart) {
+			((SeleniumTestBase) result.getInstance()).onTestStart = false;
+			((SeleniumTestBase) result.getInstance()).info("starting test '" + result.getName() + "'");
+		}
 	}
 
 	@Override
 	public void onTestSuccess(ITestResult result) {
-		((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' OK");
-		((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+		if (((SeleniumTestBase) result.getInstance()).onTestSuccess) {
+			((SeleniumTestBase) result.getInstance()).onTestSuccess = false;
+			((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' OK");
+			((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+		}
 	}
 
 	@Override
 	public void onTestFailure(ITestResult result) {
-		((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' FAILURE");
-		((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+		if (((SeleniumTestBase) result.getInstance()).onTestFailure) {
+			((SeleniumTestBase) result.getInstance()).onTestFailure = false;
+			((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' FAILURE");
+			((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+		}
 	}
 
 	@Override
 	public void onTestSkipped(ITestResult result) {
-		((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' SKIPPED");
+		if (((SeleniumTestBase) result.getInstance()).onTestSkipped) {
+			((SeleniumTestBase) result.getInstance()).onTestSkipped = false;
+			((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' SKIPPED");
+		}
 	}
 
 	@Override
 	public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
-		((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' SKIPPED");
+		if (((SeleniumTestBase) result.getInstance()).onTestFailedButWithinSuccessPercentage) {
+			((SeleniumTestBase) result.getInstance()).onTestFailedButWithinSuccessPercentage = false;
+			((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' SKIPPED");
+		}
 	}
 
 	@BeforeClass
@@ -741,7 +764,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	@Override
 	public void onFinish(ITestContext context) {
-		info("finalizing test class '" + this.getClass().getCanonicalName() + "'");
+		info("finish test class '" + this.getClass().getCanonicalName() + "'");
 		//		try {
 		//			getScreenRecorder().stop();
 		//		} catch (HeadlessException e) {
