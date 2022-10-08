@@ -633,12 +633,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			Iterator<ITestResult> resultsIt = context.getPassedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				okTests.add("OK: " + result.getTestClass().getName() + "#" + result.getName());
+				okTests.add("OK: " + result.getTestClass().getName().replace("org.phoenixctms.ctsms.selenium.", "") + "#" + result.getName());
 			}
 			resultsIt = context.getFailedTests().getAllResults().iterator();
 			while (resultsIt.hasNext()) {
 				ITestResult result = resultsIt.next();
-				failedTests.add("FAILED: " + result.getTestClass().getName() + "#" + result.getName());
+				failedTests.add("FAILED: " + result.getTestClass().getName().replace("org.phoenixctms.ctsms.selenium.", "") + "#" + result.getName());
 			}
 		}
 		Collections.sort(okTests);
