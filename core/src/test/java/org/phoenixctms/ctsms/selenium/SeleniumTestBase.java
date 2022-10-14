@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.selenium;
 
 import java.io.File;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,10 +32,12 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.TestDataProvider;
+import org.phoenixctms.ctsms.test.CustomReport;
 import org.phoenixctms.ctsms.test.OutputLogger;
 import org.phoenixctms.ctsms.test.ReportEmailSender;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.Compress;
+import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.FilePathSplitter;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +48,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 import org.testng.Reporter;
+import org.testng.TestNG;
 import org.testng.TestRunner;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
@@ -62,6 +66,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+(,\\d+)?) [A-Za-z()]+$");
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
+	private final static String HTMLTOPDF_COMMDAND = "wkhtmltopdf --enable-local-file-access {0} {1}";
 	private ChromeDriver driver;
 	private Logger logger;
 	private int screenshotCount = 0;
@@ -81,10 +86,10 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				try {
 					(new SeleniumTestBase() {
 					}).sendReportEmail();
-				} catch (Exception e) {
+				} catch (Throwable t) {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
-					System.err.println(e);
+					System.err.println(t);
 				}
 			}
 		});
@@ -596,6 +601,21 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	@BeforeTest
+	public void setTestListener(ITestContext context) {
+		TestNG myTestNG = TestNG.getDefault();
+		myTestNG.setUseDefaultListeners(false);
+		//		myTestNG.
+		//		//myTestNG.setListenerClasses(classes);
+		//		//Arrays.asList(new ITestNGListener[]{CustomReport.class});
+		//		myTestNG.addListener(new CustomReport()); //.setListenerClasses(new ArrayList<ITestNGListener>() { add(CustomReport.class); });
+		TestRunner runner = (TestRunner) context;
+		//		CustomReport report = new CustomReport();
+		//		report.onStart(context);
+		runner.addListener(new CustomReport());
+		info("default test listeners disabled, custom test report registered");
+	}
+
+	@BeforeTest
 	public void setOutputDirectory(ITestContext context) {
 		TestRunner runner = (TestRunner) context;
 		runner.setOutputDirectory(getTestDirectory());
@@ -619,8 +639,8 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		results.add(context);
 	}
 
-	void sendReportEmail() throws Exception {
-		getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
+	void sendReportEmail() throws Throwable {
+		attachReports();
 		boolean failure = false;
 		Iterator<ITestContext> it = results.iterator();
 		ArrayList<String> okTests = new ArrayList<String>();
@@ -783,5 +803,20 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//			// TODO Auto-generated catch block
 		//			e.printStackTrace();
 		//		}
+	}
+
+	private void attachReports() throws Throwable {
+		File[] files = (new File(getTestDirectory())).listFiles();
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isFile() && CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING)) {
+				File pdfFile = new File((new FilePathSplitter(files[i].getCanonicalPath())).joinFilePath("{0}." + CoreUtil.PDF_FILENAME_EXTENSION));
+				String command = MessageFormat.format(HTMLTOPDF_COMMDAND,
+						files[i].getCanonicalPath(),
+						pdfFile.getCanonicalPath());
+				CoreUtil.runProcess(command, true);
+				getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
+			}
+		}
+		//getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
 	}
 }
