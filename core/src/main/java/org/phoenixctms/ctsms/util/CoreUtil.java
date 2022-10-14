@@ -998,34 +998,38 @@ public final class CoreUtil implements ApplicationContextAware {
 					Settings.getString(SettingCodes.ECRF_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.ECRF_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_IMPORTER_PROCESS_PL));
-			Process process = Runtime.getRuntime().exec(command);
-			if (blocking) {
-				process.waitFor();
-			} else {
-				process.waitFor(JOB_EXIST_VALUE_WAIT_MILLISECONDS, TimeUnit.MILLISECONDS);
-			}
-			try {
-				if (process.exitValue() != 0) {
-					// failed
-					try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-						String line;
-						if ((line = errorReader.readLine()) != null) {
-							throw new Exception(line);
-						}
-					} catch (final IOException e) {
-						throw e;
-					}
-					//} else {
-					// ok
-				}
-			} catch (IllegalThreadStateException e) {
-				// still running
-			}
-			return process;
+			return runProcess(command, blocking);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.START_JOB_ERROR, DefaultMessages.START_JOB_ERROR,
 					new Object[] { e.getMessage() }));
 		}
+	}
+
+	public static Process runProcess(String command, boolean blocking) throws Exception {
+		Process process = Runtime.getRuntime().exec(command);
+		if (blocking) {
+			process.waitFor();
+		} else {
+			process.waitFor(JOB_EXIST_VALUE_WAIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+		}
+		try {
+			if (process.exitValue() != 0) {
+				// failed
+				try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+					String line;
+					if ((line = errorReader.readLine()) != null) {
+						throw new Exception(line);
+					}
+				} catch (final IOException e) {
+					throw e;
+				}
+				//} else {
+				// ok
+			}
+		} catch (IllegalThreadStateException e) {
+			// still running
+		}
+		return process;
 	}
 
 	private CoreUtil() {
