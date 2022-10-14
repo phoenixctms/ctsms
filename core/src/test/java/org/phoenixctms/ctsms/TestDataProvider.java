@@ -47,7 +47,6 @@ import org.phoenixctms.ctsms.test.SearchCriteriaEnum;
 import org.phoenixctms.ctsms.test.SearchCriterion;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
-import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
@@ -380,6 +379,24 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createSingleLineTextField(name, null, name, null, null, null, null);
 	}
 
+	public InputFieldOutVO createAutoCompleteField(String name, String category, String title, String comment, boolean learn, boolean strict) throws Exception {
+		InputFieldInVO newInputField = new InputFieldInVO();
+		newInputField.setFieldType(InputFieldType.AUTOCOMPLETE);
+		newInputField.setName(name);
+		newInputField.setTitle(title);
+		newInputField.setCategory(category);
+		newInputField.setComment(comment);
+		newInputField.setLearn(learn);
+		newInputField.setStrict(strict);
+		InputFieldOutVO out = inputFieldService.addInputField(auth, newInputField);
+		info("autocomplete input field " + out.getId() + " created: " + out.getName());
+		return out;
+	}
+
+	public InputFieldOutVO createAutoCompleteField(String name) throws Exception {
+		return createAutoCompleteField(name, null, name, null, true, false);
+	}
+
 	public InputFieldOutVO createSketchField(String name, String category, String title, String comment, String resourceFileName,
 			TreeMap<InputFieldValuesEnum, InkStroke> inkRegions,
 			Integer minSelections, Integer maxSelections, String validationErrorMessage) throws Throwable {
@@ -395,7 +412,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		newInputField.setMaxSelections(maxSelections);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setDatas(data);
-		newInputField.setMimeType(ExecUtil.getMimeType(data, resource.getFilename()));
+		newInputField.setMimeType(CommonUtil.getMimeType(data, resource.getFilename()));
 		newInputField.setFileName(resource.getFilename());
 		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
 		info("select many input field " + inputField.getId() + " created: " + inputField.getName());

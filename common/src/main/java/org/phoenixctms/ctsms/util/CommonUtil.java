@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -40,6 +41,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.batik.anim.dom.SVGDOMImplementation;
+import org.apache.tika.detect.DefaultDetector;
+import org.apache.tika.detect.Detector;
+import org.apache.tika.io.TikaInputStream;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaMetadataKeys;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -250,6 +256,7 @@ public final class CommonUtil {
 	private static final String HEX_DIGITS = "0123456789ABCDEF";
 	public final static String GIF_FILENAME_EXTENSION = "gif";
 	public static final String GIF_MIMETYPE_STRING = "image/gif";
+	public static final String HTML_MIMETYPE_STRING = "text/html";
 	public static final String BEACON_PATH = "beacon";
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
@@ -274,6 +281,45 @@ public final class CommonUtil {
 				USER_SETTINGS_INHERITABLE_PROPERTIES.add(transFilter.transform(it.next().getName()));
 			}
 		} catch (Exception e) {
+		}
+	}
+	private final static Detector MIME_DETECTOR = new DefaultDetector(); // All build-in Tika detectors are thread-safe, so it is ok to share the detector globally.
+
+	public static String getMimeType(byte[] data, String fileName) throws Throwable {
+		TikaInputStream tikaStream = null;
+		Metadata metadata = new Metadata();
+		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, fileName);
+		try {
+			tikaStream = TikaInputStream.get(data, metadata);
+			return MIME_DETECTOR.detect(tikaStream, metadata).toString();
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (tikaStream != null) {
+				try {
+					tikaStream.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+	}
+
+	public static String getMimeType(File file) throws Throwable {
+		TikaInputStream tikaStream = null;
+		Metadata metadata = new Metadata();
+		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, file.getName());
+		try {
+			tikaStream = TikaInputStream.get(file, metadata);
+			return MIME_DETECTOR.detect(tikaStream, metadata).toString();
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (tikaStream != null) {
+				try {
+					tikaStream.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 	}
 

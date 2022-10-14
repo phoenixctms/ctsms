@@ -11,11 +11,6 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.apache.tika.detect.DefaultDetector;
-import org.apache.tika.detect.Detector;
-import org.apache.tika.io.TikaInputStream;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.metadata.TikaMetadataKeys;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.service.course.CourseService;
@@ -60,7 +55,6 @@ public final class ExecUtil {
 		AUTHORIZED_SERVICE_CLASSES.add(JournalService.class);
 		AUTHORIZED_SERVICE_CLASSES.add(SearchService.class);
 	}
-	private final static Detector detector = new DefaultDetector(); // All build-in Tika detectors are thread-safe, so it is ok to share the detector globally.
 
 	public static AuthenticationVO authenticationPrompt(Scanner in) throws IOException {
 		System.out.print("username:");
@@ -137,44 +131,6 @@ public final class ExecUtil {
 	public static String formatFileName(String fileName, String fileNameFormat) {
 		FilePathSplitter filePath = new FilePathSplitter(fileName);
 		return filePath.joinFilePath(fileNameFormat);
-	}
-
-	public static String getMimeType(byte[] data, String fileName) throws Throwable {
-		TikaInputStream tikaStream = null;
-		Metadata metadata = new Metadata();
-		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, fileName);
-		try {
-			tikaStream = TikaInputStream.get(data, metadata);
-			return detector.detect(tikaStream, metadata).toString();
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			if (tikaStream != null) {
-				try {
-					tikaStream.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
-
-	public static String getMimeType(File file) throws Throwable {
-		TikaInputStream tikaStream = null;
-		Metadata metadata = new Metadata();
-		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, file.getName());
-		try {
-			tikaStream = TikaInputStream.get(file, metadata);
-			return detector.detect(tikaStream, metadata).toString();
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			if (tikaStream != null) {
-				try {
-					tikaStream.close();
-				} catch (IOException e) {
-				}
-			}
-		}
 	}
 
 	public static Scanner getScanner() {
