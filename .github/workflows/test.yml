@@ -77,6 +77,7 @@ jobs:
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh
+          sudo apt-get -q -y install wkhtmltopdf
 #          xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-4.4.0.jar 2>&1 &
 #          sleep 5
       - name: Load demo data
