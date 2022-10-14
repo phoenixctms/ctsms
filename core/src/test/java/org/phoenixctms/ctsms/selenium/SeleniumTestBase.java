@@ -813,6 +813,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				String command = MessageFormat.format(HTMLTOPDF_COMMDAND,
 						files[i].getCanonicalPath(),
 						pdfFile.getCanonicalPath());
+				info(command);
 				CoreUtil.runProcess(command, true);
 				getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
 			}
