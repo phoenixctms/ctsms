@@ -1,5 +1,8 @@
 package org.phoenixctms.ctsms.test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.regex.Pattern;
@@ -60,6 +63,10 @@ public abstract class JobEmailSenderBase {
 
 	public void addEmailAttachment(byte[] data, String mimeType, String fileName) {
 		attachments.add(new EmailAttachment(data, mimeType, fileName));
+	}
+
+	public void addEmailAttachment(File file, String mimeType, String fileName) throws IOException {
+		attachments.add(new EmailAttachment(Files.readAllBytes(file.toPath()), mimeType, fileName));
 	}
 
 	protected abstract String getEmailEncoding();
