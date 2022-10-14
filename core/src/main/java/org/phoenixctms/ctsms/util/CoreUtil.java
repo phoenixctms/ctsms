@@ -998,15 +998,14 @@ public final class CoreUtil implements ApplicationContextAware {
 					Settings.getString(SettingCodes.ECRF_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.ECRF_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_IMPORTER_PROCESS_PL));
-			return runProcess(blocking, command);
+			return runProcess(command, blocking);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.START_JOB_ERROR, DefaultMessages.START_JOB_ERROR,
 					new Object[] { e.getMessage() }));
 		}
 	}
 
-	public static Process runProcess(boolean blocking, String... command) throws Exception {
-		Process process = Runtime.getRuntime().exec(command);
+	private static Process runProcess(Process process, boolean blocking) throws Exception {
 		if (blocking) {
 			process.waitFor();
 		} else {
@@ -1030,6 +1029,14 @@ public final class CoreUtil implements ApplicationContextAware {
 			// still running
 		}
 		return process;
+	}
+
+	public static Process runProcess(String command, boolean blocking) throws Exception {
+		return runProcess(Runtime.getRuntime().exec(command), blocking);
+	}
+
+	public static Process runProcess(boolean blocking, String... command) throws Exception {
+		return runProcess(Runtime.getRuntime().exec(command), blocking);
 	}
 
 	private CoreUtil() {
