@@ -12,7 +12,6 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecDefaultSettings;
 import org.phoenixctms.ctsms.util.ExecSettingCodes;
 import org.phoenixctms.ctsms.util.ExecSettings;
-import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.FilePathSplitter;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
@@ -351,7 +350,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setFileName(file.getName());
 				FileInputStream stream = new FileInputStream(file);
 				inputFieldIn.setDatas(CommonUtil.inputStreamToByteArray(stream));
-				inputFieldIn.setMimeType(ExecUtil.getMimeType(file));
+				inputFieldIn.setMimeType(CommonUtil.getMimeType(file));
 			}
 		}
 	}

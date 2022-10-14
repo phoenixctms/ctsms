@@ -1813,7 +1813,7 @@ public class DemoDataProvider {
 		newInputField.setMaxSelections(maxSelections);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setDatas(data);
-		newInputField.setMimeType(ExecUtil.getMimeType(data, resource.getFilename()));
+		newInputField.setMimeType(CommonUtil.getMimeType(data, resource.getFilename()));
 		newInputField.setFileName(resource.getFilename());
 		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
 		jobOutput.println("select many input field created: " + inputField.getName());

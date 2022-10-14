@@ -21,7 +21,6 @@ import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
-import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.SettingCodes;
@@ -237,7 +236,7 @@ public class FileSystemLoader {
 			newFileStream.setSize(file.length());
 			FileInputStream inputStream = null;
 			try {
-				newFileStream.setMimeType(ExecUtil.getMimeType(file));
+				newFileStream.setMimeType(CommonUtil.getMimeType(file));
 				inputStream = new FileInputStream(file);
 				newFileStream.setStream(inputStream);
 				fileService.addFile(auth, newFile, newFileStream);
