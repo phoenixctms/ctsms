@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
@@ -77,6 +78,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 		String id;
 		Throwable tw;
 		for (ITestResult tr : tests) {
+			ArrayList<String> images = new ArrayList<String>();
 			pw.append("<tr>\n");
 			// Test method
 			ITestNGMethod method = tr.getMethod();
@@ -136,7 +138,11 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 					// Method output
 					pw.append("<div class='log' id=\"").append(divId).append("\">\n");
 					for (String s : output) {
-						pw.append(s).append("<br/>\n");
+						if (s.contains("<img")) {
+							images.add(s);
+						} else {
+							pw.append(s).append("<br/>\n");
+						}
 					}
 					pw.append("</div>\n");
 				}
@@ -203,6 +209,11 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			//Object instance = tr.getInstance();
 			//pw.append("<td>").append(Objects.toString(instance)).append("</td>");
 			pw.append("</tr>\n");
+			for (String s : images) {
+				pw.append("<tr><td colspan=\"3\">\n");
+				pw.append(s);
+				pw.append("</td></tr>\n");
+			}
 		}
 		pw.append("</table><p>\n");
 	}
