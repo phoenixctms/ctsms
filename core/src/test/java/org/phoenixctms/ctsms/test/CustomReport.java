@@ -184,21 +184,21 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			if (null != tw) {
 				fullStackTrace = Utils.longStackTrace(tw, true);
 				stackTrace = "<div><pre>" + Utils.shortStackTrace(tw, true) + "</pre></div>";
-				pw.append(stackTrace);
-				// JavaScript link
-				pw.append("<a href='#' onClick='toggleBox(\"")
-						.append(id)
-						.append(
-								"\", this, \"Click to show all stack frames\", \"Click to hide stack frames\")'>")
-						.append("Click to show all stack frames")
-						.append("</a>\n")
-						.append("<div class='stack-trace' id='")
-						.append(id)
-						.append("'>")
-						.append("<pre>")
-						.append(fullStackTrace)
-						.append("</pre>")
-						.append("</div>");
+				//				pw.append(stackTrace);
+				//				// JavaScript link
+				//				pw.append("<a href='#' onClick='toggleBox(\"")
+				//						.append(id)
+				//						.append(
+				//								"\", this, \"Click to show all stack frames\", \"Click to hide stack frames\")'>")
+				//						.append("Click to show all stack frames")
+				//						.append("</a>\n")
+				//						.append("<div class='stack-trace' id='")
+				//						.append(id)
+				//						.append("'>")
+				//						.append("<pre>")
+				//						.append(fullStackTrace)
+				//						.append("</pre>")
+				//						.append("</div>");
 			}
 			pw.append("</td>\n");
 			// Time
