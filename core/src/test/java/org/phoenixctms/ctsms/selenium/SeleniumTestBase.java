@@ -66,7 +66,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
 	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access", "--page-size", "A4", "--orientation", "Portrait", "--zoom",
-			"0.7" };
+			"0.3" };
 	private ChromeDriver driver;
 	private Logger logger;
 	private int screenshotCount = 0;
@@ -689,7 +689,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		String branch = System.getProperty("git.branch");
 		String commit = System.getProperty("git.commit");
 		if (!CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
-			body.append(" ");
+			body.append("\n");
 		}
 		if (!CommonUtil.isEmptyString(branch)) {
 			body.append(branch);
