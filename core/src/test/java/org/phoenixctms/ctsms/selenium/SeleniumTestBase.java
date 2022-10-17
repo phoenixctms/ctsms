@@ -65,7 +65,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+(,\\d+)?) [A-Za-z()]+$");
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
-	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access" };
+	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access", "-s A4", "-O Portrait", "--zoom 1.5" };
 	private ChromeDriver driver;
 	private Logger logger;
 	private int screenshotCount = 0;
@@ -809,7 +809,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile() && CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING)) {
 				File pdfFile = new File((new FilePathSplitter(files[i].getCanonicalPath())).joinFilePath("{0}." + CoreUtil.PDF_FILENAME_EXTENSION));
-				String command[] = new String[] { HTMLTOPDF_COMMAND[0], HTMLTOPDF_COMMAND[1], files[i].getCanonicalPath(), pdfFile.getCanonicalPath() };
+				String[] command = new String[HTMLTOPDF_COMMAND.length + 2];
+				for (int j = 0; j < HTMLTOPDF_COMMAND.length; j++) {
+					command[j] = HTMLTOPDF_COMMAND[j];
+				}
+				command[command.length - 2] = files[i].getCanonicalPath();
+				command[command.length - 1] = pdfFile.getCanonicalPath();
 				info(String.join(" ", command));
 				CoreUtil.runProcess(true, command);
 				getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
