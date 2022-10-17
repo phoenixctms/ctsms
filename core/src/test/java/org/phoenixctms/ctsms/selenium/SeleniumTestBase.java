@@ -66,7 +66,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
 	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access", "--page-size", "A4", "--orientation", "Portrait", "--zoom",
-			"1.5" };
+			"0.7" };
 	private ChromeDriver driver;
 	private Logger logger;
 	private int screenshotCount = 0;
@@ -685,26 +685,31 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			body.append("\n\n");
 			body.append("Phoenix CTMS Version " + version);
 		}
+		//https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
+		String branch = System.getProperty("git.branch");
+		String commit = System.getProperty("git.commit");
+		if (!CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
+			body.append(" ");
+		}
+		if (!CommonUtil.isEmptyString(branch)) {
+			body.append(branch);
+			if (!CommonUtil.isEmptyString(commit)) {
+				body.append("/");
+			}
+		}
+		if (!CommonUtil.isEmptyString(commit)) {
+			body.append(commit);
+		}
 		StringBuilder subject = new StringBuilder("E2E usecase validation ");
 		if (failure) {
 			subject.append("FAILURE");
 		} else {
 			subject.append("SUCCESS");
 		}
-		//https://stackoverflow.com/questions/58886293/getting-current-branch-and-commit-hash-in-github-action
-		String branch = System.getProperty("git.branch");
-		String commit = System.getProperty("git.commit");
-		if (!CommonUtil.isEmptyString(branch) || !CommonUtil.isEmptyString(commit)) {
+		String message = System.getProperty("git.message");
+		if (!CommonUtil.isEmptyString(message)) {
 			subject.append(": ");
-		}
-		if (!CommonUtil.isEmptyString(branch)) {
-			subject.append(branch);
-			if (!CommonUtil.isEmptyString(commit)) {
-				subject.append("/");
-			}
-		}
-		if (!CommonUtil.isEmptyString(commit)) {
-			subject.append(commit);
+			subject.append(message);
 		}
 		getReportEmailSender().send(subject.toString(), body.toString());
 	}
