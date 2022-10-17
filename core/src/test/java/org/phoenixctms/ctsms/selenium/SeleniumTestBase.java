@@ -65,7 +65,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+(,\\d+)?) [A-Za-z()]+$");
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
-	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access -O landscape" };
+	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access" };
 	private ChromeDriver driver;
 	private Logger logger;
 	private int screenshotCount = 0;
@@ -255,7 +255,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				dest = new File(getTestDirectory(), String.format("%s_%s_%s.png", this.getClass().getSimpleName(), name, getTimestamp()));
 			}
 			if (screenshot.renameTo(dest)) {
-				info("screenshot created: " + dest.getAbsolutePath());
+				info("screenshot created: " + dest.getName());
 				Reporter.setEscapeHtml(false);
 				//Reporter.log("screenshot created: <a href=\"file:///" + dest.getName() + "\">" + dest.getName() + "</a>");
 				Reporter.log("<img src=\"" + dest.getName() + "\">");
