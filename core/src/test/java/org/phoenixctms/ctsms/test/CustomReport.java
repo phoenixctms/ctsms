@@ -319,18 +319,18 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 					.append(" seconds (")
 					.append(Long.toString(endDate.getTime() - startDate.getTime()))
 					.append(" ms)</td>\n")
-					.append("</tr><tr>\n")
-					.append("<td>Included groups:</td><td>")
-					.append(arrayToString(testContext.getIncludedGroups()))
-					.append("</td>\n")
-					.append("</tr><tr>\n")
-					.append("<td>Excluded groups:</td><td>")
-					.append(arrayToString(testContext.getExcludedGroups()))
-					.append("</td>\n")
+					//					.append("</tr><tr>\n")
+					//					.append("<td>Included groups:</td><td>")
+					//					.append(arrayToString(testContext.getIncludedGroups()))
+					//					.append("</td>\n")
+					//					.append("</tr><tr>\n")
+					//					.append("<td>Excluded groups:</td><td>")
+					//					.append(arrayToString(testContext.getExcludedGroups()))
+					//					.append("</td>\n")
 					.append("</tr>\n")
 					.append("</table><p/>\n");
-			writer.append(
-					"<small><i>(Hover the method name to see the test class name)</i></small><p/>\n");
+			//writer.append(
+			//		"<small><i>(Hover the method name to see the test class name)</i></small><p/>\n");
 			if (!failedConfs.isEmpty()) {
 				generateTable(
 						writer, "FAILED CONFIGURATIONS", failedConfs, "failed", CONFIGURATION_COMPARATOR);
@@ -374,9 +374,15 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 
 		@Override
 		public int compare(ITestResult o1, ITestResult o2) {
-			String c1 = o1.getMethod().getMethodName();
-			String c2 = o2.getMethod().getMethodName();
-			return c1.compareTo(c2);
+			String c1 = o1.getTestClass().getName();
+			String c2 = o2.getTestClass().getName();
+			int result = c1.compareTo(c2);
+			if (result == 0) {
+				c1 = o1.getMethod().getMethodName();
+				c2 = o2.getMethod().getMethodName();
+				result = c1.compareTo(c2);
+			}
+			return result;
 		}
 	}
 
@@ -384,9 +390,15 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 
 		@Override
 		public int compare(ITestResult o1, ITestResult o2) {
-			ITestNGMethod tm1 = o1.getMethod();
-			ITestNGMethod tm2 = o2.getMethod();
-			return annotationValue(tm2) - annotationValue(tm1);
+			String c1 = o1.getTestClass().getName();
+			String c2 = o2.getTestClass().getName();
+			int result = c1.compareTo(c2);
+			if (result == 0) {
+				ITestNGMethod tm1 = o1.getMethod();
+				ITestNGMethod tm2 = o2.getMethod();
+				return annotationValue(tm2) - annotationValue(tm1);
+			}
+			return result;
 		}
 
 		private static int annotationValue(ITestNGMethod method) {
