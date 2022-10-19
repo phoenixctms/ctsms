@@ -178,11 +178,11 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			// Exception
 			tw = tr.getThrowable();
 			String stackTrace;
-			String fullStackTrace;
+			//String fullStackTrace;
 			id = "stack-trace" + tr.hashCode();
 			pw.append("<td>");
 			if (null != tw) {
-				fullStackTrace = Utils.longStackTrace(tw, true);
+				//fullStackTrace = Utils.longStackTrace(tw, true);
 				stackTrace = "<div><pre>" + Utils.shortStackTrace(tw, true) + "</pre></div>";
 				pw.append(stackTrace);
 				//				// JavaScript link
