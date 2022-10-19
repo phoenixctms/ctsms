@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeMap;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -46,92 +47,40 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	private enum InputFields implements InputFieldsEnum {
 
-		TEST("xx");
-		//		HEIGHT("Körpergröße"),
-		//		WEIGHT("Körpergewicht"),
-		//		BMI("Body Mass Index"),
-		//		DIABETES_YN("Diabetes J/N"),
-		//		DIABETES_TYPE("Diabetes Typ"),
-		//		DIABETES_SINCE("Diabetes seit"),
-		//		DIABETES_HBA1C_MMOLPERMOL("HbA1C in mmol/mol"),
-		//		DIABETES_HBA1C_PERCENT("HbA1C in prozent"),
-		//		DIABETES_HBA1C_DATE("HbA1C Datum"),
-		//		DIABETES_C_PEPTIDE("C-Peptid"), // µg/l
-		//		DIABETES_ATTENDING_PHYSICIAN("Arzt in Behandlung"),
-		//		DIABETES_METHOD_OF_TREATMENT("Diabetes Behandlungsmethode"), // Diät sport insulintherapie orale Antidiabetika
-		//		DIABETES_MEDICATION("Diabetes Medikamente"),
-		//		CLINICAL_TRIAL_EXPERIENCE_YN("Erfahrung mit klin. Studien J/N"),
-		//		SMOKER_YN("Raucher J/N"),
-		//		CIGARETTES_PER_DAY("Zigaretten pro Tag"),
-		//		CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"),
-		//		CHRONIC_DISEASE("Chronische Erkrankung"),
-		//		EPILEPSY_YN("Epilepsie J/N"),
-		//		EPILEPSY("Epilepsie"),
-		//		CARDIAC_PROBLEMS_YN("Herzprobleme J/N"),
-		//		CARDIAC_PROBLEMS("Herzprobleme"),
-		//		HYPERTENSION_YN("Bluthochdruck J/N"),
-		//		HYPERTENSION("Bluthochdruck"),
-		//		RENAL_INSUFFICIENCY_YN("Niereninsuffizienz/-erkrankung J/N"), // renal
-		//		RENAL_INSUFFICIENCY("Niereninsuffizienz/-erkrankung"),
-		//		LIVER_DISEASE_YN("Lebererkrankung J/N"), // liver diseaseYN
-		//		LIVER_DISEASE("Lebererkrankung"),
-		//		ANEMIA_YN("Anemie J/N"), // anemiaYN
-		//		ANEMIA("Anemie"),
-		//		IMMUNE_MEDIATED_DISEASE_YN("Autoimmunerkrankung J/N"), // immune mediated diseaseYN
-		//		IMMUNE_MEDIATED_DISEASE("Autoimmunerkrankung"),
-		//		GESTATION_YN("schwanger, stillen etc. J/N"), // gestationYN
-		//		GESTATION("schwanger, stillen etc."),
-		//		GESTATION_TYPE("schwanger, stillen etc. Auswahl"),
-		//		CONTRACEPTION_YN("Empfängnisverhütung J/N"), // contraceptionYN
-		//		CONTRACEPTION("Empfängnisverhütung"),
-		//		CONTRACEPTION_TYPE("Empfängnisverhütung Auswahl"),
-		//		ALCOHOL_DRUG_ABUSE_YN("Missbrauch von Alkohol/Drogen J/N"), // alcohol_drug_abuseYN
-		//		ALCOHOL_DRUG_ABUSE("Missbrauch von Alkohol/Drogen"),
-		//		PSYCHIATRIC_CONDITION_YN("Psychiatrische Erkrankung J/N"), // psychiatric_conditionYN
-		//		PSYCHIATRIC_CONDITION("Psychiatrische Erkrankung"),
-		//		ALLERGY_YN("Allergien J/N"), // allergyYN
-		//		ALLERGY("Allergien"),
-		//		MEDICATION_YN("Medikamente J/N"), // medicationYN
-		//		MEDICATION("Medikamente"),
-		//		EYE_PROBLEMS_YN("Probleme mit den Augen J/N"), // eye_probalemsYN
-		//		EYE_PROBLEMS("Probleme mit den Augen"),
-		//		FEET_PROBLEMS_YN("Probleme mit den Füßen J/N"), // feet_probalemsYN
-		//		FEET_PROBLEMS("Probleme mit den Füßen"),
-		//		DIAGNOSTIC_FINDINGS_AVAILABLE_YN("Befunde zuhause J/N"),
-		//		DIAGNOSTIC_FINDINGS_AVAILABLE("Befunde zuhause"),
-		//		GENERAL_STATE_OF_HEALTH("Allgemeiner Gesundheitszustand"),
-		//		NOTE("Anmerkung"),
-		//		SUBJECT_NUMBER("Subject Number"),
-		//		IC_DATE("Informed Consent Date"),
-		//		SCREENING_DATE("Screening Date"),
-		//		LAB_NUMBER("Lab Number"),
-		//		RANDOM_NUMBER("Random Number"),
-		//		LETTER_TO_PHYSICIAN_SENT("Letter to physician sent"),
-		//		PARTICIPATION_LETTER_IN_MEDOCS("Participation letter in MR/Medocs"),
-		//		LETTER_TO_SUBJECT_AT_END_OF_STUDY("Letter to subject at end of study"),
-		//		COMPLETION_LETTER_IN_MEDOCS("Completion letter in MR/Medocs"),
-		//		BODY_HEIGHT("Body Height"),
-		//		BODY_WEIGHT("Body Weight"),
-		//		BODY_MASS_INDEX("BMI"),
-		//		OBESITY("Obesity"),
-		//		EGFR("eGFR"),
-		//		SERUM_CREATININ_CONCENTRATION("Serum Creatinin Concentration"),
-		//		ETHNICITY("Ethnicity"),
-		//		HBA1C_PERCENT("HbA1C (percent)"),
-		//		HBA1C_MMOLPERMOL("HbA1C (mmol/mol)"),
-		//		MANNEQUIN("Mannequin"),
-		//		ESR("ESR"),
-		//		VAS("VAS"),
-		//		DAS28("DAS28"),
-		//		DISTANCE("Distance"),
-		//		ALPHA_ID("Alpha-ID"),
-		//		STRING_SINGLELINE("singleline text"),
-		//		STRING_MULTILINE("multiline text"),
-		//		FLOAT("decimal"),
-		//		INTEGER("integer"),
-		//		DIAGNOSIS_START("diagnosis from"),
-		//		DIAGNOSIS_END("diagnosis to"),
-		//		DIAGNOSIS_COUNT("diagnosis count");
+		CST_HEIGHT("Körpergröße"),
+		CST_WEIGHT("Körpergewicht"),
+		CST_BMI("Body Mass Index"),
+		CST_SMOKER_YN("Raucher J/N"),
+		CST_CIGARETTES_PER_DAY("Zigaretten pro Tag"),
+		CST_VEIN_CONDITION_PROBAND("Venenstatus (Proband)"),
+		CST_VEIN_CONDITION_PYSICIAN("Venenstatus (Arzt)"),
+		CST_NOTE("Anmerkung"),
+		CST_UNDERLYING_DISEASE("Grunderkrankung"),
+		CST_DIABETES_THERAPY("Diabetestherapie"),
+		CST_CSII_TRADE_MARK("Pumpenmarke"),
+		CST_CSII_TRADE_MARK_OTHER("Diabetestherapie (andere)"),
+		CST_SENSOR_THERAPY("Sensortherapie"),
+		CST_SENSOR_TRADE_MARK("Sensormarke"),
+		CST_BOLUS_INSULIN("Bolusinsulin"),
+		CST_BOLUS_INSULIN_IU_BE("Bolusinsulin IU/BE"),
+		CST_BOLUS_INSULIN_TDD("Bolusinsulin TDD"),
+		CST_BASAL_INSULIN("Basalinsulin"),
+		CST_BASAL_INSULIN_TDD("Basalinsulin TDD"),
+		CST_MIXED_INSULIN("Mischinsulin"),
+		CST_MIXED_INSULIN_TDD("Mischinsulin TDD"),
+		CST_OAD_METFORMIN("Orale Antidiabetika-Metformin"),
+		CST_OAD_METFORMIN_TDD("Metformin TDD"),
+		CST_OAD_OTHER("OAD - Andere"),
+		CST_OTHER_MEDICATION("Weitere Medikamente"),
+		CST_DIABETES_SINCE("Diabetes bekannt seit"),
+		CST_HBA1C_MMOLPERMOL("HbA1C in mmol/mol"),
+		CST_HBA1C_PERCENT("HbA1C in prozent"),
+		CST_C_PEPTIDE("C-Peptid"), // µg/l
+		CST_RECRUITED_FROM("Geworben durch"),
+		CST_SUBJECT_FILE("ProbandInnenakte"),
+		CST_DISTANCE("Entfernung"),
+		CST_UPDATED("Aktualisierung"),
+		CST_UPDATED_DATE("Aktualisierung Datum");
 
 		private final String value;
 
@@ -147,74 +96,88 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	private enum InputFieldValues implements InputFieldValuesEnum {
 
-		TEST("xx");
-		//		TYP_1_DIABETES("Typ 1 Diabetes"),
-		//		TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION("Typ 2 Diabetes mit Insulineigenproduktion"),
-		//		TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION("Typ 2 Diabetes ohne Insulineigenproduktion"),
-		//		DIAET("Diät"),
-		//		SPORTLICHE_BETAETIGUNG("Sportliche Betätigung"),
-		//		ORALE_ANTIDIABETIKA("Orale Antidiabetika"),
-		//		INSULINTHERAPIE("Insulintherapie"),
-		//		CIGARETTES_UNTER_5("Unter 5"),
-		//		CIGARETTES_5_20("5-20"),
-		//		CIGARETTES_20_40("20-40"),
-		//		CIGARETTES_UEBER_40("über 40"),
-		//		SCHWANGER("schwanger"),
-		//		STILLEN("stillen"),
-		//		HORMONELL("hormonell"),
-		//		MECHANISCH("mechanisch"),
-		//		INTRAUTERINPESSARE("Intrauterinpessare"),
-		//		CHEMISCH("chemisch"),
-		//		OPERATIV("operativ"),
-		//		SHORTWEIGHT("shortweight"),
-		//		NORMAL_WEIGHT("normal weight"),
-		//		OVERWEIGHT("overweight"),
-		//		ADIPOSITY_DEGREE_I("adiposity degree I"),
-		//		ADIPOSITY_DEGREE_II("adiposity degree II"),
-		//		ADIPOSITY_DEGREE_III("adiposity degree III"),
-		//		AMERICAN_INDIAN_OR_ALASKA_NATIVE("American Indian or Alaska Native"),
-		//		ASIAN("Asian"),
-		//		BLACK("Black"),
-		//		NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER("Native Hawaiian or Other Pacific Islander"),
-		//		WHITE("White"),
-		//		SHOULDER_RIGHT("shoulder right"),
-		//		SHOULDER_LEFT("shoulder left"),
-		//		ELLBOW_RIGHT("ellbow right"),
-		//		ELLBOW_LEFT("ellbow left"),
-		//		WRIST_RIGHT("wrist right"),
-		//		WRIST_LEFT("wrist left"),
-		//		THUMB_BASE_RIGHT("thumb base right"),
-		//		THUMB_MIDDLE_RIGHT("thumb middle right"),
-		//		THUMB_BASE_LEFT("thumb base left"),
-		//		THUMB_MIDDLE_LEFT("thumb middle left"),
-		//		INDEX_FINGER_BASE_RIGHT("index finger base right"),
-		//		INDEX_FINGER_MIDDLE_RIGHT("index finger middle right"),
-		//		MIDDLE_FINGER_BASE_RIGHT("middle finger base right"),
-		//		MIDDLE_FINGER_MIDDLE_RIGHT("middle finger middle right"),
-		//		RING_FINGER_BASE_RIGHT("ring finger base right"),
-		//		RING_FINGER_MIDDLE_RIGHT("ring finger middle right"),
-		//		LITTLE_FINGER_BASE_RIGHT("little finger base right"),
-		//		LITTLE_FINGER_MIDDLE_RIGHT("little finger middle right"),
-		//		INDEX_FINGER_BASE_LEFT("index finger base left"),
-		//		INDEX_FINGER_MIDDLE_LEFT("index finger middle left"),
-		//		MIDDLE_FINGER_BASE_LEFT("middle finger base left"),
-		//		MIDDLE_FINGER_MIDDLE_LEFT("middle finger middle left"),
-		//		RING_FINGER_BASE_LEFT("ring finger base left"),
-		//		RING_FINGER_MIDDLE_LEFT("ring finger middle left"),
-		//		LITTLE_FINGER_BASE_LEFT("little finger base left"),
-		//		LITTLE_FINGER_MIDDLE_LEFT("little finger middle left"),
-		//		KNEE_RIGHT("knee right"),
-		//		KNEE_LEFT("knee left"),
-		//		VAS_1("vas-1"),
-		//		VAS_2("vas-2"),
-		//		VAS_3("vas-3"),
-		//		VAS_4("vas-4"),
-		//		VAS_5("vas-5"),
-		//		VAS_6("vas-6"),
-		//		VAS_7("vas-7"),
-		//		VAS_8("vas-8"),
-		//		VAS_9("vas-9"),
-		//		VAS_10("vas-10");
+		CST_CIGARETTES_BELOW_5("Unter 5"),
+		CST_CIGARETTES_5_20("5-20"),
+		CST_CIGARETTES_20_40("20-40"),
+		CST_CIGARETTES_ABOVE_40("über 40"),
+		CST_VEIN_CONDITION_PYSICIAN_1("1: Sehr gut = mehrere starke Venen auf beiden Armen"),
+		CST_VEIN_CONDITION_PYSICIAN_2("2: Gut = punktierbare Venen tastbar/sichtbar auf beiden Armen"),
+		CST_VEIN_CONDITION_PYSICIAN_3("3: Schlecht = ein-zwei Venen, Venflon fraglich"),
+		CST_VEIN_CONDITION_PYSICIAN_4("4: Sehr schlecht = kein Venflon möglich"),
+		CST_VEIN_CONDITION_PROBAND_GOOD("gut"),
+		CST_VEIN_CONDITION_PROBAND_MEDIOCRE("mittel"),
+		CST_VEIN_CONDITION_PROBAND_BAD("schlecht"),
+		CST_DIABETES_TYPE_1("Diabetes Typ I"),
+		CST_DIABETES_TYPE_2("Diabetes Typ II"),
+		CST_DIABETES_TYPE_UNKNOWN("Diabetestyp unbekannt"),
+		CST_DIABETES_TYPE_OTHER("Diabetestyp anders"),
+		CST_HEALTHY("Gesund"),
+		CST_CSII("Insulinpumpe (CSII)"),
+		CST_MDI_IIT("Basal-Bolus Therapie (MDI/IIT)"),
+		CST_MDI_IIT_OAD("Basal-Bolus Therapie + Orale Antidiabetika (OAD)"),
+		CST_PRANDIAL("Prandiale Insulintherapie"),
+		CST_MIXED_INSULIN("Mischinsulintherapie"),
+		CST_BASAL_INSULIN("Basalinsulintherapie"),
+		CST_OAD("Orale Antidiabetika (OAD)"),
+		CST_OAD_BASAL("Orale Antidiabetika (OAD) + Basalinsulin"),
+		CST_OAD_BOLUS("Orale Antidiabetika (OAD) + Bolusinsulin"),
+		CST_OAD_MIXED("Orale Antidiabetika (OAD) + Mischinsulin"),
+		CST_CSII_OAD("Insulinpumpe (CSII)+OAD"),
+		CST_MEDTRONIC("Medtronic (640G, Paradigm, Minimed)"),
+		CST_ANIMAS("Animas (Vibe)"),
+		CST_YPSOMED("Ypsomed (Omnipod)"),
+		CST_ROCHE("Roche (Insight, Spirit Combo)"),
+		CST_NO_SENSOR("kein Sensor"),
+		CST_CGM("CGM (continous glucose measurement)"),
+		CST_FGM("FGM (flash glucose measurement) Libre"),
+		CST_ACTRAPID("Actrapid"),
+		CST_APIDRA("Apidra"),
+		CST_HUMALOG("Humalog"),
+		CST_HUMINSULIN_LILLY_NORMAL("Huminsulin Lilly Normal"),
+		CST_INSUMAN_RAPID("Insuman Rapid"),
+		CST_NOVORAPID("Novorapid"),
+		CST_BOLUS_INSULIN_OTHER("Andere"),
+		CST_FIASP("Fiasp"),
+		CST_LEVEMIR("Levemir"),
+		CST_LANTUS("Lantus"),
+		CST_HUMINSULIN_LILLY_BASAL("Huminsulin Lilly Basal"),
+		CST_INSULATARD("Insulatard"),
+		CST_INSUMAN_BASAL("Insuman Basal"),
+		CST_TRESIBA("Tresiba"),
+		CST_BASAL_INSULIN_OTHER("Andere"),
+		CST_TOUJEO("Toujeo"),
+		CST_HUMALOG_MIX_25("Humalog Mix 25"),
+		CST_HUMALOG_MIX_50("Humalog Mix 50"),
+		CST_HUMINSULIN_LILLY_PROFIL_3("Huminsulin Lilly Profil III"),
+		CST_INSUMAN_COMB_25("Insuman Comb 25"),
+		CST_INSUMAN_COMB_50("Insuman Comb 50"),
+		CST_MIXTARD_30("Mixtard 30"),
+		CST_MIXTARD_50("Mixtard 50"),
+		CST_NOVOMIX_30("Novomix 30"),
+		CST_NOVOMIX_70("Novomix 70"),
+		CST_MIXED_INSULIN_OTHER("Andere"),
+		CST_SULFONYLUREAS("Sulfonylharnstoffe (Amaryl, Daonil, Diamicron, Gliclazid, Glimepirid, Glucobene, Glurenorm, Minidiab)"),
+		CST_ALPHA_GLUCOSIDASE_INHIBITORS("Alpha-Glukosidasehemmer (Diastabol, Glucobay)"),
+		CST_GLINIDE("Glinide (Repaglinid, Starlix)"),
+		CST_GLITAZONE("Glitazone (Actos, Diabetalan, Pioglitazon)"),
+		CST_GLIPTINE("Gliptine/DPP-4-Inhibitoren (Galvus, Januvia, Onglyza, Tesavel, Trajenta, Vipdomet)"),
+		CST_INCRETINE("GLP1-Analoga/Inkretine (Byetta, Lyxumia, Victoza)"),
+		CST_GLIFLOZINE("SGLT2-Inhibitoren/Gliflozine (Forxiga, Jardiance)"),
+		CST_METFORMIN_GLIPTINE("Kombination Metformin + Gliptin (Eucreas, Janumet, Jentadueto, Komboglyze, Velmetia)"),
+		CST_METFORMIN_GLITAZONE("Kombination Metformin + Glitazon (Competact)"),
+		CST_GLITAZONE_GLIMEPIRID("Kombination Glitazon + Glimepirid (Sulfonylharnstoff) (Tandemact)"),
+		CST_OAD_OTHER("Andere OAD´s (bitte im Komentarfeld angeben)"),
+		CST_METFORMIN_DAPAGLIFLOZINE("Metformin + Dapagliflozine (Xigduo)"),
+		CST_ANTIHYPERTENSIVE_DRUGS("Antihypertensive Medikamente"),
+		CST_LIPID_LOWERING_DRUGS("Lipidsenkende Medikamente"),
+		CST_ANTICOAGULANT_DRUGS("Gerinnungshemmende Medikamente"),
+		CST_PSYCHOTROPIC_DRUGS("Psychopharmaka"),
+		CST_CORTISONE("Kortison"),
+		CST_SUBJECT_FILE_YES("Ja"),
+		CST_SUBJECT_FILE_NO("Nein"),
+		CST_UPDATED_DONE("erledigt"),
+		CST_UPDATED_PENDING("noch nicht erfolgt"),
+		CST_UPDATED_UNREACHABLE("Proband nicht erreicht");
 
 		private final String value;
 
@@ -285,17 +248,17 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
 	}
 
-	@Test
+	@Test(description = "Load the log in page of the Phoenix CTMS test instance.")
 	public void test_01_open_proband_page() {
 		load(getUrl("/proband/proband.jsf"));
 	}
 
-	@Test
+	@Test(description = "Log in with the user created for this test.")
 	public void test_02_login() {
 		login(userName, userPassword);
 	}
 
-	@Test
+	@Test(description = "Create a blinded subject that belongs to the departement created for this testclass. The subject alias look like \"subject-xxx\".")
 	public void test_03_create_proband() {
 		String subjectId = "subject-" + String.format("%03d", probandIds.size() + 1) + "-" + getTestId();
 		info("subject id: " + subjectId);
@@ -314,13 +277,13 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		}
 	}
 
-	@Test
+	@Test(description = "Open the test inquiry form for the created subject.")
 	public void test_04_load_inquiry_form() {
 		clickTab("tabView:inquiryvalues");
 		clickSelectOneMenu("tabView:inquiryvalue_form:inquiriestrial", trial.getName());
 	}
 
-	@Test
+	@Test(description = "Fill in values for the test inquiry form of the created subject.")
 	public void test_05_enter_inquiry_values() {
 		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
 		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
@@ -349,70 +312,69 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		//			return;
 		//		}
 	}
-
-	@Test
-	public void test_06_create_probands() {
-		for (int i = 2; i <= PROBAND_COUNT; i++) {
-			//info("entering proband " + i + "...");
-			clickMenuItem("menubar_form:newEntityMenuItem_proband");
-			closeWindow(getWindowName());
-			switchToWindow(getNewProbandEntityWindowName());
-			test_03_create_proband();
-			test_04_load_inquiry_form();
-			test_05_enter_inquiry_values();
-		}
-	}
-
-	@Test
-	public void test_07_open_proband_search_page() throws Throwable {
-		CriteriaOutVO criteria = getCriteria(SearchCriteria.TEST, criteriaCategory);
-		load(getUrl("/proband/probandSearch.jsf?criteriaid=" + criteria.getId())); //8368105
-	}
-
-	@Test
-	public void test_08_search_probands_result_size() throws Throwable {
-		clickButton(getButtonIdByLabel("Perform search"));
-		Long count = getCountFromDatatableHead("search_form:proband_result_list");
-		if (expectedProbandIds.size() == count) {
-			testOK("search returns expected number of items");
-			return;
-		} else {
-			testFailed("search returns different number of items");
-			return;
-		}
-	}
-
-	@Test
-	public void test_09_search_probands_all_expected_probands() throws Throwable {
-		do {
-			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
-			break;
-		} while (clickDatatableNextPage("search_form:proband_result_list"));
-		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
-		diff.addAll(expectedProbandIds);
-		diff.removeAll(actualProbandIds);
-		if (diff.size() == 0) {
-			testOK("search returned all expected probands");
-			return;
-		} else {
-			testFailed("search did not return expected proband IDs: " + diff.toString());
-			return;
-		}
-	}
-
-	@Test
-	public void test_10_search_probands_no_unexpected_probands() throws Throwable {
-		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
-		diff.addAll(actualProbandIds);
-		diff.removeAll(expectedProbandIds);
-		if (diff.size() == 0) {
-			testOK("search returned no unexpected probands");
-			return;
-		} else {
-			testFailed("search returned unexpected proband IDs: " + diff.toString());
-			return;
-		}
-	}
+	//	@Test
+	//	public void test_06_create_probands() {
+	//		for (int i = 2; i <= PROBAND_COUNT; i++) {
+	//			//info("entering proband " + i + "...");
+	//			clickMenuItem("menubar_form:newEntityMenuItem_proband");
+	//			closeWindow(getWindowName());
+	//			switchToWindow(getNewProbandEntityWindowName());
+	//			test_03_create_proband();
+	//			test_04_load_inquiry_form();
+	//			test_05_enter_inquiry_values();
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_07_open_proband_search_page() throws Throwable {
+	//		CriteriaOutVO criteria = getCriteria(SearchCriteria.TEST, criteriaCategory);
+	//		load(getUrl("/proband/probandSearch.jsf?criteriaid=" + criteria.getId())); //8368105
+	//	}
+	//
+	//	@Test
+	//	public void test_08_search_probands_result_size() throws Throwable {
+	//		clickButton(getButtonIdByLabel("Perform search"));
+	//		Long count = getCountFromDatatableHead("search_form:proband_result_list");
+	//		if (expectedProbandIds.size() == count) {
+	//			testOK("search returns expected number of items");
+	//			return;
+	//		} else {
+	//			testFailed("search returns different number of items");
+	//			return;
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_09_search_probands_all_expected_probands() throws Throwable {
+	//		do {
+	//			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
+	//			break;
+	//		} while (clickDatatableNextPage("search_form:proband_result_list"));
+	//		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
+	//		diff.addAll(expectedProbandIds);
+	//		diff.removeAll(actualProbandIds);
+	//		if (diff.size() == 0) {
+	//			testOK("search returned all expected probands");
+	//			return;
+	//		} else {
+	//			testFailed("search did not return expected proband IDs: " + diff.toString());
+	//			return;
+	//		}
+	//	}
+	//
+	//	@Test
+	//	public void test_10_search_probands_no_unexpected_probands() throws Throwable {
+	//		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
+	//		diff.addAll(actualProbandIds);
+	//		diff.removeAll(expectedProbandIds);
+	//		if (diff.size() == 0) {
+	//			testOK("search returned no unexpected probands");
+	//			return;
+	//		} else {
+	//			testFailed("search returned unexpected proband IDs: " + diff.toString());
+	//			return;
+	//		}
+	//	}
 
 	private UserOutVO createUser(String name, String password, long departmentId, String departmentPassword) throws Exception {
 		UserInVO newUser = new UserInVO();
@@ -476,324 +438,231 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		if (field != null) {
 			return field;
 		} else {
-			String name = inputField.toString();
+			String name = inputField.name();
+			String title = inputField.toString();
 			switch (inputField) {
 				//case HEIGHT:
-				case TEST:
-					return getTestDataProvider().createIntegerField(name);
-				//				case WEIGHT:
-				//					return getTestDataProvider().createIntegerField(name);
-				//				case BMI:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case DIABETES_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case DIABETES_TYPE:
-				//					return getTestDataProvider().createSelectOneRadioField(name,
-				//							new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//								{
-				//									put(InputFieldValues.TYP_1_DIABETES, false);
-				//									put(InputFieldValues.TYP_2_DIABETES_MIT_INSULINEIGENPRODUKTION, false);
-				//									put(InputFieldValues.TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION, false);
-				//								}
-				//							});
-				//				case DIABETES_SINCE:
-				//					return getTestDataProvider().createIntegerField(name);
-				//				case DIABETES_HBA1C_MMOLPERMOL:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case DIABETES_HBA1C_PERCENT:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case DIABETES_HBA1C_DATE:
-				//					return getTestDataProvider().createDateField(name);
-				//				case DIABETES_C_PEPTIDE:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case DIABETES_ATTENDING_PHYSICIAN:
-				//					return getTestDataProvider().createSingleLineTextField(name);
-				//				case DIABETES_METHOD_OF_TREATMENT:
-				//					return getTestDataProvider().createSelectManyField(name,
-				//							new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//								{
-				//									put(InputFieldValues.DIAET, false);
-				//									put(InputFieldValues.SPORTLICHE_BETAETIGUNG, false);
-				//									put(InputFieldValues.ORALE_ANTIDIABETIKA, false);
-				//									put(InputFieldValues.INSULINTHERAPIE, false);
-				//								}
-				//							});
-				//				case DIABETES_MEDICATION:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case CLINICAL_TRIAL_EXPERIENCE_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case SMOKER_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case CIGARETTES_PER_DAY:
-				//					return getTestDataProvider().createSelectOneDropdownField(name,
-				//							new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//								{
-				//									put(InputFieldValues.CIGARETTES_UNTER_5, false);
-				//									put(InputFieldValues.CIGARETTES_5_20, false);
-				//									put(InputFieldValues.CIGARETTES_20_40, false);
-				//									put(InputFieldValues.CIGARETTES_UEBER_40, false);
-				//								}
-				//							});
-				//				case CHRONIC_DISEASE_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case CHRONIC_DISEASE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case EPILEPSY_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case EPILEPSY:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case CARDIAC_PROBLEMS_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case CARDIAC_PROBLEMS:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case HYPERTENSION_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case HYPERTENSION:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case RENAL_INSUFFICIENCY_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case RENAL_INSUFFICIENCY:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case LIVER_DISEASE_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case LIVER_DISEASE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case ANEMIA_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case ANEMIA:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case IMMUNE_MEDIATED_DISEASE_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case IMMUNE_MEDIATED_DISEASE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case GESTATION_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case GESTATION:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case GESTATION_TYPE:
-				//					return getTestDataProvider().createSelectManyField(name,
-				//							new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//								{
-				//									put(InputFieldValues.SCHWANGER, false);
-				//									put(InputFieldValues.STILLEN, false);
-				//								}
-				//							});
-				//				case CONTRACEPTION_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case CONTRACEPTION:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case CONTRACEPTION_TYPE:
-				//					return getTestDataProvider().createSelectManyField(name,
-				//							new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//								{
-				//									put(InputFieldValues.HORMONELL, false);
-				//									put(InputFieldValues.MECHANISCH, false);
-				//									put(InputFieldValues.INTRAUTERINPESSARE, false);
-				//									put(InputFieldValues.CHEMISCH, false);
-				//									put(InputFieldValues.OPERATIV, false);
-				//								}
-				//							});
-				//				case ALCOHOL_DRUG_ABUSE_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case ALCOHOL_DRUG_ABUSE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case PSYCHIATRIC_CONDITION_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case PSYCHIATRIC_CONDITION:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case ALLERGY_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case ALLERGY:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case MEDICATION_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case MEDICATION:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case EYE_PROBLEMS_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case EYE_PROBLEMS:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case FEET_PROBLEMS_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case FEET_PROBLEMS:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case DIAGNOSTIC_FINDINGS_AVAILABLE_YN:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case DIAGNOSTIC_FINDINGS_AVAILABLE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case GENERAL_STATE_OF_HEALTH:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case NOTE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case SUBJECT_NUMBER:
-				//					// [0-9]{4}: omit ^ and $ here for xeger
-				//					return getTestDataProvider().createSingleLineTextField(name);
-				//				case IC_DATE:
-				//					return getTestDataProvider().createDateField(name);
-				//				case SCREENING_DATE:
-				//					return getTestDataProvider().createDateField(name);
-				//				case LAB_NUMBER:
-				//					return getTestDataProvider().createSingleLineTextField(name);
-				//				case RANDOM_NUMBER:
-				//					return getTestDataProvider().createSingleLineTextField(name);
-				//				case LETTER_TO_PHYSICIAN_SENT:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case PARTICIPATION_LETTER_IN_MEDOCS:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case LETTER_TO_SUBJECT_AT_END_OF_STUDY:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case COMPLETION_LETTER_IN_MEDOCS:
-				//					return getTestDataProvider().createCheckBoxField(name);
-				//				case BODY_HEIGHT:
-				//					return getTestDataProvider().createIntegerField(name);
-				//				case BODY_WEIGHT:
-				//					return getTestDataProvider().createIntegerField(name);
-				//				case BODY_MASS_INDEX:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case OBESITY:
-				//					return getTestDataProvider().createSelectOneRadioField(name, new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//						{
-				//							put(InputFieldValues.SHORTWEIGHT, false);
-				//							put(InputFieldValues.NORMAL_WEIGHT, false);
-				//							put(InputFieldValues.OVERWEIGHT, false);
-				//							put(InputFieldValues.ADIPOSITY_DEGREE_I, false);
-				//							put(InputFieldValues.ADIPOSITY_DEGREE_II, false);
-				//							put(InputFieldValues.ADIPOSITY_DEGREE_III, false);
-				//						}
-				//					});
-				//				case EGFR:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case ETHNICITY:
-				//					return getTestDataProvider().createSelectOneDropdownField(name, new TreeMap<InputFieldValuesEnum, Boolean>() {
-				//
-				//						{
-				//							put(InputFieldValues.AMERICAN_INDIAN_OR_ALASKA_NATIVE, false);
-				//							put(InputFieldValues.ASIAN, false);
-				//							put(InputFieldValues.BLACK, false);
-				//							put(InputFieldValues.NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER, false);
-				//							put(InputFieldValues.WHITE, false);
-				//						}
-				//					});
-				//				case SERUM_CREATININ_CONCENTRATION:
-				//					return getTestDataProvider().createFloatField(name); // range?
-				//				case HBA1C_PERCENT:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case HBA1C_MMOLPERMOL:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case MANNEQUIN:
-				//					return getTestDataProvider().createSketchField(name, new TreeMap<InputFieldValuesEnum, InkStroke>() {
-				//
-				//						{
-				//							put(InputFieldValues.SHOULDER_RIGHT,
-				//									new InkStroke("M111.91619,64.773336L134.22667,64.773336L134.22667,86.512383L111.91619,86.512383Z"));
-				//							put(InputFieldValues.SHOULDER_LEFT,
-				//									new InkStroke("M196.2019,66.916193L218.51238,66.916193L218.51238,88.65524L196.2019,88.65524Z"));
-				//							put(InputFieldValues.ELLBOW_RIGHT,
-				//									new InkStroke("M114.05904,111.20191L136.36952,111.20191L136.36952,132.94095L114.05904,132.94095Z"));
-				//							put(InputFieldValues.ELLBOW_LEFT,
-				//									new InkStroke("M197.63047,113.34477L219.94095,113.34477L219.94095,135.08381L197.63047,135.08381Z"));
-				//							put(InputFieldValues.WRIST_RIGHT,
-				//									new InkStroke("M94.773327,156.9162L117.08381,156.9162L117.08381,178.65524L94.773327,178.65524Z"));
-				//							put(InputFieldValues.WRIST_LEFT,
-				//									new InkStroke("M215.48761,161.20191L237.7981,161.20191L237.7981,182.94095L215.48761,182.94095Z"));
-				//							put(InputFieldValues.THUMB_BASE_RIGHT,
-				//									new InkStroke("M29.891238,214.89125L49.823043,214.89125L49.823043,254.9659L29.891238,254.9659Z"));
-				//							put(InputFieldValues.THUMB_MIDDLE_RIGHT,
-				//									new InkStroke("M9.0200169,246.16289L29.265697,246.16289L29.265697,265.83713L9.0200169,265.83713Z"));
-				//							put(InputFieldValues.THUMB_BASE_LEFT,
-				//									new InkStroke("M282.0341,217.03411L301.9659,217.03411L301.9659,257.10876L282.0341,257.10876Z"));
-				//							put(InputFieldValues.THUMB_MIDDLE_LEFT,
-				//									new InkStroke("M301.87716,250.4486L322.12284,250.4486L322.12284,270.12284L301.87716,270.12284Z"));
-				//							put(InputFieldValues.INDEX_FINGER_BASE_RIGHT,
-				//									new InkStroke("M28.305731,271.87717L48.551411,271.87717L48.551411,291.55141L28.305731,291.55141Z"));
-				//							put(InputFieldValues.INDEX_FINGER_MIDDLE_RIGHT,
-				//									new InkStroke("M22.591445,294.73431L42.837125,294.73431L42.837125,314.40855L22.591445,314.40855Z"));
-				//							put(InputFieldValues.MIDDLE_FINGER_BASE_RIGHT,
-				//									new InkStroke("M48.305731,276.16288L68.551411,276.16288L68.551411,295.83712L48.305731,295.83712Z"));
-				//							put(InputFieldValues.MIDDLE_FINGER_MIDDLE_RIGHT,
-				//									new InkStroke("M44.734302,298.30574L64.979982,298.30574L64.979982,317.97998L44.734302,317.97998Z"));
-				//							put(InputFieldValues.RING_FINGER_BASE_RIGHT,
-				//									new InkStroke("M66.162873,279.02003L86.408553,279.02003L86.408553,298.69427L66.162873,298.69427Z"));
-				//							put(InputFieldValues.RING_FINGER_MIDDLE_RIGHT,
-				//									new InkStroke("M65.448587,302.59146L85.694267,302.59146L85.694267,322.2657L65.448587,322.2657Z"));
-				//							put(InputFieldValues.LITTLE_FINGER_BASE_RIGHT,
-				//									new InkStroke("M85.448587,276.16289L105.69427,276.16289L105.69427,295.83713L85.448587,295.83713Z"));
-				//							put(InputFieldValues.LITTLE_FINGER_MIDDLE_RIGHT,
-				//									new InkStroke("M87.591444,299.02003L107.83713,299.02003L107.83713,318.69427L87.591444,318.69427Z"));
-				//							put(InputFieldValues.INDEX_FINGER_BASE_LEFT,
-				//									new InkStroke("M281.16287,274.73432L301.40856,274.73432L301.40856,294.40856L281.16287,294.40856Z"));
-				//							put(InputFieldValues.INDEX_FINGER_MIDDLE_LEFT,
-				//									new InkStroke("M286.16287,296.16289L306.40856,296.16289L306.40856,315.83713L286.16287,315.83713Z"));
-				//							put(InputFieldValues.MIDDLE_FINGER_BASE_LEFT,
-				//									new InkStroke("M262.59144,279.73432L282.83713,279.73432L282.83713,299.40856L262.59144,299.40856Z"));
-				//							put(InputFieldValues.MIDDLE_FINGER_MIDDLE_LEFT,
-				//									new InkStroke("M264.02001,301.87718L284.2657,301.87718L284.2657,321.55142L264.02001,321.55142Z"));
-				//							put(InputFieldValues.RING_FINGER_BASE_LEFT,
-				//									new InkStroke("M244.7343,282.59147L264.97999,282.59147L264.97999,302.26571L244.7343,302.26571Z"));
-				//							put(InputFieldValues.RING_FINGER_MIDDLE_LEFT,
-				//									new InkStroke("M244.02001,304.02004L264.2657,304.02004L264.2657,323.69428L244.02001,323.69428Z"));
-				//							put(InputFieldValues.LITTLE_FINGER_BASE_LEFT,
-				//									new InkStroke("M224.7343,279.02004L244.97999,279.02004L244.97999,298.69428L224.7343,298.69428Z"));
-				//							put(InputFieldValues.LITTLE_FINGER_MIDDLE_LEFT,
-				//									new InkStroke("M224.02001,301.1629L244.2657,301.1629L244.2657,320.83714L224.02001,320.83714Z"));
-				//							put(InputFieldValues.KNEE_RIGHT,
-				//									new InkStroke("M133.4355,241.29267L161.27879,241.29267L161.27879,267.13594L133.4355,267.13594Z"));
-				//							put(InputFieldValues.KNEE_LEFT,
-				//									new InkStroke("M166.29264,242.00696L194.13593,242.00696L194.13593,267.85023L166.29264,267.85023Z"));
-				//						}
-				//					});
-				//				case VAS:
-				//					return getTestDataProvider().createSketchField(name, new TreeMap<InputFieldValuesEnum, InkStroke>() {
-				//
-				//						{
-				//							final int VAS_STEPS = 10;
-				//							final float VAS_MAX_VALUE = 100.0f;
-				//							final float VAS_X_OFFSET = 10.0f;
-				//							final float VAS_LENGTH = 382.0f;
-				//							final String[] VAS_COLORS = new String[] {
-				//									"#24FF00", "#58FF00", "#8DFF00", "#C2FF00",
-				//									"#F7FF00", "#FFD300", "#FF9E00", "#FF6900", "#FF3400", "#FF0000" };
-				//							for (int i = 0; i < VAS_STEPS; i++) {
-				//								float valueFrom = i * VAS_MAX_VALUE / VAS_STEPS;
-				//								float valueTo = (i + 1) * VAS_MAX_VALUE / VAS_STEPS;
-				//								float value = (valueFrom + valueTo) / 2;
-				//								float x1 = VAS_X_OFFSET + i * VAS_LENGTH / VAS_STEPS;
-				//								float x2 = VAS_X_OFFSET + (i + 1) * VAS_LENGTH / VAS_STEPS;
-				//								int colorIndex = i * VAS_COLORS.length / VAS_STEPS;
-				//								put(InputFieldValues.valueOf(String.format("VAS_%d", i + 1)),
-				//										new InkStroke(VAS_COLORS[colorIndex], "M" + x1 + ",10L" + x2 + ",10L" + x2
-				//												+ ",50L" + x1 + ",50Z", Float.toString(value)));
-				//							}
-				//						}
-				//					});
-				//				case ESR:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case DAS28:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case DISTANCE:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case ALPHA_ID:
-				//					return getTestDataProvider().createSingleLineTextField(name);
-				//				case STRING_SINGLELINE:
-				//					return getTestDataProvider().createSingleLineTextField(name);
-				//				case STRING_MULTILINE:
-				//					return getTestDataProvider().createMultiLineTextField(name);
-				//				case FLOAT:
-				//					return getTestDataProvider().createFloatField(name);
-				//				case INTEGER:
-				//					return getTestDataProvider().createIntegerField(name);
-				//				case DIAGNOSIS_START:
-				//					return getTestDataProvider().createDateField(name);
-				//				case DIAGNOSIS_END:
-				//					return getTestDataProvider().createDateField(name);
-				//				case DIAGNOSIS_COUNT:
-				//					return getTestDataProvider().createIntegerField(name);
+				case CST_HEIGHT:
+					return getTestDataProvider().createIntegerField(name, title);
+				case CST_WEIGHT:
+					return getTestDataProvider().createIntegerField(name, title);
+				case CST_BMI:
+					return getTestDataProvider().createFloatField(name, title);
+				case CST_SMOKER_YN:
+					return getTestDataProvider().createCheckBoxField(name, title);
+				case CST_CIGARETTES_PER_DAY:
+					return getTestDataProvider().createSelectOneDropdownField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_CIGARETTES_BELOW_5, false);
+									put(InputFieldValues.CST_CIGARETTES_5_20, false);
+									put(InputFieldValues.CST_CIGARETTES_20_40, false);
+									put(InputFieldValues.CST_CIGARETTES_ABOVE_40, false);
+								}
+							});
+				case CST_VEIN_CONDITION_PROBAND:
+					return getTestDataProvider().createSelectOneDropdownField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_VEIN_CONDITION_PROBAND_GOOD, false);
+									put(InputFieldValues.CST_VEIN_CONDITION_PROBAND_MEDIOCRE, false);
+									put(InputFieldValues.CST_VEIN_CONDITION_PROBAND_BAD, false);
+								}
+							});
+				case CST_VEIN_CONDITION_PYSICIAN:
+					return getTestDataProvider().createSelectOneDropdownField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_1, false);
+									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_2, false);
+									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_3, false);
+									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_4, false);
+								}
+							});
+				case CST_NOTE:
+					return getTestDataProvider().createMultiLineTextField(name, title);
+				case CST_UNDERLYING_DISEASE:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_DIABETES_TYPE_1, false);
+									put(InputFieldValues.CST_DIABETES_TYPE_2, false);
+									put(InputFieldValues.CST_DIABETES_TYPE_UNKNOWN, false);
+									put(InputFieldValues.CST_DIABETES_TYPE_OTHER, false);
+									put(InputFieldValues.CST_HEALTHY, false);
+								}
+							});
+				case CST_DIABETES_THERAPY:
+					return getTestDataProvider().createSelectOneDropdownField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_CSII, false);
+									put(InputFieldValues.CST_MDI_IIT, false);
+									put(InputFieldValues.CST_MDI_IIT_OAD, false);
+									put(InputFieldValues.CST_PRANDIAL, false);
+									put(InputFieldValues.CST_MIXED_INSULIN, false);
+									put(InputFieldValues.CST_BASAL_INSULIN, false);
+									put(InputFieldValues.CST_OAD, false);
+									put(InputFieldValues.CST_OAD_BASAL, false);
+									put(InputFieldValues.CST_OAD_BOLUS, false);
+									put(InputFieldValues.CST_OAD_MIXED, false);
+									put(InputFieldValues.CST_CSII_OAD, false);
+								}
+							});
+				case CST_CSII_TRADE_MARK:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_MEDTRONIC, false);
+									put(InputFieldValues.CST_ANIMAS, false);
+									put(InputFieldValues.CST_YPSOMED, false);
+									put(InputFieldValues.CST_ROCHE, false);
+								}
+							});
+				case CST_CSII_TRADE_MARK_OTHER:
+					return getTestDataProvider().createAutoCompleteField(name, title);
+				case CST_SENSOR_THERAPY:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_NO_SENSOR, false);
+									put(InputFieldValues.CST_CGM, false);
+									put(InputFieldValues.CST_FGM, false);
+								}
+							});
+				case CST_SENSOR_TRADE_MARK:
+					return getTestDataProvider().createAutoCompleteField(name, title);
+				case CST_BOLUS_INSULIN:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_ACTRAPID, false);
+									put(InputFieldValues.CST_APIDRA, false);
+									put(InputFieldValues.CST_HUMALOG, false);
+									put(InputFieldValues.CST_HUMINSULIN_LILLY_NORMAL, false);
+									put(InputFieldValues.CST_INSUMAN_RAPID, false);
+									put(InputFieldValues.CST_NOVORAPID, false);
+									put(InputFieldValues.CST_NOVORAPID, false);
+									put(InputFieldValues.CST_BOLUS_INSULIN_OTHER, false);
+									put(InputFieldValues.CST_FIASP, false);
+								}
+							});
+				case CST_BOLUS_INSULIN_IU_BE:
+					return getTestDataProvider().createFloatField(name, title);
+				case CST_BOLUS_INSULIN_TDD:
+					return getTestDataProvider().createIntegerField(name, title);
+				case CST_BASAL_INSULIN:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_LEVEMIR, false);
+									put(InputFieldValues.CST_LANTUS, false);
+									put(InputFieldValues.CST_HUMINSULIN_LILLY_BASAL, false);
+									put(InputFieldValues.CST_INSULATARD, false);
+									put(InputFieldValues.CST_INSUMAN_BASAL, false);
+									put(InputFieldValues.CST_TRESIBA, false);
+									put(InputFieldValues.CST_BASAL_INSULIN_OTHER, false);
+									put(InputFieldValues.CST_TOUJEO, false);
+								}
+							});
+				case CST_BASAL_INSULIN_TDD:
+					return getTestDataProvider().createIntegerField(name, title);
+				case CST_MIXED_INSULIN:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_HUMALOG_MIX_25, false);
+									put(InputFieldValues.CST_HUMALOG_MIX_50, false);
+									put(InputFieldValues.CST_HUMINSULIN_LILLY_PROFIL_3, false);
+									put(InputFieldValues.CST_INSUMAN_COMB_25, false);
+									put(InputFieldValues.CST_INSUMAN_COMB_50, false);
+									put(InputFieldValues.CST_MIXTARD_30, false);
+									put(InputFieldValues.CST_MIXTARD_50, false);
+									put(InputFieldValues.CST_NOVOMIX_30, false);
+									put(InputFieldValues.CST_NOVOMIX_70, false);
+									put(InputFieldValues.CST_MIXED_INSULIN_OTHER, false);
+								}
+							});
+				case CST_MIXED_INSULIN_TDD:
+					return getTestDataProvider().createIntegerField(name, title);
+				case CST_OAD_METFORMIN:
+					return getTestDataProvider().createCheckBoxField(name, title);
+				case CST_OAD_METFORMIN_TDD:
+					return getTestDataProvider().createIntegerField(name, title);
+				case CST_OAD_OTHER:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_SULFONYLUREAS, false);
+									put(InputFieldValues.CST_ALPHA_GLUCOSIDASE_INHIBITORS, false);
+									put(InputFieldValues.CST_GLINIDE, false);
+									put(InputFieldValues.CST_GLITAZONE, false);
+									put(InputFieldValues.CST_GLIPTINE, false);
+									put(InputFieldValues.CST_INCRETINE, false);
+									put(InputFieldValues.CST_GLIFLOZINE, false);
+									put(InputFieldValues.CST_METFORMIN_GLIPTINE, false);
+									put(InputFieldValues.CST_METFORMIN_GLITAZONE, false);
+									put(InputFieldValues.CST_GLITAZONE_GLIMEPIRID, false);
+									put(InputFieldValues.CST_OAD_OTHER, false);
+									put(InputFieldValues.CST_METFORMIN_DAPAGLIFLOZINE, false);
+								}
+							});
+				case CST_OTHER_MEDICATION:
+					return getTestDataProvider().createSelectManyField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_ANTIHYPERTENSIVE_DRUGS, false);
+									put(InputFieldValues.CST_LIPID_LOWERING_DRUGS, false);
+									put(InputFieldValues.CST_ANTICOAGULANT_DRUGS, false);
+									put(InputFieldValues.CST_PSYCHOTROPIC_DRUGS, false);
+									put(InputFieldValues.CST_CORTISONE, false);
+								}
+							});
+				case CST_DIABETES_SINCE:
+					return getTestDataProvider().createDateField(name, title);
+				case CST_HBA1C_PERCENT:
+					return getTestDataProvider().createFloatField(name, title);
+				case CST_HBA1C_MMOLPERMOL:
+					return getTestDataProvider().createFloatField(name, title);
+				case CST_C_PEPTIDE:
+					return getTestDataProvider().createFloatField(name, title);
+				case CST_RECRUITED_FROM:
+					return getTestDataProvider().createAutoCompleteField(name, title);
+				case CST_SUBJECT_FILE:
+					return getTestDataProvider().createSelectOneDropdownField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_SUBJECT_FILE_YES, false);
+									put(InputFieldValues.CST_SUBJECT_FILE_NO, false);
+								}
+							});
+				case CST_DISTANCE:
+					return getTestDataProvider().createFloatField(name, title);
+				case CST_UPDATED:
+					return getTestDataProvider().createSelectOneRadioField(name, title,
+							new TreeMap<InputFieldValuesEnum, Boolean>() {
+
+								{
+									put(InputFieldValues.CST_UPDATED_DONE, false);
+									put(InputFieldValues.CST_UPDATED_PENDING, false);
+									put(InputFieldValues.CST_UPDATED_UNREACHABLE, false);
+								}
+							});
+				case CST_UPDATED_DATE:
+					return getTestDataProvider().createDateField(name, title);
 				default:
 					return null;
 			}
@@ -818,10 +687,42 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	private ArrayList<InquiryOutVO> createInquiryForm(TrialOutVO trial) throws Throwable {
 		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.TEST), trial, "section", 1));
-		//		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.HEIGHT), trial, "01 - Allgemeine information", 1, true, true, false, false, true, true, null,
-		//				null, null, null,
-		//				null));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_HEIGHT), trial, "01 - Basisinformation", 1));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_WEIGHT), trial, "01 - Basisinformation", 2));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BMI), trial, "01 - Basisinformation", 3));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SMOKER_YN), trial, "01 - Basisinformation", 4));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_CIGARETTES_PER_DAY), trial, "01 - Basisinformation", 5));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_VEIN_CONDITION_PROBAND), trial, "01 - Basisinformation", 6));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_VEIN_CONDITION_PYSICIAN), trial, "01 - Basisinformation", 7));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_NOTE), trial, "01 - Basisinformation", 8));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_UNDERLYING_DISEASE), trial, "02 - Medikamentöse Therapie", 1));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_DIABETES_THERAPY), trial, "02 - Medikamentöse Therapie", 2));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_NOTE), trial, "02 - Medikamentöse Therapie", 3));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_CSII_TRADE_MARK), trial, "02 - Medikamentöse Therapie", 4));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_CSII_TRADE_MARK_OTHER), trial, "02 - Medikamentöse Therapie", 5));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SENSOR_THERAPY), trial, "02 - Medikamentöse Therapie", 6));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SENSOR_TRADE_MARK), trial, "02 - Medikamentöse Therapie", 7));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BOLUS_INSULIN), trial, "02 - Medikamentöse Therapie", 8));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BOLUS_INSULIN_IU_BE), trial, "02 - Medikamentöse Therapie", 9));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BOLUS_INSULIN_TDD), trial, "02 - Medikamentöse Therapie", 10));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BASAL_INSULIN), trial, "02 - Medikamentöse Therapie", 11));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BASAL_INSULIN_TDD), trial, "02 - Medikamentöse Therapie", 12));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_MIXED_INSULIN), trial, "02 - Medikamentöse Therapie", 13));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_MIXED_INSULIN_TDD), trial, "02 - Medikamentöse Therapie", 14));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OAD_METFORMIN), trial, "02 - Medikamentöse Therapie", 15));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OAD_METFORMIN_TDD), trial, "02 - Medikamentöse Therapie", 16));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OAD_OTHER), trial, "02 - Medikamentöse Therapie", 17));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OTHER_MEDICATION), trial, "02 - Medikamentöse Therapie", 18));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_DIABETES_SINCE), trial, "03 - Sonstiges", 1));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_HBA1C_PERCENT), trial, "03 - Sonstiges", 2));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_HBA1C_MMOLPERMOL), trial, "03 - Sonstiges", 3));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_C_PEPTIDE), trial, "03 - Sonstiges", 4));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_NOTE), trial, "03 - Sonstiges", 5));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_RECRUITED_FROM), trial, "03 - Sonstiges", 6));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SUBJECT_FILE), trial, "03 - Sonstiges", 7));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_DISTANCE), trial, "03 - Sonstiges", 8));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_UPDATED), trial, "04 - Aktualisierung der Daten", 1));
+		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_UPDATED_DATE), trial, "04 - Aktualisierung der Daten", 2));
 		return inquiries;
 	}
 
@@ -841,9 +742,9 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 							new ArrayList<SearchCriterion>() {
 
 								{
-									//InputFieldOutVO field1 = getInputField(InputFields.DIABETES_TYPE);
+									//InputFieldOutVO field1 = getInputField(InputFieldValues.CST_DIABETES_TYPE);
 									//InputFieldSelectionSetValue value1 = getTestDataProvider().getInputFieldValue(field1.getId(),
-									//		InputFieldValues.TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION);
+									//		InputFieldValues.CST_TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION);
 									//add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
 									//add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value1.getId()));
 								}
