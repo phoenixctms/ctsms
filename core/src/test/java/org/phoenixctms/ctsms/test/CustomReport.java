@@ -83,11 +83,18 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			// Test method
 			ITestNGMethod method = tr.getMethod();
 			String name = method.getMethodName();
+			String cls = "";
+			if (tr.getStatus() == ITestResult.FAILURE) {
+				cls = "red";
+				//			} else if (tr.getStatus() == ITestResult.SUCCESS) {
+				//				cls = "green";
+			}
 			pw.append("<td title='")
 					.append(tr.getTestClass().getName())
 					.append(".")
 					.append(name)
-					.append("()'>")
+					.append("()'")
+					.append(" class='" + cls + "'>")
 					.append("<b>")
 					.append(name)
 					.append("</b>");
@@ -197,7 +204,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			//String fullStackTrace;
 			id = "stack-trace" + tr.hashCode();
 			if (null != tw) {
-				pw.append("<tr><td colspan=\"2\">\n");
+				pw.append("<tr><td colspan=\"2\" class=\"" + cls + "\">\n");
 				//fullStackTrace = Utils.longStackTrace(tw, true);
 				stackTrace = "<div class='stack-trace'><pre>" + Utils.longStackTrace(tw, true) + "</pre></div>";
 				pw.append(stackTrace);
@@ -237,6 +244,8 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 	private static final String HEAD = "\n<style type=\"text/css\">\n"
 			+ ".log { display: block;} \n"
 			+ ".stack-trace { display: block;} \n"
+			+ ".red { color:red;} \n"
+			+ ".green { color:green;} \n"
 			+ "</style>\n"
 			+ "<script type=\"text/javascript\">\n"
 			+ "<!--\n"
