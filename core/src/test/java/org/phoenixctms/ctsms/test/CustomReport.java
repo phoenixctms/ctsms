@@ -183,7 +183,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			pw.append("<td>");
 			if (null != tw) {
 				//fullStackTrace = Utils.longStackTrace(tw, true);
-				stackTrace = "<div><pre>" + Utils.shortStackTrace(tw, true) + "</pre></div>";
+				stackTrace = "<div class='stack-trace'>" + Utils.shortStackTrace(tw, true) + "</div>";
 				pw.append(stackTrace);
 				//				// JavaScript link
 				//				pw.append("<a href='#' onClick='toggleBox(\"")
