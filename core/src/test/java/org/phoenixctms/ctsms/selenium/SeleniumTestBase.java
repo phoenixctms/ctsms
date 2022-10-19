@@ -245,6 +245,10 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	protected void createScreenshot(String name) {
+		try {
+			Thread.sleep(1500);//finish UI fade effects 
+		} catch (InterruptedException e) {
+		}
 		File screenshot = getChromeDriver().getScreenshotAs(OutputType.FILE);
 		screenshotCount += 1;
 		if (!CommonUtil.isEmptyString(getTestDirectory())) {
