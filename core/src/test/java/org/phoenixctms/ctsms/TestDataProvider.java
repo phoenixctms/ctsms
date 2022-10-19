@@ -193,14 +193,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 			newSelectionSetValue.setFieldId(inputField.getId());
 			newSelectionSetValue.setName(selectionSetValue.getKey().toString());
 			newSelectionSetValue.setPreset(selectionSetValue.getValue());
-			newSelectionSetValue.setValue(selectionSetValue.getKey().toString());
+			newSelectionSetValue.setValue(selectionSetValue.getKey().name());
 			InputFieldSelectionSetValueOutVO out = inputFieldService.addSelectionSetValue(auth, newSelectionSetValue);
 			debug("selection set value created: " + out.getName());
 		}
 	}
 
 	public InputFieldOutVO getInputField(InputFieldsEnum inputField) throws Throwable {
-		String name = inputField.toString();
+		String name = inputField.name();
 		Iterator<InputField> it = inputFieldDao.findByNameL10nKeyLocalized(name, false).iterator();
 		if (it.hasNext()) {
 			return inputFieldService.getInputField(auth, it.next().getId());
@@ -275,8 +275,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createIntegerField(String name) throws Exception {
-		return createIntegerField(name, null, name, null, null, null, null, null);
+	public InputFieldOutVO createIntegerField(String name, String title) throws Exception {
+		return createIntegerField(name, null, title, null, null, null, null, null);
 	}
 
 	public InputFieldOutVO createMultiLineTextField(String name, String category, String title, String comment, String textPreset, String regExp,
@@ -295,8 +295,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createMultiLineTextField(String name) throws Exception {
-		return createMultiLineTextField(name, null, name, null, null, null, null);
+	public InputFieldOutVO createMultiLineTextField(String name, String title) throws Exception {
+		return createMultiLineTextField(name, null, title, null, null, null, null);
 	}
 
 	public InputFieldOutVO createSelectManyField(String name, String category, String title, String comment,
@@ -317,8 +317,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return inputField;
 	}
 
-	public InputFieldOutVO createSelectManyField(String name, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues) throws Exception {
-		return createSelectManyField(name, null, name, null, true, selectionSetValues, null, null, null);
+	public InputFieldOutVO createSelectManyField(String name, String title, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues) throws Exception {
+		return createSelectManyField(name, null, title, null, true, selectionSetValues, null, null, null);
 	}
 
 	public InputFieldOutVO createSelectOneDropdownField(String name, String category, String title, String comment,
@@ -336,8 +336,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return inputField;
 	}
 
-	public InputFieldOutVO createSelectOneDropdownField(String name, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues) throws Exception {
-		return createSelectOneDropdownField(name, null, name, null, selectionSetValues);
+	public InputFieldOutVO createSelectOneDropdownField(String name, String title, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues) throws Exception {
+		return createSelectOneDropdownField(name, null, title, null, selectionSetValues);
 	}
 
 	public InputFieldOutVO createSelectOneRadioField(String name, String category, String title, String comment, boolean vertical,
@@ -355,8 +355,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return inputField;
 	}
 
-	public InputFieldOutVO createSelectOneRadioField(String name, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues) throws Exception {
-		return createSelectOneRadioField(name, null, name, null, true, selectionSetValues);
+	public InputFieldOutVO createSelectOneRadioField(String name, String title, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues) throws Exception {
+		return createSelectOneRadioField(name, null, title, null, true, selectionSetValues);
 	}
 
 	public InputFieldOutVO createSingleLineTextField(String name, String category, String title, String comment, String textPreset, String regExp,
@@ -375,8 +375,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createSingleLineTextField(String name) throws Exception {
-		return createSingleLineTextField(name, null, name, null, null, null, null);
+	public InputFieldOutVO createSingleLineTextField(String name, String title) throws Exception {
+		return createSingleLineTextField(name, null, title, null, null, null, null);
 	}
 
 	public InputFieldOutVO createAutoCompleteField(String name, String category, String title, String comment, boolean learn, boolean strict) throws Exception {
@@ -393,8 +393,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createAutoCompleteField(String name) throws Exception {
-		return createAutoCompleteField(name, null, name, null, true, false);
+	public InputFieldOutVO createAutoCompleteField(String name, String title) throws Exception {
+		return createAutoCompleteField(name, null, title, null, true, false);
 	}
 
 	public InputFieldOutVO createSketchField(String name, String category, String title, String comment, String resourceFileName,
@@ -420,8 +420,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return inputField;
 	}
 
-	public InputFieldOutVO createSketchField(String name, TreeMap<InputFieldValuesEnum, InkStroke> inkRegions) throws Throwable {
-		return createSketchField(name, null, name, null, null, inkRegions, null, null, null);
+	public InputFieldOutVO createSketchField(String name, String title, TreeMap<InputFieldValuesEnum, InkStroke> inkRegions) throws Throwable {
+		return createSketchField(name, null, title, null, null, inkRegions, null, null, null);
 	}
 
 	public InputFieldOutVO createTimeField(String name, String category, String title, String comment, Date timePreset, Date minTime, Date maxTime,
@@ -441,8 +441,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createTimeField(String name) throws Exception {
-		return createTimeField(name, null, name, null, null, null, null, null);
+	public InputFieldOutVO createTimeField(String name, String title) throws Exception {
+		return createTimeField(name, null, title, null, null, null, null, null);
 	}
 
 	public InputFieldOutVO createTimestampField(String name, String category, String title, String comment, Date timestampPreset, Date minTimestamp,
@@ -463,8 +463,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createTimestampField(String name) throws Exception {
-		return createTimestampField(name, null, name, null, null, null, null, false, null);
+	public InputFieldOutVO createTimestampField(String name, String title) throws Exception {
+		return createTimestampField(name, null, title, null, null, null, null, false, null);
 	}
 
 	public InputFieldOutVO createCheckBoxField(String name, String category, String title, String comment, boolean booleanPreset) throws Exception {
@@ -480,8 +480,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createCheckBoxField(String name) throws Exception {
-		return createCheckBoxField(name, null, name, null, false);
+	public InputFieldOutVO createCheckBoxField(String name, String title) throws Exception {
+		return createCheckBoxField(name, null, title, null, false);
 	}
 
 	public InputFieldOutVO createDateField(String name, String category, String title, String comment, Date datePreset, Date minDate, Date maxDate,
@@ -501,8 +501,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createDateField(String name) throws Exception {
-		return createDateField(name, null, name, null, null, null, null, null);
+	public InputFieldOutVO createDateField(String name, String title) throws Exception {
+		return createDateField(name, null, title, null, null, null, null, null);
 	}
 
 	public InputFieldOutVO createFloatField(String name, String category, String title, String comment, Float floatPreset, Float lowerLimit,
@@ -522,8 +522,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return out;
 	}
 
-	public InputFieldOutVO createFloatField(String name) throws Exception {
-		return createFloatField(name, null, name, null, null, null, null, null);
+	public InputFieldOutVO createFloatField(String name, String title) throws Exception {
+		return createFloatField(name, null, title, null, null, null, null, null);
 	}
 
 	public CriteriaOutVO createCriteria(CriteriaInVO newCriteria, List<SearchCriterion> criterions)
