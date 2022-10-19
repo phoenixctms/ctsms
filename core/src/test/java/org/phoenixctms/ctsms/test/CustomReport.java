@@ -228,7 +228,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 
 	private static final String HEAD = "\n<style type=\"text/css\">\n"
 			+ ".log { display: block;} \n"
-			+ ".stack-trace { display: block;} \n"
+			+ ".stack-trace { font-family: monospace, monospace; } \n"
 			+ "</style>\n"
 			+ "<script type=\"text/javascript\">\n"
 			+ "<!--\n"
