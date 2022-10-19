@@ -82,18 +82,18 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			// Test method
 			ITestNGMethod method = tr.getMethod();
 			String name = method.getMethodName();
-			String cls = "";
-			if (tr.getStatus() == ITestResult.FAILURE) {
-				cls = "red";
-				//			} else if (tr.getStatus() == ITestResult.SUCCESS) {
-				//				cls = "green";
-			}
+			//			String cls = "";
+			//			if (tr.getStatus() == ITestResult.FAILURE) {
+			//				cls = "red";
+			//				//			} else if (tr.getStatus() == ITestResult.SUCCESS) {
+			//				//				cls = "green";
+			//			}
 			pw.append("<td title='")
 					.append(tr.getTestClass().getName())
 					.append(".")
 					.append(name)
-					.append("()'")
-					.append(" class='" + cls + "'>")
+					.append("()'>")
+					//.append(" class='" + cls + "'>")
 					.append("<b>")
 					.append(name)
 					.append("</b>");
@@ -101,7 +101,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			pw.append("<dl>");
 			String testClass = tr.getTestClass().getName();
 			if (testClass != null) {
-				pw.append("<dt>").append("Test class").append("<dt>");
+				pw.append("<dt>").append("Test class:").append("<dt>");
 				pw.append("<dd><i>").append(testClass);
 				// Test name
 				String testName = tr.getTestName();
@@ -203,7 +203,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			//String fullStackTrace;
 			id = "stack-trace" + tr.hashCode();
 			if (null != tw) {
-				pw.append("<tr><td colspan=\"2\" class=\"" + cls + "\">\n");
+				pw.append("<tr><td colspan=\"2\" >\n"); //class=\"" + cls + "\"
 				//fullStackTrace = Utils.longStackTrace(tw, true);
 				stackTrace = "<div class='stack-trace'><pre>" + Utils.longStackTrace(tw, true) + "</pre></div>";
 				pw.append(stackTrace);
@@ -243,8 +243,11 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 	private static final String HEAD = "\n<style type=\"text/css\">\n"
 			+ ".log { display: block;} \n"
 			+ ".stack-trace { display: block;} \n"
-			+ ".red { color:red;} \n"
-			+ ".green { color:green;} \n"
+			+ ".invocation-failed { color:red;} \n"
+			//+ ".green { color:green;} \n"
+			+ "table, tr, td, th, tbody, thead, tfoot {\\n"
+			+ "    page-break-inside: avoid !important;\\n"
+			+ "}\\n"
 			+ "</style>\n"
 			+ "<script type=\"text/javascript\">\n"
 			+ "<!--\n"
