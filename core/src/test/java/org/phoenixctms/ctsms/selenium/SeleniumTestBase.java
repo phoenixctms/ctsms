@@ -812,7 +812,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private void attachReports() throws Throwable {
 		File[] files = (new File(getTestDirectory())).listFiles();
 		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile() && CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING)) {
+			if (files[i].isFile() && CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING) && !"index.html".equals(files[i].getName().toLowerCase())) {
 				File pdfFile = new File((new FilePathSplitter(files[i].getCanonicalPath())).joinFilePath("{0}." + CoreUtil.PDF_FILENAME_EXTENSION));
 				String[] command = new String[HTMLTOPDF_COMMAND.length + 2];
 				for (int j = 0; j < HTMLTOPDF_COMMAND.length; j++) {
