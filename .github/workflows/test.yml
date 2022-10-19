@@ -85,9 +85,8 @@ jobs:
           sudo -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
       - name: Run tests
         env:
-          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
-          GITHUB_MESSAGE: ${{ github.event.pull_request.head.label }}
-          GITHUB_BRANCH: ${{ github.event.pull_request.head.ref }}
+          GITHUB_MESSAGE: ${{ github.event.head_commit.message }}
+          GITHUB_BRANCH: ${{ github.event.ref }}
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.* "Proband Tests" rkrenn@phoenixctms.org
 #      - name: test perl selenium remote
