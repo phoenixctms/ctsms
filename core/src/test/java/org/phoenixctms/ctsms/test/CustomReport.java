@@ -71,9 +71,8 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 				.append("<td width=\"10%\"><b>Time (seconds)</b></td>\n")
 				//.append("<td><b>Instance</b></td>\n")
 				.append("</tr>\n");
-		if (tests instanceof List) {
-			((List<ITestResult>) tests).sort(comparator);
-		}
+		tests = new ArrayList<ITestResult>(tests);
+		((ArrayList<ITestResult>) tests).sort(comparator);
 		// User output?
 		String id;
 		Throwable tw;
