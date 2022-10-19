@@ -67,7 +67,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 				.append("<tr>")
 				.append("<td><b>Test method</b></td>\n")
 				//.append("<td><b>Attribute(s)</b></td>\n")
-				.append("<td width=\"30%\"><b>Exception</b></td>\n")
+				//.append("<td width=\"30%\"><b>Exception</b></td>\n")
 				.append("<td width=\"10%\"><b>Time (seconds)</b></td>\n")
 				//.append("<td><b>Instance</b></td>\n")
 				.append("</tr>\n");
@@ -92,29 +92,37 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 					.append(name)
 					.append("</b>");
 			// Test class
+			pw.append("<dl>");
 			String testClass = tr.getTestClass().getName();
 			if (testClass != null) {
-				pw.append("<br>").append("Test class: ").append(testClass);
+				pw.append("<dt>").append("Test class").append("<dt>");
+				pw.append("<dd><i>").append(testClass);
 				// Test name
 				String testName = tr.getTestName();
 				if (testName != null) {
 					pw.append(" (").append(testName).append(")");
 				}
+				pw.append("</i></dd>");
 			}
 			// Method description
 			if (!Utils.isStringEmpty(method.getDescription())) {
-				pw.append("<br>").append("Test method: ").append(method.getDescription());
+				pw.append("<dt>").append("Description:").append("<dt>");
+				pw.append("<dd><i>").append(method.getDescription());
+				pw.append("</i></dd>");
 			}
 			Object[] parameters = tr.getParameters();
 			if (parameters != null && parameters.length > 0) {
-				pw.append("<br>Parameters: ");
+				pw.append("<dt>").append("Parameters:").append("<dt>");
+				pw.append("<dd><i>");
 				for (int j = 0; j < parameters.length; j++) {
 					if (j > 0) {
 						pw.append(", ");
 					}
 					pw.append(parameters[j] == null ? "null" : parameters[j].toString());
 				}
+				pw.append("</i></dd>");
 			}
+			pw.append("</dl>");
 			//
 			// Output from the method, created by the user calling Reporter.log()
 			//
@@ -175,15 +183,23 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			//				pw.append("</div>");
 			//				pw.append("</td>");
 			//			}
+			// Time
+			long time = (tr.getEndMillis() - tr.getStartMillis()) / 1000;
+			String strTime = Long.toString(time);
+			pw.append("<td>").append(strTime).append("</td>\n");
+			// Instance
+			//Object instance = tr.getInstance();
+			//pw.append("<td>").append(Objects.toString(instance)).append("</td>");
+			pw.append("</tr>\n");
 			// Exception
 			tw = tr.getThrowable();
 			String stackTrace;
 			//String fullStackTrace;
 			id = "stack-trace" + tr.hashCode();
-			pw.append("<td>");
 			if (null != tw) {
+				pw.append("<tr><td colspan=\"2\">\n");
 				//fullStackTrace = Utils.longStackTrace(tw, true);
-				stackTrace = "<div class='stack-trace'>" + Utils.shortStackTrace(tw, true) + "</div>";
+				stackTrace = "<div class='stack-trace'><pre>" + Utils.longStackTrace(tw, true) + "</pre></div>";
 				pw.append(stackTrace);
 				//				// JavaScript link
 				//				pw.append("<a href='#' onClick='toggleBox(\"")
@@ -199,18 +215,10 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 				//						.append(fullStackTrace)
 				//						.append("</pre>")
 				//						.append("</div>");
+				pw.append("</td></tr>\n");
 			}
-			pw.append("</td>\n");
-			// Time
-			long time = (tr.getEndMillis() - tr.getStartMillis()) / 1000;
-			String strTime = Long.toString(time);
-			pw.append("<td>").append(strTime).append("</td>\n");
-			// Instance
-			//Object instance = tr.getInstance();
-			//pw.append("<td>").append(Objects.toString(instance)).append("</td>");
-			pw.append("</tr>\n");
 			for (String s : images) {
-				pw.append("<tr><td colspan=\"3\">\n");
+				pw.append("<tr><td colspan=\"2\">\n");
 				pw.append(s);
 				pw.append("</td></tr>\n");
 			}
@@ -228,7 +236,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 
 	private static final String HEAD = "\n<style type=\"text/css\">\n"
 			+ ".log { display: block;} \n"
-			+ ".stack-trace { font-family: monospace, monospace; } \n"
+			+ ".stack-trace { display: block;} \n"
 			+ "</style>\n"
 			+ "<script type=\"text/javascript\">\n"
 			+ "<!--\n"
