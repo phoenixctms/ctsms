@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Set up JDK 11
         run: |
-          export BRANCH=${GITHUB_REF}
+          export BRANCH=${GITHUB_REF##*/}
           export COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi')
           export MESSAGE=$(git log --format=%B -n 1 "$COMMIT")
           printenv
