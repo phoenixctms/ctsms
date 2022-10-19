@@ -56,7 +56,7 @@ import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
 
-	protected final static Duration WEB_DRIVER_WAIT = Duration.ofSeconds(20l);
+	protected final static Duration WEB_DRIVER_WAIT = Duration.ofSeconds(30l);
 	private final static String ADD_OPERATION_SUCCESSFUL_MESSAGE = "create operation successful";
 	private final static String UPDATE_OPERATION_SUCCESSFUL_MESSAGE = "update operation successful";
 	private final static String PROBAND_ENTITY_WINDOW_NAME = "proband_entity_";
@@ -246,7 +246,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	protected void createScreenshot(String name) {
 		try {
-			Thread.sleep(1500);//finish UI fade effects 
+			Thread.sleep(2000);//finish UI fade effects 
 		} catch (InterruptedException e) {
 		}
 		File screenshot = getChromeDriver().getScreenshotAs(OutputType.FILE);
@@ -349,7 +349,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 					public Boolean apply(WebDriver driver) {
 						try {
 							boolean result = ((Long) ((ChromeDriver) driver).executeScript("return jQuery.active")) == 0l;
-							debug("jQuery.active: " + result);
+							info("jQuery.active: " + result);
 							return result;
 						} catch (Exception e) {
 							error("jQuery.active: " + e.getMessage());
