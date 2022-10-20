@@ -6,8 +6,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.testng.IResultMap;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
@@ -37,7 +40,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 				context,
 				null /* host */,
 				context.getOutputDirectory(),
-				context.getPassedConfigurations().getAllResults(),
+				context.getPassedConfigurations(),
 				context.getFailedConfigurations().getAllResults(),
 				context.getSkippedConfigurations().getAllResults(),
 				context.getPassedTests().getAllResults(),
@@ -302,7 +305,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			ITestContext testContext,
 			String host,
 			String outputDirectory,
-			Collection<ITestResult> passedConfs,
+			IResultMap passedConfsMap,
 			Collection<ITestResult> failedConfs,
 			Collection<ITestResult> skippedConfs,
 			Collection<ITestResult> passedTests,
@@ -385,8 +388,16 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 						"percent",
 						NAME_COMPARATOR);
 			}
+			ArrayList<ITestResult> passedConfs = new ArrayList<ITestResult>();
+			Iterator<ITestNGMethod> it = passedConfsMap.getAllMethods().iterator();
+			while (it.hasNext()) {
+				ITestNGMethod method = it.next();
+				if (!CommonUtil.isEmptyString(method.getDescription())) {
+					passedConfs.addAll(passedConfsMap.getResults(method));
+				}
+			}
 			if (!passedConfs.isEmpty()) {
-				generateTable(writer, "PASSED CONFIGURATIONS", passedConfs, "passed", NAME_COMPARATOR);
+				generateTable(writer, "CONFIGURATIONS", passedConfs, "passed", NAME_COMPARATOR);
 			}
 			if (!passedTests.isEmpty()) {
 				generateTable(writer, "PASSED TESTS", passedTests, "passed", NAME_COMPARATOR);
