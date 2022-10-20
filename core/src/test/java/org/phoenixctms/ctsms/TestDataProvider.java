@@ -163,7 +163,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 			userPermissionProfile.setUser(user);
 			CoreUtil.modifyVersion(userPermissionProfile, now, null);
 			result.add(userPermissionProfileDao.create(userPermissionProfile));
-			debug("permission profile " + profile.toString() + " added");
+			info("permission profile " + profile.toString() + " added");
 		}
 		return result;
 	}
@@ -181,7 +181,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 			newSelectionSetValue.setInkRegions(stroke.getBytes());
 			newSelectionSetValue.setStrokesId(stroke.strokesId);
 			InputFieldSelectionSetValueOutVO out = inputFieldService.addSelectionSetValue(auth, newSelectionSetValue);
-			debug("ink region created: " + out.getName());
+			info("ink region created: " + out.getName());
 		}
 	}
 
@@ -195,7 +195,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 			newSelectionSetValue.setPreset(selectionSetValue.getValue());
 			newSelectionSetValue.setValue(selectionSetValue.getKey().name());
 			InputFieldSelectionSetValueOutVO out = inputFieldService.addSelectionSetValue(auth, newSelectionSetValue);
-			debug("selection set value created: " + out.getName());
+			info("selection set value created: " + out.getName());
 		}
 	}
 
