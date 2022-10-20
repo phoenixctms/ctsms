@@ -283,8 +283,72 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		clickSelectOneMenu("tabView:inquiryvalue_form:inquiriestrial", trial.getName());
 	}
 
+	private abstract class Retry {
+
+		protected abstract void doIt();
+
+		private void paginate() {
+			clickButton("tabView:inquiryvalue_form:update");
+			if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
+				info("inquiry values page saved");
+				createScreenshot();
+				clickDatagridNextPage("tabView:inquiryvalue_form:inquiry_input_grid");
+			} else {
+				testFailed("saving inquiry values failed");
+				//return;
+			}
+		}
+
+		public void tryIt() {
+			try {
+				doIt();
+			} catch (org.openqa.selenium.NoSuchElementException e) {
+				info("input field not found, trying on next page ...");
+				paginate();
+				doIt();
+			}
+		}
+	}
+
 	@Test(description = "Fill in values for the test inquiry form of the created subject.")
 	public void test_05_enter_inquiry_values() {
+		new Retry() {
+
+			@Override
+			protected void doIt() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_HEIGHT.toString()), "123");
+			}
+		}.tryIt();
+		new Retry() {
+
+			@Override
+			protected void doIt() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_WEIGHT.toString()), "123");
+			}
+		}.tryIt();
+		new Retry() {
+
+			@Override
+			protected void doIt() {
+				sendKeys(getFieldIdBySectionPositionName("03 - Sonstiges", 5, InputFields.CST_NOTE.name()), "123");
+			}
+		}.tryIt();
+		//		sendKeys(getFieldIdBySectionPositionName("02 - Medikamentöse Therapie", 3, InputFields.CST_NOTE.name()), "123");
+		//		clickDatagridNextPage("tabView:inquiryvalue_form:inquiry_input_grid");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_HEIGHT.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_WEIGHT.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_BMI.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_SMOKER_YN.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_CIGARETTES_PER_DAY.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PROBAND.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PYSICIAN.toString()), "123");
+		//		sendKeys(getFieldIdBySectionPositionName("02 - Medikamentöse Therapie", 3, InputFields.CST_NOTE.value), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK_OTHER.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_SENSOR_THERAPY.toString()), "123");
+		//		sendKeys(getFieldIdByLabel(InputFields.CST_SENSOR_TRADE_MARK.toString()), "123");
 		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
 		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
 		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
@@ -298,19 +362,6 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			testFailed("saving inquiry values failed");
 			return;
 		}
-		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
-		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
-		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
-		//		clickSelectMany(getFieldIdByLabel("Grunderkrankung"), "Lifestyle");
-		//		clickButton("tabView:inquiryvalue_form:update");
-		//		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
-		//			//createScreenshot();
-		//			testOK("inquiry values saved");
-		//			return;
-		//		} else {
-		//			testFailed("saving inquiry values failed");
-		//			return;
-		//		}
 	}
 	//	@Test
 	//	public void test_06_create_probands() {
@@ -320,6 +371,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	//			closeWindow(getWindowName());
 	//			switchToWindow(getNewProbandEntityWindowName());
 	//			test_03_create_proband();
+	// createScreenshot();
 	//			test_04_load_inquiry_form();
 	//			test_05_enter_inquiry_values();
 	//		}
@@ -333,6 +385,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	//
 	//	@Test
 	//	public void test_08_search_probands_result_size() throws Throwable {
+	//setSkipScreenshot(true);
 	//		clickButton(getButtonIdByLabel("Perform search"));
 	//		Long count = getCountFromDatatableHead("search_form:proband_result_list");
 	//		if (expectedProbandIds.size() == count) {
