@@ -216,14 +216,14 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		}
 	}
 
-	@BeforeClass
+	@BeforeClass(description = "Create a department for test user subjects, trial and user.")
 	public void init_00_setup_department() throws Exception {
 		String departmentName = "dept-" + getTestId();
 		departmentPassword = departmentName;
 		department = getTestDataProvider().createDepartment(departmentName, true, departmentPassword);
 	}
 
-	@BeforeClass
+	@BeforeClass(description = "Create a test user.")
 	public void init_01_setup_user() throws Exception {
 		userName = "user-" + getTestId();
 		userPassword = userName;
@@ -231,18 +231,18 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		setProviderAuth(userName, userPassword);
 	}
 
-	@BeforeClass
+	@BeforeClass(description = "Create a test trial.")
 	public void init_02_setup_trial() throws Exception {
 		String trialName = "trial-" + getTestId();
 		trial = createTrial(trialName, department.getId());
 	}
 
-	@BeforeClass
+	@BeforeClass(description = "Setup a test inquiry form for the trial.")
 	public void init_03_setup_inquiry_form() throws Throwable {
 		ArrayList<InquiryOutVO> inquiries = createInquiryForm(trial);
 	}
 
-	@BeforeClass
+	@BeforeClass(description = "Setup the test test search criteria.")
 	public void init_04_setup_proband_criteria() throws Throwable {
 		criteriaCategory = getTestId();
 		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
