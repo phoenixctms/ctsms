@@ -349,7 +349,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 					public Boolean apply(WebDriver driver) {
 						try {
 							boolean result = ((Long) ((ChromeDriver) driver).executeScript("return jQuery.active")) == 0l;
-							info("jQuery.active: " + result);
+							debug("jQuery.active: " + result);
 							return result;
 						} catch (Exception e) {
 							error("jQuery.active: " + e.getMessage());

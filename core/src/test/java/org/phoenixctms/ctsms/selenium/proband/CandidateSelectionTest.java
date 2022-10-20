@@ -248,7 +248,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
 	}
 
-	@Test(description = "Load the log in page of the Phoenix CTMS test instance.")
+	@Test(description = "Load the login page of the Phoenix CTMS test instance.")
 	public void test_01_open_proband_page() {
 		load(getUrl("/proband/proband.jsf"));
 	}

@@ -37,6 +37,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 				context,
 				null /* host */,
 				context.getOutputDirectory(),
+				context.getPassedConfigurations().getAllResults(),
 				context.getFailedConfigurations().getAllResults(),
 				context.getSkippedConfigurations().getAllResults(),
 				context.getPassedTests().getAllResults(),
@@ -135,7 +136,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			{
 				List<String> output = Reporter.getOutput(tr);
 				if (!output.isEmpty()) {
-					pw.append("<br/>");
+					//pw.append("<br/>");
 					// Method name
 					String divId = "Output-" + tr.hashCode();
 					//					pw.append("\n<a href=\"#")
@@ -241,13 +242,16 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 	}
 
 	private static final String HEAD = "\n<style type=\"text/css\">\n"
-			+ ".log { display: block;} \n"
+			+ ".log { display: block; font-family: monospace; } \n"
 			+ ".stack-trace { display: block;} \n"
 			+ ".invocation-failed { color:red;} \n"
 			//+ ".green { color:green;} \n"
-			+ "table, tr, td, th, tbody, thead, tfoot {\\n"
-			+ "    page-break-inside: avoid !important;\\n"
-			+ "}\\n"
+			+ "table, tr, td, th, tbody, thead, tfoot {\n"
+			+ "    page-break-inside: avoid !important;\n"
+			+ "    border-collapse: collapse;\n"
+			+ "    border: 2px solid black;\n"
+			+ "    padding: 4px;\n"
+			+ "}\n"
 			+ "</style>\n"
 			+ "<script type=\"text/javascript\">\n"
 			+ "<!--\n"
@@ -298,6 +302,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			ITestContext testContext,
 			String host,
 			String outputDirectory,
+			Collection<ITestResult> passedConfs,
 			Collection<ITestResult> failedConfs,
 			Collection<ITestResult> skippedConfs,
 			Collection<ITestResult> passedTests,
@@ -379,6 +384,9 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 						percentageTests,
 						"percent",
 						NAME_COMPARATOR);
+			}
+			if (!passedConfs.isEmpty()) {
+				generateTable(writer, "PASSED CONFIGURATIONS", passedConfs, "passed", NAME_COMPARATOR);
 			}
 			if (!passedTests.isEmpty()) {
 				generateTable(writer, "PASSED TESTS", passedTests, "passed", NAME_COMPARATOR);
