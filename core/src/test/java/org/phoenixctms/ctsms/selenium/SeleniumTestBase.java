@@ -244,16 +244,20 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		super.finalize();
 	}
 
+	protected void createScreenshot() {
+		createScreenshot(null);
+	}
+
 	protected void createScreenshot(String name) {
 		try {
 			Thread.sleep(2000);//finish UI fade effects 
 		} catch (InterruptedException e) {
 		}
 		File screenshot = getChromeDriver().getScreenshotAs(OutputType.FILE);
-		screenshotCount += 1;
 		if (!CommonUtil.isEmptyString(getTestDirectory())) {
 			File dest;
 			if (CommonUtil.isEmptyString(name)) {
+				screenshotCount += 1;
 				dest = new File(getTestDirectory(), String.format("%s_%03d_%s.png", this.getClass().getSimpleName(), screenshotCount, getTimestamp()));
 			} else {
 				dest = new File(getTestDirectory(), String.format("%s_%s_%s.png", this.getClass().getSimpleName(), name, getTimestamp()));
@@ -370,6 +374,15 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		info("looking up input field '" + inputFieldLabel + "'");
 		return new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '" + inputFieldLabel + "')]"))).getAttribute("for");
+	}
+
+	protected String getFieldIdBySectionPositionName(String section, int position, String inputFieldName) {
+		info("looking up input field '" + section + " - " + position + ". " + inputFieldName + "'");
+		WebElement panel = getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'ui-panel')]//span[contains(text(), '" + section + "')]")))));
+		WebElement fieldSet = getParentElement(
+				getParentElement(panel.findElement(By.xpath(".//fieldset/legend/span[contains(text(), '" + position + ". " + inputFieldName + "')]"))));
+		return fieldSet.findElement(By.xpath(".//label")).getAttribute("for");
 	}
 
 	private WebElement getParentElement(WebElement element) {
@@ -517,6 +530,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private boolean onTestSkipped = true;
 	private boolean onTestFailedButWithinSuccessPercentage = true;
 	//private boolean onFinish = true;
+	private boolean skipScreenshot = false;
 
 	@AfterMethod(alwaysRun = true)
 	public void resetITestResultEvents() {
@@ -525,6 +539,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		onTestFailure = true;
 		onTestSkipped = true;
 		onTestFailedButWithinSuccessPercentage = true;
+		skipScreenshot = false;
 	}
 
 	@Override
@@ -540,7 +555,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		if (((SeleniumTestBase) result.getInstance()).onTestSuccess) {
 			((SeleniumTestBase) result.getInstance()).onTestSuccess = false;
 			((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' OK");
-			((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+			if (!((SeleniumTestBase) result.getInstance()).skipScreenshot) {
+				((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+			}
 		}
 	}
 
@@ -549,8 +566,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		if (((SeleniumTestBase) result.getInstance()).onTestFailure) {
 			((SeleniumTestBase) result.getInstance()).onTestFailure = false;
 			((SeleniumTestBase) result.getInstance()).info("test '" + result.getName() + "' FAILURE");
-			((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+			if (!((SeleniumTestBase) result.getInstance()).skipScreenshot) {
+				((SeleniumTestBase) result.getInstance()).createScreenshot(result.getName());
+			}
 		}
+	}
+
+	protected void setSkipScreenshot(boolean skipScreenshot) {
+		this.skipScreenshot = skipScreenshot;
 	}
 
 	@Override
@@ -742,6 +765,17 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		WebElement btn = getChromeDriver().findElement(By.xpath("//div[@id='" + datatableId + "']//span[contains(@class,'ui-paginator-next')]"));
 		if (btn != null && !getDisabled(btn)) {
 			info("loading next page of datatable: " + datatableId);
+			btn.click();
+			waitForAjax();
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean clickDatagridNextPage(String datagridId) {
+		WebElement btn = getChromeDriver().findElement(By.xpath("//table[@id='" + datagridId + "']//span[contains(@class,'ui-icon-seek-next')]"));
+		if (btn != null && !getDisabled(btn)) {
+			info("loading next page of data grid: " + datagridId);
 			btn.click();
 			waitForAjax();
 			return true;
