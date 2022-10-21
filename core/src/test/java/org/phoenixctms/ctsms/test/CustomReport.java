@@ -6,11 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.testng.IResultMap;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
@@ -40,7 +39,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 				context,
 				null /* host */,
 				context.getOutputDirectory(),
-				context.getPassedConfigurations(),
+				context.getPassedConfigurations().getAllResults(),
 				context.getFailedConfigurations().getAllResults(),
 				context.getSkippedConfigurations().getAllResults(),
 				context.getPassedTests().getAllResults(),
@@ -209,7 +208,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			if (null != tw) {
 				pw.append("<tr><td colspan=\"2\" >\n"); //class=\"" + cls + "\"
 				//fullStackTrace = Utils.longStackTrace(tw, true);
-				stackTrace = "<div class='stack-trace'><pre>" + Utils.longStackTrace(tw, true) + "</pre></div>";
+				stackTrace = "<div class='stack-trace'>" + Utils.longStackTrace(tw, true) + "</div>";
 				pw.append(stackTrace);
 				//				// JavaScript link
 				//				pw.append("<a href='#' onClick='toggleBox(\"")
@@ -244,13 +243,14 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 		return result.toString();
 	}
 
-	private static final String HEAD = "\n<style type=\"text/css\">\n"
+	private static final String HEAD = "\n<meta content=\"text/html;charset=utf-8\" http-equiv=\"Content-Type\">\n"
+			+ "<meta content=\"utf-8\" http-equiv=\"encoding\">\n"
+			+ "<style type=\"text/css\">\n"
 			+ ".log { display: block; font-family: monospace; } \n"
-			+ ".stack-trace { display: block;} \n"
+			+ ".stack-trace { display: block; font-family: monospace;} \n"
 			+ ".invocation-failed { color:red;} \n"
 			//+ ".green { color:green;} \n"
-			+ "table, tr, td, th, tbody, thead, tfoot {\n"
-			+ "    page-break-inside: avoid !important;\n"
+			+ "table, td {\n"
 			+ "    border-collapse: collapse;\n"
 			+ "    border: 2px solid black;\n"
 			+ "    padding: 4px;\n"
@@ -305,7 +305,7 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 			ITestContext testContext,
 			String host,
 			String outputDirectory,
-			IResultMap passedConfsMap,
+			Collection<ITestResult> passedConfs,
 			Collection<ITestResult> failedConfs,
 			Collection<ITestResult> skippedConfs,
 			Collection<ITestResult> passedTests,
@@ -388,14 +388,14 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 						"percent",
 						NAME_COMPARATOR);
 			}
-			ArrayList<ITestResult> passedConfs = new ArrayList<ITestResult>();
-			Iterator<ITestNGMethod> it = passedConfsMap.getAllMethods().iterator();
-			while (it.hasNext()) {
-				ITestNGMethod method = it.next();
-				if (!CommonUtil.isEmptyString(method.getDescription())) {
-					passedConfs.addAll(passedConfsMap.getResults(method));
+			passedConfs = new ArrayList<ITestResult>(passedConfs);
+			passedConfs.removeIf(new Predicate() {
+
+				@Override
+				public boolean test(Object result) {
+					return CommonUtil.isEmptyString(((ITestResult) result).getMethod().getDescription());
 				}
-			}
+			});
 			if (!passedConfs.isEmpty()) {
 				generateTable(writer, "CONFIGURATIONS", passedConfs, "passed", NAME_COMPARATOR);
 			}
