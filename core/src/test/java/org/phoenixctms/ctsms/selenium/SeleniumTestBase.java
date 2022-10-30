@@ -56,7 +56,39 @@ import org.testng.annotations.BeforeTest;
 
 public class SeleniumTestBase implements OutputLogger, ITestListener {
 
-	protected final static Duration WEB_DRIVER_WAIT = Duration.ofSeconds(30l);
+	private abstract class RetryEntryBase {
+
+		protected abstract void entry();
+
+		protected abstract void paginate();
+
+		public void enter() {
+			try {
+				entry();
+			} catch (org.openqa.selenium.NoSuchElementException e) {
+				info("input field not found, trying on next page ...");
+				paginate();
+				entry();
+			}
+		}
+	}
+
+	protected abstract class InquiryFormFieldEntry extends RetryEntryBase {
+
+		protected void paginate() {
+			clickButton("tabView:inquiryvalue_form:update");
+			if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
+				info("inquiry values page saved");
+				createScreenshot();
+				clickDatagridNextPage("tabView:inquiryvalue_form:inquiry_input_grid");
+			} else {
+				testFailed("saving inquiry values failed");
+				//return;
+			}
+		}
+	}
+
+	protected final static Duration WEB_DRIVER_WAIT = Duration.ofSeconds(60l);
 	private final static String ADD_OPERATION_SUCCESSFUL_MESSAGE = "create operation successful";
 	private final static String UPDATE_OPERATION_SUCCESSFUL_MESSAGE = "update operation successful";
 	private final static String PROBAND_ENTITY_WINDOW_NAME = "proband_entity_";
@@ -352,9 +384,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 					@Override
 					public Boolean apply(WebDriver driver) {
 						try {
-							boolean result = ((Long) ((ChromeDriver) driver).executeScript("return jQuery.active")) == 0l;
+							Long result = ((Long) ((ChromeDriver) driver).executeScript("return jQuery.active"));
 							debug("jQuery.active: " + result);
-							return result;
+							return result == 0l;
 						} catch (Exception e) {
 							error("jQuery.active: " + e.getMessage());
 							return true;
@@ -368,6 +400,13 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='" + id + "']//label[contains(text(), '" + itemLabel + "')]")))
 				.click();
 		info("selectmany option '" + itemLabel + "' selected: " + id);
+	}
+
+	protected void clickSelectOneRadio(String id, String itemLabel) {
+		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='" + id + "']//label[contains(text(), '" + itemLabel + "')]")))
+				.click();
+		info("selectonemenu option '" + itemLabel + "' selected: " + id);
 	}
 
 	protected String getFieldIdByLabel(String inputFieldLabel) {
