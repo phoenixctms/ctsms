@@ -283,76 +283,320 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		clickSelectOneMenu("tabView:inquiryvalue_form:inquiriestrial", trial.getName());
 	}
 
-	private abstract class Retry {
-
-		protected abstract void doIt();
-
-		private void paginate() {
-			clickButton("tabView:inquiryvalue_form:update");
-			if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
-				info("inquiry values page saved");
-				createScreenshot();
-				clickDatagridNextPage("tabView:inquiryvalue_form:inquiry_input_grid");
-			} else {
-				testFailed("saving inquiry values failed");
-				//return;
-			}
-		}
-
-		public void tryIt() {
-			try {
-				doIt();
-			} catch (org.openqa.selenium.NoSuchElementException e) {
-				info("input field not found, trying on next page ...");
-				paginate();
-				doIt();
-			}
-		}
-	}
-
 	@Test(description = "Fill in values for the test inquiry form of the created subject.")
 	public void test_05_enter_inquiry_values() {
-		new Retry() {
+		//01 - Basisinformation
+		new InquiryFormFieldEntry() {
 
 			@Override
-			protected void doIt() {
+			protected void entry() {
 				sendKeys(getFieldIdByLabel(InputFields.CST_HEIGHT.toString()), "123");
 			}
-		}.tryIt();
-		new Retry() {
+		}.enter();
+		new InquiryFormFieldEntry() {
 
 			@Override
-			protected void doIt() {
+			protected void entry() {
 				sendKeys(getFieldIdByLabel(InputFields.CST_WEIGHT.toString()), "123");
 			}
-		}.tryIt();
-		new Retry() {
+		}.enter();
+		new InquiryFormFieldEntry() {
 
 			@Override
-			protected void doIt() {
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_BMI.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickCheckbox(getFieldIdByLabel(InputFields.CST_SMOKER_YN.toString()));
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_CIGARETTES_PER_DAY.toString()), InputFieldValues.CST_CIGARETTES_BELOW_5.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_CIGARETTES_PER_DAY.toString()), InputFieldValues.CST_CIGARETTES_5_20.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_CIGARETTES_PER_DAY.toString()), InputFieldValues.CST_CIGARETTES_20_40.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_CIGARETTES_PER_DAY.toString()), InputFieldValues.CST_CIGARETTES_ABOVE_40.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PROBAND.toString()), InputFieldValues.CST_VEIN_CONDITION_PROBAND_GOOD.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PROBAND.toString()), InputFieldValues.CST_VEIN_CONDITION_PROBAND_MEDIOCRE.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PROBAND.toString()), InputFieldValues.CST_VEIN_CONDITION_PROBAND_BAD.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PYSICIAN.toString()), InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_1.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PYSICIAN.toString()), InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_2.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PYSICIAN.toString()), InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_3.toString());
+				//clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PYSICIAN.toString()), InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_4.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdBySectionPositionName("01 - Basisinformation", 8, InputFields.CST_NOTE.name()), "123");
+			}
+		}.enter();
+		//02 - Medikamentöse Therapie
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_1.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_2.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_UNKNOWN.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_OTHER.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_HEALTHY.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT_OAD.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_CSII.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT_OAD.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_PRANDIAL.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MIXED_INSULIN.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_BASAL_INSULIN.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_OAD.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_OAD_BASAL.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_OAD_BOLUS.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_OAD_MIXED.toString());
+				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_CSII_OAD.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_MEDTRONIC.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_ANIMAS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_YPSOMED.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_ROCHE.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK_OTHER.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_SENSOR_THERAPY.toString()), InputFieldValues.CST_NO_SENSOR.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_SENSOR_THERAPY.toString()), InputFieldValues.CST_CGM.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_SENSOR_THERAPY.toString()), InputFieldValues.CST_FGM.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_SENSOR_TRADE_MARK.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_ACTRAPID.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_APIDRA.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_HUMALOG.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_HUMINSULIN_LILLY_NORMAL.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_INSUMAN_RAPID.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_NOVORAPID.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_NOVORAPID.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_BOLUS_INSULIN_OTHER.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_FIASP.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN_IU_BE.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN_TDD.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_LEVEMIR.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_LANTUS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_HUMINSULIN_LILLY_BASAL.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_INSULATARD.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_INSUMAN_BASAL.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_TRESIBA.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_BASAL_INSULIN_OTHER.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN.toString()), InputFieldValues.CST_TOUJEO.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_BASAL_INSULIN_TDD.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_HUMALOG_MIX_25.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_HUMALOG_MIX_50.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_HUMINSULIN_LILLY_PROFIL_3.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_INSUMAN_COMB_25.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_INSUMAN_COMB_50.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_MIXTARD_30.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_MIXTARD_50.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_NOVOMIX_30.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_NOVOMIX_70.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN.toString()), InputFieldValues.CST_MIXED_INSULIN_OTHER.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN_TDD.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickCheckbox(getFieldIdByLabel(InputFields.CST_OAD_METFORMIN.toString()));
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN_TDD.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_SULFONYLUREAS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_ALPHA_GLUCOSIDASE_INHIBITORS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_GLINIDE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_GLITAZONE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_GLIPTINE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_INCRETINE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_GLIFLOZINE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_METFORMIN_GLIPTINE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_METFORMIN_GLITAZONE.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_GLITAZONE_GLIMEPIRID.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_OAD_OTHER.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OAD_OTHER.toString()), InputFieldValues.CST_METFORMIN_DAPAGLIFLOZINE.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OTHER_MEDICATION.toString()), InputFieldValues.CST_ANTIHYPERTENSIVE_DRUGS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OTHER_MEDICATION.toString()), InputFieldValues.CST_LIPID_LOWERING_DRUGS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OTHER_MEDICATION.toString()), InputFieldValues.CST_ANTICOAGULANT_DRUGS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OTHER_MEDICATION.toString()), InputFieldValues.CST_PSYCHOTROPIC_DRUGS.toString());
+				clickSelectMany(getFieldIdByLabel(InputFields.CST_OTHER_MEDICATION.toString()), InputFieldValues.CST_CORTISONE.toString());
+			}
+		}.enter();
+		//03 - Sonstiges
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_DIABETES_SINCE.toString()), "2022-10-10");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_HBA1C_PERCENT.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_HBA1C_MMOLPERMOL.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_C_PEPTIDE.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
 				sendKeys(getFieldIdBySectionPositionName("03 - Sonstiges", 5, InputFields.CST_NOTE.name()), "123");
 			}
-		}.tryIt();
-		//		sendKeys(getFieldIdBySectionPositionName("02 - Medikamentöse Therapie", 3, InputFields.CST_NOTE.name()), "123");
-		//		clickDatagridNextPage("tabView:inquiryvalue_form:inquiry_input_grid");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_HEIGHT.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_WEIGHT.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_BMI.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_SMOKER_YN.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_CIGARETTES_PER_DAY.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PROBAND.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_VEIN_CONDITION_PYSICIAN.toString()), "123");
-		//		sendKeys(getFieldIdBySectionPositionName("02 - Medikamentöse Therapie", 3, InputFields.CST_NOTE.value), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK_OTHER.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_SENSOR_THERAPY.toString()), "123");
-		//		sendKeys(getFieldIdByLabel(InputFields.CST_SENSOR_TRADE_MARK.toString()), "123");
-		//		sendKeys(getFieldIdByLabel("Körpergröße"), "123");
-		//		sendKeys(getFieldIdByLabel("Körpergewicht"), "123");
-		//		clickSelectOneMenu(getFieldIdByLabel("Venenstatus (Einschätzung des Probanden)"), "mittel");
-		//		clickSelectMany(getFieldIdByLabel("Grunderkrankung"), "Lifestyle");
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_RECRUITED_FROM.toString()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_SUBJECT_FILE.toString()), InputFieldValues.CST_SUBJECT_FILE_YES.toString());
+				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_SUBJECT_FILE.toString()), InputFieldValues.CST_SUBJECT_FILE_NO.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_DISTANCE.toString()), "123");
+			}
+		}.enter();
+		//04 - Aktualisierung der Daten
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				clickSelectOneRadio(getFieldIdByLabel(InputFields.CST_UPDATED.toString()), InputFieldValues.CST_UPDATED_DONE.toString());
+				//clickSelectOneRadio(getFieldIdByLabel(InputFields.CST_UPDATED.toString()),InputFieldValues.CST_UPDATED_PENDING.toString());
+				//clickSelectOneRadio(getFieldIdByLabel(InputFields.CST_UPDATED.toString()),InputFieldValues.CST_UPDATED_UNREACHABLE.toString());
+			}
+		}.enter();
 		clickButton("tabView:inquiryvalue_form:update");
 		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
 			//createScreenshot();
