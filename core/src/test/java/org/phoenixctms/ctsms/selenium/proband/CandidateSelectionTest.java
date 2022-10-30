@@ -40,7 +40,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	private String userPassword;
 	private TrialOutVO trial;
 	private String criteriaCategory;
-	private final static int PROBAND_COUNT = 1; //0;
+	private final static int PROBAND_COUNT = 10;
 	private Set<Long> probandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
 	private Set<Long> expectedProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
 	private Set<Long> actualProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
@@ -607,20 +607,20 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			return;
 		}
 	}
-	//	@Test
-	//	public void test_06_create_probands() {
-	//		for (int i = 2; i <= PROBAND_COUNT; i++) {
-	//			//info("entering proband " + i + "...");
-	//			clickMenuItem("menubar_form:newEntityMenuItem_proband");
-	//			closeWindow(getWindowName());
-	//			switchToWindow(getNewProbandEntityWindowName());
-	//			test_03_create_proband();
-	// createScreenshot();
-	//			test_04_load_inquiry_form();
-	//			test_05_enter_inquiry_values();
-	//		}
-	//	}
-	//
+
+	@Test
+	public void test_06_create_probands() {
+		for (int i = 2; i <= PROBAND_COUNT; i++) {
+			//info("entering proband " + i + "...");
+			clickMenuItem("menubar_form:newEntityMenuItem_proband");
+			closeWindow(getWindowName());
+			switchToWindow(getNewProbandEntityWindowName());
+			test_03_create_proband();
+			createScreenshot();
+			test_04_load_inquiry_form();
+			test_05_enter_inquiry_values();
+		}
+	}
 	//	@Test
 	//	public void test_07_open_proband_search_page() throws Throwable {
 	//		CriteriaOutVO criteria = getCriteria(SearchCriteria.TEST, criteriaCategory);
