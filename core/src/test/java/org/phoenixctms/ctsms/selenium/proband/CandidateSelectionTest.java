@@ -40,7 +40,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	private String userPassword;
 	private TrialOutVO trial;
 	private String criteriaCategory;
-	private final static int PROBAND_COUNT = 10;
+	private final static int PROBAND_COUNT = 1; //s0;
 	private Set<Long> probandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
 	private Set<Long> expectedProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
 	private Set<Long> actualProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
@@ -384,6 +384,13 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 			@Override
 			protected void entry() {
+				sendKeys(getFieldIdBySectionPositionName("02 - Medikamentöse Therapie", 3, InputFields.CST_NOTE.name()), "123");
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_MEDTRONIC.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_ANIMAS.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_CSII_TRADE_MARK.toString()), InputFieldValues.CST_YPSOMED.toString());
@@ -422,7 +429,6 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_HUMALOG.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_HUMINSULIN_LILLY_NORMAL.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_INSUMAN_RAPID.toString());
-				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_NOVORAPID.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_NOVORAPID.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_BOLUS_INSULIN_OTHER.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_BOLUS_INSULIN.toString()), InputFieldValues.CST_FIASP.toString());
@@ -497,7 +503,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 			@Override
 			protected void entry() {
-				sendKeys(getFieldIdByLabel(InputFields.CST_MIXED_INSULIN_TDD.toString()), "123");
+				sendKeys(getFieldIdByLabel(InputFields.CST_OAD_METFORMIN_TDD.toString()), "123");
 			}
 		}.enter();
 		new InquiryFormFieldEntry() {
@@ -595,6 +601,13 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 				clickSelectOneRadio(getFieldIdByLabel(InputFields.CST_UPDATED.toString()), InputFieldValues.CST_UPDATED_DONE.toString());
 				//clickSelectOneRadio(getFieldIdByLabel(InputFields.CST_UPDATED.toString()),InputFieldValues.CST_UPDATED_PENDING.toString());
 				//clickSelectOneRadio(getFieldIdByLabel(InputFields.CST_UPDATED.toString()),InputFieldValues.CST_UPDATED_UNREACHABLE.toString());
+			}
+		}.enter();
+		new InquiryFormFieldEntry() {
+
+			@Override
+			protected void entry() {
+				sendKeys(getFieldIdByLabel(InputFields.CST_UPDATED_DATE.toString()), "2022-10-10");
 			}
 		}.enter();
 		clickButton("tabView:inquiryvalue_form:update");
@@ -847,7 +860,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 									put(InputFieldValues.CST_HUMINSULIN_LILLY_NORMAL, false);
 									put(InputFieldValues.CST_INSUMAN_RAPID, false);
 									put(InputFieldValues.CST_NOVORAPID, false);
-									put(InputFieldValues.CST_NOVORAPID, false);
+									//put(InputFieldValues.CST_NOVORAPID, false);
 									put(InputFieldValues.CST_BOLUS_INSULIN_OTHER, false);
 									put(InputFieldValues.CST_FIASP, false);
 								}
