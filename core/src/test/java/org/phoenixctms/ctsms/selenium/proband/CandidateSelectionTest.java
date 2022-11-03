@@ -628,6 +628,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			//createScreenshot();
 			addExpectedProbandId(SearchCriteria.DEPARTMENT_PROBANDS);
 			testOK("inquiry values saved");
+			clickButton(getButtonIdByLabel("All inquiry forms"));
 			return;
 		} else {
 			testFailed("saving inquiry values failed");
