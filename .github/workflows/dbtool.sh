@@ -1,4 +1,5 @@
 #!/bin/bash
+printenv
 #VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
 #CTSMS_PROPERTIES=/ctsms/properties
 #CTSMS_JAVA=/ctsms/java
