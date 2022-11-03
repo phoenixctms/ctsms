@@ -31,8 +31,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build
         run: |
-          export VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
-          export COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi')
+          VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi' | cut -c 1-6)
+          echo "COMMIT=$COMMIT" >> $GITHUB_ENV
           sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /home/runner/work/ctsms/ctsms/pom.xml
           mvn install -DskipTests --no-transfer-progress
       - name: Setup database
@@ -43,6 +45,8 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
+          echo "CTSMS_PROPERTIES=/ctsms/properties" >> $GITHUB_ENV
+          echo "CTSMS_JAVA=/ctsms/java" >> $GITHUB_ENV
       - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
@@ -68,8 +72,6 @@ jobs:
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
-          export CTSMS_PROPERTIES=/ctsms/properties
-          export CTSMS_JAVA=/ctsms/java
       - name: Initialize DB
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
