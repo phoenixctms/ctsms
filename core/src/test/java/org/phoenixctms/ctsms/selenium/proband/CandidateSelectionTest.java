@@ -2,9 +2,11 @@ package org.phoenixctms.ctsms.selenium.proband;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -667,6 +669,11 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			test_04_load_inquiry_form();
 			test_05_enter_inquiry_values();
 		}
+		Iterator<Entry<SearchCriteria, LinkedHashSet<Long>>> it = expectedProbandIdsMap.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<SearchCriteria, LinkedHashSet<Long>> entry = it.next();
+			info(entry.getKey().toString() + ": " + entry.getValue().toString());
+		}
 	}
 
 	private void openSearch(SearchCriteria criteria) throws Throwable {
@@ -682,7 +689,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			testOK("search returns expected number of items");
 			return;
 		} else {
-			testFailed("search returns different number of items");
+			testFailed("search returns different number (" + count + ") of items (" + getExpectedProbandIds(criteria).size() + ")");
 			return;
 		}
 	}
@@ -1155,7 +1162,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 								{
 									InputFieldOutVO field = getInputField(InputFields.CST_UNDERLYING_DISEASE);
 									InputFieldSelectionSetValue value = getTestDataProvider().getInputFieldValue(field.getId(),
-											InputFieldValues.CST_DIABETES_TYPE_2);
+											InputFieldValues.CST_DIABETES_TYPE_1);
 									//add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
 									InquiryOutVO inquiry = getTestDataProvider().getInquiry(trial, "02 - Medikamentöse Therapie", 1);
 									add(new SearchCriterion(null, "proband.inquiryValues.inquiry.id", CriterionRestriction.EQ, inquiry.getId()));
@@ -1170,7 +1177,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 								{
 									InputFieldOutVO field = getInputField(InputFields.CST_UNDERLYING_DISEASE);
 									InputFieldSelectionSetValue value = getTestDataProvider().getInputFieldValue(field.getId(),
-											InputFieldValues.CST_DIABETES_TYPE_2);
+											InputFieldValues.CST_DIABETES_TYPE_1);
 									//add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
 									InquiryOutVO inquiry = getTestDataProvider().getInquiry(trial, "02 - Medikamentöse Therapie", 1);
 									add(new SearchCriterion(null, "proband.inquiryValues.inquiry.id", CriterionRestriction.EQ, inquiry.getId()));
