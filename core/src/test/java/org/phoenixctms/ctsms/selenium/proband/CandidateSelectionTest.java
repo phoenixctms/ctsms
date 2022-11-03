@@ -696,6 +696,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	public void checkSearchAllExpectedProbands(SearchCriteria criteria) throws Throwable {
 		setSkipScreenshot(true);
+		actualProbandIds.clear();
 		do {
 			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
 			break;
@@ -712,7 +713,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		}
 	}
 
-	public void checkSearchNoUnexpectedExpectedProbands(SearchCriteria criteria) throws Throwable {
+	public void checkSearchNoUnexpectedProbands(SearchCriteria criteria) throws Throwable {
 		setSkipScreenshot(true);
 		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
 		diff.addAll(actualProbandIds);
@@ -743,7 +744,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	@Test(description = "Search any subjects created by this test - check if no unexpected subjects are listed")
 	public void test_10_search_DEPARTMENT_PROBANDS_no_unexpected_probands() throws Throwable {
-		checkSearchNoUnexpectedExpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
+		checkSearchNoUnexpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
 	}
 
 	@Test(description = "Load a predefined search to list subjects with a particular disease.")
@@ -763,7 +764,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	@Test(description = "Search subjects with a particular disease - check if no unexpected subjects are listed")
 	public void test_14_search_DISEASE_no_unexpected_probands() throws Throwable {
-		checkSearchNoUnexpectedExpectedProbands(SearchCriteria.DISEASE);
+		checkSearchNoUnexpectedProbands(SearchCriteria.DISEASE);
 	}
 
 	@Test(description = "Load a predefined search to list subjects with a particular disease and particular therapy.")
@@ -783,7 +784,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	@Test(description = "List subjects with a particular disease and particular therapy - check if no unexpected subjects are listed")
 	public void test_18_search_DISEASE_THERAPY_no_unexpected_probands() throws Throwable {
-		checkSearchNoUnexpectedExpectedProbands(SearchCriteria.DISEASE_THERAPY);
+		checkSearchNoUnexpectedProbands(SearchCriteria.DISEASE_THERAPY);
 	}
 
 	private UserOutVO createUser(String name, String password, long departmentId, String departmentPassword) throws Exception {
