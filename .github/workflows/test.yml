@@ -51,6 +51,9 @@ jobs:
           MAIL_SENDER_ADDRESS: ${{ secrets.MAIL_SENDER_ADDRESS }}
         run: |
           sudo echo "email_exec_from_address=$MAIL_SENDER_ADDRESS" >> /ctsms/properties/ctsms-settings.properties
+          VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
+          COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi')
+          sudo echo "application.version=$VERSION [$COMMIT]" >> /ctsms/properties/ctsms-settings.properties
           sudo echo "email_exec_from_name=Phoenix CTMS Automated Tests" >> /ctsms/properties/ctsms-settings.properties
           sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
           sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
