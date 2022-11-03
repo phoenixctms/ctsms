@@ -2,7 +2,7 @@
 
 apt-get -q -y -o=Dpkg::Use-Pty=0 install tomcat9
 systemctl stop tomcat9
-VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
+#VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
 #sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
 echo 'CTSMS_PROPERTIES=/ctsms/properties' >>/etc/default/tomcat9
 echo 'CTSMS_JAVA=/ctsms/java' >>/etc/default/tomcat9
