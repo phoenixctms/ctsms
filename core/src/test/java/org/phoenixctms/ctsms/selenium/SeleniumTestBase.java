@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -319,6 +320,11 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			if (!CommonUtil.isEmptyString(windowSize)) {
 				chromeOptions.addArguments("--window-size=" + windowSize); //3840,2160");
 			}
+			//https://stackoverflow.com/questions/34515328/how-to-set-default-download-directory-in-selenium-chrome-capabilities
+			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+			chromePrefs.put("profile.default_content_settings.popups", 0);
+			chromePrefs.put("download.default_directory", getTestDirectory());
+			chromeOptions.setExperimentalOption("prefs", chromePrefs);
 			driver = new ChromeDriver(chromeOptions);
 			info("chrome driver created");
 		}
@@ -893,17 +899,23 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private void attachReports() throws Throwable {
 		File[] files = (new File(getTestDirectory())).listFiles();
 		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile() && CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING) && !"index.html".equals(files[i].getName().toLowerCase())) {
-				File pdfFile = new File((new FilePathSplitter(files[i].getCanonicalPath())).joinFilePath("{0}." + CoreUtil.PDF_FILENAME_EXTENSION));
-				String[] command = new String[HTMLTOPDF_COMMAND.length + 2];
-				for (int j = 0; j < HTMLTOPDF_COMMAND.length; j++) {
-					command[j] = HTMLTOPDF_COMMAND[j];
+			if (files[i].isFile()) {
+				if (CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING)) {
+					if (!"index.html".equals(files[i].getName().toLowerCase())) {
+						File pdfFile = new File((new FilePathSplitter(files[i].getCanonicalPath())).joinFilePath("{0}." + CoreUtil.PDF_FILENAME_EXTENSION));
+						String[] command = new String[HTMLTOPDF_COMMAND.length + 2];
+						for (int j = 0; j < HTMLTOPDF_COMMAND.length; j++) {
+							command[j] = HTMLTOPDF_COMMAND[j];
+						}
+						command[command.length - 2] = files[i].getCanonicalPath();
+						command[command.length - 1] = pdfFile.getCanonicalPath();
+						info(String.join(" ", command));
+						CoreUtil.runProcess(true, command);
+						getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
+					}
+				} else if (CommonUtil.getMimeType(files[i]).equals(CoreUtil.PDF_MIMETYPE_STRING)) {
+					getReportEmailSender().addEmailAttachment(files[i], CoreUtil.PDF_MIMETYPE_STRING, files[i].getName());
 				}
-				command[command.length - 2] = files[i].getCanonicalPath();
-				command[command.length - 1] = pdfFile.getCanonicalPath();
-				info(String.join(" ", command));
-				CoreUtil.runProcess(true, command);
-				getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
 			}
 		}
 		//getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
