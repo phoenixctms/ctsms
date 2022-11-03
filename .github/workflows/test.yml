@@ -36,11 +36,12 @@ jobs:
           COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi' | cut -c 1-6)
           echo "COMMIT=$COMMIT" >> $GITHUB_ENV
           sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /home/runner/work/ctsms/ctsms/pom.xml
-          mvn install -DskipTests --no-transfer-progress
+#          mvn install -DskipTests --no-transfer-progress
       - name: Setup database
         run: |
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
-          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+           sudo useradd ctsms -p '*' --groups sudo
+#          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+#          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
       - name: Download master data
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
