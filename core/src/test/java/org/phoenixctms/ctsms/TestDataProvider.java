@@ -23,6 +23,8 @@ import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
+import org.phoenixctms.ctsms.domain.Inquiry;
+import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.SponsoringTypeDao;
 import org.phoenixctms.ctsms.domain.SurveyStatusTypeDao;
 import org.phoenixctms.ctsms.domain.TrialStatusTypeDao;
@@ -100,6 +102,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 	private CriterionRestrictionDao criterionRestrictionDao;
 	@Autowired
 	private CriteriaDao criteriaDao;
+	@Autowired
+	private InquiryDao inquiryDao;
 	@Autowired
 	private SearchService searchService;
 	@Autowired
@@ -215,6 +219,17 @@ public class TestDataProvider { //extends ProductionDataProvider {
 				new SearchParameter("label", name, SearchParameter.EQUAL_COMPARATOR) })))).iterator();
 		if (it.hasNext()) {
 			return searchService.getCriteria(auth, it.next().getId());
+		}
+		return null;
+	}
+
+	public InquiryOutVO getInquiry(TrialOutVO trial, String category, int position) throws Throwable {
+		Iterator<Inquiry> it = (new ArrayList<Inquiry>(inquiryDao.search(new Search(new SearchParameter[] {
+				new SearchParameter("trial.id", trial.getId(), SearchParameter.EQUAL_COMPARATOR),
+				new SearchParameter("category", category, SearchParameter.EQUAL_COMPARATOR),
+				new SearchParameter("position", position, SearchParameter.EQUAL_COMPARATOR) })))).iterator();
+		if (it.hasNext()) {
+			return trialService.getInquiry(auth, it.next().getId());
 		}
 		return null;
 	}
