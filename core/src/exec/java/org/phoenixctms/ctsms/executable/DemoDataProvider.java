@@ -5,7 +5,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
@@ -91,6 +89,7 @@ import org.phoenixctms.ctsms.service.user.UserService;
 import org.phoenixctms.ctsms.test.InkStroke;
 import org.phoenixctms.ctsms.test.InputFieldValuesEnum;
 import org.phoenixctms.ctsms.test.InputFieldsEnum;
+import org.phoenixctms.ctsms.test.Random;
 import org.phoenixctms.ctsms.test.SearchCriteriaEnum;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -522,18 +521,16 @@ public class DemoDataProvider {
 	private CriterionPropertyDao criterionPropertyDao;
 	@Autowired
 	private CriterionRestrictionDao criterionRestrictionDao;
-	private Random random;
 	private String prefix;
-	private int year;
 	private int departmentCount;
 	private int usersPerDepartmentCount; // more users than persons intended
 	private JobOutput jobOutput;
 	private ApplicationContext context;
+	private Random random;
 
 	public DemoDataProvider() {
 		random = new Random();
 		prefix = RandomStringUtils.randomAlphanumeric(4).toLowerCase();
-		year = Calendar.getInstance().get(Calendar.YEAR);
 	}
 
 	private void addInkRegions(AuthenticationVO auth, InputFieldOutVO inputField, TreeMap<InputFieldValues, InkStroke> inkRegions) throws Exception {
@@ -591,7 +588,7 @@ public class DemoDataProvider {
 		Set<User> unassignedUsers = userDao.search(new Search(new SearchParameter[] {
 				new SearchParameter("identity", SearchParameter.NULL_COMPARATOR),
 				new SearchParameter("department.id", getDepartmentIds(), SearchParameter.IN_COMPARATOR) }));
-		User user = getRandomElement(unassignedUsers);
+		User user = random.getRandomElement(unassignedUsers);
 		UserOutVO userVO = null;
 		if (user != null) {
 			UserInVO modifiedUser = new UserInVO();
@@ -652,8 +649,8 @@ public class DemoDataProvider {
 		auth = (auth == null ? getRandomAuth() : auth);
 		CourseInVO newCourse = new CourseInVO();
 		Date stop;
-		VariablePeriod validityPeriod = getRandomElement(new VariablePeriod[] { VariablePeriod.MONTH, VariablePeriod.SIX_MONTHS, VariablePeriod.YEAR });
-		Long validityPeriodDays = (validityPeriod == VariablePeriod.EXPLICIT ? getRandomElement(new Long[] { 7L, 14L, 21L }) : null);
+		VariablePeriod validityPeriod = random.getRandomElement(new VariablePeriod[] { VariablePeriod.MONTH, VariablePeriod.SIX_MONTHS, VariablePeriod.YEAR });
+		Long validityPeriodDays = (validityPeriod == VariablePeriod.EXPLICIT ? random.getRandomElement(new Long[] { 7L, 14L, 21L }) : null);
 		if (precedingCourseIds != null && precedingCourseIds.size() > 0) {
 			stop = null;
 			Iterator<Long> it = precedingCourseIds.iterator();
@@ -668,12 +665,12 @@ public class DemoDataProvider {
 					}
 				}
 			}
-			stop = stop == null ? getRandomCourseStop() : DateCalc.subInterval(stop, VariablePeriod.EXPLICIT, new Long(random.nextInt(8)));
+			stop = stop == null ? getRandomCourseStop() : DateCalc.subInterval(stop, VariablePeriod.EXPLICIT, random.nextLong(8));
 			newCourse.setPrecedingCourseIds(precedingCourseIds);
 		} else {
 			stop = getRandomCourseStop();
 		}
-		if (getRandomBoolean(50)) {
+		if (random.getRandomBoolean(50)) {
 			newCourse.setExpires(true);
 			newCourse.setValidityPeriod(validityPeriod);
 			newCourse.setValidityPeriodDays(validityPeriodDays);
@@ -681,25 +678,25 @@ public class DemoDataProvider {
 			newCourse.setExpires(false);
 		}
 		Date start;
-		if (getRandomBoolean(50)) {
+		if (random.getRandomBoolean(50)) {
 			start = null;
 		} else {
-			VariablePeriod courseDurationPeriod = getRandomElement(new VariablePeriod[] { VariablePeriod.EXPLICIT, VariablePeriod.MONTH, VariablePeriod.SIX_MONTHS,
+			VariablePeriod courseDurationPeriod = random.getRandomElement(new VariablePeriod[] { VariablePeriod.EXPLICIT, VariablePeriod.MONTH, VariablePeriod.SIX_MONTHS,
 					VariablePeriod.YEAR });
-			Long courseDurationPeriodDays = (courseDurationPeriod == VariablePeriod.EXPLICIT ? getRandomElement(new Long[] { 7L, 14L, 21L }) : null);
+			Long courseDurationPeriodDays = (courseDurationPeriod == VariablePeriod.EXPLICIT ? random.getRandomElement(new Long[] { 7L, 14L, 21L }) : null);
 			start = DateCalc.subInterval(stop, courseDurationPeriod, courseDurationPeriodDays);
 		}
-		if (getRandomBoolean(50)) {
+		if (random.getRandomBoolean(50)) {
 			newCourse.setSelfRegistration(false);
 		} else {
 			newCourse.setSelfRegistration(true);
 			newCourse.setMaxNumberOfParticipants(1L + random.nextInt(maxParticipants));
 			Date participationDeadline;
-			if (getRandomBoolean(50)) {
+			if (random.getRandomBoolean(50)) {
 				if (start != null) {
-					participationDeadline = DateCalc.subInterval(start, VariablePeriod.EXPLICIT, new Long(random.nextInt(8)));
+					participationDeadline = DateCalc.subInterval(start, VariablePeriod.EXPLICIT, random.nextLong(8));
 				} else {
-					participationDeadline = DateCalc.subInterval(stop, VariablePeriod.EXPLICIT, new Long(random.nextInt(8)));
+					participationDeadline = DateCalc.subInterval(stop, VariablePeriod.EXPLICIT, random.nextLong(8));
 				}
 			} else {
 				participationDeadline = null;
@@ -709,30 +706,30 @@ public class DemoDataProvider {
 		newCourse.setDepartmentId(getDepartmentId(departmentNum));
 		Collection<CourseCategory> categories = courseCategoryDao.search(new Search(new SearchParameter[] {
 				new SearchParameter("trialRequired", false, SearchParameter.EQUAL_COMPARATOR) }));
-		newCourse.setCategoryId(getRandomElement(categories).getId());
-		newCourse.setInstitutionId(getRandomBoolean(50) ? getRandomElement(institutions).getId() : null);
+		newCourse.setCategoryId(random.getRandomElement(categories).getId());
+		newCourse.setInstitutionId(random.getRandomBoolean(50) ? random.getRandomElement(institutions).getId() : null);
 		newCourse.setName("course_" + (departmentNum + 1) + "_" + (courseNum + 1));
 		newCourse.setDescription("description for " + newCourse.getName());
 		newCourse.setStart(start);
 		newCourse.setStop(stop);
 		String cvTitle = "Course " + (departmentNum + 1) + "-" + (courseNum + 1);
-		if (getRandomBoolean(50)) {
+		if (random.getRandomBoolean(50)) {
 			newCourse.setShowCvPreset(true);
 			newCourse.setCvTitle(cvTitle);
-			if (getRandomBoolean(50)) {
+			if (random.getRandomBoolean(50)) {
 				newCourse.setShowCommentCvPreset(true);
 				newCourse.setCvCommentPreset("CV comment for " + newCourse.getCvTitle());
 			} else {
 				newCourse.setShowCommentCvPreset(false);
 			}
-			newCourse.setCvSectionPresetId(getRandomElement(selectionSetService.getCvSections(auth, null)).getId());
+			newCourse.setCvSectionPresetId(random.getRandomElement(selectionSetService.getCvSections(auth, null)).getId());
 		} else {
 			newCourse.setShowCvPreset(false);
 		}
-		if (getRandomBoolean(50)) {
+		if (random.getRandomBoolean(50)) {
 			newCourse.setShowTrainingRecordPreset(true);
 			newCourse.setCvTitle(cvTitle);
-			if (getRandomBoolean(50)) {
+			if (random.getRandomBoolean(50)) {
 				newCourse.setShowCommentTrainingRecordPreset(true);
 				if (CommonUtil.isEmptyString(newCourse.getCvCommentPreset())) {
 					newCourse.setCvCommentPreset("CV comment for " + newCourse.getCvTitle());
@@ -740,7 +737,7 @@ public class DemoDataProvider {
 			} else {
 				newCourse.setShowCommentTrainingRecordPreset(false);
 			}
-			newCourse.setTrainingRecordSectionPresetId(getRandomElement(selectionSetService.getTrainingRecordSections(auth, null)).getId());
+			newCourse.setTrainingRecordSectionPresetId(random.getRandomElement(selectionSetService.getTrainingRecordSections(auth, null)).getId());
 		} else {
 			newCourse.setShowTrainingRecordPreset(false);
 		}
@@ -751,9 +748,9 @@ public class DemoDataProvider {
 				new SearchParameter("person", true, SearchParameter.EQUAL_COMPARATOR) })));
 		Iterator<Staff> participantStaffIt;
 		if (course.getMaxNumberOfParticipants() != null) {
-			participantStaffIt = getUniqueRandomElements(persons, CommonUtil.safeLongToInt(course.getMaxNumberOfParticipants())).iterator();
+			participantStaffIt = random.getUniqueRandomElements(persons, CommonUtil.safeLongToInt(course.getMaxNumberOfParticipants())).iterator();
 		} else {
-			participantStaffIt = getUniqueRandomElements(persons, 1 + random.nextInt(maxParticipants)).iterator();
+			participantStaffIt = random.getUniqueRandomElements(persons, 1 + random.nextInt(maxParticipants)).iterator();
 		}
 		Collection<CourseParticipationStatusType> initialStates = courseParticipationStatusTypeDao.findInitialStates(true, course.isSelfRegistration());
 		while (participantStaffIt.hasNext()) {
@@ -767,7 +764,7 @@ public class DemoDataProvider {
 			newCourseParticipationStatusEntry.setShowTrainingRecord(course.isShowTrainingRecordPreset());
 			newCourseParticipationStatusEntry.setShowCommentTrainingRecord(course.getShowCommentTrainingRecordPreset());
 			newCourseParticipationStatusEntry.setStaffId(participantStaffIt.next().getId());
-			newCourseParticipationStatusEntry.setStatusId(getRandomElement(initialStates).getId());
+			newCourseParticipationStatusEntry.setStatusId(random.getRandomElement(initialStates).getId());
 			CourseParticipationStatusEntryOutVO participation = courseService.addCourseParticipationStatusEntry(auth, newCourseParticipationStatusEntry);
 			jobOutput.println("participant " + participation.getStatus().getName() + ": " + participation.getStaff().getName());
 		}
@@ -792,7 +789,8 @@ public class DemoDataProvider {
 			}
 			for (int i = 0; i < (courseCountPerDepartment - newestCourseCount); i++) {
 				AuthenticationVO auth = getRandomAuth(departmentNum);
-				CourseOutVO course = createCourse(auth, newestCourseCount + i, departmentNum, getUniqueRandomElements(createdIds, random.nextInt(5)), institutions, persons.size());
+				CourseOutVO course = createCourse(auth, newestCourseCount + i, departmentNum, random.getUniqueRandomElements(createdIds, random.nextInt(5)), institutions,
+						persons.size());
 				createdIds.add(course.getId());
 				createFiles(auth, FileModule.COURSE_DOCUMENT, course.getId(), FILE_COUNT_PER_COURSE);
 			}
@@ -1004,7 +1002,7 @@ public class DemoDataProvider {
 		newDutyRosterTurn.setTrialId(trial.getId());
 		ArrayList<DutyRosterTurnOutVO> out = new ArrayList<DutyRosterTurnOutVO>();
 		if (title == null && visitScheduleItems.size() > 0) {
-			Iterator<Staff> staffIt = getUniqueRandomElements(staff, visitScheduleItems.size()).iterator();
+			Iterator<Staff> staffIt = random.getUniqueRandomElements(staff, visitScheduleItems.size()).iterator();
 			Iterator<VisitScheduleItemOutVO> visitScheduleItemsIt = visitScheduleItems.iterator();
 			int dutyCount = 0;
 			while (staffIt.hasNext() && visitScheduleItemsIt.hasNext()) {
@@ -1023,7 +1021,7 @@ public class DemoDataProvider {
 			jobOutput.println(dutyCount + " duty roster turns for " + visitScheduleItems.size() + " visit schedule items created");
 			return out;
 		} else {
-			newDutyRosterTurn.setStaffId(staff.size() == 0 ? null : getRandomElement(staff).getId());
+			newDutyRosterTurn.setStaffId(staff.size() == 0 ? null : random.getRandomElement(staff).getId());
 			newDutyRosterTurn.setTitle(title);
 			newDutyRosterTurn.setComment(null);
 			newDutyRosterTurn.setVisitScheduleItemId(visitScheduleItems.size() > 0 ? visitScheduleItems.iterator().next().getId() : null);
@@ -1092,7 +1090,7 @@ public class DemoDataProvider {
 	private FileOutVO createFile(AuthenticationVO auth, FileModule module, Long id, ArrayList<String> folders) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		FileInVO newFile = new FileInVO();
-		newFile.setActive(getRandomBoolean(50));
+		newFile.setActive(random.getRandomBoolean(50));
 		newFile.setPublicFile(true);
 		switch (module) {
 			case INVENTORY_DOCUMENT:
@@ -1120,8 +1118,8 @@ public class DemoDataProvider {
 			folders.add(CommonUtil.LOGICAL_PATH_SEPARATOR);
 			folders.addAll(fileService.getFileFolders(auth, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, false, null, null, null));
 		}
-		StringBuilder logicalPath = new StringBuilder(getRandomElement(folders));
-		if (getRandomBoolean(50)) {
+		StringBuilder logicalPath = new StringBuilder(random.getRandomElement(folders));
+		if (random.getRandomBoolean(50)) {
 			logicalPath.append(CommonUtil.generateUUID());
 			logicalPath.append(CommonUtil.LOGICAL_PATH_SEPARATOR);
 			folders.add(logicalPath.toString());
@@ -1191,7 +1189,7 @@ public class DemoDataProvider {
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
-		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
+		newTrial.setSurveyStatusId(random.getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
 		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
 		jobOutput.println("trial created: " + trial.getName());
 		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
@@ -1428,7 +1426,7 @@ public class DemoDataProvider {
 		newTrial.setDutySelfAllocationLocked(false);
 		newTrial.setTypeId(trialTypeDao.searchUniqueNameL10nKey("na").getId());
 		newTrial.setSponsoringId(sponsoringTypeDao.searchUniqueNameL10nKey("na").getId());
-		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
+		newTrial.setSurveyStatusId(random.getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
 		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
 		jobOutput.println("trial created: " + trial.getName());
 		ProbandGroupInVO newProbandGroup = new ProbandGroupInVO();
@@ -1459,8 +1457,8 @@ public class DemoDataProvider {
 			newProband.setPerson(true);
 			newProband.setBlinded(true);
 			newProband.setAlias(MessageFormat.format("{0} {1}", trial.getName(), i + 1));
-			newProband.setGender(getRandomBoolean(50) ? Sex.MALE : Sex.FEMALE);
-			newProband.setDateOfBirth(getRandomDateOfBirth());
+			newProband.setGender(random.getRandomBoolean(50) ? Sex.MALE : Sex.FEMALE);
+			newProband.setDateOfBirth(random.getRandomDateOfBirth());
 			ProbandOutVO proband = probandService.addProband(auth, newProband, null, null, null);
 			jobOutput.println("proband created: " + proband.getName());
 			ProbandListEntryInVO newProbandListEntry = new ProbandListEntryInVO();
@@ -1540,16 +1538,16 @@ public class DemoDataProvider {
 	private InventoryOutVO createInventory(AuthenticationVO auth, int inventoryNum, int departmentNum, Long parentId, Collection<Staff> owners) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InventoryInVO newInventory = new InventoryInVO();
-		newInventory.setBookable(getRandomBoolean(50));
+		newInventory.setBookable(random.getRandomBoolean(50));
 		if (newInventory.getBookable()) {
 			newInventory.setMaxOverlappingBookings(1l);
 		} else {
 			newInventory.setMaxOverlappingBookings(0l);
 		}
-		newInventory.setOwnerId(getRandomBoolean(50) ? getRandomElement(owners).getId() : null);
+		newInventory.setOwnerId(random.getRandomBoolean(50) ? random.getRandomElement(owners).getId() : null);
 		newInventory.setParentId(parentId);
 		newInventory.setDepartmentId(getDepartmentId(departmentNum));
-		newInventory.setCategoryId(getRandomElement(selectionSetService.getInventoryCategories(auth, null)).getId());
+		newInventory.setCategoryId(random.getRandomElement(selectionSetService.getInventoryCategories(auth, null)).getId());
 		newInventory.setName("inventory_" + (departmentNum + 1) + "_" + (inventoryNum + 1));
 		newInventory.setPieces(random.nextInt(5) + 1L);
 		InventoryOutVO out = inventoryService.addInventory(auth, newInventory, null, null, null);
@@ -1572,7 +1570,7 @@ public class DemoDataProvider {
 			}
 			for (int i = 0; i < (inventoryCountPerDepartment - inventoryRootCount); i++) {
 				AuthenticationVO auth = getRandomAuth(departmentNum);
-				InventoryOutVO inventory = createInventory(auth, inventoryRootCount + i, departmentNum, getRandomElement(createdIds), owners);
+				InventoryOutVO inventory = createInventory(auth, inventoryRootCount + i, departmentNum, random.getRandomElement(createdIds), owners);
 				createdIds.add(inventory.getId());
 				createFiles(auth, FileModule.INVENTORY_DOCUMENT, inventory.getId(), FILE_COUNT_PER_INVENTORY);
 			}
@@ -1603,26 +1601,26 @@ public class DemoDataProvider {
 		auth = (auth == null ? getRandomAuth() : auth);
 		ProbandInVO newProband = new ProbandInVO();
 		newProband.setDepartmentId(getDepartmentId(departmentNum));
-		newProband.setCategoryId(getRandomElement(categories).getId());
-		if (getRandomBoolean(25)) {
-			newProband.setPrefixedTitle1(getRandomElement(titles));
-			if (getRandomBoolean(20)) {
-				newProband.setPrefixedTitle2(getRandomElement(titles));
+		newProband.setCategoryId(random.getRandomElement(categories).getId());
+		if (random.getRandomBoolean(25)) {
+			newProband.setPrefixedTitle1(random.getRandomElement(titles));
+			if (random.getRandomBoolean(20)) {
+				newProband.setPrefixedTitle2(random.getRandomElement(titles));
 			}
 		}
 		if (sex == null) {
-			if (getRandomBoolean(50)) {
+			if (random.getRandomBoolean(50)) {
 				sex = Sex.MALE;
 			} else {
 				sex = Sex.FEMALE;
 			}
 		}
 		newProband.setGender(sex);
-		newProband.setFirstName(Sex.MALE == sex ? getRandomElement(GermanPersonNames.MALE_FIRST_NAMES) : getRandomElement(GermanPersonNames.FEMALE_FIRST_NAMES));
+		newProband.setFirstName(Sex.MALE == sex ? random.getRandomElement(GermanPersonNames.MALE_FIRST_NAMES) : random.getRandomElement(GermanPersonNames.FEMALE_FIRST_NAMES));
 		newProband.setPerson(true);
 		newProband.setBlinded(false);
-		newProband.setLastName(getRandomElement(GermanPersonNames.LAST_NAMES));
-		newProband.setCitizenship(getRandomBoolean(5) ? "Deutschland" : "österreich");
+		newProband.setLastName(random.getRandomElement(GermanPersonNames.LAST_NAMES));
+		newProband.setCitizenship(random.getRandomBoolean(5) ? "Deutschland" : "österreich");
 		Long oldestChildDoBTime = null;
 		if (childIds != null && childIds.size() > 0) {
 			newProband.setChildIds(childIds);
@@ -1639,9 +1637,9 @@ public class DemoDataProvider {
 		if (oldestChildDoBTime != null) {
 			dOb = new Date();
 			dOb.setTime(oldestChildDoBTime);
-			dOb = DateCalc.subIntervals(dOb, VariablePeriod.YEAR, null, CommonUtil.safeLongToInt(getRandomLong(15l, 40l)));
+			dOb = DateCalc.subIntervals(dOb, VariablePeriod.YEAR, null, CommonUtil.safeLongToInt(random.getRandomLong(15l, 40l)));
 		} else {
-			dOb = getRandomDateOfBirth();
+			dOb = random.getRandomDateOfBirth();
 		}
 		newProband.setDateOfBirth(dOb);
 		ProbandOutVO out = probandService.addProband(auth, newProband, null, null, null);
@@ -1697,13 +1695,13 @@ public class DemoDataProvider {
 			HashSet<Long> childWoFemaleParentIds = new HashSet<Long>(grandChildrentIds);
 			for (int i = 0; i < childrenCount; i++) {
 				AuthenticationVO auth = getRandomAuth(departmentNum);
-				boolean isMale = getRandomBoolean(50);
+				boolean isMale = random.getRandomBoolean(50);
 				ArrayList<Long> childIds;
 				if (isMale) {
-					childIds = getUniqueRandomElements(new ArrayList<Long>(childWoMaleParentIds), random.nextInt(5));
+					childIds = random.getUniqueRandomElements(new ArrayList<Long>(childWoMaleParentIds), random.nextInt(5));
 					childWoMaleParentIds.removeAll(childIds);
 				} else {
-					childIds = getUniqueRandomElements(new ArrayList<Long>(childWoFemaleParentIds), random.nextInt(5));
+					childIds = random.getUniqueRandomElements(new ArrayList<Long>(childWoFemaleParentIds), random.nextInt(5));
 					childWoFemaleParentIds.removeAll(childIds);
 				}
 				ProbandOutVO proband = createProband(auth, departmentNum, isMale ? Sex.MALE : Sex.FEMALE, childIds, categories, titles);
@@ -1714,13 +1712,13 @@ public class DemoDataProvider {
 			childWoFemaleParentIds = new HashSet<Long>(childrentIds);
 			for (int i = 0; i < probandCountPerDepartment - grandChildrenCount - childrenCount; i++) {
 				AuthenticationVO auth = getRandomAuth(departmentNum);
-				boolean isMale = getRandomBoolean(50);
+				boolean isMale = random.getRandomBoolean(50);
 				ArrayList<Long> childIds;
 				if (isMale) {
-					childIds = getUniqueRandomElements(new ArrayList<Long>(childWoMaleParentIds), random.nextInt(5));
+					childIds = random.getUniqueRandomElements(new ArrayList<Long>(childWoMaleParentIds), random.nextInt(5));
 					childWoMaleParentIds.removeAll(childIds);
 				} else {
-					childIds = getUniqueRandomElements(new ArrayList<Long>(childWoFemaleParentIds), random.nextInt(5));
+					childIds = random.getUniqueRandomElements(new ArrayList<Long>(childWoFemaleParentIds), random.nextInt(5));
 					childWoFemaleParentIds.removeAll(childIds);
 				}
 				ProbandOutVO proband = createProband(auth, departmentNum, isMale ? Sex.MALE : Sex.FEMALE, childIds, categories, titles);
@@ -1841,7 +1839,7 @@ public class DemoDataProvider {
 			}
 			for (int i = 0; i < (personCount - externalCount - personRootCount); i++) {
 				AuthenticationVO auth = getRandomAuth(departmentNum);
-				StaffOutVO staff = createStaffPerson(auth, departmentNum, true, getRandomElement(createdIds), titles);
+				StaffOutVO staff = createStaffPerson(auth, departmentNum, true, random.getRandomElement(createdIds), titles);
 				createdIds.add(staff.getId());
 				createFiles(auth, FileModule.STAFF_DOCUMENT, staff.getId(), FILE_COUNT_PER_STAFF);
 			}
@@ -1854,7 +1852,7 @@ public class DemoDataProvider {
 			}
 			for (int i = 0; i < (organisationCount - organisationRootCount); i++) {
 				AuthenticationVO auth = getRandomAuth(departmentNum);
-				StaffOutVO organisation = createStaffOrganisation(auth, organisationRootCount + i, departmentNum, getRandomElement(createdIds));
+				StaffOutVO organisation = createStaffOrganisation(auth, organisationRootCount + i, departmentNum, random.getRandomElement(createdIds));
 				createdIds.add(organisation.getId());
 				createFiles(auth, FileModule.STAFF_DOCUMENT, organisation.getId(), FILE_COUNT_PER_ORGANISATION);
 			}
@@ -1869,7 +1867,7 @@ public class DemoDataProvider {
 		newStaff.setMaxOverlappingShifts(0l);
 		newStaff.setParentId(parentId);
 		newStaff.setDepartmentId(getDepartmentId(departmentNum));
-		newStaff.setCategoryId(getRandomElement(selectionSetService.getStaffCategories(auth, false, true, null)).getId());
+		newStaff.setCategoryId(random.getRandomElement(selectionSetService.getStaffCategories(auth, false, true, null)).getId());
 		newStaff.setOrganisationName("organisation_" + (departmentNum + 1) + "_" + (organisationNum + 1));
 		StaffOutVO staff = staffService.addStaff(auth, newStaff, null, null, null);
 		jobOutput.println("organisation created: " + staff.getName());
@@ -1881,8 +1879,8 @@ public class DemoDataProvider {
 		auth = (auth == null ? getRandomAuth() : auth);
 		StaffInVO newStaff = new StaffInVO();
 		newStaff.setPerson(true);
-		newStaff.setEmployee(employee == null ? getRandomBoolean(80) : employee);
-		newStaff.setAllocatable(newStaff.getEmployee() && getRandomBoolean(50));
+		newStaff.setEmployee(employee == null ? random.getRandomBoolean(80) : employee);
+		newStaff.setAllocatable(newStaff.getEmployee() && random.getRandomBoolean(50));
 		if (newStaff.getAllocatable()) {
 			newStaff.setMaxOverlappingShifts(1l);
 		} else {
@@ -1890,23 +1888,23 @@ public class DemoDataProvider {
 		}
 		newStaff.setParentId(parentId);
 		newStaff.setDepartmentId(getDepartmentId(departmentNum));
-		newStaff.setCategoryId(getRandomElement(selectionSetService.getStaffCategories(auth, true, false, null)).getId());
-		if (getRandomBoolean(25)) {
-			newStaff.setPrefixedTitle1(getRandomElement(titles));
-			if (getRandomBoolean(20)) {
-				newStaff.setPrefixedTitle2(getRandomElement(titles));
+		newStaff.setCategoryId(random.getRandomElement(selectionSetService.getStaffCategories(auth, true, false, null)).getId());
+		if (random.getRandomBoolean(25)) {
+			newStaff.setPrefixedTitle1(random.getRandomElement(titles));
+			if (random.getRandomBoolean(20)) {
+				newStaff.setPrefixedTitle2(random.getRandomElement(titles));
 			}
 		}
-		if (getRandomBoolean(50)) {
+		if (random.getRandomBoolean(50)) {
 			newStaff.setGender(Sex.MALE);
-			newStaff.setFirstName(getRandomElement(GermanPersonNames.MALE_FIRST_NAMES));
+			newStaff.setFirstName(random.getRandomElement(GermanPersonNames.MALE_FIRST_NAMES));
 		} else {
 			newStaff.setGender(Sex.FEMALE);
-			newStaff.setFirstName(getRandomElement(GermanPersonNames.FEMALE_FIRST_NAMES));
+			newStaff.setFirstName(random.getRandomElement(GermanPersonNames.FEMALE_FIRST_NAMES));
 		}
-		newStaff.setLastName(getRandomElement(GermanPersonNames.LAST_NAMES));
-		newStaff.setCitizenship(getRandomBoolean(5) ? "Deutschland" : "österreich");
-		newStaff.setDateOfBirth(getRandomDateOfBirth());
+		newStaff.setLastName(random.getRandomElement(GermanPersonNames.LAST_NAMES));
+		newStaff.setCitizenship(random.getRandomBoolean(5) ? "Deutschland" : "österreich");
+		newStaff.setDateOfBirth(random.getRandomDateOfBirth());
 		StaffOutVO staff = staffService.addStaff(auth, newStaff, null, null, null);
 		jobOutput.println("person created: " + staff.getName());
 		assignUser(staff);
@@ -1934,13 +1932,14 @@ public class DemoDataProvider {
 	private TimelineEventOutVO createTimelineEvent(AuthenticationVO auth, Long trialId, String title, String typeNameL10nKey, Date start, Date stop) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		TimelineEventInVO newTimelineEvent = new TimelineEventInVO();
-		TimelineEventType eventType = typeNameL10nKey != null ? timelineEventTypeDao.searchUniqueNameL10nKey(typeNameL10nKey) : getRandomElement(timelineEventTypeDao.loadAll());
+		TimelineEventType eventType = typeNameL10nKey != null ? timelineEventTypeDao.searchUniqueNameL10nKey(typeNameL10nKey)
+				: random.getRandomElement(timelineEventTypeDao.loadAll());
 		newTimelineEvent.setTrialId(trialId);
 		newTimelineEvent.setTypeId(eventType.getId());
-		newTimelineEvent.setImportance(getRandomElement(EventImportance.values()));
+		newTimelineEvent.setImportance(random.getRandomElement(EventImportance.values()));
 		newTimelineEvent.setNotify(eventType.isNotifyPreset());
 		newTimelineEvent.setReminderPeriod(VariablePeriod.EXPLICIT);
-		newTimelineEvent.setReminderPeriodDays(getRandomElement(new Long[] { 7L, 14L, 21L }));
+		newTimelineEvent.setReminderPeriodDays(random.getRandomElement(new Long[] { 7L, 14L, 21L }));
 		newTimelineEvent.setShow(eventType.isShowPreset());
 		newTimelineEvent.setStart(start);
 		newTimelineEvent.setStop(stop);
@@ -1975,7 +1974,7 @@ public class DemoDataProvider {
 			throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
 		TrialInVO newTrial = new TrialInVO();
-		newTrial.setStatusId(getRandomElement(selectionSetService.getInitialTrialStatusTypes(auth)).getId());
+		newTrial.setStatusId(random.getRandomElement(selectionSetService.getInitialTrialStatusTypes(auth)).getId());
 		newTrial.setDepartmentId(getDepartmentId(departmentNum));
 		newTrial.setName("TEST TRIAL " + (departmentNum + 1) + "-" + (trialNum + 1));
 		newTrial.setTitle(newTrial.getName());
@@ -1989,11 +1988,11 @@ public class DemoDataProvider {
 		newTrial.setDutySelfAllocationLocked(false);
 		TrialTypeVO trialType = null;
 		while (trialType == null || !trialType.isPerson()) {
-			trialType = getRandomElement(selectionSetService.getTrialTypes(auth, null));
+			trialType = random.getRandomElement(selectionSetService.getTrialTypes(auth, null));
 		}
 		newTrial.setTypeId(trialType.getId());
-		newTrial.setSponsoringId(getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
-		newTrial.setSurveyStatusId(getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
+		newTrial.setSponsoringId(random.getRandomElement(selectionSetService.getSponsoringTypes(auth, null)).getId());
+		newTrial.setSurveyStatusId(random.getRandomElement(selectionSetService.getSurveyStatusTypes(auth, null)).getId());
 		TrialOutVO trial = trialService.addTrial(auth, newTrial, null);
 		jobOutput.println("trial created: " + trial.getName());
 		ArrayList<Staff> departmentStaff = new ArrayList<Staff>(staffDao.search(new Search(new SearchParameter[] {
@@ -2003,7 +2002,7 @@ public class DemoDataProvider {
 				new SearchParameter("allocatable", true, SearchParameter.EQUAL_COMPARATOR) })));
 		Collection<TeamMemberRole> roles = teamMemberRoleDao.loadAll();
 		ArrayList<TeamMemberOutVO> teamMembers = new ArrayList<TeamMemberOutVO>();
-		Iterator<Staff> teamMemberStaffIt = getUniqueRandomElements(departmentStaff, 3 + random.nextInt(8)).iterator();
+		Iterator<Staff> teamMemberStaffIt = random.getUniqueRandomElements(departmentStaff, 3 + random.nextInt(8)).iterator();
 		while (teamMemberStaffIt.hasNext()) {
 			Staff teamMemberStaff = teamMemberStaffIt.next();
 			TeamMemberInVO newTeamMember = new TeamMemberInVO();
@@ -2020,7 +2019,7 @@ public class DemoDataProvider {
 			TeamMemberRole role;
 			while (!created) {
 				try {
-					role = getRandomElement(roles);
+					role = random.getRandomElement(roles);
 					newTeamMember.setRoleId(role.getId());
 					TeamMemberOutVO out = trialService.addTeamMember(auth, newTeamMember);
 					jobOutput.println("team member created: " + out.getStaff().getName() + " (" + out.getRole().getName() + ")");
@@ -2080,7 +2079,7 @@ public class DemoDataProvider {
 		Date visitDate = new Date();
 		visitDate.setTime(screeningDate.getTime());
 		HashMap<Long, ArrayList<VisitScheduleItemOutVO>> visitScheduleItemPerGroupMap = new HashMap<Long, ArrayList<VisitScheduleItemOutVO>>();
-		long screeningDays = getRandomLong(2l, 14l);
+		long screeningDays = random.getRandomLong(2l, 14l);
 		VisitScheduleItemInVO newVisitScheduleItem = new VisitScheduleItemInVO();
 		newVisitScheduleItem.setVisitId(screeningVisit.getId());
 		newVisitScheduleItem.setGroupId(screeningGroup.getId());
@@ -2113,7 +2112,7 @@ public class DemoDataProvider {
 			jobOutput.println("visit schedule item created: " + visitScheduleItem.getName());
 			createDuty(auth, departmentStaff, trial, startStop[0], startStop[1], "Dienst für Screening Tag " + i);
 		}
-		visitDate = DateCalc.addInterval(visitDate, VariablePeriod.EXPLICIT, getRandomElement(new Long[] { 2l, 3l, 7l }) + screeningDays - 1l);
+		visitDate = DateCalc.addInterval(visitDate, VariablePeriod.EXPLICIT, random.getRandomElement(new Long[] { 2l, 3l, 7l }) + screeningDays - 1l);
 		Iterator<VisitOutVO> visitIt = visits.iterator();
 		while (visitIt.hasNext()) {
 			VisitOutVO visit = visitIt.next();
@@ -2146,34 +2145,36 @@ public class DemoDataProvider {
 				}
 				groupCount++;
 			}
-			visitDate = DateCalc.addInterval(visitDate, VariablePeriod.EXPLICIT, getRandomElement(new Long[] { 1l, 2l, 3l, 7L, 14L, 21L }));
+			visitDate = DateCalc.addInterval(visitDate, VariablePeriod.EXPLICIT, random.getRandomElement(new Long[] { 1l, 2l, 3l, 7L, 14L, 21L }));
 		}
 		Date finalVisitDate = new Date();
 		finalVisitDate.setTime(visitDate.getTime());
 		createTimelineEvent(auth, trial.getId(), "Screening", "deadline", screeningDate, null);
 		createTimelineEvent(auth, trial.getId(), "Abschlussvisite", "deadline", finalVisitDate, null);
 		createTimelineEvent(auth, trial.getId(), "Studienvisiten", "phase", screeningDate, finalVisitDate);
-		Date screeningDatePlanned = getRandomDateAround(screeningDate, 5, 5);
+		Date screeningDatePlanned = random.getRandomDateAround(screeningDate, 5, 5);
 		createTimelineEvent(auth, trial.getId(), "Screening geplant", "phase", screeningDatePlanned,
 				DateCalc.addInterval(screeningDatePlanned, VariablePeriod.EXPLICIT, (long) DateCalc.dateDeltaDays(screeningDate, finalVisitDate)));
 		int screeningDelay = random.nextInt(15);
 		Date recruitmentStop = DateCalc.subInterval(screeningDate, VariablePeriod.EXPLICIT, (long) screeningDelay);
-		VariablePeriod recruitmentDuration = getRandomElement(new VariablePeriod[] { VariablePeriod.EXPLICIT, VariablePeriod.MONTH, VariablePeriod.TWO_MONTHS,
+		VariablePeriod recruitmentDuration = random.getRandomElement(new VariablePeriod[] { VariablePeriod.EXPLICIT, VariablePeriod.MONTH, VariablePeriod.TWO_MONTHS,
 				VariablePeriod.THREE_MONTHS });
-		Date recruitmentStart = DateCalc.subInterval(recruitmentStop, recruitmentDuration, (recruitmentDuration == VariablePeriod.EXPLICIT ? getRandomElement(new Long[] { 21L,
-				42L, 70L }) : null));
+		Date recruitmentStart = DateCalc.subInterval(recruitmentStop, recruitmentDuration,
+				(recruitmentDuration == VariablePeriod.EXPLICIT ? random.getRandomElement(new Long[] { 21L,
+						42L, 70L }) : null));
 		createTimelineEvent(auth, trial.getId(), "Rekrutierung", "phase", recruitmentStart, recruitmentStop);
-		Date trialStart = DateCalc.subInterval(recruitmentStart, VariablePeriod.EXPLICIT, getRandomElement(new Long[] { 14L, 21L, 28L, 42L }));
-		Date trialEnd = getRandomDate(DateCalc.addInterval(finalVisitDate, VariablePeriod.EXPLICIT, 14L), DateCalc.addInterval(finalVisitDate, VariablePeriod.EXPLICIT, 60L));
+		Date trialStart = DateCalc.subInterval(recruitmentStart, VariablePeriod.EXPLICIT, random.getRandomElement(new Long[] { 14L, 21L, 28L, 42L }));
+		Date trialEnd = random.getRandomDate(DateCalc.addInterval(finalVisitDate, VariablePeriod.EXPLICIT, 14L),
+				DateCalc.addInterval(finalVisitDate, VariablePeriod.EXPLICIT, 60L));
 		createTimelineEvent(auth, trial.getId(), "Studie", "trial", trialStart, trialEnd);
 		for (int i = 0; i < 3 + random.nextInt(8); i++) {
-			createTimelineEvent(auth, trial.getId(), "Einreichfrist " + (i + 1), "deadline", getRandomDate(trialStart, screeningDate), null);
+			createTimelineEvent(auth, trial.getId(), "Einreichfrist " + (i + 1), "deadline", random.getRandomDate(trialStart, screeningDate), null);
 		}
 		for (int i = 0; i < 1 + random.nextInt(3); i++) {
-			createTimelineEvent(auth, trial.getId(), "Audit " + (i + 1), "deadline", getRandomDate(screeningDate, trialEnd), null);
+			createTimelineEvent(auth, trial.getId(), "Audit " + (i + 1), "deadline", random.getRandomDate(screeningDate, trialEnd), null);
 		}
 		for (int i = 0; i < 1 + random.nextInt(3); i++) {
-			createTimelineEvent(auth, trial.getId(), "Abgabefrist " + (i + 1), "deadline", getRandomDate(finalVisitDate, trialEnd), null);
+			createTimelineEvent(auth, trial.getId(), "Abgabefrist " + (i + 1), "deadline", random.getRandomDate(finalVisitDate, trialEnd), null);
 		}
 		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
 		ArrayList<ProbandListEntryTagOutVO> probandListEntryTags = new ArrayList<ProbandListEntryTagOutVO>();
@@ -2321,11 +2322,11 @@ public class DemoDataProvider {
 				probands.add(probandService.getProband(auth, probandsIt.next().getId(), null, null, null));
 			}
 		}
-		Collections.shuffle(probands, random);
+		random.shuffle(probands);
 		ArrayList<ProbandListEntryOutVO> probandListEntries = new ArrayList<ProbandListEntryOutVO>();
 		for (int i = 0; i < probands.size() && i < (probandGroupCount * avgGroupSize); i++) {
 			ProbandListEntryInVO newProbandListEntry = new ProbandListEntryInVO();
-			newProbandListEntry.setGroupId(getRandomElement(probandGroups).getId());
+			newProbandListEntry.setGroupId(random.getRandomElement(probandGroups).getId());
 			newProbandListEntry.setPosition(i + 1l);
 			newProbandListEntry.setTrialId(trial.getId());
 			newProbandListEntry.setProbandId(probands.get(i).getId());
@@ -2393,8 +2394,8 @@ public class DemoDataProvider {
 				if (eligibilityCriterias != null && i < eligibilityCriterias.length) {
 					eligibilityCriteria = eligibilityCriterias[i];
 				}
-				TrialOutVO trial = createTrial(auth, departmentNum, i, getRandomElement(visitCounts), getRandomElement(probandGroupCounts),
-						getRandomElement(avgProbandGroupSizes), eligibilityCriteria);
+				TrialOutVO trial = createTrial(auth, departmentNum, i, random.getRandomElement(visitCounts), random.getRandomElement(probandGroupCounts),
+						random.getRandomElement(avgProbandGroupSizes), eligibilityCriteria);
 				createFiles(auth, FileModule.TRIAL_DOCUMENT, trial.getId(), FILE_COUNT_PER_TRIAL);
 			}
 		}
@@ -2912,7 +2913,7 @@ public class DemoDataProvider {
 			}
 			if (!allowPassed) {
 				while (newState == null) {
-					newState = getRandomElement(newStates);
+					newState = random.getRandomElement(newStates);
 					newState = probandListStatusMarkov(newState, probandListStatusTypeMap);
 					if (!newStateIds.contains(newState.getId())) {
 						newState = null;
@@ -2922,7 +2923,7 @@ public class DemoDataProvider {
 				}
 			} else {
 				while (newState == null) {
-					newState = getRandomElement(newStates);
+					newState = random.getRandomElement(newStates);
 					newState = probandListStatusMarkov(newState, probandListStatusTypeMap);
 					if (!newStateIds.contains(newState.getId())) {
 						newState = null;
@@ -2949,102 +2950,15 @@ public class DemoDataProvider {
 	}
 
 	private Date getRandomAutoDeleteDeadline() {
-		return getRandomDate((new GregorianCalendar(year, 0, 1)).getTime(), (new GregorianCalendar(year, 11, 31)).getTime());
-	}
-
-	private boolean getRandomBoolean() {
-		return random.nextBoolean();
-	}
-
-	private boolean getRandomBoolean(int p) {
-		if (p <= 0) {
-			return false;
-		} else if (p >= 100) {
-			return true;
-		} else {
-			return random.nextDouble() < ((p) / 100.0d);
-		}
+		return random.getRandomDate((new GregorianCalendar(random.getYear(), 0, 1)).getTime(), (new GregorianCalendar(random.getYear(), 11, 31)).getTime());
 	}
 
 	private Date getRandomCourseStop() {
-		return getRandomDate((new GregorianCalendar(year, 0, 1)).getTime(), (new GregorianCalendar(year, 11, 31)).getTime());
-	}
-
-	private Date getRandomDate(Date minDate, Date maxDate) {
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(minDate == null ? (new GregorianCalendar(1900, 0, 1)).getTime() : minDate);
-		cal = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-		cal.add(Calendar.DAY_OF_YEAR, random.nextInt(DateCalc.dateDeltaDays(minDate == null ? (new GregorianCalendar(1900, 0, 1)).getTime() : minDate,
-				maxDate == null ? (new GregorianCalendar(year, 11, 31)).getTime() : maxDate)));
-		return cal.getTime();
-	}
-
-	private Date getRandomDateAround(Date date, int maxDaysBefore, int maxDaysAfter) {
-		return DateCalc.addInterval(date, VariablePeriod.EXPLICIT, (long) (getRandomBoolean() ? random.nextInt(maxDaysAfter + 1) : (-1 * random.nextInt(maxDaysBefore + 1))));
-	}
-
-	private Date getRandomDateOfBirth() {
-		return getRandomDate((new GregorianCalendar(year - 90, 0, 1)).getTime(), (new GregorianCalendar(year - 20, 0, 1)).getTime());
+		return random.getRandomDate((new GregorianCalendar(random.getYear(), 0, 1)).getTime(), (new GregorianCalendar(random.getYear(), 11, 31)).getTime());
 	}
 
 	private Long getRandomDepartmentId() throws Exception {
 		return getDepartmentId(random.nextInt(departmentCount));
-	}
-
-	private <E> E getRandomElement(ArrayList<E> list) {
-		if (list != null && list.size() > 0) {
-			return list.get(random.nextInt(list.size()));
-		}
-		return null;
-	}
-
-	private <E> E getRandomElement(Collection<E> collection) {
-		E result = null;
-		if (collection != null && collection.size() > 0) {
-			int index = random.nextInt(collection.size());
-			Iterator<E> it = collection.iterator();
-			for (int i = 0; i <= index; i++) {
-				result = it.next();
-			}
-		}
-		return result;
-	}
-
-	private <E> E getRandomElement(E[] array) {
-		if (array != null && array.length > 0) {
-			return array[random.nextInt(array.length)];
-		}
-		return null;
-	}
-
-	private float getRandomFloat(Float lowerLimit, Float upperLimit) {
-		float lower = (lowerLimit == null ? 0f : lowerLimit.floatValue());
-		return lower + random.nextFloat() * ((upperLimit == null ? Float.MAX_VALUE : upperLimit.longValue()) - lower);
-	}
-
-	private long getRandomLong(Long lowerLimit, Long upperLimit) {
-		long lower = (lowerLimit == null ? 0l : lowerLimit.longValue());
-		return lower + nextLong(random, (upperLimit == null ? Integer.MAX_VALUE : upperLimit.longValue()) - lower);
-	}
-
-	private Date getRandomScreeningDate() {
-		return getRandomDate((new GregorianCalendar(year, 0, 1)).getTime(), (new GregorianCalendar(year, 11, 31)).getTime());
-	}
-
-	private Date getRandomTime(Date minTime, Date maxTime) {
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(minTime == null ? (new GregorianCalendar(1970, 0, 1, 0, 0, 0)).getTime() : minTime);
-		cal.setTimeInMillis(cal.getTimeInMillis()
-				+ nextLong(random, (maxTime == null ? (new GregorianCalendar(1970, 0, 1, 23, 59, 59)).getTime() : maxTime).getTime() - cal.getTimeInMillis()));
-		return cal.getTime();
-	}
-
-	private Date getRandomTimestamp(Date minTimestamp, Date maxTimestamp) {
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(minTimestamp == null ? (new GregorianCalendar(1900, 0, 1, 0, 0, 0)).getTime() : minTimestamp);
-		cal.setTimeInMillis(cal.getTimeInMillis()
-				+ nextLong(random, (maxTimestamp == null ? (new GregorianCalendar(year, 11, 31)).getTime() : maxTimestamp).getTime() - cal.getTimeInMillis()));
-		return cal.getTime();
 	}
 
 	private Long getRandomUserId() {
@@ -3053,26 +2967,6 @@ public class DemoDataProvider {
 
 	private Long getRandomUserId(int departmentNum) {
 		return getUserId(departmentNum, random.nextInt(usersPerDepartmentCount));
-	}
-
-	private <E> ArrayList<E> getUniqueRandomElements(ArrayList<E> list, int n) {
-		if (list != null) {
-			int listSize = list.size();
-			if (listSize > 0 && n > 0) {
-				if (listSize <= n) {
-					return new ArrayList<E>(list);
-				} else {
-					HashSet<E> result = new HashSet<E>(n);
-					while (result.size() < n && result.size() < listSize) {
-						result.add(list.get(random.nextInt(listSize)));
-					}
-					return new ArrayList<E>(result);
-				}
-			} else {
-				return new ArrayList<E>();
-			}
-		}
-		return null;
 	}
 
 	private Long getUserId(int departmentNum, int userNum) {
@@ -3085,21 +2979,6 @@ public class DemoDataProvider {
 
 	private String getUserPassword(int departmentNum, int num) {
 		return getUsername(departmentNum, num);
-	}
-
-	private long nextLong(Random rng, long n) {
-		// error checking and 2^x checking removed for simplicity.
-		if (n <= 0) {
-			throw new IllegalArgumentException("n must be positive");
-		}
-		// if ((n & -n) == n) // i.e., n is a power of 2
-		// return (int)((n * (long)next(31)) >> 31);
-		long bits, val;
-		do {
-			bits = (rng.nextLong() << 1) >>> 1;
-			val = bits % n;
-		} while (bits - val + (n - 1) < 0L);
-		return val;
 	}
 
 	private Collection performSearch(AuthenticationVO auth, SearchCriteria criteria, PSFVO psf, Integer maxInstances) throws Throwable {
@@ -3151,7 +3030,7 @@ public class DemoDataProvider {
 	}
 
 	private ProbandListStatusTypeVO probandListStatusMarkov(ProbandListStatusTypeVO state, HashMap<String, ProbandListStatusTypeVO> probandListStatusTypeMap) throws Exception {
-		boolean negative = getRandomBoolean(10);
+		boolean negative = random.getRandomBoolean(10);
 		if ("cancelled".equals(state.getNameL10nKey())) {
 			return negative ? state : probandListStatusTypeMap.get("acceptance");
 		} else if ("screening_failure".equals(state.getNameL10nKey())) {
@@ -3171,11 +3050,11 @@ public class DemoDataProvider {
 	}
 
 	private void setRandomInquiryValue(InquiryOutVO inquiry, InquiryValueInVO inquiryValue) {
-		if (!inquiry.isOptional() || getRandomBoolean()) {
+		if (!inquiry.isOptional() || random.getRandomBoolean()) {
 			HashSet<Long> selectionSetValues = new HashSet<Long>();
 			switch (inquiry.getField().getFieldType().getType()) {
 				case CHECKBOX:
-					inquiryValue.setBooleanValue(inquiry.isDisabled() ? inquiry.getField().getBooleanPreset() : getRandomBoolean());
+					inquiryValue.setBooleanValue(inquiry.isDisabled() ? inquiry.getField().getBooleanPreset() : random.getRandomBoolean());
 					break;
 				case SELECT_ONE_DROPDOWN:
 				case SELECT_ONE_RADIO_H:
@@ -3190,7 +3069,7 @@ public class DemoDataProvider {
 							}
 						}
 					} else {
-						selectionSetValues.add(getRandomElement(inquiry.getField().getSelectionSetValues()).getId());
+						selectionSetValues.add(random.getRandomElement(inquiry.getField().getSelectionSetValues()).getId());
 					}
 					inquiryValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
 					break;
@@ -3206,7 +3085,7 @@ public class DemoDataProvider {
 						}
 					} else {
 						for (int i = 0; i <= random.nextInt(inquiry.getField().getSelectionSetValues().size()); i++) {
-							selectionSetValues.add(getRandomElement(inquiry.getField().getSelectionSetValues()).getId());
+							selectionSetValues.add(random.getRandomElement(inquiry.getField().getSelectionSetValues()).getId());
 						}
 					}
 					inquiryValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
@@ -3227,27 +3106,27 @@ public class DemoDataProvider {
 					break;
 				case INTEGER:
 					inquiryValue.setLongValue(inquiry.isDisabled() ? inquiry.getField().getLongPreset()
-							: getRandomLong(inquiry.getField().getLongLowerLimit(), inquiry.getField()
+							: random.getRandomLong(inquiry.getField().getLongLowerLimit(), inquiry.getField()
 									.getLongUpperLimit()));
 					break;
 				case FLOAT:
 					inquiryValue.setFloatValue(inquiry.isDisabled() ? inquiry.getField().getFloatPreset()
-							: getRandomFloat(inquiry.getField().getFloatLowerLimit(), inquiry
+							: random.getRandomFloat(inquiry.getField().getFloatLowerLimit(), inquiry
 									.getField().getFloatUpperLimit()));
 					break;
 				case DATE:
 					inquiryValue.setDateValue(inquiry.isDisabled() ? inquiry.getField().getDatePreset()
-							: getRandomDate(inquiry.getField().getMinDate(), inquiry.getField()
+							: random.getRandomDate(inquiry.getField().getMinDate(), inquiry.getField()
 									.getMaxDate()));
 					break;
 				case TIME:
 					inquiryValue.setTimeValue(inquiry.isDisabled() ? inquiry.getField().getTimePreset()
-							: getRandomTime(inquiry.getField().getMinTime(), inquiry.getField()
+							: random.getRandomTime(inquiry.getField().getMinTime(), inquiry.getField()
 									.getMaxTime()));
 					break;
 				case TIMESTAMP:
 					inquiryValue.setTimestampValue(inquiry.isDisabled() ? inquiry.getField().getTimestampPreset()
-							: getRandomTimestamp(inquiry.getField().getMinTimestamp(),
+							: random.getRandomTimestamp(inquiry.getField().getMinTimestamp(),
 									inquiry.getField().getMaxTimestamp()));
 					break;
 				default:
@@ -3256,11 +3135,11 @@ public class DemoDataProvider {
 	}
 
 	private void setRandomProbandListEntryTagValue(ProbandListEntryTagOutVO probandListEntryTag, ProbandListEntryTagValueInVO probandListEntryTagValue) {
-		if (!probandListEntryTag.isOptional() || getRandomBoolean()) {
+		if (!probandListEntryTag.isOptional() || random.getRandomBoolean()) {
 			HashSet<Long> selectionSetValues = new HashSet<Long>();
 			switch (probandListEntryTag.getField().getFieldType().getType()) {
 				case CHECKBOX:
-					probandListEntryTagValue.setBooleanValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getBooleanPreset() : getRandomBoolean());
+					probandListEntryTagValue.setBooleanValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getBooleanPreset() : random.getRandomBoolean());
 					break;
 				case SELECT_ONE_DROPDOWN:
 				case SELECT_ONE_RADIO_H:
@@ -3275,7 +3154,7 @@ public class DemoDataProvider {
 							}
 						}
 					} else {
-						selectionSetValues.add(getRandomElement(probandListEntryTag.getField().getSelectionSetValues()).getId());
+						selectionSetValues.add(random.getRandomElement(probandListEntryTag.getField().getSelectionSetValues()).getId());
 					}
 					probandListEntryTagValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
 					break;
@@ -3291,7 +3170,7 @@ public class DemoDataProvider {
 						}
 					} else {
 						for (int i = 0; i <= random.nextInt(probandListEntryTag.getField().getSelectionSetValues().size()); i++) {
-							selectionSetValues.add(getRandomElement(probandListEntryTag.getField().getSelectionSetValues()).getId());
+							selectionSetValues.add(random.getRandomElement(probandListEntryTag.getField().getSelectionSetValues()).getId());
 						}
 					}
 					probandListEntryTagValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
@@ -3312,27 +3191,27 @@ public class DemoDataProvider {
 					break;
 				case INTEGER:
 					probandListEntryTagValue.setLongValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getLongPreset()
-							: getRandomLong(probandListEntryTag
+							: random.getRandomLong(probandListEntryTag
 									.getField().getLongLowerLimit(), probandListEntryTag.getField().getLongUpperLimit()));
 					break;
 				case FLOAT:
 					probandListEntryTagValue.setFloatValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getFloatPreset()
-							: getRandomFloat(probandListEntryTag
+							: random.getRandomFloat(probandListEntryTag
 									.getField().getFloatLowerLimit(), probandListEntryTag.getField().getFloatUpperLimit()));
 					break;
 				case DATE:
 					probandListEntryTagValue.setDateValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getDatePreset()
-							: getRandomDate(probandListEntryTag
+							: random.getRandomDate(probandListEntryTag
 									.getField().getMinDate(), probandListEntryTag.getField().getMaxDate()));
 					break;
 				case TIME:
 					probandListEntryTagValue.setTimeValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getTimePreset()
-							: getRandomTime(probandListEntryTag
+							: random.getRandomTime(probandListEntryTag
 									.getField().getMinTime(), probandListEntryTag.getField().getMaxTime()));
 					break;
 				case TIMESTAMP:
 					probandListEntryTagValue.setTimestampValue(probandListEntryTag.isDisabled() ? probandListEntryTag.getField().getTimestampPreset()
-							: getRandomTimestamp(
+							: random.getRandomTimestamp(
 									probandListEntryTag.getField().getMinTimestamp(), probandListEntryTag.getField().getMaxTimestamp()));
 					break;
 				default:
@@ -3340,12 +3219,16 @@ public class DemoDataProvider {
 		}
 	}
 
+	private Date getRandomScreeningDate() {
+		return random.getRandomDate((new GregorianCalendar(random.getYear(), 0, 1)).getTime(), (new GregorianCalendar(random.getYear(), 11, 31)).getTime());
+	}
+
 	private boolean updateProbandListStatusEntryRealTimestamp(ProbandListStatusEntryOutVO probandListStatusEntryVO, ProbandGroupOutVO screeningGroup,
 			HashMap<Long, ArrayList<VisitScheduleItemOutVO>> visitScheduleItemPerGroupMap, int statusHistoryLength) throws Exception {
 		boolean result = true;
 		VisitScheduleItemOutVO visitScheduleItem;
 		if (probandListStatusEntryVO.getStatus().isInitial()) {
-			visitScheduleItem = getRandomElement(visitScheduleItemPerGroupMap.get(screeningGroup.getId()));
+			visitScheduleItem = random.getRandomElement(visitScheduleItemPerGroupMap.get(screeningGroup.getId()));
 		} else {
 			ArrayList<VisitScheduleItemOutVO> visitScheduleItems = visitScheduleItemPerGroupMap.get(probandListStatusEntryVO.getListEntry().getGroup().getId());
 			if (statusHistoryLength >= visitScheduleItems.size()) {
