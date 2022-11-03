@@ -523,7 +523,11 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	protected void sendKeys(String id, CharSequence... keysToSend) {
 		findElementByAltId(id, id + "_input").sendKeys(keysToSend);
 		for (int i = 0; i < keysToSend.length; i++) {
-			info("text '" + StringEscapeUtils.escapeJava(new StringBuilder(keysToSend[i]).toString()) + "' entered: " + id);
+			if (keysToSend[i] instanceof Keys) {
+				info(((Keys) keysToSend[i]).name() + " key pressed: " + id);
+			} else {
+				info("text '" + StringEscapeUtils.escapeJava(new StringBuilder(keysToSend[i]).toString()) + "' entered: " + id);
+			}
 		}
 	}
 
