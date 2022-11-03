@@ -10,8 +10,3 @@ tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /ctsms -R
 chmod 777 /ctsms -R
-
-VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
-BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi')
-echo "application.version=$VERSION [$COMMIT]" >>/ctsms/properties/ctsms-settings.properties
