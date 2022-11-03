@@ -21,6 +21,10 @@ public final class SearchCriterion {
 	private Long longValue;
 	private String stringValue;
 
+	public SearchCriterion(CriterionTie junction) {
+		this(junction, null, null);
+	}
+
 	public SearchCriterion(CriterionTie junction, String property, CriterionRestriction operator) {
 		this.junction = junction;
 		this.property = property;

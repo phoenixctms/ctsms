@@ -1,18 +1,25 @@
 package org.phoenixctms.ctsms.selenium.proband;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.TreeMap;
 
+import org.openqa.selenium.Keys;
+import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
+import org.phoenixctms.ctsms.enumeration.CriterionRestriction;
+import org.phoenixctms.ctsms.enumeration.CriterionTie;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.selenium.SeleniumTestBase;
 import org.phoenixctms.ctsms.test.InputFieldValuesEnum;
 import org.phoenixctms.ctsms.test.InputFieldsEnum;
+import org.phoenixctms.ctsms.test.Random;
 import org.phoenixctms.ctsms.test.SearchCriteriaEnum;
 import org.phoenixctms.ctsms.test.SearchCriterion;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -40,10 +47,12 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	private String userPassword;
 	private TrialOutVO trial;
 	private String criteriaCategory;
-	private final static int PROBAND_COUNT = 1; //s0;
+	private final static int PROBAND_COUNT = 10;
 	private Set<Long> probandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
-	private Set<Long> expectedProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
+	private Long probandId;
 	private Set<Long> actualProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
+	private Map<SearchCriteria, LinkedHashSet<Long>> expectedProbandIdsMap = new HashMap<SearchCriteria, LinkedHashSet<Long>>();
+	private Random random = new Random();
 
 	private enum InputFields implements InputFieldsEnum {
 
@@ -193,16 +202,9 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	public enum SearchCriteria implements SearchCriteriaEnum {
 
-		TEST("xxx");
-		//		ALL_INVENTORY("all inventory"),
-		//		ALL_STAFF("all staff"),
-		//		ALL_COURSES("all courses"),
-		//		ALL_TRIALS("all trials"),
-		//		ALL_PROBANDS("all probands"),
-		//		ALL_INPUTFIELDS("all inputfields"),
-		//		ALL_MASSMAILS("all massmails"),
-		//		ALL_USERS("all users"),
-		//		SUBJECTS_1("subjects_1");
+		DEPARTMENT_PROBANDS("department probands"),
+		DISEASE("probands with particular disease"),
+		DISEASE_THERAPY("probands with particular disease and particular therapy");
 
 		private final String value;
 
@@ -248,7 +250,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
 	}
 
-	@Test(description = "Load the login page of the Phoenix CTMS test instance.")
+	@Test(description = "Try to open the proband page of the Phoenix CTMS test instance. It will redirect to the login page at first.")
 	public void test_01_open_proband_page() {
 		load(getUrl("/proband/proband.jsf"));
 	}
@@ -266,10 +268,9 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		sendKeys("tabView:probandmain_form:alias", subjectId);
 		clickButton("tabView:probandmain_form:add");
 		if (waitForAddOperationSuccessful("tabView:probandmain_form")) {
-			Long probandId = getProbandIdFromProbandEntityWindowName(getWindowName());
+			probandId = getProbandIdFromProbandEntityWindowName(getWindowName());
 			testOK("proband ID " + probandId.toString() + " created: " + subjectId);
 			probandIds.add(probandId);
-			expectedProbandIds.add(probandId);
 			return;
 		} else {
 			testFailed("creating proband failed: " + subjectId);
@@ -355,7 +356,11 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 			@Override
 			protected void entry() {
-				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_1.toString());
+				if (random.getRandomBoolean(50)) {
+					clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_1.toString());
+					addExpectedProbandId(SearchCriteria.DISEASE);
+					addExpectedProbandId(SearchCriteria.DISEASE_THERAPY);
+				}
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_2.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_UNKNOWN.toString());
 				clickSelectMany(getFieldIdByLabel(InputFields.CST_UNDERLYING_DISEASE.toString()), InputFieldValues.CST_DIABETES_TYPE_OTHER.toString());
@@ -366,7 +371,11 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 			@Override
 			protected void entry() {
-				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT_OAD.toString());
+				if (random.getRandomBoolean(50)) {
+					clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT_OAD.toString());
+				} else {
+					removeExpectedProbandId(SearchCriteria.DISEASE_THERAPY);
+				}
 				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_CSII.toString());
 				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT.toString());
 				//				clickSelectOneMenu(getFieldIdByLabel(InputFields.CST_DIABETES_THERAPY.toString()), InputFieldValues.CST_MDI_IIT_OAD.toString());
@@ -541,6 +550,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			@Override
 			protected void entry() {
 				sendKeys(getFieldIdByLabel(InputFields.CST_DIABETES_SINCE.toString()), "2022-10-10");
+				sendKeys(getFieldIdByLabel(InputFields.CST_DIABETES_SINCE.toString()), Keys.ESCAPE); //close the dateselector popup as it can hide a button to click next
 			}
 		}.enter();
 		new InquiryFormFieldEntry() {
@@ -608,11 +618,13 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			@Override
 			protected void entry() {
 				sendKeys(getFieldIdByLabel(InputFields.CST_UPDATED_DATE.toString()), "2022-10-10");
+				sendKeys(getFieldIdByLabel(InputFields.CST_UPDATED_DATE.toString()), Keys.ESCAPE); //close the dateselector popup as it can hide a button to click next
 			}
 		}.enter();
 		clickButton("tabView:inquiryvalue_form:update");
 		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
 			//createScreenshot();
+			addExpectedProbandId(SearchCriteria.DEPARTMENT_PROBANDS);
 			testOK("inquiry values saved");
 			return;
 		} else {
@@ -621,7 +633,29 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		}
 	}
 
-	@Test
+	private LinkedHashSet<Long> getExpectedProbandIds(SearchCriteria criteria) {
+		LinkedHashSet<Long> probandIds;
+		if (expectedProbandIdsMap.containsKey(criteria)) {
+			probandIds = expectedProbandIdsMap.get(criteria);
+		} else {
+			probandIds = new LinkedHashSet<Long>();
+			expectedProbandIdsMap.put(criteria, probandIds);
+		}
+		return probandIds;
+	}
+	//	private boolean isProbandIdExpected(SearchCriteria criteria) {
+	//		return getExpectedProbandIds(criteria).contains(probandId);
+	//	}
+
+	private boolean addExpectedProbandId(SearchCriteria criteria) {
+		return getExpectedProbandIds(criteria).add(probandId);
+	}
+
+	private boolean removeExpectedProbandId(SearchCriteria criteria) {
+		return getExpectedProbandIds(criteria).remove(probandId);
+	}
+
+	@Test(description = "Create more subjects, and populate their inquiry forms.")
 	public void test_06_create_probands() {
 		for (int i = 2; i <= PROBAND_COUNT; i++) {
 			//info("entering proband " + i + "...");
@@ -634,57 +668,116 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			test_05_enter_inquiry_values();
 		}
 	}
-	//	@Test
-	//	public void test_07_open_proband_search_page() throws Throwable {
-	//		CriteriaOutVO criteria = getCriteria(SearchCriteria.TEST, criteriaCategory);
-	//		load(getUrl("/proband/probandSearch.jsf?criteriaid=" + criteria.getId())); //8368105
-	//	}
-	//
-	//	@Test
-	//	public void test_08_search_probands_result_size() throws Throwable {
-	//setSkipScreenshot(true);
-	//		clickButton(getButtonIdByLabel("Perform search"));
-	//		Long count = getCountFromDatatableHead("search_form:proband_result_list");
-	//		if (expectedProbandIds.size() == count) {
-	//			testOK("search returns expected number of items");
-	//			return;
-	//		} else {
-	//			testFailed("search returns different number of items");
-	//			return;
-	//		}
-	//	}
-	//
-	//	@Test
-	//	public void test_09_search_probands_all_expected_probands() throws Throwable {
-	//		do {
-	//			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
-	//			break;
-	//		} while (clickDatatableNextPage("search_form:proband_result_list"));
-	//		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
-	//		diff.addAll(expectedProbandIds);
-	//		diff.removeAll(actualProbandIds);
-	//		if (diff.size() == 0) {
-	//			testOK("search returned all expected probands");
-	//			return;
-	//		} else {
-	//			testFailed("search did not return expected proband IDs: " + diff.toString());
-	//			return;
-	//		}
-	//	}
-	//
-	//	@Test
-	//	public void test_10_search_probands_no_unexpected_probands() throws Throwable {
-	//		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
-	//		diff.addAll(actualProbandIds);
-	//		diff.removeAll(expectedProbandIds);
-	//		if (diff.size() == 0) {
-	//			testOK("search returned no unexpected probands");
-	//			return;
-	//		} else {
-	//			testFailed("search returned unexpected proband IDs: " + diff.toString());
-	//			return;
-	//		}
-	//	}
+
+	private void openSearch(SearchCriteria criteria) throws Throwable {
+		load(getUrl("/proband/probandSearch.jsf?criteriaid=" + getCriteria(criteria, criteriaCategory).getId()));
+	}
+
+	public void checkSearchResultSize(SearchCriteria criteria) throws Throwable {
+		setSkipScreenshot(true);
+		info("performing search '" + criteria.toString() + "'");
+		clickButton(getButtonIdByLabel("Perform search"));
+		Long count = getCountFromDatatableHead("search_form:proband_result_list");
+		if (getExpectedProbandIds(criteria).size() == count) {
+			testOK("search returns expected number of items");
+			return;
+		} else {
+			testFailed("search returns different number of items");
+			return;
+		}
+	}
+
+	public void checkSearchAllExpectedProbands(SearchCriteria criteria) throws Throwable {
+		setSkipScreenshot(true);
+		do {
+			actualProbandIds.addAll(getDatatableRowIds("search_form:proband_result_list"));
+			break;
+		} while (clickDatatableNextPage("search_form:proband_result_list"));
+		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
+		diff.addAll(getExpectedProbandIds(criteria));
+		diff.removeAll(actualProbandIds);
+		if (diff.size() == 0) {
+			testOK("search returned all expected probands");
+			return;
+		} else {
+			testFailed("search did not return expected proband IDs: " + diff.toString());
+			return;
+		}
+	}
+
+	public void checkSearchNoUnexpectedExpectedProbands(SearchCriteria criteria) throws Throwable {
+		setSkipScreenshot(true);
+		LinkedHashSet<Long> diff = new LinkedHashSet<Long>();
+		diff.addAll(actualProbandIds);
+		diff.removeAll(getExpectedProbandIds(criteria));
+		if (diff.size() == 0) {
+			testOK("search returned no unexpected probands");
+			return;
+		} else {
+			testFailed("search returned unexpected proband IDs: " + diff.toString());
+			return;
+		}
+	}
+
+	@Test(description = "Load a predefined search to list any subjects created by this test.")
+	public void test_07_search_DEPARTMENT_PROBANDS_open() throws Throwable {
+		openSearch(SearchCriteria.DEPARTMENT_PROBANDS);
+	}
+
+	@Test(description = "Search any subjects created by this test - check expected result size")
+	public void test_08_search_DEPARTMENT_PROBANDS_result_size() throws Throwable {
+		checkSearchResultSize(SearchCriteria.DEPARTMENT_PROBANDS);
+	}
+
+	@Test(description = "Search any subjects created by this test - check if all expected subjects are listed")
+	public void test_09_search_DEPARTMENT_PROBANDS_all_expected_probands() throws Throwable {
+		checkSearchAllExpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
+	}
+
+	@Test(description = "Search any subjects created by this test - check if no unexpected subjects are listed")
+	public void test_10_search_DEPARTMENT_PROBANDS_no_unexpected_probands() throws Throwable {
+		checkSearchNoUnexpectedExpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
+	}
+
+	@Test(description = "Load a predefined search to list subjects with a particular disease.")
+	public void test_11_search_DISEASE_open() throws Throwable {
+		openSearch(SearchCriteria.DISEASE);
+	}
+
+	@Test(description = "Search subjects with a particular disease - check expected result size")
+	public void test_12_search_DISEASE_result_size() throws Throwable {
+		checkSearchResultSize(SearchCriteria.DISEASE);
+	}
+
+	@Test(description = "Search subjects with a particular disease - check if all expected subjects are listed")
+	public void test_13_search_DISEASE_all_expected_probands() throws Throwable {
+		checkSearchAllExpectedProbands(SearchCriteria.DISEASE);
+	}
+
+	@Test(description = "Search subjects with a particular disease - check if no unexpected subjects are listed")
+	public void test_14_search_DISEASE_no_unexpected_probands() throws Throwable {
+		checkSearchNoUnexpectedExpectedProbands(SearchCriteria.DISEASE);
+	}
+
+	@Test(description = "Load a predefined search to list subjects with a particular disease and particular therapy.")
+	public void test_15_search_DISEASE_THERAPY_open() throws Throwable {
+		openSearch(SearchCriteria.DISEASE_THERAPY);
+	}
+
+	@Test(description = "List subjects with a particular disease and particular therapy - check expected result size")
+	public void test_16_search_DISEASE_THERAPY_result_size() throws Throwable {
+		checkSearchResultSize(SearchCriteria.DISEASE_THERAPY);
+	}
+
+	@Test(description = "List subjects with a particular disease and particular therapy - check if all expected subjects are listed")
+	public void test_17_search_DISEASE_THERAPY_all_expected_probands() throws Throwable {
+		checkSearchAllExpectedProbands(SearchCriteria.DISEASE_THERAPY);
+	}
+
+	@Test(description = "List subjects with a particular disease and particular therapy - check if no unexpected subjects are listed")
+	public void test_18_search_DISEASE_THERAPY_no_unexpected_probands() throws Throwable {
+		checkSearchNoUnexpectedExpectedProbands(SearchCriteria.DISEASE_THERAPY);
+	}
 
 	private UserOutVO createUser(String name, String password, long departmentId, String departmentPassword) throws Exception {
 		UserInVO newUser = new UserInVO();
@@ -1045,18 +1138,49 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 			newCriteria.setLabel(criteria.toString());
 			newCriteria.setCategory(category);
 			switch (criteria) {
-				//case SUBJECTS_1:
-				case TEST:
+				case DEPARTMENT_PROBANDS:
 					newCriteria.setModule(DBModule.PROBAND_DB);
 					return getTestDataProvider().createCriteria(newCriteria,
 							new ArrayList<SearchCriterion>() {
 
 								{
-									//InputFieldOutVO field1 = getInputField(InputFieldValues.CST_DIABETES_TYPE);
-									//InputFieldSelectionSetValue value1 = getTestDataProvider().getInputFieldValue(field1.getId(),
-									//		InputFieldValues.CST_TYP_2_DIABETES_OHNE_INSULINEIGENPRODUKTION);
+									add(new SearchCriterion(null, "proband.department.id", CriterionRestriction.EQ, department.getId()));
+								}
+							});
+				case DISEASE:
+					newCriteria.setModule(DBModule.PROBAND_DB);
+					return getTestDataProvider().createCriteria(newCriteria,
+							new ArrayList<SearchCriterion>() {
+
+								{
+									InputFieldOutVO field = getInputField(InputFields.CST_UNDERLYING_DISEASE);
+									InputFieldSelectionSetValue value = getTestDataProvider().getInputFieldValue(field.getId(),
+											InputFieldValues.CST_DIABETES_TYPE_2);
 									//add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
-									//add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value1.getId()));
+									InquiryOutVO inquiry = getTestDataProvider().getInquiry(trial, "02 - Medikamentöse Therapie", 1);
+									add(new SearchCriterion(null, "proband.inquiryValues.inquiry.id", CriterionRestriction.EQ, inquiry.getId()));
+									add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value.getId()));
+								}
+							});
+				case DISEASE_THERAPY:
+					newCriteria.setModule(DBModule.PROBAND_DB);
+					return getTestDataProvider().createCriteria(newCriteria,
+							new ArrayList<SearchCriterion>() {
+
+								{
+									InputFieldOutVO field = getInputField(InputFields.CST_UNDERLYING_DISEASE);
+									InputFieldSelectionSetValue value = getTestDataProvider().getInputFieldValue(field.getId(),
+											InputFieldValues.CST_DIABETES_TYPE_2);
+									//add(new SearchCriterion(null, "proband.inquiryValues.inquiry.field.id", CriterionRestriction.EQ, field1.getId()));
+									InquiryOutVO inquiry = getTestDataProvider().getInquiry(trial, "02 - Medikamentöse Therapie", 1);
+									add(new SearchCriterion(null, "proband.inquiryValues.inquiry.id", CriterionRestriction.EQ, inquiry.getId()));
+									add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value.getId()));
+									field = getInputField(InputFields.CST_DIABETES_THERAPY);
+									value = getTestDataProvider().getInputFieldValue(field.getId(), InputFieldValues.CST_MDI_IIT_OAD);
+									inquiry = getTestDataProvider().getInquiry(trial, "02 - Medikamentöse Therapie", 2);
+									add(new SearchCriterion(CriterionTie.INTERSECT));
+									add(new SearchCriterion(null, "proband.inquiryValues.inquiry.id", CriterionRestriction.EQ, inquiry.getId()));
+									add(new SearchCriterion(CriterionTie.AND, "proband.inquiryValues.value.selectionValues.id", CriterionRestriction.EQ, value.getId()));
 								}
 							});
 				default:
