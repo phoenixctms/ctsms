@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
@@ -339,24 +342,28 @@ public class CustomReport extends TestHTMLReporter { //extends TestListenerAdapt
 					//    .append("<td>Property
 					// file:</td><td>").append(m_testRunner.getPropertyFileName()).append("</td>\n")
 					//    .append("</tr><tr>\n")
-					.append("<td>Tests passed/Failed/Skipped:</td><td>")
+					.append("<td>Tests passed/Failed/Skipped:</td><td><b>")
 					.append(Integer.toString(passed))
 					.append("/")
 					.append(Integer.toString(failed))
 					.append("/")
 					.append(Integer.toString(skipped))
-					.append("</td>\n")
-					.append("</tr><tr>\n")
-					.append("<td>Started on:</td><td>")
-					.append(testContext.getStartDate().toString())
+					.append("</b></td>\n")
+					.append("</tr>\n")
+					.append("<tr><td>" + Settings.getString(SettingCodes.APPLICATION_ABBREVIATION, Bundle.SETTINGS, null) + " Version:</td><td>")
+					.append(Settings.getString(SettingCodes.APPLICATION_VERSION, Bundle.SETTINGS, null))
+					.append("</td></tr>\n")
+					.append("<tr><td>Java Version:</td><td>\n")
+					.append(System.getProperty("java.version"))
+					.append("</td></tr>\n")
+					.append("<tr><td>Started on:</td><td>")
+					.append(CommonUtil.formatDate(testContext.getStartDate(), "yyyy-MM-dd HH:mm:ss"))
 					.append("</td>\n")
 					.append("</tr>\n")
 					.append(hostLine)
 					.append("<tr><td>Total time:</td><td>")
 					.append(Long.toString(duration))
-					.append(" seconds (")
-					.append(Long.toString(endDate.getTime() - startDate.getTime()))
-					.append(" ms)</td>\n")
+					.append(" seconds</td>\n")
 					//					.append("</tr><tr>\n")
 					//					.append("<td>Included groups:</td><td>")
 					//					.append(arrayToString(testContext.getIncludedGroups()))
