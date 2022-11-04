@@ -36,14 +36,37 @@ public class Compress {
 		}
 	}
 
+	public void zipFiles(String folder, String zipFile) throws IOException {
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(zipFile);
+			zipFiles(folder, fos);
+		} finally {
+			try {
+				fos.close();
+			} catch (Exception e) {
+			}
+		}
+	}
+
 	public byte[] zipDirectory(String folder) throws IOException {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		zipDirectory(folder, bos);
 		return bos.toByteArray();
 	}
 
+	public byte[] zipFiles(String folder) throws IOException {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		zipFiles(folder, bos);
+		return bos.toByteArray();
+	}
+
 	public void zipDirectory(String folder, OutputStream fos) throws IOException {
 		generateFileList(folder);
+		zipFiles(folder, fos);
+	}
+
+	public void zipFiles(String folder, OutputStream fos) throws IOException {
 		byte[] buffer = new byte[1024];
 		String source = new File(folder).getName();
 		ZipOutputStream zos = null;
@@ -85,7 +108,6 @@ public class Compress {
 	}
 
 	private void generateFileList(String folder) {
-		fileList.clear();
 		generateFileList(folder, new File(folder));
 	}
 
@@ -104,5 +126,13 @@ public class Compress {
 
 	private String generateZipEntry(String folder, String file) {
 		return file.substring(folder.length() + 1, file.length());
+	}
+
+	public void reset() {
+		fileList.clear();
+	}
+
+	public void addFile(String folder, File node) {
+		fileList.add(generateZipEntry(folder, node.toString()));
 	}
 }

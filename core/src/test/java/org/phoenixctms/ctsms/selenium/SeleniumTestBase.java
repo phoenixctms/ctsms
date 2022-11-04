@@ -36,6 +36,7 @@ import org.phoenixctms.ctsms.test.CustomReport;
 import org.phoenixctms.ctsms.test.OutputLogger;
 import org.phoenixctms.ctsms.test.ReportEmailSender;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Compress;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.FilePathSplitter;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -898,6 +899,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 
 	private void attachReports() throws Throwable {
 		File[] files = (new File(getTestDirectory())).listFiles();
+		Compress zip = null;
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) {
 				if (CommonUtil.getMimeType(files[i]).equals(CommonUtil.HTML_MIMETYPE_STRING)) {
@@ -914,9 +916,16 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 						getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
 					}
 				} else if (CommonUtil.getMimeType(files[i]).equals(CoreUtil.PDF_MIMETYPE_STRING)) {
-					getReportEmailSender().addEmailAttachment(files[i], CoreUtil.PDF_MIMETYPE_STRING, files[i].getName());
+					if (zip == null) {
+						zip = new Compress();
+					}
+					zip.addFile(getTestDirectory(), files[i]);
+					//getReportEmailSender().addEmailAttachment(files[i], CoreUtil.PDF_MIMETYPE_STRING, files[i].getName());
 				}
 			}
+		}
+		if (zip != null) {
+			getReportEmailSender().addEmailAttachment(zip.zipFiles(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "generated_pdfs.zip");
 		}
 		//getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
 	}
