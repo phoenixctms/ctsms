@@ -246,7 +246,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		ArrayList<InquiryOutVO> inquiries = createInquiryForm(trial);
 	}
 
-	@BeforeClass(description = "Setup the test test search criteria.")
+	@BeforeClass(description = "Setup the test search criteria.")
 	public void init_04_setup_proband_criteria() throws Throwable {
 		criteriaCategory = getTestId();
 		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
@@ -748,7 +748,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		checkSearchNoUnexpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
 	}
 
-	@Test(description = "Load a predefined search to list subjects with a particular disease.")
+	@Test(description = "Load a predefined search to list subjects with a particular disease. App. 50% of subjects have the particular disease.")
 	public void test_11_search_DISEASE_open() throws Throwable {
 		openSearch(SearchCriteria.DISEASE);
 	}
@@ -768,7 +768,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		checkSearchNoUnexpectedProbands(SearchCriteria.DISEASE);
 	}
 
-	@Test(description = "Load a predefined search to list subjects with a particular disease and particular therapy.")
+	@Test(description = "Load a predefined search to list subjects with a particular disease and particular therapy. App. 50% of subjects have the particular disease and app. 50% have the particular therapy.")
 	public void test_15_search_DISEASE_THERAPY_open() throws Throwable {
 		openSearch(SearchCriteria.DISEASE_THERAPY);
 	}
