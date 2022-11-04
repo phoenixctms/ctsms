@@ -441,6 +441,23 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(), '" + buttonLabel + "')]")))).getAttribute("id");
 	}
 
+	protected String getSplitButtonIdByLabel(String buttonLabel) {
+		info("looking up split button '" + buttonLabel + "'");
+		return getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(), '" + buttonLabel + "')]"))))).getAttribute("id");
+	}
+
+	protected void clickSplitButton(String id, String itemLabel) {
+		if (itemLabel != null) {
+			clickButton(id + "_menuButton");
+			new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+					.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_menu']/ul/li/a/span[contains(text(), '" + itemLabel + "')]"))).click();
+			info("splitbutton menu option '" + itemLabel + "' clicked");
+		} else {
+			clickButton(id + "_button");
+		}
+	}
+
 	protected void clickSelectOneMenu(String id, String itemLabel) {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']/div[contains(@class, 'ui-selectonemenu-trigger')]"))).click();

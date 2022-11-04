@@ -553,8 +553,10 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		}
 		CriteriaOutVO out = searchService.addCriteria(auth, newCriteria, newCriterions);
 		info("criteria ID " + out.getId() + " created: " + out.getLabel());
-		searchService.getIntermediateSetsByCriteria(auth, out.getId(), null);
-		info(searchService.getIntermediateSetsByCriteria(auth, out.getId(), null).getParsed().getCriterionExpression());
+		String[] expression = searchService.getIntermediateSetsByCriteria(auth, out.getId(), null).getParsed().getCriterionExpression().split("\n+");
+		for (int i = 0; i < expression.length; i++) {
+			info(expression[i]);
+		}
 		return out;
 	}
 
