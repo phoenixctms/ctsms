@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.OTPAuthenticatorType;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
@@ -65,6 +66,7 @@ import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
+import org.phoenixctms.ctsms.vo.OTPAuthenticatorTypeVO;
 import org.phoenixctms.ctsms.vo.PaymentMethodVO;
 import org.phoenixctms.ctsms.vo.PermissionProfileVO;
 import org.phoenixctms.ctsms.vo.PrivacyConsentStatusTypeVO;
@@ -400,6 +402,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getRandomizationModeName(locale, ((RandomizationMode) value).name());
+			} else if (valueClass.equals(OTPAuthenticatorType.class)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getOTPAuthenticatorTypeName(locale, ((OTPAuthenticatorType) value).name());
 			} else if (valueClass.equals(AuthenticationType.class)) {
 				if (value == null) {
 					return "";
@@ -610,6 +617,11 @@ public class KeyValueString extends GraphEnumerator {
 					return "";
 				}
 				return L10nUtil.getRandomizationModeName(locale, ((RandomizationModeVO) value).getNameL10nKey());
+			} else if (OTPAuthenticatorTypeVO.class.isAssignableFrom(valueClass)) {
+				if (value == null) {
+					return "";
+				}
+				return L10nUtil.getOTPAuthenticatorTypeName(locale, ((OTPAuthenticatorTypeVO) value).getNameL10nKey());
 			} else if (StaffCategoryVO.class.isAssignableFrom(valueClass)) {
 				if (value == null) {
 					return "";
