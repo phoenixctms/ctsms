@@ -627,8 +627,9 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		if (waitForUpdateOperationSuccessful("tabView:inquiryvalue_form")) {
 			//createScreenshot();
 			addExpectedProbandId(SearchCriteria.DEPARTMENT_PROBANDS);
+			info("download inquiry form pdf");
+			clickSplitButton(getSplitButtonIdByLabel("All inquiry forms"), trial.getName());
 			testOK("inquiry values saved");
-			clickButton(getButtonIdByLabel("All inquiry forms"));
 			return;
 		} else {
 			testFailed("saving inquiry values failed");
