@@ -3,8 +3,8 @@ package org.phoenixctms.ctsms;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -543,7 +543,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 
 	public CriteriaOutVO createCriteria(CriteriaInVO newCriteria, List<SearchCriterion> criterions)
 			throws Exception {
-		HashSet<CriterionInVO> newCriterions = new HashSet<CriterionInVO>(criterions.size());
+		LinkedHashSet<CriterionInVO> newCriterions = new LinkedHashSet<CriterionInVO>(criterions.size());
 		Iterator<SearchCriterion> it = criterions.iterator();
 		int position = 1;
 		while (it.hasNext()) {
@@ -553,6 +553,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		}
 		CriteriaOutVO out = searchService.addCriteria(auth, newCriteria, newCriterions);
 		info("criteria ID " + out.getId() + " created: " + out.getLabel());
+		searchService.getIntermediateSetsByCriteria(auth, out.getId(), null);
+		info(searchService.getIntermediateSetsByCriteria(auth, out.getId(), null).getParsed().getCriterionExpression());
 		return out;
 	}
 

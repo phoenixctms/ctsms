@@ -582,10 +582,10 @@ public final class CoreUtil implements ApplicationContextAware {
 	}
 
 	private static String getEntityClassNameFromEntityName(String entityName) {
-		StringBuilder voClassName = new StringBuilder(ENTITIES_PACKAGE_NAME);
-		voClassName.append(".");
-		voClassName.append(entityName);
-		return voClassName.toString();
+		StringBuilder entityClassName = new StringBuilder(ENTITIES_PACKAGE_NAME);
+		entityClassName.append(".");
+		entityClassName.append(entityName);
+		return entityClassName.toString();
 	}
 
 	public static String getEnumerationClassName(String enumName) {
