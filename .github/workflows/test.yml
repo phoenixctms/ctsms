@@ -33,10 +33,11 @@ jobs:
         run: |
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          COMMIT_MESSAGE_REGEX="merge [a-z0-9] into [a-z0-9]+"
-          if [[ $COMMIT_MESSAGE_REGEX =~ $BRANCH_REGEX ]];
+          COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA")
+          COMMIT_MESSAGE_REGEX="merge [a-z0-9]+ into [a-z0-9]+"
+          if [[ $COMMIT =~ $COMMIT_MESSAGE_REGEX ]];
           then
-              COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi' | cut -c 1-7)
+              COMMIT=$($COMMIT | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi' | cut -c 1-7)
           else
               COMMIT=$(git rev-parse --short HEAD)
           fi
