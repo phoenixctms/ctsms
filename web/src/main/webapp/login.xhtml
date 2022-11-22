@@ -122,7 +122,7 @@
 							rendered="#{!sessionScopeBean.otpRequired and !sessionScopeBean.captchaRequired and !sessionScopeBean.localPasswordRequired}"
 							value="http://phoenixctms.org">
 							<h:graphicImage style="border:0px;"
-								value="resources/images/phoenix_banner.png" />
+							    value="#{applicationScopeBean.bannerImageUrl}" />
 						</h:outputLink>
 
 						<h:panelGrid rendered="#{sessionScopeBean.otpRequired}" columns="1" cellpadding="2" styleClass="ctsms-input-panelgrid">
