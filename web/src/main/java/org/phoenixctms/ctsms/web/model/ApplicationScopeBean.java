@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
@@ -300,6 +301,24 @@ public class ApplicationScopeBean {
 
 	public String getFolderNodeType() {
 		return WebUtil.FOLDER_NODE_TYPE;
+	}
+
+	public String getBannerImageUrl() {
+		Properties data = new Properties();
+		String uuid = Settings.getString(SettingCodes.ANALYTICS_UUID, Bundle.SETTINGS, DefaultSettings.ANALYTICS_UUID);
+		if (!CommonUtil.isEmptyString(uuid)) {
+			data.setProperty("uuid", uuid);
+		} else {
+			throw new IllegalArgumentException(Messages.getMessage(MessageCodes.MISSING_CONFIG_PARAMETER, SettingCodes.ANALYTICS_UUID.toString()));
+		}
+		String version = Settings.getString(SettingCodes.ANALYTICS_VERSION, Bundle.SETTINGS, DefaultSettings.ANALYTICS_VERSION);
+		if (!CommonUtil.isEmptyString(version)) {
+			data.setProperty("ctsms_version", version);
+		} else {
+			throw new IllegalArgumentException(Messages.getMessage(MessageCodes.MISSING_CONFIG_PARAMETER, SettingCodes.ANALYTICS_VERSION.toString()));
+		}
+		data.setProperty("java_version", System.getProperty("java.version"));
+		return WebUtil.getAnalyticsUrl(Settings.getString(SettingCodes.BANNER_IMAGE_URL, Bundle.SETTINGS, DefaultSettings.BANNER_IMAGE_URL), data);
 	}
 
 	public String getGoogleApiUrl() {

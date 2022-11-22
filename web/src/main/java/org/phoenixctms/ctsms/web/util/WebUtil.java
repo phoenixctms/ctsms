@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.web.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TimeZone;
@@ -31,6 +34,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.ServiceLocator;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
@@ -5025,6 +5029,20 @@ public final class WebUtil {
 		if (!getSessionScopeBean().testPassword(passwordToTest)) {
 			throw new IllegalArgumentException(Messages.getString(MessageCodes.WRONG_PASSWORD));
 		}
+	}
+
+	public static String getAnalyticsUrl(String analyticsUrl, Properties data) {
+		StringBuilder sb = new StringBuilder(analyticsUrl);
+		sb.append("?ts=");
+		sb.append(System.currentTimeMillis());
+		sb.append("&data=");
+		StringWriter os = new StringWriter();
+		try {
+			data.store(os, null);
+			sb.append(new String(Base64.encodeBase64(os.toString().getBytes(CommonUtil.BASE64_CHARSET), false, true)));
+		} catch (IOException e) {
+		}
+		return sb.toString();
 	}
 
 	public static boolean testPicker(CriterionPropertyVO propertyVO) {
