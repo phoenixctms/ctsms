@@ -34,22 +34,18 @@ jobs:
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA")
-          echo "$COMMIT"
           COMMIT_MESSAGE_REGEX="[Mm]erge [a-zA-Z0-9]+ into [a-zA-Z0-9]+"
           if [[ $COMMIT =~ $COMMIT_MESSAGE_REGEX ]];
           then
-              echo "mathced!"
               COMMIT=$(echo "$COMMIT" | sed -e 's/[Mm]erge \([a-zA-Z0-9]\+\) into [a-zA-Z0-9]\+/\1/' | cut -c 1-7)
           else
               COMMIT=$(git rev-parse --short HEAD)
           fi
           echo "COMMIT=$COMMIT" >> $GITHUB_ENV
-          echo "$COMMIT"
           sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /home/runner/work/ctsms/ctsms/pom.xml
           UUID="test-"
           UUID+=$(cat /proc/sys/kernel/random/uuid)
           sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /home/runner/work/ctsms/ctsms/pom.xml
-          exit 64
           mvn install -DskipTests --no-transfer-progress
       - name: Setup database
         run: |
