@@ -43,6 +43,9 @@ jobs:
           fi
           echo "COMMIT=$COMMIT" >> $GITHUB_ENV
           sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /home/runner/work/ctsms/ctsms/pom.xml
+          UUID="test-"
+          UUID+=$(cat /proc/sys/kernel/random/uuid)
+          sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /home/runner/work/ctsms/ctsms/pom.xml
           mvn install -DskipTests --no-transfer-progress
       - name: Setup database
         run: |
