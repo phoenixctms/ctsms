@@ -42,7 +42,7 @@ jobs:
               COMMIT=$(git rev-parse --short HEAD)
           fi
           echo "COMMIT=$COMMIT" >> $GITHUB_ENV
-          printenv
+          echo $COMMIT
           sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /home/runner/work/ctsms/ctsms/pom.xml
           UUID="test-"
           UUID+=$(cat /proc/sys/kernel/random/uuid)
