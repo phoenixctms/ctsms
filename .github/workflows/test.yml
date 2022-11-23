@@ -39,7 +39,7 @@ jobs:
           if [[ $COMMIT =~ $COMMIT_MESSAGE_REGEX ]];
           then
               echo "mathced!"
-              COMMIT=$("$COMMIT" | sed -e 's/[Mm]erge \([a-zA-Z0-9]\+\) into [a-zA-Z0-9]\+/\1/' | cut -c 1-7)
+              COMMIT=$(echo "$COMMIT" | sed -e 's/[Mm]erge \([a-zA-Z0-9]\+\) into [a-zA-Z0-9]\+/\1/' | cut -c 1-7)
           else
               COMMIT=$(git rev-parse --short HEAD)
           fi
