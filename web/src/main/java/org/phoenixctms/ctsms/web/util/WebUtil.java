@@ -2074,7 +2074,7 @@ public final class WebUtil {
 	public static Long getEcrfFieldValueCount(ECRFFieldOutVO ecrfField, boolean excludeAuditTrail) {
 		if (ecrfField != null) {
 			try {
-				return getServiceLocator().getInputFieldService().getEcrfFieldValueCount(getAuthentication(), null, ecrfField.getId(), excludeAuditTrail);
+				return getServiceLocator().getInputFieldService().getEcrfFieldValueCount(getAuthentication(), ecrfField.getId(), excludeAuditTrail);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
