@@ -100,7 +100,7 @@ jobs:
 #          sleep 5
       - name: Load demo data
         run: |
-          sudo -E -u ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
+          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
       - name: Run tests
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.* "Proband Tests" git@phoenixctms.org
