@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.domain.CriterionRestriction;
 import org.phoenixctms.ctsms.domain.CriterionRestrictionDao;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.service.shared.SelectionSetService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.AssociationPath;
@@ -186,7 +187,7 @@ public class CriterionPropertyLineProcessor extends LineProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override

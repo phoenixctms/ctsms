@@ -6,6 +6,7 @@ import org.phoenixctms.ctsms.domain.OpsCodeDao;
 import org.phoenixctms.ctsms.domain.OpsSyst;
 import org.phoenixctms.ctsms.domain.OpsSystDao;
 import org.phoenixctms.ctsms.enumeration.OpsCodeType;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -128,7 +129,7 @@ public class OpsCodeLineProcessor extends LineProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override

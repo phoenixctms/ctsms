@@ -5,6 +5,7 @@ import org.phoenixctms.ctsms.domain.AlphaId;
 import org.phoenixctms.ctsms.domain.AlphaIdDao;
 import org.phoenixctms.ctsms.domain.IcdSyst;
 import org.phoenixctms.ctsms.domain.IcdSystDao;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -151,7 +152,7 @@ public class AlphaIdLineProcessor extends LineProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override

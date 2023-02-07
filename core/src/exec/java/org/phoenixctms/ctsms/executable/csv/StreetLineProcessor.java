@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.executable.csv;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.Street;
 import org.phoenixctms.ctsms.domain.StreetDao;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -94,7 +95,7 @@ public class StreetLineProcessor extends LineProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override

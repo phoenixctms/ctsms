@@ -21,6 +21,7 @@ import org.phoenixctms.ctsms.domain.TitleDao;
 import org.phoenixctms.ctsms.domain.ZipDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.executable.migration.UserIdentityDepartmentPermissionDefinitionLineProcessor;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
