@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.selenium;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -68,9 +69,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			try {
 				entry();
 			} catch (org.openqa.selenium.NoSuchElementException e) {
-				info("input field not found, trying on next page ...");
+				info("item not found, trying on next page ...");
 				paginate();
-				entry();
+				enter();
 			}
 		}
 	}
@@ -90,13 +91,69 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		}
 	}
 
+	protected abstract class EcrfFieldEntry extends RetryEntryBase {
+
+		protected abstract String getFormId();
+
+		protected void saveSeriesSection(String fieldId, boolean series) {
+			if (series) {
+				WebElement gridRow = getChromeDriver().findElement(By.id(fieldId)).findElement(By.xpath("./ancestor::tr[contains(@class, 'ui-datagrid-row')][1]"));
+				Iterator<WebElement> it = getChildElements(getParentElement(gridRow)).iterator();
+				WebElement lastGridRow = null;
+				while (it.hasNext()) {
+					lastGridRow = it.next();
+				}
+				if (gridRow.equals(lastGridRow)) {
+					WebElement panel = gridRow.findElement(By.xpath("./ancestor::table[contains(@class, 'ctsms-content-panelgrid')][1]"));
+					clickButton(getButtonIdByLabel(panel, "Save new index section"));
+					if (waitForUpdateOperationSuccessful(getFormId())) {
+						info("series section index saved");
+					} else {
+						testFailed("saving series section values failed");
+						//return;
+					}
+				}
+			}
+		}
+
+		protected void paginate() {
+			clickButton(getFormId() + ":update");
+			if (waitForUpdateOperationSuccessful(getFormId())) {
+				info("eCRF values page saved");
+				createScreenshot();
+				clickDatagridNextPage(getFormId() + ":ecrffield_input_grid");
+			} else {
+				testFailed("saving eCRF values failed");
+				//return;
+			}
+		}
+	}
+
+	protected abstract class TrialEcrfFieldEntry extends EcrfFieldEntry {
+
+		protected String getFormId() {
+			return "tabView:trialecrfstatusentry_form";
+		}
+	}
+
+	private abstract class SelectDatatableRow extends RetryEntryBase {
+
+		protected abstract String getDatatableId();
+
+		protected void paginate() {
+			clickDatatableNextPage(getDatatableId());
+		}
+	}
+
 	protected final static Duration WEB_DRIVER_WAIT = Duration.ofSeconds(60l);
 	private final static String ADD_OPERATION_SUCCESSFUL_MESSAGE = "create operation successful";
 	private final static String UPDATE_OPERATION_SUCCESSFUL_MESSAGE = "update operation successful";
+	private final static String UPLOAD_SUCCESSFUL_MESSAGE = "upload successful";
 	private final static String PROBAND_ENTITY_WINDOW_NAME = "proband_entity_";
 	private final static Pattern PROBAND_ENTITY_WINDOW_NAME_REGEXP = Pattern.compile("^" + PROBAND_ENTITY_WINDOW_NAME + "(\\d+)$");
 	//private final static String SEARCH_RESULT_COUNT_MESSAGE = "Search result for query";
-	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+(,\\d+)?) [A-Za-z()]+$");
+	private final static Pattern CRITERIA_DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^[^:]+: (\\d+(,\\d+)?) [A-Za-z()]+$");
+	private final static Pattern DATATABLE_HEAD_COUNT_MESSAGE_REGEXP = Pattern.compile("^(\\d+(,\\d+)?)");
 	private final static String ENTITY_WINDOW_NAME_NEW_SUFFIX = "new";
 	private final static String NO_RECORDS_LABEL = "no records";
 	private final static String[] HTMLTOPDF_COMMAND = new String[] { "wkhtmltopdf", "--enable-local-file-access" }; //, "--page-size", "A4", "--orientation", "Portrait", "--dpi",			"130" };
@@ -216,11 +273,15 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		sendKeys("login_form:password", password, Keys.ENTER);
 	}
 
-	protected void setProviderAuth(String username, String password) {
+	protected AuthenticationVO createAuth(String username, String password) {
 		AuthenticationVO auth = new AuthenticationVO();
 		auth.setUsername(username);
 		auth.setPassword(password);
-		getTestDataProvider().setAuth(auth);
+		return auth;
+	}
+
+	protected void setProviderAuth(String username, String password) {
+		getTestDataProvider().setAuth(createAuth(username, password));
 	}
 
 	protected void closeWindow(String windowName) {
@@ -315,7 +376,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			//String pathToChromeDriver = "C:\\chromedriver_win32\\chromedriver.exe";
 			//System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
 			ChromeOptions chromeOptions = new ChromeOptions();
-			chromeOptions.addArguments("--headless");
+			//chromeOptions.addArguments("--headless");
 			chromeOptions.addArguments("--no-sandbox");
 			String windowSize = System.getProperty("ctsms.test.windowsize");
 			if (!CommonUtil.isEmptyString(windowSize)) {
@@ -377,11 +438,80 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		return false;
 	}
 
+	protected boolean waitForUploadSuccessful(String formId) {
+		Iterator<String> it = getInfoOutcomeMessages(formId).iterator();
+		while (it.hasNext()) {
+			if (UPLOAD_SUCCESSFUL_MESSAGE.equals(it.next())) {
+				info(UPLOAD_SUCCESSFUL_MESSAGE + ": " + formId);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected String getTdLabelValue(String tableId, String tdLabel) {
+		String value = getChromeDriver()
+				.findElement(By.xpath(
+						"//table[@id='" + tableId + "']//td[contains(@class, 'ctsms-label-for-column')]//label[contains(text(), '" + tdLabel + "')]/../following-sibling::td[1]"))
+				.getText();
+		info(tdLabel + " '" + value + "': " + tableId);
+		return value;
+	}
+
+	protected boolean waitForJobSuccessful(String formId, long timeout, long sleep) throws InterruptedException {
+		Long start = System.currentTimeMillis();
+		boolean successful = false;
+		String msg = null;
+		String reloadButtonId = null;
+		while ((System.currentTimeMillis() - start) < (timeout * 1000l)
+				&& !(successful = getChromeDriver().findElements(By.xpath("//table[@id='" + formId + ":filelink']//span[contains(text(), 'successful')]")).size() > 0)) {
+			msg = getChromeDriver().findElements(By.xpath("//table[@id='" + formId + ":filelink']//tr")).iterator().next().getText();
+			debug(msg);
+			if (msg.toLowerCase().contains("error occurred")) {
+				break;
+			}
+			if (reloadButtonId == null) {
+				reloadButtonId = getButtonIdByLabel(formId, "Reload");
+			} else {
+				Thread.sleep(sleep * 1000l);
+			}
+			clickButton(reloadButtonId);
+		}
+		try {
+			String[] jobOutput = getJobOutput(formId).split("\n+");
+			for (int i = 0; i < jobOutput.length; i++) {
+				info("    " + jobOutput[i]);
+			}
+		} catch (Exception e) {
+		}
+		msg = getChromeDriver().findElements(By.xpath("//table[@id='" + formId + ":filelink']//tr")).iterator().next().getText();
+		info(msg);
+		return successful;
+	}
+
+	protected String getJobOutput(String formId) {
+		return getChromeDriver().findElement(By.xpath("//form[@id='" + formId + "']//pre[contains(@class, 'ctsms-monospaced')]")).getAttribute("innerText");
+	}
+
+	protected void clickJobTypeSelectOneRadio(String formId, String itemLabel) {
+		String id = formId + ":jobTypes";
+		//getChildElements(getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+		//		.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']//.//label[contains(text(), '" + itemLabel + "')]")))))).get(0)
+		//				.findElement(By.xpath("//div[contains(@class, 'ui-radiobutton-box')]")).click();
+		getChildElements(getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']//.//label[contains(text(), '" + itemLabel + "')]")))))).get(0).click();
+		info("jobtype selectonemenu option '" + itemLabel + "' selected: " + id);
+	}
+
 	protected void clickTab(String href) {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href=\"#" + href + "\"]"))).click();
 		waitForAjax();
 		info("tab clicked: " + href);
+	}
+
+	protected String getTabTitle(String href) {
+		return getChromeDriver().findElement(By.xpath("//a[@href=\"#" + href + "\"]")).getText();
 	}
 
 	protected void waitForAjax() {
@@ -416,13 +546,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		info("selectonemenu option '" + itemLabel + "' selected: " + id);
 	}
 
-	protected String getFieldIdByLabel(String inputFieldLabel) {
+	protected String getFieldIdByLabel(String formId, String inputFieldLabel) {
 		info("looking up input field '" + inputFieldLabel + "'");
 		return new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
-				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//label[contains(text(), '" + inputFieldLabel + "')]"))).getAttribute("for");
+				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//form[@id='" + formId + "']//label[contains(text(), '" + inputFieldLabel + "')]")))
+				.getAttribute("for");
 	}
 
-	protected String getFieldIdBySectionPositionName(String section, int position, String inputFieldName) {
+	protected String getFieldIdBySectionPositionName(String section, long position, String inputFieldName) {
 		info("looking up input field '" + section + " - " + position + ". " + inputFieldName + "'");
 		WebElement panel = getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'ui-panel')]//span[contains(text(), '" + section + "')]")))));
@@ -431,20 +562,43 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		return fieldSet.findElement(By.xpath(".//label")).getAttribute("for");
 	}
 
-	private WebElement getParentElement(WebElement element) {
+	protected String getFieldIdBySectionPositionName(String section, long position, String inputFieldName, String index) {
+		if (!CommonUtil.isEmptyString(index)) {
+			section += ": index " + index;
+		}
+		return getFieldIdBySectionPositionName(section, position, inputFieldName);
+	}
+
+	protected WebElement getParentElement(WebElement element) {
 		return element.findElement(By.xpath("./.."));
 	}
 
-	protected String getButtonIdByLabel(String buttonLabel) {
-		info("looking up button '" + buttonLabel + "'");
-		return getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
-				.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(), '" + buttonLabel + "')]")))).getAttribute("id");
+	protected List<WebElement> getChildElements(WebElement element) {
+		return element.findElements(By.xpath("./*"));
 	}
 
-	protected String getSplitButtonIdByLabel(String buttonLabel) {
+	protected String getButtonIdByLabel(String formId, String buttonLabel) {
+		info("looking up button '" + buttonLabel + "'");
+		return getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//form[@id='" + formId + "']//span[contains(text(), '" + buttonLabel + "')]")))).getAttribute("id");
+	}
+
+	protected String getButtonIdByLabel(WebElement parent, String buttonLabel) {
+		info("looking up button '" + buttonLabel + "'");
+		return getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(parent.findElement(By.xpath("//span[contains(text(), '" + buttonLabel + "')]"))))).getAttribute("id");
+	}
+
+	protected String getButtonIdByTitle(String formId, String title) {
+		info("looking up button '" + title + "'");
+		return new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//form[@id='" + formId + "']//button[contains(@title, '" + title + "')]"))).getAttribute("id");
+	}
+
+	protected String getSplitButtonIdByLabel(String formId, String buttonLabel) {
 		info("looking up split button '" + buttonLabel + "'");
 		return getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
-				.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(), '" + buttonLabel + "')]"))))).getAttribute("id");
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//form[@id='" + formId + "']//span[contains(text(), '" + buttonLabel + "')]"))))).getAttribute("id");
 	}
 
 	protected void clickSplitButton(String id, String itemLabel) {
@@ -471,6 +625,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_panel']/ul/li[contains(text(), '" + itemLabel + "')]"))).click();
 		info("selectonemenu option '" + itemLabel + "' selected: " + id);
+	}
+
+	protected void clickSelectOneMenu(String id, int index) {
+		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']/div[contains(@class, 'ui-selectonemenu-trigger')]"))).click();
+		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_panel']/table//tr[" + Integer.toString(index + 1) + "]"))).click();
+		info("selectonemenu option index " + Integer.toString(index) + " selected: " + id);
 	}
 
 	protected void clickCheckbox(String id) {
@@ -515,6 +677,42 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	//	protected String getProbandEntityWindowName(Long probandId) {
 	//		return PROBAND_ENTITY_WINDOW_NAME + probandId.toString();
 	//	}
+
+	protected static String getResourceFilePath(String fileName) throws IOException {
+		return (new File(System.getProperty("ctsms.test.resourcepath"), fileName)).getCanonicalPath();
+	}
+
+	protected void uploadFile(String id, String fileName) {
+		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT).until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']")));
+		getChromeDriver().findElement(By.id(id + "_input")).sendKeys(fileName);
+		//new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT).until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(), '" + file.getName() + "')]")));
+		info("file '" + fileName + "' selected for upload: " + id);
+	}
+
+	protected void filterDatatable(String datatableId, String columnName, String filter) {
+		info("filter datatable column '" + columnName + "' for '" + filter + "': " + datatableId);
+		getParentElement(
+				getChromeDriver().findElement(By.xpath("//div[@id='" + datatableId + "']//th[contains(@class, 'ui-filter-column')]//span[contains(text(), '" + columnName + "')]")))
+						.findElement(By.xpath("./input")).sendKeys(filter);
+		waitForAjax();
+	}
+
+	protected void clickDatatableRow(String datatableId, int rowNum) {
+		info("click datatable row " + rowNum + ": " + datatableId);
+		new SelectDatatableRow() {
+
+			@Override
+			protected String getDatatableId() {
+				return datatableId;
+			}
+
+			@Override
+			protected void entry() {
+				getChromeDriver().findElement(By.xpath("//tbody[@id='" + datatableId + "_data']//tr[@data-ri='" + rowNum + "']")).click();
+				waitForAjax();
+			}
+		}.enter();
+	}
 
 	protected Long getProbandIdFromProbandEntityWindowName(String windowName) {
 		Matcher matcher = PROBAND_ENTITY_WINDOW_NAME_REGEXP.matcher(windowName);
@@ -820,6 +1018,11 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		Matcher matcher = DATATABLE_HEAD_COUNT_MESSAGE_REGEXP.matcher(resultCountMessage);
 		if (matcher.find()) {
 			return Long.parseLong(matcher.group(1).replaceAll("[.,]", ""));
+		} else {
+			matcher = CRITERIA_DATATABLE_HEAD_COUNT_MESSAGE_REGEXP.matcher(resultCountMessage);
+			if (matcher.find()) {
+				return Long.parseLong(matcher.group(1).replaceAll("[.,]", ""));
+			}
 		}
 		return null;
 	}
