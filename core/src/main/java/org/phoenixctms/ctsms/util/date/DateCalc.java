@@ -455,7 +455,7 @@ public final class DateCalc {
 										holiday.getBase()));
 						}
 					}
-					holidayTableMap.put(year, holidayMap); // insert table only if no error occured
+					holidayTableMap.put(year, holidayMap); // insert table only if no error occurred
 				} catch (Exception e) {
 					error = e;
 				}
