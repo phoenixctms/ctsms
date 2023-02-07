@@ -1936,20 +1936,20 @@ public class TrialServiceImpl
 		}
 	}
 
-	private static Long parseFormatLongAndIncrement(String input, String format, int index, Long defaultValue) {
+	private static long parseFormatLongAndIncrement(String input, String format, int index, long defaultValue) {
 		MessageFormat messageFormat = new MessageFormat(format);
 		Object[] args = messageFormat.parse(input, new ParsePosition(0));
-		Long result = new Long(defaultValue);
+		long result;
 		try {
 			result = (Long) args[index];
-			result += 1l;
 		} catch (Exception e1) {
 			try {
 				result = Long.parseLong((String) args[index]);
-				result += 1l;
 			} catch (Exception e2) {
+				return defaultValue;
 			}
 		}
+		result += 1l;
 		return result;
 	}
 
