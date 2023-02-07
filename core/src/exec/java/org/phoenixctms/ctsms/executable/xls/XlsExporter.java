@@ -1,18 +1,13 @@
 package org.phoenixctms.ctsms.executable.xls;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-
-import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsExporterBase;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsExporterContext;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.write.WritableWorkbook;
-
-public class XlsExporter {
+public class XlsExporter extends XlsExporterBase {
 
 	@Autowired
 	protected SelectionSetValueRowWriter selectionSetValueRowWriter;
@@ -59,40 +54,8 @@ public class XlsExporter {
 		return selectionSetValueRowWriter;
 	}
 
-	private long printRows(XlsExporterContext context, RowWriter writer) throws Throwable {
-		ByteArrayOutputStream buffer = null;
-		try {
-			WritableWorkbook workbook;
-			WorkbookSettings workbookSettings = writer.getWorkbookSettings();
-			if (!CommonUtil.isEmptyString(context.getFileName())) {
-				jobOutput.println("writing to file " + context.getFileName());
-				if (workbookSettings != null) {
-					workbook = Workbook.createWorkbook(new File(context.getFileName()), workbookSettings);
-				} else {
-					workbook = Workbook.createWorkbook(new File(context.getFileName()));
-				}
-			} else {
-				buffer = new ByteArrayOutputStream();
-				if (workbookSettings != null) {
-					workbook = Workbook.createWorkbook(buffer, workbookSettings);
-				} else {
-					workbook = Workbook.createWorkbook(buffer);
-				}
-			}
-			context.setWorkbook(workbook);
-			writer.init();
-			writer.printHeaderRow();
-			writer.printRows();
-			workbook.write();
-			workbook.close();
-		} catch (Exception e) {
-			throw new IllegalArgumentException("row " + (writer.getLineCount() + 1) + ": error writing row", e);
-		}
-		if (buffer != null) {
-			jobOutput.addEmailXlsAttachment(buffer.toByteArray());
-		}
-		jobOutput.println(writer.getLineCount() + " rows exported");
-		return writer.getLineCount();
+	protected void addEmailXlsAttachment(byte[] data) {
+		jobOutput.addEmailXlsAttachment(data);
 	}
 
 	private void setContext(RowWriter writer, XlsExporterContext context) {

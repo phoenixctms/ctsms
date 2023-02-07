@@ -1,4 +1,4 @@
-package org.phoenixctms.ctsms.executable.xls;
+package org.phoenixctms.ctsms.fileprocessors.xls;
 
 import java.util.HashMap;
 
@@ -11,12 +11,12 @@ public class XlsExporterContext {
 
 	private HashMap<RowWriter, WritableSheet> spreadSheetMap;
 	private HashMap<RowWriter, Long> entityIdMap;
-	private XlsExporter exporter;
+	private XlsExporterBase exporter;
 	private String fileName;
 	private AuthenticationVO auth;
 	private WritableWorkbook workbook;
 
-	public XlsExporterContext(XlsExporter exporter, String fileName) {
+	public XlsExporterContext(XlsExporterBase exporter, String fileName) {
 		this.exporter = exporter;
 		this.fileName = fileName;
 		this.auth = null;
@@ -33,7 +33,7 @@ public class XlsExporterContext {
 		return entityIdMap.get(writer);
 	}
 
-	public XlsExporter getExporter() {
+	public XlsExporterBase getExporter() {
 		return exporter;
 	}
 
