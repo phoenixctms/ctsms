@@ -1,15 +1,15 @@
-package org.phoenixctms.ctsms.executable.xls;
+package org.phoenixctms.ctsms.fileprocessors.xls;
 
 import java.util.Locale;
 
-import org.phoenixctms.ctsms.util.JobOutput;
+import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
 
 import jxl.WorkbookSettings;
 
 public abstract class RowWriter {
 
 	private final static String DEFAULT_COMMENT_CHAR = "#";
-	protected JobOutput jobOutput;
+	protected ProcessorJobOutput jobOutput;
 	private String commentChar;
 	protected int lineNumber;
 	protected XlsExporterContext context;
@@ -105,7 +105,7 @@ public abstract class RowWriter {
 		this.context = context;
 	}
 
-	public void setJobOutput(JobOutput jobOutput) {
+	public void setJobOutput(ProcessorJobOutput jobOutput) {
 		this.jobOutput = jobOutput;
 	}
 }

@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.executable.xls;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
@@ -79,7 +80,7 @@ public class EcrfRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(enrollmentStatusColumnIndex, maxColumnIndex);
 		chargeColumnIndex = CHARGE_COLUMN_INDEX;
 		maxColumnIndex = Math.max(chargeColumnIndex, maxColumnIndex);
-		context.getExporter().getEcrfFieldRowWriter().init();
+		((XlsExporter) context.getExporter()).getEcrfFieldRowWriter().init();
 		context.getSpreadSheet(this);
 	}
 
@@ -104,17 +105,17 @@ public class EcrfRowWriter extends RowWriter {
 		values[enrollmentStatusColumnIndex] = "enrollment status to switch to";
 		values[chargeColumnIndex] = "charge";
 		printRow(values, true);
-		context.getExporter().getEcrfFieldRowWriter().printHeaderRow();
-		context.getExporter().getInputFieldRowWriter().printHeaderRow();
-		context.getExporter().getSelectionSetValueRowWriter().printHeaderRow();
+		((XlsExporter) context.getExporter()).getEcrfFieldRowWriter().printHeaderRow();
+		((XlsExporter) context.getExporter()).getInputFieldRowWriter().printHeaderRow();
+		((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().printHeaderRow();
 	}
 
 	public void printRows(Collection<ECRFOutVO> ecrfs) throws Throwable {
 		Iterator<ECRFOutVO> ecrfsIt = ecrfs.iterator();
 		while (ecrfsIt.hasNext()) {
 			ECRFOutVO ecrf = ecrfsIt.next();
-			context.setEntityId(context.getExporter().getEcrfFieldRowWriter(), ecrf.getId());
-			context.getExporter().getEcrfFieldRowWriter().printRows();
+			context.setEntityId(((XlsExporter) context.getExporter()).getEcrfFieldRowWriter(), ecrf.getId());
+			((XlsExporter) context.getExporter()).getEcrfFieldRowWriter().printRows();
 			String[] values = new String[maxColumnIndex + 1];
 			values[nameColumnIndex] = ecrf.getName();
 			values[revisionColumnIndex] = ecrf.getRevision();

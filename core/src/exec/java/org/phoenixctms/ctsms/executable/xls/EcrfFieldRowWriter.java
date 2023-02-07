@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
 		maxColumnIndex = Math.max(notifyColumnIndex, maxColumnIndex);
 		inputFieldIds.clear();
-		context.getExporter().getInputFieldRowWriter().init();
+		((XlsExporter) context.getExporter()).getInputFieldRowWriter().init();
 		context.getSpreadSheet(this);
 	}
 
@@ -137,7 +138,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 		while (it.hasNext()) {
 			ECRFFieldOutVO ecrfField = it.next();
 			if (inputFieldIds.add(ecrfField.getField().getId())) {
-				context.getExporter().getInputFieldRowWriter().printRows(ecrfField.getField());
+				((XlsExporter) context.getExporter()).getInputFieldRowWriter().printRows(ecrfField.getField());
 			}
 			String[] values = new String[maxColumnIndex + 1];
 			values[ecrfNameColumnIndex] = ecrfField.getEcrf().getName();
