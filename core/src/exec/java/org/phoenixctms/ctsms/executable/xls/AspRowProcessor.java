@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.domain.AspAtcCodeDao;
 import org.phoenixctms.ctsms.domain.AspDao;
 import org.phoenixctms.ctsms.domain.AspSubstance;
 import org.phoenixctms.ctsms.domain.AspSubstanceDao;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -257,7 +258,7 @@ public class AspRowProcessor extends RowProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 		Iterator<String> substancesIt = substancesMap.keySet().iterator();
 		while (substancesIt.hasNext()) {
 			String substance = substancesIt.next();

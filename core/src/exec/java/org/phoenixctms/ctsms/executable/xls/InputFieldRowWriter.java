@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.executable.xls;
 import java.io.IOException;
 
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -206,7 +207,7 @@ public class InputFieldRowWriter extends RowWriter {
 		datePattern = ExecSettings.getString(ExecSettingCodes.DATE_PATTERN, ExecDefaultSettings.DATE_PATTERN);
 		timePattern = ExecSettings.getString(ExecSettingCodes.TIME_PATTERN, ExecDefaultSettings.TIME_PATTERN);
 		filePath = new FilePathSplitter(context.getFileName());
-		context.getExporter().getSelectionSetValueRowWriter().init();
+		((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().init();
 		context.getSpreadSheet(this);
 	}
 
@@ -253,8 +254,8 @@ public class InputFieldRowWriter extends RowWriter {
 			case AUTOCOMPLETE:
 				values[learnColumnIndex] = Boolean.toString(inputField.getLearn());
 				values[strictColumnIndex] = Boolean.toString(inputField.getStrict());
-				context.setEntityId(context.getExporter().getSelectionSetValueRowWriter(), inputField.getId());
-				context.getExporter().getSelectionSetValueRowWriter().printRows();
+				context.setEntityId(((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter(), inputField.getId());
+				((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().printRows();
 				break;
 			case CHECKBOX:
 				values[booleanPresetColumnIndex] = Boolean.toString(inputField.getBooleanPreset());
@@ -300,7 +301,7 @@ public class InputFieldRowWriter extends RowWriter {
 			case SELECT_ONE_DROPDOWN:
 			case SELECT_ONE_RADIO_H:
 			case SELECT_ONE_RADIO_V:
-				context.getExporter().getSelectionSetValueRowWriter().printRows(inputField.getSelectionSetValues());
+				((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().printRows(inputField.getSelectionSetValues());
 				break;
 			default:
 				break;

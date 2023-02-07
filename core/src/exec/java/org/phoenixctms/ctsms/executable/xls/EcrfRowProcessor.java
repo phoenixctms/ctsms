@@ -11,6 +11,7 @@ import org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao;
 import org.phoenixctms.ctsms.domain.VisitDao;
 import org.phoenixctms.ctsms.domain.VisitType;
 import org.phoenixctms.ctsms.domain.VisitTypeDao;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ServiceUtil;
@@ -227,7 +228,7 @@ public class EcrfRowProcessor extends RowProcessor {
 		probandGroupIdMap.clear();
 		visitIdMap.clear();
 		probandListStatusTypeIdMap.clear();
-		context.getImporter().loadEcrfFields(context);
+		((XlsImporter) context.getImporter()).loadEcrfFields(context);
 	}
 
 	@Override
@@ -249,14 +250,14 @@ public class EcrfRowProcessor extends RowProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override
 	protected int processRow(String[] values, long rowNumber) throws Throwable {
 		String name = getName(values);
 		String revision = getRevision(values);
-		ECRF ecrf = context.getImporter().getEcrfFieldRowProcessor().getEcrf(name, revision);
+		ECRF ecrf = ((XlsImporter) context.getImporter()).getEcrfFieldRowProcessor().getEcrf(name, revision);
 		ECRFInVO ecrfIn = new ECRFInVO();
 		ecrfIn.setId(ecrf != null ? ecrf.getId() : null);
 		ecrfIn.setVersion(ecrf != null ? ecrf.getVersion() : 0l);
@@ -295,9 +296,9 @@ public class EcrfRowProcessor extends RowProcessor {
 		ecrfIn.setProbandListStatusId(getProbandListStatusTypeId(getEnrollmentStatus(values)));
 		ecrfIn.setCharge(CommonUtil.isEmptyString(getCharge(values)) ? 0.0f : Float.parseFloat(getCharge(values)));
 		ECRFOutVO ecrfVO = trialService.addUpdateEcrf(context.getAuth(), ecrfIn,
-				context.getImporter().getEcrfFieldRowProcessor().getEcrfFields(name, revision));
+				((XlsImporter) context.getImporter()).getEcrfFieldRowProcessor().getEcrfFields(name, revision));
 		jobOutput.println("ecrf '" + ecrfVO.getUniqueName() + "' " + (ecrfVO.getVersion() > 0l ? "updated" : "created"));
-		context.getImporter().getEcrfFieldRowProcessor().clearEcrf(name, revision);
+		((XlsImporter) context.getImporter()).getEcrfFieldRowProcessor().clearEcrf(name, revision);
 		return 1;
 	}
 

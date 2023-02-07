@@ -1,10 +1,10 @@
-package org.phoenixctms.ctsms.executable.xls;
+package org.phoenixctms.ctsms.fileprocessors.xls;
 
 import java.util.HashSet;
 import java.util.Locale;
 
+import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.JobOutput;
 
 import jxl.Cell;
 import jxl.WorkbookSettings;
@@ -21,7 +21,7 @@ public abstract class RowProcessor {
 	protected boolean filterDupes;
 	protected boolean multipleInsert;
 	protected HashSet<Integer> dupeCheck;
-	protected JobOutput jobOutput;
+	protected ProcessorJobOutput jobOutput;
 	protected XlsImporterContext context;
 
 	protected RowProcessor() {
@@ -78,7 +78,7 @@ public abstract class RowProcessor {
 
 	protected abstract int lineHashCode(String[] values);
 
-	protected abstract void postProcess() throws Exception;
+	public abstract void postProcess() throws Exception;
 
 	public final boolean processHeaderRow(Cell[] row) throws Throwable {
 		if (row != null && row.length > 0) {
@@ -153,7 +153,7 @@ public abstract class RowProcessor {
 		this.filterDupes = filterDupes;
 	}
 
-	public void setJobOutput(JobOutput jobOutput) {
+	public void setJobOutput(ProcessorJobOutput jobOutput) {
 		this.jobOutput = jobOutput;
 	}
 
