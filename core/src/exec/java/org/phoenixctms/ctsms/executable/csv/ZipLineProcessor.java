@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.Zip;
 import org.phoenixctms.ctsms.domain.ZipDao;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -102,7 +103,7 @@ public class ZipLineProcessor extends LineProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override
