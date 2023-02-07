@@ -25,6 +25,8 @@ import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
 import org.phoenixctms.ctsms.domain.Inquiry;
 import org.phoenixctms.ctsms.domain.InquiryDao;
+import org.phoenixctms.ctsms.domain.Proband;
+import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.SponsoringTypeDao;
 import org.phoenixctms.ctsms.domain.SurveyStatusTypeDao;
 import org.phoenixctms.ctsms.domain.TrialStatusTypeDao;
@@ -108,6 +110,8 @@ public class TestDataProvider { //extends ProductionDataProvider {
 	private SearchService searchService;
 	@Autowired
 	private InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao;
+	@Autowired
+	private ProbandDao probandDao;
 	private OutputLogger log;
 	private AuthenticationVO auth;
 
@@ -555,7 +559,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		info("criteria ID " + out.getId() + " created: " + out.getLabel());
 		String[] expression = searchService.getIntermediateSetsByCriteria(auth, out.getId(), null).getParsed().getCriterionExpression().split("\n+");
 		for (int i = 0; i < expression.length; i++) {
-			info(expression[i]);
+			info("    " + expression[i]);
 		}
 		return out;
 	}
@@ -570,6 +574,12 @@ public class TestDataProvider { //extends ProductionDataProvider {
 						new SearchParameter("module", module, SearchParameter.EQUAL_COMPARATOR),
 						new SearchParameter("property", property, SearchParameter.EQUAL_COMPARATOR),
 				})))).iterator().next();
+	}
+
+	public Proband getProband(String alias) {
+		return (new ArrayList<Proband>(probandDao.search(new Search(new SearchParameter[] {
+				new SearchParameter("personParticulars.alias", alias, SearchParameter.EQUAL_COMPARATOR),
+		})))).iterator().next();
 	}
 
 	public CriterionRestriction getCriterionRestriction(org.phoenixctms.ctsms.enumeration.CriterionRestriction operator) {
