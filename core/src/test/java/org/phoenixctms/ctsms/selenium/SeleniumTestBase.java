@@ -33,6 +33,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.TestDataProvider;
+import org.phoenixctms.ctsms.selenium.SeleniumTestBase.EcrfFieldEntry;
 import org.phoenixctms.ctsms.test.CustomReport;
 import org.phoenixctms.ctsms.test.OutputLogger;
 import org.phoenixctms.ctsms.test.ReportEmailSender;
@@ -376,7 +377,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			//String pathToChromeDriver = "C:\\chromedriver_win32\\chromedriver.exe";
 			//System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
 			ChromeOptions chromeOptions = new ChromeOptions();
-			//chromeOptions.addArguments("--headless");
+			chromeOptions.addArguments("--headless");
 			chromeOptions.addArguments("--no-sandbox");
 			String windowSize = System.getProperty("ctsms.test.windowsize");
 			if (!CommonUtil.isEmptyString(windowSize)) {
