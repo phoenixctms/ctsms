@@ -1,4 +1,5 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:lang="http://www.springframework.org/schema/lang"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd">
@@ -61,5 +62,11 @@
 		<property
 			name="javaMailProperties"
 			ref="jobMailSenderJavaMailPropertiesFactory" />
-	</bean>	
+	</bean>
+	<bean
+		id="xlslImporter"
+		class="org.phoenixctms.ctsms.test.xls.XlsImporter" />
+	<bean
+		id="ecrfValidationRowProcessor"
+		class="org.phoenixctms.ctsms.test.xls.EcrfValidationRowProcessor" />
 </beans>
