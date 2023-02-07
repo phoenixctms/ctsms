@@ -11,6 +11,7 @@ import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
 import org.phoenixctms.ctsms.service.shared.JobService;
 import org.phoenixctms.ctsms.test.JobEmailSenderBase;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
@@ -22,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
-public class JobOutput extends JobEmailSenderBase {
+public class JobOutput extends JobEmailSenderBase implements ProcessorJobOutput {
 
 	@Autowired
 	protected JobService jobService;
@@ -128,7 +129,7 @@ public class JobOutput extends JobEmailSenderBase {
 	}
 
 	public void printExecutionTime(boolean error) {
-		println(error ? "ERROR OCCURED" : "done" + " - execution time: " + ((new Date()).getTime() - start.getTime()) / 1000 + " seconds", true);
+		println(error ? "ERROR OCCURRED" : "done" + " - execution time: " + ((new Date()).getTime() - start.getTime()) / 1000 + " seconds", true);
 	}
 
 	public void println(String line) {
