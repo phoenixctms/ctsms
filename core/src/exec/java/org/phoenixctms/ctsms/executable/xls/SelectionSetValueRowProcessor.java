@@ -10,6 +10,7 @@ import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueInVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +127,7 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override

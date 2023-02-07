@@ -12,6 +12,7 @@ import org.phoenixctms.ctsms.domain.ECRFField;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ECRFFieldInVO;
@@ -141,7 +142,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	}
 
 	private Long getInputFieldId(String inputFieldName) {
-		InputField inputField = context.getImporter().getSelectionSetValueRowProcessor().getInputField(inputFieldName);
+		InputField inputField = ((XlsImporter) context.getImporter()).getSelectionSetValueRowProcessor().getInputField(inputFieldName);
 		Long fieldId = null;
 		if (inputField != null) {
 			fieldId = inputField.getId();
@@ -218,7 +219,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
 		ecrfFieldMap.clear();
 		ecrfMap.clear();
-		context.getImporter().loadInputFields(context);
+		((XlsImporter) context.getImporter()).loadInputFields(context);
 	}
 
 	@Override
@@ -245,7 +246,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override

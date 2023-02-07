@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.randomization.Randomization;
@@ -162,7 +163,7 @@ public class RandomizationListCodeRowProcessor extends RowProcessor {
 	}
 
 	@Override
-	protected void postProcess() throws Exception {
+	public void postProcess() throws Exception {
 		if (stratificationsMap != null) {
 			HashSet<Long> stratificationListIds = new HashSet<Long>();
 			addUpdateStratificationRandomizationLists(stratificationsMap, new LinkedList<String>(), stratificationListIds);

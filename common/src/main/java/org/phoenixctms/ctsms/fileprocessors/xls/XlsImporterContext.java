@@ -1,4 +1,4 @@
-package org.phoenixctms.ctsms.executable.xls;
+package org.phoenixctms.ctsms.fileprocessors.xls;
 
 import java.util.HashMap;
 
@@ -6,13 +6,13 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 
 public class XlsImporterContext {
 
-	private XlsImporter importer;
+	private XlsImporterBase importer;
 	private String fileName;
 	private AuthenticationVO auth;
 	private Long entityId;
 	private HashMap<RowProcessor, Boolean> mandatoryMap;
 
-	public XlsImporterContext(XlsImporter importer, String fileName) {
+	public XlsImporterContext(XlsImporterBase importer, String fileName) {
 		this.importer = importer;
 		this.fileName = fileName;
 		this.auth = null;
@@ -32,7 +32,7 @@ public class XlsImporterContext {
 		return fileName;
 	}
 
-	public XlsImporter getImporter() {
+	public XlsImporterBase getImporter() {
 		return importer;
 	}
 

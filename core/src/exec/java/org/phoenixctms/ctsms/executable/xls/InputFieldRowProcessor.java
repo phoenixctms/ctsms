@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -294,7 +295,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 		datePattern = ExecSettings.getString(ExecSettingCodes.DATE_PATTERN, ExecDefaultSettings.DATE_PATTERN);
 		timePattern = ExecSettings.getString(ExecSettingCodes.TIME_PATTERN, ExecDefaultSettings.TIME_PATTERN);
 		filePath = new FilePathSplitter(context.getFileName());
-		context.getImporter().loadSelectionSetValues(context);
+		((XlsImporter) context.getImporter()).loadSelectionSetValues(context);
 	}
 
 	@Override
@@ -356,13 +357,13 @@ public class InputFieldRowProcessor extends RowProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 	}
 
 	@Override
 	protected int processRow(String[] values, long rowNumber) throws Throwable {
 		String name = getName(values);
-		InputField inputField = context.getImporter().getSelectionSetValueRowProcessor().getInputField(name);
+		InputField inputField = ((XlsImporter) context.getImporter()).getSelectionSetValueRowProcessor().getInputField(name);
 		InputFieldInVO inputFieldIn = new InputFieldInVO();
 		inputFieldIn.setId(inputField != null ? inputField.getId() : null);
 		inputFieldIn.setVersion(inputField != null ? inputField.getVersion() : 0l);
@@ -428,9 +429,9 @@ public class InputFieldRowProcessor extends RowProcessor {
 		inputFieldIn.setComment(getComment(values));
 		inputFieldIn.setValidationErrorMsg(CommonUtil.isEmptyString(getValidationErrorMsg(values)) ? null : getValidationErrorMsg(values));
 		InputFieldOutVO inputFieldVO = inputFieldService.addUpdateInputField(context.getAuth(), inputFieldIn,
-				context.getImporter().getSelectionSetValueRowProcessor().getSelectionSetValues(name));
+				((XlsImporter) context.getImporter()).getSelectionSetValueRowProcessor().getSelectionSetValues(name));
 		jobOutput.println("input field '" + inputFieldVO.getName() + "' " + (inputFieldVO.getVersion() > 0l ? "updated" : "created"));
-		context.getImporter().getSelectionSetValueRowProcessor().clearInputField(name);
+		((XlsImporter) context.getImporter()).getSelectionSetValueRowProcessor().clearInputField(name);
 		return 1;
 	}
 

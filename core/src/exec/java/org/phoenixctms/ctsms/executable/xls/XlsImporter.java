@@ -17,6 +17,9 @@ import org.phoenixctms.ctsms.domain.AspSubstanceDao;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsImporterBase;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsImporterContext;
 import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.util.ChunkedRemoveAll;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -26,12 +29,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-
-public class XlsImporter {
+public class XlsImporter extends XlsImporterBase {
 
 	private static Search getRevisionSearch(String revision) {
 		return new Search(new SearchParameter[] {
@@ -56,7 +54,6 @@ public class XlsImporter {
 	protected AspSubstanceDao aspSubstanceDao;
 	@Autowired
 	private FileService fileService;
-	private JobOutput jobOutput;
 
 	public XlsImporter() {
 	}
@@ -135,11 +132,11 @@ public class XlsImporter {
 		return readRows(context, selectionSetValueRowProcessor);
 	}
 
-	private InputStream getInputStream(String fileName, AuthenticationVO auth, FileService fileService, JobOutput jobOutput) throws AuthenticationException,
+	protected InputStream getInputStream(String fileName, AuthenticationVO auth) throws AuthenticationException,
 			AuthorisationException, ServiceException, FileNotFoundException {
 		if (CommonUtil.isEmptyString(fileName)) {
 			jobOutput.println("reading from job");
-			return new ByteArrayInputStream(jobOutput.getJobFile().getDatas());
+			return new ByteArrayInputStream(((JobOutput) jobOutput).getJobFile().getDatas());
 		} else {
 			try {
 				long fileId = Long.parseLong(fileName);
@@ -151,67 +148,6 @@ public class XlsImporter {
 				return new FileInputStream(fileName);
 			}
 		}
-	}
-
-	private long readRows(XlsImporterContext context, RowProcessor processor) throws Throwable {
-		processor.init();
-		long rowCount = 0l;
-		long lineNumber = 1l;
-		Workbook workbook = null;
-		try {
-			InputStream inputStream = getInputStream(context.getFileName(), context.getAuth(), fileService, jobOutput);
-			WorkbookSettings workbookSettings = processor.getWorkbookSettings();
-			if (workbookSettings != null) {
-				workbook = Workbook.getWorkbook(inputStream, workbookSettings);
-			} else {
-				workbook = Workbook.getWorkbook(inputStream);
-			}
-			Sheet sheet;
-			String sheetName = processor.getSheetName();
-			if (sheetName != null) {
-				sheet = workbook.getSheet(sheetName);
-			} else {
-				try {
-					sheet = workbook.getSheet(processor.getSheetNum());
-				} catch (IndexOutOfBoundsException e) {
-					sheet = null;
-				}
-			}
-			if (sheet != null) {
-				sheetName = sheet.getName();
-				if (!CommonUtil.isEmptyString(sheetName)) {
-					jobOutput.println("processing sheet '" + sheetName + "'");
-				}
-				int sheetRowCount = sheet.getRows();
-				if (sheetRowCount > 0) {
-					Cell[] row = sheet.getRow(0);
-					if (!processor.processHeaderRow(row)) {
-						rowCount += processor.processRow(row, lineNumber);
-					}
-					lineNumber++;
-					for (int i = 1; i < sheetRowCount; i++) {
-						row = sheet.getRow(i);
-						rowCount += processor.processRow(row, lineNumber);
-						lineNumber++;
-					}
-				}
-			} else {
-				if (context.isMandatory(processor)) {
-					throw new IllegalArgumentException("spreadsheet not found");
-				} else {
-					jobOutput.println("spreadsheet not found, skipping");
-				}
-			}
-		} catch (Exception e) {
-			throw new IllegalArgumentException("line " + lineNumber + ": error reading line", e);
-		} finally {
-			if (workbook != null) {
-				workbook.close();
-			}
-		}
-		processor.postProcess();
-		jobOutput.println(rowCount + " rows processed");
-		return rowCount;
 	}
 
 	private void removeAspRecords(String revision) throws Exception {
@@ -246,9 +182,5 @@ public class XlsImporter {
 		context.setMandatory(processor, mandatory);
 		processor.setContext(context);
 		processor.setJobOutput(jobOutput);
-	}
-
-	public void setJobOutput(JobOutput jobOutput) {
-		this.jobOutput = jobOutput;
 	}
 }
