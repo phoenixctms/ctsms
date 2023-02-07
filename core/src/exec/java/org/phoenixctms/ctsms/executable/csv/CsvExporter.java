@@ -13,6 +13,7 @@ import org.phoenixctms.ctsms.SearchParameter;
 import org.phoenixctms.ctsms.domain.Permission;
 import org.phoenixctms.ctsms.domain.PermissionDao;
 import org.phoenixctms.ctsms.domain.ProfilePermissionDao;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineWriter;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter;
 import org.phoenixctms.ctsms.util.ChunkedDaoOperationAdapter.PageSizes;
 import org.phoenixctms.ctsms.util.CommonUtil;

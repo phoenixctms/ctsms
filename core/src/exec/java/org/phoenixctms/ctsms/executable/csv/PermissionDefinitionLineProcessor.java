@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterOverride;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterRestriction;
 import org.phoenixctms.ctsms.enumeration.ServiceMethodParameterTransformation;
+import org.phoenixctms.ctsms.fileprocessors.csv.LineProcessor;
 import org.phoenixctms.ctsms.security.IPAddressValidation;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -261,7 +262,7 @@ public class PermissionDefinitionLineProcessor extends LineProcessor {
 	}
 
 	@Override
-	protected void postProcess() {
+	public void postProcess() {
 		HashSet<PermissionProfile> allProfileIdentifiers = new HashSet<PermissionProfile>();
 		getPermissions().clear();
 		Iterator<String> serviceMethodsIt = serviceMethodMap.keySet().iterator();
