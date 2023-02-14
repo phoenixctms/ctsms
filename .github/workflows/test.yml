@@ -29,6 +29,10 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Setup BulkProcessor
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
       - name: Build
         run: |
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
@@ -47,6 +51,10 @@ jobs:
           UUID+=$(cat /proc/sys/kernel/random/uuid)
           sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /home/runner/work/ctsms/ctsms/pom.xml
           mvn install -DskipTests --no-transfer-progress
+      - name: Setup database
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
       - name: Setup database
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
