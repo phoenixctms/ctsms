@@ -1,5 +1,8 @@
 #!/bin/bash
 
+
+mkdir /ctsms
+
 apt-get -q -y -o=Dpkg::Use-Pty=0 install \
 libarchive-zip-perl \
 libconfig-any-perl \
