@@ -77,20 +77,20 @@ cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 cpanm --notest Spreadsheet::Reader::Format
 cpanm --notest Spreadsheet::Reader::ExcelXML
-wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /ctsms/bulk-processor.tar.gz
-tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
-perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
-mkdir /ctsms/bulk_processor/output
-chown ctsms:ctsms /ctsms/bulk_processor -R
-chmod 755 /ctsms/bulk_processor -R
-chmod 777 /ctsms/bulk_processor/output -R
-rm /ctsms/bulk-processor.tar.gz -f
-wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/ecrfdataexport.sh -O /ctsms/ecrfdataexport.sh
-chown ctsms:ctsms /ctsms/ecrfdataexport.sh
-chmod 755 /ctsms/ecrfdataexport.sh
-wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/ecrfdataimport.sh -O /ctsms/ecrfdataimport.sh
-chown ctsms:ctsms /ctsms/ecrfdataimport.sh
-chmod 755 /ctsms/ecrfdataimport.sh
-wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
-chown ctsms:ctsms /ctsms/inquirydataexport.sh
-chmod 755 /ctsms/inquirydataexport.sh
+wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /home/runner/work/ctsms/bulk-processor.tar.gz
+tar -zxvf /home/runner/work/ctsms/bulk-processor.tar.gz -C /home/runner/work/ctsms/bulk_processor --strip-components 1
+perl /home/runner/work/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/home/runner/work/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
+mkdir /home/runner/work/ctsms/bulk_processor/output
+chown ctsms:ctsms /home/runner/work/ctsms/bulk_processor -R
+chmod 755 /home/runner/work/ctsms/bulk_processor -R
+chmod 777 /home/runner/work/ctsms/bulk_processor/output -R
+rm /home/runner/work/ctsms/bulk-processor.tar.gz -f
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/ecrfdataexport.sh -O /home/runner/work/ctsms/ecrfdataexport.sh
+chown ctsms:ctsms /home/runner/work/ctsms/ecrfdataexport.sh
+chmod 755 /home/runner/work/ctsms/ecrfdataexport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/ecrfdataimport.sh -O /home/runner/work/ctsms/ecrfdataimport.sh
+chown ctsms:ctsms /home/runner/work/ctsms/ecrfdataimport.sh
+chmod 755 /home/runner/work/ctsms/ecrfdataimport.sh
+wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/inquirydataexport.sh -O /home/runner/work/ctsms/inquirydataexport.sh
+chown ctsms:ctsms /home/runner/work/ctsms/inquirydataexport.sh
+chmod 755 /home/runner/work/ctsms/inquirydataexport.sh

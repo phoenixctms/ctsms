@@ -1,12 +1,12 @@
 #!/bin/bash
 
-mkdir /ctsms
-wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /ctsms/config.tar.gz
-tar -zxvf /ctsms/config.tar.gz -C /ctsms --strip-components 1
-rm /ctsms/config.tar.gz -f          
-wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /ctsms/master-data.tar.gz
-mkdir /ctsms/master_data
-tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
-rm /ctsms/master-data.tar.gz -f
-chown ctsms:ctsms /ctsms -R
-chmod 777 /ctsms -R
+#mkdir /ctsms
+wget --no-verbose --no-check-certificate --content-disposition https://github.com/phoenixctms/config-default/archive/master.tar.gz -O /home/runner/work/ctsms/config.tar.gz
+tar -zxvf /home/runner/work/ctsms/config.tar.gz -C /home/runner/work/ctsms --strip-components 1
+rm /home/runner/work/ctsms/config.tar.gz -f          
+wget --no-verbose https://api.github.com/repos/phoenixctms/master-data/tarball/master -O /home/runner/work/ctsms/master-data.tar.gz
+mkdir /home/runner/work/ctsms/master_data
+tar -zxvf /home/runner/work/ctsms/master-data.tar.gz -C /home/runner/work/ctsms/master_data --strip-components 1
+rm /home/runner/work/ctsms/master-data.tar.gz -f
+chown ctsms:ctsms /home/runner/work/ctsms -R
+chmod 777 /home/runner/work/ctsms -R
