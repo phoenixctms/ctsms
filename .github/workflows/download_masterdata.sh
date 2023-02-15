@@ -9,7 +9,7 @@ mkdir /ctsms/master_data
 tar -zxvf /ctsms/master-data.tar.gz -C /ctsms/master_data --strip-components 1
 rm /ctsms/master-data.tar.gz -f
 
-echo "db_tool=/home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh" >> /home/runner/work/ctsms/properties/ctsms-settings.properties
+echo "db_tool=/home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh" >> /ctsms/properties/ctsms-settings.properties
 
 chown ctsms:ctsms /ctsms -R
 chmod 777 /ctsms -R
