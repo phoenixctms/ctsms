@@ -33,7 +33,6 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.TestDataProvider;
-import org.phoenixctms.ctsms.selenium.SeleniumTestBase.EcrfFieldEntry;
 import org.phoenixctms.ctsms.test.CustomReport;
 import org.phoenixctms.ctsms.test.OutputLogger;
 import org.phoenixctms.ctsms.test.ReportEmailSender;
@@ -932,7 +931,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	}
 
 	void sendReportEmail() throws Throwable {
-		attachReports();
+		attachReports(true);
 		boolean failure = false;
 		Iterator<ITestContext> it = results.iterator();
 		ArrayList<String> okTests = new ArrayList<String>();
@@ -1118,7 +1117,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//		}
 	}
 
-	private void attachReports() throws Throwable {
+	private void attachReports(boolean delete) throws Throwable {
 		File[] files = (new File(getTestDirectory())).listFiles();
 		Compress zip = null;
 		for (int i = 0; i < files.length; i++) {
@@ -1143,6 +1142,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 					zip.addFile(getTestDirectory(), files[i]);
 					//getReportEmailSender().addEmailAttachment(files[i], CoreUtil.PDF_MIMETYPE_STRING, files[i].getName());
 				}
+			}
+			if (delete) {
+				files[i].deleteOnExit();
 			}
 		}
 		if (zip != null) {
