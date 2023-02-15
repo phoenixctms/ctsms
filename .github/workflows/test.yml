@@ -51,12 +51,16 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
           /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
-      - name: Download default config and master data
+      - name: Setup database
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+      - name: Download master data
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
-          echo "CTSMS_PROPERTIES=/home/runner/work/ctsms/properties" >> $GITHUB_ENV
-          echo "CTSMS_JAVA=/home/runner/work/ctsms/java" >> $GITHUB_ENV
+          echo "CTSMS_PROPERTIES=/ctsms/properties" >> $GITHUB_ENV
+          echo "CTSMS_JAVA=/ctsms/java" >> $GITHUB_ENV
       - name: Setup BulkProcessor
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
@@ -72,18 +76,18 @@ jobs:
           MAIL_SENDER_STARTTLS: ${{ secrets.MAIL_SENDER_STARTTLS }}
           MAIL_SENDER_ADDRESS: ${{ secrets.MAIL_SENDER_ADDRESS }}
         run: |
-          sudo echo "email_exec_from_address=$MAIL_SENDER_ADDRESS" >> /home/runner/work/ctsms/properties/ctsms-settings.properties
-          sudo echo "email_exec_from_name=Phoenix CTMS Automated Tests" >> /home/runner/work/ctsms/properties/ctsms-settings.properties
-          sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /home/runner/work/ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /home/runner/work/ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /home/runner/work/ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_username=$MAIL_SENDER_USERNAME" >> /home/runner/work/ctsms/properties/ctsms-applicationcontext.properties
-          sudo echo "job_mail_sender_password=$MAIL_SENDER_PASSWORD" >> /home/runner/work/ctsms/properties/ctsms-applicationcontext.properties
-          sudo touch /home/runner/work/ctsms/properties/ctsms-job-mail-sender.properties
-          sudo chown ctsms:ctsms /home/runner/work/ctsms/properties/ctsms-job-mail-sender.properties
-          sudo chmod 777 /home/runner/work/ctsms/properties/ctsms-job-mail-sender.properties
-          sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /home/runner/work/ctsms/properties/ctsms-job-mail-sender.properties
-          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /home/runner/work/ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "email_exec_from_address=$MAIL_SENDER_ADDRESS" >> /ctsms/properties/ctsms-settings.properties
+          sudo echo "email_exec_from_name=Phoenix CTMS Automated Tests" >> /ctsms/properties/ctsms-settings.properties
+          sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_username=$MAIL_SENDER_USERNAME" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_password=$MAIL_SENDER_PASSWORD" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo touch /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chown ctsms:ctsms /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
       - name: Initialize DB
@@ -100,13 +104,14 @@ jobs:
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh
           sudo apt-get -q -y install wkhtmltopdf
-##          xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-4.4.0.jar 2>&1 &
-##          sleep 5
-#      - name: Load demo data
-#        run: |
-#          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
+#          xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-4.4.0.jar 2>&1 &
+#          sleep 5
+      - name: Load demo data
+        run: |
+          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
       - name: Run tests
         run: |
+          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.* "Proband Tests" git@phoenixctms.org
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
 #      - name: test perl selenium remote
 #        run: |
