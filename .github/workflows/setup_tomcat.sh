@@ -7,7 +7,7 @@ systemctl stop tomcat9
 echo "CTSMS_PROPERTIES=$CTSMS_PROPERTIES" >>/etc/default/tomcat9
 echo "CTSMS_JAVA=$CTSMS_JAVA" >>/etc/default/tomcat9
 sed -r -i "s|# Lifecycle|EnvironmentFile=/etc/default/tomcat9\\n\\n# Lifecycle|" /usr/lib/systemd/system/tomcat9.service
-sed -r -i "s|# Security|# Security\\nReadWritePaths=/home/runner/work/ctsms/external_files/|" /usr/lib/systemd/system/tomcat9.service
+sed -r -i "s|# Security|# Security\\nReadWritePaths=/home/runner/work/ctsms/|" /usr/lib/systemd/system/tomcat9.service
 chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war
 rm /var/lib/tomcat9/webapps/ROOT/ -rf
 cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war

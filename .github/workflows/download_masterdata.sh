@@ -21,4 +21,4 @@ sed -r -i "s/dbtool_lock_file_name=[^=]+/dbtool_lock_file_name=\/home\/runner\/w
 chown ctsms:ctsms /home/runner/work/ctsms -R
 chmod 777 /home/runner/work/ctsms -R
 
-cat /home/runner/work/ctsms/properties/ctsms-settings.properties
+#cat /home/runner/work/ctsms/properties/ctsms-settings.properties
