@@ -10,3 +10,6 @@ tar -zxvf /home/runner/work/ctsms/master-data.tar.gz -C /home/runner/work/ctsms/
 rm /home/runner/work/ctsms/master-data.tar.gz -f
 chown ctsms:ctsms /home/runner/work/ctsms -R
 chmod 777 /home/runner/work/ctsms -R
+
+echo "external_file_data_dir=/home/runner/work/ctsms/external_files" >> /home/runner/work/ctsms/properties/ctsms-settings.properties
+sed -r -i "s/dbtool_lock_file_name=[^=]+/dbtool_lock_file_name=\/home\/runner\/work\/ctsms\/{0}.lock/" /home/runner/work/ctsms/properties/ctsms-dbtool.properties
