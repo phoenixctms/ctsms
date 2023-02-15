@@ -59,6 +59,7 @@ jobs:
           echo "CTSMS_JAVA=/home/runner/work/ctsms/java" >> $GITHUB_ENV
           sudo echo "external_file_data_dir=/home/runner/work/ctsms/external_files" >> /home/runner/work/ctsms/properties/ctsms-settings.properties
           sudo echo "dbtool_lock_file_name=/home/runner/work/ctsms/{0}.lock" >> /home/runner/work/ctsms/properties/ctsms-dbtool.properties
+          cat /home/runner/work/ctsms/properties/ctsms-dbtool.properties
       - name: Setup BulkProcessor
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
