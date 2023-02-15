@@ -57,7 +57,7 @@ jobs:
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
           echo "CTSMS_PROPERTIES=/home/runner/work/ctsms/properties" >> $GITHUB_ENV
           echo "CTSMS_JAVA=/home/runner/work/ctsms/java" >> $GITHUB_ENV
-          sed -r -i "s/external_file_data_dir=[^=]+/external_file_data_dir=\/home\/runner\/work\/ctsms\/external_files/" /home/runner/work/ctsms/properties/ctsms-settings.properties
+          sudo echo "external_file_data_dir=/home/runner/work/ctsms/external_files" >> /home/runner/work/ctsms/properties/ctsms-settings.properties
       - name: Setup BulkProcessor
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
