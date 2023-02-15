@@ -51,10 +51,6 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
           /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
-      - name: Setup database
-        run: |
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
-          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
       - name: Download master data
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
@@ -90,6 +86,8 @@ jobs:
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+          sudo chown ctsms:ctsms /home/runner/work/ctsms/ -R
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/ -R
       - name: Initialize DB
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
