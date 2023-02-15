@@ -100,14 +100,13 @@ jobs:
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh
           sudo apt-get -q -y install wkhtmltopdf
-#          xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-4.4.0.jar 2>&1 &
-#          sleep 5
-      - name: Load demo data
-        run: |
-          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
+##          xvfb-run java -Dwebdriver.chrome.driver=/usr/bin/chromedriver -jar selenium-server-standalone-4.4.0.jar 2>&1 &
+##          sleep 5
+#      - name: Load demo data
+#        run: |
+#          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
       - name: Run tests
         run: |
-          cat /var/lib/tomcat9/logs/catalina.out
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
 #      - name: test perl selenium remote
 #        run: |
