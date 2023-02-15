@@ -108,7 +108,6 @@ jobs:
       - name: Run tests
         run: |
           cat /var/lib/tomcat9/logs/catalina.out
-          /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.* "Proband Tests" git@phoenixctms.org
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
 #      - name: test perl selenium remote
 #        run: |
