@@ -998,8 +998,7 @@ public final class CoreUtil implements ApplicationContextAware {
 					Settings.getString(SettingCodes.ECRF_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.ECRF_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_IMPORTER_PROCESS_PL));
-			throw new Exception(command);
-			//return runProcess(command, blocking);
+			return runProcess(command, blocking);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.START_JOB_ERROR, DefaultMessages.START_JOB_ERROR,
 					new Object[] { e.getMessage() }));
@@ -1017,9 +1016,17 @@ public final class CoreUtil implements ApplicationContextAware {
 				// failed
 				try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
 					String line;
-					if ((line = errorReader.readLine()) != null) {
-						throw new Exception(line);
+					StringBuilder sb = new StringBuilder();
+					while ((line = errorReader.readLine()) != null) {
+						if (sb.length() > 0) {
+							sb.append("\n");
+						}
+						sb.append(line);
 					}
+					throw new Exception(line);
+					//if ((line = errorReader.readLine()) != null) {
+					//	throw new Exception(line);
+					//}
 				} catch (final IOException e) {
 					throw e;
 				}
