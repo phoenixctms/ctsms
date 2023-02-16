@@ -111,6 +111,7 @@ jobs:
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
       - name: print log
+        if: always()
         run: |
           cat /var/lib/tomcat9/logs/catalina.out
 #      - name: test perl selenium remote
