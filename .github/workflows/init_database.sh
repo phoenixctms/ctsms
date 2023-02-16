@@ -1,5 +1,11 @@
 #!/bin/bash
 
+
+CATALINA_BASE=${CATALINA_BASE:-/var/lib/tomcat9}
+printenv
+ls /var/lib/tomcat9/webapps
+
+
 #Initialize db
 /ctsms/dbtool.sh -i -f
 #Setup query criteria
