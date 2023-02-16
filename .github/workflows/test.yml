@@ -87,8 +87,6 @@ jobs:
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo mv /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh /ctsms/dbtool.sh
-          sudo chown ctsms:ctsms /home/runner/work/ctsms/ -R
-          sudo chmod 755 /home/runner/work/ctsms/ -R
       - name: Initialize DB
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
