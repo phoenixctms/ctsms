@@ -109,6 +109,9 @@ jobs:
       - name: Run tests
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
+      - name: print log
+        run: |
+          cat /var/lib/tomcat9/logs/catalina.out
 #      - name: test perl selenium remote
 #        run: |
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
