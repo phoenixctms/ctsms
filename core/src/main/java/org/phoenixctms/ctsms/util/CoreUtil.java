@@ -1000,6 +1000,7 @@ public final class CoreUtil implements ApplicationContextAware {
 					Settings.getString(SettingCodes.ECRF_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_IMPORTER_PROCESS_PL));
 			return runProcess(command, blocking);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.START_JOB_ERROR, DefaultMessages.START_JOB_ERROR,
 					new Object[] { e.getMessage() }));
 		}
