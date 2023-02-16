@@ -57,6 +57,10 @@ jobs:
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
           echo "CTSMS_PROPERTIES=/ctsms/properties" >> $GITHUB_ENV
           echo "CTSMS_JAVA=/ctsms/java" >> $GITHUB_ENV
+      - name: Setup BulkProcessor
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
       - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
@@ -80,18 +84,16 @@ jobs:
           sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
           sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
-      - name: Setup Tomcat
-        run: |
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
-          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
-      - name: Setup BulkProcessor
-        run: |
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
-          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+          sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
       - name: Initialize DB
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
           /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+      - name: Setup Tomcat
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
       - name: Setup ChromeDriver
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
@@ -106,10 +108,6 @@ jobs:
       - name: Run tests
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
-      - name: print log
-        if: always()
-        run: |
-          cat /var/lib/tomcat9/logs/catalina.out
 #      - name: test perl selenium remote
 #        run: |
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
