@@ -57,10 +57,6 @@ jobs:
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
           echo "CTSMS_PROPERTIES=/ctsms/properties" >> $GITHUB_ENV
           echo "CTSMS_JAVA=/ctsms/java" >> $GITHUB_ENV
-      - name: Setup BulkProcessor
-        run: |
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
-          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
       - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
@@ -88,6 +84,10 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
           sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
+      - name: Setup BulkProcessor
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
       - name: Initialize DB
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
