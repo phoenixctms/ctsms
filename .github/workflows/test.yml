@@ -87,7 +87,6 @@ jobs:
           sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
           sudo mv /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh /ctsms/dbtool.sh
-          sudo chmod 777 /home/runner/work/ctsms/ctsms/ -R
       - name: Initialize DB
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
@@ -113,6 +112,7 @@ jobs:
       - name: print log
         if: always()
         run: |
+          cat /ctsms/dbtool.log
           cat /var/lib/tomcat9/logs/catalina.out
 #      - name: test perl selenium remote
 #        run: |
