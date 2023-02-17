@@ -15,11 +15,11 @@ rm /var/lib/tomcat9/webapps/ROOT/ -rf
 
 #cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION/WEB-INF/lib/ctsms-core-$VERSION.jar:/home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION/WEB-INF/lib/*
 
-#chmod 777 /home
-#chmod 777 /home/runner
-#chmod 777 /home/runner/work
-#chmod 777 /home/runner/work/ctsms
-#chmod 777 /home/runner/work/ctsms/ctsms/web -R
+chmod 777 /home
+chmod 777 /home/runner
+chmod 777 /home/runner/work
+chmod 777 /home/runner/work/ctsms
+chmod 777 /home/runner/work/ctsms/ctsms/web -R
 
 cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /var/lib/tomcat9/webapps/ROOT.war
 systemctl daemon-reload
