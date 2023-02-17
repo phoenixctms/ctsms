@@ -94,3 +94,5 @@ chmod 755 /ctsms/ecrfdataimport.sh
 wget --no-verbose https://raw.githubusercontent.com/phoenixctms/install-debian/master/inquirydataexport.sh -O /ctsms/inquirydataexport.sh
 chown ctsms:ctsms /ctsms/inquirydataexport.sh
 chmod 755 /ctsms/inquirydataexport.sh
+
+echo "publish_public_file: 1" >>/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/ETL/EcrfExporter/settings.yml
