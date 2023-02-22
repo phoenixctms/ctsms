@@ -112,6 +112,11 @@ jobs:
 #        run: |
 #          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
       - name: Run tests
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PATH: ${{ secrets.FTP_PATH }}
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
 #      - name: test perl selenium remote
