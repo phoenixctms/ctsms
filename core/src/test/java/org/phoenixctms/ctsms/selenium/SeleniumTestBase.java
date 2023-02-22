@@ -1216,7 +1216,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			}
 		}
 		if (zip != null) {
-			String zipFilename = "generated_pdfs.zip";
+			String zipFilename = System.getProperty("ctsms.test.name") + ".zip";
 			getReportEmailSender().addEmailAttachment(zip.zipFiles(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, zipFilename);
 			zip.zipFiles(getTestDirectory(), zipFilename);
 			File zipFile = new File(getTestDirectory(), zipFilename);
