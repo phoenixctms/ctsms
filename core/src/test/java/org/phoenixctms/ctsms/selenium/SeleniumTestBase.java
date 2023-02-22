@@ -1,8 +1,10 @@
 package org.phoenixctms.ctsms.selenium;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,6 +23,8 @@ import java.util.regex.Pattern;
 //import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -165,17 +169,21 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 	private TestDataProvider testDataProvider;
 	private ReportEmailSender reportEmailSender;
 	private static ArrayList<ITestContext> results;
+	private static ArrayList<File> reportFiles;
 	//	private ScreenRecorder screenRecorder;
 	//	private int movieCount = 0;
 	static {
 		results = new ArrayList<ITestContext>();
+		reportFiles = new ArrayList<File>();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
 			public void run() {
 				//System.out.println("Shutdown Hook is running !");
 				try {
-					(new SeleniumTestBase() {
-					}).sendReportEmail();
+					SeleniumTestBase t = (new SeleniumTestBase() {
+					});
+					t.sendReportEmail();
+					t.saveAttachmentsToFTP();
 				} catch (Throwable t) {
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
@@ -930,6 +938,65 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		results.add(context);
 	}
 
+	void saveAttachmentsToFTP() throws Exception {
+		String host = System.getProperty("ftp.host");
+		if (!CommonUtil.isEmptyString(host)) {
+			FTPClient client = new FTPClient();
+			try {
+				client.connect(host);
+				client.setFileType(FTP.BINARY_FILE_TYPE);
+				client.enterLocalPassiveMode();
+				client.login(System.getProperty("ftp.username"), System.getProperty("ftp.password"));
+				String path = System.getProperty("ftp.path");
+				if (!CommonUtil.isEmptyString(path)) {
+					path = MessageFormat.format(path, System.getProperty("ctsms.test.version"), System.getProperty("git.commit"));
+					client.makeDirectory(path);
+					//if (!client.makeDirectory(path)) {
+					//	throw new Exception("failed to create directory " + path);
+					//}
+				}
+				Iterator<File> it = reportFiles.iterator();
+				while (it.hasNext()) {
+					File reportFile = it.next();
+					FileInputStream fis = null;
+					try {
+						fis = new FileInputStream(reportFile);
+						StringBuilder remoteFilename = new StringBuilder();
+						if (!CommonUtil.isEmptyString(path)) {
+							remoteFilename.append(path);
+							if (!path.endsWith("/") && path.length() > 1) {
+								remoteFilename.append("/");
+							}
+						}
+						remoteFilename.append(reportFile.getName());
+						if (!client.storeFile(remoteFilename.toString(), fis)) {
+							throw new Exception("failed to store remote file " + remoteFilename.toString());
+						}
+						//} catch (IOException e) {
+						//	e.printStackTrace();
+					} finally {
+						try {
+							if (fis != null) {
+								fis.close();
+							}
+						} catch (IOException e) {
+							//e.printStackTrace();
+						}
+					}
+				}
+				client.logout();
+				//} catch (IOException e) {
+				//	e.printStackTrace();
+			} finally {
+				try {
+					client.disconnect();
+				} catch (IOException e) {
+					//e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	void sendReportEmail() throws Throwable {
 		attachReports(true);
 		boolean failure = false;
@@ -1134,6 +1201,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 						info(String.join(" ", command));
 						CoreUtil.runProcess(true, command);
 						getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
+						reportFiles.add(pdfFile);
 					}
 				} else if (CommonUtil.getMimeType(files[i]).equals(CoreUtil.PDF_MIMETYPE_STRING)) {
 					if (zip == null) {
@@ -1148,7 +1216,12 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			}
 		}
 		if (zip != null) {
-			getReportEmailSender().addEmailAttachment(zip.zipFiles(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "generated_pdfs.zip");
+			String zipFilename = "generated_pdfs.zip";
+			getReportEmailSender().addEmailAttachment(zip.zipFiles(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, zipFilename);
+			zip.zipFiles(getTestDirectory(), zipFilename);
+			File zipFile = new File(getTestDirectory(), zipFilename);
+			reportFiles.add(zipFile);
+			zipFile.deleteOnExit();
 		}
 		//getReportEmailSender().addEmailAttachment((new Compress()).zipDirectory(getTestDirectory()), Compress.ZIP_MIMETYPE_STRING, "test_results.zip");
 	}
