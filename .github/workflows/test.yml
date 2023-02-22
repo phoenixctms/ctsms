@@ -110,7 +110,7 @@ jobs:
 #          sleep 5
       - name: Load demo data
         run: |
-          /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh -ldd -f
+          /ctsms/dbtool.sh -ldd -f
       - name: Run tests
         env:
           FTP_HOST: ${{ secrets.FTP_HOST }}
