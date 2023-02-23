@@ -321,6 +321,10 @@ public class ApplicationScopeBean {
 		return WebUtil.getAnalyticsUrl(Settings.getString(SettingCodes.BANNER_IMAGE_URL, Bundle.SETTINGS, DefaultSettings.BANNER_IMAGE_URL), data);
 	}
 
+	public String getValidationReportsUrl() {
+		return Settings.getString(SettingCodes.VALIDATION_REPORTS_URL, Bundle.SETTINGS, DefaultSettings.VALIDATION_REPORTS_URL);
+	}
+
 	public String getGoogleApiUrl() {
 		return Settings.getString(SettingCodes.GOOGLE_API_URL, Bundle.SETTINGS, DefaultSettings.GOOGLE_API_URL);
 	}
