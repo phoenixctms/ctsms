@@ -1202,6 +1202,9 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 						CoreUtil.runProcess(true, command);
 						getReportEmailSender().addEmailAttachment(pdfFile, CoreUtil.PDF_MIMETYPE_STRING, pdfFile.getName());
 						reportFiles.add(pdfFile);
+						if (delete) {
+							pdfFile.deleteOnExit();
+						}
 					}
 				} else if (CommonUtil.getMimeType(files[i]).equals(CoreUtil.PDF_MIMETYPE_STRING)) {
 					if (zip == null) {
