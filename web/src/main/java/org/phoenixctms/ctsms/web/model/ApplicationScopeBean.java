@@ -322,7 +322,9 @@ public class ApplicationScopeBean {
 	}
 
 	public String getValidationReportsUrl() {
-		return Settings.getString(SettingCodes.VALIDATION_REPORTS_URL, Bundle.SETTINGS, DefaultSettings.VALIDATION_REPORTS_URL);
+		String url = Settings.getString(SettingCodes.VALIDATION_REPORTS_URL, Bundle.SETTINGS, DefaultSettings.VALIDATION_REPORTS_URL);
+		url.replaceAll(" ", "%20");
+		return url;
 	}
 
 	public String getGoogleApiUrl() {
