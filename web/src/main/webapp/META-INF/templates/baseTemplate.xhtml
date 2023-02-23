@@ -384,8 +384,14 @@
 					<h:outputText rendered="#{statusBarShowText}"
 						styleClass="ctsms-statusbar-icon-small ctsms-icon-information"
 						value="#{statusBarText}" escape="false" />
-					<h:outputText value="#{applicationScopeBean.applicationInstance}"
+						
+					<h:outputText rendered="#{empty applicationScopeBean.validationReportsUrl}" value="#{applicationScopeBean.applicationInstance}"
 						escape="false" />
+						
+					<h:outputLink rendered="#{not empty applicationScopeBean.validationReportsUrl}" value="#{applicationScopeBean.validationReportsUrl}">
+						<h:outputText value="#{applicationScopeBean.applicationInstance}" escape="false" />
+					</h:outputLink>
+						
 					<h:outputLink value="mailto:#{applicationScopeBean.contactEmail}">
 						<f:param name="subject" value="#{labels.contact_subject}" />
 						<h:outputText value="#{labels.contact_label}" escape="false" />

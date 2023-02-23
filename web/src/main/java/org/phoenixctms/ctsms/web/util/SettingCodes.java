@@ -19,6 +19,7 @@ public interface SettingCodes {
 	public final static String BANNER_IMAGE_URL = "banner_image_url";
 	public final static String ANALYTICS_UUID = "analytics_uuid";
 	public final static String ANALYTICS_VERSION = "analytics_version";
+	public final static String VALIDATION_REPORTS_URL = "validation_reports_url";
 	public final static String SHOW_HOLIDAYS = "show_holidays";
 	public final static String ENABLE_TOOLTIPS = "enable_tooltips";
 	public final static String INVENTORY_MAINTENANCE_DUE_IN_DURATIONS = "inventory_maintenance_due_in_durations";
