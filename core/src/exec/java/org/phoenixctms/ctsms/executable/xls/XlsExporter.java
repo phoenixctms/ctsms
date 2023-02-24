@@ -17,7 +17,6 @@ public class XlsExporter extends XlsExporterBase {
 	protected EcrfFieldRowWriter ecrfFieldRowWriter;
 	@Autowired
 	protected EcrfRowWriter ecrfRowWriter;
-	private JobOutput jobOutput;
 
 	public XlsExporter() {
 	}
@@ -55,15 +54,11 @@ public class XlsExporter extends XlsExporterBase {
 	}
 
 	protected void addEmailXlsAttachment(byte[] data) {
-		jobOutput.addEmailXlsAttachment(data);
+		((JobOutput) jobOutput).addEmailXlsAttachment(data);
 	}
 
 	private void setContext(RowWriter writer, XlsExporterContext context) {
 		writer.setContext(context);
 		writer.setJobOutput(jobOutput);
-	}
-
-	public void setJobOutput(JobOutput jobOutput) {
-		this.jobOutput = jobOutput;
 	}
 }
