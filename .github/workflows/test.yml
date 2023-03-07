@@ -31,6 +31,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build
         run: |
+          mvn -version
           VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA")
