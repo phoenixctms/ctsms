@@ -23,6 +23,10 @@ jobs:
 #        uses: actions/setup-java@v1
 #        with:
 #          java-version: 11
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.7
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
