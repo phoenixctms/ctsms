@@ -11,6 +11,7 @@
 #wget --no-verbose https://chromedriver.storage.googleapis.com/106.0.5249.61/chromedriver_linux64.zip
 wget --no-verbose https://chromedriver.storage.googleapis.com/109.0.5414.25/chromedriver_linux64.zip
 #wget --no-verbose https://chromedriver.storage.googleapis.com/108.0.5359.71/chromedriver_linux64.zip
+wget --no-verbose https://chromedriver.storage.googleapis.com/113.0.5672.1/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 
 mv chromedriver /usr/bin/chromedriver
