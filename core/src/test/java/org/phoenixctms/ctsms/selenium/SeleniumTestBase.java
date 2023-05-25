@@ -390,6 +390,8 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			if (!CommonUtil.isEmptyString(windowSize)) {
 				chromeOptions.addArguments("--window-size=" + windowSize); //3840,2160");
 			}
+			//https://stackoverflow.com/questions/75678572/java-io-ioexception-invalid-status-code-403-text-forbidden
+			chromeOptions.addArguments("--remote-allow-origins=*");
 			//https://stackoverflow.com/questions/34515328/how-to-set-default-download-directory-in-selenium-chrome-capabilities
 			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
 			chromePrefs.put("profile.default_content_settings.popups", 0);
