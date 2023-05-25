@@ -4,7 +4,7 @@ mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -D
 sudo useradd ctsms -p '*' --groups sudo
 #sudo apt-get install --yes postgresql
 sudo apt-get -q -y install postgresql-plperl
-sudo sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/12/main/postgresql.conf
+sudo sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" /etc/postgresql/14/main/postgresql.conf
 sudo service postgresql start
 sudo -u postgres psql postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
 sudo -u postgres psql postgres -c "CREATE DATABASE ctsms;"
