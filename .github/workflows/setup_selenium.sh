@@ -15,7 +15,7 @@ google-chrome --version
 #wget --no-verbose https://chromedriver.storage.googleapis.com/108.0.5359.71/chromedriver_linux64.zip
 #wget --no-verbose https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_linux64.zip
 wget --no-verbose https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/linux64/chromedriver-linux64.zip
-unzip chromedriver_linux64.zip
+unzip chromedriver-linux64.zip
 
 mv chromedriver /usr/bin/chromedriver
 chown root:root /usr/bin/chromedriver
