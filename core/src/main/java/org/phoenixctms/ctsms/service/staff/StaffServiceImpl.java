@@ -1311,7 +1311,7 @@ public class StaffServiceImpl
 		Staff staff = dutyRosterTurn.getStaff();
 		if (staff != null) {
 			StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
-			collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staff.getId(), dutyRosterTurn.getStart(), dutyRosterTurn.getStop(), false, true, false);
+			collidingStaffStatusEntries = staffStatusEntryDao.findByStaffInterval(staff.getId(), dutyRosterTurn.getStart(), dutyRosterTurn.getStop(), false, true, true, false);
 			staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		} else {
 			collidingStaffStatusEntries = new ArrayList<StaffStatusEntryOutVO>();
@@ -1325,7 +1325,7 @@ public class StaffServiceImpl
 		CheckIDUtil.checkStaffId(staffId, this.getStaffDao());
 		StaffStatusEntryDao staffStatusEntryDao = this.getStaffStatusEntryDao();
 		Collection collidingStaffStatusEntries = staffStatusEntryDao
-				.findByStaffInterval(staffId, CommonUtil.dateToTimestamp(start), CommonUtil.dateToTimestamp(stop), false, true, false);
+				.findByStaffInterval(staffId, CommonUtil.dateToTimestamp(start), CommonUtil.dateToTimestamp(stop), false, true, true, false);
 		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		return collidingStaffStatusEntries;
 	}
@@ -1712,7 +1712,8 @@ public class StaffServiceImpl
 			CheckIDUtil.checkStaffCategoryId(staffCategoryId, this.getStaffCategoryDao());
 		}
 		StaffStatusEntryDao statusEntryDao = this.getStaffStatusEntryDao();
-		Collection staffStatusEntries = statusEntryDao.findStaffStatus(CommonUtil.dateToTimestamp(now), staffId, departmentId, staffCategoryId, staffActive, hideAvailability, psf);
+		Collection staffStatusEntries = statusEntryDao.findStaffStatus(CommonUtil.dateToTimestamp(now), staffId, departmentId, staffCategoryId, staffActive, true, hideAvailability,
+				psf);
 		statusEntryDao.toStaffStatusEntryOutVOCollection(staffStatusEntries);
 		return staffStatusEntries;
 	}
@@ -1746,7 +1747,7 @@ public class StaffServiceImpl
 		}
 		StaffStatusEntryDao statusEntryDao = this.getStaffStatusEntryDao();
 		Collection staffStatusEntries = statusEntryDao.findByDepartmentCategoryInterval(departmentId, staffCategoryId, CommonUtil.dateToTimestamp(from),
-				CommonUtil.dateToTimestamp(to), null, null, hideAvailability);
+				CommonUtil.dateToTimestamp(to), null, true, true, hideAvailability);
 		statusEntryDao.toStaffStatusEntryOutVOCollection(staffStatusEntries);
 		if (sort) {
 			staffStatusEntries = new ArrayList(staffStatusEntries);
