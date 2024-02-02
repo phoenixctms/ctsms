@@ -996,7 +996,7 @@ public class InventoryServiceImpl
 			while (it.hasNext()) {
 				CourseParticipationStatusEntry courseParticipationStatusEntry = it.next();
 				collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(courseParticipationStatusEntry.getStaff().getId(), courseInventoryBooking.getStart(),
-						courseInventoryBooking.getStop(), false, null, false));
+						courseInventoryBooking.getStop(), false, true, null, false));
 			}
 			staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 			return new ArrayList<StaffStatusEntryOutVO>(collidingStaffStatusEntries);
