@@ -36,7 +36,7 @@ public class StaffStatusEntryDaoImpl
 	@Override
 	protected Collection<StaffStatusEntry> handleFindByDepartmentCategoryInterval(
 			Long departmentId, Long staffCategoryId, Timestamp from,
-			Timestamp to, Boolean staffActive, Boolean allocatable, Boolean hideAvailability)
+			Timestamp to, Boolean staffActive, Boolean employee, Boolean allocatable, Boolean hideAvailability)
 			throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
@@ -49,7 +49,7 @@ public class StaffStatusEntryDaoImpl
 				typeCriteria.add(Restrictions.eq("hideAvailability", hideAvailability.booleanValue()));
 			}
 		}
-		if (departmentId != null || staffCategoryId != null || allocatable != null) {
+		if (departmentId != null || staffCategoryId != null || allocatable != null || employee != null) {
 			Criteria staffCriteria = statusEntryCriteria.createCriteria("staff", CriteriaSpecification.INNER_JOIN);
 			if (departmentId != null) {
 				staffCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
@@ -59,6 +59,9 @@ public class StaffStatusEntryDaoImpl
 			}
 			if (allocatable != null) {
 				staffCriteria.add(Restrictions.eq("allocatable", allocatable.booleanValue()));
+			}
+			if (employee != null) {
+				staffCriteria.add(Restrictions.eq("employee", employee.booleanValue()));
 			}
 		}
 		return statusEntryCriteria.list();
@@ -78,7 +81,7 @@ public class StaffStatusEntryDaoImpl
 
 	@Override
 	protected Collection<StaffStatusEntry> handleFindByStaffInterval(
-			Long staffId, Timestamp from, Timestamp to, Boolean staffActive, Boolean allocatable, Boolean hideAvailability)
+			Long staffId, Timestamp from, Timestamp to, Boolean staffActive, Boolean employee, Boolean allocatable, Boolean hideAvailability)
 			throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		CriteriaUtil.applyStopOpenIntervalCriterion(statusEntryCriteria, from, to, null);
@@ -94,8 +97,14 @@ public class StaffStatusEntryDaoImpl
 		if (staffId != null) {
 			statusEntryCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
 		}
-		if (allocatable != null) {
-			statusEntryCriteria.createCriteria("staff", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("allocatable", allocatable.booleanValue()));
+		if (allocatable != null || employee != null) {
+			Criteria staffCriteria = statusEntryCriteria.createCriteria("staff", CriteriaSpecification.INNER_JOIN);
+			if (allocatable != null) {
+				staffCriteria.add(Restrictions.eq("allocatable", allocatable.booleanValue()));
+			}
+			if (employee != null) {
+				staffCriteria.add(Restrictions.eq("employee", employee.booleanValue()));
+			}
 		}
 		return statusEntryCriteria.list();
 	}
@@ -103,7 +112,7 @@ public class StaffStatusEntryDaoImpl
 	@Override
 	protected Collection<StaffStatusEntry> handleFindStaffStatus(Timestamp now,
 			Long staffId, Long departmentId, Long staffCategoryId,
-			Boolean staffActive, Boolean hideAvailability, PSFVO psf) throws Exception {
+			Boolean staffActive, Boolean employee, Boolean hideAvailability, PSFVO psf) throws Exception {
 		Criteria statusEntryCriteria = createStatusEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(StaffStatusEntry.class, statusEntryCriteria);
 		if (staffId != null) {
@@ -114,6 +123,9 @@ public class StaffStatusEntryDaoImpl
 		}
 		if (staffCategoryId != null) {
 			criteriaMap.createCriteria("staff").add(Restrictions.eq("category.id", staffCategoryId.longValue()));
+		}
+		if (employee != null) {
+			criteriaMap.createCriteria("staff").add(Restrictions.eq("employee", employee.booleanValue()));
 		}
 		if (staffActive != null) {
 			criteriaMap.createCriteria("type").add(Restrictions.eq("staffActive", staffActive.booleanValue()));
