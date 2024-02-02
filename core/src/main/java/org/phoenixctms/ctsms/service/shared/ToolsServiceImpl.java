@@ -1129,7 +1129,8 @@ public class ToolsServiceImpl
 				}
 			}
 		}
-		Iterator<StaffStatusEntry> staffStatusIt = this.getStaffStatusEntryDao().findStaffStatus(CommonUtil.dateToTimestamp(today), null, departmentId, null, false, null, null)
+		Iterator<StaffStatusEntry> staffStatusIt = this.getStaffStatusEntryDao()
+				.findStaffStatus(CommonUtil.dateToTimestamp(today), null, departmentId, null, false, true, null, null)
 				.iterator();
 		while (staffStatusIt.hasNext()) {
 			StaffStatusEntry staffStatusEntry = staffStatusIt.next();
