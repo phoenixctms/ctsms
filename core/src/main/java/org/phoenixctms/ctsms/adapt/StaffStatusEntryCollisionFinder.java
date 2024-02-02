@@ -36,7 +36,8 @@ public class StaffStatusEntryCollisionFinder extends CollisionFinder<StaffStatus
 	@Override
 	protected Collection<StaffStatusEntry> getCollidingItems(
 			StaffStatusEntryInVO in, Staff root) {
-		return staffStatusEntryDao.findByStaffInterval(in.getStaffId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false, null, null);
+		return staffStatusEntryDao.findByStaffInterval(in.getStaffId(), CommonUtil.dateToTimestamp(in.getStart()), CommonUtil.dateToTimestamp(in.getStop()), false, null, null,
+				null);
 	}
 
 	@Override
