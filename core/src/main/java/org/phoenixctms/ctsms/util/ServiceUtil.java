@@ -4663,7 +4663,7 @@ public final class ServiceUtil {
 					durationSummaryDetail.setStaffStatusEntryDuration(0);
 					if (!trialBreakDown && staff != null) {
 						Iterator<StaffStatusEntry> statusEntryIt = staffStatusEntryDao.findByStaffInterval(staff.getId(), CommonUtil.dateToTimestamp(summary.getStart()),
-								CommonUtil.dateToTimestamp(summary.getStop()), false, null, false).iterator();
+								CommonUtil.dateToTimestamp(summary.getStop()), false, null, null, false).iterator();
 						while (statusEntryIt.hasNext()) {
 							StaffStatusEntry statusEntry = statusEntryIt.next();
 							Date start = statusEntry.getStart();
