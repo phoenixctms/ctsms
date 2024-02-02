@@ -596,8 +596,9 @@ public class CourseServiceImpl
 				.findByCourseSorted(courseParticipationStatusEntry.getCourse().getId(), isRelevantForCourseAppointments, false).iterator();
 		while (it.hasNext()) {
 			InventoryBooking courseInventoryBooking = it.next();
-			collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(staffId, courseInventoryBooking.getStart(), courseInventoryBooking.getStop(), false, null,
-					false));
+			collidingStaffStatusEntries
+					.addAll(staffStatusEntryDao.findByStaffInterval(staffId, courseInventoryBooking.getStart(), courseInventoryBooking.getStop(), false, true, null,
+							false));
 		}
 		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		return new ArrayList<StaffStatusEntryOutVO>(collidingStaffStatusEntries);
