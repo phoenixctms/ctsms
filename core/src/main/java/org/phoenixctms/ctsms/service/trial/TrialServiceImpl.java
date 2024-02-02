@@ -5537,7 +5537,7 @@ public class TrialServiceImpl
 		Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao().findExpandedDateMode(visitScheduleItem.getId(), null).iterator();
 		while (it.hasNext()) {
 			VisitScheduleItem expanded = it.next();
-			collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(staffId, expanded.getStart(), expanded.getStop(), false, true, false));
+			collidingStaffStatusEntries.addAll(staffStatusEntryDao.findByStaffInterval(staffId, expanded.getStart(), expanded.getStop(), false, true, true, false));
 		}
 		staffStatusEntryDao.toStaffStatusEntryOutVOCollection(collidingStaffStatusEntries);
 		collidingStaffStatusEntries = new ArrayList<StaffStatusEntryOutVO>(collidingStaffStatusEntries);
