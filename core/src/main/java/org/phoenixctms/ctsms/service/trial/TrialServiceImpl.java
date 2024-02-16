@@ -1884,9 +1884,10 @@ public class TrialServiceImpl
 			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, null);
 			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX, null);
 			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX, null);
+			String departmentToken = user.getDepartment().getNameL10nKey();
 			String likePattern = likeFormat.format(
 					new Object[] {
-							CommonUtil.escapeSqlLikeWildcards(user.getDepartment().getNameL10nKey()), // {0}
+							CommonUtil.escapeSqlLikeWildcards(departmentToken), // {0}
 							null, // {1}
 							null, // {2}
 							null, // {3}
@@ -1911,13 +1912,24 @@ public class TrialServiceImpl
 				} else {
 					alias = maxAliasProband.getAnimalParticulars().getAlias();
 				}
-				maxAlias0based = parseFormatLongAndIncrement(alias, trial.getProbandAliasFormat(),
+				String maxAliasFormat = (new MessageFormat(trial.getProbandAliasFormat())).format(
+						new Object[] {
+								departmentToken, // {0}
+								null, // {1}
+								null, // {2}
+								null, // {3}
+								null, // {4}
+								null // {5}
+						},
+						new StringBuffer(),
+						null).toString();
+				maxAlias0based = parseFormatLongAndIncrement(alias, maxAliasFormat,
 						PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, maxAlias0based);
-				maxAlias1based = parseFormatLongAndIncrement(alias, trial.getProbandAliasFormat(),
+				maxAlias1based = parseFormatLongAndIncrement(alias, maxAliasFormat,
 						PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, maxAlias1based);
 			}
 			String alias = MessageFormat.format(trial.getProbandAliasFormat(),
-					user.getDepartment().getNameL10nKey(), // {0}
+					departmentToken, // {0}
 					null, // {1}
 					null, // {2}
 					null, // {3}
