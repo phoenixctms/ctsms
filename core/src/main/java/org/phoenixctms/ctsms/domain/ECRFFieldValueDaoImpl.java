@@ -845,6 +845,20 @@ public class ECRFFieldValueDaoImpl
 	}
 
 	@Override
+	protected Collection<Long> handleGetIndexes(Long probandListEntryId, Long visitId, Long ecrfFieldId) throws Exception {
+		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
+		ecrfFieldValueCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
+		if (visitId != null) {
+			ecrfFieldValueCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldValueCriteria.add(Restrictions.isNull("visit.id"));
+		}
+		ecrfFieldValueCriteria.addOrder(Order.asc("index"));
+		return ecrfFieldValueCriteria.setProjection(Projections.distinct(Projections.property("index"))).list();
+	}
+
+	@Override
 	protected Long handleGetMaxIndex(Long probandListEntryId, Long ecrfId, Long visitId, String section) throws Exception {
 		org.hibernate.Criteria ecrfFieldValueCriteria = createEcrfFieldValueCriteria(null);
 		if (probandListEntryId != null) {
@@ -976,6 +990,7 @@ public class ECRFFieldValueDaoImpl
 			target.setJsValueExpression(ecrfField.getJsValueExpression());
 			target.setJsOutputExpression(ecrfField.getJsOutputExpression());
 			target.setSection(ecrfField.getSection());
+			//target.setRef(ecrfField.getRef());
 			ECRF ecrf = ecrfField.getEcrf();
 			if (ecrf != null) {
 				Iterator it = ecrf.getGroups().iterator();
