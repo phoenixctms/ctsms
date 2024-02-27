@@ -40,5 +40,17 @@ if get_database_version() < '010801020' then
   
 end if;
 
+if get_database_version() < '010801030' then
+
+  create extension if not exists "uuid-ossp";
+
+  alter table ECRF_FIELD add column REF CHARACTER VARYING(1024);
+  update ECRF_FIELD set REF = left(replace(uuid_generate_v4()::text,'-',''),8);
+  alter table ECRF_FIELD alter REF set not null;
+  
+  perform set_database_version('010801030');
+  
+end if;
+
 end
 $$;
