@@ -2013,6 +2013,7 @@ public final class ServiceUtil {
 		ecrfFieldValueVO.setJsOutputExpression(ecrfField.getJsOutputExpression());
 		ecrfFieldValueVO.setDisabled(ecrfField.isDisabled());
 		ecrfFieldValueVO.setSection(ecrfField.getSection());
+		//ecrfFieldValueVO.setRef(  ecrfField.getRef()   );
 		ECRF ecrf = ecrfField.getEcrf();
 		if (ecrf != null) {
 			Iterator it = ecrf.getGroups().iterator();
