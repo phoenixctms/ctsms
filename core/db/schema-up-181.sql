@@ -7,6 +7,6 @@ alter table PASSWORD add column OTP_SECRET_SALT BYTEA unique;
 alter table PASSWORD add column OTP_SECRET_IV BYTEA unique;
 alter table PASSWORD add column ENCRYPTED_OTP_SECRET BYTEA unique;
 
-alter table PASSWORD add column SHOW_OTP_REGISTRATION_INFO BOOLEAN;
+alter table PASSWORD add column SHOW_OTP_REGISTRATION_INFO CHARACTER VARYING(1024);
 update PASSWORD set SHOW_OTP_REGISTRATION_INFO = 'f';
 alter table PASSWORD alter SHOW_OTP_REGISTRATION_INFO set not null;
