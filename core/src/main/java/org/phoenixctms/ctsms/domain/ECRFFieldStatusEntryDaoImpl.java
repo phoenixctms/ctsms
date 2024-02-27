@@ -405,6 +405,20 @@ public class ECRFFieldStatusEntryDaoImpl
 	}
 
 	@Override
+	protected Collection<Long> handleGetIndexes(Long probandListEntryId, Long visitId, Long ecrfFieldId) throws Exception {
+		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria(null);
+		ecrfFieldStatusEntryCriteria.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+		ecrfFieldStatusEntryCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
+		if (visitId != null) {
+			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("visit.id", visitId.longValue()));
+		} else {
+			ecrfFieldStatusEntryCriteria.add(Restrictions.isNull("visit.id"));
+		}
+		ecrfFieldStatusEntryCriteria.addOrder(Order.asc("index"));
+		return ecrfFieldStatusEntryCriteria.setProjection(Projections.distinct(Projections.property("index"))).list();
+	}
+
+	@Override
 	protected long handleGetCount(ECRFFieldStatusQueue queue, Long probandListEntryId, boolean last, Boolean initial, Boolean updated, Boolean proposed, Boolean resolved)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
