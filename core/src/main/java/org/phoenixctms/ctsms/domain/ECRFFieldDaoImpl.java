@@ -256,6 +256,36 @@ public class ECRFFieldDaoImpl
 	}
 
 	@Override
+	protected ECRFField handleFindFirst(Long ecrfId, String section,
+			Long excludeId) throws Exception {
+		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
+		ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		if (section != null && section.length() > 0) {
+			ecrfFieldCriteria.add(Restrictions.eq("section", section));
+		} else {
+			ecrfFieldCriteria.add(Restrictions.or(Restrictions.eq("section", ""), Restrictions.isNull("section")));
+		}
+		if (excludeId != null) {
+			ecrfFieldCriteria.add(Restrictions.ne("id", excludeId.longValue()));
+		}
+		ecrfFieldCriteria.addOrder(Order.desc("position"));
+		ecrfFieldCriteria.setMaxResults(1);
+		return (ECRFField) ecrfFieldCriteria.uniqueResult();
+	}
+
+	@Override
+	protected Collection<ECRFField> handleFindByEcrfRef(Long ecrfId, String ref) throws Exception {
+		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
+		if (ecrfId != null) {
+			ecrfFieldCriteria.add(Restrictions.eq("ecrf.id", ecrfId.longValue()));
+		}
+		if (ref != null) {
+			ecrfFieldCriteria.add(Restrictions.eq("ref", ref));
+		}
+		return ecrfFieldCriteria.list();
+	}
+
+	@Override
 	protected Collection<ECRFField> handleFindByTrialEcrfSectionSeriesJs(Long trialId, Long ecrfId, String section, boolean sort, Boolean series, Boolean js, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
