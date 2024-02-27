@@ -519,7 +519,6 @@ public class ProbandServiceImpl
 			parentCount++;
 		}
 		if (!isParent) {
-			ProbandDao probandDao = this.getProbandDao();
 			if (parentCount >= 2) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CHILD_TWO_PARENTS, child.getId().toString());
 			}

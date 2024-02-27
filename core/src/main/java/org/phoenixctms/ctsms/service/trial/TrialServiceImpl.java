@@ -36,6 +36,7 @@ import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.EcrfFieldJsVariableNameCollisionFinder;
 import org.phoenixctms.ctsms.adapt.EcrfFieldMoveAdapter;
 import org.phoenixctms.ctsms.adapt.EcrfFieldPositionCollisionFinder;
+import org.phoenixctms.ctsms.adapt.EcrfFieldRefCollisionFinder;
 import org.phoenixctms.ctsms.adapt.EcrfFieldSeriesCollisionFinder;
 import org.phoenixctms.ctsms.adapt.EcrfFieldValueCollisionFinder;
 import org.phoenixctms.ctsms.adapt.EcrfNameRevisionCollisionFinder;
@@ -341,7 +342,7 @@ public class TrialServiceImpl
 	}
 
 	private ECRFFieldOutVO addEcrfField(ECRFFieldInVO newEcrfField, Timestamp now, User user) throws Exception {
-		checkAddEcrfFieldInput(newEcrfField);
+		checkAddEcrfFieldInput(newEcrfField, true);
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		ECRFField ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(newEcrfField);
 		CoreUtil.modifyVersion(ecrfField, now, user);
@@ -1027,24 +1028,24 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn) throws ServiceException {
-		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
+		CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
 		if (!trial.equals(ecrf.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WRONG_ECRF, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
-		checkEcrfFieldInput(ecrfFieldIn);
+		checkEcrfFieldInput(ecrfFieldIn, checkDeferredConstraints);
 		ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
-		if (ecrfFieldIn.getSeries()
+		if (checkDeferredConstraints && ecrfFieldIn.getSeries()
 				&& this.getECRFFieldDao().getCount(null, ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection(), null, null) > 0 // optimization, bulk inserts
 		) {
 			if (this.getECRFFieldValueDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
 			}
 			if (this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
 			}
 		}
 	}
@@ -1253,7 +1254,7 @@ public class TrialServiceImpl
 		return listEntry;
 	}
 
-	private void checkEcrfFieldInput(ECRFFieldInVO ecrfFieldIn) throws ServiceException {
+	private void checkEcrfFieldInput(ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
 		if (ecrfFieldIn.getSection() != null && !ecrfFieldIn.getSection().trim().equals(ecrfFieldIn.getSection())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_FIELD_SECTION, ecrfFieldIn.getSection());
 		}
@@ -1267,9 +1268,6 @@ public class TrialServiceImpl
 			if (!JS_VARIABLE_NAME_REGEXP.matcher(ecrfFieldIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_INVALID, ecrfFieldIn.getJsVariableName());
 			}
-			if ((new EcrfFieldJsVariableNameCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE, ecrfFieldIn.getJsVariableName());
-			}
 		}
 		if (ecrfFieldIn.getNotify() && !hasJsValueExpression && !hasJsOutputExpression) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_NO_EXPRESSION_FOR_NOTIFY);
@@ -1277,12 +1275,26 @@ public class TrialServiceImpl
 		if (ecrfFieldIn.getReasonForChangeRequired() && !ecrfFieldIn.getAuditTrail()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_AUDIT_TRAIL_FALSE);
 		}
+		if (checkDeferredConstraints) {
+			checkEcrfFieldInputDeferredConstraints(ecrfFieldIn);
+		}
+	}
+
+	private void checkEcrfFieldInputDeferredConstraints(ECRFFieldInVO ecrfFieldIn) throws ServiceException {
 		if ((new EcrfFieldSeriesCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
 			// all fields within section must have same "series" flag
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_FLAG_INCONSISTENT, ecrfFieldIn.getSection());
 		}
 		if ((new EcrfFieldPositionCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
+		}
+		if (!CommonUtil.isEmptyString(ecrfFieldIn.getJsVariableName())) {
+			if ((new EcrfFieldJsVariableNameCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_NOT_UNIQUE, ecrfFieldIn.getJsVariableName());
+			}
+		}
+		if ((new EcrfFieldRefCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_REF_NOT_UNIQUE);
 		}
 	}
 
@@ -1987,7 +1999,7 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkUpdateEcrfFieldInput(ECRFField originalEcrfField, ECRFFieldInVO ecrfFieldIn) throws ServiceException {
+	private void checkUpdateEcrfFieldInput(ECRFField originalEcrfField, ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
 		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalEcrfField.getTrial())) {
@@ -1998,54 +2010,74 @@ public class TrialServiceImpl
 		if (!trial.equals(ecrf.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WRONG_ECRF, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
-		checkEcrfFieldInput(ecrfFieldIn); // lock
+		checkEcrfFieldInput(ecrfFieldIn, checkDeferredConstraints); // lock
 		boolean sectionChanged = this.getECRFFieldDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection(), ecrfFieldIn.getId()) == 0l;
 		if (!ecrf.equals(originalEcrfField.getEcrf())
 				|| sectionChanged
 				|| originalEcrfField.isSeries() != ecrfFieldIn.getSeries()
 				|| !field.equals(originalEcrfField.getField())
-				|| originalEcrfField.getPosition() != ecrfFieldIn.getPosition()) {
+				|| originalEcrfField.getPosition() != ecrfFieldIn.getPosition()) { // allow changing external_id, ... also for locked ecrfs
 			ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		}
-		long valueCount = this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false);
-		if (!field.equals(originalEcrfField.getField()) && valueCount > 0) {
+		//long valueCount = this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false);
+		if (!field.equals(originalEcrfField.getField()) && this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_INPUT_FIELD_CHANGED);
 		}
-		long statusEntryCount = this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getId(), false);
 		if (originalEcrfField.isSeries() != ecrfFieldIn.getSeries()) {
-			if (valueCount > 0) {
+			if (this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SERIES_FLAG_CHANGED);
 			}
-			if (statusEntryCount > 0) {
+			//long statusEntryCount = this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getId(), false);
+			if (this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getId(), false) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SERIES_FLAG_CHANGED);
 			}
 		}
-		if (ecrfFieldIn.getSeries() && sectionChanged) {
-			if (valueCount > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SECTION_CHANGED);
-			}
-			if (statusEntryCount > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED);
-			}
-			if (this.getECRFFieldValueDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
-			}
-			if (this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
-			}
+		//		if (checkDeferredConstraints && ecrfFieldIn.getSeries() && sectionChanged) {
+		//			if (valueCount > 0) {
+		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SECTION_CHANGED);
+		//			}
+		//			if (statusEntryCount > 0) {
+		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED);
+		//			}
+		//			if (this.getECRFFieldValueDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
+		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+		//			}
+		//			if (this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
+		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+		//			}
+		//		}
+		if (checkDeferredConstraints && sectionChanged) {
+			checkSectionIndexes(ecrfFieldIn, ecrf.getEcrfStatusEntries());
 		}
 	}
 
-	private ArrayList<ECRFStatusEntry> checkUpdateEcrfInput(ECRFInVO modifiedEcrf, ECRF originalEcrf) throws ServiceException {
+	private final void checkSectionIndexes(ECRFFieldInVO ecrfFieldIn, Collection<ECRFStatusEntry> ecrfStatusEntries) throws ServiceException {
+		ECRFField firstField = this.getECRFFieldDao().findFirst(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection(), ecrfFieldIn.getId());
+		HashMap<Long, ArrayList<Long>> indexesToCheck = new HashMap<Long, ArrayList<Long>>();
+		Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = ecrfStatusEntries.iterator();
+		while (ecrfStatusEntriesIt.hasNext()) {
+			ECRFStatusEntry ecrfStatusEntry = ecrfStatusEntriesIt.next();
+			if (firstField != null) {
+				indexesToCheck.put(firstField.getId(), (ArrayList<Long>) this.getECRFFieldValueDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
+						ecrfStatusEntry.getVisit() != null ? ecrfStatusEntry.getVisit().getId() : null, firstField.getId()));
+			}
+			checkSectionIndexes(ecrfFieldIn, ecrfStatusEntry, indexesToCheck);
+			indexesToCheck.clear();
+		}
+	}
+
+	private void checkUpdateEcrfInput(ECRFInVO modifiedEcrf, ECRF originalEcrf, ArrayList<ECRFStatusEntry> ecrfStatusEntriesToKeep,
+			ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove) throws ServiceException {
 		checkEcrfInput(modifiedEcrf);
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = new ArrayList<ECRFStatusEntry>();
 		Iterator<Visit> it = this.getVisitDao().findByEcrfStatusEntry(modifiedEcrf.getId()).iterator();
 		while (it.hasNext()) {
 			Visit visit = it.next();
-			if (!modifiedEcrf.getVisitIds().contains(visit.getId())) {
+			if (modifiedEcrf.getVisitIds().contains(visit.getId())) {
+				ecrfStatusEntriesToKeep.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), visit.getId(), null, null));
+			} else {
 				ServiceUtil.checkLockedEcrfs(originalEcrf, visit, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
 				//delete ecrf status entries of empty ecrfs
 				if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
@@ -2065,7 +2097,6 @@ public class TrialServiceImpl
 		if (!originalEcrf.getTitle().equals(modifiedEcrf.getTitle())) {
 			ServiceUtil.checkLockedEcrfs(originalEcrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		}
-		return ecrfStatusEntriesToRemove;
 	}
 
 	private void checkUpdateEcrfStatusEntry(ECRFStatusEntry originalStatusEntry, ECRFStatusType statusType, Long version, User user) throws Exception {
@@ -2824,6 +2855,7 @@ public class TrialServiceImpl
 				newEcrfField.setPosition(position);
 				newEcrfField.setFieldId(inputFieldId);
 				newEcrfField.setSection(section);
+				newEcrfField.setRef(CommonUtil.generateShortUUID());
 				newEcrfField.setOptional(optional);
 				newEcrfField.setAuditTrail(auditTrail);
 				newEcrfField.setReasonForChangeRequired(auditTrail);
@@ -3156,13 +3188,15 @@ public class TrialServiceImpl
 		ECRFOutVO original;
 		ECRF ecrf;
 		boolean update;
+		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToKeep = new ArrayList<ECRFStatusEntry>();
 		if (modifiedEcrf.getId() != null) {
 			SignatureDao signatureDao = this.getSignatureDao();
 			ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 			NotificationDao notificationDao = this.getNotificationDao();
 			NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(modifiedEcrf.getId(), ecrfDao, LockMode.PESSIMISTIC_WRITE);
-			Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = checkUpdateEcrfInput(modifiedEcrf, originalEcrf).iterator();
+			ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = new ArrayList<ECRFStatusEntry>();
+			checkUpdateEcrfInput(modifiedEcrf, originalEcrf, ecrfStatusEntriesToKeep, ecrfStatusEntriesToRemove);
 			original = ecrfDao.toECRFOutVO(originalEcrf);
 			Collection<ECRFField> originalEcrfFields = originalEcrf.getEcrfFields();
 			originalEcrfFieldIds = new HashSet<Long>(originalEcrfFields.size());
@@ -3172,6 +3206,7 @@ public class TrialServiceImpl
 			}
 			ecrfDao.evict(originalEcrf);
 			ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
+			Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = ecrfStatusEntriesToRemove.iterator();
 			while (ecrfStatusEntriesIt.hasNext()) {
 				ECRFStatusEntry ecrfStatusEntry = ecrfStatusEntriesIt.next();
 				ProbandListEntry listEntry = ecrfStatusEntry.getListEntry();
@@ -3234,13 +3269,20 @@ public class TrialServiceImpl
 				deleteEcrfFieldHelper(ecrf, originalEcrfFieldIdsIt.next(), true, false, false, now, user);
 			}
 			it = ecrfFieldIns.iterator();
+			HashMap<String, HashMap<Long, ArrayList<Long>>> indexesToCheck = new HashMap<String, HashMap<Long, ArrayList<Long>>>();
 			while (it.hasNext()) {
 				ECRFFieldInVO modifiedEcrfField = it.next();
 				ECRFField ecrfField;
 				ECRFFieldOutVO ecrfFieldVO;
 				if (modifiedEcrfField.getId() != null) {
 					ECRFField originalEcrfField = CheckIDUtil.checkEcrfFieldId(modifiedEcrfField.getId(), ecrfFieldDao);
-					checkUpdateEcrfFieldInput(originalEcrfField, modifiedEcrfField); // access original associations before evict
+					checkUpdateEcrfFieldInput(originalEcrfField, modifiedEcrfField, false); // access original associations before evict
+					if (!indexesToCheck.containsKey(modifiedEcrfField.getSection())) {
+						boolean sectionChanged = ecrfFieldDao.getCount(modifiedEcrfField.getEcrfId(), modifiedEcrfField.getSection(), modifiedEcrfField.getId()) == 0l;
+						if (sectionChanged) {
+							indexesToCheck.put(modifiedEcrfField.getSection(), new HashMap<Long, ArrayList<Long>>());
+						}
+					}
 					ECRFFieldOutVO originalEcrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 					ecrfFieldDao.evict(originalEcrfField);
 					ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(modifiedEcrfField);
@@ -3254,13 +3296,35 @@ public class TrialServiceImpl
 								this.getJournalEntryDao());
 					}
 				} else {
-					checkAddEcrfFieldInput(modifiedEcrfField);
+					checkAddEcrfFieldInput(modifiedEcrfField, false);
+					indexesToCheck.put(modifiedEcrfField.getSection(), new HashMap<Long, ArrayList<Long>>());
 					ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(modifiedEcrfField);
 					CoreUtil.modifyVersion(ecrfField, now, user);
 					ecrfField = ecrfFieldDao.create(ecrfField);
 					ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
 					ServiceUtil
 							.logSystemMessage(ecrfField.getTrial(), ecrfFieldVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_CREATED, ecrfFieldVO, null, journalEntryDao);
+					modifiedEcrfField.setId(ecrfField.getId()); //for deferred constraints checks
+				}
+			}
+			it = ecrfFieldIns.iterator();
+			while (it.hasNext()) {
+				ECRFFieldInVO modifiedEcrfField = it.next();
+				checkEcrfFieldInputDeferredConstraints(modifiedEcrfField);
+			}
+			Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = ecrfStatusEntriesToKeep.iterator();
+			while (ecrfStatusEntriesIt.hasNext()) {
+				ECRFStatusEntry ecrfStatusEntry = ecrfStatusEntriesIt.next();
+				it = ecrfFieldIns.iterator();
+				while (it.hasNext()) {
+					ECRFFieldInVO modifiedEcrfField = it.next();
+					if (indexesToCheck.containsKey(modifiedEcrfField.getSection())) {
+						checkSectionIndexes(modifiedEcrfField, ecrfStatusEntry, indexesToCheck.get(modifiedEcrfField.getSection()));
+					}
+				}
+				Iterator<String> sectionsToCheckIt = indexesToCheck.keySet().iterator();
+				while (sectionsToCheckIt.hasNext()) {
+					indexesToCheck.get(sectionsToCheckIt.next()).clear();
 				}
 			}
 		} else {
@@ -3277,6 +3341,43 @@ public class TrialServiceImpl
 					journalEntryDao);
 		}
 		return result;
+	}
+
+	private final void checkSectionIndexes(ECRFFieldInVO ecrfFieldIn, ECRFStatusEntry ecrfStatusEntry, HashMap<Long, ArrayList<Long>> indexesToCheck)
+			throws ServiceException {
+		ArrayList<Long> valueIndexes = (ArrayList<Long>) this.getECRFFieldValueDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
+				ecrfStatusEntry.getVisit() != null ? ecrfStatusEntry.getVisit().getId() : null, ecrfFieldIn.getId());
+		ArrayList<Long> statusEntryIndexes = (ArrayList<Long>) this.getECRFFieldStatusEntryDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
+				ecrfStatusEntry.getVisit() != null ? ecrfStatusEntry.getVisit().getId() : null, ecrfFieldIn.getId());
+		if (ecrfFieldIn.getSeries()) { // now series:
+			// there must not be a non-series value:
+			if (valueIndexes.size() == 1 && valueIndexes.get(0) == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+			}
+			// there must not be a non-series status entries:
+			if (statusEntryIndexes.size() == 1 && statusEntryIndexes.get(0) == null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+			}
+			ArrayList<Long> first = null;
+			try {
+				first = indexesToCheck.values().iterator().next();
+			} catch (NoSuchElementException e) {
+			}
+			// all indexes of the section have to be identical:
+			if (first != null && !first.equals(valueIndexes)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+			}
+		} else { // now non-series:
+			// there must not be any series value:
+			if (valueIndexes.size() > 1 || (valueIndexes.size() == 1 && valueIndexes.get(0) != null)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+			}
+			// there must not be any series status entries:
+			if (statusEntryIndexes.size() > 1 || (statusEntryIndexes.size() == 1 && statusEntryIndexes.get(0) != null)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+			}
+		}
+		indexesToCheck.put(ecrfFieldIn.getId(), valueIndexes);
 	}
 
 	@Override
@@ -3454,6 +3555,7 @@ public class TrialServiceImpl
 			newEcrfField.setNotify(originalEcrfField.isNotify());
 			newEcrfField.setSection(originalEcrfField.getSection());
 			newEcrfField.setSeries(originalEcrfField.isSeries());
+			newEcrfField.setRef(originalEcrfField.getRef());
 			newEcrfField.setExternalId(originalEcrfField.getExternalId());
 			newEcrfField.setEcrf(newEcrf);
 			newEcrf.addEcrfFields(newEcrfField);
@@ -7760,12 +7862,15 @@ public class TrialServiceImpl
 		NotificationDao notificationDao = this.getNotificationDao();
 		NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
 		ECRF originalEcrf = CheckIDUtil.checkEcrfId(modifiedEcrf.getId(), ecrfDao, LockMode.PESSIMISTIC_WRITE);
-		Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = checkUpdateEcrfInput(modifiedEcrf, originalEcrf).iterator();
+		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = new ArrayList<ECRFStatusEntry>();
+		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToKeep = new ArrayList<ECRFStatusEntry>();
+		checkUpdateEcrfInput(modifiedEcrf, originalEcrf, ecrfStatusEntriesToKeep, ecrfStatusEntriesToRemove);
 		ECRFOutVO original = ecrfDao.toECRFOutVO(originalEcrf);
 		ecrfDao.evict(originalEcrf);
 		ECRF ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		Iterator<ECRFStatusEntry> ecrfStatusEntriesIt = ecrfStatusEntriesToRemove.iterator();
 		while (ecrfStatusEntriesIt.hasNext()) {
 			ECRFStatusEntry ecrfStatusEntry = ecrfStatusEntriesIt.next();
 			ProbandListEntry listEntry = ecrfStatusEntry.getListEntry();
@@ -7785,7 +7890,7 @@ public class TrialServiceImpl
 	protected ECRFFieldOutVO handleUpdateEcrfField(AuthenticationVO auth, ECRFFieldInVO modifiedEcrfField) throws Exception {
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
 		ECRFField originalEcrfField = CheckIDUtil.checkEcrfFieldId(modifiedEcrfField.getId(), ecrfFieldDao);
-		checkUpdateEcrfFieldInput(originalEcrfField, modifiedEcrfField); // access original associations before evict
+		checkUpdateEcrfFieldInput(originalEcrfField, modifiedEcrfField, true); // access original associations before evict
 		ECRFFieldOutVO original = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 		ecrfFieldDao.evict(originalEcrfField);
 		ECRFField ecrfField = ecrfFieldDao.eCRFFieldInVOToEntity(modifiedEcrfField);
@@ -7810,7 +7915,7 @@ public class TrialServiceImpl
 		if (ecrfFields.size() > 0) {
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			User user = CoreUtil.getUser();
-			long newSectionExistingFieldCount = ecrfFieldDao.getCount(ecrfId, newSection, null);
+			//long newSectionExistingFieldCount = ecrfFieldDao.getCount(ecrfId, newSection, null);
 			result = new ArrayList<ECRFFieldOutVO>(ecrfFields.size());
 			JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
@@ -7826,31 +7931,32 @@ public class TrialServiceImpl
 				ecrfFieldIn.setSeries(originalEcrfField.isSeries());
 				boolean sectionChanged = ecrfFieldDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection(), ecrfFieldIn.getId()) == 0l;
 				if (sectionChanged) {
-					if (newSectionExistingFieldCount > 0) {
-						if ((new EcrfFieldSeriesCollisionFinder(ecrfDao, ecrfFieldDao)).collides(ecrfFieldIn)) {
-							// all fields within section must have same "series" flag
-							throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_FLAG_INCONSISTENT);
-						}
-						if ((new EcrfFieldPositionCollisionFinder(ecrfDao, ecrfFieldDao)).collides(ecrfFieldIn)) {
-							throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
-						}
-						if (ecrfFieldIn.getSeries()) {
-							long valueCount = ecrfFieldValueDao.getCount(ecrfFieldIn.getId(), false);
-							if (valueCount > 0) {
-								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SECTION_CHANGED);
-							}
-							long statusEntryCount = ecrfFieldStatusEntryDao.getCount(ecrfFieldIn.getId(), false);
-							if (statusEntryCount > 0) {
-								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED);
-							}
-							if (ecrfFieldValueDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
-							}
-							if (ecrfFieldStatusEntryDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
-							}
-						}
+					//if (newSectionExistingFieldCount > 0) {
+					if ((new EcrfFieldSeriesCollisionFinder(ecrfDao, ecrfFieldDao)).collides(ecrfFieldIn)) {
+						// all fields within section must have same "series" flag
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_FLAG_INCONSISTENT);
 					}
+					if ((new EcrfFieldPositionCollisionFinder(ecrfDao, ecrfFieldDao)).collides(ecrfFieldIn)) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
+					}
+					checkSectionIndexes(ecrfFieldIn, ecrf.getEcrfStatusEntries());
+					//						if (ecrfFieldIn.getSeries()) {
+					//							long valueCount = ecrfFieldValueDao.getCount(ecrfFieldIn.getId(), false);
+					//							if (valueCount > 0) {
+					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SECTION_CHANGED);
+					//							}
+					//							long statusEntryCount = ecrfFieldStatusEntryDao.getCount(ecrfFieldIn.getId(), false);
+					//							if (statusEntryCount > 0) {
+					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED);
+					//							}
+					//							if (ecrfFieldValueDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
+					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+					//							}
+					//							if (ecrfFieldStatusEntryDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
+					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+					//							}
+					//						}
+					//}
 					ECRFFieldOutVO original = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 					ecrfFieldDao.evict(originalEcrfField);
 					ECRFField ecrfField = ecrfFieldDao.load(originalEcrfField.getId());
