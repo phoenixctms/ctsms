@@ -242,6 +242,7 @@ public interface MessageCodes {
 	public static final String ECRF_FIELD_JS_VALUE_EXPRESSION_PRESET = "ecrf_field_js_value_expression_preset";
 	public static final String ECRF_FIELD_JS_OUTPUT_EXPRESSION_PRESET = "ecrf_field_js_output_expression_preset";
 	public static final String ECRF_FIELD_EXTERNAL_ID_PRESET = "ecrf_field_external_id_preset";
+	public static final String ECRF_FIELD_REF_PRESET = "ecrf_field_ref_preset";
 	public static final String SELECT_ECRF = "select_ecrf";
 	public static final String SELECT_PROBAND_LIST_ENTRY = "select_proband_list_entry";
 	public static final String SELECT_ECRF_FIELD_STATUS_ENTRY = "select_ecrf_field_status_entry";

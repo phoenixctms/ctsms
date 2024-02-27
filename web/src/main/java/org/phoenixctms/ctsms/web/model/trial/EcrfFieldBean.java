@@ -66,6 +66,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			in.setJsVariableName(out.getJsVariableName());
 			in.setJsValueExpression(out.getJsValueExpression());
 			in.setJsOutputExpression(out.getJsOutputExpression());
+			in.setRef(out.getRef());
 			in.setExternalId(out.getExternalId());
 		}
 	}
@@ -100,6 +101,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 			in.setJsVariableName(Messages.getString(MessageCodes.ECRF_FIELD_JS_VARIABLE_NAME_PRESET));
 			in.setJsValueExpression(Messages.getString(MessageCodes.ECRF_FIELD_JS_VALUE_EXPRESSION_PRESET));
 			in.setJsOutputExpression(Messages.getString(MessageCodes.ECRF_FIELD_JS_OUTPUT_EXPRESSION_PRESET));
+			in.setRef(Messages.getMessage(MessageCodes.ECRF_FIELD_REF_PRESET, CommonUtil.generateShortUUID()));
 			in.setExternalId(Messages.getString(MessageCodes.ECRF_FIELD_EXTERNAL_ID_PRESET));
 		}
 	}
