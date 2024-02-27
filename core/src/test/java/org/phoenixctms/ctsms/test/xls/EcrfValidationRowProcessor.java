@@ -22,16 +22,14 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 	private final static String SHEET_NAME = "validation";
 	private final static int ECRF_NAME_COLUMN_INDEX = 0;
 	private final static int ECRF_REVISION_COLUMN_INDEX = 1;
-	private final static int SECTION_COLUMN_INDEX = 2;
-	private final static int POSITION_COLUMN_INDEX = 3;
-	private final static int INDEX_COLUMN_INDEX = 4;
-	private final static int INPUT_VALUE_COLUMN_INDEX = 5;
-	private final static int EXPORTED_VALUE_COLUMN_INDEX = 6;
-	private final static int EXPECTED_OUTPUT_COLUMN_INDEX = 7;
+	private final static int REF_COLUMN_INDEX = 2;
+	private final static int INDEX_COLUMN_INDEX = 3;
+	private final static int INPUT_VALUE_COLUMN_INDEX = 4;
+	private final static int EXPORTED_VALUE_COLUMN_INDEX = 5;
+	private final static int EXPECTED_OUTPUT_COLUMN_INDEX = 6;
 	private int ecrfNameColumnIndex;
 	private int ecrfRevisionColumnIndex;
-	private int sectionColumnIndex;
-	private int positionColumnIndex;
+	private int refColumnIndex;
 	private int indexColumnIndex;
 	private int inputValueColumnIndex;
 	private int exportedValueColumnIndex;
@@ -43,8 +41,6 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 	protected ECRFDao eCRFDao; // varnames must match bean ids in applicationContext.xml
 	@Autowired
 	protected ECRFFieldDao eCRFFieldDao;
-	//@Autowired
-	//protected InputFieldDao inputFieldDao;
 	@Autowired
 	protected TrialService trialService;
 
@@ -107,16 +103,6 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 	private String getEcrfName(String[] values) {
 		return getColumnValue(values, ecrfNameColumnIndex);
 	}
-	//	private Long getInputFieldId(String inputFieldName) {
-	//		InputField inputField = ((XlsImporter) context.getImporter()).getSelectionSetValueRowProcessor().getInputField(inputFieldName);
-	//		Long fieldId = null;
-	//		if (inputField != null) {
-	//			fieldId = inputField.getId();
-	//		} else {
-	//			jobOutput.println("input field '" + inputFieldName + "' not found");
-	//		}
-	//		return fieldId;
-	//	}
 
 	private String getInputValue(String[] values) {
 		return getColumnValue(values, inputValueColumnIndex);
@@ -130,16 +116,12 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 		return getColumnValue(values, expectedOutputColumnIndex);
 	}
 
-	private String getPosition(String[] values) {
-		return getColumnValue(values, positionColumnIndex);
+	private String getRef(String[] values) {
+		return getColumnValue(values, refColumnIndex);
 	}
 
 	private String getIndex(String[] values) {
 		return getColumnValue(values, indexColumnIndex);
-	}
-
-	private String getSection(String[] values) {
-		return getColumnValue(values, sectionColumnIndex);
 	}
 
 	@Override
@@ -152,8 +134,7 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 		super.init();
 		ecrfNameColumnIndex = ECRF_NAME_COLUMN_INDEX;
 		ecrfRevisionColumnIndex = ECRF_REVISION_COLUMN_INDEX;
-		sectionColumnIndex = SECTION_COLUMN_INDEX;
-		positionColumnIndex = POSITION_COLUMN_INDEX;
+		refColumnIndex = REF_COLUMN_INDEX;
 		indexColumnIndex = INDEX_COLUMN_INDEX;
 		inputValueColumnIndex = INPUT_VALUE_COLUMN_INDEX;
 		exportedValueColumnIndex = EXPORTED_VALUE_COLUMN_INDEX;
@@ -161,7 +142,6 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 		vectorMap.clear();
 		ecrfMap.clear();
 		vectors.clear();
-		//		((XlsImporter) context.getImporter()).loadInputFields(context);
 	}
 
 	@Override
@@ -169,8 +149,7 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 		return new HashCodeBuilder(1249046965, -82296885)
 				.append(getEcrfName(values))
 				.append(getEcrfRevision(values))
-				.append(getSection(values))
-				.append(getPosition(values))
+				.append(getRef(values))
 				.append(getIndex(values))
 				.append(getInputValue(values))
 				.append(getExportedValue(values))
@@ -187,9 +166,8 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 		String ecrfName = getEcrfName(values);
 		String ecrfRevision = getEcrfRevision(values);
 		ECRF ecrf = getEcrf(ecrfName, ecrfRevision);
-		Long position = Long.parseLong(getPosition(values));
-		String section = getSection(values);
-		ECRFField ecrfField = eCRFFieldDao.findByEcrfSectionPosition(ecrf.getId(), section, position).iterator().next();
+		String ref = getRef(values);
+		ECRFField ecrfField = eCRFFieldDao.findByEcrfRef(ecrf.getId(), ref).iterator().next();
 		ECRFFieldOutVO ecrfFieldVO = trialService.getEcrfField(context.getAuth(), ecrfField.getId());
 		List<EcrfValidationTestVector> ecrfVectors;
 		HashMap<String, List<EcrfValidationTestVector>> revisionMap;
@@ -206,7 +184,8 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 			revisionMap.put(ecrfRevision, ecrfVectors);
 		}
 		String label = "ecrf " + ecrfName + ", revision " + ecrfRevision
-				+ ": field section " + section + ", position " + position + ", field '" + ecrfFieldVO.getField().getNameL10nKey() + "'";
+				+ ": field section " + ecrfFieldVO.getSection() + ", position " + Long.toString(ecrfFieldVO.getPosition()) + ", field '" + ecrfFieldVO.getField().getNameL10nKey()
+				+ "'";
 		EcrfValidationTestVector v = new EcrfValidationTestVector();
 		v.setInputValue(getInputValue(values) != null ? getInputValue(values) : "");
 		v.setExportedValue(getExportedValue(values) != null ? getExportedValue(values) : "");
@@ -224,8 +203,8 @@ public class EcrfValidationRowProcessor extends RowProcessor {
 		if (CommonUtil.isEmptyString(getEcrfName(values))) {
 			return false;
 		}
-		if (CommonUtil.isEmptyString(getPosition(values))) {
-			jobOutput.println("row " + rowNumber + ": empty position");
+		if (CommonUtil.isEmptyString(getRef(values))) {
+			jobOutput.println("row " + rowNumber + ": empty ref");
 			return false;
 		}
 		return true;
