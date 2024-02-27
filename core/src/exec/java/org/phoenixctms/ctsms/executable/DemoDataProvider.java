@@ -1077,6 +1077,7 @@ public class DemoDataProvider {
 		newEcrfField.setReasonForChangeRequired(reasonForChangeRequired);
 		newEcrfField.setNotify(false);
 		newEcrfField.setSection(section);
+		newEcrfField.setRef(CommonUtil.generateShortUUID());
 		newEcrfField.setSeries(series);
 		newEcrfField.setTrialId(ecrf.getTrial().getId());
 		newEcrfField.setJsVariableName(jsVariableName);

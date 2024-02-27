@@ -284,6 +284,7 @@ public final class CommonUtil {
 		}
 	}
 	private final static Detector MIME_DETECTOR = new DefaultDetector(); // All build-in Tika detectors are thread-safe, so it is ok to share the detector globally.
+	private final static int SHORT_UUID_LENGTH = 8;
 
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {
 		TikaInputStream tikaStream = null;
@@ -648,6 +649,7 @@ public final class CommonUtil {
 				out.setJsValueExpression(ecrfFieldVO.getJsValueExpression());
 				out.setJsOutputExpression(ecrfFieldVO.getJsOutputExpression());
 				out.setSection(ecrfFieldVO.getSection());
+				//out.setRef(ecrfFieldVO.getRef());
 				ECRFOutVO ecrfVO = ecrfFieldVO.getEcrf();
 				if (ecrfVO != null) {
 					Iterator it = ecrfVO.getGroups().iterator();
@@ -933,6 +935,14 @@ public final class CommonUtil {
 
 	public static String generateUUID() {
 		return UUID.randomUUID().toString();
+	}
+
+	public static String generateShortUUID() {
+		return generateUUID(SHORT_UUID_LENGTH);
+	}
+
+	public static String generateUUID(int n) { // for cosmetic reasons, lets use the same trivial method as in sql
+		return generateUUID().replace("-", "").substring(0, n);
 	}
 
 	public static Integer getAge(Date dateOfBirth) {
