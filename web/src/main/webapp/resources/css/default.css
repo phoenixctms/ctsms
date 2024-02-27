@@ -108,6 +108,24 @@ td .ui-selectonemenu {
 	border-radius: 0px !important;
 }
 
+.ui-tabs-left > .ui-tabs-nav {
+    width: 200px;
+    padding: 2px 0px;
+    height: 100%;
+} 
+
+.ui-tabs-left > .ui-tabs-panels {
+    width: calc(100% - 200px);
+}
+
+.ui-tabs .ui-tabs-panel {
+    padding: 0px 2px;
+}
+
+.ui-tabs.ui-tabs-left > .ui-tabs-nav li {
+    border-right: 1px solid #aaa;
+}
+
 .ui-tabs .ui-tabs-nav li a {
 	font-size: inherit;
 }
