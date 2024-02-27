@@ -23,23 +23,25 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private final static String SHEET_NAME = "ecrffields";
 	private final static int ECRF_NAME_COLUMN_INDEX = 0;
 	private final static int ECRF_REVISION_COLUMN_INDEX = 1;
-	private final static int SECTION_COLUMN_INDEX = 2;
-	private final static int POSITION_COLUMN_INDEX = 3;
-	private final static int EXTERNAL_ID_COLUMN_INDEX = 4;
-	private final static int INPUT_FIELD_NAME_COLUMN_INDEX = 5;
-	private final static int TITLE_COLUMN_INDEX = 6;
-	private final static int COMMENT_COLUMN_INDEX = 7;
-	private final static int SERIES_COLUMN_INDEX = 8;
-	private final static int OPTIONAL_COLUMN_INDEX = 9;
-	private final static int DISABLED_COLUMN_INDEX = 10;
-	private final static int AUDIT_TRAIL_COLUMN_INDEX = 11;
-	private final static int REASON_FOR_CHANGE_REQUIRED_COLUMN_INDEX = 12;
-	private final static int JS_VARIABLE_NAME_COLUMN_INDEX = 13;
-	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 14;
-	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 15;
-	private final static int NOTIFY_COLUMN_INDEX = 16;
+	private final static int REF_COLUMN_INDEX = 2;
+	private final static int SECTION_COLUMN_INDEX = 3;
+	private final static int POSITION_COLUMN_INDEX = 4;
+	private final static int EXTERNAL_ID_COLUMN_INDEX = 5;
+	private final static int INPUT_FIELD_NAME_COLUMN_INDEX = 6;
+	private final static int TITLE_COLUMN_INDEX = 7;
+	private final static int COMMENT_COLUMN_INDEX = 8;
+	private final static int SERIES_COLUMN_INDEX = 9;
+	private final static int OPTIONAL_COLUMN_INDEX = 10;
+	private final static int DISABLED_COLUMN_INDEX = 11;
+	private final static int AUDIT_TRAIL_COLUMN_INDEX = 12;
+	private final static int REASON_FOR_CHANGE_REQUIRED_COLUMN_INDEX = 13;
+	private final static int JS_VARIABLE_NAME_COLUMN_INDEX = 14;
+	private final static int JS_VALUE_EXPRESSION_COLUMN_INDEX = 15;
+	private final static int JS_OUTPUT_EXPRESSION_COLUMN_INDEX = 16;
+	private final static int NOTIFY_COLUMN_INDEX = 17;
 	private int ecrfNameColumnIndex;
 	private int ecrfRevisionColumnIndex;
+	private int refColumnIndex;
 	private int sectionColumnIndex;
 	private int positionColumnIndex;
 	private int externalIdColumnIndex;
@@ -137,6 +139,10 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, ecrfNameColumnIndex);
 	}
 
+	private String getRef(String[] values) {
+		return getColumnValue(values, refColumnIndex);
+	}
+
 	private String getExternalId(String[] values) {
 		return getColumnValue(values, externalIdColumnIndex);
 	}
@@ -202,6 +208,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		super.init();
 		ecrfNameColumnIndex = ECRF_NAME_COLUMN_INDEX;
 		ecrfRevisionColumnIndex = ECRF_REVISION_COLUMN_INDEX;
+		refColumnIndex = REF_COLUMN_INDEX;
 		sectionColumnIndex = SECTION_COLUMN_INDEX;
 		positionColumnIndex = POSITION_COLUMN_INDEX;
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
@@ -227,6 +234,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		return new HashCodeBuilder(1249046965, -82296885)
 				.append(getEcrfName(values))
 				.append(getEcrfRevision(values))
+				.append(getRef(values))
 				.append(getSection(values))
 				.append(getPosition(values))
 				.append(getExternalId(values))
@@ -256,10 +264,15 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ECRF ecrf = getEcrf(ecrfName, ecrfRevision);
 		Long position = Long.parseLong(getPosition(values));
 		String section = getSection(values);
+		String ref = getRef(values);
 		ECRFField ecrfField = null;
 		if (ecrf != null) {
 			try {
-				ecrfField = eCRFFieldDao.findByEcrfSectionPosition(ecrf.getId(), section, position).iterator().next();
+				if (CommonUtil.isEmptyString(ref)) {
+					ecrfField = eCRFFieldDao.findByEcrfSectionPosition(ecrf.getId(), section, position).iterator().next();
+				} else {
+					ecrfField = eCRFFieldDao.findByEcrfRef(ecrf.getId(), ref).iterator().next();
+				}
 			} catch (NoSuchElementException e) {
 			}
 		}
@@ -271,6 +284,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ecrfFieldIn.setEcrfId(ecrf != null ? ecrf.getId() : null);
 		ecrfFieldIn.setSection(section);
 		ecrfFieldIn.setPosition(position);
+		ecrfFieldIn.setRef(CommonUtil.isEmptyString(ref) ? CommonUtil.generateShortUUID() : ref);
 		ecrfFieldIn.setExternalId(getExternalId(values));
 		ecrfFieldIn.setFieldId(getInputFieldId(inputFieldName));
 		ecrfFieldIn.setTitle(getTitle(values));
