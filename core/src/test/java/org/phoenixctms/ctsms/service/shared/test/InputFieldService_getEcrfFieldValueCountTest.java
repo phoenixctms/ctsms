@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getEcrfFieldValueCount</code> of service <code>InputFieldService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.InputFieldService#getEcrfFieldValueCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, boolean)
+ * @see org.phoenixctms.ctsms.service.shared.InputFieldService#getEcrfFieldValueCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean)
  */
 @Test(groups={"service","InputFieldService"})
 public class InputFieldService_getEcrfFieldValueCountTest extends InputFieldServiceBaseTest {
