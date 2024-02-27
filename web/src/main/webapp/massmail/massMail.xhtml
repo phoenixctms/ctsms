@@ -30,6 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="massMailTabView"
 					onTabShow="handleMassMailTabChange(transposeTabIndex(index.index()))"
+					orientation="#{sessionScopeBean.massMailVisibleTabSet.size() > 5 ? 'left' : 'top'}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="massMailmain"
