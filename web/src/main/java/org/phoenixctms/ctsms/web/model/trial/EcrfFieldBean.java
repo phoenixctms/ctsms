@@ -392,6 +392,10 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		in.setSection((String) event.getObject());
 	}
 
+	public void generateRef() {
+		in.setRef(CommonUtil.generateShortUUID());
+	}
+
 	@PostConstruct
 	private void init() {
 		Long id = WebUtil.getLongParamValue(GetParamNames.ECRF_FIELD_ID);
