@@ -758,37 +758,28 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="ecrfFieldNotify" />
-								
-								
+
+
 								<h:outputLabel for="ecrfFieldRef"
 									value="#{triallabels.ecrffield_ref_label}" />
-									
-									
-									<h:panelGrid columns="2" cellpadding="0">
-								<h:panelGroup>
-									<p:inputText id="ecrfFieldRef"
-										value="#{ecrfFieldBean.in.ref}" required="true"
-										label="#{triallabels.ecrffield_ref}"
-										styleClass="ctsms-control">
-									</p:inputText>
-									<p:tooltip rendered="#{enableTooltips}"
-										for="ecrfFieldRef">
-										<h:outputText
-											value="#{triallabels.ecrffield_ref_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup
-										<p:commandButton process="@this"
-											title="#{userlabels.generate_password_button_label}"
-											actionListener="#{ecrfFieldBean.generatePassword}"
-											icon="ui-icon ui-icon-gear" ajax="true"
-											disabled="#{!passwordBean.createable}" update="password" />
-										<h:outputLabel />
-									</h:panelGrid>									
-									
-									
-									
->
+								<h:panelGrid columns="2" cellpadding="0">
+									<h:panelGroup>
+										<p:inputText id="ecrfFieldRef" value="#{ecrfFieldBean.in.ref}"
+											required="true" label="#{triallabels.ecrffield_ref}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip rendered="#{enableTooltips}" for="ecrfFieldRef">
+											<h:outputText value="#{triallabels.ecrffield_ref_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup
+									<p:commandButton process="@this"
+										title="#{triallabels.generate_ref_button_label}"
+										actionListener="#{ecrfFieldBean.generateRef}"
+										icon="ui-icon ui-icon-gear" ajax="true"
+										disabled="#{!ecrfFieldBean.createable or !ecrfFieldBean.editable}" update="ecrfFieldRef" />
+									<h:outputLabel />
+								</h:panelGrid>									
 								<p:message for="ecrfFieldRef" />
 
 							</h:panelGrid>
