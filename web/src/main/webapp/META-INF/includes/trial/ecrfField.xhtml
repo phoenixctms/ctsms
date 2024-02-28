@@ -248,9 +248,9 @@
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText
-									value="#{triallabels.ecrffield_ecrffield_list_field_ref_column}" />
+									value="#{triallabels.ecrffield_ecrffield_list_ref_column}" />
 							</f:facet>
-							<h:outputText value="#{ecrfField.vo.field.ref}" />
+							<h:outputText value="#{ecrfField.vo.ref}" />
 						</p:column>
 						<p:column sortBy="#{ecrfField.vo.section}"
 							filterBy="#{ecrfField.vo.section}"
@@ -759,7 +759,6 @@
 								</h:panelGroup>
 								<p:message for="ecrfFieldNotify" />
 
-
 								<h:outputLabel for="ecrfFieldRef"
 									value="#{triallabels.ecrffield_ref_label}" />
 								<h:panelGrid columns="2" cellpadding="0">
@@ -772,13 +771,12 @@
 											<h:outputText value="#{triallabels.ecrffield_ref_tooltip}"
 												escape="false" />
 										</p:tooltip>
-									</h:panelGroup
+									</h:panelGroup>
 									<p:commandButton process="@this"
 										title="#{triallabels.generate_ref_button_label}"
 										actionListener="#{ecrfFieldBean.generateRef}"
 										icon="ui-icon ui-icon-gear" ajax="true"
-										disabled="#{!ecrfFieldBean.createable or !ecrfFieldBean.editable}" update="ecrfFieldRef" />
-									<h:outputLabel />
+										disabled="#{!ecrfFieldBean.createable and !ecrfFieldBean.editable}" update="ecrfFieldRef" />
 								</h:panelGrid>									
 								<p:message for="ecrfFieldRef" />
 
