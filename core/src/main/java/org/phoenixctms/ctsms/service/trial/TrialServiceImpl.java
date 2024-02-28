@@ -2032,20 +2032,6 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SERIES_FLAG_CHANGED);
 			}
 		}
-		//		if (checkDeferredConstraints && ecrfFieldIn.getSeries() && sectionChanged) {
-		//			if (valueCount > 0) {
-		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SECTION_CHANGED);
-		//			}
-		//			if (statusEntryCount > 0) {
-		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED);
-		//			}
-		//			if (this.getECRFFieldValueDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
-		//			}
-		//			if (this.getECRFFieldStatusEntryDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-		//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
-		//			}
-		//		}
 		if (checkDeferredConstraints && sectionChanged) {
 			checkSectionIndexes(ecrfFieldIn, ecrf.getEcrfStatusEntries());
 		}
@@ -3347,17 +3333,17 @@ public class TrialServiceImpl
 			throws ServiceException {
 		ArrayList<Long> valueIndexes = (ArrayList<Long>) this.getECRFFieldValueDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
 				ecrfStatusEntry.getVisit() != null ? ecrfStatusEntry.getVisit().getId() : null, ecrfFieldIn.getId());
-		ArrayList<Long> statusEntryIndexes = (ArrayList<Long>) this.getECRFFieldStatusEntryDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
-				ecrfStatusEntry.getVisit() != null ? ecrfStatusEntry.getVisit().getId() : null, ecrfFieldIn.getId());
+		//		ArrayList<Long> statusEntryIndexes = (ArrayList<Long>) this.getECRFFieldStatusEntryDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
+		//				ecrfStatusEntry.getVisit() != null ? ecrfStatusEntry.getVisit().getId() : null, ecrfFieldIn.getId());
 		if (ecrfFieldIn.getSeries()) { // now series:
-			// there must not be a non-series value:
-			if (valueIndexes.size() == 1 && valueIndexes.get(0) == null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
-			}
-			// there must not be a non-series status entries:
-			if (statusEntryIndexes.size() == 1 && statusEntryIndexes.get(0) == null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
-			}
+			//			// there must not be a non-series value:
+			//			if (valueIndexes.size() == 1 && valueIndexes.get(0) == null) {
+			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+			//			}
+			//			// there must not be a non-series status entries:
+			//			if (statusEntryIndexes.size() == 1 && statusEntryIndexes.get(0) == null) {
+			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+			//			}
 			ArrayList<Long> first = null;
 			try {
 				first = indexesToCheck.values().iterator().next();
@@ -3367,15 +3353,15 @@ public class TrialServiceImpl
 			if (first != null && !first.equals(valueIndexes)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
 			}
-		} else { // now non-series:
-			// there must not be any series value:
-			if (valueIndexes.size() > 1 || (valueIndexes.size() == 1 && valueIndexes.get(0) != null)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
-			}
-			// there must not be any series status entries:
-			if (statusEntryIndexes.size() > 1 || (statusEntryIndexes.size() == 1 && statusEntryIndexes.get(0) != null)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
-			}
+			//		} else { // now non-series:
+			//			// there must not be any series value:
+			//			if (valueIndexes.size() > 1 || (valueIndexes.size() == 1 && valueIndexes.get(0) != null)) {
+			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
+			//			}
+			//			// there must not be any series status entries:
+			//			if (statusEntryIndexes.size() > 1 || (statusEntryIndexes.size() == 1 && statusEntryIndexes.get(0) != null)) {
+			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
+			//			}
 		}
 		indexesToCheck.put(ecrfFieldIn.getId(), valueIndexes);
 	}
@@ -7940,23 +7926,6 @@ public class TrialServiceImpl
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
 					}
 					checkSectionIndexes(ecrfFieldIn, ecrf.getEcrfStatusEntries());
-					//						if (ecrfFieldIn.getSeries()) {
-					//							long valueCount = ecrfFieldValueDao.getCount(ecrfFieldIn.getId(), false);
-					//							if (valueCount > 0) {
-					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_VALUES_SECTION_CHANGED);
-					//							}
-					//							long statusEntryCount = ecrfFieldStatusEntryDao.getCount(ecrfFieldIn.getId(), false);
-					//							if (statusEntryCount > 0) {
-					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WITH_STATUS_ENTRIES_SECTION_CHANGED);
-					//							}
-					//							if (ecrfFieldValueDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_VALUES, ecrfFieldIn.getSection());
-					//							}
-					//							if (ecrfFieldStatusEntryDao.getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection()) > 0) {
-					//								throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES, ecrfFieldIn.getSection());
-					//							}
-					//						}
-					//}
 					ECRFFieldOutVO original = ecrfFieldDao.toECRFFieldOutVO(originalEcrfField);
 					ecrfFieldDao.evict(originalEcrfField);
 					ECRFField ecrfField = ecrfFieldDao.load(originalEcrfField.getId());
