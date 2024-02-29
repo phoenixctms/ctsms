@@ -514,6 +514,7 @@ public interface ServiceExceptionCodes {
 	//public static final String ECRF_FIELD_SERIES_SECTION_WITH_VALUES = "ecrf_field_series_section_with_values";
 	//public static final String ECRF_FIELD_SERIES_SECTION_WITH_STATUS_ENTRIES = "ecrf_field_series_section_with_status_entries";
 	public static final String ECRF_FIELD_SECTION_WITH_VALUES = "ecrf_field_section_with_values";
+	public static final String ECRF_FIELD_SECTION_INDEX_DIFFERS = "ecrf_field_section_index_differs";
 	public static final String ECRF_FIELD_SECTION_WITH_STATUS_ENTRIES = "ecrf_field_section_with_status_entries";
 	public static final String ECRF_FIELD_WITH_VALUES_SERIES_FLAG_CHANGED = "ecrf_field_with_values_series_flag_changed";
 	public static final String ECRF_FIELD_WITH_STATUS_ENTRIES_SERIES_FLAG_CHANGED = "ecrf_field_with_status_entries_series_flag_changed";
