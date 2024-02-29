@@ -30,7 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="probandTabView"
 					onTabShow="handleProbandTabChange(transposeTabIndex(index.index()))"
-					orientation="#{sessionScopeBean.probandVisibleTabSet.size() > 5 ? 'left' : 'top'}"
+					orientation="#{sessionScopeBean.probandVisibleTabSet.size() >= 5 ? 'right' : 'top'}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="probandmain"

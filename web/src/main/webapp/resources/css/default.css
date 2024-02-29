@@ -109,22 +109,37 @@ td .ui-selectonemenu {
 }
 
 .ui-tabs-left > .ui-tabs-nav {
-    width: 200px;
-    padding: 2px 0px;
-    height: 100%;
-} 
+    width: 200px !important;
+    padding: 2px 0px !important;
+    height: 100% !important;
+}
 
+.ui-tabs-right > .ui-tabs-nav {
+    width: 200px !important;
+    padding: 2px 0px !important;
+    height: 100% !important;
+} 
+ 
 .ui-tabs-left > .ui-tabs-panels {
-    width: calc(100% - 200px);
+    width: calc(100% - 200px) !important;
+}
+
+.ui-tabs-right > .ui-tabs-panels {
+    width: calc(100% - 200px) !important;
 }
 
 .ui-tabs .ui-tabs-panel {
-    padding: 0px 2px;
+    padding: 0px 0px;
 }
 
 .ui-tabs.ui-tabs-left > .ui-tabs-nav li {
     border-right: 1px solid #aaa;
 }
+
+.ui-tabs.ui-tabs-right > .ui-tabs-nav li {
+    border-left: 1px solid #aaa;
+}
+
 
 .ui-tabs .ui-tabs-nav li a {
 	font-size: inherit;
