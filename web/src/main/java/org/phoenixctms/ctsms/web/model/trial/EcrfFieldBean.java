@@ -123,6 +123,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private boolean bulkAddAuditTrail;
 	private String oldSection;
 	private String newSection;
+	private boolean newSeries;
 	private String deferredDeleteReason;
 
 	public EcrfFieldBean() {
@@ -215,6 +216,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		bulkAddOptional = Settings.getBoolean(SettingCodes.ECRF_FIELD_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_OPTIONAL_PRESET);
 		bulkAddSeries = Settings.getBoolean(SettingCodes.ECRF_FIELD_SERIES_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_SERIES_PRESET);
 		bulkAddAuditTrail = Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET);
+		newSeries = Settings.getBoolean(SettingCodes.ECRF_FIELD_SERIES_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_SERIES_PRESET);
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -481,6 +483,14 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return bulkAddSeries;
 	}
 
+	public boolean isNewSeries() {
+		return newSeries;
+	}
+
+	public void setNewSeries(boolean newSeries) {
+		this.newSeries = newSeries;
+	}
+
 	@Override
 	public boolean isCreateable() {
 		return ((in.getTrialId() == null || in.getEcrfId() == null) ? false : !WebUtil.isTrialLocked(trial));
@@ -717,7 +727,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 				Messages.addLocalizedMessageClientId("updateSectionsMessages", FacesMessage.SEVERITY_ERROR, MessageCodes.UPDATE_ECRF_FIELD_SECTIONS_NEW_SECTION_REQUIRED);
 			} else {
 				Collection<ECRFFieldOutVO> ecrfFields = WebUtil.getServiceLocator().getTrialService()
-						.updateEcrfFieldSections(WebUtil.getAuthentication(), ecrfId, oldSection, newSection);
+						.updateEcrfFieldSections(WebUtil.getAuthentication(), ecrfId, oldSection, newSection, newSeries);
 				boolean initialized;
 				if (ecrfFields.size() > 0) {
 					initialized = false;
