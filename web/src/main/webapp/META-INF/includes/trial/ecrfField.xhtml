@@ -526,6 +526,23 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkUpdateNewSection" />
+									
+									<h:outputLabel for="bulkUpdateNewSeries"
+										value="#{triallabels.update_ecrf_sections_new_series_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="bulkUpdateNewSeries"
+											value="#{ecrfFieldBean.newSeries}">
+											<p:ajax />
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="bulkUpdateNewSeries">
+											<h:outputText
+												value="#{triallabels.update_ecrf_sections_new_series_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="bulkUpdateNewSeries" />
+									
 								</h:panelGrid>
 								<p:messages for="updateSectionsMessages" />
 								<p:toolbar>
