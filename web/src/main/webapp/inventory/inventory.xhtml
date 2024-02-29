@@ -30,7 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="inventoryTabView"
 					onTabShow="handleInventoryTabChange(transposeTabIndex(index.index()))"
-					orientation="#{sessionScopeBean.inventoryVisibleTabSet.size() > 5 ? 'left' : 'top'}"
+					orientation="#{sessionScopeBean.inventoryVisibleTabSet.size() >= 5 ? 'right' : 'top'}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="inventorymain"

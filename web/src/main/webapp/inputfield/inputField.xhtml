@@ -30,7 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="inputFieldTabView"
 					onTabShow="handleInputFieldTabChange(transposeTabIndex(index.index()))"
-					orientation="#{sessionScopeBean.inputFieldVisibleTabSet.size() > 5 ? 'left' : 'top'}"
+					orientation="#{sessionScopeBean.inputFieldVisibleTabSet.size() >= 5 ? 'right' : 'top'}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="inputfieldmain"
