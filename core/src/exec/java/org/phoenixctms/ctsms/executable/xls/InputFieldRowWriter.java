@@ -290,7 +290,12 @@ public class InputFieldRowWriter extends RowWriter {
 				values[widthColumnIndex] = (inputField.getWidth() != null ? Long.toString(inputField.getWidth()) : null);
 				values[heightColumnIndex] = (inputField.getHeight() != null ? Long.toString(inputField.getHeight()) : null);
 				if (inputField.getHasImage()) {
-					values[fileNameColumnIndex] = writeFile(inputField);
+					try {
+						values[fileNameColumnIndex] = writeFile(inputField);
+					} catch (Exception e) {
+						jobOutput.println(e.getMessage());
+						values[fileNameColumnIndex] = null;
+					}
 				}
 				// no break
 			case SELECT_MANY_H:
