@@ -601,6 +601,7 @@ public class DemoDataProvider {
 			modifiedUser.setDateFormat(user.getDateFormat());
 			modifiedUser.setDecimalSeparator(user.getDecimalSeparator());
 			modifiedUser.setTheme(user.getTheme());
+			modifiedUser.setTabOrientation(user.getTabOrientation());
 			modifiedUser.setLocked(user.isLocked());
 			modifiedUser.setLockedUntrusted(user.isLockedUntrusted());
 			modifiedUser.setShowTooltips(user.isShowTooltips());
