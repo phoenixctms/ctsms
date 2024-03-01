@@ -588,6 +588,7 @@ public final class CommonUtil {
 			out.setLocale(in.getLocale());
 			out.setShowTooltips(in.getShowTooltips());
 			out.setTheme(in.getTheme());
+			out.setTabOrientation(in.getTabOrientation());
 			out.setDecimalSeparator(in.getDecimalSeparator());
 			out.setDateFormat(in.getDateFormat());
 		}

@@ -39,6 +39,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			in.setDecimalSeparator(out.getDecimalSeparator());
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
+			in.setTabOrientation(out.getTabOrientation());
 			in.getInheritedProperties().clear();
 			Iterator<String> it = out.getInheritedProperties().iterator();
 			while (it.hasNext()) {
@@ -167,6 +168,11 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	}
 
 	@Override
+	public String getTabOrientation() {
+		return in != null ? in.getTabOrientation() : null;
+	}
+
+	@Override
 	public boolean isShowTooltips() {
 		return in != null ? in.getShowTooltips() : false;
 	}
@@ -203,6 +209,13 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	public void setTheme(String theme) {
 		if (in != null) {
 			in.setTheme(theme);
+		}
+	}
+
+	@Override
+	public void setTabOrientation(String tabOrientation) {
+		if (in != null) {
+			in.setTabOrientation(tabOrientation);
 		}
 	}
 
