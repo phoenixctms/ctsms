@@ -293,7 +293,7 @@ public class InputFieldRowWriter extends RowWriter {
 					try {
 						values[fileNameColumnIndex] = writeFile(inputField);
 					} catch (Exception e) {
-						jobOutput.println(e.getMessage());
+						jobOutput.println("failed to write file: " + e.getMessage());
 						values[fileNameColumnIndex] = null;
 					}
 				}
