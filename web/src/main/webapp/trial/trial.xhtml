@@ -22,7 +22,7 @@
 				<p:tabView id="tabView" dynamic="true" cache="false"
 					widgetVar="trialTabView"
 					onTabShow="handleTrialTabChange(transposeTabIndex(index.index()))"
-					orientation="#{sessionScopeBean.trialVisibleTabSet.size() >= 5 ? 'right' : 'top'}"
+					orientation="#{sessionScopeBean.tabOrientation}"
 					styleClass="ctsms-tabview">
 					<p:tab id="trialmain" disabled="false"
 						titleStyleClass="#{!trialBean.created ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"

@@ -30,7 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="staffTabView"
 					onTabShow="handleStaffTabChange(transposeTabIndex(index.index()))"
-					orientation="#{sessionScopeBean.staffVisibleTabSet.size() >= 5 ? 'right' : 'top'}"
+					orientation="#{sessionScopeBean.tabOrientation}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="staffmain"

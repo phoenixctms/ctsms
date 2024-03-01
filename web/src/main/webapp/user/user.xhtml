@@ -30,7 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="userTabView"
 					onTabShow="handleUserTabChange(transposeTabIndex(index.index()))"
-					orientation="#{sessionScopeBean.userVisibleTabSet.size() >= 5 ? 'right' : 'top'}"
+					orientation="#{sessionScopeBean.tabOrientation}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="usermain"

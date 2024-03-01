@@ -30,7 +30,7 @@
 					dynamic="true" cache="false"
 					widgetVar="courseTabView"
 					onTabShow="handleCourseTabChange(transposeTabIndex(index.index()))"
-					orientation="top"
+					orientation="#{sessionScopeBean.tabOrientation}"
 					styleClass="ctsms-tabview">
 					<p:tab
 						id="coursemain"
