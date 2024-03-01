@@ -10,4 +10,12 @@ public class UserLabels extends FacesBundle {
 	protected String getBundleName() {
 		return BUNDLE_NAME;
 	}
+
+	public static String getMessageLocalized(String l10nKey, Object... args) {
+		return getMessageLocalized(BUNDLE_NAME, l10nKey, args);
+	}
+
+	public static String getStringLocalized(String l10nKey) {
+		return getStringLocalized(BUNDLE_NAME, l10nKey);
+	}
 }
