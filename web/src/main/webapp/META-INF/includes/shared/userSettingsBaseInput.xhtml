@@ -201,7 +201,45 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="theme" />
+		
+		<h:panelGroup id="tab_orientation_inherit_input">
+			<p:selectBooleanCheckbox
+				id="inherit_tab_orientation"
+				value="#{bean.inheritedPropertiesMap['tabOrientation']}">
+				<p:ajax process="@this" update="tabOrientation"/>
+			</p:selectBooleanCheckbox>
+			<p:tooltip
+				rendered="#{enableTooltips}"
+				for="inherit_tab_orientation">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('tabOrientation')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
 
+		<h:outputLabel for="tabOrientation" value="#{userlabels.user_tab_orientation_label}" />
+		<h:panelGroup>
+			<p:selectOneMenu id="tabOrientation" value="#{bean.tabOrientation}"
+			    disabled="#{bean.inheritedPropertiesMap['tabOrientation']}"
+				required="false" label="#{userlabels.user_tab_orientation}"
+				styleClass="ctsms-control">
+				<f:selectItem itemLabel="#{labels.no_selection_label}"
+					itemValue="#{applicationScopeBean.noSelectionValue}" />
+				<f:selectItem itemLabel="#{labels.top_label}"
+					itemValue="top" />
+				<f:selectItem itemLabel="#{labels.left_label}"
+					itemValue="left" />
+				<f:selectItem itemLabel="#{labels.right_label}"
+					itemValue="right" />	
+				<p:ajax />
+			</p:selectOneMenu>
+			<p:tooltip rendered="#{enableTooltips}" for="tabOrientation">
+				<h:outputText value="#{userlabels.user_tab_orientation_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="tabOrientation" />
+		
 		<h:panelGroup id="showTooltips_inherit_input">
 			<p:selectBooleanCheckbox
 				id="inherit_showTooltips"

@@ -820,6 +820,18 @@ public class SessionScopeBean implements FilterItemsStore {
 		}
 	}
 
+	public synchronized String getTabOrientation() {
+		String tabOrientation = null;
+		if (logon != null && !otpRequired) {
+			tabOrientation = logon.getInheritedUser().getTabOrientation();
+		}
+		if (tabOrientation != null && tabOrientation.length() > 0) {
+			return tabOrientation;
+		} else {
+			return Settings.getString(SettingCodes.DEFAULT_TAB_ORIENTATION, Bundle.SETTINGS, DefaultSettings.TAB_ORIENTATION);
+		}
+	}
+
 	public synchronized TimeZone getTimeZone() {
 		if (logon != null) { // && !otpRequired) {
 			return CommonUtil.timeZoneFromString(logon.getInheritedUser().getTimeZone());

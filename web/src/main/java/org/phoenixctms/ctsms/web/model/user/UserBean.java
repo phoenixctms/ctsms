@@ -91,6 +91,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setDecimalSeparator(out.getDecimalSeparator());
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
+			in.setTabOrientation(out.getTabOrientation());
 			in.getInheritedProperties().clear();
 			Iterator<String> it = out.getInheritedProperties().iterator();
 			while (it.hasNext()) {
@@ -144,6 +145,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			result.setDateFormat(in.getDateFormat());
 			result.setDecimalSeparator(in.getDecimalSeparator());
 			result.setTheme(in.getTheme());
+			result.setTabOrientation(in.getTabOrientation());
 			result.getInheritedProperties().clear();
 			result.getInheritedProperties().addAll(in.getInheritedProperties());
 			result.getInheritedPermissionProfileGroups().clear();
@@ -190,6 +192,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setDecimalSeparator(Messages.getString(MessageCodes.USER_DECIMAL_SEPARATOR_PRESET));
 			in.setVersion(null);
 			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
+			in.setTabOrientation(Settings.getString(SettingCodes.USER_TAB_ORIENTATION_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TAB_ORIENTATION_PRESET));
 			in.getInheritedProperties().clear();
 			in.getInheritedPermissionProfileGroups().clear();
 		}
@@ -876,6 +879,11 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	@Override
+	public String getTabOrientation() {
+		return in != null ? in.getTabOrientation() : null;
+	}
+
+	@Override
 	public boolean isShowTooltips() {
 		return in != null ? in.getShowTooltips() : false;
 	}
@@ -912,6 +920,13 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	public void setTheme(String theme) {
 		if (in != null) {
 			in.setTheme(theme);
+		}
+	}
+
+	@Override
+	public void setTabOrientation(String tabOrientation) {
+		if (in != null) {
+			in.setTabOrientation(tabOrientation);
 		}
 	}
 

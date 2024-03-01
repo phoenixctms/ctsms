@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.TimeZoneVO;
 import org.phoenixctms.ctsms.vo.UserInheritedVO;
+import org.phoenixctms.ctsms.web.bundle.Labels;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -204,6 +205,8 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 
 	public abstract String getTheme();
 
+	public abstract String getTabOrientation();
+
 	public abstract boolean isShowTooltips();
 
 	protected abstract void setUserTimeZone(String timeZoneID);
@@ -215,6 +218,8 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 	public abstract void setDecimalSeparator(String decimalSeparator);
 
 	public abstract void setTheme(String theme);
+
+	public abstract void setTabOrientation(String tabOrientation);
 
 	public abstract void setShowTooltips(boolean showTooltips);
 
@@ -283,6 +288,8 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 						inheritedValue = WebUtil.getTimeZone((String) inheritedValue).getName();
 					} else if ("theme".equals(propertyName)) {
 						inheritedValue = Settings.getThemes().get(inheritedValue);
+					} else if ("tabOrientation".equals(propertyName)) {
+						inheritedValue = Labels.getStringLocalized(inheritedValue + "_label");
 					}
 				}
 			} catch (Exception e) {

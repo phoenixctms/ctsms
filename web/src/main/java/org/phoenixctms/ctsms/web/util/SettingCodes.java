@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.util;
 public interface SettingCodes {
 
 	public final static String DEFAULT_THEME = "default_theme";
+	public final static String DEFAULT_TAB_ORIENTATION = "default_tab_orientation";
 	public final static String MAX_CRITERIONS = "max_criterions";
 	public final static String IBAN_MASK = "iban_mask";
 	public final static String CALENDAR_YEAR_RANGE = "calendar_year_range";
@@ -194,6 +195,7 @@ public interface SettingCodes {
 	public final static String USER_LOCALE_PRESET = "user_locale_preset";
 	public final static String USER_TIME_ZONE_PRESET = "user_time_zone_preset";
 	public final static String USER_THEME_PRESET = "user_theme_preset";
+	public final static String USER_TAB_ORIENTATION_PRESET = "user_tab_orientation_preset";
 	public final static String USER_AUTH_METHOD_PRESET = "user_auth_method_preset";
 	public final static String USER_SHOW_TOOLTIPS_PRESET = "user_show_tooltips_preset";
 	public final static String USER_LOCKED_COLOR = "user_locked_color";

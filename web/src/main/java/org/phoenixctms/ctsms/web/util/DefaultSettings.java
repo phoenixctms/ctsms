@@ -24,6 +24,7 @@ import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 public final class DefaultSettings {
 
 	public final static String THEME = "aristo";
+	public final static String TAB_ORIENTATION = "top";
 	public final static int MAX_CRITERIONS = 30;
 	public final static String CALENDAR_YEAR_RANGE = "1900:" + ((new GregorianCalendar()).get(GregorianCalendar.YEAR) + 10);
 	public final static String IBAN_MASK = "";
@@ -330,6 +331,7 @@ public final class DefaultSettings {
 	public static final String USER_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
 	public static final String USER_TIME_ZONE_PRESET = CommonUtil.timeZoneToString(TimeZone.getDefault());
 	public static final String USER_THEME_PRESET = "aristo";
+	public static final String USER_TAB_ORIENTATION_PRESET = "top";
 	public static final AuthenticationType USER_AUTH_METHOD_PRESET = AuthenticationType.LOCAL;
 	public final static boolean USER_SHOW_TOOLTIPS_PRESET = true;
 	public final static boolean HYPERLINK_ACTIVE_PRESET = true;
