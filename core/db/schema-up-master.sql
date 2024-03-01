@@ -52,5 +52,13 @@ if get_database_version() < '010801030' then
   
 end if;
 
+if get_database_version() < '010801040' then
+
+  alter table USERS add column TAB_ORIENTATION CHARACTER VARYING(1024);
+  
+  perform set_database_version('010801040');
+  
+end if;
+
 end
 $$;
