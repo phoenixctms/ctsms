@@ -264,6 +264,9 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ECRF ecrf = getEcrf(ecrfName, ecrfRevision);
 		Long position = Long.parseLong(getPosition(values));
 		String section = getSection(values);
+		if (CommonUtil.isEmptyString(section)) {
+			throw new IllegalArgumentException("empty section");
+		}
 		String ref = getRef(values);
 		ECRFField ecrfField = null;
 		if (ecrf != null) {
