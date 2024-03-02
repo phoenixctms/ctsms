@@ -91,6 +91,18 @@
 							<ui:param name="rendered" value="#{!teamMember.vo.staff.person}" />
 						</ui:include>
 					</p:column>
+
+					<p:column sortBy="#{teamMember.vo.staff.department}"
+						filterBy="#{teamMember.vo.staff.department.id}"
+						filterOptions="#{sessionScopeBean.filterDepartments}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.team_member_team_member_list_staff_department_column}" />
+						</f:facet>
+						<h:outputText value="#{teamMember.vo.staff.department.name}" />
+					</p:column>
+
 					<ui:include src="../shared/teamMemberTableColumns.xhtml" />
 					<p:column style="width:64px;white-space:nowrap;">
 						<p:commandButton immediate="true" ajax="false"
