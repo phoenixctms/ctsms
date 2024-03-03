@@ -1294,7 +1294,7 @@ public class TrialServiceImpl
 			}
 		}
 		if ((new EcrfFieldRefCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_REF_NOT_UNIQUE);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_REF_NOT_UNIQUE, ecrfFieldIn.getRef());
 		}
 	}
 
