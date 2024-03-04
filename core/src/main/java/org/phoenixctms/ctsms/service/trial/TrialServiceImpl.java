@@ -2061,16 +2061,18 @@ public class TrialServiceImpl
 		Iterator<Visit> it = this.getVisitDao().findByEcrfStatusEntry(modifiedEcrf.getId()).iterator();
 		while (it.hasNext()) {
 			Visit visit = it.next();
-			ServiceUtil.checkLockedEcrfs(originalEcrf, visit, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
-			//delete ecrf status entries of empty ecrfs
-			if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
-						CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
-			} else if (ecrfFieldStatusEntryDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
-						CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
-			} else {
-				ecrfStatusEntriesToRemove.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), visit.getId(), null, null));
+			if (!modifiedEcrf.getVisitIds().contains(visit.getId())) {
+				ServiceUtil.checkLockedEcrfs(originalEcrf, visit, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
+				//delete ecrf status entries of empty ecrfs
+				if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
+							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
+				} else if (ecrfFieldStatusEntryDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
+							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
+				} else {
+					ecrfStatusEntriesToRemove.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), visit.getId(), null, null));
+				}
 			}
 		}
 		if (!modifiedEcrf.getTrialId().equals(originalEcrf.getTrial().getId())) {
