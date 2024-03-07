@@ -1956,8 +1956,8 @@ var FieldCalculation = FieldCalculation || {};
 	function _inputFieldApplyCalculatedValue(variableName, index) {
 		var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
 		if (inputFieldVariable) {
-			inputFieldVariable.enteredValue = _cloneJSON( inputFieldVariable.value);
-			inputFieldVariable.delta = false;
+			inputFieldVariable.enteredValue = _cloneJSON(inputFieldVariable.value);
+			inputFieldVariable.delta = !_equalInputFieldVariable(inputFieldVariable);
 			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
 				console.log("apply calculated value " + _debugVarName(inputFieldVariable));
 			}
