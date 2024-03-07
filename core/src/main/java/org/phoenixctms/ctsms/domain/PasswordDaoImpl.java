@@ -200,5 +200,6 @@ public class PasswordDaoImpl
 			target.setExpiration(ServiceUtil.getLogonExpirationDate(source));
 		}
 		target.setOtpType(L10nUtil.createOTPAuthenticatorTypeVO(Locales.USER, source.getOtpType()));
+		target.setHasOtpSecret(source.getEncryptedOtpSecret() != null ? source.getEncryptedOtpSecret().length > 0 : false);
 	}
 }
