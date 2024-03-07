@@ -1906,7 +1906,11 @@ public final class ServiceUtil {
 			password.setShowOtpRegistrationInfo(false);
 		}
 		if (!resetOtpSecret && password.getOtpType() != null && lastPassword != null) {
-			resetOtpSecret = !password.getOtpType().equals(lastPassword.getOtpType());
+			if (lastPassword.getEncryptedOtpSecret() != null && lastPassword.getEncryptedOtpSecret().length > 0) {
+				resetOtpSecret = !password.getOtpType().equals(lastPassword.getOtpType());
+			} else {
+				resetOtpSecret = true;
+			}
 		}
 		if (resetOtpSecret) {
 			if (password.getOtpType() != null) {
