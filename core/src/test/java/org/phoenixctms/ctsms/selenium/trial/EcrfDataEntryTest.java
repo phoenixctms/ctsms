@@ -401,6 +401,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		newUser.setDepartmentId(departmentId);
 		newUser.setName(name);
 		newPassword.setPassword(password);
+		newPassword.setEnable2fa(false);
 		return getTestDataProvider().createUser(newUser, newPassword, departmentPassword, new ArrayList<PermissionProfile>() {
 
 			{
