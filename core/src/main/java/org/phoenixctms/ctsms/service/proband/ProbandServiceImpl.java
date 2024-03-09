@@ -2057,12 +2057,18 @@ public class ProbandServiceImpl
 			department = CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		Collection<Trial> trials = new ArrayList<Trial>();
-		Iterator<Trial> trialIt = this.getTrialDao().findBySignup(department != null ? department.getId() : null, true, null).iterator();
+		if (this.getTrialDao().findBySignup(departmentId, true, null).size() == 0) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_PROBAND_LETTER_ATTACHMENT);
+		}
+		Iterator<Trial> trialIt = this.getTrialDao().findBySignup(departmentId, true, null).iterator();
 		while (trialIt.hasNext()) {
 			Trial trial = trialIt.next();
 			if (this.getInquiryValueDao().getCount(trial.getId(), null, activeSignup, proband.getId()) > 0) {
 				trials.add(trial);
 			}
+		}
+		if (trials.size() == 0) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LETTER_NOT_FOR_ANIMAL_ENTRIES);
 		}
 		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
 				trials,
