@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -2048,31 +2049,28 @@ public class ProbandServiceImpl
 	}
 
 	@Override
-	protected InquiriesPDFVO handleRenderInquiriesSignup(AuthenticationVO auth, Long departmentId, Long probandId, Boolean activeSignup) throws Exception {
+	protected InquiriesPDFVO handleRenderInquiriesSignup(AuthenticationVO auth, Long departmentId, Long inquiryTrialId, Long probandId, Boolean activeSignup) throws Exception {
 		ProbandDao probandDao = this.getProbandDao();
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
+		Collection<Trial> trials = new LinkedHashSet<Trial>();
+		if (inquiryTrialId != null) {
+			trials.add(CheckIDUtil.checkTrialId(inquiryTrialId, this.getTrialDao()));
+		}
 		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(proband);
-		Department department = null;
-		if (departmentId != null) {
-			department = CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
-		}
-		Collection<Trial> trials = new ArrayList<Trial>();
-		if (this.getTrialDao().findBySignup(departmentId, true, null).size() == 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_PROBAND_LETTER_ATTACHMENT);
-		}
+		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
 		Iterator<Trial> trialIt = this.getTrialDao().findBySignup(departmentId, true, null).iterator();
 		while (trialIt.hasNext()) {
 			Trial trial = trialIt.next();
-			if (this.getInquiryValueDao().getCount(trial.getId(), null, activeSignup, proband.getId()) > 0) {
+			if (!trials.contains(trial) && inquiryValueDao.getCount(trial.getId(), null, activeSignup, proband.getId()) > 0) {
 				trials.add(trial);
 			}
 		}
-		if (trials.size() == 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LETTER_NOT_FOR_ANIMAL_ENTRIES);
-		}
 		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
 				trials,
-				null, activeSignup, false, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				null, activeSignup, false, this.getTrialDao(), this.getInquiryDao(), inquiryValueDao, this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
 				this.getUserDao());
 		ServiceUtil.logSystemMessage(proband, (TrialOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 				SystemMessageCodes.INQUIRIES_SIGNUP_PDF_RENDERED,

@@ -156,7 +156,7 @@ public class InquiryValueDaoImpl
 		if (probandId != null) {
 			inquiryValueCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
-		if (trialId != null || active != null || inputFieldId != null) {
+		if (trialId != null || active != null || activeSignup != null || inputFieldId != null) {
 			Criteria inquiryCriteria = inquiryValueCriteria.createCriteria("inquiry", CriteriaSpecification.INNER_JOIN);
 			if (trialId != null) {
 				inquiryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -189,7 +189,7 @@ public class InquiryValueDaoImpl
 		if (probandId != null) {
 			inquiryValueCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 		}
-		if (trialId != null || active != null) {
+		if (trialId != null || active != null || activeSignup != null) {
 			org.hibernate.Criteria inquiryCriteria = inquiryValueCriteria.createCriteria("inquiry", CriteriaSpecification.INNER_JOIN);
 			if (trialId != null) {
 				inquiryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
