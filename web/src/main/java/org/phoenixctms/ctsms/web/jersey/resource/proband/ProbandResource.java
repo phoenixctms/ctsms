@@ -310,10 +310,11 @@ public final class ProbandResource extends ServiceResourceBase {
 
 	@GET
 	@Path("{id}/inquiryvalues/signuppdf")
-	public Response renderInquiriesSignup(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("active_signup") Boolean activeSignup)
+	public Response renderInquiriesSignup(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("inquiry_trial_id") Long inquiryTrialId,
+			@QueryParam("active_signup") Boolean activeSignup)
 			throws AuthenticationException,
 			AuthorisationException, ServiceException {
-		InquiriesPDFVO vo = WebUtil.getServiceLocator().getProbandService().renderInquiriesSignup(auth, departmentId, id, activeSignup);
+		InquiriesPDFVO vo = WebUtil.getServiceLocator().getProbandService().renderInquiriesSignup(auth, departmentId, inquiryTrialId, id, activeSignup);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
 		ResponseBuilder response = Response.ok(vo.getDocumentDatas(), vo.getContentType().getMimeType());
@@ -324,10 +325,11 @@ public final class ProbandResource extends ServiceResourceBase {
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/signuppdf/head")
-	public InquiriesPDFVO renderInquiriesSignupHead(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("active_signup") Boolean activeSignup)
+	public InquiriesPDFVO renderInquiriesSignupHead(@PathParam("id") Long id, @QueryParam("department_id") Long departmentId, @QueryParam("inquiry_trial_id") Long inquiryTrialId,
+			@QueryParam("active_signup") Boolean activeSignup)
 			throws AuthenticationException,
 			AuthorisationException, ServiceException {
-		InquiriesPDFVO result = WebUtil.getServiceLocator().getProbandService().renderInquiriesSignup(auth, departmentId, id, activeSignup);
+		InquiriesPDFVO result = WebUtil.getServiceLocator().getProbandService().renderInquiriesSignup(auth, departmentId, inquiryTrialId, id, activeSignup);
 		result.setDocumentDatas(null);
 		return result;
 	}
