@@ -1,0 +1,25 @@
+Estimado miembro del depósito. $probandstatusentry_proband_department,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Probanda: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband dept.: $probandstatusentry_proband_department
+   • Gato de probanda:  $probandstatusentry_proband_category
+
+   • Tipo:          $probandstatusentry_type
+   • Desde:          $probandstatusentry_start
+   • Para:            $probandstatusentry_stop
+
+Por favor prepare y/o tome las acciones apropiadas.
+
+Thank you!
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No hay respuesta.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instancia: $instance_name
