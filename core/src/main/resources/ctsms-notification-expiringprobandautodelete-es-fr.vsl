@@ -1,29 +1,29 @@
-Estimado miembro del depósito. $proband_department,
+Estimado miembro del depósito. $proband_department,
 
-esta es una notificación para el siguiente evento:
+esta es una notificación para el siguiente evento:
 
    $type
 
    • Probanda: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Depósito de probanda:     $proband_department
-   • Categoría de probanda:        $proband_category
+   • Dépôt de probabilité :     $proband_department
+   • Catégorie de probande :        $proband_category
 
-   • Eliminación programada:    $proband_autodeletedeadline
+   • Eliminación programada:    $proband_autodeletedeadline
 
-   • Último usuario modificado:      $proband_modifieduser_identity_name
-   • Última fecha de modificación: $proband_modifiedtimestamp
+   • Último utilisateur modificado:      $proband_modifieduser_identity_name
+   • Última fecha de modificación: $proband_modifiedtimestamp
 
 
-Sin el consentimiento informado del testamento, la eliminación de los registros es necesaria para implementar la privacidad de los datos con el fin de proteger los datos sensibles del probante y eliminar la información personal identificable. Por lo tanto, no se puede deshacer una eliminación.
+Sin el consentimiento informado del testamento, la eliminación de los registros es necesaria para implementar la privacidad de los datos con el fin de proteger los datos sensibles del probante y eliminar la información personal identificable. Por lo tanto, no se puede deshacer una eliminación.
 
 Por favor prepare y/o tome las acciones apropiadas.
 
 Gracias.
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. Pas de réponse.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance : $instance_name
