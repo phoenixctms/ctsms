@@ -1,35 +1,19 @@
 [![Build and Analyze](https://github.com/phoenixctms/ctsms/actions/workflows/build.yml/badge.svg)](https://github.com/phoenixctms/ctsms/actions/workflows/build.yml)
-
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=phoenixctms_ctsms&metric=alert_status)](https://sonarcloud.io/dashboard?id=phoenixctms_ctsms)
-
 [![Build and Test](https://github.com/phoenixctms/ctsms/actions/workflows/test.yml/badge.svg)](https://github.com/phoenixctms/ctsms/actions/workflows/test.yml)
-
 ![es-ES translation](https://img.shields.io/badge/dynamic/json?color=blue&label=es-ES&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27es-ES%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![es-ES proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=es-ES&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27es-ES%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![fi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fi&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27fi%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![fi proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=fi&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27fi%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![fr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fr&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27fr%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![fr proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=fr&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27fr%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![it translation](https://img.shields.io/badge/dynamic/json?color=blue&label=it&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27it%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![it proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=it&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27it%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![ko translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ko&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27ko%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![ko proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=ko&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27ko%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![pt-PT translation](https://img.shields.io/badge/dynamic/json?color=blue&label=pt-PT&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27pt-PT%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![pt-PT proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=pt-PT&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27pt-PT%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![sv-SE translation](https://img.shields.io/badge/dynamic/json?color=blue&label=sv-SE&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27sv-SE%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
-
 ![sv-SE proofreading](https://img.shields.io/badge/dynamic/json?color=green&label=sv-SE&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27sv-SE%27)].data.approvalProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 
 Phoenix CTMS
