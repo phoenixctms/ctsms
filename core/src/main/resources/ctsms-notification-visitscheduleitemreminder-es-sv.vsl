@@ -5,9 +5,9 @@ esta es una notificación para el siguiente evento:
    $type
 
    • Prueba:         $visitscheduleitem_trial_name
-   • Visita:         $visitscheduleitem_name
+   • Besök:         $visitscheduleitem_name
    • Visita de:    $visitscheduleitem_start
-   • Visitar a:      $visitscheduleitem_stop
+   • Besökare a:      $visitscheduleitem_stop
 #if($notification.proband)
 
    • Probanda: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
