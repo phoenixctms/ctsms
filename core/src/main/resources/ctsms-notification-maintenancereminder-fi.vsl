@@ -1,0 +1,26 @@
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Tavaraluettelo:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Tavaraluettelo kissa:  $maintenancescheduleitem_inventory_category
+
+   • Nimi: '$notification.maintenanceScheduleItem.title'
+   • Tyyppi:            $maintenancescheduleitem_type
+   • Päivämäärä:            $maintenancescheduleitem_nextrecurrence
+
+   • Yrityksen yhteystiedot: $maintenancescheduleitem_companycontact_name
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
