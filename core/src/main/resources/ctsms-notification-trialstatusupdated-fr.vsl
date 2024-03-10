@@ -1,0 +1,30 @@
+Cher membre de l'équipe d'essai $trial_name ou membre du département. $trial_department,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Code d'essai :   $trial_name
+   • Titre d'essai :  $trial_title
+   • Étude d'essai.:  $trial_department
+
+   • Statut d'essai : $trial_status
+#if($notification.trial.status.lockdown)
+   • Verrouillage : aucune modification supplémentaire du procès et des dossiers associés.
+#end
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Les entrées de valeur de requête sont activées.
+#sinon
+   • Les entrées de valeur de requête sont désactivées.
+#end
+
+Préparez et/ou prenez les mesures appropriées.
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
