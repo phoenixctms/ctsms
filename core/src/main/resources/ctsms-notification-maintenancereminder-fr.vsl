@@ -1,0 +1,26 @@
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Inventaire :       $maintenancescheduleitem_inventory_name
+   • Dépôt de stock.: $maintenancescheduleitem_inventory_department
+   • Chat d'inventaire :  $maintenancescheduleitem_inventory_category
+
+   • Titre : '$notification.maintenanceScheduleItem.title'
+   • Type :            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
+
+   • Contact de la société : $maintenancescheduleitem_companycontact_name
+
+Préparez et/ou prenez les mesures appropriées.
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
