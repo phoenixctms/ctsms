@@ -1,0 +1,39 @@
+Kära $dutyrosterturn_trial_name testgruppsmedlem eller handledare för $dutyrosterturn_staff_name,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Personal:       $dutyrosterturn_staff_name
+   • Personaluppdragen.: $dutyrosterturn_staff_department
+   • Personal cat.:  $dutyrosterturn_staff_category
+
+   • Statustyp: $staffstatusentry_type
+   • Status från: $staffstatusentry_start
+   • Status till:   $staffstatusentry_stop
+
+   • Provning:       $dutyrosterturn_trial_name
+   • Plikt från:   $dutyrosterturn_start
+   • Plikt till:     $dutyrosterturn_stop
+
+   • Plikt titel:  $dutyrosterturn_title
+   • Besök:       $dutyrosterturn_visitscheduleitem_name
+
+Statuskommentar:
+
+$staffstatusentry_comment
+
+Tvivla kommentar:
+
+$dutyrosterturn_comment
+
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name
