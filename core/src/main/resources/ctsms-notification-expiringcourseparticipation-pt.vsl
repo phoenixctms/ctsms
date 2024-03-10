@@ -1,0 +1,26 @@
+Dear $courseparticipationstatusentry_staff_firstname,
+
+esta é uma notificação para o seguinte evento:
+
+   $type
+
+   • Curso:              $courseparticipationstatusentry_course_name
+   • Título do Curso CV:     $courseparticipationstatusentry_course_cvtitle
+   • Departamento de curso:   $courseparticipationstatusentry_course_department
+   • Categoria do curso:     $courseparticipationstatusentry_course_category
+
+   • Fim do curso:          $courseparticipationstatusentry_course_stop
+   • Expiração de validade: $courseparticipationstatusentry_course_expiration
+
+Por favor, visite para se registrar para um curso de atualização adequado:
+
+   $http_base_url/staff/expiringParticipaçãoVisão .jsf
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name
