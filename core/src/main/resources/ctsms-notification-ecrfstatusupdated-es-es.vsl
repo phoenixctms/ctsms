@@ -18,20 +18,20 @@ esta es una notificación para el siguiente evento:
 
    • Estado de eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Validación de entrada:     $ecrfstatusentry_validationresponsemsg
-   • Marca de tiempo de validación: $ecrfstatusentry_validationtimestamp
+   • Validación de entrada:     $ecrfstatusentry_validationresponsemsg
+   • Marca de tiempo de validación: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FALLADO")
    • $ecrfstatusentry_validationresponsemsg
    • Marca de tiempo:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Validación de entrada pendiente.
+   • Validación de entrada pendiente.
 #end
 
    • Modificado: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Por favor, continúe con los siguientes pasos para completar la entrada de datos de eCRF.
+Por favor, continúe con los siguientes pasos para completar la entrada de datos de eCRF.
 #sino
 La entrada de datos de eCRF se ha completado.
 #end
