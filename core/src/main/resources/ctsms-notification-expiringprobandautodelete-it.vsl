@@ -1,0 +1,29 @@
+Caro membro del prof. $proband_department,
+
+si tratta di una notifica per il seguente evento:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband deptartment:     $proband_department
+   • Categoria banda:        $proband_category
+
+   • Eliminazione pianificata:    $proband_autodeletedeadline
+
+   • Ultimo utente modificato:      $proband_modifieduser_identity_name
+   • Ultimo timestamp modificato: $proband_modifiedtimestamp
+
+
+Senza il consenso informato della prova, la rimozione dei record è necessaria per implementare la privacy dei dati al fine di proteggere i dati sensibili della prova e rilasciare informazioni personali identificabili. Pertanto una cancellazione non può essere rotolata.
+
+Preparare e/o adottare le misure appropriate.
+
+Grazie!
+
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Istanza: $instance_name
