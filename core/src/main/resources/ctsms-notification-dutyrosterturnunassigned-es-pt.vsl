@@ -8,25 +8,25 @@ esta es una notificación para el siguiente evento:
    • Duro de:      $dutyrosterturn_start
    • Duelo a:        $dutyrosterturn_stop
 
-   • Calendario:       $dutyrosterturn_calendar
-   • Título del deber:     $dutyrosterturn_title
+   • Calendário:       $dutyrosterturn_calendar
+   • Título del deber:     $dutyrosterturn_title
    • Visita:          $dutyrosterturn_visitscheduleitem_name
 
    • Nuevo personal:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAlocatable)
-   • Autorizable.
+   • Autorizável.
 #sino
-   • Sin autoasignación.
+   • Sin autoasignación.
 #fim
 
-   • Modificado: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modificação: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
 Comentario de deber:
 
 $dutyrosterturn_comment
 
-Las asignaciones obligatorias son obligatorias y pueden cambiar hasta que finalmente se congelen. Se puede acceder a la vista actualizada en el siguiente sitio:
+Os signatários obrigatórios são obrigatórios e podem trocar por algo que finalmente é congelado. Se puede acceder a la vista actualizada en el siguiente sitio:
 
    $http_base_url/trial/dutyRosterAgenle.jsf.
 
