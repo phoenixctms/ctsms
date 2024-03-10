@@ -1,0 +1,37 @@
+Dear $user_identity_firstname,
+
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+
+   • Käyttäjänimi:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • Järjestelmänvalvoja ilmoittaa sinulle varsinaisen salasanan.
+#Muu
+   • Salasana pysyy muuttumattomana.
+#end
+#elseif($ldap_auth_method)
+   • Käytettävä salasana on sinun MUG-salasanasi.
+
+#if($new_user)
+Kun kirjaudut sisään ensimmäistä kertaa, syötä ylläpitäjän antama salasana pakolliseksi "paikallinen salasana".
+#Muu
+Kun kirjaudut seuraavan kerran, syötä nykyinen salasana pakolliseksi "paikallinen salasana".
+#end
+#end
+
+#if($new_user)
+Järjestelmä on käytettävissä alla olevalla sivustolla:
+
+   $http_base_url
+
+#end
+TÄRKEÄÄ: Tilin avulla voit lukea henkilökohtaisesti tunnistettavia tietoja aiheista, jotka käyttäjät ovat rekisteröineet "$user_department" osasto. Tietojen yksityisyyden säilyttämiseksi tilitiedot on pidettävä salassa. Sinua ei koskaan pyydetä antamaan käyttäjätunnuksia sähköpostitse tai muilla palvelimilla kuin "$http_domain_name".
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
