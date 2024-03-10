@@ -1,0 +1,25 @@
+Hyvä syvyyden jäsen. $probandstatusentry_proband_department,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Probandin syvyys: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
+
+   • Tyyppi:          $probandstatusentry_type
+   • Lähettäjä:          $probandstatusentry_start
+   • Vastaanottaja:            $probandstatusentry_stop
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
