@@ -1,0 +1,26 @@
+Hyvä $visitscheduleitem_trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $visitscheduleitem_trial_department,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Kokeilu:         $visitscheduleitem_trial_name
+   • Käynti:         $visitscheduleitem_name
+   • Vieraile alkaen:    $visitscheduleitem_start
+   • Vieraile kohteessa:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#end
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
