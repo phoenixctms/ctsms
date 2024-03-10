@@ -1,0 +1,33 @@
+Geachte $visitscheduleitem_trial_name test teamlid of toezichthouder van $staff_name,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Probeer:      $visitscheduleitem_trial_name
+   • Bezoek:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Datum:       $visit_schedule_item_day_date
+#anders
+   • Bezoek van: $visitscheduleitem_start
+   • Bezoek naar:   $visitscheduleitem_stop
+#einde
+
+   • Drempel:  $inactive_staff_limit
+
+$inactive_staff.size() medewerkers N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#einde
+
+Bereid u voor en/of neem passende acties.
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name
