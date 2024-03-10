@@ -1,0 +1,30 @@
+Caro membro del team di prova $visitscheduleitem_trial_name o membro del dept. $probandstatusentry_proband_department,
+
+si tratta di una notifica per il seguente evento:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
+
+   • Tipo di stato:   $probandstatusentry_type
+   • Stato da:   $probandstatusentry_start
+   • Stato a:     $probandstatusentry_stop
+
+   • Prova:         $visitscheduleitem_trial_name
+   • Visita:         $visitscheduleitem_name
+   • Visita da:    $visitscheduleitem_start
+   • Visita a:      $visitscheduleitem_stop
+
+Preparare e/o adottare le misure appropriate.
+
+Grazie!
+
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Istanza: $instance_name
