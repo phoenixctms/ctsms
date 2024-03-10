@@ -1,0 +1,25 @@
+Caro membro do dep. $probandstatusentry_proband_department,
+
+esta é uma notificação para o seguinte evento:
+
+   $type
+
+   • Perfil: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband dep.: $probandstatusentry_proband_department
+   • Gato Proband:  $probandstatusentry_proband_category
+
+   • Tipo:          $probandstatusentry_type
+   • De:          $probandstatusentry_start
+   • Para:            $probandstatusentry_stop
+
+Por favor, prepare-se e/ou tome as medidas adequadas.
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name
