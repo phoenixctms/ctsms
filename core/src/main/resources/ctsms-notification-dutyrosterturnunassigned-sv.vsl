@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Provning:          $dutyrosterturn_trial_name
+   • Plikt från:      $dutyrosterturn_start
+   • Plikt till:        $dutyrosterturn_stop
+
+   • Kalender:       $dutyrosterturn_calendar
+   • Plikt titel:     $dutyrosterturn_title
+   • Besök:          $dutyrosterturn_visitscheduleitem_name
+
+   • Ny personal:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Självtilldelningsbar.
+#annat
+   • Ingen självallokering.
+# slut
+
+   • Ändrad: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Tvivla kommentar:
+
+$dutyrosterturn_comment
+
+Uppdraget är obligatoriskt och kan komma att ändras tills de till slut frysas. Den aktuella översikten finns tillgänglig på webbplatsen nedan:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name
