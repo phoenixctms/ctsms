@@ -1,0 +1,17 @@
+<table width="100%" cellspacing="0" cellpadding="0"><tbody><tr><td>
+1. Instala la aplicación <b>Google Authenticator</b> en tu dispositivo móvil.
+</td></tr>
+<tr><td align="left">
+<a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" style="border-radius: 10px; width: 140px; height: 50px;"></a>
+<a target="_blank" href="https://apps.apple.com/us/app/google-authenticator/id388497605?itsct=apps_box_badge&itscg=30200"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=140x34&releaseDate=1284940800&h=7fc6b39acc8ae5a42ad4b87ff8c7f88d" alt="Download on the App Store" style="border-radius: 10px; width: 140px; height: 34px; padding:8px;"></a>
+</td></tr>
+<tr><td>
+2. Abre la aplicación para registrar tu cuenta de $application_abbreviation (escanea el código QR abajo).
+</td></tr>
+<tr><td align="left">
+<img src="https://chart.googleapis.com/chart?chs=150x150&chld=M|0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+</td></tr>
+<tr><td>
+3. Utilice la aplicación para generar el código de verificación solicitado.
+</td></tr>
+</tbody></table>
