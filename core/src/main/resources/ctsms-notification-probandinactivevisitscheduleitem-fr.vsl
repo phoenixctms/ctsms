@@ -1,0 +1,30 @@
+Cher membre de l'équipe d'essai $visitscheduleitem_trial_name ou membre du département. $probandstatusentry_proband_department,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband chat :  $probandstatusentry_proband_category
+
+   • Type de statut :   $probandstatusentry_type
+   • Statut de :   $probandstatusentry_start
+   • Statut à:     $probandstatusentry_stop
+
+   • Essai :         $visitscheduleitem_trial_name
+   • Visite:         $visitscheduleitem_name
+   • Visite de :    $visitscheduleitem_start
+   • Visiter à:      $visitscheduleitem_stop
+
+Préparez et/ou prenez les mesures appropriées.
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
