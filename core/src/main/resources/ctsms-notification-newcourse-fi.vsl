@@ -1,0 +1,27 @@
+Hyvä syvyyden jäsen. $course_department,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Kurssi:                 $course_name
+   • Kurssin CV otsikko:        $course_cvtitle
+   • Kurssiosasto:      $course_department
+   • Kurssiluokka:        $course_category
+
+   • Kurssin alku:           $course_start
+   • Kurssin loppu:             $course_stop
+   • Osallistumisen määräaika: $course_participationdeadline
+
+Rekisteröidy tälle kurssille:
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
