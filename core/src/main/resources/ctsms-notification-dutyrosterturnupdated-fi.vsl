@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Kokeilu:          $dutyrosterturn_trial_name
+   • Tulli:      $dutyrosterturn_start
+   • Velvoite:        $dutyrosterturn_stop
+
+   • Kalenteri:       $dutyrosterturn_calendar
+   • Duty otsikko:     $dutyrosterturn_title
+   • Käynti:          $dutyrosterturn_visitscheduleitem_name
+
+   • Henkilökunta:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Itsensä jaettavissa.
+#Muu
+   • Ei itsejakoa.
+#end
+
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Tullia koskeva huomautus:
+
+$dutyrosterturn_comment
+
+Tehtävät ovat pakollisia ja voivat muuttua, kunnes ne on lopullisesti jäädytetty. Ajantasainen yleiskatsaus on saatavilla alla olevalla sivustolla:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
