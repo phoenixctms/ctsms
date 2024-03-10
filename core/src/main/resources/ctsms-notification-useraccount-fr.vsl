@@ -1,0 +1,37 @@
+Dear $user_identity_firstname,
+
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+
+   • Nom d'utilisateur :   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • Un administrateur vous informera du mot de passe actuel.
+#sinon
+   • Le mot de passe reste inchangé.
+#end
+#elseif($ldap_auth_method)
+   • Le mot de passe à utiliser est votre mot de passe MUG.
+
+#if($new_user)
+Lorsque vous vous connectez pour la première fois, entrez le mot de passe fourni par l'administrateur en tant que "mot de passe local" obligatoire.
+#sinon
+Lors de la prochaine connexion, entrez votre mot de passe actuel comme "mot de passe local" obligatoire.
+#end
+#end
+
+#if($new_user)
+Le système est accessible sur le site ci-dessous:
+
+   $http_base_url
+
+#end
+IMPORTANT: Le compte vous permet de lire les informations personnellement identifiables des sujets inscrits par les utilisateurs du service "$user_department". Pour maintenir la confidentialité des données, les informations d'identification du compte doivent être gardées secrètes. Il ne vous sera jamais demandé de fournir des informations d'identification par e-mail ou par des serveurs autres que "$http_domain_name".
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
