@@ -1,0 +1,31 @@
+Cher membre du département. $inventorystatusentry_inventory_department,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Inventaire :       $inventorystatusentry_inventory_name
+   • Dépôt de stock.: $inventorystatusentry_inventory_department
+   • Chat d'inventaire :  $inventorystatusentry_inventory_category
+
+   • Type :            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Originateur :      $inventorystatusentry_originator_name
+#end
+   • De :            $inventorystatusentry_start
+   • À:              $inventorystatusentry_stop
+
+Commentaire:
+
+$inventorystatusentry_comment
+
+Préparez et/ou prenez les mesures appropriées.
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
