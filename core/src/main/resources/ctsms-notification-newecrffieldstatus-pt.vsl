@@ -1,0 +1,58 @@
+Caro membro da equipe de teste $ecrffieldstatusentry_listentry_trial_name ou membro da dep. $ecrffieldstatusentry_listentry_trial_department,
+
+esta é uma notificação para o seguinte evento:
+
+   $type
+
+   • Provação:              $ecrffieldstatusentry_listentry_trial_name
+   • Departamento de teste:   $ecrffieldstatusentry_listentry_trial_department
+   • Perfil: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+
+   • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Grupo de Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#fim
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Visita:              $notification.ecrfFieldStatusEntry.visit.title
+#fim
+   • seção eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Índice:              $ecrffieldstatusentry_index
+#fim
+
+   • Status do problema do eCRF:  $ecrffieldstatusentry_status
+
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+
+
+Comentário:
+
+$ecrffieldstatusentry_comment
+
+#if(${index_field_log.size()} > 0)Histórico:
+
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+   • salvo (#if($string_utils.isEmpty($log.reasonForChange))versão $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+#fim
+#fim
+
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+Verifique a entrada de dados para resolver o problema de eCRF:
+
+   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
+#senão
+A questão do eCRF está encerrada.
+#fim
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name
