@@ -1,0 +1,46 @@
+Cher membre de l'équipe d'essai $ecrfstatusentry_listentry_trial_name ou membre du département. $ecrfstatusentry_listentry_trial_department,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Essai :                $ecrfstatusentry_listentry_trial_name
+   • Service d'essai :     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
+   • eCRF:                 $ecrfstatusentry_ecrf_name
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Groupe de profils :        $notification.ecrfStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfStatusEntry.visit)
+   • Visit:                $notification.ecrfStatusEntry.visit.title
+#end
+
+   • Statut eCRF :          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Validation d'entrée :     $ecrfstatusentry_validationresponsemsg
+   • Horodatage de validation : $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+   • $ecrfstatusentry_validationresponsemsg
+   • Horodatage :            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "EN attente")
+   • Validation de l'entrée en attente.
+#end
+
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+
+
+#if(!$notification.ecrfStatusEntry.status.done)
+Veuillez poursuivre les étapes suivantes pour compléter la saisie des données du eCRF.
+#sinon
+La saisie des données eCRF est terminée.
+#end
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
