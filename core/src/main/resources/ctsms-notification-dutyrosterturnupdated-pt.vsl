@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+esta é uma notificação para o seguinte evento:
+
+   $type
+
+   • Provação:          $dutyrosterturn_trial_name
+   • Dever de:      $dutyrosterturn_start
+   • Obrigado:        $dutyrosterturn_stop
+
+   • Calendário:       $dutyrosterturn_calendar
+   • Título do dever:     $dutyrosterturn_title
+   • Visita:          $dutyrosterturn_visitscheduleitem_name
+
+   • Funcionário:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Auto alocado.
+#senão
+   • Sem auto-atribuição.
+#fim
+
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Comentário do dever:
+
+$dutyrosterturn_comment
+
+A atribuição dos direitos é obrigatória e pode mudar até que sejam finalmente congelados. A visão geral atualizada pode ser acessada no site abaixo:
+
+   $http_base_url/trial/dutyRosterAgenle.jsf.
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name
