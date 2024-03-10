@@ -1,0 +1,29 @@
+Cher membre du département. $proband_department,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband deptartment:     $proband_department
+   • Catégorie de bande :        $proband_category
+
+   • Calendrier de suppression :    $proband_autodeletedeadline
+
+   • Dernier utilisateur modifié :      $proband_modifieduser_identity_name
+   • Dernier horodatage modifié : $proband_modifiedtimestamp
+
+
+Sans consentement éclairé de la probabilité, la suppression des dossiers est nécessaire pour mettre en œuvre la confidentialité des données afin de protéger les données sensibles de la probande et d'abandonner les informations d'identification personnelle. Par conséquent, une suppression ne peut pas être annulée.
+
+Préparez et/ou prenez les mesures appropriées.
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name
