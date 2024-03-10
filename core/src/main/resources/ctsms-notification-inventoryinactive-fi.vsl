@@ -1,0 +1,31 @@
+Hyvä syvyyden jäsen. $inventorystatusentry_inventory_department,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Tavaraluettelo:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Tavaraluettelo kissa:  $inventorystatusentry_inventory_category
+
+   • Tyyppi:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Alkuperä:      $inventorystatusentry_originator_name
+#end
+   • Lähettäjä:            $inventorystatusentry_start
+   • Vastaanottaja:              $inventorystatusentry_stop
+
+Kommentti:
+
+$inventorystatusentry_comment
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
