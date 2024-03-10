@@ -5,17 +5,17 @@ tu cuenta de ${application.abbreviation} fue #if($new_user)creada#{else}cambiado
    • Nombre de usuario:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • Un administrador le informará de la contraseña real.
+   • Un administrador le informará de la contraseña real.
 #sino
-   • La contraseña permanece sin cambios.
+   • La contraseña permanece sin cambios.
 #end
 #elseif($ldap_auth_method)
-   • La contraseña a utilizar es su contraseña MUG.
+   • La contraseña a utilizar es su contraseña MUG.
 
 #if($new_user)
-Al iniciar sesión por primera vez, introduzca la contraseña dada por el administrador como la "contraseña local" obligatoria.
+Al iniciar sesión por primera vez, introduzca la contraseña dada por el administrador como la "contraseña local" obligatoria.
 #sino
-Cuando inicie sesión en la próxima vez, introduzca su contraseña actual como la obligatoria "contraseña local".
+Cuando inicie sesión en la próxima vez, introduzca su contraseña actual como la obligatoria "contraseña local".
 #end
 #end
 
@@ -25,7 +25,7 @@ El sistema es accesible en el siguiente sitio:
    $http_base_url
 
 #end
-IMPORTANTE: La cuenta le permite leer la información de identificación personal de los sujetos registrados por los usuarios del departamento "$user_department". Para mantener la privacidad de los datos, las credenciales de las cuentas deben mantenerse en secreto. Nunca se le pedirá que proporcione credenciales por correo electrónico o servidores distintos de "$http_domain_name".
+IMPORTANTE: La cuenta le permite leer la información de identificación personal de los sujetos registrados por los usuarios del departamento "$user_department". Para mantener la privacidad de los datos, las credenciales de las cuentas deben mantenerse en secreto. Nunca se le pedirá que proporcione credenciales por correo electrónico o servidores distintos de "$http_domain_name".
 
 Thank you!
 
