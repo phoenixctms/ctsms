@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Probeer:          $dutyrosterturn_trial_name
+   • Duty van:      $dutyrosterturn_start
+   • Heffing aan:        $dutyrosterturn_stop
+
+   • Kalender:       $dutyrosterturn_calendar
+   • Duty titel:     $dutyrosterturn_title
+   • Bezoek:          $dutyrosterturn_visitscheduleitem_name
+
+   • Nieuw personeel:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Zelf verwijzbaar.
+#anders
+   • Geen zelfallocatie.
+#einde
+
+   • Gewijzigd: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Reactie invoeren:
+
+$dutyrosterturn_comment
+
+De douanecontrole is verplicht en kan veranderen tot ze definitief zijn bevroren. Het actuele overzicht is toegankelijk op de site hieronder:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name
