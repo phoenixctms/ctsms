@@ -1,4 +1,4 @@
-Estimado miembro del depósito. $proband_department,
+Estimado miembro del depósito. $proband_department,
 
 esta es una notificación para el siguiente evento:
 
@@ -6,16 +6,16 @@ esta es una notificación para el siguiente evento:
 
    • Probanda: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Depósito de probanda:     $proband_department
-   • Categoría de probanda:        $proband_category
+   • Probanda:     $proband_department
+   • Luokka:        $proband_category
 
-   • Eliminación programada:    $proband_autodeletedeadline
+   • Eliminación programada:    $proband_autodeletedeadline
 
-   • Último usuario modificado:      $proband_modifieduser_identity_name
-   • Última fecha de modificación: $proband_modifiedtimestamp
+   • Uϊltimo usuario modificado:      $proband_modifieduser_identity_name
+   • Última fecha de modificación: $proband_modifiedtimestamp
 
 
-Sin el consentimiento informado del testamento, la eliminación de los registros es necesaria para implementar la privacidad de los datos con el fin de proteger los datos sensibles del probante y eliminar la información personal identificable. Por lo tanto, no se puede deshacer una eliminación.
+Sin el consentimiento informado del testamento, la eliminación de los registros es necesaria para implementar la privacidad de los datos con el fin de proteger los datos sensibles del probante y eliminar la información personal identificable. Por lo tanto, no se puede deshacer una eliminación.
 
 Por favor prepare y/o tome las acciones apropiadas.
 
