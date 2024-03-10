@@ -1,0 +1,30 @@
+Dear $trial_name trial team member or member of dept. $trial_department,
+
+this is a notification for the following event:
+
+   $type
+
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
+
+   • Trial status: $trial_status
+#if($notification.trial.status.lockdown)
+   • Lockdown: no further modification of the trial and associated records.
+#end
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
+#end
+
+Please prepare and/or take appropriate actions.
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name
