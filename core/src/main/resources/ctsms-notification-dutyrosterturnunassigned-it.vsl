@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+si tratta di una notifica per il seguente evento:
+
+   $type
+
+   • Prova:          $dutyrosterturn_trial_name
+   • Dovere da:      $dutyrosterturn_start
+   • Obbligo a:        $dutyrosterturn_stop
+
+   • Calendario:       $dutyrosterturn_calendar
+   • Titolo del dovere:     $dutyrosterturn_title
+   • Visita:          $dutyrosterturn_visitscheduleitem_name
+
+   • Nuovo staff:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Auto-allocabile.
+#else
+   • Nessuna auto-allocazione.
+#end
+
+   • Modificato: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Commento del dazio:
+
+$dutyrosterturn_comment
+
+L'assegnazione dei compiti è obbligatoria e può cambiare fino a quando non vengono finalmente congelati. La panoramica aggiornata è accessibile sul sito sottostante:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Grazie!
+
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Istanza: $instance_name
