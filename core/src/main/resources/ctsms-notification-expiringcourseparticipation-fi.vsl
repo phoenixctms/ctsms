@@ -1,0 +1,26 @@
+Dear $courseparticipationstatusentry_staff_firstname,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Kurssi:              $courseparticipationstatusentry_course_name
+   • Kurssin CV otsikko:     $courseparticipationstatusentry_course_cvtitle
+   • Kurssiosasto:   $courseparticipationstatusentry_course_department
+   • Kurssiluokka:     $courseparticipationstatusentry_course_category
+
+   • Kurssin loppu:          $courseparticipationstatusentry_course_stop
+   • Voimassaolo päättyy: $courseparticipationstatusentry_course_expiration
+
+Ole hyvä ja vieraile ilmoittautuaksesi sopivaan kertauskurssiin:
+
+   $http_base_url/staff/expiringParticipationYleiskatsaus.jsf
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
