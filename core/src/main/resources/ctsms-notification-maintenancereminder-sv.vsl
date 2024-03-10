@@ -1,0 +1,26 @@
+Kära #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Förråd:       $maintenancescheduleitem_inventory_name
+   • Lagerdept.: $maintenancescheduleitem_inventory_department
+   • Inventering katt:  $maintenancescheduleitem_inventory_category
+
+   • Titel: '$notification.maintenanceScheduleItem.title'
+   • Typ:            $maintenancescheduleitem_type
+   • Datum:            $maintenancescheduleitem_nextrecurrence
+
+   • Företagskontakt: $maintenancescheduleitem_companycontact_name
+
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name
