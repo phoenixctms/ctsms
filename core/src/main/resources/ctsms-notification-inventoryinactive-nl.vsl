@@ -1,0 +1,31 @@
+Geachte lid van het diepte. $inventorystatusentry_inventory_department,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Voorraad:       $inventorystatusentry_inventory_name
+   • Inventaris diepte: $inventorystatusentry_inventory_department
+   • Inventaris kat:  $inventorystatusentry_inventory_category
+
+   • Type:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Oorspronkelijk:      $inventorystatusentry_originator_name
+#einde
+   • Van:            $inventorystatusentry_start
+   • Aan:              $inventorystatusentry_stop
+
+Notitie:
+
+$inventorystatusentry_comment
+
+Bereid u voor en/of neem passende acties.
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name
