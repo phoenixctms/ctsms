@@ -1,29 +1,29 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-esta es una notificación para el siguiente evento:
+esta es una notificación para el siguiente evento:
 
    $type
 
-   • Inventario:       $inventorybooking_inventory_name
-   • Depto de inventario.: $inventorybooking_inventory_department
-   • Gato de inventario:  $inventorybooking_inventory_category
+   • Inventaire :       $inventorybooking_inventory_name
+   • Profondeur de l'inventaire. : $inventorybooking_inventory_department
+   • Gato de inventaire:  $inventorybooking_inventory_category
 
-   • Tipo de estado:     $inventorystatusentry_type
+   • Type d'état :     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originador:      $inventorystatusentry_originator_name
+   • Originateur :      $inventorystatusentry_originator_name
 #end
    • Estado de:     $inventorystatusentry_start
-   • Estado a:       $inventorystatusentry_stop
+   • Etape a :       $inventorystatusentry_stop
 
    • Reserva de:    $inventorybooking_start
-   • Reservando a:      $inventorybooking_stop
+   • Réservation a :      $inventorybooking_stop
 
    • Para el curso:      $inventorybooking_course_name
    • Para la prueba:       $inventorybooking_trial_name
    • Por prueba: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Comentario de estado:
+Commentaire de l'état :
 
 $inventorystatusentry_comment
 
@@ -35,9 +35,9 @@ Por favor prepare y/o tome las acciones apropiadas.
 
 Gracias.
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. Pas de réponse.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance : $instance_name
