@@ -15,28 +15,28 @@ esta es una notificación para el siguiente evento:
 #if($notification.ecrfFieldStatusEntry.visit)
    • Visitar:              $notification.ecrfFieldStatusEntry.visit.title
 #fim
-   • sección eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • sección eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Índice:              $ecrffieldstatusentry_index
+   • Idice:              $ecrffieldstatusentry_index
 #fim
 
    • Estado del problema eCRF:  $ecrffieldstatusentry_status
 
-   • Modificado: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Modificação: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Comentario:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)Historial:
+#if(${index_field_log.size()} > 0)Histórico:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • guardado (#if($string_utils.isEmpty($log.reasonForChange))versión $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+   • guardado (#if($string_utils.isEmpty($log.reasonForChange))versio├n $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
 #fim
 #fim
 
@@ -45,7 +45,7 @@ Por favor, compruebe la entrada de datos para resolver el problema de eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #sino
-El problema de eCRF está cerrado.
+El problema de eCRF está cerrado.
 #fim
 
 Gracias.
