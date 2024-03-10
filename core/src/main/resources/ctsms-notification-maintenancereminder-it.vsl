@@ -1,0 +1,26 @@
+Gentile #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+si tratta di una notifica per il seguente evento:
+
+   $type
+
+   • Inventario:       $maintenancescheduleitem_inventory_name
+   • Inventario dept.: $maintenancescheduleitem_inventory_department
+   • Inventario cat.:  $maintenancescheduleitem_inventory_category
+
+   • Titolo: '$notification.maintenanceScheduleItem.title'
+   • Tipo:            $maintenancescheduleitem_type
+   • Data:            $maintenancescheduleitem_nextrecurrence
+
+   • Contatto aziendale: $maintenancescheduleitem_companycontact_name
+
+Preparare e/o adottare le misure appropriate.
+
+Grazie!
+
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Istanza: $instance_name
