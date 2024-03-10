@@ -1,6 +1,6 @@
 Dear $staff_firstname,
 
-esta es una notificación para el siguiente evento:
+esta es una notificación para el siguiente evento:
 
    $type
 
@@ -8,15 +8,15 @@ esta es una notificación para el siguiente evento:
    • Duro de:      $dutyrosterturn_start
    • Duelo a:        $dutyrosterturn_stop
 
-   • Calendario:       $dutyrosterturn_calendar
-   • Título del deber:     $dutyrosterturn_title
-   • Visita:          $dutyrosterturn_visitscheduleitem_name
+   • Calendrier :       $dutyrosterturn_calendar
+   • Título del deber:     $dutyrosterturn_title
+   • Visite:          $dutyrosterturn_visitscheduleitem_name
 
-   • Personal:          $dutyrosterturn_staff_name
+   • Personnel :          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAlocatable)
-   • Autorizable.
+   • Autorisable.
 #sino
-   • Sin autoasignación.
+   • Sin autoasignación.
 #end
 
    • Modificado: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
@@ -26,15 +26,15 @@ Comentario de deber:
 
 $dutyrosterturn_comment
 
-Las asignaciones obligatorias son obligatorias y pueden cambiar hasta que finalmente se congelen. Se puede acceder a la vista actualizada en el siguiente sitio:
+Les assignations obligatoires sont obligatoires et peuvent être modifiées jusqu'à ce que l'on se réunisse finalement. Se puede acceder a la vista actualizada en el siguiente sitio:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Gracias.
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. Pas de réponse.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance : $instance_name
