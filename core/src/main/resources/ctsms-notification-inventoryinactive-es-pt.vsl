@@ -1,16 +1,16 @@
-Estimado miembro del depósito. $inventorystatusentry_inventory_department,
+Estimado miembro del depósito. $inventorystatusentry_inventory_department,
 
 esta es una notificación para el siguiente evento:
 
    $type
 
-   • Inventario:       $inventorystatusentry_inventory_name
-   • Depto de inventario.: $inventorystatusentry_inventory_department
-   • Gato de inventario:  $inventorystatusentry_inventory_category
+   • Inventário:       $inventorystatusentry_inventory_name
+   • Implantar inventario: $inventorystatusentry_inventory_department
+   • Gato de inventário:  $inventorystatusentry_inventory_category
 
    • Tipo:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originador:      $inventorystatusentry_originator_name
+   • Origem:      $inventorystatusentry_originator_name
 #fim
    • Desde:            $inventorystatusentry_start
    • Para:              $inventorystatusentry_stop
