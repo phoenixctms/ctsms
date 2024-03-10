@@ -1,0 +1,33 @@
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Kokeilu:      $visitscheduleitem_trial_name
+   • Käynti:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Päivämäärä:       $visit_schedule_item_day_date
+#Muu
+   • Vieraile alkaen: $visitscheduleitem_start
+   • Vieraile kohteessa:   $visitscheduleitem_stop
+#end
+
+   • Kynnys:  $inactive_staff_limit
+
+$inactive_staff.size() työntekijää N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
