@@ -1,0 +1,26 @@
+Dear $courseparticipationstatusentry_staff_firstname,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Cursus:              $courseparticipationstatusentry_course_name
+   • Cursus CV titel:     $courseparticipationstatusentry_course_cvtitle
+   • Cursusafdeling:   $courseparticipationstatusentry_course_department
+   • Cursuscategorie:     $courseparticipationstatusentry_course_category
+
+   • Einde cursus:          $courseparticipationstatusentry_course_stop
+   • Geldigheid vervalt: $courseparticipationstatusentry_course_expiration
+
+Bezoek om u te registreren voor een geschikte verversingscursus:
+
+   $http_base_url/staff/expiringParticipationOverview.jsf
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name
