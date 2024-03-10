@@ -1,0 +1,29 @@
+Hyvä syvyyden jäsen. $proband_department,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband deptartment:     $proband_department
+   • Proband luokka:        $proband_category
+
+   • Poistaminen ajoitettu:    $proband_autodeletedeadline
+
+   • Viimeksi muokattu käyttäjä:      $proband_modifieduser_identity_name
+   • Viimeksi muokattu aikaleima: $proband_modifiedtimestamp
+
+
+Ilman probandin tietoon perustuvaa suostumusta; tietojen poistaminen on pakollista tietojen yksityisyyden suojaamiseksi probandin arkaluonteisten tietojen suojaamiseksi ja henkilökohtaisesti tunnistettavien tietojen poistamiseksi. Sen vuoksi poistoa ei voida kiertää uudelleen.
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name
