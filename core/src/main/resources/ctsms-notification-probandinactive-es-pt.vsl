@@ -1,4 +1,4 @@
-Estimado miembro del depósito. $probandstatusentry_proband_department,
+Estimado miembro del depósito. $probandstatusentry_proband_department,
 
 esta es una notificación para el siguiente evento:
 
@@ -7,7 +7,7 @@ esta es una notificación para el siguiente evento:
    • Probanda: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dep.: $probandstatusentry_proband_department
-   • Gato de probanda:  $probandstatusentry_proband_category
+   • Gato de probaner:  $probandstatusentry_proband_category
 
    • Tipo:          $probandstatusentry_type
    • Desde:          $probandstatusentry_start
