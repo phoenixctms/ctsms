@@ -9,14 +9,14 @@ esta es una notificación para el siguiente evento:
    • Duelo a:        $dutyrosterturn_stop
 
    • Calendario:       $dutyrosterturn_calendar
-   • Título del deber:     $dutyrosterturn_title
+   • Título del deber:     $dutyrosterturn_title
    • Visita:          $dutyrosterturn_visitscheduleitem_name
 
-   • Personal:          $dutyrosterturn_staff_name
+   • Personale:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAlocatable)
-   • Autorizable.
+   • Autorizzabile.
 #sino
-   • Sin autoasignación.
+   • Sin autoasignación.
 #end
 
    • Modificado: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
