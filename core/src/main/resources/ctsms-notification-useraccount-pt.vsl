@@ -1,0 +1,37 @@
+Dear $user_identity_firstname,
+
+A sua conta ${application.abbreviation} foi #if($new_user)criou#{else}alterada#end.
+
+   • Usuário:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • Um administrador irá informá-lo sobre a senha real.
+#senão
+   • A senha permanece inalterada.
+#fim
+#elseif($ldap_auth_method)
+   • A senha para usar é sua senha MUG.
+
+#if($new_user)
+Ao fazer login pela primeira vez, digite a senha fornecida pelo administrador como obrigatória "senha local".
+#senão
+Quando fizer login na próxima vez, digite sua senha atual como a "senha local".
+#fim
+#fim
+
+#if($new_user)
+O sistema está acessível no site abaixo:
+
+   $http_base_url
+
+#fim
+IMPORTANTE: A conta permite que você leia informações de identificação pessoal de indivíduos registrados por usuários do departamento "$user_department". Para manter a privacidade dos dados, as credenciais da conta precisam ser mantidas em segredo. Você nunca será solicitado a fornecer credenciais via e-mail ou servidores diferentes de "$http_domain_name".
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name
