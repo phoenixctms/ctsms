@@ -1,6 +1,6 @@
 Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
@@ -8,7 +8,7 @@ this is a notification for the following event:
    • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Date:       $visit_schedule_item_day_date
-#else
+#altceva
    • Visit from: $visitscheduleitem_start
    • Visit to:   $visitscheduleitem_stop
 #end
@@ -21,13 +21,13 @@ $inactive_staff.size() employees N/A:
    • $employee.name
 #end
 
-Please prepare and/or take appropriate actions.
+Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
 
 Vă mulţumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
