@@ -6,7 +6,7 @@ your ${application.abbreviation} account was #if($new_user)created#{else}changed
 #if($local_auth_method)
 #if($new_user)
    • An administrator will inform you of the actual password.
-#else
+#altceva
    • The password remains unchanged.
 #end
 #elseif($ldap_auth_method)
@@ -14,7 +14,7 @@ your ${application.abbreviation} account was #if($new_user)created#{else}changed
 
 #if($new_user)
 When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
-#else
+#altceva
 When logging in the next time, enter your current password as the mandatory "local password".
 #end
 #end
@@ -29,9 +29,9 @@ IMPORTANT: The account allows you to read personally identifiable information of
 
 Vă mulţumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
