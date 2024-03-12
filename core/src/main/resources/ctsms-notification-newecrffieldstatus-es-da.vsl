@@ -11,15 +11,15 @@ esta es una notificación para el siguiente evento:
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
    • Grupo de Probanda:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#end
+#ende
 #if($notification.ecrfFieldStatusEntry.visit)
    • Visitar:              $notification.ecrfFieldStatusEntry.visit.title
-#end
+#ende
    • sección eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Índice:              $ecrffieldstatusentry_index
-#end
+#ende
 
    • Estado del problema eCRF:  $ecrffieldstatusentry_status
 
@@ -37,8 +37,8 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • guardado (#if($string_utils.isEmpty($log.reasonForChange))versión $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#end
-#end
+#ende
+#ende
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
 Por favor, compruebe la entrada de datos para resolver el problema de eCRF:
@@ -46,7 +46,7 @@ Por favor, compruebe la entrada de datos para resolver el problema de eCRF:
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #sino
 El problema de eCRF está cerrado.
-#end
+#ende
 
 Gracias.
 
