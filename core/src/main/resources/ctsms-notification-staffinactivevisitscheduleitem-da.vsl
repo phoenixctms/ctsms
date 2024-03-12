@@ -1,6 +1,6 @@
 Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
@@ -8,10 +8,10 @@ this is a notification for the following event:
    • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Date:       $visit_schedule_item_day_date
-#else
+#ellers
    • Visit from: $visitscheduleitem_start
    • Visit to:   $visitscheduleitem_stop
-#end
+#ende
 
    • Threshold:  $inactive_staff_limit
 
@@ -19,15 +19,15 @@ $inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
-#end
+#ende
 
-Please prepare and/or take appropriate actions.
+Forbered og/eller foretag passende foranstaltninger.
 
 Mange tak!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
