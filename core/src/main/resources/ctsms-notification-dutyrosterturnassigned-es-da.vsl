@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Prueba:          $dutyrosterturn_trial_name
+   • Duro de:      $dutyrosterturn_start
+   • Duelo a:        $dutyrosterturn_stop
+
+   • Calendario:       $dutyrosterturn_calendar
+   • Título del deber:     $dutyrosterturn_title
+   • Visita:          $dutyrosterturn_visitscheduleitem_name
+
+   • Personal:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAlocatable)
+   • Autorizable.
+#sino
+   • Sin autoasignación.
+#end
+
+   • Modificado: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Comentario de deber:
+
+$dutyrosterturn_comment
+
+Las asignaciones obligatorias son obligatorias y pueden cambiar hasta que finalmente se congelen. Se puede acceder a la vista actualizada en el siguiente sitio:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Gracias.
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instancia: $instance_name
