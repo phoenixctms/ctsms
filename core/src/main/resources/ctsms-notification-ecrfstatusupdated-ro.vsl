@@ -1,6 +1,6 @@
 Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
@@ -32,15 +32,15 @@ this is a notification for the following event:
 
 #if(!$notification.ecrfStatusEntry.status.done)
 Please continue with next steps to complete the eCRF data entry.
-#else
+#altceva
 The eCRF data entry is completed.
 #end
 
 Vă mulţumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
