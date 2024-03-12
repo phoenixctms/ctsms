@@ -1,0 +1,28 @@
+Dear supervisor of $staffstatusentry_staff_name,
+
+this is a notification for the following event:
+
+   $type
+
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
+
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
+
+Comment:
+
+$staffstatusentry_comment
+
+Please prepare and/or take appropriate actions.
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name
