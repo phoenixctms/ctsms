@@ -11,10 +11,10 @@ esta es una notificación para el siguiente evento:
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
    • Grupo de Probanda:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+#ende
 #if($notification.ecrfStatusEntry.visit)
    • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+#ende
 
    • Estado de eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
@@ -25,7 +25,7 @@ esta es una notificación para el siguiente evento:
    • Marca de tiempo:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
    • Validación de entrada pendiente.
-#end
+#ende
 
    • Modificado: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
@@ -34,7 +34,7 @@ esta es una notificación para el siguiente evento:
 Por favor, continúe con los siguientes pasos para completar la entrada de datos de eCRF.
 #sino
 La entrada de datos de eCRF se ha completado.
-#end
+#ende
 
 Gracias.
 
