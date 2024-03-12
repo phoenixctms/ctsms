@@ -1,6 +1,6 @@
 Dear $trial_name trial team member or member of dept. $trial_department,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
@@ -11,20 +11,20 @@ this is a notification for the following event:
    • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
    • Lockdown: no further modification of the trial and associated records.
-#end
+#ende
 #if($notification.trial.status.inquiryValueInputEnabled)
    • Inquiry value inputs are enabled.
-#else
+#ellers
    • Inquiry value inputs are disabled.
-#end
+#ende
 
-Please prepare and/or take appropriate actions.
+Forbered og/eller foretag passende foranstaltninger.
 
 Mange tak!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
