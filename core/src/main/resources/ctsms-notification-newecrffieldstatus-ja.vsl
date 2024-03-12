@@ -1,6 +1,6 @@
 Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+これは以下のイベントの通知です：
 
    $type
 
@@ -26,7 +26,7 @@ this is a notification for the following event:
    • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
-Comment:
+コメント:
 
 $ecrffieldstatusentry_comment
 
@@ -50,9 +50,9 @@ The eCRF issue is closed.
 
 Thank you!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+インスタンス： $instance_name
