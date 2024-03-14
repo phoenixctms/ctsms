@@ -4,18 +4,18 @@ Dear $trial_name trial team member or member of dept. $trial_department,
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • Пробний код:   $trial_name
+   • Назва пробної версії:  $trial_title
+   • Пробна версія:  $trial_department
 
-   • Trial status: $trial_status
-#if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
+   • Стан пробної версії: $trial_status
+#if($notificationпробна версія.статус.lockdown)
+   • Lockdown: немає подальших змін випробувань та пов'язаних записів.
 #закінчується
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
+   • Вхідні значення від запиту включені.
 #інше
-   • Inquiry value inputs are disabled.
+   • Вхідні значення повторного запиту вимкнені.
 #закінчується
 
 Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
