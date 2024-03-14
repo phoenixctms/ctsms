@@ -6,12 +6,12 @@
 <a target="_blank" href="https://apps.apple.com/us/app/google-authenticator/id388497605?itsct=apps_box_badge&itscg=30200"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=140x34&releaseDate=1284940800&h=7fc6b39acc8ae5a42ad4b87ff8c7f88d" alt="Download on the App Store" style="border-radius: 10px; width: 140px; height: 34px; padding:8px;"></a>
 </td></tr>
 <tr><td>
-2. Open the app to register your $application_abbreviation account (scan QR code below).
+2. Відкрийте додаток, щоб зареєструвати свій обліковий запис $application_abbreviation (сканувати QR-код нижче).
 </td></tr>
 <tr><td align="left">
 <img src="https://chart.googleapis.com/chart?chs=150x150&chld=M|0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
 </td></tr>
 <tr><td>
-3. Use the app to generate the requested verification code.
+3. За допомогою програми можна згенерувати бажаний код підтвердження.
 </td></tr>
 </tbody></table>
