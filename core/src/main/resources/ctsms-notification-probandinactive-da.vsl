@@ -1,17 +1,17 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Kære medlem af dept. $probandstatusentry_proband_department,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Proband kat:  $probandstatusentry_proband_category
 
    • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Fra:          $probandstatusentry_start
+   • Til:            $probandstatusentry_stop
 
 Forbered og/eller foretag passende foranstaltninger.
 
