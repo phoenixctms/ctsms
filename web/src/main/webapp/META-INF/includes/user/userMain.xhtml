@@ -574,7 +574,7 @@
 									for="parent"
 									value="#{userlabels.user_parent_label}" />
 								<h:panelGrid
-									columns="3"
+									columns="5"
 									cellpadding="0">
 									<h:panelGroup>
 										<h:inputHidden
@@ -602,6 +602,16 @@
 										icon="ui-icon ui-icon-close"
 										type="button"
 										onclick="clearIDAjax('tabView:usermain_form:parent','tabView:usermain_form:parentName','#{applicationScopeBean.noUserPickedMessage}','clearInheritedPropertiesTooltips')" />
+									<p:commandButton process="@this"
+										title="#{userlabels.enable_inherited_properties_button_label}"
+										actionListener="#{userBean.enableInheritedProperties}"
+										icon="ui-icon ui-icon-squaresmall-close" ajax="true"
+										update="@([id$=\'inherit_input\'],[id$=\'Module\'],[id$=\'ModuleTabs\'])" />
+									<p:commandButton process="@this"
+										title="#{triallabels.disable_inherited_properties_button_label}"
+										actionListener="#{userBean.disableInheritedProperties}"
+										icon="ui-icon ui-icon-circlesmall-close" ajax="true"
+										update="@([id$=\'inherit_input\'],[id$=\'Module\'],[id$=\'ModuleTabs\'])" />										
 								</h:panelGrid>
 								<p:message for="parent" />
 																
