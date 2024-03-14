@@ -1,21 +1,21 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Stimate $visitscheduleitem_trial_name membru al echipei de încercare sau supervizor al $staff_name,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • Studiu:      $visitscheduleitem_trial_name
+   • Vizită:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Date:       $visit_schedule_item_day_date
 #altceva
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
+   • Vizitați de la: $visitscheduleitem_start
+   • Vizitează la:   $visitscheduleitem_stop
 #end
 
-   • Threshold:  $inactive_staff_limit
+   • Prag:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() angajați N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
