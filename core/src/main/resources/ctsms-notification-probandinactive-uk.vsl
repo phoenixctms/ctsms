@@ -1,15 +1,15 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Шановний член глибини. $probandstatusentry_proband_department,
 
 це сповіщення для наступної події:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
+   • Розширення розширення.: $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
+   • Тип:          $probandstatusentry_type
    • From:          $probandstatusentry_start
    • To:            $probandstatusentry_stop
 
