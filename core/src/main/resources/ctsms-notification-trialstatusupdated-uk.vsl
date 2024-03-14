@@ -1,6 +1,6 @@
 Dear $trial_name trial team member or member of dept. $trial_department,
 
-this is a notification for the following event:
+це сповіщення для наступної події:
 
    $type
 
@@ -11,18 +11,18 @@ this is a notification for the following event:
    • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
    • Lockdown: no further modification of the trial and associated records.
-#end
+#закінчується
 #if($notification.trial.status.inquiryValueInputEnabled)
    • Inquiry value inputs are enabled.
-#else
+#інше
    • Inquiry value inputs are disabled.
-#end
+#закінчується
 
-Please prepare and/or take appropriate actions.
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
 Дякую!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
