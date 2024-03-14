@@ -1,0 +1,31 @@
+Уважаемый член глубины. $inventorystatusentry_inventory_department,
+
+это уведомление для следующего события:
+
+   $type
+
+   • Инвентаризация:       $inventorystatusentry_inventory_name
+   • Глубина запасов.: $inventorystatusentry_inventory_department
+   • Кошка инвентаря.:  $inventorystatusentry_inventory_category
+
+   • Тип:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Создатель:      $inventorystatusentry_originator_name
+#конец
+   • От:            $inventorystatusentry_start
+   • Кому:              $inventorystatusentry_stop
+
+Комментарий:
+
+$inventorystatusentry_comment
+
+Просьба подготовить и/или принять соответствующие меры.
+
+Спасибо!
+
+Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Копия: $instance_name
