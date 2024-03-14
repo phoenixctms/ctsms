@@ -1,19 +1,19 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Stimate membru al decupării. $inventorystatusentry_inventory_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventar:       $inventorystatusentry_inventory_name
+   • Dept-ul de inventar: $inventorystatusentry_inventory_department
+   • Pisică de inventar:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Tip:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Originator:      $inventorystatusentry_originator_name
 #end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • De la:            $inventorystatusentry_start
+   • Către:              $inventorystatusentry_stop
 
 Comentariu:
 
