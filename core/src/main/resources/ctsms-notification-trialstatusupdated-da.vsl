@@ -1,21 +1,21 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+Kære $trial_name prøvegruppemedlem eller medlem af dept. $trial_department,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
+   • Prøvekode:   $trial_name
+   • Prøvetitel:  $trial_title
    • Trial dept.:  $trial_department
 
-   • Trial status: $trial_status
-#if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
+   • Prøvestatus: $trial_status
+#hvis($notification.trial.status.lockdown)
+   • Låsning: ingen yderligere ændring af forsøget og tilhørende journaler.
 #ende
-#if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
+#if($notification.trial.status.inquiryValueInputAktiveret)
+   • Inquiry værdi input er aktiveret.
 #ellers
-   • Inquiry value inputs are disabled.
+   • Inquiry værdi input er deaktiveret.
 #ende
 
 Forbered og/eller foretag passende foranstaltninger.
