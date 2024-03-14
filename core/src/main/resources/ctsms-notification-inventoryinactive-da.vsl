@@ -1,19 +1,19 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Kære medlem af dept. $inventorystatusentry_inventory_department,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventar:       $inventorystatusentry_inventory_name
+   • Inventar dept.: $inventorystatusentry_inventory_department
+   • Inventar kat:  $inventorystatusentry_inventory_category
 
    • Type:            $inventorystatusentry_type
-#if($notification.inventoryStatusEntry.originator)
+#hf($notification.inventoryStatusEntry.originator)
    • Originator:      $inventorystatusentry_originator_name
 #ende
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Fra:            $inventorystatusentry_start
+   • Til:              $inventorystatusentry_stop
 
 Kommentar:
 
