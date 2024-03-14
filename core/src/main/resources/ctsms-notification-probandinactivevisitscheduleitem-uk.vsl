@@ -4,16 +4,16 @@ Dear $visitscheduleitem_trial_name trial team member or member of dept. $proband
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
+   • Розширення розширення.: $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
+   • Тип статусу:   $probandstatusentry_type
    • Status from:   $probandstatusentry_start
    • Status to:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
+   • Пробна:         $visitscheduleitem_trial_name
    • Visit:         $visitscheduleitem_name
    • Visit from:    $visitscheduleitem_start
    • Visit to:      $visitscheduleitem_stop
