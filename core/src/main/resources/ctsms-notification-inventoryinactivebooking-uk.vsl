@@ -4,30 +4,30 @@ Dear $inventorybooking_onbehalfof_firstname,
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
+   • Інвентар:       $inventorybooking_inventory_name
+   • Зменшити розмір інвентарю: $inventorybooking_inventory_department
    • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • Тип статусу:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
+   • Джерело:      $inventorystatusentry_originator_name
+#закінчується
    • Status from:     $inventorystatusentry_start
    • Status to:       $inventorystatusentry_stop
 
    • Booking from:    $inventorybooking_start
    • Booking to:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Для курсу:      $inventorybooking_course_name
+   • Для випробування:       $inventorybooking_trial_name
+   • На проспект: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Статус коментаря:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Коментар до бронювання:
 
 $inventorybooking_comment
 
