@@ -1,6 +1,6 @@
 Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-this is a notification for the following event:
+це сповіщення для наступної події:
 
    $type
 
@@ -14,11 +14,11 @@ this is a notification for the following event:
 
    • Company contact: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
 Дякую!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
