@@ -4,13 +4,13 @@ Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitsc
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
+   • Пробна:         $visitscheduleitem_trial_name
    • Visit:         $visitscheduleitem_name
    • Visit from:    $visitscheduleitem_start
    • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Протокол: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #закінчується
 
