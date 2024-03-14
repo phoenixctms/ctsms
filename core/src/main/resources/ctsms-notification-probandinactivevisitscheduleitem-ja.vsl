@@ -1,22 +1,22 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+親愛なる $visitscheduleitem_trial_name トライアルチームのメンバーまたはdept のメンバーの皆様。 $probandstatusentry_proband_department,
 
 これは以下のイベントの通知です：
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • プロバンド cat.:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • ステータスタイプ:   $probandstatusentry_type
+   • ステータス:   $probandstatusentry_start
+   • ステータス:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • 試用版：         $visitscheduleitem_trial_name
+   • 訪問:         $visitscheduleitem_name
+   • 訪問元:    $visitscheduleitem_start
+   •      $visitscheduleitem_stop へのアクセス
 
 適切な行動を取ってください。
 
