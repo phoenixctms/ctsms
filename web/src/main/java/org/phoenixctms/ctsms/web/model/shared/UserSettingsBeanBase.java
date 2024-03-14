@@ -224,9 +224,12 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 	public abstract void setShowTooltips(boolean showTooltips);
 
 	private void loadInheritedPropertiesMap() {
+		setInheritedPropertiesMap(true, getInheritedProperties());
+	}
+
+	protected void setInheritedPropertiesMap(boolean inherit, Collection<String> inheritedProperties) {
 		inheritedPropertiesMap.clear();
-		Collection<String> inheritedProperties = getInheritedProperties();
-		if (inheritedProperties != null) {
+		if (inherit && inheritedProperties != null) {
 			Iterator<String> it = inheritedProperties.iterator();
 			while (it.hasNext()) {
 				inheritedPropertiesMap.put(it.next(), Boolean.TRUE.toString());

@@ -1081,6 +1081,19 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		return result.toString();
 	}
 
+	private void setInheritedProperties(boolean inherit) {
+		setInheritedPropertiesMap(inherit, CommonUtil.USER_INHERITABLE_PROPERTIES);
+		clearInheritedPropertiesTooltips();
+	}
+
+	public void enableInheritedProperties() {
+		setInheritedProperties(true);
+	}
+
+	public void disableInheritedProperties() {
+		setInheritedProperties(false);
+	}
+
 	@Override
 	protected Collection<String> getInheritedProperties() {
 		return in != null ? in.getInheritedProperties() : null;
