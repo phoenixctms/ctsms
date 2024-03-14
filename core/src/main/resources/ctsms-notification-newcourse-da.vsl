@@ -1,19 +1,19 @@
-Dear member of dept. $course_department,
+Kære medlem af dept. $course_department,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Kursus:                 $course_name
+   • Kursus CV titel:        $course_cvtitle
+   • Kursusafdeling:      $course_department
+   • Kursuskategori:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Kursus start:           $course_start
+   • Kursus slut:             $course_stop
+   • Deltagelsesfrist: $course_participationdeadline
 
-Register for this course:
+Registrer dig for dette kursus:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
