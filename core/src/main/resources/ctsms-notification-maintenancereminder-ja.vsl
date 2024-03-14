@@ -1,18 +1,18 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+親愛なる #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end.
 
 これは以下のイベントの通知です：
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • インベントリ：       $maintenancescheduleitem_inventory_name
+   • 在庫部門： $maintenancescheduleitem_inventory_department
+   • インベントリcat:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • タイトル: '$notification.maintenanceScheduleItem.title'
+   • 種類:            $maintenancescheduleitem_type
+   • 日付:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • 会社の連絡先: $maintenancescheduleitem_companycontact_name
 
 適切な行動を取ってください。
 
