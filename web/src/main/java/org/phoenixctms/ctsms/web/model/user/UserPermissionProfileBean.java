@@ -34,6 +34,8 @@ import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
+import io.jsonwebtoken.lang.Collections;
+
 @ManagedBean
 @ViewScoped
 public class UserPermissionProfileBean extends ManagedBeanBase {
@@ -170,6 +172,16 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		}
 	}
 
+	private void setInheritedPermissionProfileGroupsMap(boolean inherit, Collection<PermissionProfileGroup> inheritedPermissionProfileGroups) {
+		inheritedPermissionProfileGroupsMap.clear();
+		if (inherit && inheritedPermissionProfileGroups != null) {
+			Iterator<PermissionProfileGroup> it = inheritedPermissionProfileGroups.iterator();
+			while (it.hasNext()) {
+				inheritedPermissionProfileGroupsMap.put(it.next().name(), Boolean.TRUE.toString());
+			}
+		}
+	}
+
 	private void initSets() {
 		user = WebUtil.getUser(userId, GRAPH_MAX_USER_INSTANCES, GRAPH_MAX_USER_PARENT_DEPTH, GRAPH_MAX_USER_CHILDREN_DEPTH);
 		parent = null;
@@ -178,10 +190,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		parentPermissionProfileVOMap.clear();
 		if (user != null) {
 			parent = WebUtil.getInheritedUser(user.getParent() != null ? user.getParent().getId() : null);
-			Iterator<PermissionProfileGroup> profileGroupIt = user.getInheritedPermissionProfileGroups().iterator();
-			while (profileGroupIt.hasNext()) {
-				inheritedPermissionProfileGroupsMap.put(profileGroupIt.next().name(), Boolean.TRUE.toString());
-			}
+			setInheritedPermissionProfileGroupsMap(true, user.getInheritedPermissionProfileGroups());
 			if (parent != null) {
 				Collection<UserPermissionProfileOutVO> parentUserPermissionProfiles = null;
 				try {
@@ -299,8 +308,21 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 		return ERROR_OUTCOME;
 	}
 
+	public String updateInheritAction() {
+		setInheritedPermissionProfileGroupsMap(true, Collections.arrayToList(PermissionProfileGroup.values()));
+		return updateAction();
+	}
+
+	public void updateInherit() {
+		actionPostProcess(updateInheritAction());
+	}
+
 	public Set<String> getParentPermissionProfiles() {
 		return parentPermissionProfiles;
+	}
+
+	public boolean isHasParent() {
+		return parent != null;
 	}
 
 	public String getInheritedPermissionProfileGroupTooltip(String profileGroup) {
