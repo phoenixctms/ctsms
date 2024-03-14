@@ -1,16 +1,16 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Stimate $visitscheduleitem_trial_name membru al echipei de încercare sau membru de debut. $visitscheduleitem_trial_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Studiu:         $visitscheduleitem_trial_name
+   • Vizită:         $visitscheduleitem_name
+   • Vizitați de la:    $visitscheduleitem_start
+   • Vizitează la:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #end
 
