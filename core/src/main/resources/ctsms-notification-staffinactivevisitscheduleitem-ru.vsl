@@ -1,0 +1,33 @@
+Уважаемый член пробной команды $visitscheduleitem_trial_name или руководитель $staff_name,
+
+это уведомление для следующего события:
+
+   $type
+
+   • Испытание:      $visitscheduleitem_trial_name
+   • Посещение:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Дата:       $visit_schedule_item_day_date
+#else
+   • Посещение от: $visitscheduleitem_start
+   • Посетить в:   $visitscheduleitem_stop
+#конец
+
+   • Порог:  $inactive_staff_limit
+
+$inactive_staff.size() сотрудников N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#конец
+
+Просьба подготовить и/или принять соответствующие меры.
+
+Спасибо!
+
+Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Копия: $instance_name
