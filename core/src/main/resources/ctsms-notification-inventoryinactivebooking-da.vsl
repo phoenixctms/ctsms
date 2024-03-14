@@ -4,30 +4,30 @@ dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Inventar:       $inventorybooking_inventory_name
+   • Inventar dept.: $inventorybooking_inventory_department
+   • Inventar kat:  $inventorybooking_inventory_category
 
    • Status type:     $inventorystatusentry_type
-#if($notification.inventoryStatusEntry.originator)
+#hf($notification.inventoryStatusEntry.originator)
    • Originator:      $inventorystatusentry_originator_name
 #ende
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Status fra:     $inventorystatusentry_start
+   • Status til:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Booking fra:    $inventorybooking_start
+   • Booking til:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Selvfølgelig:      $inventorybooking_course_name
+   • For forsøg:       $inventorybooking_trial_name
+   • Sandsynlig: #h($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Status kommentar:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Booking kommentar:
 
 $inventorybooking_comment
 
