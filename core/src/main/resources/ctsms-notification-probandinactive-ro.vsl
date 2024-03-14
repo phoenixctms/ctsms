@@ -1,17 +1,17 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Stimate membru al decupării. $probandstatusentry_proband_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Dept.: $probandstatusentry_proband_department
+   • Pisică de trupă:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Tip:          $probandstatusentry_type
+   • De la:          $probandstatusentry_start
+   • Către:            $probandstatusentry_stop
 
 Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
 
