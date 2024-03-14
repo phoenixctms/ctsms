@@ -4,9 +4,9 @@ Dear $staff_firstname,
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
+   • Пробна:          $dutyrosterturn_trial_name
    • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Обов'язок дані:        $dutyrosterturn_stop
 
    • Calendar:       $dutyrosterturn_calendar
    • Duty title:     $dutyrosterturn_title
@@ -14,19 +14,19 @@ Dear $staff_firstname,
 
    • Staff:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Самоузгоджено.
+#інше
+   • Жодного розподілу.
+#закінчується
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Змінено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Обов'язний коментар:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+Обов'язкове завдання є обов'язковим і може змінюватися, поки вони нарешті не будуть заморожені. Попередній огляд доступна на сайті нижче:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
