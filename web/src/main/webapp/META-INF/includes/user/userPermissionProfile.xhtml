@@ -73,6 +73,13 @@
 								icon="ui-icon ui-icon-disk" ajax="true"
 								disabled="#{!userPermissionProfileBean.editable}"
 								update="userpermissionprofile_input_grid" />
+							<p:commandButton process="@this,userpermissionprofile_inputs"
+								id="updateInherit" value="#{userlabels.update_inherit_user_permission_profiles_button_label}"
+								actionListener="#{userPermissionProfileBean.updateInherit}"
+								oncomplete="handleUpdateUserTabTitles(xhr, status, args)"
+								icon="ui-icon ui-icon-disk" ajax="true"
+								disabled="#{!userPermissionProfileBean.editable or !userPermissionProfileBean.hasParent}"
+								update="userpermissionprofile_input_grid" />								
 							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{userPermissionProfileBean.load}"
