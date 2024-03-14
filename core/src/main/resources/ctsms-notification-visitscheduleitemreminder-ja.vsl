@@ -1,16 +1,16 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+親愛なる $visitscheduleitem_trial_name トライアルチームのメンバーまたはdept のメンバーの皆様。 $visitscheduleitem_trial_department,
 
 これは以下のイベントの通知です：
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • 試用版：         $visitscheduleitem_trial_name
+   • 訪問:         $visitscheduleitem_name
+   • 訪問元:    $visitscheduleitem_start
+   •      $visitscheduleitem_stop へのアクセス
 #if($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #end
 
