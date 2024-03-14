@@ -1,22 +1,22 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Stimate $visitscheduleitem_trial_name membru al echipei de încercare sau membru de debut. $probandstatusentry_proband_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Dept.: $probandstatusentry_proband_department
+   • Pisică de trupă:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Tip de stare:   $probandstatusentry_type
+   • Status din:   $probandstatusentry_start
+   • Status la:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Studiu:         $visitscheduleitem_trial_name
+   • Vizită:         $visitscheduleitem_name
+   • Vizitați de la:    $visitscheduleitem_start
+   • Vizitează la:      $visitscheduleitem_stop
 
 Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
 
