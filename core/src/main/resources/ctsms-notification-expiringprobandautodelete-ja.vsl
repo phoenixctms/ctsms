@@ -1,21 +1,21 @@
-Dear member of dept. $proband_department,
+Dear member of dept $proband_department,
 
 これは以下のイベントの通知です：
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • 差分を調整:     $proband_department
+   • プロバンドカテゴリ:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • 削除が予定されています:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • 最終修正ユーザー：      $proband_modifieduser_identity_name
+   • 最終更新時刻: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+プローブのインフォームドコンセントなしで 記録を削除する必要がありますデータプライバシーを実装するために プロバンスの機密データを保護し、個人を特定できる情報をドロップします。 したがって、削除をロールバックすることはできません。
 
 適切な行動を取ってください。
 
