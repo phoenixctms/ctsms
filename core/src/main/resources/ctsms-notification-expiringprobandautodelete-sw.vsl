@@ -1,0 +1,29 @@
+Dear member of dept. $proband_department,
+
+this is a notification for the following event:
+
+   $type
+
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband deptartment:     $proband_department
+   • Proband category:        $proband_category
+
+   • Deletetion scheduled:    $proband_autodeletedeadline
+
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
+
+
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+
+Please prepare and/or take appropriate actions.
+
+Thank you!
+
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance: $instance_name
