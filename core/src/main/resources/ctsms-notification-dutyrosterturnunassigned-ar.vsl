@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+وهذا إشعار يتعلق بالحدث التالي:
+
+   $type
+
+   • المحاكمة:          $dutyrosterturn_trial_name
+   • واجب من:      $dutyrosterturn_start
+   • الواجب إلى:        $dutyrosterturn_stop
+
+   • التقويم:       $dutyrosterturn_calendar
+   • لقب الواجب:     $dutyrosterturn_title
+   • زيارة:          $dutyrosterturn_visitscheduleitem_name
+
+   • الموظفون الجدد:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • التخصيص الذاتي.
+#آخر
+   • عدم التخصيص الذاتي.
+#نهاية
+
+   • معدلة: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+التعليق على الواجب:
+
+$dutyrosterturn_comment
+
+والتكليف بالواجبات إلزامي وقد يتغير إلى أن يتم تجميده في نهاية المطاف. ويمكن الاطلاع على العرض العام المستكمل في الموقع أدناه:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+شكرا لك!
+
+هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+الموقع: $instance_name
