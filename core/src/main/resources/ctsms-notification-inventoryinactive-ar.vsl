@@ -1,0 +1,31 @@
+عزيزي العضو العمق. $inventorystatusentry_inventory_department,
+
+وهذا إشعار يتعلق بالحدث التالي:
+
+   $type
+
+   • المخزون:       $inventorystatusentry_inventory_name
+   • عمق المخزون: $inventorystatusentry_inventory_department
+   • القطط المخزنة:  $inventorystatusentry_inventory_category
+
+   • النوع:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • المنشئ:      $inventorystatusentry_originator_name
+#نهاية
+   • من:            $inventorystatusentry_start
+   • إلى:              $inventorystatusentry_stop
+
+التعليق:
+
+$inventorystatusentry_comment
+
+يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
+
+شكرا لك!
+
+هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+الموقع: $instance_name
