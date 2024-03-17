@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Ndeko mosangani ya dept. $inventorystatusentry_inventory_department, .
 
-this is a notification for the following event:
+oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventaire:       $inventorystatusentry_inventory_name
+   • Departema ya inventaire: $inventorystatusentry_inventory_department
+   • Inventaire cat.:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
-#if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Lolenge:            $inventorystatusentry_type
+#if($notification.Entrée yaEtat ya inventaire.mobandisi)
+   • Mobandisi:      $inventorystatusentry_originator_name
+#nsuka
+   • Euti na:            $inventorystatusentry_start
+   • Na:              $inventorystatusentry_stop
 
-Comment:
+Komantere:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 
 Matondi!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
---------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ndakisa: $instance_name
