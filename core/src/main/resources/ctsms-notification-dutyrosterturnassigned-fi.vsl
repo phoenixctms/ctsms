@@ -19,7 +19,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
    • Ei itsejakoa.
 #end
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Muokattu: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
 Tullia koskeva huomautus:
