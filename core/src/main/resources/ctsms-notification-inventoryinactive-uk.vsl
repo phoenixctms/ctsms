@@ -6,14 +6,14 @@
 
    • Інвентар:       $inventorystatusentry_inventory_name
    • Зменшити розмір інвентарю: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Кат. інвентарю:  $inventorystatusentry_inventory_category
 
    • Тип:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Джерело:      $inventorystatusentry_originator_name
 #закінчується
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Від:            $inventorystatusentry_start
+   • Кому:              $inventorystatusentry_stop
 
 Коментар:
 
@@ -28,4 +28,4 @@ $inventorystatusentry_comment
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
