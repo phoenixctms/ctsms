@@ -1,16 +1,16 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Шановний $visitscheduleitem_trial_name член команди випробувань або керівник $staff_name,
 
 це сповіщення для наступної події:
 
    $type
 
    • Пробна:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • Відвідайте:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Дата:       $visit_schedule_item_day_date
 #інше
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
+   • Відвідайте з: $visitscheduleitem_start
+   • Відвідайте:   $visitscheduleitem_stop
 #закінчується
 
    • Поріг:  $inactive_staff_limit
@@ -30,4 +30,4 @@ $inactive_staff.size() співробітників N/A:
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
