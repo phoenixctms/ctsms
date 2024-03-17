@@ -5,12 +5,12 @@ Dear $staff_firstname,
    $type
 
    • Пробна:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
+   • Мито від:      $dutyrosterturn_start
    • Обов'язок дані:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Календар:       $dutyrosterturn_calendar
+   • Назва посади:     $dutyrosterturn_title
+   • Відвідайте:          $dutyrosterturn_visitscheduleitem_name
 
    • Новий персонал:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
@@ -37,4 +37,4 @@ $dutyrosterturn_comment
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
