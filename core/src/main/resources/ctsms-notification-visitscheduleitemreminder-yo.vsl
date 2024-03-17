@@ -1,26 +1,26 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Eyin $visitscheduleitem_trial_name omo egbe idanwo tabi omo egbe Dept. $visitscheduleitem_trial_department,
 
-this is a notification for the following event:
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
-#if($notification.proband)
+   • Idanwo:         $visitscheduleitem_trial_name
+   • Ṣabẹwo:         $visitscheduleitem_name
+   • Ṣabẹwo lati:    $visitscheduleitem_start
+   • Ṣabẹwo si:      $visitscheduleitem_stop
+#ti o ba jẹ ($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#opin
 
-#end
+#opin
 
-Please prepare and/or take appropriate actions.
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 
 E dupe!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Apeere: $instance_name
