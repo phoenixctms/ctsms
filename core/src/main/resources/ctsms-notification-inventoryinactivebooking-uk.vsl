@@ -6,17 +6,17 @@ Dear $inventorybooking_onbehalfof_firstname,
 
    • Інвентар:       $inventorybooking_inventory_name
    • Зменшити розмір інвентарю: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Кат. інвентарю:  $inventorybooking_inventory_category
 
    • Тип статусу:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Джерело:      $inventorystatusentry_originator_name
 #закінчується
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Статус від:     $inventorystatusentry_start
+   • Статус:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Бронювання від:    $inventorybooking_start
+   • Бронювання до:      $inventorybooking_stop
 
    • Для курсу:      $inventorybooking_course_name
    • Для випробування:       $inventorybooking_trial_name
@@ -40,4 +40,4 @@ $inventorybooking_comment
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
