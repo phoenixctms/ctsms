@@ -1,6 +1,6 @@
 Dear $user_identity_firstname,
 
-your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+votre compte ${application.abbreviation} a été #if($new_user)créé#{else}modifié#end.
 
    • Nom d'utilisateur :   $user_name
 #if($local_auth_method)
