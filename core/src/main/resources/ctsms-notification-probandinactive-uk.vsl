@@ -7,11 +7,11 @@
    • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Розширення розширення.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Пробанд кат.:  $probandstatusentry_proband_category
 
    • Тип:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Від:          $probandstatusentry_start
+   • Кому:            $probandstatusentry_stop
 
 Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
@@ -22,4 +22,4 @@
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
