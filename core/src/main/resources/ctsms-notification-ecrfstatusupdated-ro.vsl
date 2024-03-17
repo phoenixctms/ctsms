@@ -18,8 +18,8 @@ aceasta este o notificare pentru următorul eveniment:
 
    • Status eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validat && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validation:     $ecrfstatusentry_validationresponsemsg
-   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+   • Validarea intrării:     $ecrfstatusentry_validationresponsemsg
+   • Marcaj temporal de validare: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validat && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Marcaj de timp:            $ecrfstatusentry_validationtimestamp
