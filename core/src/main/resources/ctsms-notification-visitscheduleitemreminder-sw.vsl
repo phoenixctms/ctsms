@@ -1,26 +1,26 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Mpendwa $visitscheduleitem_trial_name mwanachama wa timu ya majaribio au mwanachama wa idara. $visitscheduleitem_trial_department,
 
-this is a notification for the following event:
+hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
-#if($notification.proband)
+   • Jaribio:         $visitscheduleitem_trial_name
+   • Tembelea:         $visitscheduleitem_name
+   • Tembelea kutoka:    $visitscheduleitem_start
+   • Tembelea:      $visitscheduleitem_stop
+#kama($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
 
-#end
+#mwisho
 
-Please prepare and/or take appropriate actions.
+Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 
 Asante!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
 
---------------------------------------------------------------
+----------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Mfano: $instance_name
