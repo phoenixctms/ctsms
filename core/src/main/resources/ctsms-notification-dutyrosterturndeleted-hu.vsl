@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Kedves $staff_firstname!
 
-this is a notification for the following event:
+ez egy értesítés a következő eseményről:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Próba:          $dutyrosterturn_trial_name
+   • Ügyelet innen:      $dutyrosterturn_start
+   • Kötelessége:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Naptár:       $dutyrosterturn_calendar
+   • Beosztás:     $dutyrosterturn_title
+   • Látogassa meg:          $dutyrosterturn_visitscheduleitem_name
 
-   • Staff:          $dutyrosterturn_staff_name
+   • Személyzet:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Önállóan allokálható.
+#más
+   • Nincs önkiosztás.
+#vége
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Módosítva: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Köteles megjegyzés:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+A szolgálati beosztás kötelező, és a végleges befagyasztásig változhat. A naprakész áttekintés az alábbi oldalon érhető el:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Köszönöm!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
 
---------------------------------------------------------------
+-------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Példa: $instance_name
