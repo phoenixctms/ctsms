@@ -5,7 +5,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
    $type
 
    • Tavaraluettelo:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
+   • Varastoosasto: $inventorybooking_inventory_department
    • Tavaraluettelo kissa:  $inventorybooking_inventory_category
 
    • Tilan tyyppi:     $inventorystatusentry_type
@@ -20,7 +20,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • Kurssi:      $inventorybooking_course_name
    • Kokeilu:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Probandille: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
 Tilan kommentti:
