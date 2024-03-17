@@ -1,13 +1,13 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Шановний $visitscheduleitem_trial_name член судової групи або член відділу. $visitscheduleitem_trial_department,
 
 це сповіщення для наступної події:
 
    $type
 
    • Пробна:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Відвідайте:         $visitscheduleitem_name
+   • Відвідайте з:    $visitscheduleitem_start
+   • Відвідайте:      $visitscheduleitem_stop
 #if($notification.proband)
 
    • Протокол: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
@@ -23,4 +23,4 @@ Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitsc
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
