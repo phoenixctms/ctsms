@@ -2,7 +2,7 @@ Dear $user_identity_firstname,
 
 contul dumneavoastră ${application.abbreviation} a fost #if($new_user)a creat#{else}modificat#end.
 
-   • Username:   $user_name
+   • Nume de utilizator:   $user_name
 #if($local_auth_method)
 #if($new_user)
    • Un administrator vă va informa cu privire la parola reală.
