@@ -27,7 +27,7 @@ esta é uma notificação para o seguinte evento:
    • Validação de entrada pendente.
 #fim
 
-   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Modificado: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
