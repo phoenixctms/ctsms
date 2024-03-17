@@ -2,7 +2,7 @@ Dear $user_identity_firstname,
 
 ваш обліковий запис ${application.abbreviation} був #if($new_user)створений#{else}змінено #end.
 
-   • Username:   $user_name
+   • Ім’я користувача:   $user_name
 #if($local_auth_method)
 #if($new_user)
    • Адміністратор повідомить вас про актуальний пароль.
@@ -25,7 +25,7 @@ Dear $user_identity_firstname,
    $http_base_url
 
 #закінчується
-IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. Для підтримки даних конфіденційно, облікові дані повинні бути захищеними. Вам ніколи не будуть запропоновані облікові дані через електронну пошту або сервери, відмінні від$http_domain_name".
+ВАЖЛИВО: Обліковий запис дозволяє читати ідентифікаційну інформацію суб’єктів, зареєстрованих користувачами відділу «$user_department». Для підтримки даних конфіденційно, облікові дані повинні бути захищеними. Вам ніколи не будуть запропоновані облікові дані через електронну пошту або сервери, відмінні від$http_domain_name".
 
 Дякую!
 
@@ -34,4 +34,4 @@ IMPORTANT: The account allows you to read personally identifiable information of
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
