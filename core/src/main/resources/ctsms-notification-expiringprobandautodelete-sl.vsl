@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Spoštovana članica odd. $proband_department,
 
-this is a notification for the following event:
+to je obvestilo za naslednji dogodek:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Oddelek Proband:     $proband_department
+   • Kategorija probanda:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Načrtovano brisanje:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Zadnji spremenjeni uporabnik:      $proband_modifieduser_identity_name
+   • Časovni žig zadnje spremembe: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Brez obveščenega soglasja probanda je odstranitev zapisa potrebna za izvajanje zasebnosti podatkov, da se zaščitijo občutljivi podatki probanda in izpustijo osebno določljivi podatki. Zato izbrisa ni mogoče razveljaviti.
 
-Please prepare and/or take appropriate actions.
+Pripravite se in/ali ustrezno ukrepajte.
 
 Hvala vam!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Primer: $instance_name
