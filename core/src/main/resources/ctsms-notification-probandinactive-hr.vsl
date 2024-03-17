@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Poštovani član odv. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+ovo je obavijest za sljedeći događaj:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Proband odjel: $probandstatusentry_proband_department
+   • Proband kat.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Tip:          $probandstatusentry_type
+   • Od:          $probandstatusentry_start
+   • Za:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
 
 Hvala vam!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Primjer: $instance_name
