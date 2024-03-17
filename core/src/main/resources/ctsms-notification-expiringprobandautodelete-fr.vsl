@@ -4,7 +4,7 @@ Ceci est une notification pour l'événement suivant :
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband : #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Proband deptartment:     $proband_department
    • Catégorie de bande :        $proband_category
