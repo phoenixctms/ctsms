@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Eyin egbe ti Dept. $proband_department,
 
-this is a notification for the following event:
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#opin
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Ẹka ile-iṣẹ Proband:     $proband_department
+   • Ẹka Proband:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Ti ṣeto piparẹ:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Olumulo ti o kẹhin:      $proband_modifieduser_identity_name
+   • Igba ti a ṣe atunṣe kẹhin: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Laisi ifọwọsi ifitonileti ti proband, yiyọ igbasilẹ naa nilo lati ṣe imuse aṣiri data lati le daabobo data ifura ti proband ati ju alaye idanimọ tikalararẹ silẹ. Nitorina piparẹ ko le ṣe yiyi pada.
 
-Please prepare and/or take appropriate actions.
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 
 E dupe!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Apeere: $instance_name
