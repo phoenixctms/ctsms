@@ -1,4 +1,4 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Шановний $visitscheduleitem_trial_name член судової групи або член відділу. $probandstatusentry_proband_department,
 
 це сповіщення для наступної події:
 
@@ -7,16 +7,16 @@ Dear $visitscheduleitem_trial_name trial team member or member of dept. $proband
    • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Розширення розширення.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Пробанд кат.:  $probandstatusentry_proband_category
 
    • Тип статусу:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Статус від:   $probandstatusentry_start
+   • Статус:     $probandstatusentry_stop
 
    • Пробна:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Відвідайте:         $visitscheduleitem_name
+   • Відвідайте з:    $visitscheduleitem_start
+   • Відвідайте:      $visitscheduleitem_stop
 
 Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
@@ -27,4 +27,4 @@ Dear $visitscheduleitem_trial_name trial team member or member of dept. $proband
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
