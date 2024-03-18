@@ -1,30 +1,30 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+親愛なる $trial_name トライアルチームのメンバーまたはdept のメンバーの皆様。 $trial_department,
 
-this is a notification for the following event:
+これは以下のイベントの通知です：
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • 試用コード：   $trial_name
+   • 試用タイトル:  $trial_title
+   • トライアル部門：  $trial_department
 
-   • Trial status: $trial_status
+   • トライアルステータス: $trial_status
 #if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
+   • ロックダウン: トライアルおよび関連レコードのこれ以上の変更はありません。
 #end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
+   • お問い合わせ値入力が有効になります。
 #else
-   • Inquiry value inputs are disabled.
+   • お問い合わせ値の入力が無効になります。
 #end
 
-Please prepare and/or take appropriate actions.
+適切な行動を取ってください。
 
 ありがとう！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+インスタンス： $instance_name
