@@ -1,28 +1,28 @@
-Dear supervisor of $staffstatusentry_staff_name,
+Poštovani nadzorniče $staffstatusentry_staff_name,
 
-this is a notification for the following event:
+ovo je obavijest za sljedeći događaj:
 
    $type
 
-   • Staff:       $staffstatusentry_staff_name
-   • Staff dept.: $staffstatusentry_staff_department
-   • Staff cat.:  $staffstatusentry_staff_category
+   • Osoblje:       $staffstatusentry_staff_name
+   • Odjel osoblja: $staffstatusentry_staff_department
+   • Kat. osoblja:  $staffstatusentry_staff_category
 
-   • Type:        $staffstatusentry_type
-   • From:        $staffstatusentry_start
-   • To:          $staffstatusentry_stop
+   • Tip:        $staffstatusentry_type
+   • Od:        $staffstatusentry_start
+   • Za:          $staffstatusentry_stop
 
 Komentar:
 
 $staffstatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
 
 Hvala vam!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Primjer: $instance_name
