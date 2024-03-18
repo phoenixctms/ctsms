@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-this is a notification for the following event:
+це сповіщення для наступної події:
 
    $type
 
-   • Course:              $courseparticipationstatusentry_course_name
-   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
-   • Course department:   $courseparticipationstatusentry_course_department
-   • Course category:     $courseparticipationstatusentry_course_category
+   • Курс:              $courseparticipationstatusentry_course_name
+   • Курс CV заголовок:     $courseparticipationstatusentry_course_cvtitle
+   • Курсова кафедра:   $courseparticipationstatusentry_course_department
+   • Курс категорії:     $courseparticipationstatusentry_course_category
 
-   • Course end:          $courseparticipationstatusentry_course_stop
-   • Validity expiration: $courseparticipationstatusentry_course_expiration
+   • Кінець курсу:          $courseparticipationstatusentry_course_stop
+   • Термін дії: $courseparticipationstatusentry_course_expiration
 
-Please visit to register for a suitable refresher course:
+Будь ласка, відвідайте підходящий курс оновлення:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
