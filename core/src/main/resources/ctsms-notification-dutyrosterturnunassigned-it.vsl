@@ -1,40 +1,40 @@
 Dear $staff_firstname,
 
-this is a notification for the following event:
+si tratta di una notifica per il seguente evento:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Prova:          $dutyrosterturn_trial_name
+   • Dovere da:      $dutyrosterturn_start
+   • Obbligo a:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Calendario:       $dutyrosterturn_calendar
+   • Titolo del dovere:     $dutyrosterturn_title
+   • Visita:          $dutyrosterturn_visitscheduleitem_name
 
-   • New staff:      $dutyrosterturn_staff_name
+   • Nuovo staff:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
+   • Auto-allocabile.
 #else
-   • No self allocation.
+   • Nessuna auto-allocazione.
 #end
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modificato: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Commento del dazio:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+L'assegnazione dei compiti è obbligatoria e può cambiare fino a quando non vengono finalmente congelati. La panoramica aggiornata è accessibile sul sito sottostante:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Grazie!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Istanza: $instance_name
