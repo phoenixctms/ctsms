@@ -1,0 +1,43 @@
+प्रिय $inventorybooking_onbehalfof_firstname,
+
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+
+   $type
+
+   • इन्वेंटरी:       $inventorybooking_inventory_name
+   • इन्वेंटरी विभाग: $inventorybooking_inventory_department
+   • इन्वेंटरी बिल्ली.:  $inventorybooking_inventory_category
+
+   • स्थिति प्रकार:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • प्रवर्तक:      $inventorystatusentry_originator_name
+#अंत
+   • स्थिति यहां से:     $inventorystatusentry_start
+   • स्थिति:       $inventorystatusentry_stop
+
+   • बुकिंग यहां से:    $inventorybooking_start
+   • यहां बुकिंग:      $inventorybooking_stop
+
+   • पाठ्यक्रम के लिए:      $inventorybooking_course_name
+   • परीक्षण के लिए:       $inventorybooking_trial_name
+   • प्रोबैंड के लिए: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+स्थिति टिप्पणी:
+
+$inventorystatusentry_comment
+
+बुकिंग टिप्पणी:
+
+$inventorybooking_comment
+
+कृपया तैयारी करें और/या उचित कार्रवाई करें।
+
+धन्यवाद!
+
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+
+-------------------------------------------------- -----------
+${application.abbreviation} ${application.version}
+
+उदाहरण: $instance_name
