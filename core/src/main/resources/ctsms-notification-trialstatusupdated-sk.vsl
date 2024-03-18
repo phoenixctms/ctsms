@@ -1,30 +1,30 @@
-Vážený $trial_name člen skúšobného tímu alebo člen odd. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-toto je upozornenie na nasledujúcu udalosť:
+this is a notification for the following event:
 
    $type
 
-   • Skúšobný kód:   $trial_name
-   • Názov pokusu:  $trial_title
-   • Skúšobné oddelenie:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Stav skúšobnej verzie: $trial_status
+   • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
-   • Uzamknutie: žiadne ďalšie úpravy pokusu a súvisiacich záznamov.
-#koniec
+   • Lockdown: no further modification of the trial and associated records.
+#end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Vstupy dopytovej hodnoty sú povolené.
+   • Inquiry value inputs are enabled.
 #else
-   • Vstupy hodnoty dopytu sú vypnuté.
-#koniec
+   • Inquiry value inputs are disabled.
+#end
 
-Pripravte sa a/alebo vykonajte príslušné kroky.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Ďakujem!
 
-Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Príklad: $instance_name
+Instance: $instance_name
