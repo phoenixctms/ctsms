@@ -1,21 +1,21 @@
-Уважаемый член пробной команды $trial_name или член dept. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Пробный код:   $trial_name
-   • Название пробной версии:  $trial_title
-   • Пробная версия:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Пробный статус: $trial_status
+   • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
-   • Блокировка: никаких дополнительных изменений в судебном разбирательстве и связанных с ним записей.
+   • Lockdown: no further modification of the trial and associated records.
 #конец
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Запросы о ценности включены.
+   • Inquiry value inputs are enabled.
 #else
-   • Вход в справочную ценность отключен.
+   • Inquiry value inputs are disabled.
 #конец
 
 Просьба подготовить и/или принять соответствующие меры.
