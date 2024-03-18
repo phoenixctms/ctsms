@@ -1,22 +1,22 @@
-Mpendwa $visitscheduleitem_trial_name mwanachama wa timu ya majaribio au mwanachama wa idara. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#mwisho
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Idara ya Proband.: $probandstatusentry_proband_department
-   • Proband paka.:  $probandstatusentry_proband_category
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • Aina ya hali:   $probandstatusentry_type
-   • Hali kutoka:   $probandstatusentry_start
-   • Hali ya:     $probandstatusentry_stop
+   • Status type:   $probandstatusentry_type
+   • Status from:   $probandstatusentry_start
+   • Status to:     $probandstatusentry_stop
 
-   • Jaribio:         $visitscheduleitem_trial_name
-   • Tembelea:         $visitscheduleitem_name
-   • Tembelea kutoka:    $visitscheduleitem_start
-   • Tembelea:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 
