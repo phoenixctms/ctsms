@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Stimate membru al decupării. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Dept.: $probandstatusentry_proband_department
+   • Pisică de trupă:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Tip:          $probandstatusentry_type
+   • De la:          $probandstatusentry_start
+   • Către:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
 
 Mulțumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
