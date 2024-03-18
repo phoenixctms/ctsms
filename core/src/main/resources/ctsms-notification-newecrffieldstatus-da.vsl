@@ -1,58 +1,58 @@
-Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
+Kære $ecrffieldstatusentry_listentry_trial_name prøvegruppemedlem eller medlem af dept. $ecrffieldstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Trial:              $ecrffieldstatusentry_listentry_trial_name
-   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Prøve:              $ecrffieldstatusentry_listentry_trial_name
+   • Prøveafdeling:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
-#if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#end
-#if($notification.ecrfFieldStatusEntry.visit)
-   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
-#end
-   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
+#hf($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Proband gruppe:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#ende
+#hf($notification.ecrfFieldStatusEntry.visit)
+   • Besøg:              $notification.ecrfFieldStatusEntry.visit.title
+#ende
+   • eCRF-afsnit:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
-#if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Index:              $ecrffieldstatusentry_index
-#end
+#hf($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Indeks:              $ecrffieldstatusentry_index
+#ende
 
    • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Ændret: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
-Comment:
+Kommentar:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)History:
+#if(${index_field_log.size()} > 0)Historik:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#end
-#end
+   • gemt (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+#ende
+#ende
 
-#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Please check the data entry to resolve the eCRF issue:
+#end#hvis(!$notification.ecrfFieldStatusEntry.status.resolved)
+Kontroller dataposten for at løse problemet med eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#else
-The eCRF issue is closed.
-#end
+#andet
+Spørgsmålet om eCRF er afsluttet.
+#ende
 
 Tak skal du have!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
