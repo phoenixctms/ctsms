@@ -1,26 +1,26 @@
-Kedves #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end!
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Készlet:       $maintenancescheduleitem_inventory_name
-   • Leltári részleg: $maintenancescheduleitem_inventory_department
-   • Leltári kat.:  $maintenancescheduleitem_inventory_category
+   • Inventory:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Inventory cat.:  $maintenancescheduleitem_inventory_category
 
-   • Cím: '$notification.maintenanceScheduleItem.title'
-   • Típus:            $maintenancescheduleitem_type
-   • Dátum:            $maintenancescheduleitem_nextrecurrence
+   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
 
-   • A cég elérhetősége: $maintenancescheduleitem_companycontact_name
+   • Company contact: $maintenancescheduleitem_companycontact_name
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
