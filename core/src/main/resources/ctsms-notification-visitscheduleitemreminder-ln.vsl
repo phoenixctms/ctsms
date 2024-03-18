@@ -1,16 +1,16 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Ndeko $visitscheduleitem_trial_name membre ya équipe ya procès to membre ya dept. $visitscheduleitem_trial_department, .
 
 oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
-#if($notification.proband)
+   • Kosambisa:         $visitscheduleitem_trial_name
+   • Kotala:         $visitscheduleitem_name
+   • Kotala uta na:    $visitscheduleitem_start
+   • Kotala na:      $visitscheduleitem_stop
+#soki($notification.proband) .
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #soki($string_utils.ezali Pamba($proband_alias))$proband_id#{else}$proband_alias#nsuka
 
 #nsuka
 
