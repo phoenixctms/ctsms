@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-this is a notification for the following event:
+esta é uma notificação para o seguinte evento:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Inventário:       $inventorybooking_inventory_name
+   • Depósito dep.: $inventorybooking_inventory_department
+   • Galeria de inventário:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • Tipo de status:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Originador:      $inventorystatusentry_originator_name
+#fim
+   • Status de:     $inventorystatusentry_start
+   • Estado para:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Reserva de:    $inventorybooking_start
+   • Reserva para:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Por curso:      $inventorybooking_course_name
+   • Para o teste:       $inventorybooking_trial_name
+   • Por probabilidade: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Comentário do estado:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Comentário de reserva:
 
 $inventorybooking_comment
 
-Please prepare and/or take appropriate actions.
+Por favor, prepare-se e/ou tome as medidas adequadas.
 
 Obrigado!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instância: $instance_name
