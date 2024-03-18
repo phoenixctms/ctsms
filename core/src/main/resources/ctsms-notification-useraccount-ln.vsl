@@ -1,33 +1,33 @@
-Ndeko $user_identity_firstname,
+Dear $user_identity_firstname,
 
-compte na yo ${application.abbreviation} ezalaki #soki($new_user)ekelamaki#{else}ebongwanaki#nsuka.
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
 
-   • Nkombo ya mosaleli:   $user_name
-#soki($local_auth_method) .
-#soki($new_user) .
-   • Mokambi moko akoyebisa yo mot de passe ya solosolo.
+   • Username:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • An administrator will inform you of the actual password.
 #mosusu
-   • Mot de passe etikalaka ndenge moko.
+   • The password remains unchanged.
 #nsuka
-#soki($ldap_auth_method)
-   • Mot de passe oyo osengeli kosalela ezali mot de passe MUG na yo.
+#elseif($ldap_auth_method)
+   • The password to use is your MUG-password.
 
-#soki($new_user) .
-Tango ozali kokota mpo na mbala ya liboso, kotia mot de passe oyo administrateur apesi lokola "mot de passe locale" obligatoire.
+#if($new_user)
+When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
 #mosusu
-Ntango ozali kokota mbala ya sima, kotia mot de passe na yo ya lelo lokola "mot de passe locale" oyo esengeli.
+When logging in the next time, enter your current password as the mandatory "local password".
 #nsuka
 #nsuka
 
-#soki($new_user) .
-Système yango ekoki kozwama na esika oyo ezali awa na nse:
+#if($new_user)
+The system is accessible at the site below:
 
    $http_base_url
 
 #nsuka
-LIKANISI YA NTINDA: Compte yango epesaka yo nzela ya kotánga makambo oyo ekoki koyeba yo ya bato oyo basaleli ya departema "$user_department" bakomisi nkombo. Mpo na kobatela bomoto ya ba données, esengeli kobomba ba credentiels ya compte na sekele. Bakosenga yo ata moke te kopesa ba credentiels na nzela ya email to ba serveurs mosusu longola se "$http_domain_name".
+IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
 
-Thank you!
+Matondi!
 
 Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
