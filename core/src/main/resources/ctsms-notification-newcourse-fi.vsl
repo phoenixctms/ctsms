@@ -1,27 +1,27 @@
-Dear member of dept. $course_department,
+Hyvä syvyyden jäsen. $course_department,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Kurssi:                 $course_name
+   • Kurssin CV otsikko:        $course_cvtitle
+   • Kurssiosasto:      $course_department
+   • Kurssiluokka:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Kurssin alku:           $course_start
+   • Kurssin loppu:             $course_stop
+   • Osallistumisen määräaika: $course_participationdeadline
 
-Register for this course:
+Rekisteröidy tälle kurssille:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
