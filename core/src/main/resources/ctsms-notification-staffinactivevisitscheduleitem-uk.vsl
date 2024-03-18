@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Шановний $visitscheduleitem_trial_name член команди випробувань або керівник $staff_name,
 
-this is a notification for the following event:
+це сповіщення для наступної події:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • Пробна:      $visitscheduleitem_trial_name
+   • Відвідайте:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • Дата:       $visit_schedule_item_day_date
+#інше
+   • Відвідайте з: $visitscheduleitem_start
+   • Відвідайте:   $visitscheduleitem_stop
+#закінчується
 
-   • Threshold:  $inactive_staff_limit
+   • Поріг:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() співробітників N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
-#end
+#закінчується
 
-Please prepare and/or take appropriate actions.
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
