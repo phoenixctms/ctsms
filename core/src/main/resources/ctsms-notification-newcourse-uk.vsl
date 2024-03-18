@@ -1,27 +1,27 @@
-Шановний член глибини. $course_department,
+Dear member of dept. $course_department,
 
-це сповіщення для наступної події:
+this is a notification for the following event:
 
    $type
 
-   • Курс:                 $course_name
-   • Курс CV заголовок:        $course_cvtitle
-   • Курсове відділення:      $course_department
-   • Курс категорії:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Початок курсу:           $course_start
-   • Кінець курсу:             $course_stop
-   • Дедлайн участі: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Зареєструйтеся для цього курсу:
+Register for this course:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
-Gracias.
+Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Примірник: $instance_name
+Instance: $instance_name
