@@ -1,27 +1,27 @@
-Değerli daire üyemiz. $course_department,
+Dear member of dept. $course_department,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Kurs:                 $course_name
-   • Kurs CV başlığı:        $course_cvtitle
-   • Kurs bölümü:      $course_department
-   • Kurs kategorisi:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Kurs başlangıcı:           $course_start
-   • Kurs sonu:             $course_stop
-   • Son katılım tarihi: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Bu kursa kaydolun:
+Register for this course:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
