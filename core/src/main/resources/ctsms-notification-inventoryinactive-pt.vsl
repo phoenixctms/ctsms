@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Caro membro do dep. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+esta é uma notificação para o seguinte evento:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventário:       $inventorystatusentry_inventory_name
+   • Depósito dep.: $inventorystatusentry_inventory_department
+   • Galeria de inventário:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Tipo:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Originador:      $inventorystatusentry_originator_name
+#fim
+   • De:            $inventorystatusentry_start
+   • Para:              $inventorystatusentry_stop
 
 Comentário:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Por favor, prepare-se e/ou tome as medidas adequadas.
 
 Obrigado!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instância: $instance_name
