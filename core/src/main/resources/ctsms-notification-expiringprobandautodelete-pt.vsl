@@ -1,0 +1,29 @@
+Caro membro do dep. $proband_department,
+
+esta é uma notificação para o seguinte evento:
+
+   $type
+
+   • Perfil: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband deptar:     $proband_department
+   • Categoria Probanda:        $proband_category
+
+   • Exclusão programada:    $proband_autodeletedeadline
+
+   • Último usuário modificado:      $proband_modifieduser_identity_name
+   • Data da última modificação: $proband_modifiedtimestamp
+
+
+Sem consentimento informado da probabilidade, a remoção do registro é necessária para implementar a privacidade de dados a fim de proteger os dados confidenciais da probabilidade e descartar informações de identificação pessoal. Por conseguinte, não se pode renunciar a uma supressão.
+
+Por favor, prepare-se e/ou tome as medidas adequadas.
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name

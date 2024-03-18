@@ -1,0 +1,58 @@
+Kära $ecrffieldstatusentry_listentry_trial_name försöksmedlem eller medlem i dept. $ecrffieldstatusentry_listentry_trial_department,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Provning:              $ecrffieldstatusentry_listentry_trial_name
+   • Provavdelning:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+
+   • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Probandgrupp:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+# slut
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Besök:              $notification.ecrfFieldStatusEntry.visit.title
+# slut
+   • eCRF-avsnitt:       $ecrffieldstatusentry_ecrffield_section
+   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.serie)
+   • Index:              $ecrffieldstatusentry_index
+# slut
+
+   • Status för eCRF:  $ecrffieldstatusentry_status
+
+   • Ändrad: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+
+
+Kommentar:
+
+$ecrffieldstatusentry_comment
+
+#if(${index_field_log.size()} > 0)Historik:
+
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+   • sparad (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+# slut
+# slut
+
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+Kontrollera datainmatningen för att lösa eCRF-problemet:
+
+   $http_base_url/shared/ecrfsection.jsf?issueid=$ecrffieldstatusentry_id
+#annat
+Frågan om eCRF är avslutad.
+# slut
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

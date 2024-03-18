@@ -1,0 +1,31 @@
+Kära medlem av dept. $inventorystatusentry_inventory_department,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Förråd:       $inventorystatusentry_inventory_name
+   • Lagerdept.: $inventorystatusentry_inventory_department
+   • Inventering katt:  $inventorystatusentry_inventory_category
+
+   • Typ:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Ursprungare:      $inventorystatusentry_originator_name
+# slut
+   • Från:            $inventorystatusentry_start
+   • Till:              $inventorystatusentry_stop
+
+Kommentar:
+
+$inventorystatusentry_comment
+
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

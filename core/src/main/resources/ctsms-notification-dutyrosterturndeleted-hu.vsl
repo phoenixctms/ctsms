@@ -1,0 +1,40 @@
+Kedves $staff_firstname!
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Próba:          $dutyrosterturn_trial_name
+   • Ügyelet innen:      $dutyrosterturn_start
+   • Kötelessége:        $dutyrosterturn_stop
+
+   • Naptár:       $dutyrosterturn_calendar
+   • Beosztás:     $dutyrosterturn_title
+   • Látogassa meg:          $dutyrosterturn_visitscheduleitem_name
+
+   • Személyzet:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Önállóan allokálható.
+#más
+   • Nincs önkiosztás.
+#vége
+
+   • Módosítva: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Köteles megjegyzés:
+
+$dutyrosterturn_comment
+
+A szolgálati beosztás kötelező, és a végleges befagyasztásig változhat. A naprakész áttekintés az alábbi oldalon érhető el:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

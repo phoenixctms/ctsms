@@ -1,0 +1,43 @@
+Ezigbo $inventorybooking_onbehalfof_firstname,
+
+Nke a bụ ọkwa maka mmemme a:
+
+   $type
+
+   • Ndepụta Ngwaahịa:       $inventorybooking_inventory_name
+   • Ngalaba Ndepụta Ngwaahịa: $inventorybooking_inventory_department
+   • Nwamba ngwa ahịa.:  $inventorybooking_inventory_category
+
+   • Ụdị ọnọdụ:     $inventorystatusentry_type
+#ọ bụrụ ($notification.inventoryStatusEntry.originator)
+   • Onye malitere:      $inventorystatusentry_originator_name
+#njedebe
+   • Ọnọdụ si:     $inventorystatusentry_start
+   • Ọnọdụ ka:       $inventorystatusentry_stop
+
+   • Ndokwa site na:    $inventorybooking_start
+   • Ịde akwụkwọ na:      $inventorybooking_stop
+
+   • N'ezie:      $inventorybooking_course_name
+   • Maka ikpe:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Nkwupụta ọnọdụ:
+
+$inventorystatusentry_comment
+
+Nkwupụta ntinye akwụkwọ:
+
+$inventorybooking_comment
+
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
+
+Daalụ!
+
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ihe atụ: $instance_name

@@ -1,0 +1,43 @@
+Eyin $inventorybooking_onbehalfof_firstname,
+
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+
+   $type
+
+   • Oja:       $inventorybooking_inventory_name
+   • Ẹka Oja: $inventorybooking_inventory_department
+   • Ologbo oja .:  $inventorybooking_inventory_category
+
+   • Iru ipo:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Olupilẹṣẹ:      $inventorystatusentry_originator_name
+#opin
+   • Ipo lati:     $inventorystatusentry_start
+   • Ipo si:       $inventorystatusentry_stop
+
+   Ifiweranṣẹ lati:    $inventorybooking_start
+   • Ifiweranṣẹ si:      $inventorybooking_stop
+
+   • Fun dajudaju:      $inventorybooking_course_name
+   • Fun idanwo:       $inventorybooking_trial_name
+   • Fun proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#opin
+
+
+Ọrọ asọye ipo:
+
+$inventorystatusentry_comment
+
+Ifiweranṣẹ asọye:
+
+$inventorybooking_comment
+
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

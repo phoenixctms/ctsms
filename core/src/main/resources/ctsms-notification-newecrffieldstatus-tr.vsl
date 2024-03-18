@@ -1,0 +1,58 @@
+Sayın $ecrffieldstatusentry_listentry_trial_name deneme ekibi üyesi veya bölüm üyesi. $ecrffieldstatusentry_listentry_trial_department,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Deneme:              $ecrffieldstatusentry_listentry_trial_name
+   • Deneme departmanı:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+
+   • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Proband grubu:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#son
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Ziyaret edin:              $notification.ecrfFieldStatusEntry.visit.title
+#son
+   • eCRF bölümü:       $ecrffieldstatusentry_ecrffield_section
+   • Giriş alanı:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Dizin:              $ecrffieldstatusentry_index
+#son
+
+   • eCRF Sorun Durumu:  $ecrffieldstatusentry_status
+
+   • Değiştirildi: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+
+
+Yorum:
+
+$ecrffieldstatusentry_comment
+
+#if(${index_field_log.size()} > 0)Geçmiş:
+
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+#son
+#son
+
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+eCRF sorununu çözmek için lütfen veri girişini kontrol edin:
+
+   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
+#başka
+eCRF sorunu kapandı.
+#son
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

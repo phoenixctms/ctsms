@@ -1,0 +1,26 @@
+Kära $visitscheduleitem_trial_name försöksmedlem eller medlem i dept. $visitscheduleitem_trial_department,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Provning:         $visitscheduleitem_trial_name
+   • Besök:         $visitscheduleitem_name
+   • Besök från:    $visitscheduleitem_start
+   • Besök till:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+# slut
+
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

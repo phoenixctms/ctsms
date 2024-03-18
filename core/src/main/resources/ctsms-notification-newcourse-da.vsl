@@ -1,0 +1,27 @@
+Kære medlem af dept. $course_department,
+
+dette er en notifikation for følgende begivenhed:
+
+   $type
+
+   • Kursus:                 $course_name
+   • Kursus CV titel:        $course_cvtitle
+   • Kursusafdeling:      $course_department
+   • Kursuskategori:        $course_category
+
+   • Kursus start:           $course_start
+   • Kursus slut:             $course_stop
+   • Deltagelsesfrist: $course_participationdeadline
+
+Registrer dig for dette kursus:
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+Mange tak!
+
+Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

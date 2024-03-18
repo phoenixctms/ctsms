@@ -1,0 +1,40 @@
+Spoštovani $staff_firstname,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Preizkus:          $dutyrosterturn_trial_name
+   • Dajatev od:      $dutyrosterturn_start
+   • Dolžnost do:        $dutyrosterturn_stop
+
+   • Koledar:       $dutyrosterturn_calendar
+   • Naziv dolžnosti:     $dutyrosterturn_title
+   • Obiščite:          $dutyrosterturn_visitscheduleitem_name
+
+   • Osebje:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Samododelljivi.
+#drugo
+   • Brez samododeljevanja.
+#konec
+
+   • Spremenjeno: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Dežurni komentar:
+
+$dutyrosterturn_comment
+
+Razporeditve dolžnosti so obvezne in se lahko spreminjajo, dokler niso dokončno zamrznjene. Najnovejši pregled je dostopen na spodnji strani:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

@@ -1,0 +1,40 @@
+Vážený $staff_firstname,
+
+toto je upozornenie na nasledujúcu udalosť:
+
+   $type
+
+   • Skúška:          $dutyrosterturn_trial_name
+   • Povinnosť od:      $dutyrosterturn_start
+   • Povinnosť:        $dutyrosterturn_stop
+
+   • Kalendár:       $dutyrosterturn_calendar
+   • Názov povinnosti:     $dutyrosterturn_title
+   • Navštívte:          $dutyrosterturn_visitscheduleitem_name
+
+   • Nový personál:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Samostatne prideľovateľné.
+#else
+   • Žiadne vlastné prideľovanie.
+#koniec
+
+   • Upravené: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Povinný komentár:
+
+$dutyrosterturn_comment
+
+Pridelenie povinností je povinné a môže sa meniť, kým nebudú definitívne zmrazené. Aktuálny prehľad je dostupný na nižšie uvedenej stránke:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Ďakujem!
+
+Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Príklad: $instance_name

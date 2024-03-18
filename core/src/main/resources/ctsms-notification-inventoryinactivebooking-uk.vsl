@@ -1,0 +1,43 @@
+Dear $inventorybooking_onbehalfof_firstname,
+
+це сповіщення для наступної події:
+
+   $type
+
+   • Інвентар:       $inventorybooking_inventory_name
+   • Зменшити розмір інвентарю: $inventorybooking_inventory_department
+   • Кат. інвентарю:  $inventorybooking_inventory_category
+
+   • Тип статусу:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Джерело:      $inventorystatusentry_originator_name
+#закінчується
+   • Статус від:     $inventorystatusentry_start
+   • Статус:       $inventorystatusentry_stop
+
+   • Бронювання від:    $inventorybooking_start
+   • Бронювання до:      $inventorybooking_stop
+
+   • Для курсу:      $inventorybooking_course_name
+   • Для випробування:       $inventorybooking_trial_name
+   • На проспект: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Статус коментаря:
+
+$inventorystatusentry_comment
+
+Коментар до бронювання:
+
+$inventorybooking_comment
+
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+
+Дякую!
+
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Примірник: $instance_name

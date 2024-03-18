@@ -1,0 +1,31 @@
+Değerli daire üyemiz. $inventorystatusentry_inventory_department,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Envanter:       $inventorystatusentry_inventory_name
+   • Envanter bölümü: $inventorystatusentry_inventory_department
+   • Envanter kataloğu:  $inventorystatusentry_inventory_category
+
+   • Tür:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Oluşturan:      $inventorystatusentry_originator_name
+#son
+   • Gönderen:            $inventorystatusentry_start
+   • Kime:              $inventorystatusentry_stop
+
+Yorum:
+
+$inventorystatusentry_comment
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

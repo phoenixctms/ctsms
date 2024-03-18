@@ -1,0 +1,33 @@
+عزيزي عضو الفريق التجريبي $visitscheduleitem_trial_name أو مشرف $staff_name،
+
+وهذا إشعار يتعلق بالحدث التالي:
+
+   $type
+
+   • المحاكمة:      $visitscheduleitem_trial_name
+   • زيارة:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • التاريخ:       $visit_schedule_item_day_date
+#آخر
+   • زيارة من: $visitscheduleitem_start
+   • زيارة إلى:   $visitscheduleitem_stop
+#نهاية
+
+   • الحيازة:  $inactive_staff_limit
+
+$inactive_staff.size() موظفان N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employeeاسم
+#نهاية
+
+يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
+
+شكرا لك!
+
+هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+الموقع: $instance_name

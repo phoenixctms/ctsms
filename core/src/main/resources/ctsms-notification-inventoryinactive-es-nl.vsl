@@ -1,0 +1,31 @@
+Estimado miembro del depósito. $inventorystatusentry_inventory_department,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Voorraad:       $inventorystatusentry_inventory_name
+   • $inventorystatusentry_inventory_department is afhankelijk van inventarisatie:
+   • Gato de inventaris:  $inventorystatusentry_inventory_category
+
+   • Tipo:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Oorspronkelijk:      $inventorystatusentry_originator_name
+#einde
+   • Desde:            $inventorystatusentry_start
+   • Para:              $inventorystatusentry_stop
+
+Commentaar:
+
+$inventorystatusentry_comment
+
+Por favor prepare y/o tome las acciones apropiadas.
+
+Gracias.
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. Geen reactie.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name

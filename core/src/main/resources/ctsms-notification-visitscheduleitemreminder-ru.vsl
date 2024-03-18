@@ -1,0 +1,26 @@
+Уважаемый член пробной команды $visitscheduleitem_trial_name или член dept. $visitscheduleitem_trial_department,
+
+это уведомление для следующего события:
+
+   $type
+
+   • Испытание:         $visitscheduleitem_trial_name
+   • Посещение:         $visitscheduleitem_name
+   • Посещение от:    $visitscheduleitem_start
+   • Посетить в:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#конец
+
+Просьба подготовить и/или принять соответствующие меры.
+
+Спасибо!
+
+Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Копия: $instance_name

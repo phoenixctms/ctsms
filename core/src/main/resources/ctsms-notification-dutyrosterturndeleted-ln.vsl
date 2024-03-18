@@ -1,0 +1,40 @@
+Ndeko $staff_firstname,
+
+oyo ezali liyebisi mpo na likambo oyo elandi:
+
+   $type
+
+   • Kosambisa:          $dutyrosterturn_trial_name
+   • Mosala uta:      $dutyrosterturn_start
+   • Mosala ya:        $dutyrosterturn_stop
+
+   • Manáka:       $dutyrosterturn_calendar
+   • Titre ya mosala:     $dutyrosterturn_title
+   • Kotala:          $dutyrosterturn_visitscheduleitem_name
+
+   • Basali:          $dutyrosterturn_staff_name
+#soki($notification.Roster ya mosalaTurn.yo mokoAllocatable)
+   • Ekoki kokabola yango moko.
+#mosusu
+   • Komikabola te.
+#nsuka
+
+   • Ebongwani: #soki($notification.Roster ya mosalaBobongola.identité.ya Mosaleli)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#nsuka
+
+
+Commentaire ya mosala:
+
+$dutyrosterturn_comment
+
+Kopesa mosala ezali obligatoire mpe ekoki kobongwana kino na nsuka bakokangama na congelé. Botali ya sika ekoki kozwama na site oyo ezali awa na nse:
+
+   $http_base_url/mosambisi/mosalaSchedule ya Roster.jsf.
+
+Matondi!
+
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ndakisa: $instance_name

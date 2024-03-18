@@ -1,0 +1,26 @@
+Poštovani $visitscheduleitem_trial_name članu tima za suđenje ili članu odjela. $visitscheduleitem_trial_department,
+
+ovo je obavijest za sljedeći događaj:
+
+   $type
+
+   • Proba:         $visitscheduleitem_trial_name
+   • Posjetite:         $visitscheduleitem_name
+   • Posjet od:    $visitscheduleitem_start
+   • Posjetite:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#kraj
+
+Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
+
+Hvala vam!
+
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primjer: $instance_name

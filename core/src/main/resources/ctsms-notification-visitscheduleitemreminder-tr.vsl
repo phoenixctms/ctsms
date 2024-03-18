@@ -1,0 +1,26 @@
+Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya bölüm üyesi. $visitscheduleitem_trial_department,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Deneme:         $visitscheduleitem_trial_name
+   • Ziyaret edin:         $visitscheduleitem_name
+   • Ziyaret yeri:    $visitscheduleitem_start
+   • Şurayı ziyaret edin:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#son
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

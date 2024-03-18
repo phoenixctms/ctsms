@@ -1,0 +1,40 @@
+Ezigbo $staff_firstname,
+
+Nke a bụ ọkwa maka mmemme a:
+
+   $type
+
+   • Ọnwụnwa:          $dutyrosterturn_trial_name
+   • Ọrụ sitere na:      $dutyrosterturn_start
+   • Ọrụ na:        $dutyrosterturn_stop
+
+   • kalenda:       $dutyrosterturn_calendar
+   • Aha ọrụ:     $dutyrosterturn_title
+   • Gaa na:          $dutyrosterturn_visitscheduleitem_name
+
+   • Ndị ọrụ ọhụrụ:      $dutyrosterturn_staff_name
+#ọ bụrụ ($notification.dutyRosterTurn.selfAllocatable)
+   • ikenye onwe ya.
+#ọzọ
+   • Enweghị oke nke onwe.
+#njedebe
+
+   • gbanwetụrụ: #if ($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name# ọgwụgwụ
+
+
+Okwu ọrụ:
+
+$dutyrosterturn_comment
+
+Ihe omume dị mkpa ma nwee ike ịgbanwe ruo mgbe oyi gwụchara. Enwere ike nweta nlebanya ọhụrụ na saịtị dị n'okpuru:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Daalụ!
+
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ihe atụ: $instance_name

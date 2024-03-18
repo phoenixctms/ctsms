@@ -1,0 +1,33 @@
+Spoštovani $visitscheduleitem_trial_name član poskusne skupine ali nadzornik $staff_name,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Preizkus:      $visitscheduleitem_trial_name
+   • Obiščite:      $visitscheduleitem_name
+#če($visit_schedule_item_day_date)
+   • Datum:       $visit_schedule_item_day_date
+#drugo
+   • Obisk od: $visitscheduleitem_start
+   • Obisk:   $visitscheduleitem_stop
+#konec
+
+   • Prag:  $inactive_staff_limit
+
+$inactive_staff.size() zaposleni N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.ime
+#konec
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

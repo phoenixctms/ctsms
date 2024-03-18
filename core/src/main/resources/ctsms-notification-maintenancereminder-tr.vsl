@@ -1,0 +1,26 @@
+Sevgili #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Envanter:       $maintenancescheduleitem_inventory_name
+   • Envanter bölümü: $maintenancescheduleitem_inventory_department
+   • Envanter kataloğu:  $maintenancescheduleitem_inventory_category
+
+   • Başlık: '$notification.maintenanceScheduleItem.title'
+   • Tür:            $maintenancescheduleitem_type
+   • Tarih:            $maintenancescheduleitem_nextrecurrence
+
+   • Şirket iletişim bilgileri: $maintenancescheduleitem_companycontact_name
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

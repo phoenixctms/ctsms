@@ -1,0 +1,27 @@
+Cher membre du département. $course_department,
+
+Ceci est une notification pour l'événement suivant :
+
+   $type
+
+   • Cours :                 $course_name
+   • Titre du CV du cours :        $course_cvtitle
+   • Service de cours :      $course_department
+   • Catégorie de cours :        $course_category
+
+   • Début du cours :           $course_start
+   • Fin du cours :             $course_stop
+   • Date limite de participation : $course_participationdeadline
+
+S'inscrire à ce cours :
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+Merci!
+
+Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instance : $instance_name

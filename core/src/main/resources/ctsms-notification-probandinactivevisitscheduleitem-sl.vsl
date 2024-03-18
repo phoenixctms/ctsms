@@ -1,0 +1,30 @@
+Spoštovani $visitscheduleitem_trial_name član poskusne skupine ali član odd. $probandstatusentry_proband_department,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Oddelek za proband: $probandstatusentry_proband_department
+   • Proband kat.:  $probandstatusentry_proband_category
+
+   • Vrsta stanja:   $probandstatusentry_type
+   • Status od:   $probandstatusentry_start
+   • Status do:     $probandstatusentry_stop
+
+   • Preizkus:         $visitscheduleitem_trial_name
+   • Obiščite:         $visitscheduleitem_name
+   • Obisk od:    $visitscheduleitem_start
+   • Obisk:      $visitscheduleitem_stop
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

@@ -1,0 +1,33 @@
+Kära $visitscheduleitem_trial_name testgruppsmedlem eller handledare för $staff_name,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Provning:      $visitscheduleitem_trial_name
+   • Besök:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Datum:       $visit_schedule_item_day_date
+#annat
+   • Besök från: $visitscheduleitem_start
+   • Besök till:   $visitscheduleitem_stop
+# slut
+
+   • Tröskelvärd:  $inactive_staff_limit
+
+$inactive_staff.size() anställda N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.name
+# slut
+
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

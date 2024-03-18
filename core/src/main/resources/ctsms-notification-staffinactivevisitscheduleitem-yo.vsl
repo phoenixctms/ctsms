@@ -1,0 +1,33 @@
+Eyin $visitscheduleitem_trial_name omo egbe idanwo tabi alabojuto $staff_name,
+
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+
+   $type
+
+   • Idanwo:      $visitscheduleitem_trial_name
+   • Ṣabẹwo:      $visitscheduleitem_name
+#ti o ba jẹ ($visit_schedule_item_day_date)
+   • Ọjọ:       $visit_schedule_item_day_date
+#miiran
+   • Ṣabẹwo lati: $visitscheduleitem_start
+   • Ṣabẹwo si:   $visitscheduleitem_stop
+#opin
+
+   • Ipele:  $inactive_staff_limit
+
+$inactive_staff.size() abáni N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.orukọ
+#opin
+
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

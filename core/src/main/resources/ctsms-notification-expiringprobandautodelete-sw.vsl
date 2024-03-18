@@ -1,0 +1,29 @@
+Ndugu mwanachama wa dept. $proband_department,
+
+hii ni arifa ya tukio lifuatalo:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
+
+   • Idara ya Proband:     $proband_department
+   • Aina ya proband:        $proband_category
+
+   • Ufutaji umeratibiwa:    $proband_autodeletedeadline
+
+   • Mtumiaji aliyerekebishwa mwisho:      $proband_modifieduser_identity_name
+   • Muhuri wa muda uliorekebishwa mwisho: $proband_modifiedtimestamp
+
+
+Bila idhini iliyoarifiwa ya proband, uondoaji wa rekodi unahitajika ili kutekeleza ufaragha wa data ili kulinda data nyeti ya proband na kudondosha taarifa zinazoweza kumtambulisha mtu binafsi. Kwa hivyo ufutaji hauwezi kurejeshwa.
+
+Tafadhali jitayarishe na/au chukua hatua zinazofaa.
+
+Asante!
+
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+
+----------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Mfano: $instance_name

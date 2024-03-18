@@ -1,0 +1,30 @@
+Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya bölüm üyesi. $probandstatusentry_proband_department,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband bölümü: $probandstatusentry_proband_department
+   • Proband kataloğu:  $probandstatusentry_proband_category
+
+   • Durum türü:   $probandstatusentry_type
+   • Durum:   $probandstatusentry_start
+   • Durum:     $probandstatusentry_stop
+
+   • Deneme:         $visitscheduleitem_trial_name
+   • Ziyaret edin:         $visitscheduleitem_name
+   • Ziyaret yeri:    $visitscheduleitem_start
+   • Şurayı ziyaret edin:      $visitscheduleitem_stop
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

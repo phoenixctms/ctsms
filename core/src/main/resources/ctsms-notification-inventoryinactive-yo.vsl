@@ -1,0 +1,31 @@
+Eyin egbe ti Dept. $inventorystatusentry_inventory_department,
+
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+
+   $type
+
+   • Oja:       $inventorystatusentry_inventory_name
+   • Ẹka Oja: $inventorystatusentry_inventory_department
+   • Ologbo oja .:  $inventorystatusentry_inventory_category
+
+   • Iru:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Olupilẹṣẹ:      $inventorystatusentry_originator_name
+#opin
+   • Lati:            $inventorystatusentry_start
+   • Si:              $inventorystatusentry_stop
+
+Ọrọìwòye:
+
+$inventorystatusentry_comment
+
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

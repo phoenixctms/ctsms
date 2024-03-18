@@ -1,0 +1,26 @@
+親愛なる $visitscheduleitem_trial_name トライアルチームのメンバーまたはdept のメンバーの皆様。 $visitscheduleitem_trial_department,
+
+これは以下のイベントの通知です：
+
+   $type
+
+   • 試用版：         $visitscheduleitem_trial_name
+   • 訪問:         $visitscheduleitem_name
+   • 訪問元:    $visitscheduleitem_start
+   •      $visitscheduleitem_stop へのアクセス
+#if($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#end
+
+適切な行動を取ってください。
+
+Thank you!
+
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+インスタンス： $instance_name

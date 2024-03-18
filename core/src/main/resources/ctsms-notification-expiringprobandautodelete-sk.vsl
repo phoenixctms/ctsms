@@ -1,0 +1,29 @@
+Vážený člen odd. $proband_department,
+
+toto je upozornenie na nasledujúcu udalosť:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Oddelenie probandov:     $proband_department
+   • Kategória probanda:        $proband_category
+
+   • Plánované odstránenie:    $proband_autodeletedeadline
+
+   • Posledný upravený používateľ:      $proband_modifieduser_identity_name
+   • Časová pečiatka poslednej úpravy: $proband_modifiedtimestamp
+
+
+Bez informovaného súhlasu probanda sa vyžaduje odstránenie záznamu, aby sa zabezpečilo súkromie údajov s cieľom chrániť citlivé údaje probanda a vynechať osobné údaje. Preto vymazanie nie je možné vrátiť späť.
+
+Pripravte sa a/alebo vykonajte príslušné kroky.
+
+Ďakujem!
+
+Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Príklad: $instance_name

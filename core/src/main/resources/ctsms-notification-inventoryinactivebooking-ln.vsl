@@ -1,0 +1,43 @@
+Ndeko $inventorybooking_onbehalfof_firstname,
+
+oyo ezali liyebisi mpo na likambo oyo elandi:
+
+   $type
+
+   • Inventaire:       $inventorybooking_inventory_name
+   • Departema ya inventaire: $inventorybooking_inventory_department
+   • Inventaire cat.:  $inventorybooking_inventory_category
+
+   • Lolenge ya ezalela:     $inventorystatusentry_type
+#if($notification.Entrée yaEtat ya inventaire.mobandisi)
+   • Mobandisi:      $inventorystatusentry_originator_name
+#nsuka
+   • Ezalela uta:     $inventorystatusentry_start
+   • Ezalela na:       $inventorystatusentry_stop
+
+   • Kosala réservation kobanda na:    $inventorybooking_start
+   • Kosala réservation na:      $inventorybooking_stop
+
+   • Mpo na ya solo:      $inventorybooking_course_name
+   • Mpo na kosambisa:       $inventorybooking_trial_name
+   • Mpo na proband: #soki($string_utils.ezaliPamba($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#nsuka
+
+
+Commentaire ya état:
+
+$inventorystatusentry_comment
+
+Commentaire ya réservation:
+
+$inventorybooking_comment
+
+Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
+
+Matondi!
+
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ndakisa: $instance_name

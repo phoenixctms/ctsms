@@ -1,0 +1,58 @@
+Eyin $ecrffieldstatusentry_listentry_trial_name omo egbe idanwo tabi omo egbe Dept. $ecrffieldstatusentry_listentry_trial_department,
+
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+
+   $type
+
+   • Idanwo:              $ecrffieldstatusentry_listentry_trial_name
+   • Ẹka idanwo:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#opin
+
+   • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
+#ti o ba jẹ ($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Ẹgbẹ Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#opin
+#ti o ba jẹ ($notification.ecrfFieldStatusEntry.ibewo)
+   • Ṣabẹwo:              $notification.ecrfFieldStatusEntry.visit.title
+#opin
+   • apakan eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • Aaye igbewọle:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#ti o ba jẹ ($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Atọka:              $ecrffieldstatusentry_index
+#opin
+
+   • Ipo Oro eCRF:  $ecrffieldstatusentry_status
+
+   • Títúnṣe: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#opin
+
+
+Ọrọìwòye:
+
+$ecrffieldstatusentry_comment
+
+#if(${index_field_log.size()} > 0) Itan:
+
+#foreach($log in $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+#opin
+#opin
+
+#opin#ti o ba jẹ (!$notification.ecrfFieldStatusEntry.status.resolved)
+Jọwọ ṣayẹwo titẹsi data lati yanju ọrọ eCRF:
+
+   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
+#miiran
+Ọrọ eCRF ti wa ni pipade.
+#opin
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

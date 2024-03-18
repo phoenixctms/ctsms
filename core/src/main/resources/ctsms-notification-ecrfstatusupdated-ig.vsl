@@ -1,0 +1,46 @@
+Ezigbo $ecrfstatusentry_listentry_trial_name onye otu ikpe ma ọ bụ onye otu dept. $ecrfstatusentry_listentry_trial_department,
+
+Nke a bụ ọkwa maka mmemme a:
+
+   $type
+
+   • Ọnwụnwa:                $ecrfstatusentry_listentry_trial_name
+   • Ngalaba ikpe:     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
+   • eCRF:                 $ecrfstatusentry_ecrf_name
+#ọ bụrụ ($notification.ecrfStatusEntry.listEntry.group)
+   • Ndị otu:        $notification.ecrfStatusEntry.listEntry.group.title
+#njedebe
+#ọ bụrụ ($notification.ecrfStatusEntry.visit)
+   • Gaa na:                $notification.ecrfStatusEntry.visit.title
+#njedebe
+
+   • Ọkwa eCRF:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Ntinye ntinye:     $ecrfstatusentry_validationresponsemsg
+   • akara oge nkwado: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "EDERE")
+   • $ecrfstatusentry_validationresponsemsg
+   • akara oge:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.aha() == "na-echere")
+   • Ntinye nkwado na-echere.
+#njedebe
+
+   • gbanwetụrụ: #if ($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name# ọgwụgwụ
+
+
+#ma (!$notification.ecrfStatusEntry.status.mere)
+Biko gaa n'ihu na usoro ndị ọzọ iji mechaa ntinye data eCRF.
+#ọzọ
+E dechara ntinye data eCRF.
+#njedebe
+
+Daalụ!
+
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ihe atụ: $instance_name

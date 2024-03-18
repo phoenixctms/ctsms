@@ -1,0 +1,30 @@
+Spoštovani $trial_name član poskusne skupine ali član odd. $trial_department,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Preizkusna koda:   $trial_name
+   • Naslov preizkusa:  $trial_title
+   • Preizkusni oddelek:  $trial_department
+
+   • Stanje preizkusa: $trial_status
+#if($notification.trial.status.lockdown)
+   • Zaklepanje: brez nadaljnjega spreminjanja preskušanja in povezanih zapisov.
+#konec
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Omogočeni so vnosi vrednosti povpraševanja.
+#drugo
+   • Vnosi vrednosti poizvedbe so onemogočeni.
+#konec
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

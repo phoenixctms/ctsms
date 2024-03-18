@@ -1,0 +1,43 @@
+Dear $inventorybooking_onbehalfof_firstname,
+
+esta é uma notificação para o seguinte evento:
+
+   $type
+
+   • Inventário:       $inventorybooking_inventory_name
+   • Depósito dep.: $inventorybooking_inventory_department
+   • Galeria de inventário:  $inventorybooking_inventory_category
+
+   • Tipo de status:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Originador:      $inventorystatusentry_originator_name
+#fim
+   • Status de:     $inventorystatusentry_start
+   • Estado para:       $inventorystatusentry_stop
+
+   • Reserva de:    $inventorybooking_start
+   • Reserva para:      $inventorybooking_stop
+
+   • Por curso:      $inventorybooking_course_name
+   • Para o teste:       $inventorybooking_trial_name
+   • Por probabilidade: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Comentário do estado:
+
+$inventorystatusentry_comment
+
+Comentário de reserva:
+
+$inventorybooking_comment
+
+Por favor, prepare-se e/ou tome as medidas adequadas.
+
+Muito obrigado!
+
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name

@@ -1,0 +1,29 @@
+Kedves Osztályi Tag! $proband_department,
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband osztály:     $proband_department
+   • Proband kategória:        $proband_category
+
+   • Törlés ütemezett:    $proband_autodeletedeadline
+
+   • Utoljára módosított felhasználó:      $proband_modifieduser_identity_name
+   • Utoljára módosított időbélyeg: $proband_modifiedtimestamp
+
+
+A nyomozó tájékozott hozzájárulása nélkül a rekord eltávolítása az adatvédelem megvalósítása érdekében szükséges a vizsgáló érzékeny adatainak védelme és a személyazonosításra alkalmas adatok eldobása érdekében. Ezért a törlést nem lehet visszaállítani.
+
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

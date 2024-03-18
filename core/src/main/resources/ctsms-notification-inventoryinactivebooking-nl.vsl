@@ -1,0 +1,43 @@
+Dear $inventorybooking_onbehalfof_firstname,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Voorraad:       $inventorybooking_inventory_name
+   • Inventaris diepte: $inventorybooking_inventory_department
+   • Inventaris kat:  $inventorybooking_inventory_category
+
+   • Statustype:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Oorspronkelijk:      $inventorystatusentry_originator_name
+#einde
+   • Status van:     $inventorystatusentry_start
+   • Status naar:       $inventorystatusentry_stop
+
+   • Boeking van:    $inventorybooking_start
+   • Boeking naar:      $inventorybooking_stop
+
+   • Voor natuurlijk:      $inventorybooking_course_name
+   • Voor proef:       $inventorybooking_trial_name
+   • Voor meer: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Status reactie:
+
+$inventorystatusentry_comment
+
+Commentaar reserveren:
+
+$inventorybooking_comment
+
+Bereid u voor en/of neem passende acties.
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name

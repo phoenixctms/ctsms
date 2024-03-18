@@ -1,0 +1,29 @@
+Geachte lid van het diepte. $proband_department,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband deptartment:     $proband_department
+   • Proband categorie:        $proband_category
+
+   • Verwijderingsschema ingepland:    $proband_autodeletedeadline
+
+   • Laatst gewijzigde gebruiker:      $proband_modifieduser_identity_name
+   • Laatst gewijzigde tijdstempel: $proband_modifiedtimestamp
+
+
+Zonder geïnformeerde toestemming van de proefneming, het verwijderen van records is vereist om de gegevensprivacy te implementeren teneinde de gevoelige gegevens van de proefpartij te beschermen en persoonlijke identificeerbare informatie te laten vallen. Daarom kan een schrapping niet worden teruggedraaid.
+
+Bereid u voor en/of neem passende acties.
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name

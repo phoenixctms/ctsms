@@ -1,0 +1,30 @@
+Kedves $visitscheduleitem_trial_name próbacsapat vagy osztálytag! $probandstatusentry_proband_department,
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband oszt.: $probandstatusentry_proband_department
+   • Proband kat.:  $probandstatusentry_proband_category
+
+   • Állapot típusa:   $probandstatusentry_type
+   • Állapot innen:   $probandstatusentry_start
+   • Állapot:     $probandstatusentry_stop
+
+   • Próba:         $visitscheduleitem_trial_name
+   • Látogassa meg:         $visitscheduleitem_name
+   • Látogatás innen:    $visitscheduleitem_start
+   • Látogassa meg:      $visitscheduleitem_stop
+
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

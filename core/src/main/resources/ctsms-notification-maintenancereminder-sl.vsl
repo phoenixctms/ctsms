@@ -1,0 +1,26 @@
+Spoštovani #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Inventar:       $maintenancescheduleitem_inventory_name
+   • Oddelek za inventar: $maintenancescheduleitem_inventory_department
+   • Inventar kat.:  $maintenancescheduleitem_inventory_category
+
+   • Naslov: '$notification.maintenanceScheduleItem.title'
+   • Vrsta:            $maintenancescheduleitem_type
+   • Datum:            $maintenancescheduleitem_nextrecurrence
+
+   • Kontaktna oseba podjetja: $maintenancescheduleitem_companycontact_name
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

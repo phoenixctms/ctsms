@@ -1,0 +1,29 @@
+Spoštovana članica odd. $proband_department,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Oddelek Proband:     $proband_department
+   • Kategorija probanda:        $proband_category
+
+   • Načrtovano brisanje:    $proband_autodeletedeadline
+
+   • Zadnji spremenjeni uporabnik:      $proband_modifieduser_identity_name
+   • Časovni žig zadnje spremembe: $proband_modifiedtimestamp
+
+
+Brez obveščenega soglasja probanda je odstranitev zapisa potrebna za izvajanje zasebnosti podatkov, da se zaščitijo občutljivi podatki probanda in izpustijo osebno določljivi podatki. Zato izbrisa ni mogoče razveljaviti.
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

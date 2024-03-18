@@ -1,0 +1,37 @@
+Poštovani $user_identity_firstname,
+
+vaš ${application.abbreviation} račun je #if($new_user)kreiran#{else}promijenjen#kraj.
+
+   • Korisničko ime:   $user_name
+#ako($local_auth_method)
+#ako($new_user)
+   • Administrator će vas obavijestiti o stvarnoj lozinci.
+#drugo
+   • Lozinka ostaje nepromijenjena.
+#kraj
+#elseif($ldap_auth_method)
+   • Lozinka koju treba koristiti je vaša MUG lozinka.
+
+#ako($new_user)
+Prilikom prve prijave unesite lozinku koju ste dobili od administratora kao obaveznu "lokalnu lozinku".
+#drugo
+Prilikom sljedeće prijave unesite trenutnu lozinku kao obaveznu "lokalnu lozinku".
+#kraj
+#kraj
+
+#ako($new_user)
+Sustav je dostupan na donjoj stranici:
+
+   $http_base_url
+
+#kraj
+VAŽNO: Račun vam omogućuje čitanje osobnih podataka o subjektima koje su registrirali korisnici odjela "$user_department". Kako bi se održala privatnost podataka, vjerodajnice računa moraju biti tajne. Od vas se nikada neće tražiti da date vjerodajnice putem e-pošte ili drugih poslužitelja osim "$http_domain_name".
+
+Hvala vam!
+
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primjer: $instance_name

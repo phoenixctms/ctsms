@@ -1,0 +1,31 @@
+Estimado miembro del depósito. $inventorystatusentry_inventory_department,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Inventário:       $inventorystatusentry_inventory_name
+   • Implantar inventario: $inventorystatusentry_inventory_department
+   • Gato de inventário:  $inventorystatusentry_inventory_category
+
+   • Tipo:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Origem:      $inventorystatusentry_originator_name
+#fim
+   • Desde:            $inventorystatusentry_start
+   • Para:              $inventorystatusentry_stop
+
+Comentario:
+
+$inventorystatusentry_comment
+
+Por favor prepare y/o tome las acciones apropiadas.
+
+Gracias.
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. Sem resposta.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instância: $instance_name

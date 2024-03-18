@@ -1,0 +1,43 @@
+Kedves $inventorybooking_onbehalfof_firstname!
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Készlet:       $inventorybooking_inventory_name
+   • Leltári részleg: $inventorybooking_inventory_department
+   • Leltári kat.:  $inventorybooking_inventory_category
+
+   • Állapot típusa:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Kezdeményező:      $inventorystatusentry_originator_name
+#vége
+   • Állapot innen:     $inventorystatusentry_start
+   • Állapot:       $inventorystatusentry_stop
+
+   • Foglalás innen:    $inventorybooking_start
+   • Foglalás:      $inventorybooking_stop
+
+   • Tanfolyamhoz:      $inventorybooking_course_name
+   • Kipróbáláshoz:       $inventorybooking_trial_name
+   • Proband esetén: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Állapot megjegyzés:
+
+$inventorystatusentry_comment
+
+Foglalási megjegyzés:
+
+$inventorybooking_comment
+
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

@@ -1,0 +1,33 @@
+Ezigbo $visitscheduleitem_trial_name onye otu ikpe ma ọ bụ onye nlekọta nke $staff_name,
+
+Nke a bụ ọkwa maka mmemme a:
+
+   $type
+
+   • Ọnwụnwa:      $visitscheduleitem_trial_name
+   • Gaa na:      $visitscheduleitem_name
+#ọ bụrụ ($visit_schedule_item_day_date)
+   • Ụbọchị:       $visit_schedule_item_day_date
+#ọzọ
+   • Gaa na: $visitscheduleitem_start
+   • Gaa na:   $visitscheduleitem_stop
+#njedebe
+
+   • Ọnụ ụzọ:  $inactive_staff_limit
+
+$inactive_staff.size() ndị ọrụ N/A:
+
+#foreach($employee na $inactive_staff)
+   • $employee.aha
+#njedebe
+
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
+
+Daalụ!
+
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ihe atụ: $instance_name

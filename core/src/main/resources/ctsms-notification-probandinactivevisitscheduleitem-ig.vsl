@@ -1,0 +1,30 @@
+Ezigbo $visitscheduleitem_trial_name onye otu ikpe ma ọ bụ onye otu dept. $probandstatusentry_proband_department,
+
+Nke a bụ ọkwa maka mmemme a:
+
+   $type
+
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Dept.: $probandstatusentry_proband_department
+   • Proband nwamba.:  $probandstatusentry_proband_category
+
+   • Ụdị ọnọdụ:   $probandstatusentry_type
+   • Ọnọdụ si:   $probandstatusentry_start
+   • Ọnọdụ ka:     $probandstatusentry_stop
+
+   • Ọnwụnwa:         $visitscheduleitem_trial_name
+   • Gaa na:         $visitscheduleitem_name
+   • Gaa na:    $visitscheduleitem_start
+   • Gaa na:      $visitscheduleitem_stop
+
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
+
+Daalụ!
+
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Ihe atụ: $instance_name

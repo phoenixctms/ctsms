@@ -1,0 +1,40 @@
+Mpendwa $staff_firstname,
+
+hii ni arifa ya tukio lifuatalo:
+
+   $type
+
+   • Jaribio:          $dutyrosterturn_trial_name
+   • Wajibu kutoka kwa:      $dutyrosterturn_start
+   • Wajibu wa:        $dutyrosterturn_stop
+
+   • Kalenda:       $dutyrosterturn_calendar
+   • Kichwa cha wajibu:     $dutyrosterturn_title
+   • Tembelea:          $dutyrosterturn_visitscheduleitem_name
+
+   • Wafanyakazi:          $dutyrosterturn_staff_name
+#kama($notification.dutyRosterTurn.selfAllocatable)
+   • Kujitenga.
+#vingine
+   • Hakuna kujitenga.
+#mwisho
+
+   • Iliyorekebishwa: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#mwisho
+
+
+Maoni ya wajibu:
+
+$dutyrosterturn_comment
+
+Ugawaji wa wajibu ni wa lazima na unaweza kubadilika hadi ugandishwe. Muhtasari uliosasishwa unapatikana kwenye tovuti hapa chini:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Asante!
+
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+
+----------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Mfano: $instance_name

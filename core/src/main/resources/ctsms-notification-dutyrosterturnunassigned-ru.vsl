@@ -1,0 +1,40 @@
+Dear $staff_firstname,
+
+это уведомление для следующего события:
+
+   $type
+
+   • Испытание:          $dutyrosterturn_trial_name
+   • Обязанность от:      $dutyrosterturn_start
+   • Обязанность:        $dutyrosterturn_stop
+
+   • Календарь:       $dutyrosterturn_calendar
+   • Название обязанности:     $dutyrosterturn_title
+   • Посещение:          $dutyrosterturn_visitscheduleitem_name
+
+   • Новый персонал:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Самораспределение.
+#else
+   • Не выделять себя.
+#конец
+
+   • Изменено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Комментарий:
+
+$dutyrosterturn_comment
+
+Назначение обязанностей является обязательным и может измениться до тех пор, пока они не заморозятся. С обновленным обзором можно ознакомиться на следующем сайте:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Спасибо!
+
+Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Копия: $instance_name

@@ -1,0 +1,29 @@
+Dear member of dept $proband_department,
+
+これは以下のイベントの通知です：
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • 差分を調整:     $proband_department
+   • プロバンドカテゴリ:        $proband_category
+
+   • 削除が予定されています:    $proband_autodeletedeadline
+
+   • 最終修正ユーザー：      $proband_modifieduser_identity_name
+   • 最終更新時刻: $proband_modifiedtimestamp
+
+
+プローブのインフォームドコンセントなしで 記録を削除する必要がありますデータプライバシーを実装するために プロバンスの機密データを保護し、個人を特定できる情報をドロップします。 したがって、削除をロールバックすることはできません。
+
+適切な行動を取ってください。
+
+Thank you!
+
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+インスタンス： $instance_name

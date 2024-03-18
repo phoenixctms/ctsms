@@ -1,0 +1,46 @@
+Kedves $ecrfstatusentry_listentry_trial_name próbacsapat vagy osztálytag! $ecrfstatusentry_listentry_trial_department,
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Próba:                $ecrfstatusentry_listentry_trial_name
+   • Próbaosztály:     $ecrfstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
+   • eCRF:                 $ecrfstatusentry_ecrf_name
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Proband csoport:        $notification.ecrfStatusEntry.listEntry.group.title
+#vége
+#if($notification.ecrfStatusEntry.visit)
+   • Látogassa meg:                $notification.ecrfStatusEntry.visit.title
+#vége
+
+   • eCRF állapot:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Bemenet ellenőrzése:     $ecrfstatusentry_validationresponsemsg
+   • Érvényesítési időbélyeg: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "SIKERTELEN")
+   • $ecrfstatusentry_validationresponsemsg
+   • Időbélyeg:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FÜGGŐBEN")
+   • Bemeneti ellenőrzés függőben.
+#vége
+
+   • Módosítva: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+
+
+#if(!$notification.ecrfStatusEntry.status.done)
+Kérjük, folytassa a következő lépésekkel az eCRF adatbevitel befejezéséhez.
+#más
+Az eCRF adatbevitel befejeződött.
+#vége
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

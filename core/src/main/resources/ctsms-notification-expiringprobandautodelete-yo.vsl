@@ -1,0 +1,29 @@
+Eyin egbe ti Dept. $proband_department,
+
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#opin
+
+   • Ẹka ile-iṣẹ Proband:     $proband_department
+   • Ẹka Proband:        $proband_category
+
+   • Ti ṣeto piparẹ:    $proband_autodeletedeadline
+
+   • Olumulo ti o kẹhin:      $proband_modifieduser_identity_name
+   • Igba ti a ṣe atunṣe kẹhin: $proband_modifiedtimestamp
+
+
+Laisi ifọwọsi ifitonileti ti proband, yiyọ igbasilẹ naa nilo lati ṣe imuse aṣiri data lati le daabobo data ifura ti proband ati ju alaye idanimọ tikalararẹ silẹ. Nitorina piparẹ ko le ṣe yiyi pada.
+
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

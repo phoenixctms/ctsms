@@ -1,0 +1,25 @@
+Değerli daire üyemiz. $probandstatusentry_proband_department,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • Proband bölümü: $probandstatusentry_proband_department
+   • Proband kataloğu:  $probandstatusentry_proband_category
+
+   • Tür:          $probandstatusentry_type
+   • Gönderen:          $probandstatusentry_start
+   • Kime:            $probandstatusentry_stop
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

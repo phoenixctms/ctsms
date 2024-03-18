@@ -1,0 +1,33 @@
+Mpendwa $visitscheduleitem_trial_name mwanachama wa timu ya majaribio au msimamizi wa $staff_name,
+
+hii ni arifa ya tukio lifuatalo:
+
+   $type
+
+   • Jaribio:      $visitscheduleitem_trial_name
+   • Tembelea:      $visitscheduleitem_name
+#kama($visit_schedule_item_day_date)
+   • Tarehe:       $visit_schedule_item_day_date
+#vingine
+   • Tembelea kutoka: $visitscheduleitem_start
+   • Tembelea:   $visitscheduleitem_stop
+#mwisho
+
+   • Kizingiti:  $inactive_staff_limit
+
+$inactive_staff.size() wafanyikazi N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.jina
+#mwisho
+
+Tafadhali jitayarishe na/au chukua hatua zinazofaa.
+
+Asante!
+
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+
+----------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Mfano: $instance_name

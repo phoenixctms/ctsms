@@ -1,0 +1,26 @@
+Mpendwa #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#mwisho,
+
+hii ni arifa ya tukio lifuatalo:
+
+   $type
+
+   • Malipo:       $maintenancescheduleitem_inventory_name
+   • Idara ya mali: $maintenancescheduleitem_inventory_department
+   • Paka wa orodha.:  $maintenancescheduleitem_inventory_category
+
+   • Kichwa: '$notification.maintenanceScheduleItem.title'
+   • Aina:            $maintenancescheduleitem_type
+   • Tarehe:            $maintenancescheduleitem_nextrecurrence
+
+   • Anwani ya kampuni: $maintenancescheduleitem_companycontact_name
+
+Tafadhali jitayarishe na/au chukua hatua zinazofaa.
+
+Asante!
+
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+
+----------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Mfano: $instance_name

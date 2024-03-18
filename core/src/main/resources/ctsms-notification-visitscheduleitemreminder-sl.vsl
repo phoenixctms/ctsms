@@ -1,0 +1,26 @@
+Spoštovani $visitscheduleitem_trial_name član poskusne skupine ali član odd. $visitscheduleitem_trial_department,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Preizkus:         $visitscheduleitem_trial_name
+   • Obiščite:         $visitscheduleitem_name
+   • Obisk od:    $visitscheduleitem_start
+   • Obisk:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#konec
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

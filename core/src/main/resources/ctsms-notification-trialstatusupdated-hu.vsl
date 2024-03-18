@@ -1,0 +1,30 @@
+Kedves $trial_name próbacsapat vagy osztálytag! $trial_department,
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Próbakód:   $trial_name
+   • Próbacím:  $trial_title
+   • Próbaosztály:  $trial_department
+
+   • Próbaállapot: $trial_status
+#if($notification.trial.status.lockdown)
+   • Lezárás: nincs további módosítás a próbaverzión és a kapcsolódó rekordokon.
+#vége
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • A lekérdezési érték bevitele engedélyezett.
+#más
+   • A lekérdezési érték bevitele le van tiltva.
+#vége
+
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

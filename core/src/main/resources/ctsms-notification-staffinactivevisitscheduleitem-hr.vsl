@@ -1,0 +1,33 @@
+Poštovani $visitscheduleitem_trial_name članu probnog tima ili nadzorniku $staff_name,
+
+ovo je obavijest za sljedeći događaj:
+
+   $type
+
+   • Proba:      $visitscheduleitem_trial_name
+   • Posjetite:      $visitscheduleitem_name
+#ako($visit_schedule_item_day_date)
+   • Datum:       $visit_schedule_item_day_date
+#drugo
+   • Posjet od: $visitscheduleitem_start
+   • Posjetite:   $visitscheduleitem_stop
+#kraj
+
+   • Prag:  $inactive_staff_limit
+
+$inactive_staff.size() zaposlenici N/A:
+
+#foreach($employee u $inactive_staff)
+   • $employee.ime
+#kraj
+
+Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
+
+Hvala vam!
+
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primjer: $instance_name

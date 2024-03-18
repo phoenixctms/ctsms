@@ -1,0 +1,37 @@
+Dear $user_identity_firstname,
+
+あなたの ${application.abbreviation} アカウントは#if($new_user)作成された#{else}変更された#endです。
+
+   • ユーザー名:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • 管理者が実際のパスワードを通知します。
+#else
+   • パスワードは変更されません。
+#end
+#elseif($ldap_auth_method)
+   • 使用するパスワードは、MUG パスワードです。
+
+#if($new_user)
+初めてログインする場合は、管理者から与えられたパスワードを必須の「ローカルパスワード」として入力します。
+#else
+次回ログイン時には、現在のパスワードを必須の「ローカルパスワード」として入力してください。
+#end
+#end
+
+#if($new_user)
+システムは以下のサイトからアクセスできます:
+
+   $http_base_url
+
+#end
+重要: このアカウントでは、「$user_department」部門のユーザーが登録した被験者の個人を特定できる情報を読み取ることができます。 データのプライバシーを維持するには、アカウントの資格情報を秘密にする必要があります。 「$http_domain_name 」以外のメールまたはサーバー経由で資格情報を提供するように求められることはありません。
+
+Thank you!
+
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+インスタンス： $instance_name

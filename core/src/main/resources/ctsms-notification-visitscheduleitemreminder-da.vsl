@@ -1,0 +1,26 @@
+Kære $visitscheduleitem_trial_name prøvegruppemedlem eller medlem af dept. $visitscheduleitem_trial_department,
+
+dette er en notifikation for følgende begivenhed:
+
+   $type
+
+   • Prøve:         $visitscheduleitem_trial_name
+   • besøg:         $visitscheduleitem_name
+   • Besøg fra:    $visitscheduleitem_start
+   • Besøg for:      $visitscheduleitem_stop
+#hvis($notification.proband)
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#ende
+
+Forbered og/eller foretag passende foranstaltninger.
+
+Mange tak!
+
+Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

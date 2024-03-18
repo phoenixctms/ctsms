@@ -1,0 +1,40 @@
+Sevgili $staff_firstname,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Deneme:          $dutyrosterturn_trial_name
+   • Görev başlangıcı:      $dutyrosterturn_start
+   • Görev:        $dutyrosterturn_stop
+
+   • Takvim:       $dutyrosterturn_calendar
+   • Görev unvanı:     $dutyrosterturn_title
+   • Ziyaret edin:          $dutyrosterturn_visitscheduleitem_name
+
+   • Personel:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Kendi kendine tahsis edilebilir.
+#başka
+   • Kendi kendine tahsis yok.
+#son
+
+   • Değiştirildi: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+Görev yorumu:
+
+$dutyrosterturn_comment
+
+Görev atamaları zorunludur ve nihayet donduruluncaya kadar değişebilir. Güncel genel bakışa aşağıdaki siteden erişilebilir:
+
+   $http_base_url/trial/dutyRosterSchedule.jsf.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

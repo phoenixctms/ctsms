@@ -1,0 +1,31 @@
+Spoštovana članica odd. $inventorystatusentry_inventory_department,
+
+to je obvestilo za naslednji dogodek:
+
+   $type
+
+   • Inventar:       $inventorystatusentry_inventory_name
+   • Oddelek za inventar: $inventorystatusentry_inventory_department
+   • Inventar kat.:  $inventorystatusentry_inventory_category
+
+   • Vrsta:            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Izvor:      $inventorystatusentry_originator_name
+#konec
+   • Od:            $inventorystatusentry_start
+   • Za:              $inventorystatusentry_stop
+
+komentar:
+
+$inventorystatusentry_comment
+
+Pripravite se in/ali ustrezno ukrepajte.
+
+Hvala vam!
+
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primer: $instance_name

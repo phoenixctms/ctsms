@@ -1,0 +1,30 @@
+Poštovani $trial_name članu tima za suđenje ili članu odjela. $trial_department,
+
+ovo je obavijest za sljedeći događaj:
+
+   $type
+
+   • Probni kod:   $trial_name
+   • Naslov probe:  $trial_title
+   • Sudski odjel:  $trial_department
+
+   • Status probe: $trial_status
+#if($notification.trial.status.lockdown)
+   • Zaključavanje: nema daljnjih izmjena ispitivanja i povezanih zapisa.
+#kraj
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Omogućeni su unosi vrijednosti upita.
+#drugo
+   • Unosi vrijednosti upita su onemogućeni.
+#kraj
+
+Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
+
+Hvala vam!
+
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primjer: $instance_name

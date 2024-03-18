@@ -1,0 +1,26 @@
+Beste #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+dit is een melding voor de volgende gebeurtenis:
+
+   $type
+
+   • Voorraad:       $maintenancescheduleitem_inventory_name
+   • Inventaris diepte: $maintenancescheduleitem_inventory_department
+   • Inventaris kat:  $maintenancescheduleitem_inventory_category
+
+   • Titel: '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Datum:            $maintenancescheduleitem_nextrecurrence
+
+   • Bedrijfscontact: $maintenancescheduleitem_companycontact_name
+
+Bereid u voor en/of neem passende acties.
+
+Dank u wel!
+
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name

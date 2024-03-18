@@ -1,0 +1,43 @@
+Dear $inventorybooking_onbehalfof_firstname,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Förråd:       $inventorybooking_inventory_name
+   • Lagerdept.: $inventorybooking_inventory_department
+   • Inventering katt:  $inventorybooking_inventory_category
+
+   • Statustyp:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Ursprungare:      $inventorystatusentry_originator_name
+# slut
+   • Status från:     $inventorystatusentry_start
+   • Status till:       $inventorystatusentry_stop
+
+   • Bokning från:    $inventorybooking_start
+   • Bokning till:      $inventorybooking_stop
+
+   • Självklart:      $inventorybooking_course_name
+   • För provtid:       $inventorybooking_trial_name
+   • För proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Statuskommentar:
+
+$inventorystatusentry_comment
+
+Bokningskommentar:
+
+$inventorybooking_comment
+
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

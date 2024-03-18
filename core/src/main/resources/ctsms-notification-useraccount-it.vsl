@@ -1,0 +1,37 @@
+Dear $user_identity_firstname,
+
+il tuo account ${application.abbreviation} è stato #if($new_user)creato#{else}modificato#end.
+
+   • Nome Utente:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • Un amministratore ti informerà della password effettiva.
+#else
+   • La password rimane invariata.
+#end
+#elseif($ldap_auth_method)
+   • La password da usare è la tua MUG-password.
+
+#if($new_user)
+Quando accedi per la prima volta, inserisci la password fornita dall'amministratore come "password locale".
+#else
+Quando accedi alla prossima volta, inserisci la tua password attuale come "password locale".
+#end
+#end
+
+#if($new_user)
+Il sistema è accessibile sul sito sottostante:
+
+   $http_base_url
+
+#end
+IMPORTANTE: L'account consente di leggere personalmente le informazioni identificabili dei soggetti registrati dagli utenti del reparto "$user_department". Per mantenere la privacy dei dati, le credenziali dell'account devono essere tenute al sicuro. Non ti verrà mai chiesto di fornire credenziali via email o server diversi da "$http_domain_name".
+
+Grazie!
+
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Istanza: $instance_name

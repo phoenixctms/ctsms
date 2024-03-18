@@ -1,0 +1,37 @@
+Kedves $user_identity_firstname!
+
+${application.abbreviation} fiókod #if($new_user)létrehozva#{else}megváltozott #end.
+
+   • Felhasználónév:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • A rendszergazda tájékoztatja Önt a tényleges jelszóról.
+#más
+   • A jelszó változatlan marad.
+#vége
+#elseif($ldap_auth_method)
+   • A használandó jelszó a MUG-jelszó.
+
+#if($new_user)
+Az első bejelentkezéskor kötelező „helyi jelszóként” adja meg a rendszergazda által megadott jelszót.
+#más
+A következő bejelentkezéskor kötelező "helyi jelszóként" adja meg jelenlegi jelszavát.
+#vége
+#vége
+
+#if($new_user)
+A rendszer az alábbi oldalon érhető el:
+
+   $http_base_url
+
+#vége
+FONTOS: A fiók lehetővé teszi a "$user_department" osztály felhasználói által regisztrált alanyok személyazonosításra alkalmas adatainak olvasását. Az adatok titkosságának megőrzése érdekében a fiók hitelesítő adatait titokban kell tartani. Soha nem kell hitelesítő adatokat megadnia e-mailben vagy más szervereken, mint a „$http_domain_name”.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

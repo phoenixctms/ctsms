@@ -1,0 +1,43 @@
+Sevgili $inventorybooking_onbehalfof_firstname,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Envanter:       $inventorybooking_inventory_name
+   • Envanter bölümü: $inventorybooking_inventory_department
+   • Envanter kataloğu:  $inventorybooking_inventory_category
+
+   • Durum türü:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Oluşturan:      $inventorystatusentry_originator_name
+#son
+   • Durum:     $inventorystatusentry_start
+   • Durum:       $inventorystatusentry_stop
+
+   • Rezervasyon başlangıç tarihi:    $inventorybooking_start
+   • Rezervasyon için:      $inventorybooking_stop
+
+   • Kurs için:      $inventorybooking_course_name
+   • Deneme için:       $inventorybooking_trial_name
+   • Proband için: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+Durum yorumu:
+
+$inventorystatusentry_comment
+
+Rezervasyon yorumu:
+
+$inventorybooking_comment
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

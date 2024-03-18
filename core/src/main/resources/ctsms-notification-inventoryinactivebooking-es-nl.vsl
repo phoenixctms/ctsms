@@ -1,0 +1,43 @@
+Dear $inventorybooking_onbehalfof_firstname,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Voorraad:       $inventorybooking_inventory_name
+   • $inventorybooking_inventory_department is afhankelijk van inventarisatie:
+   • Gato de inventaris:  $inventorybooking_inventory_category
+
+   • Tipo van één kant:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Oorspronkelijk:      $inventorystatusentry_originator_name
+#einde
+   • Standaard:     $inventorystatusentry_start
+   • Standaard:       $inventorystatusentry_stop
+
+   • Reserva de:    $inventorybooking_start
+   • Reservando a:      $inventorybooking_stop
+
+   • Para el curso:      $inventorybooking_course_name
+   • Para la prueba:       $inventorybooking_trial_name
+   • Por prueba: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#einde
+
+
+Commentaar van eens:
+
+$inventorystatusentry_comment
+
+Comentario de reserva:
+
+$inventorybooking_comment
+
+Por favor prepare y/o tome las acciones apropiadas.
+
+Gracias.
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. Geen reactie.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instantie: $instance_name

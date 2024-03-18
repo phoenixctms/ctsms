@@ -1,0 +1,46 @@
+Kära $ecrfstatusentry_listentry_trial_name försöksmedlem eller medlem i dept. $ecrfstatusentry_listentry_trial_department,
+
+detta är en avisering för följande händelse:
+
+   $type
+
+   • Provning:                $ecrfstatusentry_listentry_trial_name
+   • Provavdelning:     $ecrfstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
+   • eCRF:                 $ecrfstatusentry_ecrf_name
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Probandgrupp:        $notification.ecrfStatusEntry.listEntry.group.title
+# slut
+#if($notification.ecrfStatusEntry.visit)
+   • Visit:                $notification.ecrfStatusEntry.visit.title
+# slut
+
+   • eCRF-status:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Validering av inmatning:     $ecrfstatusentry_validationresponsemsg
+   • Tidsstämpel för validering: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+   • $ecrfstatusentry_validationresponsemsg
+   • Tidsram:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Input validering väntar.
+# slut
+
+   • Ändrad: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+
+
+#if(!$notification.ecrfStatusEntry.status.done)
+Fortsätt med nästa steg för att slutföra eCRF-datainmatningen.
+#annat
+ECRF-datainmatningen är klar.
+# slut
+
+Tack så mycket!
+
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instans: $instance_name

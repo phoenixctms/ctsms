@@ -1,0 +1,26 @@
+親愛なる #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end.
+
+これは以下のイベントの通知です：
+
+   $type
+
+   • インベントリ：       $maintenancescheduleitem_inventory_name
+   • 在庫部門： $maintenancescheduleitem_inventory_department
+   • インベントリcat:  $maintenancescheduleitem_inventory_category
+
+   • タイトル: '$notification.maintenanceScheduleItem.title'
+   • 種類:            $maintenancescheduleitem_type
+   • 日付:            $maintenancescheduleitem_nextrecurrence
+
+   • 会社の連絡先: $maintenancescheduleitem_companycontact_name
+
+適切な行動を取ってください。
+
+Thank you!
+
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+インスタンス： $instance_name

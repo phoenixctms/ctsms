@@ -1,0 +1,37 @@
+Mpendwa $user_identity_firstname,
+
+akaunti yako ya ${application.abbreviation} iliundwa #if($new_user)iliundwa#{else}ilibadilishwa#mwisho.
+
+   • Jina la mtumiaji:   $user_name
+#kama($local_auth_method)
+#kama($new_user)
+   • Msimamizi atakujulisha kuhusu nenosiri halisi.
+#vingine
+   • Nenosiri husalia bila kubadilika.
+#mwisho
+#mwingine($ldap_auth_method)
+   • Nenosiri la kutumia ni MUG-nenosiri lako.
+
+#kama($new_user)
+Unapoingia kwa mara ya kwanza, ingiza nenosiri ulilopewa na msimamizi kama "nenosiri la ndani" la lazima.
+#vingine
+Unapoingia wakati ujao, weka nenosiri lako la sasa kama "nenosiri la ndani" la lazima.
+#mwisho
+#mwisho
+
+#kama($new_user)
+Mfumo huo unapatikana kwenye tovuti hapa chini:
+
+   $http_base_url
+
+#mwisho
+MUHIMU: Akaunti hukuruhusu kusoma taarifa zinazoweza kumtambulisha mtu binafsi za masomo yaliyosajiliwa na watumiaji wa idara ya "$user_department". Ili kudumisha faragha ya data, vitambulisho vya akaunti vinapaswa kufichwa. Hutawahi kuulizwa kutoa kitambulisho kupitia barua pepe au seva zaidi ya "$http_domain_name".
+
+Asante!
+
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+
+----------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Mfano: $instance_name

@@ -1,0 +1,33 @@
+Шановний $visitscheduleitem_trial_name член команди випробувань або керівник $staff_name,
+
+це сповіщення для наступної події:
+
+   $type
+
+   • Пробна:      $visitscheduleitem_trial_name
+   • Відвідайте:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Дата:       $visit_schedule_item_day_date
+#інше
+   • Відвідайте з: $visitscheduleitem_start
+   • Відвідайте:   $visitscheduleitem_stop
+#закінчується
+
+   • Поріг:  $inactive_staff_limit
+
+$inactive_staff.size() співробітників N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#закінчується
+
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+
+Дякую!
+
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Примірник: $instance_name

@@ -1,0 +1,26 @@
+Estimado #if($notification.maintenance anceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+esta es una notificación para el siguiente evento:
+
+   $type
+
+   • Inventario:       $maintenancescheduleitem_inventory_name
+   • Depto de inventario.: $maintenancescheduleitem_inventory_department
+   • Gato de inventario:  $maintenancescheduleitem_inventory_category
+
+   • Título: '$notification.maintenance ScheduleItem.title'
+   • Tipo:            $maintenancescheduleitem_type
+   • Fecha:            $maintenancescheduleitem_nextrecurrence
+
+   • Contacto de la empresa: $maintenancescheduleitem_companycontact_name
+
+Por favor prepare y/o tome las acciones apropiadas.
+
+Gracias.
+
+Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instancia: $instance_name

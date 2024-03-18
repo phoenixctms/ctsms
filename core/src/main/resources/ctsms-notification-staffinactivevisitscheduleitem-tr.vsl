@@ -1,0 +1,33 @@
+Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya $staff_namesüpervizörü,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Deneme:      $visitscheduleitem_trial_name
+   • Ziyaret edin:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Tarih:       $visit_schedule_item_day_date
+#başka
+   • Ziyaret yeri: $visitscheduleitem_start
+   • Şurayı ziyaret edin:   $visitscheduleitem_stop
+#son
+
+   • Eşik:  $inactive_staff_limit
+
+$inactive_staff.size() çalışanları Yok:
+
+#foreach($employee in $inactive_staff)
+   • $employee.isim
+#son
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

@@ -1,0 +1,26 @@
+Kedves #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end!
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Készlet:       $maintenancescheduleitem_inventory_name
+   • Leltári részleg: $maintenancescheduleitem_inventory_department
+   • Leltári kat.:  $maintenancescheduleitem_inventory_category
+
+   • Cím: '$notification.maintenanceScheduleItem.title'
+   • Típus:            $maintenancescheduleitem_type
+   • Dátum:            $maintenancescheduleitem_nextrecurrence
+
+   • A cég elérhetősége: $maintenancescheduleitem_companycontact_name
+
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

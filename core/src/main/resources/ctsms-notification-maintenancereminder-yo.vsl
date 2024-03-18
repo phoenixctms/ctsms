@@ -1,0 +1,26 @@
+Eyin #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#opin,
+
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+
+   $type
+
+   • Oja:       $maintenancescheduleitem_inventory_name
+   • Ẹka Oja: $maintenancescheduleitem_inventory_department
+   • Ologbo oja .:  $maintenancescheduleitem_inventory_category
+
+   • Akọle: '$notification.maintenanceScheduleItem.title'
+   • Iru:            $maintenancescheduleitem_type
+   • Ọjọ:            $maintenancescheduleitem_nextrecurrence
+
+   • Olubasọrọ ile-iṣẹ: $maintenancescheduleitem_companycontact_name
+
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

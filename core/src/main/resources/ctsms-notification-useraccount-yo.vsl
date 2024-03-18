@@ -1,0 +1,37 @@
+Eyin $user_identity_firstname,
+
+akọọlẹ ${application.abbreviation} rẹ ti jẹ #ti ($new_user)da#{else}yi pada#opin.
+
+   • Orukọ olumulo:   $user_name
+#ti o ba jẹ ($local_auth_method)
+#ti o ba jẹ ($new_user)
+   • Alakoso yoo sọ fun ọ nipa ọrọ igbaniwọle gangan.
+#miiran
+   • Ọrọigbaniwọle ko yipada.
+#opin
+#elseif($ldap_auth_method)
+   • Ọrọigbaniwọle lati lo jẹ ọrọ igbaniwọle MUG rẹ.
+
+#ti o ba jẹ ($new_user)
+Nigbati o ba wọle fun igba akọkọ, tẹ ọrọ igbaniwọle ti a fun nipasẹ alabojuto gẹgẹbi “ọrọ igbaniwọle agbegbe” dandan.
+#miiran
+Nigbati o ba wọle ni akoko atẹle, tẹ ọrọ igbaniwọle lọwọlọwọ rẹ sii bi “ọrọ igbaniwọle agbegbe” ti o jẹ dandan.
+#opin
+#opin
+
+#ti o ba jẹ ($new_user)
+Eto naa wa ni aaye ni isalẹ:
+
+   $http_base_url
+
+#opin
+PATAKI: Àkọọlẹ naa gba ọ laaye lati ka alaye idanimọ ti ara ẹni ti awọn koko-ọrọ ti a forukọsilẹ nipasẹ awọn olumulo ti ẹka "$user_department". Lati ṣetọju aṣiri data, awọn iwe-ẹri akọọlẹ ni lati tọju ni ikọkọ. A ko ni beere lọwọ rẹ lati pese awọn iwe-ẹri nipasẹ imeeli tabi olupin miiran yatọ si "$http_domain_name".
+
+E dupe!
+
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+
+------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Apeere: $instance_name

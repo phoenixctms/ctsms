@@ -1,0 +1,27 @@
+Poštovani član odv. $course_department,
+
+ovo je obavijest za sljedeći događaj:
+
+   $type
+
+   • Tečaj:                 $course_name
+   • Naziv životopisa tečaja:        $course_cvtitle
+   • Predmetni odjel:      $course_department
+   • Kategorija tečaja:        $course_category
+
+   • Početak tečaja:           $course_start
+   • Završetak tečaja:             $course_stop
+   • Rok za sudjelovanje: $course_participationdeadline
+
+Prijavite se za ovaj tečaj:
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+Hvala vam!
+
+Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Primjer: $instance_name

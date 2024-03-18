@@ -1,0 +1,29 @@
+Değerli daire üyemiz. $proband_department,
+
+bu, aşağıdaki etkinlik için bir bildirimdir:
+
+   $type
+
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   • Proband departmanı:     $proband_department
+   • Proband kategorisi:        $proband_category
+
+   • Silme planlandı:    $proband_autodeletedeadline
+
+   • Son değiştirilen kullanıcı:      $proband_modifieduser_identity_name
+   • Son değiştirilme zaman damgası: $proband_modifiedtimestamp
+
+
+Probandın bilgilendirilmiş onayı olmadan, probandın hassas verilerini korumak ve kişisel olarak tanımlanabilir bilgileri bırakmak amacıyla veri gizliliğini uygulamak için kaydın kaldırılması gerekir. Bu nedenle silme işlemi geri alınamaz.
+
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+
+Teşekkür ederim!
+
+Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Örnek: $instance_name

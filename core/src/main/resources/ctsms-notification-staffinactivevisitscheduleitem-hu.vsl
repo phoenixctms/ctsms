@@ -1,0 +1,33 @@
+Kedves $visitscheduleitem_trial_name próbacsapat tagja vagy a $staff_namefelügyelője!
+
+ez egy értesítés a következő eseményről:
+
+   $type
+
+   • Próba:      $visitscheduleitem_trial_name
+   • Látogassa meg:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Dátum:       $visit_schedule_item_day_date
+#más
+   • Látogatás innen: $visitscheduleitem_start
+   • Látogassa meg:   $visitscheduleitem_stop
+#vége
+
+   • Küszöb:  $inactive_staff_limit
+
+$inactive_staff.size() alkalmazottak N/A:
+
+#foreach($employee in $inactive_staff)
+   • $employee.név
+#vége
+
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+
+Köszönöm!
+
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+
+-------------------------------------------------- -------------
+${application.abbreviation} ${application.version}
+
+Példa: $instance_name

@@ -1,0 +1,30 @@
+Hyvä $trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $trial_department,
+
+tämä on ilmoitus seuraavasta tapahtumasta:
+
+   $type
+
+   • Koekoodi:   $trial_name
+   • Kokeilujakson nimi:  $trial_title
+   • Kokeilujakson syvyys:  $trial_department
+
+   • Kokeilujakson tila: $trial_status
+#if($notification.trial.status.lockdown)
+   • Lockdown: ei muita muutoksia kokeiluja ja niihin liittyviä tietueita.
+#end
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Kyselyn arvon syötteet ovat käytössä.
+#Muu
+   • Tiedusteluarvon syötteet on poistettu käytöstä.
+#end
+
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+
+Kiitos!
+
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+Instant: $instance_name

@@ -1,0 +1,37 @@
+Vážený $user_identity_firstname,
+
+váš ${application.abbreviation} účet bol #if($new_user)vytvorený#{else}zmenený#end.
+
+   • Používateľské meno:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • Správca vás bude informovať o aktuálnom hesle.
+#else
+   • Heslo zostáva nezmenené.
+#koniec
+#elseif($ldap_auth_method)
+   • Heslo na použitie je vaše heslo do hrnčeka.
+
+#if($new_user)
+Pri prvom prihlásení zadajte heslo dané administrátorom ako povinné „miestne heslo“.
+#else
+Pri ďalšom prihlásení zadajte svoje aktuálne heslo ako povinné „miestne heslo“.
+#koniec
+#koniec
+
+#if($new_user)
+Systém je dostupný na nižšie uvedenej stránke:
+
+   $http_base_url
+
+#koniec
+DÔLEŽITÉ: Účet vám umožňuje čítať osobné údaje subjektov zaregistrovaných používateľmi oddelenia "$user_department". Ak chcete zachovať súkromie údajov, poverenia účtu musia zostať v tajnosti. Nikdy nebudete požiadaní o poskytnutie poverení prostredníctvom e-mailu alebo iných serverov ako „$http_domain_name“.
+
+Ďakujem!
+
+Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+Príklad: $instance_name

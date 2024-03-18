@@ -1,0 +1,26 @@
+Dear $courseparticipationstatusentry_staff_firstname,
+
+これは以下のイベントの通知です：
+
+   $type
+
+   • コース：              $courseparticipationstatusentry_course_name
+   • コース CV タイトル:     $courseparticipationstatusentry_course_cvtitle
+   • コース部門:   $courseparticipationstatusentry_course_department
+   • コースカテゴリ：     $courseparticipationstatusentry_course_category
+
+   • コース終了:          $courseparticipationstatusentry_course_stop
+   • 有効期限: $courseparticipationstatusentry_course_expiration
+
+適切なリフレッシュコースの登録にアクセスしてください:
+
+   $http_base_url/スタッフ/expiringParticipation.jsf
+
+Thank you!
+
+これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+
+--------------------------------------------------------------
+${application.abbreviation} ${application.version}
+
+インスタンス： $instance_name
