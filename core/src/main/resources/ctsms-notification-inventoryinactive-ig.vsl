@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Ezigbo onye otu dept. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+Nke a bụ ọkwa maka mmemme a:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Ndepụta Ngwaahịa:       $inventorystatusentry_inventory_name
+   • Ngalaba Ndepụta Ngwaahịa: $inventorystatusentry_inventory_department
+   • Nwamba ngwa ahịa.:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
-#if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Ụdị:            $inventorystatusentry_type
+#ọ bụrụ ($notification.inventoryStatusEntry.originator)
+   • Onye malitere:      $inventorystatusentry_originator_name
+#njedebe
+   • Site na:            $inventorystatusentry_start
+   • Iji:              $inventorystatusentry_stop
 
-Comment:
+Okwu:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 
-Thank you!
+Daalụ!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ihe atụ: $instance_name
