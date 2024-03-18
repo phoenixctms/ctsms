@@ -1,33 +1,33 @@
-Eyin $user_identity_firstname,
+Dear $user_identity_firstname,
 
-akọọlẹ ${application.abbreviation} rẹ ti jẹ #ti ($new_user)da#{else}yi pada#opin.
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
 
-   • Orukọ olumulo:   $user_name
-#ti o ba jẹ ($local_auth_method)
-#ti o ba jẹ ($new_user)
-   • Alakoso yoo sọ fun ọ nipa ọrọ igbaniwọle gangan.
+   • Username:   $user_name
+#if($local_auth_method)
+#if($new_user)
+   • An administrator will inform you of the actual password.
 #miiran
-   • Ọrọigbaniwọle ko yipada.
+   • The password remains unchanged.
 #opin
 #elseif($ldap_auth_method)
-   • Ọrọigbaniwọle lati lo jẹ ọrọ igbaniwọle MUG rẹ.
+   • The password to use is your MUG-password.
 
-#ti o ba jẹ ($new_user)
-Nigbati o ba wọle fun igba akọkọ, tẹ ọrọ igbaniwọle ti a fun nipasẹ alabojuto gẹgẹbi “ọrọ igbaniwọle agbegbe” dandan.
+#if($new_user)
+When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
 #miiran
-Nigbati o ba wọle ni akoko atẹle, tẹ ọrọ igbaniwọle lọwọlọwọ rẹ sii bi “ọrọ igbaniwọle agbegbe” ti o jẹ dandan.
+When logging in the next time, enter your current password as the mandatory "local password".
 #opin
 #opin
 
-#ti o ba jẹ ($new_user)
-Eto naa wa ni aaye ni isalẹ:
+#if($new_user)
+The system is accessible at the site below:
 
    $http_base_url
 
 #opin
-PATAKI: Àkọọlẹ naa gba ọ laaye lati ka alaye idanimọ ti ara ẹni ti awọn koko-ọrọ ti a forukọsilẹ nipasẹ awọn olumulo ti ẹka "$user_department". Lati ṣetọju aṣiri data, awọn iwe-ẹri akọọlẹ ni lati tọju ni ikọkọ. A ko ni beere lọwọ rẹ lati pese awọn iwe-ẹri nipasẹ imeeli tabi olupin miiran yatọ si "$http_domain_name".
+IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
 
-Thank you!
+E dupe!
 
 Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
 
