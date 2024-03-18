@@ -1,43 +1,43 @@
-Poštovani $inventorybooking_onbehalfof_firstname,
+Dear $inventorybooking_onbehalfof_firstname,
 
-ovo je obavijest za sljedeći događaj:
+this is a notification for the following event:
 
    $type
 
-   • Inventar:       $inventorybooking_inventory_name
-   • Odjel inventara: $inventorybooking_inventory_department
-   • Inventar kat.:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Vrsta statusa:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Pokretač:      $inventorystatusentry_originator_name
-#kraj
-   • Status od:     $inventorystatusentry_start
-   • Status do:       $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Rezervacija od:    $inventorybooking_start
-   • Rezervacija na:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Za tečaj:      $inventorybooking_course_name
-   • Za probu:       $inventorybooking_trial_name
-   • Za proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Komentar statusa:
+Status comment:
 
 $inventorystatusentry_comment
 
-Komentar rezervacije:
+Booking comment:
 
 $inventorybooking_comment
 
-Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Hvala vam!
 
-Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Primjer: $instance_name
+Instance: $instance_name
