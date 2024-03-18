@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Spoštovani $visitscheduleitem_trial_name član poskusne skupine ali nadzornik $staff_name,
 
-this is a notification for the following event:
+to je obvestilo za naslednji dogodek:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • Preizkus:      $visitscheduleitem_trial_name
+   • Obiščite:      $visitscheduleitem_name
+#če($visit_schedule_item_day_date)
+   • Datum:       $visit_schedule_item_day_date
+#drugo
+   • Obisk od: $visitscheduleitem_start
+   • Obisk:   $visitscheduleitem_stop
+#konec
 
-   • Threshold:  $inactive_staff_limit
+   • Prag:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() zaposleni N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.name
-#end
+   • $employee.ime
+#konec
 
-Please prepare and/or take appropriate actions.
+Pripravite se in/ali ustrezno ukrepajte.
 
 Hvala vam!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Primer: $instance_name
