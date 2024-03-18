@@ -1,0 +1,26 @@
+प्रिय #यदि($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#समाप्त,
+
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+
+   $type
+
+   • इन्वेंटरी:       $maintenancescheduleitem_inventory_name
+   • इन्वेंटरी विभाग: $maintenancescheduleitem_inventory_department
+   • इन्वेंटरी बिल्ली.:  $maintenancescheduleitem_inventory_category
+
+   • शीर्षक: '$notification.maintenanceScheduleItem.title'
+   • प्रकार:            $maintenancescheduleitem_type
+   • दिनांक:            $maintenancescheduleitem_nextrecurrence
+
+   • कंपनी से संपर्क: $maintenancescheduleitem_companycontact_name
+
+कृपया तैयारी करें और/या उचित कार्रवाई करें।
+
+धन्यवाद!
+
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+
+-------------------------------------------------- -----------
+${application.abbreviation} ${application.version}
+
+उदाहरण: $instance_name
