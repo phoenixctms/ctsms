@@ -1,29 +1,29 @@
-Ndeko $visitscheduleitem_trial_name mosangani ya ekipi ya bomekoli to mokambi ya $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
 oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Kosambisa:      $visitscheduleitem_trial_name
-   • Kotala:      $visitscheduleitem_name
-#soki($visit_schedule_item_day_date) .
-   • Mokolo:       $visit_schedule_item_day_date
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Date:       $visit_schedule_item_day_date
 #mosusu
-   • Kotala uta na: $visitscheduleitem_start
-   • Kotala na:   $visitscheduleitem_stop
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
 #nsuka
 
-   • Liziba:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() basali N/A:
+$inactive_staff.size() employees N/A:
 
-#koyebisa liboso($employee na $inactive_staff)
-   • $employee.kombo
+#foreach($employee in $inactive_staff)
+   • $employee.name
 #nsuka
 
 Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 
-Thank you!
+Matondi!
 
 Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
