@@ -1,17 +1,17 @@
-Dear member of dept. $department,
+Kedves Osztályi Tag! $department,
 
-this is a notification for the following event:
+ez egy értesítés a következő eseményről:
 
    $type
 
-   • Department: $department
-   • $number_of_probands_deleted proband(s) deleted.
+   • Osztály: $department
+   • $number_of_probands_deleted proband(ok) törölve.
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+A nyomozó tájékozott hozzájárulása nélkül a rekord eltávolítása az adatvédelem megvalósítása érdekében szükséges a vizsgáló érzékeny adatainak védelme és a személyazonosításra alkalmas adatok eldobása érdekében. Ezért a törlést nem lehet visszaállítani.
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
 
---------------------------------------------------------------
+-------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Példa: $instance_name
