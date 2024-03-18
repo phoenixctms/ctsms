@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Course:              $courseparticipationstatusentry_course_name
-   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
-   • Course department:   $courseparticipationstatusentry_course_department
-   • Course category:     $courseparticipationstatusentry_course_category
+   • Curs:              $courseparticipationstatusentry_course_name
+   • Titlul cursului CV:     $courseparticipationstatusentry_course_cvtitle
+   • Departamentul cursului:   $courseparticipationstatusentry_course_department
+   • Categoria cursurilor:     $courseparticipationstatusentry_course_category
 
-   • Course end:          $courseparticipationstatusentry_course_stop
-   • Validity expiration: $courseparticipationstatusentry_course_expiration
+   • Finalul cursului:          $courseparticipationstatusentry_course_stop
+   • Expirarea valabilității: $courseparticipationstatusentry_course_expiration
 
-Please visit to register for a suitable refresher course:
+Vă rugăm să mergeți la înregistrare pentru un curs de actualizare adecvat:
 
-   $http_base_url/staff/expiringParticipationOverview.jsf
+   $http_base_url/personal/expiringParticipationOverview.jsf
 
 Mulțumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
