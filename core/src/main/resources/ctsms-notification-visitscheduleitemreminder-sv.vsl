@@ -1,26 +1,26 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Kära $visitscheduleitem_trial_name försöksmedlem eller medlem i dept. $visitscheduleitem_trial_department,
 
-this is a notification for the following event:
+detta är en avisering för följande händelse:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Provning:         $visitscheduleitem_trial_name
+   • Besök:         $visitscheduleitem_name
+   • Besök från:    $visitscheduleitem_start
+   • Besök till:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#end
+# slut
 
-Please prepare and/or take appropriate actions.
+Var snäll och förbered och/eller vidta lämpliga åtgärder.
 
 Tack!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
