@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-this is a notification for the following event:
+detta är en avisering för följande händelse:
 
    $type
 
-   • Course:              $courseparticipationstatusentry_course_name
-   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
-   • Course department:   $courseparticipationstatusentry_course_department
-   • Course category:     $courseparticipationstatusentry_course_category
+   • Kurs:              $courseparticipationstatusentry_course_name
+   • Kursens cv-titel:     $courseparticipationstatusentry_course_cvtitle
+   • Kursavdelning:   $courseparticipationstatusentry_course_department
+   • Kurskategori:     $courseparticipationstatusentry_course_category
 
-   • Course end:          $courseparticipationstatusentry_course_stop
-   • Validity expiration: $courseparticipationstatusentry_course_expiration
+   • Kursslut:          $courseparticipationstatusentry_course_stop
+   • Giltighetsförfall: $courseparticipationstatusentry_course_expiration
 
-Please visit to register for a suitable refresher course:
+Besök gärna för att anmäla dig till en lämplig repetitionskurs:
 
-   $http_base_url/staff/expiringParticipationOverview.jsf
+   $http_base_url/staff/expiiringParticipationOverview.jsf
 
 Tack!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
