@@ -1,31 +1,31 @@
-Dear $user_identity_firstname,
+Mpendwa $user_identity_firstname,
 
-your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+akaunti yako ya ${application.abbreviation} iliundwa #if($new_user)iliundwa#{else}ilibadilishwa#mwisho.
 
-   • Username:   $user_name
-#if($local_auth_method)
-#if($new_user)
-   • An administrator will inform you of the actual password.
+   • Jina la mtumiaji:   $user_name
+#kama($local_auth_method)
+#kama($new_user)
+   • Msimamizi atakujulisha kuhusu nenosiri halisi.
 #vingine
-   • The password remains unchanged.
+   • Nenosiri husalia bila kubadilika.
 #mwisho
-#elseif($ldap_auth_method)
-   • The password to use is your MUG-password.
+#mwingine($ldap_auth_method)
+   • Nenosiri la kutumia ni MUG-nenosiri lako.
 
-#if($new_user)
-When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
+#kama($new_user)
+Unapoingia kwa mara ya kwanza, ingiza nenosiri ulilopewa na msimamizi kama "nenosiri la ndani" la lazima.
 #vingine
-When logging in the next time, enter your current password as the mandatory "local password".
+Unapoingia wakati ujao, weka nenosiri lako la sasa kama "nenosiri la ndani" la lazima.
 #mwisho
 #mwisho
 
-#if($new_user)
-The system is accessible at the site below:
+#kama($new_user)
+Mfumo huo unapatikana kwenye tovuti hapa chini:
 
    $http_base_url
 
 #mwisho
-IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
+MUHIMU: Akaunti hukuruhusu kusoma taarifa zinazoweza kumtambulisha mtu binafsi za masomo yaliyosajiliwa na watumiaji wa idara ya "$user_department". Ili kudumisha faragha ya data, vitambulisho vya akaunti vinapaswa kufichwa. Hutawahi kuulizwa kutoa kitambulisho kupitia barua pepe au seva zaidi ya "$http_domain_name".
 
 Asante!
 
