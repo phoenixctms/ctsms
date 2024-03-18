@@ -4,30 +4,30 @@ Dear $inventorybooking_onbehalfof_firstname,
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Инвентаризация:       $inventorybooking_inventory_name
+   • Глубина запасов.: $inventorybooking_inventory_department
+   • Кошка инвентаря.:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • Тип статуса:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
+   • Создатель:      $inventorystatusentry_originator_name
 #конец
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Статус от:     $inventorystatusentry_start
+   • Статус в:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Бронирование от:    $inventorybooking_start
+   • Бронирование в:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Для курса:      $inventorybooking_course_name
+   • Для пробного периода:       $inventorybooking_trial_name
+   • Для пролонгации: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Комментарий к статусу:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Комментарии к бронированию:
 
 $inventorybooking_comment
 
