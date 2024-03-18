@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-this is a notification for the following event:
+dit is een melding voor de volgende gebeurtenis:
 
    $type
 
-   • Course:              $courseparticipationstatusentry_course_name
-   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
-   • Course department:   $courseparticipationstatusentry_course_department
-   • Course category:     $courseparticipationstatusentry_course_category
+   • Cursus:              $courseparticipationstatusentry_course_name
+   • Cursus CV titel:     $courseparticipationstatusentry_course_cvtitle
+   • Cursusafdeling:   $courseparticipationstatusentry_course_department
+   • Cursuscategorie:     $courseparticipationstatusentry_course_category
 
-   • Course end:          $courseparticipationstatusentry_course_stop
-   • Validity expiration: $courseparticipationstatusentry_course_expiration
+   • Einde cursus:          $courseparticipationstatusentry_course_stop
+   • Geldigheid vervalt: $courseparticipationstatusentry_course_expiration
 
-Please visit to register for a suitable refresher course:
+Bezoek om u te registreren voor een geschikte verversingscursus:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
 Bedankt!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instantie: $instance_name
