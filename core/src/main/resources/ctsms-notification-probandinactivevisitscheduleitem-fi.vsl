@@ -1,30 +1,30 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Hyvä $visitscheduleitem_trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
+   • Probandin syvyys: $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Tilan tyyppi:   $probandstatusentry_type
+   • Tila:   $probandstatusentry_start
+   • Tila:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Kokeilu:         $visitscheduleitem_trial_name
+   • Käynti:         $visitscheduleitem_name
+   • Vieraile alkaen:    $visitscheduleitem_start
+   • Vieraile kohteessa:      $visitscheduleitem_stop
 
-Please prepare and/or take appropriate actions.
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
