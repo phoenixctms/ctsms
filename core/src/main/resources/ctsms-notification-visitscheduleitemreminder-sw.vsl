@@ -1,16 +1,16 @@
-Mpendwa $visitscheduleitem_trial_name mwanachama wa timu ya majaribio au mwanachama wa idara. $visitscheduleitem_trial_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Jaribio:         $visitscheduleitem_trial_name
-   • Tembelea:         $visitscheduleitem_name
-   • Tembelea kutoka:    $visitscheduleitem_start
-   • Tembelea:      $visitscheduleitem_stop
-#kama($notification.proband)
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
+#if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #mwisho
 
