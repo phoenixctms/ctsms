@@ -1,21 +1,21 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Уважаемый член пробной команды $visitscheduleitem_trial_name или руководитель $staff_name,
 
 это уведомление для следующего события:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • Испытание:      $visitscheduleitem_trial_name
+   • Посещение:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
+   • Дата:       $visit_schedule_item_day_date
 #else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
+   • Посещение от: $visitscheduleitem_start
+   • Посетить в:   $visitscheduleitem_stop
 #конец
 
-   • Threshold:  $inactive_staff_limit
+   • Порог:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() сотрудников N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
