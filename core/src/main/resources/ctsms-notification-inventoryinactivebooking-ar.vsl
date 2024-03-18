@@ -4,36 +4,36 @@ Dear $inventorybooking_onbehalfof_firstname,
 
    $type
 
-   • المخزون:       $inventorybooking_inventory_name
-   • عمق المخزون: $inventorybooking_inventory_department
-   • القطط المخزنة:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • نوع الحالة:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • المنشئ:      $inventorystatusentry_originator_name
+   • Originator:      $inventorystatusentry_originator_name
 #نهاية
-   • الحالة من:     $inventorystatusentry_start
-   • الحالة إلى:       $inventorystatusentry_stop
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • الحجز من:    $inventorybooking_start
-   • الحجز إلى:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • للدورة:      $inventorybooking_course_name
-   • للمحاكمة:       $inventorybooking_trial_name
-   • من أجل الاختبار: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-التعليق على الحالة
+Status comment:
 
 $inventorystatusentry_comment
 
-تعليق الحجز:
+Booking comment:
 
 $inventorybooking_comment
 
 يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
 
-Thank you!
+شكرًا لك!
 
 هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
 
