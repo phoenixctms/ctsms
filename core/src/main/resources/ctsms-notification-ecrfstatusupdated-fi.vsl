@@ -1,46 +1,46 @@
-Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
+Hyvä $ecrfstatusentry_listentry_trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $ecrfstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Trial:                $ecrfstatusentry_listentry_trial_name
-   • Trial department:     $ecrfstatusentry_listentry_trial_department
-   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • Kokeilu:                $ecrfstatusentry_listentry_trial_name
+   • Kokeiluosasto:     $ecrfstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
+   • Proband ryhmä:        $notification.ecrfStatusEntry.listEntry.group.title
 #end
 #if($notification.ecrfStatusEntry.visit)
    • Visit:                $notification.ecrfStatusEntry.visit.title
 #end
 
-   • eCRF status:          $ecrfstatusentry_status
+   • eCRF tila:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validation:     $ecrfstatusentry_validationresponsemsg
-   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+   • Syötteen vahvistus:     $ecrfstatusentry_validationresponsemsg
+   • Vahvistuksen aikaleima: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Timestamp:            $ecrfstatusentry_validationtimestamp
+   • Aikaleima:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Input validation pending.
+   • Syöttövahvistus on vireillä.
 #end
 
-   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Muokattu: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Please continue with next steps to complete the eCRF data entry.
-#else
-The eCRF data entry is completed.
+Jatka seuraavin vaihein saadaksesi eCRF datan syötön valmiiksi.
+#Muu
+ECRF-tietojen syöttö on valmis.
 #end
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
