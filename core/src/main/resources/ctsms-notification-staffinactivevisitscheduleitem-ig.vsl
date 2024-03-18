@@ -1,24 +1,24 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Ezigbo $visitscheduleitem_trial_name onye otu ikpe ma ọ bụ onye nlekọta nke $staff_name,
 
 Nke a bụ ọkwa maka mmemme a:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
+   • Ọnwụnwa:      $visitscheduleitem_trial_name
+   • Gaa na:      $visitscheduleitem_name
+#ọ bụrụ ($visit_schedule_item_day_date)
+   • Ụbọchị:       $visit_schedule_item_day_date
 #ọzọ
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
+   • Gaa na: $visitscheduleitem_start
+   • Gaa na:   $visitscheduleitem_stop
 #njedebe
 
-   • Threshold:  $inactive_staff_limit
+   • Ọnụ ụzọ:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() ndị ọrụ N/A:
 
-#foreach($employee in $inactive_staff)
-   • $employee.name
+#foreach($employee na $inactive_staff)
+   • $employee.aha
 #njedebe
 
 Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
