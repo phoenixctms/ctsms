@@ -1,39 +1,39 @@
-Kedves $dutyrosterturn_trial_name próbacsapat tagja vagy a $dutyrosterturn_staff_namefelügyelője!
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Személyzet:       $dutyrosterturn_staff_name
-   • Személyzeti osztály: $dutyrosterturn_staff_department
-   • Személyzeti kat.:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • Állapot típusa: $staffstatusentry_type
-   • Állapot innen: $staffstatusentry_start
-   • Állapot:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • Próba:       $dutyrosterturn_trial_name
-   • Ügyelet innen:   $dutyrosterturn_start
-   • Kötelessége:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • Beosztás:  $dutyrosterturn_title
-   • Látogassa meg:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-Állapot megjegyzés:
+Status comment:
 
 $staffstatusentry_comment
 
-Köteles megjegyzés:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
