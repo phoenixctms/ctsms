@@ -1,28 +1,28 @@
-Dear supervisor of $staffstatusentry_staff_name,
+Hyvä $staffstatusentry_staff_name valvoja,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Staff:       $staffstatusentry_staff_name
-   • Staff dept.: $staffstatusentry_staff_department
-   • Staff cat.:  $staffstatusentry_staff_category
+   • Henkilökunta:       $staffstatusentry_staff_name
+   • Henkilökunta: $staffstatusentry_staff_department
+   • Henkilökunta:  $staffstatusentry_staff_category
 
-   • Type:        $staffstatusentry_type
-   • From:        $staffstatusentry_start
-   • To:          $staffstatusentry_stop
+   • Tyyppi:        $staffstatusentry_type
+   • Lähettäjä:        $staffstatusentry_start
+   • Vastaanottaja:          $staffstatusentry_stop
 
 Kommentti:
 
 $staffstatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
