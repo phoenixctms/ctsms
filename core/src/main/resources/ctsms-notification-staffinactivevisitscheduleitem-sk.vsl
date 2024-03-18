@@ -1,33 +1,33 @@
-Vážený $visitscheduleitem_trial_name člen skúšobného tímu alebo vedúci $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-toto je upozornenie na nasledujúcu udalosť:
+this is a notification for the following event:
 
    $type
 
-   • Skúška:      $visitscheduleitem_trial_name
-   • Navštívte:      $visitscheduleitem_name
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Dátum:       $visit_schedule_item_day_date
+   • Date:       $visit_schedule_item_day_date
 #else
-   • Návšteva z: $visitscheduleitem_start
-   • Navštívte:   $visitscheduleitem_stop
-#koniec
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Prahová hodnota:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() zamestnanci N/A:
+$inactive_staff.size() employees N/A:
 
-#foreach($employee v $inactive_staff)
-   • $employee.meno
-#koniec
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
-Pripravte sa a/alebo vykonajte príslušné kroky.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Ďakujem!
 
-Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Príklad: $instance_name
+Instance: $instance_name
