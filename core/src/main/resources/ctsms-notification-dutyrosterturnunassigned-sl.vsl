@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Spoštovani $staff_firstname,
 
-this is a notification for the following event:
+to je obvestilo za naslednji dogodek:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Preizkus:          $dutyrosterturn_trial_name
+   • Dajatev od:      $dutyrosterturn_start
+   • Dolžnost do:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Koledar:       $dutyrosterturn_calendar
+   • Naziv dolžnosti:     $dutyrosterturn_title
+   • Obiščite:          $dutyrosterturn_visitscheduleitem_name
 
-   • New staff:      $dutyrosterturn_staff_name
+   • Novo osebje:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Samododelljivi.
+#drugo
+   • Brez samododeljevanja.
+#konec
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Spremenjeno: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Dežurni komentar:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+Razporeditve dolžnosti so obvezne in se lahko spreminjajo, dokler niso dokončno zamrznjene. Najnovejši pregled je dostopen na spodnji strani:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Hvala vam!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Primer: $instance_name
