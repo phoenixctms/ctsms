@@ -1,19 +1,19 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Уважаемый член глубины. $inventorystatusentry_inventory_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Инвентаризация:       $inventorystatusentry_inventory_name
+   • Глубина запасов.: $inventorystatusentry_inventory_department
+   • Кошка инвентаря.:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Тип:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
+   • Создатель:      $inventorystatusentry_originator_name
 #конец
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • От:            $inventorystatusentry_start
+   • Кому:              $inventorystatusentry_stop
 
 Комментарий:
 
