@@ -1,19 +1,19 @@
-Dear member of dept. $course_department,
+Уважаемый член глубины. $course_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Курс:                 $course_name
+   • Название CV курса:        $course_cvtitle
+   • Отдел курса:      $course_department
+   • Категория курсов:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Начало курса:           $course_start
+   • Окончание курса:             $course_stop
+   • Срок участия: $course_participationdeadline
 
-Register for this course:
+Зарегистрироваться на этот курс:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
