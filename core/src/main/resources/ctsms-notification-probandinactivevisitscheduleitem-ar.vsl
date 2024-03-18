@@ -1,26 +1,26 @@
-عزيزي عضو الفريق التجريبي $visitscheduleitem_trial_name أو عضو العمق. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
 
 وهذا إشعار يتعلق بالحدث التالي:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • عمق المدفع: $probandstatusentry_proband_department
-   • قطرة البروباند.:  $probandstatusentry_proband_category
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • نوع الحالة:   $probandstatusentry_type
-   • الحالة من:   $probandstatusentry_start
-   • الحالة إلى:     $probandstatusentry_stop
+   • Status type:   $probandstatusentry_type
+   • Status from:   $probandstatusentry_start
+   • Status to:     $probandstatusentry_stop
 
-   • المحاكمة:         $visitscheduleitem_trial_name
-   • زيارة:         $visitscheduleitem_name
-   • زيارة من:    $visitscheduleitem_start
-   • زيارة إلى:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 
 يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
 
-Thank you!
+شكرًا لك!
 
 هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
 
