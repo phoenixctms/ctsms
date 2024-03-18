@@ -1,31 +1,31 @@
-Шановний член глибини. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-це сповіщення для наступної події:
+this is a notification for the following event:
 
    $type
 
-   • Інвентар:       $inventorystatusentry_inventory_name
-   • Зменшити розмір інвентарю: $inventorystatusentry_inventory_department
-   • Кат. інвентарю:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Тип:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Джерело:      $inventorystatusentry_originator_name
-#закінчується
-   • Від:            $inventorystatusentry_start
-   • Кому:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
 Коментар:
 
 $inventorystatusentry_comment
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Примірник: $instance_name
+Instance: $instance_name
