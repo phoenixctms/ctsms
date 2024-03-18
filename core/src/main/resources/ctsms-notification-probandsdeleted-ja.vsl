@@ -1,17 +1,17 @@
-Dear member of dept $department,
+Dear member of dept. $department,
 
-これは以下のイベントの通知です：
+this is a notification for the following event:
 
    $type
 
-   • 部署: $department
-   • $number_of_probands_deleted プロバンドを削除しました。
+   • Department: $department
+   • $number_of_probands_deleted proband(s) deleted.
 
-プローブのインフォームドコンセントなしで 記録を削除する必要がありますデータプライバシーを実装するために プロバンスの機密データを保護し、個人を特定できる情報をドロップします。 したがって、削除をロールバックすることはできません。
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+Instance: $instance_name
