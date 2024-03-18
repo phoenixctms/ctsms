@@ -1,0 +1,25 @@
+विभाग के प्रिय सदस्य. $probandstatusentry_proband_department,
+
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+
+   $type
+
+   • प्रोबैंड: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+
+   • प्रोबैंड विभाग: $probandstatusentry_proband_department
+   • प्रोबैंड बिल्ली.:  $probandstatusentry_proband_category
+
+   • प्रकार:          $probandstatusentry_type
+   • प्रेषक:          $probandstatusentry_start
+   • को:            $probandstatusentry_stop
+
+कृपया तैयारी करें और/या उचित कार्रवाई करें।
+
+धन्यवाद!
+
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+
+-------------------------------------------------- -----------
+${application.abbreviation} ${application.version}
+
+उदाहरण: $instance_name
