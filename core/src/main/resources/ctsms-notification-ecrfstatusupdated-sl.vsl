@@ -1,46 +1,46 @@
-Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
+Spoštovani $ecrfstatusentry_listentry_trial_name član poskusne skupine ali član odd. $ecrfstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+to je obvestilo za naslednji dogodek:
 
    $type
 
-   • Trial:                $ecrfstatusentry_listentry_trial_name
-   • Trial department:     $ecrfstatusentry_listentry_trial_department
-   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • Preizkus:                $ecrfstatusentry_listentry_trial_name
+   • Preizkusni oddelek:     $ecrfstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+   • Skupina probandov:        $notification.ecrfStatusEntry.listEntry.group.title
+#konec
 #if($notification.ecrfStatusEntry.visit)
-   • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+   • Obiščite:                $notification.ecrfStatusEntry.visit.title
+#konec
 
-   • eCRF status:          $ecrfstatusentry_status
+   • Stanje eCRF:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validation:     $ecrfstatusentry_validationresponsemsg
-   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+   • Preverjanje vnosa:     $ecrfstatusentry_validationresponsemsg
+   • Časovni žig potrditve: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Timestamp:            $ecrfstatusentry_validationtimestamp
+   • Časovni žig:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Input validation pending.
-#end
+   • Potrditev vnosa je v teku.
+#konec
 
-   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Spremenjeno: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Please continue with next steps to complete the eCRF data entry.
-#else
-The eCRF data entry is completed.
-#end
+Nadaljujte z naslednjimi koraki, da dokončate vnos podatkov eCRF.
+#drugo
+Vnos podatkov eCRF je končan.
+#konec
 
 Hvala vam!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Primer: $instance_name
