@@ -1,26 +1,26 @@
-Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya bölüm üyesi. $visitscheduleitem_trial_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Deneme:         $visitscheduleitem_trial_name
-   • Ziyaret edin:         $visitscheduleitem_name
-   • Ziyaret yeri:    $visitscheduleitem_start
-   • Şurayı ziyaret edin:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#son
+#end
 
-Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
