@@ -1,31 +1,31 @@
 Dear $user_identity_firstname,
 
-your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+ваш ${application.abbreviation} аккаунт был #if($new_user)создал#{else}изменен#end.
 
-   • Username:   $user_name
+   • Имя пользователя:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • An administrator will inform you of the actual password.
+   • Администратор проинформирует Вас о действительном пароле.
 #else
-   • The password remains unchanged.
+   • Пароль остается неизменным.
 #конец
 #elseif($ldap_auth_method)
-   • The password to use is your MUG-password.
+   • Пароль, который необходимо использовать - это ваш MUG-пароль.
 
 #if($new_user)
-When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
+При первом входе в систему введите пароль, указанный администратором в качестве обязательного "локального пароля".
 #else
-When logging in the next time, enter your current password as the mandatory "local password".
+При следующем входе в систему введите ваш текущий пароль в качестве обязательного "локального пароля".
 #конец
 #конец
 
 #if($new_user)
-The system is accessible at the site below:
+Система доступна на следующем сайте:
 
    $http_base_url
 
 #конец
-IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
+ВАЖНО: Учетная запись позволяет вам читать персональную информацию о темах, зарегистрированных пользователями отдела "$user_department". Для обеспечения конфиденциальности данных учетные данные должны храниться в тайне. Вам никогда не будет предложено предоставить учетные данные по электронной почте или серверам, отличным от "$http_domain_name".
 
 Спасибо!
 
