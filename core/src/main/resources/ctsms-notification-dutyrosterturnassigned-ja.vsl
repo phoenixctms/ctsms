@@ -1,40 +1,40 @@
 Dear $staff_firstname,
 
-これは以下のイベントの通知です：
+this is a notification for the following event:
 
    $type
 
-   • 試用版：          $dutyrosterturn_trial_name
-   •      $dutyrosterturn_start からのデューティ
-   • 義務：        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • カレンダー:       $dutyrosterturn_calendar
-   • 義務の名称:     $dutyrosterturn_title
-   • 訪問:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • スタッフ：          $dutyrosterturn_staff_name
+   • Staff:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • 自己割り当て可能
+   • Self allocable.
 #else
-   • 自己割り当てなし
+   • No self allocation.
 #end
 
-   • Modified: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-義務コメント:
+Duty comment:
 
 $dutyrosterturn_comment
 
-義務の割り当ては義務であり、最終的に凍結されるまで変更することがあります。 最新の概要は以下のサイトからアクセスできます:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Gracias.
+ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+Instance: $instance_name
