@@ -1,51 +1,51 @@
-Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
+Ndeko $ecrffieldstatusentry_listentry_trial_name membre ya équipe ya procès to membre ya dept. $ecrffieldstatusentry_listentry_trial_department, .
 
 oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Trial:              $ecrffieldstatusentry_listentry_trial_name
-   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Kosambisa:              $ecrffieldstatusentry_listentry_trial_name
+   • Departema ya bosambisami:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #soki($string_utils.ezali Pamba($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#nsuka
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
-#if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#if($notification.ecrfBokotisi ya Etat ya Esika.Bokotisi ya liste.etuluku)
+   • Lisanga ya Proband:      $notification.ecrfEntrée ya état ya terrain.Entry ya liste.groupe.titre
 #nsuka
-#if($notification.ecrfFieldStatusEntry.visit)
-   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
+#if($notification.ecrfKokota ya Etat ya Esika.kotala)
+   • Kotala:              $notification.ecrfEntrée ya état ya terrain.kotala.titre
 #nsuka
-   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
-   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
-#if($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Eteni ya eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • Esika ya bokotisi:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfEntrée ya état ya terrain.ecrfEtando.série)
    • Index:              $ecrffieldstatusentry_index
 #nsuka
 
-   • eCRF Issue Status:  $ecrffieldstatusentry_status
+   • Ezalela ya likambo ya eCRF:  $ecrffieldstatusentry_status
 
-   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Ebongwani: #soki($notification.ecrfEntrée yaEtat ya Elanga.identité.ya Mosaleli oyo ebongwani)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#nsuka
 
 
 Komantere:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)History:
+#soki (${index_field_log.size ()} > 0)Lisolo ya kala:
 
-#foreach($log in $index_field_log)
-#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
-   • $log.status.name: $!log.comment
-#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+#koyebisa liboso($log na $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.Ezalela ya esika ya esika ya ECREFEntryOutVO")
+   • $log.nkombo.ezalela: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.Motuya ya esika ya ECRFOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
 #nsuka
 #nsuka
 
-#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Please check the data entry to resolve the eCRF issue:
+#end#if(!$notification.ecrfBokotisi.ezalela ya Etat.esili.esili)
+Svp tala entrée ya ba données pona ko résoudre problème ya eCRF:
 
-   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
+   $http_base_url/ekabolami/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #mosusu
-The eCRF issue is closed.
+Likambo ya eCRF ekangami.
 #nsuka
 
 Matondi!
