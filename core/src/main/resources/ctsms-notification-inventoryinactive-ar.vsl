@@ -1,19 +1,19 @@
-عزيزي العضو العمق. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
 وهذا إشعار يتعلق بالحدث التالي:
 
    $type
 
-   • المخزون:       $inventorystatusentry_inventory_name
-   • عمق المخزون: $inventorystatusentry_inventory_department
-   • القطط المخزنة:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • النوع:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • المنشئ:      $inventorystatusentry_originator_name
+   • Originator:      $inventorystatusentry_originator_name
 #نهاية
-   • من:            $inventorystatusentry_start
-   • إلى:              $inventorystatusentry_stop
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
 التعليق:
 
@@ -21,7 +21,7 @@ $inventorystatusentry_comment
 
 يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
 
-Thank you!
+شكرًا لك!
 
 هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
 
