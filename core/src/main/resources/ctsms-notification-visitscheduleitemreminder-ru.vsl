@@ -1,16 +1,16 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Уважаемый член пробной команды $visitscheduleitem_trial_name или член dept. $visitscheduleitem_trial_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Испытание:         $visitscheduleitem_trial_name
+   • Посещение:         $visitscheduleitem_name
+   • Посещение от:    $visitscheduleitem_start
+   • Посетить в:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #конец
 
