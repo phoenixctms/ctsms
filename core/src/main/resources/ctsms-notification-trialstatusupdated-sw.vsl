@@ -1,21 +1,21 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+Mpendwa $trial_name mwanachama wa timu ya majaribio au mwanachama wa idara. $trial_department,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • Msimbo wa majaribio:   $trial_name
+   • Jina la jaribio:  $trial_title
+   • Idara ya majaribio:  $trial_department
 
-   • Trial status: $trial_status
-#if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
+   • Hali ya majaribio: $trial_status
+#kama($notification.trial.status.lockdown)
+   • Kufungiwa: hakuna marekebisho zaidi ya jaribio na rekodi zinazohusiana.
 #mwisho
-#if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
+#kama($notification.trial.status.inquiryValueInputEnabled)
+   • Ingizo la thamani ya swali limewezeshwa.
 #vingine
-   • Inquiry value inputs are disabled.
+   • Ingizo la thamani ya swali limezimwa.
 #mwisho
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
