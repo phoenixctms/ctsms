@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Hyvä $visitscheduleitem_trial_name kokeilutiimin jäsen tai $staff_namevalvoja,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • Kokeilu:      $visitscheduleitem_trial_name
+   • Käynti:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
+   • Päivämäärä:       $visit_schedule_item_day_date
+#Muu
+   • Vieraile alkaen: $visitscheduleitem_start
+   • Vieraile kohteessa:   $visitscheduleitem_stop
 #end
 
-   • Threshold:  $inactive_staff_limit
+   • Kynnys:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() työntekijää N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
 #end
 
-Please prepare and/or take appropriate actions.
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
