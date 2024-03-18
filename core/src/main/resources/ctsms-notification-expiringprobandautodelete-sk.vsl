@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Vážený člen odd. $proband_department,
 
-this is a notification for the following event:
+toto je upozornenie na nasledujúcu udalosť:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Oddelenie probandov:     $proband_department
+   • Kategória probanda:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Plánované odstránenie:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Posledný upravený používateľ:      $proband_modifieduser_identity_name
+   • Časová pečiatka poslednej úpravy: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Bez informovaného súhlasu probanda sa vyžaduje odstránenie záznamu, aby sa zabezpečilo súkromie údajov s cieľom chrániť citlivé údaje probanda a vynechať osobné údaje. Preto vymazanie nie je možné vrátiť späť.
 
-Please prepare and/or take appropriate actions.
+Pripravte sa a/alebo vykonajte príslušné kroky.
 
 Ďakujem!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Príklad: $instance_name
