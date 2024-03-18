@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Vážený člen odd. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+toto je upozornenie na nasledujúcu udalosť:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventár:       $inventorystatusentry_inventory_name
+   • Oddelenie zásob: $inventorystatusentry_inventory_department
+   • Kat. inventára:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Napíšte:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Pôvodca:      $inventorystatusentry_originator_name
+#koniec
+   • Od:            $inventorystatusentry_start
+   • Komu:              $inventorystatusentry_stop
 
 komentár:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Pripravte sa a/alebo vykonajte príslušné kroky.
 
 Ďakujem!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Príklad: $instance_name
