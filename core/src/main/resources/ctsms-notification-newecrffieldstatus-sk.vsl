@@ -1,58 +1,58 @@
-Vážený $ecrffieldstatusentry_listentry_trial_name člen skúšobného tímu alebo člen odd. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
-toto je upozornenie na nasledujúcu udalosť:
+this is a notification for the following event:
 
    $type
 
-   • Skúška:              $ecrffieldstatusentry_listentry_trial_name
-   • Skúšobné oddelenie:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Trial:              $ecrffieldstatusentry_listentry_trial_name
+   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Skupina probandov:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#koniec
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
-   • Navštívte:              $notification.ecrfFieldStatusEntry.visit.title
-#koniec
-   • sekcia eCRF:       $ecrffieldstatusentry_ecrffield_section
-   • Vstupné pole:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
+#end
+   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
+   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Index:              $ecrffieldstatusentry_index
-#koniec
+#end
 
-   • Stav vydania eCRF:  $ecrffieldstatusentry_status
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • Upravené: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 komentár:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)História:
+#if(${index_field_log.size()} > 0)History:
 
-#foreach($log v $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
-   • $log.názov.stavu: $!log.comment
+   • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#koniec
-#koniec
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Ak chcete vyriešiť problém s eCRF, skontrolujte zadávanie údajov:
+Please check the data entry to resolve the eCRF issue:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #else
-Otázka eCRF je uzavretá.
-#koniec
+The eCRF issue is closed.
+#end
 
-Gracias.
+Ďakujem!
 
-Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Príklad: $instance_name
+Instance: $instance_name
