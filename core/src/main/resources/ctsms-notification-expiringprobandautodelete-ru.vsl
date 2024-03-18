@@ -1,21 +1,21 @@
-Dear member of dept. $proband_department,
+Уважаемый член глубины. $proband_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Образец прополосы:     $proband_department
+   • Категория профиля:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Запланировано удаление:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Последние изменения пользователя:      $proband_modifieduser_identity_name
+   • Последнее изменение времени метки времени: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Без осознанного согласия испытания, удаление записи требуется для обеспечения конфиденциальности данных в целях защиты конфиденциальных данных proband, а также удаления персональной идентифицирующей информации. Поэтому удаление нельзя откатить.
 
 Просьба подготовить и/или принять соответствующие меры.
 
