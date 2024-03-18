@@ -1,29 +1,29 @@
-Kedves Osztályi Tag! $proband_department,
+Dear member of dept. $proband_department,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband osztály:     $proband_department
-   • Proband kategória:        $proband_category
+   • Proband deptartment:     $proband_department
+   • Proband category:        $proband_category
 
-   • Törlés ütemezett:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Utoljára módosított felhasználó:      $proband_modifieduser_identity_name
-   • Utoljára módosított időbélyeg: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-A nyomozó tájékozott hozzájárulása nélkül a rekord eltávolítása az adatvédelem megvalósítása érdekében szükséges a vizsgáló érzékeny adatainak védelme és a személyazonosításra alkalmas adatok eldobása érdekében. Ezért a törlést nem lehet visszaállítani.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
