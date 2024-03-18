@@ -1,6 +1,6 @@
 Dear $trial_name trial team member or member of dept. $trial_department,
 
-this is a notification for the following event:
+Nke a bụ ọkwa maka mmemme a:
 
    $type
 
@@ -11,20 +11,20 @@ this is a notification for the following event:
    • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
    • Lockdown: no further modification of the trial and associated records.
-#end
+#njedebe
 #if($notification.trial.status.inquiryValueInputEnabled)
    • Inquiry value inputs are enabled.
-#else
+#ọzọ
    • Inquiry value inputs are disabled.
-#end
+#njedebe
 
-Please prepare and/or take appropriate actions.
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 
-Thank you!
+Daalụ!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ihe atụ: $instance_name
