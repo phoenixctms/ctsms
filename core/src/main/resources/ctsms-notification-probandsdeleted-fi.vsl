@@ -1,17 +1,17 @@
-Hyvä syvyyden jäsen. $department,
+Dear member of dept. $department,
 
-tämä on ilmoitus seuraavasta tapahtumasta:
+this is a notification for the following event:
 
    $type
 
-   • Laitos: $department
-   • $number_of_probands_deleted probandia poistettu.
+   • Department: $department
+   • $number_of_probands_deleted proband(s) deleted.
 
-Ilman probandin tietoon perustuvaa suostumusta; tietojen poistaminen on pakollista tietojen yksityisyyden suojaamiseksi probandin arkaluonteisten tietojen suojaamiseksi ja henkilökohtaisesti tunnistettavien tietojen poistamiseksi. Sen vuoksi poistoa ei voida kiertää uudelleen.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Instance: $instance_name
