@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Beste #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-this is a notification for the following event:
+dit is een melding voor de volgende gebeurtenis:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Voorraad:       $maintenancescheduleitem_inventory_name
+   • Inventaris diepte: $maintenancescheduleitem_inventory_department
+   • Inventaris kat:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Titel: '$notification.maintenanceScheduleItem.title'
    • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Datum:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Bedrijfscontact: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Bereid u voor en/of neem passende acties.
 
 Bedankt!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instantie: $instance_name
