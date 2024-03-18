@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-これは以下のイベントの通知です：
+this is a notification for the following event:
 
    $type
 
-   • コース：              $courseparticipationstatusentry_course_name
-   • コース CV タイトル:     $courseparticipationstatusentry_course_cvtitle
-   • コース部門:   $courseparticipationstatusentry_course_department
-   • コースカテゴリ：     $courseparticipationstatusentry_course_category
+   • Course:              $courseparticipationstatusentry_course_name
+   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
+   • Course department:   $courseparticipationstatusentry_course_department
+   • Course category:     $courseparticipationstatusentry_course_category
 
-   • コース終了:          $courseparticipationstatusentry_course_stop
-   • 有効期限: $courseparticipationstatusentry_course_expiration
+   • Course end:          $courseparticipationstatusentry_course_stop
+   • Validity expiration: $courseparticipationstatusentry_course_expiration
 
-適切なリフレッシュコースの登録にアクセスしてください:
+Please visit to register for a suitable refresher course:
 
-   $http_base_url/スタッフ/expiringParticipation.jsf
+   $http_base_url/staff/expiringParticipationOverview.jsf
 
-Gracias.
+ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+Instance: $instance_name
