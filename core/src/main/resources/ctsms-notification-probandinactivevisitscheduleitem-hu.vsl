@@ -1,30 +1,30 @@
-Kedves $visitscheduleitem_trial_name próbacsapat vagy osztálytag! $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband oszt.: $probandstatusentry_proband_department
-   • Proband kat.:  $probandstatusentry_proband_category
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • Állapot típusa:   $probandstatusentry_type
-   • Állapot innen:   $probandstatusentry_start
-   • Állapot:     $probandstatusentry_stop
+   • Status type:   $probandstatusentry_type
+   • Status from:   $probandstatusentry_start
+   • Status to:     $probandstatusentry_stop
 
-   • Próba:         $visitscheduleitem_trial_name
-   • Látogassa meg:         $visitscheduleitem_name
-   • Látogatás innen:    $visitscheduleitem_start
-   • Látogassa meg:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
