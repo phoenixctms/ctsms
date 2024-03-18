@@ -1,30 +1,30 @@
-Kære $trial_name prøvegruppemedlem eller medlem af dept. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Prøvekode:   $trial_name
-   • Prøvetitel:  $trial_title
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
    • Trial dept.:  $trial_department
 
-   • Prøvestatus: $trial_status
-#hvis($notification.trial.status.lockdown)
-   • Låsning: ingen yderligere ændring af forsøget og tilhørende journaler.
-#ende
-#if($notification.trial.status.inquiryValueInputAktiveret)
-   • Inquiry værdi input er aktiveret.
-#ellers
-   • Inquiry værdi input er deaktiveret.
-#ende
+   • Trial status: $trial_status
+#if($notification.trial.status.lockdown)
+   • Lockdown: no further modification of the trial and associated records.
+#end
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
+#end
 
-Forbered og/eller foretag passende foranstaltninger.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
