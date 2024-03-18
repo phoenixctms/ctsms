@@ -1,30 +1,30 @@
-Шановний $trial_name член судової групи або член відділу. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-це сповіщення для наступної події:
+this is a notification for the following event:
 
    $type
 
-   • Пробний код:   $trial_name
-   • Назва пробної версії:  $trial_title
-   • Пробна версія:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Стан пробної версії: $trial_status
-#if($notificationпробна версія.статус.lockdown)
-   • Lockdown: немає подальших змін випробувань та пов'язаних записів.
-#закінчується
+   • Trial status: $trial_status
+#if($notification.trial.status.lockdown)
+   • Lockdown: no further modification of the trial and associated records.
+#end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Вхідні значення від запиту включені.
-#інше
-   • Вхідні значення повторного запиту вимкнені.
-#закінчується
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
+#end
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Примірник: $instance_name
+Instance: $instance_name
