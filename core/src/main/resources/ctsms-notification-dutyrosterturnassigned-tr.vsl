@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Sevgili $staff_firstname,
 
-this is a notification for the following event:
+bu, aşağıdaki etkinlik için bir bildirimdir:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Deneme:          $dutyrosterturn_trial_name
+   • Görev başlangıcı:      $dutyrosterturn_start
+   • Görev:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Takvim:       $dutyrosterturn_calendar
+   • Görev unvanı:     $dutyrosterturn_title
+   • Ziyaret edin:          $dutyrosterturn_visitscheduleitem_name
 
-   • Staff:          $dutyrosterturn_staff_name
+   • Personel:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Kendi kendine tahsis edilebilir.
+#başka
+   • Kendi kendine tahsis yok.
+#son
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Değiştirildi: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Görev yorumu:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+Görev atamaları zorunludur ve nihayet donduruluncaya kadar değişebilir. Güncel genel bakışa aşağıdaki siteden erişilebilir:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Teşekkür ederim!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Örnek: $instance_name
