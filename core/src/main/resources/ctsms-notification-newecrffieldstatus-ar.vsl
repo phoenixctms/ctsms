@@ -1,51 +1,51 @@
-Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
+عزيزي عضو الفريق التجريبي $ecrffieldstatusentry_listentry_trial_name أو عضو العمق. $ecrffieldstatusentry_listentry_trial_department,
 
 وهذا إشعار يتعلق بالحدث التالي:
 
    $type
 
-   • Trial:              $ecrffieldstatusentry_listentry_trial_name
-   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • المحاكمة:              $ecrffieldstatusentry_listentry_trial_name
+   • الدائرة التجريبية:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+   • مجموعة Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
 #نهاية
 #if($notification.ecrfFieldStatusEntry.visit)
-   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
+   • زيارة:              $notification.ecrfFieldStatusEntry.visit.title
 #نهاية
-   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
+   • قسم eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Index:              $ecrffieldstatusentry_index
+   • فهرس:              $ecrffieldstatusentry_index
 #نهاية
 
-   • eCRF Issue Status:  $ecrffieldstatusentry_status
+   • حالة مشكلة eCRF:  $ecrffieldstatusentry_status
 
-   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   تم التعديل: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 التعليق:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)History:
+#if({index_field_log.size()} > 0) التاريخ:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+   • محفوظة (#if($string_utils.isEmpty($log.reasonForChange)النسخة $log#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log
 #نهاية
 #نهاية
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Please check the data entry to resolve the eCRF issue:
+الرجاء التحقق من إدخال البيانات لحل مشكلة eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #آخر
-The eCRF issue is closed.
+تم إغلاق مشكلة نموذج الإبلاغ الموحد الإلكتروني.
 #نهاية
 
 شكرًا لك!
