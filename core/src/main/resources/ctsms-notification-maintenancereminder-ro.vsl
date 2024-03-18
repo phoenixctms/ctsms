@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Stimate #if($notification.maintenanceScheduleItem.ResponsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Inventar:       $maintenancescheduleitem_inventory_name
+   • Dept-ul de inventar: $maintenancescheduleitem_inventory_department
+   • Pisică de inventar:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Titlu: '$notification.MaintanceScheduleItem.title'
+   • Tip:            $maintenancescheduleitem_type
+   • Data:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Contact companie: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
 
 Mulțumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
