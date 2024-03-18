@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Geachte lid van het diepte. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+dit is een melding voor de volgende gebeurtenis:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Voorraad:       $inventorystatusentry_inventory_name
+   • Inventaris diepte: $inventorystatusentry_inventory_department
+   • Inventaris kat:  $inventorystatusentry_inventory_category
 
    • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Oorspronkelijk:      $inventorystatusentry_originator_name
+#einde
+   • Van:            $inventorystatusentry_start
+   • Aan:              $inventorystatusentry_stop
 
 Notitie:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Bereid u voor en/of neem passende acties.
 
 Bedankt!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instantie: $instance_name
