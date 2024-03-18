@@ -1,39 +1,39 @@
-Sayın $dutyrosterturn_trial_name deneme ekibi üyesi veya $dutyrosterturn_staff_namesüpervizörü,
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Personel:       $dutyrosterturn_staff_name
-   • Personel departmanı: $dutyrosterturn_staff_department
-   • Personel kategorisi:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • Durum türü: $staffstatusentry_type
-   • Durum: $staffstatusentry_start
-   • Durum:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • Deneme:       $dutyrosterturn_trial_name
-   • Görev başlangıcı:   $dutyrosterturn_start
-   • Görev:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • Görev unvanı:  $dutyrosterturn_title
-   • Ziyaret edin:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-Durum yorumu:
+Status comment:
 
 $staffstatusentry_comment
 
-Görev yorumu:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
