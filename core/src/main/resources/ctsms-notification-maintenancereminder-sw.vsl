@@ -1,18 +1,18 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Mpendwa #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#mwisho,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Malipo:       $maintenancescheduleitem_inventory_name
+   • Idara ya mali: $maintenancescheduleitem_inventory_department
+   • Paka wa orodha.:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Kichwa: '$notification.maintenanceScheduleItem.title'
+   • Aina:            $maintenancescheduleitem_type
+   • Tarehe:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Anwani ya kampuni: $maintenancescheduleitem_companycontact_name
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 
