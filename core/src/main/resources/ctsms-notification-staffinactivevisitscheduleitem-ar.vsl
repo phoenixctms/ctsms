@@ -1,24 +1,24 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+عزيزي عضو الفريق التجريبي $visitscheduleitem_trial_name أو مشرف $staff_name،
 
 وهذا إشعار يتعلق بالحدث التالي:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • المحاكمة:      $visitscheduleitem_trial_name
+   • زيارة:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
+   • التاريخ:       $visit_schedule_item_day_date
 #آخر
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
+   • زيارة من: $visitscheduleitem_start
+   • زيارة إلى:   $visitscheduleitem_stop
 #نهاية
 
-   • Threshold:  $inactive_staff_limit
+   • الحيازة:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() موظفان N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.name
+   • $employeeاسم
 #نهاية
 
 يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
