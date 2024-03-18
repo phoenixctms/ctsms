@@ -1,24 +1,24 @@
-Mpendwa $visitscheduleitem_trial_name mwanachama wa timu ya majaribio au msimamizi wa $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Jaribio:      $visitscheduleitem_trial_name
-   • Tembelea:      $visitscheduleitem_name
-#kama($visit_schedule_item_day_date)
-   • Tarehe:       $visit_schedule_item_day_date
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Date:       $visit_schedule_item_day_date
 #vingine
-   • Tembelea kutoka: $visitscheduleitem_start
-   • Tembelea:   $visitscheduleitem_stop
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
 #mwisho
 
-   • Kizingiti:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() wafanyikazi N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.jina
+   • $employee.name
 #mwisho
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
