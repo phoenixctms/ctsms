@@ -1,27 +1,27 @@
-Kedves Osztályi Tag! $course_department,
+Dear member of dept. $course_department,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Tanfolyam:                 $course_name
-   • A kurzus önéletrajzának címe:        $course_cvtitle
-   • Tanfolyami osztály:      $course_department
-   • Tanfolyam kategória:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • A tanfolyam kezdete:           $course_start
-   • Tanfolyam vége:             $course_stop
-   • Részvételi határidő: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Regisztráljon erre a tanfolyamra:
+Register for this course:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
