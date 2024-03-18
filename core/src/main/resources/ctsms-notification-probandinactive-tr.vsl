@@ -1,25 +1,25 @@
-Değerli daire üyemiz. $probandstatusentry_proband_department,
+Dear member of dept. $probandstatusentry_proband_department,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband bölümü: $probandstatusentry_proband_department
-   • Proband kataloğu:  $probandstatusentry_proband_category
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • Tür:          $probandstatusentry_type
-   • Gönderen:          $probandstatusentry_start
-   • Kime:            $probandstatusentry_stop
+   • Type:          $probandstatusentry_type
+   • From:          $probandstatusentry_start
+   • To:            $probandstatusentry_stop
 
-Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
