@@ -1,22 +1,22 @@
-عزيزي عضو الفريق التجريبي $visitscheduleitem_trial_name أو عضو العمق. $visitscheduleitem_trial_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
 وهذا إشعار يتعلق بالحدث التالي:
 
    $type
 
-   • المحاكمة:         $visitscheduleitem_trial_name
-   • زيارة:         $visitscheduleitem_name
-   • زيارة من:    $visitscheduleitem_start
-   • زيارة إلى:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #نهاية
 
 يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
 
-Thank you!
+شكرًا لك!
 
 هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
 
