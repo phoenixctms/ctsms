@@ -1,30 +1,30 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+Hyvä $trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $trial_department,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • Koekoodi:   $trial_name
+   • Kokeilujakson nimi:  $trial_title
+   • Kokeilujakson syvyys:  $trial_department
 
-   • Trial status: $trial_status
+   • Kokeilujakson tila: $trial_status
 #if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
+   • Lockdown: ei muita muutoksia kokeiluja ja niihin liittyviä tietueita.
 #end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
-#else
-   • Inquiry value inputs are disabled.
+   • Kyselyn arvon syötteet ovat käytössä.
+#Muu
+   • Tiedusteluarvon syötteet on poistettu käytöstä.
 #end
 
-Please prepare and/or take appropriate actions.
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
