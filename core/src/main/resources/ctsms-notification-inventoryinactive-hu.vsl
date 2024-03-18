@@ -1,31 +1,31 @@
-Kedves Osztályi Tag! $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Készlet:       $inventorystatusentry_inventory_name
-   • Leltári részleg: $inventorystatusentry_inventory_department
-   • Leltári kat.:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Típus:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Kezdeményező:      $inventorystatusentry_originator_name
-#vége
-   • Feladó:            $inventorystatusentry_start
-   • Címzett:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
 Megjegyzés:
 
 $inventorystatusentry_comment
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
