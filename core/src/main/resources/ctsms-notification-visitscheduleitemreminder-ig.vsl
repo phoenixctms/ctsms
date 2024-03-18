@@ -8,7 +8,7 @@ Nke a bụ ọkwa maka mmemme a:
    • Gaa na:         $visitscheduleitem_name
    • Gaa na:    $visitscheduleitem_start
    • Gaa na:      $visitscheduleitem_stop
-#if($notification.proband)
+#ọ bụrụ ($notification.proband)
 
    • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
