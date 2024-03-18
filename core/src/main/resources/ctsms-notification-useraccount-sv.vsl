@@ -1,37 +1,37 @@
 Dear $user_identity_firstname,
 
-your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+ditt ${application.abbreviation} konto var #if($new_user)skapade#{else}ändrad#end.
 
-   • Username:   $user_name
+   • Användarnamn:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • An administrator will inform you of the actual password.
-#else
-   • The password remains unchanged.
-#end
+   • En administratör kommer att informera dig om det faktiska lösenordet.
+#annat
+   • Lösenordet förblir oförändrat.
+# slut
 #elseif($ldap_auth_method)
-   • The password to use is your MUG-password.
+   • Lösenordet som ska användas är ditt MUG-lösenord.
 
 #if($new_user)
-When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
-#else
-When logging in the next time, enter your current password as the mandatory "local password".
-#end
-#end
+När du loggar in för första gången, ange lösenordet som anges av administratören som obligatoriskt "lokalt lösenord".
+#annat
+När du loggar in nästa gång, ange ditt nuvarande lösenord som obligatoriskt "lokalt lösenord".
+# slut
+# slut
 
 #if($new_user)
-The system is accessible at the site below:
+Systemet är tillgängligt på webbplatsen nedan:
 
    $http_base_url
 
-#end
-IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
+# slut
+VIKTIGT: Kontot tillåter dig att läsa personligt identifierbar information om ämnen registrerade av användare av "$user_department" avdelningen. För att upprätthålla dataskyddet måste kontouppgifterna hållas sekretessbelagda. Du kommer aldrig att bli ombedd att tillhandahålla autentiseringsuppgifter via e-post eller andra servrar än "$http_domain_name".
 
 Tack!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
