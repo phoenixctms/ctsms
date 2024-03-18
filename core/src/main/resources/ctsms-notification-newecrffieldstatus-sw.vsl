@@ -1,36 +1,36 @@
-Mpendwa $ecrffieldstatusentry_listentry_trial_name mwanachama wa timu ya majaribio au mwanachama wa idara. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Jaribio:              $ecrffieldstatusentry_listentry_trial_name
-   • Idara ya majaribio:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#mwisho
+   • Trial:              $ecrffieldstatusentry_listentry_trial_name
+   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Kikundi cha proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
 #mwisho
-#if($notification.ecrfFieldStatusEntry.tembelea)
-   • Tembelea:              $notification.ecrfFieldStatusEntry.visit.title
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
 #mwisho
-   • sehemu ya eCRF:       $ecrffieldstatusentry_ecrffield_section
-   • Sehemu ya ingizo:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
+   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Kielezo:              $ecrffieldstatusentry_index
+   • Index:              $ecrffieldstatusentry_index
 #mwisho
 
-   • Hali ya Tatizo la eCRF:  $ecrffieldstatusentry_status
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • Iliyorekebishwa: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#mwisho
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Maoni:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)Historia:
+#if(${index_field_log.size()} > 0)History:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
@@ -40,12 +40,12 @@ $ecrffieldstatusentry_comment
 #mwisho
 #mwisho
 
-#mwisho#kama(!$notification.ecrfFieldStatusEntry.status.status.umetatuliwa)
-Tafadhali angalia ingizo la data ili kutatua suala la eCRF:
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+Please check the data entry to resolve the eCRF issue:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #vingine
-Suala la eCRF limefungwa.
+The eCRF issue is closed.
 #mwisho
 
 Asante!
