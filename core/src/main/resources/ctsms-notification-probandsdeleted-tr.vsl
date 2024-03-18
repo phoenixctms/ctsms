@@ -1,17 +1,17 @@
-Değerli daire üyemiz. $department,
+Dear member of dept. $department,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Departman: $department
-   • $number_of_probands_deleted proband(lar) silindi.
+   • Department: $department
+   • $number_of_probands_deleted proband(s) deleted.
 
-Probandın bilgilendirilmiş onayı olmadan, probandın hassas verilerini korumak ve kişisel olarak tanımlanabilir bilgileri bırakmak amacıyla veri gizliliğini uygulamak için kaydın kaldırılması gerekir. Bu nedenle silme işlemi geri alınamaz.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
