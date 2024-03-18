@@ -1,39 +1,39 @@
-Шановний $dutyrosterturn_trial_name член команди випробувань або керівник $dutyrosterturn_staff_name,
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-це сповіщення для наступної події:
+this is a notification for the following event:
 
    $type
 
-   • Персонал:       $dutyrosterturn_staff_name
-   • Меню співробітників.: $dutyrosterturn_staff_department
-   • Штатний кат.:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • Тип статусу: $staffstatusentry_type
-   • Статус від: $staffstatusentry_start
-   • Статус:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • Пробна:       $dutyrosterturn_trial_name
-   • Мито від:   $dutyrosterturn_start
-   • Обов'язок дані:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • Назва посади:  $dutyrosterturn_title
-   • Відвідайте:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-Статус коментаря:
+Status comment:
 
 $staffstatusentry_comment
 
-Обов'язний коментар:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Примірник: $instance_name
+Instance: $instance_name
