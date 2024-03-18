@@ -10,7 +10,7 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfKokota ya Etat.Kokota ya liste.etuluku)
-   • Lisanga ya Proband:        $notification.ecrfEtatEntry.listEntry.groupe.titre
+   • Lisanga ya Proband:        $notification.ecrfEntrée d'état.Entry ya liste.groupe.titre
 #nsuka
 #soki($notification.ecrfKokota ya Etat.kotala)
    • Kotala:                $notification.ecrfStatusEntry.kotala.titre
@@ -23,20 +23,20 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 #elseif($notification.ecrfEzalela ya Bokotisi.ezalela.esili.endimisami && $notification.ecrfEzalela ya Bokotisi.Ezalela ya bondimi.Ezalela ya bondimi.kombo() == "EZONGI")
    • $ecrfstatusentry_validationresponsemsg
    • Elembo ya ngonga:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.Ezalela ya bondimi.Ezalela ya bondimi.kombo () == "EZALI KOSALELA")
+#elseif($notification.ecrfEzalela ya Bokotisi.ezalela.esili.endimisami && $notification.ecrfEzalela ya Bokotisi.Ezalela ya bondimi.Ezalela ya bondimi.kombo () == "EZALI KOSALELA")
    • Validation ya entrée ezali kozela.
 #nsuka
 
    • Ebongwani: #soki($notification.ecrfEntrée yaEtat.identité.ya Mosaleli oyo ebongwani)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#nsuka
 
 
-#soki (!$notification.ecrfEzalela ya Bokoti.ezalela.esalemi)
+#soki(!$notification.ecrfEzalela ya Bokotisi.ezalela.esalemi)
 Svp koba na ba étapes oyo elandi pona kosilisa bokotisi ya ba données ya eCRF.
 #mosusu
 Bokotisi ya ba données ya eCRF esili.
 #nsuka
 
-Thank you!
+Matondi!
 
 Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
