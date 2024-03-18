@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-this is a notification for the following event:
+si tratta di una notifica per il seguente evento:
 
    $type
 
-   • Course:              $courseparticipationstatusentry_course_name
-   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
-   • Course department:   $courseparticipationstatusentry_course_department
-   • Course category:     $courseparticipationstatusentry_course_category
+   • Corso:              $courseparticipationstatusentry_course_name
+   • Titolo CV del corso:     $courseparticipationstatusentry_course_cvtitle
+   • Dipartimento del corso:   $courseparticipationstatusentry_course_department
+   • Categoria del corso:     $courseparticipationstatusentry_course_category
 
-   • Course end:          $courseparticipationstatusentry_course_stop
-   • Validity expiration: $courseparticipationstatusentry_course_expiration
+   • Fine del corso:          $courseparticipationstatusentry_course_stop
+   • Scadenza della validità: $courseparticipationstatusentry_course_expiration
 
-Please visit to register for a suitable refresher course:
+Si prega di visitare per iscriversi a un corso di aggiornamento adeguato:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
 Grazie!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Istanza: $instance_name
