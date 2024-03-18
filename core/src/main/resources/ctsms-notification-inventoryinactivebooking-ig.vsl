@@ -1,43 +1,43 @@
-Dear $inventorybooking_onbehalfof_firstname,
+Ezigbo $inventorybooking_onbehalfof_firstname,
 
-this is a notification for the following event:
+Nke a bụ ọkwa maka mmemme a:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Ndepụta Ngwaahịa:       $inventorybooking_inventory_name
+   • Ngalaba Ndepụta Ngwaahịa: $inventorybooking_inventory_department
+   • Nwamba ngwa ahịa.:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
-#if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Ụdị ọnọdụ:     $inventorystatusentry_type
+#ọ bụrụ ($notification.inventoryStatusEntry.originator)
+   • Onye malitere:      $inventorystatusentry_originator_name
+#njedebe
+   • Ọnọdụ si:     $inventorystatusentry_start
+   • Ọnọdụ ka:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Ndokwa site na:    $inventorybooking_start
+   • Ịde akwụkwọ na:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
+   • N'ezie:      $inventorybooking_course_name
+   • Maka ikpe:       $inventorybooking_trial_name
    • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Nkwupụta ọnọdụ:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Nkwupụta ntinye akwụkwọ:
 
 $inventorybooking_comment
 
-Please prepare and/or take appropriate actions.
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 
-Thank you!
+Daalụ!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ihe atụ: $instance_name
