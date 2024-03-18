@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Hyvä syvyyden jäsen. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Tavaraluettelo:       $inventorystatusentry_inventory_name
+   • Varastoosasto: $inventorystatusentry_inventory_department
+   • Tavaraluettelo kissa:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Tyyppi:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
+   • Alkuperä:      $inventorystatusentry_originator_name
 #end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Lähettäjä:            $inventorystatusentry_start
+   • Vastaanottaja:              $inventorystatusentry_stop
 
 Kommentti:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
 
 Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instant: $instance_name
