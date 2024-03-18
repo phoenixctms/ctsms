@@ -1,29 +1,29 @@
-Kære medlem af dept. $proband_department,
+Dear member of dept. $proband_department,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Proband deptartment:     $proband_department
-   • Proband kategori:        $proband_category
+   • Proband category:        $proband_category
 
-   • Planlagt sletning:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Sidst ændret bruger:      $proband_modifieduser_identity_name
-   • Sidst ændret tidsstempel: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-Uden et informeret samtykke fra sandsynligheden at fjernelse af data er nødvendig for at implementere databeskyttelse for at beskytte probandens følsomme data og slippe personligt identificerbare oplysninger. Derfor kan en sletning ikke rulles tilbage.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Forbered og/eller foretag passende foranstaltninger.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
