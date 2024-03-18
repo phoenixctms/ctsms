@@ -1,30 +1,30 @@
-Kedves $trial_name próbacsapat vagy osztálytag! $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Próbakód:   $trial_name
-   • Próbacím:  $trial_title
-   • Próbaosztály:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Próbaállapot: $trial_status
+   • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
-   • Lezárás: nincs további módosítás a próbaverzión és a kapcsolódó rekordokon.
-#vége
+   • Lockdown: no further modification of the trial and associated records.
+#end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • A lekérdezési érték bevitele engedélyezett.
-#más
-   • A lekérdezési érték bevitele le van tiltva.
-#vége
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
+#end
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
