@@ -20,7 +20,7 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 #if($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "DARA")
    • Afọwọsi igbewọle:     $ecrfstatusentry_validationresponsemsg
    • Aago Ifọwọsi: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "KUNA")
    • $ecrfstatusentry_validationresponsemsg
    • Aami akoko:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "NI isunmọtosi")
@@ -36,7 +36,7 @@ Jọwọ tẹsiwaju pẹlu awọn igbesẹ atẹle lati pari titẹsi data eCRF.
 Akọsilẹ data eCRF ti pari.
 #opin
 
-Thank you!
+E dupe!
 
 Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
 
