@@ -10,30 +10,30 @@
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Группа проба:        $notification.ecrfStatusEntry.listEntry.group.title
+   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
 #конец
 #if($notification.ecrfStatusEntry.visit)
    • Visit:                $notification.ecrfStatusEntry.visit.title
 #конец
 
-   • Статус eCRF:          $ecrfstatusentry_status
+   • eCRF status:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Проверка ввода:     $ecrfstatusentry_validationresponsemsg
-   • Метка времени подтверждения: $ecrfstatusentry_validationtimestamp
+   • Input validation:     $ecrfstatusentry_validationresponsemsg
+   • Validation timestamp: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Метка времени:            $ecrfstatusentry_validationtimestamp
+   • Timestamp:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Ввод для подтверждения ожидания.
+   • Input validation pending.
 #конец
 
-   • Изменено: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Пожалуйста, продолжайте следующие шаги для завершения ввода данных eCRF.
+Please continue with next steps to complete the eCRF data entry.
 #else
-Ввод данных eCRF завершен.
+The eCRF data entry is completed.
 #конец
 
 Спасибо!
