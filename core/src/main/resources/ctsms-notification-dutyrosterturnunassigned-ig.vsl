@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Ezigbo $staff_firstname,
 
-this is a notification for the following event:
+Nke a bụ ọkwa maka mmemme a:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Ọnwụnwa:          $dutyrosterturn_trial_name
+   • Ọrụ sitere na:      $dutyrosterturn_start
+   • Ọrụ na:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • kalenda:       $dutyrosterturn_calendar
+   • Aha ọrụ:     $dutyrosterturn_title
+   • Gaa na:          $dutyrosterturn_visitscheduleitem_name
 
-   • New staff:      $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Ndị ọrụ ọhụrụ:      $dutyrosterturn_staff_name
+#ọ bụrụ ($notification.dutyRosterTurn.selfAllocatable)
+   • ikenye onwe ya.
+#ọzọ
+   • Enweghị oke nke onwe.
+#njedebe
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • gbanwetụrụ: #if ($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name# ọgwụgwụ
 
 
-Duty comment:
+Okwu ọrụ:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+Ihe omume dị mkpa ma nwee ike ịgbanwe ruo mgbe oyi gwụchara. Enwere ike nweta nlebanya ọhụrụ na saịtị dị n'okpuru:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Thank you!
+Daalụ!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ihe atụ: $instance_name
