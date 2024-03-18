@@ -1,30 +1,30 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Шановний $visitscheduleitem_trial_name член судової групи або член відділу. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+це сповіщення для наступної події:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Розширення розширення.: $probandstatusentry_proband_department
+   • Пробанд кат.:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Тип статусу:   $probandstatusentry_type
+   • Статус від:   $probandstatusentry_start
+   • Статус:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Пробна:         $visitscheduleitem_trial_name
+   • Відвідайте:         $visitscheduleitem_name
+   • Відвідайте з:    $visitscheduleitem_start
+   • Відвідайте:      $visitscheduleitem_stop
 
-Please prepare and/or take appropriate actions.
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
