@@ -1,18 +1,18 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+#if($notification.maintenanceScheduleItem.responsible)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
 это уведомление для следующего события:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Инвентаризация:       $maintenancescheduleitem_inventory_name
+   • Глубина запасов.: $maintenancescheduleitem_inventory_department
+   • Кошка инвентаря.:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Название: '$notification.maintenanceScheduleItem.title'
+   • Тип:            $maintenancescheduleitem_type
+   • Дата:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Контакт компании: $maintenancescheduleitem_companycontact_name
 
 Просьба подготовить и/или принять соответствующие меры.
 
