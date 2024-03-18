@@ -1,19 +1,19 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+عزيزي العضو العمق. $inventorystatusentry_inventory_department,
 
 وهذا إشعار يتعلق بالحدث التالي:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • المخزون:       $inventorystatusentry_inventory_name
+   • عمق المخزون: $inventorystatusentry_inventory_department
+   • القطط المخزنة:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • النوع:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
+   • المنشئ:      $inventorystatusentry_originator_name
 #نهاية
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • من:            $inventorystatusentry_start
+   • إلى:              $inventorystatusentry_stop
 
 التعليق:
 
