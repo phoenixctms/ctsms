@@ -1,51 +1,51 @@
-Уважаемый член пробной команды $ecrffieldstatusentry_listentry_trial_name или член dept. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Испытание:              $ecrffieldstatusentry_listentry_trial_name
-   • Пробный департамент:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Trial:              $ecrffieldstatusentry_listentry_trial_name
+   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Группа проба:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
 #конец
 #if($notification.ecrfFieldStatusEntry.visit)
-   • Посещение:              $notification.ecrfFieldStatusEntry.visit.title
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
 #конец
-   • Раздел eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Индекс:              $ecrffieldstatusentry_index
+   • Index:              $ecrffieldstatusentry_index
 #конец
 
-   • Статус вопросов eCRF:  $ecrffieldstatusentry_status
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • Изменено: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
 Комментарий:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)История:
+#if(${index_field_log.size()} > 0)History:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • сохранено (#if($string_utils.isEmpty($log.reasonForChange))версия $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
 #конец
 #конец
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Пожалуйста, проверьте данные для разрешения проблемы eCRF:
+Please check the data entry to resolve the eCRF issue:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
 #else
-Вопрос eCRF закрыт.
+The eCRF issue is closed.
 #конец
 
 Спасибо!
