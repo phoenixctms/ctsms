@@ -1,26 +1,26 @@
-Poštovani #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-ovo je obavijest za sljedeći događaj:
+this is a notification for the following event:
 
    $type
 
-   • Inventar:       $maintenancescheduleitem_inventory_name
-   • Odjel inventara: $maintenancescheduleitem_inventory_department
-   • Inventar kat.:  $maintenancescheduleitem_inventory_category
+   • Inventory:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Inventory cat.:  $maintenancescheduleitem_inventory_category
 
-   • Naslov: '$notification.maintenanceScheduleItem.title'
-   • Tip:            $maintenancescheduleitem_type
-   • Datum:            $maintenancescheduleitem_nextrecurrence
+   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
 
-   • Kontakt za tvrtku: $maintenancescheduleitem_companycontact_name
+   • Company contact: $maintenancescheduleitem_companycontact_name
 
-Molimo pripremite se i/ili poduzmite odgovarajuće radnje.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Hvala vam!
 
-Ovo je sistemski generirana e-pošta stvorena $generated_on, možda je u međuvremenu zastarjela. Ne odgovaraj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Primjer: $instance_name
+Instance: $instance_name
