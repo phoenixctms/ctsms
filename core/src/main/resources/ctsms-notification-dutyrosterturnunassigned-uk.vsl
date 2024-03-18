@@ -1,40 +1,40 @@
 Dear $staff_firstname,
 
-це сповіщення для наступної події:
+this is a notification for the following event:
 
    $type
 
-   • Пробна:          $dutyrosterturn_trial_name
-   • Мито від:      $dutyrosterturn_start
-   • Обов'язок дані:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Календар:       $dutyrosterturn_calendar
-   • Назва посади:     $dutyrosterturn_title
-   • Відвідайте:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Новий персонал:      $dutyrosterturn_staff_name
+   • New staff:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Самоузгоджено.
-#інше
-   • Жодного розподілу.
-#закінчується
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • Змінено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Обов'язний коментар:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Обов'язкове завдання є обов'язковим і може змінюватися, поки вони нарешті не будуть заморожені. Попередній огляд доступна на сайті нижче:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Gracias.
+Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Примірник: $instance_name
+Instance: $instance_name
