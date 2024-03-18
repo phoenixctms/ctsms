@@ -1,27 +1,27 @@
-Vážený člen odd. $course_department,
+Dear member of dept. $course_department,
 
-toto je upozornenie na nasledujúcu udalosť:
+this is a notification for the following event:
 
    $type
 
-   • Kurz:                 $course_name
-   • Názov životopisu kurzu:        $course_cvtitle
-   • Oddelenie kurzu:      $course_department
-   • Kategória kurzu:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Začiatok kurzu:           $course_start
-   • Koniec kurzu:             $course_stop
-   • Termín účasti: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Zaregistrujte sa na tento kurz:
+Register for this course:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
-Gracias.
+Ďakujem!
 
-Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Príklad: $instance_name
+Instance: $instance_name
