@@ -1,30 +1,30 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Ezigbo $visitscheduleitem_trial_name onye otu ikpe ma ọ bụ onye otu dept. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+Nke a bụ ọkwa maka mmemme a:
 
    $type
 
    • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Dept.: $probandstatusentry_proband_department
+   • Proband nwamba.:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Ụdị ọnọdụ:   $probandstatusentry_type
+   • Ọnọdụ si:   $probandstatusentry_start
+   • Ọnọdụ ka:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Ọnwụnwa:         $visitscheduleitem_trial_name
+   • Gaa na:         $visitscheduleitem_name
+   • Gaa na:    $visitscheduleitem_start
+   • Gaa na:      $visitscheduleitem_stop
 
-Please prepare and/or take appropriate actions.
+Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
 
-Thank you!
+Daalụ!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ihe atụ: $instance_name
