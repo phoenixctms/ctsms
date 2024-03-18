@@ -1,16 +1,16 @@
-Estimado $visitscheduleitem_trial_name miembro del equipo de prueba o supervisor de $staff_name,
+Estimado miembro del equipo de prueba $visitscheduleitem_trial_name o supervisor de $staff_name,
 
 esta es una notificación para el siguiente evento:
 
    $type
 
-   • Prueba:      $visitscheduleitem_trial_name
+   • Ensayo:      $visitscheduleitem_trial_name
    • Visita:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Fecha:       $visit_schedule_item_day_date
 #sino
-   • Visita de: $visitscheduleitem_start
-   • Visitar a:   $visitscheduleitem_stop
+   • Visita desde: $visitscheduleitem_start
+   • Visita a:   $visitscheduleitem_stop
 #end
 
    • Umbral:  $inactive_staff_limit
@@ -23,7 +23,7 @@ $inactive_staff.size() empleados N/A:
 
 Por favor prepare y/o tome las acciones apropiadas.
 
-Gracias.
+¡Gracias!
 
 Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
 

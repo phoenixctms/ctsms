@@ -23,7 +23,7 @@ oyo ezali liyebisi mpo na likambo oyo elandi:
 
    • Ezalela ya likambo ya eCRF:  $ecrffieldstatusentry_status
 
-   • Ebongwani: #soki($notification.ecrfEntrée yaEtat ya Esika.identité.ya Mosaleli oyo ebongwani)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#nsuka
+   • Ebongwani: #soki($notification.ecrfEntrée yaEtat ya Elanga.identité.ya Mosaleli oyo ebongwani)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#nsuka
 
 
 Komantere:
@@ -40,7 +40,7 @@ $ecrffieldstatusentry_comment
 #nsuka
 #nsuka
 
-#end#if(!$notification.ecrfEzalela ya Etando.ezalela.esili)
+#end#if(!$notification.ecrfBokotisi.ezalela ya Etat.esili.esili)
 Svp tala entrée ya ba données pona ko résoudre problème ya eCRF:
 
    $http_base_url/ekabolami/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id

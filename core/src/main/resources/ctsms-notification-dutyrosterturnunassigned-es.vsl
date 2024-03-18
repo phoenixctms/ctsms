@@ -4,7 +4,7 @@ esta es una notificación para el siguiente evento:
 
    $type
 
-   • Prueba:          $dutyrosterturn_trial_name
+   • Ensayo:          $dutyrosterturn_trial_name
    • Duro de:      $dutyrosterturn_start
    • Duelo a:        $dutyrosterturn_stop
 
@@ -13,7 +13,7 @@ esta es una notificación para el siguiente evento:
    • Visita:          $dutyrosterturn_visitscheduleitem_name
 
    • Nuevo personal:      $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAlocatable)
+#if($notification.dutyRosterTurn.selfAllocatable)
    • Autorizable.
 #sino
    • Sin autoasignación.
@@ -30,7 +30,7 @@ Las asignaciones obligatorias son obligatorias y pueden cambiar hasta que finalm
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Gracias.
+¡Gracias!
 
 Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
 

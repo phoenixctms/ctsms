@@ -1,4 +1,4 @@
-Estimado $trial_name miembro del equipo de prueba o miembro del depto. $trial_department,
+Estimado miembro del equipo de prueba $trial_name o miembro del departamento. $trial_department
 
 esta es una notificación para el siguiente evento:
 
@@ -6,7 +6,7 @@ esta es una notificación para el siguiente evento:
 
    • Código de prueba:   $trial_name
    • Título de prueba:  $trial_title
-   • Depto de prueba.:  $trial_department
+   • Prof. de prueba.:  $trial_department
 
    • Estado de prueba: $trial_status
 #if($notification.trial.status.lockdown)
@@ -20,7 +20,7 @@ esta es una notificación para el siguiente evento:
 
 Por favor prepare y/o tome las acciones apropiadas.
 
-Gracias.
+¡Gracias!
 
 Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
 

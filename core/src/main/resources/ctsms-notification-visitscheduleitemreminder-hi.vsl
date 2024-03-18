@@ -1,0 +1,26 @@
+प्रिय $visitscheduleitem_trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $visitscheduleitem_trial_department,
+
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+
+   $type
+
+   • परीक्षण:         $visitscheduleitem_trial_name
+   • विजिट करें:         $visitscheduleitem_name
+   • यहां से जाएँ:    $visitscheduleitem_start
+   • यहां जाएँ:      $visitscheduleitem_stop
+#if($notification.proband)
+
+   • प्रोबैंड: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+#अंत
+
+कृपया तैयारी करें और/या उचित कार्रवाई करें।
+
+धन्यवाद!
+
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+
+-------------------------------------------------- -----------
+${application.abbreviation} ${application.version}
+
+उदाहरण: $instance_name

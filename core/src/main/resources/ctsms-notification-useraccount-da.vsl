@@ -6,7 +6,7 @@ din ${application.abbreviation} konto var #hf($new_user)oprettet#{else}ændret#e
 #hvis($local_auth_method)
 #hvis($new_user)
    • En administrator vil informere dig om den faktiske adgangskode.
-#ellers
+#andet
    • Adgangskoden forbliver uændret.
 #ende
 #elseif($ldap_auth_method)
@@ -14,7 +14,7 @@ din ${application.abbreviation} konto var #hf($new_user)oprettet#{else}ændret#e
 
 #hvis($new_user)
 Når du logger ind for første gang, indtast adgangskoden givet af administratoren som den obligatoriske "lokale adgangskode".
-#ellers
+#andet
 Når du logger ind næste gang, skal du indtaste din nuværende adgangskode som den obligatoriske "lokale adgangskode".
 #ende
 #ende
@@ -27,7 +27,7 @@ Systemet er tilgængeligt på stedet nedenfor:
 #ende
 VIGTIGT: Kontoen giver dig mulighed for at læse personligt identificerbare oplysninger om emner registreret af brugere af "$user_department" afdelingen. For at opretholde databeskyttelse skal kontooplysninger holdes hemmelige. Du vil aldrig blive bedt om at give legitimationsoplysninger via e-mail eller andre servere end "$http_domain_name".
 
-Mange tak!
+Tak skal du have!
 
 Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
 

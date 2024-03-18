@@ -1,0 +1,30 @@
+प्रिय $trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $trial_department,
+
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+
+   $type
+
+   • परीक्षण कोड:   $trial_name
+   • परीक्षण शीर्षक:  $trial_title
+   • परीक्षण विभाग:  $trial_department
+
+   • परीक्षण स्थिति: $trial_status
+#if($notification.trial.status.lockdown)
+   • लॉकडाउन: परीक्षण और संबंधित रिकॉर्ड में कोई और संशोधन नहीं।
+#अंत
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • पूछताछ मूल्य इनपुट सक्षम हैं।
+#अन्य
+   • पूछताछ मूल्य इनपुट अक्षम हैं।
+#अंत
+
+कृपया तैयारी करें और/या उचित कार्रवाई करें।
+
+धन्यवाद!
+
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+
+-------------------------------------------------- -----------
+${application.abbreviation} ${application.version}
+
+उदाहरण: $instance_name

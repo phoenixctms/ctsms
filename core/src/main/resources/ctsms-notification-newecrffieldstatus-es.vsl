@@ -1,10 +1,10 @@
-Estimado $ecrffieldstatusentry_listentry_trial_name miembro del equipo de prueba o miembro del depto. $ecrffieldstatusentry_listentry_trial_department,
+Estimado miembro del equipo de prueba $ecrffieldstatusentry_listentry_trial_name o miembro del departamento. $ecrffieldstatusentry_listentry_trial_department
 
 esta es una notificación para el siguiente evento:
 
    $type
 
-   • Prueba:              $ecrffieldstatusentry_listentry_trial_name
+   • Ensayo:              $ecrffieldstatusentry_listentry_trial_name
    • Departamento de prueba:   $ecrffieldstatusentry_listentry_trial_department
    • Probanda: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
@@ -48,7 +48,7 @@ Por favor, compruebe la entrada de datos para resolver el problema de eCRF:
 El problema de eCRF está cerrado.
 #end
 
-Gracias.
+¡Gracias!
 
 Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
 

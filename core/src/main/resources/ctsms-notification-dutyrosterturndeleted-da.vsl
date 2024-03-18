@@ -6,7 +6,7 @@ dette er en notifikation for følgende begivenhed:
 
    • Prøve:          $dutyrosterturn_trial_name
    • Tjeneste fra:      $dutyrosterturn_start
-   • Opgave til:        $dutyrosterturn_stop
+   • Pligt til:        $dutyrosterturn_stop
 
    • Kalender:       $dutyrosterturn_calendar
    • Tjeneste titel:     $dutyrosterturn_title
@@ -15,7 +15,7 @@ dette er en notifikation for følgende begivenhed:
    • Personale:          $dutyrosterturn_staff_name
 #hvis($notification.dutyRosterTurn.selfAllocatable)
    • Selvfordeling.
-#ellers
+#andet
    • Ingen selvfordeling.
 #ende
 
@@ -30,7 +30,7 @@ Arbejdsopgaver er obligatoriske og kan ændres, indtil de er endeligt fastfrosse
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Mange tak!
+Tak skal du have!
 
 Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
 

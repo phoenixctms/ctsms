@@ -20,7 +20,7 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 #if($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "DARA")
    • Afọwọsi igbewọle:     $ecrfstatusentry_validationresponsemsg
    • Aago Ifọwọsi: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "KUNA")
    • $ecrfstatusentry_validationresponsemsg
    • Aami akoko:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "NI isunmọtosi")

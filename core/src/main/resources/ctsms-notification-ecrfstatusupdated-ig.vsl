@@ -23,7 +23,7 @@ Nke a bụ ọkwa maka mmemme a:
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "EDERE")
    • $ecrfstatusentry_validationresponsemsg
    • akara oge:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.aha() == "na-echere")
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "na-echere")
    • Ntinye nkwado na-echere.
 #njedebe
 
