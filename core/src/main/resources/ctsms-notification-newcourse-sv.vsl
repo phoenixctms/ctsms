@@ -1,27 +1,27 @@
-Dear member of dept. $course_department,
+Kära medlem av dept. $course_department,
 
-this is a notification for the following event:
+detta är en avisering för följande händelse:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Kurs:                 $course_name
+   • Kursens cv-titel:        $course_cvtitle
+   • Kursavdelning:      $course_department
+   • Kurskategori:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Kursstart:           $course_start
+   • Kursslut:             $course_stop
+   • Tidsfristen för deltagande: $course_participationdeadline
 
-Register for this course:
+Registrera dig på denna kurs:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 Tack!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
