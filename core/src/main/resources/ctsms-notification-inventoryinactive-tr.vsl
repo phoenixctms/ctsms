@@ -1,31 +1,31 @@
-Değerli daire üyemiz. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Envanter:       $inventorystatusentry_inventory_name
-   • Envanter bölümü: $inventorystatusentry_inventory_department
-   • Envanter kataloğu:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Tür:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Oluşturan:      $inventorystatusentry_originator_name
-#son
-   • Gönderen:            $inventorystatusentry_start
-   • Kime:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
 Yorum:
 
 $inventorystatusentry_comment
 
-Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
