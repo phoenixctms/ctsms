@@ -1,30 +1,30 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
+Caro membro da equipe de teste $visitscheduleitem_trial_name ou membro da dep. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+esta é uma notificação para o seguinte evento:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Perfil: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Proband dep.: $probandstatusentry_proband_department
+   • Gato Proband:  $probandstatusentry_proband_category
 
-   • Status type:   $probandstatusentry_type
-   • Status from:   $probandstatusentry_start
-   • Status to:     $probandstatusentry_stop
+   • Tipo de status:   $probandstatusentry_type
+   • Status de:   $probandstatusentry_start
+   • Estado para:     $probandstatusentry_stop
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
+   • Provação:         $visitscheduleitem_trial_name
+   • Visita:         $visitscheduleitem_name
+   • Visita de:    $visitscheduleitem_start
+   • Visite a:      $visitscheduleitem_stop
 
-Please prepare and/or take appropriate actions.
+Por favor, prepare-se e/ou tome as medidas adequadas.
 
 Obrigado!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instância: $instance_name
