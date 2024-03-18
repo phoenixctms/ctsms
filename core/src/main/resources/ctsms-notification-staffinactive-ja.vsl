@@ -1,28 +1,28 @@
-$staffstatusentry_staff_name の上司様
+Dear supervisor of $staffstatusentry_staff_name,
 
-これは以下のイベントの通知です：
+this is a notification for the following event:
 
    $type
 
-   • スタッフ：       $staffstatusentry_staff_name
-   • スタッフ部門: $staffstatusentry_staff_department
-   • スタッフの猫:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • 種類:        $staffstatusentry_type
+   • Type:        $staffstatusentry_type
    • From:        $staffstatusentry_start
-   • 宛先:          $staffstatusentry_stop
+   • To:          $staffstatusentry_stop
 
 コメント:
 
 $staffstatusentry_comment
 
-適切な行動を取ってください。
+Please prepare and/or take appropriate actions.
 
-Gracias.
+ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+Instance: $instance_name
