@@ -1,26 +1,26 @@
-Шановний $visitscheduleitem_trial_name член судової групи або член відділу. $visitscheduleitem_trial_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
-це сповіщення для наступної події:
+this is a notification for the following event:
 
    $type
 
-   • Пробна:         $visitscheduleitem_trial_name
-   • Відвідайте:         $visitscheduleitem_name
-   • Відвідайте з:    $visitscheduleitem_start
-   • Відвідайте:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Протокол: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#закінчується
+#end
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Примірник: $instance_name
+Instance: $instance_name
