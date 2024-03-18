@@ -1,26 +1,26 @@
-Spoštovani $courseparticipationstatusentry_staff_firstname,
+Dear $courseparticipationstatusentry_staff_firstname,
 
-to je obvestilo za naslednji dogodek:
+this is a notification for the following event:
 
    $type
 
-   • Tečaj:              $courseparticipationstatusentry_course_name
-   • Naslov življenjepisa tečaja:     $courseparticipationstatusentry_course_cvtitle
-   • Predmetni oddelek:   $courseparticipationstatusentry_course_department
-   • Kategorija tečaja:     $courseparticipationstatusentry_course_category
+   • Course:              $courseparticipationstatusentry_course_name
+   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
+   • Course department:   $courseparticipationstatusentry_course_department
+   • Course category:     $courseparticipationstatusentry_course_category
 
-   • Konec tečaja:          $courseparticipationstatusentry_course_stop
-   • Potek veljavnosti: $courseparticipationstatusentry_course_expiration
+   • Course end:          $courseparticipationstatusentry_course_stop
+   • Validity expiration: $courseparticipationstatusentry_course_expiration
 
-Za prijavo na ustrezen osvežitveni tečaj obiščite:
+Please visit to register for a suitable refresher course:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
-Gracias.
+Hvala vam!
 
-To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Primer: $instance_name
+Instance: $instance_name
