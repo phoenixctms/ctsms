@@ -1,43 +1,43 @@
-Sevgili $inventorybooking_onbehalfof_firstname,
+Dear $inventorybooking_onbehalfof_firstname,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Envanter:       $inventorybooking_inventory_name
-   • Envanter bölümü: $inventorybooking_inventory_department
-   • Envanter kataloğu:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Durum türü:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Oluşturan:      $inventorystatusentry_originator_name
-#son
-   • Durum:     $inventorystatusentry_start
-   • Durum:       $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Rezervasyon başlangıç tarihi:    $inventorybooking_start
-   • Rezervasyon için:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Kurs için:      $inventorybooking_course_name
-   • Deneme için:       $inventorybooking_trial_name
-   • Proband için: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Durum yorumu:
+Status comment:
 
 $inventorystatusentry_comment
 
-Rezervasyon yorumu:
+Booking comment:
 
 $inventorybooking_comment
 
-Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
