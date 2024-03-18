@@ -4,14 +4,14 @@ hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#mwisho
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Idara ya Proband.: $probandstatusentry_proband_department
+   • Proband paka.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Aina:          $probandstatusentry_type
+   • Kutoka:          $probandstatusentry_start
+   • Kwa:            $probandstatusentry_stop
 
 Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 
