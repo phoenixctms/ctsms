@@ -1,17 +1,17 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Уважаемый член глубины. $probandstatusentry_proband_department,
 
 это уведомление для следующего события:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Кошка профиля.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Тип:          $probandstatusentry_type
+   • От:          $probandstatusentry_start
+   • Кому:            $probandstatusentry_stop
 
 Просьба подготовить и/или принять соответствующие меры.
 
