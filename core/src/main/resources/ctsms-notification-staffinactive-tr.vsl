@@ -1,28 +1,28 @@
-Sayın $staffstatusentry_staff_nameyöneticisi,
+Dear supervisor of $staffstatusentry_staff_name,
 
-bu, aşağıdaki etkinlik için bir bildirimdir:
+this is a notification for the following event:
 
    $type
 
-   • Personel:       $staffstatusentry_staff_name
-   • Personel departmanı: $staffstatusentry_staff_department
-   • Personel kategorisi:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • Tür:        $staffstatusentry_type
-   • Gönderen:        $staffstatusentry_start
-   • Kime:          $staffstatusentry_stop
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
 
 Yorum:
 
 $staffstatusentry_comment
 
-Lütfen gerekli önlemleri alın ve/veya hazırlayın.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Teşekkür ederim!
 
-Bu, $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Örnek: $instance_name
+Instance: $instance_name
