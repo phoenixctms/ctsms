@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-this is a notification for the following event:
+це сповіщення для наступної події:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Інвентар:       $inventorybooking_inventory_name
+   • Зменшити розмір інвентарю: $inventorybooking_inventory_department
+   • Кат. інвентарю:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • Тип статусу:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Джерело:      $inventorystatusentry_originator_name
+#закінчується
+   • Статус від:     $inventorystatusentry_start
+   • Статус:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Бронювання від:    $inventorybooking_start
+   • Бронювання до:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Для курсу:      $inventorybooking_course_name
+   • Для випробування:       $inventorybooking_trial_name
+   • На проспект: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Статус коментаря:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Коментар до бронювання:
 
 $inventorybooking_comment
 
-Please prepare and/or take appropriate actions.
+Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
