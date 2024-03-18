@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Kære medlem af dept. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventar:       $inventorystatusentry_inventory_name
+   • Inventar dept.: $inventorystatusentry_inventory_department
+   • Inventar kat:  $inventorystatusentry_inventory_category
 
    • Type:            $inventorystatusentry_type
-#if($notification.inventoryStatusEntry.originator)
+#hf($notification.inventoryStatusEntry.originator)
    • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+#ende
+   • Fra:            $inventorystatusentry_start
+   • Til:              $inventorystatusentry_stop
 
-Comment:
+Kommentar:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Forbered og/eller foretag passende foranstaltninger.
 
 Tak skal du have!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instans: $instance_name
