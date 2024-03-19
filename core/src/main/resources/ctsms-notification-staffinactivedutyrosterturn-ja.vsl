@@ -1,39 +1,39 @@
-$dutyrosterturn_trial_name トライアルチームメンバーの皆様、または $dutyrosterturn_staff_name の上司様
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-これは以下のイベントの通知です：
+this is a notification for the following event:
 
    $type
 
-   • スタッフ：       $dutyrosterturn_staff_name
-   • スタッフ部門: $dutyrosterturn_staff_department
-   • スタッフの猫:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • ステータスタイプ: $staffstatusentry_type
-   • ステータス: $staffstatusentry_start
-   • ステータス:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • 試用版：       $dutyrosterturn_trial_name
-   •   $dutyrosterturn_start からのデューティ
-   • 義務：     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • 義務の名称:  $dutyrosterturn_title
-   • 訪問:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-ステータスコメント:
+Status comment:
 
 $staffstatusentry_comment
 
-義務コメント:
+Duty comment:
 
 $dutyrosterturn_comment
 
-適切な行動を取ってください。
+Please prepare and/or take appropriate actions.
 
 ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+Instance: $instance_name
