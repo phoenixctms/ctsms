@@ -1,26 +1,26 @@
-Ezigbo #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname# ngwụcha,
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-Nke a bụ ọkwa maka mmemme a:
+this is a notification for the following event:
 
    $type
 
-   • Ndepụta Ngwaahịa:       $maintenancescheduleitem_inventory_name
-   • Ngalaba Ndepụta Ngwaahịa: $maintenancescheduleitem_inventory_department
-   • Nwamba ngwa ahịa.:  $maintenancescheduleitem_inventory_category
+   • Inventory:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Inventory cat.:  $maintenancescheduleitem_inventory_category
 
-   • Aha: '$notification.maintenanceScheduleItem.title'
-   • Ụdị:            $maintenancescheduleitem_type
-   • Ụbọchị:            $maintenancescheduleitem_nextrecurrence
+   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
 
-   • kọntaktị ụlọ ọrụ: $maintenancescheduleitem_companycontact_name
+   • Company contact: $maintenancescheduleitem_companycontact_name
 
-Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
+Please prepare and/or take appropriate actions.
 
 Daalụ!
 
-Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ihe atụ: $instance_name
+Instance: $instance_name
