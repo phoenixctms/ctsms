@@ -1,27 +1,27 @@
-Spoštovana članica odd. $course_department,
+Dear member of dept. $course_department,
 
-to je obvestilo za naslednji dogodek:
+this is a notification for the following event:
 
    $type
 
-   • Tečaj:                 $course_name
-   • Naslov življenjepisa tečaja:        $course_cvtitle
-   • Predmetni oddelek:      $course_department
-   • Kategorija tečaja:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Začetek tečaja:           $course_start
-   • Konec tečaja:             $course_stop
-   • Rok za sodelovanje: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Prijavite se na ta tečaj:
+Register for this course:
 
-   $http_base_url/staff/comingCourseOverview.jsf
+   $http_base_url/staff/upcomingCourseOverview.jsf
 
 Hvala vam!
 
-To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Primer: $instance_name
+Instance: $instance_name
