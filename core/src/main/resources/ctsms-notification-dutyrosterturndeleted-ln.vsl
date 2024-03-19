@@ -1,40 +1,40 @@
-Ndeko $staff_firstname,
+Dear $staff_firstname,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Kosambisa:          $dutyrosterturn_trial_name
-   • Mosala uta:      $dutyrosterturn_start
-   • Mosala ya:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Manáka:       $dutyrosterturn_calendar
-   • Titre ya mosala:     $dutyrosterturn_title
-   • Kotala:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Basali:          $dutyrosterturn_staff_name
-#soki($notification.Roster ya mosalaTurn.yo mokoAllocatable)
-   • Ekoki kokabola yango moko.
-#mosusu
-   • Komikabola te.
-#nsuka
+   • Staff:          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • Ebongwani: #soki($notification.RosterRosterTurn.identité.ya Mosaleli oyo ebongwani)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#suka
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Commentaire ya mosala:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Kopesa mosala ezali obligatoire mpe ekoki kobongwana kino na nsuka bakokangama na congelé. Botali ya sika ekoki kozwama na site oyo ezali awa na nse:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
-   $http_base_url/mosambisi/mosalaSchedule ya Roster.jsf.
+   $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
