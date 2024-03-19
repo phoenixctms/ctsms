@@ -1,26 +1,26 @@
-Vážený #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-toto je upozornenie na nasledujúcu udalosť:
+this is a notification for the following event:
 
    $type
 
-   • Inventár:       $maintenancescheduleitem_inventory_name
-   • Oddelenie zásob: $maintenancescheduleitem_inventory_department
-   • Kat. inventára:  $maintenancescheduleitem_inventory_category
+   • Inventory:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Inventory cat.:  $maintenancescheduleitem_inventory_category
 
-   • Názov: '$notification.maintenanceScheduleItem.title'
-   • Napíšte:            $maintenancescheduleitem_type
-   • Dátum:            $maintenancescheduleitem_nextrecurrence
+   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
 
-   • Kontakt na spoločnosť: $maintenancescheduleitem_companycontact_name
+   • Company contact: $maintenancescheduleitem_companycontact_name
 
-Pripravte sa a/alebo vykonajte príslušné kroky.
+Please prepare and/or take appropriate actions.
 
 Ďakujem!
 
-Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Príklad: $instance_name
+Instance: $instance_name
