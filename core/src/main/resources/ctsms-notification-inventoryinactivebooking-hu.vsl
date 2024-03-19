@@ -1,43 +1,43 @@
-Kedves $inventorybooking_onbehalfof_firstname!
+Dear $inventorybooking_onbehalfof_firstname,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Készlet:       $inventorybooking_inventory_name
-   • Leltári részleg: $inventorybooking_inventory_department
-   • Leltári kat.:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Állapot típusa:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Kezdeményező:      $inventorystatusentry_originator_name
-#vége
-   • Állapot innen:     $inventorystatusentry_start
-   • Állapot:       $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Foglalás innen:    $inventorybooking_start
-   • Foglalás:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Tanfolyamhoz:      $inventorybooking_course_name
-   • Kipróbáláshoz:       $inventorybooking_trial_name
-   • Proband esetén: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Állapot megjegyzés:
+Status comment:
 
 $inventorystatusentry_comment
 
-Foglalási megjegyzés:
+Booking comment:
 
 $inventorybooking_comment
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
 Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
