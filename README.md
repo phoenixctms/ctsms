@@ -8,6 +8,7 @@
 ![ff translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ff&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27ff%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![fi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fi&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27fi%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![fr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=fr&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27fr%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
+![hi translation](https://img.shields.io/badge/dynamic/json?color=blue&label=hi&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27hi%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![hr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=hr&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27hr%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![hu translation](https://img.shields.io/badge/dynamic/json?color=blue&label=hu&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27hu%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![ig translation](https://img.shields.io/badge/dynamic/json?color=blue&label=ig&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27ig%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
@@ -27,6 +28,7 @@
 ![tr translation](https://img.shields.io/badge/dynamic/json?color=blue&label=tr&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27tr%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![uk translation](https://img.shields.io/badge/dynamic/json?color=blue&label=uk&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27uk%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 ![yo translation](https://img.shields.io/badge/dynamic/json?color=blue&label=yo&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27yo%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
+![zh-CN translation](https://img.shields.io/badge/dynamic/json?color=blue&label=zh-CN&style=flat&logo=crowdin&query=%24.progress[?(@.data.languageId==%27zh-CN%27)].data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-14663316-445508.json)
 
 Phoenix CTMS
 =====
