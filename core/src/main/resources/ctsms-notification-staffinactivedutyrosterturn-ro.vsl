@@ -1,39 +1,39 @@
-Stimate $dutyrosterturn_trial_name membru al echipei de încercare sau supervizor al $dutyrosterturn_staff_name,
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-aceasta este o notificare pentru următorul eveniment:
+this is a notification for the following event:
 
    $type
 
-   • Personal:       $dutyrosterturn_staff_name
-   • Dept-ul personalului: $dutyrosterturn_staff_department
-   • Pisica personalului:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • Tip de stare: $staffstatusentry_type
-   • Status din: $staffstatusentry_start
-   • Status la:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • Studiu:       $dutyrosterturn_trial_name
-   • Obligație din:   $dutyrosterturn_start
-   Obligație:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • Titlu sarcină:  $dutyrosterturn_title
-   • Vizită:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-Comentariu stare:
+Status comment:
 
 $staffstatusentry_comment
 
-Comentariu de sarcină:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
+Please prepare and/or take appropriate actions.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instanță: $instance_name
+Instance: $instance_name
