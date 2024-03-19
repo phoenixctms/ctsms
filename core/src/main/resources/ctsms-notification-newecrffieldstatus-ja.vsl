@@ -1,4 +1,4 @@
-$ecrffieldstatusentry_listentry_trial_name 試験チームのメンバーまたは部門のメンバーの皆様。 $ecrffieldstatusentry_listentry_trial_department、
+$ecrffieldstatusentry_listentry_trial_name 試験チームのメンバーまたは部門のメンバーの皆様。 $ecrffieldstatusentry_listentry_trial_department、 $ecrffieldstatusentry_listentry_trial_department、
 
 以下のイベントのお知らせです。
 
@@ -16,7 +16,7 @@ $ecrffieldstatusentry_listentry_trial_name 試験チームのメンバーまた�
    • アクセス:              $notification.ecrfFieldStatusEntry.visit.title
 ＃終わり
    • eCRF セクション:       $ecrffieldstatusentry_ecrffield_section
-   • 入力フィールド:        ${ecrffieldstatusentry_ecrffield_position}。 $ecrffieldstatusentry_ecrffield_field_name
+   • 入力フィールド:        ${ecrffieldstatusentry_ecrffield_position}。 $ecrffieldstatusentry_ecrffield_field_name $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • インデックス:              $ecrffieldstatusentry_index
 ＃終わり
@@ -50,7 +50,7 @@ eCRFの問題は終了しました。
 
 ありがとう！
 
-これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。 返信しないでください。
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。 返信しないでください。 返信しないでください。
 
 -------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
