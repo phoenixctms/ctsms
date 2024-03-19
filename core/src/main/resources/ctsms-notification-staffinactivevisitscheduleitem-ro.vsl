@@ -1,33 +1,33 @@
-Stimate $visitscheduleitem_trial_name membru al echipei de încercare sau supervizor al $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-aceasta este o notificare pentru următorul eveniment:
+this is a notification for the following event:
 
    $type
 
-   • Studiu:      $visitscheduleitem_trial_name
-   • Vizită:      $visitscheduleitem_name
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Data:       $visit_schedule_item_day_date
-#altceva
-   • Vizitați de la: $visitscheduleitem_start
-   • Vizitează la:   $visitscheduleitem_stop
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
 #end
 
-   • Prag:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() angajați N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
 #end
 
-Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
+Please prepare and/or take appropriate actions.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instanță: $instance_name
+Instance: $instance_name
