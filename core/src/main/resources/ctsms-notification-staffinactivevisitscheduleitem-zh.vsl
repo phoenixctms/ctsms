@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+亲爱的 $visitscheduleitem_trial_name 试验组成员或 $staff_name的主管，
 
-this is a notification for the following event:
+这是针对以下事件的通知：
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • 试用：      $visitscheduleitem_trial_name
+   • 访问：      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • 日期：       $visit_schedule_item_day_date
+＃别的
+   • 访问时间： $visitscheduleitem_start
+   • 访问：   $visitscheduleitem_stop
+＃结尾
 
-   • Threshold:  $inactive_staff_limit
+   • 阈值：  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() 员工 不适用：
 
-#foreach($employee in $inactive_staff)
+#foreach($employee 在 $inactive_staff)
    • $employee.name
-#end
+＃结尾
 
-Please prepare and/or take appropriate actions.
+请准备和/或采取适当的行动。
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
