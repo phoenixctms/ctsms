@@ -1,30 +1,30 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+亲爱的 $trial_name 试验组成员或部门成员 $trial_department,
 
-this is a notification for the following event:
+这是针对以下事件的通知：
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • 试用码：   $trial_name
+   • 试用标题：  $trial_title
+   • 试用部：  $trial_department
 
-   • Trial status: $trial_status
-#if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
-#end
-#if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
-#else
-   • Inquiry value inputs are disabled.
-#end
+   • 试用状态： $trial_status
+#if($notification.审判.状态.锁定)
+   • 锁定：不再修改试验和相关记录。
+＃结尾
+#if($notification.Trial.status.inquiryValueInputEnabled)
+   • 启用查询值输入。
+＃别的
+   • 查询值输入被禁用。
+＃结尾
 
-Please prepare and/or take appropriate actions.
+请准备和/或采取适当的行动。
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
