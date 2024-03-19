@@ -1,25 +1,25 @@
-Estimado miembro del depósito. $probandstatusentry_proband_department
+Dear member of dept. $probandstatusentry_proband_department,
 
-esta es una notificación para el siguiente evento:
+this is a notification for the following event:
 
    $type
 
-   • Probanda: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Gato de probanda.:  $probandstatusentry_proband_category
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • Tipo:          $probandstatusentry_type
-   • De:          $probandstatusentry_start
-   • Para:            $probandstatusentry_stop
+   • Type:          $probandstatusentry_type
+   • From:          $probandstatusentry_start
+   • To:            $probandstatusentry_stop
 
-Por favor prepare y/o tome las acciones apropiadas.
+Please prepare and/or take appropriate actions.
 
-¡Gracias!
+Thank you!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance: $instance_name
