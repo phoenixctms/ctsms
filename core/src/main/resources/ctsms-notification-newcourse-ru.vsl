@@ -1,27 +1,27 @@
-Dear member of dept. $course_department,
+Уважаемый сотрудник отд. $course_department,
 
-this is a notification for the following event:
+это уведомление о следующем событии:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Курс:                 $course_name
+   • Название резюме курса:        $course_cvtitle
+   • Отдел курса:      $course_department
+   • Категория курса:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Начало курса:           $course_start
+   • Конец курса:             $course_stop
+   • Срок участия: $course_participationdeadline
 
-Register for this course:
+Зарегистрируйтесь на этот курс:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 Спасибо!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
