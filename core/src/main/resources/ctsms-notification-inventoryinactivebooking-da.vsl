@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Inventar:       $inventorybooking_inventory_name
-   • Inventar dept.: $inventorybooking_inventory_department
-   • Inventar kat:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
    • Status type:     $inventorystatusentry_type
-#hf($notification.inventoryStatusEntry.originator)
+#if($notification.inventoryStatusEntry.originator)
    • Originator:      $inventorystatusentry_originator_name
-#ende
-   • Status fra:     $inventorystatusentry_start
-   • Status til:       $inventorystatusentry_stop
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Booking fra:    $inventorybooking_start
-   • Booking til:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Selvfølgelig:      $inventorybooking_course_name
-   • For forsøg:       $inventorybooking_trial_name
-   • Sandsynlig: #h($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status kommentar:
+Status comment:
 
 $inventorystatusentry_comment
 
-Booking kommentar:
+Booking comment:
 
 $inventorybooking_comment
 
-Forbered og/eller foretag passende foranstaltninger.
+Please prepare and/or take appropriate actions.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
