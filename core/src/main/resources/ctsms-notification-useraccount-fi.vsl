@@ -1,37 +1,37 @@
 Dear $user_identity_firstname,
 
-${application.abbreviation} tilisi #if($new_user)luodin#{else}muutettiin #end.
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
 
-   • Käyttäjänimi:   $user_name
+   • Username:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • Järjestelmänvalvoja ilmoittaa sinulle varsinaisen salasanan.
-#Muu
-   • Salasana pysyy muuttumattomana.
+   • An administrator will inform you of the actual password.
+#else
+   • The password remains unchanged.
 #end
 #elseif($ldap_auth_method)
-   • Käytettävä salasana on sinun MUG-salasanasi.
+   • The password to use is your MUG-password.
 
 #if($new_user)
-Kun kirjaudut sisään ensimmäistä kertaa, syötä ylläpitäjän antama salasana pakolliseksi "paikallinen salasana".
-#Muu
-Kun kirjaudut seuraavan kerran, syötä nykyinen salasana pakolliseksi "paikallinen salasana".
+When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
+#else
+When logging in the next time, enter your current password as the mandatory "local password".
 #end
 #end
 
 #if($new_user)
-Järjestelmä on käytettävissä alla olevalla sivustolla:
+The system is accessible at the site below:
 
    $http_base_url
 
 #end
-TÄRKEÄÄ: Tilin avulla voit lukea henkilökohtaisesti tunnistettavia tietoja aiheista, jotka käyttäjät ovat rekisteröineet "$user_department" osasto. Tietojen yksityisyyden säilyttämiseksi tilitiedot on pidettävä salassa. Sinua ei koskaan pyydetä antamaan käyttäjätunnuksia sähköpostitse tai muilla palvelimilla kuin "$http_domain_name".
+IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
 
-Kiitos!
+Thank you!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Instance: $instance_name
