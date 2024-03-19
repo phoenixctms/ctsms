@@ -6,7 +6,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches-ignore:
-      - '!l10n_master'
+      - 'l10n_master'
 jobs:
   build:
     name: Build and Analyze
