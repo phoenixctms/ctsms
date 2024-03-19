@@ -1,36 +1,36 @@
-Stimate $ecrffieldstatusentry_listentry_trial_name membru al echipei de încercare sau membru de debut. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
-aceasta este o notificare pentru următorul eveniment:
+this is a notification for the following event:
 
    $type
 
-   • Studiu:              $ecrffieldstatusentry_listentry_trial_name
-   • Departamentul de încercare:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Trial:              $ecrffieldstatusentry_listentry_trial_name
+   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Proband grup:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
 #end
 #if($notification.ecrfFieldStatusEntry.visit)
-   • Vizită:              $notification.ecrfFieldStatusEntry.visit.title
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
 #end
-   • secțiunea eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
    • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Indice:              $ecrffieldstatusentry_index
+   • Index:              $ecrffieldstatusentry_index
 #end
 
-   • Status problemă eCRF:  $ecrffieldstatusentry_status
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • Modificat: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
-Comentariu:
+Comment:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)Istoric:
+#if(${index_field_log.size()} > 0)History:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
@@ -41,18 +41,18 @@ $ecrffieldstatusentry_comment
 #end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Vă rugăm să verificați intrarea de date pentru a rezolva problema eCRF:
+Please check the data entry to resolve the eCRF issue:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#altceva
-Problema eCRF a fost închisă.
+#else
+The eCRF issue is closed.
 #end
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instanță: $instance_name
+Instance: $instance_name
