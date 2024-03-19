@@ -1,25 +1,25 @@
-Ndeko mosangani ya dept. $probandstatusentry_proband_department, .
+Dear member of dept. $probandstatusentry_proband_department,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #soki($string_utils.ezali Pamba($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#nsuka
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Departema ya proband: $probandstatusentry_proband_department
-   • Mbua ya proband.:  $probandstatusentry_proband_category
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • Lolenge:          $probandstatusentry_type
-   • Euti na:          $probandstatusentry_start
-   • Na:            $probandstatusentry_stop
+   • Type:          $probandstatusentry_type
+   • From:          $probandstatusentry_start
+   • To:            $probandstatusentry_stop
 
-Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
+Please prepare and/or take appropriate actions.
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
