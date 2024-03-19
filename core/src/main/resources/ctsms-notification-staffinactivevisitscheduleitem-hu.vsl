@@ -1,33 +1,33 @@
-Kedves $visitscheduleitem_trial_name próbacsapat tagja vagy a $staff_namefelügyelője!
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Próba:      $visitscheduleitem_trial_name
-   • Látogassa meg:      $visitscheduleitem_name
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Dátum:       $visit_schedule_item_day_date
-#más
-   • Látogatás innen: $visitscheduleitem_start
-   • Látogassa meg:   $visitscheduleitem_stop
-#vége
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Küszöb:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() alkalmazottak N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.név
-#vége
+   • $employee.name
+#end
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
 Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
