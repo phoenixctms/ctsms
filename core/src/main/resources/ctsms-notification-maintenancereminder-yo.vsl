@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Eyin #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#opin,
 
-this is a notification for the following event:
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Oja:       $maintenancescheduleitem_inventory_name
+   • Ẹka Oja: $maintenancescheduleitem_inventory_department
+   • Ologbo oja .:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Akọle: '$notification.maintenanceScheduleItem.title'
+   • Iru:            $maintenancescheduleitem_type
+   • Ọjọ:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Olubasọrọ ile-iṣẹ: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 
 E dupe!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Apeere: $instance_name
