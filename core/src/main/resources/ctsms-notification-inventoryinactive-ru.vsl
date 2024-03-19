@@ -1,31 +1,31 @@
-Уважаемый член глубины. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-это уведомление для следующего события:
+this is a notification for the following event:
 
    $type
 
-   • Инвентаризация:       $inventorystatusentry_inventory_name
-   • Глубина запасов.: $inventorystatusentry_inventory_department
-   • Кошка инвентаря.:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Тип:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Создатель:      $inventorystatusentry_originator_name
-#конец
-   • От:            $inventorystatusentry_start
-   • Кому:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
-Комментарий:
+Comment:
 
 $inventorystatusentry_comment
 
-Просьба подготовить и/или принять соответствующие меры.
+Please prepare and/or take appropriate actions.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Instance: $instance_name
