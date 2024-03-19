@@ -1,26 +1,26 @@
-Eyin #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#opin,
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Oja:       $maintenancescheduleitem_inventory_name
-   • Ẹka Oja: $maintenancescheduleitem_inventory_department
-   • Ologbo oja .:  $maintenancescheduleitem_inventory_category
+   • Inventory:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Inventory cat.:  $maintenancescheduleitem_inventory_category
 
-   • Akọle: '$notification.maintenanceScheduleItem.title'
-   • Iru:            $maintenancescheduleitem_type
-   • Ọjọ:            $maintenancescheduleitem_nextrecurrence
+   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
 
-   • Olubasọrọ ile-iṣẹ: $maintenancescheduleitem_companycontact_name
+   • Company contact: $maintenancescheduleitem_companycontact_name
 
-Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+Please prepare and/or take appropriate actions.
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
