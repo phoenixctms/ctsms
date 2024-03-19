@@ -1,31 +1,31 @@
-Spoštovana članica odd. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-to je obvestilo za naslednji dogodek:
+this is a notification for the following event:
 
    $type
 
-   • Inventar:       $inventorystatusentry_inventory_name
-   • Oddelek za inventar: $inventorystatusentry_inventory_department
-   • Inventar kat.:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Vrsta:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Izvor:      $inventorystatusentry_originator_name
-#konec
-   • Od:            $inventorystatusentry_start
-   • Za:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
-komentar:
+Comment:
 
 $inventorystatusentry_comment
 
-Pripravite se in/ali ustrezno ukrepajte.
+Please prepare and/or take appropriate actions.
 
 Hvala vam!
 
-To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Primer: $instance_name
+Instance: $instance_name
