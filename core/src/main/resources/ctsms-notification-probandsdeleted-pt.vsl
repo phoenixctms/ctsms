@@ -1,17 +1,17 @@
-Caro membro do dep. $department,
+Dear member of dept. $department,
 
-esta é uma notificação para o seguinte evento:
+this is a notification for the following event:
 
    $type
 
-   • Departamento: $department
-   • Probabilidade $number_of_probands_deleted excluída.
+   • Department: $department
+   • $number_of_probands_deleted proband(s) deleted.
 
-Sem consentimento informado da probabilidade, a remoção do registro é necessária para implementar a privacidade de dados a fim de proteger os dados confidenciais da probabilidade e descartar informações de identificação pessoal. Por conseguinte, não se pode renunciar a uma supressão.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instância: $instance_name
+Instance: $instance_name
