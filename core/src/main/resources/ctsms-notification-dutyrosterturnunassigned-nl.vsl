@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Beste $staff_firstname,
 
-this is a notification for the following event:
+dit is een melding voor de volgende gebeurtenis:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Proef:          $dutyrosterturn_trial_name
+   • Duty vanaf:      $dutyrosterturn_start
+   • Plicht tot:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Kalender:       $dutyrosterturn_calendar
+   • Functietitel:     $dutyrosterturn_title
+   • Bezoek:          $dutyrosterturn_visitscheduleitem_name
 
-   • New staff:      $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Nieuw personeel:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocable)
+   • Zelf toewijsbaar.
+#anders
+   • Geen eigen toewijzing.
+#einde
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Gewijzigd: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Plicht commentaar:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+De taaktoewijzing is verplicht en kan veranderen totdat ze definitief worden bevroren. Het actuele overzicht vindt u op onderstaande site:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Bedankt!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
---------------------------------------------------------------
+---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instantie: $instance_name
