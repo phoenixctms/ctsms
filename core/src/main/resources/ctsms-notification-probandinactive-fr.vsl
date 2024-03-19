@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Cher membre du département. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+il s'agit d'une notification pour l'événement suivant :
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband : #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Département proposant : $probandstatusentry_proband_department
+   • Chat proposé :  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Tapez :          $probandstatusentry_type
+   • De :          $probandstatusentry_start
+   • À :            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Veuillez préparer et/ou prendre les mesures appropriées.
 
-Thank you!
+Merci!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Il s'agit d'un e-mail généré par le système créé le $generated_on, il est peut-être obsolète entre-temps. Ne pas répondre.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instance : $instance_name
