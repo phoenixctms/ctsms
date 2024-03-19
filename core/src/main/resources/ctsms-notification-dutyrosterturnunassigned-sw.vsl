@@ -1,40 +1,40 @@
-Mpendwa $staff_firstname,
+Dear $staff_firstname,
 
-hii ni arifa ya tukio lifuatalo:
+this is a notification for the following event:
 
    $type
 
-   • Jaribio:          $dutyrosterturn_trial_name
-   • Wajibu kutoka kwa:      $dutyrosterturn_start
-   • Wajibu wa:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Kalenda:       $dutyrosterturn_calendar
-   • Kichwa cha wajibu:     $dutyrosterturn_title
-   • Tembelea:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Wafanyakazi wapya:      $dutyrosterturn_staff_name
-#kama($notification.dutyRosterTurn.selfAllocatable)
-   • Kujitenga.
-#vingine
-   • Hakuna kujitenga.
-#mwisho
+   • New staff:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • Iliyorekebishwa: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#mwisho
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Maoni ya wajibu:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Ugawaji wa wajibu ni wa lazima na unaweza kubadilika hadi ugandishwe. Muhtasari uliosasishwa unapatikana kwenye tovuti hapa chini:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Asante!
 
-Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
------------------------------------------------ -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Mfano: $instance_name
+Instance: $instance_name
