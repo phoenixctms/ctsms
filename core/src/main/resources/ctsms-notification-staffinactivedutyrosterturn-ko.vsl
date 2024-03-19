@@ -1,39 +1,39 @@
-친애하는 $dutyrosterturn_trial_name 시험 팀원 또는 $dutyrosterturn_staff_name감독자님께,
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 직원:       $dutyrosterturn_staff_name
-   • 직원부서: $dutyrosterturn_staff_department
-   • 직원 고양이:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • 상태 유형: $staffstatusentry_type
-   • 상태: $staffstatusentry_start
-   • 상태:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • 체험판:       $dutyrosterturn_trial_name
-   • 의무:   $dutyrosterturn_start
-   • 의무:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • 직무명 :  $dutyrosterturn_title
-   • 방문:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-상태 코멘트:
+Status comment:
 
 $staffstatusentry_comment
 
-의무 코멘트:
+Duty comment:
 
 $dutyrosterturn_comment
 
-준비 및/또는 적절한 조치를 취하시기 바랍니다.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
