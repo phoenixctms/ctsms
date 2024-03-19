@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Geacht lid van de afd. $proband_department,
 
-this is a notification for the following event:
+dit is een melding voor de volgende gebeurtenis:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Afdeling Proband:     $proband_department
+   • Proband-categorie:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Geplande verwijdering:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Laatst gewijzigde gebruiker:      $proband_modifieduser_identity_name
+   • Laatst gewijzigde tijdstempel: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Zonder geïnformeerde toestemming van de proband is het verwijderen van records vereist om gegevensprivacy te implementeren om de gevoelige gegevens van de proband te beschermen en persoonlijk identificeerbare informatie te verwijderen. Daarom kan een verwijdering niet ongedaan worden gemaakt.
 
-Please prepare and/or take appropriate actions.
+Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 
 Bedankt!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
---------------------------------------------------------------
+---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instantie: $instance_name
