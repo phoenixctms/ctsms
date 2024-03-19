@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Cher $staff_firstname,
 
-this is a notification for the following event:
+il s'agit d'une notification pour l'événement suivant :
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Essai :          $dutyrosterturn_trial_name
+   • Service à partir de :      $dutyrosterturn_start
+   • Devoir de :        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Calendrier :       $dutyrosterturn_calendar
+   • Titre de la fonction :     $dutyrosterturn_title
+   • Visite :          $dutyrosterturn_visitscheduleitem_name
 
-   • Staff:          $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Personnel :          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocable)
+   • Auto-attribuable.
+#autre
+   • Pas d'auto-allocation.
+#fin
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modifié : #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+Commentaire de devoir :
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+Les affectations de tâches sont obligatoires et peuvent évoluer jusqu'à ce qu'elles soient définitivement gelées. L’aperçu à jour est accessible sur le site ci-dessous :
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Thank you!
+Merci!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Il s'agit d'un e-mail généré par le système créé le $generated_on, il est peut-être obsolète entre-temps. Ne pas répondre.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instance : $instance_name
