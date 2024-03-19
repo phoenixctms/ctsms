@@ -1,39 +1,39 @@
-Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
+Уважаемый член испытательной группы $dutyrosterturn_trial_name или руководитель $dutyrosterturn_staff_name,
 
-this is a notification for the following event:
+это уведомление о следующем событии:
 
    $type
 
-   • Staff:       $dutyrosterturn_staff_name
-   • Staff dept.: $dutyrosterturn_staff_department
-   • Staff cat.:  $dutyrosterturn_staff_category
+   • Посох:       $dutyrosterturn_staff_name
+   • Отдел персонала: $dutyrosterturn_staff_department
+   • Категория персонала:  $dutyrosterturn_staff_category
 
-   • Status type: $staffstatusentry_type
-   • Status from: $staffstatusentry_start
-   • Status to:   $staffstatusentry_stop
+   • Тип статуса: $staffstatusentry_type
+   • Статус: $staffstatusentry_start
+   • Статус:   $staffstatusentry_stop
 
-   • Trial:       $dutyrosterturn_trial_name
-   • Duty from:   $dutyrosterturn_start
-   • Duty to:     $dutyrosterturn_stop
+   • Пробная версия:       $dutyrosterturn_trial_name
+   • Дежурство от:   $dutyrosterturn_start
+   • Обязанности:     $dutyrosterturn_stop
 
-   • Duty title:  $dutyrosterturn_title
-   • Visit:       $dutyrosterturn_visitscheduleitem_name
+   • Должность:  $dutyrosterturn_title
+   • Посетите:       $dutyrosterturn_visitscheduleitem_name
 
-Status comment:
+Комментарий к статусу:
 
 $staffstatusentry_comment
 
-Duty comment:
+Комментарий к обязанностям:
 
 $dutyrosterturn_comment
 
-Please prepare and/or take appropriate actions.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
