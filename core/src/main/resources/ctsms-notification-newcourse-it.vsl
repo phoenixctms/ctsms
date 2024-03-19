@@ -1,27 +1,27 @@
-Dear member of dept. $course_department,
+Caro membro del dipartimento $course_department,
 
-this is a notification for the following event:
+questa è una notifica per il seguente evento:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Rotta:                 $course_name
+   • Titolo CV del corso:        $course_cvtitle
+   • Dipartimento del corso:      $course_department
+   • Categoria del corso:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Inizio del corso:           $course_start
+   • Fine del corso:             $course_stop
+   • Termine ultimo per la partecipazione: $course_participationdeadline
 
-Register for this course:
+Iscriviti a questo corso:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
-Thank you!
+Grazie!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Questa è un'e-mail generata dal sistema creata il $generated_on, nel frattempo potrebbe essere obsoleta. Non rispondere.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Istanza: $instance_name
