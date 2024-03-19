@@ -1,26 +1,26 @@
-Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
+Ndeko $visitscheduleitem_trial_name membre ya équipe ya procès to membre ya dept. $visitscheduleitem_trial_department, .
 
-this is a notification for the following event:
+oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Trial:         $visitscheduleitem_trial_name
-   • Visit:         $visitscheduleitem_name
-   • Visit from:    $visitscheduleitem_start
-   • Visit to:      $visitscheduleitem_stop
-#if($notification.proband)
+   • Kosambisa:         $visitscheduleitem_trial_name
+   • Kotala:         $visitscheduleitem_name
+   • Kotala uta na:    $visitscheduleitem_start
+   • Kotala na:      $visitscheduleitem_stop
+#soki($notification.proband) .
 
-   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #soki($string_utils.ezali Pamba($proband_alias))$proband_id#{else}$proband_alias#nsuka
 
-#end
+#nsuka
 
-Please prepare and/or take appropriate actions.
+Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 
 Matondi!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
---------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ndakisa: $instance_name
