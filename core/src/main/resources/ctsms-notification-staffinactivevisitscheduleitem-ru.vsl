@@ -1,33 +1,33 @@
-Уважаемый член пробной команды $visitscheduleitem_trial_name или руководитель $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-это уведомление для следующего события:
+this is a notification for the following event:
 
    $type
 
-   • Испытание:      $visitscheduleitem_trial_name
-   • Посещение:      $visitscheduleitem_name
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Дата:       $visit_schedule_item_day_date
+   • Date:       $visit_schedule_item_day_date
 #else
-   • Посещение от: $visitscheduleitem_start
-   • Посетить в:   $visitscheduleitem_stop
-#конец
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Порог:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() сотрудников N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
-#конец
+#end
 
-Просьба подготовить и/или принять соответствующие меры.
+Please prepare and/or take appropriate actions.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Instance: $instance_name
