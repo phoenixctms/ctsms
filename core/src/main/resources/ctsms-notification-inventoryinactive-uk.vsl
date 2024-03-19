@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Шановний член каф. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+це сповіщення про наступну подію:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Інвентар:       $inventorystatusentry_inventory_name
+   • Відділ інвентаризації: $inventorystatusentry_inventory_department
+   • Кат. інвентарю:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Тип:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Автор:      $inventorystatusentry_originator_name
+#кінець
+   • Від:            $inventorystatusentry_start
+   • Кому:              $inventorystatusentry_stop
 
-Comment:
+коментар:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
