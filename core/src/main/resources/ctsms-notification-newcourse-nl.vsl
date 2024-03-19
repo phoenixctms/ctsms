@@ -1,27 +1,27 @@
-Geachte lid van het diepte. $course_department,
+Dear member of dept. $course_department,
 
-dit is een melding voor de volgende gebeurtenis:
+this is a notification for the following event:
 
    $type
 
-   • Cursus:                 $course_name
-   • Cursus CV titel:        $course_cvtitle
-   • Cursusafdeling:      $course_department
-   • Cursuscategorie:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Cursus start:           $course_start
-   • Einde cursus:             $course_stop
-   • Deelnametermijn: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Registreer voor deze cursus:
+Register for this course:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instantie: $instance_name
+Instance: $instance_name
