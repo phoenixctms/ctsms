@@ -1,46 +1,46 @@
-Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
+प्रिय $ecrfstatusentry_listentry_trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $ecrfstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
    $type
 
-   • Trial:                $ecrfstatusentry_listentry_trial_name
-   • Trial department:     $ecrfstatusentry_listentry_trial_department
-   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • परीक्षण:                $ecrfstatusentry_listentry_trial_name
+   • परीक्षण विभाग:     $ecrfstatusentry_listentry_trial_department
+   • प्रोबैंड: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+   • प्रोबैंड समूह:        $notification.ecrfStatusEntry.listEntry.group.title
+#अंत
 #if($notification.ecrfStatusEntry.visit)
-   • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+   • विजिट करें:                $notification.ecrfStatusEntry.visit.title
+#अंत
 
-   • eCRF status:          $ecrfstatusentry_status
+   • ईसीआरएफ स्थिति:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validation:     $ecrfstatusentry_validationresponsemsg
-   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+   • इनपुट सत्यापन:     $ecrfstatusentry_validationresponsemsg
+   • सत्यापन टाइमस्टैम्प: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Timestamp:            $ecrfstatusentry_validationtimestamp
+   • टाइमस्टैम्प:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Input validation pending.
-#end
+   • इनपुट सत्यापन लंबित है.
+#अंत
 
-   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • संशोधित: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Please continue with next steps to complete the eCRF data entry.
-#else
-The eCRF data entry is completed.
-#end
+कृपया eCRF डेटा प्रविष्टि को पूरा करने के लिए अगले चरण जारी रखें।
+#अन्य
+ईसीआरएफ डेटा प्रविष्टि पूरी हो गई है।
+#अंत
 
 धन्यवाद!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
 
---------------------------------------------------------------
+-------------------------------------------------- -----------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+उदाहरण: $instance_name
