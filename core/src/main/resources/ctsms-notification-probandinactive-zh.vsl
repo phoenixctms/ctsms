@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+尊敬的部门成员 $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+这是针对以下事件的通知：
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • 先证者：#if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   •先证者部门： $probandstatusentry_proband_department
+   •先证者猫：  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • 类型：          $probandstatusentry_type
+   • 来自：          $probandstatusentry_start
+   • 至：            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+请准备和/或采取适当的行动。
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
