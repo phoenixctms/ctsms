@@ -1,43 +1,43 @@
-Eyin $inventorybooking_onbehalfof_firstname,
+Dear $inventorybooking_onbehalfof_firstname,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Oja:       $inventorybooking_inventory_name
-   • Ẹka Oja: $inventorybooking_inventory_department
-   • Ologbo oja .:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Iru ipo:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Olupilẹṣẹ:      $inventorystatusentry_originator_name
-#opin
-   • Ipo lati:     $inventorystatusentry_start
-   • Ipo si:       $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   Ifiweranṣẹ lati:    $inventorybooking_start
-   • Ifiweranṣẹ si:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Fun dajudaju:      $inventorybooking_course_name
-   • Fun idanwo:       $inventorybooking_trial_name
-   • Fun proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#opin
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Ọrọ asọye ipo:
+Status comment:
 
 $inventorystatusentry_comment
 
-Ifiweranṣẹ asọye:
+Booking comment:
 
 $inventorybooking_comment
 
-Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+Please prepare and/or take appropriate actions.
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
