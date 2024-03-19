@@ -1,30 +1,30 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+Sayın $trial_name deneme ekibi üyesi veya bölüm üyesi. $trial_department,
 
-this is a notification for the following event:
+bu, aşağıdaki etkinlik için bir bildirimdir:
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • Deneme kodu:   $trial_name
+   • Deneme başlığı:  $trial_title
+   • Deneme bölümü:  $trial_department
 
-   • Trial status: $trial_status
+   • Deneme durumu: $trial_status
 #if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
-#end
+   • Kilitleme: deneyde ve ilgili kayıtlarda daha fazla değişiklik yapılmaz.
+#son
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
-#else
-   • Inquiry value inputs are disabled.
-#end
+   • Sorgu değeri girişleri etkinleştirilir.
+#başka
+   • Sorgu değeri girişleri devre dışı bırakılır.
+#son
 
-Please prepare and/or take appropriate actions.
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 
 Teşekkür ederim!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Örnek: $instance_name
