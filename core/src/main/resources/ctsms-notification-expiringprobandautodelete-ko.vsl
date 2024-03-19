@@ -1,29 +1,29 @@
-친애하는 학과 구성원 여러분. $proband_department,
+Dear member of dept. $proband_department,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 프로밴드: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • 프로밴드 부서:     $proband_department
-   • 프로밴드 카테고리:        $proband_category
+   • Proband deptartment:     $proband_department
+   • Proband category:        $proband_category
 
-   • 삭제 예정일:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • 마지막으로 수정된 사용자:      $proband_modifieduser_identity_name
-   • 마지막으로 수정된 타임스탬프: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-제안자의 사전 동의 없이, 제안자의 민감한 데이터를 보호하고 개인 식별 정보를 삭제하기 위해 데이터 프라이버시를 구현하기 위해 기록 제거가 필요합니다. 따라서 삭제를 롤백할 수 없습니다.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-준비 및/또는 적절한 조치를 취하시기 바랍니다.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
