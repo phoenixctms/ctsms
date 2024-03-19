@@ -1,33 +1,33 @@
-Ndeko $visitscheduleitem_trial_name mosangani ya ekipi ya bomekoli to mokambi ya $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Kosambisa:      $visitscheduleitem_trial_name
-   • Kotala:      $visitscheduleitem_name
-#soki($visit_schedule_item_day_date) .
-   • Mokolo:       $visit_schedule_item_day_date
-#mosusu
-   • Kotala uta na: $visitscheduleitem_start
-   • Kotala na:   $visitscheduleitem_stop
-#nsuka
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Liziba:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() basali N/A:
+$inactive_staff.size() employees N/A:
 
-#koyebisa liboso($employee na $inactive_staff)
-   • $employee.kombo
-#nsuka
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
-Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
+Please prepare and/or take appropriate actions.
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
