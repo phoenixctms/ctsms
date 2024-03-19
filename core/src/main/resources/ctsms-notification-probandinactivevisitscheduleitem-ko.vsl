@@ -1,30 +1,30 @@
-친애하는 $visitscheduleitem_trial_name 임상팀 구성원 또는 부서 구성원입니다. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 프로밴드: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • 프로밴드 부서: $probandstatusentry_proband_department
-   • 프로밴드 고양이:  $probandstatusentry_proband_category
+   • Proband dept.: $probandstatusentry_proband_department
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • 상태 유형:   $probandstatusentry_type
-   • 상태:   $probandstatusentry_start
-   • 상태:     $probandstatusentry_stop
+   • Status type:   $probandstatusentry_type
+   • Status from:   $probandstatusentry_start
+   • Status to:     $probandstatusentry_stop
 
-   • 체험판:         $visitscheduleitem_trial_name
-   • 방문:         $visitscheduleitem_name
-   • 방문 출발지:    $visitscheduleitem_start
-   • 방문 장소:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 
-준비 및/또는 적절한 조치를 취하시기 바랍니다.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
