@@ -1,28 +1,28 @@
-Caro supervisor do $staffstatusentry_staff_name,
+Dear supervisor of $staffstatusentry_staff_name,
 
-esta é uma notificação para o seguinte evento:
+this is a notification for the following event:
 
    $type
 
-   • Funcionário:       $staffstatusentry_staff_name
-   • Equipe dept.: $staffstatusentry_staff_department
-   • Gato da equipe:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • Tipo:        $staffstatusentry_type
-   • De:        $staffstatusentry_start
-   • Para:          $staffstatusentry_stop
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
 
-Comentário:
+Comment:
 
 $staffstatusentry_comment
 
-Por favor, prepare-se e/ou tome as medidas adequadas.
+Please prepare and/or take appropriate actions.
 
-Obrigado!
+Thank you!
 
-Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instância: $instance_name
+Instance: $instance_name
