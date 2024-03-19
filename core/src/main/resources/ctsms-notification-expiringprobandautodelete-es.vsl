@@ -1,29 +1,29 @@
-Estimado miembro del depósito. $proband_department
+Dear member of dept. $proband_department,
 
-esta es una notificación para el siguiente evento:
+this is a notification for the following event:
 
    $type
 
-   • Probanda: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Almacenamiento de probanda:     $proband_department
-   • Categoría de probanda:        $proband_category
+   • Proband deptartment:     $proband_department
+   • Proband category:        $proband_category
 
-   • Eliminación programada:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Último usuario modificado:      $proband_modifieduser_identity_name
-   • Última fecha modificada: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-Sin el consentimiento informado del testamento, la eliminación de los registros es necesaria para implementar la privacidad de los datos con el fin de proteger los datos sensibles del probante y eliminar la información personal identificable. Por lo tanto, no se puede deshacer una eliminación.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Por favor prepare y/o tome las acciones apropiadas.
+Please prepare and/or take appropriate actions.
 
-¡Gracias!
+Thank you!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance: $instance_name
