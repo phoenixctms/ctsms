@@ -1,31 +1,31 @@
-Ndugu mwanachama wa dept. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-hii ni arifa ya tukio lifuatalo:
+this is a notification for the following event:
 
    $type
 
-   • Malipo:       $inventorystatusentry_inventory_name
-   • Idara ya mali: $inventorystatusentry_inventory_department
-   • Paka wa orodha.:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Aina:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Mwanzilishi:      $inventorystatusentry_originator_name
-#mwisho
-   • Kutoka:            $inventorystatusentry_start
-   • Kwa:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
-Maoni:
+Comment:
 
 $inventorystatusentry_comment
 
-Tafadhali jitayarishe na/au chukua hatua zinazofaa.
+Please prepare and/or take appropriate actions.
 
 Asante!
 
-Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
------------------------------------------------ -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Mfano: $instance_name
+Instance: $instance_name
