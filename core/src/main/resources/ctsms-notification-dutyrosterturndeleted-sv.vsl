@@ -1,40 +1,40 @@
 Dear $staff_firstname,
 
-detta är en avisering för följande händelse:
+this is a notification for the following event:
 
    $type
 
-   • Provning:          $dutyrosterturn_trial_name
-   • Plikt från:      $dutyrosterturn_start
-   • Plikt till:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Kalender:       $dutyrosterturn_calendar
-   • Plikt titel:     $dutyrosterturn_title
-   • Besök:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Personal:          $dutyrosterturn_staff_name
+   • Staff:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Självtilldelningsbar.
-#annat
-   • Ingen självallokering.
-# slut
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • Ändrad: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Tvivla kommentar:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Uppdraget är obligatoriskt och kan komma att ändras tills de till slut frysas. Den aktuella översikten finns tillgänglig på webbplatsen nedan:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Tack!
+Thank you!
 
-Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
