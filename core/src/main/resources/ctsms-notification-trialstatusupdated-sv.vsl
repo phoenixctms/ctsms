@@ -1,30 +1,30 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+Bästa $trial_name testteammedlem eller medlem av avd. $trial_department,
 
-this is a notification for the following event:
+detta är ett meddelande för följande händelse:
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • Provkod:   $trial_name
+   • Provtitel:  $trial_title
+   • Försöksavdelning:  $trial_department
 
-   • Trial status: $trial_status
+   • Provstatus: $trial_status
 #if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
-#end
+   • Lockdown: ingen ytterligare ändring av testversionen och tillhörande poster.
+#slutet
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
-#else
-   • Inquiry value inputs are disabled.
-#end
+   • Inmatningar av förfrågningsvärde är aktiverade.
+#annan
+   • Inmatningar av förfrågningsvärde är avaktiverade.
+#slutet
 
-Please prepare and/or take appropriate actions.
+Förbered och/eller vidta lämpliga åtgärder.
 
-Thank you!
+Tack!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Detta är ett systemgenererat e-postmeddelande skapat på $generated_on, det kan vara inaktuellt under tiden. Svara inte.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Exempel: $instance_name
