@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Kedves Osztályi Tag! $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+ez egy értesítés a következő eseményről:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Proband oszt.: $probandstatusentry_proband_department
+   • Proband kat.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Típus:          $probandstatusentry_type
+   • Feladó:          $probandstatusentry_start
+   • Címzett:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
 
 Köszönöm!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
 
---------------------------------------------------------------
+-------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Példa: $instance_name
