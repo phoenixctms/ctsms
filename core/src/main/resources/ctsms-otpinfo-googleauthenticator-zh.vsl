@@ -1,5 +1,5 @@
 <table width="100%" cellspacing="0" cellpadding="0"><tbody><tr><td>
-1. Install the <b>Google Authenticator</b> app on you mobile device.
+1. 在您的移动设备上安装 <b>Google Authenticator</b> 应用程序。
 </td></tr>
 <tr><td align="left">
 <a target="_blank" href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" style="border-radius: 10px; width: 140px; height: 50px;"></a>
@@ -12,6 +12,6 @@
 <img src="https://chart.googleapis.com/chart?chs=150x150&chld=M|0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
 </td></tr>
 <tr><td>
-3. Use the app to generate the requested verification code.
+3. 使用该应用程序生成所请求的验证码。
 </td></tr>
 </tbody></table>
