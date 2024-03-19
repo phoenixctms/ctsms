@@ -1,31 +1,31 @@
-विभाग के प्रिय सदस्य. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+this is a notification for the following event:
 
    $type
 
-   • इन्वेंटरी:       $inventorystatusentry_inventory_name
-   • इन्वेंटरी विभाग: $inventorystatusentry_inventory_department
-   • इन्वेंटरी बिल्ली.:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • प्रकार:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • प्रवर्तक:      $inventorystatusentry_originator_name
-#अंत
-   • प्रेषक:            $inventorystatusentry_start
-   • को:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
-टिप्पणी:
+Comment:
 
 $inventorystatusentry_comment
 
-कृपया तैयारी करें और/या उचित कार्रवाई करें।
+Please prepare and/or take appropriate actions.
 
 धन्यवाद!
 
-यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -----------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-उदाहरण: $instance_name
+Instance: $instance_name
