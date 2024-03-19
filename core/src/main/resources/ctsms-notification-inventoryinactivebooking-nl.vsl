@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-dit is een melding voor de volgende gebeurtenis:
+this is a notification for the following event:
 
    $type
 
-   • Voorraad:       $inventorybooking_inventory_name
-   • Inventaris diepte: $inventorybooking_inventory_department
-   • Inventaris kat:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Statustype:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Oorspronkelijk:      $inventorystatusentry_originator_name
-#einde
-   • Status van:     $inventorystatusentry_start
-   • Status naar:       $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Boeking van:    $inventorybooking_start
-   • Boeking naar:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Voor natuurlijk:      $inventorybooking_course_name
-   • Voor proef:       $inventorybooking_trial_name
-   • Voor meer: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status reactie:
+Status comment:
 
 $inventorystatusentry_comment
 
-Commentaar reserveren:
+Booking comment:
 
 $inventorybooking_comment
 
-Bereid u voor en/of neem passende acties.
+Please prepare and/or take appropriate actions.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instantie: $instance_name
+Instance: $instance_name
