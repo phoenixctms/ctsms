@@ -1,27 +1,27 @@
-Ndeko mosangani ya dept. $course_department, .
+Dear member of dept. $course_department,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Liteya:                 $course_name
-   • Titre ya CV ya cours:        $course_cvtitle
-   • Departema ya mateya:      $course_department
-   • Lolenge ya mateya:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Ebandeli ya mateya:           $course_start
-   • Nsuka ya mateya:             $course_stop
-   • Mokolo ya suka ya kosangana: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Bokomisa nkombo mpo na cours oyo:
+Register for this course:
 
-   $http_base_url/basali/Botali ya Liteya oyo ekoya.jsf
+   $http_base_url/staff/upcomingCourseOverview.jsf
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
