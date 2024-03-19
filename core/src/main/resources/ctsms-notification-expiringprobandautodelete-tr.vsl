@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Değerli daire üyemiz. $proband_department,
 
-this is a notification for the following event:
+bu, aşağıdaki etkinlik için bir bildirimdir:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Proband departmanı:     $proband_department
+   • Proband kategorisi:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Silme planlandı:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Son değiştirilen kullanıcı:      $proband_modifieduser_identity_name
+   • Son değiştirilme zaman damgası: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Probandın bilgilendirilmiş onayı olmadan, probandın hassas verilerini korumak ve kişisel olarak tanımlanabilir bilgileri bırakmak amacıyla veri gizliliğini uygulamak için kaydın kaldırılması gerekir. Bu nedenle silme işlemi geri alınamaz.
 
-Please prepare and/or take appropriate actions.
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 
 Teşekkür ederim!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Örnek: $instance_name
