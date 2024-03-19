@@ -1,58 +1,58 @@
-Eyin $ecrffieldstatusentry_listentry_trial_name omo egbe idanwo tabi omo egbe Dept. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Idanwo:              $ecrffieldstatusentry_listentry_trial_name
-   • Ẹka idanwo:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#opin
+   • Trial:              $ecrffieldstatusentry_listentry_trial_name
+   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
-#ti o ba jẹ ($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Ẹgbẹ Proband:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#opin
-#ti o ba jẹ ($notification.ecrfFieldStatusEntry.ibewo)
-   • Ṣabẹwo:              $notification.ecrfFieldStatusEntry.visit.title
-#opin
-   • apakan eCRF:       $ecrffieldstatusentry_ecrffield_section
-   • Aaye igbewọle:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
-#ti o ba jẹ ($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Atọka:              $ecrffieldstatusentry_index
-#opin
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfFieldStatusEntry.visit)
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
+#end
+   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
+   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • Index:              $ecrffieldstatusentry_index
+#end
 
-   • Ipo Oro eCRF:  $ecrffieldstatusentry_status
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • Títúnṣe: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#opin
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
-Ọrọìwòye:
+Comment:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0) Itan:
+#if(${index_field_log.size()} > 0)History:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#opin
-#opin
+#end
+#end
 
-#opin#ti o ba jẹ (!$notification.ecrfFieldStatusEntry.status.resolved)
-Jọwọ ṣayẹwo titẹsi data lati yanju ọrọ eCRF:
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+Please check the data entry to resolve the eCRF issue:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#miiran
-Ọrọ eCRF ti wa ni pipade.
-#opin
+#else
+The eCRF issue is closed.
+#end
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
