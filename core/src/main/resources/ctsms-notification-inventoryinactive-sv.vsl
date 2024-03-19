@@ -1,31 +1,31 @@
-Kära medlem av dept. $inventorystatusentry_inventory_department,
+Dear member of dept. $inventorystatusentry_inventory_department,
 
-detta är en avisering för följande händelse:
+this is a notification for the following event:
 
    $type
 
-   • Förråd:       $inventorystatusentry_inventory_name
-   • Lagerdept.: $inventorystatusentry_inventory_department
-   • Inventering katt:  $inventorystatusentry_inventory_category
+   • Inventory:       $inventorystatusentry_inventory_name
+   • Inventory dept.: $inventorystatusentry_inventory_department
+   • Inventory cat.:  $inventorystatusentry_inventory_category
 
-   • Typ:            $inventorystatusentry_type
+   • Type:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Ursprungare:      $inventorystatusentry_originator_name
-# slut
-   • Från:            $inventorystatusentry_start
-   • Till:              $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • From:            $inventorystatusentry_start
+   • To:              $inventorystatusentry_stop
 
-Kommentar:
+Comment:
 
 $inventorystatusentry_comment
 
-Var snäll och förbered och/eller vidta lämpliga åtgärder.
+Please prepare and/or take appropriate actions.
 
-Tack!
+Thank you!
 
-Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
