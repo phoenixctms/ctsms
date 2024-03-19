@@ -1,28 +1,28 @@
-Stimate supraveghetor al lui $staffstatusentry_staff_name,
+Dear supervisor of $staffstatusentry_staff_name,
 
-aceasta este o notificare pentru următorul eveniment:
+this is a notification for the following event:
 
    $type
 
-   • Personal:       $staffstatusentry_staff_name
-   • Dept-ul personalului: $staffstatusentry_staff_department
-   • Pisica personalului:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • Tip:        $staffstatusentry_type
-   • De la:        $staffstatusentry_start
-   • Către:          $staffstatusentry_stop
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
 
-Comentariu:
+Comment:
 
 $staffstatusentry_comment
 
-Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
+Please prepare and/or take appropriate actions.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instanță: $instance_name
+Instance: $instance_name
