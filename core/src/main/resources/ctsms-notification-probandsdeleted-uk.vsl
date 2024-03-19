@@ -1,17 +1,17 @@
-Dear member of dept. $department,
+Шановний член каф. $department,
 
-this is a notification for the following event:
+це сповіщення про наступну подію:
 
    $type
 
-   • Department: $department
-   • $number_of_probands_deleted proband(s) deleted.
+   • Відділ: $department
+   • $number_of_probands_deleted пробанд(и) видалено.
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Без інформованої згоди пробанда видалення запису необхідне для забезпечення конфіденційності даних, щоб захистити конфіденційні дані пробанда та видалити особисту інформацію. Тому видалення не можна відкотити.
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
