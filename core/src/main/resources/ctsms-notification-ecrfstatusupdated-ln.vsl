@@ -1,46 +1,46 @@
-Ndeko $ecrfstatusentry_listentry_trial_name membre ya équipe ya procès to membre ya dept. $ecrfstatusentry_listentry_trial_department, .
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Kosambisa:                $ecrfstatusentry_listentry_trial_name
-   • Departema ya bosambisami:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #soki($string_utils.ezali Pamba($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#nsuka
+   • Trial:                $ecrfstatusentry_listentry_trial_name
+   • Trial department:     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
-#if($notification.ecrfKokota ya Etat.Kokota ya liste.etuluku)
-   • Lisanga ya Proband:        $notification.ecrfEntrée d'état.Entry ya liste.groupe.titre
-#nsuka
-#soki($notification.ecrfKokota ya Etat.kotala)
-   • Kotala:                $notification.ecrfStatusEntry.kotala.titre
-#nsuka
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfStatusEntry.visit)
+   • Visit:                $notification.ecrfStatusEntry.visit.title
+#end
 
-   • Ezalela ya eCRF:          $ecrfstatusentry_status
-#if($notification.ecrfEtat.état.état.validé && $notification.ecrfEtatEntry.état ya validation.état ya validation.kombo () == "OK")
-   • Bondimi ya bokotisi:     $ecrfstatusentry_validationresponsemsg
-   • Elembo ya ntango ya bondimi: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfEzalela ya Bokotisi.ezalela.esili.endimisami && $notification.ecrfEzalela ya Bokotisi.Ezalela ya bondimi.Ezalela ya bondimi.kombo() == "EZONGI")
+   • eCRF status:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Input validation:     $ecrfstatusentry_validationresponsemsg
+   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Elembo ya ngonga:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfEzalela ya Bokotisi.ezalela.esili.endimisami && $notification.ecrfEzalela ya Bokotisi.Ezalela ya bondimi.Ezalela ya bondimi.kombo () == "EZALI KOSALELA")
-   • Validation ya entrée ezali kozela.
-#nsuka
+   • Timestamp:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Input validation pending.
+#end
 
-   • Ebongwani: #soki($notification.ecrfEntrée yaEtat.identité.ya Mosaleli oyo ebongwani)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#nsuka
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
-#soki(!$notification.ecrfEzalela ya Bokotisi.ezalela.esalemi)
-Svp koba na ba étapes oyo elandi pona kosilisa bokotisi ya ba données ya eCRF.
-#mosusu
-Bokotisi ya ba données ya eCRF esili.
-#nsuka
+#if(!$notification.ecrfStatusEntry.status.done)
+Please continue with next steps to complete the eCRF data entry.
+#else
+The eCRF data entry is completed.
+#end
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
