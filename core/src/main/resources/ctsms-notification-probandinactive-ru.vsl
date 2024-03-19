@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Уважаемый сотрудник отд. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+это уведомление о следующем событии:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Отдел пробандов: $probandstatusentry_proband_department
+   • Кот пробанда:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Введите:          $probandstatusentry_type
+   • От:          $probandstatusentry_start
+   • Кому:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
