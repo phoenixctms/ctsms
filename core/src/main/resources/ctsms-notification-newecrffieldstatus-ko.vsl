@@ -1,58 +1,58 @@
-친애하는 $ecrffieldstatusentry_listentry_trial_name 임상팀 구성원 또는 부서 구성원입니다. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 체험판:              $ecrffieldstatusentry_listentry_trial_name
-   • 시험부서 :   $ecrffieldstatusentry_listentry_trial_department
-   • 프로밴드: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Trial:              $ecrffieldstatusentry_listentry_trial_name
+   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • 프로밴드 그룹:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#끝
+   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#end
 #if($notification.ecrfFieldStatusEntry.visit)
-   • 방문:              $notification.ecrfFieldStatusEntry.visit.title
-#끝
-   • eCRF 섹션:       $ecrffieldstatusentry_ecrffield_section
-   • 입력 필드:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
+#end
+   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
+   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • 색인:              $ecrffieldstatusentry_index
-#끝
+   • Index:              $ecrffieldstatusentry_index
+#end
 
-   • eCRF 발행 상태:  $ecrffieldstatusentry_status
+   • eCRF Issue Status:  $ecrffieldstatusentry_status
 
-   • 수정됨: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
-논평:
+Comment:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)기록:
+#if(${index_field_log.size()} > 0)History:
 
-#foreach($log $index_field_log)
+#foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#끝
-#끝
+#end
+#end
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-eCRF 문제를 해결하려면 데이터 항목을 확인하세요.
+Please check the data entry to resolve the eCRF issue:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#또 다른
-eCRF 문제가 종료되었습니다.
-#끝
+#else
+The eCRF issue is closed.
+#end
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
