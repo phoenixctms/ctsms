@@ -1,28 +1,28 @@
-$staffstatusentry_staff_name감독님,
+Dear supervisor of $staffstatusentry_staff_name,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 직원:       $staffstatusentry_staff_name
-   • 직원부서: $staffstatusentry_staff_department
-   • 직원 고양이:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • 유형:        $staffstatusentry_type
-   • 보낸 사람:        $staffstatusentry_start
-   • 받는 사람:          $staffstatusentry_stop
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
 
-논평:
+Comment:
 
 $staffstatusentry_comment
 
-준비 및/또는 적절한 조치를 취하시기 바랍니다.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
