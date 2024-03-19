@@ -1,37 +1,37 @@
 Dear $user_identity_firstname,
 
-je ${application.abbreviation} account was #if($new_user)aangemaakt#{else}veranderd#end.
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
 
-   • Gebruikersnaam:   $user_name
+   • Username:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • Een beheerder informeert u over het werkelijke wachtwoord.
-#anders
-   • Het wachtwoord blijft ongewijzigd.
-#einde
+   • An administrator will inform you of the actual password.
+#else
+   • The password remains unchanged.
+#end
 #elseif($ldap_auth_method)
-   • Het wachtwoord om te gebruiken is je MUG-wachtwoord.
+   • The password to use is your MUG-password.
 
 #if($new_user)
-Wanneer u voor de eerste keer inlogt, vul het wachtwoord in dat door de beheerder is opgegeven als verplicht "lokaal wachtwoord".
-#anders
-Wanneer u de volgende keer inlogt, voer uw huidige wachtwoord in als verplicht "lokaal wachtwoord".
-#einde
-#einde
+When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
+#else
+When logging in the next time, enter your current password as the mandatory "local password".
+#end
+#end
 
 #if($new_user)
-Het systeem is toegankelijk op de site hieronder:
+The system is accessible at the site below:
 
    $http_base_url
 
-#einde
-BELANGRIJK: Het account stelt u in staat persoonlijk identificeerbare informatie te lezen van onderwerpen geregistreerd door gebruikers van de$user_department" afdeling. Om de privacy van gegevens te behouden, moeten accountgegevens geheim blijven. U wordt nooit gevraagd om inloggegevens te verstrekken via e-mail of andere servers dan "$http_domain_name".
+#end
+IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instantie: $instance_name
+Instance: $instance_name
