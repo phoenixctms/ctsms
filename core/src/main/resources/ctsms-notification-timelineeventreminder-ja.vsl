@@ -1,32 +1,32 @@
-Dear $timelineevent_trial_name trial team member or member of dept. $timelineevent_trial_department,
+$timelineevent_trial_name 試験チームのメンバーまたは部門のメンバーの皆様。 $timelineevent_trial_department、
 
-this is a notification for the following event:
+以下のイベントのお知らせです。
 
    $type
 
-   • Trial code:   $timelineevent_trial_name
-   • Trial title:  $timelineevent_trial_title
-   • Trial dept.:  $timelineevent_trial_department
-   • Trial status: $timelineevent_trial_status
+   • トライアルコード:   $timelineevent_trial_name
+   • トライアルのタイトル:  $timelineevent_trial_title
+   • 治験部門:  $timelineevent_trial_department
+   • トライアルステータス: $timelineevent_trial_status
 
-   • Event type:   $timelineevent_type
-   • Event from:   $timelineevent_start
-   • Event to:     $timelineevent_stop
+   • イベントタイプ:   $timelineevent_type
+   • イベントの発信元:   $timelineevent_start
+   • イベント先:     $timelineevent_stop
 
-   • Event title:  '$timelineevent_title'
-   • Importance:   $timelineevent_importance
+   • イベントのタイトル: '$timelineevent_title'
+   • 重要性:   $timelineevent_importance
 
 説明：
 
 $timelineevent_description
 
-Please prepare and/or take appropriate actions.
+適切な準備や対応を行ってください。
 
 ありがとう！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+インスタンス: $instance_name
