@@ -1,58 +1,58 @@
-Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of dept. $ecrffieldstatusentry_listentry_trial_department,
+प्रिय $ecrffieldstatusentry_listentry_trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $ecrffieldstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
    $type
 
-   • Trial:              $ecrffieldstatusentry_listentry_trial_name
-   • Trial department:   $ecrffieldstatusentry_listentry_trial_department
-   • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • परीक्षण:              $ecrffieldstatusentry_listentry_trial_name
+   • परीक्षण विभाग:   $ecrffieldstatusentry_listentry_trial_department
+   • प्रोबैंड: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Proband group:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#end
+   • प्रोबैंड समूह:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#अंत
 #if($notification.ecrfFieldStatusEntry.visit)
-   • Visit:              $notification.ecrfFieldStatusEntry.visit.title
-#end
-   • eCRF section:       $ecrffieldstatusentry_ecrffield_section
-   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+   • विजिट करें:              $notification.ecrfFieldStatusEntry.visit.title
+#अंत
+   • eCRF अनुभाग:       $ecrffieldstatusentry_ecrffield_section
+   • इनपुट फ़ील्ड:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Index:              $ecrffieldstatusentry_index
-#end
+   • सूचकांक:              $ecrffieldstatusentry_index
+#अंत
 
-   • eCRF Issue Status:  $ecrffieldstatusentry_status
+   • ईसीआरएफ जारी करने की स्थिति:  $ecrffieldstatusentry_status
 
-   • Modified:           #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+   • संशोधित: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
 
-Comment:
+टिप्पणी:
 
 $ecrffieldstatusentry_comment
 
-#if(${index_field_log.size()} > 0)History:
+#if(${index_field_log.size()} > 0)इतिहास:
 
 #foreach($log in $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#end
-#end
+#अंत
+#अंत
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Please check the data entry to resolve the eCRF issue:
+कृपया eCRF समस्या के समाधान के लिए डेटा प्रविष्टि की जाँच करें:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#else
-The eCRF issue is closed.
-#end
+#अन्य
+ईसीआरएफ मुद्दा बंद हो गया है।
+#अंत
 
 धन्यवाद!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
 
---------------------------------------------------------------
+-------------------------------------------------- -----------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+उदाहरण: $instance_name
