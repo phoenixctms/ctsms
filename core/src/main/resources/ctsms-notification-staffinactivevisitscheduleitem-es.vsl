@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Estimado $visitscheduleitem_trial_name miembro del equipo de prueba o supervisor de $staff_name,
 
-this is a notification for the following event:
+Esta es una notificación para el siguiente evento:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • Prueba:      $visitscheduleitem_trial_name
+   • Visita:      $visitscheduleitem_name
+#si($visit_schedule_item_day_date)
+   • Fecha:       $visit_schedule_item_day_date
+#demás
+   • Visita desde: $visitscheduleitem_start
+   • Visita a:   $visitscheduleitem_stop
+#fin
 
-   • Threshold:  $inactive_staff_limit
+   • Umbral:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() empleados N/A:
 
-#foreach($employee in $inactive_staff)
-   • $employee.name
-#end
+#foreach($employee en $inactive_staff)
+   • $employee.nombre
+#fin
 
-Please prepare and/or take appropriate actions.
+Por favor prepare y/o tome las acciones apropiadas.
 
-Thank you!
+¡Gracias!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Este es un correo electrónico generado por el sistema creado el $generated_on, es posible que mientras tanto esté desactualizado. No responder.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instancia: $instance_name
