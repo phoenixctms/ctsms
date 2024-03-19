@@ -1,26 +1,26 @@
-Estimado miembro del equipo de prueba $visitscheduleitem_trial_name o miembro del departamento. $visitscheduleitem_trial_department
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
-esta es una notificación para el siguiente evento:
+this is a notification for the following event:
 
    $type
 
-   • Ensayo:         $visitscheduleitem_trial_name
-   • Visita:         $visitscheduleitem_name
-   • Visita desde:    $visitscheduleitem_start
-   • Visita a:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Probanda: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #end
 
-Por favor prepare y/o tome las acciones apropiadas.
+Please prepare and/or take appropriate actions.
 
-¡Gracias!
+Thank you!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance: $instance_name
