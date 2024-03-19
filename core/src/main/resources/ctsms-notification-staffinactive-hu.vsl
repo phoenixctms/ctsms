@@ -1,28 +1,28 @@
-Tisztelt $staffstatusentry_staff_namefelügyelő!
+Dear supervisor of $staffstatusentry_staff_name,
 
-ez egy értesítés a következő eseményről:
+this is a notification for the following event:
 
    $type
 
-   • Személyzet:       $staffstatusentry_staff_name
-   • Személyzeti osztály: $staffstatusentry_staff_department
-   • Személyzeti kat.:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • Típus:        $staffstatusentry_type
-   • Feladó:        $staffstatusentry_start
-   • Címzett:          $staffstatusentry_stop
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
 
-Megjegyzés:
+Comment:
 
 $staffstatusentry_comment
 
-Kérjük, készüljön fel és/vagy tegye meg a megfelelő intézkedéseket.
+Please prepare and/or take appropriate actions.
 
 Köszönöm!
 
-Ez egy rendszer által generált e-mail, amelyet a $generated_onnapon hoztak létre, és időközben elavult lehet. Ne válaszolj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Példa: $instance_name
+Instance: $instance_name
