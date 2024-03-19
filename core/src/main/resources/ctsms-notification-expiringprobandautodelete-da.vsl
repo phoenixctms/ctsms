@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Kære medlem af afd. $proband_department,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#slut
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Proband-afdeling:     $proband_department
+   • Proband kategori:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Planlagt sletning:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Sidst ændrede bruger:      $proband_modifieduser_identity_name
+   • Sidst ændrede tidsstempel: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Uden informeret samtykke fra probanden, er registreringsfjernelsen påkrævet for at implementere databeskyttelse for at beskytte probandens følsomme data og droppe personligt identificerbare oplysninger. Derfor kan en sletning ikke rulles tilbage.
 
-Please prepare and/or take appropriate actions.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Forekomst: $instance_name
