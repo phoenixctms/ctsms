@@ -1,46 +1,46 @@
-Kære $ecrfstatusentry_listentry_trial_name prøvegruppemedlem eller medlem af dept. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Prøve:                $ecrfstatusentry_listentry_trial_name
-   • Prøveafdeling:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • Trial:                $ecrfstatusentry_listentry_trial_name
+   • Trial department:     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
-#hvis($notification.ecrfStatusEntry.listEntry.group)
-   • Proband gruppe:        $notification.ecrfStatusEntry.listEntry.group.title
-#ende
-#hvis($notification.ecrfStatusEntry.visit)
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfStatusEntry.visit)
    • Visit:                $notification.ecrfStatusEntry.visit.title
-#ende
+#end
 
    • eCRF status:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.valideret && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Inputvalidering:     $ecrfstatusentry_validationresponsemsg
-   • Validering tidsstempel: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.valideret && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Input validation:     $ecrfstatusentry_validationresponsemsg
+   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Tidsstempel:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.valideret && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Input-validering afventet.
-#ende
+   • Timestamp:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Input validation pending.
+#end
 
-   • Ændret: #hf($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
-#hvis(!$notification.ecrfStatusEntry.status.done)
-Fortsæt med næste trin for at fuldføre eCRF-dataposten.
-#andet
-ECRF-dataposten er fuldført.
-#ende
+#if(!$notification.ecrfStatusEntry.status.done)
+Please continue with next steps to complete the eCRF data entry.
+#else
+The eCRF data entry is completed.
+#end
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
