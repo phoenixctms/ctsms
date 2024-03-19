@@ -1,25 +1,25 @@
-Уважаемый член глубины. $probandstatusentry_proband_department,
+Уважаемый сотрудник отд. $probandstatusentry_proband_department,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Кошка профиля.:  $probandstatusentry_proband_category
+   • Отдел пробандов: $probandstatusentry_proband_department
+   • Кот пробанда:  $probandstatusentry_proband_category
 
-   • Тип:          $probandstatusentry_type
+   • Введите:          $probandstatusentry_type
    • От:          $probandstatusentry_start
    • Кому:            $probandstatusentry_stop
 
-Просьба подготовить и/или принять соответствующие меры.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

@@ -1,17 +1,17 @@
-Dear $inventorybooking_onbehalfof_firstname,
+Шановний $inventorybooking_onbehalfof_firstname,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
    • Інвентар:       $inventorybooking_inventory_name
-   • Зменшити розмір інвентарю: $inventorybooking_inventory_department
+   • Відділ інвентаризації: $inventorybooking_inventory_department
    • Кат. інвентарю:  $inventorybooking_inventory_category
 
    • Тип статусу:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Джерело:      $inventorystatusentry_originator_name
-#закінчується
+   • Автор:      $inventorystatusentry_originator_name
+#кінець
    • Статус від:     $inventorystatusentry_start
    • Статус:       $inventorystatusentry_stop
 
@@ -20,24 +20,24 @@ Dear $inventorybooking_onbehalfof_firstname,
 
    • Для курсу:      $inventorybooking_course_name
    • Для випробування:       $inventorybooking_trial_name
-   • На проспект: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Для пробанда: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Статус коментаря:
+Коментар статусу:
 
 $inventorystatusentry_comment
 
-Коментар до бронювання:
+Коментар бронювання:
 
 $inventorybooking_comment
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

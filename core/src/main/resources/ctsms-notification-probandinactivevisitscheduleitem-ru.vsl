@@ -1,30 +1,30 @@
-Уважаемый член пробной команды $visitscheduleitem_trial_name или член dept. $probandstatusentry_proband_department,
+Уважаемый $visitscheduleitem_trial_name член испытательной группы или сотрудник отдела. $probandstatusentry_proband_department,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Кошка профиля.:  $probandstatusentry_proband_category
+   • Отдел пробандов: $probandstatusentry_proband_department
+   • Кот пробанда:  $probandstatusentry_proband_category
 
    • Тип статуса:   $probandstatusentry_type
-   • Статус от:   $probandstatusentry_start
-   • Статус в:     $probandstatusentry_stop
+   • Статус:   $probandstatusentry_start
+   • Статус:     $probandstatusentry_stop
 
-   • Испытание:         $visitscheduleitem_trial_name
-   • Посещение:         $visitscheduleitem_name
-   • Посещение от:    $visitscheduleitem_start
-   • Посетить в:      $visitscheduleitem_stop
+   • Пробная версия:         $visitscheduleitem_trial_name
+   • Посетите:         $visitscheduleitem_name
+   • Посетитель:    $visitscheduleitem_start
+   • Посещение:      $visitscheduleitem_stop
 
-Просьба подготовить и/или принять соответствующие меры.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

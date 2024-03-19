@@ -1,0 +1,40 @@
+亲爱的 $staff_firstname，
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 试用：          $dutyrosterturn_trial_name
+   • 职责来自：      $dutyrosterturn_start
+   • 职责：        $dutyrosterturn_stop
+
+   • 日历：       $dutyrosterturn_calendar
+   • 职责名称：     $dutyrosterturn_title
+   • 访问：          $dutyrosterturn_visitscheduleitem_name
+
+   • 工作人员：          $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • 可自行分配。
+＃别的
+   • 无自我分配。
+＃结尾
+
+   • 修改：#if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+
+
+值班评论：
+
+$dutyrosterturn_comment
+
+职责分配是强制性的，并且可能会发生变化，直到最终被冻结。 最新概述可在以下站点访问：
+
+   $http_base_url/Trial/dutyRosterSchedule.jsf。
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

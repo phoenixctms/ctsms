@@ -1,27 +1,27 @@
-Estimado miembro del equipo de prueba $ecrffieldstatusentry_listentry_trial_name o miembro del departamento. $ecrffieldstatusentry_listentry_trial_department
+Estimado $ecrffieldstatusentry_listentry_trial_name miembro del equipo de prueba o miembro del departamento. $ecrffieldstatusentry_listentry_trial_department,
 
-esta es una notificación para el siguiente evento:
+Esta es una notificación para el siguiente evento:
 
    $type
 
-   • Ensayo:              $ecrffieldstatusentry_listentry_trial_name
-   • Departamento de prueba:   $ecrffieldstatusentry_listentry_trial_department
-   • Probanda: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+   • Prueba:              $ecrffieldstatusentry_listentry_trial_name
+   • Departamento de pruebas:   $ecrffieldstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Grupo de Probanda:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#end
-#if($notification.ecrfFieldStatusEntry.visit)
-   • Visitar:              $notification.ecrfFieldStatusEntry.visit.title
-#end
-   • sección eCRF:       $ecrffieldstatusentry_ecrffield_section
-   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+   • Grupo probando:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#fin
+#if($notification.ecrfFieldStatusEntry.visita)
+   • Visita:              $notification.ecrfFieldStatusEntry.visit.title
+#fin
+   • Sección eCRF:       $ecrffieldstatusentry_ecrffield_section
+   • Campo de entrada:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • Índice:              $ecrffieldstatusentry_index
-#end
+#fin
 
-   • Estado del problema eCRF:  $ecrffieldstatusentry_status
+   • Estado de emisión del eCRF:  $ecrffieldstatusentry_status
 
    • Modificado: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
@@ -32,27 +32,27 @@ $ecrffieldstatusentry_comment
 
 #if(${index_field_log.size()} > 0)Historial:
 
-#foreach($log in $index_field_log)
+#foreach($log en $index_field_log)
 #if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
-   • guardado (#if($string_utils.isEmpty($log.reasonForChange))versión $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#end
-#end
+   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+#fin
+#fin
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Por favor, compruebe la entrada de datos para resolver el problema de eCRF:
+Verifique la entrada de datos para resolver el problema del eCRF:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#sino
-El problema de eCRF está cerrado.
-#end
+#demás
+La cuestión del eCRF está cerrada.
+#fin
 
 ¡Gracias!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado el $generated_on, es posible que mientras tanto esté desactualizado. No responder.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instancia: $instance_name

@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Dragă $staff_firstname,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Studiu:          $dutyrosterturn_trial_name
-   • Obligație din:      $dutyrosterturn_start
-   Obligație:        $dutyrosterturn_stop
+   • Proba:          $dutyrosterturn_trial_name
+   • Taxa de la:      $dutyrosterturn_start
+   • Obligație față de:        $dutyrosterturn_stop
 
    • Calendar:       $dutyrosterturn_calendar
-   • Titlu sarcină:     $dutyrosterturn_title
+   • Titlul sarcinii:     $dutyrosterturn_title
    • Vizită:          $dutyrosterturn_visitscheduleitem_name
 
    • Personal nou:      $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocable)
-   • Autoalocabil.
-#altceva
-   • Fără auto-alocare.
-#end
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Auto-alocabil.
+#altfel
+   • Fără autoalocare.
+#Sfârşit
 
    • Modificat: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Comentariu de sarcină:
+Comentariu de datorie:
 
 $dutyrosterturn_comment
 
-Taxa atribuită este obligatorie și se poate schimba până la înghețarea finală. Imaginea de ansamblu actualizată este accesibilă pe site-ul de mai jos:
+Atribuirea sarcinilor este obligatorie și se poate modifica până la înghețare definitivă. Prezentarea generală actualizată este accesibilă pe site-ul de mai jos:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instanță: $instance_name

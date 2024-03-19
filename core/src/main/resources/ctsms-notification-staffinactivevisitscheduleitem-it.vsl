@@ -1,33 +1,33 @@
-Gentile membro del team di prova $visitscheduleitem_trial_name o supervisore di $staff_name,
+Gentile membro del team di prova di $visitscheduleitem_trial_name o supervisore di $staff_name,
 
-si tratta di una notifica per il seguente evento:
+questa è una notifica per il seguente evento:
 
    $type
 
    • Prova:      $visitscheduleitem_trial_name
    • Visita:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
+#se($visit_schedule_item_day_date)
    • Data:       $visit_schedule_item_day_date
-#else
+#altro
    • Visita da: $visitscheduleitem_start
    • Visita a:   $visitscheduleitem_stop
-#end
+#FINE
 
    • Soglia:  $inactive_staff_limit
 
-$inactive_staff.size() dipendenti N/A:
+$inactive_staff.size() dipendenti N/D:
 
 #foreach($employee in $inactive_staff)
-   • $employee.name
-#end
+   • $employee.nome
+#FINE
 
-Preparare e/o adottare le misure appropriate.
+Si prega di preparare e/o intraprendere azioni appropriate.
 
 Grazie!
 
-Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+Questa è un'e-mail generata dal sistema creata il $generated_on, nel frattempo potrebbe essere obsoleta. Non rispondere.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Istanza: $instance_name

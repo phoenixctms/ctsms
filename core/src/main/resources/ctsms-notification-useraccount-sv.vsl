@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Bästa $user_identity_firstname,
 
-ditt ${application.abbreviation} konto var #if($new_user)skapade#{else}ändrad#end.
+ditt ${application.abbreviation} -konto #if($new_user)skapades#{else}ändrades#slut.
 
    • Användarnamn:   $user_name
 #if($local_auth_method)
 #if($new_user)
    • En administratör kommer att informera dig om det faktiska lösenordet.
-#annat
+#annan
    • Lösenordet förblir oförändrat.
-# slut
+#slutet
 #elseif($ldap_auth_method)
    • Lösenordet som ska användas är ditt MUG-lösenord.
 
 #if($new_user)
-När du loggar in för första gången, ange lösenordet som anges av administratören som obligatoriskt "lokalt lösenord".
-#annat
-När du loggar in nästa gång, ange ditt nuvarande lösenord som obligatoriskt "lokalt lösenord".
-# slut
-# slut
+När du loggar in för första gången, skriv in lösenordet som administratören gett som det obligatoriska "lokala lösenordet".
+#annan
+När du loggar in nästa gång anger du ditt nuvarande lösenord som det obligatoriska "lokala lösenordet".
+#slutet
+#slutet
 
 #if($new_user)
 Systemet är tillgängligt på webbplatsen nedan:
 
    $http_base_url
 
-# slut
-VIKTIGT: Kontot tillåter dig att läsa personligt identifierbar information om ämnen registrerade av användare av "$user_department" avdelningen. För att upprätthålla dataskyddet måste kontouppgifterna hållas sekretessbelagda. Du kommer aldrig att bli ombedd att tillhandahålla autentiseringsuppgifter via e-post eller andra servrar än "$http_domain_name".
+#slutet
+VIKTIGT: Kontot låter dig läsa personligt identifierbar information om ämnen som registrerats av användare av "$user_department"-avdelningen. För att upprätthålla datasekretessen måste kontouppgifterna hållas hemliga. Du kommer aldrig att bli ombedd att tillhandahålla referenser via e-post eller andra servrar än "$http_domain_name".
 
 Tack!
 
-Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+Detta är ett systemgenererat e-postmeddelande skapat på $generated_on, det kan vara inaktuellt under tiden. Svara inte.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Exempel: $instance_name

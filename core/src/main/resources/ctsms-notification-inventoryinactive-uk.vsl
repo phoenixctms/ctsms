@@ -1,31 +1,31 @@
-Шановний член глибини. $inventorystatusentry_inventory_department,
+Шановний член каф. $inventorystatusentry_inventory_department,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
    • Інвентар:       $inventorystatusentry_inventory_name
-   • Зменшити розмір інвентарю: $inventorystatusentry_inventory_department
+   • Відділ інвентаризації: $inventorystatusentry_inventory_department
    • Кат. інвентарю:  $inventorystatusentry_inventory_category
 
    • Тип:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Джерело:      $inventorystatusentry_originator_name
-#закінчується
+   • Автор:      $inventorystatusentry_originator_name
+#кінець
    • Від:            $inventorystatusentry_start
    • Кому:              $inventorystatusentry_stop
 
-Коментар:
+коментар:
 
 $inventorystatusentry_comment
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

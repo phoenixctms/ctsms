@@ -1,0 +1,26 @@
+亲爱的#if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 库存：       $maintenancescheduleitem_inventory_name
+   • 库存部门： $maintenancescheduleitem_inventory_department
+   • 库存类别：  $maintenancescheduleitem_inventory_category
+
+   • 标题：“$notification.maintenanceScheduleItem.title”
+   • 类型：            $maintenancescheduleitem_type
+   • 日期：            $maintenancescheduleitem_nextrecurrence
+
+   • 公司联系方式： $maintenancescheduleitem_companycontact_name
+
+请准备和/或采取适当的行动。
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

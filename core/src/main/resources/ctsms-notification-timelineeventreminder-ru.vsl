@@ -1,13 +1,13 @@
-Уважаемый член пробной команды $timelineevent_trial_name или член dept. $timelineevent_trial_department,
+Уважаемый $timelineevent_trial_name член испытательной группы или сотрудник отдела. $timelineevent_trial_department,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
    • Пробный код:   $timelineevent_trial_name
    • Название пробной версии:  $timelineevent_trial_title
-   • Пробная версия:  $timelineevent_trial_department
-   • Пробный статус: $timelineevent_trial_status
+   • Судебный отдел:  $timelineevent_trial_department
+   • Статус пробной версии: $timelineevent_trial_status
 
    • Тип события:   $timelineevent_type
    • Событие от:   $timelineevent_start
@@ -20,13 +20,13 @@
 
 $timelineevent_description
 
-Просьба подготовить и/или принять соответствующие меры.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

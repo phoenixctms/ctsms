@@ -1,33 +1,33 @@
-عزيزي عضو الفريق التجريبي $visitscheduleitem_trial_name أو مشرف $staff_name،
+عزيزي $visitscheduleitem_trial_name عضو فريق التجربة أو المشرف على $staff_name،
 
-وهذا إشعار يتعلق بالحدث التالي:
+هذا إشعار للحدث التالي:
 
    $type
 
    • المحاكمة:      $visitscheduleitem_trial_name
    • زيارة:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
+#إذا($visit_schedule_item_day_date)
    • التاريخ:       $visit_schedule_item_day_date
 #آخر
-   • زيارة من: $visitscheduleitem_start
+   • الزيارة من: $visitscheduleitem_start
    • زيارة إلى:   $visitscheduleitem_stop
 #نهاية
 
-   • الحيازة:  $inactive_staff_limit
+   • العتبة:  $inactive_staff_limit
 
-$inactive_staff.size() موظفان N/A:
+$inactive_staff.size() الموظفون غير متاح:
 
-#foreach($employee in $inactive_staff)
-   • $employeeاسم
+#foreach($employee في $inactive_staff)
+   • $employee.name
 #نهاية
 
-يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
+يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 
 شكرًا لك!
 
-هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-الموقع: $instance_name
+المثيل: $instance_name

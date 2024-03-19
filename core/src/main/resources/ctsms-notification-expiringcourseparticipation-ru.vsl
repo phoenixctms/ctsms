@@ -1,26 +1,26 @@
-Dear $courseparticipationstatusentry_staff_firstname,
+Дорогой $courseparticipationstatusentry_staff_firstname,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
    • Курс:              $courseparticipationstatusentry_course_name
-   • Название CV курса:     $courseparticipationstatusentry_course_cvtitle
+   • Название резюме курса:     $courseparticipationstatusentry_course_cvtitle
    • Отдел курса:   $courseparticipationstatusentry_course_department
-   • Категория курсов:     $courseparticipationstatusentry_course_category
+   • Категория курса:     $courseparticipationstatusentry_course_category
 
-   • Окончание курса:          $courseparticipationstatusentry_course_stop
-   • Срок годности: $courseparticipationstatusentry_course_expiration
+   • Конец курса:          $courseparticipationstatusentry_course_stop
+   • Срок действия: $courseparticipationstatusentry_course_expiration
 
-Пожалуйста, посетите страницу регистрации для получения соответствующего курса:
+Пожалуйста, посетите, чтобы зарегистрироваться на подходящий курс повышения квалификации:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Cher $user_identity_firstname,
 
 votre compte ${application.abbreviation} a été #if($new_user)créé#{else}modifié#end.
 
-   • Nom d'utilisateur :   $user_name
-#if($local_auth_method)
-#if($new_user)
-   • Un administrateur vous informera du mot de passe actuel.
-#sinon
+   • Nom d'utilisateur :   $user_name
+#si($local_auth_method)
+#si($new_user)
+   • Un administrateur vous informera du mot de passe réel.
+#autre
    • Le mot de passe reste inchangé.
-#end
+#fin
 #elseif($ldap_auth_method)
    • Le mot de passe à utiliser est votre mot de passe MUG.
 
-#if($new_user)
-Lorsque vous vous connectez pour la première fois, entrez le mot de passe fourni par l'administrateur en tant que "mot de passe local" obligatoire.
-#sinon
-Lors de la prochaine connexion, entrez votre mot de passe actuel comme "mot de passe local" obligatoire.
-#end
-#end
+#si($new_user)
+Lors de votre première connexion, saisissez le mot de passe fourni par l'administrateur comme « mot de passe local » obligatoire.
+#autre
+Lors de votre prochaine connexion, entrez votre mot de passe actuel comme « mot de passe local » obligatoire.
+#fin
+#fin
 
-#if($new_user)
-Le système est accessible sur le site ci-dessous:
+#si($new_user)
+Le système est accessible sur le site ci-dessous :
 
    $http_base_url
 
-#end
-IMPORTANT: Le compte vous permet de lire les informations personnellement identifiables des sujets inscrits par les utilisateurs du service "$user_department". Pour maintenir la confidentialité des données, les informations d'identification du compte doivent être gardées secrètes. Il ne vous sera jamais demandé de fournir des informations d'identification par e-mail ou par des serveurs autres que "$http_domain_name".
+#fin
+IMPORTANT : Le compte vous permet de lire les informations personnellement identifiables des sujets enregistrés par les utilisateurs du département «$user_department». Pour préserver la confidentialité des données, les informations d’identification du compte doivent rester secrètes. Il ne vous sera jamais demandé de fournir des informations d'identification par e-mail ou sur des serveurs autres que "$http_domain_name".
 
 Merci!
 
-Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+Il s'agit d'un e-mail généré par le système créé le $generated_on, il est peut-être obsolète entre-temps. Ne pas répondre.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance : $instance_name
+Instance : $instance_name

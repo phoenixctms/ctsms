@@ -1,0 +1,30 @@
+亲爱的 $trial_name 试验组成员或部门成员 $trial_department,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 试用码：   $trial_name
+   • 试用标题：  $trial_title
+   • 试用部：  $trial_department
+
+   • 试用状态： $trial_status
+#if($notification.审判.状态.锁定)
+   • 锁定：不再修改试验和相关记录。
+＃结尾
+#if($notification.Trial.status.inquiryValueInputEnabled)
+   • 启用查询值输入。
+＃别的
+   • 查询值输入被禁用。
+＃结尾
+
+请准备和/或采取适当的行动。
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

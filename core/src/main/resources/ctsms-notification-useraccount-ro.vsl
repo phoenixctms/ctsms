@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Dragă $user_identity_firstname,
 
-contul dumneavoastră ${application.abbreviation} a fost #if($new_user)a creat#{else}modificat#end.
+contul dvs. ${application.abbreviation} a fost #if($new_user)creat#{else}schimbat#end.
 
    • Nume de utilizator:   $user_name
-#if($local_auth_method)
-#if($new_user)
-   • Un administrator vă va informa cu privire la parola reală.
-#altceva
+#dacă($local_auth_method)
+#dacă($new_user)
+   • Un administrator vă va informa despre parola reală.
+#altfel
    • Parola rămâne neschimbată.
-#end
+#Sfârşit
 #elseif($ldap_auth_method)
-   • Parola de folosit este parola de MUG-.
+   • Parola de utilizat este parola dumneavoastră MUG.
 
-#if($new_user)
-Când vă conectați pentru prima dată, introduceți parola dată de administrator ca fiind obligatorie "parolă locală".
-#altceva
-Când vă autentificați data viitoare, introduceți parola curentă ca fiind obligatorie pentru "parola locală".
-#end
-#end
+#dacă($new_user)
+Când vă conectați pentru prima dată, introduceți parola dată de administrator ca „parolă locală” obligatorie.
+#altfel
+Când vă conectați data viitoare, introduceți parola curentă ca „parolă locală” obligatorie.
+#Sfârşit
+#Sfârşit
 
-#if($new_user)
+#dacă($new_user)
 Sistemul este accesibil pe site-ul de mai jos:
 
    $http_base_url
 
-#end
-IMPORTANT: Contul vă permite să citiți informații identificabile personal despre subiecții înregistrați de către utilizatorii departamentului "$user_department". Pentru a menține confidențialitatea datelor, datele de autentificare ale contului trebuie păstrate confidențial. Nu vi se va cere niciodată să furnizați acreditări prin e-mail sau alte servere decât "$http_domain_name".
+#Sfârşit
+IMPORTANT: Contul vă permite să citiți informații de identificare personală ale subiecților înregistrați de utilizatorii departamentului „$user_department”. Pentru a menține confidențialitatea datelor, acreditările contului trebuie păstrate secrete. Nu vi se va cere niciodată să furnizați acreditări prin e-mail sau alte servere decât „$http_domain_name”.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instanță: $instance_name

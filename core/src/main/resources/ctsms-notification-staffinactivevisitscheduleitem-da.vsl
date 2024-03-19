@@ -1,33 +1,33 @@
-Kære $visitscheduleitem_trial_name prøvegruppemedlem eller vejleder i $staff_name,
+Kære $visitscheduleitem_trial_name prøveteammedlem eller supervisor for $staff_name,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Prøve:      $visitscheduleitem_trial_name
-   • besøg:      $visitscheduleitem_name
+   • Prøveversion:      $visitscheduleitem_trial_name
+   • Besøg:      $visitscheduleitem_name
 #hvis($visit_schedule_item_day_date)
    • Dato:       $visit_schedule_item_day_date
 #andet
    • Besøg fra: $visitscheduleitem_start
-   • Besøg for:   $visitscheduleitem_stop
+   • Besøg på:   $visitscheduleitem_stop
 #ende
 
    • Tærskel:  $inactive_staff_limit
 
 $inactive_staff.size() medarbejdere N/A:
 
-#foreach($employee in $inactive_staff)
-   • $employee.name
+#foreach($employee i $inactive_staff)
+   • $employee.navn
 #ende
 
-Forbered og/eller foretag passende foranstaltninger.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Forekomst: $instance_name

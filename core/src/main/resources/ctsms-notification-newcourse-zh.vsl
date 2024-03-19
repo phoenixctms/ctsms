@@ -1,0 +1,27 @@
+尊敬的部门成员 $course_department,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 课程：                 $course_name
+   • 课程简历标题：        $course_cvtitle
+   • 课程部门：      $course_department
+   • 课程类别：        $course_category
+
+   • 课程开始：           $course_start
+   • 课程结束：             $course_stop
+   • 参与截止日期： $course_participationdeadline
+
+注册本课程：
+
+   $http_base_url/staff/upcomingCourseOverview.jsf
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

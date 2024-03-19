@@ -1,39 +1,39 @@
 Шановний $dutyrosterturn_trial_name член команди випробувань або керівник $dutyrosterturn_staff_name,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
    • Персонал:       $dutyrosterturn_staff_name
-   • Меню співробітників.: $dutyrosterturn_staff_department
+   • Відділ персоналу: $dutyrosterturn_staff_department
    • Штатний кат.:  $dutyrosterturn_staff_category
 
    • Тип статусу: $staffstatusentry_type
    • Статус від: $staffstatusentry_start
    • Статус:   $staffstatusentry_stop
 
-   • Пробна:       $dutyrosterturn_trial_name
+   • Випробування:       $dutyrosterturn_trial_name
    • Мито від:   $dutyrosterturn_start
-   • Обов'язок дані:     $dutyrosterturn_stop
+   • Обов'язок:     $dutyrosterturn_stop
 
    • Назва посади:  $dutyrosterturn_title
    • Відвідайте:       $dutyrosterturn_visitscheduleitem_name
 
-Статус коментаря:
+Коментар статусу:
 
 $staffstatusentry_comment
 
-Обов'язний коментар:
+Обов'язковий коментар:
 
 $dutyrosterturn_comment
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

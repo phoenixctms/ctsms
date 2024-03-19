@@ -1,30 +1,30 @@
-Caro membro da equipe de teste $trial_name ou membro da dep. $trial_department,
+Prezado $trial_name membro da equipe de teste ou membro do departamento. $trial_department,
 
 esta é uma notificação para o seguinte evento:
 
    $type
 
    • Código de teste:   $trial_name
-   • Título da avaliação:  $trial_title
-   • Trial dept.:  $trial_department
+   • Título do teste:  $trial_title
+   • Departamento de testes:  $trial_department
 
    • Status do teste: $trial_status
 #if($notification.trial.status.lockdown)
-   • Bloqueio: não há nenhuma modificação adicional do teste e registros associados.
+   • Bloqueio: nenhuma modificação adicional do estudo e dos registros associados.
 #fim
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • As entradas dos valores de consulta estão habilitadas.
-#senão
-   • As entradas do valor da pesquisa estão desabilitadas.
+   • As entradas de valores de consulta estão habilitadas.
+#outro
+   • As entradas de valores de consulta estão desabilitadas.
 #fim
 
-Por favor, prepare-se e/ou tome as medidas adequadas.
+Prepare-se e/ou tome as medidas apropriadas.
 
 Obrigado!
 
-Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+Este é um e-mail gerado pelo sistema criado em $generated_on, pode estar desatualizado entretanto. Não responda.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instância: $instance_name

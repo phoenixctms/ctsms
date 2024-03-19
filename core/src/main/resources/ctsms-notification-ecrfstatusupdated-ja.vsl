@@ -1,46 +1,46 @@
-親愛なる $ecrfstatusentry_listentry_trial_name トライアルチームのメンバーまたはdept のメンバーの皆様。 $ecrfstatusentry_listentry_trial_department,
+$ecrfstatusentry_listentry_trial_name 試験チームのメンバーまたは部門のメンバーの皆様。 $ecrfstatusentry_listentry_trial_department、
 
-これは以下のイベントの通知です：
+以下のイベントのお知らせです。
 
    $type
 
-   • 試用版：                $ecrfstatusentry_listentry_trial_name
+   • トライアル:                $ecrfstatusentry_listentry_trial_name
    • トライアル部門:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • 発端者: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+   • 発端者グループ:        $notification.ecrfStatusEntry.listEntry.group.title
+＃終わり
 #if($notification.ecrfStatusEntry.visit)
-   • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+   • アクセス:                $notification.ecrfStatusEntry.visit.title
+＃終わり
 
    • eCRF ステータス:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • 入力検証:     $ecrfstatusentry_validationresponsemsg
-   • バリデーションタイムスタンプ： $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.validationStatus.name() == "FAILED")
+   • 入力の検証:     $ecrfstatusentry_validationresponsemsg
+   • 検証タイムスタンプ: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • タイムスタンプ：            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • タイムスタンプ:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "保留中")
    • 入力検証が保留中です。
-#end
+＃終わり
 
-   • 修正: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • 変更: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-eCRFデータ入力を完了するには、次の手順に従ってください。
-#else
-eCRFデータのエントリが完了しました。
-#end
+次のステップに進んで eCRF データ入力を完了してください。
+＃それ以外
+eCRF データ入力が完了しました。
+＃終わり
 
 ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+インスタンス: $instance_name

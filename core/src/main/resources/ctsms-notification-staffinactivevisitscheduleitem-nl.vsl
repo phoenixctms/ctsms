@@ -1,33 +1,33 @@
-Geachte $visitscheduleitem_trial_name test teamlid of toezichthouder van $staff_name,
+Beste $visitscheduleitem_trial_name proefteamlid of begeleider van $staff_name,
 
 dit is een melding voor de volgende gebeurtenis:
 
    $type
 
-   • Probeer:      $visitscheduleitem_trial_name
+   • Proef:      $visitscheduleitem_trial_name
    • Bezoek:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
    • Datum:       $visit_schedule_item_day_date
 #anders
    • Bezoek van: $visitscheduleitem_start
-   • Bezoek naar:   $visitscheduleitem_stop
+   • Bezoek aan:   $visitscheduleitem_stop
 #einde
 
    • Drempel:  $inactive_staff_limit
 
-$inactive_staff.size() medewerkers N/A:
+$inactive_staff.size() werknemers N.v.t.:
 
 #foreach($employee in $inactive_staff)
-   • $employee.name
+   • $employee.naam
 #einde
 
-Bereid u voor en/of neem passende acties.
+Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
---------------------------------------------------------------
+---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instantie: $instance_name

@@ -1,6 +1,6 @@
-Dear $user_identity_firstname,
+Kære $user_identity_firstname,
 
-din ${application.abbreviation} konto var #hf($new_user)oprettet#{else}ændret#end.
+din ${application.abbreviation} konto blev #if($new_user)oprettet#{else}ændret#end.
 
    • Brugernavn:   $user_name
 #hvis($local_auth_method)
@@ -10,28 +10,28 @@ din ${application.abbreviation} konto var #hf($new_user)oprettet#{else}ændret#e
    • Adgangskoden forbliver uændret.
 #ende
 #elseif($ldap_auth_method)
-   • Den adgangskode, der skal bruges, er din MUG-adgangskode.
+   • Adgangskoden, der skal bruges, er din MUG-adgangskode.
 
 #hvis($new_user)
-Når du logger ind for første gang, indtast adgangskoden givet af administratoren som den obligatoriske "lokale adgangskode".
+Når du logger på første gang, skal du indtaste den adgangskode, som administratoren har givet som den obligatoriske "lokale adgangskode".
 #andet
 Når du logger ind næste gang, skal du indtaste din nuværende adgangskode som den obligatoriske "lokale adgangskode".
 #ende
 #ende
 
 #hvis($new_user)
-Systemet er tilgængeligt på stedet nedenfor:
+Systemet er tilgængeligt på nedenstående websted:
 
    $http_base_url
 
 #ende
-VIGTIGT: Kontoen giver dig mulighed for at læse personligt identificerbare oplysninger om emner registreret af brugere af "$user_department" afdelingen. For at opretholde databeskyttelse skal kontooplysninger holdes hemmelige. Du vil aldrig blive bedt om at give legitimationsoplysninger via e-mail eller andre servere end "$http_domain_name".
+VIGTIGT: Kontoen giver dig mulighed for at læse personligt identificerbare oplysninger om emner, der er registreret af brugere af "$user_department"-afdelingen. For at bevare databeskyttelsen skal kontooplysningerne holdes hemmelige. Du vil aldrig blive bedt om at give legitimationsoplysninger via e-mail eller andre servere end "$http_domain_name".
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Forekomst: $instance_name

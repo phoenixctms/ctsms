@@ -1,4 +1,4 @@
-Kære $trial_name prøvegruppemedlem eller medlem af dept. $trial_department,
+Kære $trial_name prøveteammedlem eller medlem af afd. $trial_department,
 
 dette er en notifikation for følgende begivenhed:
 
@@ -6,25 +6,25 @@ dette er en notifikation for følgende begivenhed:
 
    • Prøvekode:   $trial_name
    • Prøvetitel:  $trial_title
-   • Trial dept.:  $trial_department
+   • Forsøgsafdeling:  $trial_department
 
    • Prøvestatus: $trial_status
-#hvis($notification.trial.status.lockdown)
-   • Låsning: ingen yderligere ændring af forsøget og tilhørende journaler.
+#if($notification.trial.status.lockdown)
+   • Lockdown: ingen yderligere ændring af prøveperioden og tilhørende registreringer.
 #ende
-#if($notification.trial.status.inquiryValueInputAktiveret)
-   • Inquiry værdi input er aktiveret.
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Forespørgselsværdiinput er aktiveret.
 #andet
-   • Inquiry værdi input er deaktiveret.
+   • Indtastning af forespørgselsværdier er deaktiveret.
 #ende
 
-Forbered og/eller foretag passende foranstaltninger.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Forekomst: $instance_name

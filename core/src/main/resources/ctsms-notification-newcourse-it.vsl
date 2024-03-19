@@ -1,27 +1,27 @@
-Caro membro del prof. $course_department,
+Caro membro del dipartimento $course_department,
 
-si tratta di una notifica per il seguente evento:
+questa è una notifica per il seguente evento:
 
    $type
 
-   • Corso:                 $course_name
+   • Rotta:                 $course_name
    • Titolo CV del corso:        $course_cvtitle
    • Dipartimento del corso:      $course_department
    • Categoria del corso:        $course_category
 
-   • Inizio corso:           $course_start
+   • Inizio del corso:           $course_start
    • Fine del corso:             $course_stop
-   • Termine di partecipazione: $course_participationdeadline
+   • Termine ultimo per la partecipazione: $course_participationdeadline
 
-Registrati per questo corso:
+Iscriviti a questo corso:
 
-   $http_base_url/staff/upcomingCoursePanoramica.jsf
+   $http_base_url/staff/upcomingCourseOverview.jsf
 
 Grazie!
 
-Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+Questa è un'e-mail generata dal sistema creata il $generated_on, nel frattempo potrebbe essere obsoleta. Non rispondere.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Istanza: $instance_name

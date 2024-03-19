@@ -1,4 +1,4 @@
-Hyvä $ecrffieldstatusentry_listentry_trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $ecrffieldstatusentry_listentry_trial_department,
+Hyvä $ecrffieldstatusentry_listentry_trial_name kokeilutiimin jäsen tai osaston jäsen. $ecrffieldstatusentry_listentry_trial_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -10,18 +10,18 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
 #if($notification.ecrfFieldStatusEntry.listEntry.group)
-   • Proband ryhmä:      $notification.ecrfFieldStatusEntry.listEntry.group.title
-#end
+   • Proband-ryhmä:      $notification.ecrfFieldStatusEntry.listEntry.group.title
+#loppu
 #if($notification.ecrfFieldStatusEntry.visit)
-   • Käynti:              $notification.ecrfFieldStatusEntry.visit.title
-#end
-   • eCRF osio:       $ecrffieldstatusentry_ecrffield_section
-   • Input field:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
+   • Käy:              $notification.ecrfFieldStatusEntry.visit.title
+#loppu
+   • eCRF-osio:       $ecrffieldstatusentry_ecrffield_section
+   • Syöttökenttä:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Indeksi:              $ecrffieldstatusentry_index
-#end
+   • Hakemisto:              $ecrffieldstatusentry_index
+#loppu
 
-   • eCRF Ongelman tila:  $ecrffieldstatusentry_status
+   • eCRF-ongelman tila:  $ecrffieldstatusentry_status
 
    • Muokattu: #if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
 
@@ -37,22 +37,22 @@ $ecrffieldstatusentry_comment
    • $log.status.name: $!log.comment
 #elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
    • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
-#end
-#end
+#loppu
+#loppu
 
 #end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
-Ole hyvä ja tarkista tiedot ratkaista eCRF kysymys:
+Tarkista syöttötiedot eCRF-ongelman ratkaisemiseksi:
 
    $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
-#Muu
-ECRF:n kysymys on päättynyt.
-#end
+#muu
+eCRF-ongelma on suljettu.
+#loppu
 
 Kiitos!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+Tämä on järjestelmän luoma sähköposti, joka on luotu $generated_on, ja se voi olla vanhentunut sillä välin. Älä vastaa.
 
---------------------------------------------------------------
+--------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Esimerkki: $instance_name

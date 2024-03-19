@@ -1,4 +1,4 @@
-Hyvä syvyyden jäsen. $proband_department,
+Arvoisa osaston jäsen. $proband_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -6,24 +6,24 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband luokka:        $proband_category
+   • Proband-osasto:     $proband_department
+   • Proband-luokka:        $proband_category
 
-   • Poistaminen ajoitettu:    $proband_autodeletedeadline
+   • Poisto ajoitettu:    $proband_autodeletedeadline
 
    • Viimeksi muokattu käyttäjä:      $proband_modifieduser_identity_name
    • Viimeksi muokattu aikaleima: $proband_modifiedtimestamp
 
 
-Ilman probandin tietoon perustuvaa suostumusta; tietojen poistaminen on pakollista tietojen yksityisyyden suojaamiseksi probandin arkaluonteisten tietojen suojaamiseksi ja henkilökohtaisesti tunnistettavien tietojen poistamiseksi. Sen vuoksi poistoa ei voida kiertää uudelleen.
+Ilman tutkijan tietoista suostumusta tietueen poisto on pakollinen tietosuojan toteuttamiseksi tutkittavan arkaluonteisten tietojen suojaamiseksi ja henkilötietojen poistamiseksi. Siksi poistoa ei voi peruuttaa.
 
-Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+Valmistaudu ja/tai ryhdy tarvittaviin toimiin.
 
 Kiitos!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+Tämä on järjestelmän luoma sähköposti, joka on luotu $generated_on, ja se voi olla vanhentunut sillä välin. Älä vastaa.
 
---------------------------------------------------------------
+--------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Esimerkki: $instance_name

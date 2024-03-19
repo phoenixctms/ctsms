@@ -1,25 +1,25 @@
-Шановний член глибини. $probandstatusentry_proband_department,
+Шановний член каф. $probandstatusentry_proband_department,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
-   • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Розширення розширення.: $probandstatusentry_proband_department
+   • Відділ пробанд: $probandstatusentry_proband_department
    • Пробанд кат.:  $probandstatusentry_proband_category
 
    • Тип:          $probandstatusentry_type
    • Від:          $probandstatusentry_start
    • Кому:            $probandstatusentry_stop
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

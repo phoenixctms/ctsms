@@ -1,4 +1,4 @@
-Stimate membru al decupării. $proband_department,
+Dragă membru al dept. $proband_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
@@ -6,24 +6,24 @@ aceasta este o notificare pentru următorul eveniment:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Deptartul proformației:     $proband_department
-   • Categorie de probandă:        $proband_category
+   • Departamentul Proband:     $proband_department
+   • Categoria Proband:        $proband_category
 
-   • Ștergere programată:    $proband_autodeletedeadline
+   • Ștergerea programată:    $proband_autodeletedeadline
 
    • Ultimul utilizator modificat:      $proband_modifieduser_identity_name
-   • Ultima modificare a fazei de timp: $proband_modifiedtimestamp
+   • Ultima modificare temporală: $proband_modifiedtimestamp
 
 
-Fără consimţământul în cunoştinţă de cauză al probei, eliminarea înregistrărilor este necesară pentru punerea în aplicare a confidențialității datelor pentru a proteja datele sensibile ale probei și pentru a renunța la informații identificabile personal. Prin urmare, o eliminare nu poate fi reluată.
+Fără consimțământul informat al probandului, eliminarea înregistrării este necesară pentru a implementa confidențialitatea datelor, pentru a proteja datele sensibile ale probei și pentru a elimina informațiile de identificare personală. Prin urmare, o ștergere nu poate fi anulată.
 
-Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
+Vă rugăm să pregătiți și/sau să luați măsurile adecvate.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instanță: $instance_name

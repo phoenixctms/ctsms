@@ -17,7 +17,7 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
 #son
 
    • eCRF durumu:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "Tamam")
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Giriş doğrulaması:     $ecrfstatusentry_validationresponsemsg
    • Doğrulama zaman damgası: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")

@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Caro $user_identity_firstname,
 
-il tuo account ${application.abbreviation} è stato #if($new_user)creato#{else}modificato#end.
+il tuo account ${application.abbreviation} è stato #se($new_user)creato#{else}modificato#end.
 
-   • Nome Utente:   $user_name
-#if($local_auth_method)
-#if($new_user)
+   • Nome utente:   $user_name
+#se($local_auth_method)
+#se($new_user)
    • Un amministratore ti informerà della password effettiva.
-#else
+#altro
    • La password rimane invariata.
-#end
-#elseif($ldap_auth_method)
-   • La password da usare è la tua MUG-password.
+#FINE
+#altrimentise($ldap_auth_method)
+   • La password da utilizzare è la password MUG.
 
-#if($new_user)
-Quando accedi per la prima volta, inserisci la password fornita dall'amministratore come "password locale".
-#else
-Quando accedi alla prossima volta, inserisci la tua password attuale come "password locale".
-#end
-#end
+#se($new_user)
+Al primo accesso inserire come “password locale” obbligatoria la password fornita dall'amministratore.
+#altro
+Al prossimo accesso, inserisci la tua password attuale come "password locale" obbligatoria.
+#FINE
+#FINE
 
-#if($new_user)
-Il sistema è accessibile sul sito sottostante:
+#se($new_user)
+Il sistema è accessibile al sito seguente:
 
    $http_base_url
 
-#end
-IMPORTANTE: L'account consente di leggere personalmente le informazioni identificabili dei soggetti registrati dagli utenti del reparto "$user_department". Per mantenere la privacy dei dati, le credenziali dell'account devono essere tenute al sicuro. Non ti verrà mai chiesto di fornire credenziali via email o server diversi da "$http_domain_name".
+#FINE
+IMPORTANTE: L'account consente di leggere le informazioni di identificazione personale dei soggetti registrati dagli utenti del dipartimento "$user_department". Per mantenere la privacy dei dati, le credenziali dell'account devono essere mantenute segrete. Non ti verrà mai chiesto di fornire credenziali tramite email o server diversi da "$http_domain_name".
 
 Grazie!
 
-Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+Questa è un'e-mail generata dal sistema creata il $generated_on, nel frattempo potrebbe essere obsoleta. Non rispondere.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Istanza: $instance_name

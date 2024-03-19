@@ -1,27 +1,27 @@
-Уважаемый член глубины. $course_department,
+Уважаемый сотрудник отд. $course_department,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
    • Курс:                 $course_name
-   • Название CV курса:        $course_cvtitle
+   • Название резюме курса:        $course_cvtitle
    • Отдел курса:      $course_department
-   • Категория курсов:        $course_category
+   • Категория курса:        $course_category
 
    • Начало курса:           $course_start
-   • Окончание курса:             $course_stop
+   • Конец курса:             $course_stop
    • Срок участия: $course_participationdeadline
 
-Зарегистрироваться на этот курс:
+Зарегистрируйтесь на этот курс:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

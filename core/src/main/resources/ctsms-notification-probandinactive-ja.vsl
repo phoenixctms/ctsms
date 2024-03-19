@@ -1,25 +1,25 @@
-Dear member of dept $probandstatusentry_proband_department,
+親愛なる部員の皆様。 $probandstatusentry_proband_department、
 
-これは以下のイベントの通知です：
+以下のイベントのお知らせです。
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • 発端者: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • プロバンド cat.:  $probandstatusentry_proband_category
+   • 発端者部門: $probandstatusentry_proband_department
+   • 発端猫:  $probandstatusentry_proband_category
 
-   • 種類:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
+   • 入力:          $probandstatusentry_type
+   • 送信者:          $probandstatusentry_start
    • 宛先:            $probandstatusentry_stop
 
-適切な行動を取ってください。
+適切な準備や対応を行ってください。
 
 ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+インスタンス: $instance_name

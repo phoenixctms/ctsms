@@ -1,26 +1,26 @@
-#if($notification.maintenanceScheduleItem.responsible)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Дорогой #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
-   • Инвентаризация:       $maintenancescheduleitem_inventory_name
-   • Глубина запасов.: $maintenancescheduleitem_inventory_department
-   • Кошка инвентаря.:  $maintenancescheduleitem_inventory_category
+   • Инвентарь:       $maintenancescheduleitem_inventory_name
+   • Отдел инвентаря: $maintenancescheduleitem_inventory_department
+   • Инвентарь:  $maintenancescheduleitem_inventory_category
 
-   • Название: '$notification.maintenanceScheduleItem.title'
+   • Заголовок: '$notification.maintenanceScheduleItem.title'
    • Тип:            $maintenancescheduleitem_type
    • Дата:            $maintenancescheduleitem_nextrecurrence
 
-   • Контакт компании: $maintenancescheduleitem_companycontact_name
+   • Контактная информация компании: $maintenancescheduleitem_companycontact_name
 
-Просьба подготовить и/или принять соответствующие меры.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

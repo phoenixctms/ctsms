@@ -1,30 +1,30 @@
 Шановний $visitscheduleitem_trial_name член судової групи або член відділу. $probandstatusentry_proband_department,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
-   • Протокол: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Розширення розширення.: $probandstatusentry_proband_department
+   • Відділ пробанд: $probandstatusentry_proband_department
    • Пробанд кат.:  $probandstatusentry_proband_category
 
    • Тип статусу:   $probandstatusentry_type
    • Статус від:   $probandstatusentry_start
    • Статус:     $probandstatusentry_stop
 
-   • Пробна:         $visitscheduleitem_trial_name
+   • Випробування:         $visitscheduleitem_trial_name
    • Відвідайте:         $visitscheduleitem_name
    • Відвідайте з:    $visitscheduleitem_start
    • Відвідайте:      $visitscheduleitem_stop
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

@@ -1,26 +1,26 @@
-Dear $courseparticipationstatusentry_staff_firstname,
+Шановний $courseparticipationstatusentry_staff_firstname,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
    • Курс:              $courseparticipationstatusentry_course_name
-   • Курс CV заголовок:     $courseparticipationstatusentry_course_cvtitle
-   • Курсова кафедра:   $courseparticipationstatusentry_course_department
-   • Курс категорії:     $courseparticipationstatusentry_course_category
+   • Назва CV курсу:     $courseparticipationstatusentry_course_cvtitle
+   • Курсове відділення:   $courseparticipationstatusentry_course_department
+   • Категорія курсу:     $courseparticipationstatusentry_course_category
 
    • Кінець курсу:          $courseparticipationstatusentry_course_stop
    • Термін дії: $courseparticipationstatusentry_course_expiration
 
-Будь ласка, відвідайте підходящий курс оновлення:
+Перейдіть, щоб зареєструватися на відповідний курс підвищення кваліфікації:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

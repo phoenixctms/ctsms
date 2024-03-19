@@ -1,0 +1,46 @@
+亲爱的 $ecrfstatusentry_listentry_trial_name 试验组成员或部门成员 $ecrfstatusentry_listentry_trial_department,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 试用：                $ecrfstatusentry_listentry_trial_name
+   • 试用部门：     $ecrfstatusentry_listentry_trial_department
+   • 先证者：#if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+
+   • eCRF：                 $ecrfstatusentry_ecrf_name
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • 先证者组：        $notification.ecrfStatusEntry.listEntry.group.title
+＃结尾
+#if($notification.ecrfStatusEntry.visit)
+   • 访问：                $notification.ecrfStatusEntry.visit.title
+＃结尾
+
+   • eCRF 状态：          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "确定")
+   • 输入验证：     $ecrfstatusentry_validationresponsemsg
+   • 验证时间戳： $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "失败")
+   • $ecrfstatusentry_validationresponsemsg
+   • 时间戳：            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "待处理")
+   • 输入验证待处理。
+＃结尾
+
+   • 修改：#if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+
+
+#if(!$notification.ecrfStatusEntry.status.done)
+请继续执行后续步骤以完成 eCRF 数据输入。
+＃别的
+eCRF 数据输入完成。
+＃结尾
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

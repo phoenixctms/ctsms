@@ -1,26 +1,26 @@
-Dear $courseparticipationstatusentry_staff_firstname,
+Estimado $courseparticipationstatusentry_staff_firstname,
 
-esta es una notificación para el siguiente evento:
+Esta es una notificación para el siguiente evento:
 
    $type
 
    • Curso:              $courseparticipationstatusentry_course_name
-   • Título CV del curso:     $courseparticipationstatusentry_course_cvtitle
+   • Título del CV del curso:     $courseparticipationstatusentry_course_cvtitle
    • Departamento del curso:   $courseparticipationstatusentry_course_department
    • Categoría del curso:     $courseparticipationstatusentry_course_category
 
    • Fin del curso:          $courseparticipationstatusentry_course_stop
-   • Vencimiento de validez: $courseparticipationstatusentry_course_expiration
+   • Caducidad de validez: $courseparticipationstatusentry_course_expiration
 
-Por favor visita para registrarte en un curso de actualización adecuado:
+Visite para registrarse en un curso de actualización adecuado:
 
-   $http_base_url/personal/expiraciónParticipationOverview.jsf
+   $http_base_url/staff/expiringParticipationOverview.jsf
 
 ¡Gracias!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado el $generated_on, es posible que mientras tanto esté desactualizado. No responder.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instancia: $instance_name

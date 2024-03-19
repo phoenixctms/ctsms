@@ -1,4 +1,4 @@
-Hyvä $ecrfstatusentry_listentry_trial_name kokeiluryhmän jäsen tai syvyyden jäsen. $ecrfstatusentry_listentry_trial_department,
+Hyvä $ecrfstatusentry_listentry_trial_name kokeilutiimin jäsen tai osaston jäsen. $ecrfstatusentry_listentry_trial_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -10,37 +10,37 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband ryhmä:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+   • Proband-ryhmä:        $notification.ecrfStatusEntry.listEntry.group.title
+#loppu
 #if($notification.ecrfStatusEntry.visit)
-   • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+   • Käy:                $notification.ecrfStatusEntry.visit.title
+#loppu
 
-   • eCRF tila:          $ecrfstatusentry_status
+   • eCRF-tila:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
    • Syötteen vahvistus:     $ecrfstatusentry_validationresponsemsg
    • Vahvistuksen aikaleima: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Aikaleima:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Syöttövahvistus on vireillä.
-#end
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "DODING")
+   • Syötteen vahvistus odottaa.
+#loppu
 
    • Muokattu: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Jatka seuraavin vaihein saadaksesi eCRF datan syötön valmiiksi.
-#Muu
-ECRF-tietojen syöttö on valmis.
-#end
+Jatka seuraaviin vaiheisiin eCRF-tietojen syöttämisen viimeistelemiseksi.
+#muu
+eCRF-tietojen syöttö on valmis.
+#loppu
 
 Kiitos!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+Tämä on järjestelmän luoma sähköposti, joka on luotu $generated_on, ja se voi olla vanhentunut sillä välin. Älä vastaa.
 
---------------------------------------------------------------
+--------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Esimerkki: $instance_name

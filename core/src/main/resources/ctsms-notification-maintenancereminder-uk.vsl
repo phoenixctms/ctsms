@@ -1,26 +1,26 @@
 Шановний #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
    • Інвентар:       $maintenancescheduleitem_inventory_name
-   • Зменшити розмір інвентарю: $maintenancescheduleitem_inventory_department
+   • Відділ інвентаризації: $maintenancescheduleitem_inventory_department
    • Кат. інвентарю:  $maintenancescheduleitem_inventory_category
 
    • Назва: '$notification.maintenanceScheduleItem.title'
    • Тип:            $maintenancescheduleitem_type
    • Дата:            $maintenancescheduleitem_nextrecurrence
 
-   • Контакт компанії: $maintenancescheduleitem_companycontact_name
+   • Контактна особа компанії: $maintenancescheduleitem_companycontact_name
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

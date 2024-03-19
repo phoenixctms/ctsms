@@ -1,29 +1,29 @@
-Kære medlem af dept. $proband_department,
+Kære medlem af afd. $proband_department,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#slut
 
-   • Proband deptartment:     $proband_department
+   • Proband-afdeling:     $proband_department
    • Proband kategori:        $proband_category
 
    • Planlagt sletning:    $proband_autodeletedeadline
 
-   • Sidst ændret bruger:      $proband_modifieduser_identity_name
-   • Sidst ændret tidsstempel: $proband_modifiedtimestamp
+   • Sidst ændrede bruger:      $proband_modifieduser_identity_name
+   • Sidst ændrede tidsstempel: $proband_modifiedtimestamp
 
 
-Uden et informeret samtykke fra sandsynligheden at fjernelse af data er nødvendig for at implementere databeskyttelse for at beskytte probandens følsomme data og slippe personligt identificerbare oplysninger. Derfor kan en sletning ikke rulles tilbage.
+Uden informeret samtykke fra probanden, er registreringsfjernelsen påkrævet for at implementere databeskyttelse for at beskytte probandens følsomme data og droppe personligt identificerbare oplysninger. Derfor kan en sletning ikke rulles tilbage.
 
-Forbered og/eller foretag passende foranstaltninger.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Forekomst: $instance_name

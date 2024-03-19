@@ -1,30 +1,30 @@
-Stimate $trial_name membru al echipei de încercare sau membru de debut. $trial_department,
+Stimate $trial_name membru al echipei de încercare sau membru al departamentului. $trial_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
    • Cod de încercare:   $trial_name
-   • Titlul studiului:  $trial_title
-   • Dept-ul testului:  $trial_department
+   • Titlul procesului:  $trial_title
+   • Departamentul proces:  $trial_department
 
-   • Stare de încercare: $trial_status
+   • Starea de încercare: $trial_status
 #if($notification.trial.status.lockdown)
    • Blocare: nicio modificare ulterioară a procesului și a înregistrărilor asociate.
-#end
+#Sfârşit
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Intrările de valori ale investigației sunt activate.
-#altceva
-   • Intrările de valori ale investigației sunt dezactivate.
-#end
+   • Intrările valorii de interogare sunt activate.
+#altfel
+   • Intrările valorii de interogare sunt dezactivate.
+#Sfârşit
 
-Vă rugăm să pregătiţi şi/sau să luaţi măsurile adecvate.
+Vă rugăm să pregătiți și/sau să luați măsurile adecvate.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instanță: $instance_name

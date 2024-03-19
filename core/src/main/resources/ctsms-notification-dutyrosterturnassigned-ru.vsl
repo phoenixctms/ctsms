@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Дорогой $staff_firstname,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
-   • Испытание:          $dutyrosterturn_trial_name
-   • Обязанность от:      $dutyrosterturn_start
-   • Обязанность:        $dutyrosterturn_stop
+   • Пробная версия:          $dutyrosterturn_trial_name
+   • Дежурство от:      $dutyrosterturn_start
+   • Обязанности:        $dutyrosterturn_stop
 
    • Календарь:       $dutyrosterturn_calendar
-   • Название обязанности:     $dutyrosterturn_title
-   • Посещение:          $dutyrosterturn_visitscheduleitem_name
+   • Должность:     $dutyrosterturn_title
+   • Посетите:          $dutyrosterturn_visitscheduleitem_name
 
-   • Персонал:          $dutyrosterturn_staff_name
+   • Посох:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Самораспределение.
-#else
-   • Не выделять себя.
+   • Самораспределяемый.
+#еще
+   • Никакого самораспределения.
 #конец
 
    • Изменено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Комментарий:
+Комментарий к обязанностям:
 
 $dutyrosterturn_comment
 
-Назначение обязанностей является обязательным и может измениться до тех пор, пока они не заморозятся. С обновленным обзором можно ознакомиться на следующем сайте:
+Распределение обязанностей является обязательным и может меняться до момента их окончательного замораживания. Актуальный обзор доступен на сайте ниже:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name

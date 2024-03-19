@@ -1,26 +1,26 @@
-Estimado miembro del equipo de prueba $visitscheduleitem_trial_name o miembro del departamento. $visitscheduleitem_trial_department
+Estimado $visitscheduleitem_trial_name miembro del equipo de prueba o miembro del departamento. $visitscheduleitem_trial_department,
 
-esta es una notificación para el siguiente evento:
+Esta es una notificación para el siguiente evento:
 
    $type
 
-   • Ensayo:         $visitscheduleitem_trial_name
+   • Prueba:         $visitscheduleitem_trial_name
    • Visita:         $visitscheduleitem_name
    • Visita desde:    $visitscheduleitem_start
    • Visita a:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Probanda: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#end
+#fin
 
 Por favor prepare y/o tome las acciones apropiadas.
 
 ¡Gracias!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado el $generated_on, es posible que mientras tanto esté desactualizado. No responder.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instancia: $instance_name

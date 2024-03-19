@@ -1,12 +1,12 @@
-Dear $staff_firstname,
+Шановний $staff_firstname,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
-   • Пробна:          $dutyrosterturn_trial_name
+   • Випробування:          $dutyrosterturn_trial_name
    • Мито від:      $dutyrosterturn_start
-   • Обов'язок дані:        $dutyrosterturn_stop
+   • Обов'язок:        $dutyrosterturn_stop
 
    • Календар:       $dutyrosterturn_calendar
    • Назва посади:     $dutyrosterturn_title
@@ -14,27 +14,27 @@ Dear $staff_firstname,
 
    • Новий персонал:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Самоузгоджено.
+   • Саморозподіл.
 #інше
-   • Жодного розподілу.
-#закінчується
+   • Немає самостійного розподілу.
+#кінець
 
-   • Змінено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Змінено: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#кінець
 
 
-Обов'язний коментар:
+Обов'язковий коментар:
 
 $dutyrosterturn_comment
 
-Обов'язкове завдання є обов'язковим і може змінюватися, поки вони нарешті не будуть заморожені. Попередній огляд доступна на сайті нижче:
+Призначення обов'язкових і може змінюватися до їх остаточного заморожування. Актуальний огляд доступний на сайті нижче:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

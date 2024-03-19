@@ -18,7 +18,7 @@ to je obvestilo za naslednji dogodek:
    • razdelek eCRF:       $ecrffieldstatusentry_ecrffield_section
    • Vnosno polje:        ${ecrffieldstatusentry_ecrffield_position}. $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
-   • Indeks:              $ecrffieldstatusentry_index
+   • Kazalo:              $ecrffieldstatusentry_index
 #konec
 
    • Stanje težave z eCRF:  $ecrffieldstatusentry_status

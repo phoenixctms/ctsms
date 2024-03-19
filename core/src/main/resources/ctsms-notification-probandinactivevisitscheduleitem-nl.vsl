@@ -1,4 +1,4 @@
-Geachte $visitscheduleitem_trial_name test teamlid of lid van de diepte. $probandstatusentry_proband_department,
+Beste $visitscheduleitem_trial_name proefteamlid of lid van de afdeling. $probandstatusentry_proband_department,
 
 dit is een melding voor de volgende gebeurtenis:
 
@@ -6,25 +6,25 @@ dit is een melding voor de volgende gebeurtenis:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Vereenvoudigd diepte: $probandstatusentry_proband_department
-   • Proband kat:  $probandstatusentry_proband_category
+   • Onderzoeksafdeling: $probandstatusentry_proband_department
+   • Proband-cat.:  $probandstatusentry_proband_category
 
    • Statustype:   $probandstatusentry_type
-   • Status van:   $probandstatusentry_start
+   • Status vanaf:   $probandstatusentry_start
    • Status naar:     $probandstatusentry_stop
 
-   • Probeer:         $visitscheduleitem_trial_name
+   • Proef:         $visitscheduleitem_trial_name
    • Bezoek:         $visitscheduleitem_name
    • Bezoek van:    $visitscheduleitem_start
-   • Bezoek naar:      $visitscheduleitem_stop
+   • Bezoek aan:      $visitscheduleitem_stop
 
-Bereid u voor en/of neem passende acties.
+Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
---------------------------------------------------------------
+---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instantie: $instance_name

@@ -1,26 +1,26 @@
-Cher membre de l'équipe d'essai $visitscheduleitem_trial_name ou membre du département. $visitscheduleitem_trial_department,
+Cher $visitscheduleitem_trial_name membre de l'équipe d'essai ou membre du département. $visitscheduleitem_trial_department,
 
-Ceci est une notification pour l'événement suivant :
+il s'agit d'une notification pour l'événement suivant :
 
    $type
 
-   • Essai :         $visitscheduleitem_trial_name
-   • Visite:         $visitscheduleitem_name
-   • Visite de :    $visitscheduleitem_start
-   • Visiter à:      $visitscheduleitem_stop
+   • Essai :         $visitscheduleitem_trial_name
+   • Visite :         $visitscheduleitem_name
+   • Visite à partir de :    $visitscheduleitem_start
+   • Visite à :      $visitscheduleitem_stop
 #if($notification.proband)
 
    • Proband : #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#end
+#fin
 
-Préparez et/ou prenez les mesures appropriées.
+Veuillez préparer et/ou prendre les mesures appropriées.
 
 Merci!
 
-Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+Il s'agit d'un e-mail généré par le système créé le $generated_on, il est peut-être obsolète entre-temps. Ne pas répondre.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance : $instance_name
+Instance : $instance_name

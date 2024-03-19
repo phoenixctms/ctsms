@@ -1,0 +1,29 @@
+尊敬的部门成员 $proband_department,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 先证者：#if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+
+   •先证者部门：     $proband_department
+   • 先证者类别：        $proband_category
+
+   • 预定删除：    $proband_autodeletedeadline
+
+   • 最后修改的用户：      $proband_modifieduser_identity_name
+   • 最后修改时间戳： $proband_modifiedtimestamp
+
+
+在未经先证者知情同意的情况下，需要删除记录以实现数据隐私，以保护先证者的敏感数据并删除个人身份信息。 因此删除操作无法回滚。
+
+请准备和/或采取适当的行动。
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

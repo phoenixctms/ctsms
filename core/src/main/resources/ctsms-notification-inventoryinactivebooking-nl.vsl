@@ -1,43 +1,43 @@
-Dear $inventorybooking_onbehalfof_firstname,
+Beste $inventorybooking_onbehalfof_firstname,
 
 dit is een melding voor de volgende gebeurtenis:
 
    $type
 
    • Voorraad:       $inventorybooking_inventory_name
-   • Inventaris diepte: $inventorybooking_inventory_department
-   • Inventaris kat:  $inventorybooking_inventory_category
+   • Voorraadafdeling: $inventorybooking_inventory_department
+   • Voorraadcat.:  $inventorybooking_inventory_category
 
    • Statustype:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Oorspronkelijk:      $inventorystatusentry_originator_name
+   • Initiatiefnemer:      $inventorystatusentry_originator_name
 #einde
-   • Status van:     $inventorystatusentry_start
+   • Status vanaf:     $inventorystatusentry_start
    • Status naar:       $inventorystatusentry_stop
 
-   • Boeking van:    $inventorybooking_start
-   • Boeking naar:      $inventorybooking_stop
+   • Boeking vanaf:    $inventorybooking_start
+   • Boeking tot:      $inventorybooking_stop
 
-   • Voor natuurlijk:      $inventorybooking_course_name
-   • Voor proef:       $inventorybooking_trial_name
-   • Voor meer: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Voor de cursus:      $inventorybooking_course_name
+   • Ter proef:       $inventorybooking_trial_name
+   • Voor proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status reactie:
+Statuscommentaar:
 
 $inventorystatusentry_comment
 
-Commentaar reserveren:
+Boeking commentaar:
 
 $inventorybooking_comment
 
-Bereid u voor en/of neem passende acties.
+Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
---------------------------------------------------------------
+---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instantie: $instance_name

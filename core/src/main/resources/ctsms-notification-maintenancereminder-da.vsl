@@ -1,26 +1,26 @@
-Kære #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Kære #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#slut,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Inventar:       $maintenancescheduleitem_inventory_name
-   • Inventar dept.: $maintenancescheduleitem_inventory_department
-   • Inventar kat:  $maintenancescheduleitem_inventory_category
+   • Beholdning:       $maintenancescheduleitem_inventory_name
+   • Inventarafdeling: $maintenancescheduleitem_inventory_department
+   • Inventar kat.:  $maintenancescheduleitem_inventory_category
 
    • Titel: '$notification.maintenanceScheduleItem.title'
    • Type:            $maintenancescheduleitem_type
    • Dato:            $maintenancescheduleitem_nextrecurrence
 
-   • Firma kontakt: $maintenancescheduleitem_companycontact_name
+   • Firmakontakt: $maintenancescheduleitem_companycontact_name
 
-Forbered og/eller foretag passende foranstaltninger.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Forekomst: $instance_name

@@ -1,33 +1,33 @@
 Шановний $visitscheduleitem_trial_name член команди випробувань або керівник $staff_name,
 
-це сповіщення для наступної події:
+це сповіщення про наступну подію:
 
    $type
 
-   • Пробна:      $visitscheduleitem_trial_name
+   • Випробування:      $visitscheduleitem_trial_name
    • Відвідайте:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
+#якщо($visit_schedule_item_day_date)
    • Дата:       $visit_schedule_item_day_date
 #інше
    • Відвідайте з: $visitscheduleitem_start
    • Відвідайте:   $visitscheduleitem_stop
-#закінчується
+#кінець
 
    • Поріг:  $inactive_staff_limit
 
-$inactive_staff.size() співробітників N/A:
+$inactive_staff.size() співробітників Н/Д:
 
-#foreach($employee in $inactive_staff)
+#foreach($employee в $inactive_staff)
    • $employee.name
-#закінчується
+#кінець
 
-Будь ласка, приготуйтесь і/або виконуйте відповідні дії.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-Це системний, створений на $generated_onе-поштою, тому це може бути застарілим. Не відповідайте.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Примірник: $instance_name

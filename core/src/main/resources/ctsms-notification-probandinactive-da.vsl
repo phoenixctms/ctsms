@@ -1,25 +1,25 @@
-Kære medlem af dept. $probandstatusentry_proband_department,
+Kære medlem af afd. $probandstatusentry_proband_department,
 
 dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#slut
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband kat:  $probandstatusentry_proband_category
+   • Proband afd.: $probandstatusentry_proband_department
+   • Proband kat.:  $probandstatusentry_proband_category
 
    • Type:          $probandstatusentry_type
    • Fra:          $probandstatusentry_start
    • Til:            $probandstatusentry_stop
 
-Forbered og/eller foretag passende foranstaltninger.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Forekomst: $instance_name

@@ -1,26 +1,26 @@
-Caro membro da equipe de teste $visitscheduleitem_trial_name ou membro da dep. $visitscheduleitem_trial_department,
+Prezado $visitscheduleitem_trial_name membro da equipe de teste ou membro do departamento. $visitscheduleitem_trial_department,
 
 esta é uma notificação para o seguinte evento:
 
    $type
 
-   • Provação:         $visitscheduleitem_trial_name
-   • Visita:         $visitscheduleitem_name
+   • Teste:         $visitscheduleitem_trial_name
+   • Visite:         $visitscheduleitem_name
    • Visita de:    $visitscheduleitem_start
-   • Visite a:      $visitscheduleitem_stop
+   • Visita a:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Perfil: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #fim
 
-Por favor, prepare-se e/ou tome as medidas adequadas.
+Prepare-se e/ou tome as medidas apropriadas.
 
 Obrigado!
 
-Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+Este é um e-mail gerado pelo sistema criado em $generated_on, pode estar desatualizado entretanto. Não responda.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instância: $instance_name

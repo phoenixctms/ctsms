@@ -1,0 +1,31 @@
+尊敬的部门成员 $inventorystatusentry_inventory_department,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 库存：       $inventorystatusentry_inventory_name
+   • 库存部门： $inventorystatusentry_inventory_department
+   • 库存类别：  $inventorystatusentry_inventory_category
+
+   • 类型：            $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • 发起者：      $inventorystatusentry_originator_name
+＃结尾
+   • 来自：            $inventorystatusentry_start
+   • 至：              $inventorystatusentry_stop
+
+评论：
+
+$inventorystatusentry_comment
+
+请准备和/或采取适当的行动。
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

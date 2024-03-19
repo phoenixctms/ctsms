@@ -1,27 +1,27 @@
-Dear member of dept $course_department,
+親愛なる部員の皆様。 $course_department、
 
-これは以下のイベントの通知です：
+以下のイベントのお知らせです。
 
    $type
 
-   • コース：                 $course_name
-   • コース CV タイトル:        $course_cvtitle
+   • コース:                 $course_name
+   • コース履歴書のタイトル:        $course_cvtitle
    • コース部門:      $course_department
-   • コースカテゴリ：        $course_category
+   • コースカテゴリ:        $course_category
 
    • コース開始:           $course_start
    • コース終了:             $course_stop
    • 参加期限: $course_participationdeadline
 
-このコースに登録:
+このコースに登録するには:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+インスタンス: $instance_name

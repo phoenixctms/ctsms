@@ -1,4 +1,4 @@
-Geachte lid van het diepte. $probandstatusentry_proband_department,
+Geacht lid van de afd. $probandstatusentry_proband_department,
 
 dit is een melding voor de volgende gebeurtenis:
 
@@ -6,20 +6,20 @@ dit is een melding voor de volgende gebeurtenis:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Vereenvoudigd diepte: $probandstatusentry_proband_department
-   • Proband kat:  $probandstatusentry_proband_category
+   • Onderzoeksafdeling: $probandstatusentry_proband_department
+   • Proband-cat.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
+   • Typ:          $probandstatusentry_type
    • Van:          $probandstatusentry_start
-   • Aan:            $probandstatusentry_stop
+   • Naar:            $probandstatusentry_stop
 
-Bereid u voor en/of neem passende acties.
+Bereid passende maatregelen voor en/of onderneem passende maatregelen.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+Dit is een door het systeem gegenereerde e-mail die is gemaakt op $generated_onen in de tussentijd mogelijk verouderd is. Niet antwoorden.
 
---------------------------------------------------------------
+---------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instantie: $instance_name

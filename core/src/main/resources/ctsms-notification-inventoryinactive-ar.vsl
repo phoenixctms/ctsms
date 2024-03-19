@@ -1,12 +1,12 @@
-عزيزي العضو العمق. $inventorystatusentry_inventory_department,
+عزيزي عضو القسم $inventorystatusentry_inventory_department,
 
-وهذا إشعار يتعلق بالحدث التالي:
+هذا إشعار للحدث التالي:
 
    $type
 
    • المخزون:       $inventorystatusentry_inventory_name
-   • عمق المخزون: $inventorystatusentry_inventory_department
-   • القطط المخزنة:  $inventorystatusentry_inventory_category
+   • قسم الجرد: $inventorystatusentry_inventory_department
+   • قطة الجرد.:  $inventorystatusentry_inventory_category
 
    • النوع:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
@@ -15,17 +15,17 @@
    • من:            $inventorystatusentry_start
    • إلى:              $inventorystatusentry_stop
 
-التعليق:
+تعليق:
 
 $inventorystatusentry_comment
 
-يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
+يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 
 شكرًا لك!
 
-هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-الموقع: $instance_name
+المثيل: $instance_name

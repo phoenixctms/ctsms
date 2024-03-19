@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Hyvä $user_identity_firstname,
 
 ${application.abbreviation} tilisi #if($new_user)luodin#{else}muutettiin #end.
 
-   • Käyttäjänimi:   $user_name
+   • Käyttäjätunnus:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • Järjestelmänvalvoja ilmoittaa sinulle varsinaisen salasanan.
-#Muu
+   • Järjestelmänvalvoja ilmoittaa sinulle todellisen salasanan.
+#muu
    • Salasana pysyy muuttumattomana.
-#end
+#loppu
 #elseif($ldap_auth_method)
-   • Käytettävä salasana on sinun MUG-salasanasi.
+   • Käytettävä salasana on MUG-salasanasi.
 
 #if($new_user)
-Kun kirjaudut sisään ensimmäistä kertaa, syötä ylläpitäjän antama salasana pakolliseksi "paikallinen salasana".
-#Muu
-Kun kirjaudut seuraavan kerran, syötä nykyinen salasana pakolliseksi "paikallinen salasana".
-#end
-#end
+Kun kirjaudut sisään ensimmäistä kertaa, syötä pakolliseksi "paikalliseksi salasanaksi" ylläpitäjän antama salasana.
+#muu
+Kun kirjaudut sisään seuraavan kerran, kirjoita nykyinen salasanasi pakolliseksi "paikalliseksi salasanaksi".
+#loppu
+#loppu
 
 #if($new_user)
-Järjestelmä on käytettävissä alla olevalla sivustolla:
+Järjestelmään pääsee alla olevasta sivustosta:
 
    $http_base_url
 
-#end
-TÄRKEÄÄ: Tilin avulla voit lukea henkilökohtaisesti tunnistettavia tietoja aiheista, jotka käyttäjät ovat rekisteröineet "$user_department" osasto. Tietojen yksityisyyden säilyttämiseksi tilitiedot on pidettävä salassa. Sinua ei koskaan pyydetä antamaan käyttäjätunnuksia sähköpostitse tai muilla palvelimilla kuin "$http_domain_name".
+#loppu
+TÄRKEÄÄ: Tilin avulla voit lukea "$user_department" -osaston käyttäjien rekisteröimien aiheiden henkilökohtaisia tunnistetietoja. Tietosuojan säilyttämiseksi tilin tunnistetiedot on pidettävä salassa. Sinua ei koskaan pyydetä antamaan tunnistetietoja sähköpostitse tai muilla palvelimilla kuin "$http_domain_name".
 
 Kiitos!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+Tämä on järjestelmän luoma sähköposti, joka on luotu $generated_on, ja se voi olla vanhentunut sillä välin. Älä vastaa.
 
---------------------------------------------------------------
+--------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Esimerkki: $instance_name

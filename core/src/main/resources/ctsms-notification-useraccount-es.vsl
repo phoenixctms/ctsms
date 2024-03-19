@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Estimado $user_identity_firstname,
 
-tu cuenta de ${application.abbreviation} fue #if($new_user)creada#{else}cambiado#end.
+su cuenta ${application.abbreviation} fue #si($new_user)creada#{else}cambió#final.
 
-   • Usuario:   $user_name
-#if($local_auth_method)
-#if($new_user)
-   • Un administrador le informará de la contraseña real.
-#sino
+   • Nombre de usuario:   $user_name
+#si($local_auth_method)
+#si($new_user)
+   • Un administrador le informará la contraseña real.
+#demás
    • La contraseña permanece sin cambios.
-#end
+#fin
 #elseif($ldap_auth_method)
    • La contraseña a utilizar es su contraseña MUG.
 
-#if($new_user)
-Al iniciar sesión por primera vez, introduzca la contraseña dada por el administrador como la "contraseña local" obligatoria.
-#sino
-Cuando inicie sesión en la próxima vez, introduzca su contraseña actual como la obligatoria "contraseña local".
-#end
-#end
+#si($new_user)
+Al iniciar sesión por primera vez, ingrese la contraseña proporcionada por el administrador como "contraseña local" obligatoria.
+#demás
+La próxima vez que inicie sesión, ingrese su contraseña actual como la "contraseña local" obligatoria.
+#fin
+#fin
 
-#if($new_user)
-El sistema es accesible en el siguiente sitio:
+#si($new_user)
+Se puede acceder al sistema en el siguiente sitio:
 
    $http_base_url
 
-#end
-IMPORTANTE: La cuenta le permite leer datos de identificación personal de temas registrados por los usuarios del departamento "$user_department". Para mantener la privacidad de los datos, las credenciales de las cuentas deben mantenerse en secreto. Nunca se le pedirá que proporcione credenciales a través de correo electrónico o servidores distintos de "$http_domain_name".
+#fin
+IMPORTANTE: La cuenta le permite leer información de identificación personal de los sujetos registrados por los usuarios del departamento "$user_department". Para mantener la privacidad de los datos, las credenciales de la cuenta deben mantenerse en secreto. Nunca se le pedirá que proporcione credenciales por correo electrónico o servidores distintos de "$http_domain_name".
 
 ¡Gracias!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+Este es un correo electrónico generado por el sistema creado el $generated_on, es posible que mientras tanto esté desactualizado. No responder.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
 Instancia: $instance_name

@@ -1,0 +1,58 @@
+亲爱的 $ecrffieldstatusentry_listentry_trial_name 试验组成员或部门成员 $ecrffieldstatusentry_listentry_trial_department,
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 试用：              $ecrffieldstatusentry_listentry_trial_name
+   • 试用部：   $ecrffieldstatusentry_listentry_trial_department
+   • 先证者：#if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
+
+   • eCRF：               $ecrffieldstatusentry_ecrffield_ecrf_name
+#if($notification.ecrfFieldStatusEntry.listEntry.group)
+   • 先证者组：      $notification.ecrfFieldStatusEntry.listEntry.group.title
+＃结尾
+#if($notification.ecrfFieldStatusEntry.visit)
+   • 访问：              $notification.ecrfFieldStatusEntry.visit.title
+＃结尾
+   • eCRF 部分：       $ecrffieldstatusentry_ecrffield_section
+   • 输入字段：        ${ecrffieldstatusentry_ecrffield_position}。 $ecrffieldstatusentry_ecrffield_field_name
+#if($notification.ecrfFieldStatusEntry.ecrfField.series)
+   • 索引：              $ecrffieldstatusentry_index
+＃结尾
+
+   • eCRF 问题状态：  $ecrffieldstatusentry_status
+
+   • 修改：#if($notification.ecrfFieldStatusEntry.modifiedUser.identity)$ecrffieldstatusentry_modifieduser_identity_name#{else}$ecrffieldstatusentry_modifieduser_name#end
+
+
+评论：
+
+$ecrffieldstatusentry_comment
+
+#if(${index_field_log.size()} > 0)历史记录：
+
+#foreach($log 在 $index_field_log)
+#if(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO")
+   • $log.status.name: $!log.comment
+#elseif(${log.class.name} == "org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO")
+   • saved (#if($string_utils.isEmpty($log.reasonForChange))version $log.version#{else}$log.reasonForChange#end): $ecrf_input_field_value_adapter.toString($log)
+＃结尾
+＃结尾
+
+#end#if(!$notification.ecrfFieldStatusEntry.status.resolved)
+请检查数据输入以解决 eCRF 问题：
+
+   $http_base_url/shared/ecrfSection.jsf?issueid=$ecrffieldstatusentry_id
+＃别的
+eCRF 问题已结束。
+＃结尾
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

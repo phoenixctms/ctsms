@@ -1,0 +1,43 @@
+亲爱的 $inventorybooking_onbehalfof_firstname，
+
+这是针对以下事件的通知：
+
+   $type
+
+   • 库存：       $inventorybooking_inventory_name
+   • 库存部门： $inventorybooking_inventory_department
+   • 库存类别：  $inventorybooking_inventory_category
+
+   • 状态类型：     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • 发起者：      $inventorystatusentry_originator_name
+＃结尾
+   • 状态来自：     $inventorystatusentry_start
+   • 状态为：       $inventorystatusentry_stop
+
+   • 预订自：    $inventorybooking_start
+   • 预订至：      $inventorybooking_stop
+
+   • 对于课程：      $inventorybooking_course_name
+   • 试用：       $inventorybooking_trial_name
+   • 对于先证者：#if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+
+
+状态评论：
+
+$inventorystatusentry_comment
+
+预订评论：
+
+$inventorybooking_comment
+
+请准备和/或采取适当的行动。
+
+谢谢你！
+
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
+
+-------------------------------------------------- ------------
+${application.abbreviation} ${application.version}
+
+实例： $instance_name

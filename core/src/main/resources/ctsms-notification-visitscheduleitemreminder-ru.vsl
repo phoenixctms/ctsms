@@ -1,26 +1,26 @@
-Уважаемый член пробной команды $visitscheduleitem_trial_name или член dept. $visitscheduleitem_trial_department,
+Уважаемый $visitscheduleitem_trial_name член испытательной группы или сотрудник отдела. $visitscheduleitem_trial_department,
 
-это уведомление для следующего события:
+это уведомление о следующем событии:
 
    $type
 
-   • Испытание:         $visitscheduleitem_trial_name
-   • Посещение:         $visitscheduleitem_name
-   • Посещение от:    $visitscheduleitem_start
-   • Посетить в:      $visitscheduleitem_stop
-#if($notification.proband)
+   • Пробная версия:         $visitscheduleitem_trial_name
+   • Посетите:         $visitscheduleitem_name
+   • Посетитель:    $visitscheduleitem_start
+   • Посещение:      $visitscheduleitem_stop
+#if($notification.пробанд)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
 #конец
 
-Просьба подготовить и/или принять соответствующие меры.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Экземпляр: $instance_name
