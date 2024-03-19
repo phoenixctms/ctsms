@@ -1,33 +1,33 @@
-عزيزي عضو الفريق التجريبي $visitscheduleitem_trial_name أو مشرف $staff_name،
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-وهذا إشعار يتعلق بالحدث التالي:
+this is a notification for the following event:
 
    $type
 
-   • المحاكمة:      $visitscheduleitem_trial_name
-   • زيارة:      $visitscheduleitem_name
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • التاريخ:       $visit_schedule_item_day_date
-#آخر
-   • زيارة من: $visitscheduleitem_start
-   • زيارة إلى:   $visitscheduleitem_stop
-#نهاية
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • الحيازة:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() موظفان N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employeeاسم
-#نهاية
+   • $employee.name
+#end
 
-يرجى إعداد و/أو اتخاذ الإجراءات المناسبة.
+Please prepare and/or take appropriate actions.
 
 شكرًا لك!
 
-هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-الموقع: $instance_name
+Instance: $instance_name
