@@ -1,46 +1,46 @@
-Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
+亲爱的 $ecrfstatusentry_listentry_trial_name 试验组成员或部门成员 $ecrfstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+这是针对以下事件的通知：
 
    $type
 
-   • Trial:                $ecrfstatusentry_listentry_trial_name
-   • Trial department:     $ecrfstatusentry_listentry_trial_department
-   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • 试用：                $ecrfstatusentry_listentry_trial_name
+   • 试用部门：     $ecrfstatusentry_listentry_trial_department
+   • 先证者：#if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
-   • eCRF:                 $ecrfstatusentry_ecrf_name
+   • eCRF：                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+   • 先证者组：        $notification.ecrfStatusEntry.listEntry.group.title
+＃结尾
 #if($notification.ecrfStatusEntry.visit)
-   • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+   • 访问：                $notification.ecrfStatusEntry.visit.title
+＃结尾
 
-   • eCRF status:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validation:     $ecrfstatusentry_validationresponsemsg
-   • Validation timestamp: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+   • eCRF 状态：          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "确定")
+   • 输入验证：     $ecrfstatusentry_validationresponsemsg
+   • 验证时间戳： $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "失败")
    • $ecrfstatusentry_validationresponsemsg
-   • Timestamp:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Input validation pending.
-#end
+   • 时间戳：            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "待处理")
+   • 输入验证待处理。
+＃结尾
 
-   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • 修改：#if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Please continue with next steps to complete the eCRF data entry.
-#else
-The eCRF data entry is completed.
-#end
+请继续执行后续步骤以完成 eCRF 数据输入。
+＃别的
+eCRF 数据输入完成。
+＃结尾
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
