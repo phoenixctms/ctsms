@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-tämä on ilmoitus seuraavasta tapahtumasta:
+this is a notification for the following event:
 
    $type
 
-   • Kurssi:              $courseparticipationstatusentry_course_name
-   • Kurssin CV otsikko:     $courseparticipationstatusentry_course_cvtitle
-   • Kurssiosasto:   $courseparticipationstatusentry_course_department
-   • Kurssiluokka:     $courseparticipationstatusentry_course_category
+   • Course:              $courseparticipationstatusentry_course_name
+   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
+   • Course department:   $courseparticipationstatusentry_course_department
+   • Course category:     $courseparticipationstatusentry_course_category
 
-   • Kurssin loppu:          $courseparticipationstatusentry_course_stop
-   • Voimassaolo päättyy: $courseparticipationstatusentry_course_expiration
+   • Course end:          $courseparticipationstatusentry_course_stop
+   • Validity expiration: $courseparticipationstatusentry_course_expiration
 
-Ole hyvä ja vieraile ilmoittautuaksesi sopivaan kertauskurssiin:
+Please visit to register for a suitable refresher course:
 
-   $http_base_url/staff/expiringParticipationYleiskatsaus.jsf
+   $http_base_url/staff/expiringParticipationOverview.jsf
 
-Kiitos!
+Thank you!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Instance: $instance_name
