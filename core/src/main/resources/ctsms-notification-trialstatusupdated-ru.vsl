@@ -1,30 +1,30 @@
-Уважаемый член пробной команды $trial_name или член dept. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-это уведомление для следующего события:
+this is a notification for the following event:
 
    $type
 
-   • Пробный код:   $trial_name
-   • Название пробной версии:  $trial_title
-   • Пробная версия:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Пробный статус: $trial_status
+   • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
-   • Блокировка: никаких дополнительных изменений в судебном разбирательстве и связанных с ним записей.
-#конец
+   • Lockdown: no further modification of the trial and associated records.
+#end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Запросы о ценности включены.
+   • Inquiry value inputs are enabled.
 #else
-   • Вход в справочную ценность отключен.
-#конец
+   • Inquiry value inputs are disabled.
+#end
 
-Просьба подготовить и/или принять соответствующие меры.
+Please prepare and/or take appropriate actions.
 
 Спасибо!
 
-Это системное письмо, созданное $generated_on, оно может быть устаревшим. Не отвечать.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Копия: $instance_name
+Instance: $instance_name
