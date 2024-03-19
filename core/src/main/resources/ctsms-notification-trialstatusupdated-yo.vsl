@@ -1,30 +1,30 @@
-Eyin $trial_name omo egbe idanwo tabi omo egbe Dept. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Koodu idanwo:   $trial_name
-   • Akọle idanwo:  $trial_title
-   • Ẹka iwadii:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Ipo idanwo: $trial_status
-#ti o ba jẹ ($notification.trial.status.lockdown)
-   • Titiipa: ko si iyipada siwaju sii ti idanwo ati awọn igbasilẹ ti o somọ.
-#opin
-#ti o ba jẹ ($notification.trial.status.inquiryValueInputEnabled)
-   • Awọn igbewọle iye ibeere ti ṣiṣẹ.
-#miiran
-   • Awọn igbewọle iye ibeere jẹ alaabo.
-#opin
+   • Trial status: $trial_status
+#if($notification.trial.status.lockdown)
+   • Lockdown: no further modification of the trial and associated records.
+#end
+#if($notification.trial.status.inquiryValueInputEnabled)
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
+#end
 
-Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+Please prepare and/or take appropriate actions.
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
