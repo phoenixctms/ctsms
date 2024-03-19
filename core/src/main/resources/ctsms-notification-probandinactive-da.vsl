@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Kære medlem af afd. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#slut
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Proband afd.: $probandstatusentry_proband_department
+   • Proband kat.:  $probandstatusentry_proband_category
 
    • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Fra:          $probandstatusentry_start
+   • Til:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Forekomst: $instance_name
