@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Sevgili #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-this is a notification for the following event:
+bu, aşağıdaki etkinlik için bir bildirimdir:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Envanter:       $maintenancescheduleitem_inventory_name
+   • Envanter bölümü: $maintenancescheduleitem_inventory_department
+   • Envanter kataloğu:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Başlık: '$notification.maintenanceScheduleItem.title'
+   • Tür:            $maintenancescheduleitem_type
+   • Tarih:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Şirket iletişim bilgileri: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 
 Teşekkür ederim!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Örnek: $instance_name
