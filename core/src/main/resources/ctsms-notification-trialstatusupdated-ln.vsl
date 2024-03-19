@@ -1,30 +1,30 @@
-Dear $trial_name trial team member or member of dept. $trial_department,
+Ndeko $trial_name membre ya équipe ya procès to membre ya dept. $trial_department, .
 
-this is a notification for the following event:
+oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Trial code:   $trial_name
-   • Trial title:  $trial_title
-   • Trial dept.:  $trial_department
+   • Code ya bomekoli:   $trial_name
+   • Titre ya procès:  $trial_title
+   • Departema ya bosambisi:  $trial_department
 
-   • Trial status: $trial_status
-#if($notification.trial.status.lockdown)
-   • Lockdown: no further modification of the trial and associated records.
-#end
-#if($notification.trial.status.inquiryValueInputEnabled)
-   • Inquiry value inputs are enabled.
-#else
-   • Inquiry value inputs are disabled.
-#end
+   • Ezalela ya bomekoli: $trial_status
+#soki($notification.ezalela ya bosambisami.bokangami)
+   • Bokangami : mbongwana mosusu te ya bosambisami mpe mikanda oyo esangisi yango.
+#nsuka
+#soki($notification.ezalela.ya.ezalela.motuyaMotuyaBokotisiEfungolami)
+   • Ba entrées ya valeur ya enquête e activé.
+#mosusu
+   • Ba entrées ya valeur ya enquête ekangami.
+#nsuka
 
-Please prepare and/or take appropriate actions.
+Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 
 Matondi!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
---------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ndakisa: $instance_name
