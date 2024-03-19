@@ -1,26 +1,26 @@
-Geachte $visitscheduleitem_trial_name test teamlid of lid van de diepte. $visitscheduleitem_trial_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
-dit is een melding voor de volgende gebeurtenis:
+this is a notification for the following event:
 
    $type
 
-   • Probeer:         $visitscheduleitem_trial_name
-   • Bezoek:         $visitscheduleitem_name
-   • Bezoek van:    $visitscheduleitem_start
-   • Bezoek naar:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#einde
+#end
 
-Bereid u voor en/of neem passende acties.
+Please prepare and/or take appropriate actions.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instantie: $instance_name
+Instance: $instance_name
