@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Ndeko mosangani ya dept. $proband_department, .
 
-this is a notification for the following event:
+oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband: #soki($string_utils.ezali Pamba($proband_alias))$proband_id#{else}$proband_alias#nsuka
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Departema ya Proband:     $proband_department
+   • Catégorie ya proband:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Kolongolama oyo ebongisami:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Mosaleli ya nsuka oyo abongolamaki:      $proband_modifieduser_identity_name
+   • Elembo ya ngonga oyo ebongwani ya nsuka: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Kozanga ndingisa ya proband oyo eyebisami, kolongola dossier esengeli mpo na kosalela bomoto ya ba données mpo na kobatela ba données sensibles ya proband mpe kobwaka ba informations oyo ekoki koyeba moto. Yango wana suppression moko ekoki kozongisama sima te.
 
-Please prepare and/or take appropriate actions.
+Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 
 Matondi!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
---------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ndakisa: $instance_name
