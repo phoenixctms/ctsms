@@ -1,29 +1,29 @@
-Dear member of dept. $proband_department,
+Шановний член каф. $proband_department,
 
-this is a notification for the following event:
+це сповіщення про наступну подію:
 
    $type
 
-   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Пробанд: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptartment:     $proband_department
-   • Proband category:        $proband_category
+   • Пробандний відділ:     $proband_department
+   • Категорія пробандів:        $proband_category
 
-   • Deletetion scheduled:    $proband_autodeletedeadline
+   • Заплановане видалення:    $proband_autodeletedeadline
 
-   • Last modified user:      $proband_modifieduser_identity_name
-   • Last modified timestamp: $proband_modifiedtimestamp
+   • Останній змінений користувач:      $proband_modifieduser_identity_name
+   • Мітка часу останньої зміни: $proband_modifiedtimestamp
 
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Без інформованої згоди пробанда видалення запису необхідне для забезпечення конфіденційності даних, щоб захистити конфіденційні дані пробанда та видалити особисту інформацію. Тому видалення не можна відкотити.
 
-Please prepare and/or take appropriate actions.
+Будь ласка, підготуйтеся та/або зробіть відповідні дії.
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
