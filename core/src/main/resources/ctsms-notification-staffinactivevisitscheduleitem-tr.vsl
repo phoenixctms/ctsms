@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya $staff_namesüpervizörü,
 
-this is a notification for the following event:
+bu, aşağıdaki etkinlik için bir bildirimdir:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • Deneme:      $visitscheduleitem_trial_name
+   • Ziyaret edin:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • Tarih:       $visit_schedule_item_day_date
+#başka
+   • Ziyaret yeri: $visitscheduleitem_start
+   • Şurayı ziyaret edin:   $visitscheduleitem_stop
+#son
 
-   • Threshold:  $inactive_staff_limit
+   • Eşik:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() çalışanları Yok:
 
 #foreach($employee in $inactive_staff)
-   • $employee.name
-#end
+   • $employee.isim
+#son
 
-Please prepare and/or take appropriate actions.
+Lütfen gerekli önlemleri alın ve/veya hazırlayın.
 
 Teşekkür ederim!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Bu $generated_ontarihinde oluşturulan, sistem tarafından oluşturulan bir e-postadır, bu arada güncelliğini yitirmiş olabilir. Cevap yok.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Örnek: $instance_name
