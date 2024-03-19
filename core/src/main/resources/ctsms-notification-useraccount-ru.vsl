@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+Дорогой $user_identity_firstname,
 
-your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+ваша учетная запись ${application.abbreviation} была #if($new_user)создана#{else}изменена#end.
 
-   • Username:   $user_name
+   • Имя пользователя:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • An administrator will inform you of the actual password.
-#else
-   • The password remains unchanged.
-#end
+   • Администратор сообщит вам действительный пароль.
+#еще
+   • Пароль остается неизменным.
+#конец
 #elseif($ldap_auth_method)
-   • The password to use is your MUG-password.
+   • Используемый пароль — это ваш пароль MUG.
 
 #if($new_user)
-When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
-#else
-When logging in the next time, enter your current password as the mandatory "local password".
-#end
-#end
+При первом входе в систему введите пароль, предоставленный администратором, в качестве обязательного «локального пароля».
+#еще
+При следующем входе в систему введите текущий пароль в качестве обязательного «локального пароля».
+#конец
+#конец
 
 #if($new_user)
-The system is accessible at the site below:
+Система доступна на сайте ниже:
 
    $http_base_url
 
-#end
-IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
+#конец
+ВАЖНО: Аккаунт позволяет вам читать личную информацию субъектов, зарегистрированных пользователями отдела "$user_department". Чтобы обеспечить конфиденциальность данных, учетные данные учетной записи должны храниться в секрете. Вас никогда не попросят предоставить учетные данные по электронной почте или на других серверах, кроме «$http_domain_name».
 
 Спасибо!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
