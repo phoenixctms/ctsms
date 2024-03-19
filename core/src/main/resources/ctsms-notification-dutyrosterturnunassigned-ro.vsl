@@ -1,40 +1,40 @@
 Dear $staff_firstname,
 
-aceasta este o notificare pentru următorul eveniment:
+this is a notification for the following event:
 
    $type
 
-   • Studiu:          $dutyrosterturn_trial_name
-   • Obligație din:      $dutyrosterturn_start
-   Obligație:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
    • Calendar:       $dutyrosterturn_calendar
-   • Titlu sarcină:     $dutyrosterturn_title
-   • Vizită:          $dutyrosterturn_visitscheduleitem_name
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Personal nou:      $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocable)
-   • Autoalocabil.
-#altceva
-   • Fără auto-alocare.
+   • New staff:      $dutyrosterturn_staff_name
+#if($notification.dutyRosterTurn.selfAllocatable)
+   • Self allocable.
+#else
+   • No self allocation.
 #end
 
-   • Modificat: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Comentariu de sarcină:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Taxa atribuită este obligatorie și se poate schimba până la înghețarea finală. Imaginea de ansamblu actualizată este accesibilă pe site-ul de mai jos:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instanță: $instance_name
+Instance: $instance_name
