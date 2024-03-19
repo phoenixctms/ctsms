@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+親愛なる部員の皆様。 $inventorystatusentry_inventory_department、
 
-this is a notification for the following event:
+以下のイベントのお知らせです。
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • 在庫:       $inventorystatusentry_inventory_name
+   • 在庫部門: $inventorystatusentry_inventory_department
+   • 在庫カタログ:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • 入力:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • 発信者:      $inventorystatusentry_originator_name
+＃終わり
+   • 送信者:            $inventorystatusentry_start
+   • 宛先:              $inventorystatusentry_stop
 
-Comment:
+コメント：
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+適切な準備や対応を行ってください。
 
 ありがとう！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+インスタンス: $instance_name
