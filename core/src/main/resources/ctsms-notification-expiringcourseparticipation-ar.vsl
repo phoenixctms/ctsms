@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-وهذا إشعار يتعلق بالحدث التالي:
+this is a notification for the following event:
 
    $type
 
-   • الدورة:              $courseparticipationstatusentry_course_name
-   • عنوان السيرة الذاتية:     $courseparticipationstatusentry_course_cvtitle
-   • قسم الدورة:   $courseparticipationstatusentry_course_department
-   • فئة الدورة:     $courseparticipationstatusentry_course_category
+   • Course:              $courseparticipationstatusentry_course_name
+   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
+   • Course department:   $courseparticipationstatusentry_course_department
+   • Course category:     $courseparticipationstatusentry_course_category
 
-   • نهاية الدورة:          $courseparticipationstatusentry_course_stop
-   • انتهاء صلاحية الصلاحية: $courseparticipationstatusentry_course_expiration
+   • Course end:          $courseparticipationstatusentry_course_stop
+   • Validity expiration: $courseparticipationstatusentry_course_expiration
 
-يرجى زيارة التسجيل للحصول على دورة تنشيطية مناسبة:
+Please visit to register for a suitable refresher course:
 
-   $http_base_url/staff/endingParticipationOverview.jsf
+   $http_base_url/staff/expiringParticipationOverview.jsf
 
 شكرًا لك!
 
-هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-الموقع: $instance_name
+Instance: $instance_name
