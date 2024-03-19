@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-tämä on ilmoitus seuraavasta tapahtumasta:
+this is a notification for the following event:
 
    $type
 
-   • Tavaraluettelo:       $inventorybooking_inventory_name
-   • Varastoosasto: $inventorybooking_inventory_department
-   • Tavaraluettelo kissa:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Tilan tyyppi:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Alkuperä:      $inventorystatusentry_originator_name
+   • Originator:      $inventorystatusentry_originator_name
 #end
-   • Tila:     $inventorystatusentry_start
-   • Tila:       $inventorystatusentry_stop
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Varaus:    $inventorybooking_start
-   • Varaus:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Kurssi:      $inventorybooking_course_name
-   • Kokeilu:       $inventorybooking_trial_name
-   • Probandille: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Tilan kommentti:
+Status comment:
 
 $inventorystatusentry_comment
 
-Varauksen kommentti:
+Booking comment:
 
 $inventorybooking_comment
 
-Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+Please prepare and/or take appropriate actions.
 
-Kiitos!
+Thank you!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Instance: $instance_name
