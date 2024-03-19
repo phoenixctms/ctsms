@@ -1,29 +1,29 @@
-Caro membro do dep. $proband_department,
+Dear member of dept. $proband_department,
 
-esta é uma notificação para o seguinte evento:
+this is a notification for the following event:
 
    $type
 
-   • Perfil: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband deptar:     $proband_department
-   • Categoria Probanda:        $proband_category
+   • Proband deptartment:     $proband_department
+   • Proband category:        $proband_category
 
-   • Exclusão programada:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Último usuário modificado:      $proband_modifieduser_identity_name
-   • Data da última modificação: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-Sem consentimento informado da probabilidade, a remoção do registro é necessária para implementar a privacidade de dados a fim de proteger os dados confidenciais da probabilidade e descartar informações de identificação pessoal. Por conseguinte, não se pode renunciar a uma supressão.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Por favor, prepare-se e/ou tome as medidas adequadas.
+Please prepare and/or take appropriate actions.
 
-Obrigado!
+Thank you!
 
-Este é um e-mail gerado pelo sistema no $generated_on, ele pode estar desatualizado enquanto isso. Não responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instância: $instance_name
+Instance: $instance_name
