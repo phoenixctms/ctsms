@@ -1,39 +1,39 @@
-Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
+Hyvä $dutyrosterturn_trial_name kokeilutiimin jäsen tai $dutyrosterturn_staff_namevalvoja,
 
-this is a notification for the following event:
+tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
-   • Staff:       $dutyrosterturn_staff_name
-   • Staff dept.: $dutyrosterturn_staff_department
-   • Staff cat.:  $dutyrosterturn_staff_category
+   • Henkilökunta:       $dutyrosterturn_staff_name
+   • Henkilökuntaosasto: $dutyrosterturn_staff_department
+   • Henkilökunta:  $dutyrosterturn_staff_category
 
-   • Status type: $staffstatusentry_type
-   • Status from: $staffstatusentry_start
-   • Status to:   $staffstatusentry_stop
+   • Tilatyyppi: $staffstatusentry_type
+   • Tila alkaen: $staffstatusentry_start
+   • Tila:   $staffstatusentry_stop
 
-   • Trial:       $dutyrosterturn_trial_name
-   • Duty from:   $dutyrosterturn_start
-   • Duty to:     $dutyrosterturn_stop
+   • Kokeilu:       $dutyrosterturn_trial_name
+   • Tehtävä alkaen:   $dutyrosterturn_start
+   • Velvollisuus:     $dutyrosterturn_stop
 
-   • Duty title:  $dutyrosterturn_title
-   • Visit:       $dutyrosterturn_visitscheduleitem_name
+   • Tehtävänimike:  $dutyrosterturn_title
+   • Käy:       $dutyrosterturn_visitscheduleitem_name
 
-Status comment:
+Tilakommentti:
 
 $staffstatusentry_comment
 
-Duty comment:
+Tehtäväkommentti:
 
 $dutyrosterturn_comment
 
-Please prepare and/or take appropriate actions.
+Valmistaudu ja/tai ryhdy tarvittaviin toimiin.
 
-Thank you!
+Kiitos!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Tämä on järjestelmän luoma sähköposti, joka on luotu $generated_on, ja se voi olla vanhentunut sillä välin. Älä vastaa.
 
---------------------------------------------------------------
+--------------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Esimerkki: $instance_name
