@@ -1,40 +1,40 @@
 Dear $staff_firstname,
 
-dit is een melding voor de volgende gebeurtenis:
+this is a notification for the following event:
 
    $type
 
-   • Probeer:          $dutyrosterturn_trial_name
-   • Duty van:      $dutyrosterturn_start
-   • Heffing aan:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Kalender:       $dutyrosterturn_calendar
-   • Duty titel:     $dutyrosterturn_title
-   • Bezoek:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Medewerker:          $dutyrosterturn_staff_name
+   • Staff:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Zelf verwijzbaar.
-#anders
-   • Geen zelfallocatie.
-#einde
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • Gewijzigd: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Reactie invoeren:
+Duty comment:
 
 $dutyrosterturn_comment
 
-De douanecontrole is verplicht en kan veranderen tot ze definitief zijn bevroren. Het actuele overzicht is toegankelijk op de site hieronder:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instantie: $instance_name
+Instance: $instance_name
