@@ -1,46 +1,46 @@
-Caro membro del team di prova $ecrfstatusentry_listentry_trial_name o membro del dept. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
 
-si tratta di una notifica per il seguente evento:
+this is a notification for the following event:
 
    $type
 
-   • Prova:                $ecrfstatusentry_listentry_trial_name
-   • Dipartimento di prova:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • Trial:                $ecrfstatusentry_listentry_trial_name
+   • Trial department:     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Gruppo Proband:        $notification.ecrfStatusEntry.listEntry.group.title
+   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
 #end
 #if($notification.ecrfStatusEntry.visit)
    • Visit:                $notification.ecrfStatusEntry.visit.title
 #end
 
-   • stato eCRF:          $ecrfstatusentry_status
+   • eCRF status:          $ecrfstatusentry_status
 #if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validazione:     $ecrfstatusentry_validationresponsemsg
-   • Timestamp di validazione: $ecrfstatusentry_validationtimestamp
+   • Input validation:     $ecrfstatusentry_validationresponsemsg
+   • Validation timestamp: $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
    • Timestamp:            $ecrfstatusentry_validationtimestamp
 #elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Convalida in ingresso in sospeso.
+   • Input validation pending.
 #end
 
-   • Modificato: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Si prega di continuare con i prossimi passi per completare la voce di dati eCRF.
+Please continue with next steps to complete the eCRF data entry.
 #else
-La voce di dati eCRF è completata.
+The eCRF data entry is completed.
 #end
 
-Grazie!
+Thank you!
 
-Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Istanza: $instance_name
+Instance: $instance_name
