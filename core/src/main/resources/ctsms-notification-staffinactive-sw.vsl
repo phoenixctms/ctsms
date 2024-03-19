@@ -1,28 +1,28 @@
-Mpendwa msimamizi wa $staffstatusentry_staff_name,
+Dear supervisor of $staffstatusentry_staff_name,
 
-hii ni arifa ya tukio lifuatalo:
+this is a notification for the following event:
 
    $type
 
-   • Wafanyakazi:       $staffstatusentry_staff_name
-   • Idara ya wafanyikazi: $staffstatusentry_staff_department
-   • Paka wa wafanyikazi.:  $staffstatusentry_staff_category
+   • Staff:       $staffstatusentry_staff_name
+   • Staff dept.: $staffstatusentry_staff_department
+   • Staff cat.:  $staffstatusentry_staff_category
 
-   • Aina:        $staffstatusentry_type
-   • Kutoka:        $staffstatusentry_start
-   • Kwa:          $staffstatusentry_stop
+   • Type:        $staffstatusentry_type
+   • From:        $staffstatusentry_start
+   • To:          $staffstatusentry_stop
 
-Maoni:
+Comment:
 
 $staffstatusentry_comment
 
-Tafadhali jitayarishe na/au chukua hatua zinazofaa.
+Please prepare and/or take appropriate actions.
 
 Asante!
 
-Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
------------------------------------------------ -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Mfano: $instance_name
+Instance: $instance_name
