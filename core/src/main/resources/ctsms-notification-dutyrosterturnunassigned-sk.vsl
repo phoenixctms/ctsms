@@ -1,40 +1,40 @@
-Vážený $staff_firstname,
+Dear $staff_firstname,
 
-toto je upozornenie na nasledujúcu udalosť:
+this is a notification for the following event:
 
    $type
 
-   • Skúška:          $dutyrosterturn_trial_name
-   • Povinnosť od:      $dutyrosterturn_start
-   • Povinnosť:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Kalendár:       $dutyrosterturn_calendar
-   • Názov povinnosti:     $dutyrosterturn_title
-   • Navštívte:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Nový personál:      $dutyrosterturn_staff_name
+   • New staff:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Samostatne prideľovateľné.
+   • Self allocable.
 #else
-   • Žiadne vlastné prideľovanie.
-#koniec
+   • No self allocation.
+#end
 
-   • Upravené: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Povinný komentár:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Pridelenie povinností je povinné a môže sa meniť, kým nebudú definitívne zmrazené. Aktuálny prehľad je dostupný na nižšie uvedenej stránke:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 Ďakujem!
 
-Toto je e-mail vygenerovaný systémom, ktorý bol vytvorený dňa $generated_on, môže byť medzičasom zastaraný. Neodpovedaj.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Príklad: $instance_name
+Instance: $instance_name
