@@ -1,43 +1,43 @@
-Dear $inventorybooking_onbehalfof_firstname,
+प्रिय $inventorybooking_onbehalfof_firstname,
 
-this is a notification for the following event:
+यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • इन्वेंटरी:       $inventorybooking_inventory_name
+   • इन्वेंटरी विभाग: $inventorybooking_inventory_department
+   • इन्वेंटरी बिल्ली.:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • स्थिति प्रकार:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • प्रवर्तक:      $inventorystatusentry_originator_name
+#अंत
+   • स्थिति यहां से:     $inventorystatusentry_start
+   • स्थिति:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • बुकिंग यहां से:    $inventorybooking_start
+   • यहां बुकिंग:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • पाठ्यक्रम के लिए:      $inventorybooking_course_name
+   • परीक्षण के लिए:       $inventorybooking_trial_name
+   • प्रोबैंड के लिए: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+स्थिति टिप्पणी:
 
 $inventorystatusentry_comment
 
-Booking comment:
+बुकिंग टिप्पणी:
 
 $inventorybooking_comment
 
-Please prepare and/or take appropriate actions.
+कृपया तैयारी करें और/या उचित कार्रवाई करें।
 
 धन्यवाद!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
 
---------------------------------------------------------------
+-------------------------------------------------- -----------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+उदाहरण: $instance_name
