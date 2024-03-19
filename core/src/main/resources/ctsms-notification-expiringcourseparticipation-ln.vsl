@@ -1,26 +1,26 @@
-Ndeko $courseparticipationstatusentry_staff_firstname,
+Dear $courseparticipationstatusentry_staff_firstname,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Liteya:              $courseparticipationstatusentry_course_name
-   • Titre ya CV ya cours:     $courseparticipationstatusentry_course_cvtitle
-   • Departema ya mateya:   $courseparticipationstatusentry_course_department
-   • Lolenge ya mateya:     $courseparticipationstatusentry_course_category
+   • Course:              $courseparticipationstatusentry_course_name
+   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
+   • Course department:   $courseparticipationstatusentry_course_department
+   • Course category:     $courseparticipationstatusentry_course_category
 
-   • Nsuka ya mateya:          $courseparticipationstatusentry_course_stop
-   • Bosilisi ya bosolo: $courseparticipationstatusentry_course_expiration
+   • Course end:          $courseparticipationstatusentry_course_stop
+   • Validity expiration: $courseparticipationstatusentry_course_expiration
 
-Tosɛngi yo okende mpo na kokomisa nkombo mpo na cours ya kozongisa sika oyo ebongi:
+Please visit to register for a suitable refresher course:
 
-   $http_base_url/basali/ezali kosilaBolakisi ya bosangani.jsf
+   $http_base_url/staff/expiringParticipationOverview.jsf
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
