@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-detta är en avisering för följande händelse:
+this is a notification for the following event:
 
    $type
 
-   • Förråd:       $inventorybooking_inventory_name
-   • Lagerdept.: $inventorybooking_inventory_department
-   • Inventering katt:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Statustyp:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Ursprungare:      $inventorystatusentry_originator_name
-# slut
-   • Status från:     $inventorystatusentry_start
-   • Status till:       $inventorystatusentry_stop
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Bokning från:    $inventorybooking_start
-   • Bokning till:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Självklart:      $inventorybooking_course_name
-   • För provtid:       $inventorybooking_trial_name
-   • För proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Statuskommentar:
+Status comment:
 
 $inventorystatusentry_comment
 
-Bokningskommentar:
+Booking comment:
 
 $inventorybooking_comment
 
-Var snäll och förbered och/eller vidta lämpliga åtgärder.
+Please prepare and/or take appropriate actions.
 
-Tack!
+Thank you!
 
-Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
