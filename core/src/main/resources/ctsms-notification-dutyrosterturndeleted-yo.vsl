@@ -1,40 +1,40 @@
-Eyin $staff_firstname,
+Dear $staff_firstname,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Idanwo:          $dutyrosterturn_trial_name
-   • Ojuse lati:      $dutyrosterturn_start
-   • Ojuse si:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • Kalẹnda:       $dutyrosterturn_calendar
-   • Akọle iṣẹ:     $dutyrosterturn_title
-   • Ṣabẹwo:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • Oṣiṣẹ:          $dutyrosterturn_staff_name
+   • Staff:          $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Ara allocable.
-#miiran
-   • Ko si ipin ti ara ẹni.
-#opin
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • Títúnṣe: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#opin
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Ọrọìwòye ojuse:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Iṣẹ iyansilẹ jẹ ọranyan ati pe o le yipada titi ti wọn yoo fi di didi. Akopọ imudojuiwọn-ọjọ wa ni iraye si ni aaye ni isalẹ:
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
