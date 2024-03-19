@@ -1,29 +1,29 @@
-Ndugu mwanachama wa dept. $proband_department,
+Dear member of dept. $proband_department,
 
-hii ni arifa ya tukio lifuatalo:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Idara ya Proband:     $proband_department
-   • Aina ya proband:        $proband_category
+   • Proband deptartment:     $proband_department
+   • Proband category:        $proband_category
 
-   • Ufutaji umeratibiwa:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Mtumiaji aliyerekebishwa mwisho:      $proband_modifieduser_identity_name
-   • Muhuri wa muda uliorekebishwa mwisho: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-Bila idhini iliyoarifiwa ya proband, uondoaji wa rekodi unahitajika ili kutekeleza ufaragha wa data ili kulinda data nyeti ya proband na kudondosha taarifa zinazoweza kumtambulisha mtu binafsi. Kwa hivyo ufutaji hauwezi kurejeshwa.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Tafadhali jitayarishe na/au chukua hatua zinazofaa.
+Please prepare and/or take appropriate actions.
 
 Asante!
 
-Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
------------------------------------------------ -------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Mfano: $instance_name
+Instance: $instance_name
