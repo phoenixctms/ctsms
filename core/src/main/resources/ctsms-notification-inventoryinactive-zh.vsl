@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+尊敬的部门成员 $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+这是针对以下事件的通知：
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • 库存：       $inventorystatusentry_inventory_name
+   • 库存部门： $inventorystatusentry_inventory_department
+   • 库存类别：  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • 类型：            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • 发起者：      $inventorystatusentry_originator_name
+＃结尾
+   • 来自：            $inventorystatusentry_start
+   • 至：              $inventorystatusentry_stop
 
-Comment:
+评论：
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+请准备和/或采取适当的行动。
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
