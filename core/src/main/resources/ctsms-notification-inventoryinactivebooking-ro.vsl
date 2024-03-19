@@ -1,43 +1,43 @@
-Dear $inventorybooking_onbehalfof_firstname,
+Dragă $inventorybooking_onbehalfof_firstname,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • Inventar:       $inventorybooking_inventory_name
+   • Departamentul de inventariere: $inventorybooking_inventory_department
+   • Cat. de inventar:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • Tip stare:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • Inițiator:      $inventorystatusentry_originator_name
+#Sfârşit
+   • Stare de la:     $inventorystatusentry_start
+   • Stare la:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • Rezervare de la:    $inventorybooking_start
+   • Rezervare la:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • Pentru curs:      $inventorybooking_course_name
+   • Pentru încercare:       $inventorybooking_trial_name
+   • Pentru proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+Comentariu de stare:
 
 $inventorystatusentry_comment
 
-Booking comment:
+Comentariu rezervare:
 
 $inventorybooking_comment
 
-Please prepare and/or take appropriate actions.
+Vă rugăm să pregătiți și/sau să luați măsurile adecvate.
 
 Mulțumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
