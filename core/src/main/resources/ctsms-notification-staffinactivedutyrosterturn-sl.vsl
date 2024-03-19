@@ -1,39 +1,39 @@
-Spoštovani $dutyrosterturn_trial_name član poskusne skupine ali nadzornik $dutyrosterturn_staff_name,
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-to je obvestilo za naslednji dogodek:
+this is a notification for the following event:
 
    $type
 
-   • Osebje:       $dutyrosterturn_staff_name
-   • Oddelek osebja: $dutyrosterturn_staff_department
-   • Kat. osebja:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • Vrsta stanja: $staffstatusentry_type
-   • Status od: $staffstatusentry_start
-   • Status do:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • Preizkus:       $dutyrosterturn_trial_name
-   • Dajatev od:   $dutyrosterturn_start
-   • Dolžnost do:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • Naziv dolžnosti:  $dutyrosterturn_title
-   • Obiščite:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-Komentar stanja:
+Status comment:
 
 $staffstatusentry_comment
 
-Dežurni komentar:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Pripravite se in/ali ustrezno ukrepajte.
+Please prepare and/or take appropriate actions.
 
 Hvala vam!
 
-To je sistemsko ustvarjeno e-poštno sporočilo, ustvarjeno dne $generated_on, morda je medtem zastarelo. Ne odgovorite.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Primer: $instance_name
+Instance: $instance_name
