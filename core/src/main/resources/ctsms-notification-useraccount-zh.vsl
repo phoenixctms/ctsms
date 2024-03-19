@@ -1,37 +1,37 @@
-Dear $user_identity_firstname,
+亲爱的 $user_identity_firstname，
 
-your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
+您的 ${application.abbreviation} 帐户已 #if($new_user) 创建#{else}已更改#end。
 
-   • Username:   $user_name
+   • 用户名：   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • An administrator will inform you of the actual password.
-#else
-   • The password remains unchanged.
-#end
+   • 管理员将告知您实际的密码。
+＃别的
+   • 密码保持不变。
+＃结尾
 #elseif($ldap_auth_method)
-   • The password to use is your MUG-password.
+   • 使用的密码是您的MUG 密码。
 
 #if($new_user)
-When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
-#else
-When logging in the next time, enter your current password as the mandatory "local password".
-#end
-#end
+首次登录时，请输入管理员给出的密码作为必填的“本地密码”。
+＃别的
+下次登录时，请输入您当前的密码作为必填的“本地密码”。
+＃结尾
+＃结尾
 
 #if($new_user)
-The system is accessible at the site below:
+该系统可通过以下站点访问：
 
    $http_base_url
 
-#end
-IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
+＃结尾
+重要提示：该帐户允许您读取“$user_department”部门用户注册的主题的个人身份信息。 为了维护数据隐私，帐户凭据必须保密。 除了“$http_domain_name”之外，您永远不会被要求通过电子邮件或服务器提供凭据。
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
