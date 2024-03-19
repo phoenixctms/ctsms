@@ -1,46 +1,46 @@
-Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
+Stimate $ecrfstatusentry_listentry_trial_name membru al echipei de încercare sau membru al departamentului. $ecrfstatusentry_listentry_trial_department,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Trial:                $ecrfstatusentry_listentry_trial_name
-   • Trial department:     $ecrfstatusentry_listentry_trial_department
-   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • Proba:                $ecrfstatusentry_listentry_trial_name
+   • Compartiment Trial:     $ecrfstatusentry_listentry_trial_department
+   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
-#end
+   • Grup Proband:        $notification.ecrfStatusEntry.listEntry.group.title
+#Sfârşit
 #if($notification.ecrfStatusEntry.visit)
-   • Visit:                $notification.ecrfStatusEntry.visit.title
-#end
+   • Vizitați:                $notification.ecrfStatusEntry.visit.title
+#Sfârşit
 
-   • eCRF status:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
-   • Input validation:     $ecrfstatusentry_validationresponsemsg
-   • Validation timestamp: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
+   • Stare eCRF:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == „OK”)
+   • Validarea intrării:     $ecrfstatusentry_validationresponsemsg
+   • Marcaj temporal de validare: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == „FAILED”)
    • $ecrfstatusentry_validationresponsemsg
-   • Timestamp:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
-   • Input validation pending.
-#end
+   • Marcaj temporal:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == „ÎN AȘTEPTARE”)
+   • Validarea intrărilor în așteptare.
+#Sfârşit
 
-   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Modificat: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-Please continue with next steps to complete the eCRF data entry.
-#else
-The eCRF data entry is completed.
-#end
+Continuați cu pașii următori pentru a finaliza introducerea datelor eCRF.
+#altfel
+Introducerea datelor eCRF este finalizată.
+#Sfârşit
 
 Mulțumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
