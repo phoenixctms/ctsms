@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+$visitscheduleitem_trial_name トライアル チーム メンバーまたは $staff_nameのスーパーバイザー各位
 
-this is a notification for the following event:
+以下のイベントのお知らせです。
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
+   • トライアル:      $visitscheduleitem_trial_name
+   • 訪問:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • 日付:       $visit_schedule_item_day_date
+＃それ以外
+   • 訪問者: $visitscheduleitem_start
+   • 訪問先:   $visitscheduleitem_stop
+＃終わり
 
-   • Threshold:  $inactive_staff_limit
+   • しきい値:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() 従業員 N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
-#end
+＃終わり
 
-Please prepare and/or take appropriate actions.
+適切な準備や対応を行ってください。
 
 ありがとう！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+これは $generated_onに作成されたシステム生成のメールです。その間に古くなっている可能性があります。 返信しないでください。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+インスタンス: $instance_name
