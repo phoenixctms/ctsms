@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Kære #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#slut,
 
-this is a notification for the following event:
+dette er en notifikation for følgende begivenhed:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Beholdning:       $maintenancescheduleitem_inventory_name
+   • Inventarafdeling: $maintenancescheduleitem_inventory_department
+   • Inventar kat.:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Titel: '$notification.maintenanceScheduleItem.title'
    • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Dato:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Firmakontakt: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Forbered venligst og/eller tag passende handlinger.
 
 Tak skal du have!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Dette er en systemgenereret e-mail oprettet den $generated_on, den kan være forældet i mellemtiden. Svar ikke.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Forekomst: $instance_name
