@@ -1,29 +1,29 @@
-Hyvä syvyyden jäsen. $proband_department,
+Dear member of dept. $proband_department,
 
-tämä on ilmoitus seuraavasta tapahtumasta:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Proband deptartment:     $proband_department
-   • Proband luokka:        $proband_category
+   • Proband category:        $proband_category
 
-   • Poistaminen ajoitettu:    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Viimeksi muokattu käyttäjä:      $proband_modifieduser_identity_name
-   • Viimeksi muokattu aikaleima: $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-Ilman probandin tietoon perustuvaa suostumusta; tietojen poistaminen on pakollista tietojen yksityisyyden suojaamiseksi probandin arkaluonteisten tietojen suojaamiseksi ja henkilökohtaisesti tunnistettavien tietojen poistamiseksi. Sen vuoksi poistoa ei voida kiertää uudelleen.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Valvokaa ja/tai toteuttakaa asianmukaisia toimia.
+Please prepare and/or take appropriate actions.
 
-Kiitos!
+Thank you!
 
-Tämä on järjestelmä luotu sähköposti luotu $generated_on, se voi olla vanhentunut sillä välin. Älä vastaa.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instant: $instance_name
+Instance: $instance_name
