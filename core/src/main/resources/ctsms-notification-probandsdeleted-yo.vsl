@@ -1,17 +1,17 @@
-Eyin egbe ti Dept. $department,
+Dear member of dept. $department,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Ẹka: $department
-   • $number_of_probands_deleted proband(s) paarẹ.
+   • Department: $department
+   • $number_of_probands_deleted proband(s) deleted.
 
-Laisi ifọwọsi ifitonileti ti proband, yiyọ igbasilẹ naa nilo lati ṣe imuse aṣiri data lati le daabobo data ifura ti proband ati ju alaye idanimọ tikalararẹ silẹ. Nitorina piparẹ ko le ṣe yiyi pada.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
