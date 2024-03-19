@@ -1,43 +1,43 @@
-Ndeko $inventorybooking_onbehalfof_firstname,
+Dear $inventorybooking_onbehalfof_firstname,
 
-oyo ezali liyebisi mpo na likambo oyo elandi:
+this is a notification for the following event:
 
    $type
 
-   • Inventaire:       $inventorybooking_inventory_name
-   • Departema ya inventaire: $inventorybooking_inventory_department
-   • Inventaire cat.:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Lolenge ya ezalela:     $inventorystatusentry_type
-#if($notification.Entrée yaEtat ya inventaire.mobandisi)
-   • Mobandisi:      $inventorystatusentry_originator_name
-#nsuka
-   • Ezalela uta:     $inventorystatusentry_start
-   • Ezalela na:       $inventorystatusentry_stop
+   • Status type:     $inventorystatusentry_type
+#if($notification.inventoryStatusEntry.originator)
+   • Originator:      $inventorystatusentry_originator_name
+#end
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Kosala réservation kobanda na:    $inventorybooking_start
-   • Kosala réservation na:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Mpo na ya solo:      $inventorybooking_course_name
-   • Mpo na kosambisa:       $inventorybooking_trial_name
-   • Mpo na proband: #soki($string_utils.ezaliPamba($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#nsuka
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Commentaire ya état:
+Status comment:
 
 $inventorystatusentry_comment
 
-Commentaire ya réservation:
+Booking comment:
 
 $inventorybooking_comment
 
-Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
+Please prepare and/or take appropriate actions.
 
 Matondi!
 
-Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ndakisa: $instance_name
+Instance: $instance_name
