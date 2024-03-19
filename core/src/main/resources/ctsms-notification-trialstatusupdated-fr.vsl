@@ -1,30 +1,30 @@
-Cher membre de l'équipe d'essai $trial_name ou membre du département. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-Ceci est une notification pour l'événement suivant :
+this is a notification for the following event:
 
    $type
 
-   • Code d'essai :   $trial_name
-   • Titre d'essai :  $trial_title
-   • Étude d'essai.:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Statut d'essai : $trial_status
+   • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
-   • Verrouillage : aucune modification supplémentaire du procès et des dossiers associés.
+   • Lockdown: no further modification of the trial and associated records.
 #end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Les entrées de valeur de requête sont activées.
-#sinon
-   • Les entrées de valeur de requête sont désactivées.
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
 #end
 
-Préparez et/ou prenez les mesures appropriées.
+Please prepare and/or take appropriate actions.
 
-Merci!
+Thank you!
 
-Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance : $instance_name
+Instance: $instance_name
