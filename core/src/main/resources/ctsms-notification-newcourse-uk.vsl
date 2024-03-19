@@ -1,27 +1,27 @@
-Dear member of dept. $course_department,
+Шановний член каф. $course_department,
 
-this is a notification for the following event:
+це сповіщення про наступну подію:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • Курс:                 $course_name
+   • Назва CV курсу:        $course_cvtitle
+   • Курсове відділення:      $course_department
+   • Категорія курсу:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • Початок курсу:           $course_start
+   • Кінець курсу:             $course_stop
+   • Дедлайн участі: $course_participationdeadline
 
-Register for this course:
+Зареєструйтеся на цей курс:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 Дякую тобі!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Це створений системою електронний лист, створений $generated_on, тим часом він може бути застарілим. Не відповідай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Примірник: $instance_name
