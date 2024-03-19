@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+Ndeko $staff_firstname,
 
-this is a notification for the following event:
+oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • Kosambisa:          $dutyrosterturn_trial_name
+   • Mosala uta:      $dutyrosterturn_start
+   • Mosala ya:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • Manáka:       $dutyrosterturn_calendar
+   • Titre ya mosala:     $dutyrosterturn_title
+   • Kotala:          $dutyrosterturn_visitscheduleitem_name
 
-   • Staff:          $dutyrosterturn_staff_name
-#if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • Basali:          $dutyrosterturn_staff_name
+#soki($notification.Roster ya mosalaTurn.yo mokoAllocatable)
+   • Ekoki kokabola yango moko.
+#mosusu
+   • Komikabola te.
+#nsuka
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Ebongwani: #soki($notification.RosterRosterTurn.identité.ya Mosaleli oyo ebongisami)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#nsuka
 
 
-Duty comment:
+Commentaire ya mosala:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+Kopesa mosala ezali obligatoire mpe ekoki kobongwana kino na nsuka bakokangama na congelé. Botali ya sika ekoki kozwama na site oyo ezali awa na nse:
 
-   $http_base_url/trial/dutyRosterSchedule.jsf.
+   $http_base_url/mosambisi/mosalaSchedule ya Roster.jsf.
 
 Matondi!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
---------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ndakisa: $instance_name
