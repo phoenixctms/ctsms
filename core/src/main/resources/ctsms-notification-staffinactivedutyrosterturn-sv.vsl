@@ -1,39 +1,39 @@
-Kära $dutyrosterturn_trial_name testgruppsmedlem eller handledare för $dutyrosterturn_staff_name,
+Dear $dutyrosterturn_trial_name trial team member or supervisor of $dutyrosterturn_staff_name,
 
-detta är en avisering för följande händelse:
+this is a notification for the following event:
 
    $type
 
-   • Personal:       $dutyrosterturn_staff_name
-   • Personaluppdragen.: $dutyrosterturn_staff_department
-   • Personal cat.:  $dutyrosterturn_staff_category
+   • Staff:       $dutyrosterturn_staff_name
+   • Staff dept.: $dutyrosterturn_staff_department
+   • Staff cat.:  $dutyrosterturn_staff_category
 
-   • Statustyp: $staffstatusentry_type
-   • Status från: $staffstatusentry_start
-   • Status till:   $staffstatusentry_stop
+   • Status type: $staffstatusentry_type
+   • Status from: $staffstatusentry_start
+   • Status to:   $staffstatusentry_stop
 
-   • Provning:       $dutyrosterturn_trial_name
-   • Plikt från:   $dutyrosterturn_start
-   • Plikt till:     $dutyrosterturn_stop
+   • Trial:       $dutyrosterturn_trial_name
+   • Duty from:   $dutyrosterturn_start
+   • Duty to:     $dutyrosterturn_stop
 
-   • Plikt titel:  $dutyrosterturn_title
-   • Besök:       $dutyrosterturn_visitscheduleitem_name
+   • Duty title:  $dutyrosterturn_title
+   • Visit:       $dutyrosterturn_visitscheduleitem_name
 
-Statuskommentar:
+Status comment:
 
 $staffstatusentry_comment
 
-Tvivla kommentar:
+Duty comment:
 
 $dutyrosterturn_comment
 
-Var snäll och förbered och/eller vidta lämpliga åtgärder.
+Please prepare and/or take appropriate actions.
 
-Tack!
+Thank you!
 
-Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
