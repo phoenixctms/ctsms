@@ -1,46 +1,46 @@
-Eyin $ecrfstatusentry_listentry_trial_name omo egbe idanwo tabi omo egbe Dept. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Idanwo:                $ecrfstatusentry_listentry_trial_name
-   • Ẹka idanwo:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#opin
+   • Trial:                $ecrfstatusentry_listentry_trial_name
+   • Trial department:     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
-#ti o ba jẹ ($notification.ecrfStatusEntry.listEntry.group)
-   • Ẹgbẹ Proband:        $notification.ecrfStatusEntry.listEntry.group.title
-#opin
-#ti o ba jẹ ($notification.ecrfStatusEntry.ibewo)
-   • Ṣabẹwo:                $notification.ecrfStatusEntry.visit.title
-#opin
+#if($notification.ecrfStatusEntry.listEntry.group)
+   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
+#end
+#if($notification.ecrfStatusEntry.visit)
+   • Visit:                $notification.ecrfStatusEntry.visit.title
+#end
 
-   • ipo eCRF:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "DARA")
-   • Afọwọsi igbewọle:     $ecrfstatusentry_validationresponsemsg
-   • Aago Ifọwọsi: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "KUNA")
+   • eCRF status:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Input validation:     $ecrfstatusentry_validationresponsemsg
+   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • Aami akoko:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.ti afọwọsi && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "NI isunmọtosi")
-   • Ifọwọsi igbewọle ni isunmọtosi.
-#opin
+   • Timestamp:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Input validation pending.
+#end
 
-   • Títúnṣe: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#opin
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
-#ti o ba jẹ (!$notification.ecrfStatusEntry.status.ti ṣe)
-Jọwọ tẹsiwaju pẹlu awọn igbesẹ atẹle lati pari titẹsi data eCRF.
-#miiran
-Akọsilẹ data eCRF ti pari.
-#opin
+#if(!$notification.ecrfStatusEntry.status.done)
+Please continue with next steps to complete the eCRF data entry.
+#else
+The eCRF data entry is completed.
+#end
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
