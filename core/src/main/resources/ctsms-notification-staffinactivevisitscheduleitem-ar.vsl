@@ -1,33 +1,33 @@
-Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
+عزيزي $visitscheduleitem_trial_name عضو فريق التجربة أو المشرف على $staff_name،
 
-this is a notification for the following event:
+هذا إشعار للحدث التالي:
 
    $type
 
-   • Trial:      $visitscheduleitem_trial_name
-   • Visit:      $visitscheduleitem_name
-#if($visit_schedule_item_day_date)
-   • Date:       $visit_schedule_item_day_date
-#else
-   • Visit from: $visitscheduleitem_start
-   • Visit to:   $visitscheduleitem_stop
-#end
+   • المحاكمة:      $visitscheduleitem_trial_name
+   • زيارة:      $visitscheduleitem_name
+#إذا($visit_schedule_item_day_date)
+   • التاريخ:       $visit_schedule_item_day_date
+#آخر
+   • الزيارة من: $visitscheduleitem_start
+   • زيارة إلى:   $visitscheduleitem_stop
+#نهاية
 
-   • Threshold:  $inactive_staff_limit
+   • العتبة:  $inactive_staff_limit
 
-$inactive_staff.size() employees N/A:
+$inactive_staff.size() الموظفون غير متاح:
 
-#foreach($employee in $inactive_staff)
+#foreach($employee في $inactive_staff)
    • $employee.name
-#end
+#نهاية
 
-Please prepare and/or take appropriate actions.
+يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 
 شكرًا لك!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+المثيل: $instance_name
