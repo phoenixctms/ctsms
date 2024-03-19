@@ -1,27 +1,27 @@
-Stimate membru al decupării. $course_department,
+Dear member of dept. $course_department,
 
-aceasta este o notificare pentru următorul eveniment:
+this is a notification for the following event:
 
    $type
 
-   • Curs:                 $course_name
-   • Titlul cursului CV:        $course_cvtitle
-   • Departamentul cursului:      $course_department
-   • Categoria cursurilor:        $course_category
+   • Course:                 $course_name
+   • Course CV title:        $course_cvtitle
+   • Course department:      $course_department
+   • Course category:        $course_category
 
-   • Începutul cursului:           $course_start
-   • Finalul cursului:             $course_stop
-   • Termenul de participare: $course_participationdeadline
+   • Course start:           $course_start
+   • Course end:             $course_stop
+   • Participation deadline: $course_participationdeadline
 
-Înregistrați-vă pentru acest curs:
+Register for this course:
 
-   $http_base_url/personal/upcomingCourseOverview.jsf
+   $http_base_url/staff/upcomingCourseOverview.jsf
 
 Mulțumesc!
 
-Acesta este un e-mail generat de sistem creat pe $generated_on, poate fi depășit între timp. Nu răspunde.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instanță: $instance_name
+Instance: $instance_name
