@@ -1,29 +1,29 @@
-Cher membre du département. $proband_department,
+Dear member of dept. $proband_department,
 
-Ceci est une notification pour l'événement suivant :
+this is a notification for the following event:
 
    $type
 
-   • Proband : #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
    • Proband deptartment:     $proband_department
-   • Catégorie de bande :        $proband_category
+   • Proband category:        $proband_category
 
-   • Calendrier de suppression :    $proband_autodeletedeadline
+   • Deletetion scheduled:    $proband_autodeletedeadline
 
-   • Dernier utilisateur modifié :      $proband_modifieduser_identity_name
-   • Dernier horodatage modifié : $proband_modifiedtimestamp
+   • Last modified user:      $proband_modifieduser_identity_name
+   • Last modified timestamp: $proband_modifiedtimestamp
 
 
-Sans consentement éclairé de la probabilité, la suppression des dossiers est nécessaire pour mettre en œuvre la confidentialité des données afin de protéger les données sensibles de la probande et d'abandonner les informations d'identification personnelle. Par conséquent, une suppression ne peut pas être annulée.
+Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
 
-Préparez et/ou prenez les mesures appropriées.
+Please prepare and/or take appropriate actions.
 
-Merci!
+Thank you!
 
-Ceci est un e-mail généré par le système créé sur $generated_on, il peut être obsolète entre-temps. Ne répondez pas.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instance : $instance_name
+Instance: $instance_name
