@@ -1,26 +1,26 @@
-#if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 인벤토리:       $maintenancescheduleitem_inventory_name
-   • 재고부서 : $maintenancescheduleitem_inventory_department
-   • 인벤토리 고양이:  $maintenancescheduleitem_inventory_category
+   • Inventory:       $maintenancescheduleitem_inventory_name
+   • Inventory dept.: $maintenancescheduleitem_inventory_department
+   • Inventory cat.:  $maintenancescheduleitem_inventory_category
 
-   • 제목: '$notification.maintenanceScheduleItem.title'
-   • 유형:            $maintenancescheduleitem_type
-   • 날짜:            $maintenancescheduleitem_nextrecurrence
+   • Title:           '$notification.maintenanceScheduleItem.title'
+   • Type:            $maintenancescheduleitem_type
+   • Date:            $maintenancescheduleitem_nextrecurrence
 
-   • 회사 연락처: $maintenancescheduleitem_companycontact_name
+   • Company contact: $maintenancescheduleitem_companycontact_name
 
-준비 및/또는 적절한 조치를 취하시기 바랍니다.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
