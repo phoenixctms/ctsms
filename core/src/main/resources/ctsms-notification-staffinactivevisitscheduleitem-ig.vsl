@@ -1,33 +1,33 @@
-Ezigbo $visitscheduleitem_trial_name onye otu ikpe ma ọ bụ onye nlekọta nke $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-Nke a bụ ọkwa maka mmemme a:
+this is a notification for the following event:
 
    $type
 
-   • Ọnwụnwa:      $visitscheduleitem_trial_name
-   • Gaa na:      $visitscheduleitem_name
-#ọ bụrụ ($visit_schedule_item_day_date)
-   • Ụbọchị:       $visit_schedule_item_day_date
-#ọzọ
-   • Gaa na: $visitscheduleitem_start
-   • Gaa na:   $visitscheduleitem_stop
-#njedebe
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Ọnụ ụzọ:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() ndị ọrụ N/A:
+$inactive_staff.size() employees N/A:
 
-#foreach($employee na $inactive_staff)
-   • $employee.aha
-#njedebe
+#foreach($employee in $inactive_staff)
+   • $employee.name
+#end
 
-Biko kwadebe na/ma ọ bụ mee ihe kwesịrị ekwesị.
+Please prepare and/or take appropriate actions.
 
 Daalụ!
 
-Nke a bụ usoro ewepụtara email emebere na $generated_on, ọ nwere ike bụrụ ihe ochie ugbu a. azaghachila.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Ihe atụ: $instance_name
+Instance: $instance_name
