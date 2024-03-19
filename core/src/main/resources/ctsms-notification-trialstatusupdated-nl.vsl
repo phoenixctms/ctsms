@@ -1,30 +1,30 @@
-Geachte $trial_name test teamlid of lid van de diepte. $trial_department,
+Dear $trial_name trial team member or member of dept. $trial_department,
 
-dit is een melding voor de volgende gebeurtenis:
+this is a notification for the following event:
 
    $type
 
-   • Proefcode:   $trial_name
-   • Proeftitel:  $trial_title
-   • Proefdiepte:  $trial_department
+   • Trial code:   $trial_name
+   • Trial title:  $trial_title
+   • Trial dept.:  $trial_department
 
-   • Proefstatus: $trial_status
+   • Trial status: $trial_status
 #if($notification.trial.status.lockdown)
-   • Lockdown: geen verdere wijzigingen van de proefperiode en bijbehorende records.
-#einde
+   • Lockdown: no further modification of the trial and associated records.
+#end
 #if($notification.trial.status.inquiryValueInputEnabled)
-   • Aanvraagwaarde is ingeschakeld.
-#anders
-   • Aanvraagwaarde is uitgeschakeld.
-#einde
+   • Inquiry value inputs are enabled.
+#else
+   • Inquiry value inputs are disabled.
+#end
 
-Bereid u voor en/of neem passende acties.
+Please prepare and/or take appropriate actions.
 
 Bedankt!
 
-Dit is een systeem gegenereerd e-mail op $generated_on, het kan ondertussen verouderd zijn. Reageer niet.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instantie: $instance_name
+Instance: $instance_name
