@@ -1,33 +1,33 @@
-Kære $visitscheduleitem_trial_name prøvegruppemedlem eller vejleder i $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Prøve:      $visitscheduleitem_trial_name
-   • besøg:      $visitscheduleitem_name
-#hvis($visit_schedule_item_day_date)
-   • Dato:       $visit_schedule_item_day_date
-#andet
-   • Besøg fra: $visitscheduleitem_start
-   • Besøg for:   $visitscheduleitem_stop
-#ende
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Tærskel:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() medarbejdere N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
    • $employee.name
-#ende
+#end
 
-Forbered og/eller foretag passende foranstaltninger.
+Please prepare and/or take appropriate actions.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
