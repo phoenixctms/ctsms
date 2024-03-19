@@ -1,37 +1,37 @@
 Dear $user_identity_firstname,
 
-tu cuenta de ${application.abbreviation} fue #if($new_user)creada#{else}cambiado#end.
+your ${application.abbreviation} account was #if($new_user)created#{else}changed#end.
 
-   • Usuario:   $user_name
+   • Username:   $user_name
 #if($local_auth_method)
 #if($new_user)
-   • Un administrador le informará de la contraseña real.
-#sino
-   • La contraseña permanece sin cambios.
+   • An administrator will inform you of the actual password.
+#else
+   • The password remains unchanged.
 #end
 #elseif($ldap_auth_method)
-   • La contraseña a utilizar es su contraseña MUG.
+   • The password to use is your MUG-password.
 
 #if($new_user)
-Al iniciar sesión por primera vez, introduzca la contraseña dada por el administrador como la "contraseña local" obligatoria.
-#sino
-Cuando inicie sesión en la próxima vez, introduzca su contraseña actual como la obligatoria "contraseña local".
+When logging in for the first time, enter the password given by the administrator as the mandatory "local password".
+#else
+When logging in the next time, enter your current password as the mandatory "local password".
 #end
 #end
 
 #if($new_user)
-El sistema es accesible en el siguiente sitio:
+The system is accessible at the site below:
 
    $http_base_url
 
 #end
-IMPORTANTE: La cuenta le permite leer datos de identificación personal de temas registrados por los usuarios del departamento "$user_department". Para mantener la privacidad de los datos, las credenciales de las cuentas deben mantenerse en secreto. Nunca se le pedirá que proporcione credenciales a través de correo electrónico o servidores distintos de "$http_domain_name".
+IMPORTANT: The account allows you to read personally identifiable information of subjects registered by users of the "$user_department" department. To maintain data privacy, account credentials have to be kept secrect. You will never be asked to provide credentials via email or servers other than "$http_domain_name".
 
-¡Gracias!
+Thank you!
 
-Este es un correo electrónico generado por el sistema creado en $generated_on, puede estar desactualizado mientras tanto. No responda.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instancia: $instance_name
+Instance: $instance_name
