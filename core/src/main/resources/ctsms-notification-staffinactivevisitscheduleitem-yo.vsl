@@ -1,33 +1,33 @@
-Eyin $visitscheduleitem_trial_name omo egbe idanwo tabi alabojuto $staff_name,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-eyi jẹ iwifunni fun iṣẹlẹ atẹle:
+this is a notification for the following event:
 
    $type
 
-   • Idanwo:      $visitscheduleitem_trial_name
-   • Ṣabẹwo:      $visitscheduleitem_name
-#ti o ba jẹ ($visit_schedule_item_day_date)
-   • Ọjọ:       $visit_schedule_item_day_date
-#miiran
-   • Ṣabẹwo lati: $visitscheduleitem_start
-   • Ṣabẹwo si:   $visitscheduleitem_stop
-#opin
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
+#if($visit_schedule_item_day_date)
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • Ipele:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() abáni N/A:
+$inactive_staff.size() employees N/A:
 
 #foreach($employee in $inactive_staff)
-   • $employee.orukọ
-#opin
+   • $employee.name
+#end
 
-Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
+Please prepare and/or take appropriate actions.
 
 E dupe!
 
-Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Apeere: $instance_name
+Instance: $instance_name
