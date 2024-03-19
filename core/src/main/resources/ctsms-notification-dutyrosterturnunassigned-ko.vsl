@@ -1,40 +1,40 @@
-친애하는 $staff_firstname,
+Dear $staff_firstname,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 체험판:          $dutyrosterturn_trial_name
-   • 의무:      $dutyrosterturn_start
-   • 의무:        $dutyrosterturn_stop
+   • Trial:          $dutyrosterturn_trial_name
+   • Duty from:      $dutyrosterturn_start
+   • Duty to:        $dutyrosterturn_stop
 
-   • 달력:       $dutyrosterturn_calendar
-   • 직무명 :     $dutyrosterturn_title
-   • 방문:          $dutyrosterturn_visitscheduleitem_name
+   • Calendar:       $dutyrosterturn_calendar
+   • Duty title:     $dutyrosterturn_title
+   • Visit:          $dutyrosterturn_visitscheduleitem_name
 
-   • 새로운 직원:      $dutyrosterturn_staff_name
+   • New staff:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • 자체 할당 가능.
-#또 다른
-   • 자체 할당이 없습니다.
-#끝
+   • Self allocable.
+#else
+   • No self allocation.
+#end
 
-   • 수정됨: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-의무 코멘트:
+Duty comment:
 
 $dutyrosterturn_comment
 
-임무 할당은 의무적이며 최종적으로 동결될 때까지 변경될 수 있습니다. 최신 개요는 아래 사이트에서 액세스할 수 있습니다.
+Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
