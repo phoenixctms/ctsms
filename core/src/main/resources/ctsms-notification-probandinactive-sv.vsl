@@ -1,25 +1,25 @@
-Kära medlem av dept. $probandstatusentry_proband_department,
+Dear member of dept. $probandstatusentry_proband_department,
 
-detta är en avisering för följande händelse:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Proband katt:  $probandstatusentry_proband_category
+   • Proband cat.:  $probandstatusentry_proband_category
 
-   • Typ:          $probandstatusentry_type
-   • Från:          $probandstatusentry_start
-   • Till:            $probandstatusentry_stop
+   • Type:          $probandstatusentry_type
+   • From:          $probandstatusentry_start
+   • To:            $probandstatusentry_stop
 
-Var snäll och förbered och/eller vidta lämpliga åtgärder.
+Please prepare and/or take appropriate actions.
 
-Tack!
+Thank you!
 
-Detta är ett systemgenererat e-postmeddelande som skapats på $generated_on, det kan vara föråldrat under tiden. Svara inte.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
