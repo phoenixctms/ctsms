@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+Ndugu mwanachama wa dept. $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+hii ni arifa ya tukio lifuatalo:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#mwisho
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • Idara ya Proband.: $probandstatusentry_proband_department
+   • Proband paka.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • Aina:          $probandstatusentry_type
+   • Kutoka:          $probandstatusentry_start
+   • Kwa:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+Tafadhali jitayarishe na/au chukua hatua zinazofaa.
 
 Asante!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Hii ni barua pepe iliyotokana na mfumo iliyoundwa tarehe $generated_on, inaweza kuwa imepitwa na wakati kwa sasa. Usijibu.
 
---------------------------------------------------------------
+----------------------------------------------- -------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Mfano: $instance_name
