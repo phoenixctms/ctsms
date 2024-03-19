@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Eyin egbe ti Dept. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Oja:       $inventorystatusentry_inventory_name
+   • Ẹka Oja: $inventorystatusentry_inventory_department
+   • Ologbo oja .:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Iru:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Olupilẹṣẹ:      $inventorystatusentry_originator_name
+#opin
+   • Lati:            $inventorystatusentry_start
+   • Si:              $inventorystatusentry_stop
 
-Comment:
+Ọrọìwòye:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Jọwọ mura ati/tabi ṣe awọn iṣe ti o yẹ.
 
 E dupe!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Eyi jẹ imeeli ti ipilẹṣẹ eto ti a ṣẹda lori $generated_on, o le jẹ ti igba atijọ ni asiko yii. Maṣe dahun.
 
---------------------------------------------------------------
+------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Apeere: $instance_name
