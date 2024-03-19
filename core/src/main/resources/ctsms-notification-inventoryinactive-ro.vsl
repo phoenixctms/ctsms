@@ -1,31 +1,31 @@
-Dear member of dept. $inventorystatusentry_inventory_department,
+Dragă membru al dept. $inventorystatusentry_inventory_department,
 
-this is a notification for the following event:
+aceasta este o notificare pentru următorul eveniment:
 
    $type
 
-   • Inventory:       $inventorystatusentry_inventory_name
-   • Inventory dept.: $inventorystatusentry_inventory_department
-   • Inventory cat.:  $inventorystatusentry_inventory_category
+   • Inventar:       $inventorystatusentry_inventory_name
+   • Departamentul de inventariere: $inventorystatusentry_inventory_department
+   • Cat. de inventar:  $inventorystatusentry_inventory_category
 
-   • Type:            $inventorystatusentry_type
+   • Tip:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • From:            $inventorystatusentry_start
-   • To:              $inventorystatusentry_stop
+   • Inițiator:      $inventorystatusentry_originator_name
+#Sfârşit
+   • De la:            $inventorystatusentry_start
+   • Către:              $inventorystatusentry_stop
 
-Comment:
+Cometariu:
 
 $inventorystatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Vă rugăm să pregătiți și/sau să luați măsurile adecvate.
 
 Mulțumesc!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Acesta este un e-mail generat de sistem creat pe $generated_on, este posibil să fie depășit între timp. Nu răspunde.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Instanță: $instance_name
