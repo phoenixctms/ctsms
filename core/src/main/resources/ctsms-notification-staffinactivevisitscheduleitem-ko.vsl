@@ -1,33 +1,33 @@
-친애하는 $visitscheduleitem_trial_name 시험 팀원 또는 $staff_name감독자님께,
+Dear $visitscheduleitem_trial_name trial team member or supervisor of $staff_name,
 
-이는 다음 이벤트에 대한 알림입니다.
+this is a notification for the following event:
 
    $type
 
-   • 체험판:      $visitscheduleitem_trial_name
-   • 방문:      $visitscheduleitem_name
+   • Trial:      $visitscheduleitem_trial_name
+   • Visit:      $visitscheduleitem_name
 #if($visit_schedule_item_day_date)
-   • 날짜:       $visit_schedule_item_day_date
-#또 다른
-   • 방문 출발지: $visitscheduleitem_start
-   • 방문 장소:   $visitscheduleitem_stop
-#끝
+   • Date:       $visit_schedule_item_day_date
+#else
+   • Visit from: $visitscheduleitem_start
+   • Visit to:   $visitscheduleitem_stop
+#end
 
-   • 임계값:  $inactive_staff_limit
+   • Threshold:  $inactive_staff_limit
 
-$inactive_staff.size() 직원 N/A:
+$inactive_staff.size() employees N/A:
 
-#foreach($employee $inactive_staff)
+#foreach($employee in $inactive_staff)
    • $employee.name
-#끝
+#end
 
-준비 및/또는 적절한 조치를 취하시기 바랍니다.
+Please prepare and/or take appropriate actions.
 
-Gracias.
+Thank you!
 
-이 이메일은 $generated_on에 생성된 시스템 생성 이메일이므로 그 동안은 오래되었을 수 있습니다. 답장하지 마십시오.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
-------------------------------------- ------------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-인스턴스: $instance_name
+Instance: $instance_name
