@@ -1,28 +1,28 @@
-Dear supervisor of $staffstatusentry_staff_name,
+亲爱的 $staffstatusentry_staff_name的主管，
 
-this is a notification for the following event:
+这是针对以下事件的通知：
 
    $type
 
-   • Staff:       $staffstatusentry_staff_name
-   • Staff dept.: $staffstatusentry_staff_department
-   • Staff cat.:  $staffstatusentry_staff_category
+   • 工作人员：       $staffstatusentry_staff_name
+   • 员工部： $staffstatusentry_staff_department
+   • 员工目录：  $staffstatusentry_staff_category
 
-   • Type:        $staffstatusentry_type
-   • From:        $staffstatusentry_start
-   • To:          $staffstatusentry_stop
+   • 类型：        $staffstatusentry_type
+   • 来自：        $staffstatusentry_start
+   • 至：          $staffstatusentry_stop
 
-Comment:
+评论：
 
 $staffstatusentry_comment
 
-Please prepare and/or take appropriate actions.
+请准备和/或采取适当的行动。
 
 谢谢你！
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+实例： $instance_name
