@@ -1,27 +1,27 @@
-Dear member of dept. $course_department,
+عزيزي عضو القسم $course_department,
 
-this is a notification for the following event:
+هذا إشعار للحدث التالي:
 
    $type
 
-   • Course:                 $course_name
-   • Course CV title:        $course_cvtitle
-   • Course department:      $course_department
-   • Course category:        $course_category
+   • الدورة:                 $course_name
+   • عنوان السيرة الذاتية للدورة:        $course_cvtitle
+   • قسم الدورة :      $course_department
+   • فئة الدورة:        $course_category
 
-   • Course start:           $course_start
-   • Course end:             $course_stop
-   • Participation deadline: $course_participationdeadline
+   • بداية الدورة:           $course_start
+   • نهاية الدورة:             $course_stop
+   • آخر موعد للمشاركة: $course_participationdeadline
 
-Register for this course:
+سجل في هذه الدورة:
 
    $http_base_url/staff/upcomingCourseOverview.jsf
 
 شكرًا لك!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+المثيل: $instance_name
