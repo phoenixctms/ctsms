@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-si tratta di una notifica per il seguente evento:
+this is a notification for the following event:
 
    $type
 
-   • Inventario:       $inventorybooking_inventory_name
-   • Inventario dept.: $inventorybooking_inventory_department
-   • Inventario cat.:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • Tipo di stato:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originatore:      $inventorystatusentry_originator_name
+   • Originator:      $inventorystatusentry_originator_name
 #end
-   • Stato da:     $inventorystatusentry_start
-   • Stato a:       $inventorystatusentry_stop
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • Prenotazione da:    $inventorybooking_start
-   • Prenotazione a:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • Per corso:      $inventorybooking_course_name
-   • Per prova:       $inventorybooking_trial_name
-   • Per la proband: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Commento di stato:
+Status comment:
 
 $inventorystatusentry_comment
 
-Commento di prenotazione:
+Booking comment:
 
 $inventorybooking_comment
 
-Preparare e/o adottare le misure appropriate.
+Please prepare and/or take appropriate actions.
 
-Grazie!
+Thank you!
 
-Questa è una email generata dal sistema creata su $generated_on, potrebbe essere superata nel frattempo. Non rispondere.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Istanza: $instance_name
+Instance: $instance_name
