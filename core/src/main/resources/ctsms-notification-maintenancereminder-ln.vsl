@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Ndeko #soki($notification.Eloko ya Manaka ya bobateli.Moto oyo azali na mokumba)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#suka,
 
-this is a notification for the following event:
+oyo ezali liyebisi mpo na likambo oyo elandi:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Inventaire:       $maintenancescheduleitem_inventory_name
+   • Departema ya inventaire: $maintenancescheduleitem_inventory_department
+   • Inventaire cat.:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Titre: '$notification.Eloko ya Manaka ya bobateli.titre'.
+   • Lolenge:            $maintenancescheduleitem_type
+   • Mokolo:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Contact ya entreprise: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Tosɛngi yo omibongisa mpe/to osala makambo oyo ebongi.
 
 Matondi!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Oyo ezali email oyo esalemi na système oyo esalemi na $generated_on, ekoki kozala dépassé entre temps. Koyanola te.
 
---------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Ndakisa: $instance_name
