@@ -1,40 +1,40 @@
-Dear $staff_firstname,
+عزيزي $staff_firstname،
 
-this is a notification for the following event:
+هذا إشعار للحدث التالي:
 
    $type
 
-   • Trial:          $dutyrosterturn_trial_name
-   • Duty from:      $dutyrosterturn_start
-   • Duty to:        $dutyrosterturn_stop
+   • المحاكمة:          $dutyrosterturn_trial_name
+   • الواجب من:      $dutyrosterturn_start
+   • الواجب تجاه:        $dutyrosterturn_stop
 
-   • Calendar:       $dutyrosterturn_calendar
-   • Duty title:     $dutyrosterturn_title
-   • Visit:          $dutyrosterturn_visitscheduleitem_name
+   • التقويم:       $dutyrosterturn_calendar
+   • عنوان الواجب:     $dutyrosterturn_title
+   • زيارة:          $dutyrosterturn_visitscheduleitem_name
 
-   • New staff:      $dutyrosterturn_staff_name
+   • طاقم العمل الجديد:      $dutyrosterturn_staff_name
 #if($notification.dutyRosterTurn.selfAllocatable)
-   • Self allocable.
-#else
-   • No self allocation.
-#end
+   • التخصيص الذاتي.
+#آخر
+   • لا يوجد تخصيص ذاتي.
+#نهاية
 
-   • Modified:       #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
+   • تم التعديل: #if($notification.dutyRosterTurn.modifiedUser.identity)$dutyrosterturn_modifieduser_identity_name#{else}$dutyrosterturn_modifieduser_name#end
 
 
-Duty comment:
+تعليق الواجب:
 
 $dutyrosterturn_comment
 
-Duty assignment are obligatory and may change until they are finally frozen. The up-to-date overview is accessible at the site below:
+تعتبر مهمة الواجب إلزامية وقد تتغير حتى يتم تجميدها نهائيًا. يمكن الوصول إلى النظرة العامة المحدثة على الموقع أدناه:
 
    $http_base_url/trial/dutyRosterSchedule.jsf.
 
 شكرًا لك!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+المثيل: $instance_name
