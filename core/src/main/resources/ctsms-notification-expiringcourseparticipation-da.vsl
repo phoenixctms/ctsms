@@ -1,26 +1,26 @@
 Dear $courseparticipationstatusentry_staff_firstname,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Kursus:              $courseparticipationstatusentry_course_name
-   • Kursus CV titel:     $courseparticipationstatusentry_course_cvtitle
-   • Kursusafdeling:   $courseparticipationstatusentry_course_department
-   • Kursuskategori:     $courseparticipationstatusentry_course_category
+   • Course:              $courseparticipationstatusentry_course_name
+   • Course CV title:     $courseparticipationstatusentry_course_cvtitle
+   • Course department:   $courseparticipationstatusentry_course_department
+   • Course category:     $courseparticipationstatusentry_course_category
 
-   • Kursus slut:          $courseparticipationstatusentry_course_stop
-   • Gyldighedsudløb: $courseparticipationstatusentry_course_expiration
+   • Course end:          $courseparticipationstatusentry_course_stop
+   • Validity expiration: $courseparticipationstatusentry_course_expiration
 
-Besøg for at tilmelde dig et passende genopfriskningskursus:
+Please visit to register for a suitable refresher course:
 
    $http_base_url/staff/expiringParticipationOverview.jsf
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
