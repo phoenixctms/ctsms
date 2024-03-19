@@ -1,30 +1,30 @@
-Kære $visitscheduleitem_trial_name prøvegruppemedlem eller medlem af dept. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $probandstatusentry_proband_department,
 
-dette er en notifikation for følgende begivenhed:
+this is a notification for the following event:
 
    $type
 
-   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
    • Proband dept.: $probandstatusentry_proband_department
-   • Proband kat:  $probandstatusentry_proband_category
+   • Proband cat.:  $probandstatusentry_proband_category
 
    • Status type:   $probandstatusentry_type
-   • Status fra:   $probandstatusentry_start
-   • Status til:     $probandstatusentry_stop
+   • Status from:   $probandstatusentry_start
+   • Status to:     $probandstatusentry_stop
 
-   • Prøve:         $visitscheduleitem_trial_name
-   • besøg:         $visitscheduleitem_name
-   • Besøg fra:    $visitscheduleitem_start
-   • Besøg for:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 
-Forbered og/eller foretag passende foranstaltninger.
+Please prepare and/or take appropriate actions.
 
 Tak skal du have!
 
-Dette er en systemgenereret e-mail oprettet på $generated_on, det kan være forældet i mellemtiden. Du må ikke svare.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-Instans: $instance_name
+Instance: $instance_name
