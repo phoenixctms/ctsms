@@ -1,26 +1,26 @@
-Dear #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
+Дорогой #if($notification.maintenanceScheduleItem.responsiblePerson)$maintenancescheduleitem_responsibleperson_firstname#{else}$maintenancescheduleitem_responsiblepersonproxy_firstname#end,
 
-this is a notification for the following event:
+это уведомление о следующем событии:
 
    $type
 
-   • Inventory:       $maintenancescheduleitem_inventory_name
-   • Inventory dept.: $maintenancescheduleitem_inventory_department
-   • Inventory cat.:  $maintenancescheduleitem_inventory_category
+   • Инвентарь:       $maintenancescheduleitem_inventory_name
+   • Отдел инвентаря: $maintenancescheduleitem_inventory_department
+   • Инвентарь:  $maintenancescheduleitem_inventory_category
 
-   • Title:           '$notification.maintenanceScheduleItem.title'
-   • Type:            $maintenancescheduleitem_type
-   • Date:            $maintenancescheduleitem_nextrecurrence
+   • Заголовок: '$notification.maintenanceScheduleItem.title'
+   • Тип:            $maintenancescheduleitem_type
+   • Дата:            $maintenancescheduleitem_nextrecurrence
 
-   • Company contact: $maintenancescheduleitem_companycontact_name
+   • Контактная информация компании: $maintenancescheduleitem_companycontact_name
 
-Please prepare and/or take appropriate actions.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
