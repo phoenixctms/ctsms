@@ -1,43 +1,43 @@
 Dear $inventorybooking_onbehalfof_firstname,
 
-これは以下のイベントの通知です：
+this is a notification for the following event:
 
    $type
 
-   • インベントリ：       $inventorybooking_inventory_name
-   • 在庫部門： $inventorybooking_inventory_department
-   • インベントリcat:  $inventorybooking_inventory_category
+   • Inventory:       $inventorybooking_inventory_name
+   • Inventory dept.: $inventorybooking_inventory_department
+   • Inventory cat.:  $inventorybooking_inventory_category
 
-   • ステータスタイプ:     $inventorystatusentry_type
+   • Status type:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
    • Originator:      $inventorystatusentry_originator_name
 #end
-   • ステータス:     $inventorystatusentry_start
-   • ステータス:       $inventorystatusentry_stop
+   • Status from:     $inventorystatusentry_start
+   • Status to:       $inventorystatusentry_stop
 
-   • 予約元:    $inventorybooking_start
-   • 予約先:      $inventorybooking_stop
+   • Booking from:    $inventorybooking_start
+   • Booking to:      $inventorybooking_stop
 
-   • コース:      $inventorybooking_course_name
-   • 試用版：       $inventorybooking_trial_name
-   • プロバンド用: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • For course:      $inventorybooking_course_name
+   • For trial:       $inventorybooking_trial_name
+   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-ステータスコメント:
+Status comment:
 
 $inventorystatusentry_comment
 
-予約コメント:
+Booking comment:
 
 $inventorybooking_comment
 
-適切な行動を取ってください。
+Please prepare and/or take appropriate actions.
 
 ありがとう！
 
-これは、 $generated_onで作成されたシステム生成メールです。その間に古くなる可能性があります。 返信しないでください。
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-インスタンス： $instance_name
+Instance: $instance_name
