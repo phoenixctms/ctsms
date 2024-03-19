@@ -1,43 +1,43 @@
-Dear $inventorybooking_onbehalfof_firstname,
+عزيزي $inventorybooking_onbehalfof_firstname،
 
-this is a notification for the following event:
+هذا إشعار للحدث التالي:
 
    $type
 
-   • Inventory:       $inventorybooking_inventory_name
-   • Inventory dept.: $inventorybooking_inventory_department
-   • Inventory cat.:  $inventorybooking_inventory_category
+   • المخزون:       $inventorybooking_inventory_name
+   • قسم الجرد: $inventorybooking_inventory_department
+   • قطة الجرد.:  $inventorybooking_inventory_category
 
-   • Status type:     $inventorystatusentry_type
+   • نوع الحالة:     $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
-   • Originator:      $inventorystatusentry_originator_name
-#end
-   • Status from:     $inventorystatusentry_start
-   • Status to:       $inventorystatusentry_stop
+   • المنشئ:      $inventorystatusentry_originator_name
+#نهاية
+   • الحالة من:     $inventorystatusentry_start
+   • الحالة إلى:       $inventorystatusentry_stop
 
-   • Booking from:    $inventorybooking_start
-   • Booking to:      $inventorybooking_stop
+   • الحجز من:    $inventorybooking_start
+   • الحجز إلى:      $inventorybooking_stop
 
-   • For course:      $inventorybooking_course_name
-   • For trial:       $inventorybooking_trial_name
-   • For proband:     #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
+   • للدورة:      $inventorybooking_course_name
+   • للتجربة:       $inventorybooking_trial_name
+   • بالنسبة للنطاق العريض: #if($string_utils.isEmpty($inventorybooking_proband_alias))$inventorybooking_proband_id#{else}$inventorybooking_proband_alias#end
 
 
-Status comment:
+تعليق الحالة:
 
 $inventorystatusentry_comment
 
-Booking comment:
+تعليق الحجز:
 
 $inventorybooking_comment
 
-Please prepare and/or take appropriate actions.
+يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 
 شكرًا لك!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+المثيل: $instance_name
