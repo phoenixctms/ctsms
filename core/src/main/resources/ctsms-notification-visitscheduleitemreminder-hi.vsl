@@ -1,26 +1,26 @@
-प्रिय $visitscheduleitem_trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $visitscheduleitem_trial_department,
+Dear $visitscheduleitem_trial_name trial team member or member of dept. $visitscheduleitem_trial_department,
 
-यह निम्नलिखित घटना के लिए एक अधिसूचना है:
+this is a notification for the following event:
 
    $type
 
-   • परीक्षण:         $visitscheduleitem_trial_name
-   • विजिट करें:         $visitscheduleitem_name
-   • यहां से जाएँ:    $visitscheduleitem_start
-   • यहां जाएँ:      $visitscheduleitem_stop
+   • Trial:         $visitscheduleitem_trial_name
+   • Visit:         $visitscheduleitem_name
+   • Visit from:    $visitscheduleitem_start
+   • Visit to:      $visitscheduleitem_stop
 #if($notification.proband)
 
-   • प्रोबैंड: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
+   • Proband:       #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-#अंत
+#end
 
-कृपया तैयारी करें और/या उचित कार्रवाई करें।
+Please prepare and/or take appropriate actions.
 
 धन्यवाद!
 
-यह $generated_onपर बनाया गया एक सिस्टम जनरेटेड ईमेल है, यह इस बीच पुराना हो सकता है। जवाब न दें।
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
--------------------------------------------------- -----------
+--------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-उदाहरण: $instance_name
+Instance: $instance_name
