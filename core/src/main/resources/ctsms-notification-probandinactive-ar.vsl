@@ -1,25 +1,25 @@
-Dear member of dept. $probandstatusentry_proband_department,
+عزيزي عضو القسم $probandstatusentry_proband_department,
 
-this is a notification for the following event:
+هذا إشعار للحدث التالي:
 
    $type
 
-   • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
+   • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
-   • Proband cat.:  $probandstatusentry_proband_category
+   • قسم البرودباند: $probandstatusentry_proband_department
+   • قطة بروباند.:  $probandstatusentry_proband_category
 
-   • Type:          $probandstatusentry_type
-   • From:          $probandstatusentry_start
-   • To:            $probandstatusentry_stop
+   • النوع:          $probandstatusentry_type
+   • من:          $probandstatusentry_start
+   • إلى:            $probandstatusentry_stop
 
-Please prepare and/or take appropriate actions.
+يرجى الاستعداد و/أو اتخاذ الإجراءات المناسبة.
 
 شكرًا لك!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+هذا بريد إلكتروني تم إنشاؤه بواسطة النظام وتم إنشاؤه في $generated_on، وقد يكون قديمًا في هذه الأثناء. لا ترد.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+المثيل: $instance_name
