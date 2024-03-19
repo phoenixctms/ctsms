@@ -1,17 +1,17 @@
-Dear member of dept. $department,
+Уважаемый сотрудник отд. $department,
 
-this is a notification for the following event:
+это уведомление о следующем событии:
 
    $type
 
-   • Department: $department
-   • $number_of_probands_deleted proband(s) deleted.
+   • Отдел: $department
+   • $number_of_probands_deleted пробанды удалены.
 
-Without informed consent of the proband, the record removal is required to implement data privacy in order to protect the proband's sensitive data and drop personally identifiable information. Therefore a deletion cannot be rolled back.
+Без информированного согласия пробанда удаление записи необходимо для обеспечения конфиденциальности данных, чтобы защитить конфиденциальные данные пробанда и удалить личную информацию. Поэтому удаление невозможно отменить.
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
