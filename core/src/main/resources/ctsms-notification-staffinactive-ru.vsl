@@ -1,28 +1,28 @@
-Dear supervisor of $staffstatusentry_staff_name,
+Дорогой руководитель $staffstatusentry_staff_name,
 
-this is a notification for the following event:
+это уведомление о следующем событии:
 
    $type
 
-   • Staff:       $staffstatusentry_staff_name
-   • Staff dept.: $staffstatusentry_staff_department
-   • Staff cat.:  $staffstatusentry_staff_category
+   • Посох:       $staffstatusentry_staff_name
+   • Отдел персонала: $staffstatusentry_staff_department
+   • Категория персонала:  $staffstatusentry_staff_category
 
-   • Type:        $staffstatusentry_type
-   • From:        $staffstatusentry_start
-   • To:          $staffstatusentry_stop
+   • Введите:        $staffstatusentry_type
+   • От:        $staffstatusentry_start
+   • Кому:          $staffstatusentry_stop
 
-Comment:
+Комментарий:
 
 $staffstatusentry_comment
 
-Please prepare and/or take appropriate actions.
+Пожалуйста, подготовьтесь и/или примите соответствующие меры.
 
 Спасибо!
 
-This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
+Это сгенерированное системой электронное письмо, созданное $generated_on, оно может устареть. Не отвечай.
 
---------------------------------------------------------------
+-------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
 
-Instance: $instance_name
+Экземпляр: $instance_name
