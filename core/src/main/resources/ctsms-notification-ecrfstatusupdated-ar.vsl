@@ -1,46 +1,46 @@
-عزيزي عضو الفريق التجريبي $ecrfstatusentry_listentry_trial_name أو عضو العمق. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of dept. $ecrfstatusentry_listentry_trial_department,
 
-وهذا إشعار يتعلق بالحدث التالي:
+this is a notification for the following event:
 
    $type
 
-   • المحاكمة:                $ecrfstatusentry_listentry_trial_name
-   • الدائرة التجريبية:     $ecrfstatusentry_listentry_trial_department
-   • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
+   • Trial:                $ecrfstatusentry_listentry_trial_name
+   • Trial department:     $ecrfstatusentry_listentry_trial_department
+   • Proband:              #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
 #if($notification.ecrfStatusEntry.listEntry.group)
-   • مجموعة Proband:        $notification.ecrfStatusEntry.listEntry.group.title
-#نهاية
+   • Proband group:        $notification.ecrfStatusEntry.listEntry.group.title
+#end
 #if($notification.ecrfStatusEntry.visit)
    • Visit:                $notification.ecrfStatusEntry.visit.title
-#نهاية
+#end
 
-   • حالة eCRF:          $ecrfstatusentry_status
-#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() = "موافق")
-   • التحقق من الإدخالات:     $ecrfstatusentry_validationresponsemsg
-   • الطابع الزمني للتحقق من: $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.valid.& $notification.ecrfStatusEntry.validationStatus.validationStatus.name() = "فايليد")
+   • eCRF status:          $ecrfstatusentry_status
+#if($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "OK")
+   • Input validation:     $ecrfstatusentry_validationresponsemsg
+   • Validation timestamp: $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "FAILED")
    • $ecrfstatusentry_validationresponsemsg
-   • الطابع الزمني:            $ecrfstatusentry_validationtimestamp
-#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() = "PENDING")
-   • التحقق من المدخلات قيد النظر.
-#نهاية
+   • Timestamp:            $ecrfstatusentry_validationtimestamp
+#elseif($notification.ecrfStatusEntry.status.validated && $notification.ecrfStatusEntry.validationStatus.validationStatus.name() == "PENDING")
+   • Input validation pending.
+#end
 
-   • معدلة: #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
+   • Modified:             #if($notification.ecrfStatusEntry.modifiedUser.identity)$ecrfstatusentry_modifieduser_identity_name#{else}$ecrfstatusentry_modifieduser_name#end
 
 
 #if(!$notification.ecrfStatusEntry.status.done)
-يرجى الاستمرار في الخطوات التالية لإكمال إدخال البيانات في نموذج الإبلاغ الموحد.
-#آخر
-وقد اكتمل إدخال البيانات الإلكترونية لنموذج الإبلاغ الموحد.
-#نهاية
+Please continue with next steps to complete the eCRF data entry.
+#else
+The eCRF data entry is completed.
+#end
 
 شكرًا لك!
 
-هذا بريد إلكتروني تم إنشاؤه في نظام $generated_on، قد يكون قديم في غضون ذلك. لا ترد.
+This is a system generated email created on $generated_on, it may be outdated in meantime. Do not reply.
 
 --------------------------------------------------------------
 ${application.abbreviation} ${application.version}
 
-الموقع: $instance_name
+Instance: $instance_name
