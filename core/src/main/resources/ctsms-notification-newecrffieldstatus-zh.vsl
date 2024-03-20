@@ -1,4 +1,4 @@
-亲爱的 $ecrffieldstatusentry_listentry_trial_name 试验组成员或部门成员 $ecrffieldstatusentry_listentry_trial_department,
+亲爱的 $ecrffieldstatusentry_listentry_trial_name 试验组成员或部门成员 $ecrffieldstatusentry_listentry_trial_department, $ecrffieldstatusentry_listentry_trial_department,
 
 这是针对以下事件的通知：
 
@@ -16,7 +16,7 @@
    • 访问：              $notification.ecrfFieldStatusEntry.visit.title
 ＃结尾
    • eCRF 部分：       $ecrffieldstatusentry_ecrffield_section
-   • 输入字段：        ${ecrffieldstatusentry_ecrffield_position}。 $ecrffieldstatusentry_ecrffield_field_name
+   • 输入字段：        ${ecrffieldstatusentry_ecrffield_position}。 $ecrffieldstatusentry_ecrffield_field_name $ecrffieldstatusentry_ecrffield_field_name
 #if($notification.ecrfFieldStatusEntry.ecrfField.series)
    • 索引：              $ecrffieldstatusentry_index
 ＃结尾
@@ -50,7 +50,7 @@ eCRF 问题已结束。
 
 谢谢你！
 
-这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。 请勿回复。
+这是系统生成的电子邮件，创建于 $generated_on，同时可能已过时。 请勿回复。 请勿回复。 请勿回复。
 
 -------------------------------------------------- ------------
 ${application.abbreviation} ${application.version}
