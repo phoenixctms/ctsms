@@ -624,10 +624,11 @@ public class TrialServiceImpl
 		ProbandListEntry listEntry = ecrfStatusEntry.getListEntry();
 		boolean isAuditTrail = ecrfField.isAuditTrail() && ecrfStatusEntry.getStatus().isAuditTrail();
 		if (id == null) {
-			if (ecrfField.isDisabled()) {
-				ecrfFieldValueIn = ServiceUtil.createPresetEcrfFieldInValue(ecrfField, listEntry.getId(), visit != null ? visit.getId() : null, ecrfFieldValueIn.getIndex(),
-						this.getInputFieldSelectionSetValueDao());
-			}
+			// override disabled values with preset:
+			//if (ecrfField.isDisabled()) {
+			//	ecrfFieldValueIn = ServiceUtil.createPresetEcrfFieldInValue(ecrfField, listEntry.getId(), visit != null ? visit.getId() : null, ecrfFieldValueIn.getIndex(),
+			//			this.getInputFieldSelectionSetValueDao());
+			//}
 			checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, visit, ecrfField);
 			checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
 			ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
@@ -662,9 +663,10 @@ public class TrialServiceImpl
 							ecrfFieldValueIn.getIndex()))) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, originalEcrfFieldValue.getModifiedUser().getName());
 			}
-			if (!ecrfField.isDisabled()
-					&& (!CommonUtil.isEmptyString(ecrfFieldValueIn.getReasonForChange())
-							|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue(), force))) {
+			if (//!ecrfField.isDisabled()
+				//	&& 
+			(!CommonUtil.isEmptyString(ecrfFieldValueIn.getReasonForChange())
+					|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue(), force))) {
 				checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, visit, ecrfField);
 				checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
 				ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
@@ -739,9 +741,10 @@ public class TrialServiceImpl
 		ProbandListEntryTagValueJsonVO resultJs = null;
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		if (id == null) {
-			if (listEntryTag.isDisabled()) {
-				probandListEntryTagValueIn = ServiceUtil.createPresetProbandListEntryTagInValue(listEntryTag, listEntry.getId(), this.getInputFieldSelectionSetValueDao());
-			}
+			// override disabled values with preset:
+			//if (listEntryTag.isDisabled()) {
+			//	probandListEntryTagValueIn = ServiceUtil.createPresetProbandListEntryTagInValue(listEntryTag, listEntry.getId(), this.getInputFieldSelectionSetValueDao());
+			//}
 			checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag);
 			ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 					journalEntryDao);
@@ -768,8 +771,9 @@ public class TrialServiceImpl
 			}
 		} else {
 			ProbandListEntryTagValue originalListEntryTagValue = CheckIDUtil.checkProbandListEntryTagValueId(id, probandListEntryTagValueDao);
-			if (!listEntryTag.isDisabled()
-					&& !ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), force)) {
+			if (//!listEntryTag.isDisabled()
+				//	&& 
+			!ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), force)) {
 				boolean isEqual = ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), false);
 				checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user,
