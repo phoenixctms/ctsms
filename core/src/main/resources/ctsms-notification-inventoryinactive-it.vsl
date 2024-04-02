@@ -1,4 +1,4 @@
-Caro membro del dipartimento Caro membro del dipartimento $inventorystatusentry_inventory_department,
+Caro membro del dipartimento $inventorystatusentry_inventory_department,
 
 questa è una notifica per il seguente evento:
 
@@ -6,7 +6,7 @@ questa è una notifica per il seguente evento:
 
    • Inventario:       $inventorystatusentry_inventory_name
    • Reparto inventario: $inventorystatusentry_inventory_department
-   inventario:  $inventorystatusentry_inventory_category
+   • Cat. inventario:  $inventorystatusentry_inventory_category
 
    • Digitare:            $inventorystatusentry_type
 #if($notification.inventoryStatusEntry.originator)
