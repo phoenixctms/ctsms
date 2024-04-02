@@ -187,9 +187,10 @@ public class ProbandServiceImpl
 		InquiryValueJsonVO resultJs = null;
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		if (id == null) {
-			if (inquiry.isDisabled()) {
-				inquiryValueIn = ServiceUtil.createPresetInquiryInValue(inquiry, proband.getId(), this.getInputFieldSelectionSetValueDao());
-			}
+			// override disabled values with preset:
+			//if (inquiry.isDisabled()) {
+			//	inquiryValueIn = ServiceUtil.createPresetInquiryInValue(inquiry, proband.getId(), this.getInputFieldSelectionSetValueDao());
+			//}
 			checkInquiryValueInput(inquiryValueIn, proband, inquiry);
 			ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(), journalEntryDao);
 			InquiryValue inquiryValue = inquiryValueDao.inquiryValueInVOToEntity(inquiryValueIn);
@@ -211,8 +212,9 @@ public class ProbandServiceImpl
 			}
 		} else {
 			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueId(id, inquiryValueDao);
-			if (!inquiry.isDisabled()
-					&& !ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue(), force)) {
+			if (//!inquiry.isDisabled()
+				//	&& 
+			!ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue(), force)) {
 				checkInquiryValueInput(inquiryValueIn, proband, inquiry);
 				ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);
