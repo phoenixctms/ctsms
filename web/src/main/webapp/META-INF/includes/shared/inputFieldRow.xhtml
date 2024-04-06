@@ -27,7 +27,7 @@
 				update="row#{index}" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-input-panelgrid"
-				rowClasses="#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{fieldInput.hasOutput ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.fieldCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
+				rowClasses="#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{fieldInput.hasOutput ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.fieldCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
 				<h:panelGrid
 					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch)}"
 					columns="#{fieldInput.longTitle ? 1 : 4}"
@@ -74,13 +74,14 @@
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 						rendered="#{fieldInput.time}" value="#{fieldInput.title}" />
 					<h:panelGroup>
+					    <!-- https://stackoverflow.com/questions/32390081/force-jsf-to-process-validate-and-update-readonly-disabled-input-components-any -->
 						<p:inputText id="singleLineText#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.textValue}" label="#{fieldInput.label}"
 							rendered="#{fieldInput.singleLineText}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							styleClass="ctsms-control-larger" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.singleLineTextOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.singleLineTextOnChange')}">
@@ -98,7 +99,7 @@
 							rendered="#{fieldInput.selectOneDropdown}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							styleClass="ctsms-control-larger"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectOneDropdownOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectOneDropdownOnChange')}">
@@ -124,7 +125,7 @@
 							rendered="#{fieldInput.selectOneRadio}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectOneRadioOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectOneRadioOnChange')}">
 
@@ -148,7 +149,7 @@
 							label="#{fieldInput.label}" rendered="#{fieldInput.selectMany}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							layout="#{fieldInput.selectVertical ? 'pageDirection' : 'lineDirection'}"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}">
@@ -170,7 +171,7 @@
 							rendered="#{fieldInput.autocomplete}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							label="#{fieldInput.label}" styleClass="ctsms-control-larger"
 							autocomplete="off"
 							minQueryLength="#{autoCompleteMinQueryLengthInputField}"
@@ -197,7 +198,7 @@
 							rendered="#{fieldInput.checkBox}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.checkBoxOnChange')}">
 							<p:ajax />
 						</p:selectBooleanCheckbox>
@@ -212,7 +213,7 @@
 							rendered="#{fieldInput.integer}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							styleClass="ctsms-spinner" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}">
@@ -229,7 +230,7 @@
 							rendered="#{fieldInput.float}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							styleClass="ctsms-control-float" autocomplete="off"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.floatOnChange')}"
 							onchange="#{fieldInput.getEventJSCall('FieldCalculation.floatOnChange')}">
@@ -246,7 +247,7 @@
 							rendered="#{fieldInput.date}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							pattern="#{sessionScopeBean.inputDatePattern}"
 							yearRange="#{applicationScopeBean.calendarYearRange}"
 							showWeek="true" navigator="true"
@@ -270,7 +271,7 @@
 							rendered="#{fieldInput.timestamp}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							pattern="#{sessionScopeBean.inputDateTimePattern}"
 							yearRange="#{applicationScopeBean.calendarYearRange}"
 							showWeek="true" navigator="true"
@@ -296,7 +297,7 @@
 							rendered="#{fieldInput.time}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 							timeSeparator="#{applicationScopeBean.timeSeparator}"
 							mode="popup"
 							intervalMinutes="#{applicationScopeBean.timePickerIntervalMinutes}"
@@ -351,7 +352,7 @@
 							value="#{fieldInput.textValue}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
-							disabled="#{!enabled or fieldInput.disabled}" autoResize="false"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}" autoResize="false"
 							styleClass="ctsms-textarea" autocomplete="off"
 							label="#{fieldInput.label}"
 							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.multiLineTextOnChange')}"
@@ -380,7 +381,7 @@
 						value="#{fieldInput.inkValueWithSelections}"
 						width="#{fieldInput.width}" height="#{fieldInput.height}"
 						regions="#{fieldInput.inkRegions}"
-						disabled="#{!enabled or fieldInput.disabled}"
+						disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 						label="#{fieldInput.label}"
 						backgroundImage="#{request.contextPath}/inputfieldimage?#{applicationScopeBean.parameterName('INPUT_FIELD_ID')}=#{fieldInput.inputField.id}"
 						onChange="#{fieldInput.getEventJSCall('FieldCalculation.sketchOnChange')}" />
@@ -417,19 +418,19 @@
 					<ui:param name="escapeHtml" value="true" />
 				</ui:include>
 				<h:panelGrid
-					rendered="#{(not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired}"
+					rendered="#{(not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired}"
 					columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 					<h:outputLabel
 						styleClass="ctsms-field-icon ctsms-icon-noencryption"
 						for="reasonForChange#{index}"
-						value="#{labels.noencryption_warning_label}#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? labels.audit_trail_reason_for_change_label_required : labels.audit_trail_reason_for_change_label}" />
+						value="#{labels.noencryption_warning_label}#{((not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? labels.audit_trail_reason_for_change_label_required : labels.audit_trail_reason_for_change_label}" />
 					<h:panelGroup>
 						<p:inputTextarea id="reasonForChange#{index}"
 							value="#{fieldInput.reasonForChange}"
-							required="#{(not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired}"
+							required="#{(not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired}"
 							requiredMessage="#{labels.audit_trail_reason_for_change_required_message}"
-							disabled="#{!enabled or fieldInput.disabled}" autoResize="false"
+							disabled="#{!enabled}" autoResize="false"
 							styleClass="ctsms-textarea" autocomplete="off"
 							label="#{labels.audit_trail_reason_for_change}">
 							<p:ajax />
@@ -437,7 +438,7 @@
 						<p:tooltip rendered="#{enableTooltips}"
 							for="reasonForChange#{index}">
 							<h:outputText
-								value="#{((not (!enabled or fieldInput.disabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? labels.audit_trail_reason_for_change_tooltip_required : labels.audit_trail_reason_for_change_tooltip}"
+								value="#{((not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? labels.audit_trail_reason_for_change_tooltip_required : labels.audit_trail_reason_for_change_tooltip}"
 								escape="false" />
 						</p:tooltip>
 					</h:panelGroup>
@@ -557,7 +558,9 @@
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);#{updateOnComplete}"
 							icon="ui-icon ui-icon-disk" rendered="#{!fieldInput.dummy}"
 							ajax="true" disabled="#{!editable or !fieldInput.editable}"
-							update="row#{index},#{update}" />
+							update="row#{index},#{update}" >
+							<f:param name="includeDisabled" value="true" />
+						</p:commandButton>
 						<p:commandButton process="@this"
 							title="#{labels.load_button_label}"
 							actionListener="#{fieldInput.load}" tabindex="-1"
