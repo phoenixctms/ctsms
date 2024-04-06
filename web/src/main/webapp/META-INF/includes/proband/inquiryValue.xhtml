@@ -88,7 +88,9 @@
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
 								disabled="#{!inquiryValueBean.editable}"
-								update="inquiriestrial,inquiry_input_grid" />
+								update="inquiriestrial,inquiry_input_grid">
+								<f:param name="includeDisabled" value="true" />	
+							</p:commandButton>
 							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{inquiryValueBean.load}"

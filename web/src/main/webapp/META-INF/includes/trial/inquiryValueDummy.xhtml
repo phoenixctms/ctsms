@@ -54,7 +54,9 @@
 								oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-help" ajax="true"
 								disabled="#{!dummyInquiryValueBean.created}"
-								update="inquiry_input_grid" />
+								update="inquiry_input_grid">
+								<f:param name="includeDisabled" value="true" />	
+							</p:commandButton>
 							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{dummyInquiryValueBean.load}"

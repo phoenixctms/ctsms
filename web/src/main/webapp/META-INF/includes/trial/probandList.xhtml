@@ -883,7 +883,9 @@
 											oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);probandList.unselectAllRows();probandList.filter()"
 											icon="ui-icon ui-icon-disk" ajax="true"
 											disabled="#{!probandListEntryBean.probandListEntryTagValueBean.editable}"
-											update="tagvalue_input_grid" />
+											update="tagvalue_input_grid">
+											<f:param name="includeDisabled" value="true" />	
+										</p:commandButton>
 										<p:commandButton process="@this"
 											value="#{labels.load_button_label}"
 											actionListener="#{probandListEntryBean.probandListEntryTagValueBean.load}"

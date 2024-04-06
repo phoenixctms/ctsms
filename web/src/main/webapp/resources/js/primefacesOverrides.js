@@ -167,12 +167,12 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
         var jqProcess = $(PrimeFaces.escapeClientId(item)), componentPostParams = null;
 
         if (jqProcess.is('form')) {
-          componentPostParams = jqProcess.serializeArray();
+          componentPostParams = _serializeArray(jqProcess, cfg);
           hasViewstate = true;
         } else if (jqProcess.is(':input')) {
-          componentPostParams = jqProcess.serializeArray();
+          componentPostParams = _serializeArray(jqProcess, cfg);
         } else {
-          componentPostParams = jqProcess.find(':input').serializeArray();
+          componentPostParams = _serializeArray(jqProcess.find(':input'), cfg);
         }
 
         $.merge(postParams, componentPostParams);
@@ -188,7 +188,7 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
     }
 
   } else {
-    $.merge(postParams, form.serializeArray());
+    $.merge(postParams, _serializeArray(form, cfg));
   }
 
   //serialize
@@ -272,6 +272,29 @@ PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
 
   $.ajax(xhrOptions);
 };
+
+function _serializeArray(jqProcess, cfg) {
+  var componentPostParams;
+  var includeDisabled = false;
+  var i;
+  if (cfg != null && 'params' in cfg && cfg.params != null) {
+	for (i = 0; i < cfg.params.length; i++) {
+	  if (cfg.params[i].name == 'includeDisabled') {
+		includeDisabled = cfg.params[i].value;
+		break;
+	  }
+	}
+  }
+  if (includeDisabled) {
+    var fields = jqProcess.filter(':disabled');
+    fields.prop('disabled', false);
+    componentPostParams = jqProcess.serializeArray();
+    fields.prop('disabled', true);
+  } else {
+	componentPostParams = jqProcess.serializeArray();
+  }
+  return componentPostParams;
+}
 
 function _highlightText(jq) {
 
