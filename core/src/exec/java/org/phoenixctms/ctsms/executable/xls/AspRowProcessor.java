@@ -25,19 +25,19 @@ public class AspRowProcessor extends RowProcessor {
 	private static final int TYPE_COLUMN_INDEX = 1;
 	private static final int LABELING_COLUMN_INDEX = 2;
 	private static final int REGISTRATION_NUMBER_COLUMN_INDEX = 3;
-	private static final int PROPRIETOR_COLUMN_INDEX = 4;
-	private static final int REGISTRATION_DATE_COLUMN_INDEX = 5;
-	private static final int SUBSTANCES_COLUMN_INDEX = 6;
-	private static final int ATC_CODE_COLUMN_INDEX = 7;
-	private static final int NARCOTIC_COLUMN_INDEX = 8;
-	private static final int PSYCHOTROPIC_COLUMN_INDEX = 9;
-	private static final int BATCH_RELEASE_COLUMN_INDEX = 10;
-	private static final int BATCH_TESTING_COLUMN_INDEX = 11;
-	private static final int BATCH_TESTING_EXCLUSION_COLUMN_INDEX = 12;
-	private static final int PRESCRIPTION_COLUMN_INDEX = 13;
-	private static final int DISTRIBUTION_COLUMN_INDEX = 14;
-	private static final int HUMAN_COLUMN_INDEX = 15;
-	private static final int CATEGORY_COLUMN_INDEX = 16;
+	private static final int PROPRIETOR_COLUMN_INDEX = 5;
+	private static final int REGISTRATION_DATE_COLUMN_INDEX = 6;
+	private static final int SUBSTANCES_COLUMN_INDEX = 7;
+	private static final int ATC_CODE_COLUMN_INDEX = 8;
+	private static final int NARCOTIC_COLUMN_INDEX = 9;
+	private static final int PSYCHOTROPIC_COLUMN_INDEX = 10;
+	private static final int BATCH_RELEASE_COLUMN_INDEX = 11;
+	private static final int BATCH_TESTING_COLUMN_INDEX = 12;
+	private static final int BATCH_TESTING_EXCLUSION_COLUMN_INDEX = 13;
+	private static final int PRESCRIPTION_COLUMN_INDEX = 14;
+	private static final int DISTRIBUTION_COLUMN_INDEX = 15;
+	private static final int HUMAN_COLUMN_INDEX = 16;
+	private static final int CATEGORY_COLUMN_INDEX = 17;
 	private final static Pattern SUBSTANCES_SEPARATOR_REGEXP = Pattern.compile(";");
 	private final static Pattern ATC_CODES_SEPARATOR_REGEXP = Pattern.compile(";");
 
@@ -50,9 +50,9 @@ public class AspRowProcessor extends RowProcessor {
 	}
 
 	private static boolean parseBoolean(String value) {
-		if ("1".equals(value)) {
+		if ("1".equals(value) || "ja".equals(value.toLowerCase())) {
 			return true;
-		} else if ("0".equals(value)) {
+		} else if ("0".equals(value) || "nein".equals(value.toLowerCase())) {
 			return false;
 		} else {
 			throw new IllegalArgumentException("cannot parse boolean value " + value);
