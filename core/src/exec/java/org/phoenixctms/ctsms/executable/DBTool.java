@@ -827,13 +827,15 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_INPUT_FIELDS_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - input fields and selection set values will be updated!")) {
-						sendEmail = dbTool.getXlsImporter().loadInputFields(line.getOptionValue(DBToolOptions.IMPORT_INPUT_FIELDS_OPT), getAuthenticationOptionValue(line)) > 0l;
+						sendEmail = dbTool.getXlsImporter().loadInputFields(line.getOptionValue(DBToolOptions.IMPORT_INPUT_FIELDS_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT), getAuthenticationOptionValue(line)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_ECRFS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ECRFS_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRFs, eCRF fields, input fields and selection set values will be updated!")) {
-						sendEmail = dbTool.getXlsImporter().loadEcrfs(line.getOptionValue(DBToolOptions.IMPORT_ECRFS_OPT), getAuthenticationOptionValue(line),
+						sendEmail = dbTool.getXlsImporter().loadEcrfs(line.getOptionValue(DBToolOptions.IMPORT_ECRFS_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
+								getAuthenticationOptionValue(line),
 								getIdOptionValue(line, true)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_INPUT_FIELD_OPT)) {
@@ -843,6 +845,7 @@ public class DBTool {
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT))) {
 						sendEmail = dbTool.getXlsExporter().exportInputField(
 								line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT),
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_ECRFS_OPT)) {
@@ -852,6 +855,7 @@ public class DBTool {
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT))) {
 						sendEmail = dbTool.getXlsExporter().exportEcrfs(
 								line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT),
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT)) {
@@ -859,12 +863,13 @@ public class DBTool {
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - randomization lists will be updated!")) {
 						sendEmail = dbTool.getXlsImporter().loadRandomizationLists(line.getOptionValue(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT),
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_ASPS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ASPS_OPT);
 					dbTool.getJobOutput().printPrelude(job);
-					sendEmail = dbTool.getXlsImporter().loadAsps(line.getOptionValue(DBToolOptions.IMPORT_ASPS_OPT),
+					sendEmail = dbTool.getXlsImporter().loadAsps(line.getOptionValue(DBToolOptions.IMPORT_ASPS_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							line.hasOption(DBToolOptions.FLUSH_REVISION_OPT), line.getOptionValue(DBToolOptions.ASP_REVISION_OPT)) > 0l;
 				} else if (line.hasOption(DBToolOptions.EXPORT_ECRF_PDFS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_ECRF_PDFS_OPT);
