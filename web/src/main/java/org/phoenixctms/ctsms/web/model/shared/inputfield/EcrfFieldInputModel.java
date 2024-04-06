@@ -322,6 +322,14 @@ public class EcrfFieldInputModel extends InputModel {
 	}
 
 	@Override
+	public boolean isEditable() {
+		if (ecrfField != null) {
+			return !ecrfField.getEcrf().getDisabled();
+		}
+		return true;
+	}
+
+	@Override
 	public boolean isDummy() {
 		return false;
 	}

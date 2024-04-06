@@ -72,6 +72,7 @@ public interface MessageCodes {
 	public static final String MASS_MAIL_LOCKED = "mass_mail_locked";
 	public static final String ECRF_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_ENTRY = "ecrf_value_input_disabled_for_proband_list_entry";
 	public static final String ECRF_VALUE_INPUT_DISABLED_FOR_TRIAL = "ecrf_value_input_disabled_for_trial";
+	public static final String ECRF_VALUE_INPUT_DISABLED_FOR_ECRF = "ecrf_value_input_disabled_for_ecrf";
 	public static final String ECRF_FIELD_VALUES_LOCKED_STATUS = "ecrf_field_values_locked_status";
 	public static final String ECRF_FIELD_STATUS_LOCKED_STATUS = "ecrf_field_status_locked_status";
 	public static final String CRITERION_LIST_NULL = "criterion_list_null";
