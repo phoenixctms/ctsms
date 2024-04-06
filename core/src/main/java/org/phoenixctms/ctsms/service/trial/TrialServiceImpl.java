@@ -5987,7 +5987,7 @@ public class TrialServiceImpl
 			throws Exception {
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
 		ECRFField ecrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
-		if (visitId == null) {
+		if (visitId != null) {
 			CheckIDUtil.checkVisitId(visitId, this.getVisitDao());
 		}
 		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, visitId, ecrfFieldId, index);
