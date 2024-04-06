@@ -17,11 +17,11 @@ public abstract class XlsExporterBase {
 	protected void addEmailXlsAttachment(byte[] data) {
 	}
 
-	protected long printRows(XlsExporterContext context, RowWriter writer) throws Throwable {
+	protected long printRows(XlsExporterContext context, String encoding, RowWriter writer) throws Throwable {
 		ByteArrayOutputStream buffer = null;
 		try {
 			WritableWorkbook workbook;
-			WorkbookSettings workbookSettings = writer.getWorkbookSettings();
+			WorkbookSettings workbookSettings = writer.getWorkbookSettings(encoding);
 			if (!CommonUtil.isEmptyString(context.getFileName())) {
 				jobOutput.println("writing to file " + context.getFileName());
 				if (workbookSettings != null) {

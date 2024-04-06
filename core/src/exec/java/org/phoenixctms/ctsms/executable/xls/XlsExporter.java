@@ -21,7 +21,7 @@ public class XlsExporter extends XlsExporterBase {
 	public XlsExporter() {
 	}
 
-	public long exportEcrfs(String fileName, AuthenticationVO auth, Long trialId) throws Throwable {
+	public long exportEcrfs(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
 		XlsExporterContext context = new XlsExporterContext(this, fileName);
 		setContext(ecrfRowWriter, context);
 		setContext(ecrfFieldRowWriter, context);
@@ -29,16 +29,16 @@ public class XlsExporter extends XlsExporterBase {
 		setContext(selectionSetValueRowWriter, context);
 		context.setEntityId(ecrfRowWriter, trialId);
 		context.setAuth(auth);
-		return printRows(context, ecrfRowWriter);
+		return printRows(context, encoding, ecrfRowWriter);
 	}
 
-	public long exportInputField(String fileName, AuthenticationVO auth, Long inputFieldId) throws Throwable {
+	public long exportInputField(String fileName, String encoding, AuthenticationVO auth, Long inputFieldId) throws Throwable {
 		XlsExporterContext context = new XlsExporterContext(this, fileName);
 		setContext(inputFieldRowWriter, context);
 		setContext(selectionSetValueRowWriter, context);
 		context.setEntityId(inputFieldRowWriter, inputFieldId);
 		context.setAuth(auth);
-		return printRows(context, inputFieldRowWriter);
+		return printRows(context, encoding, inputFieldRowWriter);
 	}
 
 	public EcrfFieldRowWriter getEcrfFieldRowWriter() {

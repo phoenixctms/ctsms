@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.fileprocessors.xls;
 import java.util.Locale;
 
 import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
+import org.phoenixctms.ctsms.util.CommonUtil;
 
 import jxl.WorkbookSettings;
 
@@ -39,9 +40,13 @@ public abstract class RowWriter {
 		return 0;
 	}
 
-	public WorkbookSettings getWorkbookSettings() {
+	public WorkbookSettings getWorkbookSettings(String encoding) {
 		WorkbookSettings workbookSettings = new WorkbookSettings();
 		workbookSettings.setLocale(Locale.getDefault());
+		if (!CommonUtil.isEmptyString(encoding)) {
+			jobOutput.println("using " + encoding + " encoding");
+			workbookSettings.setEncoding(encoding);
+		}
 		return workbookSettings;
 	}
 
