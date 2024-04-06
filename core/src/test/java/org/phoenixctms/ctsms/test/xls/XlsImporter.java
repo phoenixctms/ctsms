@@ -24,16 +24,16 @@ public class XlsImporter extends XlsImporterBase {
 	public XlsImporter() {
 	}
 
-	private XlsImporterContext createContext(RowProcessor processor, String fileName, boolean mandatory) {
-		XlsImporterContext context = new XlsImporterContext(this, fileName);
+	private XlsImporterContext createContext(RowProcessor processor, String fileName, String encoding, boolean mandatory) {
+		XlsImporterContext context = new XlsImporterContext(this, fileName, encoding);
 		setContext(processor, context, mandatory);
 		return context;
 	}
 
-	public long loadEcrfValidationVectors(String fileName, Long trialId) throws Throwable {
-		XlsImporterContext context = createContext(ecrfValidationRowProcessor, fileName, true);
+	public long loadEcrfValidationVectors(String fileName, String encoding, Long trialId) throws Throwable {
+		XlsImporterContext context = createContext(ecrfValidationRowProcessor, fileName, encoding, true);
 		context.setEntityId(trialId);
-		return readRows(context, ecrfValidationRowProcessor);
+		return readRows(context, encoding, ecrfValidationRowProcessor);
 	}
 
 	public List<EcrfValidationTestVector> getEcrfValidationTestVectors(String ecrfName, String ecrfRevision) {

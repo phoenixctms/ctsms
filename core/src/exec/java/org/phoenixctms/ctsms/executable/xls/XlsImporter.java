@@ -58,8 +58,8 @@ public class XlsImporter extends XlsImporterBase {
 	public XlsImporter() {
 	}
 
-	private XlsImporterContext createContext(RowProcessor processor, String fileName, boolean mandatory) {
-		XlsImporterContext context = new XlsImporterContext(this, fileName);
+	private XlsImporterContext createContext(RowProcessor processor, String fileName, String encoding, boolean mandatory) {
+		XlsImporterContext context = new XlsImporterContext(this, fileName, encoding);
 		setContext(processor, context, mandatory);
 		return context;
 	}
@@ -72,8 +72,8 @@ public class XlsImporter extends XlsImporterBase {
 		return selectionSetValueRowProcessor;
 	}
 
-	public long loadAsps(String fileName, boolean removeAllBeforeInsert, String revision) throws Throwable {
-		XlsImporterContext context = createContext(aspRowProcessor, fileName, true);
+	public long loadAsps(String fileName, String encoding, boolean removeAllBeforeInsert, String revision) throws Throwable {
+		XlsImporterContext context = createContext(aspRowProcessor, fileName, encoding, true);
 		if (CommonUtil.isEmptyString(revision)) {
 			revision = ExecUtil.removeExtension((new File(fileName)).getName());
 			jobOutput.println("no asp revision specified, using " + revision);
@@ -93,43 +93,43 @@ public class XlsImporter extends XlsImporterBase {
 			removeAspRecords(revision);
 			jobOutput.println("asp revision " + revision + " cleared");
 		}
-		return readRows(context, aspRowProcessor);
+		return readRows(context, encoding, aspRowProcessor);
 	}
 
-	public long loadRandomizationLists(String fileName, AuthenticationVO auth, Long trialId, boolean purge) throws Throwable {
-		XlsImporterContext context = createContext(randomizationListCodeRowProcessor, fileName, true);
+	public long loadRandomizationLists(String fileName, String encoding, AuthenticationVO auth, Long trialId, boolean purge) throws Throwable {
+		XlsImporterContext context = createContext(randomizationListCodeRowProcessor, fileName, encoding, true);
 		context.setAuth(auth);
 		context.setEntityId(trialId);
 		randomizationListCodeRowProcessor.setPurge(purge);
-		return readRows(context, randomizationListCodeRowProcessor);
+		return readRows(context, encoding, randomizationListCodeRowProcessor);
 	}
 
 	protected long loadEcrfFields(XlsImporterContext context) throws Throwable {
 		setContext(ecrfFieldRowProcessor, context, true);
-		return readRows(context, ecrfFieldRowProcessor);
+		return readRows(context, context.getEncoding(), ecrfFieldRowProcessor);
 	}
 
-	public long loadEcrfs(String fileName, AuthenticationVO auth, Long trialId) throws Throwable {
-		XlsImporterContext context = createContext(ecrfRowProcessor, fileName, true);
+	public long loadEcrfs(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
+		XlsImporterContext context = createContext(ecrfRowProcessor, fileName, encoding, true);
 		context.setAuth(auth);
 		context.setEntityId(trialId);
-		return readRows(context, ecrfRowProcessor);
+		return readRows(context, encoding, ecrfRowProcessor);
 	}
 
-	public long loadInputFields(String fileName, AuthenticationVO auth) throws Throwable {
-		XlsImporterContext context = createContext(inputFieldRowProcessor, fileName, true);
+	public long loadInputFields(String fileName, String encoding, AuthenticationVO auth) throws Throwable {
+		XlsImporterContext context = createContext(inputFieldRowProcessor, fileName, encoding, true);
 		context.setAuth(auth);
-		return readRows(context, inputFieldRowProcessor);
+		return readRows(context, encoding, inputFieldRowProcessor);
 	}
 
 	protected long loadInputFields(XlsImporterContext context) throws Throwable {
 		setContext(inputFieldRowProcessor, context, false);
-		return readRows(context, inputFieldRowProcessor);
+		return readRows(context, context.getEncoding(), inputFieldRowProcessor);
 	}
 
 	protected long loadSelectionSetValues(XlsImporterContext context) throws Throwable {
 		setContext(selectionSetValueRowProcessor, context, context.isMandatory(inputFieldRowProcessor));
-		return readRows(context, selectionSetValueRowProcessor);
+		return readRows(context, context.getEncoding(), selectionSetValueRowProcessor);
 	}
 
 	protected InputStream getInputStream(String fileName, AuthenticationVO auth) throws AuthenticationException,

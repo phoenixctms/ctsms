@@ -66,9 +66,13 @@ public abstract class RowProcessor {
 		return trimValues;
 	}
 
-	public WorkbookSettings getWorkbookSettings() {
+	public WorkbookSettings getWorkbookSettings(String encoding) {
 		WorkbookSettings workbookSettings = new WorkbookSettings();
 		workbookSettings.setLocale(Locale.getDefault());
+		if (!CommonUtil.isEmptyString(encoding)) {
+			jobOutput.println("using " + encoding + " encoding");
+			workbookSettings.setEncoding(encoding);
+		}
 		return workbookSettings;
 	}
 

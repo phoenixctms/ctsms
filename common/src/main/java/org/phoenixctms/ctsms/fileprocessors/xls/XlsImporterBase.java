@@ -22,14 +22,14 @@ public abstract class XlsImporterBase {
 	protected abstract InputStream getInputStream(String fileName, AuthenticationVO auth) throws AuthenticationException,
 			AuthorisationException, ServiceException, FileNotFoundException;
 
-	protected long readRows(XlsImporterContext context, RowProcessor processor) throws Throwable {
+	protected long readRows(XlsImporterContext context, String encoding, RowProcessor processor) throws Throwable {
 		processor.init();
 		long rowCount = 0l;
 		long lineNumber = 1l;
 		Workbook workbook = null;
 		try {
 			InputStream inputStream = getInputStream(context.getFileName(), context.getAuth());
-			WorkbookSettings workbookSettings = processor.getWorkbookSettings();
+			WorkbookSettings workbookSettings = processor.getWorkbookSettings(encoding);
 			if (workbookSettings != null) {
 				workbook = Workbook.getWorkbook(inputStream, workbookSettings);
 			} else {
