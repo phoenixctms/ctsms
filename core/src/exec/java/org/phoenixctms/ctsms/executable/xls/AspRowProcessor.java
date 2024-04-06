@@ -34,10 +34,10 @@ public class AspRowProcessor extends RowProcessor {
 	private static final int BATCH_RELEASE_COLUMN_INDEX = 11;
 	private static final int BATCH_TESTING_COLUMN_INDEX = 12;
 	private static final int BATCH_TESTING_EXCLUSION_COLUMN_INDEX = 13;
-	private static final int PRESCRIPTION_COLUMN_INDEX = 14;
-	private static final int DISTRIBUTION_COLUMN_INDEX = 15;
-	private static final int HUMAN_COLUMN_INDEX = 16;
-	private static final int CATEGORY_COLUMN_INDEX = 17;
+	private static final int PRESCRIPTION_COLUMN_INDEX = 15;
+	private static final int DISTRIBUTION_COLUMN_INDEX = 16;
+	private static final int HUMAN_COLUMN_INDEX = 17;
+	private static final int CATEGORY_COLUMN_INDEX = 18;
 	private final static Pattern SUBSTANCES_SEPARATOR_REGEXP = Pattern.compile(";");
 	private final static Pattern ATC_CODES_SEPARATOR_REGEXP = Pattern.compile(";");
 
