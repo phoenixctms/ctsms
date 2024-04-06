@@ -8,13 +8,15 @@ public class XlsImporterContext {
 
 	private XlsImporterBase importer;
 	private String fileName;
+	private String encoding;
 	private AuthenticationVO auth;
 	private Long entityId;
 	private HashMap<RowProcessor, Boolean> mandatoryMap;
 
-	public XlsImporterContext(XlsImporterBase importer, String fileName) {
+	public XlsImporterContext(XlsImporterBase importer, String fileName, String encoding) {
 		this.importer = importer;
 		this.fileName = fileName;
+		this.encoding = encoding;
 		this.auth = null;
 		this.entityId = null;
 		mandatoryMap = new HashMap<RowProcessor, Boolean>();
@@ -30,6 +32,10 @@ public class XlsImporterContext {
 
 	public String getFileName() {
 		return fileName;
+	}
+
+	public String getEncoding() {
+		return encoding;
 	}
 
 	public XlsImporterBase getImporter() {
