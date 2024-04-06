@@ -89,7 +89,9 @@
 									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 									icon="ui-icon ui-icon-help" ajax="true"
 									disabled="#{!dummyInputFieldValueBean.created}"
-									update="input_dummy_input" />
+									update="input_dummy_input">
+									<f:param name="includeDisabled" value="true" />	
+								</p:commandButton>
 								<p:commandButton process="@this"
 									value="#{labels.load_button_label}"
 									actionListener="#{dummyInputFieldValueBean.load}"

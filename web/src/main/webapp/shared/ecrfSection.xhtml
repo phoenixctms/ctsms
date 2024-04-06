@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html">
 <h:head>
-	<title>team member picker</title>
+	<title>ecrf section view</title>
 </h:head>
 <h:body>
 	<ui:composition template="/META-INF/templates/popupTemplate.xhtml">
@@ -170,7 +170,9 @@
 													oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 													icon="ui-icon ui-icon-disk" ajax="true"
 													disabled="#{!ecrfSectionBean.ecrfFieldValueBean.editable and !ecrfSectionBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}"
-													update=":ecrfsection_form:ecrffield_input_grid" />
+													update=":ecrfsection_form:ecrffield_input_grid">
+													<f:param name="includeDisabled" value="true" />	
+												</p:commandButton>
 											</p:toolbarGroup>
 										</p:toolbar>
 									</h:panelGrid>
