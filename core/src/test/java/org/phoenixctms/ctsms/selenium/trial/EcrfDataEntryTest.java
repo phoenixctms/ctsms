@@ -40,6 +40,7 @@ import org.testng.annotations.Test;
 public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobOutput {
 
 	private final static String ECRF_FILE = "ecrfs.xls";
+	private final static String ECRF_FILE_ENCODING = null;
 	private String departmentPassword;
 	private DepartmentVO department;
 	private String userName;
@@ -102,7 +103,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		if (waitForAddOperationSuccessful("tabView:trialjob_form")) {
 			if (waitForJobSuccessful("tabView:trialjob_form", 60l, 5l)) {
 				info("loading eCRF validation test data from " + getResourceFilePath(ECRF_FILE));
-				getXlsImporter().loadEcrfValidationVectors(getResourceFilePath(ECRF_FILE), trial.getId());
+				getXlsImporter().loadEcrfValidationVectors(getResourceFilePath(ECRF_FILE), ECRF_FILE_ENCODING, trial.getId());
 				return;
 			}
 		}
