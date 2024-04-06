@@ -532,6 +532,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			return false;
 		} else if (WebUtil.isProbandLocked(probandListEntry)) {
 			return false;
+		} else if (ecrf.getDisabled()) {
+			return false;
 		} else if (!probandListEntry.getTrial().getStatus().getEcrfValueInputEnabled()) {
 			return false;
 		} else if (probandListEntry.getLastStatus() != null && !probandListEntry.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
