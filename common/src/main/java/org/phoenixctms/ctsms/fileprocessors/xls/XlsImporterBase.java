@@ -60,6 +60,12 @@ public abstract class XlsImporterBase {
 					lineNumber++;
 					for (int i = 1; i < sheetRowCount; i++) {
 						row = sheet.getRow(i);
+						if (!processor.preCheck(row)) {
+							break;
+						}
+					}
+					for (int i = 1; i < sheetRowCount; i++) {
+						row = sheet.getRow(i);
 						rowCount += processor.processRow(row, lineNumber);
 						lineNumber++;
 					}
