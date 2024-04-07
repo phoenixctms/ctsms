@@ -140,6 +140,39 @@ public abstract class RowProcessor {
 
 	protected abstract int processRow(String[] values, long rowNumber) throws Throwable;
 
+	public final boolean preCheck(Cell[] row) throws Throwable {
+		if (row != null && row.length > 0) {
+			boolean commented = false;
+			String[] values = new String[row.length];
+			for (int i = 0; i < row.length; i++) {
+				String value = "";
+				if (row[i] != null && !commented) {
+					value = row[i].getContents();
+					if (value != null) {
+						if (useComments && (acceptCommentsIndex == null || acceptCommentsIndex == i)) {
+							int commentPos = value.indexOf(commentChar);
+							if (commentPos >= 0) {
+								value = trimValues ? value.substring(0, commentPos).trim() : value.substring(0, commentPos);
+								commented = true;
+							} else {
+								value = trimValues ? value.trim() : value;
+							}
+						} else {
+							value = trimValues ? value.trim() : value;
+						}
+					}
+				}
+				values[i] = value;
+			}
+			return preCheck(values);
+		}
+		return true;
+	}
+
+	protected boolean preCheck(String[] values) throws Throwable {
+		return false; // stop
+	}
+
 	protected boolean processHeaderRow(String[] values) throws Throwable {
 		return false;
 	}

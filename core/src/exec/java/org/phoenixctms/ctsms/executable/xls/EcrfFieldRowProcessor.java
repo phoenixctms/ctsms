@@ -57,6 +57,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 	private int jsValueExpressionColumnIndex;
 	private int jsOutputExpressionColumnIndex;
 	private int notifyColumnIndex;
+	private boolean noRefs;
 	private HashMap<String, HashMap<String, Set<ECRFFieldInVO>>> ecrfFieldMap;
 	private HashMap<String, HashMap<String, ECRF>> ecrfMap;
 	@Autowired
@@ -72,6 +73,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		super();
 		filterDupes = false;
 		acceptCommentsIndex = 0;
+		noRefs = true;
 		ecrfFieldMap = new HashMap<String, HashMap<String, Set<ECRFFieldInVO>>>();
 		ecrfMap = new HashMap<String, HashMap<String, ECRF>>();
 	}
@@ -224,6 +226,7 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		jsValueExpressionColumnIndex = JS_VALUE_EXPRESSION_COLUMN_INDEX;
 		jsOutputExpressionColumnIndex = JS_OUTPUT_EXPRESSION_COLUMN_INDEX;
 		notifyColumnIndex = NOTIFY_COLUMN_INDEX;
+		noRefs = true;
 		ecrfFieldMap.clear();
 		ecrfMap.clear();
 		((XlsImporter) context.getImporter()).loadInputFields(context);
@@ -271,10 +274,12 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 		ECRFField ecrfField = null;
 		if (ecrf != null) {
 			try {
-				if (CommonUtil.isEmptyString(ref)) {
+				if (noRefs) {
 					ecrfField = eCRFFieldDao.findByEcrfSectionPosition(ecrf.getId(), section, position).iterator().next();
 				} else {
-					ecrfField = eCRFFieldDao.findByEcrfRef(ecrf.getId(), ref).iterator().next();
+					if (!CommonUtil.isEmptyString(ref)) {
+						ecrfField = eCRFFieldDao.findByEcrfRef(ecrf.getId(), ref).iterator().next();
+					}
 				}
 			} catch (NoSuchElementException e) {
 			}
@@ -339,5 +344,11 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	protected boolean preCheck(String[] values) throws Throwable {
+		noRefs &= CommonUtil.isEmptyString(getRef(values));
+		return noRefs;
 	}
 }
