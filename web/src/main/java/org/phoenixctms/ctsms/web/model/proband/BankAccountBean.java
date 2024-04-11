@@ -70,7 +70,10 @@ public class BankAccountBean extends ManagedBeanBase {
 
 	private static String loadAccountHolderName(Long probandId) {
 		ProbandOutVO probandVO = WebUtil.getProband(probandId, null, null, null);
-		return (probandVO == null ? Messages.getString(MessageCodes.ACCOUNT_HOLDER_NAME_PRESET) : probandVO.getName());
+		if (probandVO != null && probandVO.isPerson() && !probandVO.isBlinded() && probandVO.isDecrypted()) {
+			return probandVO.getName();
+		}
+		return Messages.getString(MessageCodes.ACCOUNT_HOLDER_NAME_PRESET);
 	}
 
 	private BankAccountInVO in;
