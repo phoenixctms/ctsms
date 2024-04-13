@@ -1,4 +1,4 @@
-Vážený $visitscheduleitem_trial_name člen skúšobného tímu alebo člen odd. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 toto je upozornenie na nasledujúcu udalosť:
 
@@ -6,7 +6,7 @@ toto je upozornenie na nasledujúcu udalosť:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband odd.: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • Proband kat.:  $probandstatusentry_proband_category
 
    • Typ stavu:   $probandstatusentry_type
