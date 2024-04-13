@@ -1,4 +1,4 @@
-Sayın $visitscheduleitem_trial_name deneme ekibi üyesi veya bölüm üyesi. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 bu, aşağıdaki etkinlik için bir bildirimdir:
 
@@ -6,7 +6,7 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband bölümü: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • Proband kataloğu:  $probandstatusentry_proband_category
 
    • Durum türü:   $probandstatusentry_type
