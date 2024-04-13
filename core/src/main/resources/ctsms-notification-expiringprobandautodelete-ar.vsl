@@ -1,4 +1,4 @@
-عزيزي عضو القسم عزيزي عضو القسم $proband_department,
+عزيزي العضو في الموقع $proband_department،
 
 هذا إشعار للحدث التالي:
 
@@ -6,7 +6,7 @@
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • قسم البرودباند:     $proband_department
+   • موقع التوريد:            $proband_department
    • فئة النطاق الترددي:        $proband_category
 
    • تمت جدولة الحذف:    $proband_autodeletedeadline
