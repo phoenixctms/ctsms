@@ -1,4 +1,4 @@
-Spoštovani $visitscheduleitem_trial_name član poskusne skupine ali član odd. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 to je obvestilo za naslednji dogodek:
 
@@ -6,7 +6,7 @@ to je obvestilo za naslednji dogodek:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Oddelek za proband: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • Proband kat.:  $probandstatusentry_proband_category
 
    • Vrsta stanja:   $probandstatusentry_type
