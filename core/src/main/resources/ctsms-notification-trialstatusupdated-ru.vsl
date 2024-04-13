@@ -1,4 +1,4 @@
-Уважаемый $trial_name член испытательной группы или сотрудник отдела. $trial_department,
+Уважаемый участник пробной команды $trial_name или участник сайта $trial_department,
 
 это уведомление о следующем событии:
 
@@ -6,7 +6,7 @@
 
    • Пробный код:   $trial_name
    • Название пробной версии:  $trial_title
-   • Судебный отдел:  $trial_department
+   • Пробный сайт:   $trial_department
 
    • Статус пробной версии: $trial_status
 #if($notification.trial.status.lockdown)
