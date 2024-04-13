@@ -1,4 +1,4 @@
-عزيزي $visitscheduleitem_trial_name عضو فريق التجربة أو عضو القسم. $probandstatusentry_proband_department,
+عزيزي عضو فريق التجربة $visitscheduleitem_trial_name أو عضو في الموقع $probandstatusentry_proband_department،
 
 هذا إشعار للحدث التالي:
 
@@ -6,7 +6,7 @@
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • قسم البرودباند: $probandstatusentry_proband_department
+   • موقع التوريد:  $probandstatusentry_proband_department
    • قطة بروباند.:  $probandstatusentry_proband_category
 
    • نوع الحالة:   $probandstatusentry_type
