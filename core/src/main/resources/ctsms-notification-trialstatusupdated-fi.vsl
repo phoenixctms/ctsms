@@ -1,4 +1,4 @@
-Hyvä $trial_name kokeilutiimin jäsen tai osaston jäsen. $trial_department,
+Dear $trial_name trial team member or member of site $trial_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -6,7 +6,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • Kokeilukoodi:   $trial_name
    • Kokeilun nimi:  $trial_title
-   • Kokeiluosasto:  $trial_department
+   • Kokeilujakson sivusto:   $trial_department
 
    • Kokeilutila: $trial_status
 #if($notification.trial.status.lockdown)
