@@ -1,4 +1,4 @@
-Vážený $trial_name člen skúšobného tímu alebo člen odd. $trial_department,
+Dear $trial_name trial team member or member of site $trial_department,
 
 toto je upozornenie na nasledujúcu udalosť:
 
@@ -6,7 +6,7 @@ toto je upozornenie na nasledujúcu udalosť:
 
    • Skúšobný kód:   $trial_name
    • Názov pokusu:  $trial_title
-   • Skúšobné oddelenie:  $trial_department
+   • Trial site:   $trial_department
 
    • Stav skúšobnej verzie: $trial_status
 #if($notification.trial.status.lockdown)
