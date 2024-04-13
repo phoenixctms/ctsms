@@ -1,4 +1,4 @@
-Ndugu mwanachama wa dept. $proband_department,
+Dear member of site $proband_department,
 
 hii ni arifa ya tukio lifuatalo:
 
@@ -6,7 +6,7 @@ hii ni arifa ya tukio lifuatalo:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#mwisho
 
-   • Idara ya Proband:     $proband_department
+   • Proband site:            $proband_department
    • Aina ya proband:        $proband_category
 
    • Ufutaji umeratibiwa:    $proband_autodeletedeadline
