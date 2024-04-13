@@ -1,11 +1,11 @@
-亲爱的 $ecrffieldstatusentry_listentry_trial_name 试验组成员或部门成员 $ecrffieldstatusentry_listentry_trial_department, $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 这是针对以下事件的通知：
 
    $type
 
    • 试用：              $ecrffieldstatusentry_listentry_trial_name
-   • 试用部：   $ecrffieldstatusentry_listentry_trial_department
+   • Trial site:         $ecrffieldstatusentry_listentry_trial_department
    • 先证者：#if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF：               $ecrffieldstatusentry_ecrffield_ecrf_name
