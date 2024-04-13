@@ -1,4 +1,4 @@
-친애하는 학과 구성원 여러분. $proband_department,
+Dear member of site $proband_department,
 
 이는 다음 이벤트에 대한 알림입니다.
 
@@ -6,7 +6,7 @@
 
    • 프로밴드: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • 프로밴드 부서:     $proband_department
+   • Proband site:            $proband_department
    • 프로밴드 카테고리:        $proband_category
 
    • 삭제 예정일:    $proband_autodeletedeadline
