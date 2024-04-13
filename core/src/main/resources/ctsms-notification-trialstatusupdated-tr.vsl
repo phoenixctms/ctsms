@@ -1,4 +1,4 @@
-Sayın $trial_name deneme ekibi üyesi veya bölüm üyesi. $trial_department,
+Dear $trial_name trial team member or member of site $trial_department,
 
 bu, aşağıdaki etkinlik için bir bildirimdir:
 
@@ -6,7 +6,7 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
 
    • Deneme kodu:   $trial_name
    • Deneme başlığı:  $trial_title
-   • Deneme bölümü:  $trial_department
+   • Trial site:   $trial_department
 
    • Deneme durumu: $trial_status
 #if($notification.trial.status.lockdown)
