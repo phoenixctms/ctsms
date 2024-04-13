@@ -1,4 +1,4 @@
-Dragă membru al dept. $proband_department,
+Stimate membru al site-ului $proband_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
@@ -6,7 +6,7 @@ aceasta este o notificare pentru următorul eveniment:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Departamentul Proband:     $proband_department
+   • Site-ul formației:            $proband_department
    • Categoria Proband:        $proband_category
 
    • Ștergerea programată:    $proband_autodeletedeadline
