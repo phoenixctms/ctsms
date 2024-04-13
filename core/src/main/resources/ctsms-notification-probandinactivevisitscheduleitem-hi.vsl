@@ -1,4 +1,4 @@
-प्रिय $visitscheduleitem_trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
@@ -6,7 +6,7 @@
 
    • प्रोबैंड: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • प्रोबैंड विभाग: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • प्रोबैंड बिल्ली.:  $probandstatusentry_proband_category
 
    • स्थिति प्रकार:   $probandstatusentry_type
