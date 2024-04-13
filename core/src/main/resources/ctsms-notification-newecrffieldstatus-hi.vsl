@@ -1,11 +1,11 @@
-प्रिय $ecrffieldstatusentry_listentry_trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
    $type
 
    • परीक्षण:              $ecrffieldstatusentry_listentry_trial_name
-   • परीक्षण विभाग:   $ecrffieldstatusentry_listentry_trial_department
+   • Trial site:         $ecrffieldstatusentry_listentry_trial_department
    • प्रोबैंड: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
