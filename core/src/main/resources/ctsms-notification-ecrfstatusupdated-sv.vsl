@@ -1,11 +1,11 @@
-Bästa $ecrfstatusentry_listentry_trial_name testteammedlem eller medlem av avd. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of site $ecrfstatusentry_listentry_trial_department,
 
 detta är ett meddelande för följande händelse:
 
    $type
 
    • Provperiod:                $ecrfstatusentry_listentry_trial_name
-   • Provavdelning:     $ecrfstatusentry_listentry_trial_department
+   • Provsajt:           $ecrfstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#slut
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
