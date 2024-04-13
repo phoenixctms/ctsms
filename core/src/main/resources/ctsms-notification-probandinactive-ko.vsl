@@ -1,4 +1,4 @@
-친애하는 학과 구성원 여러분. $probandstatusentry_proband_department,
+Dear member of site $probandstatusentry_proband_department,
 
 이는 다음 이벤트에 대한 알림입니다.
 
@@ -6,7 +6,7 @@
 
    • 프로밴드: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • 프로밴드 부서: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • 프로밴드 고양이:  $probandstatusentry_proband_category
 
    • 유형:          $probandstatusentry_type
