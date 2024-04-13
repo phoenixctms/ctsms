@@ -1,11 +1,11 @@
-Estimado $ecrfstatusentry_listentry_trial_name miembro del equipo de prueba o miembro del departamento. $ecrfstatusentry_listentry_trial_department,
+Estimado miembro del equipo de prueba $ecrfstatusentry_listentry_trial_name o miembro del sitio $ecrfstatusentry_listentry_trial_department,
 
 Esta es una notificación para el siguiente evento:
 
    $type
 
    • Prueba:                $ecrfstatusentry_listentry_trial_name
-   • Departamento de pruebas:     $ecrfstatusentry_listentry_trial_department
+   • Sitio de prueba:           $ecrfstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
