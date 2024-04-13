@@ -1,11 +1,11 @@
-Mpendwa $ecrffieldstatusentry_listentry_trial_name mwanachama wa timu ya majaribio au mwanachama wa idara. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 hii ni arifa ya tukio lifuatalo:
 
    $type
 
    • Jaribio:              $ecrffieldstatusentry_listentry_trial_name
-   • Idara ya majaribio:   $ecrffieldstatusentry_listentry_trial_department
+   • Trial site:         $ecrffieldstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#mwisho
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
