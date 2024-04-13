@@ -1,11 +1,11 @@
-Ezigbo $ecrffieldstatusentry_listentry_trial_name onye otu ikpe ma ọ bụ onye otu dept. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 Nke a bụ ọkwa maka mmemme a:
 
    $type
 
    • Ọnwụnwa:              $ecrffieldstatusentry_listentry_trial_name
-   • Ngalaba ikpe:   $ecrffieldstatusentry_listentry_trial_department
+   • Trial site:         $ecrffieldstatusentry_listentry_trial_department
    • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
