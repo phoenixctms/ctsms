@@ -1,4 +1,4 @@
-Шановний член каф. $probandstatusentry_proband_department,
+Шановний член сайту $probandstatusentry_proband_department,
 
 це сповіщення про наступну подію:
 
@@ -6,7 +6,7 @@
 
    • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Відділ пробанд: $probandstatusentry_proband_department
+   • Проміжний сайт:  $probandstatusentry_proband_department
    • Пробанд кат.:  $probandstatusentry_proband_category
 
    • Тип:          $probandstatusentry_type
