@@ -1,4 +1,4 @@
-Cher membre du département. $probandstatusentry_proband_department,
+Cher membre du site $probandstatusentry_proband_department,
 
 il s'agit d'une notification pour l'événement suivant :
 
@@ -6,7 +6,7 @@ il s'agit d'une notification pour l'événement suivant :
 
    • Proband : #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Département proposant : $probandstatusentry_proband_department
+   • Site Proband :  $probandstatusentry_proband_department
    • Chat proposé :  $probandstatusentry_proband_category
 
    • Tapez :          $probandstatusentry_type
