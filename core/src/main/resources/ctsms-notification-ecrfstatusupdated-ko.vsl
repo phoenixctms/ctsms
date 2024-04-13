@@ -1,11 +1,11 @@
-친애하는 $ecrfstatusentry_listentry_trial_name 임상팀 구성원 또는 부서 구성원입니다. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of site $ecrfstatusentry_listentry_trial_department,
 
 이는 다음 이벤트에 대한 알림입니다.
 
    $type
 
    • 체험판:                $ecrfstatusentry_listentry_trial_name
-   • 시험부서 :     $ecrfstatusentry_listentry_trial_department
+   • Trial site:           $ecrfstatusentry_listentry_trial_department
    • 프로밴드: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
