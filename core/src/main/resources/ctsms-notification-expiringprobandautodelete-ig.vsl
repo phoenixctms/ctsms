@@ -1,4 +1,4 @@
-Ezigbo onye otu dept. $proband_department,
+Dear member of site $proband_department,
 
 Nke a bụ ọkwa maka mmemme a:
 
@@ -6,7 +6,7 @@ Nke a bụ ọkwa maka mmemme a:
 
    • Proband:                 #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Ngalaba Proband:     $proband_department
+   • Proband site:            $proband_department
    • ngalaba proband:        $proband_category
 
    • Ahaziri ihichapụ:    $proband_autodeletedeadline
