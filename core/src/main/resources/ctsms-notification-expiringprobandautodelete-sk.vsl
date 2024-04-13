@@ -1,4 +1,4 @@
-Vážený člen odd. $proband_department,
+Dear member of site $proband_department,
 
 toto je upozornenie na nasledujúcu udalosť:
 
@@ -6,7 +6,7 @@ toto je upozornenie na nasledujúcu udalosť:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Oddelenie probandov:     $proband_department
+   • Proband site:            $proband_department
    • Kategória probanda:        $proband_category
 
    • Plánované odstránenie:    $proband_autodeletedeadline
