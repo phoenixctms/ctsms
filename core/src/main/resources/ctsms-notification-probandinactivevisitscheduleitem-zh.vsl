@@ -1,4 +1,4 @@
-亲爱的 $visitscheduleitem_trial_name 试验组成员或部门成员 $probandstatusentry_proband_department, 尊敬的部门成员 $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 这是针对以下事件的通知：
 
@@ -6,7 +6,7 @@
 
    • 先证者：#if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   •先证者部门： $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    •先证者猫：  $probandstatusentry_proband_category
 
    • 状态类型：   $probandstatusentry_type
