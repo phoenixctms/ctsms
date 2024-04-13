@@ -1,4 +1,4 @@
-Ezigbo $visitscheduleitem_trial_name onye otu ikpe ma ọ bụ onye otu dept. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 Nke a bụ ọkwa maka mmemme a:
 
@@ -6,7 +6,7 @@ Nke a bụ ọkwa maka mmemme a:
 
    • Proband:       #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Dept.: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • Proband nwamba.:  $probandstatusentry_proband_category
 
    • Ụdị ọnọdụ:   $probandstatusentry_type
