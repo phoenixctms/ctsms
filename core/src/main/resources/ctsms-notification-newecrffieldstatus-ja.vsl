@@ -1,11 +1,11 @@
-$ecrffieldstatusentry_listentry_trial_name 試験チームのメンバーまたは部門のメンバーの皆様。 $ecrffieldstatusentry_listentry_trial_department、 $ecrffieldstatusentry_listentry_trial_department、
+親愛なる $ecrffieldstatusentry_listentry_trial_name トライアルチームメンバーまたはサイト $ecrffieldstatusentry_listentry_trial_department のメンバー ,
 
 以下のイベントのお知らせです。
 
    $type
 
    • トライアル:              $ecrffieldstatusentry_listentry_trial_name
-   • トライアル部門:   $ecrffieldstatusentry_listentry_trial_department
+   • トライアルサイト：         $ecrffieldstatusentry_listentry_trial_department
    • 発端者: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
