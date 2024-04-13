@@ -1,11 +1,11 @@
-Stimate $ecrffieldstatusentry_listentry_trial_name membru al echipei de încercare sau membru al departamentului. $ecrffieldstatusentry_listentry_trial_department,
+Stimate $ecrffieldstatusentry_listentry_trial_name membru al echipei de încercare sau membru al site-ului $ecrffieldstatusentry_listentry_trial_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
    $type
 
    • Proba:              $ecrffieldstatusentry_listentry_trial_name
-   • Departamentul de probă:   $ecrffieldstatusentry_listentry_trial_department
+   • Locul testului:         $ecrffieldstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
