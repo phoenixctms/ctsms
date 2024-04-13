@@ -1,4 +1,4 @@
-Geacht lid van de afd. $proband_department,
+Beste lid van de site $proband_department,
 
 dit is een melding voor de volgende gebeurtenis:
 
@@ -6,7 +6,7 @@ dit is een melding voor de volgende gebeurtenis:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Afdeling Proband:     $proband_department
+   • Proband website:            $proband_department
    • Proband-categorie:        $proband_category
 
    • Geplande verwijdering:    $proband_autodeletedeadline
