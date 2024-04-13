@@ -1,4 +1,4 @@
-Arvoisa osaston jäsen. $proband_department,
+Hyvä jäsen sivustolla $proband_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -6,7 +6,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband-osasto:     $proband_department
+   • Proband-sivusto:            $proband_department
    • Proband-luokka:        $proband_category
 
    • Poisto ajoitettu:    $proband_autodeletedeadline
