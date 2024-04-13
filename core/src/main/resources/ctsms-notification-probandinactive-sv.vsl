@@ -1,4 +1,4 @@
-Bäste medlem i avd. $probandstatusentry_proband_department,
+Kära medlem av sajten $probandstatusentry_proband_department,
 
 detta är ett meddelande för följande händelse:
 
@@ -6,7 +6,7 @@ detta är ett meddelande för följande händelse:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#slut
 
-   • Probandsavdelning: $probandstatusentry_proband_department
+   • Proband webbplats:  $probandstatusentry_proband_department
    • Proband kat.:  $probandstatusentry_proband_category
 
    • Typ:          $probandstatusentry_type
