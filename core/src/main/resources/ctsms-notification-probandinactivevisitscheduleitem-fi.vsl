@@ -1,4 +1,4 @@
-Hyvä $visitscheduleitem_trial_name kokeilutiimin jäsen tai osaston jäsen. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
@@ -6,7 +6,7 @@ tämä on ilmoitus seuraavasta tapahtumasta:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband osasto: $probandstatusentry_proband_department
+   • Proband-sivusto:  $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
    • Tilatyyppi:   $probandstatusentry_type
