@@ -1,4 +1,4 @@
-Geacht lid van de afd. $probandstatusentry_proband_department,
+Beste lid van de site $probandstatusentry_proband_department,
 
 dit is een melding voor de volgende gebeurtenis:
 
@@ -6,7 +6,7 @@ dit is een melding voor de volgende gebeurtenis:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Onderzoeksafdeling: $probandstatusentry_proband_department
+   • Proband website:  $probandstatusentry_proband_department
    • Proband-cat.:  $probandstatusentry_proband_category
 
    • Typ:          $probandstatusentry_type
