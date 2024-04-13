@@ -1,11 +1,11 @@
-Cher $ecrffieldstatusentry_listentry_trial_name membre de l'équipe d'essai ou membre du département. $ecrffieldstatusentry_listentry_trial_department,
+Cher membre de l'équipe d'évaluation $ecrffieldstatusentry_listentry_trial_name ou membre du site $ecrffieldstatusentry_listentry_trial_department,
 
 il s'agit d'une notification pour l'événement suivant :
 
    $type
 
    • Essai :              $ecrffieldstatusentry_listentry_trial_name
-   • Département d'essai :   $ecrffieldstatusentry_listentry_trial_department
+   • Site d'essai :         $ecrffieldstatusentry_listentry_trial_department
    • Proband : #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF :               $ecrffieldstatusentry_ecrffield_ecrf_name
