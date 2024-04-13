@@ -1,11 +1,11 @@
-Kedves $ecrffieldstatusentry_listentry_trial_name próbacsapat vagy osztálytag! $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 ez egy értesítés a következő eseményről:
 
    $type
 
    • Próba:              $ecrffieldstatusentry_listentry_trial_name
-   • Próbaosztály:   $ecrffieldstatusentry_listentry_trial_department
+   • Trial site:         $ecrffieldstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
