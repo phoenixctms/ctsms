@@ -1,4 +1,4 @@
-Kære medlem af afd. $proband_department,
+Kære medlem af webstedet $proband_department,
 
 dette er en notifikation for følgende begivenhed:
 
@@ -6,7 +6,7 @@ dette er en notifikation for følgende begivenhed:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#slut
 
-   • Proband-afdeling:     $proband_department
+   • Proband sted:            $proband_department
    • Proband kategori:        $proband_category
 
    • Planlagt sletning:    $proband_autodeletedeadline
