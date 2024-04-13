@@ -1,4 +1,4 @@
-Bästa $visitscheduleitem_trial_name testteammedlem eller medlem av avd. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 detta är ett meddelande för följande händelse:
 
@@ -6,7 +6,7 @@ detta är ett meddelande för följande händelse:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#slut
 
-   • Probandsavdelning: $probandstatusentry_proband_department
+   • Proband webbplats:  $probandstatusentry_proband_department
    • Proband kat.:  $probandstatusentry_proband_category
 
    • Statustyp:   $probandstatusentry_type
