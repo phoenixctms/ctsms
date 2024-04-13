@@ -1,4 +1,4 @@
-Kære $visitscheduleitem_trial_name prøveteammedlem eller medlem af afd. $probandstatusentry_proband_department,
+Kære $visitscheduleitem_trial_name prøvegruppemedlem eller medlem af webstedet $probandstatusentry_proband_department,
 
 dette er en notifikation for følgende begivenhed:
 
@@ -6,7 +6,7 @@ dette er en notifikation for følgende begivenhed:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#slut
 
-   • Proband afd.: $probandstatusentry_proband_department
+   • Proband sted:  $probandstatusentry_proband_department
    • Proband kat.:  $probandstatusentry_proband_category
 
    • Statustype:   $probandstatusentry_type
