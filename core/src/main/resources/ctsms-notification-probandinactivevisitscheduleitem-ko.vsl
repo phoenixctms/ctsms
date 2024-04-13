@@ -1,4 +1,4 @@
-친애하는 $visitscheduleitem_trial_name 임상팀 구성원 또는 부서 구성원입니다. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 이는 다음 이벤트에 대한 알림입니다.
 
@@ -6,7 +6,7 @@
 
    • 프로밴드: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • 프로밴드 부서: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • 프로밴드 고양이:  $probandstatusentry_proband_category
 
    • 상태 유형:   $probandstatusentry_type
