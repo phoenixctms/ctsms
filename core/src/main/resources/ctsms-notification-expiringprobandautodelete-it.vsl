@@ -1,4 +1,4 @@
-Caro membro del dipartimento Caro membro del dipartimento $proband_department,
+Gentile membro del sito $proband_department,
 
 questa è una notifica per il seguente evento:
 
@@ -6,7 +6,7 @@ questa è una notifica per il seguente evento:
 
    • Probando: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Dipartimento probando:     $proband_department
+   • Sito Proband:            $proband_department
    • Categoria probando:        $proband_category
 
    • Cancellazione programmata:    $proband_autodeletedeadline
