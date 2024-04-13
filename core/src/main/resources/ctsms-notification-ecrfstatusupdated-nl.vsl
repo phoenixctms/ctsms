@@ -1,11 +1,11 @@
-Beste $ecrfstatusentry_listentry_trial_name proefteamlid of lid van de afdeling. $ecrfstatusentry_listentry_trial_department,
+Geachte $ecrfstatusentry_listentry_trial_name test teamlid of lid van site $ecrfstatusentry_listentry_trial_department,
 
 dit is een melding voor de volgende gebeurtenis:
 
    $type
 
    • Proef:                $ecrfstatusentry_listentry_trial_name
-   • Proefafdeling:     $ecrfstatusentry_listentry_trial_department
+   • Testsite:           $ecrfstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#end
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
