@@ -1,4 +1,4 @@
-Değerli daire üyemiz. $proband_department,
+Dear member of site $proband_department,
 
 bu, aşağıdaki etkinlik için bir bildirimdir:
 
@@ -6,7 +6,7 @@ bu, aşağıdaki etkinlik için bir bildirimdir:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband departmanı:     $proband_department
+   • Proband site:            $proband_department
    • Proband kategorisi:        $proband_category
 
    • Silme planlandı:    $proband_autodeletedeadline
