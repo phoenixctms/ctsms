@@ -1,4 +1,4 @@
-Prezado $visitscheduleitem_trial_name membro da equipe de teste ou membro do departamento. $probandstatusentry_proband_department,
+Caro membro da equipe de teste $visitscheduleitem_trial_name ou membro do site $probandstatusentry_proband_department,
 
 esta é uma notificação para o seguinte evento:
 
@@ -6,7 +6,7 @@ esta é uma notificação para o seguinte evento:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Departamento de Probando: $probandstatusentry_proband_department
+   • Site da Probanda:  $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
    • Tipo de status:   $probandstatusentry_type
