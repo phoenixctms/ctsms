@@ -1,11 +1,11 @@
-Дорогой $ecrffieldstatusentry_listentry_trial_name член испытательной группы или сотрудник отдела. $ecrffieldstatusentry_listentry_trial_department,
+Уважаемый участник пробной команды $ecrffieldstatusentry_listentry_trial_name или участник сайта $ecrffieldstatusentry_listentry_trial_department,
 
 это уведомление о следующем событии:
 
    $type
 
    • Пробная версия:              $ecrffieldstatusentry_listentry_trial_name
-   • Судебный отдел:   $ecrffieldstatusentry_listentry_trial_department
+   • Пробный сайт:         $ecrffieldstatusentry_listentry_trial_department
    • Пробанд: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
