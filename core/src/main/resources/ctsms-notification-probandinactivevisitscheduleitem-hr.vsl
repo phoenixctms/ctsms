@@ -1,4 +1,4 @@
-Poštovani $visitscheduleitem_trial_name članu tima za suđenje ili članu odjela. $probandstatusentry_proband_department,
+Dear $visitscheduleitem_trial_name trial team member or member of site $probandstatusentry_proband_department,
 
 ovo je obavijest za sljedeći događaj:
 
@@ -6,7 +6,7 @@ ovo je obavijest za sljedeći događaj:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband odjel: $probandstatusentry_proband_department
+   • Proband site:  $probandstatusentry_proband_department
    • Proband kat.:  $probandstatusentry_proband_category
 
    • Vrsta statusa:   $probandstatusentry_type
