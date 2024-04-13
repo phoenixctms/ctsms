@@ -1,11 +1,11 @@
-Eyin $ecrfstatusentry_listentry_trial_name omo egbe idanwo tabi omo egbe Dept. $ecrfstatusentry_listentry_trial_department,
+Dear $ecrfstatusentry_listentry_trial_name trial team member or member of site $ecrfstatusentry_listentry_trial_department,
 
 eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    $type
 
    • Idanwo:                $ecrfstatusentry_listentry_trial_name
-   • Ẹka idanwo:     $ecrfstatusentry_listentry_trial_department
+   • Trial site:           $ecrfstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrfstatusentry_listentry_proband_alias))$ecrfstatusentry_listentry_proband_id#{else}$ecrfstatusentry_listentry_proband_alias#opin
 
    • eCRF:                 $ecrfstatusentry_ecrf_name
