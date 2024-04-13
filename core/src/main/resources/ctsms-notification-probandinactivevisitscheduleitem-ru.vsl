@@ -1,4 +1,4 @@
-Уважаемый $visitscheduleitem_trial_name член испытательной группы или сотрудник отдела. $probandstatusentry_proband_department,
+Уважаемый участник пробной команды $visitscheduleitem_trial_name или участник сайта $probandstatusentry_proband_department,
 
 это уведомление о следующем событии:
 
@@ -6,7 +6,7 @@
 
    • Пробанд: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Отдел пробандов: $probandstatusentry_proband_department
+   • Сайт профиля:  $probandstatusentry_proband_department
    • Кот пробанда:  $probandstatusentry_proband_category
 
    • Тип статуса:   $probandstatusentry_type
