@@ -1,11 +1,11 @@
-Liebes $ecrffieldstatusentry_listentry_trial_name Studienteammitglied oder Angehörige/r der Org.einheit $ecrffieldstatusentry_listentry_trial_department,
+Liebes $ecrffieldstatusentry_listentry_trial_name Studienteammitglied oder Angehörige/r der Site $ecrffieldstatusentry_listentry_trial_department,
 
 dies ist die Benachrichtigung für folgendes Ereignis:
 
    $type
 
    • Studie:             $ecrffieldstatusentry_listentry_trial_name
-   • Studie Org.einheit: $ecrffieldstatusentry_listentry_trial_department
+   • Studie Site:        $ecrffieldstatusentry_listentry_trial_department
    • Proband:            #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name

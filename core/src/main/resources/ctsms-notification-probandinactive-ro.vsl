@@ -1,4 +1,4 @@
-Dragă membru al dept. $probandstatusentry_proband_department,
+Dragă membru al site $probandstatusentry_proband_department,
 
 aceasta este o notificare pentru următorul eveniment:
 
@@ -6,7 +6,7 @@ aceasta este o notificare pentru următorul eveniment:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
+   • Proband site: $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
    • Tip:          $probandstatusentry_type

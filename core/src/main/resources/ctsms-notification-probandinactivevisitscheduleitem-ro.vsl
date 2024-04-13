@@ -6,7 +6,7 @@ aceasta este o notificare pentru următorul eveniment:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Proband dept.: $probandstatusentry_proband_department
+   • Proband site: $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
    • Tip stare:   $probandstatusentry_type
