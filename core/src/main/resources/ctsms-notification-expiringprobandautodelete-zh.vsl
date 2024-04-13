@@ -1,4 +1,4 @@
-尊敬的部门成员 $proband_department,
+Dear member of site $proband_department,
 
 这是针对以下事件的通知：
 
@@ -6,7 +6,7 @@
 
    • 先证者：#if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   •先证者部门：     $proband_department
+   • Proband site:            $proband_department
    • 先证者类别：        $proband_category
 
    • 预定删除：    $proband_autodeletedeadline
