@@ -1,4 +1,4 @@
-प्रिय $trial_name परीक्षण टीम के सदस्य या विभाग के सदस्य। $trial_department,
+Dear $trial_name trial team member or member of site $trial_department,
 
 यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
@@ -6,7 +6,7 @@
 
    • परीक्षण कोड:   $trial_name
    • परीक्षण शीर्षक:  $trial_title
-   • परीक्षण विभाग:  $trial_department
+   • Trial site:   $trial_department
 
    • परीक्षण स्थिति: $trial_status
 #if($notification.trial.status.lockdown)
