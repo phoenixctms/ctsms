@@ -1,4 +1,4 @@
-Spoštovani $trial_name član poskusne skupine ali član odd. $trial_department,
+Dear $trial_name trial team member or member of site $trial_department,
 
 to je obvestilo za naslednji dogodek:
 
@@ -6,7 +6,7 @@ to je obvestilo za naslednji dogodek:
 
    • Preizkusna koda:   $trial_name
    • Naslov preizkusa:  $trial_title
-   • Preizkusni oddelek:  $trial_department
+   • Trial site:   $trial_department
 
    • Stanje preizkusa: $trial_status
 #if($notification.trial.status.lockdown)
