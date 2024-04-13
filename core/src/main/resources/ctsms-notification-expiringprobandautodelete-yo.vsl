@@ -1,4 +1,4 @@
-Eyin egbe ti Dept. $proband_department,
+Dear member of site $proband_department,
 
 eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
@@ -6,7 +6,7 @@ eyi jẹ iwifunni fun iṣẹlẹ atẹle:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#opin
 
-   • Ẹka ile-iṣẹ Proband:     $proband_department
+   • Proband site:            $proband_department
    • Ẹka Proband:        $proband_category
 
    • Ti ṣeto piparẹ:    $proband_autodeletedeadline
