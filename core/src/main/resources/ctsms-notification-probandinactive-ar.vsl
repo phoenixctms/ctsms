@@ -1,4 +1,4 @@
-عزيزي عضو القسم $probandstatusentry_proband_department,
+عزيزي العضو في الموقع $probandstatusentry_proband_department،
 
 هذا إشعار للحدث التالي:
 
@@ -6,7 +6,7 @@
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • قسم البرودباند: $probandstatusentry_proband_department
+   • موقع التوريد:  $probandstatusentry_proband_department
    • قطة بروباند.:  $probandstatusentry_proband_category
 
    • النوع:          $probandstatusentry_type
