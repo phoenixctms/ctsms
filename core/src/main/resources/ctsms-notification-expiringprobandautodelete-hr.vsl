@@ -1,4 +1,4 @@
-Poštovani član odv. $proband_department,
+Dear member of site $proband_department,
 
 ovo je obavijest za sljedeći događaj:
 
@@ -6,7 +6,7 @@ ovo je obavijest za sljedeći događaj:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband odjel:     $proband_department
+   • Proband site:            $proband_department
    • Kategorija probanda:        $proband_category
 
    • Zakazano brisanje:    $proband_autodeletedeadline
