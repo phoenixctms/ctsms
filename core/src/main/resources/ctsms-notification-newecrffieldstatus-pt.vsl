@@ -1,11 +1,11 @@
-Prezado $ecrffieldstatusentry_listentry_trial_name membro da equipe de teste ou membro do departamento. $ecrffieldstatusentry_listentry_trial_department,
+Caro membro da equipe de teste $ecrffieldstatusentry_listentry_trial_name ou membro do site $ecrffieldstatusentry_listentry_trial_department,
 
 esta é uma notificação para o seguinte evento:
 
    $type
 
    • Teste:              $ecrffieldstatusentry_listentry_trial_name
-   • Departamento de testes:   $ecrffieldstatusentry_listentry_trial_department
+   • Site de teste:         $ecrffieldstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
