@@ -1,11 +1,11 @@
-Spoštovani $ecrffieldstatusentry_listentry_trial_name član poskusne skupine ali član odd. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 to je obvestilo za naslednji dogodek:
 
    $type
 
    • Preizkus:              $ecrffieldstatusentry_listentry_trial_name
-   • Preizkusni oddelek:   $ecrffieldstatusentry_listentry_trial_department
+   • Trial site:         $ecrffieldstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
