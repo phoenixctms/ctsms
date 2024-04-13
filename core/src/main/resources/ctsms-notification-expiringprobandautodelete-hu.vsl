@@ -1,4 +1,4 @@
-Kedves Osztályi Tag! $proband_department,
+Dear member of site $proband_department,
 
 ez egy értesítés a következő eseményről:
 
@@ -6,7 +6,7 @@ ez egy értesítés a következő eseményről:
 
    • Proband: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Proband osztály:     $proband_department
+   • Proband site:            $proband_department
    • Proband kategória:        $proband_category
 
    • Törlés ütemezett:    $proband_autodeletedeadline
