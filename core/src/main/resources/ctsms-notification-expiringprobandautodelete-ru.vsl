@@ -1,4 +1,4 @@
-Уважаемый сотрудник отд. $proband_department,
+Уважаемый участник сайта $proband_department,
 
 это уведомление о следующем событии:
 
@@ -6,7 +6,7 @@
 
    • Пробанд: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • Отдел пробандов:     $proband_department
+   • Сайт профиля:            $proband_department
    • Категория пробанда:        $proband_category
 
    • Запланировано удаление:    $proband_autodeletedeadline
