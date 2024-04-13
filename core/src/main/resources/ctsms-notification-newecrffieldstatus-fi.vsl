@@ -1,11 +1,11 @@
-Hyvä $ecrffieldstatusentry_listentry_trial_name kokeilutiimin jäsen tai osaston jäsen. $ecrffieldstatusentry_listentry_trial_department,
+Dear $ecrffieldstatusentry_listentry_trial_name trial team member or member of site $ecrffieldstatusentry_listentry_trial_department,
 
 tämä on ilmoitus seuraavasta tapahtumasta:
 
    $type
 
    • Kokeilu:              $ecrffieldstatusentry_listentry_trial_name
-   • Kokeiluosasto:   $ecrffieldstatusentry_listentry_trial_department
+   • Kokeilujakson sivusto:         $ecrffieldstatusentry_listentry_trial_department
    • Proband: #if($string_utils.isEmpty($ecrffieldstatusentry_listentry_proband_alias))$ecrffieldstatusentry_listentry_proband_id#{else}$ecrffieldstatusentry_listentry_proband_alias#end
 
    • eCRF:               $ecrffieldstatusentry_ecrffield_ecrf_name
