@@ -1,4 +1,4 @@
-विभाग के प्रिय सदस्य. $proband_department,
+Dear member of site $proband_department,
 
 यह निम्नलिखित घटना के लिए एक अधिसूचना है:
 
@@ -6,7 +6,7 @@
 
    • प्रोबैंड: #if($string_utils.isEmpty($proband_alias))$proband_id#{else}$proband_alias#end
 
-   • प्रोबैंड विभाग:     $proband_department
+   • Proband site:            $proband_department
    • प्रोबैंड श्रेणी:        $proband_category
 
    • हटाना शेड्यूल किया गया:    $proband_autodeletedeadline
