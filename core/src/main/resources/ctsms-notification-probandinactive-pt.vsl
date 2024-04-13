@@ -1,4 +1,4 @@
-Prezado membro do dep. $probandstatusentry_proband_department,
+Caro membro do site $probandstatusentry_proband_department,
 
 esta é uma notificação para o seguinte evento:
 
@@ -6,7 +6,7 @@ esta é uma notificação para o seguinte evento:
 
    • Proband: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • Departamento de Probando: $probandstatusentry_proband_department
+   • Site da Probanda:  $probandstatusentry_proband_department
    • Proband cat.:  $probandstatusentry_proband_category
 
    • Tipo:          $probandstatusentry_type
