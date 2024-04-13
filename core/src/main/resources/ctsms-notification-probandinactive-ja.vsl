@@ -1,4 +1,4 @@
-親愛なる部員の皆様。 親愛なる部員の皆様。 $probandstatusentry_proband_department、
+サイト $probandstatusentry_proband_departmentのメンバーの皆様
 
 以下のイベントのお知らせです。
 
@@ -6,7 +6,7 @@
 
    • 発端者: #if($string_utils.isEmpty($probandstatusentry_proband_alias))$probandstatusentry_proband_id#{else}$probandstatusentry_proband_alias#end
 
-   • 発端者部門: $probandstatusentry_proband_department
+   • プロバンドサイト：  $probandstatusentry_proband_department
    • 発端猫:  $probandstatusentry_proband_category
 
    • 入力:          $probandstatusentry_type
