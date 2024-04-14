@@ -256,6 +256,8 @@ public final class CommonUtil {
 	private static final String HEX_DIGITS = "0123456789ABCDEF";
 	public final static String GIF_FILENAME_EXTENSION = "gif";
 	public static final String GIF_MIMETYPE_STRING = "image/gif";
+	public static final String PNG_FILENAME_EXTENSION = "png";
+	public static final String PNG_MIMETYPE_STRING = "image/png";
 	public static final String HTML_MIMETYPE_STRING = "text/html";
 	public static final String BEACON_PATH = "beacon";
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";

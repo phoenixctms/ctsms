@@ -162,6 +162,11 @@
 		<servlet-class>org.phoenixctms.ctsms.web.servlet.UnsubscribeServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>qrCodeServlet</servlet-name>
+		<servlet-class>org.phoenixctms.ctsms.web.servlet.QRCodeServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
 	<!-- overlapping mappings -->
 	<!-- http://www.roguewave.com/portals/0/products/hydraexpress/docs/3.5.0/html/rwsfservletug/4-3.html -->
 	<servlet-mapping>
@@ -180,6 +185,10 @@
 		<servlet-name>unsubscribeServlet</servlet-name>
 		<url-pattern>/unsubscribe/*</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>qrCodeServlet</servlet-name>
+		<url-pattern>/chart</url-pattern>
+	</servlet-mapping>	
 	<context-param>
 		<param-name>javax.faces.VALIDATE_EMPTY_FIELDS</param-name>
 		<param-value>true</param-value>
