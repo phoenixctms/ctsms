@@ -76,7 +76,10 @@ public enum GetParamNames {
 	REFERER("referer"),
 	UUID("uuid"),
 	VALIDATE("validate"),
-	BEACON("beacon");
+	BEACON("beacon"),
+	QR_CODE_CHLD("chld"),
+	QR_CODE_CHS("chs"),
+	QR_CODE_CHL("chl");
 
 	private final String value;
 
