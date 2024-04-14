@@ -111,8 +111,8 @@ public abstract class OTPAuthenticator {
 				Settings.getString(SettingCodes.APPLICATION_ABBREVIATION, Bundle.SETTINGS, null));
 		model.put(
 				OTPRegistrationInfoMessageTemplateParameters.INSTANCE_NAME, Settings.getInstanceName());
-		//		model.put(
-		//				OTPRegistrationInfoMessageTemplateParameters.HTTP_BASE_URL, Settings.getHttpBaseUrl());
+		model.put(
+				OTPRegistrationInfoMessageTemplateParameters.HTTP_BASE_URL, Settings.getHttpBaseUrl());
 		//model.put(
 		//		OTPRegistrationInfoMessageTemplateParameters.HTTP_DOMAIN_NAME, Settings.getHttpDomainName());
 		model.put(OTPRegistrationInfoMessageTemplateParameters.TEMPLATE_ENCODING, TEMPLATE_ENCODING);
