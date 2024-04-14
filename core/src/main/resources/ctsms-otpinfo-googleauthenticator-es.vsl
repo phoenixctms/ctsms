@@ -9,7 +9,7 @@
 2. Abra la aplicación para registrar su cuenta $application_abbreviation (escanee el código QR a continuación).
 </td></tr>
 <tr><td align="left">
-<img src="https://chart.googleapis.com/chart?chs=150x150&chld=M|0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
 </td></tr>
 <tr><td>
 3. Utilice la aplicación para generar el código de verificación solicitado.

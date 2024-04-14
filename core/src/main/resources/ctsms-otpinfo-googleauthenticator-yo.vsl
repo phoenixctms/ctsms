@@ -9,7 +9,7 @@
 2. Ṣii app naa lati forukọsilẹ iroyin $application_abbreviation rẹ (ṣayẹwo koodu QR ni isalẹ).
 </td></tr>
 <tr><td align="left">
-<img src="https://chart.googleapis.com/chart?chs=150x150&chld=M|0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
 </td></tr>
 <tr><td>
 3. Lo ìṣàfilọlẹ náà láti ṣàgbékalẹ̀ kóòdù ìmúdájú tí a béèrè.

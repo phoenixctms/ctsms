@@ -6,6 +6,7 @@ public interface OTPRegistrationInfoMessageTemplateParameters {
 	public static final boolean TEMPLATE_MODEL_LOWER_CASE_FIELD_NAMES = true;
 	public static final String OTP_SECRET = "otp_secret";
 	public static final String INSTANCE_NAME = "instance_name";
+	public static final String HTTP_BASE_URL = "http_base_url";
 	//public static final String HTTP_DOMAIN_NAME = "http_domain_name";
 	public static final String APPLICATION_ABBREVIATION = "application_abbreviation";
 	public static final Object STRING_UTILS = "string_utils";
