@@ -22,7 +22,7 @@ public class CharacterSet {
 	}
 
 	public void add(CharacterClasses characterClass, int minOccurrence, int maxOccurrence) {
-		if (minOccurrence >= 0 && maxOccurrence >= minOccurrence && !characterClasses.contains(characterClass)) {
+		if (minOccurrence >= 0 && (PasswordPolicy.IGNORE_MAX_OCCURRENCENS || maxOccurrence >= minOccurrence) && !characterClasses.contains(characterClass)) {
 			characterClasses.add(characterClass);
 			minOccurrences.put(characterClass, minOccurrence);
 			maxOccurrences.put(characterClass, maxOccurrence);
