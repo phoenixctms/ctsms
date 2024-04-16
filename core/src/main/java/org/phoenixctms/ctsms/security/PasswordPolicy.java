@@ -24,6 +24,7 @@ public class PasswordPolicy {
 		SMALL_LETTERS, CAPITAL_LETTERS, DIGITS, UMLAUTS, WHITESPACES, ALT_SYMBOLS, SYMBOLS
 	}
 
+	final static boolean IGNORE_MAX_OCCURRENCENS = true; //if true, max_occurrences is used for generating passwords only
 	private final static String STRING_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static HashMap<CharacterClasses, Character[]> CHARACTER_CLASSES = new HashMap<CharacterClasses, Character[]>();
 	private final static HashMap<CharacterClasses, String> CHARACTER_CLASS_L10NKEYS = new HashMap<CharacterClasses, String>();
@@ -280,7 +281,7 @@ public class PasswordPolicy {
 			if (minOccurrence != null && occurrenceCount < minOccurrence) {
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.PASSWORD_TOO_FEW_OCCURRENCES, DefaultMessages.PASSWORD_TOO_FEW_OCCURRENCES, minOccurrence,
 						characterClassName));
-			} else if (maxOccurrence != null && occurrenceCount > maxOccurrence) {
+			} else if (!IGNORE_MAX_OCCURRENCENS && maxOccurrence != null && occurrenceCount > maxOccurrence) {
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.PASSWORD_TOO_MANY_OCCURRENCES, DefaultMessages.PASSWORD_TOO_MANY_OCCURRENCES, maxOccurrence,
 						characterClassName));
 			}
@@ -346,7 +347,7 @@ public class PasswordPolicy {
 			randomChars.clear();
 			candidates.clear();
 			it = characterSet.getCharacterClasses().iterator();
-			if (i < minRequiredLength) {
+			if (!IGNORE_MAX_OCCURRENCENS && i < minRequiredLength) {
 				while (it.hasNext()) {
 					CharacterClasses characterClass = it.next();
 					Integer minOccurrence = characterSet.getMinOccurrence(characterClass);
@@ -358,7 +359,6 @@ public class PasswordPolicy {
 					}
 				}
 			} else {
-				it = characterSet.getCharacterClasses().iterator();
 				while (it.hasNext()) {
 					CharacterClasses characterClass = it.next();
 					Integer maxOccurrence = characterSet.getMaxOccurrence(characterClass);
@@ -395,7 +395,7 @@ public class PasswordPolicy {
 				requirements.append(L10nUtil.getMessage(MessageCodes.PASSWORD_CHARACTER_CLASS_MIN_REQUIREMENT, DefaultMessages.PASSWORD_CHARACTER_CLASS_MIN_REQUIREMENT,
 						minOccurrence, characterClassName));
 			}
-			if (maxOccurrence != null && maxOccurrence < maxLength) {
+			if (!IGNORE_MAX_OCCURRENCENS && maxOccurrence != null && maxOccurrence < maxLength) {
 				requirements.append("\n");
 				requirements.append(L10nUtil.getMessage(MessageCodes.PASSWORD_CHARACTER_CLASS_MAX_REQUIREMENT, DefaultMessages.PASSWORD_CHARACTER_CLASS_MAX_REQUIREMENT,
 						maxOccurrence, characterClassName));
