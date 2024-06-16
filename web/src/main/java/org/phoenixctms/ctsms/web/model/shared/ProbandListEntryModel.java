@@ -349,9 +349,9 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		if (trialId != null || probandGroup != null || probandId != null) {
 			try {
 				if (probandGroup != null) {
-					return WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(WebUtil.getAuthentication(), null, probandGroup.getId(), null, total, psf);
+					return WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(WebUtil.getAuthentication(), null, null, probandGroup.getId(), null, total, psf);
 				} else {
-					return WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(WebUtil.getAuthentication(), trialId, null, probandId, total, psf);
+					return WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(WebUtil.getAuthentication(), trialId, null, null, probandId, total, psf);
 				}
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {

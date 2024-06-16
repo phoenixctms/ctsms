@@ -30,7 +30,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import io.swagger.annotations.Api;
 
-@Api(value="trial")
+@Api(value = "trial")
 @Path("/probandlistentry")
 public class ProbandListEntryResource {
 
@@ -72,7 +72,8 @@ public class ProbandListEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public Page<ProbandListEntryOutVO> getProbandListEntryList(@Context UriInfo uriInfo) throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<ProbandListEntryOutVO>(WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(auth, null, null, null, true, psf = new PSFUriPart(uriInfo)),
+		return new Page<ProbandListEntryOutVO>(
+				WebUtil.getServiceLocator().getTrialService().getProbandListEntryList(auth, null, null, null, null, true, psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 

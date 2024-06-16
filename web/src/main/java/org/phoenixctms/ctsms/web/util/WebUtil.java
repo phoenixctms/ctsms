@@ -3291,7 +3291,7 @@ public final class WebUtil {
 	public static Long getProbandListEntryCount(Long trialId, Long probandId, boolean total) {
 		if (trialId != null || probandId != null) {
 			try {
-				return getServiceLocator().getTrialService().getProbandListEntryCount(getAuthentication(), trialId, null, probandId, total);
+				return getServiceLocator().getTrialService().getProbandListEntryCount(getAuthentication(), trialId, null, null, probandId, total);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
