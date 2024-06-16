@@ -274,8 +274,8 @@ public class ProbandGroupDaoImpl
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
-		target.setSize(this.getProbandListEntryDao().getTrialGroupProbandCount(null, source.getId(), null, false));
-		target.setTotalSize(this.getProbandListEntryDao().getTrialGroupProbandCount(null, source.getId(), null, true));
+		target.setSize(this.getProbandListEntryDao().getTrialDepartmentGroupProbandCount(null, null, source.getId(), null, false));
+		target.setTotalSize(this.getProbandListEntryDao().getTrialDepartmentGroupProbandCount(null, null, source.getId(), null, true));
 		target.setUniqueName(getUniqueProbandGroupName(target));
 	}
 }

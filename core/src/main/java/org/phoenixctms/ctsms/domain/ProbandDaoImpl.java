@@ -535,7 +535,7 @@ public class ProbandDaoImpl
 	}
 
 	@Override
-	protected Collection<Proband> handleFindByMoneyTransferNoParticipation(Long trialId,
+	protected Collection<Proband> handleFindByMoneyTransferNoParticipation(Long trialId, Long departmentId,
 			PaymentMethod method, String costType, Boolean paid, boolean total,
 			Boolean person, PSFVO psf)
 			throws Exception {
@@ -545,6 +545,9 @@ public class ProbandDaoImpl
 		}
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Proband.class, probandCriteria);
 		Criteria moneyTransferCriteria = criteriaMap.createCriteria("moneyTransfers");
+		if (departmentId != null) {
+			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+		}
 		moneyTransferCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		if (method != null) {
 			moneyTransferCriteria.add(Restrictions.eq("method", method));

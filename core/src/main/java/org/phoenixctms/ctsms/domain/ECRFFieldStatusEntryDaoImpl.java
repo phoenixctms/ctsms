@@ -727,7 +727,8 @@ public class ECRFFieldStatusEntryDaoImpl
 	}
 
 	@Override
-	protected Collection<ECRFFieldStatusEntry> handleGetLog(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, boolean last,
+	protected Collection<ECRFFieldStatusEntry> handleGetLog(ECRFFieldStatusQueue queue, Long trialId, Long departmentId, Long probandListEntryId, Long ecrfId, Long visitId,
+			boolean last,
 			boolean sort, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
@@ -735,13 +736,15 @@ public class ECRFFieldStatusEntryDaoImpl
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		org.hibernate.Criteria listEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", "probandListEntry0");
-		if (trialId != null || probandListEntryId != null) {
-			if (trialId != null) {
-				listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-			}
-			if (probandListEntryId != null) {
-				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-			}
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (probandListEntryId != null) {
+			listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
+		}
+		if (departmentId != null) {
+			org.hibernate.Criteria probandCriteria = ecrfFieldStatusEntryCriteria.createCriteria("proband");
+			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		org.hibernate.Criteria visitCriteria = null;
@@ -779,7 +782,8 @@ public class ECRFFieldStatusEntryDaoImpl
 	}
 
 	@Override
-	protected Collection<ECRFFieldStatusEntry> handleGetLog(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, String section,
+	protected Collection<ECRFFieldStatusEntry> handleGetLog(ECRFFieldStatusQueue queue, Long trialId, Long departmentId, Long probandListEntryId, Long ecrfId, Long visitId,
+			String section,
 			boolean last,
 			boolean sort, PSFVO psf) throws Exception {
 		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
@@ -787,13 +791,15 @@ public class ECRFFieldStatusEntryDaoImpl
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		org.hibernate.Criteria listEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", "probandListEntry0");
-		if (trialId != null || probandListEntryId != null) {
-			if (trialId != null) {
-				listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-			}
-			if (probandListEntryId != null) {
-				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-			}
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (probandListEntryId != null) {
+			listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
+		}
+		if (departmentId != null) {
+			org.hibernate.Criteria probandCriteria = ecrfFieldStatusEntryCriteria.createCriteria("proband");
+			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		org.hibernate.Criteria visitCriteria = null;
