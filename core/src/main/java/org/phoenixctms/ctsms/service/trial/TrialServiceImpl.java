@@ -4578,7 +4578,7 @@ public class TrialServiceImpl
 		writer.setVOs(fieldValueVOs);
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		for (int i = 0; i < queues.length; i++) {
-			Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queues[i], trialId, probandListEntryId, ecrfId, visitId, false, true, null);
+			Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queues[i], trialId, null, probandListEntryId, ecrfId, visitId, false, true, null);
 			ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(statusEntries);
 			writer.setVOs(queues[i], statusEntries);
 		}
@@ -5888,10 +5888,14 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected Collection<ECRFFieldStatusEntryOutVO> handleGetEcrfFieldStatusEntryLog(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId,
+	protected Collection<ECRFFieldStatusEntryOutVO> handleGetEcrfFieldStatusEntryLog(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long departmentId,
+			Long probandListEntryId,
 			Long ecrfId, Long visitId, boolean last, boolean sort, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		if (probandListEntryId != null) {
 			CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
@@ -5909,16 +5913,20 @@ public class TrialServiceImpl
 			}
 		}
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-		Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queue, trialId, probandListEntryId, ecrfId, visitId, last, sort, psf);
+		Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queue, trialId, departmentId, probandListEntryId, ecrfId, visitId, last, sort, psf);
 		ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(statusEntries);
 		return statusEntries;
 	}
 
 	@Override
-	protected Collection<ECRFFieldStatusEntryOutVO> handleGetEcrfFieldStatusEntryLog(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId,
+	protected Collection<ECRFFieldStatusEntryOutVO> handleGetEcrfFieldStatusEntryLog(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long departmentId,
+			Long probandListEntryId,
 			Long ecrfId, Long visitId, String section, boolean last, boolean sort, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		if (probandListEntryId != null) {
 			CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
@@ -5936,7 +5944,7 @@ public class TrialServiceImpl
 			}
 		}
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
-		Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queue, trialId, probandListEntryId, ecrfId, visitId, section, last, sort, psf);
+		Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queue, trialId, departmentId, probandListEntryId, ecrfId, visitId, section, last, sort, psf);
 		ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(statusEntries);
 		return statusEntries;
 	}
@@ -6503,9 +6511,12 @@ public class TrialServiceImpl
 
 	@Override
 	protected long handleGetProbandListEntryCount(
-			AuthenticationVO auth, Long trialId, Long probandGroupId, Long probandId, boolean total) throws Exception {
+			AuthenticationVO auth, Long trialId, Long departmentId, Long probandGroupId, Long probandId, boolean total) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		if (probandGroupId != null) {
 			CheckIDUtil.checkProbandGroupId(probandGroupId, this.getProbandGroupDao());
@@ -6513,14 +6524,17 @@ public class TrialServiceImpl
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
-		return this.getProbandListEntryDao().getTrialGroupProbandCount(trialId, probandGroupId, probandId, total);
+		return this.getProbandListEntryDao().getTrialDepartmentGroupProbandCount(trialId, departmentId, probandGroupId, probandId, total);
 	}
 
 	@Override
 	protected Collection<ProbandListEntryOutVO> handleGetProbandListEntryList(
-			AuthenticationVO auth, Long trialId, Long probandGroupId, Long probandId, boolean total, PSFVO psf) throws Exception {
+			AuthenticationVO auth, Long trialId, Long departmentId, Long probandGroupId, Long probandId, boolean total, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		if (probandGroupId != null) {
 			CheckIDUtil.checkProbandGroupId(probandGroupId, this.getProbandGroupDao());
@@ -6529,7 +6543,7 @@ public class TrialServiceImpl
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
-		Collection listEntries = probandListEntryDao.findByTrialGroupProbandCountPerson(trialId, probandGroupId, probandId, total, null, psf);
+		Collection listEntries = probandListEntryDao.findByTrialDepartmentGroupProbandCountPerson(trialId, departmentId, probandGroupId, probandId, total, null, psf);
 		probandListEntryDao.toProbandListEntryOutVOCollection(listEntries);
 		return listEntries;
 	}
@@ -6760,15 +6774,18 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<MoneyTransferSummaryVO> handleGetProbandMoneyTransferNoParticipationSummaryList(
-			AuthenticationVO auth, Long trialId,
+			AuthenticationVO auth, Long trialId, Long departmentId,
 			String costType, PaymentMethod method, Boolean paid, boolean total, PSFVO psf) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		TrialOutVO trialVO = trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(trialId, trialDao));
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
 		ProbandDao probandDao = this.getProbandDao();
 		MoneyTransferDao moneyTransferDao = this.getMoneyTransferDao();
 		Collection<String> costTypes = moneyTransferDao.getCostTypes(null, trialVO.getId(), null, null, method);
 		BankAccountDao bankAccountDao = this.getBankAccountDao();
-		Collection probands = probandDao.findByMoneyTransferNoParticipation(trialVO.getId(), method, costType, paid, total, true, psf);
+		Collection probands = probandDao.findByMoneyTransferNoParticipation(trialVO.getId(), departmentId, method, costType, paid, total, true, psf);
 		ArrayList<MoneyTransferSummaryVO> result = new ArrayList<MoneyTransferSummaryVO>(probands.size());
 		Iterator it = probands.iterator();
 		while (it.hasNext()) {
@@ -6811,16 +6828,19 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<MoneyTransferSummaryVO> handleGetProbandMoneyTransferSummaryList(
-			AuthenticationVO auth, Long trialId,
+			AuthenticationVO auth, Long trialId, Long departmentId,
 			String costType, PaymentMethod method, Boolean paid, boolean total, PSFVO psf) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		MoneyTransferDao moneyTransferDao = this.getMoneyTransferDao();
 		Collection<String> costTypes = moneyTransferDao.getCostTypes(null, trialId, null, null, method);
 		BankAccountDao bankAccountDao = this.getBankAccountDao();
-		Collection listEntries = probandListEntryDao.findByTrialGroupProbandCountPerson(trialId, null, null, total, true, psf);
+		Collection listEntries = probandListEntryDao.findByTrialDepartmentGroupProbandCountPerson(trialId, departmentId, null, null, total, true, psf);
 		ArrayList<MoneyTransferSummaryVO> result = new ArrayList<MoneyTransferSummaryVO>(listEntries.size());
 		Iterator it = listEntries.iterator();
 		while (it.hasNext()) {
