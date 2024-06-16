@@ -43,7 +43,7 @@ public class ProbandListEntryStatusCollisionFinder extends BlockingProbandListSt
 	@Override
 	protected Collection<ProbandListEntry> getCollidingItems(
 			ProbandListEntryInVO in, Proband root) throws ServiceException {
-		return probandListEntryDao.findByTrialGroupProbandCountPerson(null, null, in.getProbandId(), true, null, null);
+		return probandListEntryDao.findByTrialDepartmentGroupProbandCountPerson(null, null, null, in.getProbandId(), true, null, null);
 	}
 
 	@Override

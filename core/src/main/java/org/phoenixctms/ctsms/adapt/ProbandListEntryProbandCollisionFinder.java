@@ -35,7 +35,7 @@ public class ProbandListEntryProbandCollisionFinder extends CollisionFinder<Prob
 	@Override
 	protected Collection<ProbandListEntry> getCollidingItems(
 			ProbandListEntryInVO in, Trial root) {
-		return probandListEntryDao.findByTrialGroupProbandCountPerson(in.getTrialId(), null, in.getProbandId(), true, null, null);
+		return probandListEntryDao.findByTrialDepartmentGroupProbandCountPerson(in.getTrialId(), null, null, in.getProbandId(), true, null, null);
 	}
 
 	@Override
