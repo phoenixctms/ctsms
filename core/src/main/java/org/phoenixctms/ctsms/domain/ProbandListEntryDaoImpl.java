@@ -61,8 +61,8 @@ public class ProbandListEntryDaoImpl
 	}
 
 	@Override
-	protected Collection<ProbandListEntry> handleFindByTrialGroupProbandCountPerson(
-			Long trialId, Long probandGroupId, Long probandId, boolean total,
+	protected Collection<ProbandListEntry> handleFindByTrialDepartmentGroupProbandCountPerson(
+			Long trialId, Long departmentId, Long probandGroupId, Long probandId, boolean total,
 			Boolean person, PSFVO psf) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandListEntry.class, listEntryCriteria);
@@ -72,10 +72,13 @@ public class ProbandListEntryDaoImpl
 		if (probandGroupId != null) {
 			listEntryCriteria.add(Restrictions.eq("group.id", probandGroupId.longValue()));
 		}
-		if (probandId != null || person != null) {
+		if (probandId != null || departmentId != null || person != null) {
 			Criteria probandCriteria = criteriaMap.createCriteria("proband", CriteriaSpecification.INNER_JOIN);
 			if (probandId != null) {
 				probandCriteria.add(Restrictions.idEq(probandId.longValue()));
+			}
+			if (departmentId != null) {
+				probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 			}
 			if (person != null) {
 				probandCriteria.add(Restrictions.eq("person", person.booleanValue()));
@@ -189,11 +192,14 @@ public class ProbandListEntryDaoImpl
 	}
 
 	@Override
-	protected long handleGetTrialGroupProbandCount(
-			Long trialId, Long probandGroupId, Long probandId, boolean total) throws Exception {
+	protected long handleGetTrialDepartmentGroupProbandCount(
+			Long trialId, Long departmentId, Long probandGroupId, Long probandId, boolean total) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (departmentId != null) {
+			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (probandGroupId != null) {
 			listEntryCriteria.add(Restrictions.eq("group.id", probandGroupId.longValue()));
