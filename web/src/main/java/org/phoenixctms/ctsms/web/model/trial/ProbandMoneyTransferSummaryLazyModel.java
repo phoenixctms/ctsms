@@ -23,8 +23,8 @@ public class ProbandMoneyTransferSummaryLazyModel extends ProbandMoneyTransferSu
 	protected Collection<MoneyTransferSummaryVO> getLazyResult(PSFVO psf) {
 		if (trialId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getProbandMoneyTransferSummaryList(WebUtil.getAuthentication(), trialId, null, null, paid, total, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+				return WebUtil.getServiceLocator().getTrialService().getProbandMoneyTransferSummaryList(WebUtil.getAuthentication(), trialId, null, null, null, paid, total, psf);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
@@ -36,7 +36,7 @@ public class ProbandMoneyTransferSummaryLazyModel extends ProbandMoneyTransferSu
 	protected MoneyTransferSummaryVO getRowElement(Long id) {
 		try {
 			return WebUtil.getServiceLocator().getTrialService().getProbandMoneyTransferSummary(WebUtil.getAuthentication(), id, null, null, paid);
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
