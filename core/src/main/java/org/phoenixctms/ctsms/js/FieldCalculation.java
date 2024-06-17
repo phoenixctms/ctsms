@@ -12,6 +12,7 @@ import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
+import org.openjdk.nashorn.api.scripting.JSObject;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -30,8 +31,6 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.springframework.core.io.ClassPathResource;
-
-import jdk.nashorn.api.scripting.JSObject;
 
 @SuppressWarnings("restriction")
 public class FieldCalculation {

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import jdk.nashorn.api.scripting.AbstractJSObject;
+import org.openjdk.nashorn.api.scripting.AbstractJSObject;
 
 //http://stackoverflow.com/questions/7519399/how-to-convert-java-map-to-a-basic-javascript-object
 @SuppressWarnings("restriction")
