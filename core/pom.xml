@@ -172,16 +172,22 @@
 		</dependency>
 
 		<dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-support</artifactId>
-			    <scope>test</scope>
-</dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-support</artifactId>
+			<scope>test</scope>
+		</dependency>
 
  <!--  <dependency>
     <groupId>com.github.stephenc.monte</groupId>
     <artifactId>monte-screen-recorder</artifactId>
     <scope>test</scope>
 </dependency>  -->
+
+		<dependency>
+			<groupId>org.openjdk.nashorn</groupId>
+			<artifactId>nashorn-core</artifactId>
+			<version>15.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-cli</groupId>
