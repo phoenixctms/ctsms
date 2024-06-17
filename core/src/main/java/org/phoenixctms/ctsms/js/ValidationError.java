@@ -1,6 +1,6 @@
 package org.phoenixctms.ctsms.js;
 
-import jdk.nashorn.api.scripting.JSObject;
+import org.openjdk.nashorn.api.scripting.JSObject;
 
 @SuppressWarnings("restriction")
 public class ValidationError {

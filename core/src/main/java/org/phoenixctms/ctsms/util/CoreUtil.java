@@ -40,9 +40,9 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 import org.apache.commons.codec.binary.Base64;
+import org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory;
 import org.phoenixctms.ctsms.PrincipalStore;
 import org.phoenixctms.ctsms.UserContext;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
@@ -81,7 +81,7 @@ public final class CoreUtil implements ApplicationContextAware {
 
 	public final static String OBFUSCATED_STRING = "********";
 	public final static String RANDOM_ALGORITHM = "SHA1PRNG";
-	private final static String JAVASCRIPT_ENGINE_NAME = "JavaScript";
+	//private final static String JAVASCRIPT_ENGINE_NAME = "JavaScript";
 	public static final String PDF_FILENAME_EXTENSION = "pdf";
 	public static final String PDF_MIMETYPE_STRING = "application/pdf"; // public for demodataprovider
 	public static final String EXCEL_FILENAME_EXTENSION = "xls";
@@ -665,8 +665,10 @@ public final class CoreUtil implements ApplicationContextAware {
 	}
 
 	public static ScriptEngine getJsEngine() {
-		ScriptEngineManager manager = new ScriptEngineManager();
-		return manager.getEngineByName(JAVASCRIPT_ENGINE_NAME);
+		//ScriptEngineManager manager = new ScriptEngineManager();
+		//return manager.getEngineByName(JAVASCRIPT_ENGINE_NAME);
+		NashornScriptEngineFactory factory = new NashornScriptEngineFactory();
+		return factory.getScriptEngine();
 	}
 
 	public static Password getLastPassword() {
