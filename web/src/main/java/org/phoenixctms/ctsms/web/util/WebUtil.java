@@ -2035,7 +2035,7 @@ public final class WebUtil {
 	public static Long getEcrfFieldStatusEntryCount(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, boolean last) {
 		if (trialId != null || probandListEntryId != null || ecrfId != null) {
 			try {
-				return getServiceLocator().getTrialService().getEcrfFieldStatusEntryCount(getAuthentication(), queue, trialId, probandListEntryId, ecrfId, visitId, last);
+				return getServiceLocator().getTrialService().getEcrfFieldStatusEntryCount(getAuthentication(), queue, trialId, null, probandListEntryId, ecrfId, visitId, last);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
