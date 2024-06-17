@@ -5817,10 +5817,13 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected long handleGetEcrfFieldStatusEntryCount(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId,
+	protected long handleGetEcrfFieldStatusEntryCount(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long departmentId, Long probandListEntryId,
 			Long ecrfId, Long visitId, boolean last) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		if (probandListEntryId != null) {
 			CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
@@ -5835,7 +5838,7 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_ID_IS_NULL);
 			}
 		}
-		return this.getECRFFieldStatusEntryDao().getCount(queue, trialId, probandListEntryId, ecrfId, visitId, last);
+		return this.getECRFFieldStatusEntryDao().getCount(queue, trialId, departmentId, probandListEntryId, ecrfId, visitId, last);
 	}
 
 	@Override
@@ -5851,10 +5854,13 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected long handleGetEcrfFieldStatusEntryCount(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId,
+	protected long handleGetEcrfFieldStatusEntryCount(AuthenticationVO auth, ECRFFieldStatusQueue queue, Long trialId, Long departmentId, Long probandListEntryId,
 			Long ecrfId, Long visitId, String section, boolean last) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
 		if (probandListEntryId != null) {
 			CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
@@ -5869,7 +5875,7 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_ID_IS_NULL);
 			}
 		}
-		return this.getECRFFieldStatusEntryDao().getCount(queue, trialId, probandListEntryId, ecrfId, visitId, section, last);
+		return this.getECRFFieldStatusEntryDao().getCount(queue, trialId, departmentId, probandListEntryId, ecrfId, visitId, section, last);
 	}
 
 	@Override

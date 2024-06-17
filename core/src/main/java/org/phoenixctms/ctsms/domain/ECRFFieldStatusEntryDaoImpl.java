@@ -485,20 +485,22 @@ public class ECRFFieldStatusEntryDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, boolean last)
+	protected long handleGetCount(ECRFFieldStatusQueue queue, Long trialId, Long departmentId, Long probandListEntryId, Long ecrfId, Long visitId, boolean last)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
 		if (queue != null) {
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		org.hibernate.Criteria listEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", "probandListEntry0");
-		if (trialId != null || probandListEntryId != null) {
-			if (trialId != null) {
-				listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-			}
-			if (probandListEntryId != null) {
-				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-			}
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (probandListEntryId != null) {
+			listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
+		}
+		if (departmentId != null) {
+			org.hibernate.Criteria probandCriteria = listEntryCriteria.createCriteria("proband");
+			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		if (ecrfId != null) {
@@ -565,20 +567,22 @@ public class ECRFFieldStatusEntryDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(ECRFFieldStatusQueue queue, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, String section, boolean last)
+	protected long handleGetCount(ECRFFieldStatusQueue queue, Long trialId, Long departmentId, Long probandListEntryId, Long ecrfId, Long visitId, String section, boolean last)
 			throws Exception {
 		org.hibernate.Criteria ecrfFieldStatusEntryCriteria = createEcrfFieldStatusEntryCriteria("ecrfFieldStatusEntry0");
 		if (queue != null) {
 			ecrfFieldStatusEntryCriteria.add(Restrictions.eq("queue", queue));
 		}
 		org.hibernate.Criteria listEntryCriteria = ecrfFieldStatusEntryCriteria.createCriteria("listEntry", "probandListEntry0");
-		if (trialId != null || probandListEntryId != null) {
-			if (trialId != null) {
-				listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
-			}
-			if (probandListEntryId != null) {
-				listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
-			}
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (probandListEntryId != null) {
+			listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
+		}
+		if (departmentId != null) {
+			org.hibernate.Criteria probandCriteria = listEntryCriteria.createCriteria("proband");
+			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
 		if (ecrfId != null) {
@@ -743,7 +747,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
 		}
 		if (departmentId != null) {
-			org.hibernate.Criteria probandCriteria = ecrfFieldStatusEntryCriteria.createCriteria("proband");
+			org.hibernate.Criteria probandCriteria = listEntryCriteria.createCriteria("proband");
 			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
@@ -798,7 +802,7 @@ public class ECRFFieldStatusEntryDaoImpl
 			listEntryCriteria.add(Restrictions.idEq(probandListEntryId.longValue()));
 		}
 		if (departmentId != null) {
-			org.hibernate.Criteria probandCriteria = ecrfFieldStatusEntryCriteria.createCriteria("proband");
+			org.hibernate.Criteria probandCriteria = listEntryCriteria.createCriteria("proband");
 			probandCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		org.hibernate.Criteria ecrfFieldCriteria = ecrfFieldStatusEntryCriteria.createCriteria("ecrfField", "ecrfField0");
