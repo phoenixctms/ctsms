@@ -261,25 +261,45 @@
 				<artifactId>spring-test</artifactId>
 				<version>${spring.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>3.3.0</version>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- <dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib-nodep</artifactId>
+				<version>3.3.0</version>
+				<scope>runtime</scope>
+			</dependency> -->
+			
+			<!-- <dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>9.7</version>
+			</dependency>
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib-nodep</artifactId>
 				<version>2.2.2</version>
 				<scope>runtime</scope>
-			</dependency>
+			</dependency> -->
 			<!-- Following is necessary for deployment on Payara to avoid version conflicts -->
-			<dependency>
+			<!-- <dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib</artifactId>
 				<version>2.2.2</version>
 				<scope>runtime</scope>
-			</dependency>
-			<dependency>
+			</dependency> -->
+			<!-- <dependency>
 				<groupId>asm</groupId>
 				<artifactId>asm</artifactId>
 				<version>3.3.1</version>
 				<scope>runtime</scope>
-			</dependency>
+			</dependency> -->
+			
 			<dependency>
 				<groupId>antlr</groupId>
 				<artifactId>antlr</artifactId>
