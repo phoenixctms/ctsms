@@ -86,9 +86,13 @@
 			<artifactId>ehcache</artifactId>
 			<type>pom</type>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib-nodep</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
@@ -182,6 +186,8 @@
     <artifactId>monte-screen-recorder</artifactId>
     <scope>test</scope>
 </dependency>  -->
+
+		
 
 		<dependency>
 			<groupId>org.openjdk.nashorn</groupId>
