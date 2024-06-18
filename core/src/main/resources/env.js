@@ -18,6 +18,24 @@ if (!String.prototype.trim) {
 jQuery.trim = function(str) {
 	return (str != null ? str.trim() : null);
 };
+jQuery.grep = function(elems, callback, invert) {
+	var callbackInverse,
+		matches = [],
+		i = 0,
+		length = elems.length,
+		callbackExpect = !invert;
+
+	// Go through the array, only saving the items
+	// that pass the validator function
+	for (; i < length; i++) {
+		callbackInverse = !callback(elems[i], i);
+		if (callbackInverse !== callbackExpect) {
+			matches.push(elems[i]);
+		}
+	}
+
+	return matches;
+};
 var console = {
 	log : function(msg) {
 		java.lang.System.out.println(msg);
