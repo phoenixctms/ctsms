@@ -795,6 +795,23 @@ public class FileDaoImpl
 	}
 
 	@Override
+	protected String handleGetCountSafe(FileModule module, Long id, String logicalPath, boolean subTree,
+			Boolean active, Boolean publicFile, Boolean image, String mimeType, Integer limit) throws Exception {
+		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		applyModuleIdCriterions(fileCriteria, module, id);
+		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
+		if (active != null) {
+			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (publicFile != null) {
+			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
+		}
+		applyContentTypeCriterions(fileCriteria, image, mimeType);
+		return CriteriaUtil.limitCount(limit, Settings.getIntNullable(SettingCodes.FILE_DEFAULT_COUNT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.FILE_DEFAULT_COUNT_LIMIT), fileCriteria);
+	}
+
+	@Override
 	protected long handleGetCount(
 			String externalFileName) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
