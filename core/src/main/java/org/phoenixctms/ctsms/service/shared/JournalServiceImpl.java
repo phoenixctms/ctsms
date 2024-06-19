@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.Criteria;
@@ -154,17 +152,6 @@ public class JournalServiceImpl
 		}
 		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, false) });
-	}
-
-	private static String x(String test, String regexp, String repl) {
-		StringBuffer stringBuffer = new StringBuffer();
-		Pattern pattern = Pattern.compile(regexp);
-		Matcher matcher = pattern.matcher(test);
-		while (matcher.find()) {
-			matcher.appendReplacement(stringBuffer, matcher.group(1).replaceAll("(.)", repl));
-		}
-		matcher.appendTail(stringBuffer);
-		return stringBuffer.toString();
 	}
 
 	private void checkJournalEntryInput(JournalEntryInVO journalEntry) throws ServiceException {
@@ -561,6 +548,13 @@ public class JournalServiceImpl
 			throws Exception {
 		checkJournalModuleId(module, id);
 		return this.getJournalEntryDao().getCount(module, id);
+	}
+
+	@Override
+	protected String handleGetJournalCountSafe(AuthenticationVO auth, JournalModule module, Long id, Integer limit)
+			throws Exception {
+		checkJournalModuleId(module, id);
+		return this.getJournalEntryDao().getCountSafe(module, id, limit);
 	}
 
 	/**

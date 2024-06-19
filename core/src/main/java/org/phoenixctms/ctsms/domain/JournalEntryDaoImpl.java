@@ -847,6 +847,15 @@ public class JournalEntryDaoImpl
 		return (Long) journalCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
+	@Override
+	protected String handleGetCountSafe(JournalModule module,
+			Long id, Integer limit) throws Exception {
+		org.hibernate.Criteria journalCriteria = createJournalEntryCriteria(null);
+		applyJournalCriterion(journalCriteria, module, id);
+		return CriteriaUtil.limitCount(limit, Settings.getIntNullable(SettingCodes.JOURNAL_ENTRY_DEFAULT_COUNT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.JOURNAL_ENTRY_DEFAULT_COUNT_LIMIT), journalCriteria);
+	}
+
 	/**
 	 * @inheritDoc
 	 */

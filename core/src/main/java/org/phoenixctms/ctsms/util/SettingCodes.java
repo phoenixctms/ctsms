@@ -169,6 +169,8 @@ public interface SettingCodes {
 	public static final String MAX_MISSING_ECRF_FIELD_VALUES = "max_missing_ecrf_field_values";
 	public static final String INPUT_FIELD_IMAGE_SIZE_LIMIT = "input_field_image_size_limit";
 	public static final String INPUT_FIELD_TRUNCATED_STRING_VALUE_MAX_LENGTH = "input_field_truncated_string_value_max_length";
+	public static final String JOURNAL_ENTRY_DEFAULT_COUNT_LIMIT = "journal_entry_default_count_limit";
+	public static final String FILE_DEFAULT_COUNT_LIMIT = "file_default_count_limit";
 	public static final String BANK_CODE_NUMBER_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "bank_code_number_autocomplete_default_result_limit";
 	public static final String BANK_IDENTIFICATION_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "bank_identification_autocomplete_default_result_limit";
 	public static final String BANK_NAME_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "bank_name_autocomplete_default_result_limit";

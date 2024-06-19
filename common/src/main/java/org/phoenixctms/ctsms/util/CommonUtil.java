@@ -287,6 +287,22 @@ public final class CommonUtil {
 	}
 	private final static Detector MIME_DETECTOR = new DefaultDetector(); // All build-in Tika detectors are thread-safe, so it is ok to share the detector globally.
 	private final static int SHORT_UUID_LENGTH = 8;
+	private final static String COUNT_LIMIT_EXCEEDED_PREFIX = "";
+	private final static String COUNT_LIMIT_EXCEEDED_SUFFIX = "+";
+
+	public static String toCountLimitExceeded(int count) {
+		return COUNT_LIMIT_EXCEEDED_PREFIX + Integer.toString(count) + COUNT_LIMIT_EXCEEDED_SUFFIX;
+	}
+
+	public static long fromCountLimitExceeded(Object countSafe) {
+		try {
+			return Long.parseLong(countSafe.toString()
+					.replaceFirst(Pattern.quote("^" + COUNT_LIMIT_EXCEEDED_PREFIX), "")
+					.replaceFirst(Pattern.quote(COUNT_LIMIT_EXCEEDED_SUFFIX) + "$", ""));
+		} catch (Exception e) {
+		}
+		return 0;
+	}
 
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {
 		TikaInputStream tikaStream = null;
