@@ -134,7 +134,7 @@ public class PasswordBean extends ManagedBeanBase implements VariablePeriodSelec
 							MessageCodes.PASSWORD_TAB_TITLE, MessageCodes.PASSWORD_TAB_TITLE_WITH_COUNT, userId == null ? null : out != null ? 1l : 0l);
 					WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_USER_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_USER_JOURNAL_ENTRY_COUNT,
 							MessageCodes.USER_JOURNAL_TAB_TITLE, MessageCodes.USER_JOURNAL_TAB_TITLE_WITH_COUNT,
-							WebUtil.getJournalCount(JournalModule.USER_JOURNAL, userId));
+							WebUtil.getJournalCountSafe(JournalModule.USER_JOURNAL, userId));
 				}
 			}
 		}

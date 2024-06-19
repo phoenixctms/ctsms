@@ -76,7 +76,7 @@ public class StaffImageBean extends PhotoBeanBase {
 		if (operationSuccess) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_STAFF_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_STAFF_JOURNAL_ENTRY_COUNT,
 					MessageCodes.STAFF_JOURNAL_TAB_TITLE, MessageCodes.STAFF_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.STAFF_JOURNAL, in.getId()));
+					WebUtil.getJournalCountSafe(JournalModule.STAFF_JOURNAL, in.getId()));
 		}
 	}
 
@@ -87,7 +87,7 @@ public class StaffImageBean extends PhotoBeanBase {
 		if (id != null) {
 			try {
 				out = WebUtil.getServiceLocator().getStaffService().getStaffImage(WebUtil.getAuthentication(), id);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
 				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -205,7 +205,7 @@ public class StaffImageBean extends PhotoBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().getStaffImage(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -221,7 +221,7 @@ public class StaffImageBean extends PhotoBeanBase {
 	protected Integer loadUploadSizeLimit() {
 		try {
 			return WebUtil.getServiceLocator().getToolsService().getStaffImageUploadSizeLimit();
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
@@ -268,7 +268,7 @@ public class StaffImageBean extends PhotoBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

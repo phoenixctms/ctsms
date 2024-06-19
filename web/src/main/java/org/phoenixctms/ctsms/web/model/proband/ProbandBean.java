@@ -190,14 +190,14 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	private TreeNode childrenRoot;
 	private TreeNode parentsRoot;
 	private ProbandMultiPickerModel childrenMultiPicker;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private Object[] inquiryValuesTotalCounts;
 	private String deferredDeleteReason;
 
 	public ProbandBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		inquiryValuesTotalCounts = new Object[3];
 		DefaultTreeNode childrenRoot = new DefaultTreeNode("children_root", null);
@@ -619,7 +619,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = null;
+		Object count = null;
 		if (out != null) {
 			try {
 				ProbandImageOutVO probandImage = WebUtil.getServiceLocator().getProbandService().getProbandImage(WebUtil.getAuthentication(), in.getId());
@@ -687,7 +687,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_INQUIRY_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INQUIRY_VALUE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INQUIRY_VALUES_TAB_TITLE, MessageCodes.INQUIRY_VALUES_TAB_TITLE_WITH_COUNT, count, inquiryValuesTotalCounts));
-		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.PROBAND_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getFileCountSafe(FileModule.PROBAND_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROBAND_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_FILES_TAB_TITLE, MessageCodes.PROBAND_FILES_TAB_TITLE_WITH_COUNT, count));
@@ -695,7 +695,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		tabCountMap.put(JSValues.AJAX_PROBAND_JOB_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_JOB_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_JOBS_TAB_TITLE, MessageCodes.PROBAND_JOBS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.PROBAND_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT, count));

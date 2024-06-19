@@ -96,7 +96,7 @@ public class UserPermissionProfileBean extends ManagedBeanBase {
 							MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE_WITH_COUNT, userPermissionProfilesOut == null ? null : new Long(userPermissionProfilesOut.size()));
 					WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_USER_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_USER_JOURNAL_ENTRY_COUNT,
 							MessageCodes.USER_JOURNAL_TAB_TITLE, MessageCodes.USER_JOURNAL_TAB_TITLE_WITH_COUNT,
-							WebUtil.getJournalCount(JournalModule.USER_JOURNAL, userId));
+							WebUtil.getJournalCountSafe(JournalModule.USER_JOURNAL, userId));
 				}
 			}
 		}

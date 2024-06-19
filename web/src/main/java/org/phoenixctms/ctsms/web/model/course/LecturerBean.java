@@ -96,7 +96,7 @@ public class LecturerBean extends ManagedBeanBase {
 		if (operationSuccess && in.getCourseId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_COURSE_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_COURSE_JOURNAL_ENTRY_COUNT,
 					MessageCodes.COURSE_JOURNAL_TAB_TITLE, MessageCodes.COURSE_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.COURSE_JOURNAL, in.getCourseId()));
+					WebUtil.getJournalCountSafe(JournalModule.COURSE_JOURNAL, in.getCourseId()));
 		}
 	}
 

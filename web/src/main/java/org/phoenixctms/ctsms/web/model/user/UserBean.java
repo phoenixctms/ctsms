@@ -206,7 +206,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	private LdapEntryVO ldapEntry2;
 	private ArrayList<SelectItem> departments;
 	private AuthenticationTypeSelector authMethod;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
 	private String newDepartmentPassword;
@@ -216,7 +216,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	public UserBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		setAuthMethod(new AuthenticationTypeSelector(this, AUTH_METHOD_PROPERTY_ID));
 		remoteUserMessage = null;
@@ -561,7 +561,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		tabTitleMap.clear();
 		PSFVO psf = new PSFVO();
 		psf.setPageSize(0);
-		Long count = null;
+		Object count = null;
 		if (out != null) {
 			try {
 				count = WebUtil.getServiceLocator().getUserService().getPassword(WebUtil.getAuthentication(), in.getId()) != null ? 1l : 0l;
@@ -586,7 +586,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		tabCountMap.put(JSValues.AJAX_USER_PERMISSION_PROFILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_USER_PERMISSION_PROFILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE, MessageCodes.USER_PERMISSION_PROFILES_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.USER_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.USER_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_USER_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_USER_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.USER_JOURNAL_TAB_TITLE, MessageCodes.USER_JOURNAL_TAB_TITLE_WITH_COUNT, count));

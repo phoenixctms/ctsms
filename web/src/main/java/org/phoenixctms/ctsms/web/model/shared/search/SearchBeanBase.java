@@ -168,7 +168,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private CriteriaInstantVO instantCriteria;
 	private boolean parsed;
 	private HashMap<Long, CriterionInstantVO> instantCriterionsMap;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
@@ -176,7 +176,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	protected SearchBeanBase() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		criteriaModel = new CriteriaLazyModel();
 		selectionItemsNameClipMaxLength = Settings.getInt(SettingCodes.SELECTION_ITEMS_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS, DefaultSettings.SELECTION_ITEMS_TEXT_CLIP_MAX_LENGTH);
@@ -226,7 +226,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 					(out == null || isPicker()) ? null : WebUtil.getJobCount(getJobModule(), criteriaIn.getId()));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_CRITERIA_JOURNAL_ENTRY_COUNT,
 					MessageCodes.CRITERIA_JOURNAL_TAB_TITLE, MessageCodes.CRITERIA_JOURNAL_TAB_TITLE_WITH_COUNT,
-					(out == null || isPicker()) ? null : WebUtil.getJournalCount(JournalModule.CRITERIA_JOURNAL, criteriaIn.getId()));
+					(out == null || isPicker()) ? null : WebUtil.getJournalCountSafe(JournalModule.CRITERIA_JOURNAL, criteriaIn.getId()));
 		}
 	}
 
@@ -724,11 +724,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = ((out == null || isPicker()) ? null : WebUtil.getJobCount(getJobModule(), criteriaIn.getId()));
+		Object count = ((out == null || isPicker()) ? null : WebUtil.getJobCount(getJobModule(), criteriaIn.getId()));
 		tabCountMap.put(JSValues.AJAX_CRITERIA_JOB_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_CRITERIA_JOB_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.CRITERIA_JOBS_TAB_TITLE, MessageCodes.CRITERIA_JOBS_TAB_TITLE_WITH_COUNT, count));
-		count = ((out == null || isPicker()) ? null : WebUtil.getJournalCount(JournalModule.CRITERIA_JOURNAL, criteriaIn.getId()));
+		count = ((out == null || isPicker()) ? null : WebUtil.getJournalCountSafe(JournalModule.CRITERIA_JOURNAL, criteriaIn.getId()));
 		tabCountMap.put(JSValues.AJAX_CRITERIA_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_CRITERIA_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.CRITERIA_JOURNAL_TAB_TITLE, MessageCodes.CRITERIA_JOURNAL_TAB_TITLE_WITH_COUNT, count));

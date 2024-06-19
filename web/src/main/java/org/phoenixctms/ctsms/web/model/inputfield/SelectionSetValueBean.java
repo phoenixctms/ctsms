@@ -117,7 +117,7 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 		if (operationSuccess && in.getFieldId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT,
 					MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.INPUT_FIELD_JOURNAL, in.getFieldId()));
+					WebUtil.getJournalCountSafe(JournalModule.INPUT_FIELD_JOURNAL, in.getFieldId()));
 		}
 	}
 

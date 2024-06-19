@@ -156,7 +156,7 @@ public class MassMailBean extends ManagedBeanBase {
 	private MassMailStatusTypeVO massMailStatusType;
 	private ArrayList<SelectItem> probandListStatusTypes;
 	private ArrayList<SelectItem> locales;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private Long previewProbandId;
 	private String previewSubject;
@@ -165,7 +165,7 @@ public class MassMailBean extends ManagedBeanBase {
 
 	public MassMailBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 	}
 
@@ -494,16 +494,16 @@ public class MassMailBean extends ManagedBeanBase {
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = null;
+		Object count = null;
 		count = (out == null ? null : WebUtil.getMassMailRecipientCount(in.getId(), null, false));
 		tabCountMap.put(JSValues.AJAX_MASS_MAIL_RECIPIENT_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_MASS_MAIL_RECIPIENT_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.MASS_MAIL_RECIPIENTS_TAB_TITLE, MessageCodes.MASS_MAIL_RECIPIENTS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.MASS_MAIL_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getFileCountSafe(FileModule.MASS_MAIL_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_MASS_MAIL_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_MASS_MAIL_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.MASS_MAIL_FILES_TAB_TITLE, MessageCodes.MASS_MAIL_FILES_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.MASS_MAIL_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.MASS_MAIL_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE, MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT, count));

@@ -148,7 +148,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	private InputFieldOutVO out;
 	private ArrayList<SelectItem> booleans;
 	private InputFieldTypeSelector fieldType;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String allowTypes;
 	private Integer uploadSizeLimit;
@@ -156,7 +156,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 
 	public InputFieldBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		config = new InputFieldInVOConfig();
 		setFieldType(new InputFieldTypeSelector(this, FIELD_TYPE_PROPERTY_ID));
@@ -532,7 +532,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		}
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = (out == null ? null : WebUtil.getSelectionSetValueCount(in.getId()));
+		Object count = (out == null ? null : WebUtil.getSelectionSetValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_SELECTION_SET_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_SELECTION_SET_VALUE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.SELECTION_SET_VALUES_TAB_TITLE, MessageCodes.SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT, count));
@@ -540,7 +540,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		tabCountMap.put(JSValues.AJAX_INPUT_FIELD_JOB_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INPUT_FIELD_JOB_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE, MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.INPUT_FIELD_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.INPUT_FIELD_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT, count));

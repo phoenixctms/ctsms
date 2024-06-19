@@ -127,7 +127,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 					if (operationSuccess && in.getInventoryId() != null) {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INVENTORY_JOURNAL_TAB_TITLE_BASE64,
 								JSValues.AJAX_INVENTORY_JOURNAL_ENTRY_COUNT, MessageCodes.INVENTORY_JOURNAL_TAB_TITLE, MessageCodes.INVENTORY_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.INVENTORY_JOURNAL, in.getInventoryId()));
+								WebUtil.getJournalCountSafe(JournalModule.INVENTORY_JOURNAL, in.getInventoryId()));
 					}
 					break;
 				case STAFF_HYPERLINK:
@@ -136,7 +136,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 					if (operationSuccess && in.getStaffId() != null) {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_STAFF_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_STAFF_JOURNAL_ENTRY_COUNT,
 								MessageCodes.STAFF_JOURNAL_TAB_TITLE, MessageCodes.STAFF_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.STAFF_JOURNAL, in.getStaffId()));
+								WebUtil.getJournalCountSafe(JournalModule.STAFF_JOURNAL, in.getStaffId()));
 					}
 					break;
 				case COURSE_HYPERLINK:
@@ -145,7 +145,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 					if (operationSuccess && in.getCourseId() != null) {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_COURSE_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_COURSE_JOURNAL_ENTRY_COUNT,
 								MessageCodes.COURSE_JOURNAL_TAB_TITLE, MessageCodes.COURSE_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.COURSE_JOURNAL, in.getCourseId()));
+								WebUtil.getJournalCountSafe(JournalModule.COURSE_JOURNAL, in.getCourseId()));
 					}
 					break;
 				case TRIAL_HYPERLINK:
@@ -154,7 +154,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 					if (operationSuccess && in.getTrialId() != null) {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
 								MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
+								WebUtil.getJournalCountSafe(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
 					}
 					break;
 				default:

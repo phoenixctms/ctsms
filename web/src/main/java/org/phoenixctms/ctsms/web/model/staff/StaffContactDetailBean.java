@@ -86,7 +86,7 @@ public class StaffContactDetailBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
@@ -105,7 +105,7 @@ public class StaffContactDetailBean extends ManagedBeanBase {
 		if (operationSuccess && in.getStaffId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_STAFF_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_STAFF_JOURNAL_ENTRY_COUNT,
 					MessageCodes.STAFF_JOURNAL_TAB_TITLE, MessageCodes.STAFF_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.STAFF_JOURNAL, in.getStaffId()));
+					WebUtil.getJournalCountSafe(JournalModule.STAFF_JOURNAL, in.getStaffId()));
 		}
 	}
 
@@ -133,7 +133,7 @@ public class StaffContactDetailBean extends ManagedBeanBase {
 			out = null;
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -261,7 +261,7 @@ public class StaffContactDetailBean extends ManagedBeanBase {
 		try {
 			out = WebUtil.getServiceLocator().getStaffService().getStaffContactDetailValue(WebUtil.getAuthentication(), id);
 			return LOAD_OUTCOME;
-		} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
@@ -312,7 +312,7 @@ public class StaffContactDetailBean extends ManagedBeanBase {
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
-		} catch (ServiceException|IllegalArgumentException|AuthorisationException e) {
+		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

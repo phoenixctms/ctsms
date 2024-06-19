@@ -166,7 +166,7 @@ public final class WebUtil {
 			JSValues countJsVar,
 			String tabTitleMsgCode,
 			String tabTitleWithCountMsgCode,
-			Long count, Object... args) {
+			Object count, Object... args) {
 		RequestContext requestContext = context == null ? RequestContext.getCurrentInstance() : context;
 		if (requestContext != null) {
 			requestContext.addCallbackParam(tabTitleBase64Arg.toString(), JsUtil.encodeBase64(getTabTitleString(tabTitleMsgCode, tabTitleWithCountMsgCode, count, args), false));
@@ -2592,6 +2592,22 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static String getJournalCountSafe(JournalModule module, Long id, Integer limit) {
+		if (module != null && id != null) {
+			try {
+				return getServiceLocator().getJournalService().getJournalCountSafe(getAuthentication(), module, id, limit);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
+	public static String getJournalCountSafe(JournalModule module, Long id) {
+		return getJournalCountSafe(module, id, null);
+	}
+
 	public static JournalEntryOutVO getJournalEntry(Long journalEntryId) {
 		if (journalEntryId != null) {
 			try {
@@ -3783,17 +3799,18 @@ public final class WebUtil {
 	public static String getTabTitleString(
 			String tabTitleMsgCode,
 			String tabTitleWithCountMsgCode,
-			Long count, Object... countArgs) {
+			Object countSafe, Object... countArgs) {
 		Object[] args;
 		String titleMsgCode;
-		if (count != null && count > 0) {
+		long count = CommonUtil.fromCountLimitExceeded(countSafe);
+		if (count > 0l) {
 			if (countArgs != null && countArgs.length > 0) {
 				args = java.util.Arrays.copyOf(countArgs, countArgs.length + 1);
 				System.arraycopy(args, 0, args, 1, countArgs.length);
-				args[0] = count;
+				args[0] = countSafe;
 			} else {
 				args = new Object[1];
-				args[0] = count;
+				args[0] = countSafe;
 			}
 			titleMsgCode = tabTitleWithCountMsgCode;
 		} else {
@@ -3895,7 +3912,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long getTotalFileCount(FileModule module, Long id) {
+	public static Long getFileCount(FileModule module, Long id) {
 		if (module != null && id != null) {
 			try {
 				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, true, null, null);
@@ -3905,6 +3922,22 @@ public final class WebUtil {
 			}
 		}
 		return null;
+	}
+
+	public static String getFileCountSafe(FileModule module, Long id, Integer limit) {
+		if (module != null && id != null) {
+			try {
+				return getServiceLocator().getFileService().getFileCountSafe(getAuthentication(), module, id, null, true, null, null, limit);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
+	public static String getFileCountSafe(FileModule module, Long id) {
+		return getFileCountSafe(module, id, null);
 	}
 
 	public static TrialOutVO getTrial(Long trialId) {
@@ -4698,17 +4731,20 @@ public final class WebUtil {
 		return false;
 	}
 
-	public static boolean isTabCountEmphasized(Long count) {
-		return isTabCountEmphasized(count, false);
+	public static boolean isTabCountEmphasized(Object countSafe) {
+		return isTabCountEmphasized(countSafe, false);
 	}
 
-	public static boolean isTabCountEmphasized(Long count, boolean inverted) {
-		if (count == null) {
+	public static boolean isTabCountEmphasized(Object countSafe, boolean inverted) {
+		if (countSafe == null) {
 			return false;
-		} else if (count > 0l) {
-			return inverted;
 		} else {
-			return !inverted;
+			long count = CommonUtil.fromCountLimitExceeded(countSafe);
+			if (count > 0l) {
+				return inverted;
+			} else {
+				return !inverted;
+			}
 		}
 	}
 

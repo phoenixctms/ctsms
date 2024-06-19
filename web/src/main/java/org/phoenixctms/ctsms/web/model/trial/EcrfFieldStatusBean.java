@@ -68,7 +68,7 @@ public class EcrfFieldStatusBean extends EcrfFieldStatusEntryBeanBase {
 						MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE, MessageCodes.ECRF_FIELD_STATUS_TAB_TITLE_WITH_COUNT, new Long(ecrfFieldStatusEntryModel.getRowCount()));
 				WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
 						MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-						WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, trialId));
+						WebUtil.getJournalCountSafe(JournalModule.TRIAL_JOURNAL, trialId));
 			}
 		}
 	}

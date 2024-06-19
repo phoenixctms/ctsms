@@ -44,7 +44,7 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 					MessageCodes.SELECTION_SET_VALUES_TAB_TITLE, MessageCodes.SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT, WebUtil.getSelectionSetValueCount(inputFieldId));
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT,
 					MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.INPUT_FIELD_JOURNAL, inputFieldId));
+					WebUtil.getJournalCountSafe(JournalModule.INPUT_FIELD_JOURNAL, inputFieldId));
 		}
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);

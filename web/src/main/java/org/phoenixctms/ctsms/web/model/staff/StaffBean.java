@@ -158,13 +158,13 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	private ArrayList<SelectItem> departments;
 	private TreeNode staffRoot;
 	private SexSelector gender;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
 
 	public StaffBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		DefaultTreeNode staffRoot = new DefaultTreeNode("staff_root", null);
 		staffRoot.setExpanded(true);
@@ -533,7 +533,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = null;
+		Object count = null;
 		if (out != null) {
 			try {
 				StaffImageOutVO staffImage = WebUtil.getServiceLocator().getStaffService().getStaffImage(WebUtil.getAuthentication(), in.getId());
@@ -578,11 +578,11 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 		tabCountMap.put(JSValues.AJAX_STAFF_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.STAFF_HYPERLINKS_TAB_TITLE, MessageCodes.STAFF_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.STAFF_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getFileCountSafe(FileModule.STAFF_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_STAFF_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.STAFF_FILES_TAB_TITLE, MessageCodes.STAFF_FILES_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.STAFF_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.STAFF_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_STAFF_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_STAFF_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.STAFF_JOURNAL_TAB_TITLE, MessageCodes.STAFF_JOURNAL_TAB_TITLE_WITH_COUNT, count));
