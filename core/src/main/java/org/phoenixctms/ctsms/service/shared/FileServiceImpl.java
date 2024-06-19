@@ -549,6 +549,14 @@ public class FileServiceImpl
 	}
 
 	@Override
+	protected String handleGetFileCountSafe(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+			Integer limit)
+			throws Exception {
+		checkFileModuleId(module, id);
+		return this.getFileDao().getCountSafe(module, id, logicalPath, subTree, active, publicFile, null, null, limit);
+	}
+
+	@Override
 	protected Collection<String> handleGetFileFolders(AuthenticationVO auth, FileModule module,
 			Long id, String parentLogicalPath, boolean complete, Boolean active, Boolean publicFile, PSFVO psf) throws Exception {
 		return this.getFileDao().findFileFolders(module, id, parentLogicalPath, complete, active, publicFile, null, psf);
