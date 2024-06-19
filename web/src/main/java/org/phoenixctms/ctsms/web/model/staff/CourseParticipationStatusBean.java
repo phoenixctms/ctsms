@@ -69,7 +69,7 @@ public class CourseParticipationStatusBean extends CourseParticipationStatusBean
 		if (operationSuccess && in.getStaffId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_STAFF_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_STAFF_JOURNAL_ENTRY_COUNT,
 					MessageCodes.STAFF_JOURNAL_TAB_TITLE, MessageCodes.STAFF_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.STAFF_JOURNAL, in.getStaffId()));
+					WebUtil.getJournalCountSafe(JournalModule.STAFF_JOURNAL, in.getStaffId()));
 		}
 	}
 

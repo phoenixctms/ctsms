@@ -113,7 +113,7 @@ public class JobBean extends ManagedBeanBase {
 					if (operationSuccess && in.getTrialId() != null) {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64,
 								JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT, MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
+								WebUtil.getJournalCountSafe(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
 					}
 					break;
 				case PROBAND_JOB:
@@ -122,7 +122,7 @@ public class JobBean extends ManagedBeanBase {
 					if (operationSuccess && in.getProbandId() != null) {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
 								MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
+								WebUtil.getJournalCountSafe(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
 					}
 					break;
 				case INPUT_FIELD_JOB:
@@ -132,7 +132,7 @@ public class JobBean extends ManagedBeanBase {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INPUT_FIELD_JOURNAL_TAB_TITLE_BASE64,
 								JSValues.AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT,
 								MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE, MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.INPUT_FIELD_JOURNAL, in.getInputFieldId()));
+								WebUtil.getJournalCountSafe(JournalModule.INPUT_FIELD_JOURNAL, in.getInputFieldId()));
 					}
 					break;
 				case INVENTORY_CRITERIA_JOB:
@@ -149,7 +149,7 @@ public class JobBean extends ManagedBeanBase {
 						WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64,
 								JSValues.AJAX_CRITERIA_JOURNAL_ENTRY_COUNT,
 								MessageCodes.CRITERIA_JOURNAL_TAB_TITLE, MessageCodes.CRITERIA_JOURNAL_TAB_TITLE_WITH_COUNT,
-								WebUtil.getJournalCount(JournalModule.CRITERIA_JOURNAL, in.getCriteriaId()));
+								WebUtil.getJournalCountSafe(JournalModule.CRITERIA_JOURNAL, in.getCriteriaId()));
 					}
 					break;
 				default:

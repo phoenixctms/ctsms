@@ -97,13 +97,13 @@ public class InventoryBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> categories;
 	private ArrayList<SelectItem> departments;
 	private TreeNode inventoryRoot;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private String deferredDeleteReason;
 
 	public InventoryBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		DefaultTreeNode inventoryRoot = new DefaultTreeNode("inventory_root", null);
 		inventoryRoot.setExpanded(true);
@@ -366,7 +366,7 @@ public class InventoryBean extends ManagedBeanBase {
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = (out == null ? null : WebUtil.getInventoryTagValueCount(in.getId()));
+		Object count = (out == null ? null : WebUtil.getInventoryTagValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_INVENTORY_TAG_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_TAG_VALUE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_TAGS_TAB_TITLE, MessageCodes.INVENTORY_TAGS_TAB_TITLE_WITH_COUNT, count));
@@ -386,11 +386,11 @@ public class InventoryBean extends ManagedBeanBase {
 		tabCountMap.put(JSValues.AJAX_INVENTORY_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_HYPERLINKS_TAB_TITLE, MessageCodes.INVENTORY_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.INVENTORY_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getFileCountSafe(FileModule.INVENTORY_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_INVENTORY_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_FILES_TAB_TITLE, MessageCodes.INVENTORY_FILES_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.INVENTORY_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.INVENTORY_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_INVENTORY_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_INVENTORY_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.INVENTORY_JOURNAL_TAB_TITLE, MessageCodes.INVENTORY_JOURNAL_TAB_TITLE_WITH_COUNT, count));

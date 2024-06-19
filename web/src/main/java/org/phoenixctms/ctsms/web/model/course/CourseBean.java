@@ -199,12 +199,12 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private VariablePeriodSelector validity;
 	private String deferredDeleteReason;
 	private Date today;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 
 	public CourseBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		today = new Date();
 		DefaultTreeNode renewalsRoot = new DefaultTreeNode("renewals_root", null);
@@ -661,7 +661,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private void initSets() {
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = (out == null ? null : WebUtil.getLecturerCount(in.getId(), null));
+		Object count = (out == null ? null : WebUtil.getLecturerCount(in.getId(), null));
 		tabCountMap.put(JSValues.AJAX_LECTURER_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_LECTURER_COUNT.toString(), WebUtil.getTabTitleString(MessageCodes.LECTURERS_TAB_TITLE, MessageCodes.LECTURERS_TAB_TITLE_WITH_COUNT, count));
 		count = (out == null ? null : WebUtil.getCourseInventoryBookingCount(in.getId()));
@@ -676,11 +676,11 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		tabCountMap.put(JSValues.AJAX_COURSE_HYPERLINK_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_COURSE_HYPERLINK_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.COURSE_HYPERLINKS_TAB_TITLE, MessageCodes.COURSE_HYPERLINKS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.COURSE_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getFileCountSafe(FileModule.COURSE_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_COURSE_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_COURSE_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.COURSE_FILES_TAB_TITLE, MessageCodes.COURSE_FILES_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.COURSE_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.COURSE_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_COURSE_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_COURSE_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.COURSE_JOURNAL_TAB_TITLE, MessageCodes.COURSE_JOURNAL_TAB_TITLE_WITH_COUNT, count));

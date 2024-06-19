@@ -123,7 +123,7 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		if (operationSuccess && in.getTrialId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_TRIAL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT,
 					MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
+					WebUtil.getJournalCountSafe(JournalModule.TRIAL_JOURNAL, in.getTrialId()));
 		}
 	}
 

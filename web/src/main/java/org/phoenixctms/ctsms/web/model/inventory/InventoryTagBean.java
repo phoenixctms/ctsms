@@ -95,7 +95,7 @@ public class InventoryTagBean extends ManagedBeanBase {
 		if (operationSuccess && in.getInventoryId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_INVENTORY_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_INVENTORY_JOURNAL_ENTRY_COUNT,
 					MessageCodes.INVENTORY_JOURNAL_TAB_TITLE, MessageCodes.INVENTORY_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.INVENTORY_JOURNAL, in.getInventoryId()));
+					WebUtil.getJournalCountSafe(JournalModule.INVENTORY_JOURNAL, in.getInventoryId()));
 		}
 	}
 

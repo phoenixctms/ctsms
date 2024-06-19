@@ -106,7 +106,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	private ArrayList<SelectItem> sponsoringTypes;
 	private ArrayList<SelectItem> surveyStatusTypes;
 	private TrialStatusTypeVO trialStatusType;
-	private HashMap<String, Long> tabCountMap;
+	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private VariablePeriodSelector blocking;
 	private Collection<TrialStatusTypeVO> allStatusTypes;
@@ -116,7 +116,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 
 	public TrialBean() {
 		super();
-		tabCountMap = new HashMap<String, Long>();
+		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 		allStatusTypes = loadAllTrialStatusTypes();
 		setBlocking(new VariablePeriodSelector(this, BLOCKING_PERIOD_PROPERTY_ID));
@@ -463,7 +463,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		password = null;
 		tabCountMap.clear();
 		tabTitleMap.clear();
-		Long count = (out == null ? null : WebUtil.getTrialTagValueCount(in.getId()));
+		Object count = (out == null ? null : WebUtil.getTrialTagValueCount(in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_TAG_VALUE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_TAG_VALUE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_TAGS_TAB_TITLE, MessageCodes.TRIAL_TAGS_TAB_TITLE_WITH_COUNT, count));
@@ -532,11 +532,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		tabCountMap.put(JSValues.AJAX_TRIAL_JOB_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_JOB_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_JOBS_TAB_TITLE, MessageCodes.TRIAL_JOBS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getTotalFileCount(FileModule.TRIAL_DOCUMENT, in.getId()));
+		count = (out == null ? null : WebUtil.getFileCountSafe(FileModule.TRIAL_DOCUMENT, in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_FILE_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_FILE_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_FILES_TAB_TITLE, MessageCodes.TRIAL_FILES_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getJournalCount(JournalModule.TRIAL_JOURNAL, in.getId()));
+		count = (out == null ? null : WebUtil.getJournalCountSafe(JournalModule.TRIAL_JOURNAL, in.getId()));
 		tabCountMap.put(JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT, count));

@@ -84,7 +84,7 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 		if (operationSuccess && in.getMassMailId() != null) {
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_MASS_MAIL_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT,
 					MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE, MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.MASS_MAIL_JOURNAL, in.getMassMailId()));
+					WebUtil.getJournalCountSafe(JournalModule.MASS_MAIL_JOURNAL, in.getMassMailId()));
 		}
 	}
 
