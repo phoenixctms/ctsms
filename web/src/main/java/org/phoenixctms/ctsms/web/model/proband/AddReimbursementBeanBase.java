@@ -140,7 +140,7 @@ public abstract class AddReimbursementBeanBase extends MoneyTransferBeanBase {
 			requestContext.addCallbackParam(JSValues.AJAX_OPERATION_SUCCESS.toString(), operationSuccess);
 			WebUtil.appendRequestContextCallbackTabTitleArgs(requestContext, JSValues.AJAX_PROBAND_JOURNAL_TAB_TITLE_BASE64, JSValues.AJAX_PROBAND_JOURNAL_ENTRY_COUNT,
 					MessageCodes.PROBAND_JOURNAL_TAB_TITLE, MessageCodes.PROBAND_JOURNAL_TAB_TITLE_WITH_COUNT,
-					WebUtil.getJournalCount(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
+					WebUtil.getJournalCountSafe(JournalModule.PROBAND_JOURNAL, in.getProbandId()));
 		}
 	}
 
