@@ -7,6 +7,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.web.model.LazyDataModelBase;
@@ -24,14 +25,22 @@ public class JournalEntryLazyModel extends LazyDataModelBase<JournalEntryOutVO> 
 	@Override
 	protected Collection<JournalEntryOutVO> getLazyResult(PSFVO psf) {
 		if (module != null && entityId != null) {
+			if (psf != null) {
+				psf.setUpdateRowCount(false);
+			}
 			try {
 				return WebUtil.getServiceLocator().getJournalService().getJournal(WebUtil.getAuthentication(), module, entityId, psf);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
 		}
 		return new ArrayList<JournalEntryOutVO>();
+	}
+
+	@Override
+	public void updateRowCount() {
+		setRowCount(CommonUtil.safeLongToInt(CommonUtil.fromCountLimitExceeded(WebUtil.getJournalCountSafe(module, entityId))));
 	}
 
 	public JournalModule getModule() {
