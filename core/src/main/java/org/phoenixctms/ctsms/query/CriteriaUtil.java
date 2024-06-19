@@ -381,15 +381,44 @@ public final class CriteriaUtil {
 		}
 	}
 
-	public static void applyLimit(Integer limit, Integer defaultLimit, Criteria criteria) {
+	public static String limitCount(Integer limit, Integer defaultLimit, Criteria criteria) {
 		if (criteria != null) {
-			criteria.setFirstResult(0);
 			if (limit != null) {
 				if (limit >= 0) {
+					criteria.setFirstResult(0);
+					criteria.setMaxResults(limit + 1);
+					int count = criteria.setProjection(Projections.id()).list().size();
+					if (count > limit) {
+						return CommonUtil.toCountLimitExceeded(limit);
+					}
+					return Integer.toString(count);
+				}
+			} else if (defaultLimit != null) {
+				if (defaultLimit >= 0) {
+					criteria.setFirstResult(0);
+					criteria.setMaxResults(defaultLimit + 1);
+					int count = criteria.setProjection(Projections.id()).list().size();
+					if (count > defaultLimit) {
+						return CommonUtil.toCountLimitExceeded(defaultLimit);
+					}
+					return Integer.toString(count);
+				}
+			}
+			return Integer.toString((Integer) criteria.setProjection(Projections.rowCount()).uniqueResult());
+		}
+		return "";
+	}
+
+	public static void applyLimit(Integer limit, Integer defaultLimit, Criteria criteria) {
+		if (criteria != null) {
+			if (limit != null) {
+				if (limit >= 0) {
+					criteria.setFirstResult(0);
 					criteria.setMaxResults(limit);
 				}
 			} else if (defaultLimit != null) {
 				if (defaultLimit >= 0) {
+					criteria.setFirstResult(0);
 					criteria.setMaxResults(defaultLimit);
 				}
 			}
