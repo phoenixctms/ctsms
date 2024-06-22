@@ -6695,7 +6695,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ProbandListStatusEntryOutVO> handleGetProbandListStatus(
-			AuthenticationVO auth, Long trialId, Long probandId, boolean last, PSFVO psf)
+			AuthenticationVO auth, Long trialId, Long probandId, boolean last, Boolean initial, PSFVO psf)
 			throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
@@ -6704,7 +6704,7 @@ public class TrialServiceImpl
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
-		Collection statusEntries = probandListStatusEntryDao.findByTrialProband(trialId, probandId, last, psf);
+		Collection statusEntries = probandListStatusEntryDao.findByTrialProband(trialId, probandId, last, initial, psf);
 		probandListStatusEntryDao.toProbandListStatusEntryOutVOCollection(statusEntries);
 		return statusEntries;
 	}

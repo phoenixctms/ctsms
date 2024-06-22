@@ -52,7 +52,7 @@ public class ProbandListStatusEntryCollisionFinder extends BlockingProbandListSt
 		} else {
 			probandId = root.getId();
 		}
-		return probandListStatusEntryDao.findByTrialProband(null, probandId, true, null);
+		return probandListStatusEntryDao.findByTrialProband(null, probandId, true, null, null);
 	}
 
 	@Override
