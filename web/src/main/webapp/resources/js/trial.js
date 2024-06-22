@@ -1,5 +1,4 @@
 
-
 var oldTrialTabIndex = 0;
 
 function handleTrialTabChange(index) {
@@ -456,7 +455,6 @@ function handleTrialAssociationTabChange(index) {
 
 	switch (index) {
 	case 0:
-
 		changeTrialCourses();
 		break;
 	case 1:
@@ -465,7 +463,6 @@ function handleTrialAssociationTabChange(index) {
 	case 2:
 		changeShiftDurationSummary();
 		break;
-
 	case 3:
 		changeBookingDurationSummary();
 		break;
@@ -473,6 +470,9 @@ function handleTrialAssociationTabChange(index) {
 		changeEnrollmentChart();
 		break;
 	case 5:
+		changeDepartmentChart();
+		break;		
+	case 6:
 		changeRandomizationListCodes();
 		break;
 

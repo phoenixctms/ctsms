@@ -166,7 +166,7 @@ public class ProbandSearchBean extends SearchBeanBase {
 			if (!probandListStatusCache.containsKey(proband.getId())) {
 				Collection probandListStatus = null;
 				try {
-					probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), null, proband.getId(), true, null);
+					probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), null, proband.getId(), true, null, null);
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);

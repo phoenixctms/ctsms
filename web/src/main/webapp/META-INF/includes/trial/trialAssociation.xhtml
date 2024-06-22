@@ -14,6 +14,10 @@
 			<p:remoteCommand process="@this" name="changeEnrollmentChart"
 				actionListener="#{trialAssociationBean.handleEnrollmentChartChange}"
 				update=":tabView:trialassociation_form:association_lists:enrollmentChart" />
+				
+			<p:remoteCommand process="@this" name="changeDepartmentChart"
+				actionListener="#{trialAssociationBean.handleDepartmentChartChange}"
+				update=":tabView:trialassociation_form:association_lists:departmentChart" />				
 
 			<p:remoteCommand process="@this" name="changeShiftDurationSummary"
 				actionListener="#{trialAssociationBean.handleShiftDurationSummaryChange}"
@@ -349,46 +353,27 @@
 							</ui:include>
 						</h:panelGrid>
 					</p:tab>
-
-
-
-
-
-
-
-
-
-
-
 					<p:tab
 						title="#{triallabels.trial_association_enrollment_chart_tab_label}">
 						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">
-
-
-
-
-
-
-
-
 							<p:panel>
 								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-									<h:outputLabel for="stacked"
+									<h:outputLabel for="enrollmentChart_stacked"
 										value="#{triallabels.trial_association_enrollment_chart_stacked_label}" />
 									<h:panelGroup>
-										<p:selectBooleanCheckbox id="stacked"
+										<p:selectBooleanCheckbox id="enrollmentChart_stacked"
 											value="#{trialAssociationBean.enrollmentChartBean.stacked}">
 											<p:ajax update="enrollmentChart" />
 										</p:selectBooleanCheckbox>
-										<p:tooltip rendered="#{enableTooltips}" for="stacked">
+										<p:tooltip rendered="#{enableTooltips}" for="enrollmentChart_stacked">
 											<h:outputText
 												value="#{triallabels.trial_association_enrollment_chart_stacked_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="stacked" />
+									<p:message for="enrollmentChart_stacked" />
 								</h:panelGrid>
 							</p:panel>
 							<p:panel>
@@ -447,23 +432,103 @@
 										actionListener="#{trialAssociationBean.enrollmentChartBean.updateChart}"
 										value="#{labels.update_chart_button_label}"
 										icon="ui-icon-refresh" ajax="true"
-										update="stacked,enrollmentChart" />
+										update="enrollmentChart_stacked,enrollmentChart" />
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">
 									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
 								</p:toolbarGroup>
 							</p:toolbar>
-
-
-
-
-
-
 						</h:panelGrid>
 					</p:tab>
-
-
+					<p:tab
+						title="#{triallabels.trial_association_department_chart_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+							<p:panel>
+								<h:panelGrid columns="3" cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+									<h:outputLabel for="departmentChart_stacked"
+										value="#{triallabels.trial_association_department_chart_stacked_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="departmentChart_stacked"
+											value="#{trialAssociationBean.departmentChartBean.stacked}">
+											<p:ajax update="departmentChart" />
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}" for="departmentChart_stacked">
+											<h:outputText
+												value="#{triallabels.trial_association_department_chart_stacked_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="departmentChart_stacked" />
+								</h:panelGrid>
+							</p:panel>
+							<p:panel>
+								<p:lineChart id="departmentChart"
+									value="#{trialAssociationBean.departmentChartBean.chartModel}"
+									legendPosition="e" styleClass="ctsms-chart"
+									minX="#{trialAssociationBean.departmentChartBean.minX}"
+									maxX="#{trialAssociationBean.departmentChartBean.maxX}"
+									minY="0"
+									maxY="#{trialAssociationBean.departmentChartBean.maxY}"
+									stacked="#{trialAssociationBean.departmentChartBean.stacked}"
+									fill="true"
+									xaxisLabel="#{triallabels.trial_association_department_chart_xaxis_label}"
+									yaxisLabel="#{triallabels.trial_association_department_chart_yaxis_label}"
+									seriesColors="#{trialAssociationBean.departmentChartBean.seriesColors}" />
+							</p:panel>
+							<p:toolbar>
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										disabled="#{!trialAssociationBean.departmentChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_sicl_button_label}"
+										title="#{triallabels.export_sicl_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.departmentChartBean.siclExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.departmentChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_pre_screening_log_button_label}"
+										title="#{triallabels.export_pre_screening_log_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.departmentChartBean.preScreeningLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.departmentChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_screening_log_button_label}"
+										title="#{triallabels.export_screening_log_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.departmentChartBean.screeningLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.departmentChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_enrollment_log_button_label}"
+										title="#{triallabels.export_enrollment_log_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.departmentChartBean.enrollmentLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton process="@this"
+										actionListener="#{trialAssociationBean.departmentChartBean.updateChart}"
+										value="#{labels.update_chart_button_label}"
+										icon="ui-icon-refresh" ajax="true"
+										update="departmentChart_stacked,departmentChart" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:tab>
 					<p:tab
 						title="#{triallabels.trial_association_randomization_list_codes_tab_label}">
 						<h:panelGrid columns="1" cellpadding="0"

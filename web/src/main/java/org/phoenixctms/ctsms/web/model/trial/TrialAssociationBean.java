@@ -32,6 +32,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 	private TrialMassMailLazyModel trialMassMailModel;
 	private BookingDurationSummaryModel bookingDurationModel;
 	private EnrollmentChartBean enrollmentChartBean;
+	private DepartmentChartBean departmentChartBean;
 	private RandomizationListCodeLazyModel randomizationListCodeModel;
 
 	public TrialAssociationBean() {
@@ -42,6 +43,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		trialMassMailModel = new TrialMassMailLazyModel();
 		bookingDurationModel = new BookingDurationSummaryModel(BookingDurationSummaryType.TRIAL);
 		enrollmentChartBean = new EnrollmentChartBean();
+		departmentChartBean = new DepartmentChartBean();
 		randomizationListCodeModel = new RandomizationListCodeLazyModel();
 	}
 
@@ -62,6 +64,10 @@ public class TrialAssociationBean extends ManagedBeanBase {
 
 	public EnrollmentChartBean getEnrollmentChartBean() {
 		return enrollmentChartBean;
+	}
+
+	public DepartmentChartBean getDepartmentChartBean() {
+		return departmentChartBean;
 	}
 
 	public String getMassMailProgressLabel(MassMailOutVO massMail) {
@@ -107,6 +113,10 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		enrollmentChartBean.changeRootEntity(trialId);
 	}
 
+	public void handleDepartmentChartChange() {
+		departmentChartBean.changeRootEntity(trialId);
+	}
+
 	public void handleShiftDurationSummaryChange() {
 		now = new Date();
 		shiftDurationModel.reset(now, ShiftDurationSummaryType.TRIAL, trialId);
@@ -147,6 +157,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		shiftDurationModel.reset(now, ShiftDurationSummaryType.TRIAL, null);
 		bookingDurationModel.reset(now, BookingDurationSummaryType.TRIAL, null);
 		enrollmentChartBean.changeRootEntity(null);
+		departmentChartBean.changeRootEntity(null);
 	}
 
 	@Override
