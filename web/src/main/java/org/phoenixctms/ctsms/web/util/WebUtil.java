@@ -3580,7 +3580,7 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static String getSeriesColors(ArrayList<Color> colors) {
+	public static String getSeriesColors(List<Color> colors) {
 		if (colors != null && colors.size() > 0) {
 			StringBuilder seriesColors = new StringBuilder();
 			Iterator<Color> colorsIt = colors.iterator();

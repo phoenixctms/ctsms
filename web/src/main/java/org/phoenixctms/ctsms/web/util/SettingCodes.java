@@ -450,6 +450,7 @@ public interface SettingCodes {
 	public final static String DUTY_SELF_ALLOCATION_LOCKED_COLOR = "duty_self_allocation_locked_color";
 	public final static String INVENTORY_BOOKING_SCHEDULE_TRIAL_COLORS = "inventory_booking_schedule_trial_colors";
 	public final static String DUTY_ROSTER_SCHEDULE_TRIAL_COLORS = "duty_roster_schedule_trial_colors";
+	public final static String DEPARTMENT_CHART_DEPARTMENT_COLORS = "department_chart_department_colors";
 	public final static String MAX_COST_TYPES_PER_TRIAL = "max_cost_types_per_trial";
 	public final static String MAX_COST_TYPES_COLUMNS = "max_cost_types_columns";
 	public final static String ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR = "enrollment_status_is_not_count_color";

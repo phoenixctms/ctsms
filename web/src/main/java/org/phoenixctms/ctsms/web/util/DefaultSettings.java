@@ -603,6 +603,7 @@ public final class DefaultSettings {
 	public static final Color DUTY_SELF_ALLOCATION_LOCKED_COLOR = Color.GAINSBORO;
 	public static final ArrayList<String> INVENTORY_BOOKING_SCHEDULE_TRIAL_COLORS = new ArrayList<String>();
 	public static final ArrayList<String> DUTY_ROSTER_SCHEDULE_TRIAL_COLORS = new ArrayList<String>();
+	public static final ArrayList<String> DEPARTMENT_CHART_DEPARTMENT_COLORS = new ArrayList<String>();
 	public static final Long MAX_COST_TYPES_PER_TRIAL = 10l;
 	public static final Long MAX_COST_TYPES_COLUMNS = 5l;
 	public final static Color ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR = Color.GAINSBORO;
