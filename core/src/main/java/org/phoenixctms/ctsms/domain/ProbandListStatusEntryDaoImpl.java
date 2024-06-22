@@ -100,7 +100,7 @@ public class ProbandListStatusEntryDaoImpl
 
 	@Override
 	protected Collection<ProbandListStatusEntry> handleFindByTrialProband(
-			Long trialId, Long probandId, boolean last, PSFVO psf)
+			Long trialId, Long probandId, boolean last, Boolean initial, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria statusEntryCriteria = createStatusEntryCriteria("probandListStatusEntry");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandListStatusEntry.class, statusEntryCriteria);
@@ -109,6 +109,9 @@ public class ProbandListStatusEntryDaoImpl
 		}
 		if (probandId != null) {
 			criteriaMap.createCriteria("listEntry").add(Restrictions.eq("proband.id", probandId.longValue()));
+		}
+		if (initial != null) {
+			criteriaMap.createCriteria("status").add(Restrictions.eq("initial", initial.booleanValue()));
 		}
 		if (last) {
 			criteriaMap.createCriteria("listEntry.lastStatus").add(Restrictions.eqProperty("id", "probandListStatusEntry.id")); // didn't work without explicit id compare
