@@ -443,7 +443,8 @@ public class VisitScheduleItemDaoImpl
 	}
 
 	@Override
-	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentIntervalId(Long trialId, Long departmentId, Timestamp from, Timestamp to, Long id) throws Exception {
+	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentIntervalId(Long trialId, Long departmentId, Timestamp from, Timestamp to, Long id)
+			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		org.hibernate.criterion.Criterion idCriterion;
 		if (id != null) {
@@ -465,9 +466,9 @@ public class VisitScheduleItemDaoImpl
 
 	@Override
 	protected Collection<Object[]> handleFindByTrialDepartmentStatusTypeInterval(Long trialId,
-			Long departmentId, Long statusId, Long visitTypeId, Timestamp from, Timestamp to)
+			Long departmentId, Long probandId, Long statusId, Long visitTypeId, Timestamp from, Timestamp to)
 			throws Exception {
-		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria(null);
+		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (trialId != null || departmentId != null || statusId != null) {
 			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			if (trialId != null) {
@@ -484,7 +485,8 @@ public class VisitScheduleItemDaoImpl
 			org.hibernate.Criteria visitCriteria = visitScheduleItemCriteria.createCriteria("visit", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			visitCriteria.add(Restrictions.eq("type.id", visitTypeId.longValue()));
 		}
-		return listExpandDateModeProband(visitScheduleItemCriteria, null, from, to, null, null);
+		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
+		return listExpandDateModeProband(visitScheduleItemCriteria, probandId, from, to, null, null);
 	}
 
 	/**
