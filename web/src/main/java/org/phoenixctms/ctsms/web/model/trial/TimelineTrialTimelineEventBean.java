@@ -370,7 +370,7 @@ public class TimelineTrialTimelineEventBean extends TimelineEventBeanBase {
 				visitScheduleAppointments = WebUtil
 						.getServiceLocator()
 						.getTrialService()
-						.getVisitScheduleItemInterval(WebUtil.getAuthentication(), filterTrialId, filterDepartmentId, filterStatusId, filterVisitTypeId, rangeStart, rangeEnd,
+						.getVisitScheduleItemInterval(WebUtil.getAuthentication(), filterTrialId, filterDepartmentId, null, filterStatusId, filterVisitTypeId, rangeStart, rangeEnd,
 								false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
