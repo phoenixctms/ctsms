@@ -61,7 +61,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	private boolean showProbandStatus;
 	private Long showCollisionsThresholdDays;
 	private Long staffNaCountLimit;
-	private boolean showStaffNaCount;
+	//private boolean showStaffNaCount;
 	private Long departmentId;
 	private Long staffCategoryId;
 	private Long trialId;
@@ -291,7 +291,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			Collection<VisitScheduleAppointmentVO> visitScheduleAppointments = null;
 			try {
 				visitScheduleAppointments = WebUtil.getServiceLocator().getTrialService()
-						.getVisitScheduleItemInterval(auth, trialId, departmentId, statusId, visitTypeId, from, to, false);
+						.getVisitScheduleItemInterval(auth, trialId, departmentId, null, statusId, visitTypeId, from, to, false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

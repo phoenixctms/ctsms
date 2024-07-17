@@ -144,6 +144,7 @@ public class VisitScheduleAppointmentEvent extends ScheduleEventBase<VisitSchedu
 			sb.append(in.getToken());
 			appended = true;
 		}
+		appended = sb.length() > 0;
 		ProbandOutVO proband = null;
 		proband = (out != null ? out.getProband() : null);
 		if (proband != null) {
