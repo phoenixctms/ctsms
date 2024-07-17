@@ -5463,7 +5463,7 @@ public class TrialServiceImpl
 				break;
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				visitScheduleItems = new ArrayList<VisitScheduleAppointmentVO>();
-				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, null, null,
+				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, null, null, null,
 						CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 				while (it.hasNext()) {
 					Object[] visitScheduleItemProband = (Object[]) it.next();
@@ -7336,6 +7336,9 @@ public class TrialServiceImpl
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		if (id != null) {
 			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
@@ -7352,12 +7355,15 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<VisitScheduleAppointmentVO> handleGetVisitScheduleItemInterval(AuthenticationVO auth, Long trialId,
-			Long departmentId, Long statusId, Long visitTypeId, Date from, Date to, boolean sort) throws Exception {
+			Long departmentId, Long probandId, Long statusId, Long visitTypeId, Date from, Date to, boolean sort) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
+		if (probandId != null) {
+			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		if (statusId != null) {
 			CheckIDUtil.checkTrialStatusTypeId(statusId, this.getTrialStatusTypeDao());
@@ -7368,7 +7374,7 @@ public class TrialServiceImpl
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		ProbandDao probandDao = this.getProbandDao();
 		ArrayList<VisitScheduleAppointmentVO> result = new ArrayList<VisitScheduleAppointmentVO>();
-		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, statusId, visitTypeId,
+		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, probandId, statusId, visitTypeId,
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 		while (it.hasNext()) {
 			Object[] visitScheduleItemProband = it.next();
