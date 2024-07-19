@@ -172,7 +172,7 @@ public class VisitScheduleItemDaoImpl
 		org.hibernate.Criteria stopTagValuesValueCriteria = stopTagValuesCriteria.createCriteria("value", CriteriaSpecification.LEFT_JOIN);
 		// from the cross product, remove those with start+stop values of different probands. also include rows without existing stop tag values
 		visitScheduleItemCriteria.add(CriteriaUtil.applyOr(
-				Restrictions.or(Restrictions.eqProperty("startTagValues.listEntry.id", "stopTagValues.listEntry.id"), Restrictions.isNull("stopTagValues.listEntry.id")), or));
+				Restrictions.or(Restrictions.eqProperty("startTagValues.listEntry.id", "stopTagValues.listEntry.id"), Restrictions.isNull("stopTag.id")), or));
 		// narrow to particular proband, if given
 		org.hibernate.Criteria startTagValuesListEntryCriteria = startTagValuesCriteria.createCriteria("listEntry", "startTagValuesListEntry", CriteriaSpecification.LEFT_JOIN);
 		if (probandId != null) {
