@@ -1,6 +1,7 @@
 -- authorization:
 CREATE INDEX permission_service_method ON permission (service_method);
 CREATE INDEX profile_permission_permission_fk_profile_active ON profile_permission (permission_fk,profile,active);
+CREATE INDEX user_permission_profile_user_fk_active_profile ON user_permission_profile (user_fk,active,profile);
 
 -- criteria:
 CREATE INDEX criterion_property_module_property ON criterion_property (module,property);

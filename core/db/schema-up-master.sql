@@ -60,5 +60,13 @@ if get_database_version() < '010801040' then
   
 end if;
 
+if get_database_version() < '010801050' then
+
+  CREATE INDEX user_permission_profile_user_fk_active_profile ON user_permission_profile (user_fk,active,profile);
+  
+  perform set_database_version('010801050');
+  
+end if;
+
 end
 $$;
