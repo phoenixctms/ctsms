@@ -3346,6 +3346,24 @@ public final class ServiceUtil {
 		return result;
 	}
 
+	public static boolean hasProbandAllDepartmentsAccount(Staff staff, UserPermissionProfileDao userPermissionProfileDao) {
+		HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap = new HashMap<Long, HashSet<PermissionProfileGroup>>();
+		Iterator<User> accountsIt = staff.getAccounts().iterator();
+		while (accountsIt.hasNext()) {
+			Iterator<UserPermissionProfile> userPermissionProfilesIt = ServiceUtil.getInheritedUserPermissionProfiles(accountsIt.next(), PermissionProfileGroup.PROBAND,
+					true, inheritPermissionProfileGroupMap, userPermissionProfileDao).iterator();
+			while (userPermissionProfilesIt.hasNext()) {
+				UserPermissionProfile permissionProfile = userPermissionProfilesIt.next();
+				if (PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS.equals(permissionProfile.getProfile())
+						|| PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS.equals(permissionProfile.getProfile())
+						|| PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS.equals(permissionProfile.getProfile())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public static Collection<UserPermissionProfile> getInheritedUserPermissionProfiles(User user, PermissionProfileGroup profileGroup, Boolean active,
 			HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap, UserPermissionProfileDao userPermissionProfileDao) {
 		if (isPermissionProfileGroupInherited(user, profileGroup, inheritPermissionProfileGroupMap)) {

@@ -199,11 +199,12 @@ public class NotificationDaoImpl
 		return result;
 	}
 
-	private HashSet<Staff> addTrialTeamMemberOtherRecipients(Notification newNotification, Trial trial, boolean create) throws Exception {
-		return addTrialTeamMemberRecipients(newNotification, trial, false, true, false, false, false, false, create);
+	private HashSet<Staff> addTrialTeamMemberOtherRecipients(Notification newNotification, Trial trial, Department department, boolean create) throws Exception {
+		return addTrialTeamMemberRecipients(newNotification, trial, department, false, true, false, false, false, false, create);
 	}
 
-	private HashSet<Staff> addTrialTeamMemberRecipients(Notification newNotification, Trial trial, boolean filterTimelineEventRecipients, boolean filterOtherRecipients,
+	private HashSet<Staff> addTrialTeamMemberRecipients(Notification newNotification, Trial trial, Department department, boolean filterTimelineEventRecipients,
+			boolean filterOtherRecipients,
 			boolean filterEcrfValidatedStatusRecipients, boolean filterEcrfReviewStatusRecipients, boolean filterEcrfVerifiedStatusRecipients,
 			boolean filterEcrfFieldStatusRecipients, boolean create) throws Exception {
 		HashSet<Staff> result = new HashSet<Staff>();
@@ -218,8 +219,11 @@ public class NotificationDaoImpl
 						&& (!filterEcrfVerifiedStatusRecipients || teamMember.isNotifyEcrfVerifiedStatus())
 						&& (!filterEcrfFieldStatusRecipients || teamMember.isNotifyEcrfFieldStatus())) {
 					Staff teamMemberStaff = teamMember.getStaff();
-					if (result.add(teamMemberStaff) && create) {
-						createNotificationRecipient(newNotification, teamMemberStaff);
+					if (department == null || department.equals(teamMemberStaff.getDepartment())
+							|| ServiceUtil.hasProbandAllDepartmentsAccount(teamMemberStaff, this.getUserPermissionProfileDao())) {
+						if (result.add(teamMemberStaff) && create) {
+							createNotificationRecipient(newNotification, teamMemberStaff);
+						}
 					}
 				}
 			}
@@ -413,7 +417,7 @@ public class NotificationDaoImpl
 				});
 			case EXPIRING_PASSWORD:
 				return L10nUtil.getNotificationSubject(Locales.NOTIFICATION, type.getSubjectL10nKey(), new Object[] {
-						messageParameters.get("password_user_name"),
+						messageParameters.get("password_inheriteduser_name"),
 						messageParameters.get(NotificationMessageTemplateParameters.PASSWORD_EXPIRATION_DAYS_LEFT)
 				});
 			case TRIAL_STATUS_UPDATED:
@@ -611,7 +615,7 @@ public class NotificationDaoImpl
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
 			if (addSuperVisorsRecipients(notification, dutyRosterTurn.getStaff(), true).size() == 0
-					&& addTrialTeamMemberOtherRecipients(notification, dutyRosterTurn.getTrial(), true).size() == 0) {
+					&& addTrialTeamMemberOtherRecipients(notification, dutyRosterTurn.getTrial(), null, true).size() == 0) {
 				createNotificationRecipient(notification, dutyRosterTurn.getStaff());
 			}
 			return notification;
@@ -660,7 +664,8 @@ public class NotificationDaoImpl
 		Notification notification = Notification.Factory.newInstance();
 		Department department = null;
 		Trial trial = ecrfFieldStatusEntry.getListEntry().getTrial();
-		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, false, false, false, false, false, true, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, ecrfFieldStatusEntry.getListEntry().getProband().getDepartment(), false, false, false,
+				false, false, true, false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -688,8 +693,10 @@ public class NotificationDaoImpl
 		Notification notification = Notification.Factory.newInstance();
 		Department department = null;
 		Trial trial = ecrfStatusEntry.getListEntry().getTrial();
-		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, false, false, ecrfStatusEntry.getStatus().isValidated(), ecrfStatusEntry.getStatus()
-				.isReview(), ecrfStatusEntry.getStatus().isVerified(), false, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, ecrfStatusEntry.getListEntry().getProband().getDepartment(), false, false,
+				ecrfStatusEntry.getStatus().isValidated(), ecrfStatusEntry.getStatus()
+						.isReview(),
+				ecrfStatusEntry.getStatus().isVerified(), false, false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -861,7 +868,7 @@ public class NotificationDaoImpl
 		Notification notification = Notification.Factory.newInstance();
 		Trial trial = timelineEvent.getTrial();
 		Department department = null;
-		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, true, false, false, false, false, false, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, null, true, false, false, false, false, false, false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -884,7 +891,7 @@ public class NotificationDaoImpl
 		ServiceUtil.cancelNotifications(trial.getNotifications(), this, notificationType);
 		Notification notification = Notification.Factory.newInstance();
 		Department department = null;
-		HashSet<Staff> trialMembers = addTrialTeamMemberOtherRecipients(notification, trial, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberOtherRecipients(notification, trial, null, false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -916,7 +923,7 @@ public class NotificationDaoImpl
 		ServiceUtil.cancelNotifications(trialTagNotifications, this, notificationType);
 		Notification notification = Notification.Factory.newInstance();
 		Department department = null;
-		HashSet<Staff> trialMembers = addTrialTeamMemberOtherRecipients(notification, trial, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberOtherRecipients(notification, trial, null, false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -961,7 +968,7 @@ public class NotificationDaoImpl
 		Notification notification = Notification.Factory.newInstance();
 		Trial trial = visitScheduleItem.getTrial();
 		Department department = null;
-		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, true, false, false, false, false, false, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberRecipients(notification, trial, proband.getDepartment(), true, false, false, false, false, false, false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -1016,7 +1023,7 @@ public class NotificationDaoImpl
 		Notification notification = Notification.Factory.newInstance();
 		Trial trial = visitScheduleItem.getTrial();
 		Department department = null;
-		HashSet<Staff> trialMembers = addTrialTeamMemberOtherRecipients(notification, trial, false);
+		HashSet<Staff> trialMembers = addTrialTeamMemberOtherRecipients(notification, trial, proband.getDepartment(), false);
 		if (trialMembers.size() == 0) {
 			department = trial.getDepartment();
 			notification.setDepartment(department);
@@ -1057,7 +1064,7 @@ public class NotificationDaoImpl
 		if (setRemainingFields(notification, today, notificationType, messageParameters)) {
 			notification = this.create(notification);
 			if (addSuperVisorsRecipients(notification, staff, true).size() == 0
-					&& addTrialTeamMemberOtherRecipients(notification, visitScheduleItem.getTrial(), true).size() == 0) {
+					&& addTrialTeamMemberOtherRecipients(notification, visitScheduleItem.getTrial(), null, true).size() == 0) {
 				createNotificationRecipient(notification, staff);
 			}
 			return notification;
