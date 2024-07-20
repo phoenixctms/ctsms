@@ -235,6 +235,7 @@ public class MassMailServiceImpl
 		massMailVO.setStart(massMailIn.getStart());
 		massMailVO.setStatus(statusVO);
 		massMailVO.setLockAfterSending(massMailIn.getLockAfterSending());
+		massMailVO.setStoreMessages(massMailIn.getStoreMessages());
 		massMailVO.setType(typeVO);
 		massMailVO.setProbandListStatus(probandListStatusTypeVO);
 		massMailVO.setProbandListStatusResend(massMailIn.getProbandListStatusResend());

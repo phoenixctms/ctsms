@@ -776,15 +776,22 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 
 	@Override
 	protected void storeMessage(MimeMessage mimeMessage, MassMail entity, MassMailRecipient recipient, Date now) throws Exception {
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		mimeMessage.writeTo(buffer);
-		recipient.setMimeMessageSize(buffer.size());
-		buffer.reset();
-		CipherStream cipherStream = CryptoUtil.createEncryptionStream(buffer);
-		recipient.setMimeMessageDataIv(cipherStream.getIv());
-		mimeMessage.writeTo(cipherStream);
-		cipherStream.close();
-		recipient.setEncryptedMimeMessageData(buffer.toByteArray());
-		recipient.setMimeMessageTimestamp(CommonUtil.dateToTimestamp(now));
+		if (entity.isStoreMessages()) {
+			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+			mimeMessage.writeTo(buffer);
+			recipient.setMimeMessageSize(buffer.size());
+			buffer.reset();
+			CipherStream cipherStream = CryptoUtil.createEncryptionStream(buffer);
+			recipient.setMimeMessageDataIv(cipherStream.getIv());
+			mimeMessage.writeTo(cipherStream);
+			cipherStream.close();
+			recipient.setEncryptedMimeMessageData(buffer.toByteArray());
+			recipient.setMimeMessageTimestamp(CommonUtil.dateToTimestamp(now));
+		} else {
+			recipient.setMimeMessageSize(0l);
+			recipient.setMimeMessageDataIv(null);
+			recipient.setEncryptedMimeMessageData(null);
+			recipient.setMimeMessageTimestamp(null);
+		}
 	}
 }
