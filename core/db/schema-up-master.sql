@@ -68,5 +68,16 @@ if get_database_version() < '010801050' then
   
 end if;
 
+if get_database_version() < '010801060' then
+
+  ALTER TABLE mass_mail ADD COLUMN store_messages BOOLEAN;
+  UPDATE mass_mail SET store_messages = 'f';
+  ALTER TABLE mass_mail ALTER store_messages SET NOT NULL;
+  
+  perform set_database_version('store_messages');
+  
+end if;
+
+
 end
 $$;
