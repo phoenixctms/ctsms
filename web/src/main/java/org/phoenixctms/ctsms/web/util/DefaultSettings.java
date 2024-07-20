@@ -695,6 +695,7 @@ public final class DefaultSettings {
 	public static final boolean SHOW_PROBAND_LIST_ENTRY_RATING = false;
 	public static final Long DUTY_ROSTER_SCHEDULE_STAFF_NA_COUNT_LIMIT = null;
 	public static final boolean MASS_MAIL_LOCK_AFTER_SENDING_PRESET = false;
+	public static final boolean MASS_MAIL_STORE_MESSAGES_PRESET = false;
 	public static final String MASS_MAIL_FROM_ADDRESS_PRESET = "";
 	public static final String MASS_MAIL_FROM_NAME_PRESET = "";
 	public static final String MASS_MAIL_REPLY_TO_ADDRESS_PRESET = "";

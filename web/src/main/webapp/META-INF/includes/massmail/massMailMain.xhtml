@@ -158,7 +158,6 @@
 									</h:panelGroup>
 									<p:message for="probandliststatus" />
 
-
 									<h:outputLabel for="probandliststatusresend"
 										value="#{massmaillabels.mass_mail_probandliststatusresend_label}" />
 									<h:panelGroup>
@@ -172,6 +171,20 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="probandliststatusresend" />
+									
+									<h:outputLabel for="storemessages"
+										value="#{massmaillabels.mass_mail_storemessages_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="storemessages"
+											value="#{massMailBean.in.storeMessages}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="storemessages">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_storemessages_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="storemessages" />
 								</h:panelGrid>
 								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
