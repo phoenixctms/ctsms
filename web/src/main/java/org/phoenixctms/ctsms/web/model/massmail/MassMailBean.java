@@ -60,6 +60,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setStart(out.getStart());
 			in.setStatusId(statusVO == null ? null : statusVO.getId());
 			in.setLockAfterSending(out.getLockAfterSending());
+			in.setStoreMessages(out.getStoreMessages());
 			in.setTypeId(typeVO == null ? null : typeVO.getId());
 			in.setProbandListStatusId(probandListStatus == null ? null : probandListStatus.getId());
 			in.setProbandListStatusResend(out.getProbandListStatusResend());
@@ -104,6 +105,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setStart(new Timestamp(System.currentTimeMillis()));
 			in.setStatusId(null);
 			in.setLockAfterSending(Settings.getBoolean(SettingCodes.MASS_MAIL_LOCK_AFTER_SENDING_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_LOCK_AFTER_SENDING_PRESET));
+			in.setStoreMessages(Settings.getBoolean(SettingCodes.MASS_MAIL_STORE_MESSAGES_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_STORE_MESSAGES_PRESET));
 			in.setTypeId(null);
 			in.setProbandListStatusId(null);
 			in.setProbandListStatusResend(

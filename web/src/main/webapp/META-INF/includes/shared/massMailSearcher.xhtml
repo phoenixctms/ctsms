@@ -215,20 +215,6 @@
 					</ui:include>
 				</p:column>
 
-
-
-				<p:column>
-					<f:attribute name="visibleDefault" value="false" />
-					<f:facet name="header">
-						<h:outputText
-							value="#{massmaillabels.search_mass_mail_result_list_attachment_column}" />
-					</f:facet>
-					<ui:include src="listBooleanIcon.xhtml">
-						<ui:param name="value"
-							value="#{massMail.vo.attachMassMailFiles or massMail.vo.attachTrialFiles or massMail.vo.attachProbandFiles or massMail.vo.attachInquiries or massMail.vo.attachProbandListEntryTags or massMail.vo.attachEcrfs or massMail.vo.attachProbandLetter or massMail.vo.attachReimbursementsPdf}" />
-					</ui:include>
-				</p:column>
-
 				<p:column sortBy="#{massMail.vo.status}"
 					filterBy="#{massMail.vo.status.id}"
 					filterOptions="#{sessionScopeBean.filterMassMailStatusTypes}">
@@ -240,6 +226,30 @@
 						<ui:param name="label" value="#{massMail.vo.status.name}" />
 						<ui:param name="icon" value="#{massMail.vo.status.nodeStyleClass}" />
 						<ui:param name="rendered" value="true" />
+					</ui:include>
+				</p:column>
+				
+				<p:column sortBy="#{massMail.vo.storeMessages}"
+				    filterOptions="#{sessionScopeBean.filterBooleans}">
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_store_messages_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param name="value" value="#{massMail.vo.storeMessages}" />
+					</ui:include>
+				</p:column>
+				
+				<p:column>
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText
+							value="#{massmaillabels.search_mass_mail_result_list_attachment_column}" />
+					</f:facet>
+					<ui:include src="listBooleanIcon.xhtml">
+						<ui:param name="value"
+							value="#{massMail.vo.attachMassMailFiles or massMail.vo.attachTrialFiles or massMail.vo.attachProbandFiles or massMail.vo.attachInquiries or massMail.vo.attachProbandListEntryTags or massMail.vo.attachEcrfs or massMail.vo.attachProbandLetter or massMail.vo.attachReimbursementsPdf}" />
 					</ui:include>
 				</p:column>
 
