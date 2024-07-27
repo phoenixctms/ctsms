@@ -35,11 +35,16 @@
 		</developer>
 	</developers>
 	<repositories>
-		<repository>
+	    <!-- https://stackoverflow.com/questions/4955635/how-to-add-local-jar-files-to-a-maven-project -->
+	    <repository>
+        	<id>local-maven-repo</id>
+        	<url>file:///${project.basedir}/../repository</url>
+    	</repository>
+		<!-- <repository>
 			<id>primefacerepo</id>
 			<name>PrimeFaces Repository</name>
 			<url>https://repository.primefaces.org/</url>
-		</repository>
+		</repository> -->
 		<!-- <repository>
 			<id>springrepo</id>
 			<name>Spring Repository</name>
