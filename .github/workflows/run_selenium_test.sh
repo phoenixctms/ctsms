@@ -2,6 +2,7 @@
 #CTSMS_PROPERTIES=/ctsms/properties
 #CTSMS_JAVA=/ctsms/java
 #VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
+cat /var/lib/tomcat9/log/catalina.out
 BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
 #COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA" | sed -e 's/merge \([a-z0-9]\+\) into [a-z0-9]\+/\1/gi')
 MESSAGE=$(git log --format=%B -n 1 "$COMMIT")
