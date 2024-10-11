@@ -38,12 +38,17 @@ import org.phoenixctms.ctsms.domain.StaffDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.domain.UserPermissionProfileDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.pdf.PDFMerger;
 import org.phoenixctms.ctsms.security.CipherStream;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
+import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -300,6 +305,69 @@ public class FileServiceImpl
 		}
 	}
 
+	private void checkActivePermission(File file) throws AuthorisationException {
+		if (!file.isActive()) {
+			User user = CoreUtil.getUser();
+			if (!user.equals(file.getModifiedUser())) {
+				UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
+				switch (file.getModule()) {
+					case INVENTORY_DOCUMENT:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.INVENTORY, userPermissionProfileDao,
+								PermissionProfile.INVENTORY_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+						}
+						break;
+					case STAFF_DOCUMENT:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.STAFF, userPermissionProfileDao,
+								PermissionProfile.STAFF_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+						}
+						break;
+					case COURSE_DOCUMENT:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.COURSE, userPermissionProfileDao,
+								PermissionProfile.COURSE_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+						}
+						break;
+					case TRIAL_DOCUMENT:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.TRIAL, userPermissionProfileDao,
+								PermissionProfile.TRIAL_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+						}
+						break;
+					case PROBAND_DOCUMENT:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.PROBAND, userPermissionProfileDao,
+								PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+						}
+						break;
+					case MASS_MAIL_DOCUMENT:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.MASS_MAIL, userPermissionProfileDao,
+								PermissionProfile.MASS_MAIL_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.MASS_MAIL_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.MASS_MAIL_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+						}
+						break;
+					default:
+						// not supported for now...
+						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
+								.getModule().toString() }));
+				}
+			}
+		}
+	}
+
 	private FileOutVO createFile(File file, Timestamp now, User user) throws Exception {
 		FileDao fileDao = this.getFileDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
@@ -335,6 +403,7 @@ public class FileServiceImpl
 	private FileOutVO deleteFileHelper(Long fileId, Timestamp now, User user) throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao, LockMode.UPGRADE_NOWAIT);
+		checkActivePermission(file);
 		FileOutVO result = fileDao.toFileOutVO(file);
 		if (!result.isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);
@@ -524,6 +593,7 @@ public class FileServiceImpl
 			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
+		checkActivePermission(file);
 		FileOutVO result = fileDao.toFileOutVO(file);
 		return result;
 	}
@@ -536,6 +606,7 @@ public class FileServiceImpl
 			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
+		checkActivePermission(file);
 		checkContentSize(file);
 		FileContentOutVO result = fileDao.toFileContentOutVO(file);
 		return result;
@@ -584,6 +655,7 @@ public class FileServiceImpl
 			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
+		checkActivePermission(file);
 		FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
 		return result;
 	}
@@ -603,6 +675,7 @@ public class FileServiceImpl
 			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
+		checkActivePermission(originalFile);
 		checkFileInput(modifiedFile);
 		if (!fileDao.toFileOutVO(originalFile).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);
@@ -625,6 +698,7 @@ public class FileServiceImpl
 			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
+		checkActivePermission(originalFile);
 		checkFileInput(modifiedFile);
 		if (!fileDao.toFileOutVO(originalFile).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);
@@ -648,6 +722,7 @@ public class FileServiceImpl
 			throws Exception {
 		FileDao fileDao = this.getFileDao();
 		File originalFile = CheckIDUtil.checkFileId(modifiedFile.getId(), fileDao, LockMode.UPGRADE_NOWAIT);
+		checkActivePermission(originalFile);
 		checkFileInput(modifiedFile);
 		if (!fileDao.toFileOutVO(originalFile).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_FILE);

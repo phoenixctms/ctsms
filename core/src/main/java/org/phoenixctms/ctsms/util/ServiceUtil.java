@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -3359,6 +3360,20 @@ public final class ServiceUtil {
 						|| PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS.equals(permissionProfile.getProfile())) {
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean hasInheritedPermissionProfile(User user, PermissionProfileGroup profileGroup,
+			UserPermissionProfileDao userPermissionProfileDao, PermissionProfile... profiles) {
+		HashMap<Long, HashSet<PermissionProfileGroup>> inheritPermissionProfileGroupMap = new HashMap<Long, HashSet<PermissionProfileGroup>>();
+		Iterator<UserPermissionProfile> userPermissionProfilesIt = ServiceUtil.getInheritedUserPermissionProfiles(CoreUtil.getUser(), profileGroup,
+				true, inheritPermissionProfileGroupMap, userPermissionProfileDao).iterator();
+		HashSet<PermissionProfile> profilesSet = new HashSet<PermissionProfile>(Arrays.asList(profiles));
+		while (userPermissionProfilesIt.hasNext()) {
+			if (profilesSet.contains(userPermissionProfilesIt.next().getProfile())) {
+				return true;
 			}
 		}
 		return false;
