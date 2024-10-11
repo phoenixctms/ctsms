@@ -13,6 +13,7 @@ import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
 import org.phoenixctms.ctsms.vo.HyperlinkInVO;
@@ -63,6 +64,19 @@ public class HyperlinkDaoImpl
 		}
 	}
 
+	private final static void applyActiveCriterion(org.hibernate.Criteria criteria, Boolean active) {
+		if (active != null) {
+			User user = CoreUtil.getUser();
+			if (user != null) {
+				criteria.add(Restrictions.or(
+						Restrictions.eq("active", active.booleanValue()),
+						Restrictions.eq("modifiedUser.id", user.getId().longValue())));
+			} else {
+				criteria.add(Restrictions.eq("active", active.booleanValue()));
+			}
+		}
+	}
+
 	private org.hibernate.Criteria createHyperLinkCriteria() {
 		org.hibernate.Criteria hyperlinkCriteria = this.getSession().createCriteria(Hyperlink.class);
 		return hyperlinkCriteria;
@@ -73,9 +87,7 @@ public class HyperlinkDaoImpl
 			HyperlinkModule module, Long id, Boolean active, PSFVO psf) throws Exception {
 		org.hibernate.Criteria hyperlinkCriteria = createHyperLinkCriteria();
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Hyperlink.class, hyperlinkCriteria);
-		if (active != null) {
-			hyperlinkCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
+		applyActiveCriterion(hyperlinkCriteria, active);
 		applyModuleIdCriterions(criteriaMap, module, id);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return hyperlinkCriteria.list();
@@ -85,9 +97,7 @@ public class HyperlinkDaoImpl
 	protected long handleGetCount(
 			HyperlinkModule module, Long id, Boolean active) throws Exception {
 		org.hibernate.Criteria hyperlinkCriteria = createHyperLinkCriteria();
-		if (active != null) {
-			hyperlinkCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
+		applyActiveCriterion(hyperlinkCriteria, active);
 		applyModuleIdCriterions(hyperlinkCriteria, module, id);
 		return (Long) hyperlinkCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}

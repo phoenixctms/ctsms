@@ -96,6 +96,19 @@ public class FileDaoImpl
 		}
 	}
 
+	private final static void applyActiveCriterion(org.hibernate.Criteria criteria, Boolean active) {
+		if (active != null) {
+			User user = CoreUtil.getUser();
+			if (user != null) {
+				criteria.add(Restrictions.or(
+						Restrictions.eq("active", active.booleanValue()),
+						Restrictions.eq("modifiedUser.id", user.getId().longValue())));
+			} else {
+				criteria.add(Restrictions.eq("active", active.booleanValue()));
+			}
+		}
+	}
+
 	private final static void applySubTreeCriterion(org.hibernate.Criteria criteria, boolean subTree, String logicalPath) {
 		if (logicalPath != null && logicalPath.length() > 0) {
 			logicalPath = CommonUtil.fixLogicalPathFolderName(logicalPath);
@@ -733,9 +746,7 @@ public class FileDaoImpl
 			if (useParentPath) {
 				fileCriteria.add(Restrictions.like("logicalPath", parentLogicalFolder, MatchMode.START));
 			}
-			if (active != null) {
-				fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
-			}
+			applyActiveCriterion(fileCriteria, active);
 			if (publicFile != null) {
 				fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 			}
@@ -767,9 +778,7 @@ public class FileDaoImpl
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		if (active != null) {
-			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
+		applyActiveCriterion(fileCriteria, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
@@ -784,9 +793,7 @@ public class FileDaoImpl
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		if (active != null) {
-			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
+		applyActiveCriterion(fileCriteria, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
@@ -800,9 +807,7 @@ public class FileDaoImpl
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		if (active != null) {
-			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
+		applyActiveCriterion(fileCriteria, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
@@ -826,9 +831,7 @@ public class FileDaoImpl
 		org.hibernate.Criteria fileCriteria = createFileCriteria();
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		if (active != null) {
-			fileCriteria.add(Restrictions.eq("active", active.booleanValue()));
-		}
+		applyActiveCriterion(fileCriteria, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
