@@ -60,7 +60,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		return xlsImporter;
 	}
 
-	@BeforeClass(description = "Create a department for test user, subjects, trial and user.")
+	@BeforeClass(description = "Create a department for test user, subjects and trial.")
 	public void init_00_setup_department() throws Exception {
 		String departmentName = "dept-" + getTestId();
 		departmentPassword = departmentName;
