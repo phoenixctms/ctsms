@@ -14,5 +14,7 @@ public interface AuthorisationExceptionCodes {
 	public static final String PARAMETER_DISJUNCTIVE_RESTRICTION_NOT_SATISFIED = "parameter_disjunctive_restriction_not_satisfied";
 	public static final String PARAMETER_RESTRICTION_VIOLATED = "parameter_restriction_violated";
 	public final static String FILE_NOT_PUBLIC = "file_not_public";
+	public final static String FILE_NOT_ACTIVE = "file_not_active";
+	public final static String HYPERLINK_NOT_ACTIVE = "hyperlink_not_active";
 	public final static String ENCRYPTED_FILE = "encrypted_file";
 }
