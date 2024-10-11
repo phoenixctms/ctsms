@@ -22,9 +22,14 @@ import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.domain.UserPermissionProfileDao;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -139,6 +144,53 @@ public class HyperlinkServiceImpl
 		}
 	}
 
+	private void checkActivePermission(Hyperlink hyperlink) throws AuthorisationException {
+		if (!hyperlink.isActive()) {
+			User user = CoreUtil.getUser();
+			if (!user.equals(hyperlink.getModifiedUser())) {
+				UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
+				switch (hyperlink.getCategory().getModule()) {
+					case INVENTORY_HYPERLINK:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.INVENTORY, userPermissionProfileDao,
+								PermissionProfile.INVENTORY_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+						}
+						break;
+					case STAFF_HYPERLINK:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.STAFF, userPermissionProfileDao,
+								PermissionProfile.STAFF_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+						}
+						break;
+					case COURSE_HYPERLINK:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.COURSE, userPermissionProfileDao,
+								PermissionProfile.COURSE_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+						}
+						break;
+					case TRIAL_HYPERLINK:
+						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.TRIAL, userPermissionProfileDao,
+								PermissionProfile.TRIAL_MASTER_ALL_DEPARTMENTS,
+								PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
+								PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
+							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+						}
+						break;
+					default:
+						// not supported for now...
+						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_HYPERLINK_MODULE, DefaultMessages.UNSUPPORTED_HYPERLINK_MODULE,
+								new Object[] { hyperlink.getCategory().getModule().toString() }));
+				}
+			}
+		}
+	}
+
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.HyperlinkService#addHyperlink(HyperlinkInVO)
 	 */
@@ -183,6 +235,7 @@ public class HyperlinkServiceImpl
 			throws Exception {
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink hyperlink = CheckIDUtil.checkHyperlinkId(hyperlinkId, hyperlinkDao);
+		checkActivePermission(hyperlink);
 		HyperlinkOutVO result = hyperlinkDao.toHyperlinkOutVO(hyperlink);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -233,6 +286,7 @@ public class HyperlinkServiceImpl
 			throws Exception {
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink hyperlink = CheckIDUtil.checkHyperlinkId(hyperlinkId, hyperlinkDao);
+		checkActivePermission(hyperlink);
 		HyperlinkOutVO result = hyperlinkDao.toHyperlinkOutVO(hyperlink);
 		return result;
 	}
@@ -265,6 +319,7 @@ public class HyperlinkServiceImpl
 			throws Exception {
 		HyperlinkDao hyperlinkDao = this.getHyperlinkDao();
 		Hyperlink originalHyperlink = CheckIDUtil.checkHyperlinkId(modifiedHyperlink.getId(), hyperlinkDao);
+		checkActivePermission(originalHyperlink);
 		checkHyperlinkInput(modifiedHyperlink);
 		HyperlinkOutVO original = hyperlinkDao.toHyperlinkOutVO(originalHyperlink);
 		hyperlinkDao.evict(originalHyperlink);
