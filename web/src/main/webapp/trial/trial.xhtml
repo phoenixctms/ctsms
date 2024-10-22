@@ -100,7 +100,7 @@
 					</p:tab>
 					<p:tab id="inquiryvaluesdummy" disabled="#{!trialBean.created}"
 						rendered="#{sessionScopeBean.trialVisibleTabSet.contains('inquiryvaluesdummy')}"
-						titleStyleClass="tsms-tabtitle"
+						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.trial_inquiry_value_dummy_tab_label}">
 						<ui:include src="/META-INF/includes/trial/inquiryValueDummy.xhtml" />
 					</p:tab>
@@ -124,7 +124,7 @@
 					</p:tab>
 					<p:tab id="trialecrfstatusentries" disabled="#{!trialBean.created}"
 						rendered="#{sessionScopeBean.trialVisibleTabSet.contains('trialecrfstatusentries')}"
-						titleStyleClass="tsms-tabtitle"
+						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.trialecrfstatusentries_tab_label}">
 						<ui:include
 							src="/META-INF/includes/trial/trialEcrfStatusEntry.xhtml" />
@@ -138,13 +138,13 @@
 					</p:tab>
 					<p:tab id="reimbursements" disabled="#{!trialBean.created}"
 						rendered="#{sessionScopeBean.trialVisibleTabSet.contains('reimbursements')}"
-						titleStyleClass="tsms-tabtitle"
+						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.reimbursements_tab_label}">
 						<ui:include src="/META-INF/includes/trial/reimbursements.xhtml" />
 					</p:tab>
 					<p:tab id="trialassociations" disabled="#{!trialBean.created}"
 						rendered="#{sessionScopeBean.trialVisibleTabSet.contains('trialassociations')}"
-						titleStyleClass="tsms-tabtitle"
+						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.trial_associations_tab_label}">
 						<ui:include src="/META-INF/includes/trial/trialAssociation.xhtml" />
 					</p:tab>

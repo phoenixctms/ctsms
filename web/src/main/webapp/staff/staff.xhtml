@@ -99,7 +99,7 @@
 						id="courseparticipationstatus"
 						rendered="#{sessionScopeBean.staffVisibleTabSet.contains('courseparticipationstatus')}"
 						disabled="#{!staffBean.created}"
-						titleStyleClass="tsms-tabtitle"
+						titleStyleClass="ctsms-tabtitle"
 						title="#{staffBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT'))}">
 						<ui:include src="/META-INF/includes/staff/courseParticipationStatus.xhtml" />
 					</p:tab>
@@ -107,7 +107,7 @@
 						id="staffassociations"
 						rendered="#{sessionScopeBean.staffVisibleTabSet.contains('staffassociations')}"
 						disabled="#{!staffBean.created}"
-						titleStyleClass="tsms-tabtitle"
+						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.staff_associations_tab_label}">
 						<ui:include src="/META-INF/includes/staff/staffAssociation.xhtml" />
 					</p:tab>
