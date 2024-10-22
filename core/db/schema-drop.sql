@@ -890,6 +890,18 @@
     alter table ecrf_visit 
         drop constraint VISIT_ECRFS_FKC;
 
+    alter table file_department 
+        drop constraint DEPARTMENT_FILES_FKC;
+
+    alter table file_department 
+        drop constraint FILE_DEPARTMENTS_FKC;
+
+    alter table hyperlink_department 
+        drop constraint DEPARTMENT_HYPERLINKS_FKC;
+
+    alter table hyperlink_department 
+        drop constraint HYPERLINK_DEPARTMENTS_FKC;
+
     alter table input_field_value_selection 
         drop constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC;
 
@@ -1268,6 +1280,10 @@
     drop table ecrf_status_type_action cascade;
 
     drop table ecrf_visit cascade;
+
+    drop table file_department cascade;
+
+    drop table hyperlink_department cascade;
 
     drop table input_field_value_selection cascade;
 
