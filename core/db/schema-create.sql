@@ -2119,6 +2119,16 @@
         VISITS_FK BIGINT not null
     );
 
+    create table file_department (
+        FILES_FK BIGINT not null,
+        DEPARTMENTS_FK BIGINT not null
+    );
+
+    create table hyperlink_department (
+        HYPERLINKS_FK BIGINT not null,
+        DEPARTMENTS_FK BIGINT not null
+    );
+
     create table input_field_value_selection (
         INPUT_FIELD_VALUES_FK BIGINT not null,
         SELECTION_VALUES_FK BIGINT not null
@@ -3709,6 +3719,26 @@
         add constraint VISIT_ECRFS_FKC 
         foreign key (ECRFS_FK) 
         references ecrf;
+
+    alter table file_department 
+        add constraint DEPARTMENT_FILES_FKC 
+        foreign key (FILES_FK) 
+        references FILE;
+
+    alter table file_department 
+        add constraint FILE_DEPARTMENTS_FKC 
+        foreign key (DEPARTMENTS_FK) 
+        references DEPARTMENT;
+
+    alter table hyperlink_department 
+        add constraint DEPARTMENT_HYPERLINKS_FKC 
+        foreign key (HYPERLINKS_FK) 
+        references HYPERLINK;
+
+    alter table hyperlink_department 
+        add constraint HYPERLINK_DEPARTMENTS_FKC 
+        foreign key (DEPARTMENTS_FK) 
+        references DEPARTMENT;
 
     alter table input_field_value_selection 
         add constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC 

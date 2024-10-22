@@ -107,12 +107,12 @@ public class TrialDaoImpl
 			trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFImpl.class, "ecrf"); // IMPL!!!!
-		subQuery.setProjection(Projections.rowCount());
+		subQuery.setProjection(Projections.id());
 		subQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
 		if (withChargeOnly) {
 			subQuery.add(Restrictions.gt("charge", 0.0f));
 		}
-		trialCriteria.add(Subqueries.lt(0l, subQuery));
+		trialCriteria.add(Subqueries.exists(subQuery));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return trialCriteria.list();
 	}
@@ -135,7 +135,7 @@ public class TrialDaoImpl
 		}
 		org.hibernate.Criteria statusCriteria = trialCriteria.createCriteria("status", "trialStatus", CriteriaSpecification.INNER_JOIN);
 		DetachedCriteria valuesSubQuery = DetachedCriteria.forClass(InquiryValueImpl.class, "inquiryValue"); // IMPL!!!!
-		valuesSubQuery.setProjection(Projections.rowCount());
+		valuesSubQuery.setProjection(Projections.id());
 		valuesSubQuery.add(Restrictions.eq("proband.id", probandId.longValue()));
 		DetachedCriteria inquiriesSubQuery = valuesSubQuery.createCriteria("inquiry", "inquiry0", CriteriaSpecification.INNER_JOIN);
 		inquiriesSubQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
@@ -146,7 +146,7 @@ public class TrialDaoImpl
 			inquiriesSubQuery.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
 		}
 		inquiriesSubQuery = DetachedCriteria.forClass(InquiryImpl.class, "inquiry1"); // IMPL!!!!
-		inquiriesSubQuery.setProjection(Projections.rowCount());
+		inquiriesSubQuery.setProjection(Projections.id());
 		inquiriesSubQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
 		if (active != null) {
 			inquiriesSubQuery.add(Restrictions.eq("active", active.booleanValue()));
@@ -156,9 +156,9 @@ public class TrialDaoImpl
 		}
 		trialCriteria.add(
 				Restrictions.or(
-						Subqueries.lt(0l, valuesSubQuery),
+						Subqueries.exists(valuesSubQuery),
 						Restrictions.and(
-								Subqueries.lt(0l, inquiriesSubQuery),
+								Subqueries.exists(inquiriesSubQuery),
 								Restrictions.and(
 										Restrictions.eq("trialStatus.inquiryValueInputEnabled", true),
 										Restrictions.eq("trialStatus.lockdown", false)))));
@@ -202,17 +202,17 @@ public class TrialDaoImpl
 		org.hibernate.Criteria statusCriteria = trialCriteria.createCriteria("status", "trialStatus", CriteriaSpecification.INNER_JOIN);
 		statusCriteria.add(Restrictions.eq("lockdown", false));
 		DetachedCriteria subQuery = DetachedCriteria.forClass(InquiryImpl.class, "inquiry"); // IMPL!!!!
-		subQuery.setProjection(Projections.rowCount());
+		subQuery.setProjection(Projections.id());
 		subQuery.add(Restrictions.eqProperty("trial.id", "trial0.id"));
 		subQuery.add(Restrictions.eq("activeSignup", true));
 		trialCriteria.add(
 				Restrictions.or(
 						Restrictions.eq("signupProbandList", true),
 						Restrictions.and(
-								ignoreSignupInquiries ? Subqueries.lt(0l, subQuery)
+								ignoreSignupInquiries ? Subqueries.exists(subQuery)
 										: Restrictions.and(
 												Restrictions.eq("signupInquiries", true),
-												Subqueries.lt(0l, subQuery)),
+												Subqueries.exists(subQuery)),
 								Restrictions.eq("trialStatus.inquiryValueInputEnabled", true))));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return trialCriteria.list();

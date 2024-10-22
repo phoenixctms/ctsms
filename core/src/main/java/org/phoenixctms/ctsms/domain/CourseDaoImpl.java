@@ -390,7 +390,7 @@ public class CourseDaoImpl
 		// )
 		// ));
 		DetachedCriteria subQuery = DetachedCriteria.forClass(CourseParticipationStatusEntryImpl.class, "courseParticipationStatusEntry"); // IMPL!!!!
-		subQuery.setProjection(Projections.rowCount());
+		subQuery.setProjection(Projections.id());
 		subQuery.add(Restrictions.eqProperty("course.id", "course0.id"));
 		subQuery.add(Restrictions.eq("staff.id", staffId.longValue()));
 		courseCriteria.add(Restrictions.or(
@@ -403,7 +403,7 @@ public class CourseDaoImpl
 								Restrictions.ge("participationDeadline", now))),
 				Restrictions.and(
 						Restrictions.and(Restrictions.eq("selfRegistration", false), Restrictions.ge("stop", new Date(now.getTime()))),
-						Subqueries.lt(0l, subQuery))));
+						Subqueries.exists(subQuery))));
 		CriteriaUtil.applyPSFVO(criteriaMap, psf); // unique participant staff per course
 		return courseCriteria.list();
 	}

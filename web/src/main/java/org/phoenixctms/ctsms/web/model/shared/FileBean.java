@@ -3,9 +3,12 @@ package org.phoenixctms.ctsms.web.model.shared;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.FileContentInVO;
 import org.phoenixctms.ctsms.vo.FileInVO;
 import org.phoenixctms.ctsms.vo.FileOutVO;
@@ -38,6 +42,8 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
 import org.phoenixctms.ctsms.web.model.FileFolderVO;
+import org.phoenixctms.ctsms.web.model.IDVO;
+import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -53,6 +59,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
@@ -73,6 +80,11 @@ public class FileBean extends ManagedBeanBase {
 			MassMailOutVO massMailVO = out.getMassMail();
 			ProbandOutVO probandVO = out.getProband();
 			in.setActive(out.getActive());
+			in.getDepartmentIds().clear();
+			Iterator it = out.getDepartments().iterator();
+			while (it.hasNext()) {
+				in.getDepartmentIds().add(((DepartmentVO) it.next()).getId());
+			}
 			in.setPublicFile(out.getPublicFile());
 			in.setComment(out.getComment());
 			in.setCourseId(courseVO == null ? null : courseVO.getId());
@@ -99,6 +111,7 @@ public class FileBean extends ManagedBeanBase {
 	public static void initFileDefaultValues(FileInVO in, Long entityId, FileModule module) {
 		if (in != null) {
 			in.setActive(Settings.getBoolean(SettingCodes.FILE_ACTIVE_PRESET, Bundle.SETTINGS, DefaultSettings.FILE_ACTIVE_PRESET));
+			in.getDepartmentIds().clear();
 			in.setPublicFile(Settings.getBoolean(SettingCodes.FILE_PUBLIC_PRESET, Bundle.SETTINGS, DefaultSettings.FILE_PUBLIC_PRESET));
 			in.setComment(Messages.getString(MessageCodes.FILE_COMMENT_PRESET));
 			in.setCourseId(FileModule.COURSE_DOCUMENT.equals(module) ? entityId : null);
@@ -200,6 +213,7 @@ public class FileBean extends ManagedBeanBase {
 	private String titleFilter;
 	private Boolean activeFilter;
 	private Boolean publicFilter;
+	private List<DepartmentVO> departments;
 
 	public FileBean() {
 		super();
@@ -207,6 +221,7 @@ public class FileBean extends ManagedBeanBase {
 		fileCount = null;
 		logicalFileSystemStats = null;
 		streamUploadEnabled = null;
+		departments = new ArrayList<DepartmentVO>();
 		try {
 			streamUploadEnabled = WebUtil.getServiceLocator().getToolsService().isStreamUploadEnabled();
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -236,7 +251,7 @@ public class FileBean extends ManagedBeanBase {
 		FileInVO backup = new FileInVO(in);
 		in.setId(null);
 		in.setVersion(null);
-		in.setLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getLogicalPath()));
+		sanitizeInVals();
 		try {
 			if (streamUploadEnabled) {
 				out = WebUtil.getServiceLocator().getFileService().addFile(WebUtil.getAuthentication(), in, streamIn);
@@ -772,6 +787,7 @@ public class FileBean extends ManagedBeanBase {
 		trial = (FileModule.TRIAL_DOCUMENT.equals(module) ? WebUtil.getTrial(entityId) : null);
 		proband = (FileModule.PROBAND_DOCUMENT.equals(module) ? WebUtil.getProband(entityId, null, null, null) : null);
 		massMail = (FileModule.MASS_MAIL_DOCUMENT.equals(module) ? WebUtil.getMassMail(entityId) : null);
+		loadDepartments();
 		useFileEncryption = CommonUtil.getUseFileEncryption(module);
 		lastUploadedOut = null;
 		if (updateTree) {
@@ -871,6 +887,28 @@ public class FileBean extends ManagedBeanBase {
 					return Settings.getBoolean(SettingCodes.PROBAND_FILE_FOLDER_TREE_DYNAMIC, Bundle.SETTINGS, DefaultSettings.PROBAND_FILE_FOLDER_TREE_DYNAMIC_DEFAULT);
 				case MASS_MAIL_DOCUMENT:
 					return Settings.getBoolean(SettingCodes.MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT);
+				default:
+					break;
+			}
+		}
+		return true;
+	}
+
+	public boolean isApproval() {
+		if (module != null) {
+			switch (module) {
+				case INVENTORY_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.INVENTORY_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.INVENTORY_FILE_APPROVAL_DEFAULT);
+				case STAFF_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.STAFF_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.STAFF_FILE_APPROVAL_DEFAULT);
+				case COURSE_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.COURSE_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.COURSE_FILE_APPROVAL_DEFAULT);
+				case TRIAL_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.TRIAL_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.TRIAL_FILE_APPROVAL_DEFAULT);
+				case PROBAND_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.PROBAND_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.PROBAND_FILE_APPROVAL_DEFAULT);
+				case MASS_MAIL_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.MASS_MAIL_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FILE_APPROVAL_DEFAULT);
 				default:
 					break;
 			}
@@ -1068,7 +1106,7 @@ public class FileBean extends ManagedBeanBase {
 
 	@Override
 	public String updateAction() {
-		in.setLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getLogicalPath()));
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getFileService().updateFile(WebUtil.getAuthentication(), in);
 			initIn();
@@ -1093,7 +1131,7 @@ public class FileBean extends ManagedBeanBase {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_ERROR, MessageCodes.FILE_STREAM_UPLOAD_MODE_UNDEFINED);
 			return ERROR_OUTCOME;
 		}
-		in.setLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getLogicalPath()));
+		sanitizeInVals();
 		try {
 			if (streamUploadEnabled) {
 				out = WebUtil.getServiceLocator().getFileService().updateFile(WebUtil.getAuthentication(), in, streamIn);
@@ -1149,5 +1187,80 @@ public class FileBean extends ManagedBeanBase {
 			fileCount = WebUtil.getFileCount(module, entityId);
 			logicalFileSystemStats = null;
 		}
+	}
+
+	public List<IDVO> getDepartments() {
+		return new IDVOList(departments);
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null) {
+			departmentIds = new HashSet<Long>(out.getDepartments().size());
+			Iterator it = out.getDepartments().iterator();
+			while (it.hasNext()) {
+				DepartmentVO department = (DepartmentVO) it.next();
+				if (department != null) {
+					departmentIds.add(department.getId());
+				}
+			}
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartments() {
+		departments.clear();
+		Iterator<Long> it = in.getDepartmentIds().iterator();
+		while (it.hasNext()) {
+			DepartmentVO department = WebUtil.getDepartment(it.next());
+			if (department != null) {
+				departments.add(department);
+			}
+		}
+	}
+
+	public void setDepartments(List<IDVO> departments) {
+		if (departments != null) {
+			ArrayList<DepartmentVO> departmentsCopy = new ArrayList<DepartmentVO>(departments.size());
+			Iterator<IDVO> it = departments.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					departmentsCopy.add((DepartmentVO) idVo.getVo());
+				}
+			}
+			this.departments.clear();
+			this.departments.addAll(departmentsCopy);
+		} else {
+			this.departments.clear();
+		}
+	}
+
+	private void sanitizeInVals() {
+		in.setLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getLogicalPath()));
+		LinkedHashSet<Long> departmentIds = new LinkedHashSet<Long>(departments.size()); //force unique items to prevent confusion when unselecting a duplicate item
+		Iterator it = departments.iterator();
+		while (it.hasNext()) {
+			DepartmentVO department = (DepartmentVO) it.next();
+			if (department != null) {
+				departmentIds.add(department.getId());
+			}
+		}
+		in.setDepartmentIds(new ArrayList<Long>(departmentIds));
 	}
 }

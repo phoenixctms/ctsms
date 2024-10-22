@@ -592,6 +592,8 @@ public interface ServiceExceptionCodes {
 	public final static String FILE_TRIAL_ONLY_ALLOWED = "file_trial_only_allowed";
 	public final static String FILE_PROBAND_ONLY_ALLOWED = "file_proband_only_allowed";
 	public final static String FILE_MASS_MAIL_ONLY_ALLOWED = "file_mass_mail_only_allowed";
+	public final static String FILE_DEPARTMENT_ID_IS_NULL = "file_department_id_is_null";
+	public final static String FILE_DUPLICATE_DEPARTMENT = "file_duplicate_department";
 	public final static String INVALID_LOGICAL_PATH = "invalid_logical_path";
 	public final static String INVALID_HYPERLINK_ID = "invalid_hyperlink_id";
 	public final static String HYPERLINK_INVENTORY_ONLY_ALLOWED = "hyperlink_inventory_only_allowed";
@@ -599,6 +601,8 @@ public interface ServiceExceptionCodes {
 	public final static String HYPERLINK_COURSE_ONLY_ALLOWED = "hyperlink_course_only_allowed";
 	public final static String HYPERLINK_TRIAL_ONLY_ALLOWED = "hyperlink_trial_only_allowed";
 	public final static String INVALID_URL = "invalid_url";
+	public final static String HYPERLINK_DEPARTMENT_ID_IS_NULL = "hyperlink_department_id_is_null";
+	public final static String HYPERLINK_DUPLICATE_DEPARTMENT = "hyperlink_duplicate_department";
 	public final static String INVALID_PHONE_NUMBER = "invalid_phone_number";
 	public final static String INVALID_EMAIL_ADDRESS = "invalid_email_address";
 	public final static String INVALID_DATE_FORMAT = "invalid_date_format";

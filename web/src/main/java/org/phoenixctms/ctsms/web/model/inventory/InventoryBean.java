@@ -3,7 +3,9 @@ package org.phoenixctms.ctsms.web.model.inventory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -27,6 +29,7 @@ import org.phoenixctms.ctsms.vo.InventoryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
+import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -39,6 +42,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.TreeNode;
 
 @ManagedBean
@@ -95,7 +100,7 @@ public class InventoryBean extends ManagedBeanBase {
 	private InventoryInVO in;
 	private InventoryOutVO out;
 	private ArrayList<SelectItem> categories;
-	private ArrayList<SelectItem> departments;
+	private DepartmentVO department;
 	private TreeNode inventoryRoot;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -244,10 +249,6 @@ public class InventoryBean extends ManagedBeanBase {
 
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
-	}
-
-	public ArrayList<SelectItem> getDepartments() {
-		return departments;
 	}
 
 	public InventoryInVO getIn() {
@@ -410,7 +411,7 @@ public class InventoryBean extends ManagedBeanBase {
 			loose.setType(WebUtil.LEAF_NODE_TYPE);
 		}
 		categories = WebUtil.getVisibleInventoryCategories(in.getCategoryId());
-		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
+		loadDepartment();
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
@@ -527,6 +528,11 @@ public class InventoryBean extends ManagedBeanBase {
 	}
 
 	private void sanitizeInVals() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		if (!in.getBookable()) {
 			in.setMaxOverlappingBookings(0l);
 		}
@@ -555,5 +561,48 @@ public class InventoryBean extends ManagedBeanBase {
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null && out.getDepartment() != null) {
+			departmentIds = new HashSet<Long>(1);
+			departmentIds.add(out.getDepartment().getId());
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getDepartment() {
+		if (department != null) {
+			return IDVO.transformVo(department);
+		}
+		return null;
+	}
+
+	public void setDepartment(IDVO department) {
+		if (department != null) {
+			this.department = (DepartmentVO) department.getVo();
+		} else {
+			this.department = null;
+		}
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartment() {
+		department = WebUtil.getDepartment(in.getDepartmentId());
 	}
 }

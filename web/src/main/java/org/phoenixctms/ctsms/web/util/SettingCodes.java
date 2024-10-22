@@ -42,6 +42,12 @@ public interface SettingCodes {
 	public final static String TRIAL_FILE_FOLDER_TREE_DYNAMIC = "trial_file_folder_tree_dynamic";
 	public final static String PROBAND_FILE_FOLDER_TREE_DYNAMIC = "proband_file_folder_tree_dynamic";
 	public final static String MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC = "mass_mail_file_folder_tree_dynamic";
+	public final static String INVENTORY_FILE_APPROVAL = "inventory_file_approval";
+	public final static String STAFF_FILE_APPROVAL = "staff_file_approval";
+	public final static String COURSE_FILE_APPROVAL = "course_file_approval";
+	public final static String TRIAL_FILE_APPROVAL = "trial_file_approval";
+	public final static String PROBAND_FILE_APPROVAL = "proband_file_approval";
+	public final static String MASS_MAIL_FILE_APPROVAL = "mass_mail_file_approval";
 	public final static String ENABLE_PRIMEFACES_SCHEDULE_DST_WORKAROUND = "enable_primefaces_schedule_dst_workaround";
 	public final static String TIME_USER_TIME_ZONE = "time_user_time_zone";
 	public final static String DATE_USER_TIME_ZONE = "date_user_time_zone";
@@ -77,6 +83,10 @@ public interface SettingCodes {
 	public final static String FILE_LOGICAL_PATH_PRESET = "file_logical_path_preset";
 	public final static String HYPERLINK_ACTIVE_PRESET = "hyperlink_active_preset";
 	public final static String HYPERLINK_URL_PRESET = "hyperlink_url_preset";
+	public final static String INVENTORY_HYPERLINK_APPROVAL = "inventory_hyperlink_approval";
+	public final static String STAFF_HYPERLINK_APPROVAL = "staff_hyperlink_approval";
+	public final static String COURSE_HYPERLINK_APPROVAL = "course_hyperlink_approval";
+	public final static String TRIAL_HYPERLINK_APPROVAL = "trial_hyperlink_approval";
 	public final static String PROBAND_LIST_INQUIRY_ACTIVE = "proband_list_inquiry_active";
 	public final static String PROBAND_LIST_INQUIRY_VALUE_TEXT_CLIP_MAX_LENGTH = "proband_list_inquiry_value_text_clip_max_length";
 	public final static String PROBAND_LIST_PROBAND_LIST_ENTRY_TAG_VALUE_TEXT_CLIP_MAX_LENGTH = "proband_list_proband_list_entry_tag_value_text_clip_max_length";

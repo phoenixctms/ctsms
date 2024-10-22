@@ -2,9 +2,11 @@ package org.phoenixctms.ctsms.web.model;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -100,6 +102,10 @@ public class FileFolderVO {
 	}
 
 	public UserOutVO getModifiedUser() {
+		return null;
+	}
+
+	public List<DepartmentVO> getDepartments() {
 		return null;
 	}
 

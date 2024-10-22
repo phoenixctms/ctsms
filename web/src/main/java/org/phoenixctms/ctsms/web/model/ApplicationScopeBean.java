@@ -32,6 +32,7 @@ import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.JavaScriptCompressor;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.CourseParticipationStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
@@ -745,6 +746,7 @@ public class ApplicationScopeBean {
 	private final static String TIMELINE_EVENT_SEPARATOR = ", ";
 	private final static String PROBAND_GROUP_SEPARATOR = "; ";
 	private final static String VISIT_SEPARATOR = "; ";
+	private final static String DEPARTMENT_SEPARATOR = "; ";
 
 	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
 		if (events != null) {
@@ -785,6 +787,21 @@ public class ApplicationScopeBean {
 					sb.append(VISIT_SEPARATOR);
 				}
 				sb.append(it.next().getTitle());
+			}
+			return sb.toString();
+		}
+		return "";
+	}
+
+	public String departmentsToString(Collection<DepartmentVO> departments) {
+		if (departments != null) {
+			Iterator<DepartmentVO> it = departments.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(DEPARTMENT_SEPARATOR);
+				}
+				sb.append(it.next().getName());
 			}
 			return sb.toString();
 		}

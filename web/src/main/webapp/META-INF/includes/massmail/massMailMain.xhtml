@@ -68,28 +68,42 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="massmailname" />
+									
 									<h:outputLabel for="department"
 										value="#{massmaillabels.mass_mail_department_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu id="department"
-											value="#{massMailBean.in.departmentId}" required="true"
+										<p:autoComplete id="department" required="true"
+											value="#{massMailBean.department}"
 											label="#{massmaillabels.mass_mail_department}"
-											styleClass="ctsms-control">
-											<f:converter converterId="ctsms.ID" />
-											<f:selectItem itemLabel="#{labels.no_selection_label}"
-												itemValue="#{applicationScopeBean.noSelectionValue}" />
-											<f:selectItems value="#{massMailBean.departments}"
-												var="selectItem" itemLabel="#{selectItem.label}"
-												itemValue="#{selectItem.value}" />
-											<p:ajax />
-										</p:selectOneMenu>
+											styleClass="ctsms-control"
+											minQueryLength="#{autoCompleteMinQueryLengthDepartment}"
+											maxResults="#{autoCompleteMaxResultsDepartment}"
+											queryDelay="#{autoCompleteQueryDelayDepartment}"
+											global="#{autoCompleteGlobalDepartment}"
+											dropdown="#{autoCompleteDropdownDepartment}"
+											scrollHeight="#{autoCompleteScrollHeightDepartment}"
+											completeMethod="#{massMailBean.completeDepartment}"
+											forceSelection="true"
+											var="department" itemValue="#{department}"
+											itemLabel="#{department.vo.name}" converter="ctsms.Department">
+											<p:ajax process="@this" event="itemSelect"
+												listener="#{massMailBean.handleDepartmentSelect}" />
+											<p:ajax process="@this" event="itemUnselect"
+												listener="#{massMailBean.handleDepartmentUnselect}" />
+											<p:column>
+												<h:outputText value="#{department.vo.name}" />
+											</p:column>
+											<p:column>
+												<h:outputText value="#{department.vo.nameL10nKey}" />
+											</p:column>
+										</p:autoComplete>
 										<p:tooltip rendered="#{enableTooltips}" for="department">
-											<h:outputText
-												value="#{massmaillabels.mass_mail_department_tooltip}"
+											<h:outputText value="#{massmaillabels.mass_mail_department_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="department" />
+									<p:message for="department" />										
+									
 									<h:outputLabel for="massmailtype"
 										value="#{massmaillabels.mass_mail_type_label}" />
 									<h:panelGroup>

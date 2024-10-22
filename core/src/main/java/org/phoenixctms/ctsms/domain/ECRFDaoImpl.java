@@ -337,15 +337,15 @@ public class ECRFDaoImpl
 		subQuery.add(Restrictions.eqProperty("ecrf.id", ecrfCriteria.getAlias() + ".id"));
 		subQuery.add(Restrictions.or(Restrictions.and(Restrictions.isNull("ecrfStatusEntry.visit.id"), Restrictions.isNull(visitCriteria.getAlias() + ".id")),
 				Restrictions.eqProperty("ecrfStatusEntry.visit.id", visitCriteria.getAlias() + ".id")));
-		subQuery.setProjection(Projections.rowCount());
-		ecrfCriteria.add(Restrictions.or(conjunction, Subqueries.lt(0l, subQuery)));
+		subQuery.setProjection(Projections.id());
+		ecrfCriteria.add(Restrictions.or(conjunction, Subqueries.exists(subQuery)));
 		//		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFFieldImpl.class, "ecrfField"); // IMPL!!!!
 		//		subQuery.createCriteria("fieldValues", "ecrfFieldValues", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
 		//		subQuery.add(Restrictions.eqProperty("ecrf.id", ecrfCriteria.getAlias() + ".id"));
 		//		subQuery.add(Restrictions.or(Restrictions.and(Restrictions.isNull("ecrfFieldValues.visit.id"), Restrictions.isNull(visitCriteria.getAlias() + ".id")),
 		//				Restrictions.eqProperty("ecrfFieldValues.visit.id", visitCriteria.getAlias() + ".id")));
 		//		subQuery.setProjection(Projections.rowCount());
-		//		ecrfCriteria.add(Restrictions.or(conjunction, Subqueries.lt(0l, subQuery)));
+		//		ecrfCriteria.add(Restrictions.or(conjunction, Subqueries.exists( subQuery)));
 		if (sort) {
 			if (psf == null) {
 				psf = new PSFVO();

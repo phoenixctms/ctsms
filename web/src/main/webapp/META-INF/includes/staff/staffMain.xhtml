@@ -676,36 +676,42 @@
 							<p:message
 								for="citizenship"
 								rendered="#{staffBean.in.person}" />
-							<h:outputLabel
-								for="department"
+							
+							<h:outputLabel for="department"
 								value="#{stafflabels.staff_department_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="department"
-									value="#{staffBean.in.departmentId}"
-									required="true"
+								<p:autoComplete id="department" required="true"
+									value="#{staffBean.department}"
 									label="#{stafflabels.staff_department}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{staffBean.departments}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-									<p:ajax />
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="department">
-									<h:outputText
-										value="#{stafflabels.staff_department_tooltip}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthDepartment}"
+									maxResults="#{autoCompleteMaxResultsDepartment}"
+									queryDelay="#{autoCompleteQueryDelayDepartment}"
+									global="#{autoCompleteGlobalDepartment}"
+									dropdown="#{autoCompleteDropdownDepartment}"
+									scrollHeight="#{autoCompleteScrollHeightDepartment}"
+									completeMethod="#{staffBean.completeDepartment}"
+									forceSelection="true"
+									var="department" itemValue="#{department}"
+									itemLabel="#{department.vo.name}" converter="ctsms.Department">
+									<p:ajax process="@this" event="itemSelect"
+										listener="#{staffBean.handleDepartmentSelect}" />
+									<p:ajax process="@this" event="itemUnselect"
+										listener="#{staffBean.handleDepartmentUnselect}" />
+									<p:column>
+										<h:outputText value="#{department.vo.name}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{department.vo.nameL10nKey}" />
+									</p:column>
+								</p:autoComplete>
+								<p:tooltip rendered="#{enableTooltips}" for="department">
+									<h:outputText value="#{stafflabels.staff_department_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message for="department" />
+							<p:message for="department" />								
+							
 							<h:outputLabel
 								for="category"
 								value="#{stafflabels.staff_category_label}" />

@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -41,6 +43,7 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @ViewScoped
@@ -153,7 +156,7 @@ public class MassMailBean extends ManagedBeanBase {
 	private MassMailInVO in;
 	private MassMailOutVO out;
 	private ArrayList<SelectItem> statusTypes;
-	private ArrayList<SelectItem> departments;
+	private DepartmentVO department;
 	private ArrayList<SelectItem> massMailTypes;
 	private MassMailStatusTypeVO massMailStatusType;
 	private ArrayList<SelectItem> probandListStatusTypes;
@@ -275,10 +278,6 @@ public class MassMailBean extends ManagedBeanBase {
 
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
-	}
-
-	public ArrayList<SelectItem> getDepartments() {
-		return departments;
 	}
 
 	public MassMailInVO getIn() {
@@ -509,7 +508,7 @@ public class MassMailBean extends ManagedBeanBase {
 		tabCountMap.put(JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE, MessageCodes.MASS_MAIL_JOURNAL_TAB_TITLE_WITH_COUNT, count));
-		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
+		loadDepartment();
 		massMailTypes = WebUtil.getVisibleMassMailTypes(in.getTypeId());
 		Collection<MassMailStatusTypeVO> statusTypeVOs = null;
 		if (out != null) {
@@ -613,6 +612,11 @@ public class MassMailBean extends ManagedBeanBase {
 	}
 
 	private void sanitizeInVals() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		if (in.getAttachMassMailFiles()) {
 			in.setMassMailFilesLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getMassMailFilesLogicalPath()));
 		} else {
@@ -686,5 +690,48 @@ public class MassMailBean extends ManagedBeanBase {
 				WebUtil.publishException(e);
 			}
 		}
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null && out.getDepartment() != null) {
+			departmentIds = new HashSet<Long>(1);
+			departmentIds.add(out.getDepartment().getId());
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getDepartment() {
+		if (department != null) {
+			return IDVO.transformVo(department);
+		}
+		return null;
+	}
+
+	public void setDepartment(IDVO department) {
+		if (department != null) {
+			this.department = (DepartmentVO) department.getVo();
+		} else {
+			this.department = null;
+		}
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartment() {
+		department = WebUtil.getDepartment(in.getDepartmentId());
 	}
 }

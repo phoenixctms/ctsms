@@ -189,28 +189,42 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="name" />
+									
 									<h:outputLabel for="department"
 										value="#{courselabels.course_department_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu id="department"
-											value="#{courseBean.in.departmentId}" required="true"
+										<p:autoComplete id="department" required="true"
+											value="#{courseBean.department}"
 											label="#{courselabels.course_department}"
-											styleClass="ctsms-control">
-											<f:converter converterId="ctsms.ID" />
-											<f:selectItem itemLabel="#{labels.no_selection_label}"
-												itemValue="#{applicationScopeBean.noSelectionValue}" />
-											<f:selectItems value="#{courseBean.departments}"
-												var="selectItem" itemLabel="#{selectItem.label}"
-												itemValue="#{selectItem.value}" />
-											<p:ajax />
-										</p:selectOneMenu>
+											styleClass="ctsms-control"
+											minQueryLength="#{autoCompleteMinQueryLengthDepartment}"
+											maxResults="#{autoCompleteMaxResultsDepartment}"
+											queryDelay="#{autoCompleteQueryDelayDepartment}"
+											global="#{autoCompleteGlobalDepartment}"
+											dropdown="#{autoCompleteDropdownDepartment}"
+											scrollHeight="#{autoCompleteScrollHeightDepartment}"
+											completeMethod="#{courseBean.completeDepartment}"
+											forceSelection="true"
+											var="department" itemValue="#{department}"
+											itemLabel="#{department.vo.name}" converter="ctsms.Department">
+											<p:ajax process="@this" event="itemSelect"
+												listener="#{courseBean.handleDepartmentSelect}" />
+											<p:ajax process="@this" event="itemUnselect"
+												listener="#{courseBean.handleDepartmentUnselect}" />
+											<p:column>
+												<h:outputText value="#{department.vo.name}" />
+											</p:column>
+											<p:column>
+												<h:outputText value="#{department.vo.nameL10nKey}" />
+											</p:column>
+										</p:autoComplete>
 										<p:tooltip rendered="#{enableTooltips}" for="department">
-											<h:outputText
-												value="#{courselabels.course_department_tooltip}"
+											<h:outputText value="#{courselabels.course_department_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="department" />
+									<p:message for="department" />										
+
 									<h:outputLabel for="category"
 										value="#{courselabels.course_category_label}" />
 									<h:panelGroup>

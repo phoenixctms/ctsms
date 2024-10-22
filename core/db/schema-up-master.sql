@@ -78,6 +78,39 @@ if get_database_version() < '010801060' then
   
 end if;
 
+if get_database_version() < '010801070' then
+
+  create table file_department (
+      FILES_FK BIGINT not null,
+      DEPARTMENTS_FK BIGINT not null
+  );
+  
+  create table hyperlink_department (
+      HYPERLINKS_FK BIGINT not null,
+      DEPARTMENTS_FK BIGINT not null
+  );
+
+  alter table file_department 
+      add constraint DEPARTMENT_FILES_FKC 
+      foreign key (FILES_FK) 
+      references FILE;
+
+  alter table file_department 
+      add constraint FILE_DEPARTMENTS_FKC 
+      foreign key (DEPARTMENTS_FK) 
+      references DEPARTMENT;
+
+  alter table hyperlink_department 
+      add constraint DEPARTMENT_HYPERLINKS_FKC 
+      foreign key (HYPERLINKS_FK) 
+      references HYPERLINK;
+
+  alter table hyperlink_department 
+      add constraint HYPERLINK_DEPARTMENTS_FKC 
+      foreign key (DEPARTMENTS_FK) 
+      references DEPARTMENT;
+  
+end if;
 
 end
 $$;

@@ -557,14 +557,14 @@ public class ProbandDaoImpl
 		}
 		CategoryCriterion.apply(moneyTransferCriteria, new CategoryCriterion(costType, "costType", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
 		DetachedCriteria subQuery = DetachedCriteria.forClass(ProbandListEntryImpl.class, "probandListEntry"); // IMPL!!!!
-		subQuery.setProjection(Projections.rowCount());
+		subQuery.setProjection(Projections.id());
 		subQuery.add(Restrictions.eqProperty("proband.id", "proband0.id"));
 		subQuery.add(Restrictions.eq("trial.id", trialId.longValue()));
 		if (!total) {
 			subQuery.createCriteria("lastStatus", CriteriaSpecification.INNER_JOIN).createCriteria("status", CriteriaSpecification.INNER_JOIN)
 					.add(Restrictions.eq("count", true));
 		}
-		probandCriteria.add(Subqueries.eq(0l, subQuery));
+		probandCriteria.add(Subqueries.exists(subQuery));
 		return CriteriaUtil.listDistinctRootPSFVO(criteriaMap, psf, this);
 	}
 

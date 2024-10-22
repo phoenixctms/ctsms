@@ -17,12 +17,15 @@ import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseDao;
+import org.phoenixctms.ctsms.domain.Department;
+import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.domain.Inventory;
@@ -259,6 +262,22 @@ public class FileServiceImpl
 		if (!FILE_PATH_REGEXP.matcher(file.getLogicalPath()).find()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_LOGICAL_PATH, file.getLogicalPath());
 		}
+		Collection<Long> departmentIds = file.getDepartmentIds();
+		if (departmentIds != null && departmentIds.size() > 0) {
+			DepartmentDao departmentDao = this.getDepartmentDao();
+			Iterator<Long> it = departmentIds.iterator();
+			HashSet<Long> dupeCheck = new HashSet<Long>(departmentIds.size());
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_DEPARTMENT_ID_IS_NULL);
+				}
+				Department department = CheckIDUtil.checkDepartmentId(id, departmentDao);
+				if (!dupeCheck.add(department.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_DUPLICATE_DEPARTMENT, departmentDao.toDepartmentVO(department).getName());
+				}
+			}
+		}
 	}
 
 	private void checkFileInput(FileStreamInVO fileStream, FileModule module) throws ServiceException {
@@ -306,66 +325,79 @@ public class FileServiceImpl
 	}
 
 	private void checkActivePermission(File file) throws AuthorisationException {
-		if (!file.isActive()) {
-			User user = CoreUtil.getUser();
-			if (!user.equals(file.getModifiedUser())) {
-				UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
-				switch (file.getModule()) {
-					case INVENTORY_DOCUMENT:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.INVENTORY, userPermissionProfileDao,
-								PermissionProfile.INVENTORY_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
+		//if (!file.isActive()) {
+		User user = CoreUtil.getUser();
+		//!file.getDepartments().contains(user.getDepartment()
+		if (!user.equals(file.getModifiedUser())) {
+			UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
+			switch (file.getModule()) {
+				case INVENTORY_DOCUMENT:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.INVENTORY, userPermissionProfileDao,
+							PermissionProfile.INVENTORY_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
+						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
-						break;
-					case STAFF_DOCUMENT:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.STAFF, userPermissionProfileDao,
-								PermissionProfile.STAFF_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case STAFF_DOCUMENT:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.STAFF, userPermissionProfileDao,
+							PermissionProfile.STAFF_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
+						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
-						break;
-					case COURSE_DOCUMENT:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.COURSE, userPermissionProfileDao,
-								PermissionProfile.COURSE_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case COURSE_DOCUMENT:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.COURSE, userPermissionProfileDao,
+							PermissionProfile.COURSE_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
+						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
-						break;
-					case TRIAL_DOCUMENT:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.TRIAL, userPermissionProfileDao,
-								PermissionProfile.TRIAL_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case TRIAL_DOCUMENT:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.TRIAL, userPermissionProfileDao,
+							PermissionProfile.TRIAL_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
+						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
-						break;
-					case PROBAND_DOCUMENT:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.PROBAND, userPermissionProfileDao,
-								PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case PROBAND_DOCUMENT:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.PROBAND, userPermissionProfileDao,
+							PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS)) {
+						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
-						break;
-					case MASS_MAIL_DOCUMENT:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.MASS_MAIL, userPermissionProfileDao,
-								PermissionProfile.MASS_MAIL_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.MASS_MAIL_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.MASS_MAIL_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case MASS_MAIL_DOCUMENT:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.MASS_MAIL, userPermissionProfileDao,
+							PermissionProfile.MASS_MAIL_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.MASS_MAIL_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.MASS_MAIL_VIEW_ALL_DEPARTMENTS)) {
+						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
-						break;
-					default:
-						// not supported for now...
-						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
-								.getModule().toString() }));
-				}
+					}
+					break;
+				default:
+					// not supported for now...
+					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
+							.getModule().toString() }));
 			}
 		}
+		//}
 	}
 
 	private FileOutVO createFile(File file, Timestamp now, User user) throws Exception {
@@ -460,6 +492,7 @@ public class FileServiceImpl
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_FILE_MODULE, DefaultMessages.UNSUPPORTED_FILE_MODULE, new Object[] { file
 						.getModule().toString() }));
 		}
+		file.getDepartments().clear();
 		return result;
 	}
 
