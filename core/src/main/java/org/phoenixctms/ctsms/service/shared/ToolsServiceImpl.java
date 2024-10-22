@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -30,6 +31,7 @@ import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
+import org.phoenixctms.ctsms.compare.DepartmentVOComparator;
 import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.domain.AlphaIdDao;
 import org.phoenixctms.ctsms.domain.Announcement;
@@ -120,6 +122,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationTypeVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CalendarWeekVO;
 import org.phoenixctms.ctsms.vo.DBModuleVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
@@ -1433,5 +1436,35 @@ public class ToolsServiceImpl
 			throws Exception {
 		CoreUtil.setUser(auth, this.getUserDao());
 		return this.getZipDao().findProvinces(countryNameInfix, provinceInfix, zipCodePrefix, cityNameInfix, limit);
+	}
+
+	@Override
+	protected Collection<DepartmentVO> handleCompleteDepartment(AuthenticationVO auth, String nameInfix, Set<Long> departmentIds, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		DepartmentDao departmentDao = this.getDepartmentDao();
+		if (limit == null) {
+			limit = Settings.getIntNullable(SettingCodes.DEPARTMENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+					DefaultSettings.DEPARTMENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT);
+		}
+		String name = (nameInfix != null ? nameInfix.trim().toLowerCase() : null);
+		HashSet<Long> ids = new HashSet<Long>();
+		if (departmentIds != null) {
+			ids.addAll(departmentIds);
+		}
+		Collection departments = departmentDao.loadAll();
+		departmentDao.toDepartmentVOCollection(departments);
+		ArrayList<DepartmentVO> result = new ArrayList<DepartmentVO>(departments.size());
+		Collections.sort((ArrayList<DepartmentVO>) departments, new DepartmentVOComparator());
+		Iterator it = departments.iterator();
+		while (it.hasNext()) {
+			DepartmentVO departmentVO = (DepartmentVO) it.next();
+			if ((limit == null || result.size() < limit)
+					&& (departmentVO.getVisible() || ids.contains(departmentVO.getId()))
+					&& (name == null || name.length() == 0 || departmentVO.getName().toLowerCase().contains(name) || departmentVO.getNameL10nKey().toLowerCase().contains(name))) {
+				result.add(departmentVO);
+			}
+		}
+		return result;
 	}
 }
