@@ -26,8 +26,8 @@
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-file-treetable-panelgrid"
 					rowClasses="ctsms-file-treetable-filter-row,ctsms-file-treetable-row">
-					<h:panelGrid id="file_filters" columns="17" cellpadding="0"
-						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-delete-pdf-files-button-column,ctsms-aggregated-pdf-files-button-column">
+					<h:panelGrid id="file_filters" columns="#{fileBean.approval ? 17 : 14}" cellpadding="0"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,#{fileBean.approval ? 'ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column' : ''},ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-delete-pdf-files-button-column,ctsms-aggregated-pdf-files-button-column">
 						<h:outputLabel for="filelogicalpath_filter"
 							value="#{labels.file_filelogicalpath_filter_label}" />
 						<h:panelGroup>
@@ -101,9 +101,9 @@
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="title_filter" />
-						<h:outputLabel for="active_filter"
+						<h:outputLabel rendered="#{fileBean.approval}"  for="active_filter"
 							value="#{labels.file_active_filter_label}" />
-						<h:panelGroup>
+						<h:panelGroup rendered="#{fileBean.approval}" >
 							<p:selectOneRadio id="active_filter" layout="lineDirection"
 								styleClass="ui-widget-content ui-corner-all"
 								value="#{fileBean.activeFilter}">
@@ -125,8 +125,7 @@
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
-						<p:message for="active_filter" />
-
+						<p:message rendered="#{fileBean.approval}" for="active_filter" />
 						<h:outputLabel for="public_filter"
 							value="#{labels.file_public_filter_label}" />
 						<h:panelGroup>
@@ -184,13 +183,20 @@
 							<h:outputText
 								value="#{filefolder.decrypted ? applicationScopeBean.clipStringTrailing(filefolder.title,56) : labels.encrypted_file_label}" />
 						</p:column>
-						<p:column style="width:32px;">
+						<p:column rendered="#{fileBean.approval}" style="width:32px;">
 							<f:facet name="header">
 								<h:outputText value="#{labels.file_treetable_active_column}" />
 							</f:facet>
 							<ui:include src="listBooleanIcon.xhtml">
 								<ui:param name="value" value="#{filefolder.active}" />
 							</ui:include>
+						</p:column>
+						<p:column rendered="#{fileBean.approval}" style="width:140px;">
+							<f:facet name="header">
+								<h:outputText value="#{labels.file_treetable_departments_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{applicationScopeBean.clipStringMid(applicationScopeBean.departmentsToString(filefolder.departments))}" />
 						</p:column>
 						<p:column style="width:32px;">
 							<f:facet name="header">
@@ -200,7 +206,7 @@
 								<ui:param name="value" value="#{filefolder.publicFile}" />
 							</ui:include>
 						</p:column>
-						<p:column style="width:66px;">
+						<p:column style="width:70px;">
 							<f:facet name="header">
 								<h:outputText value="#{labels.file_treetable_size_column}" />
 							</f:facet>
@@ -215,7 +221,7 @@
 							<h:outputText
 								value="#{applicationScopeBean.getIdentityString(filefolder.modifiedUser)}" />
 						</p:column>
-						<p:column style="width:106px;">
+						<p:column style="width:108px;">
 							<f:facet name="header">
 								<h:outputText value="#{labels.file_treetable_timestamp_column}" />
 							</f:facet>
@@ -314,9 +320,9 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="filelogicalPath" />
-							<h:outputLabel for="fileactive"
+							<h:outputLabel rendered="#{fileBean.approval}" for="fileactive"
 								value="#{labels.file_active_label}" />
-							<h:panelGroup>
+							<h:panelGroup rendered="#{fileBean.approval}">
 								<p:selectBooleanCheckbox id="fileactive"
 									value="#{fileBean.in.active}">
 									<p:ajax />
@@ -326,7 +332,39 @@
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message for="fileactive" />
+							<p:message rendered="#{fileBean.approval}" for="fileactive" />
+							<h:outputLabel rendered="#{fileBean.approval}" for="departments"
+								value="#{labels.file_departments_label}" />
+							<h:panelGroup rendered="#{fileBean.approval}">
+								<p:autoComplete id="departments" required="false"
+									value="#{fileBean.departments}"
+									label="#{labels.file_departments}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthDepartment}"
+									maxResults="#{autoCompleteMaxResultsDepartment}"
+									queryDelay="#{autoCompleteQueryDelayDepartment}"
+									global="#{autoCompleteGlobalDepartment}"
+									scrollHeight="#{autoCompleteScrollHeightDepartment}"
+									completeMethod="#{fileBean.completeDepartment}" multiple="true"
+									var="department" itemValue="#{department}"
+									itemLabel="#{department.vo.name}" converter="ctsms.Department">
+									<p:ajax process="@this" event="itemSelect"
+										listener="#{fileBean.handleDepartmentSelect}" />
+									<p:ajax process="@this" event="itemUnselect"
+										listener="#{fileBean.handleDepartmentUnselect}" />
+									<p:column>
+										<h:outputText value="#{department.vo.name}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{department.vo.nameL10nKey}" />
+									</p:column>
+								</p:autoComplete>
+								<p:tooltip rendered="#{enableTooltips}" for="departments">
+									<h:outputText value="#{labels.file_departments_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message rendered="#{fileBean.approval}" for="departments" />
 							<h:outputLabel for="filepublic"
 								value="#{labels.file_public_label}" />
 							<h:panelGroup>

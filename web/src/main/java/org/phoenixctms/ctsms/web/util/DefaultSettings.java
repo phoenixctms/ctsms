@@ -336,6 +336,10 @@ public final class DefaultSettings {
 	public final static boolean USER_SHOW_TOOLTIPS_PRESET = true;
 	public final static boolean HYPERLINK_ACTIVE_PRESET = true;
 	public final static String HYPERLINK_URL_PRESET = "http://";
+	public final static boolean INVENTORY_HYPERLINK_APPROVAL_DEFAULT = true;
+	public final static boolean STAFF_HYPERLINK_APPROVAL_DEFAULT = true;
+	public final static boolean COURSE_HYPERLINK_APPROVAL_DEFAULT = true;
+	public final static boolean TRIAL_HYPERLINK_APPROVAL_DEFAULT = true;
 	public final static boolean FILE_ACTIVE_PRESET = true;
 	public final static boolean FILE_PUBLIC_PRESET = false;
 	public final static String FILE_LOGICAL_PATH_PRESET = "";
@@ -467,6 +471,12 @@ public final class DefaultSettings {
 	public static final boolean TRIAL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
 	public static final boolean PROBAND_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
 	public static final boolean MASS_MAIL_FILE_FOLDER_TREE_DYNAMIC_DEFAULT = false;
+	public static final boolean INVENTORY_FILE_APPROVAL_DEFAULT = true;
+	public static final boolean STAFF_FILE_APPROVAL_DEFAULT = true;
+	public static final boolean COURSE_FILE_APPROVAL_DEFAULT = true;
+	public static final boolean TRIAL_FILE_APPROVAL_DEFAULT = true;
+	public static final boolean PROBAND_FILE_APPROVAL_DEFAULT = true;
+	public static final boolean MASS_MAIL_FILE_APPROVAL_DEFAULT = true;
 	public static final String INVENTORY_START_URL = "/inventory/inventorySearch.jsf";
 	public static final String STAFF_START_URL = "/staff/staffSearch.jsf";
 	public static final String COURSE_START_URL = "/course/courseSearch.jsf";
