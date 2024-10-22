@@ -185,35 +185,41 @@
 								</p:tooltip>
 							</h:panelGroup>
 							<p:message for="name" />
-							<h:outputLabel
-								for="department"
+							
+							<h:outputLabel for="department"
 								value="#{inventorylabels.inventory_department_label}" />
 							<h:panelGroup>
-								<p:selectOneMenu
-									id="department"
-									value="#{inventoryBean.in.departmentId}"
-									required="true"
+								<p:autoComplete id="department" required="true"
+									value="#{inventoryBean.department}"
 									label="#{inventorylabels.inventory_department}"
-									styleClass="ctsms-control">
-									<f:converter converterId="ctsms.ID" />
-									<f:selectItem
-										itemLabel="#{labels.no_selection_label}"
-										itemValue="#{applicationScopeBean.noSelectionValue}" />
-									<f:selectItems
-										value="#{inventoryBean.departments}"
-										var="selectItem"
-										itemLabel="#{selectItem.label}"
-										itemValue="#{selectItem.value}" />
-								</p:selectOneMenu>
-								<p:tooltip
-									rendered="#{enableTooltips}"
-									for="department">
-									<h:outputText
-										value="#{inventorylabels.inventory_department_tooltip}"
+									styleClass="ctsms-control"
+									minQueryLength="#{autoCompleteMinQueryLengthDepartment}"
+									maxResults="#{autoCompleteMaxResultsDepartment}"
+									queryDelay="#{autoCompleteQueryDelayDepartment}"
+									global="#{autoCompleteGlobalDepartment}"
+									dropdown="#{autoCompleteDropdownDepartment}"
+									scrollHeight="#{autoCompleteScrollHeightDepartment}"
+									completeMethod="#{inventoryBean.completeDepartment}"
+									forceSelection="true"
+									var="department" itemValue="#{department}"
+									itemLabel="#{department.vo.name}" converter="ctsms.Department">
+									<p:ajax process="@this" event="itemSelect"
+										listener="#{inventoryBean.handleDepartmentSelect}" />
+									<p:ajax process="@this" event="itemUnselect"
+										listener="#{inventoryBean.handleDepartmentUnselect}" />
+									<p:column>
+										<h:outputText value="#{department.vo.name}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{department.vo.nameL10nKey}" />
+									</p:column>
+								</p:autoComplete>
+								<p:tooltip rendered="#{enableTooltips}" for="department">
+									<h:outputText value="#{inventorylabels.inventory_department_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
-							<p:message for="department" />
+							<p:message for="department" />										
 							<h:outputLabel
 								for="category"
 								value="#{inventorylabels.inventory_category_label}" />

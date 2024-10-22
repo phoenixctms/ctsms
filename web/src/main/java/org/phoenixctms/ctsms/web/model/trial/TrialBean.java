@@ -3,7 +3,9 @@ package org.phoenixctms.ctsms.web.model.trial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -24,6 +26,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.SignatureVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -31,6 +34,7 @@ import org.phoenixctms.ctsms.vo.TrialRandomizationListVO;
 import org.phoenixctms.ctsms.vo.TrialStatusActionVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelector;
 import org.phoenixctms.ctsms.web.model.RandomizationModeSelectorListener;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
@@ -45,6 +49,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @ViewScoped
@@ -101,7 +107,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	private TrialOutVO out;
 	private SignatureVO signature;
 	private ArrayList<SelectItem> statusTypes;
-	private ArrayList<SelectItem> departments;
 	private ArrayList<SelectItem> trialTypes;
 	private ArrayList<SelectItem> sponsoringTypes;
 	private ArrayList<SelectItem> surveyStatusTypes;
@@ -113,6 +118,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	private String deferredDeleteReason;
 	private RandomizationModeSelector randomizationMode;
 	private TrialRandomizationListVO trialRandomizationList;
+	private DepartmentVO department;
 
 	public TrialBean() {
 		super();
@@ -272,10 +278,6 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
-	}
-
-	public ArrayList<SelectItem> getDepartments() {
-		return departments;
 	}
 
 	public TrialInVO getIn() {
@@ -540,7 +542,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		tabCountMap.put(JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_JOURNAL_ENTRY_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_JOURNAL_TAB_TITLE, MessageCodes.TRIAL_JOURNAL_TAB_TITLE_WITH_COUNT, count));
-		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
+		loadDepartment();
 		trialTypes = WebUtil.getVisibleTrialTypes(in.getTypeId());
 		sponsoringTypes = WebUtil.getVisibleSponsoringTypes(in.getSponsoringId());
 		surveyStatusTypes = WebUtil.getVisibleSurveyStatusTypes(in.getSurveyStatusId());
@@ -701,6 +703,11 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 	}
 
 	private void sanitizeInVals() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		if (!in.getDutySelfAllocationLocked()) {
 			in.setDutySelfAllocationLockedUntil(null);
 			in.setDutySelfAllocationLockedFrom(null);
@@ -787,5 +794,48 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null && out.getDepartment() != null) {
+			departmentIds = new HashSet<Long>(1);
+			departmentIds.add(out.getDepartment().getId());
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getDepartment() {
+		if (department != null) {
+			return IDVO.transformVo(department);
+		}
+		return null;
+	}
+
+	public void setDepartment(IDVO department) {
+		if (department != null) {
+			this.department = (DepartmentVO) department.getVo();
+		} else {
+			this.department = null;
+		}
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartment() {
+		department = WebUtil.getDepartment(in.getDepartmentId());
 	}
 }

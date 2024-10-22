@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -36,6 +38,7 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
+import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.VariablePeriodSelector;
@@ -52,6 +55,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
@@ -188,7 +193,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	private CourseInVO in;
 	private CourseOutVO out;
 	private ArrayList<SelectItem> categories;
-	private ArrayList<SelectItem> departments;
+	private DepartmentVO department;
 	private ArrayList<SelectItem> cvSections;
 	private ArrayList<SelectItem> trainingRecordSections;
 	private CvSectionVO cvSection;
@@ -507,10 +512,6 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		return deferredDeleteReason;
 	}
 
-	public ArrayList<SelectItem> getDepartments() {
-		return departments;
-	}
-
 	public Boolean getExpired() {
 		return WebUtil.getCourseExpired(today, in);
 	}
@@ -707,7 +708,7 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 		}
 		precedingCourseMultiPicker.setIds(in.getPrecedingCourseIds());
 		categories = WebUtil.getVisibleCourseCategories(in.getCategoryId());
-		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
+		loadDepartment();
 		cvSections = WebUtil.getCvSections(this.in.getCvSectionPresetId());
 		trainingRecordSections = WebUtil.getTrainingRecordSections(this.in.getTrainingRecordSectionPresetId());
 		loadCvSelectedSection();
@@ -797,6 +798,11 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 	}
 
 	private void sanitizeInVals() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		if (!in.getSelfRegistration()) {
 			in.setMaxNumberOfParticipants(null);
 			in.setParticipationDeadline(null);
@@ -850,5 +856,48 @@ public class CourseBean extends ManagedBeanBase implements VariablePeriodSelecto
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null && out.getDepartment() != null) {
+			departmentIds = new HashSet<Long>(1);
+			departmentIds.add(out.getDepartment().getId());
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getDepartment() {
+		if (department != null) {
+			return IDVO.transformVo(department);
+		}
+		return null;
+	}
+
+	public void setDepartment(IDVO department) {
+		if (department != null) {
+			this.department = (DepartmentVO) department.getVo();
+		} else {
+			this.department = null;
+		}
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartment() {
+		department = WebUtil.getDepartment(in.getDepartmentId());
 	}
 }

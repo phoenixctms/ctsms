@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.user;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.vo.UserPermissionProfileOutVO;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelector;
 import org.phoenixctms.ctsms.web.model.AuthenticationTypeSelectorListener;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
+import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.shared.UserSettingsBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -43,6 +44,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.TreeNode;
 
 @ManagedBean
@@ -204,7 +207,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	private Boolean remoteUserOk;
 	private LdapEntryVO ldapEntry1;
 	private LdapEntryVO ldapEntry2;
-	private ArrayList<SelectItem> departments;
+	private DepartmentVO department;
 	private AuthenticationTypeSelector authMethod;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -398,10 +401,6 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	public String getDeferredDeleteReason() {
 		return deferredDeleteReason;
-	}
-
-	public ArrayList<SelectItem> getDepartments() {
-		return departments;
 	}
 
 	public String getIdentityName() {
@@ -608,7 +607,7 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 		ldapEntry1 = null;
 		ldapEntry2 = null;
 		loadRemoteUserInfo();
-		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
+		loadDepartment();
 		if (WebUtil.isPropertiesDescendantLoggedIn(in.getId())) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.EDITING_ANCESTOR_OF_ACTIVE_USER);
 		}
@@ -954,6 +953,11 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	public boolean isOldDepartmentPasswordRequired() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		return out != null
 				? !out.getDepartment().getId().equals(in != null ? in.getDepartmentId() : null)
 						&& !out.getDepartment().getId().equals(WebUtil.getUser().getDepartment().getId())
@@ -961,11 +965,21 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	public boolean isNewDepartmentPasswordRequired() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		return in != null ? !WebUtil.getUser().getDepartment().getId().equals(in.getDepartmentId()) : false;
 	}
 
 	protected void sanitizeInVals() {
 		super.sanitizeInVals();
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		if (!isNewDepartmentPasswordRequired()) {
 			newDepartmentPassword = null;
 		}
@@ -979,6 +993,11 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	}
 
 	public String getNewDepartmentPasswordLabel() {
+		if (department != null) {
+			in.setDepartmentId(department.getId());
+		} else {
+			in.setDepartmentId(null);
+		}
 		return Messages.getMessage(MessageCodes.USER_NEW_DEPARTMENT_PASSWORD_LABEL,
 				(in != null && in.getDepartmentId() != null) ? WebUtil.getDepartment(in.getDepartmentId()).getName() : null);
 	}
@@ -1097,5 +1116,48 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 	@Override
 	protected Collection<String> getInheritedProperties() {
 		return in != null ? in.getInheritedProperties() : null;
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null && out.getDepartment() != null) {
+			departmentIds = new HashSet<Long>(1);
+			departmentIds.add(out.getDepartment().getId());
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public IDVO getDepartment() {
+		if (department != null) {
+			return IDVO.transformVo(department);
+		}
+		return null;
+	}
+
+	public void setDepartment(IDVO department) {
+		if (department != null) {
+			this.department = (DepartmentVO) department.getVo();
+		} else {
+			this.department = null;
+		}
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartment() {
+		department = WebUtil.getDepartment(in.getDepartmentId());
 	}
 }
