@@ -15,10 +15,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.phoenixctms.ctsms.compare.AlphanumStringComparator;
+import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -36,6 +39,7 @@ import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.FileInVO;
 import org.phoenixctms.ctsms.vo.FileOutVO;
@@ -54,6 +58,8 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
  */
 public class FileDaoImpl
 		extends FileDaoBase {
+
+	private final static VOIDComparator DEPARTMENT_ID_COMPARATOR = new VOIDComparator<DepartmentVO>(false);
 
 	private final static void applyContentTypeCriterions(org.hibernate.Criteria criteria, Boolean image, String mimeType) {
 		if (image != null || (mimeType != null && mimeType.length() > 0)) {
@@ -100,9 +106,35 @@ public class FileDaoImpl
 		if (active != null) {
 			User user = CoreUtil.getUser();
 			if (user != null) {
-				criteria.add(Restrictions.or(
-						Restrictions.eq("active", active.booleanValue()),
-						Restrictions.eq("modifiedUser.id", user.getId().longValue())));
+				if (active) {
+					DetachedCriteria subQuery = DetachedCriteria.forClass(FileImpl.class, "file1"); // IMPL!!!!
+					subQuery.setProjection(Projections.id());
+					subQuery.add(Restrictions.eqProperty("id", "file0.id"));
+					subQuery.createCriteria("departments").add(Restrictions.idEq(user.getDepartment().getId().longValue()));
+					//Criteria departmentsCriteria = 
+					//					criteria.add(Restrictions.sqlRestriction("{alias}.department_fk = ?",
+					//							user.getDepartment().getId().longValue(),
+					//							Hibernate.LONG));
+					//					criteria.createCriteria("departments", "departments0", CriteriaSpecification.LEFT_JOIN,
+					//							Restrictions.sqlRestriction("{alias}.department_fk = ?",
+					//									user.getDepartment().getId().longValue(),
+					//									Hibernate.LONG));
+					//criteria.createAlias("departments", "departments0", CriteriaSpecification.LEFT_JOIN, Restrictions.idEq(user.getDepartment().getId().longValue()));
+					//					Criteria departmentsCriteria = criteria.createCriteria("departments", "departments0", CriteriaSpecification.LEFT_JOIN);
+					//					departmentsCriteria.add(Restrictions.or(
+					//							Restrictions.isNull("id"),
+					//							Restrictions.idEq(user.getDepartment().getId().longValue())));
+					criteria.add(Restrictions.or(
+							Restrictions.and(
+									Restrictions.eq("active", true),
+									Subqueries.exists(subQuery)),
+							//Restrictions.isNotNull("departments0.id")),
+							Restrictions.eq("modifiedUser.id", user.getId().longValue())));
+				} else {
+					criteria.add(Restrictions.or(
+							Restrictions.eq("active", false),
+							Restrictions.eq("modifiedUser.id", user.getId().longValue())));
+				}
 			} else {
 				criteria.add(Restrictions.eq("active", active.booleanValue()));
 			}
@@ -291,8 +323,13 @@ public class FileDaoImpl
 		return RE_ENCRYPTERS;
 	}
 
-	private org.hibernate.Criteria createFileCriteria() {
-		org.hibernate.Criteria fileCriteria = this.getSession().createCriteria(File.class);
+	private org.hibernate.Criteria createFileCriteria(String alias) {
+		org.hibernate.Criteria fileCriteria;
+		if (alias != null && alias.length() > 0) {
+			fileCriteria = this.getSession().createCriteria(File.class, alias);
+		} else {
+			fileCriteria = this.getSession().createCriteria(File.class);
+		}
 		return fileCriteria;
 	}
 
@@ -446,6 +483,10 @@ public class FileDaoImpl
 				massMail.removeFiles(target);
 			}
 		}
+		Collection departmentIds;
+		if ((departmentIds = source.getDepartmentIds()).size() > 0 || copyIfNull) {
+			target.setDepartments(toDepartmentSet(departmentIds));
+		}
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
 			try {
 				if (copyIfNull || source.getTitle() != null) {
@@ -574,6 +615,14 @@ public class FileDaoImpl
 				massMail.removeFiles(target);
 			}
 		}
+		Collection departments = source.getDepartments();
+		if (departments.size() > 0) {
+			departments = new ArrayList(departments); //prevent changing VO
+			this.getDepartmentDao().departmentVOToEntityCollection(departments);
+			target.setDepartments(departments); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getDepartments().clear();
+		}
 		if (modifiedUserVO != null) {
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
@@ -688,7 +737,7 @@ public class FileDaoImpl
 	@Override
 	protected Collection<File> handleFindByExternalFileName(
 			String externalFileName) throws Exception {
-		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		org.hibernate.Criteria fileCriteria = createFileCriteria(null);
 		fileCriteria.add(Restrictions.eq("externalFile", true));
 		fileCriteria.add(Restrictions.eq("externalFileName", externalFileName));
 		return fileCriteria.list();
@@ -740,7 +789,7 @@ public class FileDaoImpl
 			}
 		}
 		if (id != null) {
-			org.hibernate.Criteria fileCriteria = createFileCriteria();
+			org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 			SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
 			applyModuleIdCriterions(fileCriteria, module, id);
 			if (useParentPath) {
@@ -774,7 +823,7 @@ public class FileDaoImpl
 	@Override
 	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType, PSFVO psf) throws Exception {
-		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
@@ -790,7 +839,7 @@ public class FileDaoImpl
 	@Override
 	protected long handleGetCount(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
-		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
 		applyActiveCriterion(fileCriteria, active);
@@ -804,7 +853,7 @@ public class FileDaoImpl
 	@Override
 	protected String handleGetCountSafe(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType, Integer limit) throws Exception {
-		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
 		applyActiveCriterion(fileCriteria, active);
@@ -819,7 +868,7 @@ public class FileDaoImpl
 	@Override
 	protected long handleGetCount(
 			String externalFileName) throws Exception {
-		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		org.hibernate.Criteria fileCriteria = createFileCriteria(null);
 		fileCriteria.add(Restrictions.eq("externalFile", true));
 		fileCriteria.add(Restrictions.eq("externalFileName", externalFileName));
 		return (Long) fileCriteria.setProjection(Projections.rowCount()).uniqueResult();
@@ -828,7 +877,7 @@ public class FileDaoImpl
 	@Override
 	protected long handleGetFileSizeSum(FileModule module, Long id, String logicalPath, boolean subTree,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
-		org.hibernate.Criteria fileCriteria = createFileCriteria();
+		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
 		applyActiveCriterion(fileCriteria, active);
@@ -1002,6 +1051,7 @@ public class FileDaoImpl
 		if (massMail != null) {
 			target.setMassMailId(massMail.getId());
 		}
+		target.setDepartmentIds(toDepartmentIdCollection(source.getDepartments()));
 		if (CommonUtil.getUseFileEncryption(source.getModule())) {
 			try {
 				target.setTitle((String) CryptoUtil.decryptValue(source.getTitleIv(), source.getEncryptedTitle()));
@@ -1057,6 +1107,7 @@ public class FileDaoImpl
 		if (massMail != null) {
 			target.setMassMail(this.getMassMailDao().toMassMailOutVO(massMail));
 		}
+		target.setDepartments(toDepartmentVOCollection(source.getDepartments()));
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
@@ -1147,5 +1198,37 @@ public class FileDaoImpl
 			}
 			target.setDecrypted(true);
 		}
+	}
+
+	private static ArrayList<Long> toDepartmentIdCollection(Collection<Department> departments) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(departments.size());
+		Iterator<Department> it = departments.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
+	}
+
+	private ArrayList<DepartmentVO> toDepartmentVOCollection(Collection<Department> departments) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		DepartmentDao departmentDao = this.getDepartmentDao();
+		ArrayList<DepartmentVO> result = new ArrayList<DepartmentVO>(departments.size());
+		Iterator<Department> it = departments.iterator();
+		while (it.hasNext()) {
+			result.add(departmentDao.toDepartmentVO(it.next()));
+		}
+		Collections.sort(result, DEPARTMENT_ID_COMPARATOR);
+		return result;
+	}
+
+	private HashSet<Department> toDepartmentSet(Collection<Long> departmentIds) { // lazyload persistentset prevention
+		DepartmentDao departmentDao = this.getDepartmentDao();
+		HashSet<Department> result = new HashSet<Department>(departmentIds.size());
+		Iterator<Long> it = departmentIds.iterator();
+		while (it.hasNext()) {
+			result.add(departmentDao.load(it.next()));
+		}
+		return result;
 	}
 }
