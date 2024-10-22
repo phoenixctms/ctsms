@@ -74,7 +74,7 @@ if get_database_version() < '010801060' then
   UPDATE mass_mail SET store_messages = 'f';
   ALTER TABLE mass_mail ALTER store_messages SET NOT NULL;
   
-  perform set_database_version('store_messages');
+  perform set_database_version('010801060');
   
 end if;
 
@@ -109,6 +109,8 @@ if get_database_version() < '010801070' then
       add constraint HYPERLINK_DEPARTMENTS_FKC 
       foreign key (DEPARTMENTS_FK) 
       references DEPARTMENT;
+      
+  perform set_database_version('010801070');
   
 end if;
 
