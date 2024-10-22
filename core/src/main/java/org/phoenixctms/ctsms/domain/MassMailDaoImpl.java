@@ -100,11 +100,11 @@ public class MassMailDaoImpl
 		}
 		if (resendProbandId != null) {
 			DetachedCriteria recipientsSubQuery = DetachedCriteria.forClass(MassMailRecipientImpl.class, "massMailRecipient1"); // IMPL!!!!
-			recipientsSubQuery.setProjection(Projections.rowCount());
+			recipientsSubQuery.setProjection(Projections.id());
 			recipientsSubQuery.add(Restrictions.eq("proband.id", resendProbandId.longValue()));
 			recipientsSubQuery.add(Restrictions.eqProperty("massMail.id", "massMail0.id"));
 			massMailCriteria.add(Restrictions.or(Restrictions.eq("probandListStatusResend", true),
-					Subqueries.eq(0l, recipientsSubQuery)));
+					Subqueries.exists(recipientsSubQuery)));
 		}
 		return (Long) massMailCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
