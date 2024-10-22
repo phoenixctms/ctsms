@@ -10,9 +10,13 @@ package org.phoenixctms.ctsms.service.shared;
 
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.domain.Course;
+import org.phoenixctms.ctsms.domain.Department;
+import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.Hyperlink;
 import org.phoenixctms.ctsms.domain.HyperlinkCategory;
 import org.phoenixctms.ctsms.domain.HyperlinkDao;
@@ -119,6 +123,22 @@ public class HyperlinkServiceImpl
 		if (!URL_REGEXP.matcher(hyperlink.getUrl()).find()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_URL, hyperlink.getUrl());
 		}
+		Collection<Long> departmentIds = hyperlink.getDepartmentIds();
+		if (departmentIds != null && departmentIds.size() > 0) {
+			DepartmentDao departmentDao = this.getDepartmentDao();
+			Iterator<Long> it = departmentIds.iterator();
+			HashSet<Long> dupeCheck = new HashSet<Long>(departmentIds.size());
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.HYPERLINK_DEPARTMENT_ID_IS_NULL);
+				}
+				Department department = CheckIDUtil.checkDepartmentId(id, departmentDao);
+				if (!dupeCheck.add(department.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.HYPERLINK_DUPLICATE_DEPARTMENT, departmentDao.toDepartmentVO(department).getName());
+				}
+			}
+		}
 	}
 
 	private void checkHyperlinkModuleId(HyperlinkModule module, Long id) throws ServiceException {
@@ -145,50 +165,58 @@ public class HyperlinkServiceImpl
 	}
 
 	private void checkActivePermission(Hyperlink hyperlink) throws AuthorisationException {
-		if (!hyperlink.isActive()) {
-			User user = CoreUtil.getUser();
-			if (!user.equals(hyperlink.getModifiedUser())) {
-				UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
-				switch (hyperlink.getCategory().getModule()) {
-					case INVENTORY_HYPERLINK:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.INVENTORY, userPermissionProfileDao,
-								PermissionProfile.INVENTORY_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
+		//if (!hyperlink.isActive()) {
+		User user = CoreUtil.getUser();
+		if (!user.equals(hyperlink.getModifiedUser())) {
+			UserPermissionProfileDao userPermissionProfileDao = this.getUserPermissionProfileDao();
+			switch (hyperlink.getCategory().getModule()) {
+				case INVENTORY_HYPERLINK:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.INVENTORY, userPermissionProfileDao,
+							PermissionProfile.INVENTORY_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
+						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
-						break;
-					case STAFF_HYPERLINK:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.STAFF, userPermissionProfileDao,
-								PermissionProfile.STAFF_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case STAFF_HYPERLINK:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.STAFF, userPermissionProfileDao,
+							PermissionProfile.STAFF_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
+						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
-						break;
-					case COURSE_HYPERLINK:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.COURSE, userPermissionProfileDao,
-								PermissionProfile.COURSE_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case COURSE_HYPERLINK:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.COURSE, userPermissionProfileDao,
+							PermissionProfile.COURSE_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
+						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
-						break;
-					case TRIAL_HYPERLINK:
-						if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.TRIAL, userPermissionProfileDao,
-								PermissionProfile.TRIAL_MASTER_ALL_DEPARTMENTS,
-								PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
-								PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
+					}
+					break;
+				case TRIAL_HYPERLINK:
+					if (!ServiceUtil.hasInheritedPermissionProfile(user, PermissionProfileGroup.TRIAL, userPermissionProfileDao,
+							PermissionProfile.TRIAL_MASTER_ALL_DEPARTMENTS,
+							PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
+							PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
+						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
 							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
-						break;
-					default:
-						// not supported for now...
-						throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_HYPERLINK_MODULE, DefaultMessages.UNSUPPORTED_HYPERLINK_MODULE,
-								new Object[] { hyperlink.getCategory().getModule().toString() }));
-				}
+					}
+					break;
+				default:
+					// not supported for now...
+					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_HYPERLINK_MODULE, DefaultMessages.UNSUPPORTED_HYPERLINK_MODULE,
+							new Object[] { hyperlink.getCategory().getModule().toString() }));
 			}
 		}
+		//}
 	}
 
 	/**
@@ -275,6 +303,7 @@ public class HyperlinkServiceImpl
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_HYPERLINK_MODULE, DefaultMessages.UNSUPPORTED_HYPERLINK_MODULE,
 						new Object[] { hyperlink.getCategory().getModule().toString() }));
 		}
+		hyperlink.getDepartments().clear();
 		return result;
 	}
 
