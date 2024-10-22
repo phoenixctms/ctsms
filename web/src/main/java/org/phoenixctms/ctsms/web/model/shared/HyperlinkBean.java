@@ -1,6 +1,11 @@
 package org.phoenixctms.ctsms.web.model.shared;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -16,6 +21,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.CourseOutVO;
+import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
 import org.phoenixctms.ctsms.vo.HyperlinkInVO;
 import org.phoenixctms.ctsms.vo.HyperlinkOutVO;
@@ -24,6 +30,7 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
+import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -35,6 +42,8 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @ViewScoped
@@ -48,6 +57,11 @@ public class HyperlinkBean extends ManagedBeanBase {
 			CourseOutVO courseVO = out.getCourse();
 			TrialOutVO trialVO = out.getTrial();
 			in.setActive(out.getActive());
+			in.getDepartmentIds().clear();
+			Iterator it = out.getDepartments().iterator();
+			while (it.hasNext()) {
+				in.getDepartmentIds().add(((DepartmentVO) it.next()).getId());
+			}
 			in.setCategoryId(hyperlinkCategoryVO == null ? null : hyperlinkCategoryVO.getId());
 			in.setCourseId(courseVO == null ? null : courseVO.getId());
 			in.setId(out.getId());
@@ -63,6 +77,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 	public static void initHyperlinkDefaultValues(HyperlinkInVO in, Long entityId, HyperlinkModule module) {
 		if (in != null) {
 			in.setActive(Settings.getBoolean(SettingCodes.HYPERLINK_ACTIVE_PRESET, Bundle.SETTINGS, DefaultSettings.HYPERLINK_ACTIVE_PRESET));
+			in.getDepartmentIds().clear();
 			in.setCategoryId(null);
 			in.setCourseId(HyperlinkModule.COURSE_HYPERLINK.equals(module) ? entityId : null);
 			in.setId(null);
@@ -87,9 +102,11 @@ public class HyperlinkBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> filterCategories;
 	private HyperlinkLazyModel hyperlinkModel;
 	private HyperlinkCategoryVO category;
+	private List<DepartmentVO> departments;
 
 	public HyperlinkBean() {
 		super();
+		departments = new ArrayList<DepartmentVO>();
 		hyperlinkModel = new HyperlinkLazyModel();
 	}
 
@@ -98,6 +115,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 		HyperlinkInVO backup = new HyperlinkInVO(in);
 		in.setId(null);
 		in.setVersion(null);
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getHyperlinkService().addHyperlink(WebUtil.getAuthentication(), in);
 			initIn();
@@ -325,6 +343,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 		staff = (HyperlinkModule.STAFF_HYPERLINK.equals(module) ? WebUtil.getStaff(entityId, null, null, null) : null);
 		course = (HyperlinkModule.COURSE_HYPERLINK.equals(module) ? WebUtil.getCourse(entityId, null, null, null) : null);
 		trial = (HyperlinkModule.TRIAL_HYPERLINK.equals(module) ? WebUtil.getTrial(entityId) : null);
+		loadDepartments();
 		hyperlinkModel.setEntityId(entityId);
 		hyperlinkModel.setModule(module);
 		hyperlinkModel.updateRowCount();
@@ -484,6 +503,7 @@ public class HyperlinkBean extends ManagedBeanBase {
 
 	@Override
 	public String updateAction() {
+		sanitizeInVals();
 		try {
 			out = WebUtil.getServiceLocator().getHyperlinkService().updateHyperlink(WebUtil.getAuthentication(), in);
 			initIn();
@@ -497,5 +517,97 @@ public class HyperlinkBean extends ManagedBeanBase {
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public boolean isApproval() {
+		if (module != null) {
+			switch (module) {
+				case INVENTORY_HYPERLINK:
+					return Settings.getBoolean(SettingCodes.INVENTORY_HYPERLINK_APPROVAL, Bundle.SETTINGS, DefaultSettings.INVENTORY_HYPERLINK_APPROVAL_DEFAULT);
+				case STAFF_HYPERLINK:
+					return Settings.getBoolean(SettingCodes.STAFF_HYPERLINK_APPROVAL, Bundle.SETTINGS, DefaultSettings.STAFF_HYPERLINK_APPROVAL_DEFAULT);
+				case COURSE_HYPERLINK:
+					return Settings.getBoolean(SettingCodes.COURSE_HYPERLINK_APPROVAL, Bundle.SETTINGS, DefaultSettings.COURSE_HYPERLINK_APPROVAL_DEFAULT);
+				case TRIAL_HYPERLINK:
+					return Settings.getBoolean(SettingCodes.TRIAL_HYPERLINK_APPROVAL, Bundle.SETTINGS, DefaultSettings.TRIAL_HYPERLINK_APPROVAL_DEFAULT);
+				default:
+					break;
+			}
+		}
+		return true;
+	}
+
+	public List<IDVO> getDepartments() {
+		return new IDVOList(departments);
+	}
+
+	public List<IDVO> completeDepartment(String query) {
+		HashSet<Long> departmentIds = null;
+		if (out != null) {
+			departmentIds = new HashSet<Long>(out.getDepartments().size());
+			Iterator it = out.getDepartments().iterator();
+			while (it.hasNext()) {
+				DepartmentVO department = (DepartmentVO) it.next();
+				if (department != null) {
+					departmentIds.add(department.getId());
+				}
+			}
+		}
+		try {
+			Collection departmentVOs = WebUtil.getServiceLocator().getToolsService().completeDepartment(WebUtil.getAuthentication(), query, departmentIds, null);
+			IDVO.transformVoCollection(departmentVOs);
+			return (List<IDVO>) departmentVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public void handleDepartmentSelect(SelectEvent event) {
+	}
+
+	public void handleDepartmentUnselect(UnselectEvent event) {
+	}
+
+	private void loadDepartments() {
+		departments.clear();
+		Iterator<Long> it = in.getDepartmentIds().iterator();
+		while (it.hasNext()) {
+			DepartmentVO department = WebUtil.getDepartment(it.next());
+			if (department != null) {
+				departments.add(department);
+			}
+		}
+	}
+
+	public void setDepartments(List<IDVO> departments) {
+		if (departments != null) {
+			ArrayList<DepartmentVO> departmentsCopy = new ArrayList<DepartmentVO>(departments.size());
+			Iterator<IDVO> it = departments.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					departmentsCopy.add((DepartmentVO) idVo.getVo());
+				}
+			}
+			this.departments.clear();
+			this.departments.addAll(departmentsCopy);
+		} else {
+			this.departments.clear();
+		}
+	}
+
+	private void sanitizeInVals() {
+		LinkedHashSet<Long> departmentIds = new LinkedHashSet<Long>(departments.size()); //force unique items to prevent confusion when unselecting a duplicate item
+		Iterator it = departments.iterator();
+		while (it.hasNext()) {
+			DepartmentVO department = (DepartmentVO) it.next();
+			if (department != null) {
+				departmentIds.add(department.getId());
+			}
+		}
+		in.setDepartmentIds(new ArrayList<Long>(departmentIds));
 	}
 }

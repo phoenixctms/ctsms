@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -10,13 +9,9 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:panelGrid
-			columns="1"
-			cellpadding="0"
+		<h:panelGrid columns="1" cellpadding="0"
 			styleClass="ctsms-content-panelgrid">
-			<p:dataTable
-				styleClass="ctsms-datatable"
-				lazy="true"
+			<p:dataTable styleClass="ctsms-datatable" lazy="true"
 				rows="#{dataTablesRowsDefault}"
 				paginator="#{dataTablesPaginatorDefault}"
 				paginatorTemplate="#{dataTablesPaginatorTemplateDefault}"
@@ -29,17 +24,16 @@
 				resizableColumns="#{dataTablesResizableColumnsDefault}"
 				sortBy="#{hyperlink.vo.id}"
 				emptyMessage="#{labels.datatable_permission_empty_message}"
-				var="hyperlink"
-				value="#{hyperlinkBean.hyperlinkModel}"
-				id="hyperlink_list"
-				selectionMode="single"
+				var="hyperlink" value="#{hyperlinkBean.hyperlinkModel}"
+				id="hyperlink_list" selectionMode="single"
 				selection="#{hyperlinkBean.selectedHyperlink}">
-				<p:ajax event="page" listener="#{hyperlinkBean.hyperlinkModel.handlePageChanged}" />
-				<p:ajax
-					event="rowSelect"
+				<p:ajax event="page"
+					listener="#{hyperlinkBean.hyperlinkModel.handlePageChanged}" />
+				<p:ajax event="rowSelect"
 					update="#{namingContainer}:hyperlink_input" />
 				<f:facet name="header">
-					<h:outputText value="#{hyperlinkBean.hyperlinkModel.rowCount} #{labels.hyperlink_hyperlink_list_header}" />
+					<h:outputText
+						value="#{hyperlinkBean.hyperlinkModel.rowCount} #{labels.hyperlink_hyperlink_list_header}" />
 				</f:facet>
 				<p:column sortBy="#{hyperlink.vo.id}">
 					<f:facet name="header">
@@ -47,210 +41,202 @@
 					</f:facet>
 					<h:outputText value="#{hyperlink.vo.id}" />
 				</p:column>
-				<p:column
-					sortBy="#{hyperlink.vo.category}"
+				<p:column sortBy="#{hyperlink.vo.category}"
 					filterBy="#{hyperlink.vo.category.id}"
 					filterOptions="#{hyperlinkBean.filterCategories}">
 					<f:facet name="header">
-						<h:outputText value="#{labels.hyperlink_hyperlink_list_category_column}" />
+						<h:outputText
+							value="#{labels.hyperlink_hyperlink_list_category_column}" />
 					</f:facet>
 					<h:outputText value="#{hyperlink.vo.category.name}" />
 				</p:column>
-				<p:column
-					sortBy="#{hyperlink.vo.title}"
+				<p:column sortBy="#{hyperlink.vo.title}"
 					filterBy="#{hyperlink.vo.title}">
 					<f:facet name="header">
-						<h:outputText value="#{labels.hyperlink_hyperlink_list_title_column}" />
+						<h:outputText
+							value="#{labels.hyperlink_hyperlink_list_title_column}" />
 					</f:facet>
 					<h:outputText value="#{hyperlink.vo.title}" />
 				</p:column>
-				<p:column
-					sortBy="#{hyperlink.vo.url}"
+				<p:column sortBy="#{hyperlink.vo.url}"
 					filterBy="#{hyperlink.vo.url}">
 					<f:facet name="header">
-						<h:outputText value="#{labels.hyperlink_hyperlink_list_link_column}" />
+						<h:outputText
+							value="#{labels.hyperlink_hyperlink_list_link_column}" />
 					</f:facet>
-					<h:outputLink
-						rendered="#{hyperlink.vo.active}"
-						value="#{hyperlink.vo.url}"
-						target="_blank">
+					<h:outputLink value="#{hyperlink.vo.url}" target="_blank">
 						<h:outputText value="#{hyperlink.vo.url}" />
 					</h:outputLink>
-					<h:outputText
+					<!-- <h:outputText
 						rendered="#{!hyperlink.vo.active}"
-						value="#{hyperlink.vo.url}" />
+						value="#{hyperlink.vo.url}" />  -->
 				</p:column>
-				<p:column
-					sortBy="#{hyperlink.vo.active}"
-					filterBy="#{hyperlink.vo.active}"
+				<p:column rendered="#{hyperlinkBean.approval}"
+					sortBy="#{hyperlink.vo.active}" filterBy="#{hyperlink.vo.active}"
 					filterOptions="#{sessionScopeBean.filterBooleans}">
 					<f:facet name="header">
-						<h:outputText value="#{labels.hyperlink_hyperlink_list_active_column}" />
+						<h:outputText
+							value="#{labels.hyperlink_hyperlink_list_active_column}" />
 					</f:facet>
 					<ui:include src="listBooleanIcon.xhtml">
-						<ui:param
-							name="value"
-							value="#{hyperlink.vo.active}" />
+						<ui:param name="value" value="#{hyperlink.vo.active}" />
 					</ui:include>
+				</p:column>
+				
+				<p:column rendered="#{hyperlinkBean.approval}"
+					filterBy="#{hyperlink.vo.departments}"
+					filterOptions="#{sessionScopeBean.filterDepartments}">
+					<f:facet name="header">
+						<h:outputText
+							value="#{labels.hyperlink_hyperlink_list_departments_column}" />
+					</f:facet>
+					<h:outputText
+						value="#{applicationScopeBean.clipStringMid(applicationScopeBean.departmentsToString(hyperlink.vo.departments))}" />
 				</p:column>
 			</p:dataTable>
 			<p:panel id="hyperlink_input">
 				<f:facet name="header">
 					<h:outputText value="#{hyperlinkBean.title}" />
 				</f:facet>
-				<h:panelGrid
-					columns="1"
-					cellpadding="0"
+				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-input-panelgrid"
 					rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
-					<h:panelGrid
-						rendered="#{hyperlinkBean.inputVisible}"
-						columns="6"
+					<h:panelGrid rendered="#{hyperlinkBean.inputVisible}" columns="9"
 						cellpadding="2"
-						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-						<h:outputLabel
-							for="hyperlinkcategory"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel for="hyperlinkcategory"
 							value="#{labels.hyperlink_category_label}" />
 						<h:panelGroup>
-							<p:selectOneMenu
-								id="hyperlinkcategory"
-								value="#{hyperlinkBean.in.categoryId}"
-								required="true"
-								label="#{labels.hyperlink_category}"
-								styleClass="ctsms-control">
+							<p:selectOneMenu id="hyperlinkcategory"
+								value="#{hyperlinkBean.in.categoryId}" required="true"
+								label="#{labels.hyperlink_category}" styleClass="ctsms-control">
 								<f:converter converterId="ctsms.ID" />
-								<f:selectItem
-									itemLabel="#{labels.no_selection_label}"
+								<f:selectItem itemLabel="#{labels.no_selection_label}"
 									itemValue="#{applicationScopeBean.noSelectionValue}" />
-								<f:selectItems
-									value="#{hyperlinkBean.categories}"
-									var="selectItem"
-									itemLabel="#{selectItem.label}"
+								<f:selectItems value="#{hyperlinkBean.categories}"
+									var="selectItem" itemLabel="#{selectItem.label}"
 									itemValue="#{selectItem.value}" />
 								<p:ajax
 									oncomplete="handleHyperlinkCategorySelected(xhr, status, args)"
 									listener="#{hyperlinkBean.handleCategoryChange}" />
 							</p:selectOneMenu>
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="hyperlinkcategory">
-								<h:outputText
-									value="#{labels.hyperlink_category_tooltip}"
+							<p:tooltip rendered="#{enableTooltips}" for="hyperlinkcategory">
+								<h:outputText value="#{labels.hyperlink_category_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="hyperlinkcategory" />
-						<h:outputLabel
-							for="hyperlinktitle"
+						<h:outputLabel for="hyperlinktitle"
 							value="#{labels.hyperlink_title_label}" />
 						<h:panelGroup>
-							<p:inputText
-								id="hyperlinktitle"
-								widgetVar="hyperlinkTitle"
-								value="#{hyperlinkBean.in.title}"
-								required="true"
+							<p:inputText id="hyperlinktitle" widgetVar="hyperlinkTitle"
+								value="#{hyperlinkBean.in.title}" required="true"
 								label="#{labels.hyperlink_title}"
 								styleClass="ctsms-control-larger" />
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="hyperlinktitle">
-								<h:outputText
-									value="#{labels.hyperlink_title_tooltip}"
+							<p:tooltip rendered="#{enableTooltips}" for="hyperlinktitle">
+								<h:outputText value="#{labels.hyperlink_title_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="hyperlinktitle" />
-						<h:outputLabel
-							for="hyperlinkurl"
+						<h:outputLabel for="hyperlinkurl"
 							value="#{labels.hyperlink_url_label}" />
 						<h:panelGroup>
-							<p:inputText
-								id="hyperlinkurl"
-								value="#{hyperlinkBean.in.url}"
-								required="true"
-								label="#{labels.hyperlink_url}"
+							<p:inputText id="hyperlinkurl" value="#{hyperlinkBean.in.url}"
+								required="true" label="#{labels.hyperlink_url}"
 								styleClass="ctsms-control-larger" />
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="hyperlinkurl">
-								<h:outputText
-									value="#{labels.hyperlink_url_tooltip}"
+							<p:tooltip rendered="#{enableTooltips}" for="hyperlinkurl">
+								<h:outputText value="#{labels.hyperlink_url_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="hyperlinkurl" />
-						<h:outputLabel
-							for="hyperlinkactive"
-							value="#{labels.hyperlink_active_label}" />
-						<h:panelGroup>
-							<p:selectBooleanCheckbox
-								id="hyperlinkactive"
+						<h:outputLabel rendered="#{hyperlinkBean.approval}"
+							for="hyperlinkactive" value="#{labels.hyperlink_active_label}" />
+						<h:panelGroup rendered="#{hyperlinkBean.approval}">
+							<p:selectBooleanCheckbox id="hyperlinkactive"
 								value="#{hyperlinkBean.in.active}" />
-							<p:tooltip
-								rendered="#{enableTooltips}"
-								for="hyperlinkactive">
-								<h:outputText
-									value="#{labels.hyperlink_active_tooltip}"
+							<p:tooltip rendered="#{enableTooltips}" for="hyperlinkactive">
+								<h:outputText value="#{labels.hyperlink_active_tooltip}"
 									escape="false" />
 							</p:tooltip>
 						</h:panelGroup>
-						<p:message for="hyperlinkactive" />
+						<p:message rendered="#{hyperlinkBean.approval}"
+							for="hyperlinkactive" />
+						<h:outputLabel rendered="#{hyperlinkBean.approval}"
+							for="departments" value="#{labels.hyperlink_departments_label}" />
+						<h:panelGroup rendered="#{hyperlinkBean.approval}">
+							<p:autoComplete id="departments" required="false"
+								value="#{hyperlinkBean.departments}"
+								label="#{labels.hyperlink_departments}"
+								styleClass="ctsms-control-larger"
+								minQueryLength="#{autoCompleteMinQueryLengthDepartment}"
+								maxResults="#{autoCompleteMaxResultsDepartment}"
+								queryDelay="#{autoCompleteQueryDelayDepartment}"
+								global="#{autoCompleteGlobalDepartment}"
+								scrollHeight="#{autoCompleteScrollHeightDepartment}"
+								completeMethod="#{hyperlinkBean.completeDepartment}"
+								multiple="true" var="department" itemValue="#{department}"
+								itemLabel="#{department.vo.name}" converter="ctsms.Department">
+								<p:ajax process="@this" event="itemSelect"
+									listener="#{hyperlinkBean.handleDepartmentSelect}" />
+								<p:ajax process="@this" event="itemUnselect"
+									listener="#{hyperlinkBean.handleDepartmentUnselect}" />
+								<p:column>
+									<h:outputText value="#{department.vo.name}" />
+								</p:column>
+								<p:column>
+									<h:outputText value="#{department.vo.nameL10nKey}" />
+								</p:column>
+							</p:autoComplete>
+							<p:tooltip rendered="#{enableTooltips}" for="departments">
+								<h:outputText value="#{labels.hyperlink_departments_tooltip}"
+									escape="false" />
+							</p:tooltip>
+						</h:panelGroup>
+						<p:message rendered="#{hyperlinkBean.approval}" for="departments" />
 					</h:panelGrid>
 					<h:outputLabel rendered="#{!hyperlinkBean.inputVisible}" />
 					<p:messages />
 					<p:toolbar>
 						<p:toolbarGroup align="left">
-							<h:outputText
-								styleClass="ctsms-toolbar-text"
+							<h:outputText styleClass="ctsms-toolbar-text"
 								value="#{hyperlinkBean.created ? hyperlinkBean.modifiedAnnotation : ''}" />
 						</p:toolbarGroup>
 						<p:separator />
 						<p:toolbarGroup align="right">
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.reset_button_label}"
 								actionListener="#{hyperlinkBean.reset}"
 								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
-								icon="ui-icon ui-icon-close"
-								ajax="true"
-								disabled="false"
+								icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 								update="hyperlink_list,hyperlink_input" />
-							<p:commandButton
-								process="@this,hyperlink_input"
-								id="addHyperlink"
-								value="#{labels.add_button_label}"
+							<p:commandButton process="@this,hyperlink_input"
+								id="addHyperlink" value="#{labels.add_button_label}"
 								actionListener="#{hyperlinkBean.add}"
 								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
-								icon="ui-icon ui-icon-plusthick"
-								ajax="true"
+								icon="ui-icon ui-icon-plusthick" ajax="true"
 								disabled="#{!hyperlinkBean.createable}"
 								update="hyperlink_list,hyperlink_input" />
-							<p:commandButton
-								process="@this,hyperlink_input"
-								id="updateHyperlink"
-								value="#{labels.update_button_label}"
+							<p:commandButton process="@this,hyperlink_input"
+								id="updateHyperlink" value="#{labels.update_button_label}"
 								actionListener="#{hyperlinkBean.update}"
 								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
-								icon="ui-icon ui-icon-disk"
-								ajax="true"
+								icon="ui-icon ui-icon-disk" ajax="true"
 								disabled="#{!hyperlinkBean.editable}"
 								update="hyperlink_list,hyperlink_input" />
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.delete_button_label}"
 								actionListener="#{hyperlinkBean.delete}"
 								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
-								icon="ui-icon ui-icon-trash"
-								ajax="true"
+								icon="ui-icon ui-icon-trash" ajax="true"
 								disabled="#{!hyperlinkBean.removable}"
 								update="hyperlink_list,hyperlink_input" />
-							<p:commandButton
-								process="@this"
+							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{hyperlinkBean.load}"
 								oncomplete="#{jsUpdateTabTitles}(xhr, status, args)"
-								icon="ui-icon-refresh"
-								ajax="true"
+								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!hyperlinkBean.created}"
 								update="hyperlink_list,hyperlink_input" />
 						</p:toolbarGroup>
@@ -262,23 +248,17 @@
 				</h:panelGrid>
 			</p:panel>
 		</h:panelGrid>
-		<p:confirmDialog
-			appendToBody="false"
-			severity="info"
+		<p:confirmDialog appendToBody="false" severity="info"
 			widgetVar="hyperlinkTitlePresetOverrideConfirmation">
 			<f:facet name="message">
 				<h:outputText
 					value="#{labels.hyperlink_title_preset_override_confirmation_dialog_message}"
 					escape="false" />
 			</f:facet>
-			<p:commandButton
-				value="#{labels.yes_button_label}"
-				onclick="setHyperlinkTitle(true)"
-				type="button" />
-			<p:commandButton
-				value="#{labels.no_button_label}"
-				onclick="setHyperlinkTitle(false)"
-				type="button" />
+			<p:commandButton value="#{labels.yes_button_label}"
+				onclick="setHyperlinkTitle(true)" type="button" />
+			<p:commandButton value="#{labels.no_button_label}"
+				onclick="setHyperlinkTitle(false)" type="button" />
 		</p:confirmDialog>
 	</ui:composition>
 </h:body>
