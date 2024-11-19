@@ -69,12 +69,18 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			return vo != null ? WebUtil.getProbandListEntryTag(vo.getId()) : null;
 		}
 	};
-	private static final String UNIQUE_PROBAND_LIST_ENTRY_TAG_NAME = "{0}. {1}";
+	private static final String PROBAND_LIST_ENTRY_TAG_LABEL = "{0}. {1}";
+	private static final String PROBAND_LIST_ENTRY_TAG_TITLE_LABEL = "{0}. {1} - {2}";
 
 	public String getProbandListEntryTagName(ProbandListEntryTagOutVO probandListEntryTagVO) {
 		if (probandListEntryTagVO != null && probandListEntryTagVO.getField() != null) {
-			return MessageFormat.format(UNIQUE_PROBAND_LIST_ENTRY_TAG_NAME, Long.toString(probandListEntryTagVO.getPosition()),
-					probandListEntryTagVO.getField().getName());
+			if (CommonUtil.isEmptyString(probandListEntryTagVO.getTitle())) {
+				return MessageFormat.format(PROBAND_LIST_ENTRY_TAG_LABEL, Long.toString(probandListEntryTagVO.getPosition()),
+						probandListEntryTagVO.getField().getNameL10nKey());
+			} else {
+				return MessageFormat.format(PROBAND_LIST_ENTRY_TAG_TITLE_LABEL, Long.toString(probandListEntryTagVO.getPosition()),
+						probandListEntryTagVO.getField().getNameL10nKey(), probandListEntryTagVO.getTitleL10nKey());
+			}
 		}
 		return null;
 	}
@@ -171,6 +177,8 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			in.setMode(modeVO == null ? null : modeVO.getDateMode());
 			in.setStartTagId(startTagVO == null ? null : startTagVO.getId());
 			in.setStopTagId(stopTagVO == null ? null : stopTagVO.getId());
+			in.setInternal(out.getInternal());
+			in.setDescription(out.getDescription());
 		}
 	}
 
@@ -196,6 +204,8 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			in.setMode(modeVO == null ? null : modeVO.getDateMode());
 			in.setStartTagId(startTagVO == null ? null : startTagVO.getId());
 			in.setStopTagId(stopTagVO == null ? null : stopTagVO.getId());
+			in.setInternal(out.getInternal());
+			in.setDescription(out.getDescription());
 		}
 	}
 
@@ -216,6 +226,8 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 			in.setMode(Settings.getVisitScheduleDateMode(SettingCodes.VISIT_SCHEDULE_ITEM_MODE_PRESET, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_MODE_PRESET));
 			in.setStartTagId(null);
 			in.setStopTagId(null);
+			in.setInternal(Settings.getBoolean(SettingCodes.VISIT_SCHEDULE_ITEM_INTERNAL_PRESET, Bundle.SETTINGS, DefaultSettings.VISIT_SCHEDULE_ITEM_INTERNAL_PRESET));
+			in.setDescription(Messages.getString(MessageCodes.VISIT_SCHEDULE_ITEM_DESCRIPTION_PRESET));
 		}
 	}
 
@@ -232,12 +244,15 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	private GroupVisitMatrix<VisitScheduleItemOutVO> matrix;
 	private ProbandGroupOutVO group;
 	private VisitOutVO visit;
+	private boolean showCollisions;
 
 	public VisitScheduleBean() {
 		super();
 		collidingProbandStatusEntryModelCache = new HashMap<Long, CollidingProbandStatusEntryEagerModel>();
 		collidingStaffStatusEntryModelCache = new HashMap<Long, CollidingStaffStatusEntryEagerModel>();
 		visitScheduleAppointmentModelCache = new HashMap<Long, VisitScheduleAppointmentEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.TRIAL_VISIT_SCHEDULE_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.TRIAL_VISIT_SCHEDULE_SHOW_COLLISIONS_PRESET);
 		visitScheduleItemModel = new VisitScheduleItemLazyModel();
 		setMode(new VisitScheduleDateModeSelector(this, MODE_PROPERTY_ID));
 		matrix = new GroupVisitMatrix<VisitScheduleItemOutVO>() {
@@ -375,7 +390,7 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	public CollidingProbandStatusEntryEagerModel getCollidingProbandStatusEntryModel(VisitScheduleItemOutVO visitScheduleItem) {
 		CollidingProbandStatusEntryEagerModel collidingProbandStatusEntryModel = CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(visitScheduleItem,
-				true, collidingProbandStatusEntryModelCache);
+				showCollisions, collidingProbandStatusEntryModelCache);
 		collidingProbandStatusEntryModel.setProbandId(null);
 		return collidingProbandStatusEntryModel;
 	}
@@ -389,7 +404,7 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	public CollidingStaffStatusEntryEagerModel getCollidingStaffStatusEntryModel(VisitScheduleItemOutVO visitScheduleItem) {
 		CollidingStaffStatusEntryEagerModel collidingStaffStatusEntryModel = CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(visitScheduleItem,
-				true, collidingStaffStatusEntryModelCache);
+				showCollisions, collidingStaffStatusEntryModelCache);
 		collidingStaffStatusEntryModel.setStaffId(null);
 		return collidingStaffStatusEntryModel;
 	}
@@ -914,5 +929,22 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 	}
 
 	public void handleOffsetnUnselect(UnselectEvent event) {
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingProbandStatusEntryModelCache.clear();
+		collidingStaffStatusEntryModelCache.clear();
+		//visitScheduleAppointmentModelCache.clear();
+		//visitScheduleItemModel.setTrialId(in.getTrialId());
+		//visitScheduleItemModel.setExpand(false);
+		//visitScheduleItemModel.updateRowCount();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

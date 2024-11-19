@@ -35,10 +35,27 @@
 						update=":tabView:courseinventorybooking_form:inventorybooking_input" />
 					<f:facet name="header">
 
-						<h:panelGrid columns="2" cellpadding="0"
-							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+						<h:panelGrid columns="4" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column,ctsms-datatable-header-button-column">
 							<h:outputText
 								value="#{courseInventoryBookingBean.bookingModel.rowCount} #{courselabels.course_inventory_booking_inventorybooking_list_header}" />
+
+							<h:outputLabel for="inventorybooking_list_collisions_filter"
+								value="#{courselabels.course_inventory_booking_inventorybooking_list_collisions_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="inventorybooking_list_collisions_filter"
+									value="#{courseInventoryBookingBean.showCollisions}">
+									<p:ajax update="inventorybooking_list"
+										listener="#{courseInventoryBookingBean.handleShowCollisionsChange}"/>
+								</p:selectBooleanCheckbox>	
+								<p:tooltip rendered="#{enableTooltips}"
+									for="inventorybooking_list_collisions_filter">
+									<h:outputText
+										value="#{courselabels.course_inventory_booking_inventorybooking_list_collisions_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+
 							<p:commandButton type="button"
 								title="#{labels.open_table_columns_dialog_button_label}"
 								icon="ui-icon ui-icon-wrench"
@@ -92,6 +109,9 @@
 								value="#{courselabels.course_inventory_booking_inventorybooking_list_colliding_inventory_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{courseInventoryBookingBean.showCollisions}" />						
 							<ui:param name="value"
 								value="#{courseInventoryBookingBean.getCollidingInventoryStatusEntryModel(booking.vo).allRowCount}" />
 						</ui:include>
@@ -102,6 +122,9 @@
 								value="#{courselabels.course_inventory_booking_inventorybooking_list_colliding_staff_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{courseInventoryBookingBean.showCollisions}" />							
 							<ui:param name="value"
 								value="#{courseInventoryBookingBean.getCollidingStaffStatusEntryModel(booking.vo).allRowCount}" />
 						</ui:include>
@@ -112,6 +135,9 @@
 								value="#{courselabels.course_inventory_booking_inventorybooking_list_colliding_duty_roster_turn_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{courseInventoryBookingBean.showCollisions}" />							
 							<ui:param name="value"
 								value="#{courseInventoryBookingBean.getCollidingDutyRosterTurnModel(booking.vo).allRowCount}" />
 						</ui:include>
@@ -122,6 +148,9 @@
 								value="#{courselabels.course_inventory_booking_inventorybooking_list_colliding_course_participation_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{courseInventoryBookingBean.showCollisions}" />							
 							<ui:param name="value"
 								value="#{courseInventoryBookingBean.getCollidingCourseParticipationStatusEntryModel(booking.vo).allRowCount}" />
 						</ui:include>

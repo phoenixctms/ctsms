@@ -332,7 +332,6 @@ var FieldCalculation = FieldCalculation || {};
 		if (inputFieldVariable && inputFieldVariable.outputId != null && inputFieldVariable.outputId.length > 0) {
 			var outputElement = _getElement(inputFieldVariable.outputId);
 			if (outputElement != null) {
-
 				outputElement.removeClass('ctsms-inputfield-output-valueerror ctsms-inputfield-output-outputerror ctsms-inputfield-output-delta ctsms-inputfield-output-nodelta ctsms-inputfield-output');
 				if (inputFieldVariable.valueErrorMessage != null && inputFieldVariable.valueErrorMessage.length > 0) {
 					outputElement.html(inputFieldVariable.valueErrorMessage);
@@ -343,7 +342,15 @@ var FieldCalculation = FieldCalculation || {};
 						outputElement.addClass('ctsms-inputfield-output-outputerror');
 					}
 				} else if (inputFieldVariable.output != null && inputFieldVariable.output.length > 0) {
-					outputElement.html(inputFieldVariable.output);
+					try  {
+						outputElement.html(inputFieldVariable.output);
+					} catch (e) {
+						outputElement.html(e.message);
+						if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
+							outputElement.addClass('ctsms-inputfield-output-outputerror');
+						}
+						return;
+					}
 					if (inputFieldVariable.value.jsValueExpression != null && inputFieldVariable.value.jsValueExpression.length > 0) {
 						if (!outputElement.hasClass('ctsms-inputfield-output-disabled')) {
     						if (inputFieldVariable.delta) {
@@ -554,6 +561,7 @@ var FieldCalculation = FieldCalculation || {};
 		if (inputFieldVariable.value.series) {
 			mask["$index"] = inputFieldVariable.value.index;
 		}
+		mask["$variableName"] = inputFieldVariable.value.jsVariableName;
 
 		mask["$selectionSetValues"] = inputFieldVariable.value.selectionSetValues;
 		mask["$proband"] =  inputFieldVars.proband;
@@ -885,6 +893,7 @@ var FieldCalculation = FieldCalculation || {};
 		} else {
 			mask["console"] = null;
 		}
+		mask["loadExpressionUtils"] = function(resource, fileId) { return _loadExpressionUtils(mask, resource, fileId); };
 	}
 
 	function _empty(input) {
@@ -1547,6 +1556,7 @@ var FieldCalculation = FieldCalculation || {};
 		}
 		inputFieldVariableMap = {};
 		inputFieldVars = {};
+		expressionUtilsCache = {};
 		errorMessageId = null;
 		silent = false;
 		if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
@@ -1585,9 +1595,9 @@ var FieldCalculation = FieldCalculation || {};
 		if (_testPropertyExists(args, AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64)) {
 			inputFieldVars.probandListEntry = _decode(args[AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64]);
 		}
-		if (_testPropertyExists(args, AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64)) {
-			inputFieldVars.visitScheduleItems = _decode(args[AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64]);
-		}
+		//if (_testPropertyExists(args, AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64)) {
+		//	inputFieldVars.visitScheduleItems = _decode(args[AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64]);
+		//}
 		if (_testPropertyExists(args, AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64)) {
 			inputFieldVars.probandGroups = _decode(args[AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64]);
 		}
@@ -1704,6 +1714,9 @@ var FieldCalculation = FieldCalculation || {};
     }
 
 	function _initInputFieldVariableValues(args) {
+		if (_testPropertyExists(args, AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64)) {
+			inputFieldVars.visitScheduleItems = _decode(args[AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64]);
+		}
 		if (_testPropertyExists(args, AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64)) {
 			var inputFieldVariableValues = _decode(args[AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64]);
 			var msg = "merged " + inputFieldVariableValues.length + " variable values";
@@ -2173,6 +2186,47 @@ var FieldCalculation = FieldCalculation || {};
 		}
 		return decodeURIComponent(str);
 	}
+	
+	var expressionUtilsCache = {};
+	function _loadExpressionUtils(mask, resource, fileId) {
+		var js;
+		if (resource in expressionUtilsCache) {
+			js = expressionUtilsCache[resource];
+		} else {
+			js = FieldCalculation.getScript(resource, fileId);
+			expressionUtilsCache[resource] = js;
+		}
+		eval("with(mask){(\n" + js + "\n)(mask);}");
+	}
+	
+	function _getScriptAjax(resource, fileId) {
+		var js;
+		var error;
+		jQuery.ajax({
+		    url: resource,
+		    type: 'GET',
+		    dataType: 'text',
+		    async: false,
+		    cache: false,
+	        timeout: 30000,
+		    error: function(jqXHR, textStatus, errorThrown) {
+		        if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
+					console.log(resource + ': ' + textStatus + ((errorThrown != null && errorThrown.toString().length > 0) ? ' - ' + errorThrown.toString() : ''));
+				}
+				error = resource + ': ' + textStatus + ((errorThrown != null && errorThrown.toString().length > 0) ? ' - ' + errorThrown.toString() : '');
+		    },
+		    success: function(data, textStatus, jqXHR) { 
+				if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
+					console.log(resource + ': ' + textStatus);
+				}
+		        js = data;
+		    },
+		});
+		if (error != null) {
+			throw error;
+		}
+		return js;
+	}
 
 	FieldCalculation.handleInitInputFieldVariables = handleInitInputFieldVariables;
 	FieldCalculation.resetInputFieldVariables = resetInputFieldVariables;
@@ -2205,6 +2259,9 @@ var FieldCalculation = FieldCalculation || {};
 	FieldCalculation.timestampApplyCalculatedValue = timestampApplyCalculatedValue;
 	FieldCalculation.timeApplyCalculatedValue = timeApplyCalculatedValue;
 	FieldCalculation.sketchApplyCalculatedValue = sketchApplyCalculatedValue;
+
+	FieldCalculation.getScriptAjax = _getScriptAjax;
+	FieldCalculation.getScript = _getScriptAjax;
 
 	_exportExpressionUtils(FieldCalculation);
 

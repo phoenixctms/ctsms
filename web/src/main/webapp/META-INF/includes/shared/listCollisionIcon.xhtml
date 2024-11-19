@@ -9,7 +9,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:outputText rendered="#{value != null}"
+		<h:outputText rendered="#{rendered and value != null}"
 			styleClass="#{value > 0 ? 'ctsms-list-icon ctsms-icon-warning' : 'ctsms-list-icon ctsms-icon-check'}"
 			value="(#{value} #{labels.collisions_label})" />
 

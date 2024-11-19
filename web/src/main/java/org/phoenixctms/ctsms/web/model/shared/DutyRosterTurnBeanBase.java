@@ -65,6 +65,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	protected ArrayList<SelectItem> filterTitles;
 	protected HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
 	protected HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
+	protected boolean showCollisions;
 	private static final String VISIT_SCHEDULE_ITEM_NAME = "{0}";
 	private static final String TRIAL_VISIT_SCHEDULE_ITEM_NAME = "{0}: {1}";
 
@@ -183,11 +184,11 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(DutyRosterTurnOutVO dutyRosterTurn) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(dutyRosterTurn, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(dutyRosterTurn, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public CollidingStaffStatusEntryEagerModel getCollidingStaffStatusEntryModel(DutyRosterTurnOutVO dutyRosterTurn) {
-		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(dutyRosterTurn, true, collidingStaffStatusEntryModelCache);
+		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(dutyRosterTurn, showCollisions, collidingStaffStatusEntryModelCache);
 	}
 
 	private List<String> getCompleteCalendarList(String query) {
@@ -415,5 +416,13 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	}
 
 	protected void updateEvent() {
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

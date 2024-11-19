@@ -69,11 +69,28 @@
 						<p:ajax event="page" listener="#{inventoryStatusOverviewBean.inventoryStatusModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid
-								columns="3"
+								columns="5"
 								cellpadding="0"
-								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column,ctsms-datatable-header-button-column">
 								<h:outputText value="#{inventoryStatusOverviewBean.inventoryStatusModel.rowCount} #{inventorylabels.inventory_status_overview_inventorystatus_list_header}" />
 								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								
+								<h:outputLabel for="inventorystatus_list_collisions_filter"
+									value="#{inventorylabels.inventory_status_overview_inventorystatus_list_collisions_filter_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="inventorystatus_list_collisions_filter"
+										value="#{inventoryStatusOverviewBean.showCollisions}">
+										<p:ajax update="inventorystatus_list"
+											listener="#{inventoryStatusOverviewBean.handleShowCollisionsChange}"/>
+									</p:selectBooleanCheckbox>	
+									<p:tooltip rendered="#{enableTooltips}"
+										for="inventorystatus_list_collisions_filter">
+										<h:outputText
+											value="#{inventorylabels.inventory_status_overview_inventorystatus_list_collisions_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								
 								<p:commandButton
 									process="@this"
 									actionListener="#{inventoryStatusOverviewBean.load}"
@@ -175,6 +192,9 @@
 								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_colliding_inventory_booking_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+								<ui:param
+									name="rendered"
+							    	value="#{teamMemberPickerBean.showCollisions}" />
 								<ui:param
 									name="value"
 									value="#{inventoryStatusOverviewBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />

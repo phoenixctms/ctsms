@@ -17,10 +17,14 @@ import org.phoenixctms.ctsms.web.model.shared.CollidingDutyRosterTurnEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.InventoryBookingBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -55,6 +59,8 @@ public class CourseInventoryBookingBean extends InventoryBookingBeanBase {
 		collidingStaffStatusEntryModelCache = new HashMap<Long, CollidingStaffStatusEntryEagerModel>();
 		collidingDutyRosterTurnModelCache = new HashMap<Long, CollidingDutyRosterTurnEagerModel>();
 		collidingCourseParticipationStatusEntryModelCache = new HashMap<Long, CollidingCourseParticipationStatusEntryEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.COURSE_INVENTORY_BOOKINGS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.COURSE_INVENTORY_BOOKINGS_SHOW_COLLISIONS_PRESET);
 		bookingModel = new CourseInventoryBookingLazyModel();
 	}
 
@@ -86,15 +92,15 @@ public class CourseInventoryBookingBean extends InventoryBookingBeanBase {
 
 	public CollidingCourseParticipationStatusEntryEagerModel getCollidingCourseParticipationStatusEntryModel(InventoryBookingOutVO courseBooking) {
 		return CollidingCourseParticipationStatusEntryEagerModel.getCachedCollidingCourseParticipationStatusEntryModel(courseBooking,
-				true, collidingCourseParticipationStatusEntryModelCache);
+				showCollisions, collidingCourseParticipationStatusEntryModelCache);
 	}
 
 	public CollidingDutyRosterTurnEagerModel getCollidingDutyRosterTurnModel(InventoryBookingOutVO courseBooking) {
-		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(courseBooking, true, collidingDutyRosterTurnModelCache);
+		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(courseBooking, showCollisions, collidingDutyRosterTurnModelCache);
 	}
 
 	public CollidingStaffStatusEntryEagerModel getCollidingStaffStatusEntryModel(InventoryBookingOutVO courseBooking) {
-		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(courseBooking, true, collidingStaffStatusEntryModelCache);
+		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(courseBooking, showCollisions, collidingStaffStatusEntryModelCache);
 	}
 
 	@Override
@@ -145,5 +151,12 @@ public class CourseInventoryBookingBean extends InventoryBookingBeanBase {
 	@Override
 	public boolean isCreateable() {
 		return (in.getCourseId() == null ? false : true);
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingInventoryStatusEntryModelCache.clear();
+		collidingStaffStatusEntryModelCache.clear();
+		collidingDutyRosterTurnModelCache.clear();
+		collidingCourseParticipationStatusEntryModelCache.clear();
 	}
 }

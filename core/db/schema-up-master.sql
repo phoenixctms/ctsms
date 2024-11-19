@@ -114,5 +114,18 @@ if get_database_version() < '010801070' then
   
 end if;
 
+if get_database_version() < '010801080' then
+
+  ALTER TABLE visit_schedule_item ADD COLUMN internal BOOLEAN;
+  UPDATE visit_schedule_item SET internal = 'f';
+  ALTER TABLE visit_schedule_item ALTER internal SET NOT NULL;
+  
+  ALTER TABLE visit_schedule_item ADD COLUMN description TEXT;
+  UPDATE visit_schedule_item SET description = '';
+  
+  perform set_database_version('010801080');
+  
+end if;
+
 end
 $$;

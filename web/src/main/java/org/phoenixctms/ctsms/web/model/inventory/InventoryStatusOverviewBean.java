@@ -22,15 +22,18 @@ public class InventoryStatusOverviewBean extends ManagedBeanBase {
 
 	private InventoryStatusLazyModel inventoryStatusModel;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
+	private boolean showCollisions;
 
 	public InventoryStatusOverviewBean() {
 		super();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.INVENTORY_STATUS_OVERVIEW_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_STATUS_OVERVIEW_SHOW_COLLISIONS_PRESET);
 		inventoryStatusModel = new InventoryStatusLazyModel();
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(InventoryStatusEntryOutVO statusEntry) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public InventoryStatusLazyModel getInventoryStatusModel() {
@@ -80,5 +83,17 @@ public class InventoryStatusOverviewBean extends ManagedBeanBase {
 		initIn();
 		initSets();
 		return LOAD_OUTCOME;
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingInventoryBookingModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

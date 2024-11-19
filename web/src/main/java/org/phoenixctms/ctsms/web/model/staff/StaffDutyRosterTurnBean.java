@@ -54,6 +54,8 @@ public class StaffDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	public StaffDutyRosterTurnBean() {
 		super();
 		dutyRosterTurnModel = new StaffDutyRosterTurnLazyModel();
+		showCollisions = Settings.getBoolean(SettingCodes.STAFF_DUTY_ROSTER_TURNS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.STAFF_DUTY_ROSTER_TURNS_SHOW_COLLISIONS_PRESET);
 	}
 
 	@Override
@@ -156,5 +158,10 @@ public class StaffDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && WebUtil.isStaffAllocatable(staff);
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingStaffStatusEntryModelCache.clear();
+		collidingInventoryBookingModelCache.clear();
 	}
 }

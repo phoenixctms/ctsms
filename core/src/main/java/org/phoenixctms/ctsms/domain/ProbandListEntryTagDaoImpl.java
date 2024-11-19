@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -91,9 +92,12 @@ public class ProbandListEntryTagDaoImpl
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = listEntryTagCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = listEntryTagCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			listEntryTagCriteria.add(Restrictions.or(
-					(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
-					(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction()));
+			Junction junction = Restrictions.disjunction();
+			junction.add((new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			listEntryTagCriteria.add(junction);
 		}
 		applySortOrders(listEntryTagCriteria);
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.PROBAND_LIST_ENTRY_TAG_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
@@ -206,10 +210,17 @@ public class ProbandListEntryTagDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long trialId) throws Exception {
+	protected long handleGetCount(Long trialId, Boolean startDate) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
 		if (trialId != null) {
 			listEntryTagCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (startDate != null) {
+			if (startDate) {
+				listEntryTagCriteria.add(Restrictions.sizeGt("startDates", 0));
+			} else {
+				listEntryTagCriteria.add(Restrictions.sizeEq("startDates", 0));
+			}
 		}
 		return (Long) listEntryTagCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}

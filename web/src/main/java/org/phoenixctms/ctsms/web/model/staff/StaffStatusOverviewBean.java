@@ -26,25 +26,28 @@ public class StaffStatusOverviewBean extends ManagedBeanBase {
 	private HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
 	private HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache;
+	private boolean showCollisions;
 
 	public StaffStatusOverviewBean() {
 		super();
 		collidingDutyRosterTurnModelCache = new HashMap<Long, CollidingDutyRosterTurnEagerModel>();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
 		collidingVisitScheduleItemModelCache = new HashMap<Long, CollidingVisitScheduleItemEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.STAFF_STATUS_OVERVIEW_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.STAFF_STATUS_OVERVIEW_SHOW_COLLISIONS_PRESET);
 		staffStatusModel = new StaffStatusLazyModel();
 	}
 
 	public CollidingDutyRosterTurnEagerModel getCollidingDutyRosterTurnModel(StaffStatusEntryOutVO statusEntry) {
-		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(statusEntry, true, collidingDutyRosterTurnModelCache);
+		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(statusEntry, showCollisions, collidingDutyRosterTurnModelCache);
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(StaffStatusEntryOutVO statusEntry) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public CollidingVisitScheduleItemEagerModel getCollidingVisitScheduleItemModel(StaffStatusEntryOutVO statusEntry) {
-		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, collidingVisitScheduleItemModelCache);
+		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, showCollisions, collidingVisitScheduleItemModelCache);
 	}
 
 	public StaffStatusLazyModel getStaffStatusModel() {
@@ -96,5 +99,19 @@ public class StaffStatusOverviewBean extends ManagedBeanBase {
 			}
 		}
 		return "";
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingDutyRosterTurnModelCache.clear();
+		collidingInventoryBookingModelCache.clear();
+		collidingVisitScheduleItemModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

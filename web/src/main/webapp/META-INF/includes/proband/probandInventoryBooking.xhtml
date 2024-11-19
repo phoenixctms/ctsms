@@ -34,10 +34,27 @@
 					<p:ajax event="rowSelect"
 						update=":tabView:probandinventorybooking_form:inventorybooking_input" />
 					<f:facet name="header">
-						<h:panelGrid columns="2" cellpadding="0"
-							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+						<h:panelGrid columns="4" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column,ctsms-datatable-header-button-column">
 							<h:outputText
 								value="#{probandInventoryBookingBean.bookingModel.rowCount} #{probandlabels.proband_inventory_booking_inventorybooking_list_header}" />
+							
+							<h:outputLabel for="inventorybooking_list_collisions_filter"
+								value="#{probandlabels.proband_inventory_booking_inventorybooking_list_collisions_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="inventorybooking_list_collisions_filter"
+									value="#{probandInventoryBookingBean.showCollisions}">
+									<p:ajax update="inventorybooking_list"
+										listener="#{probandInventoryBookingBean.handleShowCollisionsChange}"/>
+								</p:selectBooleanCheckbox>	
+								<p:tooltip rendered="#{enableTooltips}"
+									for="inventorybooking_list_collisions_filter">
+									<h:outputText
+										value="#{probandlabels.proband_inventory_booking_inventorybooking_list_collisions_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>							
+							
 							<p:commandButton type="button"
 								title="#{labels.open_table_columns_dialog_button_label}"
 								icon="ui-icon ui-icon-wrench"
@@ -103,6 +120,9 @@
 								value="#{probandlabels.proband_inventory_booking_inventorybooking_list_colliding_inventory_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{probandInventoryBookingBean.showCollisions}" />							
 							<ui:param name="value"
 								value="#{probandInventoryBookingBean.getCollidingInventoryStatusEntryModel(booking.vo).allRowCount}" />
 						</ui:include>
@@ -113,6 +133,9 @@
 								value="#{probandlabels.proband_inventory_booking_inventorybooking_list_colliding_proband_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{probandInventoryBookingBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{probandInventoryBookingBean.getCollidingProbandStatusEntryModel(booking.vo).allRowCount}" />
 						</ui:include>

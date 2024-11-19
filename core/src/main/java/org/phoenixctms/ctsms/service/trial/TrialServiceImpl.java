@@ -836,13 +836,14 @@ public class TrialServiceImpl
 		UserOutVO userVO = this.getUserDao().toUserOutVO(user);
 		Collection visitScheduleItems = null;
 		Collection probandGroups = null;
-		if (listEntry.getGroup() != null) {
-			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-			visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(), listEntry.getGroup().getId(),
-					visit != null ? visit.getId() : null, //narrow ecrf visit?
-					listEntry.getProband().getId(), null, true, null);
-			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
-		}
+		//if (listEntry.getGroup() != null) {
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(listEntry.getTrial().getId(),
+				listEntry.getGroup() != null ? listEntry.getGroup().getId() : null,
+				visit != null ? visit.getId() : null, //narrow ecrf visit?
+				listEntry.getProband().getId(), null, null, true, null);
+		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+		//}
 		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
 		probandGroups = probandGroupDao.findByTrial(listEntry.getTrial().getId(), null);
 		probandGroupDao.toProbandGroupOutVOCollection(probandGroups);
@@ -876,7 +877,7 @@ public class TrialServiceImpl
 				ecrfFieldValueDao.findByListEntryEcrfVisitJsField(listEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, true, true, null, null),
 				maxSeriesIndexMap, fieldMaxPositionMap, fieldMinPositionMap, seriesEcrfFieldMap,
 				false, ecrfFieldValueDao, inputFieldSelectionSetValueDao);
-		FieldCalculation fieldCalculation = new FieldCalculation();
+		FieldCalculation fieldCalculation = new FieldCalculation(this.getFileDao());
 		fieldCalculation.setProbandListEntry(listEntryVO);
 		fieldCalculation.setActiveUser(userVO);
 		fieldCalculation.setLocale(Locales.AUDIT_TRAIL);
@@ -5459,12 +5460,12 @@ public class TrialServiceImpl
 				visitScheduleItems = trial.getVisitScheduleItems();
 				break;
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, true, null);
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, false, true, null);
 				break;
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				visitScheduleItems = new ArrayList<VisitScheduleAppointmentVO>();
 				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, null, null, null,
-						CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
+						false, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 				while (it.hasNext()) {
 					Object[] visitScheduleItemProband = (Object[]) it.next();
 					VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO((VisitScheduleItem) visitScheduleItemProband[0]);
@@ -5562,7 +5563,7 @@ public class TrialServiceImpl
 		//Iterator<VisitScheduleItem> it = probandGroup.getVisitScheduleItems().iterator();
 		Iterator<VisitScheduleItem> it = this.getVisitScheduleItemDao()
 				.findByTrialGroupVisitProbandTravel(probandListEntry.getTrial().getId(), probandGroup != null ? probandGroup.getId() : null,
-						null, probandListEntry.getProband().getId(), null, true, null)
+						null, probandListEntry.getProband().getId(), null, false, true, null)
 				.iterator();
 		while (it.hasNext()) {
 			VisitScheduleItem expanded = it.next();
@@ -6573,11 +6574,11 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected long handleGetProbandListEntryTagCount(AuthenticationVO auth, Long trialId) throws Exception {
+	protected long handleGetProbandListEntryTagCount(AuthenticationVO auth, Long trialId, Boolean startDate) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
-		return this.getProbandListEntryTagDao().getCount(trialId);
+		return this.getProbandListEntryTagDao().getCount(trialId, startDate);
 	}
 
 	@Override
@@ -7310,7 +7311,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected long handleGetVisitScheduleItemCount(
-			AuthenticationVO auth, Long trialId, Long probandGroupId, Long visitId, Long probandId, boolean expand) throws Exception {
+			AuthenticationVO auth, Long trialId, Long probandGroupId, Long visitId, Long probandId, Boolean internal, boolean expand) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
@@ -7323,7 +7324,7 @@ public class TrialServiceImpl
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
-		return this.getVisitScheduleItemDao().getCount(trialId, probandGroupId, visitId, probandId, null, expand);
+		return this.getVisitScheduleItemDao().getCount(trialId, probandGroupId, visitId, probandId, null, internal, expand);
 	}
 
 	@Override
@@ -7343,7 +7344,7 @@ public class TrialServiceImpl
 		if (id != null) {
 			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
 		}
-		Collection visitScheduleItems = visitScheduleItemDao.findByTrialDepartmentIntervalId(trialId, departmentId,
+		Collection visitScheduleItems = visitScheduleItemDao.findByTrialDepartmentIntervalId(trialId, departmentId, false,
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), id);
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		if (sort) {
@@ -7374,7 +7375,7 @@ public class TrialServiceImpl
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		ProbandDao probandDao = this.getProbandDao();
 		ArrayList<VisitScheduleAppointmentVO> result = new ArrayList<VisitScheduleAppointmentVO>();
-		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, probandId, statusId, visitTypeId,
+		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, probandId, statusId, visitTypeId, false,
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 		while (it.hasNext()) {
 			Object[] visitScheduleItemProband = it.next();
@@ -7416,7 +7417,7 @@ public class TrialServiceImpl
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-		Collection visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialId, probandGroupId, visitId, probandId, null, expand, psf);
+		Collection visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialId, probandGroupId, visitId, probandId, null, null, expand, psf);
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		return visitScheduleItems;
 	}

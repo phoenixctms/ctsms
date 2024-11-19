@@ -19,7 +19,8 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 
 public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<VisitScheduleItemOutVO> {
 
-	public static CollidingVisitScheduleItemEagerModel getCachedCollidingVisitScheduleItemModel(ProbandStatusEntryOutVO statusEntry, boolean allProbandGroups,
+	public static CollidingVisitScheduleItemEagerModel getCachedCollidingVisitScheduleItemModel(ProbandStatusEntryOutVO statusEntry, boolean load, boolean allProbandGroups,
+			Boolean internal,
 			HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache) {
 		CollidingVisitScheduleItemEagerModel model;
 		if (statusEntry != null && collidingVisitScheduleItemModelCache != null) {
@@ -27,30 +28,40 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 			if (collidingVisitScheduleItemModelCache.containsKey(probandStatusEntryId)) {
 				model = collidingVisitScheduleItemModelCache.get(probandStatusEntryId);
 			} else {
-				model = new CollidingVisitScheduleItemEagerModel();
-				model.setProbandStatusEntryId(probandStatusEntryId);
-				model.setAllProbandGroups(allProbandGroups);
-				collidingVisitScheduleItemModelCache.put(probandStatusEntryId, model);
+				if (load) {
+					model = new CollidingVisitScheduleItemEagerModel();
+					model.setProbandStatusEntryId(probandStatusEntryId);
+					model.setAllProbandGroups(allProbandGroups);
+					model.setInternal(internal);
+					collidingVisitScheduleItemModelCache.put(probandStatusEntryId, model);
+				} else {
+					model = new CollidingVisitScheduleItemEagerModel();
+				}
 			}
 		} else {
 			model = new CollidingVisitScheduleItemEagerModel();
 			model.setAllProbandGroups(allProbandGroups);
+			model.setInternal(internal);
 			model.initSets();
 		}
 		return model;
 	}
 
 	public static CollidingVisitScheduleItemEagerModel getCachedCollidingVisitScheduleItemModel(StaffStatusEntryOutVO statusEntry,
-			HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache) {
+			boolean load, HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache) {
 		CollidingVisitScheduleItemEagerModel model;
 		if (statusEntry != null && collidingVisitScheduleItemModelCache != null) {
 			long staffStatusEntryId = statusEntry.getId();
 			if (collidingVisitScheduleItemModelCache.containsKey(staffStatusEntryId)) {
 				model = collidingVisitScheduleItemModelCache.get(staffStatusEntryId);
 			} else {
-				model = new CollidingVisitScheduleItemEagerModel();
-				model.setStaffStatusEntryId(staffStatusEntryId);
-				collidingVisitScheduleItemModelCache.put(staffStatusEntryId, model);
+				if (load) {
+					model = new CollidingVisitScheduleItemEagerModel();
+					model.setStaffStatusEntryId(staffStatusEntryId);
+					collidingVisitScheduleItemModelCache.put(staffStatusEntryId, model);
+				} else {
+					model = new CollidingVisitScheduleItemEagerModel();
+				}
 			}
 		} else {
 			model = new CollidingVisitScheduleItemEagerModel();
@@ -62,6 +73,7 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 	private Long staffStatusEntryId;
 	private ArrayList<SelectItem> filterTrials;
 	private boolean allProbandGroups;
+	private Boolean internal;
 
 	public CollidingVisitScheduleItemEagerModel() {
 		super();
@@ -72,7 +84,8 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 	protected Collection<VisitScheduleItemOutVO> getEagerResult(PSFVO psf) {
 		if (probandStatusEntryId != null) {
 			try {
-				return WebUtil.getServiceLocator().getProbandService().getCollidingVisitScheduleItems(WebUtil.getAuthentication(), probandStatusEntryId, allProbandGroups);
+				return WebUtil.getServiceLocator().getProbandService().getCollidingVisitScheduleItems(WebUtil.getAuthentication(), probandStatusEntryId, allProbandGroups,
+						internal);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -121,6 +134,14 @@ public class CollidingVisitScheduleItemEagerModel extends EagerDataModelBase<Vis
 
 	public void setAllProbandGroups(boolean allProbandGroups) {
 		this.allProbandGroups = allProbandGroups;
+	}
+
+	public Boolean getInternal() {
+		return internal;
+	}
+
+	public void setInternal(Boolean internal) {
+		this.internal = internal;
 	}
 
 	public void setProbandStatusEntryId(Long probandStatusEntryId) {

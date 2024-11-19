@@ -803,12 +803,12 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	private Collection<VisitScheduleItemOutVO> loadVisitScheduleItems(ProbandListEntryOutVO listEntry, VisitOutVO ecrfVisit) {
-		if (listEntry != null && listEntry.getGroup() != null) {
+		if (listEntry != null) { // && listEntry.getGroup() != null) {
 			try {
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService()
-						.getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup().getId(),
+						.getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup() != null ? listEntry.getGroup().getId() : null,
 								ecrfVisit != null ? ecrfVisit.getId() : null, listEntry.getProband().getId(), //narrow ecrf visit?
 								true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {

@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -212,13 +213,14 @@ public class ECRFFieldDaoImpl
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = ecrfFieldCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = ecrfFieldCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			ecrfFieldCriteria.add(Restrictions.or(
-					(new CategoryCriterion(nameInfix, "section", MatchMode.ANYWHERE)).getRestriction(),
-					Restrictions.or(
-							(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
-							Restrictions.or(
-									(new CategoryCriterion(nameInfix, "ecrf0.name", MatchMode.ANYWHERE)).getRestriction(),
-									(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction()))));
+			Junction junction = Restrictions.disjunction();
+			junction.add((new CategoryCriterion(nameInfix, "section", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "ecrf0.name", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			ecrfFieldCriteria.add(junction);
 		}
 		applySortOrders(ecrfFieldCriteria, ecrfCriteria);
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.ECRF_FIELD_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,

@@ -25,10 +25,14 @@ import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -75,10 +79,13 @@ public class InventoryStatusBean extends ManagedBeanBase {
 	private InventoryStatusEntryLazyModel statusEntryModel;
 	private InventoryStatusTypeVO statusType;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
+	private boolean showCollisions;
 
 	public InventoryStatusBean() {
 		super();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.INVENTORY_STATUS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.INVENTORY_STATUS_SHOW_COLLISIONS_PRESET);
 		statusEntryModel = new InventoryStatusEntryLazyModel();
 	}
 
@@ -154,7 +161,7 @@ public class InventoryStatusBean extends ManagedBeanBase {
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(InventoryStatusEntryOutVO statusEntry) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public InventoryStatusEntryInVO getIn() {
@@ -326,5 +333,17 @@ public class InventoryStatusBean extends ManagedBeanBase {
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingInventoryBookingModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

@@ -30,4 +30,9 @@ public class VisitScheduleDurationConverter extends DurationConverterBase {
 			return null;
 		}
 	}
+
+	@Override
+	protected boolean isSigned() {
+		return false;
+	}
 }

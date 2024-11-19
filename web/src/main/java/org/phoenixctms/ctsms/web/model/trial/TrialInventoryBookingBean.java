@@ -17,10 +17,14 @@ import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.InventoryBookingBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -52,6 +56,8 @@ public class TrialInventoryBookingBean extends InventoryBookingBeanBase {
 	public TrialInventoryBookingBean() {
 		super();
 		collidingProbandStatusEntryModelCache = new HashMap<Long, CollidingProbandStatusEntryEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.TRIAL_INVENTORY_BOOKINGS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.TRIAL_INVENTORY_BOOKINGS_SHOW_COLLISIONS_PRESET);
 		bookingModel = new TrialInventoryBookingLazyModel();
 	}
 
@@ -82,7 +88,7 @@ public class TrialInventoryBookingBean extends InventoryBookingBeanBase {
 	}
 
 	public CollidingProbandStatusEntryEagerModel getCollidingProbandStatusEntryModel(InventoryBookingOutVO probandBooking) {
-		return CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(probandBooking, true, collidingProbandStatusEntryModelCache);
+		return CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(probandBooking, showCollisions, collidingProbandStatusEntryModelCache);
 	}
 
 	@Override
@@ -153,5 +159,10 @@ public class TrialInventoryBookingBean extends InventoryBookingBeanBase {
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isTrialLocked(trial);
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingInventoryStatusEntryModelCache.clear();
+		collidingProbandStatusEntryModelCache.clear();
 	}
 }

@@ -17,10 +17,14 @@ import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CollidingProbandStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.InventoryBookingBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -53,6 +57,8 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 	public ProbandInventoryBookingBean() {
 		super();
 		collidingProbandStatusEntryModelCache = new HashMap<Long, CollidingProbandStatusEntryEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.PROBAND_INVENTORY_BOOKINGS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.PROBAND_INVENTORY_BOOKINGS_SHOW_COLLISIONS_PRESET);
 		bookingModel = new ProbandInventoryBookingLazyModel();
 		addReimbursementBean = new AddBookingReimbursementBean();
 	}
@@ -94,7 +100,7 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 	}
 
 	public CollidingProbandStatusEntryEagerModel getCollidingProbandStatusEntryModel(InventoryBookingOutVO probandBooking) {
-		return CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(probandBooking, true, collidingProbandStatusEntryModelCache);
+		return CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(probandBooking, showCollisions, collidingProbandStatusEntryModelCache);
 	}
 
 	@Override
@@ -169,5 +175,10 @@ public class ProbandInventoryBookingBean extends InventoryBookingBeanBase {
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isProbandLocked(proband);
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingInventoryStatusEntryModelCache.clear();
+		collidingProbandStatusEntryModelCache.clear();
 	}
 }

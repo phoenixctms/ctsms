@@ -67,7 +67,7 @@
 							<ui:param name="value" value="#{visit.vo.type.travel}" />
 						</ui:include>
 					</p:column>
-					<p:column sortBy="#{visit.vo.token}">
+					<p:column sortBy="#{visit.vo.token}" filterBy="#{visit.vo.token}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{triallabels.visit_visit_list_token_column}" />

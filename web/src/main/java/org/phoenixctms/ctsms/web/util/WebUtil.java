@@ -3328,10 +3328,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static Long getProbandListEntryTagCount(Long trialId) {
+	public static Long getProbandListEntryTagCount(Long trialId, Boolean startDate) {
 		if (trialId != null) {
 			try {
-				return getServiceLocator().getTrialService().getProbandListEntryTagCount(getAuthentication(), trialId);
+				return getServiceLocator().getTrialService().getProbandListEntryTagCount(getAuthentication(), trialId, startDate);
 			} catch (AuthenticationException e) {
 				publishException(e);
 			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
@@ -4557,7 +4557,7 @@ public final class WebUtil {
 	public static Long getVisitScheduleItemCount(Long trialId, Long probandId, boolean expand) {
 		if (trialId != null || probandId != null) {
 			try {
-				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId, expand);
+				return getServiceLocator().getTrialService().getVisitScheduleItemCount(getAuthentication(), trialId, null, null, probandId, null, expand);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);

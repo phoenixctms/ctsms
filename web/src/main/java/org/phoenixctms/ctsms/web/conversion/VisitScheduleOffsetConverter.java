@@ -30,4 +30,9 @@ public class VisitScheduleOffsetConverter extends DurationConverterBase {
 			return null;
 		}
 	}
+
+	@Override
+	protected boolean isSigned() {
+		return true;
+	}
 }

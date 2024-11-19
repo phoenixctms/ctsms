@@ -1358,8 +1358,8 @@ public class StaffServiceImpl
 		}
 		if (!staffStatusEntry.getType().isStaffActive()) {
 			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-			Collection collidingVisitScheduleItems = visitScheduleItemDao.findByDepartmentTravelInterval(trialDepartmentId, staffStatusEntry.getStart(),
-					staffStatusEntry.getStop(), null);
+			Collection collidingVisitScheduleItems = visitScheduleItemDao.findByDepartmentTravelInterval(trialDepartmentId, null, false, staffStatusEntry.getStart(),
+					staffStatusEntry.getStop());
 			visitScheduleItemDao.toVisitScheduleItemOutVOCollection(collidingVisitScheduleItems);
 			return collidingVisitScheduleItems;
 		} else {
@@ -2287,7 +2287,8 @@ public class StaffServiceImpl
 				StaffDao staffDao = this.getStaffDao();
 				HashMap<Date, Collection> dateMap = new HashMap<Date, Collection>();
 				Iterator<VisitScheduleItem> visitScheduleItemsIt = this.getVisitScheduleItemDao()
-						.findByDepartmentTravelInterval(allTrials ? null : statusEntry.getStaff().getDepartment().getId(), statusEntry.getStart(), statusEntry.getStop(), null)
+						.findByDepartmentTravelInterval(allTrials ? null : statusEntry.getStaff().getDepartment().getId(), null, false, statusEntry.getStart(),
+								statusEntry.getStop())
 						.iterator();
 				while (visitScheduleItemsIt.hasNext()) {
 					VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();

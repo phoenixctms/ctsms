@@ -55,7 +55,7 @@
 						</f:facet>
 						<h:outputText value="#{probandGroup.vo.id}" />
 					</p:column>
-					<p:column sortBy="#{probandGroup.vo.token}">
+					<p:column sortBy="#{probandGroup.vo.token}" filterBy="#{probandGroup.vo.token}">
 						<f:facet name="header">
 							<h:outputText
 								value="#{triallabels.proband_group_probandgroup_list_token_column}" />

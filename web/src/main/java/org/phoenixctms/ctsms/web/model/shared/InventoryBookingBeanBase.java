@@ -54,6 +54,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 	protected InventoryBookingOutVO out;
 	protected HashMap<Long, CollidingInventoryStatusEntryEagerModel> collidingInventoryStatusEntryModelCache;
 	protected ArrayList<SelectItem> filterCalendars;
+	protected boolean showCollisions;
 
 	public InventoryBookingBeanBase() {
 		super();
@@ -144,7 +145,7 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 	}
 
 	public CollidingInventoryStatusEntryEagerModel getCollidingInventoryStatusEntryModel(InventoryBookingOutVO booking) {
-		return CollidingInventoryStatusEntryEagerModel.getCachedCollidingInventoryStatusEntryModel(booking, true, collidingInventoryStatusEntryModelCache);
+		return CollidingInventoryStatusEntryEagerModel.getCachedCollidingInventoryStatusEntryModel(booking, showCollisions, collidingInventoryStatusEntryModelCache);
 	}
 
 	private List<String> getCompleteCalendarList(String query) {
@@ -289,5 +290,13 @@ public abstract class InventoryBookingBeanBase extends ManagedBeanBase {
 	}
 
 	protected void updateEvent() {
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

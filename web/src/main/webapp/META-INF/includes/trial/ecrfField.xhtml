@@ -234,6 +234,15 @@
 							</f:facet>
 							<h:outputText value="#{ecrfField.vo.field.externalId}" />
 						</p:column>
+						<p:column sortBy="#{ecrfField.vo.comment}" filterBy="#{ecrfField.vo.comment}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.ecrffield_ecrffield_list_field_comment_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{applicationScopeBean.clipStringTrailing(ecrfField.vo.comment)}" />
+						</p:column>						
 						<p:column>
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">

@@ -15,6 +15,14 @@
 			</f:facet>
 			<h:outputText value="#{ecrf.vo.name}" />
 		</p:column>
+		<p:column sortBy="#{ecrf.vo.title}" filterBy="#{ecrf.vo.title}">
+		    <f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_title_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{applicationScopeBean.clipStringTrailing(ecrf.vo.title)}" />
+		</p:column>
 		<p:column rendered="#{showRevision}" sortBy="#{ecrf.vo.revision}"
 			filterBy="#{ecrf.vo.revision}">
 			<f:facet name="header">
@@ -79,6 +87,15 @@
 			</f:facet>
 			<h:outputText value="#{ecrf.vo.externalId}" />
 		</p:column>
+		
+		<p:column sortBy="#{ecrf.vo.description}" filterBy="#{ecrf.vo.description}">
+		    <f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.ecrf_list_description_column}" />
+			</f:facet>
+			<h:outputText
+				value="#{applicationScopeBean.clipStringTrailing(ecrf.vo.description)}" />
+		</p:column>		
 
 		<p:column rendered="#{showEnableBrowserFieldCalculation}"
 			sortBy="#{ecrf.vo.enableBrowserFieldCalculation}">

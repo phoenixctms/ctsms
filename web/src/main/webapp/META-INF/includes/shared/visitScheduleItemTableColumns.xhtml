@@ -17,21 +17,24 @@
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.visit.type.name}" />
 		</p:column>
-		<p:column sortBy="#{visitScheduleItem.vo.group.id}">
+		<p:column sortBy="#{visitScheduleItem.vo.group.id}"
+			filterBy="#{visitScheduleItem.vo.group.token}">
 			<f:facet name="header">
 				<h:outputText
 					value="#{triallabels.visitschedule_list_group_token_column}" />
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.group.token}" />
 		</p:column>
-		<p:column sortBy="#{visitScheduleItem.vo.visit.id}">
+		<p:column sortBy="#{visitScheduleItem.vo.visit.id}"
+		    filterBy="#{visitScheduleItem.vo.visit.token}">
 			<f:facet name="header">
 				<h:outputText
 					value="#{triallabels.visitschedule_list_visit_token_column}" />
 			</f:facet>
 			<h:outputText value="#{visitScheduleItem.vo.visit.token}" />
 		</p:column>
-		<p:column sortBy="#{visitScheduleItem.vo.token}">
+		<p:column sortBy="#{visitScheduleItem.vo.token}"
+		    filterBy="#{visitScheduleItem.vo.token}">
 			<f:facet name="header">
 				<h:outputText value="#{triallabels.visitschedule_list_token_column}" />
 			</f:facet>
