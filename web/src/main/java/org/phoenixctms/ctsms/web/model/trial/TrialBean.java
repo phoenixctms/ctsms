@@ -496,7 +496,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		tabCountMap.put(JSValues.AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_TRIAL_DUTY_ROSTER_TURN_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.TRIAL_DUTY_ROSTER_TURNS_TAB_TITLE, MessageCodes.TRIAL_DUTY_ROSTER_TURNS_TAB_TITLE_WITH_COUNT, count));
-		count = (out == null ? null : WebUtil.getProbandListEntryTagCount(in.getId()));
+		count = (out == null ? null : WebUtil.getProbandListEntryTagCount(in.getId(), null));
 		tabCountMap.put(JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_COUNT.toString(), count);
 		tabTitleMap.put(JSValues.AJAX_PROBAND_LIST_ENTRY_TAG_COUNT.toString(),
 				WebUtil.getTabTitleString(MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE, MessageCodes.PROBAND_LIST_ENTRY_TAGS_TAB_TITLE_WITH_COUNT, count));

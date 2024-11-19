@@ -206,6 +206,7 @@ public interface MessageCodes {
 	public static final String PROBAND_GROUP_TOKEN_PRESET = "proband_group_token_preset";
 	public static final String PROBAND_GROUP_DESCRIPTION_PRESET = "proband_group_description_preset";
 	public static final String VISIT_SCHEDULE_ITEM_TOKEN_PRESET = "visit_schedule_item_token_preset";
+	public static final String VISIT_SCHEDULE_ITEM_DESCRIPTION_PRESET = "visit_schedule_item_description_preset";
 	public static final String DUTY_ROSTER_TURN_TITLE_PRESET = "duty_roster_turn_title_preset";
 	public static final String DUTY_ROSTER_TURN_CALENDAR_PRESET = "duty_roster_turn_calendar_preset";
 	public static final String PROBAND_LIST_ENTRY_TAG_COMMENT_PRESET = "proband_list_entry_tag_comment_preset";

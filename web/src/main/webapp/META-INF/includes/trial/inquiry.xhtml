@@ -175,6 +175,15 @@
 							</f:facet>
 							<h:outputText value="#{inquiry.vo.externalId}" />
 						</p:column>
+						<p:column sortBy="#{inquiry.vo.comment}" filterBy="#{inquiry.vo.comment}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_comment_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{applicationScopeBean.clipStringTrailing(inquiry.vo.comment)}" />
+						</p:column>						
 						<p:column>
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">

@@ -38,13 +38,30 @@
 					rowStyleClass="#{applicationScopeBean.visitToColor(visitScheduleItem.vo.visit)}#{rowBgColorAlpha}">
 					<p:ajax event="page"
 						listener="#{visitScheduleBean.visitScheduleItemModel.handlePageChanged}" />
-					<p:ajax event="rowSelect"
+					<p:ajax event="rowSelect" 
 						update=":tabView:visitschedule_form:visitschedule_input" />
 					<f:facet name="header">
-						<h:panelGrid columns="2" cellpadding="0"
-							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-button-column">
+						<h:panelGrid columns="4" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column,ctsms-datatable-header-button-column">
 							<h:outputText
 								value="#{visitScheduleBean.visitScheduleItemModel.rowCount} #{triallabels.visit_schedule_visitschedule_list_header}" />
+							
+							<h:outputLabel for="visitschedule_list_collisions_filter"
+								value="#{triallabels.visit_schedule_visitschedule_list_collisions_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="visitschedule_list_collisions_filter"
+									value="#{visitScheduleBean.showCollisions}">
+									<p:ajax update="visitschedule_list"
+										listener="#{visitScheduleBean.handleShowCollisionsChange}"/>
+								</p:selectBooleanCheckbox>	
+								<p:tooltip rendered="#{enableTooltips}"
+									for="visitschedule_list_collisions_filter">
+									<h:outputText
+										value="#{triallabels.visit_schedule_visitschedule_list_collisions_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							
 							<p:commandButton type="button"
 								title="#{labels.open_table_columns_dialog_button_label}"
 								icon="ui-icon ui-icon-wrench"
@@ -176,6 +193,18 @@
 						<h:outputText
 							value="#{visitScheduleItem.vo.mode.dateMode != 'STATIC' ? visitScheduleBean.getVisitScheduleAppointmentModel(visitScheduleItem.vo).allRowCount : ''}" />
 					</p:column>
+					
+					<p:column sortBy="#{visitScheduleItem.vo.internal}"
+						filterBy="#{visitScheduleItem.vo.internal}"
+						filterOptions="#{sessionScopeBean.filterBooleans}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.visit_schedule_visitschedule_list_internal_column}" />
+						</f:facet>
+						<ui:include src="../shared/listBooleanIcon.xhtml">
+							<ui:param name="value" value="#{visitScheduleItem.vo.internal}" />
+						</ui:include>
+					</p:column>
 
 					<p:column sortBy="#{visitScheduleItem.vo.notify}"
 						filterBy="#{visitScheduleItem.vo.notify}"
@@ -188,6 +217,17 @@
 							<ui:param name="value" value="#{visitScheduleItem.vo.notify}" />
 						</ui:include>
 					</p:column>
+					
+					<p:column sortBy="#{visitScheduleItem.vo.description}" filterBy="#{visitScheduleItem.vo.description}">
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.visit_schedule_visitschedule_list_description_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(visitScheduleItem.vo.description)}" />
+					</p:column>
+					
 					<p:column>
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
@@ -195,6 +235,9 @@
 								value="#{triallabels.visit_schedule_visitschedule_list_colliding_proband_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{visitScheduleBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{visitScheduleBean.getCollidingProbandStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
 						</ui:include>
@@ -206,6 +249,9 @@
 								value="#{triallabels.visit_schedule_visitschedule_list_colliding_staff_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+						    <ui:param
+								name="rendered"
+							   	value="#{visitScheduleBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{visitScheduleBean.getCollidingStaffStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
 						</ui:include>
@@ -330,8 +376,8 @@
 								<ui:param name="dataTableResizableColumns"
 									value="#{dataTablesResizableColumnsRowExpansion}" />
 							</ui:include>
-						</p:tabView>
-					</p:rowExpansion>
+						</p:tabView> 
+					</p:rowExpansion>  
 				</p:dataTable>
 				<h:panelGrid columns="2" cellpadding="0"
 					styleClass="ctsms-trialvisitschedule-content-panelgrid ctsms-content-panelgrid-maxheight"
@@ -356,7 +402,7 @@
 						</f:facet>
 						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-input-panelgrid"
-							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+							rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
 							<h:panelGrid rendered="#{visitScheduleBean.inputVisible}"
 								columns="9" cellpadding="2"
 								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
@@ -478,9 +524,21 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="visitscheduleitemmode" />
-								<h:outputLabel />
-								<h:outputText value="" />
-								<h:outputLabel />
+								<h:outputLabel for="visitscheduleiteminternal"
+									value="#{triallabels.visit_schedule_internal_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="visitscheduleiteminternal"
+										value="#{visitScheduleBean.in.internal}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="visitscheduleiteminternal">
+										<h:outputText
+											value="#{triallabels.visit_schedule_internal_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="visitscheduleiteminternal" />
 								<h:outputLabel for="visitscheduleitemnotify"
 									value="#{triallabels.visit_schedule_notify_label}" />
 								<h:panelGroup>
@@ -622,13 +680,12 @@
 										<f:facet name="itemtip">
 											<h:panelGrid columns="1" cellpadding="0"
 												styleClass="ctsms-visitschedule-itemtip-panelgrid">
-
-												<h:outputText styleClass="ctsms-visitschedule-itemtip-em"
-													value="#{visitScheduleBean.getProbandListEntryTagName(listEntryTag.vo)}" />
-												<h:outputText value="#{listEntryTag.vo.title}"
+                                                <h:outputText value="#{listEntryTag.vo.field.name}" />
+                                                <h:outputText value="#{listEntryTag.vo.title}" styleClass="ctsms-visitschedule-itemtip-em"
 													rendered="#{not empty listEntryTag.vo.title}" />
-												<h:outputText
-													value="#{listEntryTag.vo.field.fieldType.name}" />
+                                                <h:outputText value="#{listEntryTag.vo.field.title}" styleClass="ctsms-visitschedule-itemtip-em"
+													rendered="#{empty listEntryTag.vo.title}" />
+												<h:outputText value="#{listEntryTag.vo.field.fieldType.name}" />													
 											</h:panelGrid>
 										</f:facet>
 									</p:autoComplete>
@@ -680,12 +737,12 @@
 											<h:panelGrid columns="1" cellpadding="0"
 												styleClass="ctsms-visitschedule-itemtip-panelgrid">
 
-												<h:outputText styleClass="ctsms-visitschedule-itemtip-em"
-													value="#{visitScheduleBean.getProbandListEntryTagName(listEntryTag.vo)}" />
-												<h:outputText value="#{listEntryTag.vo.title}"
+												<h:outputText value="#{listEntryTag.vo.field.name}" />
+                                                <h:outputText value="#{listEntryTag.vo.title}" styleClass="ctsms-visitschedule-itemtip-em"
 													rendered="#{not empty listEntryTag.vo.title}" />
-												<h:outputText
-													value="#{listEntryTag.vo.field.fieldType.name}" />
+                                                <h:outputText value="#{listEntryTag.vo.field.title}" styleClass="ctsms-visitschedule-itemtip-em"
+													rendered="#{empty listEntryTag.vo.title}" />
+												<h:outputText value="#{listEntryTag.vo.field.fieldType.name}" />		
 											</h:panelGrid>
 										</f:facet>
 									</p:autoComplete>
@@ -778,6 +835,28 @@
 								<p:message for="visitscheduleitemoffset"
 									rendered="#{visitScheduleBean.offsetVisible}" />
 							</h:panelGrid>
+							
+							<h:panelGrid rendered="#{visitScheduleBean.inputVisible}" columns="1"
+								cellpadding="0" styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+								<h:outputLabel
+									styleClass="ctsms-field-icon ctsms-icon-noencryption"
+									for="visitscheduleitemdescription"
+									value="#{labels.noencryption_warning_label}#{triallabels.visit_schedule_description_label}" />
+								<h:panelGroup>
+									<p:inputTextarea id="visitscheduleitemdescription"
+										value="#{visitScheduleBean.in.description}" required="false"
+										autoResize="false" styleClass="ctsms-textarea"
+										label="#{triallabels.visit_schedule_description}">
+									</p:inputTextarea>
+									<p:tooltip rendered="#{enableTooltips}" for="visitscheduleitemdescription">
+										<h:outputText value="#{triallabels.visit_schedule_description_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>				
+										
+							<h:outputLabel rendered="#{!visitScheduleBean.inputVisible}" />
 							<h:outputLabel rendered="#{!visitScheduleBean.inputVisible}" />
 							<p:messages />
 							<p:toolbar>

@@ -188,6 +188,15 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntryTag.vo.externalId}" />
 						</p:column>
+						<p:column sortBy="#{probandListEntryTag.vo.comment}" filterBy="#{probandListEntryTag.vo.comment}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_comment_column}" />
+							</f:facet>
+							<h:outputText
+								value="#{applicationScopeBean.clipStringTrailing(probandListEntryTag.vo.comment)}" />
+						</p:column>
 						<p:column>
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
