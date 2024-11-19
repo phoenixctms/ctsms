@@ -12,13 +12,16 @@ import java.util.NoSuchElementException;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValuesOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.adapt.ProbandListEntryTagValueInVOStringAdapter;
 import org.phoenixctms.ctsms.web.model.shared.ProbandListEntryTagValueBean;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
@@ -29,6 +32,7 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.primefaces.context.RequestContext;
 
 public final class ProbandListEntryTagInputModel extends InputModel {
 
@@ -128,6 +132,50 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 	@Override
 	public String getModifiedAnnotation() {
 		return modifiedAnnotation;
+	}
+
+	@Override
+	protected void actionPostProcess(Object out) {
+		if (out instanceof ProbandListEntryTagValuesOutVO) {
+			super.actionPostProcess(((ProbandListEntryTagValuesOutVO) out).getJsValues());
+			appendRequestContextCallbackArgs(((ProbandListEntryTagValuesOutVO) out).getPageValues().iterator().next());
+		} else {
+			super.actionPostProcess(out);
+		}
+	}
+
+	@Override
+	protected void appendRequestContextCallbackArgs(Object out) {
+		if (out instanceof ProbandListEntryTagValueOutVO) {
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			if (requestContext != null) {
+				ProbandListEntryOutVO listEntry = ((ProbandListEntryTagValueOutVO) out).getListEntry();
+				Long visitScheduleItemStartTagsCount = WebUtil.getProbandListEntryTagCount(listEntry.getTrial().getId(), true);
+				if (visitScheduleItemStartTagsCount != null && visitScheduleItemStartTagsCount > 0l) {
+					Collection<VisitScheduleItemOutVO> visitSchedule = loadVisitScheduleItems(listEntry);
+					requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(visitSchedule), false));
+				}
+			}
+		} else {
+			super.appendRequestContextCallbackArgs(out);
+		}
+	}
+
+	private Collection<VisitScheduleItemOutVO> loadVisitScheduleItems(ProbandListEntryOutVO listEntry) {
+		if (listEntry != null) {
+			try {
+				return WebUtil
+						.getServiceLocator()
+						.getTrialService()
+						.getVisitScheduleItemList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), listEntry.getGroup() != null ? listEntry.getGroup().getId() : null,
+								null, listEntry.getProband().getId(),
+								true, null);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -324,7 +372,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
 				setModifiedAnnotation(out);
-				return values.getJsValues();
+				return values;
 			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (AuthenticationException e) {
@@ -481,7 +529,7 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
 				setModifiedAnnotation(out);
-				return values.getJsValues();
+				return values;
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
 				setErrorMessage(e.getMessage());
 			} catch (ServiceException e) {

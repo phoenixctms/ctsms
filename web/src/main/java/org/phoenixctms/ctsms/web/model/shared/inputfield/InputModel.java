@@ -59,7 +59,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		}
 	}
 
-	private void appendRequestContextCallbackArgs(Object out) {
+	protected void appendRequestContextCallbackArgs(Object out) {
 		RequestContext requestContext = RequestContext.getCurrentInstance();
 		if (requestContext != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),

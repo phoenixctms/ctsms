@@ -33,8 +33,27 @@
 					<p:ajax event="rowSelect"
 						update=":tabView:staffdutyrosterturn_form:dutyrosterturn_input" />
 					<f:facet name="header">
-						<h:outputText
-							value="#{staffDutyRosterTurnBean.dutyRosterTurnModel.rowCount} #{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_header}" />
+						<h:panelGrid columns="3" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column">
+							<h:outputText
+								value="#{staffDutyRosterTurnBean.dutyRosterTurnModel.rowCount} #{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_header}" />
+							
+							<h:outputLabel for="dutyrosterturn_list_collisions_filter"
+								value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_collisions_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="dutyrosterturn_list_collisions_filter"
+									value="#{staffDutyRosterTurnBean.showCollisions}">
+									<p:ajax update="dutyrosterturn_list"
+										listener="#{staffDutyRosterTurnBean.handleShowCollisionsChange}"/>
+								</p:selectBooleanCheckbox>	
+								<p:tooltip rendered="#{enableTooltips}"
+									for="dutyrosterturn_list_collisions_filter">
+									<h:outputText
+										value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_collisions_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
@@ -68,6 +87,9 @@
 								value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_colliding_staff_status_entry_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{staffDutyRosterTurnBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{staffDutyRosterTurnBean.getCollidingStaffStatusEntryModel(dutyRosterTurn.vo).allRowCount}" />
 						</ui:include>
@@ -78,6 +100,9 @@
 								value="#{stafflabels.staff_duty_roster_turn_dutyrosterturn_list_colliding_course_inventory_booking_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{staffDutyRosterTurnBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{staffDutyRosterTurnBean.getCollidingInventoryBookingModel(dutyRosterTurn.vo).allRowCount}" />
 						</ui:include>

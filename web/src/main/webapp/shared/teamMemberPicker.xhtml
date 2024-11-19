@@ -55,7 +55,27 @@
 						rowStyleClass="#{applicationScopeBean.staffToColor(teamMember.vo.staff)}#{rowBgColorAlpha}">
 						<p:ajax event="page" listener="#{teamMemberPickerBean.teamMemberModel.handlePageChanged}" />
 						<f:facet name="header">
-							<h:outputText value="#{teamMemberPickerBean.teamMemberModel.rowCount} #{triallabels.team_member_picker_team_member_list_header}" />
+							<h:panelGrid columns="3" cellpadding="0"
+								columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column">
+							
+								<h:outputText value="#{teamMemberPickerBean.teamMemberModel.rowCount} #{triallabels.team_member_picker_team_member_list_header}" />
+							
+								<h:outputLabel for="team_member_list_collisions_filter"
+									value="#{triallabels.team_member_picker_team_member_list_collisions_filter_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="team_member_list_collisions_filter"
+										value="#{teamMemberPickerBean.showCollisions}">
+										<p:ajax update="team_member_list"
+											listener="#{teamMemberPickerBean.handleShowCollisionsChange}"/>
+									</p:selectBooleanCheckbox>	
+									<p:tooltip rendered="#{enableTooltips}"
+										for="team_member_list_collisions_filter">
+										<h:outputText
+											value="#{triallabels.team_member_picker_team_member_list_collisions_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+							</h:panelGrid>
 						</f:facet>
 						<p:column style="width:16px;">
 							<p:rowToggler />
@@ -136,6 +156,9 @@
 								<h:outputText value="#{triallabels.team_member_picker_team_member_list_colliding_staff_status_entry_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+								<ui:param
+									name="rendered"
+							   		value="#{teamMemberPickerBean.showCollisions}" />
 								<ui:param
 									name="value"
 									value="#{teamMemberPickerBean.getCollidingStaffStatusEntryModel(teamMember.vo.staff).allRowCount}" />

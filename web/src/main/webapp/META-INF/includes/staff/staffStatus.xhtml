@@ -33,8 +33,28 @@
 					<p:ajax event="rowSelect"
 						update=":tabView:staffstatus_form:staffstatus_input" />
 					<f:facet name="header">
-						<h:outputText
-							value="#{staffStatusBean.statusEntryModel.rowCount} #{stafflabels.staff_status_staffstatus_list_header}" />
+						<h:panelGrid columns="3" cellpadding="0"
+							columnClasses="ctsms-datatable-header-text-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column">
+		
+							<h:outputText
+								value="#{staffStatusBean.statusEntryModel.rowCount} #{stafflabels.staff_status_staffstatus_list_header}" />
+								
+							<h:outputLabel for="staffstatus_list_collisions_filter"
+								value="#{stafflabels.staff_status_staffstatus_list_collisions_filter_label}" />
+							<h:panelGroup>
+								<p:selectBooleanCheckbox id="staffstatus_list_collisions_filter"
+									value="#{staffStatusBean.showCollisions}">
+									<p:ajax update="staffstatus_list"
+										listener="#{staffStatusBean.handleShowCollisionsChange}"/>
+								</p:selectBooleanCheckbox>	
+								<p:tooltip rendered="#{enableTooltips}"
+									for="staffstatus_list_collisions_filter">
+									<h:outputText
+										value="#{stafflabels.staff_status_staffstatus_list_collisions_filter_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>				
 					</f:facet>
 					<p:column style="width:16px;">
 						<p:rowToggler />
@@ -89,6 +109,9 @@
 								value="#{stafflabels.staff_status_staffstatus_list_colliding_duty_roster_turn_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{staffStatusBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{staffStatusBean.getCollidingDutyRosterTurnModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
@@ -99,6 +122,9 @@
 								value="#{stafflabels.staff_status_staffstatus_list_colliding_course_inventory_booking_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{staffStatusBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{staffStatusBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
@@ -109,6 +135,9 @@
 								value="#{stafflabels.staff_status_staffstatus_list_colliding_visit_schedule_item_column}" />
 						</f:facet>
 						<ui:include src="../shared/listCollisionIcon.xhtml">
+							<ui:param
+								name="rendered"
+							   	value="#{staffStatusBean.showCollisions}" />
 							<ui:param name="value"
 								value="#{staffStatusBean.getCollidingVisitScheduleItemModel(statusEntry.vo).allRowCount}" />
 						</ui:include>

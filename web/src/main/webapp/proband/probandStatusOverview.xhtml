@@ -69,11 +69,28 @@
 						<p:ajax event="page" listener="#{probandStatusOverviewBean.probandStatusModel.handlePageChanged}" />
 						<f:facet name="header">
 							<h:panelGrid
-								columns="3"
+								columns="5"
 								cellpadding="0"
-								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-button-column">
+								columnClasses="ctsms-datatable-header-text-column,ctsms-ajaxstatus-column,ctsms-datatable-header-label-for-column,ctsms-datatable-header-input-column,ctsms-datatable-header-button-column">
 								<h:outputText value="#{probandStatusOverviewBean.probandStatusModel.rowCount} #{probandlabels.proband_status_overview_probandstatus_list_header}" />
 								<ui:include src="/META-INF/includes/shared/ajaxStatus.xhtml" />
+								
+								<h:outputLabel for="probandstatus_list_collisions_filter"
+									value="#{probandlabels.proband_status_overview_probandstatus_list_collisions_filter_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="probandstatus_list_collisions_filter"
+										value="#{probandStatusOverviewBean.showCollisions}">
+										<p:ajax update="probandstatus_list"
+											listener="#{probandStatusOverviewBean.handleShowCollisionsChange}"/>
+									</p:selectBooleanCheckbox>	
+									<p:tooltip rendered="#{enableTooltips}"
+										for="probandstatus_list_collisions_filter">
+										<h:outputText
+											value="#{probandlabels.proband_status_overview_probandstatus_list_collisions_filter_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								
 								<p:commandButton
 									process="@this"
 									actionListener="#{probandStatusOverviewBean.load}"
@@ -112,14 +129,14 @@
 							</ui:include>
 						</p:column>
 						
-				<p:column filterBy="#{statusEntry.vo.proband.animalParticulars.animalName}"
-					sortBy="#{statusEntry.vo.proband.animalParticulars.animalName}">
-					<f:facet name="header">
-						<h:outputText
-							value="#{probandlabels.proband_status_overview_probandstatus_list_particulars_animal_name_column}" />
-					</f:facet>
-					<h:outputText rendered="#{!statusEntry.vo.proband.person}" value="#{statusEntry.vo.proband.name}" />
-				</p:column>
+						<p:column filterBy="#{statusEntry.vo.proband.animalParticulars.animalName}"
+							sortBy="#{statusEntry.vo.proband.animalParticulars.animalName}">
+							<f:facet name="header">
+								<h:outputText
+									value="#{probandlabels.proband_status_overview_probandstatus_list_particulars_animal_name_column}" />
+							</f:facet>
+							<h:outputText rendered="#{!statusEntry.vo.proband.person}" value="#{statusEntry.vo.proband.name}" />
+						</p:column>
 						
 						<p:column
 							sortBy="#{statusEntry.vo.proband.department}"
@@ -196,6 +213,9 @@
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
 								<ui:param
+									name="rendered"
+							   		value="#{probandStatusOverviewBean.showCollisions}" />
+								<ui:param
 									name="value"
 									value="#{probandStatusOverviewBean.getCollidingInventoryBookingModel(statusEntry.vo).allRowCount}" />
 							</ui:include>
@@ -205,6 +225,9 @@
 								<h:outputText value="#{probandlabels.proband_status_overview_probandstatus_list_colliding_visit_schedule_items_column}" />
 							</f:facet>
 							<ui:include src="/META-INF/includes/shared/listCollisionIcon.xhtml">
+							    <ui:param
+									name="rendered"
+							   		value="#{probandStatusOverviewBean.showCollisions}" />
 								<ui:param
 									name="value"
 									value="#{probandStatusOverviewBean.getCollidingVisitScheduleItemModel(statusEntry.vo).allRowCount}" />
