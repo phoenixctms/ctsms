@@ -13,6 +13,10 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 
 import org.openjdk.nashorn.api.scripting.JSObject;
+import org.phoenixctms.ctsms.domain.File;
+import org.phoenixctms.ctsms.domain.FileDao;
+import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
+import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -22,6 +26,7 @@ import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -61,8 +66,10 @@ public class FieldCalculation {
 	private final static boolean FIELD_CALCULATION_ENCODE_BASE64 = false;
 	private final static String INIT_INPUT_FIELD_VARIABLES = "initInputFieldVariables";
 	private final static String UPDATE_INPUT_FIELD_VARIABLES = "updateInputFieldVariables";
+	private final static String SCRIPT_CHARSET = "UTF8";
+	private FileDao fileDao;
 
-	private static Invocable createEngine() throws ScriptException, IOException {
+	private static Invocable createEngine(FieldCalculation fieldCalculation) throws ScriptException, IOException {
 		ScriptEngine engine = CoreUtil.getJsEngine();
 		engine.eval(getJsFile(ENV_JS_FILE_NAME));
 		updateEnv(engine);
@@ -75,6 +82,7 @@ public class FieldCalculation {
 		engine.eval(getJsFile(REST_API_JS_FILE_NAME));
 		engine.eval(getJsFile(LOCATION_DISTANCE_JS_FILE_NAME));
 		engine.eval(getJsFile(FIELD_CALCULATION_JS_FILE_NAME));
+		updateEnv(engine, fieldCalculation);
 		return (Invocable) engine;
 	}
 
@@ -120,12 +128,22 @@ public class FieldCalculation {
 		engine.eval(sb.toString());
 	}
 
+	private final static void updateEnv(ScriptEngine engine, FieldCalculation fieldCalculation) throws ScriptException {
+		engine.put("JavaFieldCalculation", fieldCalculation);
+		StringBuilder sb = new StringBuilder();
+		sb.append("FieldCalculation.getScript = function(resource, fileId) { return JavaFieldCalculation.getScript(resource, fileId); };");
+		//sb.append("window.FieldCalculation.getScript = JavaFieldCalculation.getScript;");
+		//sb.append("FieldCalculation.getScript('123');");
+		engine.eval(sb.toString());
+	}
+
 	private Invocable invocable;
 	private HashMap<String, Object> args;
 
-	public FieldCalculation() throws ScriptException, IOException {
+	public FieldCalculation(FileDao fileDao) throws ScriptException, IOException {
 		args = new HashMap<String, Object>();
-		invocable = createEngine();
+		this.fileDao = fileDao;
+		invocable = createEngine(this);
 		reset();
 	}
 
@@ -194,5 +212,17 @@ public class FieldCalculation {
 
 	public ArrayList<ValidationError> updateInputFieldVariables() throws ScriptException, NoSuchMethodException {
 		return invoke(UPDATE_INPUT_FIELD_VARIABLES);
+	}
+
+	public String getScript(String resource, Long fileId) throws Exception {
+		File file = CheckIDUtil.checkFileId(fileId, fileDao);
+		if (CommonUtil.getUseFileEncryption(file.getModule())) {
+			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.ENCRYPTED_FILE, fileId.toString());
+		}
+		if (!file.isPublicFile()) {
+			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
+		}
+		FileContentOutVO result = fileDao.toFileContentOutVO(file);
+		return new String(result.getDatas(), SCRIPT_CHARSET);
 	}
 }
