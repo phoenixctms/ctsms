@@ -26,10 +26,14 @@ import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.proband.CollidingVisitScheduleItemEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingDutyRosterTurnEagerModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingInventoryBookingEagerModel;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -73,12 +77,15 @@ public class StaffStatusBean extends ManagedBeanBase {
 	private HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
 	private HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache;
+	private boolean showCollisions;
 
 	public StaffStatusBean() {
 		super();
 		collidingDutyRosterTurnModelCache = new HashMap<Long, CollidingDutyRosterTurnEagerModel>();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
 		collidingVisitScheduleItemModelCache = new HashMap<Long, CollidingVisitScheduleItemEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.STAFF_STATUS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.STAFF_STATUS_SHOW_COLLISIONS_PRESET);
 		statusEntryModel = new StaffStatusEntryLazyModel();
 	}
 
@@ -149,15 +156,15 @@ public class StaffStatusBean extends ManagedBeanBase {
 	}
 
 	public CollidingDutyRosterTurnEagerModel getCollidingDutyRosterTurnModel(StaffStatusEntryOutVO statusEntry) {
-		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(statusEntry, true, collidingDutyRosterTurnModelCache);
+		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(statusEntry, showCollisions, collidingDutyRosterTurnModelCache);
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(StaffStatusEntryOutVO statusEntry) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public CollidingVisitScheduleItemEagerModel getCollidingVisitScheduleItemModel(StaffStatusEntryOutVO statusEntry) {
-		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, collidingVisitScheduleItemModelCache);
+		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, showCollisions, collidingVisitScheduleItemModelCache);
 	}
 
 	public StaffStatusEntryInVO getIn() {
@@ -349,5 +356,19 @@ public class StaffStatusBean extends ManagedBeanBase {
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingDutyRosterTurnModelCache.clear();
+		collidingInventoryBookingModelCache.clear();
+		collidingVisitScheduleItemModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

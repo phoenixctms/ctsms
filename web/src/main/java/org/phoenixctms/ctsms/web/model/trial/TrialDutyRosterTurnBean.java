@@ -55,6 +55,8 @@ public class TrialDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	public TrialDutyRosterTurnBean() {
 		super();
 		dutyRosterTurnModel = new TrialDutyRosterTurnLazyModel();
+		showCollisions = Settings.getBoolean(SettingCodes.TRIAL_DUTY_ROSTER_TURNS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.TRIAL_DUTY_ROSTER_TURNS_SHOW_COLLISIONS_PRESET);
 	}
 
 	@Override
@@ -158,5 +160,10 @@ public class TrialDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	@Override
 	public boolean isRemovable() {
 		return isCreated() && !WebUtil.isTrialLocked(trial);
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingStaffStatusEntryModelCache.clear();
+		collidingInventoryBookingModelCache.clear();
 	}
 }

@@ -15,10 +15,14 @@ import org.phoenixctms.ctsms.web.model.PickerBeanBase;
 import org.phoenixctms.ctsms.web.model.ShiftDurationSummaryModel;
 import org.phoenixctms.ctsms.web.model.shared.CollidingStaffStatusEntryEagerModel;
 import org.phoenixctms.ctsms.web.util.DateUtil;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 
@@ -33,11 +37,14 @@ public class TeamMemberPickerBean extends PickerBeanBase {
 	private TeamMemberLazyModel teamMemberModel;
 	private HashMap<Long, ShiftDurationSummaryModel> shiftDurationModelCache;
 	private HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
+	private boolean showCollisions;
 
 	public TeamMemberPickerBean() {
 		super();
 		collidingStaffStatusEntryModelCache = new HashMap<Long, CollidingStaffStatusEntryEagerModel>();
 		shiftDurationModelCache = new HashMap<Long, ShiftDurationSummaryModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.TEAM_MEMBER_PICKER_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.TEAM_MEMBER_PICKER_SHOW_COLLISIONS_PRESET);
 		teamMemberModel = new TeamMemberLazyModel();
 	}
 
@@ -60,7 +67,7 @@ public class TeamMemberPickerBean extends PickerBeanBase {
 	}
 
 	public CollidingStaffStatusEntryEagerModel getCollidingStaffStatusEntryModel(StaffOutVO staff) {
-		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(staff, start, stop, true, collidingStaffStatusEntryModelCache);
+		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(staff, start, stop, showCollisions, collidingStaffStatusEntryModelCache);
 	}
 
 	@Override
@@ -127,5 +134,17 @@ public class TeamMemberPickerBean extends PickerBeanBase {
 	@Override
 	public boolean isCreated() {
 		return false;
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingStaffStatusEntryModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

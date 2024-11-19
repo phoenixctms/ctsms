@@ -27,10 +27,14 @@ import org.phoenixctms.ctsms.vo.TrainingRecordSectionVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.shared.CourseParticipationStatusBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.StaffMultiPickerModel;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
@@ -78,6 +82,8 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 
 	public AdminCourseParticipationStatusBean() {
 		super();
+		showCollisions = Settings.getBoolean(SettingCodes.ADMIN_COURSE_PARTICIPATION_STATUS_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.ADMIN_COURSE_PARTICIPATION_STATUS_SHOW_COLLISIONS_PRESET);
 		staffMultiPicker = new StaffMultiPickerModel();
 	}
 
@@ -373,5 +379,11 @@ public class AdminCourseParticipationStatusBean extends CourseParticipationStatu
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingStaffStatusEntryModelCache.clear();
+		collidingDutyRosterTurnModelCache.clear();
+		collidingInventoryBookingModelCache.clear();
 	}
 }

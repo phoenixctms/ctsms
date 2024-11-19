@@ -61,11 +61,14 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 	private HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache;
 	private HashMap<Long, HashMap<Long, ProbandListStatusEntryOutVO>> statusEntryCache;
 	private AddVisitScheduleItemReimbursementBean addReimbursementBean;
+	private boolean showCollisions;
 
 	public ProbandVisitScheduleBean() {
 		super();
 		collidingProbandStatusEntryModelCache = new HashMap<Long, CollidingProbandStatusEntryEagerModel>();
 		statusEntryCache = new HashMap<Long, HashMap<Long, ProbandListStatusEntryOutVO>>();
+		showCollisions = Settings.getBoolean(SettingCodes.PROBAND_VISIT_SCHEDULE_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.PROBAND_VISIT_SCHEDULE_SHOW_COLLISIONS_PRESET);
 		visitScheduleItemModel = new VisitScheduleItemLazyModel();
 		addReimbursementBean = new AddVisitScheduleItemReimbursementBean();
 	}
@@ -131,7 +134,7 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 
 	public CollidingProbandStatusEntryEagerModel getCollidingProbandStatusEntryModel(VisitScheduleItemOutVO visitScheduleItem) {
 		CollidingProbandStatusEntryEagerModel collidingProbandStatusEntryModel = CollidingProbandStatusEntryEagerModel.getCachedCollidingProbandStatusEntryModel(visitScheduleItem,
-				true, collidingProbandStatusEntryModelCache);
+				showCollisions, collidingProbandStatusEntryModelCache);
 		collidingProbandStatusEntryModel.setProbandId(probandId);
 		return collidingProbandStatusEntryModel;
 	}
@@ -257,5 +260,17 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 			}
 		}
 		return "";
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingProbandStatusEntryModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

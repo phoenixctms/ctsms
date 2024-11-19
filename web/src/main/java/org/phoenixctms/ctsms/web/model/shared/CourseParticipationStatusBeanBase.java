@@ -79,6 +79,7 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	protected HashMap<Long, CollidingDutyRosterTurnEagerModel> collidingDutyRosterTurnModelCache;
 	protected HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
 	protected ArrayList<SelectItem> courseTrials;
+	protected boolean showCollisions;
 
 	public CourseParticipationStatusBeanBase() {
 		super();
@@ -89,15 +90,15 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 	}
 
 	public CollidingDutyRosterTurnEagerModel getCollidingDutyRosterTurnModel(CourseParticipationStatusEntryOutVO courseParticipation) {
-		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(courseParticipation, true, collidingDutyRosterTurnModelCache);
+		return CollidingDutyRosterTurnEagerModel.getCachedCollidingDutyRosterTurnModel(courseParticipation, showCollisions, collidingDutyRosterTurnModelCache);
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(CourseParticipationStatusEntryOutVO courseParticipation) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(courseParticipation, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(courseParticipation, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public CollidingStaffStatusEntryEagerModel getCollidingStaffStatusEntryModel(CourseParticipationStatusEntryOutVO courseParticipation) {
-		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(courseParticipation, true, collidingStaffStatusEntryModelCache);
+		return CollidingStaffStatusEntryEagerModel.getCachedCollidingStaffStatusEntryModel(courseParticipation, showCollisions, collidingStaffStatusEntryModelCache);
 	}
 
 	public ArrayList<SelectItem> getCvSections() {
@@ -380,5 +381,13 @@ public abstract class CourseParticipationStatusBeanBase extends ManagedBeanBase 
 
 	public String getAllowTypes() {
 		return allowTypes;
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }

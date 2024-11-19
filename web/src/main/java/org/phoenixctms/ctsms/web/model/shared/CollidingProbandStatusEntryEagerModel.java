@@ -9,7 +9,6 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
-import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.EagerDataModelBase;
@@ -38,28 +37,27 @@ public class CollidingProbandStatusEntryEagerModel extends EagerDataModelBase<Pr
 		}
 		return model;
 	}
-
-	public static CollidingProbandStatusEntryEagerModel getCachedCollidingProbandStatusEntryModel(ProbandListEntryOutVO probandListEntry, boolean load,
-			HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache) {
-		CollidingProbandStatusEntryEagerModel model;
-		if (probandListEntry != null && collidingProbandStatusEntryModelCache != null) {
-			long probandListEntryId = probandListEntry.getId();
-			if (collidingProbandStatusEntryModelCache.containsKey(probandListEntryId)) {
-				model = collidingProbandStatusEntryModelCache.get(probandListEntryId);
-			} else {
-				if (load) {
-					model = new CollidingProbandStatusEntryEagerModel();
-					model.setProbandListEntryId(probandListEntryId);
-					collidingProbandStatusEntryModelCache.put(probandListEntryId, model);
-				} else {
-					model = new CollidingProbandStatusEntryEagerModel();
-				}
-			}
-		} else {
-			model = new CollidingProbandStatusEntryEagerModel();
-		}
-		return model;
-	}
+	//	public static CollidingProbandStatusEntryEagerModel getCachedCollidingProbandStatusEntryModel(ProbandListEntryOutVO probandListEntry, boolean load,
+	//			HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache) {
+	//		CollidingProbandStatusEntryEagerModel model;
+	//		if (probandListEntry != null && collidingProbandStatusEntryModelCache != null) {
+	//			long probandListEntryId = probandListEntry.getId();
+	//			if (collidingProbandStatusEntryModelCache.containsKey(probandListEntryId)) {
+	//				model = collidingProbandStatusEntryModelCache.get(probandListEntryId);
+	//			} else {
+	//				if (load) {
+	//					model = new CollidingProbandStatusEntryEagerModel();
+	//					model.setProbandListEntryId(probandListEntryId);
+	//					collidingProbandStatusEntryModelCache.put(probandListEntryId, model);
+	//				} else {
+	//					model = new CollidingProbandStatusEntryEagerModel();
+	//				}
+	//			}
+	//		} else {
+	//			model = new CollidingProbandStatusEntryEagerModel();
+	//		}
+	//		return model;
+	//	}
 
 	public static CollidingProbandStatusEntryEagerModel getCachedCollidingProbandStatusEntryModel(VisitScheduleItemOutVO visitScheduleItem, boolean load,
 			HashMap<Long, CollidingProbandStatusEntryEagerModel> collidingProbandStatusEntryModelCache) {

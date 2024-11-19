@@ -21,23 +21,28 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 public class ProbandStatusOverviewBean extends ManagedBeanBase {
 
 	private static final boolean COLLIDING_VISIT_SCHEDULE_ITEMS_ALL_PROBAND_GROUPS = false;
+	private static final Boolean COLLIDING_VISIT_SCHEDULE_ITEMS_INTERNAL = false;
 	private ProbandStatusLazyModel probandStatusModel;
 	private HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
 	private HashMap<Long, CollidingVisitScheduleItemEagerModel> collidingVisitScheduleItemModelCache;
+	private boolean showCollisions;
 
 	public ProbandStatusOverviewBean() {
 		super();
 		collidingInventoryBookingModelCache = new HashMap<Long, CollidingInventoryBookingEagerModel>();
 		collidingVisitScheduleItemModelCache = new HashMap<Long, CollidingVisitScheduleItemEagerModel>();
+		showCollisions = Settings.getBoolean(SettingCodes.PROBAND_STATUS_OVERVIEW_SHOW_COLLISIONS_PRESET, Bundle.SETTINGS,
+				DefaultSettings.PROBAND_STATUS_OVERVIEW_SHOW_COLLISIONS_PRESET);
 		probandStatusModel = new ProbandStatusLazyModel();
 	}
 
 	public CollidingInventoryBookingEagerModel getCollidingInventoryBookingModel(ProbandStatusEntryOutVO statusEntry) {
-		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, true, collidingInventoryBookingModelCache);
+		return CollidingInventoryBookingEagerModel.getCachedCollidingInventoryBookingModel(statusEntry, showCollisions, collidingInventoryBookingModelCache);
 	}
 
 	public CollidingVisitScheduleItemEagerModel getCollidingVisitScheduleItemModel(ProbandStatusEntryOutVO statusEntry) {
-		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, COLLIDING_VISIT_SCHEDULE_ITEMS_ALL_PROBAND_GROUPS,
+		return CollidingVisitScheduleItemEagerModel.getCachedCollidingVisitScheduleItemModel(statusEntry, showCollisions, COLLIDING_VISIT_SCHEDULE_ITEMS_ALL_PROBAND_GROUPS,
+				COLLIDING_VISIT_SCHEDULE_ITEMS_INTERNAL,
 				collidingVisitScheduleItemModelCache);
 	}
 
@@ -89,5 +94,18 @@ public class ProbandStatusOverviewBean extends ManagedBeanBase {
 			}
 		}
 		return "";
+	}
+
+	public void handleShowCollisionsChange() {
+		collidingInventoryBookingModelCache.clear();
+		collidingVisitScheduleItemModelCache.clear();
+	}
+
+	public boolean isShowCollisions() {
+		return showCollisions;
+	}
+
+	public void setShowCollisions(boolean showCollisions) {
+		this.showCollisions = showCollisions;
 	}
 }
