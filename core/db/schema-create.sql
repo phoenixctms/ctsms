@@ -1900,6 +1900,8 @@
         NOTIFY BOOLEAN not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
+        INTERNAL BOOLEAN not null,
+        DESCRIPTION TEXT,
         START_TAG_FK BIGINT,
         STOP_TAG_FK BIGINT,
         GROUP_FK BIGINT,
