@@ -138,8 +138,8 @@
 					</p:column>
 
 					<p:column
-						sortBy="#{visitScheduleItem.vo.startTag.field.nameL10nKey}"
-						filterBy="#{visitScheduleItem.vo.startTag.field.nameL10nKey}">
+						sortBy="#{visitScheduleItem.vo.startTag.titleL10nKey}"
+						filterBy="#{visitScheduleItem.vo.startTag.titleL10nKey}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
@@ -149,8 +149,8 @@
 							value="#{visitScheduleBean.getProbandListEntryTagName(visitScheduleItem.vo.startTag)}" />
 					</p:column>
 					<p:column
-						sortBy="#{visitScheduleItem.vo.stopTag.field.nameL10nKey}"
-						filterBy="#{visitScheduleItem.vo.stopTag.field.nameL10nKey}">
+						sortBy="#{visitScheduleItem.vo.stopTag.titleL10nKey}"
+						filterBy="#{visitScheduleItem.vo.stopTag.titleL10nKey}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText
