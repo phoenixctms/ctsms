@@ -10,6 +10,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -100,11 +101,13 @@ public class InquiryDaoImpl
 		if (!CommonUtil.isEmptyString(nameInfix)) {
 			org.hibernate.Criteria trialCriteria = inquiryCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
 			org.hibernate.Criteria fieldCriteria = inquiryCriteria.createCriteria("field", "inputField", CriteriaSpecification.INNER_JOIN);
-			inquiryCriteria.add(Restrictions.or(
-					(new CategoryCriterion(nameInfix, "category", MatchMode.ANYWHERE)).getRestriction(),
-					Restrictions.or(
-							(new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction(),
-							(new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction())));
+			Junction junction = Restrictions.disjunction();
+			junction.add((new CategoryCriterion(nameInfix, "category", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "inputField.nameL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			inquiryCriteria.add(junction);
 		}
 		applySortOrders(inquiryCriteria);
 		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.INQUIRY_FIELD_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,

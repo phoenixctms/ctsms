@@ -414,7 +414,8 @@ public class VisitScheduleItemDaoImpl
 	}
 
 	@Override
-	protected Collection<VisitScheduleItem> handleFindByDepartmentTravelInterval(Long departmentId, Timestamp from, Timestamp to, Boolean travel) throws Exception {
+	protected Collection<VisitScheduleItem> handleFindByDepartmentTravelInterval(Long departmentId, Boolean travel, Boolean internal, Timestamp from, Timestamp to)
+			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (departmentId != null) {
 			visitScheduleItemCriteria.createCriteria("trial").add(Restrictions.eq("department.id", departmentId.longValue()));
@@ -424,11 +425,14 @@ public class VisitScheduleItemDaoImpl
 					Restrictions.or(Restrictions.eq("travel", travel.booleanValue()),
 							Restrictions.isNull("visitScheduleItem.visit")));
 		}
+		if (internal != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
+		}
 		return listExpandDateMode(visitScheduleItemCriteria, null, from, to, null, null, null, false);
 	}
 
 	@Override
-	protected Collection<VisitScheduleItem> handleFindByInterval(Long trialId, Long groupId, Long probandId,
+	protected Collection<VisitScheduleItem> handleFindByInterval(Long trialId, Long groupId, Long probandId, Boolean internal,
 			Timestamp from, Timestamp to) throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (trialId != null) {
@@ -438,12 +442,15 @@ public class VisitScheduleItemDaoImpl
 			visitScheduleItemCriteria.add(Restrictions.or(Restrictions.eq("group.id", groupId.longValue()),
 					Restrictions.isNull("group.id")));
 		}
+		if (internal != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
+		}
 		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
 		return listExpandDateMode(visitScheduleItemCriteria, probandId, from, to, null, null, null, false);
 	}
 
 	@Override
-	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentIntervalId(Long trialId, Long departmentId, Timestamp from, Timestamp to, Long id)
+	protected Collection<VisitScheduleItem> handleFindByTrialDepartmentIntervalId(Long trialId, Long departmentId, Boolean internal, Timestamp from, Timestamp to, Long id)
 			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		org.hibernate.criterion.Criterion idCriterion;
@@ -461,12 +468,15 @@ public class VisitScheduleItemDaoImpl
 				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.eq("department.id", departmentId.longValue()), idCriterion));
 			}
 		}
+		if (internal != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
+		}
 		return listExpandDateMode(visitScheduleItemCriteria, null, from, to, idCriterion, null, null, true);
 	}
 
 	@Override
 	protected Collection<Object[]> handleFindByTrialDepartmentStatusTypeInterval(Long trialId,
-			Long departmentId, Long probandId, Long statusId, Long visitTypeId, Timestamp from, Timestamp to)
+			Long departmentId, Long probandId, Long statusId, Long visitTypeId, Boolean internal, Timestamp from, Timestamp to)
 			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (trialId != null || departmentId != null || statusId != null) {
@@ -485,6 +495,9 @@ public class VisitScheduleItemDaoImpl
 			org.hibernate.Criteria visitCriteria = visitScheduleItemCriteria.createCriteria("visit", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			visitCriteria.add(Restrictions.eq("type.id", visitTypeId.longValue()));
 		}
+		if (internal != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
+		}
 		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
 		return listExpandDateModeProband(visitScheduleItemCriteria, probandId, from, to, null, null);
 	}
@@ -493,7 +506,8 @@ public class VisitScheduleItemDaoImpl
 	 * @inheritDoc
 	 */
 	@Override
-	protected Collection<VisitScheduleItem> handleFindByTrialGroupVisitProbandTravel(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel, boolean expand,
+	protected Collection<VisitScheduleItem> handleFindByTrialGroupVisitProbandTravel(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel, Boolean internal,
+			boolean expand,
 			PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
@@ -514,6 +528,9 @@ public class VisitScheduleItemDaoImpl
 			criteriaMap.createCriteria("visit.type", CriteriaSpecification.LEFT_JOIN).add(
 					Restrictions.or(Restrictions.eq("travel", travel.booleanValue()),
 							Restrictions.isNull("visitScheduleItem.visit")));
+		}
+		if (internal != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
 		}
 		if (expand) {
 			return listExpandDateMode(visitScheduleItemCriteria, probandId, criteriaMap, psf, false);
@@ -701,7 +718,7 @@ public class VisitScheduleItemDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel, boolean expand)
+	protected long handleGetCount(Long trialId, Long groupId, Long visitId, Long probandId, Boolean travel, Boolean internal, boolean expand)
 			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		if (trialId != null) {
@@ -720,6 +737,9 @@ public class VisitScheduleItemDaoImpl
 			visitScheduleItemCriteria.createCriteria("visit.type", CriteriaSpecification.LEFT_JOIN).add(
 					Restrictions.or(Restrictions.eq("travel", travel.booleanValue()),
 							Restrictions.isNull("visitScheduleItem.visit")));
+		}
+		if (internal != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
 		}
 		if (expand) {
 			return countExpandDateMode(visitScheduleItemCriteria, probandId);

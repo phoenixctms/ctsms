@@ -1354,10 +1354,10 @@ public class ProbandServiceImpl
 		Collection<VisitScheduleItem> visitScheduleItems;
 		switch (style) {
 			case PROBAND_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(null, null, null, probandVO.getId(), null, true, null);
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(null, null, null, probandVO.getId(), null, false, true, null);
 				break;
 			case PROBAND_TRIAL_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), null, true, null);
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), null, false, true, null);
 				break;
 			default:
 				visitScheduleItems = null;
@@ -1463,7 +1463,7 @@ public class ProbandServiceImpl
 
 	@Override
 	protected Collection<VisitScheduleItemOutVO> handleGetCollidingVisitScheduleItems(
-			AuthenticationVO auth, Long probandStatusEntryId, boolean allProbandGroups) throws Exception {
+			AuthenticationVO auth, Long probandStatusEntryId, boolean allProbandGroups, Boolean internal) throws Exception {
 		ProbandStatusEntry probandStatusEntry = CheckIDUtil.checkProbandStatusEntryId(probandStatusEntryId, this.getProbandStatusEntryDao());
 		if (!probandStatusEntry.getType().isProbandActive()) {
 			Collection collidingVisitScheduleItems = new HashSet();
@@ -1474,13 +1474,14 @@ public class ProbandServiceImpl
 				ProbandGroup probandGroup = probandListEntry.getGroup();
 				if (probandGroup != null) {
 					collidingVisitScheduleItems
-							.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), probandListEntry.getProband().getId(),
+							.addAll(visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), probandListEntry.getProband().getId(), internal,
 									probandStatusEntry.getStart(),
 									probandStatusEntry.getStop()));
 				} else {
 					if (allProbandGroups) {
 						collidingVisitScheduleItems.addAll(
-								visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), null, probandListEntry.getProband().getId(), probandStatusEntry.getStart(),
+								visitScheduleItemDao.findByInterval(probandListEntry.getTrial().getId(), null, probandListEntry.getProband().getId(), internal,
+										probandStatusEntry.getStart(),
 										probandStatusEntry.getStop()));
 					}
 				}
@@ -2739,7 +2740,7 @@ public class ProbandServiceImpl
 					ProbandGroup probandGroup = probandListEntry.getGroup();
 					if (probandGroup != null) {
 						Iterator<VisitScheduleItem> it = visitScheduleItemDao
-								.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), proband.getId(), statusEntry.getStart(),
+								.findByInterval(probandListEntry.getTrial().getId(), probandGroup.getId(), proband.getId(), false, statusEntry.getStart(),
 										statusEntry.getStop())
 								.iterator();
 						while (it.hasNext()) {

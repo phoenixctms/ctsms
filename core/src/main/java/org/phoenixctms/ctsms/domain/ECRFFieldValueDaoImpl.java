@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -116,11 +117,11 @@ public class ECRFFieldValueDaoImpl
 	private void applyEcrfFieldSearchCriterions(org.hibernate.Criteria ecrfFieldCriteria, String fieldQuery) {
 		if (!CommonUtil.isEmptyString(fieldQuery)) {
 			ecrfFieldCriteria.createCriteria("field", "inputField0");
-			ecrfFieldCriteria.add(
-					Restrictions.or(Restrictions.or(
-							Restrictions.ilike("titleL10nKey", fieldQuery, MatchMode.ANYWHERE),
-							Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE)),
-							Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			Junction junction = Restrictions.disjunction();
+			junction.add(Restrictions.ilike("titleL10nKey", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE));
+			ecrfFieldCriteria.add(junction);
 		}
 	}
 
