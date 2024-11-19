@@ -11,6 +11,8 @@ import org.phoenixctms.ctsms.web.util.DateUtil.DurationUnitOfTime;
 
 public abstract class DurationConverterBase implements Converter {
 
+	protected abstract boolean isSigned();
+
 	@Override
 	public String getAsString(FacesContext facesContext, UIComponent component, Object value) {
 		if (value == null) {
@@ -27,7 +29,8 @@ public abstract class DurationConverterBase implements Converter {
 				}
 			}
 		} else if (value instanceof SelectItem) {
-			return DateUtil.getDurationString((Integer) ((SelectItem) value).getValue(), DurationUnitOfTime.SECONDS, DurationUnitOfTime.SECONDS, 0);
+			Integer seconds = (Integer) ((SelectItem) value).getValue();
+			return (isSigned() ? DateUtil.getSignSymbol(seconds) : "") + DateUtil.getDurationString(seconds, DurationUnitOfTime.SECONDS, DurationUnitOfTime.SECONDS, 0);
 		} else {
 			return CommonUtil.NO_SELECTION_VALUE;
 		}
