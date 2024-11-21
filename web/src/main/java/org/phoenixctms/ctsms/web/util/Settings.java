@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -277,6 +279,19 @@ public final class Settings {
 		String value = CommonUtil.getValue(key, getBundle(bundle), defaultValue == null ? null : defaultValue.name());
 		if (value != null && value.length() > 0) {
 			return Sex.fromString(value); // illegal arg exc!
+		} else {
+			return null;
+		}
+	}
+
+	public static Pattern getRegexp(String key, Bundle bundle, String defaultValue) {
+		String pattern = CommonUtil.getValue(key, getBundle(bundle), defaultValue);
+		if (pattern != null && pattern.length() > 0) {
+			try {
+				return java.util.regex.Pattern.compile(pattern);
+			} catch (PatternSyntaxException e) {
+				throw new IllegalArgumentException(e);
+			}
 		} else {
 			return null;
 		}

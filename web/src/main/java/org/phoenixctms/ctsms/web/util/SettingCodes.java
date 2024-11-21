@@ -489,6 +489,7 @@ public interface SettingCodes {
 	public static final String API_REALM = "api_realm";
 	public static final String API_TITLE = "api_title";
 	public static final String API_TRUSTED_HOSTS_ONLY = "api_trusted_hosts_only";
+	public static final String API_TRUSTED_HOSTS_ONLY_WHITELIST_PATH_REGEXP = "api_trusted_hosts_only_whitelist_path_regexp";
 	public static final String API_VERSION = "api_version";
 	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
 	public static final String FIELD_CALCULATION_DEBUG_LEVEL = "field_calculation_debug_level";

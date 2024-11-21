@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.web.jersey.provider;
 
+import java.util.regex.Pattern;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
@@ -25,12 +27,15 @@ public class TrustedHostFilter extends ExceptionMapperBase implements ContainerR
 
 	@Override
 	public ContainerRequest filter(ContainerRequest request) {
-		if (Settings.getBoolean(SettingCodes.API_TRUSTED_HOSTS_ONLY, Bundle.SETTINGS, DefaultSettings.API_TRUSTED_HOSTS_ONLY) && !WebUtil.isTrustedHost(this.request)) {
-			AuthorisationException ex = new AuthorisationException(Messages.getMessage(MessageCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, WebUtil.getRemoteHost(this.request)));
-			ex.setErrorCode(AuthorisationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST);
-			throw new WebApplicationException(ex);
-		} else {
-			return request;
+		if (Settings.getBoolean(SettingCodes.API_TRUSTED_HOSTS_ONLY, Bundle.SETTINGS, DefaultSettings.API_TRUSTED_HOSTS_ONLY)) { // && !WebUtil.isTrustedHost(this.request)) {
+			Pattern whitelistRegExp = Settings.getRegexp(SettingCodes.API_TRUSTED_HOSTS_ONLY_WHITELIST_PATH_REGEXP, Bundle.SETTINGS,
+					DefaultSettings.API_TRUSTED_HOSTS_ONLY_WHITELIST_REGEXP);
+			if (whitelistRegExp != null && !whitelistRegExp.matcher(request.getRequestUri().getPath()).find()) {
+				AuthorisationException ex = new AuthorisationException(Messages.getMessage(MessageCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, WebUtil.getRemoteHost(this.request)));
+				ex.setErrorCode(AuthorisationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST);
+				throw new WebApplicationException(ex);
+			}
 		}
+		return request;
 	}
 }
