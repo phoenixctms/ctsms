@@ -3,20 +3,27 @@ package org.phoenixctms.ctsms.adapt;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.domain.UserPermissionProfileDao;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.PositionMovement;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -26,13 +33,23 @@ public class ProbandListEntryMoveAdapter extends MoveAdapter<Trial, ProbandListE
 	private TrialDao trialDao;
 	private ProbandListEntryDao probandListEntryDao;
 	private JournalEntryDao journalEntryDao;
+	private UserPermissionProfileDao userPermissionProfileDao;
 	private static final String ENUMERATED_PROBAND_LIST_ENTRY_NAME = "{0}. {1}";
+	private HashSet<Department> departments;
 
-	public ProbandListEntryMoveAdapter(JournalEntryDao journalEntryDao, ProbandListEntryDao probandListEntryDao, TrialDao trialDao) {
+	public ProbandListEntryMoveAdapter(UserPermissionProfileDao userPermissionProfileDao, JournalEntryDao journalEntryDao, ProbandListEntryDao probandListEntryDao,
+			TrialDao trialDao) {
 		super();
+		this.userPermissionProfileDao = userPermissionProfileDao;
 		this.journalEntryDao = journalEntryDao;
 		this.probandListEntryDao = probandListEntryDao;
 		this.trialDao = trialDao;
+		departments = new HashSet<Department>();
+	}
+
+	@Override
+	protected void reset() {
+		departments.clear();
 	}
 
 	@Override
@@ -58,6 +75,13 @@ public class ProbandListEntryMoveAdapter extends MoveAdapter<Trial, ProbandListE
 
 	@Override
 	protected void daoUpdate(ProbandListEntry item) throws Exception {
+		if (departments.add(item.getProband().getDepartment())
+				&& departments.size() > 1
+				&& !ServiceUtil.hasInheritedPermissionProfile(CoreUtil.getUser(), PermissionProfileGroup.PROBAND, userPermissionProfileDao,
+						PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS,
+						PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ALL_DEPARMTENTS_PERMISSION_REQUIRED);
+		}
 		probandListEntryDao.update(item);
 	}
 

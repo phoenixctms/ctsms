@@ -31,9 +31,7 @@ import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
-import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
-import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -164,7 +162,7 @@ public class HyperlinkServiceImpl
 		}
 	}
 
-	private void checkActivePermission(Hyperlink hyperlink) throws AuthorisationException {
+	private void checkActivePermission(Hyperlink hyperlink) throws ServiceException {
 		//if (!hyperlink.isActive()) {
 		User user = CoreUtil.getUser();
 		if (!user.equals(hyperlink.getModifiedUser())) {
@@ -176,7 +174,7 @@ public class HyperlinkServiceImpl
 							PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
 						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
 					}
 					break;
@@ -186,7 +184,7 @@ public class HyperlinkServiceImpl
 							PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
 						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
 					}
 					break;
@@ -196,7 +194,7 @@ public class HyperlinkServiceImpl
 							PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
 						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
 					}
 					break;
@@ -206,7 +204,7 @@ public class HyperlinkServiceImpl
 							PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
 						if (!hyperlink.isActive() || !hyperlink.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.HYPERLINK_NOT_ACTIVE, hyperlink.getId().toString());
 						}
 					}
 					break;

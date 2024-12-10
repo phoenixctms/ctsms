@@ -45,13 +45,11 @@ import org.phoenixctms.ctsms.domain.UserPermissionProfileDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
-import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.pdf.PDFMerger;
 import org.phoenixctms.ctsms.security.CipherStream;
 import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
-import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -324,7 +322,7 @@ public class FileServiceImpl
 		}
 	}
 
-	private void checkActivePermission(File file) throws AuthorisationException {
+	private void checkActivePermission(File file) throws ServiceException {
 		//if (!file.isActive()) {
 		User user = CoreUtil.getUser();
 		//!file.getDepartments().contains(user.getDepartment()
@@ -337,7 +335,7 @@ public class FileServiceImpl
 							PermissionProfile.INVENTORY_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.INVENTORY_VIEW_ALL_DEPARTMENTS)) {
 						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
 					}
 					break;
@@ -347,7 +345,7 @@ public class FileServiceImpl
 							PermissionProfile.STAFF_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.STAFF_VIEW_ALL_DEPARTMENTS)) {
 						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
 					}
 					break;
@@ -357,7 +355,7 @@ public class FileServiceImpl
 							PermissionProfile.COURSE_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.COURSE_VIEW_ALL_DEPARTMENTS)) {
 						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
 					}
 					break;
@@ -367,7 +365,7 @@ public class FileServiceImpl
 							PermissionProfile.TRIAL_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.TRIAL_VIEW_ALL_DEPARTMENTS)) {
 						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
 					}
 					break;
@@ -377,7 +375,7 @@ public class FileServiceImpl
 							PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS)) {
 						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
 					}
 					break;
@@ -387,7 +385,7 @@ public class FileServiceImpl
 							PermissionProfile.MASS_MAIL_DETAIL_ALL_DEPARTMENTS,
 							PermissionProfile.MASS_MAIL_VIEW_ALL_DEPARTMENTS)) {
 						if (!file.isActive() || !file.getDepartments().contains(user.getDepartment())) {
-							throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_ACTIVE, file.getId().toString());
 						}
 					}
 					break;

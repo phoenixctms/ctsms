@@ -15,13 +15,13 @@ import javax.script.ScriptException;
 import org.openjdk.nashorn.api.scripting.JSObject;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
-import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
@@ -217,10 +217,10 @@ public class FieldCalculation {
 	public String getScript(String resource, Long fileId) throws Exception {
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		if (CommonUtil.getUseFileEncryption(file.getModule())) {
-			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.ENCRYPTED_FILE, fileId.toString());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ENCRYPTED_FILE, fileId.toString());
 		}
 		if (!file.isPublicFile()) {
-			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
 		}
 		FileContentOutVO result = fileDao.toFileContentOutVO(file);
 		return new String(result.getDatas(), SCRIPT_CHARSET);

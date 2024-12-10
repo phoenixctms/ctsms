@@ -17,6 +17,9 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 	protected MoveAdapter() {
 	}
 
+	protected void reset() {
+	}
+
 	protected abstract ROOT aquireWriteLock(Long rootId) throws ServiceException;
 
 	protected abstract void checkItem(LISTITEM groupItem) throws ServiceException;
@@ -55,6 +58,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 			throws Exception;
 
 	public LISTITEMVO move(Long itemId, PositionMovement movement) throws Exception {
+		reset();
 		LISTITEM item = checkItemId(itemId);
 		checkItem(item);
 		ROOT root = aquireWriteLock(getRootId(getRoot(item)));
@@ -146,6 +150,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 	}
 
 	public ArrayList<LISTITEMVO> moveTo(Long itemId, long targetPosition) throws Exception {
+		reset();
 		LISTITEM item = checkItemId(itemId);
 		checkItem(item);
 		ROOT root = aquireWriteLock(getRootId(getRoot(item)));
@@ -251,6 +256,7 @@ public abstract class MoveAdapter<ROOT, LISTITEM, LISTITEMVO> {
 	}
 
 	protected ArrayList<LISTITEMVO> normalizePositions(LISTITEM groupItem, ROOT root) throws Exception {
+		reset();
 		checkRoot(root);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
