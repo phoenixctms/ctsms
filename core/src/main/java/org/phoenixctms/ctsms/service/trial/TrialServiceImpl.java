@@ -7450,7 +7450,8 @@ public class TrialServiceImpl
 	protected ProbandListEntryOutVO handleMoveProbandListEntry(
 			AuthenticationVO auth, Long probandListEntryId, PositionMovement movement)
 			throws Exception {
-		return (new ProbandListEntryMoveAdapter(this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao())).move(probandListEntryId,
+		return (new ProbandListEntryMoveAdapter(this.getUserPermissionProfileDao(), this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao())).move(
+				probandListEntryId,
 				movement);
 	}
 
@@ -7472,7 +7473,8 @@ public class TrialServiceImpl
 	protected Collection<ProbandListEntryOutVO> handleMoveProbandListEntryTo(
 			AuthenticationVO auth, Long probandListEntryId, Long targetPosition)
 			throws Exception {
-		return (new ProbandListEntryMoveAdapter(this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao())).moveTo(probandListEntryId,
+		return (new ProbandListEntryMoveAdapter(this.getUserPermissionProfileDao(), this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao())).moveTo(
+				probandListEntryId,
 				targetPosition);
 	}
 
@@ -7491,7 +7493,8 @@ public class TrialServiceImpl
 	@Override
 	protected Collection<ProbandListEntryOutVO> handleNormalizeProbandListEntryPositions(
 			AuthenticationVO auth, Long trialId) throws Exception {
-		return (new ProbandListEntryMoveAdapter(this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao())).normalizePositions(trialId);
+		return (new ProbandListEntryMoveAdapter(this.getUserPermissionProfileDao(), this.getJournalEntryDao(), this.getProbandListEntryDao(), this.getTrialDao()))
+				.normalizePositions(trialId);
 	}
 
 	@Override
