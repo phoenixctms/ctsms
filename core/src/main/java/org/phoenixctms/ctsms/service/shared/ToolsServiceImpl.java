@@ -98,7 +98,6 @@ import org.phoenixctms.ctsms.security.Authenticator;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
 import org.phoenixctms.ctsms.security.otp.OTPAuthenticator;
-import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.Compile;
@@ -992,10 +991,10 @@ public class ToolsServiceImpl
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		if (CommonUtil.getUseFileEncryption(file.getModule())) {
-			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.ENCRYPTED_FILE, fileId.toString());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ENCRYPTED_FILE, fileId.toString());
 		}
 		if (!file.isPublicFile()) {
-			throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
 		}
 		FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
 		return result;

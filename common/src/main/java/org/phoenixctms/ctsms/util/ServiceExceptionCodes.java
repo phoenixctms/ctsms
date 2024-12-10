@@ -835,4 +835,9 @@ public interface ServiceExceptionCodes {
 	public static final String JOB_INVALID_EMAIL_RECIPIENTS = "job_invalid_email_recipients";
 	public static final String JOB_ALREADY_EXISTS = "job_already_exists";
 	public static final String VISIT_ID_NOT_NULL = "visit_id_not_null";
+	public final static String FILE_NOT_PUBLIC = "file_not_public";
+	public final static String FILE_NOT_ACTIVE = "file_not_active";
+	public final static String ALL_DEPARMTENTS_PERMISSION_REQUIRED = "all_deparmtents_permission_required";
+	public final static String HYPERLINK_NOT_ACTIVE = "hyperlink_not_active";
+	public final static String ENCRYPTED_FILE = "encrypted_file";
 }
