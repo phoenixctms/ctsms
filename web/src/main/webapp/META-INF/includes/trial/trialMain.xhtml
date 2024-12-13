@@ -9,7 +9,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="trialmain_form">
+		<h:form id="trialmain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 			<p:remoteCommand process="@this" name="changeTrialTag"
 				actionListener="#{trialTagBean.change(trialBean.in.id)}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"

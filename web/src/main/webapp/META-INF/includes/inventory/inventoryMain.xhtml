@@ -10,7 +10,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="inventorymain_form">
+		<h:form id="inventorymain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 			<p:remoteCommand
 				process="@this"
 				name="changeInventoryTag"

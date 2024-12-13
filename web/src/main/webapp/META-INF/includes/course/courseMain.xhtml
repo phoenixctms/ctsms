@@ -9,7 +9,7 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="coursemain_form">
+		<h:form id="coursemain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 			<p:remoteCommand process="@this" name="changeLecturer"
 				actionListener="#{lecturerBean.change(courseBean.in.id)}"
 				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
