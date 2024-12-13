@@ -84,7 +84,7 @@
 		<ui:param name="defaultColorOpacity" value="-50" />
 		<ui:param name="effect" value="fade" />
 		<ui:param name="autoCompleteForceSelectionPreventFormSubmission"
-			value="return event.keyCode != 13;" />
+			value="return event.keyCode != 13 || jQuery(event.srcElement).is('textarea');" />
 		<ui:param name="autoCompleteMinQueryLengthTitle" value="1" />
 		<ui:param name="autoCompleteMaxResultsTitle"
 			value="#{applicationScopeBean.integerMaxValue}" />
