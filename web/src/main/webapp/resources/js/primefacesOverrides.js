@@ -676,6 +676,9 @@ PrimeFaces.widget.SelectManyCheckbox.prototype.setValue = function(value) {
 
       var found = false;
       for ( var i = 0; i < value.length; i++) {
+		if (value[i] instanceof Array) {
+		  throw new Error('value element is an array');
+		}
         if (value[i] === itemValue) {
           found = true;
           break;
