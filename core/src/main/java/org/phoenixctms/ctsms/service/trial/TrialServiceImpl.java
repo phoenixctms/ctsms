@@ -236,7 +236,7 @@ public class TrialServiceImpl
 		extends TrialServiceBase {
 
 	private final static String SHUFFLE_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
-	private final static java.util.regex.Pattern JS_VARIABLE_NAME_REGEXP = Pattern.compile("^[A-Za-z0-9_]+$");
+	private final static java.util.regex.Pattern JS_VARIABLE_NAME_REGEXP = Pattern.compile("^[A-Za-z_][A-Za-z0-9_]*$");
 	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX = 6;
 	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX = 7;
 	private final static int PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX = 8;
