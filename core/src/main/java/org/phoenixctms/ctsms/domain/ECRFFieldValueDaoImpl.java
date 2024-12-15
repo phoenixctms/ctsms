@@ -1001,8 +1001,13 @@ public class ECRFFieldValueDaoImpl
 				}
 				it = ecrf.getVisits().iterator();
 				target.getVisitTokens().clear();
+				target.setVisitToken(null);
 				while (it.hasNext()) {
-					target.getVisitTokens().add(((Visit) it.next()).getToken());
+					Visit v = (Visit) it.next();
+					target.getVisitTokens().add(v.getToken());
+					if (v.equals(visit)) {
+						target.setVisitToken(v.getToken());
+					}
 				}
 			}
 			target.setDisabled(ecrfField.isDisabled());

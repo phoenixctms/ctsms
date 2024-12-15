@@ -678,8 +678,13 @@ public final class CommonUtil {
 					}
 					it = ecrfVO.getVisits().iterator();
 					out.getVisitTokens().clear();
+					out.setVisitToken(null);
 					while (it.hasNext()) {
-						out.getVisitTokens().add(((VisitOutVO) it.next()).getToken());
+						VisitOutVO visit = (VisitOutVO) it.next();
+						out.getVisitTokens().add(visit.getToken());
+						if (visitId != null && visitId.equals(visit.getId())) {
+							out.setVisitToken(visit.getToken());
+						}
 					}
 				}
 				out.setDisabled(ecrfFieldVO.getDisabled());

@@ -2028,8 +2028,13 @@ public final class ServiceUtil {
 			}
 			it = ecrf.getVisits().iterator();
 			ecrfFieldValueVO.getVisitTokens().clear();
+			ecrfFieldValueVO.setVisitToken(null);
 			while (it.hasNext()) {
-				ecrfFieldValueVO.getVisitTokens().add(((Visit) it.next()).getToken());
+				Visit visit = (Visit) it.next();
+				ecrfFieldValueVO.getVisitTokens().add(visit.getToken());
+				if (visit.getId().equals(visitId)) {
+					ecrfFieldValueVO.setVisitToken(visit.getToken());
+				}
 			}
 		}
 		ecrfFieldValueVO.setInputFieldId(inputField.getId());

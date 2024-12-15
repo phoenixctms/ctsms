@@ -575,7 +575,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["$section"] = inputFieldVariable.value.section;
 		mask["$category"] = inputFieldVariable.value.category;
 		mask["$inputFieldName"] = inputFieldVariable.value.inputFieldName;
-		mask["$probandGroup"] = inputFieldVariable.value.probandGroupToken;
+		mask["$probandGroup"] = inputFieldVars.probandListEntry != null ? (inputFieldVars.probandListEntry.group != null ? inputFieldVars.probandListEntry.group.token : null) : null;
 		mask["$visit"] = inputFieldVariable.value.visitToken;
 
 		mask["getEnteredValue"] = _getEnteredValue;
