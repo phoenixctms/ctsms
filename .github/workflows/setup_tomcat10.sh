@@ -10,7 +10,7 @@ echo "CTSMS_JAVA=$CTSMS_JAVA" >>/etc/default/tomcat10
 sed -r -i "s|# Lifecycle|EnvironmentFile=/etc/default/tomcat10\\n\\n# Lifecycle|" /usr/lib/systemd/system/tomcat10.service
 sed -r -i "s|# Security|# Security\\nReadWritePaths=/ctsms/external_files/ /ctsms/bulk_processor/output/ /ctsms/ /tmp/|" /usr/lib/systemd/system/tomcat10.service
 tar -xvzf /home/runner/work/ctsms/ctsms/.github/workflows/jakartaee-migration-1.0.8-bin.tar.gz -C /ctsms
-sudo /ctsms/jakartaee-migration-1.0.8/bin/migrate.sh /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war
+/ctsms/jakartaee-migration-1.0.8/bin/migrate.sh /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION.war /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war
 chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war
 rm /var/lib/tomcat10/webapps/ROOT/ -rf
 #cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION/WEB-INF/lib/ctsms-core-$VERSION.jar:/home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION/WEB-INF/lib/*
