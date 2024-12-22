@@ -104,8 +104,8 @@ jobs:
           /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
       - name: Setup Tomcat
         run: |
-          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
-          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat.sh
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
       - name: Setup ChromeDriver
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
