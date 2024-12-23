@@ -15,6 +15,6 @@ tar -xvzf /home/runner/work/ctsms/ctsms/.github/workflows/jakartaee-migration-1.
 chmod 755 /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war
 rm /var/lib/tomcat10/webapps/ROOT/ -rf
 #cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION/WEB-INF/lib/ctsms-core-$VERSION.jar:/home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION/WEB-INF/lib/*
-cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war /var/lib/tomcat9/webapps/ROOT.war
+cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war /var/lib/tomcat10/webapps/ROOT.war
 systemctl daemon-reload
 systemctl start tomcat10
