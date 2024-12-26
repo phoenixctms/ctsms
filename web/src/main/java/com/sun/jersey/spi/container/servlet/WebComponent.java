@@ -257,8 +257,7 @@ public class WebComponent implements ContainerListener {
 						Method sendError = response.getClass().getMethod("sendError", int.class, String.class);
 						sendError.invoke(response, statusType.getStatusCode(), reasonPhrase);
 					} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e2) {
-						response.setStatus(statusType.getStatusCode(), reasonPhrase);
-						//response.setStatus(statusType.getStatusCode());
+						response.setStatus(statusType.getStatusCode());
 					}
 				}
 			} else {
