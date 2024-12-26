@@ -1,6 +1,7 @@
 #!/bin/bash
-#CTSMS_PROPERTIES=/ctsms/properties
-#CTSMS_JAVA=/ctsms/java
+CTSMS_PROPERTIES=/ctsms/properties
+CTSMS_JAVA=/ctsms/java
+echo "JDK_JAVA_OPTIONS=--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" >> $GITHUB_ENV
 #VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
 #cat /var/lib/tomcat9/logs/catalina.out
 BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
