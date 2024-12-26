@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -245,11 +247,21 @@ public class WebComponent implements ContainerListener {
 		private void writeStatus() {
 			Response.StatusType statusType = cResponse.getStatusType();
 			final String reasonPhrase = statusType.getReasonPhrase();
-			//if (reasonPhrase != null) {
-			//    response.setStatus(statusType.getStatusCode(), reasonPhrase);
-			//} else {
-			response.setStatus(statusType.getStatusCode());
-			//}
+			if (reasonPhrase != null) {
+				try {
+					response.setStatus(statusType.getStatusCode(), reasonPhrase);
+				} catch (NoSuchMethodError e) {
+					try {
+						Method setError = response.getClass().getMethod("setError", int.class, String.class);
+						setError.invoke(response, statusType.getStatusCode(), reasonPhrase);
+					} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
+						//response.setStatus(statusType.getStatusCode());
+						response.setStatus(statusType.getStatusCode(), reasonPhrase);
+					}
+				}
+			} else {
+				response.setStatus(statusType.getStatusCode());
+			}
 		}
 
 		public void write(int b) throws IOException {
