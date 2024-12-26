@@ -244,23 +244,30 @@ public class WebComponent implements ContainerListener {
 
 		private void writeStatus() {
 			Response.StatusType statusType = cResponse.getStatusType();
+			final int statusCode = statusType.getStatusCode();
 			final String reasonPhrase = statusType.getReasonPhrase();
-			//			if (reasonPhrase != null) {
-			//				try {
-			//					//javax.servlet.http.HttpServletResponse:
-			//					response.setStatus(statusType.getStatusCode(), reasonPhrase);
-			//				} catch (NoSuchMethodError e1) {
-			//					try {
-			//						//jakarta.servlet.http.HttpServletResponse:
-			//						Method sendError = response.getClass().getMethod("sendError", int.class, String.class);
-			//						sendError.invoke(response, statusType.getStatusCode(), reasonPhrase);
-			//					} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e2) {
-			//						response.setStatus(statusType.getStatusCode());
-			//					}
-			//				}
-			//			} else {
-			response.setStatus(statusType.getStatusCode());
-			//			}
+			if (reasonPhrase != null) {
+				try {
+					//// noinspection deprecation
+					response.setStatus(statusCode, reasonPhrase);
+				} catch (NoSuchMethodError noSuchMethodError) {
+					response.setStatus(statusCode);
+				}
+				//				try {
+				//					//javax.servlet.http.HttpServletResponse:
+				//					response.setStatus(statusType.getStatusCode(), reasonPhrase);
+				//				} catch (NoSuchMethodError e1) {
+				//					try {
+				//						//jakarta.servlet.http.HttpServletResponse:
+				//						Method sendError = response.getClass().getMethod("sendError", int.class, String.class);
+				//						sendError.invoke(response, statusType.getStatusCode(), reasonPhrase);
+				//					} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e2) {
+				//						response.setStatus(statusType.getStatusCode());
+				//					}
+				//				}
+			} else {
+				response.setStatus(statusCode);
+			}
 		}
 
 		public void write(int b) throws IOException {
