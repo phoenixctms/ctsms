@@ -122,9 +122,6 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_PATH: ${{ secrets.FTP_PATH }}
         run: |
-          echo "CTSMS_PROPERTIES=/ctsms/properties" >> $GITHUB_ENV
-          echo "CTSMS_JAVA=/ctsms/java" >> $GITHUB_ENV
-          echo "JDK_JAVA_OPTIONS=--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" >> $GITHUB_ENV
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.* "Proband Tests" git@phoenixctms.org
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
 #      - name: test perl selenium remote
