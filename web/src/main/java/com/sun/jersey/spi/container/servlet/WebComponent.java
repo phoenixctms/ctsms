@@ -249,14 +249,16 @@ public class WebComponent implements ContainerListener {
 			final String reasonPhrase = statusType.getReasonPhrase();
 			if (reasonPhrase != null) {
 				try {
+					//javax.servlet.http.HttpServletResponse:
 					response.setStatus(statusType.getStatusCode(), reasonPhrase);
-				} catch (NoSuchMethodError e) {
+				} catch (NoSuchMethodError e1) {
 					try {
-						Method setError = response.getClass().getMethod("setError", int.class, String.class);
-						setError.invoke(response, statusType.getStatusCode(), reasonPhrase);
-					} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e1) {
-						//response.setStatus(statusType.getStatusCode());
+						//jakarta.servlet.http.HttpServletResponse:
+						Method sendError = response.getClass().getMethod("sendError", int.class, String.class);
+						sendError.invoke(response, statusType.getStatusCode(), reasonPhrase);
+					} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e2) {
 						response.setStatus(statusType.getStatusCode(), reasonPhrase);
+						//response.setStatus(statusType.getStatusCode());
 					}
 				}
 			} else {
