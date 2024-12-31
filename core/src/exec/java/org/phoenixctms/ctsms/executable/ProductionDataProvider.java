@@ -1978,6 +1978,17 @@ public class ProductionDataProvider {
 				false,
 				true,
 				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
+		ProbandListStatusType reScreeningProbandListStatusType = createProbandListStatusType("re_screening", Color.CYAN,
+				false,
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
 		ProbandListStatusType screeningFailureProbandListStatusType = createProbandListStatusType("screening_failure", Color.ORANGERED,
 				false,
 				true,
@@ -2037,9 +2048,11 @@ public class ProductionDataProvider {
 				getProbandListStatusTransitions(icSignedProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
 						droppedOutProbandListStatusType));
 		updateProbandListStatusType(screeningOkProbandListStatusType,
-				getProbandListStatusTransitions(screeningOkProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType));
+				getProbandListStatusTransitions(screeningOkProbandListStatusType, reScreeningProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType));
+		updateProbandListStatusType(reScreeningProbandListStatusType,
+				getProbandListStatusTransitions(reScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType));
 		updateProbandListStatusType(screeningFailureProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(reScreeningProbandListStatusType));
 		updateProbandListStatusType(ongoingProbandListStatusType,
 				getProbandListStatusTransitions(ongoingProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
 		updateProbandListStatusType(droppedOutProbandListStatusType,
