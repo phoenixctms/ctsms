@@ -127,5 +127,57 @@ if get_database_version() < '010801080' then
   
 end if;
 
+if get_database_version() < '010801090' then
+
+  insert into PROBAND_LIST_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "reason_required", "blocking", "count", "screening", "ic", "ecrf_value_input_enabled", "signup", "person")
+  values (nextval('hibernate_sequence'), 'CYAN', 'f', 're_screening', 't', 'f', 'f', 't', 'f', 't', 'f', 't');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'SCREENING' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_ok' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_ok' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_failure' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_failure' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1)
+  );
+  
+  perform set_database_version('010801090');
+  
+end if;
+
 end
 $$;
