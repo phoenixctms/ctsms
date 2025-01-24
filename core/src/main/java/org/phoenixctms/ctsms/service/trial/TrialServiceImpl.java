@@ -2063,20 +2063,35 @@ public class TrialServiceImpl
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = new ArrayList<ECRFStatusEntry>();
-		Iterator<Visit> it = this.getVisitDao().findByEcrfStatusEntry(modifiedEcrf.getId()).iterator();
-		while (it.hasNext()) {
-			Visit visit = it.next();
-			if (!modifiedEcrf.getVisitIds().contains(visit.getId())) {
-				ServiceUtil.checkLockedEcrfs(originalEcrf, visit, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
-				//delete ecrf status entries of empty ecrfs
-				if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
-							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
-				} else if (ecrfFieldStatusEntryDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
-							CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
-				} else {
-					ecrfStatusEntriesToRemove.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), visit.getId(), null, null));
+		if (modifiedEcrf.getVisitIds().size() > 0 && originalEcrf.getVisits().size() == 0) {
+			ServiceUtil.checkLockedEcrfs(originalEcrf, null, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
+			//delete ecrf status entries of empty ecrfs
+			if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), (Long) null) > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
+						CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), null, null));
+			} else if (ecrfFieldStatusEntryDao.getCount(modifiedEcrf.getId(), (Long) null) > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
+						CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), null, null));
+			} else {
+				ecrfStatusEntriesToRemove.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), null, null, null));
+			}
+		} else {
+			Iterator<Visit> it = this.getVisitDao().findByEcrfStatusEntry(modifiedEcrf.getId()).iterator();
+			while (it.hasNext()) {
+				Visit visit = it.next();
+				if (!modifiedEcrf.getVisitIds().contains(visit.getId())) {
+					ServiceUtil.checkLockedEcrfs(originalEcrf, visit, ecrfStatusEntryDao, this.getECRFDao(), this.getVisitDao());
+					//delete ecrf status entries of empty ecrfs
+					if (ecrfFieldValueDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_VALUES,
+								CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
+					} else if (ecrfFieldStatusEntryDao.getCount(modifiedEcrf.getId(), visit.getId()) > 0) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_VISIT_WITH_STATUS_ENTRIES,
+								CommonUtil.getEcrfVisitName(modifiedEcrf.getName(), visit.getToken(), modifiedEcrf.getVisitIds().size()));
+					} else {
+						ecrfStatusEntriesToRemove
+								.addAll(ecrfStatusEntryDao.findByTrialListEntryEcrfVisitValidationStatus(null, null, modifiedEcrf.getId(), visit.getId(), null, null));
+					}
 				}
 			}
 		}
