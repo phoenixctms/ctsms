@@ -34,6 +34,20 @@
 			</ui:include>
 		</p:column>
 		<p:column
+			sortBy="#{teamMember.vo.ecrf}"
+			filterBy="#{teamMember.vo.ecrf}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_ecrf_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.ecrf}" />
+			</ui:include>
+		</p:column>		
+		<p:column
 			sortBy="#{teamMember.vo.sign}"
 			filterBy="#{teamMember.vo.sign}"
 			filterOptions="#{sessionScopeBean.filterBooleans}">
@@ -62,7 +76,7 @@
 			</ui:include>
 		</p:column>				
 		
-				<p:column
+		<p:column
 			sortBy="#{teamMember.vo.verify}"
 			filterBy="#{teamMember.vo.verify}"
 			filterOptions="#{sessionScopeBean.filterBooleans}">
@@ -76,10 +90,7 @@
 					value="#{teamMember.vo.verify}" />
 			</ui:include>
 		</p:column>		
-		
 
-		
-		
 		<p:column sortBy="#{teamMember.vo.notifyEcrfValidatedStatus}"
 			filterBy="#{teamMember.vo.notifyEcrfValidatedStatus}"
 			filterOptions="#{sessionScopeBean.filterBooleans}">

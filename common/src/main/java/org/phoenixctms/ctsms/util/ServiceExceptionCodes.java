@@ -427,6 +427,7 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_TEAM_MEMBER_ID = "invalid_team_member_id";
 	public final static String TEAM_MEMBER_ALREADY_MEMBER_WITH_SAME_ROLE = "team_member_already_member_with_same_role";
 	public final static String TEAM_MEMBER_ACCESS_FALSE = "team_member_access_false";
+	public final static String TEAM_MEMBER_ECRF_FALSE = "team_member_ecrf_false";
 	public final static String TEAM_MEMBER_SIGNEE_NOT_PERSON = "team_member_signee_not_person";
 	public final static String TEAM_MEMBER_RESOLVER_NOT_PERSON = "team_member_resolver_not_person";
 	public final static String TEAM_MEMBER_VERIFIER_NOT_PERSON = "team_member_verifier_not_person";

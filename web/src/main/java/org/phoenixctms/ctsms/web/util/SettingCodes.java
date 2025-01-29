@@ -138,6 +138,7 @@ public interface SettingCodes {
 	public final static String TEAM_MEMBER_SIGN_PRESET = "team_member_sign_preset";
 	public final static String TEAM_MEMBER_RESOLVE_PRESET = "team_member_resolve_preset";
 	public final static String TEAM_MEMBER_VERIFY_PRESET = "team_member_verify_preset";
+	public final static String TEAM_MEMBER_ECRF_PRESET = "team_member_ecrf_preset";
 	public final static String TEAM_MEMBER_NOTIFY_TIMELINE_EVENT_PRESET = "team_member_notify_timeline_event_preset";
 	public final static String TEAM_MEMBER_NOTIFY_ECRF_VALIDATED_STATUS_PRESET = "team_member_notify_ecrf_validated_status_preset";
 	public final static String TEAM_MEMBER_NOTIFY_ECRF_REVIEW_STATUS_PRESET = "team_member_notify_ecrf_review_status_preset";

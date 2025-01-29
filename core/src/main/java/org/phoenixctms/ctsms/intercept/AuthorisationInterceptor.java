@@ -187,14 +187,16 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		return false;
 	}
 
-	private static boolean isMember(Trial trial, Staff identity, Boolean access) {
+	private static boolean isMember(Trial trial, Staff identity, Boolean access, Boolean ecrf) {
 		if (trial == null) {
 			return false;
 		}
 		Iterator<TeamMember> membersIt = trial.getMembers().iterator();
 		while (membersIt.hasNext()) {
 			TeamMember member = membersIt.next();
-			if ((access == null || access == member.isAccess()) && identity.equals(member.getStaff())) {
+			if ((access == null || access == member.isAccess())
+					&& (ecrf == null || ecrf == member.isEcrf())
+					&& identity.equals(member.getStaff())) {
 				return true;
 			}
 		}
@@ -767,7 +769,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
 				}
 				trial = parameterValue == null ? null : CheckIDUtil.checkTrialId((Long) parameterValue, trialDao);
-				if (!isMember(trial, identity, null)) {
+				if (!isMember(trial, identity, null, null)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), trial == null ? null : trialDao.toTrialOutVO(trial).getName());
 				}
@@ -778,7 +780,18 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
 				}
 				trial = parameterValue == null ? null : CheckIDUtil.checkTrialId((Long) parameterValue, trialDao);
-				if (!isMember(trial, identity, true)) {
+				if (!isMember(trial, identity, true, null)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), trial == null ? null : trialDao.toTrialOutVO(trial).getName());
+				}
+				break;
+			case TRIAL_IDENTITY_TEAM_MEMBER_ECRF:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				trial = parameterValue == null ? null : CheckIDUtil.checkTrialId((Long) parameterValue, trialDao);
+				if (!isMember(trial, identity, true, true)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), trial == null ? null : trialDao.toTrialOutVO(trial).getName());
 				}

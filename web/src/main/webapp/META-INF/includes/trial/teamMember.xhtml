@@ -346,7 +346,7 @@
 									<p:selectBooleanCheckbox id="access"
 										value="#{teamMemberBean.in.access}">
 										<p:ajax listener="#{teamMemberBean.handleAccessChange}"
-											update="sign,resolve,verify" />
+											update="ecrf,sign,resolve,verify" />
 									</p:selectBooleanCheckbox>
 									<p:tooltip rendered="#{enableTooltips}" for="access">
 										<h:outputText
@@ -355,12 +355,29 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="access" />
+								
+								<h:outputLabel for="ecrf"
+									value="#{triallabels.team_member_ecrf_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="ecrf"
+										disabled="#{!teamMemberBean.in.access}"
+										value="#{teamMemberBean.in.ecrf}">
+										<p:ajax listener="#{teamMemberBean.handleEcrfChange}"
+											update="sign,resolve,verify" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="ecrf">
+										<h:outputText
+											value="#{triallabels.team_member_ecrf_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrf" />
 
 								<h:outputLabel for="sign"
 									value="#{triallabels.team_member_sign_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="sign"
-										disabled="#{!teamMemberBean.in.access}"
+										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrf}"
 										value="#{teamMemberBean.in.sign}" />
 									<p:tooltip rendered="#{enableTooltips}" for="sign">
 										<h:outputText value="#{triallabels.team_member_sign_tooltip}"
@@ -373,7 +390,7 @@
 									value="#{triallabels.team_member_resolve_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="resolve"
-										disabled="#{!teamMemberBean.in.access}"
+										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrf}"
 										value="#{teamMemberBean.in.resolve}" />
 									<p:tooltip rendered="#{enableTooltips}" for="resolve">
 										<h:outputText
@@ -387,7 +404,7 @@
 									value="#{triallabels.team_member_verify_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="verify"
-										disabled="#{!teamMemberBean.in.access}"
+										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrf}"
 										value="#{teamMemberBean.in.verify}" />
 									<p:tooltip rendered="#{enableTooltips}" for="verify">
 										<h:outputText

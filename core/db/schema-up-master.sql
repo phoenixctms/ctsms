@@ -179,5 +179,15 @@ if get_database_version() < '010801090' then
   
 end if;
 
+if get_database_version() < '010801091' then
+
+  ALTER TABLE team_member ADD COLUMN ecrf BOOLEAN;
+  UPDATE team_member SET ecrf = (sign or resolve or verify);
+  ALTER TABLE team_member ALTER ecrf SET NOT NULL;
+  
+  perform set_database_version('010801091');
+  
+end if;
+
 end
 $$;
