@@ -1709,6 +1709,7 @@
         SIGN BOOLEAN not null,
         RESOLVE BOOLEAN not null,
         VERIFY BOOLEAN not null,
+        ECRF BOOLEAN not null,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
         ROLE_FK BIGINT not null,
