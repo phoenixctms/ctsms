@@ -60,6 +60,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			in.setSign(out.getSign());
 			in.setResolve(out.getResolve());
 			in.setVerify(out.getVerify());
+			in.setEcrf(out.getEcrf());
 			in.setNotifyTimelineEvent(out.getNotifyTimelineEvent());
 			in.setNotifyEcrfValidatedStatus(out.getNotifyEcrfValidatedStatus());
 			in.setNotifyEcrfReviewStatus(out.getNotifyEcrfReviewStatus());
@@ -92,6 +93,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 			in.setSign(Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET));
 			in.setResolve(Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET));
 			in.setVerify(Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET));
+			in.setEcrf(Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_PRESET));
 		}
 	}
 
@@ -148,6 +150,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 				Set<Long> ids = this.staffMultiPicker.getSelectionIds();
 				Iterator<TeamMemberOutVO> it = WebUtil.getServiceLocator().getTrialService()
 						.addTeamMembers(WebUtil.getAuthentication(), trialId, bulkAddRoleId, bulkAddAccess,
+								Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_PRESET),
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET),
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET),
 								Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET), ids)
@@ -294,6 +297,15 @@ public class TeamMemberBean extends ManagedBeanBase {
 
 	public void handleAccessChange() {
 		if (!in.getAccess()) {
+			in.setEcrf(false);
+			in.setSign(false);
+			in.setResolve(false);
+			in.setVerify(false);
+		}
+	}
+
+	public void handleEcrfChange() {
+		if (!in.getEcrf()) {
 			in.setSign(false);
 			in.setResolve(false);
 			in.setVerify(false);
@@ -416,6 +428,7 @@ public class TeamMemberBean extends ManagedBeanBase {
 
 	private void sanitizeInVals() {
 		if (!in.getAccess()) {
+			in.setEcrf(false);
 			in.setSign(false);
 			in.setResolve(false);
 			in.setVerify(false);
