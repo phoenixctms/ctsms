@@ -22,6 +22,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 import jxl.HeaderFooter;
 import jxl.WorkbookSettings;
@@ -51,6 +52,21 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 					CommonUtil.formatDate(statusEntry.getRealTimestamp(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
 					getIdentityName(statusEntry.getModifiedUser()), statusEntry.getStatus().getName(), statusEntry.getReason());
 		}
+	}
+
+	public static String getVisitScheduleAppointmentValue(VisitScheduleItemOutVO visitScheduleItem) {
+		if (visitScheduleItem != null) {
+			if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
+				return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+						CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
+						CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
+			} else if (visitScheduleItem.getStart() != null) {
+				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+			} else if (visitScheduleItem.getStop() != null) {
+				return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+			}
+		}
+		return null;
 	}
 
 	public static String getICDateColumnName() {
@@ -118,6 +134,30 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.PROBAND_LIST_ENTRY_TAG_DATE_HEAD, ExcelUtil.DEFAULT_LABEL,
 				probandListEntryTag == null ? null : probandListEntryTag.getUniqueName(),
 				probandListEntryTag == null ? null : CommonUtil.inputFieldOutVOToString(probandListEntryTag.getField()));
+	}
+
+	public static String getVisitScheduleAppointmentsStartColumnName(VisitScheduleItemOutVO visitScheduleItem) {
+		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_HEAD, ExcelUtil.DEFAULT_LABEL,
+				visitScheduleItem == null ? null : visitScheduleItem.getName(),
+				(visitScheduleItem != null && visitScheduleItem.getGroup() != null) ? visitScheduleItem.getGroup().getToken() : null,
+				(visitScheduleItem != null && visitScheduleItem.getVisit() != null) ? visitScheduleItem.getVisit().getToken() : null,
+				visitScheduleItem == null ? null : visitScheduleItem.getToken());
+	}
+
+	public static String getVisitScheduleAppointmentsStopColumnName(VisitScheduleItemOutVO visitScheduleItem) {
+		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_STOP_HEAD, ExcelUtil.DEFAULT_LABEL,
+				visitScheduleItem == null ? null : visitScheduleItem.getName(),
+				(visitScheduleItem != null && visitScheduleItem.getGroup() != null) ? visitScheduleItem.getGroup().getToken() : null,
+				(visitScheduleItem != null && visitScheduleItem.getVisit() != null) ? visitScheduleItem.getVisit().getToken() : null,
+				visitScheduleItem == null ? null : visitScheduleItem.getToken());
+	}
+
+	public static String getVisitScheduleAppointmentsStartStopColumnName(VisitScheduleItemOutVO visitScheduleItem) {
+		return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_HEAD, ExcelUtil.DEFAULT_LABEL,
+				visitScheduleItem == null ? null : visitScheduleItem.getName(),
+				(visitScheduleItem != null && visitScheduleItem.getGroup() != null) ? visitScheduleItem.getGroup().getToken() : null,
+				(visitScheduleItem != null && visitScheduleItem.getVisit() != null) ? visitScheduleItem.getVisit().getToken() : null,
+				visitScheduleItem == null ? null : visitScheduleItem.getToken());
 	}
 
 	protected ProbandListExcelWriter() {
@@ -201,6 +241,14 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							ProbandListExcelDefaultSettings.SICL_SCALE_FACTOR);
 					if (Settings.getBoolean(ProbandListExcelSettingCodes.SICL_APPEND_HEADER_FOOTER, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.SICL_APPEND_HEADER_FOOTER)) {
+						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
+					}
+					break;
+				case PROBAND_STATUS:
+					scaleFactor = Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_STATUS_SCALE_FACTOR, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SCALE_FACTOR);
+					if (Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_APPEND_HEADER_FOOTER, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_APPEND_HEADER_FOOTER)) {
 						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 					}
 					break;
@@ -298,6 +346,26 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(ProbandListExcelSettingCodes.SICL_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_COLORS),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_HEAD_FORMAT),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_FORMAT));
+				case PROBAND_STATUS:
+					return new SpreadSheetWriter(
+							this,
+							getColumnIndexMap(L10nUtil.getProbandListExcelColumns(Locales.USER, ProbandListExcelLabelCodes.PROBAND_STATUS_VO_FIELD_COLUMNS,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_VO_FIELD_COLUMNS)),
+							Settings.getInt(ProbandListExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+							omitFields,
+							Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_AUTOSIZE, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_AUTOSIZE),
+							Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_WRITEHEAD, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_WRITEHEAD),
+							Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_STATUS_PAGE_BREAK_AT_ROW, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_PAGE_BREAK_AT_ROW),
+							Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_ROW_COLORS),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_STATUS_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_STATUS_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_ROW_FORMAT));
 				default:
 					return new SpreadSheetWriter(this,
 							getColumnIndexMap(new ArrayList<String>()),
@@ -362,6 +430,9 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 				case SICL:
 					return Settings.getString(ProbandListExcelSettingCodes.SICL_TEMPLATE_FILE_NAME, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.SICL_TEMPLATE_FILE_NAME);
+				case PROBAND_STATUS:
+					return Settings.getString(ProbandListExcelSettingCodes.PROBAND_STATUS_TEMPLATE_FILE_NAME, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_TEMPLATE_FILE_NAME);
 				default:
 					return null;
 			}
@@ -417,6 +488,10 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 						break;
 					case SICL:
 						templateSpreadSheetName = L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.SICL_SPREADSHEET_NAME, ExcelUtil.DEFAULT_LABEL,
+								trial.getId(), trial.getName(), trial.getTitle());
+					case PROBAND_STATUS:
+						templateSpreadSheetName = L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.PROBAND_STATUS_SPREADSHEET_NAME,
+								ExcelUtil.DEFAULT_LABEL,
 								trial.getId(), trial.getName(), trial.getTitle());
 						break;
 					default:

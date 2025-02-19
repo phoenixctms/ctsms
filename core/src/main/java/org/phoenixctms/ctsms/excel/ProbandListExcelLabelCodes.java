@@ -4,12 +4,17 @@ public interface ProbandListExcelLabelCodes {
 
 	public final static String PROBAND_LIST_ENTRY_TAG_HEAD = "proband_list_entry_tag_head";
 	public final static String PROBAND_LIST_ENTRY_TAG_DATE_HEAD = "proband_list_entry_tag_date_head";
+	public final static String VISIT_SCHEDULE_APPOINTMENT_START_HEAD = "visit_schedule_appointment_start_head";
+	public final static String VISIT_SCHEDULE_APPOINTMENT_STOP_HEAD = "visit_schedule_appointment_stop_head";
+	public final static String VISIT_SCHEDULE_APPOINTMENT_START_STOP_HEAD = "visit_schedule_appointment_start_stop_head";
+	public final static String VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE = "visit_schedule_appointment_start_stop_value";
 	public final static String INQUIRY_HEAD = "inquiry_head";
 	public final static String INQUIRY_DATE_HEAD = "inquiry_date_head";
 	public final static String ENROLLMENT_STATUS_LOG_HEAD = "enrollment_status_log_head";
 	public static final String ENROLLMENT_STATUS_LOG_VALUE = "enrollment_status_log_value";
 	public static final String ENROLLMENT_STATUS_LOG_VALUE_NO_REASON = "enrollment_status_log_value_no_reason";
 	public static final String PROBAND_LIST_VO_FIELD_COLUMNS = "proband_list_vo_field_columns";
+	public static final String PROBAND_STATUS_VO_FIELD_COLUMNS = "proband_status_vo_field_columns";
 	public static final String ENROLLMENT_LOG_VO_FIELD_COLUMNS = "enrollment_log_vo_field_columns";
 	public static final String SCREENING_LOG_VO_FIELD_COLUMNS = "screening_log_vo_field_columns";
 	public static final String PRE_SCREENING_LOG_VO_FIELD_COLUMNS = "pre_screening_log_vo_field_columns";
@@ -25,6 +30,7 @@ public interface ProbandListExcelLabelCodes {
 	public static final String EMAIL_CONTACT_DETAILS_HEAD = "email_contact_details_head";
 	public static final String PHONE_CONTACT_DETAILS_HEAD = "phone_contact_details_head";
 	public static final String PROBAND_LIST_SPREADSHEET_NAME = "proband_list_spreadsheet_name";
+	public static final String PROBAND_STATUS_SPREADSHEET_NAME = "proband_status_spreadsheet_name";
 	public static final String ENROLLMENT_LOG_SPREADSHEET_NAME = "enrollment_log_spreadsheet_name";
 	public static final String PRE_SCREENING_LOG_SPREADSHEET_NAME = "pre_screening_log_spreadsheet_name";
 	public static final String SCREENING_LOG_SPREADSHEET_NAME = "screening_log_spreadsheet_name";

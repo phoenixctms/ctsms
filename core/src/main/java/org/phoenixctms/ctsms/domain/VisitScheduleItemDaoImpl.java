@@ -479,8 +479,9 @@ public class VisitScheduleItemDaoImpl
 			Long departmentId, Long probandId, Long statusId, Long visitTypeId, Boolean internal, Timestamp from, Timestamp to)
 			throws Exception {
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
+		org.hibernate.Criteria trialCriteria = null;
 		if (trialId != null || departmentId != null || statusId != null) {
-			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
+			trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
@@ -498,7 +499,7 @@ public class VisitScheduleItemDaoImpl
 		if (internal != null) {
 			visitScheduleItemCriteria.add(Restrictions.eq("internal", internal.booleanValue()));
 		}
-		applyProbandCriterions(visitScheduleItemCriteria, probandId, null, null);
+		applyProbandCriterions(visitScheduleItemCriteria, probandId, trialCriteria, null);
 		return listExpandDateModeProband(visitScheduleItemCriteria, probandId, from, to, null, null);
 	}
 

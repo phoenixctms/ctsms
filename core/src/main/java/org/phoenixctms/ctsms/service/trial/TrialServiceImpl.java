@@ -4649,6 +4649,10 @@ public class TrialServiceImpl
 		boolean showICAge;
 		boolean showScreeningDate;
 		boolean showScreeningReason;
+		boolean showVisitScheduleAppointmentsStart;
+		boolean showVisitScheduleAppointmentsStop;
+		boolean showVisitScheduleAppointmentsStartStop;
+		Boolean visitScheduleAppointmentsInternal;
 		ExcelCellFormat rowCellFormat;
 		if (logLevel != null) {
 			switch (logLevel) {
@@ -4687,6 +4691,18 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_SHOW_SCREENING_REASON);
 					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_FORMAT);
+					showVisitScheduleAppointmentsStart = Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START);
+					showVisitScheduleAppointmentsStop = Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP);
+					showVisitScheduleAppointmentsStartStop = Settings.getBoolean(ProbandListExcelSettingCodes.ENROLLMENT_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+					visitScheduleAppointmentsInternal = Settings.getBooleanNullable(ProbandListExcelSettingCodes.ENROLLMENT_LOG_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL);
 					break;
 				case SCREENING:
 					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
@@ -4723,6 +4739,18 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.SCREENING_LOG_SHOW_SCREENING_REASON);
 					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_FORMAT);
+					showVisitScheduleAppointmentsStart = Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START);
+					showVisitScheduleAppointmentsStop = Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP);
+					showVisitScheduleAppointmentsStartStop = Settings.getBoolean(ProbandListExcelSettingCodes.SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+					visitScheduleAppointmentsInternal = Settings.getBooleanNullable(ProbandListExcelSettingCodes.SCREENING_LOG_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SCREENING_LOG_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL);
 					break;
 				case PRE_SCREENING:
 					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
@@ -4759,6 +4787,18 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_SHOW_SCREENING_REASON);
 					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_FORMAT);
+					showVisitScheduleAppointmentsStart = Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START);
+					showVisitScheduleAppointmentsStop = Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP);
+					showVisitScheduleAppointmentsStartStop = Settings.getBoolean(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+					visitScheduleAppointmentsInternal = Settings.getBooleanNullable(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL);
 					break;
 				case SICL:
 					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.SICL_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
@@ -4792,6 +4832,65 @@ public class TrialServiceImpl
 							ProbandListExcelDefaultSettings.SICL_SHOW_SCREENING_REASON);
 					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.SICL_ROW_FORMAT);
+					showVisitScheduleAppointmentsStart = Settings.getBoolean(ProbandListExcelSettingCodes.SICL_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SICL_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START);
+					showVisitScheduleAppointmentsStop = Settings.getBoolean(ProbandListExcelSettingCodes.SICL_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SICL_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP);
+					showVisitScheduleAppointmentsStartStop = Settings.getBoolean(ProbandListExcelSettingCodes.SICL_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SICL_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+					visitScheduleAppointmentsInternal = Settings.getBooleanNullable(ProbandListExcelSettingCodes.SICL_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SICL_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL);
+					break;
+				case PROBAND_STATUS:
+					showProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_PROBAND_LIST_ENTRY_TAGS);
+					showAllProbandListEntryTags = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_ALL_PROBAND_LIST_ENTRY_TAGS, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_ALL_PROBAND_LIST_ENTRY_TAGS);
+					showAllProbandListEntryTagDates = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_ALL_PROBAND_LIST_ENTRY_TAG_DATES,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_ALL_PROBAND_LIST_ENTRY_TAG_DATES);
+					showInquiries = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_INQUIRIES, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_INQUIRIES);
+					showAllInquiries = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_ALL_INQUIRIES, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_ALL_INQUIRIES);
+					showAllInquiryDates = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_ALL_INQUIRY_DATES, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_ALL_INQUIRY_DATES);
+					showAddresses = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_ADDRESSES, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_ADDRESSES);
+					showContactDetails = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_CONTACT_DETAILS, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_CONTACT_DETAILS);
+					showTags = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_TAGS, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_TAGS);
+					showEnrollmentStatusLog = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_ENROLLMENT_STATUS_LOG, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_ENROLLMENT_STATUS_LOG);
+					aggregateAddresses = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_AGGREGATE_ADDRESSES, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_AGGREGATE_ADDRESSES);
+					aggregateContactDetails = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_AGGREGATE_CONTACT_DETAILS, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_AGGREGATE_CONTACT_DETAILS);
+					showICDate = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_IC_DATE, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_IC_DATE);
+					showICAge = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_IC_AGE, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_IC_AGE);
+					showScreeningDate = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_SCREENING_DATE, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_SCREENING_DATE);
+					showScreeningReason = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_SCREENING_REASON, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_SCREENING_REASON);
+					rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_STATUS_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_ROW_FORMAT);
+					showVisitScheduleAppointmentsStart = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START);
+					showVisitScheduleAppointmentsStop = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP);
+					showVisitScheduleAppointmentsStartStop = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_STATUS_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+					visitScheduleAppointmentsInternal = Settings.getBooleanNullable(ProbandListExcelSettingCodes.PROBAND_STATUS_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL,
+							Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL);
 					break;
 				default:
 					showProbandListEntryTags = false;
@@ -4811,6 +4910,10 @@ public class TrialServiceImpl
 					showScreeningDate = false;
 					showScreeningReason = false;
 					rowCellFormat = null;
+					showVisitScheduleAppointmentsStart = false;
+					showVisitScheduleAppointmentsStop = false;
+					showVisitScheduleAppointmentsStartStop = false;
+					visitScheduleAppointmentsInternal = null;
 					break;
 			}
 		} else {
@@ -4847,11 +4950,29 @@ public class TrialServiceImpl
 					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_SCREENING_REASON);
 			rowCellFormat = Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 					ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_FORMAT);
+			showVisitScheduleAppointmentsStart = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START, Bundle.PROBAND_LIST_EXCEL,
+					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START);
+			showVisitScheduleAppointmentsStop = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP, Bundle.PROBAND_LIST_EXCEL,
+					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_VISIT_SCHEDULE_APPOINTMENTS_STOP);
+			showVisitScheduleAppointmentsStartStop = Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+					Bundle.PROBAND_LIST_EXCEL,
+					ProbandListExcelDefaultSettings.PROBAND_LIST_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+			visitScheduleAppointmentsInternal = Settings.getBooleanNullable(ProbandListExcelSettingCodes.PROBAND_LIST_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL,
+					Bundle.PROBAND_LIST_EXCEL,
+					ProbandListExcelDefaultSettings.PROBAND_LIST_VISIT_SCHEDULE_APPOINTMENTS_INTERNAL);
 		}
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		Collection listEntryTags = showProbandListEntryTags ? probandListEntryTagDao.findByTrialExcelEcrfStratificationProbandSorted(trialId, showAllProbandListEntryTags
 				|| showAllProbandListEntryTagDates ? null : true, null, null, null) : new ArrayList();
 		probandListEntryTagDao.toProbandListEntryTagOutVOCollection(listEntryTags);
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Collection visitScheduleItems = (showVisitScheduleAppointmentsStart || showVisitScheduleAppointmentsStop || showVisitScheduleAppointmentsStartStop)
+				? visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialId,
+						null,
+						null,
+						null, null, visitScheduleAppointmentsInternal, true, null)
+				: new ArrayList();
+		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Collection inquiries = showInquiries ? inquiryDao.findByTrialActiveExcelProbandSorted(trialId, null, null, showAllInquiries || showAllInquiryDates ? null : true, null)
 				: new ArrayList();
@@ -4872,8 +4993,8 @@ public class TrialServiceImpl
 		ProbandListStatusEntryOutVOComparator probandListStatusEntryOutVOComparator = new ProbandListStatusEntryOutVOComparator();
 		ArrayList<String> distinctColumnNames;
 		if (passDecryption) {
-			distinctColumnNames = new ArrayList<String>(2 * listEntryTags.size() + 2 * inquiries.size()
-					+ (aggregateAddresses ? 3 : addressTypes.size())
+			distinctColumnNames = new ArrayList<String>(2 * listEntryTags.size() + 2 * inquiries.size() + 3 * visitScheduleItems.size() +
+					+(aggregateAddresses ? 3 : addressTypes.size())
 					+ (aggregateContactDetails ? 2 : contactDetailTypes.size())
 					+ probandTags.size()
 					+ (showEnrollmentStatusLog ? 1 : 0)
@@ -4919,7 +5040,7 @@ public class TrialServiceImpl
 				}
 			}
 		} else {
-			distinctColumnNames = new ArrayList<String>(2 * listEntryTags.size() + 2 * inquiries.size());
+			distinctColumnNames = new ArrayList<String>(2 * listEntryTags.size() + 2 * inquiries.size() + 3 * visitScheduleItems.size());
 		}
 		Iterator<ProbandListEntryTagOutVO> listEntryTagsIt = listEntryTags.iterator();
 		while (listEntryTagsIt.hasNext()) {
@@ -4929,6 +5050,19 @@ public class TrialServiceImpl
 			}
 			if (showAllProbandListEntryTagDates || tagVO.isExcelDate()) {
 				distinctColumnNames.add(ProbandListExcelWriter.getProbandListEntryTagDateColumnName(tagVO));
+			}
+		}
+		Iterator<VisitScheduleItemOutVO> visitScheduleItemsIt = visitScheduleItems.iterator();
+		while (visitScheduleItemsIt.hasNext()) {
+			VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemsIt.next();
+			if (showVisitScheduleAppointmentsStart) {
+				distinctColumnNames.add(ProbandListExcelWriter.getVisitScheduleAppointmentsStartColumnName(visitScheduleItemVO));
+			}
+			if (showVisitScheduleAppointmentsStop) {
+				distinctColumnNames.add(ProbandListExcelWriter.getVisitScheduleAppointmentsStopColumnName(visitScheduleItemVO));
+			}
+			if (showVisitScheduleAppointmentsStartStop) {
+				distinctColumnNames.add(ProbandListExcelWriter.getVisitScheduleAppointmentsStartStopColumnName(visitScheduleItemVO));
 			}
 		}
 		Iterator<InquiryOutVO> inquiriesIt = inquiries.iterator();
@@ -5075,6 +5209,37 @@ public class TrialServiceImpl
 						date = DateCalc.convertTimezone(date, TimeZone.getDefault(), CoreUtil.getUserContext().getTimeZone());
 					}
 					fieldRow.put(fieldKey, DateCalc.getStartOfDay(date));
+				}
+			}
+			HashMap<Long, VisitScheduleItem> visitScheduleAppointmentMap;
+			if (showVisitScheduleAppointmentsStart || showVisitScheduleAppointmentsStop || showVisitScheduleAppointmentsStartStop) {
+				Collection<Object[]> visitScheduleAppointments = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(probandListEntryVO.getTrial().getId(),
+						null, probandListEntryVO.getProband().getId(), null, null, visitScheduleAppointmentsInternal, null, null);
+				visitScheduleAppointmentMap = new HashMap<Long, VisitScheduleItem>(visitScheduleAppointments.size());
+				Iterator<Object[]> visitScheduleAppointmentsIt = visitScheduleAppointments.iterator();
+				while (visitScheduleAppointmentsIt.hasNext()) {
+					Object[] visitScheduleItemProband = visitScheduleAppointmentsIt.next();
+					VisitScheduleItem visitScheduleAppointment = (VisitScheduleItem) visitScheduleItemProband[0];
+					visitScheduleAppointmentMap.put(visitScheduleAppointment.getId(), visitScheduleAppointment);
+				}
+			} else {
+				visitScheduleAppointmentMap = null;
+			}
+			visitScheduleItemsIt = visitScheduleItems.iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemsIt.next();
+				VisitScheduleItem visitScheduleAppointment = visitScheduleAppointmentMap.get(visitScheduleItemVO.getId());
+				if (showVisitScheduleAppointmentsStart) {
+					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStartColumnName(visitScheduleItemVO);
+					fieldRow.put(fieldKey, visitScheduleAppointment.getStart());
+				}
+				if (showVisitScheduleAppointmentsStop) {
+					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStopColumnName(visitScheduleItemVO);
+					fieldRow.put(fieldKey, visitScheduleAppointment.getStop());
+				}
+				if (showVisitScheduleAppointmentsStartStop) {
+					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStartStopColumnName(visitScheduleItemVO);
+					fieldRow.put(fieldKey, ProbandListExcelWriter.getVisitScheduleAppointmentValue(visitScheduleItemVO));
 				}
 			}
 			HashMap<Long, InquiryValue> inquiryValueMap;
