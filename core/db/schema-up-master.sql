@@ -189,5 +189,20 @@ if get_database_version() < '010801091' then
   
 end if;
 
+if get_database_version() < '010801092' then
+
+  insert into PROBAND_LIST_STATUS_LOG_LEVEL
+    ("id", "log_level")
+  values (nextval('hibernate_sequence'), 'PROBAND_STATUS');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'candidate' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'PROBAND_STATUS' limit 1)
+  );
+
+end if;
+  
 end
 $$;
