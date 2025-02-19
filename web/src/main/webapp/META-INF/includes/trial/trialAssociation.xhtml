@@ -428,6 +428,15 @@
 										<p:fileDownload
 											value="#{trialAssociationBean.enrollmentChartBean.enrollmentLogExcelStreamedContent}" />
 									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.enrollmentChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_proband_status_button_label}"
+										title="#{triallabels.export_proband_status_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.enrollmentChartBean.probandStatusExcelStreamedContent}" />
+									</p:commandButton>
 									<p:commandButton process="@this"
 										actionListener="#{trialAssociationBean.enrollmentChartBean.updateChart}"
 										value="#{labels.update_chart_button_label}"
@@ -515,6 +524,15 @@
 										icon="ui-icon ui-icon-xls">
 										<p:fileDownload
 											value="#{trialAssociationBean.departmentChartBean.enrollmentLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.departmentChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_proband_status_button_label}"
+										title="#{triallabels.export_proband_status_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.departmentChartBean.probandStatusExcelStreamedContent}" />
 									</p:commandButton>
 									<p:commandButton process="@this"
 										actionListener="#{trialAssociationBean.departmentChartBean.updateChart}"

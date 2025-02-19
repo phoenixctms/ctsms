@@ -1933,7 +1933,7 @@ public class ProductionDataProvider {
 				false,
 				true,
 				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PRE_SCREENING,
-						org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SICL));
+						org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SICL, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PROBAND_STATUS));
 		ProbandListStatusType cancelledProbandListStatusType = createProbandListStatusType("cancelled", Color.RED,
 				false,
 				false,

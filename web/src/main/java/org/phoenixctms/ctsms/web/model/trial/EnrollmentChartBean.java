@@ -148,6 +148,19 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		}
 	}
 
+	public StreamedContent getProbandStatusExcelStreamedContent() throws Exception {
+		try {
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId,
+					ProbandListStatusLogLevel.PROBAND_STATUS);
+			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
 	private void initIn() {
 		stacked = true;
 	}
