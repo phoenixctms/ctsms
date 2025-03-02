@@ -9,7 +9,7 @@
 2. Deschideți aplicația pentru a vă înregistra contul $application_abbreviation (scanați codul QR de mai jos).
 </td></tr>
 <tr><td align="left">
-<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret&issuer=$application_abbreviation"/>
 </td></tr>
 <tr><td>
 3. Utilizați aplicația pentru a genera codul de verificare solicitat.
