@@ -9,7 +9,7 @@
 2. Ezali na ntina mingi. Fungola appli pona ko enregistrer compte $application_abbreviation na yo (scanner code QR na se).
 </td></tr>
 <tr><td align="left">
-<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret&issuer=$application_abbreviation"/>
 </td></tr>
 <tr><td>
 3. Ezali na ntina mingi. Salelá appli mpo na kobimisa code ya vérification oyo osɛngi.
