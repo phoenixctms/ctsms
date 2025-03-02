@@ -9,7 +9,7 @@
 2. 앱을 열어 $application_abbreviation 계정을 등록하세요(아래 QR 코드 스캔).
 </td></tr>
 <tr><td align="left">
-<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret&issuer=$application_abbreviation"/>
 </td></tr>
 <tr><td>
 삼. 앱을 사용하여 요청된 인증 코드를 생성하세요.
