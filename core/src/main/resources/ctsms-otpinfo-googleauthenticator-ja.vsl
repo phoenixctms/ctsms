@@ -9,7 +9,7 @@
 2. アプリを開いて $application_abbreviation アカウントを登録します (下の QR コードをスキャンしてください)。
 </td></tr>
 <tr><td align="left">
-<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret&issuer=$application_abbreviation"/>
 </td></tr>
 <tr><td>
 3. アプリを使用して、要求された確認コードを生成します。
