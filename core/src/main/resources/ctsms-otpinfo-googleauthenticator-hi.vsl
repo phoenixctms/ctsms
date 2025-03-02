@@ -9,7 +9,7 @@
 2. अपना $application_abbreviation खाता पंजीकृत करने के लिए ऐप खोलें (नीचे QR कोड स्कैन करें)।
 </td></tr>
 <tr><td align="left">
-<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret"/>
+<img src="$http_base_url/chart?chs=150x150&chld=M%7c0&cht=qr&chl=otpauth://totp/$string_utils.urlEncode($inheriteduser_name,$template_encoding)@$string_utils.urlEncode($instance_name,$template_encoding)?secret=$otp_secret&issuer=$application_abbreviation"/>
 </td></tr>
 <tr><td>
 3. अनुरोधित सत्यापन कोड उत्पन्न करने के लिए ऐप का उपयोग करें।
