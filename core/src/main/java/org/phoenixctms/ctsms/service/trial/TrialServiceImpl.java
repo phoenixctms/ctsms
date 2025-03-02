@@ -5239,7 +5239,7 @@ public class TrialServiceImpl
 				}
 				if (showVisitScheduleAppointmentsStartStop) {
 					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStartStopColumnName(visitScheduleItemVO);
-					fieldRow.put(fieldKey, ProbandListExcelWriter.getVisitScheduleAppointmentValue(visitScheduleItemVO));
+					fieldRow.put(fieldKey, ProbandListExcelWriter.getVisitScheduleAppointmentValue(visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleAppointment)));
 				}
 			}
 			HashMap<Long, InquiryValue> inquiryValueMap;
