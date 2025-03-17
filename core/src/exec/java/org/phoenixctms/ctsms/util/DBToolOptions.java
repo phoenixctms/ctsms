@@ -143,6 +143,9 @@ public final class DBToolOptions {
 	public final static String INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT = "idtdf";
 	public final static String INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT = "idplsr";
 	public final static String INITIALIZE_PROBAND_COMMENT_FIELDS_OPT = "ipcf";
+	public final static String INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT = "ipnnf";
+	public final static String INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT = "isnnf";
+	public final static String INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT = "ionnf";
 	public final static String INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT = "ijsmc";
 	public final static String INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT = "ipapf";
 	public static final String IMPORT_ALPHA_IDS_OPT = "iai";
@@ -304,6 +307,15 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT, "initialize_proband_address_province_fields",
 				"(migration) initialize proband address province fields",
 				0, allLockIds));
+		tasks.addOption(
+				registerTaskOption(INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT, "initialize_proband_name_normalized_fields",
+						"(migration) initialize proband normalized firstname, lastname, alias fields", 0, allLockIds));
+		tasks.addOption(
+				registerTaskOption(INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT, "initialize_staff_name_normalized_fields",
+						"(migration) initialize staff normalized firstname, lastname fields", 0, allLockIds));
+		tasks.addOption(
+				registerTaskOption(INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT, "initialize_staff_organisation_name_normalized_fields",
+						"(migration) initialize staff normalized organisation name fields", 0, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ICD_SYSTEMATICS_OPT, "import_icd_systematics", "import icd systematics", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_ALPHA_IDS_OPT, "import_alpha_ids", "import alpha ids", 1, allLockIds));
 		tasks.addOption(registerTaskOption(IMPORT_OPS_SYSTEMATICS_OPT, "import_ops_systematics", "import ops systematics", 1, allLockIds));

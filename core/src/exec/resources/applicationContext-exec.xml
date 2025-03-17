@@ -98,6 +98,13 @@
 			ref="authenticator" />
 	</bean>
 	<bean
+		id="probandNameNormalizedInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandNameNormalizedInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>	
+	<bean
 		id="probandAddressProvinceInitializer"
 		class="org.phoenixctms.ctsms.executable.migration.ProbandAddressProvinceInitializer">
 		<property
@@ -124,6 +131,14 @@
 		<property
 			name="authenticator"
 			ref="authenticator" />
+	</bean>
+	<bean
+		id="personNameNormalizedInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.PersonNameNormalizedInitializer">
+	</bean>	
+	<bean
+		id="organisationNameNormalizedInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.OrganisationNameNormalizedInitializer">
 	</bean>
 	<bean
 		id="alphaIdLineProcessor"
