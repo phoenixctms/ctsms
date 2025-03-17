@@ -2336,4 +2336,27 @@ public class StaffServiceImpl
 		trialDao.toTrialOutVOCollection(trials);
 		return trials;
 	}
+
+	@Override
+	protected Collection<StaffOutVO> handleGetPersonDuplicates(AuthenticationVO auth, String firstName, String lastName, Date dateOfBirth, Long excludeId, Integer limit)
+			throws Exception {
+		StaffDao staffDao = this.getStaffDao();
+		if (excludeId != null) {
+			CheckIDUtil.checkStaffId(excludeId, staffDao);
+		}
+		Collection duplicatePersons = staffDao.findPersonDuplicates(firstName, lastName, dateOfBirth, excludeId, limit);
+		staffDao.toStaffOutVOCollection(duplicatePersons);
+		return duplicatePersons;
+	}
+
+	@Override
+	protected Collection<StaffOutVO> handleGetOrganisationDuplicates(AuthenticationVO auth, String organisationName, Long excludeId, Integer limit) throws Exception {
+		StaffDao staffDao = this.getStaffDao();
+		if (excludeId != null) {
+			CheckIDUtil.checkStaffId(excludeId, staffDao);
+		}
+		Collection duplicateOrganisations = staffDao.findOrganisationDuplicates(organisationName, excludeId, limit);
+		staffDao.toStaffOutVOCollection(duplicateOrganisations);
+		return duplicateOrganisations;
+	}
 }

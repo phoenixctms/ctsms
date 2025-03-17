@@ -9,6 +9,7 @@ package org.phoenixctms.ctsms.domain;
 import java.awt.Dimension;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,6 +18,8 @@ import java.util.Map.Entry;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -25,7 +28,12 @@ import org.phoenixctms.ctsms.enumeration.NotificationType;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.QueryUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -108,6 +116,63 @@ public class StaffDaoImpl
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Staff.class, staffCriteria);
 		CriteriaUtil.applyIdDepartmentCriterion(staffCriteria, staffId, departmentId);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return staffCriteria.list();
+	}
+
+	@Override
+	protected Collection<Staff> handleFindPersonDuplicates(String firstName, String lastName, Date dateOfBirth, Long excludeId, Integer limit) throws Exception {
+		org.hibernate.Criteria staffCriteria = createStaffCriteria();
+		staffCriteria.add(Restrictions.eq("person", true));
+		Criteria personParticularsCriteria = staffCriteria.createCriteria("personParticulars", CriteriaSpecification.INNER_JOIN);
+		Iterator<String[]> personNameVariantsIt = CommonUtil.getPersonNameVariants(firstName, lastName).iterator();
+		if (personNameVariantsIt.hasNext()) {
+			Disjunction disjunction = Restrictions.disjunction();
+			while (personNameVariantsIt.hasNext()) {
+				String[] personNameVariant = personNameVariantsIt.next();
+				disjunction.add(Restrictions.and(
+						Restrictions.eq("firstNameNormalized", personNameVariant[0]),
+						Restrictions.eq("lastNameNormalized", personNameVariant[1])));
+			}
+			personParticularsCriteria.add(disjunction);
+		}
+		if (dateOfBirth != null) {
+			personParticularsCriteria.add(Restrictions.or(Restrictions.eq("dateOfBirth", dateOfBirth), Restrictions.isNull("dateOfBirth")));
+		}
+		if (excludeId != null) {
+			staffCriteria.add(Restrictions.not(Restrictions.idEq(excludeId.longValue())));
+		}
+		//probandCriteria.addOrder(Order.desc("modifiedTimestamp"));
+		staffCriteria.addOrder(Order.asc("id"));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.PERSON_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+						DefaultSettings.PERSON_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				staffCriteria);
+		return staffCriteria.list();
+	}
+
+	@Override
+	protected Collection<Staff> handleFindOrganisationDuplicates(String organisationName, Long excludeId, Integer limit) throws Exception {
+		org.hibernate.Criteria staffCriteria = createStaffCriteria();
+		staffCriteria.add(Restrictions.eq("person", false));
+		Criteria organisationParticularsCriteria = staffCriteria.createCriteria("organisationParticulars", CriteriaSpecification.INNER_JOIN);
+		Iterator<String[]> organisationNameVariantsIt = CommonUtil.getOrganisationNameVariants(organisationName).iterator();
+		if (organisationNameVariantsIt.hasNext()) {
+			Disjunction disjunction = Restrictions.disjunction();
+			while (organisationNameVariantsIt.hasNext()) {
+				String[] organisationNameVariant = organisationNameVariantsIt.next();
+				disjunction.add(Restrictions.eq("organisationNameNormalized", organisationNameVariant[0]));
+			}
+			organisationParticularsCriteria.add(disjunction);
+		}
+		if (excludeId != null) {
+			staffCriteria.add(Restrictions.not(Restrictions.idEq(excludeId.longValue())));
+		}
+		//probandCriteria.addOrder(Order.desc("modifiedTimestamp"));
+		staffCriteria.addOrder(Order.asc("id"));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.ORGANISATION_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+						DefaultSettings.ORGANISATION_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				staffCriteria);
 		return staffCriteria.list();
 	}
 
@@ -381,9 +446,11 @@ public class StaffDaoImpl
 			}
 			if (copyIfNull || source.getFirstName() != null) {
 				personParticulars.setFirstName(source.getFirstName());
+				personParticulars.setFirstNameNormalized(CommonUtil.normalizeFirstName(source.getFirstName()));
 			}
 			if (copyIfNull || source.getLastName() != null) {
 				personParticulars.setLastName(source.getLastName());
+				personParticulars.setLastNameNormalized(CommonUtil.normalizeFirstName(source.getLastName()));
 			}
 			if (copyIfNull || source.getPostpositionedTitle1() != null) {
 				personParticulars.setPostpositionedTitle1(source.getPostpositionedTitle1());
@@ -420,6 +487,7 @@ public class StaffDaoImpl
 		if (organisationParticulars != null) {
 			if (copyIfNull || source.getOrganisationName() != null) {
 				organisationParticulars.setOrganisationName(source.getOrganisationName());
+				organisationParticulars.setOrganisationNameNormalized(CommonUtil.normalizeOrganisationName(source.getOrganisationName()));
 			}
 			if (copyIfNull || source.getCvOrganisationName() != null) {
 				organisationParticulars.setCvOrganisationName(source.getCvOrganisationName());
@@ -501,9 +569,11 @@ public class StaffDaoImpl
 			}
 			if (copyIfNull || source.getFirstName() != null) {
 				personParticulars.setFirstName(source.getFirstName());
+				personParticulars.setFirstNameNormalized(CommonUtil.normalizeFirstName(source.getFirstName()));
 			}
 			if (copyIfNull || source.getLastName() != null) {
 				personParticulars.setLastName(source.getLastName());
+				personParticulars.setLastNameNormalized(CommonUtil.normalizeLastName(source.getLastName()));
 			}
 			if (copyIfNull || source.getPostpositionedTitle1() != null) {
 				personParticulars.setPostpositionedTitle1(source.getPostpositionedTitle1());
@@ -543,6 +613,7 @@ public class StaffDaoImpl
 		if (organisationParticulars != null) {
 			if (copyIfNull || source.getOrganisationName() != null) {
 				organisationParticulars.setOrganisationName(source.getOrganisationName());
+				organisationParticulars.setOrganisationNameNormalized(CommonUtil.normalizeOrganisationName(source.getOrganisationName()));
 			}
 			if (copyIfNull || source.getCvOrganisationName() != null) {
 				organisationParticulars.setCvOrganisationName(source.getCvOrganisationName());
