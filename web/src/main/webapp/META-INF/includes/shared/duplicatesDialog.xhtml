@@ -44,16 +44,22 @@
 						<h:outputText
 							value="#{applicationScopeBean.escapeHtml(duplicate.vo.name)}"
 							escape="false" />
+						<h:outputText rendered="#{not empty duplicate.vo.dateOfBirth}" value=" " />
+						<h:outputText rendered="#{not empty duplicate.vo.dateOfBirth}" value="#{duplicate.vo.dateOfBirth}" >
+    						<f:converter converterId="ctsms.Date" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>							
 					</f:facet>
-					<p:column>
+					<!-- <p:column>
 						<h:outputText value="#{duplicate.vo.modifiedTimestamp}" >
     						<f:converter converterId="ctsms.DateTime" />
 							<f:attribute name="timeZone"
 								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 						</h:outputText>
-					</p:column>
+					</p:column> -->
 					<p:column>
-						<h:outputFormat value=" - #{duplicateIdFormat}">
+						<h:outputFormat value="#{duplicateIdFormat}">
 							<f:param value="#{duplicate.vo.id}" />
 						</h:outputFormat>
 					</p:column>
