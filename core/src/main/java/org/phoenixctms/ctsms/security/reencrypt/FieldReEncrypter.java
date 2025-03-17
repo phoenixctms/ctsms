@@ -14,6 +14,7 @@ public abstract class FieldReEncrypter<T> extends ReEncrypter<T> {
 		setIv(item, cipherText.getIv());
 		setEncrypted(item, cipherText.getCipherText());
 		setHash(item, CryptoUtil.hashForSearch(newDepartmentKey, plainText));
+		setExtra(item, newDepartmentKey, plainText);
 	}
 
 	protected abstract byte[] getIv(T item);
@@ -25,4 +26,7 @@ public abstract class FieldReEncrypter<T> extends ReEncrypter<T> {
 	protected abstract void setEncrypted(T item, byte[] cipherText);
 
 	protected abstract void setHash(T item, byte[] hash);
+
+	protected void setExtra(T item, SecretKey newDepartmentKey, byte[] plainText) throws Exception {
+	}
 }

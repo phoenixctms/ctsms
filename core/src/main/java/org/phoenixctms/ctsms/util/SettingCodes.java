@@ -313,4 +313,7 @@ public interface SettingCodes {
 	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_REFERENCES = "otp_registration_info_template_model_enumerate_references";
 	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_COLLECTIONS = "otp_registration_info_template_model_enumerate_collections";
 	public static final String OTP_REGISTRATION_INFO_TEMPLATE_MODEL_ENUMERATE_MAPS = "otp_registration_info_template_model_enumerate_maps";
+	public static final String ORGANISATION_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "organisation_duplicates_autocomplete_default_result_limit";
+	public static final String PERSON_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "person_duplicates_autocomplete_default_result_limit";
+	public static final String PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_duplicates_autocomplete_default_result_limit";
 }

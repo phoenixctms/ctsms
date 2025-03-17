@@ -21,10 +21,13 @@ import org.phoenixctms.ctsms.executable.csv.CsvExporter;
 import org.phoenixctms.ctsms.executable.csv.CsvImporter;
 import org.phoenixctms.ctsms.executable.migration.FileDecryptInitializer;
 import org.phoenixctms.ctsms.executable.migration.JournalSystemMessageCodeInitializer;
+import org.phoenixctms.ctsms.executable.migration.OrganisationNameNormalizedInitializer;
+import org.phoenixctms.ctsms.executable.migration.PersonNameNormalizedInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandAddressProvinceInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandCommentInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandImageInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandListStatusEntryReasonDecryptInitializer;
+import org.phoenixctms.ctsms.executable.migration.ProbandNameNormalizedInitializer;
 import org.phoenixctms.ctsms.executable.xls.XlsExporter;
 import org.phoenixctms.ctsms.executable.xls.XlsImporter;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -738,6 +741,18 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_COMMENT_FIELDS_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandCommentInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getProbandNameNormalizedInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+				} else if (line.hasOption(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getPersonNameNormalizedInitializer().update() > 0l;
+				} else if (line.hasOption(DBToolOptions.INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getOrganisationNameNormalizedInitializer().update() > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT);
 					dbTool.getJobOutput().printPrelude(job);
@@ -1069,6 +1084,9 @@ public class DBTool {
 	private ClamlImporter clamlImporter;
 	private ProbandImageInitializer probandImageInitializer;
 	private ProbandCommentInitializer probandCommentInitializer;
+	private ProbandNameNormalizedInitializer probandNameNormalizedInitializer;
+	private PersonNameNormalizedInitializer personNameNormalizedInitializer;
+	private OrganisationNameNormalizedInitializer organisationNameNormalizedInitializer;
 	private ProbandAddressProvinceInitializer probandAddressProvinceInitializer;
 	private FileDecryptInitializer fileDecryptInitializer;
 	private ProbandListStatusEntryReasonDecryptInitializer probandListStatusEntryReasonDecryptInitializer;
@@ -1218,6 +1236,30 @@ public class DBTool {
 			probandCommentInitializer.setJobOutput(getJobOutput());
 		}
 		return probandCommentInitializer;
+	}
+
+	private ProbandNameNormalizedInitializer getProbandNameNormalizedInitializer() {
+		if (probandNameNormalizedInitializer == null) {
+			probandNameNormalizedInitializer = context.getBean(ProbandNameNormalizedInitializer.class);
+			probandNameNormalizedInitializer.setJobOutput(getJobOutput());
+		}
+		return probandNameNormalizedInitializer;
+	}
+
+	private PersonNameNormalizedInitializer getPersonNameNormalizedInitializer() {
+		if (personNameNormalizedInitializer == null) {
+			personNameNormalizedInitializer = context.getBean(PersonNameNormalizedInitializer.class);
+			personNameNormalizedInitializer.setJobOutput(getJobOutput());
+		}
+		return personNameNormalizedInitializer;
+	}
+
+	private OrganisationNameNormalizedInitializer getOrganisationNameNormalizedInitializer() {
+		if (organisationNameNormalizedInitializer == null) {
+			organisationNameNormalizedInitializer = context.getBean(OrganisationNameNormalizedInitializer.class);
+			organisationNameNormalizedInitializer.setJobOutput(getJobOutput());
+		}
+		return organisationNameNormalizedInitializer;
 	}
 
 	private ProbandAddressProvinceInitializer getProbandAddressProvinceInitializer() {

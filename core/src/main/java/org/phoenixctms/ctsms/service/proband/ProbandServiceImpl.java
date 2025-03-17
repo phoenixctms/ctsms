@@ -2896,4 +2896,27 @@ public class ProbandServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_CHANGED);
 		}
 	}
+
+	@Override
+	protected Collection<ProbandOutVO> handleGetProbandDuplicates(AuthenticationVO auth, String firstName, String lastName, Date dateOfBirth, Long excludeId, Integer limit)
+			throws Exception {
+		ProbandDao probandDao = this.getProbandDao();
+		if (excludeId != null) {
+			CheckIDUtil.checkProbandId(excludeId, probandDao);
+		}
+		Collection duplicateProbands = probandDao.findProbandDuplicates(firstName, lastName, dateOfBirth, excludeId, limit);
+		probandDao.toProbandOutVOCollection(duplicateProbands);
+		return duplicateProbands;
+	}
+
+	@Override
+	protected Collection<ProbandOutVO> handleGetProbandDuplicates(AuthenticationVO auth, String alias, Long excludeId, Integer limit) throws Exception {
+		ProbandDao probandDao = this.getProbandDao();
+		if (excludeId != null) {
+			CheckIDUtil.checkProbandId(excludeId, probandDao);
+		}
+		Collection duplicateProbands = probandDao.findProbandDuplicates(alias, excludeId, limit);
+		probandDao.toProbandOutVOCollection(duplicateProbands);
+		return duplicateProbands;
+	}
 }

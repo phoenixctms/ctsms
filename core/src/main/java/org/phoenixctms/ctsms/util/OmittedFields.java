@@ -167,7 +167,9 @@ public final class OmittedFields {
 			}
 		}
 		protectedCriterionProperties.add("proband.personParticulars.firstNameHash");
+		protectedCriterionProperties.add("proband.personParticulars.firstNameNormalizedHash");
 		protectedCriterionProperties.add("proband.personParticulars.lastNameHash");
+		protectedCriterionProperties.add("proband.personParticulars.lastNameNormalizedHash");
 		protectedCriterionProperties.add("proband.personParticulars.dateOfBirthHash");
 		protectedCriterionProperties.add("proband.tagValues.valueHash");
 		protectedCriterionProperties.add("proband.contactDetailValues.valueHash");

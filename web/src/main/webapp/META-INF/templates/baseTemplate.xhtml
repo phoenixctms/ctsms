@@ -39,13 +39,6 @@
             	    	}
             		});
             	}                
-				//jQuery(window).keydown(function(event){
-				//	//console.log("keydown: " + event.keyCode);
-				//	if(#{allowEnter ? 'false' : 'true'} &amp;&amp; event.keyCode == 13) {
-            	//    	event.preventDefault();
-            	//    	return false;
-            	//    }
-            	//});
             });           
         </script>
 		<noscript>#{labels.no_script}
@@ -286,6 +279,19 @@
 		<ui:param name="multiPickerDataListsPageLinks" value="5" />
 		<ui:param name="multiPickerDataListsPaginatorAlwaysVisible"
 			value="true" />
+			
+		<ui:param name="duplicatesDataListsType" value="definition" />
+		<ui:param name="duplicatesDataListsRows" value="5" />
+		<ui:param name="duplicatesDataListsPaginator" value="true" />
+		<ui:param name="duplicatesDataListsPaginatorTemplate"
+			value="{PreviousPageLink} {CurrentPageReport} {NextPageLink}" />
+		<ui:param name="duplicatesDataListsRowsPerPageTemplate"
+			value="5,10,20" />
+		<ui:param name="duplicatesDataListsPaginatorPosition" value="bottom" />
+		<ui:param name="duplicatesDataListsPageLinks" value="5" />
+		<ui:param name="duplicatesDataListsPaginatorAlwaysVisible"
+			value="true" />			
+			
 		<ui:param name="dataTablesRowsDefault" value="5" />
 		<ui:param name="dataTablesPaginatorDefault" value="true" />
 		<ui:param name="dataTablesPaginatorTemplateDefault"

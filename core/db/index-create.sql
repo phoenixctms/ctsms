@@ -149,7 +149,9 @@ CREATE INDEX proband_contact_particulars_file_name_hash ON proband_contact_parti
 CREATE INDEX proband_contact_particulars_citizenship_hash ON proband_contact_particulars (citizenship_hash);
 CREATE INDEX proband_contact_particulars_date_of_birth_hash ON proband_contact_particulars (date_of_birth_hash);
 CREATE INDEX proband_contact_particulars_last_name_hash ON proband_contact_particulars (last_name_hash);
+CREATE INDEX proband_contact_particulars_last_name_normalized_hash ON proband_contact_particulars (last_name_normalized_hash);
 CREATE INDEX proband_contact_particulars_first_name_hash ON proband_contact_particulars (first_name_hash);
+CREATE INDEX proband_contact_particulars_first_name_normalized_hash ON proband_contact_particulars (first_name_normalized_hash);
 CREATE INDEX proband_contact_detail_value_comment_hash ON proband_contact_detail_value (comment_hash);
 CREATE INDEX proband_contact_detail_value_value_hash ON proband_contact_detail_value (value_hash);
 CREATE INDEX proband_address_care_of_hash ON proband_address (care_of_hash);
@@ -175,5 +177,9 @@ CREATE INDEX bank_account_bank_code_number_hash ON bank_account (bank_code_numbe
 CREATE INDEX bank_account_account_number_hash ON bank_account (account_number_hash);
 CREATE INDEX bank_account_account_holder_name_hash ON bank_account (account_holder_name_hash);
 
+CREATE INDEX proband_contact_particulars_alias_normalized ON proband_contact_particulars (alias_normalized);
+CREATE INDEX person_contact_particulars_first_name_normalized ON person_contact_particulars (first_name_normalized);
+CREATE INDEX person_contact_particulars_last_name_normalized ON person_contact_particulars (last_name_normalized);
+CREATE INDEX organisation_contact_particulars_organisation_name_normalized ON organisation_contact_particulars (organisation_name_normalized);
 
 CREATE INDEX data_table_column_user_fk_table_name_column_name ON data_table_column (user_fk, table_name, column_name);

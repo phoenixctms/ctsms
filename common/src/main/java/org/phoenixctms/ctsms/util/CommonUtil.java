@@ -15,9 +15,11 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,6 +29,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -2607,6 +2610,124 @@ public final class CommonUtil {
 			return user.getName();
 		}
 		return null;
+	}
+
+	public static List<String[]> getPersonNameVariants(String firstName, String lastName) {
+		List<String[]> result = new ArrayList<>();
+		Iterator<List<String>> firstNameVariantsIt = getPowerSet(
+				normalizeName(firstName, true)).iterator();
+		while (firstNameVariantsIt.hasNext()) {
+			List<String> firstNames = firstNameVariantsIt.next();
+			if (firstNames.isEmpty())
+				continue;
+			Iterator<List<String>> lastNameVariantsIt = getPowerSet(
+					normalizeName(lastName, true)).iterator();
+			while (lastNameVariantsIt.hasNext()) {
+				List<String> lastNames = lastNameVariantsIt.next();
+				if (lastNames.isEmpty())
+					continue;
+				result.add(new String[] { String.join("", firstNames), String.join("", lastNames) });
+			}
+		}
+		return result;
+	}
+
+	public static List<String[]> getOrganisationNameVariants(String organisationName) {
+		List<String[]> result = new ArrayList<>();
+		Iterator<List<String>> organisationNameVariantsIt = getPowerSet(
+				normalizeName(organisationName, true)).iterator();
+		while (organisationNameVariantsIt.hasNext()) {
+			List<String> organisationNames = organisationNameVariantsIt.next();
+			if (organisationNames.isEmpty())
+				continue;
+			result.add(new String[] { String.join("", organisationNames) });
+		}
+		return result;
+	}
+
+	public static List<String[]> getAliasVariants(String alias) {
+		List<String[]> result = new ArrayList<>();
+		Iterator<List<String>> aliasVariantsIt = getPowerSet(
+				normalizeName(alias, true)).iterator();
+		while (aliasVariantsIt.hasNext()) {
+			List<String> aliasVariants = aliasVariantsIt.next();
+			if (aliasVariants.isEmpty())
+				continue;
+			result.add(new String[] { String.join("", aliasVariants) });
+		}
+		return result;
+	}
+
+	public static String normalizeFirstName(String firstName) {
+		try {
+			return normalizeName(firstName, false).iterator().next();
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
+	public static String normalizeLastName(String lastName) {
+		try {
+			return normalizeName(lastName, false).iterator().next();
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
+	public static String normalizeOrganisationName(String organisationName) {
+		try {
+			return normalizeName(organisationName, false).iterator().next();
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
+	public static String normalizeAlias(String alias) {
+		try {
+			return normalizeName(alias, false).iterator().next();
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
+	private static List<String> normalizeName(String name, boolean split) {
+		List<String> parts = new ArrayList<String>();
+		if (name == null) {
+			return parts;
+		}
+		// Normalize to NFKD and remove diacritics
+		name = Normalizer.normalize(name, Normalizer.Form.NFKD);
+		name = name.replaceAll("\\p{M}", "");
+		// Convert to lowercase
+		name = name.toLowerCase();
+		// Replace underscores and hyphens with spaces
+		name = name.replaceAll("[_-]", " ");
+		// Trim and normalize spaces
+		name = name.trim().replaceAll("\\s+", " ");
+		if (split) {
+			parts.addAll(Arrays.asList(name.split(" ")));
+		} else {
+			parts.add(name.replaceAll(" ", ""));
+		}
+		return parts;
+	}
+
+	public static <T> List<List<T>> getPowerSet(List<T> input) {
+		List<List<T>> result = new ArrayList<>();
+		result.add(new ArrayList<>()); // Add empty set
+		Iterator<T> it = input.iterator();
+		while (it.hasNext()) {
+			T element = it.next();
+			List<List<T>> newSubsets = new ArrayList<>();
+			Iterator<List<T>> resultIt = result.iterator();
+			while (resultIt.hasNext()) {
+				List<T> subset = new ArrayList<>(resultIt.next());
+				subset.add(element);
+				newSubsets.add(subset);
+			}
+			result.addAll(newSubsets);
+		}
+		return result;
 	}
 
 	private CommonUtil() {

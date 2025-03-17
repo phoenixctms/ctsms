@@ -16,10 +16,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import javax.crypto.SecretKey;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -175,6 +178,12 @@ public class ProbandDaoImpl
 			}
 
 			@Override
+			protected void setExtra(Proband item, SecretKey newDepartmentKey, byte[] plainText) throws Exception {
+				item.getPersonParticulars().setFirstNameNormalizedHash(CryptoUtil.hashForSearch(newDepartmentKey,
+						CoreUtil.serialize(CommonUtil.normalizeFirstName((String) CoreUtil.deserialize(plainText)))));
+			}
+
+			@Override
 			protected boolean isSkip(Proband item) {
 				return !(item.isPerson() && item.getPersonParticulars() != null);
 			}
@@ -204,6 +213,12 @@ public class ProbandDaoImpl
 			@Override
 			protected void setHash(Proband item, byte[] hash) {
 				item.getPersonParticulars().setLastNameHash(hash);
+			}
+
+			@Override
+			protected void setExtra(Proband item, SecretKey newDepartmentKey, byte[] plainText) throws Exception {
+				item.getPersonParticulars()
+						.setLastNameNormalizedHash(CryptoUtil.hashForSearch(CoreUtil.serialize(CommonUtil.normalizeLastName((String) CoreUtil.deserialize(plainText)))));
 			}
 
 			@Override
@@ -504,6 +519,70 @@ public class ProbandDaoImpl
 				this.getCriterionPropertyDao(),
 				this.getCriterionRestrictionDao());
 		return query.list();
+	}
+
+	@Override
+	protected Collection<Proband> handleFindProbandDuplicates(String firstName, String lastName, Date dateOfBirth, Long excludeId, Integer limit) throws Exception {
+		if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
+			org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+			probandCriteria.add(Restrictions.eq("department.id", CoreUtil.getUser().getDepartment().getId()));
+			probandCriteria.add(Restrictions.eq("person", true));
+			probandCriteria.add(Restrictions.eq("blinded", false));
+			Criteria personParticularsCriteria = probandCriteria.createCriteria("personParticulars", CriteriaSpecification.INNER_JOIN);
+			Iterator<String[]> personNameVariantsIt = CommonUtil.getPersonNameVariants(firstName, lastName).iterator();
+			if (personNameVariantsIt.hasNext()) {
+				Disjunction disjunction = Restrictions.disjunction();
+				while (personNameVariantsIt.hasNext()) {
+					String[] personNameVariant = personNameVariantsIt.next();
+					disjunction.add(Restrictions.and(
+							Restrictions.eq("firstNameNormalizedHash", CryptoUtil.hashForSearch(personNameVariant[0])),
+							Restrictions.eq("lastNameNormalizedHash", CryptoUtil.hashForSearch(personNameVariant[1]))));
+				}
+				personParticularsCriteria.add(disjunction);
+			}
+			if (dateOfBirth != null) {
+				personParticularsCriteria.add(Restrictions.eq("dateOfBirthHash", CryptoUtil.hashForSearch(dateOfBirth)));
+			}
+			if (excludeId != null) {
+				probandCriteria.add(Restrictions.not(Restrictions.idEq(excludeId.longValue())));
+			}
+			//probandCriteria.addOrder(Order.desc("modifiedTimestamp"));
+			probandCriteria.addOrder(Order.asc("id"));
+			CriteriaUtil.applyLimit(limit,
+					Settings.getIntNullable(SettingCodes.PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+							DefaultSettings.PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+					probandCriteria);
+			return probandCriteria.list();
+		} else {
+			return new ArrayList<Proband>();
+		}
+	}
+
+	@Override
+	protected Collection<Proband> handleFindProbandDuplicates(String alias, Long excludeId, Integer limit) throws Exception {
+		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		probandCriteria.add(Restrictions.eq("person", true));
+		probandCriteria.add(Restrictions.eq("blinded", true));
+		Criteria personParticularsCriteria = probandCriteria.createCriteria("personParticulars", CriteriaSpecification.INNER_JOIN);
+		Iterator<String[]> aliasVariantsIt = CommonUtil.getAliasVariants(alias).iterator();
+		if (aliasVariantsIt.hasNext()) {
+			Disjunction disjunction = Restrictions.disjunction();
+			while (aliasVariantsIt.hasNext()) {
+				String[] aliasVariant = aliasVariantsIt.next();
+				disjunction.add(Restrictions.eq("aliasNormalized", aliasVariant[0]));
+			}
+			personParticularsCriteria.add(disjunction);
+		}
+		if (excludeId != null) {
+			probandCriteria.add(Restrictions.not(Restrictions.idEq(excludeId.longValue())));
+		}
+		//probandCriteria.addOrder(Order.desc("modifiedTimestamp"));
+		probandCriteria.addOrder(Order.asc("id"));
+		CriteriaUtil.applyLimit(limit,
+				Settings.getIntNullable(SettingCodes.PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+						DefaultSettings.PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT),
+				probandCriteria);
+		return probandCriteria.list();
 	}
 
 	@Override
@@ -900,6 +979,7 @@ public class ProbandDaoImpl
 			}
 			if (copyIfNull || source.getAlias() != null) {
 				personParticulars.setAlias(source.getAlias());
+				personParticulars.setAliasNormalized(CommonUtil.normalizeAlias(source.getAlias()));
 			}
 			try {
 				if (copyIfNull || source.getPrefixedTitle1() != null) {
@@ -922,12 +1002,14 @@ public class ProbandDaoImpl
 					personParticulars.setFirstNameIv(cipherText.getIv());
 					personParticulars.setEncryptedFirstName(cipherText.getCipherText());
 					personParticulars.setFirstNameHash(CryptoUtil.hashForSearch(source.getFirstName()));
+					personParticulars.setFirstNameNormalizedHash(CryptoUtil.hashForSearch(CommonUtil.normalizeFirstName(source.getFirstName())));
 				}
 				if (copyIfNull || source.getLastName() != null) {
 					CipherText cipherText = CryptoUtil.encryptValue(source.getLastName());
 					personParticulars.setLastNameIv(cipherText.getIv());
 					personParticulars.setEncryptedLastName(cipherText.getCipherText());
 					personParticulars.setLastNameHash(CryptoUtil.hashForSearch(source.getLastName()));
+					personParticulars.setLastNameNormalizedHash(CryptoUtil.hashForSearch(CommonUtil.normalizeLastName(source.getLastName())));
 				}
 				if (copyIfNull || source.getPostpositionedTitle1() != null) {
 					CipherText cipherText = CryptoUtil.encryptValue(source.getPostpositionedTitle1());
@@ -1074,6 +1156,7 @@ public class ProbandDaoImpl
 			}
 			if (copyIfNull || source.getAlias() != null) {
 				personParticulars.setAlias(source.getAlias());
+				personParticulars.setAliasNormalized(CommonUtil.normalizeAlias(source.getAlias()));
 			}
 			try {
 				if (copyIfNull || source.getPrefixedTitle1() != null) {
@@ -1096,12 +1179,14 @@ public class ProbandDaoImpl
 					personParticulars.setFirstNameIv(cipherText.getIv());
 					personParticulars.setEncryptedFirstName(cipherText.getCipherText());
 					personParticulars.setFirstNameHash(CryptoUtil.hashForSearch(source.getFirstName()));
+					personParticulars.setFirstNameNormalizedHash(CryptoUtil.hashForSearch(CommonUtil.normalizeFirstName(source.getFirstName())));
 				}
 				if (copyIfNull || source.getLastName() != null) {
 					CipherText cipherText = CryptoUtil.encryptValue(source.getLastName());
 					personParticulars.setLastNameIv(cipherText.getIv());
 					personParticulars.setEncryptedLastName(cipherText.getCipherText());
 					personParticulars.setLastNameHash(CryptoUtil.hashForSearch(source.getLastName()));
+					personParticulars.setLastNameNormalizedHash(CryptoUtil.hashForSearch(CommonUtil.normalizeLastName(source.getLastName())));
 				}
 				if (copyIfNull || source.getPostpositionedTitle1() != null) {
 					CipherText cipherText = CryptoUtil.encryptValue(source.getPostpositionedTitle1());

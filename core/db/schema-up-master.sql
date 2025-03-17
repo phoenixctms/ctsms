@@ -201,8 +201,41 @@ if get_database_version() < '010801092' then
     (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'candidate' limit 1),
     (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'PROBAND_STATUS' limit 1)
   );
+  
+  perform set_database_version('010801092');
 
 end if;
+
+if get_database_version() < '010801093' then
+
+  alter table PROBAND_CONTACT_PARTICULARS add column FIRST_NAME_NORMALIZED_HASH BYTEA;
+  CREATE INDEX proband_contact_particulars_first_name_normalized_hash ON proband_contact_particulars (first_name_normalized_hash);
   
+  alter table PROBAND_CONTACT_PARTICULARS add column LAST_NAME_NORMALIZED_HASH BYTEA;
+  CREATE INDEX proband_contact_particulars_last_name_normalized_hash ON proband_contact_particulars (last_name_normalized_hash);
+  
+  alter table PROBAND_CONTACT_PARTICULARS add column ALIAS_NORMALIZED CHARACTER VARYING(1024);
+  CREATE INDEX proband_contact_particulars_alias_normalized ON proband_contact_particulars (alias_normalized);  
+  
+  alter table ORGANISATION_CONTACT_PARTICULARS add column ORGANISATION_NAME_NORMALIZED CHARACTER VARYING(1024);
+  update ORGANISATION_CONTACT_PARTICULARS set ORGANISATION_NAME_NORMALIZED = ORGANISATION_NAME;
+  alter table ORGANISATION_CONTACT_PARTICULARS alter ORGANISATION_NAME_NORMALIZED set not null;
+  CREATE INDEX organisation_contact_particulars_organisation_name_normalized ON organisation_contact_particulars (organisation_name_normalized);
+  
+  alter table PERSON_CONTACT_PARTICULARS add column FIRST_NAME_NORMALIZED CHARACTER VARYING(1024);
+  update PERSON_CONTACT_PARTICULARS set FIRST_NAME_NORMALIZED = FIRST_NAME;
+  alter table PERSON_CONTACT_PARTICULARS alter FIRST_NAME_NORMALIZED set not null;
+  CREATE INDEX person_contact_particulars_first_name_normalized ON person_contact_particulars (first_name_normalized);
+  
+  alter table PERSON_CONTACT_PARTICULARS add column LAST_NAME_NORMALIZED CHARACTER VARYING(1024);
+  update PERSON_CONTACT_PARTICULARS set LAST_NAME_NORMALIZED = LAST_NAME;
+  alter table PERSON_CONTACT_PARTICULARS alter LAST_NAME_NORMALIZED set not null;
+  CREATE INDEX person_contact_particulars_last_name_normalized ON person_contact_particulars (last_name_normalized);    
+  
+  perform set_database_version('010801093');
+
+end if;
+
+ 
 end
 $$;
