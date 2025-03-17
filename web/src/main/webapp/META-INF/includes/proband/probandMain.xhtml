@@ -97,7 +97,6 @@
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
 				update=":tabView:probandjournal_form:journal_list,:tabView:probandjournal_form:journal_input" />
 
-
 			<p:remoteCommand process="@this" name="changeProbandByTag"
 				actionListener="#{probandBean.change(probandTagBean.in.probandId)}"
 				oncomplete="handleProbandChanged(xhr, status, args)"
@@ -259,8 +258,6 @@
 								rowClasses="ctsms-input-row,ctsms-textarea-row">
 								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-
-
 									<h:outputLabel for="person"
 										value="#{probandlabels.proband_person_label}" />
 									<h:panelGroup>
@@ -268,8 +265,9 @@
 											disabled="#{probandBean.created}"
 											value="#{probandBean.in.person}">
 											<p:ajax listener="#{probandBean.handlePersonChange}"
-												update=":tabView:probandmain_form:proband_input" />
-
+												process="@this"
+												update=":tabView:probandmain_form:proband_input"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}" for="person">
 											<h:outputText value="#{probandlabels.proband_person_tooltip}"
@@ -280,11 +278,11 @@
 									<h:outputLabel for="blinded"
 										value="#{probandlabels.proband_blinded_label}" />
 									<h:panelGroup>
-
 										<p:selectBooleanCheckbox id="blinded" disabled="false"
 											value="#{probandBean.in.blinded}">
-											<p:ajax update=":tabView:probandmain_form:proband_input" />
-
+											<p:ajax update=":tabView:probandmain_form:proband_input"
+												process="@this" listener="#{probandBean.loadDuplicates}"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}" for="blinded">
 											<h:outputText
@@ -293,9 +291,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="blinded" />
-
-
-
 									<h:outputLabel for="animalName"
 										rendered="#{!probandBean.in.person and !probandBean.in.blinded}"
 										value="#{probandlabels.animal_name_label}" />
@@ -315,10 +310,6 @@
 									</h:panelGroup>
 									<p:message for="animalName"
 										rendered="#{!probandBean.in.person and !probandBean.in.blinded}" />
-
-
-
-
 									<h:outputLabel
 										styleClass="ctsms-field-icon ctsms-icon-encryption"
 										for="prefixedTitle1"
@@ -406,7 +397,10 @@
 											value="#{probandBean.in.firstName}" required="true"
 											label="#{probandlabels.first_name}"
 											styleClass="ctsms-control">
-											<p:ajax />
+											<p:ajax process="@this"
+												listener="#{probandBean.loadDuplicates}"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
+
 										</p:inputText>
 										<p:tooltip rendered="#{enableTooltips}" for="firstName">
 											<h:outputText value="#{probandlabels.first_name_tooltip}"
@@ -426,7 +420,10 @@
 										<p:inputText id="lastName" value="#{probandBean.in.lastName}"
 											required="true" label="#{probandlabels.last_name}"
 											styleClass="ctsms-control">
-											<p:ajax />
+											<p:ajax process="@this"
+												listener="#{probandBean.loadDuplicates}"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
+
 										</p:inputText>
 										<p:tooltip rendered="#{enableTooltips}" for="lastName">
 											<h:outputText value="#{probandlabels.last_name_tooltip}"
@@ -522,8 +519,6 @@
 									<p:message for="postpositionedTitle1"
 										rendered="#{probandBean.in.person and !probandBean.in.blinded}" />
 
-
-
 									<h:outputLabel
 										styleClass="#{probandBean.in.person ? 'ctsms-field-icon ctsms-icon-noencryption' : ''}"
 										for="alias" rendered="#{probandBean.in.blinded}"
@@ -532,7 +527,10 @@
 										<p:inputText id="alias" value="#{probandBean.in.alias}"
 											required="false" label="#{probandlabels.alias}"
 											styleClass="ctsms-control">
-											<p:ajax />
+											<p:ajax process="@this"
+												listener="#{probandBean.loadDuplicates}"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
+
 										</p:inputText>
 										<p:tooltip rendered="#{enableTooltips}" for="alias">
 											<h:outputText value="#{probandlabels.alias_tooltip}"
@@ -540,10 +538,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="alias" rendered="#{probandBean.in.blinded}" />
-
-
-
-
 
 									<h:outputLabel
 										styleClass="ctsms-field-icon ctsms-icon-encryption"
@@ -562,8 +556,13 @@
 											<f:converter converterId="ctsms.Date" />
 											<f:attribute name="timeZone"
 												value="#{applicationScopeBean.defaultTimeZone}" />
+											<p:ajax process="@this"
+												listener="#{probandBean.loadDuplicates}"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
 											<p:ajax event="blur" process="@this" update="age" />
-											<p:ajax event="dateSelect" process="@this" update="age" />
+											<p:ajax event="dateSelect" process="@this" update="age"
+												listener="#{probandBean.loadDuplicates}"
+												oncomplete="duplicateProbandsDialogPop(xhr, status, args)" />
 										</p:calendar>
 										<p:tooltip rendered="#{enableTooltips}" for="dateOfBirth">
 											<h:outputText value="#{probandlabels.date_of_birth_tooltip}"
@@ -720,14 +719,8 @@
 										</p:tooltip>
 									</h:panelGroup>
 								</h:panelGrid>
-
-
-
-
 							</h:panelGrid>
 						</p:fieldset>
-
-
 						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText
@@ -847,10 +840,7 @@
 									</p:column>
 								</p:dataList>
 							</h:panelGrid>
-
-
 						</p:fieldset>
-
 						<p:messages />
 						<p:toolbar>
 							<p:toolbarGroup align="left">
@@ -859,6 +849,11 @@
 							</p:toolbarGroup>
 							<p:separator />
 							<p:toolbarGroup align="right">
+								<p:commandButton process="@this"
+									rendered="#{probandBean.in.person}"
+									value="#{labels.duplicates_button_label}"
+									onclick="duplicateProbandsDialogShow()" disabled="false"
+									icon="ui-icon ctsms-icon-duplicates" type="button" />
 								<p:commandButton process="@this"
 									value="#{labels.reset_button_label}"
 									actionListener="#{probandBean.reset}"
@@ -964,6 +959,15 @@
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="probandAddConfirmation.hide()" type="button" />
 			</p:confirmDialog>
+			<ui:include src="../shared/duplicatesDialog.xhtml">
+				<ui:param name="duplicatesDialog" value="duplicateProbandsDialog" />
+				<ui:param name="duplicateItems"
+					value="#{probandBean.probandDuplicates}" />
+				<ui:param name="duplicatesBean" value="#{probandBean}" />
+				<ui:param name="openDuplicate" value="openProband" />
+				<ui:param name="openDuplicateButtonLabel" value="#{labels.open_proband_button_label}" />
+                <ui:param name="duplicateIdFormat" value="#{labels.duplicate_proband_id_format}" /> 
+			</ui:include>
 		</h:form>
 	</ui:composition>
 </h:body>

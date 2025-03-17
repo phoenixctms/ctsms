@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -31,6 +33,7 @@ import org.phoenixctms.ctsms.vo.SexVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.model.DefaultTreeNode;
+import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOTreeNode;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.SexSelector;
@@ -47,6 +50,7 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.DateSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.TreeNode;
 
@@ -569,6 +573,7 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 
 	public void handlePersonChange() {
 		loadProbandCategories();
+		loadDuplicatesAjax();
 	}
 
 	public void handlePostpositionedTitle1Select(SelectEvent event) {
@@ -723,6 +728,11 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 		loadProbandCategories();
 		departments = WebUtil.getVisibleDepartments(in.getDepartmentId());
 		loadSelectedCategory();
+		//		try {
+		//			loadDuplicates();
+		//		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		//		} catch (AuthenticationException e) {
+		//		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
@@ -988,5 +998,56 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
+	}
+
+	private Collection duplicates;
+
+	public ArrayList<IDVO> getProbandDuplicates() {
+		return (ArrayList<IDVO>) duplicates;
+	}
+
+	public void loadDuplicatesAjax() {
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		try {
+			loadDuplicates();
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+		}
+		requestContext.addCallbackParam(JSValues.AJAX_DUPLICATE_COUNT.toString(), duplicates.size());
+	}
+
+	public void loadDuplicates(AjaxBehaviorEvent abe) {
+		loadDuplicatesAjax();
+	}
+
+	public void loadDuplicates(DateSelectEvent abe) {
+		loadDuplicatesAjax();
+	}
+
+	public void loadDuplicates(ActionEvent ae) {
+		String messagesClientId = (String) ae.getComponent().getAttributes().get("messages_id");
+		try {
+			loadDuplicates();
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_ERROR, e.getMessage());
+			WebUtil.publishException(e);
+		}
+		//Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_WARN, "test");
+	}
+
+	private void loadDuplicates() throws AuthenticationException, AuthorisationException, ServiceException {
+		duplicates = new ArrayList<IDVO>();
+		if (in.getPerson()) {
+			if (in.getBlinded()) {
+				duplicates = WebUtil.getServiceLocator().getProbandService().getProbandDuplicates(WebUtil.getAuthentication(),
+						in.getAlias(), in.getId(), null);
+			} else {
+				duplicates = WebUtil.getServiceLocator().getProbandService().getProbandDuplicates(WebUtil.getAuthentication(),
+						in.getFirstName(), in.getLastName(), in.getDateOfBirth(), in.getId(), null);
+			}
+			IDVO.transformVoCollection(duplicates);
+		}
 	}
 }

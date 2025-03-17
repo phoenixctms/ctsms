@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>duplicates dialog</title>
+</h:head>
+<h:body>
+	<ui:composition>
+<script type="text/javascript">
+    function #{duplicatesDialog}Pop(xhr, status, args) {
+       	if (_testPropertyExists(args, AJAX_DUPLICATE_COUNT) &amp;&amp; args[AJAX_DUPLICATE_COUNT] &gt; 0) {
+       		#{duplicatesDialog}PopRemoteCommand();
+       	}
+    }           
+</script>
+		<p:dialog widgetVar="#{duplicatesDialog}" modal="true"
+			header="#{labels.duplicates_dialog_title}" showEffect="#{effect}"
+			hideEffect="#{effect}" styleClass="ctsms-duplicates-dialog">
+			<h:panelGrid columns="1" cellpadding="0"
+				styleClass="ctsms-input-panelgrid" id="#{duplicatesDialog}_input"
+				rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
+				<h:outputText rendered="#{empty duplicateItems}"
+					value="#{labels.no_duplicates_dialog_message}"
+					escape="false" />
+				<p:dataList rendered="#{not empty duplicateItems}"
+					type="#{duplicatesDataListsType}" rows="#{duplicatesDataListsRows}"
+					paginator="#{duplicatesDataListsPaginator}"
+					paginatorTemplate="#{duplicatesDataListsPaginatorTemplate}"
+					rowsPerPageTemplate="#{duplicatesDataListsRowsPerPageTemplate}"
+					paginatorPosition="#{duplicatesDataListsPaginatorPosition}"
+					pageLinks="#{duplicatesDataListsPageLinks}"
+					paginatorAlwaysVisible="#{duplicatesDataListsPaginatorAlwaysVisible}"
+					var="duplicate" styleClass="ctsms-duplicates-dialog-list"
+					value="#{duplicateItems}">
+					<f:facet name="description">
+						<p:commandButton type="button"
+							title="#{openDuplicateButtonLabel}"
+							icon="ui-icon ui-icon-extlink"
+							onclick="#{openDuplicate}(#{duplicate.vo.id})" />
+						<h:outputText value=" " />
+						<h:outputText
+							value="#{applicationScopeBean.escapeHtml(duplicate.vo.name)}"
+							escape="false" />
+					</f:facet>
+					<p:column>
+						<h:outputText value="#{duplicate.vo.modifiedTimestamp}" >
+    						<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone"
+								value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+					</p:column>
+					<p:column>
+						<h:outputFormat value=" - #{duplicateIdFormat}">
+							<f:param value="#{duplicate.vo.id}" />
+						</h:outputFormat>
+					</p:column>
+				</p:dataList>
+				<p:messages id="#{duplicatesDialog}_messages" />
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:remoteCommand process="@this"
+							actionListener="#{duplicatesBean.loadDuplicates}"
+							name="#{duplicatesDialog}Show"
+							update="#{duplicatesDialog}_input,#{duplicatesDialog}_messages"
+							oncomplete="#{duplicatesDialog}.show()">
+							<f:attribute name="messages_id"
+								value="#{duplicatesDialog}_messages" />
+						</p:remoteCommand>
+						<p:remoteCommand process="@this"
+							name="#{duplicatesDialog}PopRemoteCommand"
+							update="#{duplicatesDialog}_input,#{duplicatesDialog}_messages"
+							oncomplete="#{duplicatesDialog}.show()">
+						</p:remoteCommand>
+						<p:commandButton process="@this"
+							value="#{labels.load_button_label}"
+							actionListener="#{duplicatesBean.loadDuplicates}"
+							icon="ui-icon-refresh" ajax="true" disabled="false"
+							update="#{duplicatesDialog}_input,#{duplicatesDialog}_messages">
+							<f:attribute name="messages_id"
+								value="#{duplicatesDialog}_messages" />
+						</p:commandButton>
+					</p:toolbarGroup>
+					<p:separator />
+					<p:toolbarGroup align="right">
+						<ui:include src="toolbarAjaxStatus.xhtml" />
+					</p:toolbarGroup>
+				</p:toolbar>
+			</h:panelGrid>
+		</p:dialog>
+	</ui:composition>
+</h:body>
+</html>
