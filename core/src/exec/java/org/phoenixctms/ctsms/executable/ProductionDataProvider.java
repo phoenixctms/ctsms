@@ -754,7 +754,9 @@ public class ProductionDataProvider {
 				validationErrorEcrfFieldStatusType,
 				validationUpdateEcrfFieldStatusType,
 				validationProposedResolutionEcrfFieldStatusType,
-				validationClosedEcrfFieldStatusType));
+				validationClosedEcrfFieldStatusType,
+				validationDataNaEcrfFieldStatusType,
+				validationCorrectedEcrfFieldStatusType));
 		updateEcrfFieldStatusType(validationUpdateEcrfFieldStatusType, getEcrfFieldStatusTransitions(
 				validationUpdateEcrfFieldStatusType,
 				validationProposedResolutionEcrfFieldStatusType));
