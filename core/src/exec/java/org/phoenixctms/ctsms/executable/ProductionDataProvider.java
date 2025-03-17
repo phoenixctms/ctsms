@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.xml.registry.infomodel.User;
-
+import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.FileModule;
