@@ -1,6 +1,5 @@
 package org.phoenixctms.ctsms.executable;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,6 +7,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.phoenixctms.ctsms.domain.*;
+import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.FileModule;
