@@ -236,6 +236,26 @@ if get_database_version() < '010801093' then
 
 end if;
 
+if get_database_version() < '010801094' then
+
+  insert into ecrf_field_status_transition
+    ("e_c_r_f_field_status_types_fk","transitions_fk")
+  values (
+    (select id from ecrf_field_status_type where name_l10n_key = 'validation_error' limit 1),
+    (select id from ecrf_field_status_type where name_l10n_key = 'validation_data_na' limit 1)
+  );
+  
+  insert into ecrf_field_status_transition
+    ("e_c_r_f_field_status_types_fk","transitions_fk")
+  values (
+    (select id from ecrf_field_status_type where name_l10n_key = 'validation_error' limit 1),
+    (select id from ecrf_field_status_type where name_l10n_key = 'validation_corrected' limit 1)
+  );  
+
+  perform set_database_version('010801094');
+  
+end if;
+
  
 end
 $$;
