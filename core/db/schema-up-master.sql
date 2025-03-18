@@ -256,6 +256,20 @@ if get_database_version() < '010801094' then
   
 end if;
 
+if get_database_version() < '010801095' then
+
+  delete from PROBAND_LIST_STATUS_TYPE_LOG_LEVEL where log_levels_fk = (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'PROBAND_STATUS' limit 1);
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_signed' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'PROBAND_STATUS' limit 1)
+  );
+  
+  perform set_database_version('010801095');
+
+end if;
  
 end
 $$;
