@@ -14,6 +14,7 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
@@ -56,14 +57,34 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 
 	public static String getVisitScheduleAppointmentValue(VisitScheduleItemOutVO visitScheduleItem) {
 		if (visitScheduleItem != null) {
-			if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
-				return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
-						CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
-						CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
-			} else if (visitScheduleItem.getStart() != null) {
-				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
-			} else if (visitScheduleItem.getStop() != null) {
-				return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+			Boolean isDay = DateCalc.isSingleDay(visitScheduleItem.getStart(), visitScheduleItem.getStop());
+			if (isDay != null && isDay) {
+				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+			} else {
+				if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart()) &&
+							(DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop()))) {
+						return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					} else {
+						return L10nUtil.getProbandListExcelLabel(Locales.USER, ProbandListExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
+								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					}
+				} else if (visitScheduleItem.getStart() != null) {
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
+						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+					} else {
+						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+					}
+				} else if (visitScheduleItem.getStop() != null) {
+					if (DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop())) {
+						return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+					} else {
+						return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+					}
+				}
 			}
 		}
 		return null;

@@ -705,6 +705,54 @@ public final class DateCalc {
 		return null;
 	}
 
+	public static Boolean isEndOfDay(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			if (cal.get(Calendar.HOUR) == 23 && cal.get(Calendar.MINUTE) == 59) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return null;
+	}
+
+	public static Boolean isStartOfDay(Date date) {
+		if (date != null) {
+			GregorianCalendar cal = new GregorianCalendar();
+			cal.setTime(date);
+			if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return null;
+	}
+
+	public static Boolean isSingleDay(Date start, Date stop) {
+		if (start != null) {
+			if (isStartOfDay(start)) {
+				if (stop != null) {
+					int deltaDays = dateDeltaDays(start, stop);
+					if (deltaDays == 0 && isEndOfDay(stop)) {
+						return true;
+					} else if (deltaDays == 1 && isStartOfDay(start)) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return true;
+				}
+			} else {
+				return false;
+			}
+		}
+		return null;
+	}
+
 	public static boolean isHoliday(Date date, HolidayDao holidayDao) throws Exception {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);

@@ -392,6 +392,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			}
 			//https://stackoverflow.com/questions/75678572/java-io-ioexception-invalid-status-code-403-text-forbidden
 			chromeOptions.addArguments("--remote-allow-origins=*");
+			chromeOptions.addArguments("--disable-popup-blocking");
 			//https://stackoverflow.com/questions/34515328/how-to-set-default-download-directory-in-selenium-chrome-capabilities
 			HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
 			chromePrefs.put("profile.default_content_settings.popups", 0);

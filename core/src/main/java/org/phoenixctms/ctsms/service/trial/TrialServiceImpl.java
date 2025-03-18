@@ -4970,7 +4970,7 @@ public class TrialServiceImpl
 				? visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialId,
 						null,
 						null,
-						null, null, visitScheduleAppointmentsInternal, true, null)
+						null, null, visitScheduleAppointmentsInternal, false, null)
 				: new ArrayList();
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		InquiryDao inquiryDao = this.getInquiryDao();
