@@ -855,6 +855,7 @@ var FieldCalculation = FieldCalculation || {};
 		mask["parseDateTime"] = _parseDateTime;
 		mask["parseTime"] = _parseTime;
 		mask["formatDecimal"] = _formatDecimal;		
+		mask["parseDecimal"] = _parseDecimal;
 
 		mask["parseDateCustom"] = _parseDateCustom;
 		mask["parseTimeCustom"] = _parseTimeCustom;
