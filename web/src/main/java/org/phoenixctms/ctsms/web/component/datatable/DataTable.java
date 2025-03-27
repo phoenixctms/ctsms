@@ -137,9 +137,11 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 
 	@Override
 	public void setFilters(java.util.Map<String, String> filters) {
-		WebUtil.getSessionScopeBean().setFilterMap(this.getClientId(), filters);
+		boolean updated = WebUtil.getSessionScopeBean().setFilterMap(this.getClientId(), filters);
 		if (usePageFromDataModel()) {
-			((LazyDataModel) this.getDataModel()).setPage(0);
+			if (updated) {
+				((LazyDataModel) this.getDataModel()).setPage(0);
+			}
 		} else {
 			setFirst(0);
 		}
