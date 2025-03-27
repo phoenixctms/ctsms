@@ -1385,8 +1385,21 @@ public class SessionScopeBean implements FilterItemsStore {
 		return getLoginOutcome(false);
 	}
 
-	public synchronized void setFilterMap(String id, Map<String, String> filterMap) {
-		getFilterComponentMap().put(id, filterMap);
+	public synchronized boolean setFilterMap(String id, Map<String, String> filterMap) {
+		Map<String, String> oldFilterMap = getFilterComponentMap().get(id);
+		boolean equal;
+		if (oldFilterMap != null && filterMap != null) {
+			equal = oldFilterMap.equals(filterMap);
+		} else if (oldFilterMap == null && filterMap == null) {
+			equal = true;
+		} else {
+			equal = false;
+		}
+		if (!equal) {
+			getFilterComponentMap().put(id, filterMap);
+			return true;
+		}
+		return false;
 	}
 
 	public synchronized void setLocalPassword(String localPassword) {
