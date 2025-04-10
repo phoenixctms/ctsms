@@ -226,8 +226,11 @@
 								onclick="probandEcrfStatusEcrfListTableColumnsDialog.show()" />
 						</h:panelGrid>
 					</f:facet>
-					<p:column style="width:16px;"
-						rendered="#{probandEcrfStatusEntryBean.showEcrfLog}">
+					<p:column style="width:16px;">
+						<f:attribute name="visibleDefault" value="false" />
+					    <f:facet name="header">
+							<h:outputText value="#{probandlabels.probandecrfstatus_ecrf_list_rowexpansion_column}" />
+						</f:facet>					
 						<p:rowToggler />
 					</p:column>
 
@@ -389,8 +392,7 @@
 							value="#{probandEcrfStatusEntryBean.getEcrfProgressValue(ecrfVisit.ecrf,ecrfVisit.visit)}" />
 					</p:column>
 
-					<p:rowExpansion
-						rendered="#{probandEcrfStatusEntryBean.showEcrfLog}">
+					<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list')['probandlabels.probandecrfstatus_ecrf_list_rowexpansion_column']}">
 						<ui:include src="../shared/auditTrailEcrfLog.xhtml">
 							<ui:param name="ecrfStatusEntryBean"
 								value="#{probandEcrfStatusEntryBean}" />
