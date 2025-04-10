@@ -101,7 +101,7 @@
 									update=":inventorystatusoverview_form:inventorystatus_list" />
 							</h:panelGrid>
 						</f:facet>
-						<p:column style="width:16px;">
+						<p:column style="width:16px;" rendered="#{inventoryStatusOverviewBean.showCollisions}">
 							<p:rowToggler />
 						</p:column>
 						<p:column sortBy="#{statusEntry.vo.id}">
@@ -207,7 +207,7 @@
 								icon="ui-icon ui-icon-extlink"
 								onclick="openInventory(#{statusEntry.vo.inventory.id})" />
 						</p:column>
-						<p:rowExpansion>
+						<p:rowExpansion rendered="#{inventoryStatusOverviewBean.showCollisions}">
 							<p:tabView styleClass="ctsms-rowexpansion-tabview">
 								<ui:include src="/META-INF/includes/shared/collidingInventoryBookingTableTab.xhtml">
 									<ui:param

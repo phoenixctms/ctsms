@@ -68,7 +68,7 @@
 								onclick="courseParticipationStatusTableColumnsDialog.show()" />
 						</h:panelGrid>							
 					</f:facet>
-					<p:column style="width:16px;">
+					<p:column style="width:16px;" rendered="#{adminCourseParticipationStatusBean.showCollisions}">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.id}">
@@ -222,7 +222,7 @@
 							icon="ui-icon ui-icon-extlink"
 							onclick="openStaff(#{statusEntry.vo.staff.id})" />
 					</p:column>
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{adminCourseParticipationStatusBean.showCollisions}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingDutyRosterTurnTableTab.xhtml">
 								<ui:param name="collidingDutyRosterTurnModel"

@@ -56,7 +56,7 @@
 							</h:panelGroup>							
 						</h:panelGrid>
 					</f:facet>
-					<p:column style="width:16px;">
+					<p:column style="width:16px;" rendered="#{probandStatusBean.showCollisions}">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{statusEntry.vo.id}">
@@ -130,7 +130,7 @@
 								value="#{probandStatusBean.getCollidingVisitScheduleItemModel(statusEntry.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{probandStatusBean.showCollisions}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include
 								src="../shared/collidingInventoryBookingTableTab.xhtml">

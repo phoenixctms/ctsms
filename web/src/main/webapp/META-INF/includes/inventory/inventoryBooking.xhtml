@@ -63,7 +63,7 @@
 						</h:panelGrid>
 
 					</f:facet>
-					<p:column style="width:16px;">
+					<p:column style="width:16px;" rendered="#{inventoryBookingBean.showCollisions}">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{booking.vo.id}">
@@ -171,7 +171,7 @@
 						inventoryBookingBean.getCollidingCourseParticipationStatusEntryModel(booking.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{inventoryBookingBean.showCollisions}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include
 								src="../shared/collidingInventoryStatusTableTab.xhtml">
