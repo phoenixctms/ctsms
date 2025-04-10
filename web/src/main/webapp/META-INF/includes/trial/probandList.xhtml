@@ -58,6 +58,10 @@
 
 						</f:facet>
 						<p:column style="width:16px;">
+							<f:attribute name="visibleDefault" value="false" />
+						    <f:facet name="header">
+								<h:outputText value="#{triallabels.proband_list_proband_list_rowexpansion_column}" />
+							</f:facet>			
 							<p:rowToggler />
 						</p:column>
 						<p:column sortBy="#{probandListEntry.vo.id}">
@@ -274,7 +278,7 @@
 								type="button" icon="ui-icon ui-icon-extlink"
 								onclick="openProband(#{probandListEntry.vo.proband.id})" />
 						</p:column>
-						<p:rowExpansion>
+						<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':tabView:probandlist_form:proband_list')['triallabels.proband_list_proband_list_rowexpansion_column']}">
 							<h:panelGrid columns="5" cellpadding="0"
 								styleClass="ctsms-probandlist-rowexpansion-panelgrid"
 								columnClasses="ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column,ctsms-probandlist-rowexpansion-column">

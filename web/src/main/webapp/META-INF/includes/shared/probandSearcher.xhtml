@@ -110,6 +110,10 @@
 					</h:panelGrid>
 				</f:facet>
 				<p:column style="width:16px;">
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText value="#{probandlabels.search_proband_result_list_rowexpansion_column}" />
+					</f:facet>					
 					<p:rowToggler />
 				</p:column>
 				<p:column sortBy="#{proband.vo.id}" filterBy="#{proband.vo.id}">
@@ -272,7 +276,7 @@
 					<h:outputText value="#{proband.vo.privacyConsentStatus.name}" />
 				</p:column>
 				<ui:insert name="pickbutton"></ui:insert>
-				<p:rowExpansion>
+				<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':search_form:'.concat(probandSearchBean.resultListId))['probandlabels.search_proband_result_list_rowexpansion_column']}">
 					<h:panelGrid columns="4" cellpadding="0"
 						styleClass="ctsms-resultsetlist-rowexpansion-panelgrid"
 						columnClasses="ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column,ctsms-resultsetlist-rowexpansion-column">
