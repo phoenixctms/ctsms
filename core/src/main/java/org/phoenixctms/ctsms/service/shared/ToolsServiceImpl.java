@@ -1344,6 +1344,37 @@ public class ToolsServiceImpl
 					probandContactDetailValueDao.update(contact);
 				}
 			}
+			this.getJournalEntryDao().addSystemMessage(proband, now, null, SystemMessageCodes.PROBAND_EMAIL_UNSUBSCRIBED);
+		}
+	}
+
+	@Override
+	protected void handleConfirmProbandPrivacyConsent(String beacon) throws Exception {
+		CommonUtil.parseUUID(beacon);
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
+		if (proband == null) {
+			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
+			if (recipient != null) {
+				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+				recipient.setConfirmed(recipient.getConfirmed() + 1l);
+				recipient.setConfirmedTimestamp(now);
+				CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
+				massMailRecipientDao.update(recipient);
+				proband = recipient.getProband();
+			} else {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
+			}
+		}
+		ProbandDao probandDao = this.getProbandDao();
+		if (proband != null) {
+			probandDao.lock(proband, LockMode.PESSIMISTIC_WRITE);
+			CoreUtil.modifyVersion(proband, proband.getVersion(), now, proband.getModifiedUser());
+			proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findConfirmState());
+			probandDao.update(proband);
+			ServiceUtil.notifyExpiringProbandAutoDelete(proband, now, this.getNotificationDao());
+			this.getJournalEntryDao().addSystemMessage(proband, now, null, SystemMessageCodes.PRIVACY_CONSENT_STATUS_CONFIRMED);
 		}
 	}
 

@@ -121,8 +121,9 @@ public final class ServiceUtil {
 	public final static boolean LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF = false;
 	public final static VelocityStringUtils VELOCITY_STRING_UTILS = new VelocityStringUtils();
 	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
+	private final static String BEACON_CONFIRM_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
-	private final static String DUUMY_BEACON = "dummy";
+	private final static String DUMMY_BEACON = "dummy";
 	private final static EcrfFieldValueInVOInputFieldValueEqualsAdapter ECRF_FIELD_VALUE_EQUALS_ADAPTER = new EcrfFieldValueInVOInputFieldValueEqualsAdapter();
 	private final static ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER = new ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter();
 	private final static InquiryValueInVOInputFieldValueEqualsAdapter INQUIRY_VALUE_EQUALS_ADAPTER = new InquiryValueInVOInputFieldValueEqualsAdapter();
@@ -1875,10 +1876,16 @@ public final class ServiceUtil {
 		}
 		model.put(
 				MassMailMessageTemplateParameters.MASS_MAIL_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
-						CommonUtil.UNSUBSCRIBE_PATH, beacon != null ? beacon : DUUMY_BEACON));
+						CommonUtil.UNSUBSCRIBE_PATH, beacon != null ? beacon : DUMMY_BEACON));
 		model.put(
 				MassMailMessageTemplateParameters.PROBAND_BEACON_UNSUBSCRIBE_URL, MessageFormat.format(BEACON_UNSUBSCRIBE_URL, Settings.getHttpBaseUrl(),
-						CommonUtil.UNSUBSCRIBE_PATH, proband != null ? proband.getBeacon() : DUUMY_BEACON));
+						CommonUtil.UNSUBSCRIBE_PATH, proband != null ? proband.getBeacon() : DUMMY_BEACON));
+		model.put(
+				MassMailMessageTemplateParameters.MASS_MAIL_BEACON_CONFIRM_URL, MessageFormat.format(BEACON_CONFIRM_URL, Settings.getHttpBaseUrl(),
+						CommonUtil.CONFIRM_PATH, beacon != null ? beacon : DUMMY_BEACON));
+		model.put(
+				MassMailMessageTemplateParameters.PROBAND_BEACON_CONFIRM_URL, MessageFormat.format(BEACON_CONFIRM_URL, Settings.getHttpBaseUrl(),
+						CommonUtil.CONFIRM_PATH, proband != null ? proband.getBeacon() : DUMMY_BEACON));
 		model.put(
 				MassMailMessageTemplateParameters.GENERATED_ON,
 				Settings.getSimpleDateFormat(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DATETIME_PATTERN, Bundle.SETTINGS,

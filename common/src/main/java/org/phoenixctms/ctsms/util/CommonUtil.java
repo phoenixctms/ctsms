@@ -264,6 +264,7 @@ public final class CommonUtil {
 	public static final String HTML_MIMETYPE_STRING = "text/html";
 	public static final String BEACON_PATH = "beacon";
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
+	public static final String CONFIRM_PATH = "confirm";
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
