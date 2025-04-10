@@ -7,6 +7,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
 public enum Urls {
+
 	INVENTORY_PICKER("/shared/inventoryPicker.jsf"),
 	STAFF_PICKER("/shared/staffPicker.jsf"),
 	COURSE_PICKER("/shared/coursePicker.jsf"),
@@ -29,6 +30,7 @@ public enum Urls {
 	PORTAL("/portal.jsf"),
 	ERROR("/error.jsf"),
 	UNSUBSCRIBE("/unsubscribe.jsf"),
+	CONFIRM("/confirm.jsf"),
 	INVENTORY_START(Settings.getString(SettingCodes.INVENTORY_START_URL, Bundle.SETTINGS, DefaultSettings.INVENTORY_START_URL)),
 	STAFF_START(Settings.getString(SettingCodes.STAFF_START_URL, Bundle.SETTINGS, DefaultSettings.STAFF_START_URL)),
 	COURSE_START(Settings.getString(SettingCodes.COURSE_START_URL, Bundle.SETTINGS, DefaultSettings.COURSE_START_URL)),

@@ -43,6 +43,15 @@ public class PrivacyConsentStatusTypeDaoImpl
 		return privacyConsentStatusTypeCriteria.list();
 	}
 
+	@Override
+	protected PrivacyConsentStatusType handleFindConfirmState() {
+		org.hibernate.Criteria privacyConsentStatusTypeCriteria = createPrivacyConsentStatusTypeCriteria();
+		privacyConsentStatusTypeCriteria.add(Restrictions.eq("confirm", true));
+		privacyConsentStatusTypeCriteria.addOrder(Order.desc("id"));
+		privacyConsentStatusTypeCriteria.setMaxResults(1);
+		return (PrivacyConsentStatusType) privacyConsentStatusTypeCriteria.uniqueResult();
+	}
+
 	/**
 	 * @inheritDoc
 	 */

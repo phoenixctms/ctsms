@@ -60,6 +60,10 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>CharacterEncodingFilter</filter-name>
+		<url-pattern>/confirm.jsf</url-pattern>
+	</filter-mapping>	
+	<filter-mapping>
+		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/login.jsf</url-pattern>
 	</filter-mapping>
 	<filter>
@@ -163,9 +167,14 @@
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet>
+		<servlet-name>confirmServlet</servlet-name>
+		<servlet-class>org.phoenixctms.ctsms.web.servlet.ConfirmServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>	
+	<servlet>
 		<servlet-name>qrCodeServlet</servlet-name>
 		<servlet-class>org.phoenixctms.ctsms.web.servlet.QRCodeServlet</servlet-class>
-		<load-on-startup>4</load-on-startup>
+		<load-on-startup>5</load-on-startup>
 	</servlet>
 	<!-- overlapping mappings -->
 	<!-- http://www.roguewave.com/portals/0/products/hydraexpress/docs/3.5.0/html/rwsfservletug/4-3.html -->
@@ -185,6 +194,10 @@
 		<servlet-name>unsubscribeServlet</servlet-name>
 		<url-pattern>/unsubscribe/*</url-pattern>
 	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>confirmServlet</servlet-name>
+		<url-pattern>/confirm/*</url-pattern>
+	</servlet-mapping>	
 	<servlet-mapping>
 		<servlet-name>qrCodeServlet</servlet-name>
 		<url-pattern>/chart</url-pattern>

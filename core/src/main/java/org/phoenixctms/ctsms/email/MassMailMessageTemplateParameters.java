@@ -24,6 +24,8 @@ public interface MassMailMessageTemplateParameters {
 	public static final String STRING_UTILS = "string_utils";
 	public static final Object MASS_MAIL_BEACON_UNSUBSCRIBE_URL = MASS_MAIL_PREFIX + "unsubscribe_url";
 	public static final Object PROBAND_BEACON_UNSUBSCRIBE_URL = PROBAND_PREFIX + "unsubscribe_url";
+	public static final Object MASS_MAIL_BEACON_CONFIRM_URL = MASS_MAIL_PREFIX + "confirm_url";
+	public static final Object PROBAND_BEACON_CONFIRM_URL = PROBAND_PREFIX + "confirm_url";
 	public static final String PROBAND_TAG_VALUES = PROBAND_PREFIX + "tagvalues";
 	public static final String PROBAND_CONTACT_DETAIL_VALUES = PROBAND_PREFIX + "contactdetailvalues";
 	public static final String PROBAND_ADDRESSES = PROBAND_PREFIX + "addresses";

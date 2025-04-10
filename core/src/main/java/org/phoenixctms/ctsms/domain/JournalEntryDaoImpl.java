@@ -115,6 +115,17 @@ public class JournalEntryDaoImpl
 		return true;
 	}
 
+	private static void setTitleComment(JournalEntry journalEntry) {
+		journalEntry.setTitleIv(null);
+		journalEntry.setEncryptedTitle(null);
+		journalEntry.setTitleHash(null);
+		journalEntry.setCommentIv(null);
+		journalEntry.setEncryptedComment(null);
+		journalEntry.setCommentHash(null);
+		journalEntry.setTitle(null);
+		journalEntry.setComment(null);
+	}
+
 	private final static Collection<ReEncrypter<JournalEntry>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<JournalEntry>>();
 	static {
 		RE_ENCRYPTERS.add(new FieldReEncrypter<JournalEntry>() {
@@ -334,6 +345,20 @@ public class JournalEntryDaoImpl
 		if (!setTitleComment(journalEntry, modifiedUser, systemMessageCode, titleArgs, systemMessageCode, commentArgs)) {
 			return null;
 		}
+		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
+		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
+		journalEntry.setSystemMessage(true);
+		journalEntry.setSystemMessageCode(systemMessageCode);
+		journalEntry.setProband(proband);
+		proband.addJournalEntries(journalEntry);
+		return this.create(journalEntry);
+	}
+
+	@Override
+	protected JournalEntry handleAddSystemMessage(Proband proband, Timestamp now, User modifiedUser, String systemMessageCode) throws Exception {
+		JournalEntry journalEntry = JournalEntry.Factory.newInstance();
+		journalEntry.setSystemMessageModule(JournalModule.PROBAND_JOURNAL);
+		setTitleComment(journalEntry);
 		CoreUtil.modifyVersion(journalEntry, now, modifiedUser);
 		journalEntry.setRealTimestamp(CommonUtil.dateToTimestamp(DateCalc.getMillisCleared(now)));
 		journalEntry.setSystemMessage(true);
@@ -1278,8 +1303,16 @@ public class JournalEntryDaoImpl
 		}
 		if (CommonUtil.getUseJournalEncryption(source.getSystemMessageModule(), category == null ? null : category.getModule())) {
 			try {
-				target.setTitle((String) CryptoUtil.decryptValue(source.getTitleIv(), source.getEncryptedTitle()));
-				target.setComment((String) CryptoUtil.decryptValue(source.getCommentIv(), source.getEncryptedComment()));
+				if (source.getTitleIv() != null && source.getEncryptedTitle() != null) {
+					target.setTitle((String) CryptoUtil.decryptValue(source.getTitleIv(), source.getEncryptedTitle()));
+					//} else {
+					//	target.setTitle(source.getTitle());
+				}
+				if (source.getCommentIv() != null && source.getEncryptedComment() != null) {
+					target.setComment((String) CryptoUtil.decryptValue(source.getCommentIv(), source.getEncryptedComment()));
+					//} else {
+					//	target.setComment(source.getComment());
+				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -1351,8 +1384,16 @@ public class JournalEntryDaoImpl
 				if (!CoreUtil.isPassDecryption()) {
 					throw new Exception();
 				}
-				target.setTitle((String) CryptoUtil.decryptValue(source.getTitleIv(), source.getEncryptedTitle()));
-				target.setComment((String) CryptoUtil.decryptValue(source.getCommentIv(), source.getEncryptedComment()));
+				if (source.getTitleIv() != null && source.getEncryptedTitle() != null) {
+					target.setTitle((String) CryptoUtil.decryptValue(source.getTitleIv(), source.getEncryptedTitle()));
+					//} else {
+					//	target.setTitle(source.getTitle());
+				}
+				if (source.getCommentIv() != null && source.getEncryptedComment() != null) {
+					target.setComment((String) CryptoUtil.decryptValue(source.getCommentIv(), source.getEncryptedComment()));
+					//} else {
+					//	target.setComment(source.getComment());
+				}
 				target.setDecrypted(true);
 			} catch (Exception e) {
 				target.setTitle(null);

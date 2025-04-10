@@ -19,7 +19,7 @@
 				showEffect="#{effect}" hideEffect="#{effect}">
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-input-panelgrid">
-					<h:outputFormat value="#{labels.unsubscribe_prompt}">
+					<h:outputFormat value="#{labels.unsubscribe_prompt}" escape="false">
 						<f:param value="#{unsubscribeBean.beacon}" />
 					</h:outputFormat>
 					<ui:include
