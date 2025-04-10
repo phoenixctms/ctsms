@@ -324,8 +324,11 @@
 								onclick="trialEcrfStatusEcrfListTableColumnsDialog.show()" />
 						</h:panelGrid>
 					</f:facet>
-					<p:column style="width:16px;"
-						rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
+					<p:column style="width:16px;">
+						<f:attribute name="visibleDefault" value="false" />
+					    <f:facet name="header">
+							<h:outputText value="#{triallabels.trialecrfstatus_ecrf_list_rowexpansion_column}" />
+						</f:facet>
 						<p:rowToggler />
 					</p:column>
 
@@ -484,7 +487,7 @@
 							value="#{trialEcrfStatusEntryBean.getEcrfProgressValue(ecrfVisit.ecrf,ecrfVisit.visit)}" />
 					</p:column>
 
-					<p:rowExpansion rendered="#{trialEcrfStatusEntryBean.showEcrfLog}">
+					<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list')['triallabels.trialecrfstatus_ecrf_list_rowexpansion_column']}">
 						<ui:include src="../shared/auditTrailEcrfLog.xhtml">
 							<ui:param name="ecrfStatusEntryBean"
 								value="#{trialEcrfStatusEntryBean}" />

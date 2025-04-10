@@ -144,6 +144,10 @@
 					</h:panelGrid>
 				</f:facet>
 				<p:column style="width:16px;">
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText value="#{triallabels.search_trial_result_list_rowexpansion_column}" />
+					</f:facet>		
 					<p:rowToggler />
 				</p:column>
 				<p:column
@@ -266,7 +270,7 @@
 					<h:outputText value="#{trialSearchBean.getProbandListEntryCount(trial.vo)}" />
 				</p:column>
 				<ui:insert name="pickbutton"></ui:insert>
-				<p:rowExpansion>
+				<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':search_form:'.concat(trialSearchBean.resultListId))['triallabels.search_trial_result_list_rowexpansion_column']}">
 					<h:panelGrid
 						columns="4"
 						cellpadding="0"

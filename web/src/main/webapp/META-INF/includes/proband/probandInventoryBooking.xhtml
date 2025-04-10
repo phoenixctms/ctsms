@@ -62,7 +62,7 @@
 								onclick="probandInventoryBookingTableColumnsDialog.show()" />
 						</h:panelGrid>
 					</f:facet>
-					<p:column style="width:16px;">
+					<p:column style="width:16px;" rendered="#{probandInventoryBookingBean.showCollisions}">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{booking.vo.id}">
@@ -150,7 +150,7 @@
 					</p:column>
 
 
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{probandInventoryBookingBean.showCollisions}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include
 								src="../shared/collidingInventoryStatusTableTab.xhtml">

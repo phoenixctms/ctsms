@@ -747,10 +747,9 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	}
 
 	protected abstract void initSpecificSets();
-
-	public boolean isShowEcrfLog() {
-		return Settings.getBoolean(SettingCodes.SHOW_ECRF_STATUS_ECRF_LOG, Bundle.SETTINGS, DefaultSettings.SHOW_ECRF_STATUS_ECRF_LOG);
-	}
+	//	public boolean isShowEcrfLog() {
+	//		return Settings.getBoolean(SettingCodes.SHOW_ECRF_STATUS_ECRF_LOG, Bundle.SETTINGS, DefaultSettings.SHOW_ECRF_STATUS_ECRF_LOG);
+	//	}
 
 	public boolean isSignEcrfsVisible() {
 		return getVerfiedEcrfCount() > 0l || getDoneEcrfCount() > 0l;

@@ -46,6 +46,10 @@
 						</h:panelGrid>
 					</f:facet>
 					<p:column style="width:16px;">
+					    <f:attribute name="visibleDefault" value="false" />
+					    <f:facet name="header">
+							<h:outputText value="#{triallabels.proband_group_probandgroup_list_rowexpansion_column}" />
+						</f:facet>					
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{probandGroup.vo.id}">
@@ -123,7 +127,7 @@
 							value="#{applicationScopeBean.clipStringTrailing(probandGroupBean.getProbandListEntryModel(probandGroup.vo).probandNamesString,96)}" />
 					</p:column>
 					
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':tabView:probandgroup_form:probandgroup_list')['triallabels.proband_group_probandgroup_list_rowexpansion_column']}">
 						<p:panel>
 							<p:dataTable styleClass="ctsms-datatable" lazy="false"
 								rows="#{dataTablesRowsRowExpansion}"

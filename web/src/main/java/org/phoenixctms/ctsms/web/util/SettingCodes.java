@@ -546,7 +546,7 @@ public interface SettingCodes {
 	public final static String PROBAND_RATING_PRESET = "proband_rating_preset";
 	public final static String PROBAND_RATING_MAX_PRESET = "proband_rating_max_preset";
 	public static final String ECRF_FIELD_STATUS_QUEUE = "ecrf_field_status_queue";
-	public static final String SHOW_ECRF_STATUS_ECRF_LOG = "show_ecrf_status_ecrf_log";
+	//public static final String SHOW_ECRF_STATUS_ECRF_LOG = "show_ecrf_status_ecrf_log";
 	public static final String SHOW_LAST_UNRESOLVED_FIELD_STATUS = "show_last_unresolved_field_status";
 	public static final String ECRF_CLONE_ADD_OTHER_TRIAL_ENABLED = "ecrf_clone_add_other_trial_enabled";
 	public static final String ENABLE_INVENTORY_MODULE = "enable_inventory_module";

@@ -62,7 +62,7 @@
 								onclick="probandVisitScheduleTableColumnsDialog.show()" />
 						</h:panelGrid>
 					</f:facet>
-					<p:column style="width:16px;">
+					<p:column style="width:16px;" rendered="#{probandVisitScheduleBean.showCollisions}">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{visitScheduleItem.vo.id}">
@@ -188,7 +188,7 @@
 							icon="ui-icon ui-icon-extlink"
 							onclick="openTrial(#{visitScheduleItem.vo.trial.id})" />
 					</p:column>
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{probandVisitScheduleBean.showCollisions}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingProbandStatusTableTab.xhtml">
 								<ui:param name="collidingProbandStatusEntryModel"

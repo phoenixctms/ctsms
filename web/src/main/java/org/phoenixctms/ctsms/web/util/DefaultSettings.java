@@ -702,7 +702,7 @@ public final class DefaultSettings {
 	public static final boolean PROBAND_PERSON_PRESET = true;
 	public static final boolean PROBAND_BLINDED_PRESET = false;
 	public static final ECRFFieldStatusQueue ECRF_FIELD_STATUS_QUEUE = null;
-	public static final boolean SHOW_ECRF_STATUS_ECRF_LOG = false;
+	//public static final boolean SHOW_ECRF_STATUS_ECRF_LOG = false;
 	public static final boolean SHOW_LAST_UNRESOLVED_FIELD_STATUS = true;
 	public static final boolean ECRF_CLONE_ADD_OTHER_TRIAL_ENABLED = false;
 	public static final boolean ADD_REIMBURSEMENT_SHOW_COMMENT = true;

@@ -144,6 +144,10 @@
 					</h:panelGrid>
 				</f:facet>
 				<p:column style="width:16px;">
+					<f:attribute name="visibleDefault" value="false" />
+					<f:facet name="header">
+						<h:outputText value="#{stafflabels.search_staff_result_list_rowexpansion_column}" />
+					</f:facet>							
 					<p:rowToggler />
 				</p:column>
 				<p:column
@@ -249,7 +253,7 @@
 					</ui:include>
 				</p:column>
 				<ui:insert name="pickbutton"></ui:insert>
-				<p:rowExpansion>
+				<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':search_form:'.concat(staffSearchBean.resultListId))['stafflabels.search_staff_result_list_rowexpansion_column']}">
 					<h:panelGrid
 						columns="3"
 						cellpadding="0"

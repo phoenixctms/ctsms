@@ -57,7 +57,7 @@
 							</h:panelGroup>
 						</h:panelGrid>
 					</f:facet>
-					<p:column style="width:16px;">
+					<p:column style="width:16px;" rendered="#{trialDutyRosterTurnBean.showCollisions}">
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{dutyRosterTurn.vo.id}">
@@ -110,7 +110,7 @@
 								value="#{trialDutyRosterTurnBean.getCollidingInventoryBookingModel(dutyRosterTurn.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{trialDutyRosterTurnBean.showCollisions}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<ui:include src="../shared/collidingStaffStatusTableTab.xhtml">
 								<ui:param name="collidingStaffStatusEntryModel"
