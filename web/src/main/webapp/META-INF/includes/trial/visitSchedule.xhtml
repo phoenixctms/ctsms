@@ -71,6 +71,10 @@
 
 					</f:facet>
 					<p:column style="width:16px;">
+					    <f:attribute name="visibleDefault" value="false" />
+					    <f:facet name="header">
+							<h:outputText value="#{triallabels.visit_schedule_visitschedule_list_rowexpansion_column}" />
+						</f:facet>
 						<p:rowToggler />
 					</p:column>
 					<p:column sortBy="#{visitScheduleItem.vo.id}">
@@ -256,7 +260,7 @@
 								value="#{visitScheduleBean.getCollidingStaffStatusEntryModel(visitScheduleItem.vo).allRowCount}" />
 						</ui:include>
 					</p:column>
-					<p:rowExpansion>
+					<p:rowExpansion rendered="#{sessionScopeBean.columnManager.getVisibleMap(':tabView:visitschedule_form:visitschedule_list')['triallabels.visit_schedule_visitschedule_list_rowexpansion_column']}">
 						<p:tabView styleClass="ctsms-rowexpansion-tabview">
 							<p:tab rendered="#{visitScheduleItem.vo.mode.dateMode != 'STATIC'}"
 								title="#{triallabels.visit_schedule_appointments_tab_label_1}#{visitScheduleBean.getVisitScheduleAppointmentModel(visitScheduleItem.vo).allRowCount}#{triallabels.visit_schedule_appointments_tab_label_2}">
