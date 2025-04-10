@@ -1773,11 +1773,13 @@ public class ProductionDataProvider {
 	protected PrivacyConsentStatusType createPrivacyConsentStatusType(String nameL10nKey,
 			org.phoenixctms.ctsms.enumeration.Color color,
 			boolean initial,
-			boolean autoDelete) {
+			boolean autoDelete,
+			boolean confirm) {
 		PrivacyConsentStatusType privacyConsentStatusType = PrivacyConsentStatusType.Factory.newInstance();
 		privacyConsentStatusType.setColor(color);
 		privacyConsentStatusType.setInitial(initial);
 		privacyConsentStatusType.setAutoDelete(autoDelete);
+		privacyConsentStatusType.setConfirm(confirm);
 		privacyConsentStatusType.setNameL10nKey(nameL10nKey);
 		privacyConsentStatusType = privacyConsentStatusTypeDao.create(privacyConsentStatusType);
 		return privacyConsentStatusType;
@@ -1785,23 +1787,33 @@ public class ProductionDataProvider {
 
 	protected void createPrivacyConsentStatusTypeEntries() {
 		PrivacyConsentStatusType registeredPrivacyConsentStatusType = createPrivacyConsentStatusType("registered",
-				Color.LIMEGREEN,
-				true,
-				true);
-		PrivacyConsentStatusType existingPrivacyConsentOkPrivacyConsentStatusType = createPrivacyConsentStatusType("existing_privacy_consent_ok",
 				Color.YELLOW,
+				true,
+				true,
+				false);
+		PrivacyConsentStatusType existingPrivacyConsentOkPrivacyConsentStatusType = createPrivacyConsentStatusType("existing_privacy_consent_ok",
+				Color.KHAKI,
+				false,
 				false,
 				false);
 		PrivacyConsentStatusType privacyConsentSentPrivacyConsentStatusType = createPrivacyConsentStatusType("privacy_consent_sent",
 				Color.LEMONCHIFFON,
 				false,
-				true);
+				true,
+				false);
 		PrivacyConsentStatusType privacyConsentReceivedPrivacyConsentStatusType = createPrivacyConsentStatusType("privacy_consent_received",
-				Color.KHAKI,
+				Color.LIME,
+				false,
 				false,
 				false);
 		PrivacyConsentStatusType privacyConsentNotReceivedPrivacyConsentStatusType = createPrivacyConsentStatusType("privacy_consent_not_received",
 				Color.PAPAYAWHIP,
+				false,
+				true,
+				false);
+		PrivacyConsentStatusType confirmedPrivacyConsentStatusType = createPrivacyConsentStatusType("confirmed",
+				Color.LIMEGREEN,
+				false,
 				false,
 				true);
 		updatePrivacyConsentStatusType(
@@ -1819,6 +1831,8 @@ public class ProductionDataProvider {
 				getPrivacyConsentStatusTransitions(privacyConsentNotReceivedPrivacyConsentStatusType, privacyConsentSentPrivacyConsentStatusType));
 		updatePrivacyConsentStatusType(privacyConsentReceivedPrivacyConsentStatusType,
 				getPrivacyConsentStatusTransitions(privacyConsentReceivedPrivacyConsentStatusType, privacyConsentNotReceivedPrivacyConsentStatusType));
+		updatePrivacyConsentStatusType(confirmedPrivacyConsentStatusType,
+				getPrivacyConsentStatusTransitions(confirmedPrivacyConsentStatusType));
 		jobOutput.println("privacy consent states created");
 	}
 

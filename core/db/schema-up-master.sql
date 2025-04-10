@@ -270,6 +270,31 @@ if get_database_version() < '010801095' then
   perform set_database_version('010801095');
 
 end if;
+
+if get_database_version() < '010801096' then
+
+  ALTER TABLE privacy_consent_status_type ADD COLUMN confirm BOOLEAN;
+  UPDATE privacy_consent_status_type SET confirm = 'f';
+  ALTER TABLE privacy_consent_status_type ALTER confirm SET NOT NULL;
+  
+  update privacy_consent_status_type set color = 'YELLOW' where name_l10n_key = 'registered';
+  update privacy_consent_status_type set color = 'KHAKI' where name_l10n_key = 'existing_privacy_consent_ok';
+  update privacy_consent_status_type set color = 'LIME' where name_l10n_key = 'privacy_consent_received';
+
+  insert into PRIVACY_CONSENT_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "auto_delete", "confirm")
+  values (nextval('hibernate_sequence'), 'LIMEGREEN', 'f', 'confirmed', 'f', 't');
+
+  insert into PRIVACY_CONSENT_STATUS_TRANSITION
+    ("privacy_consent_status_types_fk","transitions_fk")
+  values (
+    (select id from PRIVACY_CONSENT_STATUS_TYPE where name_l10n_key = 'confirmed' limit 1),
+    (select id from PRIVACY_CONSENT_STATUS_TYPE where name_l10n_key = 'confirmed' limit 1)
+  );
+  
+  perform set_database_version('010801096');
+
+end if;
  
 end
 $$;
