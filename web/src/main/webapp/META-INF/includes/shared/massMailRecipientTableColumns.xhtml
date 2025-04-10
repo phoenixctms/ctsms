@@ -72,6 +72,20 @@
 					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 			</h:outputText>
 		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.confirmedTimestamp}">
+			<f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:outputText
+					value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_confirmed_column}" />
+			</f:facet>
+			<h:outputText rendered="#{massMailRecipient.vo.confirmed > 0}"
+				styleClass="ctsms-list-icon ctsms-icon-information"
+				value="#{massMailRecipient.vo.confirmedTimestamp}">
+				<f:converter converterId="ctsms.DateTime" />
+				<f:attribute name="timeZone"
+					value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+			</h:outputText>
+		</p:column>		
 		<p:column sortBy="#{massMailRecipient.vo.modifiedUser.name}"
 			rendered="#{showModified}">
 			<f:attribute name="visibleDefault" value="false" />
