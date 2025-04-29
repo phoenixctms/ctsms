@@ -238,7 +238,8 @@
 							</c:forEach>
 						</p:splitButton>
 						<p:menuButton disabled="#{empty probandVisitScheduleBean.trials}"
-							value="#{probandlabels.travel_expenses_visit_schedule_xls_menu_label}">
+							value="#{probandlabels.travel_expenses_visit_schedule_xls_menu_label}"
+							styleClass="ui-buttonset">
 							<c:forEach var="trial" items="#{probandVisitScheduleBean.trials}">
 								<p:menuitem immediate="true" ajax="false"
 									value="#{probandVisitScheduleBean.getTravelExpensesVisitScheduleExcelButtonLabel(trial)}"
@@ -246,6 +247,19 @@
 									icon="ctsms-menubar-icon ctsms-icon-xls">
 									<p:fileDownload
 										value="#{probandVisitScheduleBean.getTravelExpensesVisitScheduleExcelStreamedContent(trial.value)}" />
+								</p:menuitem>
+							</c:forEach>
+						</p:menuButton>
+						<p:menuButton disabled="#{empty probandVisitScheduleBean.trials}"
+							value="#{probandlabels.visit_plan_xls_menu_label}"
+							styleClass="ui-buttonset">
+							<c:forEach var="trial" items="#{probandVisitScheduleBean.trials}">
+								<p:menuitem immediate="true" ajax="false"
+									value="#{probandVisitScheduleBean.getVisitPlanExcelButtonLabel(trial)}"
+									title="#{labels.export_visit_plan_button_label}"
+									icon="ctsms-menubar-icon ctsms-icon-xls">
+									<p:fileDownload
+										value="#{probandVisitScheduleBean.getVisitPlanExcelStreamedContent(trial.value)}" />
 								</p:menuitem>
 							</c:forEach>
 						</p:menuButton>

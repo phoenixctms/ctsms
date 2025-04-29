@@ -323,7 +323,7 @@ public class ReimbursementsBean extends ManagedBeanBase {
 
 	public StreamedContent getVisitScheduleExcelStreamedContent(Long probandId) throws Exception {
 		try {
-			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(WebUtil.getAuthentication(), trialId, probandId, null, null, null);
+			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportTravelExpensesVisitSchedule(WebUtil.getAuthentication(), trialId, probandId);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
