@@ -295,6 +295,16 @@ if get_database_version() < '010801096' then
   perform set_database_version('010801096');
 
 end if;
+
+if get_database_version() < '010801097' then
+
+  ALTER TABLE mass_mail ADD COLUMN attach_visit_plans BOOLEAN;
+  UPDATE mass_mail SET attach_visit_plans = 'f';
+  ALTER TABLE mass_mail ALTER attach_visit_plans SET NOT NULL;
+  
+  perform set_database_version('010801097');
+
+end if;
  
 end
 $$;
