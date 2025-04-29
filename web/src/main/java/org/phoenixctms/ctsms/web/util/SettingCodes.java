@@ -586,6 +586,7 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_ATTACH_ECRFS_PRESET = "mass_mail_attach_ecrfs_preset";
 	public static final String MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET = "mass_mail_attach_proband_letter_preset";
 	public static final String MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET = "mass_mail_attach_reimbursements_preset";
+	public static final String MASS_MAIL_ATTACH_VISIT_PLANS_PRESET = "mass_mail_attach_visit_plans_preset";
 	public static final String MASS_MAIL_LOCALE_PRESET = "mass_mail_locale_preset";
 	public static final String PUBLIC_FILE_SIGNUP_URL = "public_file_signup_url";
 	public static final String RECIPIENT_OVERVIEW_SHOW_PENDING_PRESET = "recipient_overview_show_pending_preset";

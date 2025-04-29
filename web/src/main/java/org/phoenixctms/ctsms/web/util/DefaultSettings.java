@@ -747,6 +747,7 @@ public final class DefaultSettings {
 	public static final boolean MASS_MAIL_ATTACH_ECRFS_PRESET = false;
 	public static final boolean MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET = false;
 	public static final boolean MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_VISIT_PLANS_PRESET = false;
 	public static final String MASS_MAIL_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
 	public static final String PUBLIC_FILE_SIGNUP_URL = null;
 	public static final Boolean RECIPIENT_OVERVIEW_SHOW_PENDING_PRESET = null;
