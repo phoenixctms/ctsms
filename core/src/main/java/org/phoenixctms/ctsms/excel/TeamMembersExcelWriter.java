@@ -71,6 +71,11 @@ public class TeamMembersExcelWriter extends WorkbookWriter {
 						Settings.getBoolean(TeamMembersExcelSettingCodes.AUTOSIZE, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.AUTOSIZE),
 						Settings.getBoolean(TeamMembersExcelSettingCodes.WRITEHEAD, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.WRITEHEAD),
 						Settings.getIntNullable(TeamMembersExcelSettingCodes.PAGE_BREAK_AT_ROW, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(TeamMembersExcelSettingCodes.ROW_OFFSET_FIRST_PAGE, Bundle.TEAM_MEMBERS_EXCEL,
+								TeamMembersExcelDefaultSettings.ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(TeamMembersExcelSettingCodes.ROW_OFFSET_OTHER_PAGES, Bundle.TEAM_MEMBERS_EXCEL,
+								TeamMembersExcelDefaultSettings.ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(TeamMembersExcelSettingCodes.COL_OFFSET, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.COL_OFFSET),
 						Settings.getBoolean(TeamMembersExcelSettingCodes.ROW_COLORS, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.ROW_COLORS),
 						Settings.getExcelCellFormat(TeamMembersExcelSettingCodes.HEAD_FORMAT, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.HEAD_FORMAT),
 						Settings.getExcelCellFormat(TeamMembersExcelSettingCodes.ROW_FORMAT, Bundle.TEAM_MEMBERS_EXCEL, TeamMembersExcelDefaultSettings.ROW_FORMAT)));

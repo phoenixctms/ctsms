@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -14,11 +15,15 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
+import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.VisitOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleAppointmentVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
@@ -29,7 +34,7 @@ import jxl.write.WritableSheet;
 public class VisitScheduleExcelWriter extends WorkbookWriter {
 
 	public enum Styles {
-		TRIAL_VISIT_SCHEDULE, PROBAND_VISIT_SCHEDULE, PROBAND_TRIAL_VISIT_SCHEDULE, TRAVEL_EXPENSES_VISIT_SCHEDULE, PROBAND_APPOINTMENT_SCHEDULE
+		TRIAL_VISIT_SCHEDULE, PROBAND_VISIT_SCHEDULE, PROBAND_TRIAL_VISIT_SCHEDULE, TRAVEL_EXPENSES_VISIT_SCHEDULE, PROBAND_APPOINTMENT_SCHEDULE, VISIT_PLAN
 	}
 
 	public static String getAliquotVisitReimbursementColumnName() {
@@ -60,6 +65,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 	protected TrialOutVO trial;
 	protected ProbandOutVO proband;
 	protected ProbandAddressOutVO address;
+	protected ProbandGroupOutVO group;
 	protected DepartmentVO trialDepartment;
 	protected Date from;
 	protected Date to;
@@ -81,7 +87,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 
 	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
 		String temp;
-		header.getLeft().clear();
+		//header.getLeft().clear();
 		temp = CommonUtil.trialOutVOToString(trial);
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getLeft().append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.TRIAL_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
@@ -95,7 +101,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 				header.getLeft().append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.ALL_TRIALS_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL));
 			}
 		}
-		header.getCentre().clear();
+		//header.getCentre().clear();
 		temp = CommonUtil.probandOutVOToString(proband);
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
@@ -139,33 +145,63 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 							ExcelUtil.DEFAULT_LABEL);
 				}
 				break;
+			case VISIT_PLAN:
+				if (!CommonUtil.isEmptyString(temp)) {
+					temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_PLAN_PROBAND_HEADER_FOOTER,
+							ExcelUtil.DEFAULT_LABEL, temp);
+				} else {
+					temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_PLAN_HEADER_FOOTER,
+							ExcelUtil.DEFAULT_LABEL);
+				}
+				break;
 			default:
 		}
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getCentre().append(temp);
 		}
-		header.getRight().clear();
-		temp = address == null ? null : address.getName();
-		if (!CommonUtil.isEmptyString(temp)) {
-			header.getRight().append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.ADDRESS_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
-		} else {
-			temp = CommonUtil.getDateStartStopString(from, to, new SimpleDateFormat(ExcelUtil.EXCEL_DATE_TIME_PATTERN));
-			if (!CommonUtil.isEmptyString(temp)) {
-				header.getRight()
-						.append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.FROM_TO_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
-			}
+		//header.getRight().clear();
+		temp = (from == null && to == null) ? "" : CommonUtil.getDateStartStopString(from, to, new SimpleDateFormat(ExcelUtil.EXCEL_DATE_TIME_PATTERN));
+		switch (style) {
+			case TRIAL_VISIT_SCHEDULE:
+				temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.TRIAL_VISIT_SCHEDULE_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER,
+						ExcelUtil.DEFAULT_LABEL, address == null ? "" : address.getName(), group == null ? "" : group.getTitle(), temp);
+				break;
+			case PROBAND_VISIT_SCHEDULE:
+				temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PROBAND_VISIT_SCHEDULE_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER,
+						ExcelUtil.DEFAULT_LABEL, address == null ? "" : address.getName(), group == null ? "" : group.getTitle(), temp);
+				break;
+			case PROBAND_TRIAL_VISIT_SCHEDULE:
+				temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PROBAND_TRIAL_VISIT_SCHEDULE_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER,
+						ExcelUtil.DEFAULT_LABEL, address == null ? "" : address.getName(), group == null ? "" : group.getTitle(), temp);
+				break;
+			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
+				temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER,
+						ExcelUtil.DEFAULT_LABEL, address == null ? "" : address.getName(), group == null ? "" : group.getTitle(), temp);
+				break;
+			case PROBAND_APPOINTMENT_SCHEDULE:
+				temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PROBAND_APPOINTMENT_SCHEDULE_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER,
+						ExcelUtil.DEFAULT_LABEL, address == null ? "" : address.getName(), group == null ? "" : group.getTitle(), temp);
+				break;
+			case VISIT_PLAN:
+				temp = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_PLAN_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER,
+						ExcelUtil.DEFAULT_LABEL, address == null ? "" : address.getName(), group == null ? "" : group.getTitle(), temp);
+				break;
+			default:
 		}
-		footer.getLeft().clear();
+		if (!CommonUtil.isEmptyString(temp)) {
+			header.getRight().append(temp);
+		}
+		//footer.getLeft().clear();
 		temp = excelVO.getFileName();
 		if (!CommonUtil.isEmptyString(temp)) {
 			footer.getLeft().append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.FILE_NAME_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
 		}
-		footer.getCentre().clear();
+		//footer.getCentre().clear();
 		footer.getCentre().append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PAGE_NUMBER_HEADER_FOOTER_1, ExcelUtil.DEFAULT_LABEL));
 		footer.getCentre().appendPageNumber();
 		footer.getCentre().append(L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PAGE_NUMBER_HEADER_FOOTER_2, ExcelUtil.DEFAULT_LABEL));
 		footer.getCentre().appendTotalPages();
-		footer.getRight().clear();
+		//footer.getRight().clear();
 		temp = excelVO.getRequestingUser() != null ? CommonUtil.staffOutVOToString(excelVO.getRequestingUser().getIdentity()) : null;
 		if (!CommonUtil.isEmptyString(temp)) {
 			footer.getRight().append(
@@ -230,6 +266,14 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 					appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 				}
 				break;
+			case VISIT_PLAN:
+				scaleFactor = Settings.getIntNullable(VisitScheduleExcelSettingCodes.VISIT_PLAN_SCALE_FACTOR, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.VISIT_PLAN_SCALE_FACTOR);
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_APPEND_HEADER_FOOTER, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.VISIT_PLAN_APPEND_HEADER_FOOTER)) {
+					appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
+				}
+				break;
 			default:
 		}
 		if (scaleFactor != null && scaleFactor.intValue() > 0) {
@@ -239,6 +283,163 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 
 	@Override
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
+	}
+
+	@Override
+	protected int getRowIncrement(Object lastRow, Object row) {
+		int increment = 1;
+		switch (style) {
+			case TRIAL_VISIT_SCHEDULE:
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_GROUP_VISITS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_GROUP_VISITS)) {
+					increment = 2;
+				}
+				break;
+			case PROBAND_VISIT_SCHEDULE:
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_GROUP_VISITS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_GROUP_VISITS)) {
+					increment = 2;
+				}
+				break;
+			case PROBAND_TRIAL_VISIT_SCHEDULE:
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_VISITS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_VISITS)) {
+					increment = 2;
+				}
+				break;
+			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_VISITS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_VISITS)) {
+					increment = 2;
+				}
+				break;
+			case PROBAND_APPOINTMENT_SCHEDULE:
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_GROUP_VISITS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_GROUP_VISITS)) {
+					increment = 2;
+				}
+				break;
+			case VISIT_PLAN:
+				if (Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_GROUP_VISITS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.VISIT_PLAN_GROUP_VISITS)) {
+					increment = 2;
+				}
+				break;
+			default:
+				break;
+		}
+		if (lastRow != null) {
+			VisitOutVO visit = null;
+			VisitOutVO lastVisit = null;
+			if (lastRow instanceof VisitScheduleItemOutVO) {
+				lastVisit = ((VisitScheduleItemOutVO) lastRow).getVisit();
+			} else if (lastRow instanceof VisitScheduleAppointmentVO) {
+				lastVisit = ((VisitScheduleAppointmentVO) lastRow).getVisit();
+			}
+			if (row instanceof VisitScheduleItemOutVO) {
+				visit = ((VisitScheduleItemOutVO) row).getVisit();
+			} else if (row instanceof VisitScheduleAppointmentVO) {
+				visit = ((VisitScheduleAppointmentVO) row).getVisit();
+			}
+			boolean visitEqual;
+			if (visit != null && lastVisit != null) {
+				String prefix = CommonUtil.longestCommonPrefix(visit.getToken(), lastVisit.getToken()).replaceFirst("^[^0-9]+", "");
+				if (prefix.length() > 0) {
+					String suffix = visit.getToken().replaceFirst(prefix, "");
+					visitEqual = suffix.length() == 0 || Pattern.compile("^[^0-9]+$").matcher(suffix).find();
+				} else {
+					visitEqual = false;
+				}
+				//visitEqual = visit.getToken().replaceFirst(prefix, "").replaceFirst("^[0-9]+", "").length() > 0;
+			} else if (visit == null && lastVisit == null) {
+				visitEqual = true;
+			} else {
+				visitEqual = false;
+			}
+			if (visitEqual) {
+				return 1;
+			} else {
+				return increment;
+			}
+		} else if (row == null) {
+			return increment;
+		} else {
+			return 0;
+		}
+	}
+
+	public static String getVisitScheduleAppointmentValue(VisitScheduleItemOutVO visitScheduleItem) {
+		if (visitScheduleItem != null) {
+			Boolean isDay = DateCalc.isSingleDay(visitScheduleItem.getStart(), visitScheduleItem.getStop());
+			if (isDay != null && isDay) {
+				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+			} else {
+				if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart()) &&
+							(DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop()))) {
+						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					} else {
+						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
+								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					}
+				} else if (visitScheduleItem.getStart() != null) {
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
+						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+					} else {
+						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+					}
+				} else if (visitScheduleItem.getStop() != null) {
+					if (DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop())) {
+						return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+					} else {
+						return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public static String getVisitScheduleAppointmentValue(VisitScheduleAppointmentVO visitScheduleItem) {
+		if (visitScheduleItem != null) {
+			Boolean isDay = DateCalc.isSingleDay(visitScheduleItem.getStart(), visitScheduleItem.getStop());
+			if (isDay != null && isDay) {
+				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+			} else {
+				if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart()) &&
+							(DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop()))) {
+						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					} else {
+						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
+								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					}
+				} else if (visitScheduleItem.getStart() != null) {
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
+						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+					} else {
+						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+					}
+				} else if (visitScheduleItem.getStop() != null) {
+					if (DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop())) {
+						return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
+					} else {
+						return CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+	public static String getVisitScheduleAppointmentsStartStopColumnName() {
+		return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_HEAD, ExcelUtil.DEFAULT_LABEL);
 	}
 
 	protected SpreadSheetWriter createSpreadSheetWriter(boolean omitFields) {
@@ -256,6 +457,12 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 								VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_WRITEHEAD),
 						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_COL_OFFSET, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_COL_OFFSET),
 						Settings.getBoolean(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_ROW_COLORS, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_ROW_COLORS),
 						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_HEAD_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
@@ -275,6 +482,12 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 								VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_WRITEHEAD),
 						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_COL_OFFSET, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_COL_OFFSET),
 						Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_ROW_COLORS, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_ROW_COLORS),
 						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_HEAD_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
@@ -294,6 +507,12 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 								VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_WRITEHEAD),
 						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_COL_OFFSET, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_COL_OFFSET),
 						Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_ROW_COLORS, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_ROW_COLORS),
 						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_HEAD_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
@@ -313,6 +532,12 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 								VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_WRITEHEAD),
 						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_COL_OFFSET, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_COL_OFFSET),
 						Settings.getBoolean(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_COLORS, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_COLORS),
 						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_HEAD_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
@@ -332,12 +557,43 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_WRITEHEAD),
 						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_PAGE_BREAK_AT_ROW, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_FIRST_PAGE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_OTHER_PAGES, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_COL_OFFSET, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_COL_OFFSET),
 						Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_ROW_COLORS, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_ROW_COLORS),
 						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_HEAD_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_HEAD_FORMAT),
 						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_ROW_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
 								VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_ROW_FORMAT));
+			case VISIT_PLAN:
+				return new SpreadSheetWriter(this,
+						getColumnIndexMap(L10nUtil.getVisitScheduleExcelColumns(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_PLAN_VO_FIELD_COLUMNS,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_VO_FIELD_COLUMNS)),
+						Settings.getInt(VisitScheduleExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+						omitFields,
+						Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_AUTOSIZE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_AUTOSIZE),
+						Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_WRITEHEAD, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_WRITEHEAD),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.VISIT_PLAN_PAGE_BREAK_AT_ROW, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_PAGE_BREAK_AT_ROW),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.VISIT_PLAN_ROW_OFFSET_FIRST_PAGE, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_ROW_OFFSET_FIRST_PAGE),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.VISIT_PLAN_ROW_OFFSET_OTHER_PAGES, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_ROW_OFFSET_OTHER_PAGES),
+						Settings.getIntNullable(VisitScheduleExcelSettingCodes.VISIT_PLAN_COL_OFFSET, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_COL_OFFSET),
+						Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_ROW_COLORS, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_ROW_COLORS),
+						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.VISIT_PLAN_HEAD_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_HEAD_FORMAT),
+						Settings.getExcelCellFormat(VisitScheduleExcelSettingCodes.VISIT_PLAN_ROW_FORMAT, Bundle.VISIT_SCHEDULE_EXCEL,
+								VisitScheduleExcelDefaultSettings.VISIT_PLAN_ROW_FORMAT));
 			default:
 				return new SpreadSheetWriter(this,
 						getColumnIndexMap(new ArrayList<String>()),
@@ -346,6 +602,9 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 						omitFields,
 						false,
 						true,
+						null,
+						null,
+						null,
 						null,
 						true,
 						ExcelCellFormat.getDefaultHeadFormat(),
@@ -414,6 +673,8 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 				return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_NAME, ExcelUtil.DEFAULT_LABEL);
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PROBAND_APPOINTMENT_SCHEDULE_NAME, ExcelUtil.DEFAULT_LABEL);
+			case VISIT_PLAN:
+				return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_PLAN_NAME, ExcelUtil.DEFAULT_LABEL);
 			default:
 		}
 		return "";
@@ -437,6 +698,9 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				return Settings.getString(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_TEMPLATE_FILE_NAME, Bundle.VISIT_SCHEDULE_EXCEL,
 						VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_TEMPLATE_FILE_NAME);
+			case VISIT_PLAN:
+				return Settings.getString(VisitScheduleExcelSettingCodes.VISIT_PLAN_TEMPLATE_FILE_NAME, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.VISIT_PLAN_TEMPLATE_FILE_NAME);
 			default:
 				return null;
 		}
@@ -502,9 +766,18 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 					templateSpreadSheetName = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.PROBAND_APPOINTMENT_SCHEDULE_SPREADSHEET_NAME,
 							ExcelUtil.DEFAULT_LABEL);
 					break;
+				case VISIT_PLAN:
+					templateSpreadSheetName = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_PLAN_SPREADSHEET_NAME,
+							ExcelUtil.DEFAULT_LABEL);
+					break;
 				default:
 			}
-			if (CommonUtil.isEmptyString(templateSpreadSheetName)) {
+			String templateFileName = null;
+			try {
+				templateFileName = getTemplateFileName();
+			} catch (Exception e) {
+			}
+			if (CommonUtil.isEmptyString(templateSpreadSheetName) && CommonUtil.isEmptyString(templateFileName)) {
 				if (trial != null && proband != null) {
 					templateSpreadSheetName = L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.TRIAL_PROBAND_SPREADSHEET_NAME,
 							ExcelUtil.DEFAULT_LABEL, getStyleName(), trial.getId(), trial.getName(), proband.getId(), proband.getName());
@@ -571,17 +844,35 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 		if (vo instanceof VisitScheduleItemOutVO) {
 			VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) vo;
 			Object distinctVo = getDistinctFieldRows().get(visitScheduleItem.getId()).get(RECENT_PROBAND_LIST_STATUS_ENTRY);
+			ProbandListStatusEntryOutVO statusEntry = null;
 			if (distinctVo instanceof ProbandListStatusEntryOutVO) {
-				ProbandListStatusEntryOutVO statusEntry = (ProbandListStatusEntryOutVO) distinctVo;
-				if (statusEntry.getStatus().isCount()) {
-					return Settings.getColor(VisitScheduleExcelSettingCodes.ENROLLMENT_STATUS_IS_COUNT_COLOR, Bundle.VISIT_SCHEDULE_EXCEL,
-							VisitScheduleExcelDefaultSettings.ENROLLMENT_STATUS_IS_COUNT_COLOR);
-				} else {
-					return Settings.getColor(VisitScheduleExcelSettingCodes.ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR, Bundle.VISIT_SCHEDULE_EXCEL,
-							VisitScheduleExcelDefaultSettings.ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR);
-				}
+				statusEntry = (ProbandListStatusEntryOutVO) distinctVo;
+			}
+			VisitOutVO visit = visitScheduleItem.getVisit();
+			switch (style) {
+				case VISIT_PLAN:
+					return visit != null ? visit.getType().getColor() : null;
+				default:
+					if (statusEntry != null) {
+						if (statusEntry.getStatus().isCount()) {
+							return Settings.getColor(VisitScheduleExcelSettingCodes.ENROLLMENT_STATUS_IS_COUNT_COLOR, Bundle.VISIT_SCHEDULE_EXCEL,
+									VisitScheduleExcelDefaultSettings.ENROLLMENT_STATUS_IS_COUNT_COLOR);
+						} else {
+							return Settings.getColor(VisitScheduleExcelSettingCodes.ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR, Bundle.VISIT_SCHEDULE_EXCEL,
+									VisitScheduleExcelDefaultSettings.ENROLLMENT_STATUS_IS_NOT_COUNT_COLOR);
+						}
+					}
+					break;
 			}
 		}
 		return null;
+	}
+
+	public ProbandGroupOutVO getGroup() {
+		return group;
+	}
+
+	public void setGroup(ProbandGroupOutVO group) {
+		this.group = group;
 	}
 }

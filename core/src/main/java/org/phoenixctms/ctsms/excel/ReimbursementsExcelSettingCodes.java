@@ -7,6 +7,9 @@ public interface ReimbursementsExcelSettingCodes {
 	public static final String AUTOSIZE = "autosize";
 	public static final String WRITEHEAD = "writehead";
 	public static final String PAGE_BREAK_AT_ROW = "page_break_at_row";
+	public static final String ROW_OFFSET_FIRST_PAGE = "row_offset_first_page";
+	public static final String ROW_OFFSET_OTHER_PAGES = "row_offset_other_pages";
+	public static final String COL_OFFSET = "col_offset";
 	public static final String SCALE_FACTOR = "scale_factor";
 	public static final String HEAD_FORMAT = "head_format";
 	public static final String ROW_FORMAT = "row_format";
@@ -18,6 +21,9 @@ public interface ReimbursementsExcelSettingCodes {
 	public static final String PETTY_CASH_AUTOSIZE = "petty_cash_autosize";
 	public static final String PETTY_CASH_WRITEHEAD = "petty_cash_writehead";
 	public static final String PETTY_CASH_PAGE_BREAK_AT_ROW = "petty_cash_page_break_at_row";
+	public static final String PETTY_CASH_ROW_OFFSET_FIRST_PAGE = "petty_cash_row_offset_first_page";
+	public static final String PETTY_CASH_ROW_OFFSET_OTHER_PAGES = "petty_cash_row_offset_other_pages";
+	public static final String PETTY_CASH_COL_OFFSET = "petty_cash_col_offset";
 	public static final String PETTY_CASH_SCALE_FACTOR = "petty_cash_scale_factor";
 	public static final String PETTY_CASH_HEAD_FORMAT = "petty_cash_head_format";
 	public static final String PETTY_CASH_ROW_FORMAT = "petty_cash_row_format";
@@ -29,6 +35,9 @@ public interface ReimbursementsExcelSettingCodes {
 	public static final String VOUCHER_AUTOSIZE = "voucher_autosize";
 	public static final String VOUCHER_WRITEHEAD = "voucher_writehead";
 	public static final String VOUCHER_PAGE_BREAK_AT_ROW = "voucher_page_break_at_row";
+	public static final String VOUCHER_ROW_OFFSET_FIRST_PAGE = "voucher_row_offset_first_page";
+	public static final String VOUCHER_ROW_OFFSET_OTHER_PAGES = "voucher_row_offset_other_pages";
+	public static final String VOUCHER_COL_OFFSET = "voucher_col_offset";
 	public static final String VOUCHER_SCALE_FACTOR = "voucher_scale_factor";
 	public static final String VOUCHER_HEAD_FORMAT = "voucher_head_format";
 	public static final String VOUCHER_ROW_FORMAT = "voucher_row_format";
@@ -40,6 +49,9 @@ public interface ReimbursementsExcelSettingCodes {
 	public static final String WIRE_TRANSFER_AUTOSIZE = "wire_transfer_autosize";
 	public static final String WIRE_TRANSFER_WRITEHEAD = "wire_transfer_writehead";
 	public static final String WIRE_TRANSFER_PAGE_BREAK_AT_ROW = "wire_transfer_page_break_at_row";
+	public static final String WIRE_TRANSFER_ROW_OFFSET_FIRST_PAGE = "wire_transfer_row_offset_first_page";
+	public static final String WIRE_TRANSFER_ROW_OFFSET_OTHER_PAGES = "wire_transfer_row_offset_other_pages";
+	public static final String WIRE_TRANSFER_COL_OFFSET = "wire_transfer_col_offset";
 	public static final String WIRE_TRANSFER_SCALE_FACTOR = "wire_transfer_scale_factor";
 	public static final String WIRE_TRANSFER_HEAD_FORMAT = "wire_transfer_head_format";
 	public static final String WIRE_TRANSFER_ROW_FORMAT = "wire_transfer_row_format";

@@ -8,6 +8,9 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final String TEMPLATE_FILE_NAME = null;
 	public static final boolean AUDIT_TRAIL_AUTOSIZE = true;
 	public static final Integer AUDIT_TRAIL_PAGE_BREAK_AT_ROW = null;
+	public static final Integer AUDIT_TRAIL_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer AUDIT_TRAIL_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer AUDIT_TRAIL_COL_OFFSET = null;
 	public static final Integer AUDIT_TRAIL_SCALE_FACTOR = null;
 	public static final ExcelCellFormat AUDIT_TRAIL_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat AUDIT_TRAIL_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
@@ -17,6 +20,9 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final boolean AUDIT_TRAIL_APPEND_HEADER_FOOTER = false;
 	public static final boolean ECRF_FIELD_STATUS_AUTOSIZE = true;
 	public static final Integer ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW = null;
+	public static final Integer ECRF_FIELD_STATUS_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer ECRF_FIELD_STATUS_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer ECRF_FIELD_STATUS_COL_OFFSET = null;
 	public static final Integer ECRF_FIELD_STATUS_SCALE_FACTOR = null;
 	public static final ExcelCellFormat ECRF_FIELD_STATUS_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat ECRF_FIELD_STATUS_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
