@@ -50,6 +50,7 @@ import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.ProbandListStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandTagValueDao;
 import org.phoenixctms.ctsms.domain.ProcedureDao;
 import org.phoenixctms.ctsms.domain.SignatureDao;
@@ -63,8 +64,11 @@ import org.phoenixctms.ctsms.domain.TrialTagValueDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.VisitDao;
+import org.phoenixctms.ctsms.domain.VisitScheduleItem;
+import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
+import org.phoenixctms.ctsms.excel.VisitScheduleExcelWriter;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
@@ -97,6 +101,7 @@ import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ReimbursementsPDFVO;
 import org.phoenixctms.ctsms.vo.StaffContactDetailValueOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleExcelVO;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient> {
@@ -140,6 +145,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private ProbandContactDetailValueDao probandContactDetailValueDao;
 	private TrialTagValueDao trialTagValueDao;
 	private ProbandListEntryDao probandListEntryDao;
+	private VisitScheduleItemDao visitScheduleItemDao;
+	private ProbandListStatusEntryDao probandListStatusEntryDao;
 	private ProbandListEntryTagDao probandListEntryTagDao;
 	private ProbandListEntryTagValueDao probandListEntryTagValueDao;
 	private InventoryBookingDao inventoryBookingDao;
@@ -230,6 +237,41 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					attachments.add(attachment);
 				} else {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_PROBAND_LIST_ENTRY_TAGS_ATTACHMENT);
+				}
+			}
+			if (massMail.isAttachVisitPlans()) {
+				Collection<Trial> trials;
+				if (massMail.getTrial() != null) {
+					trials = new ArrayList<Trial>();
+					trials.add(massMail.getTrial());
+				} else {
+					trials = trialDao.findByParticipatingProbandSorted(recipient.getProband().getId());
+				}
+				Iterator<Trial> trialsIt = trials.iterator();
+				int count = 0;
+				while (trialsIt.hasNext()) {
+					Collection<VisitScheduleItem> visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(massMail.getTrial().getId(), null, null,
+							recipient.getProband().getId(), null, false, true, null);
+					if (visitScheduleItems.size() > 0) {
+						VisitScheduleExcelVO visitPlanExcel = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, VisitScheduleExcelWriter.Styles.VISIT_PLAN,
+								probandDao.toProbandOutVO(recipient.getProband()), trialDao.toTrialOutVO(massMail.getTrial()),
+								null, null, null,
+								visitScheduleItemDao,
+								probandListStatusEntryDao,
+								probandListEntryDao,
+								probandAddressDao,
+								userDao);
+						EmailAttachmentVO attachment = new EmailAttachmentVO();
+						attachment.setDatas(visitPlanExcel.getDocumentDatas());
+						attachment.setFileSize((long) attachment.getDatas().length);
+						attachment.setFileName(visitPlanExcel.getFileName());
+						attachment.setContentType(visitPlanExcel.getContentType());
+						attachments.add(attachment);
+						count++;
+					}
+				}
+				if (count == 0) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_VISIT_PLANS_ATTACHMENT);
 				}
 			}
 			if (massMail.isAttachEcrfs()) {
@@ -793,5 +835,13 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			recipient.setEncryptedMimeMessageData(null);
 			recipient.setMimeMessageTimestamp(null);
 		}
+	}
+
+	public void setVisitScheduleItemDao(VisitScheduleItemDao visitScheduleItemDao) {
+		this.visitScheduleItemDao = visitScheduleItemDao;
+	}
+
+	public void setProbandListStatusEntryDao(ProbandListStatusEntryDao probandListStatusEntryDao) {
+		this.probandListStatusEntryDao = probandListStatusEntryDao;
 	}
 }
