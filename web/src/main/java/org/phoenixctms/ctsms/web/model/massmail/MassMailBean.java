@@ -95,6 +95,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setAttachEcrfs(out.getAttachEcrfs());
 			in.setAttachProbandLetter(out.getAttachProbandLetter());
 			in.setAttachReimbursementsPdf(out.getAttachReimbursementsPdf());
+			in.setAttachVisitPlans(out.getAttachVisitPlans());
 			in.setVersion(out.getVersion());
 		}
 	}
@@ -149,6 +150,8 @@ public class MassMailBean extends ManagedBeanBase {
 					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET));
 			in.setAttachReimbursementsPdf(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET));
+			in.setAttachVisitPlans(
+					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_VISIT_PLANS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_VISIT_PLANS_PRESET));
 			in.setVersion(null);
 		}
 	}

@@ -151,9 +151,25 @@ public class ProbandVisitScheduleBean extends ManagedBeanBase {
 		return Messages.getMessage(MessageCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_LABEL, trial.getLabel());
 	}
 
+	public String getVisitPlanExcelButtonLabel(SelectItem trial) {
+		return Messages.getMessage(MessageCodes.VISIT_PLAN_LABEL, trial.getLabel());
+	}
+
+	public StreamedContent getVisitPlanExcelStreamedContent(Long trialId) throws Exception {
+		try {
+			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getProbandService().exportVisitPlan(WebUtil.getAuthentication(), probandId, trialId);
+			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
 	public StreamedContent getTravelExpensesVisitScheduleExcelStreamedContent(Long trialId) throws Exception {
 		try {
-			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(WebUtil.getAuthentication(), trialId, probandId, null, null, null);
+			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportTravelExpensesVisitSchedule(WebUtil.getAuthentication(), trialId, probandId);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

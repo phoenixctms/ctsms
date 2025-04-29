@@ -494,7 +494,7 @@ public class ServiceMethods {
 				.println("timespan: "
 						+ CommonUtil.getDateStartStopString(range.getStart(), range.getStop(),
 								new SimpleDateFormat(ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN))));
-		VisitScheduleExcelVO result = trialService.exportVisitSchedule(auth, null, null, id, range.getStart(), range.getStop());
+		VisitScheduleExcelVO result = trialService.exportVisitAppointmentSchedule(auth, null, null, id, range.getStart(), range.getStop());
 		if (result != null) {
 			if (id != null) {
 				jobOutput.println("department ID " + Long.toString(id) + ": " + result.getRowCount() + " visit schedule appointments");

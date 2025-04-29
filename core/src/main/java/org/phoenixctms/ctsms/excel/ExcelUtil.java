@@ -28,8 +28,12 @@ import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
 import jxl.Cell;
 import jxl.biff.DisplayFormat;
+import jxl.format.Alignment;
+import jxl.format.Border;
+import jxl.format.BorderLineStyle;
 import jxl.format.CellFormat;
 import jxl.format.Colour;
+import jxl.format.VerticalAlignment;
 import jxl.write.NumberFormats;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
@@ -49,35 +53,53 @@ public final class ExcelUtil {
 	public final static boolean COLUMN_NAME_LOWER_CASE_FIELD_NAMES = false;
 	// http://office.microsoft.com/en-us/excel-help/excel-specifications-and-limits-HP005199291.aspx
 	private final static int EXCEL_MAX_CELL_TEXT_LENGTH = 32737;
+	private final static String BOOLEAN_TRUE = "\u2612"; //empty for jxl default
+	private final static String BOOLEAN_FALSE = "\u2610"; //empty for jxl default
 	private final static HashMap<Color, Colour> COLOR_MAPPING = new HashMap<Color, Colour>();
 	static {
 		// http://jexcelapi.sourceforge.net/resources/javadocs/2_6_10/docs/jxl/format/Colour.html
-		COLOR_MAPPING.put(Color.LIGHTYELLOW, Colour.VERY_LIGHT_YELLOW);
-		COLOR_MAPPING.put(Color.ORANGE, Colour.GOLD);
-		COLOR_MAPPING.put(Color.DARKORANGE, Colour.LIGHT_ORANGE);
+		COLOR_MAPPING.put(Color.LIGHTYELLOW, Colour.IVORY);
+		COLOR_MAPPING.put(Color.ORANGE, Colour.LIGHT_ORANGE);
+		COLOR_MAPPING.put(Color.DARKORANGE, Colour.ORANGE);
 		COLOR_MAPPING.put(Color.SPRINGGREEN, Colour.LIGHT_GREEN);
 		COLOR_MAPPING.put(Color.LIMEGREEN, Colour.BRIGHT_GREEN);
 		COLOR_MAPPING.put(Color.LIME, Colour.LIME);
-		COLOR_MAPPING.put(Color.TOMATO, Colour.DARK_RED);
+		COLOR_MAPPING.put(Color.TOMATO, Colour.CORAL);
 		COLOR_MAPPING.put(Color.MEDIUMSEAGREEN, Colour.SEA_GREEN);
 		COLOR_MAPPING.put(Color.RED, Colour.RED);
-		COLOR_MAPPING.put(Color.ORANGERED, Colour.ORANGE);
+		COLOR_MAPPING.put(Color.ORANGERED, Colour.TAN);
 		COLOR_MAPPING.put(Color.LIGHTGRAY, Colour.GREY_25_PERCENT);
 		COLOR_MAPPING.put(Color.GREEN, Colour.GREEN);
-		COLOR_MAPPING.put(Color.GAINSBORO, Colour.GREY_25_PERCENT);
+		COLOR_MAPPING.put(Color.GAINSBORO, Colour.GREY_50_PERCENT);
 		COLOR_MAPPING.put(Color.SALMON, Colour.CORAL);
 		COLOR_MAPPING.put(Color.LIGHTSKYBLUE, Colour.SKY_BLUE);
+		COLOR_MAPPING.put(Color.OLIVE, Colour.DARK_YELLOW);
+		COLOR_MAPPING.put(Color.YELLOWGREEN, Colour.GOLD);
+		COLOR_MAPPING.put(Color.KHAKI, Colour.VERY_LIGHT_YELLOW);
+		COLOR_MAPPING.put(Color.ORCHID, Colour.ROSE);
 	}
 
 	private static void addCell(WritableCell cell, WritableSheet spreadSheet, int c, int r, ExcelCellFormat f) throws WriteException {
 		if (cell != null) {
 			if (!f.isOverrideFormat()) {
 				WritableCellFormat cellFormat = getRowCellFormat(spreadSheet, c, r);
-				if (cellFormat == null && f.getBgColor() != null) {
+				if (cellFormat == null && (f.getBgColor() != null
+						|| f.getBorder() != null
+						|| f.getAlignment() != null
+						|| f.getVerticalAlignment() != null)) {
 					cellFormat = new WritableCellFormat();
 				}
 				if (f.getBgColor() != null) {
 					setBgColor(cellFormat, f.getBgColor());
+				}
+				if (f.getBorder() != null) {
+					setBorder(cellFormat, f.getBorder(), f.getBorderStyle());
+				}
+				if (f.getAlignment() != null) {
+					setAlignment(cellFormat, f.getAlignment());
+				}
+				if (f.getVerticalAlignment() != null) {
+					setVerticalAlignment(cellFormat, f.getVerticalAlignment());
 				}
 				if (cellFormat != null) {
 					cell.setCellFormat(cellFormat);
@@ -170,12 +192,30 @@ public final class ExcelUtil {
 					if (value == null) {
 						return new jxl.write.Blank(c, r, cellFormat);
 					}
-					return new jxl.write.Boolean(c, r, (java.lang.Boolean) value, cellFormat);
+					boolean val = (java.lang.Boolean) value;
+					if (val && CommonUtil.isEmptyString(BOOLEAN_TRUE)) {
+						return new jxl.write.Boolean(c, r, true, cellFormat);
+					} else if (!val && CommonUtil.isEmptyString(BOOLEAN_FALSE)) {
+						return new jxl.write.Boolean(c, r, false, cellFormat);
+					} else {
+						return new jxl.write.Label(c, r, val ? BOOLEAN_TRUE : BOOLEAN_FALSE, cellFormat);
+					}
+					//return new jxl.write.Boolean(c, r, (java.lang.Boolean) value, cellFormat);
+					//return new jxl.write.Label(c, r, (java.lang.Boolean) value ? "\u2612" : "\u2610", cellFormat);
 				} else {
 					if (value == null) {
 						return new jxl.write.Blank(c, r);
 					}
-					return new jxl.write.Boolean(c, r, (java.lang.Boolean) value);
+					boolean val = (java.lang.Boolean) value;
+					if (val && CommonUtil.isEmptyString(BOOLEAN_TRUE)) {
+						return new jxl.write.Boolean(c, r, true);
+					} else if (!val && CommonUtil.isEmptyString(BOOLEAN_FALSE)) {
+						return new jxl.write.Boolean(c, r, false);
+					} else {
+						return new jxl.write.Label(c, r, val ? BOOLEAN_TRUE : BOOLEAN_FALSE);
+					}
+					//return new jxl.write.Boolean(c, r, (java.lang.Boolean) value);
+					//return new jxl.write.Label(c, r, (java.lang.Boolean) value ? "\u2612" : "\u2610");
 				}
 			} else if (returnType.equals(java.lang.Boolean.TYPE)) {
 				if (f.isOverrideFormat()) {
@@ -183,12 +223,30 @@ public final class ExcelUtil {
 					if (value == null) {
 						return new jxl.write.Blank(c, r, cellFormat);
 					}
-					return new jxl.write.Boolean(c, r, (java.lang.Boolean) value, cellFormat);
+					boolean val = (java.lang.Boolean) value;
+					if (val && CommonUtil.isEmptyString(BOOLEAN_TRUE)) {
+						return new jxl.write.Boolean(c, r, true, cellFormat);
+					} else if (!val && CommonUtil.isEmptyString(BOOLEAN_FALSE)) {
+						return new jxl.write.Boolean(c, r, false, cellFormat);
+					} else {
+						return new jxl.write.Label(c, r, val ? BOOLEAN_TRUE : BOOLEAN_FALSE, cellFormat);
+					}
+					//return new jxl.write.Boolean(c, r, (java.lang.Boolean) value, cellFormat);
+					//return new jxl.write.Label(c, r, (java.lang.Boolean) value ? "\u2611" : "\u2610", cellFormat);
 				} else {
 					if (value == null) {
 						return new jxl.write.Blank(c, r);
 					}
-					return new jxl.write.Boolean(c, r, (java.lang.Boolean) value);
+					boolean val = (java.lang.Boolean) value;
+					if (val && CommonUtil.isEmptyString(BOOLEAN_TRUE)) {
+						return new jxl.write.Boolean(c, r, true);
+					} else if (!val && CommonUtil.isEmptyString(BOOLEAN_FALSE)) {
+						return new jxl.write.Boolean(c, r, false);
+					} else {
+						return new jxl.write.Label(c, r, val ? BOOLEAN_TRUE : BOOLEAN_FALSE);
+					}
+					//return new jxl.write.Boolean(c, r, (java.lang.Boolean) value);
+					//return new jxl.write.Label(c, r, (java.lang.Boolean) value ? "\u2611" : "\u2610");
 				}
 			} else if (returnType.equals(Float.class)) {
 				if (f.isOverrideFormat()) {
@@ -450,7 +508,7 @@ public final class ExcelUtil {
 		}
 	}
 
-	private static String getFormatCode(boolean head, DisplayFormat format, Color bgColor) {
+	private static String getFormatCode(boolean head, DisplayFormat format, Color bgColor, Border border, Alignment alignemnt, VerticalAlignment verticalAlignment) {
 		StringBuilder formatCode = new StringBuilder(head ? "h" : "r");
 		formatCode.append("-");
 		if (format instanceof jxl.write.DateFormat) {
@@ -463,18 +521,41 @@ public final class ExcelUtil {
 			formatCode.append("-");
 			formatCode.append(bgColor.name());
 		}
+		if (border != null) {
+			formatCode.append("-");
+			formatCode.append(border.getDescription());
+		}
+		if (alignemnt != null) {
+			formatCode.append("-");
+			formatCode.append(alignemnt.getDescription());
+		}
+		if (verticalAlignment != null) {
+			formatCode.append("-");
+			formatCode.append(verticalAlignment.getDescription());
+		}
 		return formatCode.toString();
 	}
 
 	private static WritableCellFormat getCellFormat(DisplayFormat format, ExcelCellFormat f) {
 		WritableCellFormat cellFormat = new WritableCellFormat(f.getFont(), format);
-		setBgColor(cellFormat, f.getBgColor());
+		if (f.getBgColor() != null) {
+			setBgColor(cellFormat, f.getBgColor());
+		}
+		if (f.getBorder() != null) {
+			setBorder(cellFormat, f.getBorder(), f.getBorderStyle());
+		}
+		if (f.getAlignment() != null) {
+			setAlignment(cellFormat, f.getAlignment());
+		}
+		if (f.getVerticalAlignment() != null) {
+			setVerticalAlignment(cellFormat, f.getVerticalAlignment());
+		}
 		return cellFormat;
 	}
 
 	private static WritableCellFormat getHeadCellFormat(ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
 		WritableCellFormat cellFormat;
-		String formatCode = getFormatCode(true, NumberFormats.TEXT, f.getBgColor());
+		String formatCode = getFormatCode(true, NumberFormats.TEXT, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
 		if (!cellFormats.containsKey(formatCode)) {
 			cellFormat = getCellFormat(NumberFormats.TEXT, f);
 			cellFormats.put(formatCode, cellFormat);
@@ -486,7 +567,7 @@ public final class ExcelUtil {
 
 	private static WritableCellFormat getRowCellFormat(DisplayFormat format, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
 		WritableCellFormat cellFormat;
-		String formatCode = getFormatCode(false, format, f.getBgColor());
+		String formatCode = getFormatCode(false, format, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
 		if (!cellFormats.containsKey(formatCode)) {
 			cellFormat = getCellFormat(format, f);
 			cellFormats.put(formatCode, cellFormat);
@@ -540,6 +621,27 @@ public final class ExcelUtil {
 				cellFormat.setBackground(colour);
 			} catch (WriteException e) {
 			}
+		}
+	}
+
+	private static void setBorder(WritableCellFormat cellFormat, Border border, BorderLineStyle borderStyle) {
+		try {
+			cellFormat.setBorder(border, borderStyle != null ? borderStyle : BorderLineStyle.THIN);
+		} catch (WriteException e) {
+		}
+	}
+
+	private static void setAlignment(WritableCellFormat cellFormat, Alignment alignment) {
+		try {
+			cellFormat.setAlignment(alignment);
+		} catch (WriteException e) {
+		}
+	}
+
+	private static void setVerticalAlignment(WritableCellFormat cellFormat, VerticalAlignment verticalAlignment) {
+		try {
+			cellFormat.setVerticalAlignment(verticalAlignment);
+		} catch (WriteException e) {
 		}
 	}
 

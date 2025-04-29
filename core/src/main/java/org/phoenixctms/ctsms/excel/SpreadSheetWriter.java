@@ -26,6 +26,9 @@ public class SpreadSheetWriter {
 	private boolean autoSize;
 	private boolean writeHead;
 	private Integer pageBreakAtRow;
+	private Integer rowOffsetFirstPage;
+	private Integer rowOffsetOtherPages;
+	private Integer colOffset;
 	private boolean rowColors;
 	private ExcelCellFormat headFormat;
 	private ExcelCellFormat rowFormat;
@@ -33,8 +36,22 @@ public class SpreadSheetWriter {
 	private final static boolean ENUMERATE_COLLECTIONS = false;
 	private final static boolean ENUMERATE_MAPS = false;
 
+	//	public SpreadSheetWriter(WorkbookWriter workbookWriter, HashMap<String, Integer> voFieldColumnIndexMap, int voGraphRecursionDepth, boolean omitFields, boolean autoSize,
+	//			boolean writeHead, Integer pageBreakAtRow,
+	//			boolean rowColors, ExcelCellFormat headFormat, ExcelCellFormat rowFormat) {
+	//		this(workbookWriter, voFieldColumnIndexMap, voGraphRecursionDepth, omitFields, autoSize,
+	//				writeHead, pageBreakAtRow,
+	//				null,
+	//				null,
+	//				null,
+	//				rowColors, headFormat, rowFormat);
+	//	}
 	public SpreadSheetWriter(WorkbookWriter workbookWriter, HashMap<String, Integer> voFieldColumnIndexMap, int voGraphRecursionDepth, boolean omitFields, boolean autoSize,
-			boolean writeHead, Integer pageBreakAtRow, boolean rowColors, ExcelCellFormat headFormat, ExcelCellFormat rowFormat) {
+			boolean writeHead, Integer pageBreakAtRow,
+			Integer rowOffsetFirstPage,
+			Integer rowOffsetOtherPages,
+			Integer colOffset,
+			boolean rowColors, ExcelCellFormat headFormat, ExcelCellFormat rowFormat) {
 		voColumns = new ArrayList<VOColumn>();
 		this.workbookWriter = workbookWriter;
 		this.voFieldColumnIndexMap = voFieldColumnIndexMap;
@@ -43,6 +60,9 @@ public class SpreadSheetWriter {
 		this.autoSize = autoSize;
 		this.writeHead = writeHead;
 		this.pageBreakAtRow = pageBreakAtRow;
+		this.rowOffsetFirstPage = rowOffsetFirstPage;
+		this.rowOffsetOtherPages = rowOffsetOtherPages;
+		this.colOffset = colOffset;
 		this.rowColors = rowColors;
 		this.headFormat = headFormat;
 		this.rowFormat = rowFormat;
@@ -97,6 +117,13 @@ public class SpreadSheetWriter {
 		this.VOs = VOs;
 	}
 
+	private int getColIndex(int c) {
+		if (colOffset != null) {
+			return c + colOffset;
+		}
+		return c;
+	}
+
 	private void writeFieldRow(WritableSheet spreadSheet, HashMap<String, Object> fieldRow, int maxIndexedColumnIndex, int r, ExcelCellFormat f,
 			HashMap<String, WritableCellFormat> cellFormats) throws Exception {
 		if (fieldRow != null && distinctColumnNames != null && distinctColumnNames.size() > 0) {
@@ -110,9 +137,9 @@ public class SpreadSheetWriter {
 					columnIndex = c;
 				}
 				if (fieldValue != null) {
-					ExcelUtil.writeCell(spreadSheet, columnIndex.intValue(), r, fieldValue.getClass(), fieldValue, f, cellFormats, false);
+					ExcelUtil.writeCell(spreadSheet, getColIndex(columnIndex.intValue()), r, fieldValue.getClass(), fieldValue, f, cellFormats, false);
 				} else {
-					ExcelUtil.writeCell(spreadSheet, columnIndex.intValue(), r, String.class, null, f, cellFormats, false);
+					ExcelUtil.writeCell(spreadSheet, getColIndex(columnIndex.intValue()), r, String.class, null, f, cellFormats, false);
 				}
 			}
 		}
@@ -137,10 +164,10 @@ public class SpreadSheetWriter {
 			Integer columnIndex = getColumnIndex(column.getColumnName());
 			if (columnIndex != null) {
 				if (writeHead) {
-					column.writeHead(spreadSheet, columnIndex.intValue(), r, workbookWriter.getColumnTitle(column.getColumnName()), headFormat, cellFormats);
+					column.writeHead(spreadSheet, getColIndex(columnIndex.intValue()), r, workbookWriter.getColumnTitle(column.getColumnName()), headFormat, cellFormats);
 				}
 				if (cellView != null) {
-					spreadSheet.setColumnView(columnIndex.intValue(), cellView);
+					spreadSheet.setColumnView(getColIndex(columnIndex.intValue()), cellView);
 				}
 			}
 		}
@@ -154,10 +181,10 @@ public class SpreadSheetWriter {
 					columnIndex = c;
 				}
 				if (writeHead) {
-					ExcelUtil.writeHead(spreadSheet, columnIndex.intValue(), r, columnName, headFormat, cellFormats);
+					ExcelUtil.writeHead(spreadSheet, getColIndex(columnIndex.intValue()), r, columnName, headFormat, cellFormats);
 				}
 				if (cellView != null) {
-					spreadSheet.setColumnView(columnIndex.intValue(), cellView);
+					spreadSheet.setColumnView(getColIndex(columnIndex.intValue()), cellView);
 				}
 			}
 		}
@@ -165,23 +192,33 @@ public class SpreadSheetWriter {
 	}
 
 	public WritableSheet writeSpreadSheet(WritableWorkbook workbook) throws Exception {
-		WritableSheet spreadSheet = workbook.getSheet(spreadSheetName); // The sheet with the specified name, or null if it is not found
+		WritableSheet spreadSheet = null;
+		if (CommonUtil.isEmptyString(spreadSheetName)) {
+			spreadSheet = workbook.getSheet(0);
+		} else {
+			spreadSheet = workbook.getSheet(spreadSheetName); // The sheet with the specified name, or null if it is not found
+		}
 		if (spreadSheet == null) {
 			spreadSheet = workbook.createSheet(spreadSheetName, workbook.getNumberOfSheets());
 		}
 		HashMap<String, WritableCellFormat> cellFormats = new HashMap<String, WritableCellFormat>();
-		int maxIndexedColumnIndex = writeHeadRow(spreadSheet, 0, cellFormats);
+		int r = rowOffsetFirstPage != null ? rowOffsetFirstPage : 0;
+		int maxIndexedColumnIndex = writeHeadRow(spreadSheet, r, cellFormats);
 		int c;
-		int r = writeHead ? 1 : 0;
+		r += writeHead ? workbookWriter.getRowIncrement(null, null) : 0;
 		if (VOs != null && VOs.size() > 0) {
 			Iterator vosIt = VOs.iterator();
+			Object lastVO = null;
 			while (vosIt.hasNext()) {
 				Object vo = vosIt.next();
+				r += workbookWriter.getRowIncrement(lastVO, vo);
+				lastVO = vo;
 				boolean newPage = ((pageBreakAtRow == null) ? false : (r > 0 && (r % pageBreakAtRow.intValue()) == 0));
 				if (newPage) {
 					spreadSheet.addRowPageBreak(r);
+					r += rowOffsetOtherPages != null ? rowOffsetOtherPages : 0;
 					writeHeadRow(spreadSheet, r, cellFormats);
-					r++;
+					r += writeHead ? workbookWriter.getRowIncrement(null, null) : 0;
 				}
 				for (c = 0; c < voColumns.size(); c++) {
 					VOColumn voColumn = voColumns.get(c);
@@ -190,7 +227,7 @@ public class SpreadSheetWriter {
 						if (rowColors) {
 							rowFormat.setBgColor(workbookWriter.voToColor(vo));
 						}
-						voColumn.writeCell(spreadSheet, columnIndex.intValue(), r, vo, rowFormat, cellFormats);
+						voColumn.writeCell(spreadSheet, getColIndex(columnIndex.intValue()), r, vo, rowFormat, cellFormats);
 					}
 				}
 				if (distinctFieldRows != null && distinctFieldRows.size() > 0) {
@@ -202,22 +239,25 @@ public class SpreadSheetWriter {
 						writeFieldRow(spreadSheet, distinctFieldRows.get(id), maxIndexedColumnIndex, r, rowFormat, cellFormats);
 					}
 				}
-				r++;
 			}
 		} else if (distinctFieldRows != null && distinctFieldRows.size() > 0) {
 			Iterator<HashMap<String, Object>> fieldRowIt = distinctFieldRows.values().iterator();
+			HashMap<String, Object> lastRow = null;
 			while (fieldRowIt.hasNext()) {
+				HashMap<String, Object> row = fieldRowIt.next();
+				r += workbookWriter.getRowIncrement(lastRow, row);
+				lastRow = row;
 				boolean newPage = ((pageBreakAtRow == null) ? false : (r > 0 && (r % pageBreakAtRow.intValue()) == 0));
 				if (newPage) {
 					spreadSheet.addRowPageBreak(r);
+					r += rowOffsetOtherPages != null ? rowOffsetOtherPages : 0;
 					writeHeadRow(spreadSheet, r, cellFormats);
-					r++;
+					r += writeHead ? workbookWriter.getRowIncrement(null, null) : 0;
 				}
 				if (rowColors) {
 					rowFormat.setBgColor(null);
 				}
-				writeFieldRow(spreadSheet, fieldRowIt.next(), maxIndexedColumnIndex, r, rowFormat, cellFormats);
-				r++;
+				writeFieldRow(spreadSheet, row, maxIndexedColumnIndex, r, rowFormat, cellFormats);
 			}
 		}
 		return spreadSheet;

@@ -792,6 +792,7 @@ public interface MessageCodes {
 	public static final String PROBAND_VISIT_SCHEDULE_TRIAL_LABEL = "proband_visit_schedule_trial_label";
 	public static final String PROBAND_VISIT_SCHEDULE_ALL_TRIALS_LABEL = "proband_visit_schedule_all_trials_label";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_LABEL = "travel_expenses_visit_schedule_label";
+	public static final String VISIT_PLAN_LABEL = "visit_plan_label";
 	public static final String REIMBURSEMENTS_TRIAL_LABEL = "reimbursements_trial_label";
 	public static final String REIMBURSEMENTS_NO_TRIAL_LABEL = "reimbursements_no_trial_label";
 	public static final String TRAINING_RECORD_TRIAL_LABEL = "training_record_trial_label";

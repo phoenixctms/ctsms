@@ -25,6 +25,11 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final boolean TRIAL_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
 	public static final boolean TRIAL_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
 	public static final boolean TRIAL_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = false;
+	public static final boolean TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = false;
+	public static final Integer TRIAL_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer TRIAL_VISIT_SCHEDULE_COL_OFFSET = null;
+	public static final boolean TRIAL_VISIT_SCHEDULE_GROUP_VISITS = false;
 	public static final String PROBAND_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean PROBAND_VISIT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer PROBAND_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -41,6 +46,11 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final boolean PROBAND_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
 	public static final boolean PROBAND_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
 	public static final boolean PROBAND_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = false;
+	public static final boolean PROBAND_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = false;
+	public static final Integer PROBAND_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer PROBAND_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer PROBAND_VISIT_SCHEDULE_COL_OFFSET = null;
+	public static final boolean PROBAND_VISIT_SCHEDULE_GROUP_VISITS = false;
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -57,6 +67,11 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
 	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
 	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = false;
+	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = false;
+	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_COL_OFFSET = null;
+	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_VISITS = false;
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -73,6 +88,11 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_APPEND_HEADER_FOOTER = false;
+	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = false;
+	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_COL_OFFSET = null;
+	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_VISITS = false;
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -89,6 +109,32 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
 	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
 	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_APPEND_HEADER_FOOTER = false;
+	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = false;
+	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_COL_OFFSET = null;
+	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_GROUP_VISITS = false;
+	public static final String VISIT_PLAN_TEMPLATE_FILE_NAME = null;
+	public static final boolean VISIT_PLAN_AUTOSIZE = true;
+	public static final Integer VISIT_PLAN_PAGE_BREAK_AT_ROW = null;
+	public static final Integer VISIT_PLAN_SCALE_FACTOR = null;
+	public static final ExcelCellFormat VISIT_PLAN_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
+	public static final ExcelCellFormat VISIT_PLAN_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
+	public static final boolean VISIT_PLAN_ROW_COLORS = true;
+	public final static ArrayList<String> VISIT_PLAN_VO_FIELD_COLUMNS = new ArrayList<String>();
+	public static final boolean VISIT_PLAN_WRITEHEAD = true;
+	public static final boolean VISIT_PLAN_SHOW_ENROLLMENT_STATUS_REASON = false;
+	public static final boolean VISIT_PLAN_SHOW_ENROLLMENT_STATUS = false;
+	public static final boolean VISIT_PLAN_SHOW_ENROLLMENT_STATUS_TIMESTAMP = false;
+	public static final boolean VISIT_PLAN_SHOW_ENROLLMENT_STATUS_TYPE_IS_COUNT = false;
+	public static final boolean VISIT_PLAN_SHOW_ALIQUOT_VISIT_REIMBURSEMENT = false;
+	public static final boolean VISIT_PLAN_SHOW_FIRST_VISIT_REIMBURSEMENT = false;
+	public static final boolean VISIT_PLAN_APPEND_HEADER_FOOTER = false;
+	public static final boolean VISIT_PLAN_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = true;
+	public static final Integer VISIT_PLAN_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer VISIT_PLAN_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer VISIT_PLAN_COL_OFFSET = null;
+	public static final boolean VISIT_PLAN_GROUP_VISITS = false;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	static {
@@ -148,6 +194,17 @@ public final class VisitScheduleExcelDefaultSettings {
 		PROBAND_APPOINTMENT_SCHEDULE_VO_FIELD_COLUMNS.add("token");
 		PROBAND_APPOINTMENT_SCHEDULE_VO_FIELD_COLUMNS.add("start");
 		PROBAND_APPOINTMENT_SCHEDULE_VO_FIELD_COLUMNS.add("stop");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("name");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("group" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "token");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("group" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "title");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("visit" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "token");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("visit" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "title");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("visit" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "description");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("visit" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "type" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR
+				+ "name");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("token");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("start");
+		VISIT_PLAN_VO_FIELD_COLUMNS.add("stop");
 	}
 
 	private VisitScheduleExcelDefaultSettings() {

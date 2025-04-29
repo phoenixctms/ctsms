@@ -554,8 +554,9 @@ public class ScheduleInventoryBookingBean extends InventoryBookingBeanBase {
 	public StreamedContent getVisitScheduleExcelStreamedContent() throws Exception {
 		try {
 			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
-			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitSchedule(
-					WebUtil.getAuthentication(), bookingScheduleModel.getTrialId(), null, bookingScheduleModel.getDepartmentId(), range.getStart(), range.getStop());
+			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitAppointmentSchedule(
+					WebUtil.getAuthentication(), bookingScheduleModel.getTrialId(),
+					bookingScheduleModel.getProbandId(), bookingScheduleModel.getDepartmentId(), range.getStart(), range.getStop());
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

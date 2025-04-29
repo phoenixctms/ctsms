@@ -569,7 +569,8 @@
 							value="#{triallabels.reimbursements_all_probands_pdf_button_label}"
 							title="#{labels.reimbursements_pdf_button_label}"
 							disabled="#{reimbursementsBean.getPayOffSummary().count == 0}"
-							icon="ui-icon ui-icon-pdf">
+							icon="ui-icon ui-icon-pdf"
+							styleClass="ui-buttonset">
 							<p:fileDownload
 								value="#{reimbursementsBean.reimbursementsPdfStreamedContent}" />
 						</p:commandButton>

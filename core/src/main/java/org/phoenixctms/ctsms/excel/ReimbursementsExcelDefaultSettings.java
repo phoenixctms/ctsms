@@ -11,6 +11,9 @@ public final class ReimbursementsExcelDefaultSettings {
 	public static final boolean AUTOSIZE = true;
 	public static final boolean WRITEHEAD = true;
 	public static final Integer PAGE_BREAK_AT_ROW = null;
+	public static final Integer ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer COL_OFFSET = null;
 	public static final boolean ROW_COLORS = false;
 	public static final ExcelCellFormat HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
@@ -24,6 +27,9 @@ public final class ReimbursementsExcelDefaultSettings {
 	public static final boolean PETTY_CASH_AUTOSIZE = true;
 	public static final boolean PETTY_CASH_WRITEHEAD = true;
 	public static final Integer PETTY_CASH_PAGE_BREAK_AT_ROW = null;
+	public static final Integer PETTY_CASH_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer PETTY_CASH_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer PETTY_CASH_COL_OFFSET = null;
 	public static final boolean PETTY_CASH_ROW_COLORS = false;
 	public static final ExcelCellFormat PETTY_CASH_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat PETTY_CASH_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
@@ -37,6 +43,9 @@ public final class ReimbursementsExcelDefaultSettings {
 	public static final boolean VOUCHER_AUTOSIZE = true;
 	public static final boolean VOUCHER_WRITEHEAD = true;
 	public static final Integer VOUCHER_PAGE_BREAK_AT_ROW = null;
+	public static final Integer VOUCHER_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer VOUCHER_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer VOUCHER_COL_OFFSET = null;
 	public static final boolean VOUCHER_ROW_COLORS = true;
 	public static final ExcelCellFormat VOUCHER_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat VOUCHER_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
@@ -50,6 +59,9 @@ public final class ReimbursementsExcelDefaultSettings {
 	public static final boolean WIRE_TRANSFER_AUTOSIZE = true;
 	public static final boolean WIRE_TRANSFER_WRITEHEAD = true;
 	public static final Integer WIRE_TRANSFER_PAGE_BREAK_AT_ROW = null;
+	public static final Integer WIRE_TRANSFER_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer WIRE_TRANSFER_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer WIRE_TRANSFER_COL_OFFSET = null;
 	public static final boolean WIRE_TRANSFER_ROW_COLORS = false;
 	public static final ExcelCellFormat WIRE_TRANSFER_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat WIRE_TRANSFER_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();

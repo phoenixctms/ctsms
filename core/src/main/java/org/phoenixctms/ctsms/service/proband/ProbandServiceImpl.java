@@ -1366,6 +1366,7 @@ public class ProbandServiceImpl
 				null, null, null,
 				visitScheduleItemDao,
 				this.getProbandListStatusEntryDao(),
+				this.getProbandListEntryDao(),
 				this.getProbandAddressDao(),
 				this.getUserDao());
 		switch (style) {
@@ -1376,6 +1377,42 @@ public class ProbandServiceImpl
 			case PROBAND_TRIAL_VISIT_SCHEDULE:
 				ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 						SystemMessageCodes.VISIT_SCHEDULE_EXPORTED,
+						result, null, this.getJournalEntryDao());
+				break;
+			default:
+		}
+		return result;
+	}
+
+	@Override
+	protected VisitScheduleExcelVO handleExportVisitPlan(
+			AuthenticationVO auth, Long probandId, Long trialId) throws Exception {
+		ProbandDao probandDao = this.getProbandDao();
+		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
+		ProbandOutVO probandVO = probandDao.toProbandOutVO(proband);
+		TrialDao trialDao = this.getTrialDao();
+		TrialOutVO trialVO = trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(trialId, trialDao));
+		VisitScheduleExcelWriter.Styles style = VisitScheduleExcelWriter.Styles.VISIT_PLAN;
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Collection<VisitScheduleItem> visitScheduleItems;
+		switch (style) {
+			case VISIT_PLAN:
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), null, false, true, null);
+				break;
+			default:
+				visitScheduleItems = null;
+		}
+		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style, probandVO, trialVO,
+				null, null, null,
+				visitScheduleItemDao,
+				this.getProbandListStatusEntryDao(),
+				this.getProbandListEntryDao(),
+				this.getProbandAddressDao(),
+				this.getUserDao());
+		switch (style) {
+			case VISIT_PLAN:
+				ServiceUtil.logSystemMessage(proband, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+						SystemMessageCodes.VISIT_PLAN_EXPORTED,
 						result, null, this.getJournalEntryDao());
 				break;
 			default:

@@ -852,6 +852,27 @@
 									<h:outputLabel />
 
 									<h:outputText value="" />
+									
+									
+									<h:outputLabel for="attachvisitplans"
+										value="#{massmaillabels.mass_mail_attachvisitplans_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachvisitplans"
+											value="#{massMailBean.in.attachVisitPlans}" />
+										<p:tooltip rendered="#{enableTooltips}" for="attachvisitplans">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachvisitplans_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachvisitplans" />
+
+
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputLabel />
+
+									<h:outputText value="" />
 
 
 									<h:outputLabel for="attachecrfs"

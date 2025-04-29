@@ -189,6 +189,9 @@ public class MassMailServiceImpl
 			if (massMailIn.getAttachTrialFiles()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACH_TRIAL_FILES_NOT_FALSE);
 			}
+			//			if (massMailIn.getAttachVisitPlan()) {
+			//				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ATTACH_VISIT_PLAN_NOT_FALSE);
+			//			}
 		}
 		if (!massMailIn.getAttachTrialFiles() && massMailIn.getTrialFilesLogicalPath() != null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_NOT_NULL);
@@ -267,6 +270,7 @@ public class MassMailServiceImpl
 		massMailVO.setAttachEcrfs(massMailIn.getAttachEcrfs());
 		massMailVO.setAttachProbandLetter(massMailIn.getAttachProbandLetter());
 		massMailVO.setAttachReimbursementsPdf(massMailIn.getAttachReimbursementsPdf());
+		massMailVO.setAttachVisitPlans(massMailIn.getAttachVisitPlans());
 		if (massMailIn.getVersion() != null) {
 			massMailVO.setVersion(massMailIn.getVersion());
 		}

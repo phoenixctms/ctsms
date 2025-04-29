@@ -5616,7 +5616,78 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected VisitScheduleExcelVO handleExportVisitSchedule(
+	protected VisitScheduleExcelVO handleExportVisitScheduleItems(
+			AuthenticationVO auth, Long trialId) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
+		VisitScheduleExcelWriter.Styles style = VisitScheduleExcelWriter.Styles.TRIAL_VISIT_SCHEDULE;
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Collection visitScheduleItems;
+		Iterator it;
+		switch (style) {
+			case TRIAL_VISIT_SCHEDULE:
+				visitScheduleItems = trial.getVisitScheduleItems();
+				break;
+			default:
+				visitScheduleItems = null;
+		}
+		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style,
+				null, trialVO, null, null, null,
+				visitScheduleItemDao,
+				this.getProbandListStatusEntryDao(),
+				this.getProbandListEntryDao(),
+				this.getProbandAddressDao(),
+				this.getUserDao());
+		switch (style) {
+			case TRIAL_VISIT_SCHEDULE:
+				ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+						SystemMessageCodes.VISIT_SCHEDULE_ITEMS_EXPORTED, result, null, this.getJournalEntryDao());
+				break;
+			default:
+		}
+		return result;
+	}
+
+	@Override
+	protected VisitScheduleExcelVO handleExportTravelExpensesVisitSchedule(
+			AuthenticationVO auth, Long trialId, Long probandId) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
+		ProbandDao probandDao = this.getProbandDao();
+		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
+		ProbandOutVO probandVO = probandVO = probandDao.toProbandOutVO(proband);
+		VisitScheduleExcelWriter.Styles style = VisitScheduleExcelWriter.Styles.TRAVEL_EXPENSES_VISIT_SCHEDULE;
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Collection visitScheduleItems;
+		Iterator it;
+		switch (style) {
+			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
+				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, false, true, null);
+				break;
+			default:
+				visitScheduleItems = null;
+		}
+		VisitScheduleExcelVO result = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, style,
+				probandVO, trialVO, null, null, null,
+				visitScheduleItemDao,
+				this.getProbandListStatusEntryDao(),
+				this.getProbandListEntryDao(),
+				this.getProbandAddressDao(),
+				this.getUserDao());
+		switch (style) {
+			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
+				ServiceUtil.logSystemMessage(proband, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+						SystemMessageCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
+				break;
+			default:
+		}
+		return result;
+	}
+
+	@Override
+	protected VisitScheduleExcelVO handleExportVisitAppointmentSchedule(
 			AuthenticationVO auth, Long trialId, Long probandId, Long trialDepartmentId, Date from, Date to) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = null;
@@ -5637,29 +5708,14 @@ public class TrialServiceImpl
 		if (trialDepartmentId != null) {
 			trialDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(trialDepartmentId, departmentDao));
 		}
-		VisitScheduleExcelWriter.Styles style;
-		if (trialVO != null) {
-			if (probandVO != null) {
-				style = VisitScheduleExcelWriter.Styles.TRAVEL_EXPENSES_VISIT_SCHEDULE;
-			} else {
-				style = VisitScheduleExcelWriter.Styles.TRIAL_VISIT_SCHEDULE;
-			}
-		} else {
-			style = VisitScheduleExcelWriter.Styles.PROBAND_APPOINTMENT_SCHEDULE;
-		}
+		VisitScheduleExcelWriter.Styles style = VisitScheduleExcelWriter.Styles.PROBAND_APPOINTMENT_SCHEDULE;
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		Collection visitScheduleItems;
 		Iterator it;
 		switch (style) {
-			case TRIAL_VISIT_SCHEDULE:
-				visitScheduleItems = trial.getVisitScheduleItems();
-				break;
-			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
-				visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trialVO.getId(), null, null, probandVO.getId(), true, false, true, null);
-				break;
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				visitScheduleItems = new ArrayList<VisitScheduleAppointmentVO>();
-				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, null, null, null,
+				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, probandId, null, null,
 						false, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 				while (it.hasNext()) {
 					Object[] visitScheduleItemProband = (Object[]) it.next();
@@ -5675,19 +5731,15 @@ public class TrialServiceImpl
 				probandVO, trialVO, trialDepartmentVO, from, to,
 				visitScheduleItemDao,
 				this.getProbandListStatusEntryDao(),
+				this.getProbandListEntryDao(),
 				this.getProbandAddressDao(),
 				this.getUserDao());
 		switch (style) {
-			case TRIAL_VISIT_SCHEDULE:
-				ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
-						SystemMessageCodes.VISIT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
-				break;
-			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
-				ServiceUtil.logSystemMessage(proband, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
-						SystemMessageCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
-				break;
 			case PROBAND_APPOINTMENT_SCHEDULE:
-				if (trial != null) { //not implemented atm
+				if (proband != null) {
+					ServiceUtil.logSystemMessage(proband, result.getProband(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
+							SystemMessageCodes.PROBAND_APPOINTMENT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
+				} else if (trial != null) { //not implemented atm
 					ServiceUtil.logSystemMessage(trial, result.getTrial(), CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 							SystemMessageCodes.PROBAND_APPOINTMENT_SCHEDULE_EXPORTED, result, null, this.getJournalEntryDao());
 				} else {

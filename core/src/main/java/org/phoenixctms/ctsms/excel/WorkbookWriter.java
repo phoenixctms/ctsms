@@ -85,6 +85,16 @@ public abstract class WorkbookWriter implements ExcelWriter, ExcelOutput {
 
 	protected abstract void updateExcelVO();
 
+	protected int getRowIncrement(Object lastRow, Object row) {
+		if (lastRow != null) {
+			return 1;
+		} else if (row == null) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
+
 	@Override
 	public void writeSpreadSheets(WritableWorkbook workbook) throws Exception {
 		Iterator<SpreadSheetWriter> spreadSheetWriterIt = getSpreadSheetWriters().iterator();

@@ -6,6 +6,9 @@ public interface InventoryBookingsExcelSettingCodes {
 	public static final String AUTOSIZE = "autosize";
 	public static final String WRITEHEAD = "writehead";
 	public static final String PAGE_BREAK_AT_ROW = "page_break_at_row";
+	public static final String ROW_OFFSET_FIRST_PAGE = "row_offset_first_page";
+	public static final String ROW_OFFSET_OTHER_PAGES = "row_offset_other_pages";
+	public static final String COL_OFFSET = "col_offset";
 	public static final String SCALE_FACTOR = "scale_factor";
 	public static final String ROW_FORMAT = "row_format";
 	public static final String HEAD_FORMAT = "head_format";

@@ -1,93 +1,93 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Standard="http://www.eclipse.org/uml2/schemas/Standard/1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.0.0/UML" xsi:schemaLocation="http://www.eclipse.org/uml2/schemas/Standard/1 pathmap://UML_PROFILES/Standard.profile.uml#_yzU58YinEdqtvbnfB2L_5w">
   <uml:Profile xmi:id="_11_5_e240333_1154527425687_111873_349" name="andromda-service" metamodelReference="_11_5_e240333_1154527425687_111873_349_packageImportcreatedOnLoad">
-    <eAnnotations xmi:id="_gpSKIhL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML">
-      <contents xmi:type="ecore:EPackage" xmi:id="_gpSKIxL-EfCxxcfnLlOhXA" name="andromdaservice" nsURI="http:///schemas/andromdaservice/_gaxH8BL-EfCxxcfnLlOhXA/0" nsPrefix="andromdaservice">
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKJBL-EfCxxcfnLlOhXA" name="SpringRemotingProtocol">
-          <eAnnotations xmi:id="_gpSKJRL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337557859_990547_75"/>
-          <eLiterals xmi:id="_gpSKJhL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKJxL-EfCxxcfnLlOhXA" name="none" value="1"/>
-          <eLiterals xmi:id="_gpSKKBL-EfCxxcfnLlOhXA" name="rmi" value="2"/>
-          <eLiterals xmi:id="_gpSKKRL-EfCxxcfnLlOhXA" name="httpinvoker" value="3"/>
-          <eLiterals xmi:id="_gpSKKhL-EfCxxcfnLlOhXA" name="burlap" value="4"/>
-          <eLiterals xmi:id="_gpSKKxL-EfCxxcfnLlOhXA" name="hessian" value="5"/>
+    <eAnnotations xmi:id="_ZZCHciShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <contents xmi:type="ecore:EPackage" xmi:id="_ZZCHcyShEfCYNOSZNVpMQA" name="andromdaservice" nsURI="http:///schemas/andromdaservice/_VvTlMCShEfCYNOSZNVpMQA/0" nsPrefix="andromdaservice">
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHdCShEfCYNOSZNVpMQA" name="SpringRemotingProtocol">
+          <eAnnotations xmi:id="_ZZCHdSShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337557859_990547_75"/>
+          <eLiterals xmi:id="_ZZCHdiShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHdyShEfCYNOSZNVpMQA" name="none" value="1"/>
+          <eLiterals xmi:id="_ZZCHeCShEfCYNOSZNVpMQA" name="rmi" value="2"/>
+          <eLiterals xmi:id="_ZZCHeSShEfCYNOSZNVpMQA" name="httpinvoker" value="3"/>
+          <eLiterals xmi:id="_ZZCHeiShEfCYNOSZNVpMQA" name="burlap" value="4"/>
+          <eLiterals xmi:id="_ZZCHeyShEfCYNOSZNVpMQA" name="hessian" value="5"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKLBL-EfCxxcfnLlOhXA" name="EjbTransactionManagement">
-          <eAnnotations xmi:id="_gpSKLRL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833726_945883_99"/>
-          <eLiterals xmi:id="_gpSKLhL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKLxL-EfCxxcfnLlOhXA" name="BEAN" value="1"/>
-          <eLiterals xmi:id="_gpSKMBL-EfCxxcfnLlOhXA" name="CONTAINER" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHfCShEfCYNOSZNVpMQA" name="EjbTransactionManagement">
+          <eAnnotations xmi:id="_ZZCHfSShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833726_945883_99"/>
+          <eLiterals xmi:id="_ZZCHfiShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHfyShEfCYNOSZNVpMQA" name="BEAN" value="1"/>
+          <eLiterals xmi:id="_ZZCHgCShEfCYNOSZNVpMQA" name="CONTAINER" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKMRL-EfCxxcfnLlOhXA" name="EjbServiceType">
-          <eAnnotations xmi:id="_gpSKMhL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833726_224593_102"/>
-          <eLiterals xmi:id="_gpSKMxL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKNBL-EfCxxcfnLlOhXA" name="Stateful" value="1"/>
-          <eLiterals xmi:id="_gpSKNRL-EfCxxcfnLlOhXA" name="Stateless" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHgSShEfCYNOSZNVpMQA" name="EjbServiceType">
+          <eAnnotations xmi:id="_ZZCHgiShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833726_224593_102"/>
+          <eLiterals xmi:id="_ZZCHgyShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHhCShEfCYNOSZNVpMQA" name="Stateful" value="1"/>
+          <eLiterals xmi:id="_ZZCHhSShEfCYNOSZNVpMQA" name="Stateless" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKNhL-EfCxxcfnLlOhXA" name="TernaryBoolean">
-          <eAnnotations xmi:id="_gpSKNxL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_6_e240333_1161094333937_968681_130"/>
-          <eLiterals xmi:id="_gpSKOBL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKORL-EfCxxcfnLlOhXA" name="true" value="1"/>
-          <eLiterals xmi:id="_gpSKOhL-EfCxxcfnLlOhXA" name="false" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHhiShEfCYNOSZNVpMQA" name="TernaryBoolean">
+          <eAnnotations xmi:id="_ZZCHhyShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_11_6_e240333_1161094333937_968681_130"/>
+          <eLiterals xmi:id="_ZZCHiCShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHiSShEfCYNOSZNVpMQA" name="true" value="1"/>
+          <eLiterals xmi:id="_ZZCHiiShEfCYNOSZNVpMQA" name="false" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKOxL-EfCxxcfnLlOhXA" name="EjbTransactionType">
-          <eAnnotations xmi:id="_gpSKPBL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337557859_467824_83"/>
-          <eLiterals xmi:id="_gpSKPRL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKPhL-EfCxxcfnLlOhXA" name="NotSupported" value="1"/>
-          <eLiterals xmi:id="_gpSKPxL-EfCxxcfnLlOhXA" name="Supports" value="2"/>
-          <eLiterals xmi:id="_gpSKQBL-EfCxxcfnLlOhXA" name="Required" value="3"/>
-          <eLiterals xmi:id="_gpSKQRL-EfCxxcfnLlOhXA" name="RequiresNew" value="4"/>
-          <eLiterals xmi:id="_gpSKQhL-EfCxxcfnLlOhXA" name="Mandatory" value="5"/>
-          <eLiterals xmi:id="_gpSKQxL-EfCxxcfnLlOhXA" name="Never" value="6"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHiyShEfCYNOSZNVpMQA" name="EjbTransactionType">
+          <eAnnotations xmi:id="_ZZCHjCShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337557859_467824_83"/>
+          <eLiterals xmi:id="_ZZCHjSShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHjiShEfCYNOSZNVpMQA" name="NotSupported" value="1"/>
+          <eLiterals xmi:id="_ZZCHjyShEfCYNOSZNVpMQA" name="Supports" value="2"/>
+          <eLiterals xmi:id="_ZZCHkCShEfCYNOSZNVpMQA" name="Required" value="3"/>
+          <eLiterals xmi:id="_ZZCHkSShEfCYNOSZNVpMQA" name="RequiresNew" value="4"/>
+          <eLiterals xmi:id="_ZZCHkiShEfCYNOSZNVpMQA" name="Mandatory" value="5"/>
+          <eLiterals xmi:id="_ZZCHkyShEfCYNOSZNVpMQA" name="Never" value="6"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKRBL-EfCxxcfnLlOhXA" name="SpringTransactionType">
-          <eAnnotations xmi:id="_gpSKRRL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337557859_949884_69"/>
-          <eLiterals xmi:id="_gpSKRhL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKRxL-EfCxxcfnLlOhXA" name="PROPAGATION_MANDATORY" value="1"/>
-          <eLiterals xmi:id="_gpSKSBL-EfCxxcfnLlOhXA" name="PROPAGATION_NESTED" value="2"/>
-          <eLiterals xmi:id="_gpSKSRL-EfCxxcfnLlOhXA" name="PROPAGATION_NEVER" value="3"/>
-          <eLiterals xmi:id="_gpSKShL-EfCxxcfnLlOhXA" name="PROPAGATION_NOT_SUPPORTED" value="4"/>
-          <eLiterals xmi:id="_gpSKSxL-EfCxxcfnLlOhXA" name="PROPAGATION_REQUIRED" value="5"/>
-          <eLiterals xmi:id="_gpSKTBL-EfCxxcfnLlOhXA" name="PROPAGATION_REQUIRES_NEW" value="6"/>
-          <eLiterals xmi:id="_gpSKTRL-EfCxxcfnLlOhXA" name="PROPAGATION_SUPPORTS" value="7"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHlCShEfCYNOSZNVpMQA" name="SpringTransactionType">
+          <eAnnotations xmi:id="_ZZCHlSShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_1fe00f9_1119337557859_949884_69"/>
+          <eLiterals xmi:id="_ZZCHliShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHlyShEfCYNOSZNVpMQA" name="PROPAGATION_MANDATORY" value="1"/>
+          <eLiterals xmi:id="_ZZCHmCShEfCYNOSZNVpMQA" name="PROPAGATION_NESTED" value="2"/>
+          <eLiterals xmi:id="_ZZCHmSShEfCYNOSZNVpMQA" name="PROPAGATION_NEVER" value="3"/>
+          <eLiterals xmi:id="_ZZCHmiShEfCYNOSZNVpMQA" name="PROPAGATION_NOT_SUPPORTED" value="4"/>
+          <eLiterals xmi:id="_ZZCHmyShEfCYNOSZNVpMQA" name="PROPAGATION_REQUIRED" value="5"/>
+          <eLiterals xmi:id="_ZZCHnCShEfCYNOSZNVpMQA" name="PROPAGATION_REQUIRES_NEW" value="6"/>
+          <eLiterals xmi:id="_ZZCHnSShEfCYNOSZNVpMQA" name="PROPAGATION_SUPPORTS" value="7"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKThL-EfCxxcfnLlOhXA" name="EjbViewType">
-          <eAnnotations xmi:id="_gpSKTxL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_2_12ab03bf_1122060056406_374453_0"/>
-          <eLiterals xmi:id="_gpSKUBL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKURL-EfCxxcfnLlOhXA" name="local" value="1"/>
-          <eLiterals xmi:id="_gpSKUhL-EfCxxcfnLlOhXA" name="remote" value="2"/>
-          <eLiterals xmi:id="_gpSKUxL-EfCxxcfnLlOhXA" name="both" value="3"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHniShEfCYNOSZNVpMQA" name="EjbViewType">
+          <eAnnotations xmi:id="_ZZCHnyShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_0_2_12ab03bf_1122060056406_374453_0"/>
+          <eLiterals xmi:id="_ZZCHoCShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHoSShEfCYNOSZNVpMQA" name="local" value="1"/>
+          <eLiterals xmi:id="_ZZCHoiShEfCYNOSZNVpMQA" name="remote" value="2"/>
+          <eLiterals xmi:id="_ZZCHoyShEfCYNOSZNVpMQA" name="both" value="3"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKVBL-EfCxxcfnLlOhXA" name="EjbMdbSubscriptionDurabilityType">
-          <eAnnotations xmi:id="_gpSKVRL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833711_619951_90"/>
-          <eLiterals xmi:id="_gpSKVhL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKVxL-EfCxxcfnLlOhXA" name="Durable" value="1"/>
-          <eLiterals xmi:id="_gpSKWBL-EfCxxcfnLlOhXA" name="NonDurable" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHpCShEfCYNOSZNVpMQA" name="EjbMdbSubscriptionDurabilityType">
+          <eAnnotations xmi:id="_ZZCHpSShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833711_619951_90"/>
+          <eLiterals xmi:id="_ZZCHpiShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHpyShEfCYNOSZNVpMQA" name="Durable" value="1"/>
+          <eLiterals xmi:id="_ZZCHqCShEfCYNOSZNVpMQA" name="NonDurable" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKWRL-EfCxxcfnLlOhXA" name="EjbMdbDestinationType">
-          <eAnnotations xmi:id="_gpSKWhL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833711_204308_93"/>
-          <eLiterals xmi:id="_gpSKWxL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKXBL-EfCxxcfnLlOhXA" name="javax.jms.Queue" value="1"/>
-          <eLiterals xmi:id="_gpSKXRL-EfCxxcfnLlOhXA" name="javax.jms.Topic" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHqSShEfCYNOSZNVpMQA" name="EjbMdbDestinationType">
+          <eAnnotations xmi:id="_ZZCHqiShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833711_204308_93"/>
+          <eLiterals xmi:id="_ZZCHqyShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHrCShEfCYNOSZNVpMQA" name="javax.jms.Queue" value="1"/>
+          <eLiterals xmi:id="_ZZCHrSShEfCYNOSZNVpMQA" name="javax.jms.Topic" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKXhL-EfCxxcfnLlOhXA" name="EjbMdbAcknowledgeMode">
-          <eAnnotations xmi:id="_gpSKXxL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833711_902139_96"/>
-          <eLiterals xmi:id="_gpSKYBL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKYRL-EfCxxcfnLlOhXA" name="AUTO_ACKNOWLEDGE" value="1"/>
-          <eLiterals xmi:id="_gpSKYhL-EfCxxcfnLlOhXA" name="DUPS_OK_ACKNOWLEDGE" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHriShEfCYNOSZNVpMQA" name="EjbMdbAcknowledgeMode">
+          <eAnnotations xmi:id="_ZZCHryShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833711_902139_96"/>
+          <eLiterals xmi:id="_ZZCHsCShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHsSShEfCYNOSZNVpMQA" name="AUTO_ACKNOWLEDGE" value="1"/>
+          <eLiterals xmi:id="_ZZCHsiShEfCYNOSZNVpMQA" name="DUPS_OK_ACKNOWLEDGE" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKYxL-EfCxxcfnLlOhXA" name="EjbPersistenceUnitType">
-          <eAnnotations xmi:id="_gpSKZBL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833726_968699_105"/>
-          <eLiterals xmi:id="_gpSKZRL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKZhL-EfCxxcfnLlOhXA" name="TRANSACTION" value="1"/>
-          <eLiterals xmi:id="_gpSKZxL-EfCxxcfnLlOhXA" name="EXTENDED" value="2"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHsyShEfCYNOSZNVpMQA" name="EjbPersistenceUnitType">
+          <eAnnotations xmi:id="_ZZCHtCShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141264833726_968699_105"/>
+          <eLiterals xmi:id="_ZZCHtSShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHtiShEfCYNOSZNVpMQA" name="TRANSACTION" value="1"/>
+          <eLiterals xmi:id="_ZZCHtyShEfCYNOSZNVpMQA" name="EXTENDED" value="2"/>
         </eClassifiers>
-        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_gpSKaBL-EfCxxcfnLlOhXA" name="EjbServiceFlushMode">
-          <eAnnotations xmi:id="_gpSKaRL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141265110836_846841_163"/>
-          <eLiterals xmi:id="_gpSKahL-EfCxxcfnLlOhXA" name="default"/>
-          <eLiterals xmi:id="_gpSKaxL-EfCxxcfnLlOhXA" name="AUTO" value="1"/>
-          <eLiterals xmi:id="_gpSKbBL-EfCxxcfnLlOhXA" name="COMMIT" value="2"/>
-          <eLiterals xmi:id="_gpSKbRL-EfCxxcfnLlOhXA" name="NEVER" value="3"/>
+        <eClassifiers xmi:type="ecore:EEnum" xmi:id="_ZZCHuCShEfCYNOSZNVpMQA" name="EjbServiceFlushMode">
+          <eAnnotations xmi:id="_ZZCHuSShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML" references="_9_5_1_192d044b_1141265110836_846841_163"/>
+          <eLiterals xmi:id="_ZZCHuiShEfCYNOSZNVpMQA" name="default"/>
+          <eLiterals xmi:id="_ZZCHuyShEfCYNOSZNVpMQA" name="AUTO" value="1"/>
+          <eLiterals xmi:id="_ZZCHvCShEfCYNOSZNVpMQA" name="COMMIT" value="2"/>
+          <eLiterals xmi:id="_ZZCHvSShEfCYNOSZNVpMQA" name="NEVER" value="3"/>
         </eClassifiers>
       </contents>
     </eAnnotations>
@@ -131,8 +131,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399515_275880_253" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399515_970255_252" name=""/>
       </ownedEnd>
-      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399515_341234_250"/>
       <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399515_171755_251"/>
+      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399515_341234_250"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Enumeration" xmi:id="_11_6_e240333_1161094333937_968681_130" name="TernaryBoolean">
       <ownedLiteral xmi:id="_11_6_e240333_1161094355078_618877_133" name="default"/>
@@ -291,8 +291,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399546_838106_302" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399546_487354_301" name=""/>
       </ownedEnd>
-      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399546_421445_299"/>
       <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399546_49900_300"/>
+      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399546_421445_299"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527399500_203440_238" name="" navigableOwnedEnd="_11_5_e240333_1154527399515_726033_240">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527399515_726033_240" name="extension_DataSource" visibility="private" aggregation="composite" association="_11_5_e240333_1154527399500_203440_238">
@@ -300,8 +300,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399515_782704_242" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399515_830859_241" name=""/>
       </ownedEnd>
-      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399515_726033_240"/>
       <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399500_759891_239"/>
+      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399515_726033_240"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527399468_375851_104" name="" navigableOwnedEnd="_11_5_e240333_1154527399468_460950_106">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527399468_460950_106" name="extension_PostActivate" visibility="private" aggregation="composite" association="_11_5_e240333_1154527399468_375851_104">
@@ -309,8 +309,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399468_838681_108" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399468_306497_107" name=""/>
       </ownedEnd>
-      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399468_460950_106"/>
       <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399468_536404_105"/>
+      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399468_460950_106"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527399500_33207_221" name="" navigableOwnedEnd="_11_5_e240333_1154527399500_797241_223">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527399500_797241_223" name="extension_PersistenceContext" visibility="private" aggregation="composite" association="_11_5_e240333_1154527399500_33207_221">
@@ -318,8 +318,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399500_817089_225" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399500_543525_224" name=""/>
       </ownedEnd>
-      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399500_834928_222"/>
       <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399500_797241_223"/>
+      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399500_834928_222"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527399546_194828_308" name="" navigableOwnedEnd="_11_5_e240333_1154527399546_554636_310">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527399546_554636_310" name="extension_UserTransaction" visibility="private" aggregation="composite" association="_11_5_e240333_1154527399546_194828_308">
@@ -327,8 +327,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399546_7506_312" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399546_26232_311" name=""/>
       </ownedEnd>
-      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399546_554636_310"/>
       <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399546_150097_309"/>
+      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399546_554636_310"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527399484_886931_115" name="" navigableOwnedEnd="_11_5_e240333_1154527399484_592886_117">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527399484_592886_117" name="extension_MessageDriven" visibility="private" aggregation="composite" association="_11_5_e240333_1154527399484_886931_115">
@@ -336,8 +336,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399484_464684_119" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399484_227479_118" name=""/>
       </ownedEnd>
-      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399484_592886_117"/>
       <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399484_938436_116"/>
+      <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399484_592886_117"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_5_e240333_1154527399531_355067_261" name="" navigableOwnedEnd="_11_5_e240333_1154527399531_259740_263">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_5_e240333_1154527399531_259740_263" name="extension_ServiceRef" visibility="private" aggregation="composite" association="_11_5_e240333_1154527399531_355067_261">
@@ -345,8 +345,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_5_e240333_1154527399531_359938_265" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_5_e240333_1154527399531_644724_264" name=""/>
       </ownedEnd>
-      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399531_662083_262"/>
       <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_5_e240333_1154527399531_259740_263"/>
+      <memberEnd href="andromda-common.profile.uml#_11_5_e240333_1154527399531_662083_262"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_6_e240333_1161095327375_796746_146" name="" navigableOwnedEnd="_11_6_e240333_1161095327375_608427_148">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_6_e240333_1161095327375_608427_148" name="extension_SecuredElement" visibility="private" aggregation="composite" association="_11_6_e240333_1161095327375_796746_146">
@@ -363,8 +363,8 @@
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_11_6_e240333_1161095327390_996728_155" name="" value="1"/>
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_11_6_e240333_1161095327390_980718_154" name=""/>
       </ownedEnd>
-      <memberEnd href="andromda-common.profile.uml#_11_6_e240333_1161095327390_491502_152"/>
       <memberEnd xmi:type="uml:ExtensionEnd" href="#_11_6_e240333_1161095327390_868101_153"/>
+      <memberEnd href="andromda-common.profile.uml#_11_6_e240333_1161095327390_491502_152"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Extension" xmi:id="_11_6_e240333_1161095598406_333504_162" name="" navigableOwnedEnd="_11_6_e240333_1161095598406_623959_164">
       <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_11_6_e240333_1161095598406_623959_164" name="extension_InterceptorOperation" visibility="private" aggregation="composite" association="_11_6_e240333_1161095598406_333504_162">
@@ -376,11 +376,11 @@
       <memberEnd href="andromda-common.profile.uml#_11_6_e240333_1161095598406_123937_163"/>
     </packagedElement>
     <profileApplication xmi:id="_0profileApplicationandromda-service">
-      <eAnnotations xmi:id="_g8THuBL-EfCxxcfnLlOhXA" source="http://www.eclipse.org/uml2/2.0.0/UML">
+      <eAnnotations xmi:id="_ZyPPIiShEfCYNOSZNVpMQA" source="http://www.eclipse.org/uml2/2.0.0/UML">
         <references xmi:type="ecore:EPackage" href="pathmap://UML_PROFILES/Standard.profile.uml#_yzU58YinEdqtvbnfB2L_5w"/>
       </eAnnotations>
       <appliedProfile href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
     </profileApplication>
   </uml:Profile>
-  <Standard:ModelLibrary xmi:id="_g8THuRL-EfCxxcfnLlOhXA" base_Package="_11_5_e240333_1154527425687_111873_349"/>
+  <Standard:ModelLibrary xmi:id="_ZyP2MCShEfCYNOSZNVpMQA" base_Package="_11_5_e240333_1154527425687_111873_349"/>
 </xmi:XMI>

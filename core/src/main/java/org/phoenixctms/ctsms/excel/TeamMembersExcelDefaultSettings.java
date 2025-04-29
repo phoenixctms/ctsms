@@ -10,6 +10,9 @@ public final class TeamMembersExcelDefaultSettings {
 	public static final int VO_GRAPH_RECURSION_DEPTH = 2;
 	public static final String SPREADSHEET_NAME = null;
 	public static final Integer PAGE_BREAK_AT_ROW = null;
+	public static final Integer ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer COL_OFFSET = null;
 	public static final Integer SCALE_FACTOR = null;
 	public static final ExcelCellFormat HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
 	public static final ExcelCellFormat ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
