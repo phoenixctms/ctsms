@@ -799,6 +799,7 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_TRIAL_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_trial_files_logical_path_not_null";
 	public static final String MASS_MAIL_PROBAND_FILES_LOGICAL_PATH_NOT_NULL = "mass_mail_proband_files_logical_path_not_null";
 	public static final String MASS_MAIL_ATTACH_TRIAL_FILES_NOT_FALSE = "mass_mail_attach_trial_files_not_false";
+	//public static final String MASS_MAIL_ATTACH_VISIT_PLAN_NOT_FALSE = "mass_mail_attach_visit_plan_not_false";
 	public static final String MASS_MAIL_RECIPIENT_ALREADY_EXISTS = "mass_mail_recipient_already_exists";
 	public static final String EMAIL_EMPTY_SUBJECT = "email_empty_subject";
 	public static final String EMAIL_EMPTY_MESSAGE = "email_empty_message";
@@ -814,6 +815,7 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_NO_PROBAND_FILES_ATTACHMENTS = "mass_mail_no_proband_files_attachments";
 	public static final String MASS_MAIL_NO_INQUIRIES_ATTACHMENT = "mass_mail_no_inquiries_attachment";
 	public static final String MASS_MAIL_NO_PROBAND_LIST_ENTRY_TAGS_ATTACHMENT = "mass_mail_no_proband_list_entry_tags_attachment";
+	public static final String MASS_MAIL_NO_VISIT_PLANS_ATTACHMENT = "mass_mail_no_visit_plans_attachment";
 	public static final String MASS_MAIL_NO_ECRFS_ATTACHMENTS = "mass_mail_no_ecrfs_attachments";
 	public static final String MASS_MAIL_NO_PROBAND_LETTER_ATTACHMENT = "mass_mail_no_proband_letter_attachment";
 	public static final String MASS_MAIL_NO_REIMBURSEMENTS_PDF_ATTACHMENT = "mass_mail_no_reimbursements_pdf_attachment";

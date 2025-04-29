@@ -2591,6 +2591,7 @@ public final class ServiceUtil {
 			TrialOutVO trialVO, DepartmentVO trialDepartmentVO, Date from, Date to,
 			VisitScheduleItemDao visitScheduleItemDao,
 			ProbandListStatusEntryDao probandListStatusEntryDao,
+			ProbandListEntryDao probandListEntryDao,
 			ProbandAddressDao probandAddressDao,
 			UserDao userDao) throws Exception {
 		boolean passDecryption = CoreUtil.isPassDecryption();
@@ -2598,6 +2599,11 @@ public final class ServiceUtil {
 		writer.setTrial(trialVO);
 		writer.setProband(probandVO);
 		writer.setAddress(probandVO == null ? null : probandAddressDao.toProbandAddressOutVO(probandAddressDao.findByProbandWireTransfer(probandVO.getId())));
+		ProbandListEntryOutVO listEntryVO = null;
+		if (probandVO != null && trialVO != null) {
+			listEntryVO = probandListEntryDao.toProbandListEntryOutVO(probandListEntryDao.findByTrialProband(trialVO.getId(), probandVO.getId()));
+		}
+		writer.setGroup(listEntryVO != null ? listEntryVO.getGroup() : null);
 		writer.setTrialDepartment(trialDepartmentVO);
 		writer.setFrom(from);
 		writer.setTo(to);
@@ -2607,6 +2613,7 @@ public final class ServiceUtil {
 		boolean showEnrollmentStatusTypeIsCount = false;
 		boolean showAliquotVisitReimbursement = false;
 		boolean showFirstVisitReimbursement = false;
+		boolean showVisitScheduleAppointmentsStartStop = false;
 		switch (style) {
 			case TRIAL_VISIT_SCHEDULE:
 				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON, Bundle.VISIT_SCHEDULE_EXCEL,
@@ -2621,6 +2628,9 @@ public final class ServiceUtil {
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
 				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT, Bundle.VISIT_SCHEDULE_EXCEL,
 						VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				showVisitScheduleAppointmentsStartStop = Settings.getBoolean(VisitScheduleExcelSettingCodes.TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+						Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
 				break;
 			case PROBAND_VISIT_SCHEDULE:
 				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON, Bundle.VISIT_SCHEDULE_EXCEL,
@@ -2635,6 +2645,9 @@ public final class ServiceUtil {
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
 				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT,
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				showVisitScheduleAppointmentsStartStop = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+						Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
 				break;
 			case PROBAND_TRIAL_VISIT_SCHEDULE:
 				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON,
@@ -2649,6 +2662,10 @@ public final class ServiceUtil {
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
 				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT,
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				showVisitScheduleAppointmentsStartStop = Settings.getBoolean(
+						VisitScheduleExcelSettingCodes.PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+						Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
 				break;
 			case TRAVEL_EXPENSES_VISIT_SCHEDULE:
 				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON,
@@ -2663,6 +2680,10 @@ public final class ServiceUtil {
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
 				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT,
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				showVisitScheduleAppointmentsStartStop = Settings.getBoolean(
+						VisitScheduleExcelSettingCodes.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+						Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
 				break;
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ENROLLMENT_STATUS_REASON,
@@ -2677,13 +2698,35 @@ public final class ServiceUtil {
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
 				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT,
 						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				showVisitScheduleAppointmentsStartStop = Settings.getBoolean(
+						VisitScheduleExcelSettingCodes.PROBAND_APPOINTMENT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+						Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.PROBAND_APPOINTMENT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
+				break;
+			case VISIT_PLAN:
+				showEnrollmentStatusReason = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_ENROLLMENT_STATUS_REASON,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_ENROLLMENT_STATUS_REASON);
+				showEnrollmentStatus = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_ENROLLMENT_STATUS, Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_ENROLLMENT_STATUS);
+				showEnrollmentStatusTimestamp = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_ENROLLMENT_STATUS_TIMESTAMP,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_ENROLLMENT_STATUS_TIMESTAMP);
+				showEnrollmentStatusTypeIsCount = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_ENROLLMENT_STATUS_TYPE_IS_COUNT,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_ENROLLMENT_STATUS_TYPE_IS_COUNT);
+				showAliquotVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_ALIQUOT_VISIT_REIMBURSEMENT,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_ALIQUOT_VISIT_REIMBURSEMENT);
+				showFirstVisitReimbursement = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_FIRST_VISIT_REIMBURSEMENT,
+						Bundle.VISIT_SCHEDULE_EXCEL, VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_FIRST_VISIT_REIMBURSEMENT);
+				showVisitScheduleAppointmentsStartStop = Settings.getBoolean(VisitScheduleExcelSettingCodes.VISIT_PLAN_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP,
+						Bundle.VISIT_SCHEDULE_EXCEL,
+						VisitScheduleExcelDefaultSettings.VISIT_PLAN_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP);
 				break;
 			default:
 		}
 		ArrayList<String> distinctColumnNames;
 		if (passDecryption) {
 			distinctColumnNames = new ArrayList<String>(
-					(showEnrollmentStatusReason ? 1 : 0) +
+					(showVisitScheduleAppointmentsStartStop ? 1 : 0) +
+							(showEnrollmentStatusReason ? 1 : 0) +
 							(showEnrollmentStatus ? 1 : 0) +
 							(showEnrollmentStatusTimestamp ? 1 : 0) +
 							(showEnrollmentStatusTypeIsCount ? 1 : 0) +
@@ -2691,12 +2734,16 @@ public final class ServiceUtil {
 							(showFirstVisitReimbursement ? 1 : 0));
 		} else {
 			distinctColumnNames = new ArrayList<String>(
-					(!CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON && showEnrollmentStatusReason ? 1 : 0) +
+					(showVisitScheduleAppointmentsStartStop ? 1 : 0) +
+							(!CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON && showEnrollmentStatusReason ? 1 : 0) +
 							(showEnrollmentStatus ? 1 : 0) +
 							(showEnrollmentStatusTimestamp ? 1 : 0) +
 							(showEnrollmentStatusTypeIsCount ? 1 : 0) +
 							(showAliquotVisitReimbursement ? 1 : 0) +
 							(showFirstVisitReimbursement ? 1 : 0));
+		}
+		if (showVisitScheduleAppointmentsStartStop) {
+			distinctColumnNames.add(VisitScheduleExcelWriter.getVisitScheduleAppointmentsStartStopColumnName());
 		}
 		if ((!CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON || passDecryption) && showEnrollmentStatusReason) {
 			distinctColumnNames.add(VisitScheduleExcelWriter.getEnrollmentStatusReasonColumnName());
@@ -2728,6 +2775,8 @@ public final class ServiceUtil {
 			VisitOutVO visitVO;
 			ProbandGroupOutVO groupVO;
 			Date stop;
+			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
+			fieldKey = VisitScheduleExcelWriter.getVisitScheduleAppointmentsStartStopColumnName();
 			if (vo instanceof VisitScheduleAppointmentVO) {
 				VisitScheduleAppointmentVO visitScheduleAppointmentVO = (VisitScheduleAppointmentVO) vo;
 				probandVO = visitScheduleAppointmentVO.getProband();
@@ -2736,6 +2785,9 @@ public final class ServiceUtil {
 				visitVO = visitScheduleAppointmentVO.getVisit();
 				groupVO = visitScheduleAppointmentVO.getGroup();
 				stop = visitScheduleAppointmentVO.getStop();
+				if (showVisitScheduleAppointmentsStartStop) {
+					fieldRow.put(fieldKey, VisitScheduleExcelWriter.getVisitScheduleAppointmentValue(visitScheduleAppointmentVO));
+				}
 			} else {
 				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO((VisitScheduleItem) vo);
 				visitScheduleItemVO.setId(id);
@@ -2744,8 +2796,10 @@ public final class ServiceUtil {
 				groupVO = visitScheduleItemVO.getGroup();
 				vo = visitScheduleItemVO;
 				stop = visitScheduleItemVO.getStop();
+				if (showVisitScheduleAppointmentsStartStop) {
+					fieldRow.put(fieldKey, VisitScheduleExcelWriter.getVisitScheduleAppointmentValue(visitScheduleItemVO));
+				}
 			}
-			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
 			if (probandVO != null) {
 				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialVO.getId(), probandVO.getId(), CommonUtil.dateToTimestamp(stop));
 				ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
@@ -2817,6 +2871,9 @@ public final class ServiceUtil {
 				break;
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				Collections.sort((List<VisitScheduleAppointmentVO>) VOs, new VisitScheduleAppointmentIntervalComparator(false));
+				break;
+			case VISIT_PLAN:
+				Collections.sort((List<VisitScheduleItemOutVO>) VOs, new VisitScheduleItemOutVOComparator(true));
 				break;
 			default:
 		}
