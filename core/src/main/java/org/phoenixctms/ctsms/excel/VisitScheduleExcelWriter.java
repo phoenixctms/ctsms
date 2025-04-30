@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import org.phoenixctms.ctsms.enumeration.Color;
+import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -375,16 +376,27 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
 			} else {
 				if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
-					if (DateCalc.isStartOfDay(visitScheduleItem.getStart()) &&
-							(DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop()))) {
-						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
-								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
-								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
+						if (DateCalc.isEndOfDay(visitScheduleItem.getStop())) {
+							return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE,
+									ExcelUtil.DEFAULT_LABEL,
+									CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+									CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+						} else if (DateCalc.isStartOfDay(visitScheduleItem.getStop())) {
+							return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE,
+									ExcelUtil.DEFAULT_LABEL,
+									CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+									CommonUtil.formatDate(DateCalc.addInterval(visitScheduleItem.getStop(), VariablePeriod.EXPLICIT, -1l), ExcelUtil.EXCEL_DATE_PATTERN,
+											L10nUtil.getLocale(Locales.USER)));
+						}
 					} else {
-						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
-								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
-								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
+						if (CommonUtil.dateDeltaSecs(visitScheduleItem.getStart(), visitScheduleItem.getStop()) == 86400l) {
+							return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+						}
 					}
+					return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+							CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
+							CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
 				} else if (visitScheduleItem.getStart() != null) {
 					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
 						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
@@ -410,16 +422,27 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 				return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
 			} else {
 				if (visitScheduleItem.getStart() != null && visitScheduleItem.getStop() != null) {
-					if (DateCalc.isStartOfDay(visitScheduleItem.getStart()) &&
-							(DateCalc.isEndOfDay(visitScheduleItem.getStop()) || DateCalc.isStartOfDay(visitScheduleItem.getStop()))) {
-						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
-								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
-								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
+						if (DateCalc.isEndOfDay(visitScheduleItem.getStop())) {
+							return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE,
+									ExcelUtil.DEFAULT_LABEL,
+									CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+									CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)));
+						} else if (DateCalc.isStartOfDay(visitScheduleItem.getStop())) {
+							return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE,
+									ExcelUtil.DEFAULT_LABEL,
+									CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER)),
+									CommonUtil.formatDate(DateCalc.addInterval(visitScheduleItem.getStop(), VariablePeriod.EXPLICIT, -1l), ExcelUtil.EXCEL_DATE_PATTERN,
+											L10nUtil.getLocale(Locales.USER)));
+						}
 					} else {
-						return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
-								CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
-								CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
+						if (CommonUtil.dateDeltaSecs(visitScheduleItem.getStart(), visitScheduleItem.getStop()) == 86400l) {
+							return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER));
+						}
 					}
+					return L10nUtil.getVisitScheduleExcelLabel(Locales.USER, VisitScheduleExcelLabelCodes.VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE, ExcelUtil.DEFAULT_LABEL,
+							CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)),
+							CommonUtil.formatDate(visitScheduleItem.getStop(), ExcelUtil.EXCEL_DATE_TIME_PATTERN, L10nUtil.getLocale(Locales.USER)));
 				} else if (visitScheduleItem.getStart() != null) {
 					if (DateCalc.isStartOfDay(visitScheduleItem.getStart())) {
 						return CommonUtil.formatDate(visitScheduleItem.getStart(), ExcelUtil.EXCEL_DATE_PATTERN, L10nUtil.getLocale(Locales.USER));
