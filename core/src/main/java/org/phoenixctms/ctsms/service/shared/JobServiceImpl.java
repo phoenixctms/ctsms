@@ -386,30 +386,32 @@ public class JobServiceImpl extends JobServiceBase {
 		jobDao.update(job);
 		JobOutVO result = jobDao.toJobOutVO(job);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		switch (job.getType().getModule()) {
-			case TRIAL_JOB:
-				logSystemMessage(job.getTrial(), result.getTrial(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
-				break;
-			case PROBAND_JOB:
-				logSystemMessage(job.getProband(), result.getProband(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
-				break;
-			case INPUT_FIELD_JOB:
-				logSystemMessage(job.getInputField(), result.getInputField(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
-				break;
-			case INVENTORY_CRITERIA_JOB:
-			case STAFF_CRITERIA_JOB:
-			case COURSE_CRITERIA_JOB:
-			case TRIAL_CRITERIA_JOB:
-			case INPUT_FIELD_CRITERIA_JOB:
-			case PROBAND_CRITERIA_JOB:
-			case USER_CRITERIA_JOB:
-			case MASS_MAIL_CRITERIA_JOB:
-				logSystemMessage(job.getCriteria(), result.getCriteria(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
-				break;
-			default:
-				// not supported for now...
-				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOB_MODULE, DefaultMessages.UNSUPPORTED_JOB_MODULE,
-						new Object[] { job.getType().getModule().toString() }));
+		if (!result.getStatus().equals(original.getStatus())) {
+			switch (job.getType().getModule()) {
+				case TRIAL_JOB:
+					logSystemMessage(job.getTrial(), result.getTrial(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
+					break;
+				case PROBAND_JOB:
+					logSystemMessage(job.getProband(), result.getProband(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
+					break;
+				case INPUT_FIELD_JOB:
+					logSystemMessage(job.getInputField(), result.getInputField(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
+					break;
+				case INVENTORY_CRITERIA_JOB:
+				case STAFF_CRITERIA_JOB:
+				case COURSE_CRITERIA_JOB:
+				case TRIAL_CRITERIA_JOB:
+				case INPUT_FIELD_CRITERIA_JOB:
+				case PROBAND_CRITERIA_JOB:
+				case USER_CRITERIA_JOB:
+				case MASS_MAIL_CRITERIA_JOB:
+					logSystemMessage(job.getCriteria(), result.getCriteria(), now, user, SystemMessageCodes.JOB_UPDATED, result, original, journalEntryDao);
+					break;
+				default:
+					// not supported for now...
+					throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_JOB_MODULE, DefaultMessages.UNSUPPORTED_JOB_MODULE,
+							new Object[] { job.getType().getModule().toString() }));
+			}
 		}
 		return result;
 	}
