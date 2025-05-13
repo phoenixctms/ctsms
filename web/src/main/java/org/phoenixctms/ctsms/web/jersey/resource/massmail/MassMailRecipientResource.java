@@ -103,8 +103,8 @@ public final class MassMailRecipientResource {
 	@PUT
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/reset")
-	public MassMailRecipientOutVO resetMassMailRecipient(@PathParam("id") Long id, @QueryParam("version") Long version)
+	public MassMailRecipientOutVO resetMassMailRecipient(@PathParam("id") Long id, @QueryParam("sent") Boolean sent, @QueryParam("version") Long version)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getMassMailService().resetMassMailRecipient(auth, id, version);
+		return WebUtil.getServiceLocator().getMassMailService().resetMassMailRecipient(auth, id, sent, version);
 	}
 }

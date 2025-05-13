@@ -169,7 +169,7 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 		Long version = WebUtil.getLongParamValue(GetParamNames.VERSION);
 		if (massMailRecipientId != null && version != null) {
 			try {
-				WebUtil.getServiceLocator().getMassMailService().resetMassMailRecipient(WebUtil.getAuthentication(), massMailRecipientId, version);
+				WebUtil.getServiceLocator().getMassMailService().resetMassMailRecipient(WebUtil.getAuthentication(), massMailRecipientId, null, version);
 				initIn();
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

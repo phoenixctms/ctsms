@@ -671,19 +671,24 @@ public class MassMailServiceImpl
 	}
 
 	@Override
-	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Long version) throws Exception {
+	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Boolean sent, Long version) throws Exception {
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
 		MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
-		ServiceUtil.resetMassMailRecipient(recipient, original);
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		User user = CoreUtil.getUser();
-		CoreUtil.modifyVersion(recipient, version.longValue(), now, user);
-		massMailRecipientDao.update(recipient);
-		MassMailRecipientOutVO result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
-		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
-		ServiceUtil.logSystemMessage(recipient.getMassMail(), result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result, original, journalEntryDao);
-		ServiceUtil.logSystemMessage(recipient.getProband(), result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result, original, journalEntryDao);
+		MassMailRecipientOutVO result;
+		if (sent == null || sent == recipient.isSent()) {
+			ServiceUtil.resetMassMailRecipient(recipient, original);
+			Timestamp now = new Timestamp(System.currentTimeMillis());
+			User user = CoreUtil.getUser();
+			CoreUtil.modifyVersion(recipient, version.longValue(), now, user);
+			massMailRecipientDao.update(recipient);
+			result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+			JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+			ServiceUtil.logSystemMessage(recipient.getMassMail(), result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result, original, journalEntryDao);
+			ServiceUtil.logSystemMessage(recipient.getProband(), result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result, original, journalEntryDao);
+		} else {
+			result = original;
+		}
 		return result;
 	}
 
