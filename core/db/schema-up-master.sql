@@ -277,6 +277,12 @@ if get_database_version() < '010801096' then
   UPDATE privacy_consent_status_type SET confirm = 'f';
   ALTER TABLE privacy_consent_status_type ALTER confirm SET NOT NULL;
   
+  ALTER TABLE mass_mail_recipient ADD COLUMN CONFIRMED BIGINT;
+  UPDATE mass_mail_recipient SET confirmed = 0;
+  ALTER TABLE mass_mail_recipient ALTER confirmed SET NOT NULL;  
+  
+  ALTER TABLE mass_mail_recipient ADD COLUMN CONFIRMED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE;
+  
   update privacy_consent_status_type set color = 'YELLOW' where name_l10n_key = 'registered';
   update privacy_consent_status_type set color = 'KHAKI' where name_l10n_key = 'existing_privacy_consent_ok';
   update privacy_consent_status_type set color = 'LIME' where name_l10n_key = 'privacy_consent_received';
