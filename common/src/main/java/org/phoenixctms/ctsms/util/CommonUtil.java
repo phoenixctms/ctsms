@@ -1325,6 +1325,8 @@ public final class CommonUtil {
 				case FEMALE:
 				case TRANSGENDER_FEMALE:
 					return femaleSalutation;
+				case DIVERSE:
+					return maleSalutation + '/' + femaleSalutation;
 				default:
 					break;
 			}

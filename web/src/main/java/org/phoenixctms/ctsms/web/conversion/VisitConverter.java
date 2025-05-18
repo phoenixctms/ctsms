@@ -21,8 +21,8 @@ public class VisitConverter extends IDVOConverter {
 		VisitOutVO visit = (VisitOutVO) (idvo != null ? getVo(idvo.getId()) : null);
 		if (visit != null) {
 			details.put(MessageCodes.CRITERION_ITEM_TIP_TRIAL_NAME, visit.getTrial().getName());
-			details.put(MessageCodes.CRITERION_ITEM_TIP_TOKEN, visit.getToken());
-			details.put(MessageCodes.CRITERION_ITEM_TIP_TITLE, visit.getTitle());
+			details.put(MessageCodes.CRITERION_ITEM_TIP_VISIT_TOKEN, visit.getToken());
+			details.put(MessageCodes.CRITERION_ITEM_TIP_VISIT_TITLE, visit.getTitle());
 		}
 		return details;
 	}

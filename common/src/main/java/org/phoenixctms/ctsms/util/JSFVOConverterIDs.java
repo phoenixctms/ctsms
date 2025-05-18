@@ -18,6 +18,7 @@ public final class JSFVOConverterIDs {
 	public final static String TIMELINE_EVENT_CONVERTER_ID = "ctsms.TimelineEvent";
 	public final static String PROBAND_GROUP_CONVERTER_ID = "ctsms.ProbandGroup";
 	public final static String VISIT_CONVERTER_ID = "ctsms.Visit";
+	public final static String VISIT_SCHEDULE_ITEM_CONVERTER_ID = "ctsms.VisitScheduleItem";
 	public final static String DEPARTMENT_CONVERTER_ID = "ctsms.Department";
 	public final static Collection<String> CONVERTER_IDS = new HashSet<String>();
 	static {
@@ -34,6 +35,7 @@ public final class JSFVOConverterIDs {
 		CONVERTER_IDS.add(TIMELINE_EVENT_CONVERTER_ID);
 		CONVERTER_IDS.add(PROBAND_GROUP_CONVERTER_ID);
 		CONVERTER_IDS.add(VISIT_CONVERTER_ID);
+		CONVERTER_IDS.add(VISIT_SCHEDULE_ITEM_CONVERTER_ID);
 		CONVERTER_IDS.add(DEPARTMENT_CONVERTER_ID);
 	}
 

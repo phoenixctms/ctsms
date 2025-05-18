@@ -113,6 +113,15 @@
 						<h:outputText
 							value="#{massMailRecipient.vo.massMail.probandListStatus.name}" />
 					</p:column>
+					
+					<p:column>
+					    <f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText value="#{probandlabels.mass_mail_recipient_probandrecipient_list_visit_schedule_items_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{applicationScopeBean.clipStringMid(applicationScopeBean.visitScheduleItemsToString(massMailRecipient.vo.massMail.visitScheduleItems))}" />
+					</p:column>
 
 					<ui:include src="../shared/massMailRecipientTableColumns.xhtml">
 						<ui:param name="showModified" value="true" />

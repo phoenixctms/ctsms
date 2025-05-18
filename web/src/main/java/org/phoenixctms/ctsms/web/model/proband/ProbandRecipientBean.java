@@ -25,6 +25,7 @@ public class ProbandRecipientBean extends MassMailRecipientBeanBase {
 		if (in != null) {
 			in.setProbandId(probandId);
 			in.setMassMailId(null);
+			in.setToken(null);
 			in.setId(null);
 			in.setVersion(null);
 		}

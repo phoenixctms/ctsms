@@ -3815,7 +3815,27 @@ public class TrialServiceImpl
 		NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
+		MassMailDao massMailDao = this.getMassMailDao();
+		HashSet<Long> visitScheduleItemIds = new HashSet<Long>();
 		Iterator<VisitScheduleItem> visitScheduleItemsIt = probandGroup.getVisitScheduleItems().iterator();
+		while (visitScheduleItemsIt.hasNext()) {
+			visitScheduleItemIds.add(visitScheduleItemsIt.next().getId());
+		}
+		Iterator<MassMail> massMailsIt = massMailDao.findByVisitScheduleItemsLocked(visitScheduleItemIds, null).iterator();
+		while (massMailsIt.hasNext()) {
+			MassMail massMail = massMailsIt.next();
+			massMailDao.lock(massMail, LockMode.PESSIMISTIC_WRITE);
+			MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
+			visitScheduleItemsIt = probandGroup.getVisitScheduleItems().iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				massMail.removeVisitScheduleItems(visitScheduleItemsIt.next());
+			}
+			CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
+			massMailDao.update(massMail);
+			MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
+			logSystemMessage(massMail, result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
+		}
+		visitScheduleItemsIt = probandGroup.getVisitScheduleItems().iterator();
 		while (visitScheduleItemsIt.hasNext()) {
 			VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
 			VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
@@ -3831,6 +3851,7 @@ public class TrialServiceImpl
 				dutyRosterTurnDao.update(dutyRosterTurn);
 			}
 			visitScheduleItem.getDutyRosterTurns().clear();
+			visitScheduleItem.getMassMails().clear();
 			visitScheduleItem.setTrial(null);
 			trial.removeVisitScheduleItems(visitScheduleItem);
 			visitScheduleItemDao.remove(visitScheduleItem);
@@ -4119,6 +4140,20 @@ public class TrialServiceImpl
 				logSystemMessage(booking.getInventory(), result, now, user, SystemMessageCodes.TRIAL_DELETED_BOOKING_UPDATED, bookingVO, original, journalEntryDao);
 			}
 			trial.getInventoryBookings().clear();
+			MassMailDao massMailDao = this.getMassMailDao();
+			Iterator<MassMail> massMailsIt = trial.getMassMails().iterator();
+			while (massMailsIt.hasNext()) {
+				MassMail massMail = massMailsIt.next();
+				massMailDao.lock(massMail, LockMode.PESSIMISTIC_WRITE);
+				MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
+				massMail.setTrial(null);
+				massMail.getVisitScheduleItems().clear();
+				CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
+				massMailDao.update(massMail);
+				MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
+				logSystemMessage(massMail, result, now, user, SystemMessageCodes.TRIAL_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
+			}
+			trial.getMassMails().clear();
 			DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 			VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 			Iterator<VisitScheduleItem> visitScheduleItemsIt = trial.getVisitScheduleItems().iterator();
@@ -4149,6 +4184,7 @@ public class TrialServiceImpl
 					}
 				}
 				visitScheduleItem.getDutyRosterTurns().clear();
+				visitScheduleItem.getMassMails().clear();
 				visitScheduleItem.setTrial(null);
 				if (group != null) {
 					group.removeVisitScheduleItems(visitScheduleItem);
@@ -4375,18 +4411,6 @@ public class TrialServiceImpl
 				logSystemMessage(course, result, now, user, SystemMessageCodes.TRIAL_DELETED_COURSE_UPDATED, courseVO, original, journalEntryDao);
 			}
 			trial.getCourses().clear();
-			MassMailDao massMailDao = this.getMassMailDao();
-			Iterator<MassMail> massMailsIt = trial.getMassMails().iterator();
-			while (massMailsIt.hasNext()) {
-				MassMail massMail = massMailsIt.next();
-				MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
-				massMail.setTrial(null);
-				CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
-				massMailDao.update(massMail);
-				MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
-				logSystemMessage(massMail, result, now, user, SystemMessageCodes.TRIAL_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
-			}
-			trial.getMassMails().clear();
 			ServiceUtil.removeNotifications(trial.getNotifications(), notificationDao, notificationRecipientDao);
 			trialDao.remove(trial);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.TRIAL_DELETED, result, null, journalEntryDao);
@@ -4461,7 +4485,27 @@ public class TrialServiceImpl
 		visit.getEcrfs().clear();
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
+		MassMailDao massMailDao = this.getMassMailDao();
+		HashSet<Long> visitScheduleItemIds = new HashSet<Long>();
 		Iterator<VisitScheduleItem> visitScheduleItemsIt = visit.getVisitScheduleItems().iterator();
+		while (visitScheduleItemsIt.hasNext()) {
+			visitScheduleItemIds.add(visitScheduleItemsIt.next().getId());
+		}
+		Iterator<MassMail> massMailsIt = massMailDao.findByVisitScheduleItemsLocked(visitScheduleItemIds, null).iterator();
+		while (massMailsIt.hasNext()) {
+			MassMail massMail = massMailsIt.next();
+			massMailDao.lock(massMail, LockMode.PESSIMISTIC_WRITE);
+			MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
+			visitScheduleItemsIt = visit.getVisitScheduleItems().iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				massMail.removeVisitScheduleItems(visitScheduleItemsIt.next());
+			}
+			CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
+			massMailDao.update(massMail);
+			MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
+			logSystemMessage(massMail, result.getTrial(), now, user, SystemMessageCodes.VISIT_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
+		}
+		visitScheduleItemsIt = visit.getVisitScheduleItems().iterator();
 		while (visitScheduleItemsIt.hasNext()) {
 			VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
 			VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
@@ -4477,6 +4521,7 @@ public class TrialServiceImpl
 				dutyRosterTurnDao.update(dutyRosterTurn);
 			}
 			visitScheduleItem.getDutyRosterTurns().clear();
+			visitScheduleItem.getMassMails().clear();
 			visitScheduleItem.setTrial(null);
 			trial.removeVisitScheduleItems(visitScheduleItem);
 			visitScheduleItemDao.remove(visitScheduleItem);
@@ -4521,6 +4566,20 @@ public class TrialServiceImpl
 			stopTag.removeStopDates(visitScheduleItem);
 			visitScheduleItem.setStopTag(null);
 		}
+		MassMailDao massMailDao = this.getMassMailDao();
+		Iterator<MassMail> massMailsIt = visitScheduleItem.getMassMails().iterator();
+		while (massMailsIt.hasNext()) {
+			MassMail massMail = massMailsIt.next();
+			massMailDao.lock(massMail, LockMode.PESSIMISTIC_WRITE);
+			MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
+			massMail.removeVisitScheduleItems(visitScheduleItem);
+			CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
+			massMailDao.update(massMail);
+			MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
+			logSystemMessage(massMail, result.getTrial(), now, user, SystemMessageCodes.VISIT_SCHEDULE_ITEM_DELETED_MASS_MAIL_UPDATED, massMailVO, original,
+					this.getJournalEntryDao());
+		}
+		visitScheduleItem.getMassMails().clear();
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 		Iterator<DutyRosterTurn> dutyRosterTurnsIt = visitScheduleItem.getDutyRosterTurns().iterator();
 		while (dutyRosterTurnsIt.hasNext()) {

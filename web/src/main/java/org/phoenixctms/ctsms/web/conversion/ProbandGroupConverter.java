@@ -21,8 +21,8 @@ public class ProbandGroupConverter extends IDVOConverter {
 		ProbandGroupOutVO group = (ProbandGroupOutVO) (idvo != null ? getVo(idvo.getId()) : null);
 		if (group != null) {
 			details.put(MessageCodes.CRITERION_ITEM_TIP_TRIAL_NAME, group.getTrial().getName());
-			details.put(MessageCodes.CRITERION_ITEM_TIP_TOKEN, group.getToken());
-			details.put(MessageCodes.CRITERION_ITEM_TIP_TITLE, group.getTitle());
+			details.put(MessageCodes.CRITERION_ITEM_TIP_GROUP_TOKEN, group.getToken());
+			details.put(MessageCodes.CRITERION_ITEM_TIP_GROUP_TITLE, group.getTitle());
 		}
 		return details;
 	}

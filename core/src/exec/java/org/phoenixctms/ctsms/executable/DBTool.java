@@ -526,6 +526,10 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SEND_NOTIFICATIONS_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getNotificationSender().processNotifications(getDepartmentL10nKeyOptionValue(line, false), getLimitOptionValue(line, false)) > 0l;
+				} else if (line.hasOption(DBToolOptions.PREPARE_MASS_MAIL_RECIPIENTS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PREPARE_MASS_MAIL_RECIPIENTS_OPT);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getMassMailSender().prepareRecipients(getAuthenticationOptionValue(line), getDepartmentL10nKeyOptionValue(line, false)) > 0l;
 				} else if (line.hasOption(DBToolOptions.SEND_MASS_MAILS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SEND_MASS_MAILS_OPT);
 					dbTool.getJobOutput().printPrelude(job);

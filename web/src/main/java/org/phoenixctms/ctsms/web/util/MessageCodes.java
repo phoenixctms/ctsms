@@ -822,6 +822,11 @@ public interface MessageCodes {
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_NAME = "criterion_item_tip_input_field_name";
 	public static final String CRITERION_ITEM_TIP_TITLE = "criterion_item_tip_title";
 	public static final String CRITERION_ITEM_TIP_TOKEN = "criterion_item_tip_token";
+	public static final String CRITERION_ITEM_TIP_VISIT_TITLE = "criterion_item_tip_visit_title";
+	public static final String CRITERION_ITEM_TIP_VISIT_TOKEN = "criterion_item_tip_visit_token";
+	public static final String CRITERION_ITEM_TIP_GROUP_TOKEN = "criterion_item_tip_group_token";
+	public static final String CRITERION_ITEM_TIP_GROUP_TITLE = "criterion_item_tip_group_title";
+	public static final String CRITERION_ITEM_TIP_DESCRIPTION = "criterion_item_tip_description";
 	public static final String CRITERION_ITEM_TIP_START_STOP = "criterion_item_tip_start_stop";
 	public static final String CRITERION_ITEM_TIP_TIMELINE_EVENT_TYPE = "criterion_item_tip_timeline_event_type";
 	public static final String CRITERION_ITEM_TIP_INPUT_FIELD_EXTERNAL_ID = "criterion_item_tip_input_field_external_id";

@@ -19,6 +19,13 @@ public class MassMailSender {
 	public MassMailSender() {
 	}
 
+	public long prepareRecipients(AuthenticationVO auth, String departmentL10nKey) throws Exception {
+		jobOutput.println("department l10n key: " + departmentL10nKey);
+		long count = massMailService.prepareRecipients(auth, ExecUtil.departmentL10nKeyToId(departmentL10nKey, departmentDao, jobOutput));
+		jobOutput.println(count + " mass mail recipients prepared");
+		return count;
+	}
+
 	public long processMassMails(AuthenticationVO auth, String departmentL10nKey, Integer limit) throws Exception {
 		jobOutput.println("department l10n key: " + departmentL10nKey);
 		PSFVO psf = new PSFVO();

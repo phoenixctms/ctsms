@@ -16,6 +16,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.mail.internet.AddressException;
@@ -35,12 +38,17 @@ import org.phoenixctms.ctsms.domain.MassMailStatusType;
 import org.phoenixctms.ctsms.domain.MassMailStatusTypeDao;
 import org.phoenixctms.ctsms.domain.MassMailType;
 import org.phoenixctms.ctsms.domain.Proband;
+import org.phoenixctms.ctsms.domain.ProbandDao;
+import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListStatusTypeDao;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.domain.VisitScheduleItem;
+import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.email.MassMailEmailSender;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -69,6 +77,7 @@ import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 /**
  * @see org.phoenixctms.ctsms.service.massmail.MassMailService
@@ -107,17 +116,19 @@ public class MassMailServiceImpl
 			}
 		}
 		if (!validState) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INITIAL_TRIAL_STATUS_TYPE, L10nUtil.getMassMailStatusTypeName(Locales.USER, state.getNameL10nKey()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_INITIAL_MASS_MAIL_STATUS_TYPE,
+					L10nUtil.getMassMailStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
 	}
 
 	private void checkMassMailInput(MassMailInVO massMailIn, Date now) throws ServiceException {
 		CheckIDUtil.checkDepartmentId(massMailIn.getDepartmentId(), this.getDepartmentDao());
 		MassMailType massMailType = CheckIDUtil.checkMassMailTypeId(massMailIn.getTypeId(), this.getMassMailTypeDao());
+		Trial trial = null;
 		TrialOutVO trialVO = null;
 		if (massMailIn.getTrialId() != null) {
 			TrialDao trialDao = this.getTrialDao();
-			Trial trial = CheckIDUtil.checkTrialId(massMailIn.getTrialId(), trialDao);
+			trial = CheckIDUtil.checkTrialId(massMailIn.getTrialId(), trialDao);
 			ServiceUtil.checkTrialLocked(trial);
 			trialVO = trialDao.toTrialOutVO(trial);
 		} else if (massMailType.isTrialRequired()) {
@@ -140,10 +151,41 @@ public class MassMailServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_NOT_FALSE);
 			}
 		}
+		ArrayList<VisitScheduleItemOutVO> visitScheduleItemVOs = null;
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Collection<Long> visitScheduleItemIds = massMailIn.getVisitScheduleItemIds();
+		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
+			visitScheduleItemVOs = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItemIds.size());
+			Iterator<Long> it = visitScheduleItemIds.iterator();
+			HashSet<Long> dupeCheck = new HashSet<Long>(visitScheduleItemIds.size());
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_VISIT_SCHEDULE_ITEM_ID_IS_NULL);
+				}
+				VisitScheduleItem visitScheduleItem = CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
+				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+				if (!dupeCheck.add(visitScheduleItem.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_DUPLICATE_VISIT_SCHEDULE_ITEM,
+							visitScheduleItemVO.getName());
+				}
+				if (!trial.equals(visitScheduleItem.getTrial())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_WRONG_VISIT_SCHEDULE_ITEM,
+							visitScheduleItemVO.getName(),
+							CommonUtil.trialOutVOToString(trialVO));
+				}
+				visitScheduleItemVOs.add(visitScheduleItemVO);
+			}
+		} else {
+			if (massMailType.isVisitScheduleItemsRequired()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_VISIT_SCHEDULE_ITEMS_REQUIRED,
+						L10nUtil.getMassMailTypeName(Locales.USER, massMailType.getNameL10nKey()));
+			}
+		}
 		ServiceUtil.checkLocale(massMailIn.getLocale());
 		ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(), L10nUtil.getLocales(massMailIn.getLocale()), massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				null, trialVO,
-				probandListStatusTypeVO);
+				probandListStatusTypeVO, visitScheduleItemVOs);
 		ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn), null, null, now, null, this.getTrialTagValueDao(), this.getProbandListEntryDao(),
 				this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
@@ -214,7 +256,7 @@ public class MassMailServiceImpl
 			}
 		}
 		if (!validState) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_NEW_TRIAL_STATUS_TYPE, L10nUtil.getMassMailStatusTypeName(Locales.USER, state.getNameL10nKey()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_NEW_MASS_MAIL_STATUS_TYPE, L10nUtil.getMassMailStatusTypeName(Locales.USER, state.getNameL10nKey()));
 		}
 	}
 
@@ -229,6 +271,12 @@ public class MassMailServiceImpl
 		ProbandListStatusTypeVO probandListStatusTypeVO = massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
 				.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null;
 		TrialOutVO trialVO = massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null;
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		ArrayList<VisitScheduleItemOutVO> visitScheduleItemVOs = new ArrayList<VisitScheduleItemOutVO>(massMailIn.getVisitScheduleItemIds().size());
+		Iterator<Long> it = massMailIn.getVisitScheduleItemIds().iterator();
+		while (it.hasNext()) {
+			visitScheduleItemVOs.add(visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItemDao.load(it.next())));
+		}
 		if (massMailIn.getId() != null) {
 			massMailVO.setId(massMailIn.getId());
 		}
@@ -242,6 +290,7 @@ public class MassMailServiceImpl
 		massMailVO.setType(typeVO);
 		massMailVO.setProbandListStatus(probandListStatusTypeVO);
 		massMailVO.setProbandListStatusResend(massMailIn.getProbandListStatusResend());
+		massMailVO.setVisitScheduleItems(visitScheduleItemVOs);
 		massMailVO.setTrial(trialVO);
 		massMailVO.setFromAddress(massMailIn.getFromAddress());
 		massMailVO.setFromName(massMailIn.getFromName());
@@ -390,6 +439,12 @@ public class MassMailServiceImpl
 				massMailRecipientDao.remove(recipient);
 			}
 			massMail.getRecipients().clear();
+			Iterator<VisitScheduleItem> visitScheduleItemsIt = massMail.getVisitScheduleItems().iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+				visitScheduleItem.removeMassMails(massMail);
+			}
+			massMail.getVisitScheduleItems().clear();
 			Iterator<JournalEntry> journalEntriesIt = massMail.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
 				JournalEntry journalEntry = journalEntriesIt.next();
@@ -566,13 +621,23 @@ public class MassMailServiceImpl
 
 	@Override
 	protected String handleGetSubject(AuthenticationVO auth, MassMailInVO massMailIn, Long probandId) throws ServiceException {
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		ArrayList<VisitScheduleItemOutVO> visitScheduleItemVOs = new ArrayList<VisitScheduleItemOutVO>(massMailIn.getVisitScheduleItemIds().size());
+		Iterator<Long> it = massMailIn.getVisitScheduleItemIds().iterator();
+		while (it.hasNext()) {
+			visitScheduleItemVOs.add(visitScheduleItemDao.toVisitScheduleItemOutVO(CheckIDUtil.checkVisitScheduleItemId(it.next(), visitScheduleItemDao)));
+		}
+		ProbandDao probandDao = this.getProbandDao();
+		TrialDao trialDao = this.getTrialDao();
+		ProbandListStatusTypeDao probandListStatusTypeDao = this.getProbandListStatusTypeDao();
 		return ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(),
 				L10nUtil.getLocales(massMailIn.getLocale()),
 				massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
-				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null,
-				massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null,
-				massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
-						.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null);
+				probandId != null ? probandDao.toProbandOutVO(CheckIDUtil.checkProbandId(probandId, probandDao)) : null,
+				massMailIn.getTrialId() != null ? trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(massMailIn.getTrialId(), trialDao)) : null,
+				massMailIn.getProbandListStatusId() != null ? probandListStatusTypeDao
+						.toProbandListStatusTypeVO(CheckIDUtil.checkProbandListStatusTypeId(massMailIn.getProbandListStatusId(), probandListStatusTypeDao)) : null,
+				visitScheduleItemVOs);
 	}
 
 	@Override
@@ -671,12 +736,95 @@ public class MassMailServiceImpl
 	}
 
 	@Override
+	protected long handlePrepareRecipients(AuthenticationVO auth, Long departmentId) throws Exception {
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
+		Date today = new Date();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		long count = 0;
+		VariablePeriod visitScheduleItemReminderPeriod = Settings.getVariablePeriod(SettingCodes.MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD);
+		Long visitScheduleItemReminderPeriodDays = Settings.getLongNullable(SettingCodes.MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS);
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Iterator<Map.Entry> visitScheduleItemScheduleIt = visitScheduleItemDao
+				.findVisitScheduleItemSchedule(today, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false)
+				.entrySet().iterator();
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		while (visitScheduleItemScheduleIt.hasNext()) {
+			Entry visitScheduleItemSchedule = visitScheduleItemScheduleIt.next();
+			Long probandId = (Long) visitScheduleItemSchedule.getKey();
+			Iterator<VisitScheduleItem> visitScheduleItemsIt = ((List<VisitScheduleItem>) visitScheduleItemSchedule.getValue()).iterator();
+			while (visitScheduleItemsIt.hasNext()) {
+				VisitScheduleItem visitScheduleItem = visitScheduleItemDao.load(visitScheduleItemsIt.next().getId());
+				String token = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem).getName();
+				Iterator<MassMail> massMailsIt = visitScheduleItem.getMassMails().iterator();
+				while (massMailsIt.hasNext()) {
+					MassMail massMail = massMailsIt.next();
+					CheckIDUtil.checkMassMailId(massMail.getId(), this.getMassMailDao(), LockMode.PESSIMISTIC_WRITE);
+					ArrayList<Long> probandIds = new ArrayList<Long>();
+					if (probandId != null) {
+						probandIds.add(probandId);
+					} else {
+						Iterator<ProbandListEntry> listEntriesIt = visitScheduleItem.getTrial().getProbandListEntries().iterator();
+						while (listEntriesIt.hasNext()) {
+							probandIds.add(listEntriesIt.next().getProband().getId());
+						}
+					}
+					Iterator<Long> probandIdsIt = probandIds.iterator();
+					while (probandIdsIt.hasNext()) {
+						probandId = probandIdsIt.next();
+						MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);
+						try {
+							if (recipient != null) {
+								MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+								if (!token.equals(recipient.getToken())) {
+									//massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+									ServiceUtil.resetMassMailRecipient(recipient, original);
+									recipient.setToken(token);
+									CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
+									massMailRecipientDao.update(recipient);
+									MassMailRecipientOutVO result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+									ServiceUtil.logSystemMessage(recipient.getMassMail(), result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result,
+											original,
+											journalEntryDao);
+									ServiceUtil.logSystemMessage(recipient.getProband(), result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result,
+											original,
+											journalEntryDao);
+									count++;
+								}
+							} else {
+								MassMailRecipientInVO newMassMailRecipient = new MassMailRecipientInVO();
+								newMassMailRecipient.setMassMailId(massMail.getId());
+								newMassMailRecipient.setProbandId(probandId);
+								newMassMailRecipient.setToken(token);
+								//try {
+								ServiceUtil.addMassMailRecipient(newMassMailRecipient, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
+										massMailRecipientDao,
+										this.getJournalEntryDao());
+								count++;
+								//} catch (ServiceException e) {
+								//}
+							}
+						} catch (ServiceException e) {
+						}
+					}
+				}
+			}
+		}
+		return count;
+	}
+
+	@Override
 	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Boolean sent, Long version) throws Exception {
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
 		MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		MassMailRecipientOutVO result;
-		if (sent == null || sent == recipient.isSent()) {
+		if ((sent == null || sent == recipient.isSent()) && recipient.getTimesProcessed() > 0l) {
 			ServiceUtil.resetMassMailRecipient(recipient, original);
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			User user = CoreUtil.getUser();

@@ -106,6 +106,7 @@ public final class DBToolOptions {
 	public static final String PREPARE_NOTIFICATIONS_OPT = "pn";
 	public static final String SEND_NOTIFICATIONS_OPT = "sn";
 	public static final String SEND_MASS_MAILS_OPT = "smm";
+	public static final String PREPARE_MASS_MAIL_RECIPIENTS_OPT = "pmmr";
 	public static final String REMOVE_PROBANDS_OPT = "rp";
 	public static final String DELETE_INVENTORY_OPT = "idi";
 	public static final String PERFORM_INVENTORY_DEFERRED_DELETE_OPT = "pdidi";
@@ -251,6 +252,7 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(PREPARE_NOTIFICATIONS_OPT, "prepare_notifications", "prepare notifications", 0, LockId.NOTIFICATION_LOCK_ID));
 		tasks.addOption(registerTaskOption(SEND_NOTIFICATIONS_OPT, "send_notifications", "send notifications", 0, LockId.NOTIFICATION_LOCK_ID));
 		tasks.addOption(registerTaskOption(SEND_MASS_MAILS_OPT, "send_mass_mails", "send mass mails", 0, LockId.MASS_MAIL_LOCK_ID));
+		tasks.addOption(registerTaskOption(PREPARE_MASS_MAIL_RECIPIENTS_OPT, "prepare_mass_mail_recipients", "prepare mass mail recipients", 0, LockId.MASS_MAIL_LOCK_ID));
 		tasks.addOption(registerTaskOption(RUN_DAILY_JOBS_OPT, "rund_daily_jobs", "execute daily jobs", 0, LockId.JOB_LOCK_ID));
 		tasks.addOption(registerTaskOption(RUN_WEEKLY_JOBS_OPT, "rund_weekly_jobs", "execute weekly jobs", 0, LockId.JOB_LOCK_ID));
 		tasks.addOption(registerTaskOption(RUN_MONTHLY_JOBS_OPT, "rund_monthly_jobs", "execute monthly jobs", 0, LockId.JOB_LOCK_ID));

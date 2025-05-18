@@ -785,9 +785,15 @@ public interface ServiceExceptionCodes {
 	public static final String INVALID_MASS_MAIL_STATUS_TYPE_ID = "invalid_mass_mail_status_type_id";
 	public static final String INVALID_MASS_MAIL_TYPE_ID = "invalid_mass_mail_type_id";
 	public static final String MASS_MAIL_TRIAL_REQUIRED = "mass_mail_trial_required";
+	public static final String INVALID_INITIAL_MASS_MAIL_STATUS_TYPE = "invalid_initial_mass_mail_status_type";
+	public static final String INVALID_NEW_MASS_MAIL_STATUS_TYPE = "invalid_new_mass_mail_status_type";
 	public static final String MASS_MAIL_PROBAND_LIST_STATUS_TYPE_REQUIRED = "mass_mail_proband_list_status_type_required";
 	public static final String MASS_MAIL_PROBAND_LIST_STATUS_RESEND_NOT_FALSE = "mass_mail_proband_list_status_resend_not_false";
 	public static final String MASS_MAIL_WRONG_PROBAND_LIST_STATUS_TYPE = "mass_mail_wrong_proband_list_status_type";
+	public static final String MASS_MAIL_VISIT_SCHEDULE_ITEM_ID_IS_NULL = "mass_mail_visit_schedule_item_id_is_null";
+	public static final String MASS_MAIL_DUPLICATE_VISIT_SCHEDULE_ITEM = "mass_mail_duplicate_visit_schedule_item";
+	public static final String MASS_MAIL_WRONG_VISIT_SCHEDULE_ITEM = "mass_mail_wrong_visit_schedule_item";
+	public static final String MASS_MAIL_VISIT_SCHEDULE_ITEMS_REQUIRED = "mass_mail_visit_schedule_items_required";
 	public static final String MASS_MAIL_INVALID_SUBJECT_FORMAT = "mass_mail_invalid_subject_format";
 	public static final String MASS_MAIL_INVALID_TEXT_TEMPLATE = "mass_mail_invalid_text_template";
 	public static final String MASS_MAIL_INVALID_OTHER_TO = "mass_mail_invalid_other_to";
