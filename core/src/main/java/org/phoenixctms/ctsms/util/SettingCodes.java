@@ -221,7 +221,10 @@ public interface SettingCodes {
 	public static final String TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "timeline_event_autocomplete_default_result_limit";
 	public static final String PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_group_autocomplete_default_result_limit";
 	public static final String VISIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "visit_autocomplete_default_result_limit";
+	public static final String VISIT_SCHEDULE_ITEM_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "visit_schedule_item_autocomplete_default_result_limit";
 	public static final String DEPARTMENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "department_autocomplete_default_result_limit";
+	public static final String MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD = "mass_mail_visit_schedule_item_reminder_period";
+	public static final String MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS = "mass_mail_visit_schedule_item_reminder_period_days";
 	public static final String OPS_CODE_REVISION = "ops_code_revision";
 	public static final String ALPHA_ID_REVISION = "alpha_id_revision";
 	public static final String ASP_REVISION = "asp_revision";

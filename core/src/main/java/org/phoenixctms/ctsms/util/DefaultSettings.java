@@ -36,6 +36,8 @@ public final class DefaultSettings {
 	public static final Long NOTIFICATION_EXPIRING_PASSWORD_REMINDER_PERIOD_DAYS = 10l;
 	public static final VariablePeriod NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD = VariablePeriod.EXPLICIT;
 	public static final Long NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS = 10l;
+	public static final VariablePeriod MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD = VariablePeriod.EXPLICIT;
+	public static final Long MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS = 10l;
 	public static final boolean LDAP_FAILOVER = false;
 	public static final boolean ADMIN_IGNORE_POLICY = false;
 	public static final int DISTANCE_PASSWORD_HISTORY = 0;
@@ -167,6 +169,7 @@ public final class DefaultSettings {
 	public static final Integer TIMELINE_EVENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer PROBAND_GROUP_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer VISIT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
+	public static final Integer VISIT_SCHEDULE_ITEM_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer DEPARTMENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final String OPS_CODE_REVISION = null;
 	public static final String ALPHA_ID_REVISION = null;
