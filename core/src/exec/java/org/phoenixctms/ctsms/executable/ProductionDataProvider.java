@@ -1592,22 +1592,24 @@ public class ProductionDataProvider {
 		jobOutput.println("mass mail states created");
 	}
 
-	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired) {
+	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired, boolean visitScheduleItemsRequired) {
 		MassMailType massMailType = MassMailType.Factory.newInstance();
 		massMailType.setNameL10nKey(nameL10nKey);
 		massMailType.setVisible(visible);
 		massMailType.setTrialRequired(trialRequired);
 		massMailType.setProbandListStausRequired(probandListStausRequired);
+		massMailType.setVisitScheduleItemsRequired(visitScheduleItemsRequired);
 		massMailType = massMailTypeDao.create(massMailType);
 		return massMailType;
 	}
 
 	protected void createMassMailTypes() {
-		createMassMailType("regulatory", true, false, false);
-		createMassMailType("welcome", true, false, false);
-		createMassMailType("newsletter", true, false, false);
-		createMassMailType("study_specific", true, true, false);
-		createMassMailType("enrollment", true, true, true);
+		createMassMailType("regulatory", true, false, false, false);
+		createMassMailType("welcome", true, false, false, false);
+		createMassMailType("newsletter", true, false, false, false);
+		createMassMailType("study_specific", true, true, false, false);
+		createMassMailType("enrollment", true, true, true, false);
+		createMassMailType("visit_reminder", true, true, false, true);
 		jobOutput.println("mass mail types created");
 	}
 
