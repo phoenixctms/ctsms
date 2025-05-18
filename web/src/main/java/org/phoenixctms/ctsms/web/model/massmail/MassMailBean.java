@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -30,7 +31,9 @@ import org.phoenixctms.ctsms.vo.MassMailTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
+import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -56,6 +59,11 @@ public class MassMailBean extends ManagedBeanBase {
 			MassMailTypeVO typeVO = out.getType();
 			ProbandListStatusTypeVO probandListStatus = out.getProbandListStatus();
 			TrialOutVO trial = out.getTrial();
+			in.getVisitScheduleItemIds().clear();
+			Iterator it = out.getVisitScheduleItems().iterator();
+			while (it.hasNext()) {
+				in.getVisitScheduleItemIds().add(((VisitScheduleItemOutVO) it.next()).getId());
+			}
 			in.setId(out.getId());
 			in.setName(out.getName());
 			in.setDescription(out.getDescription());
@@ -112,6 +120,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setStoreMessages(Settings.getBoolean(SettingCodes.MASS_MAIL_STORE_MESSAGES_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_STORE_MESSAGES_PRESET));
 			in.setTypeId(null);
 			in.setProbandListStatusId(null);
+			in.getVisitScheduleItemIds().clear();
 			in.setProbandListStatusResend(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET));
 			in.setTrialId(null);
@@ -164,6 +173,7 @@ public class MassMailBean extends ManagedBeanBase {
 	private MassMailStatusTypeVO massMailStatusType;
 	private ArrayList<SelectItem> probandListStatusTypes;
 	private ArrayList<SelectItem> locales;
+	private List<VisitScheduleItemOutVO> visitScheduleItems;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private Long previewProbandId;
@@ -173,6 +183,7 @@ public class MassMailBean extends ManagedBeanBase {
 
 	public MassMailBean() {
 		super();
+		visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>();
 		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 	}
@@ -541,6 +552,7 @@ public class MassMailBean extends ManagedBeanBase {
 		}
 		loadMassMailStatusType();
 		probandListStatusTypes = WebUtil.getAllProbandListStatusTypes(null);
+		loadVisitScheduleItems();
 		if (this.locales == null) {
 			this.locales = WebUtil.getLocales();
 		}
@@ -620,6 +632,15 @@ public class MassMailBean extends ManagedBeanBase {
 		} else {
 			in.setDepartmentId(null);
 		}
+		LinkedHashSet<Long> visitScheduleItemIds = new LinkedHashSet<Long>(visitScheduleItems.size()); //force unique items to prevent confusion when unselecting a duplicate item
+		Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) it.next();
+			if (visitScheduleItem != null) {
+				visitScheduleItemIds.add(visitScheduleItem.getId());
+			}
+		}
+		in.setVisitScheduleItemIds(new ArrayList<Long>(visitScheduleItemIds));
 		if (in.getAttachMassMailFiles()) {
 			in.setMassMailFilesLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getMassMailFilesLogicalPath()));
 		} else {
@@ -736,5 +757,56 @@ public class MassMailBean extends ManagedBeanBase {
 
 	private void loadDepartment() {
 		department = WebUtil.getDepartment(in.getDepartmentId());
+	}
+
+	public List<IDVO> completeVisitScheduleItem(String query) {
+		try {
+			Collection visitScheduleItemVOs = WebUtil.getServiceLocator().getToolsService().completeVisitScheduleItem(WebUtil.getAuthentication(), query, in.getTrialId(), null);
+			IDVO.transformVoCollection(visitScheduleItemVOs);
+			return (List<IDVO>) visitScheduleItemVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public List<IDVO> getVisitScheduleItems() {
+		return new IDVOList(visitScheduleItems);
+	}
+
+	public void handleVisitScheduleItemSelect(SelectEvent event) {
+	}
+
+	public void handleVisitScheduleItemUnselect(UnselectEvent event) {
+	}
+
+	private void loadVisitScheduleItems() {
+		visitScheduleItems.clear();
+		Iterator<Long> it = in.getVisitScheduleItemIds().iterator();
+		while (it.hasNext()) {
+			VisitScheduleItemOutVO visitScheduleItem = WebUtil.getVisitScheduleItem(it.next());
+			if (visitScheduleItem != null) {
+				visitScheduleItems.add(visitScheduleItem);
+			}
+		}
+	}
+
+	public void setVisitScheduleItems(List<IDVO> visitScheduleItems) {
+		if (visitScheduleItems != null) {
+			ArrayList<VisitScheduleItemOutVO> visitScheduleItemsCopy = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems.size());
+			Iterator<IDVO> it = visitScheduleItems.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					visitScheduleItemsCopy.add((VisitScheduleItemOutVO) idVo.getVo());
+				}
+			}
+			this.visitScheduleItems.clear();
+			this.visitScheduleItems.addAll(visitScheduleItemsCopy);
+		} else {
+			this.visitScheduleItems.clear();
+		}
 	}
 }

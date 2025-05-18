@@ -28,6 +28,7 @@ public abstract class MassMailRecipientBeanBase extends ManagedBeanBase {
 			MassMailOutVO massMailVO = out.getMassMail();
 			ProbandOutVO probandVO = out.getProband();
 			in.setId(out.getId());
+			in.setToken(out.getToken());
 			in.setMassMailId(massMailVO == null ? null : massMailVO.getId());
 			in.setProbandId(probandVO == null ? null : probandVO.getId());
 			in.setVersion(out.getVersion());

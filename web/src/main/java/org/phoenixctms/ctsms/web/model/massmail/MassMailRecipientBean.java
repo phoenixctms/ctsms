@@ -32,6 +32,7 @@ public class MassMailRecipientBean extends MassMailRecipientBeanBase {
 	private static void initMassMailRecipientDefaultValues(MassMailRecipientInVO in, Long massMailId) {
 		if (in != null) {
 			in.setProbandId(null);
+			in.setToken(null);
 			in.setMassMailId(massMailId);
 			in.setId(null);
 			in.setVersion(null);

@@ -747,6 +747,7 @@ public class ApplicationScopeBean {
 	private final static String PROBAND_GROUP_SEPARATOR = "; ";
 	private final static String VISIT_SEPARATOR = "; ";
 	private final static String DEPARTMENT_SEPARATOR = "; ";
+	private final static String VISIT_SCHEDULE_ITEM_SEPARATOR = "; ";
 
 	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
 		if (events != null) {
@@ -787,6 +788,21 @@ public class ApplicationScopeBean {
 					sb.append(VISIT_SEPARATOR);
 				}
 				sb.append(it.next().getTitle());
+			}
+			return sb.toString();
+		}
+		return "";
+	}
+
+	public String visitScheduleItemsToString(Collection<VisitScheduleItemOutVO> visitScheduleItems) {
+		if (visitScheduleItems != null) {
+			Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(VISIT_SCHEDULE_ITEM_SEPARATOR);
+				}
+				sb.append(it.next().getName());
 			}
 			return sb.toString();
 		}
