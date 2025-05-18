@@ -9,6 +9,7 @@ package org.phoenixctms.ctsms.domain;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,10 +20,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
@@ -32,6 +36,8 @@ import org.hibernate.loader.criteria.CriteriaQueryTranslator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemComparator;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
+import org.phoenixctms.ctsms.query.CategoryCriterion;
+import org.phoenixctms.ctsms.query.CategoryCriterion.EmptyPrefixModes;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SQLProjection;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -39,6 +45,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
@@ -653,6 +660,7 @@ public class VisitScheduleItemDaoImpl
 		if (id != null) {
 			visitScheduleItemCriteria.add(Restrictions.idEq(id));
 		}
+		//visitScheduleItemCriteria.add(Restrictions.isNotEmpty("massMails"));
 		org.hibernate.Criteria trialCriteria = null;
 		if (departmentId != null || ignoreTimelineEvents != null) {
 			trialCriteria = visitScheduleItemCriteria.createCriteria("trial");
@@ -672,6 +680,57 @@ public class VisitScheduleItemDaoImpl
 		while (it.hasNext()) {
 			ArrayList<VisitScheduleItem> visitScheduleItems = it.next();
 			ArrayList<VisitScheduleItem> reminderItems = CriteriaUtil.listReminders(visitScheduleItems, today, notify, includeAlreadyPassed, reminderPeriod, reminderPeriodDays);
+			visitScheduleItems.clear();
+			visitScheduleItems.addAll(reminderItems);
+		}
+		return result;
+		//		listExpandDateMode(visitScheduleItemCriteria, probandId, from, to, or, criteriaMap, psf)
+		//		visitScheduleItemCriteria.add(Restrictions.ge("stop", CommonUtil.dateToTimestamp(today)));
+		//		
+		////		if (psf != null) {
+		////			PSFVO sorterFilter = new PSFVO();
+		////			sorterFilter.setFilters(psf.getFilters());
+		////			sorterFilter.setSortField(psf.getSortField());
+		////			sorterFilter.setSortOrder(psf.getSortOrder());
+		////			CriteriaUtil.applyPSFVO(criteriaMap, sorterFilter); // staff is not unique in team members
+		////		} else {
+		////			visitScheduleItemCriteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+		////		}
+		//		
+		//		ArrayList<VisitScheduleItem> resultSet = CriteriaUtil.listReminders(visitScheduleItemCriteria, today, notify, includeAlreadyPassed, reminderPeriod, reminderPeriodDays);
+		//		return CriteriaUtil.applyPVO(resultSet, psf, false); // no dupes here any more
+	}
+
+	@Override
+	protected Map handleFindVisitScheduleItemSchedule(
+			Date today, Long departmentId, Boolean hasMassMails, Boolean ignoreTimelineEvents, VariablePeriod reminderPeriod,
+			Long reminderPeriodDays,
+			boolean includeAlreadyPassed)
+			throws Exception {
+		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
+		org.hibernate.Criteria trialCriteria = null;
+		if (departmentId != null || ignoreTimelineEvents != null) {
+			trialCriteria = visitScheduleItemCriteria.createCriteria("trial");
+			if (departmentId != null) {
+				trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+			}
+			if (ignoreTimelineEvents != null) {
+				trialCriteria.createCriteria("status").add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));
+			}
+		}
+		if (hasMassMails != null) {
+			if (hasMassMails) {
+				visitScheduleItemCriteria.add(Restrictions.isNotEmpty("massMails"));
+			} else {
+				visitScheduleItemCriteria.add(Restrictions.isEmpty("massMails"));
+			}
+		}
+		//applyProbandCriterions(visitScheduleItemCriteria, probandId, trialCriteria, null);
+		HashMap<Long, ArrayList<VisitScheduleItem>> result = listExpandDateModeByProband(visitScheduleItemCriteria, null, CommonUtil.dateToTimestamp(today), null);
+		Iterator<ArrayList<VisitScheduleItem>> it = result.values().iterator();
+		while (it.hasNext()) {
+			ArrayList<VisitScheduleItem> visitScheduleItems = it.next();
+			ArrayList<VisitScheduleItem> reminderItems = CriteriaUtil.listReminders(visitScheduleItems, today, null, includeAlreadyPassed, reminderPeriod, reminderPeriodDays);
 			visitScheduleItems.clear();
 			visitScheduleItems.addAll(reminderItems);
 		}
@@ -752,6 +811,60 @@ public class VisitScheduleItemDaoImpl
 			//				return (Long) visitScheduleItemCriteria.setProjection(Projections.countDistinct("id")).uniqueResult();
 			//			}
 		}
+	}
+
+	@Override
+	protected Collection<VisitScheduleItem> handleFindVisitScheduleItems(Long trialId, String nameInfix, Integer limit)
+			throws Exception {
+		Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
+		if (trialId != null) {
+			visitScheduleItemCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		visitScheduleItemCriteria.createCriteria("trial", "trial", CriteriaSpecification.LEFT_JOIN);
+		visitScheduleItemCriteria.createCriteria("visit", "visit", CriteriaSpecification.LEFT_JOIN);
+		visitScheduleItemCriteria.createCriteria("group", "group", CriteriaSpecification.LEFT_JOIN);
+		if (nameInfix != null) { // && nameInfix.length() > 0) {
+			if (nameInfix.trim().length() == 0) {
+				CategoryCriterion.apply(visitScheduleItemCriteria, new CategoryCriterion(null, "group.token", null, EmptyPrefixModes.EMPTY_ROWS));
+				CategoryCriterion.apply(visitScheduleItemCriteria, new CategoryCriterion(null, "visit.token", null, EmptyPrefixModes.EMPTY_ROWS));
+				CategoryCriterion.apply(visitScheduleItemCriteria, new CategoryCriterion(null, "token", null, EmptyPrefixModes.EMPTY_ROWS));
+			} else {
+				String[] tokens = nameInfix.split(Pattern.quote(TOKEN_SEPARATOR_STRING), 3);
+				if (tokens.length == 1) {
+					CategoryCriterion.applyOr(visitScheduleItemCriteria,
+							new CategoryCriterion(tokens[0], "group.token", MatchMode.ANYWHERE),
+							new CategoryCriterion(tokens[0], "visit.token", MatchMode.ANYWHERE),
+							new CategoryCriterion(tokens[0], "token", MatchMode.ANYWHERE));
+				} else if (tokens.length == 2) {
+					CategoryCriterion.applyAnd(visitScheduleItemCriteria,
+							Arrays.asList(
+									new CategoryCriterion(tokens[0], "visit.token", MatchMode.END),
+									new CategoryCriterion(tokens[1], "token", MatchMode.START)),
+							Arrays.asList(
+									new CategoryCriterion(tokens[0], "group.token", MatchMode.END),
+									new CategoryCriterion(tokens[1], "token", MatchMode.START)),
+							Arrays.asList(
+									new CategoryCriterion(tokens[0], "group.token", MatchMode.END),
+									new CategoryCriterion(tokens[1], "visit.token", MatchMode.START)));
+				} else if (tokens.length == 3) {
+					CategoryCriterion.applyAnd(visitScheduleItemCriteria,
+							new CategoryCriterion(tokens[0], "group.token", MatchMode.END),
+							new CategoryCriterion(tokens[1], "visit.token", MatchMode.EXACT),
+							new CategoryCriterion(tokens[2], "token", MatchMode.START));
+				}
+			}
+			//visitScheduleItemCriteria
+			//		.add(Restrictions.sqlRestriction("lower(concat(" + groupCriteria.getAlias() + ".token, ?, " + visitCriteria.getAlias() + ".token, ?, {alias}.token)) like ?",
+			//				new Object[] { TOKEN_SEPARATOR_STRING, TOKEN_SEPARATOR_STRING, MatchMode.ANYWHERE.toMatchString(nameInfix.toLowerCase()) },
+			//				new org.hibernate.type.NullableType[] { Hibernate.STRING, Hibernate.STRING, Hibernate.STRING }));
+		}
+		visitScheduleItemCriteria.addOrder(Order.asc("trial.name"));
+		visitScheduleItemCriteria.addOrder(Order.asc("group.token"));
+		visitScheduleItemCriteria.addOrder(Order.asc("visit.token"));
+		visitScheduleItemCriteria.addOrder(Order.asc("visitScheduleItem.token"));
+		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.VISIT_SCHEDULE_ITEM_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.VISIT_SCHEDULE_ITEM_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), visitScheduleItemCriteria);
+		return visitScheduleItemCriteria.list();
 	}
 
 	/**

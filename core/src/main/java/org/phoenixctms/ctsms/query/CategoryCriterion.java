@@ -3,7 +3,9 @@ package org.phoenixctms.ctsms.query;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -23,10 +25,9 @@ public class CategoryCriterion {
 	public static void applyAnd(Criteria criteria, CategoryCriterion... categoryCriterions) {
 		applyCategoryCriterions(criteria, Restrictions.conjunction(), categoryCriterions);
 	}
-
-	public static void applyAnd(Criteria criteria, List<CategoryCriterion> categoryCriterions) {
-		applyAnd(criteria, categoryCriterions.toArray(new CategoryCriterion[0]));
-	}
+	//public static void applyAnd(Criteria criteria, List<CategoryCriterion> categoryCriterions) {
+	//	applyAnd(criteria, categoryCriterions.toArray(new CategoryCriterion[0]));
+	//}
 
 	private static boolean applyCategoryCriterion(Object criteriaJunction, CategoryCriterion categoryCriterion) {
 		Criterion restriction = getCategoryCriterionRestriction(categoryCriterion);
@@ -59,9 +60,50 @@ public class CategoryCriterion {
 	public static void applyOr(Criteria criteria, CategoryCriterion... categoryCriterions) {
 		applyCategoryCriterions(criteria, Restrictions.disjunction(), categoryCriterions);
 	}
+	//public static void applyOr(Criteria criteria, List<CategoryCriterion> categoryCriterions) {
+	//	applyOr(criteria, categoryCriterions.toArray(new CategoryCriterion[0]));
+	//}
 
-	public static void applyOr(Criteria criteria, List<CategoryCriterion> categoryCriterions) {
-		applyOr(criteria, categoryCriterions.toArray(new CategoryCriterion[0]));
+	public static void applyAnd(Criteria criteria, List<CategoryCriterion>... categoryCriterions) {
+		if (criteria != null && categoryCriterions != null && categoryCriterions != null) {
+			Disjunction or = Restrictions.disjunction();
+			boolean orApplied = false;
+			for (int i = 0; i < categoryCriterions.length; i++) {
+				Conjunction and = Restrictions.conjunction();
+				boolean andApplied = false;
+				for (int j = 0; j < categoryCriterions[i].size(); j++) {
+					andApplied |= applyCategoryCriterion(and, categoryCriterions[i].get(j));
+				}
+				if (andApplied) {
+					or.add(and);
+					orApplied |= true;
+				}
+			}
+			if (orApplied) {
+				criteria.add(or);
+			}
+		}
+	}
+
+	public static void applyOr(Criteria criteria, List<CategoryCriterion>... categoryCriterions) {
+		if (criteria != null && categoryCriterions != null && categoryCriterions != null) {
+			Conjunction and = Restrictions.conjunction();
+			boolean andApplied = false;
+			for (int i = 0; i < categoryCriterions.length; i++) {
+				Disjunction or = Restrictions.disjunction();
+				boolean orApplied = false;
+				for (int j = 0; j < categoryCriterions[i].size(); j++) {
+					orApplied |= applyCategoryCriterion(or, categoryCriterions[i].get(j));
+				}
+				if (orApplied) {
+					and.add(or);
+					andApplied |= true;
+				}
+			}
+			if (andApplied) {
+				criteria.add(and);
+			}
+		}
 	}
 
 	public static Criterion getCategoryCriterionRestriction(CategoryCriterion categoryCriterion) {

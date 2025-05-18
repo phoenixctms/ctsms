@@ -7,13 +7,21 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.hibernate.Query;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.QueryUtil;
@@ -28,12 +36,15 @@ import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 /**
  * @see MassMail
  */
 public class MassMailDaoImpl
 		extends MassMailDaoBase {
+
+	private final static VOIDComparator VISIT_SCHEDULE_ITEM_ID_COMPARATOR = new VOIDComparator<VisitScheduleItemOutVO>(false);
 
 	private org.hibernate.Criteria createMassMailCriteria(String alias) {
 		org.hibernate.Criteria massMailCriteria;
@@ -83,6 +94,21 @@ public class MassMailDaoImpl
 			criteriaMap.createCriteria("status").add(Restrictions.eq("locked", locked.booleanValue()));
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		return massMailCriteria.list();
+	}
+
+	@Override
+	protected Collection<MassMail> handleFindByVisitScheduleItemsLocked(Set<Long> VisitScheduleItemIds, Boolean locked) throws Exception {
+		org.hibernate.Criteria massMailCriteria = createMassMailCriteria(null);
+		if (VisitScheduleItemIds != null && VisitScheduleItemIds.size() > 0) {
+			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", VisitScheduleItemIds));
+		} else {
+			return new ArrayList<MassMail>();
+		}
+		if (locked != null) {
+			massMailCriteria.createCriteria("status").add(Restrictions.eq("locked", locked.booleanValue()));
+		}
+		massMailCriteria.addOrder(Order.asc("id")); // save when used for lock order
 		return massMailCriteria.list();
 	}
 
@@ -184,6 +210,32 @@ public class MassMailDaoImpl
 		} else if (copyIfNull) {
 			target.setTrial(null);
 		}
+		Collection visitScheduleItemIds;
+		if ((visitScheduleItemIds = source.getVisitScheduleItemIds()).size() > 0 || copyIfNull) {
+			target.setVisitScheduleItems(toVisitScheduleItemSet(visitScheduleItemIds));
+		}
+	}
+
+	private HashSet<VisitScheduleItem> toVisitScheduleItemSet(Collection<Long> visitScheduleItemIds) { // lazyload persistentset prevention
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		HashSet<VisitScheduleItem> result = new HashSet<VisitScheduleItem>(visitScheduleItemIds.size());
+		Iterator<Long> it = visitScheduleItemIds.iterator();
+		while (it.hasNext()) {
+			result.add(visitScheduleItemDao.load(it.next()));
+		}
+		return result;
+	}
+
+	private ArrayList<VisitScheduleItemOutVO> toVisitScheduleItemOutVOCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		ArrayList<VisitScheduleItemOutVO> result = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems.size());
+		Iterator<VisitScheduleItem> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			result.add(visitScheduleItemDao.toVisitScheduleItemOutVO(it.next()));
+		}
+		Collections.sort(result, VISIT_SCHEDULE_ITEM_ID_COMPARATOR);
+		return result;
 	}
 
 	@Override
@@ -235,6 +287,14 @@ public class MassMailDaoImpl
 		} else if (copyIfNull) {
 			target.setTrial(null);
 		}
+		Collection visitScheduleItems = source.getVisitScheduleItems();
+		if (visitScheduleItems.size() > 0) {
+			visitScheduleItems = new ArrayList(visitScheduleItems); //prevent changing VO
+			this.getVisitScheduleItemDao().visitScheduleItemOutVOToEntityCollection(visitScheduleItems);
+			target.setVisitScheduleItems(visitScheduleItems); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getVisitScheduleItems().clear();
+		}
 	}
 
 	@Override
@@ -267,6 +327,17 @@ public class MassMailDaoImpl
 		if (trial != null) {
 			target.setTrialId(trial.getId());
 		}
+		target.setVisitScheduleItemIds(toVisitScheduleItemIdCollection(source.getVisitScheduleItems()));
+	}
+
+	private static ArrayList<Long> toVisitScheduleItemIdCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(visitScheduleItems.size());
+		Iterator<VisitScheduleItem> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
 	}
 
 	@Override
@@ -303,5 +374,6 @@ public class MassMailDaoImpl
 		if (trial != null) {
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
+		target.setVisitScheduleItems(toVisitScheduleItemOutVOCollection(source.getVisitScheduleItems()));
 	}
 }
