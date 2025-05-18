@@ -204,7 +204,7 @@
 											scrollHeight="#{autoCompleteScrollHeightVisitScheduleItem}"
 											completeMethod="#{massMailBean.completeVisitScheduleItem}"
 											multiple="true" var="visitScheduleItem" itemValue="#{visitScheduleItem}"
-											itemLabel="#{empty visitScheduleItem.vo.name ? '&lt;&gt;' : visitScheduleItem.vo.name}" converter="ctsms.VisitScheduleItem">
+											itemLabel="#{applicationScopeBean.getVisitScheduleItemName(visitScheduleItem.vo)}" converter="ctsms.VisitScheduleItem">
 											<p:ajax process="@this" event="itemSelect"
 												listener="#{massMailBean.handleVisitScheduleItemSelect}" />
 											<p:ajax process="@this" event="itemUnselect"
@@ -227,7 +227,7 @@
 											</p:column> -->
 											<p:column>
 												<h:outputText
-													value="#{empty visitScheduleItem.vo.name ? '&lt;&gt;' : visitScheduleItem.vo.name}" />
+													value="#{applicationScopeBean.getVisitScheduleItemName(visitScheduleItem.vo)}" />
 											</p:column>
 											<p:column>
 												<h:outputText

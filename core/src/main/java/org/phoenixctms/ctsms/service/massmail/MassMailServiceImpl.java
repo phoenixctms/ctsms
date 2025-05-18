@@ -64,7 +64,6 @@ import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
-import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.EmailMessageVO;
@@ -741,7 +740,7 @@ public class MassMailServiceImpl
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
-		Date today = DateCalc.getStartOfDay(new Date());
+		Date today = new Date();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		long count = 0;

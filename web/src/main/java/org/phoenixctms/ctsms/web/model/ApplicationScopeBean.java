@@ -748,6 +748,7 @@ public class ApplicationScopeBean {
 	private final static String VISIT_SEPARATOR = "; ";
 	private final static String DEPARTMENT_SEPARATOR = "; ";
 	private final static String VISIT_SCHEDULE_ITEM_SEPARATOR = "; ";
+	private final static String EMTPY_VISIT_SCHEDULE_ITEM_NAME = "<>";
 
 	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
 		if (events != null) {
@@ -794,6 +795,17 @@ public class ApplicationScopeBean {
 		return "";
 	}
 
+	public String getVisitScheduleItemName(VisitScheduleItemOutVO visitScheduleItem) {
+		if (visitScheduleItem != null) {
+			if (visitScheduleItem.getName() != null && visitScheduleItem.getName().length() > 0) {
+				return visitScheduleItem.getName();
+			} else {
+				return EMTPY_VISIT_SCHEDULE_ITEM_NAME;
+			}
+		}
+		return "";
+	}
+
 	public String visitScheduleItemsToString(Collection<VisitScheduleItemOutVO> visitScheduleItems) {
 		if (visitScheduleItems != null) {
 			Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
@@ -802,7 +814,7 @@ public class ApplicationScopeBean {
 				if (sb.length() > 0) {
 					sb.append(VISIT_SCHEDULE_ITEM_SEPARATOR);
 				}
-				sb.append(it.next().getName());
+				sb.append(getVisitScheduleItemName(it.next()));
 			}
 			return sb.toString();
 		}
