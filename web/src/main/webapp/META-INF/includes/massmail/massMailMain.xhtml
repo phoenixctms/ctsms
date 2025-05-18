@@ -142,10 +142,10 @@
 										</h:panelGroup>
 										<p:commandButton title="#{labels.pick_trial_button_label}"
 											icon="ui-icon ui-icon-search" type="button"
-											onclick="openTrialPickerAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
+											onclick="openTrialPickerAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName',':tabView:massmailmain_form:visitscheduleitems',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
 										<p:commandButton title="#{labels.clear_trial_button_label}"
 											icon="ui-icon ui-icon-close" type="button"
-											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
+											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:massmailmain_form:visitscheduleitems',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
 									</h:panelGrid>
 									<p:message for="trial" />
 									<h:outputLabel for="probandliststatus"
@@ -185,6 +185,66 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="probandliststatusresend" />
+									
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputLabel />
+									
+									<h:outputLabel for="visitscheduleitems"
+										value="#{massmaillabels.mass_mail_visit_schedule_items_label}" />
+									<h:panelGroup>
+										<p:autoComplete id="visitscheduleitems" required="false"
+											value="#{massMailBean.visitScheduleItems}"
+											label="#{massmaillabels.mass_mail_visit_schedule_items}"
+											styleClass="ctsms-control-larger"
+											minQueryLength="#{autoCompleteMinQueryLengthVisitScheduleItem}"
+											maxResults="#{autoCompleteMaxResultsVisitScheduleItem}"
+											queryDelay="#{autoCompleteQueryDelayVisitScheduleItem}"
+											global="#{autoCompleteGlobalVisitScheduleItem}"
+											scrollHeight="#{autoCompleteScrollHeightVisitScheduleItem}"
+											completeMethod="#{massMailBean.completeVisitScheduleItem}"
+											multiple="true" var="visitScheduleItem" itemValue="#{visitScheduleItem}"
+											itemLabel="#{empty visitScheduleItem.vo.name ? '&lt;&gt;' : visitScheduleItem.vo.name}" converter="ctsms.VisitScheduleItem">
+											<p:ajax process="@this" event="itemSelect"
+												listener="#{massMailBean.handleVisitScheduleItemSelect}" />
+											<p:ajax process="@this" event="itemUnselect"
+												listener="#{massMailBean.handleVisitScheduleItemUnselect}" />
+											<p:column rendered="#{empty massMailBean.in.trialId}">
+												<h:outputText
+													value="#{visitScheduleItem.vo.trial.name}" />
+											</p:column> 
+											<!-- <p:column>
+												<h:outputText
+													value="#{visitScheduleItem.vo.group.token}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{visitScheduleItem.vo.visit.token}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{visitScheduleItem.vo.token}" />
+											</p:column> -->
+											<p:column>
+												<h:outputText
+													value="#{empty visitScheduleItem.vo.name ? '&lt;&gt;' : visitScheduleItem.vo.name}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{applicationScopeBean.clipStringTrailing(visitScheduleItem.vo.description,96)}" />
+											</p:column>
+										</p:autoComplete>
+										<p:tooltip rendered="#{enableTooltips}" for="visitscheduleitems">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_visit_schedule_items_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="visitscheduleitems" />
+
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputLabel />
 									
 									<h:outputLabel for="storemessages"
 										value="#{massmaillabels.mass_mail_storemessages_label}" />
@@ -255,10 +315,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="massmailstatustype" />
-
-
-
-
 
 									<h:outputLabel for="start"
 										value="#{massmaillabels.mass_mail_start_label}" />

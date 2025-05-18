@@ -211,6 +211,14 @@
 									</f:facet>
 									<h:outputText value="#{massMail.vo.probandListStatus.name}" />
 								</p:column>
+								
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{triallabels.trial_association_massmails_list_visit_schedule_items_column}" />
+									</f:facet>
+									<h:outputText
+										value="#{applicationScopeBean.clipStringMid(applicationScopeBean.visitScheduleItemsToString(massMail.vo.visitScheduleItems))}" />
+								</p:column>
 
 								<p:column sortBy="#{massMail.vo.probandTo}"
 									filterBy="#{massMail.vo.probandTo}"

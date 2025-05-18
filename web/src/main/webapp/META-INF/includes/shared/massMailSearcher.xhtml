@@ -164,11 +164,23 @@
 				<p:column sortBy="#{massMail.vo.probandListStatus}"
 					filterBy="#{massMail.vo.probandListStatus.id}"
 					filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
+					<f:attribute name="visibleDefault"
+						value="#{!massMailSearchBean.picker}" />
 					<f:facet name="header">
 						<h:outputText
 							value="#{massmaillabels.search_mass_mail_result_list_proband_list_status_column}" />
 					</f:facet>
 					<h:outputText value="#{massMail.vo.probandListStatus.name}" />
+				</p:column>
+				
+				<p:column>
+				    <f:attribute name="visibleDefault"
+						value="#{!massMailSearchBean.picker}" />
+					<f:facet name="header">
+						<h:outputText value="#{massmaillabels.search_mass_mail_result_list_visit_schedule_items_column}" />
+					</f:facet>
+					<h:outputText
+						value="#{applicationScopeBean.clipStringMid(applicationScopeBean.visitScheduleItemsToString(massMail.vo.visitScheduleItems))}" />
 				</p:column>
 
 				<p:column sortBy="#{massMail.vo.locale}"
@@ -182,9 +194,6 @@
 					<h:outputText
 						value="#{applicationScopeBean.localeToDisplayString(massMail.vo.locale)}" />
 				</p:column>
-
-
-
 
 
 				<p:column sortBy="#{massMail.vo.probandTo}"
