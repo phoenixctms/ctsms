@@ -1866,7 +1866,7 @@ public final class ServiceUtil {
 		if (massMail != null) {
 			model.put(MassMailMessageTemplateParameters.SUBJECT,
 					getMassMailSubject(massMail.getSubjectFormat(), locale, massMail.getMaleSalutation(), massMail.getFemaleSalutation(), proband, massMail.getTrial(),
-							massMail.getProbandListStatus()));
+							massMail.getProbandListStatus(), massMail.getVisitScheduleItems()));
 			model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,
 					CommonUtil.getGenderSpecificSalutation(proband, massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
 			if (proband != null) {
@@ -3330,8 +3330,8 @@ public final class ServiceUtil {
 	}
 
 	public static String getMassMailSubject(String format, Locales locale, String maleSalutation, String femaleSalutation, ProbandOutVO proband, TrialOutVO trial,
-			ProbandListStatusTypeVO probandListStatusType) throws ServiceException {
-		Object[] args = new String[10];
+			ProbandListStatusTypeVO probandListStatusType, Collection<VisitScheduleItemOutVO> visitScheduleItems) throws ServiceException {
+		Object[] args = new String[10 + (visitScheduleItems != null ? 3 * visitScheduleItems.size() : 0)];
 		args[0] = CommonUtil.getGenderSpecificSalutation(proband, maleSalutation, femaleSalutation);
 		if (proband != null) {
 			args[1] = proband.getFirstName();
@@ -3369,6 +3369,19 @@ public final class ServiceUtil {
 			args[9] = L10nUtil.getProbandListStatusTypeName(locale, probandListStatusType.getNameL10nKey());
 		} else {
 			args[9] = "";
+		}
+		if (visitScheduleItems != null) {
+			int j = 10;
+			Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+			while (it.hasNext()) {
+				VisitScheduleItemOutVO visitScheduleItem = it.next();
+				args[j] = visitScheduleItem.getName();
+				j += 1;
+				args[j] = visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getTitle() : "";
+				j += 1;
+				args[j] = visitScheduleItem.getToken() != null ? visitScheduleItem.getToken() : "";
+				j += 1;
+			}
 		}
 		try {
 			return MessageFormat.format(format, args);

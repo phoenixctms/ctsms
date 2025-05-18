@@ -80,6 +80,7 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.domain.VisitDao;
 import org.phoenixctms.ctsms.domain.VisitScheduleItem;
+import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.email.NotificationEmailSender;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
@@ -150,6 +151,7 @@ import org.phoenixctms.ctsms.vo.UserInVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VariablePeriodVO;
 import org.phoenixctms.ctsms.vo.VisitOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 
 /**
  * @see org.phoenixctms.ctsms.service.shared.ToolsService
@@ -518,6 +520,17 @@ public class ToolsServiceImpl
 		Collection visits = visitDao.findVisits(trialId, tokenInfix, titleInfix, limit);
 		visitDao.toVisitOutVOCollection(visits);
 		return visits;
+	}
+
+	@Override
+	protected Collection<VisitScheduleItemOutVO> handleCompleteVisitScheduleItem(AuthenticationVO auth, String nameInfix, Long trialId, Integer limit)
+			throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for trialId ...
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		Collection visitScheduleItems = visitScheduleItemDao.findVisitScheduleItems(trialId, nameInfix, limit);
+		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+		return visitScheduleItems;
 	}
 
 	@Override
