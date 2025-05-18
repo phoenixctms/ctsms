@@ -914,6 +914,12 @@
     alter table mass_mail_status_transition 
         drop constraint MASS_MAIL_STATUS_TYPE_TRANSITIONS_FKC;
 
+    alter table mass_mail_visit_schedule_item 
+        drop constraint VISIT_SCHEDULE_ITEM_MASS_MAILS_FKC;
+
+    alter table mass_mail_visit_schedule_item 
+        drop constraint MASS_MAIL_VISIT_SCHEDULE_ITEMS_FKC;
+
     alter table medication_ingredient 
         drop constraint ASP_SUBSTANCE_MEDICATIONS_FKC;
 
@@ -1288,6 +1294,8 @@
     drop table input_field_value_selection cascade;
 
     drop table mass_mail_status_transition cascade;
+
+    drop table mass_mail_visit_schedule_item cascade;
 
     drop table medication_ingredient cascade;
 

@@ -311,6 +311,37 @@ if get_database_version() < '010801097' then
   perform set_database_version('010801097');
 
 end if;
+
+if get_database_version() < '010801098' then
+
+  ALTER TABLE MASS_MAIL_TYPE ADD COLUMN VISIT_SCHEDULE_ITEMS_REQUIRED BOOLEAN;
+  UPDATE MASS_MAIL_TYPE SET VISIT_SCHEDULE_ITEMS_REQUIRED = 'f';
+  ALTER TABLE MASS_MAIL_TYPE ALTER VISIT_SCHEDULE_ITEMS_REQUIRED SET NOT NULL;
+  
+  alter table MASS_MAIL_RECIPIENT add column TOKEN CHARACTER VARYING(1024);
+  
+  insert into MASS_MAIL_TYPE
+    ("id", "name_l10n_key", "visible", "trial_required", "proband_list_staus_required", "visit_schedule_items_required")
+  values (nextval('hibernate_sequence'), 'visit_reminder', 't', 't', 'f', 't');
+  
+  create table mass_mail_visit_schedule_item (
+    MASS_MAILS_FK BIGINT not null,
+    VISIT_SCHEDULE_ITEMS_FK BIGINT not null
+  );
+
+  alter table mass_mail_visit_schedule_item 
+    add constraint VISIT_SCHEDULE_ITEM_MASS_MAILS_FKC 
+    foreign key (MASS_MAILS_FK) 
+    references MASS_MAIL;
+
+  alter table mass_mail_visit_schedule_item 
+    add constraint MASS_MAIL_VISIT_SCHEDULE_ITEMS_FKC 
+    foreign key (VISIT_SCHEDULE_ITEMS_FK) 
+    references VISIT_SCHEDULE_ITEM;
+  
+  perform set_database_version('010801098');
+
+end if;
  
 end
 $$;

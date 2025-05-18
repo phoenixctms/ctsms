@@ -931,6 +931,7 @@
         CONFIRMED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE,
         MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
         VERSION BIGINT not null,
+        TOKEN CHARACTER VARYING(1024),
         MASS_MAIL_FK BIGINT not null,
         PROBAND_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
@@ -954,6 +955,7 @@
         VISIBLE BOOLEAN not null,
         TRIAL_REQUIRED BOOLEAN not null,
         PROBAND_LIST_STAUS_REQUIRED BOOLEAN not null,
+        VISIT_SCHEDULE_ITEMS_REQUIRED BOOLEAN not null,
         primary key (ID)
     );
 
@@ -2150,6 +2152,11 @@
     create table mass_mail_status_transition (
         MASS_MAIL_STATUS_TYPES_FK BIGINT not null,
         TRANSITIONS_FK BIGINT not null
+    );
+
+    create table mass_mail_visit_schedule_item (
+        MASS_MAILS_FK BIGINT not null,
+        VISIT_SCHEDULE_ITEMS_FK BIGINT not null
     );
 
     create table medication_ingredient (
@@ -3772,6 +3779,16 @@
         add constraint MASS_MAIL_STATUS_TYPE_TRANSITIONS_FKC 
         foreign key (TRANSITIONS_FK) 
         references MASS_MAIL_STATUS_TYPE;
+
+    alter table mass_mail_visit_schedule_item 
+        add constraint VISIT_SCHEDULE_ITEM_MASS_MAILS_FKC 
+        foreign key (MASS_MAILS_FK) 
+        references MASS_MAIL;
+
+    alter table mass_mail_visit_schedule_item 
+        add constraint MASS_MAIL_VISIT_SCHEDULE_ITEMS_FKC 
+        foreign key (VISIT_SCHEDULE_ITEMS_FK) 
+        references VISIT_SCHEDULE_ITEM;
 
     alter table medication_ingredient 
         add constraint ASP_SUBSTANCE_MEDICATIONS_FKC 
