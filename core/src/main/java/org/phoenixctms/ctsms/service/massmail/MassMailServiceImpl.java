@@ -764,7 +764,6 @@ public class MassMailServiceImpl
 				Iterator<MassMail> massMailsIt = visitScheduleItem.getMassMails().iterator();
 				while (massMailsIt.hasNext()) {
 					MassMail massMail = massMailsIt.next();
-					CheckIDUtil.checkMassMailId(massMail.getId(), this.getMassMailDao(), LockMode.PESSIMISTIC_WRITE);
 					ArrayList<Long> probandIds = new ArrayList<Long>();
 					if (probandId != null) {
 						probandIds.add(probandId);
@@ -774,12 +773,15 @@ public class MassMailServiceImpl
 							probandIds.add(listEntriesIt.next().getProband().getId());
 						}
 					}
+					probandIds.sort(null);
 					Iterator<Long> probandIdsIt = probandIds.iterator();
 					while (probandIdsIt.hasNext()) {
 						probandId = probandIdsIt.next();
+						CheckIDUtil.checkMassMailId(massMail.getId(), this.getMassMailDao(), LockMode.PESSIMISTIC_WRITE);
 						MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);
 						try {
 							if (recipient != null) {
+								CheckIDUtil.checkMassMailRecipientId(recipient.getId(), massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
 								MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 								if (!token.equals(recipient.getToken())) {
 									//massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
@@ -811,6 +813,7 @@ public class MassMailServiceImpl
 							}
 						} catch (ServiceException e) {
 						}
+						massMailRecipientDao.commitAndResumeTransaction();
 					}
 				}
 			}
