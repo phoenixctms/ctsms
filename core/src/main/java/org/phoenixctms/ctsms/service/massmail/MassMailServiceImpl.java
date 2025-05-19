@@ -781,7 +781,7 @@ public class MassMailServiceImpl
 						MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);
 						try {
 							if (recipient != null) {
-								CheckIDUtil.checkMassMailRecipientId(recipient.getId(), massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
+								//CheckIDUtil.checkMassMailRecipientId(recipient.getId(), massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
 								MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 								if (!token.equals(recipient.getToken())) {
 									//massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
@@ -824,7 +824,7 @@ public class MassMailServiceImpl
 	@Override
 	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Boolean sent, Long version) throws Exception {
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao, LockMode.PESSIMISTIC_WRITE);
+		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao); //, LockMode.PESSIMISTIC_WRITE);
 		MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		MassMailRecipientOutVO result;
 		if ((sent == null || sent == recipient.isSent()) && recipient.getTimesProcessed() > 0l) {
