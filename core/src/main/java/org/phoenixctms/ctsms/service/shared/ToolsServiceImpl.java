@@ -1094,7 +1094,8 @@ public class ToolsServiceImpl
 		if (recipient == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
 		}
-		massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+		//this.getMassMailDao().load(recipient.getMassMail().getId(), LockMode.PESSIMISTIC_WRITE);
+		massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		recipient.setRead(recipient.getRead() + 1l);
 		recipient.setReadTimestamp(now);
@@ -1334,7 +1335,8 @@ public class ToolsServiceImpl
 		if (proband == null) {
 			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
 			if (recipient != null) {
-				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+				massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
+				//this.getMassMailDao().load(recipient.getMassMail().getId(), LockMode.PESSIMISTIC_WRITE);
 				recipient.setUnsubscribed(recipient.getUnsubscribed() + 1l);
 				recipient.setUnsubscribedTimestamp(now);
 				CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
@@ -1344,8 +1346,8 @@ public class ToolsServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
 			}
 		}
-		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		if (proband != null) {
+			ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 			this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
 			Iterator<ProbandContactDetailValue> contactsIt = proband.getContactDetailValues().iterator();
 			while (contactsIt.hasNext()) {
@@ -1380,8 +1382,8 @@ public class ToolsServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
 			}
 		}
-		ProbandDao probandDao = this.getProbandDao();
 		if (proband != null) {
+			ProbandDao probandDao = this.getProbandDao();
 			probandDao.lock(proband, LockMode.PESSIMISTIC_WRITE);
 			CoreUtil.modifyVersion(proband, proband.getVersion(), now, proband.getModifiedUser());
 			proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findConfirmState());

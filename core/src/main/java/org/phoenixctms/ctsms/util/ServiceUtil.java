@@ -329,7 +329,7 @@ public final class ServiceUtil {
 	public static MassMailRecipientOutVO addResetMassMailRecipient(MassMail massMail, Proband proband, Timestamp now, User user, MassMailDao massMailDao, ProbandDao probandDao,
 			TrialDao trialDao,
 			MassMailRecipientDao massMailRecipientDao, JournalEntryDao journalEntryDao) throws Exception {
-		CheckIDUtil.checkMassMailId(massMail.getId(), massMailDao, LockMode.PESSIMISTIC_WRITE);
+		massMailDao.lock(massMail, LockMode.PESSIMISTIC_WRITE);
 		MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), proband.getId());
 		MassMailRecipientOutVO result = null;
 		if (recipient == null) {

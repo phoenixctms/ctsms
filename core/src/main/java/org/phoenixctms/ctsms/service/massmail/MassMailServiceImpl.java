@@ -777,7 +777,8 @@ public class MassMailServiceImpl
 					Iterator<Long> probandIdsIt = probandIds.iterator();
 					while (probandIdsIt.hasNext()) {
 						probandId = probandIdsIt.next();
-						CheckIDUtil.checkMassMailId(massMail.getId(), this.getMassMailDao(), LockMode.PESSIMISTIC_WRITE);
+						this.getMassMailDao().lock(massMail, LockMode.PESSIMISTIC_WRITE);
+						//CheckIDUtil.checkMassMailId(massMail.getId(), this.getMassMailDao(), LockMode.PESSIMISTIC_WRITE);
 						MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);
 						try {
 							if (recipient != null) {
@@ -825,6 +826,7 @@ public class MassMailServiceImpl
 	protected MassMailRecipientOutVO handleResetMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId, Boolean sent, Long version) throws Exception {
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecipientDao); //, LockMode.PESSIMISTIC_WRITE);
+		this.getMassMailDao().lock(recipient.getMassMail(), LockMode.PESSIMISTIC_WRITE);
 		MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 		MassMailRecipientOutVO result;
 		if ((sent == null || sent == recipient.isSent()) && recipient.getTimesProcessed() > 0l) {
