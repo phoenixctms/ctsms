@@ -1094,8 +1094,7 @@ public class ToolsServiceImpl
 		if (recipient == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
 		}
-		//this.getMassMailDao().load(recipient.getMassMail().getId(), LockMode.PESSIMISTIC_WRITE);
-		massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
+		massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		recipient.setRead(recipient.getRead() + 1l);
 		recipient.setReadTimestamp(now);
@@ -1335,8 +1334,7 @@ public class ToolsServiceImpl
 		if (proband == null) {
 			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
 			if (recipient != null) {
-				massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
-				//this.getMassMailDao().load(recipient.getMassMail().getId(), LockMode.PESSIMISTIC_WRITE);
+				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 				recipient.setUnsubscribed(recipient.getUnsubscribed() + 1l);
 				recipient.setUnsubscribedTimestamp(now);
 				CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
