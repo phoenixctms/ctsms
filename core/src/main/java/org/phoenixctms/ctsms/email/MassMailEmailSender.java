@@ -250,11 +250,12 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				Iterator<Trial> trialsIt = trials.iterator();
 				int count = 0;
 				while (trialsIt.hasNext()) {
-					Collection<VisitScheduleItem> visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(massMail.getTrial().getId(), null, null,
+					Trial trial = trialsIt.next();
+					Collection<VisitScheduleItem> visitScheduleItems = visitScheduleItemDao.findByTrialGroupVisitProbandTravel(trial.getId(), null, null,
 							recipient.getProband().getId(), null, false, true, null);
 					if (visitScheduleItems.size() > 0) {
 						VisitScheduleExcelVO visitPlanExcel = ServiceUtil.createVisitScheduleExcel(visitScheduleItems, VisitScheduleExcelWriter.Styles.VISIT_PLAN,
-								probandDao.toProbandOutVO(recipient.getProband()), trialDao.toTrialOutVO(massMail.getTrial()),
+								probandDao.toProbandOutVO(recipient.getProband()), trialDao.toTrialOutVO(trial),
 								null, null, null,
 								visitScheduleItemDao,
 								probandListStatusEntryDao,

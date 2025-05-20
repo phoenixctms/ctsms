@@ -345,7 +345,7 @@ public final class ServiceUtil {
 			logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
 			logSystemMessage(massMail, result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
 		} else if (massMail.isProbandListStatusResend()) {
-			//massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 			MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 			resetMassMailRecipient(recipient, original);
 			CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
