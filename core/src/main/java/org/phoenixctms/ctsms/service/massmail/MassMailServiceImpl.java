@@ -783,42 +783,46 @@ public class MassMailServiceImpl
 					Iterator<Long> probandIdsIt = probandIds.iterator();
 					while (probandIdsIt.hasNext()) {
 						probandId = probandIdsIt.next();
-						this.getMassMailDao().lock(massMail, LockMode.PESSIMISTIC_WRITE);
-						MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);
-						try {
-							if (recipient != null) {
-								massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
-								MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
-								if (!token.equals(recipient.getToken())) {
-									ServiceUtil.resetMassMailRecipient(recipient, original);
-									recipient.setToken(token);
-									CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
-									massMailRecipientDao.update(recipient);
-									MassMailRecipientOutVO result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
-									ServiceUtil.logSystemMessage(recipient.getMassMail(), result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result,
-											original,
-											journalEntryDao);
-									ServiceUtil.logSystemMessage(recipient.getProband(), result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result,
-											original,
-											journalEntryDao);
+						ProbandListEntry listEntry = this.getProbandListEntryDao().findByTrialProband(visitScheduleItem.getTrial().getId(), probandId);
+						if (listEntry != null && listEntry.getLastStatus() != null && !listEntry.getLastStatus().getStatus().isInitial()
+								&& listEntry.getLastStatus().getStatus().getTransitions().size() > 0) {
+							this.getMassMailDao().lock(massMail, LockMode.PESSIMISTIC_WRITE);
+							MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);
+							try {
+								if (recipient != null) {
+									massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+									MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+									if (!token.equals(recipient.getToken())) {
+										ServiceUtil.resetMassMailRecipient(recipient, original);
+										recipient.setToken(token);
+										CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
+										massMailRecipientDao.update(recipient);
+										MassMailRecipientOutVO result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+										ServiceUtil.logSystemMessage(recipient.getMassMail(), result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result,
+												original,
+												journalEntryDao);
+										ServiceUtil.logSystemMessage(recipient.getProband(), result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_RESET, result,
+												original,
+												journalEntryDao);
+										count++;
+									}
+								} else {
+									MassMailRecipientInVO newMassMailRecipient = new MassMailRecipientInVO();
+									newMassMailRecipient.setMassMailId(massMail.getId());
+									newMassMailRecipient.setProbandId(probandId);
+									newMassMailRecipient.setToken(token);
+									//try {
+									ServiceUtil.addMassMailRecipient(newMassMailRecipient, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
+											massMailRecipientDao,
+											this.getJournalEntryDao());
 									count++;
+									//} catch (ServiceException e) {
+									//}
 								}
-							} else {
-								MassMailRecipientInVO newMassMailRecipient = new MassMailRecipientInVO();
-								newMassMailRecipient.setMassMailId(massMail.getId());
-								newMassMailRecipient.setProbandId(probandId);
-								newMassMailRecipient.setToken(token);
-								//try {
-								ServiceUtil.addMassMailRecipient(newMassMailRecipient, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
-										massMailRecipientDao,
-										this.getJournalEntryDao());
-								count++;
-								//} catch (ServiceException e) {
-								//}
+							} catch (ServiceException e) {
 							}
-						} catch (ServiceException e) {
+							massMailRecipientDao.commitAndResumeTransaction();
 						}
-						massMailRecipientDao.commitAndResumeTransaction();
 					}
 				}
 			}

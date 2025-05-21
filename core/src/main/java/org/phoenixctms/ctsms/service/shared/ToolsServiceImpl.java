@@ -69,6 +69,7 @@ import org.phoenixctms.ctsms.domain.ProbandContactDetailValue;
 import org.phoenixctms.ctsms.domain.ProbandContactDetailValueDao;
 import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.ProbandGroupDao;
+import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryTagDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntry;
 import org.phoenixctms.ctsms.domain.Staff;
@@ -1226,10 +1227,14 @@ public class ToolsServiceImpl
 			Iterator<VisitScheduleItem> visitScheduleItemsIt = ((List<VisitScheduleItem>) visitScheduleItemSchedule.getValue()).iterator();
 			while (visitScheduleItemsIt.hasNext()) {
 				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
-				if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER,
-						false)) {
-					if (notificationDao.addNotification(visitScheduleItem, proband, today, null) != null) {
-						count++;
+				ProbandListEntry listEntry = probandId != null ? this.getProbandListEntryDao().findByTrialProband(visitScheduleItem.getTrial().getId(), probandId) : null;
+				if (listEntry == null || (listEntry.getLastStatus() != null
+						&& !listEntry.getLastStatus().getStatus().isInitial() && listEntry.getLastStatus().getStatus().getTransitions().size() > 0)) {
+					if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER,
+							false)) {
+						if (notificationDao.addNotification(visitScheduleItem, proband, today, null) != null) {
+							count++;
+						}
 					}
 				}
 			}
