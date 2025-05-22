@@ -2793,9 +2793,35 @@ public class ProductionDataProvider {
 				true);
 		createJobType(
 				JobModule.TRIAL_JOB,
+				"export_done_ecrf_data",
+				"export_done_ecrf_data",
+				"{10} --task=cleanup_all --task=export_ecrf_data_vertical --task=export_ecrf_data_horizontal --task=publish_ecrf_data_sqlite --task=publish_ecrf_data_horizontal_csv --task=publish_ecrf_data_xls --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --signed --force",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
 				"export_ecrf_pdfs",
 				"export_ecrf_pdfs",
 				"{10} --task=cleanup_all --task=publish_ecrf_data_pdfs --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --force",
+				true,
+				false,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_signed_ecrf_pdfs",
+				"export_signed_ecrf_pdfs",
+				"{10} --task=cleanup_all --task=publish_ecrf_data_pdfs --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --signed --force",
 				true,
 				false,
 				false,

@@ -308,7 +308,10 @@ public class ECRFDaoImpl
 	//	}
 
 	@Override
-	protected Collection<Object[]> handleFindByListEntryActiveSorted(Long probandListEntryId, Boolean active, boolean sort, PSFVO psf) throws Exception {
+	protected Collection<Object[]> handleFindByListEntryActiveDoneValidatedReviewVerifiedSorted(Long probandListEntryId, Boolean active, Long ecrfStatusTypeId,
+			Boolean valueLockdown, Boolean done,
+			Boolean validated,
+			Boolean review, Boolean verified, boolean sort, PSFVO psf) throws Exception {
 		ProbandListEntry listEntry = this.getProbandListEntryDao().load(probandListEntryId);
 		Long trialId = listEntry.getTrial().getId();
 		Long groupId = (listEntry.getGroup() != null ? listEntry.getGroup().getId() : null);
@@ -346,6 +349,32 @@ public class ECRFDaoImpl
 		//				Restrictions.eqProperty("ecrfFieldValues.visit.id", visitCriteria.getAlias() + ".id")));
 		//		subQuery.setProjection(Projections.rowCount());
 		//		ecrfCriteria.add(Restrictions.or(conjunction, Subqueries.exists( subQuery)));
+		if (ecrfStatusTypeId != null || valueLockdown != null || done != null || validated != null || review != null || verified != null) {
+			subQuery = DetachedCriteria.forClass(ECRFStatusEntryImpl.class, "ecrfStatusEntry"); // IMPL!!!!
+			subQuery.add(Restrictions.eq("listEntry.id", probandListEntryId.longValue()));
+			subQuery.add(Restrictions.eqProperty("ecrf.id", ecrfCriteria.getAlias() + ".id"));
+			DetachedCriteria ecrfStatusTypeCriteria = subQuery.createCriteria("status");
+			if (ecrfStatusTypeId != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.idEq(ecrfStatusTypeId.longValue()));
+			}
+			if (valueLockdown != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.eq("valueLockdown", valueLockdown.booleanValue()));
+			}
+			if (done != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.eq("done", done.booleanValue()));
+			}
+			if (validated != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.eq("validated", validated.booleanValue()));
+			}
+			if (review != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.eq("review", review.booleanValue()));
+			}
+			if (verified != null) {
+				ecrfStatusTypeCriteria.add(Restrictions.eq("verified", verified.booleanValue()));
+			}
+			subQuery.setProjection(Projections.id());
+			ecrfCriteria.add(Subqueries.exists(subQuery));
+		}
 		if (sort) {
 			if (psf == null) {
 				psf = new PSFVO();

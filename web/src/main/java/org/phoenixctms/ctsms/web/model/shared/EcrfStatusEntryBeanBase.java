@@ -486,7 +486,24 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public StreamedContent getEcrfPdfStreamedContent(ProbandListEntryOutVO listEntry, boolean blank) throws Exception {
 		if (listEntry != null) {
 			try {
-				ECRFPDFVO ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntry.getId(), null, null, blank);
+				ECRFPDFVO ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntry.getId(), null, null, null, null, null,
+						null, null, null, blank);
+				return new DefaultStreamedContent(new ByteArrayInputStream(ecrfPdf.getDocumentDatas()), ecrfPdf.getContentType().getMimeType(), ecrfPdf.getFileName());
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+				throw e;
+			} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+				throw e;
+			}
+		}
+		return null;
+	}
+
+	public StreamedContent getDoneEcrfPdfStreamedContent(ProbandListEntryOutVO listEntry) throws Exception {
+		if (listEntry != null) {
+			try {
+				ECRFPDFVO ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntry.getId(), null, null, null, null, true,
+						null, null, null, false);
 				return new DefaultStreamedContent(new ByteArrayInputStream(ecrfPdf.getDocumentDatas()), ecrfPdf.getContentType().getMimeType(), ecrfPdf.getFileName());
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

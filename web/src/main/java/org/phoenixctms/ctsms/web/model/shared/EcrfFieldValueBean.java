@@ -499,16 +499,17 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		return inputModelsMap.get(section).getEcrfFieldValues();
 	}
 
-	public StreamedContent getEcrfPdfStreamedContent(boolean blank, boolean section) throws Exception {
+	public StreamedContent getDoneEcrfPdfStreamedContent(boolean section) throws Exception {
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
 			Long visitId = visit != null ? visit.getId() : null;
 			ECRFPDFVO ecrfPdf;
 			if (!section || CommonUtil.isEmptyString(filterSection)) {
-				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntryId, ecrfId, visitId, blank);
+				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntryId, ecrfId, visitId, null, null, true, null, null,
+						null, false);
 			} else {
-				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrf(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, blank);
+				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrf(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, false);
 			}
 			return new DefaultStreamedContent(new ByteArrayInputStream(ecrfPdf.getDocumentDatas()), ecrfPdf.getContentType().getMimeType(), ecrfPdf.getFileName());
 		} catch (AuthenticationException e) {

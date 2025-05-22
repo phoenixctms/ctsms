@@ -114,6 +114,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	private final static boolean INQUIRIES_BLANK = false;
 	private final static boolean PROBAND_LIST_ENTRY_TAGS_BLANK = false;
 	private final static boolean ECRFS_BLANK = false;
+	private final static boolean ECRFS_DONE = true;
 	private final static Pattern MAIL_USER_DOMAIN_REGEXP = Pattern.compile("@");
 	private static final MethodTransfilter RESOLVE_MAIL_ADDRESS_TRANSFILTER = MethodTransfilter.getEntityMethodTransfilter(true);
 
@@ -288,7 +289,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				while (trialsIt.hasNext()) {
 					Trial trial = trialsIt.next();
 					ProbandListEntry listEntry = probandListEntryDao.findByTrialProband(trial.getId(), recipient.getProband().getId());
-					ECRFPDFVO ecrfsPDF = ServiceUtil.renderEcrfs(listEntry, trial, null, null, ECRFS_BLANK, null,
+					ECRFPDFVO ecrfsPDF = ServiceUtil.renderEcrfs(listEntry, trial, null, null, null, null, ECRFS_DONE, null, null, null, ECRFS_BLANK, null,
 							probandListEntryDao, eCRFDao, visitDao, eCRFFieldDao, eCRFFieldValueDao,
 							inputFieldDao, inputFieldSelectionSetValueDao, eCRFStatusEntryDao, eCRFFieldStatusEntryDao, eCRFFieldStatusTypeDao,
 							probandListEntryTagDao, probandListEntryTagValueDao, signatureDao, userDao);

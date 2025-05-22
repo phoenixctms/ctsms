@@ -683,10 +683,22 @@ public class ServiceMethods {
 	}
 
 	public long renderEcrfPDFs(AuthenticationVO auth, Long id, String fileName) throws Exception {
-		ECRFPDFVO result = trialService.renderEcrfs(auth, id, null, null, null, false);
+		ECRFPDFVO result = trialService.renderEcrfs(auth, id, null, null, null, null, null, null, null, null, null, false);
 		if (result != null) {
 			long ecrfCount = result.getStatusEntries().size();
 			jobOutput.println("trial ID " + Long.toString(id) + ": " + ecrfCount + " eCRF(s)");
+			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
+			return ecrfCount;
+		} else {
+			return 0l;
+		}
+	}
+
+	public long renderDoneEcrfPDFs(AuthenticationVO auth, Long id, String fileName) throws Exception {
+		ECRFPDFVO result = trialService.renderEcrfs(auth, id, null, null, null, null, null, true, null, null, null, false);
+		if (result != null) {
+			long ecrfCount = result.getStatusEntries().size();
+			jobOutput.println("trial ID " + Long.toString(id) + ": " + ecrfCount + " done eCRF(s)");
 			writeDocument(fileName, result.getDocumentDatas(), result.getContentType(), result.getFileName());
 			return ecrfCount;
 		} else {

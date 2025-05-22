@@ -180,11 +180,11 @@
 						</p:column>
 						<p:column style="width:64px;white-space:nowrap;">
 							<p:commandButton immediate="true" ajax="false"
-								title="#{probandlabels.ecrfs_pdf_button_label}"
-								disabled="#{probandEcrfStatusEntryBean.getEcrfProgressSummary(probandListEntry.vo).ecrfTotalCount == 0}"
+								title="#{probandlabels.done_ecrfs_pdf_button_label}"
+								disabled="#{probandEcrfStatusEntryBean.getEcrfProgressSummary(probandListEntry.vo).ecrfDoneCount == 0}"
 								icon="ui-icon ui-icon-pdf">
 								<p:fileDownload
-									value="#{probandEcrfStatusEntryBean.getEcrfPdfStreamedContent(probandListEntry.vo,false)}" />
+									value="#{probandEcrfStatusEntryBean.getDoneEcrfPdfStreamedContent(probandListEntry.vo)}" />
 							</p:commandButton>
 							<p:commandButton title="#{labels.open_trial_button_label}"
 								type="button" icon="ui-icon ui-icon-extlink"
@@ -719,6 +719,13 @@
 									icon="ctsms-menubar-icon ctsms-icon-pdf">
 									<p:fileDownload
 										value="#{probandEcrfStatusEntryBean.getEcrfPdfStreamedContent(probandEcrfStatusEntryBean.probandListEntry,true)}" />
+								</p:menuitem>
+								<p:menuitem immediate="true" ajax="false"
+									value="#{probandlabels.done_ecrfs_pdf_button_label}"
+									disabled="#{empty probandEcrfStatusEntryBean.probandListEntry or probandEcrfStatusEntryBean.getEcrfProgressSummary(probandEcrfStatusEntryBean.probandListEntry).ecrfDoneCount == 0}"
+									icon="ctsms-menubar-icon ctsms-icon-pdf">
+									<p:fileDownload
+										value="#{probandEcrfStatusEntryBean.getDoneEcrfPdfStreamedContent(probandEcrfStatusEntryBean.probandListEntry)}" />
 								</p:menuitem>
 								<p:menuitem immediate="true" ajax="false"
 									value="#{probandEcrfStatusEntryBean.getEcrfPdfButtonLabel(false)}"

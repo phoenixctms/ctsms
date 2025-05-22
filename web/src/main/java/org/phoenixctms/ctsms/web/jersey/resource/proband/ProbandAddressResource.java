@@ -1,7 +1,5 @@
 package org.phoenixctms.ctsms.web.jersey.resource.proband;
 
-import io.swagger.annotations.Api;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -26,7 +24,9 @@ import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@Api(value="proband")
+import io.swagger.annotations.Api;
+
+@Api(value = "proband")
 @Path("/probandaddress")
 public final class ProbandAddressResource {
 
@@ -70,6 +70,16 @@ public final class ProbandAddressResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/probandletterpdf")
 	public ProbandLetterPDFVO renderProbandLetterPDFHead(@PathParam("id") Long id)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		ProbandLetterPDFVO result = WebUtil.getServiceLocator().getProbandService().renderProbandLetterPDF(auth, id);
+		result.setDocumentDatas(null);
+		return result;
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/probandletterpdf/head")
+	public ProbandLetterPDFVO renderProbandLetterPDFVO(@PathParam("id") Long id)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		ProbandLetterPDFVO result = WebUtil.getServiceLocator().getProbandService().renderProbandLetterPDF(auth, id);
 		result.setDocumentDatas(null);

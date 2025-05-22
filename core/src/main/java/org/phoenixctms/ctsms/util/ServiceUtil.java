@@ -5796,7 +5796,9 @@ public final class ServiceUtil {
 		stratificationRandomizationListDao.remove(randomizationList);
 	}
 
-	public static ECRFPDFVO renderEcrfs(ProbandListEntry listEntry, Trial trial, ECRF ecrf, Visit visit, boolean blank, LinkedHashSet<ProbandListEntryOutVO> listEntryVOs,
+	public static ECRFPDFVO renderEcrfs(ProbandListEntry listEntry, Trial trial, ECRF ecrf, Visit visit, Long ecrfStatusTypeId, Boolean valueLockdown, Boolean done,
+			Boolean validated,
+			Boolean review, Boolean verified, boolean blank, LinkedHashSet<ProbandListEntryOutVO> listEntryVOs,
 			ProbandListEntryDao probandListEntryDao,
 			ECRFDao ecrfDao,
 			VisitDao visitDao,
@@ -5845,7 +5847,10 @@ public final class ServiceUtil {
 						probandListEntryTagValueDao,
 						signatureDao);
 			} else {
-				Iterator<Object[]> ecrfVisitIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+				Iterator<Object[]> ecrfVisitIt = ecrfDao
+						.findByListEntryActiveDoneValidatedReviewVerifiedSorted(listEntry.getId(), true, ecrfStatusTypeId, valueLockdown, done, validated, review, verified, true,
+								null)
+						.iterator();
 				while (ecrfVisitIt.hasNext()) {
 					Object[] ecrfVisit = ecrfVisitIt.next();
 					ecrf = (ECRF) ecrfVisit[0];
@@ -5895,7 +5900,10 @@ public final class ServiceUtil {
 							probandListEntryTagValueDao,
 							signatureDao);
 				} else {
-					Iterator<Object[]> ecrfVisitIt = ecrfDao.findByListEntryActiveSorted(listEntry.getId(), true, true, null).iterator();
+					Iterator<Object[]> ecrfVisitIt = ecrfDao
+							.findByListEntryActiveDoneValidatedReviewVerifiedSorted(listEntry.getId(), true, ecrfStatusTypeId, valueLockdown, done, validated, review, verified,
+									true, null)
+							.iterator();
 					while (ecrfVisitIt.hasNext()) {
 						Object[] ecrfVisit = ecrfVisitIt.next();
 						ecrf = (ECRF) ecrfVisit[0];
