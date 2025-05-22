@@ -6500,12 +6500,19 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected Collection<ECRFVisitVO> handleGetEcrfVisitList(AuthenticationVO auth, Long probandListEntryId, Boolean active, PSFVO psf) throws Exception {
+	protected Collection<ECRFVisitVO> handleGetEcrfVisitList(AuthenticationVO auth, Long probandListEntryId, Boolean active, Long ecrfStatusTypeId, Boolean valueLockdown,
+			Boolean done, Boolean validated,
+			Boolean review, Boolean verified, PSFVO psf) throws Exception {
 		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
+		if (ecrfStatusTypeId != null) {
+			CheckIDUtil.checkEcrfStatusTypeId(ecrfStatusTypeId, this.getECRFStatusTypeDao());
+		}
 		ECRFDao ecrfDao = this.getECRFDao();
 		VisitDao visitDao = this.getVisitDao();
 		ArrayList<ECRFVisitVO> result = new ArrayList<ECRFVisitVO>();
-		Iterator<Object[]> it = ecrfDao.findByListEntryActiveSorted(probandListEntryId, active, false, psf).iterator();
+		Iterator<Object[]> it = ecrfDao
+				.findByListEntryActiveDoneValidatedReviewVerifiedSorted(probandListEntryId, active, ecrfStatusTypeId, valueLockdown, done, validated, review, verified, false, psf)
+				.iterator();
 		while (it.hasNext()) {
 			Object[] ecrfVisit = it.next();
 			ECRFVisitVO ecrfVisitVO = new ECRFVisitVO();
@@ -7685,9 +7692,20 @@ public class TrialServiceImpl
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 		while (it.hasNext()) {
 			Object[] visitScheduleItemProband = it.next();
-			VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO((VisitScheduleItem) visitScheduleItemProband[0]);
-			visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO((Proband) visitScheduleItemProband[1]));
-			result.add(visitScheduleItemProbandVO);
+			VisitScheduleItem visitScheduleItem = (VisitScheduleItem) visitScheduleItemProband[0];
+			Proband proband = (Proband) visitScheduleItemProband[1];
+			ProbandListEntry listEntry = proband != null ? this.getProbandListEntryDao().findByTrialProband(visitScheduleItem.getTrial().getId(), proband.getId()) : null;
+			ProbandListStatusEntry lastStatus = proband != null
+					? this.getProbandListStatusEntryDao().findRecentStatus(visitScheduleItem.getTrial().getId(), proband.getId(), CommonUtil.dateToTimestamp(to))
+					: null;
+			if (listEntry != null
+					|| (lastStatus != null
+							&& !lastStatus.getStatus().isInitial()
+							&& lastStatus.getStatus().getTransitions().size() > 0)) {
+				VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO(visitScheduleItem);
+				visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO(proband));
+				result.add(visitScheduleItemProbandVO);
+			}
 		}
 		if (sort) {
 			Collections.sort(result, new VisitScheduleAppointmentIntervalComparator(false));
@@ -7867,7 +7885,9 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected ECRFPDFVO handleRenderEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, boolean blank) throws Exception {
+	protected ECRFPDFVO handleRenderEcrfs(AuthenticationVO auth, Long trialId, Long probandListEntryId, Long ecrfId, Long visitId, Long ecrfStatusTypeId, Boolean valueLockdown,
+			Boolean done, Boolean validated,
+			Boolean review, Boolean verified, boolean blank) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = null;
 		if (trialId != null) {
@@ -7892,8 +7912,11 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.VISIT_ID_NOT_NULL);
 			}
 		}
+		if (ecrfStatusTypeId != null) {
+			CheckIDUtil.checkEcrfStatusTypeId(ecrfStatusTypeId, this.getECRFStatusTypeDao());
+		}
 		LinkedHashSet<ProbandListEntryOutVO> listEntryVOs = new LinkedHashSet<ProbandListEntryOutVO>();
-		ECRFPDFVO result = ServiceUtil.renderEcrfs(listEntry, trial, ecrf, visit, blank, listEntryVOs,
+		ECRFPDFVO result = ServiceUtil.renderEcrfs(listEntry, trial, ecrf, visit, ecrfStatusTypeId, valueLockdown, done, validated, review, verified, blank, listEntryVOs,
 				this.getProbandListEntryDao(), this.getECRFDao(), this.getVisitDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getInputFieldDao(),
 				this.getInputFieldSelectionSetValueDao(), this.getECRFStatusEntryDao(), this.getECRFFieldStatusEntryDao(), this.getECRFFieldStatusTypeDao(),
 				this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(), this.getSignatureDao(), this.getUserDao());
