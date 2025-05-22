@@ -898,6 +898,14 @@ public class DBTool {
 						sendEmail = dbTool.getServiceMethods().renderEcrfPDFs(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
 								line.getOptionValue(DBToolOptions.EXPORT_ECRF_PDFS_OPT)) > 0l;
 					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT)) {
+					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT);
+					dbTool.initJob(line).printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT))) {
+						sendEmail = dbTool.getServiceMethods().renderDoneEcrfPDFs(getAuthenticationOptionValue(line), getIdOptionValue(line, true),
+								line.getOptionValue(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT)) > 0l;
+					}
 				} else if (line.hasOption(DBToolOptions.VALIDATE_PENDING_ECRFS_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.VALIDATE_PENDING_ECRFS_OPT);
 					dbTool.initJob(line).printPrelude(job);

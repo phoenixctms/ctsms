@@ -168,6 +168,7 @@ public final class DBToolOptions {
 	public static final String EXPORT_CRITERIA_CVS_OPT = "eccv";
 	public static final String EXPORT_CRITERIA_PROBAND_LETTERS_OPT = "ecpl";
 	public static final String EXPORT_ECRF_PDFS_OPT = "eep";
+	public static final String EXPORT_DONE_ECRF_PDFS_OPT = "edep";
 	public static final String EXPORT_AUDIT_TRAIL_OPT = "eat";
 	public static final String IMPORT_INPUT_FIELDS_OPT = "iif";
 	public static final String EXPORT_INPUT_FIELD_OPT = "eif";
@@ -343,6 +344,8 @@ public final class DBToolOptions {
 				"export proband letters by criteria", 1));
 		tasks.addOption(registerTaskOption(EXPORT_ECRF_PDFS_OPT, "export_ecrf_pdfs",
 				"export eCRFs by trial", 1));
+		tasks.addOption(registerTaskOption(EXPORT_DONE_ECRF_PDFS_OPT, "export_done_ecrf_pdfs",
+				"export done eCRFs by trial", 1));
 		tasks.addOption(registerTaskOption(EXPORT_AUDIT_TRAIL_OPT, "export_audit_trail",
 				"export eCRF audit trail", 1));
 		tasks.addOption(registerTaskOption(IMPORT_INPUT_FIELDS_OPT, "import_input_fields",
