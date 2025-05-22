@@ -30,7 +30,9 @@ public class EcrfVisitLazyModel extends LazyDataModel<ECRFVisitVO> implements Se
 	protected Collection<ECRFVisitVO> getLazyResult(PSFVO psf) {
 		if (probandListEntryId != null) {
 			try {
-				return WebUtil.getServiceLocator().getTrialService().getEcrfVisitList(WebUtil.getAuthentication(), probandListEntryId, active, psf);
+				return WebUtil.getServiceLocator().getTrialService().getEcrfVisitList(WebUtil.getAuthentication(), probandListEntryId, active,
+						null, null, null, null, null, null,
+						psf);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
