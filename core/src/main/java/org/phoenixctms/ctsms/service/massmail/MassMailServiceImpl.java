@@ -784,7 +784,9 @@ public class MassMailServiceImpl
 					while (probandIdsIt.hasNext()) {
 						probandId = probandIdsIt.next();
 						ProbandListEntry listEntry = this.getProbandListEntryDao().findByTrialProband(visitScheduleItem.getTrial().getId(), probandId);
-						if (listEntry != null && listEntry.getLastStatus() != null && !listEntry.getLastStatus().getStatus().isInitial()
+						if (listEntry != null
+								&& listEntry.getLastStatus() != null
+								&& !listEntry.getLastStatus().getStatus().isInitial()
 								&& listEntry.getLastStatus().getStatus().getTransitions().size() > 0) {
 							this.getMassMailDao().lock(massMail, LockMode.PESSIMISTIC_WRITE);
 							MassMailRecipient recipient = massMailRecipientDao.findByMassMailProband(massMail.getId(), probandId);

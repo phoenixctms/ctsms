@@ -1229,7 +1229,8 @@ public class ToolsServiceImpl
 				VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
 				ProbandListEntry listEntry = probandId != null ? this.getProbandListEntryDao().findByTrialProband(visitScheduleItem.getTrial().getId(), probandId) : null;
 				if (listEntry == null || (listEntry.getLastStatus() != null
-						&& !listEntry.getLastStatus().getStatus().isInitial() && listEntry.getLastStatus().getStatus().getTransitions().size() > 0)) {
+						&& !listEntry.getLastStatus().getStatus().isInitial()
+						&& listEntry.getLastStatus().getStatus().getTransitions().size() > 0)) {
 					if (!ServiceUtil.testNotificationExists(visitScheduleItem.getNotifications(), org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER,
 							false)) {
 						if (notificationDao.addNotification(visitScheduleItem, proband, today, null) != null) {
