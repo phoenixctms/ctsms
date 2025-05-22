@@ -716,9 +716,11 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 								statusEntryVO.setEcrf(ecrfVO);
 								statusEntryVO.setListEntry(listEntryVO);
 								statusEntryVO.setVisit(visitVO);
+								//no status
+								pdfVO.getStatusEntries().add(statusEntryVO);
+							} else {
 								pdfVO.getStatusEntries().add(statusEntryVO);
 							}
-							//pdfVO.getStatusEntries().add(statusEntryVO);
 						}
 					}
 				}
