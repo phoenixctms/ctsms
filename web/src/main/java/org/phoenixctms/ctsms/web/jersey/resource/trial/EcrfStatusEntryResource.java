@@ -122,10 +122,20 @@ public class EcrfStatusEntryResource {
 	}
 
 	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{listEntryId}/ecrfpdf/{ecrfId}/head")
+	public ECRFPDFVO renderEcrfVO(@PathParam("listEntryId") Long listEntryId, @PathParam("ecrfId") Long ecrfId,
+			@QueryParam("visit_id") Long visitId, @QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
+		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrf(auth, listEntryId, ecrfId, visitId, null, blank);
+		result.setDocumentDatas(null);
+		return result;
+	}
+
+	@GET
 	@Path("{listEntryId}/ecrfpdf")
 	public Response renderEcrfs(@PathParam("listEntryId") Long listEntryId,
-			@QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFPDFVO vo = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, blank);
+			@QueryParam("done") Boolean done, @QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
+		ECRFPDFVO vo = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, null, null, done, null, null, null, blank);
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
 		ResponseBuilder response = Response.ok(vo.getDocumentDatas(), vo.getContentType().getMimeType());
@@ -137,8 +147,18 @@ public class EcrfStatusEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{listEntryId}/ecrfpdf")
 	public ECRFPDFVO renderEcrfsHead(@PathParam("listEntryId") Long listEntryId,
-			@QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
-		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, blank);
+			@QueryParam("done") Boolean done, @QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
+		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, null, null, done, null, null, null, blank);
+		result.setDocumentDatas(null);
+		return result;
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{listEntryId}/ecrfpdf/head")
+	public ECRFPDFVO renderEcrfsVO(@PathParam("listEntryId") Long listEntryId,
+			@QueryParam("done") Boolean done, @QueryParam("blank") Boolean blank) throws AuthenticationException, AuthorisationException, ServiceException {
+		ECRFPDFVO result = WebUtil.getServiceLocator().getTrialService().renderEcrfs(auth, null, listEntryId, null, null, null, null, done, null, null, null, blank);
 		result.setDocumentDatas(null);
 		return result;
 	}
