@@ -342,6 +342,20 @@ if get_database_version() < '010801098' then
   perform set_database_version('010801098');
 
 end if;
+
+if get_database_version() < '010801099' then
+
+  INSERT INTO job_type
+  ("id", "module", "name_l10n_key", "description_l10n_key", "command_format", "visible", "daily", "weekly", "monthly", "input_file", "output_file", "encrypt_file", "email_recipients", "trial_fk") VALUES
+  (nextval('hibernate_sequence'), 'TRIAL_JOB', 'export_done_ecrf_pdfs', 'export_done_ecrf_pdfs', '{10} --task=cleanup_all --task=publish_ecrf_data_pdfs --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --signed --force', 't', 'f', 'f', 'f', 'f', 'f', 'f', 't', NULL);
+
+  INSERT INTO job_type
+  ("id", "module", "name_l10n_key", "description_l10n_key", "command_format", "visible", "daily", "weekly", "monthly", "input_file", "output_file", "encrypt_file", "email_recipients", "trial_fk") VALUES
+  (nextval('hibernate_sequence'), 'TRIAL_JOB', 'export_done_ecrf_data', 'export_done_ecrf_data', '{10} --task=cleanup_all --task=export_ecrf_data_vertical --task=export_ecrf_data_horizontal --task=publish_ecrf_data_sqlite --task=publish_ecrf_data_horizontal_csv --task=publish_ecrf_data_xls --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --signed --force', 't', 'f', 'f', 'f', 'f', 'f', 'f', 't', NULL);
+  
+  perform set_database_version('010801099');
+
+end if;
  
 end
 $$;
