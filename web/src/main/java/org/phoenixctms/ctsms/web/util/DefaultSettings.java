@@ -750,6 +750,7 @@ public final class DefaultSettings {
 	public static final boolean MASS_MAIL_ATTACH_VISIT_PLANS_PRESET = false;
 	public static final String MASS_MAIL_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
 	public static final String PUBLIC_FILE_SIGNUP_URL = null;
+	public static final String TRIAL_SIGNUP_URL = null;
 	public static final Boolean RECIPIENT_OVERVIEW_SHOW_PENDING_PRESET = null;
 	public static final boolean RECIPIENT_OVERVIEW_SHOW_SCHEDULED_PRESET = true;
 	public static final boolean MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET = false;

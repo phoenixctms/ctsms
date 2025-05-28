@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -837,5 +838,15 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 
 	private void loadDepartment() {
 		department = WebUtil.getDepartment(in.getDepartmentId());
+	}
+
+	public String getTrialSignupUrl() {
+		if (out != null) {
+			String signupUrlFormat = Settings.getString(SettingCodes.TRIAL_SIGNUP_URL, Bundle.SETTINGS, DefaultSettings.TRIAL_SIGNUP_URL);
+			if (!CommonUtil.isEmptyString(signupUrlFormat)) {
+				return MessageFormat.format(signupUrlFormat, Long.toString(out.getId()));
+			}
+		}
+		return null;
 	}
 }

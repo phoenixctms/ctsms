@@ -617,7 +617,7 @@
 									<h:panelGroup>
 										<p:selectBooleanCheckbox id="signupprobandlist"
 											value="#{trialBean.in.signupProbandList}">
-											<p:ajax update="signuprandomize" />
+											<p:ajax update="signuprandomize,trialsignuplink" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}"
 											for="signupprobandlist">
@@ -646,6 +646,7 @@
 									<h:panelGroup>
 										<p:selectBooleanCheckbox id="signupinquiries"
 											value="#{trialBean.in.signupInquiries}">
+											<p:ajax update="trialsignuplink" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}" for="signupinquiries">
 											<h:outputText
@@ -654,6 +655,29 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="signupinquiries" />
+									
+									<h:outputLabel
+										rendered="#{trialBean.created and not empty trialBean.trialSignupUrl}"
+										for="trialsignuplink"
+										value="#{triallabels.trial_signup_link_label}" />
+									<h:panelGroup rendered="#{trialBean.created and not empty trialBean.trialSignupUrl}">
+										<h:outputLink
+											styleClass="#{(trialBean.out.signupProbandList or trialBean.out.signupInquiries) ? '' : 'ui-state-disabled'}"
+											id="trialsignuplink"
+											disabled="#{not (trialBean.out.signupProbandList or trialBean.out.signupInquiries)}"
+											value="#{trialBean.trialSignupUrl}" target="_blank">
+											<h:outputText value="#{trialBean.trialSignupUrl}" />
+										</h:outputLink>
+									    <p:tooltip rendered="#{enableTooltips}" for="trialsignuplink">
+									        <h:outputFormat value="#{triallabels.trial_signup_link_tooltip}" escape="false">
+												<f:param value="#{trialBean.trialSignupUrl}" />
+											</h:outputFormat>
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message
+										rendered="#{trialBean.created and not empty trialBean.trialSignupUrl}"
+										for="trialsignuplink" />
+									
 								</h:panelGrid>
 								<h:panelGrid columns="1" cellpadding="0"
 									styleClass="ctsms-input-panelgrid"
