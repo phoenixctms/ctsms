@@ -382,28 +382,40 @@
 								rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}"
 								for="publicfilelinksignup"
 								value="#{labels.file_public_link_signup_label}" />
-							<h:outputLink
-								styleClass="#{fileBean.out.publicFile ? '' : 'ui-state-disabled'}"
-								id="publicfilelinksignup"
-								rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}"
-								disabled="#{not fileBean.out.publicFile}"
-								value="#{fileBean.publicFileSignupUrl}" target="_blank">
-								<h:outputText value="#{fileBean.publicFileSignupUrl}" />
-							</h:outputLink>
+							<h:panelGroup rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}">
+								<h:outputLink
+									styleClass="#{fileBean.out.publicFile ? '' : 'ui-state-disabled'}"
+									id="publicfilelinksignup"
+									disabled="#{not fileBean.out.publicFile}"
+									value="#{fileBean.publicFileSignupUrl}" target="_blank">
+									<h:outputText value="#{fileBean.publicFileSignupUrl}" />
+								</h:outputLink>
+							    <p:tooltip rendered="#{enableTooltips}" for="publicfilelinksignup">
+								    <h:outputFormat value="#{labels.file_public_link_signup_tooltip}" escape="false">
+								        <f:param value="#{fileBean.publicFileSignupUrl}" />
+									</h:outputFormat>
+								</p:tooltip>
+							</h:panelGroup>
 							<p:message
 								rendered="#{fileBean.created and not empty fileBean.publicFileSignupUrl}"
 								for="publicfilelinksignup" />
 							<h:outputLabel
 								rendered="#{fileBean.created and not fileBean.useFileEncryption}"
 								for="publicfilelink" value="#{labels.file_public_link_label}" />
-							<h:outputLink
-								styleClass="#{fileBean.out.publicFile ? '' : 'ui-state-disabled'}"
-								id="publicfilelink"
-								rendered="#{fileBean.created and not fileBean.useFileEncryption}"
-								disabled="#{not fileBean.out.publicFile}"
-								value="#{fileBean.publicFileUrl}" target="_blank">
-								<h:outputText value="#{fileBean.publicFileUrl}" />
-							</h:outputLink>
+							<h:panelGroup rendered="#{fileBean.created and not fileBean.useFileEncryption}">
+								<h:outputLink
+									styleClass="#{fileBean.out.publicFile ? '' : 'ui-state-disabled'}"
+									id="publicfilelink"
+									disabled="#{not fileBean.out.publicFile}"
+									value="#{fileBean.publicFileUrl}" target="_blank">
+									<h:outputText value="#{fileBean.publicFileUrl}" />
+								</h:outputLink>
+								<p:tooltip rendered="#{enableTooltips}" for="publicfilelink">
+								    <h:outputFormat value="#{labels.file_public_link_tooltip}" escape="false">
+								        <f:param value="#{fileBean.publicFileUrl}" />
+									</h:outputFormat>
+								</p:tooltip>
+							</h:panelGroup>
 							<p:message
 								rendered="#{fileBean.created and not fileBean.useFileEncryption}"
 								for="publicfilelink" />
