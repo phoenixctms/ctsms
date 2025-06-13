@@ -75,6 +75,7 @@ import org.phoenixctms.ctsms.compare.TrialStatusActionComparator;
 import org.phoenixctms.ctsms.compare.VisitOutVOTokenComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
@@ -5031,6 +5032,7 @@ public class TrialServiceImpl
 						null,
 						null, null, visitScheduleAppointmentsInternal, false, null)
 				: new ArrayList();
+		Collections.sort((List<VisitScheduleItemOutVO>) visitScheduleItems, new VisitScheduleItemOutVOComparator(true));
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Collection inquiries = showInquiries ? inquiryDao.findByTrialActiveExcelProbandSorted(trialId, null, null, showAllInquiries || showAllInquiryDates ? null : true, null)
