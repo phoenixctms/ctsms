@@ -5032,8 +5032,8 @@ public class TrialServiceImpl
 						null,
 						null, null, visitScheduleAppointmentsInternal, false, null)
 				: new ArrayList();
-		Collections.sort((List<VisitScheduleItemOutVO>) visitScheduleItems, new VisitScheduleItemOutVOComparator(true));
 		visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+		Collections.sort((List<VisitScheduleItemOutVO>) visitScheduleItems, new VisitScheduleItemOutVOComparator(true));
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Collection inquiries = showInquiries ? inquiryDao.findByTrialActiveExcelProbandSorted(trialId, null, null, showAllInquiries || showAllInquiryDates ? null : true, null)
 				: new ArrayList();
