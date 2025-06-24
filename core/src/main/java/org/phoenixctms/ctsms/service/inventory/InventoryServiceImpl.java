@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.InventoryBookingCollisionFinder;
@@ -800,7 +801,7 @@ public class InventoryServiceImpl
 
 	@Override
 	protected InventoryBookingsExcelVO handleExportInventoryBookings(AuthenticationVO auth, Long probandDepartmentId, Long courseDepartmentId, Long trialDepartmentId,
-			String calendar, Date from, Date to, Boolean isProbandAppointment,
+			Set<String> calendars, Date from, Date to, Boolean isProbandAppointment,
 			Boolean isRelevantForProbandAppointments, Boolean isCourseAppointment, Boolean isRelevantForCourseAppointments, Boolean isTrialAppointment,
 			Boolean isRelevantForTrialAppointments) throws Exception {
 		DepartmentDao departmentDao = this.getDepartmentDao();
@@ -820,7 +821,7 @@ public class InventoryServiceImpl
 		writer.setProbandDepartment(probandDepartmentVO);
 		writer.setCourseDepartment(courseDepartmentVO);
 		writer.setTrialDepartment(trialDepartmentVO);
-		writer.setCalendar(calendar);
+		writer.setCalendars(calendars);
 		writer.setFrom(from);
 		writer.setTo(to);
 		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
@@ -828,7 +829,7 @@ public class InventoryServiceImpl
 				probandDepartmentId,
 				courseDepartmentId,
 				trialDepartmentId,
-				calendar, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), isProbandAppointment, isRelevantForProbandAppointments, isCourseAppointment,
+				calendars, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to), isProbandAppointment, isRelevantForProbandAppointments, isCourseAppointment,
 				isRelevantForCourseAppointments, isTrialAppointment, isRelevantForTrialAppointments);
 		inventoryBookingDao.toInventoryBookingOutVOCollection(VOs);
 		writer.setVOs(VOs);
@@ -1033,7 +1034,7 @@ public class InventoryServiceImpl
 
 	@Override
 	protected Collection<InventoryBookingOutVO> handleGetInventoryBookingInterval(AuthenticationVO auth, Long departmentId, Long inventoryCategoryId,
-			Long inventoryId, Long onBehalfOfId, Long probandId, Long courseId, Long trialId, String calendar, Date from, Date to, boolean sort) throws Exception {
+			Long inventoryId, Long onBehalfOfId, Long probandId, Long courseId, Long trialId, Set<String> calendars, Date from, Date to, boolean sort) throws Exception {
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
@@ -1057,7 +1058,7 @@ public class InventoryServiceImpl
 		}
 		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 		Collection inventoryBookings = inventoryBookingDao.findByDepartmentCategoryInventoryOnBehalfOfProbandCourseTrialCalendarInterval(departmentId, inventoryCategoryId,
-				inventoryId, onBehalfOfId, probandId, courseId, trialId, calendar, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to));
+				inventoryId, onBehalfOfId, probandId, courseId, trialId, calendars, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to));
 		inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
 		if (sort) {
 			inventoryBookings = new ArrayList(inventoryBookings);

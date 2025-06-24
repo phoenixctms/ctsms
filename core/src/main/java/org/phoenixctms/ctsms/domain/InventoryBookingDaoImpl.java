@@ -7,7 +7,11 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -73,7 +77,7 @@ public class InventoryBookingDaoImpl
 
 	@Override
 	protected Collection<InventoryBooking> handleFindByAppointmentDepartmentsCalendarInterval(Long probandDepartmentId, Long courseDepartmentId, Long trialDepartmentId,
-			String calendar, Timestamp from, Timestamp to,
+			Set<String> calendars, Timestamp from, Timestamp to,
 			Boolean isProbandAppointment, Boolean isRelevantForProbandAppointments,
 			Boolean isCourseAppointment, Boolean isRelevantForCourseAppointments,
 			Boolean isTrialAppointment, Boolean isRelevantForTrialAppointments) throws Exception {
@@ -94,7 +98,14 @@ public class InventoryBookingDaoImpl
 		applyIncludeAppointmentsCriterion(bookingCriteria, isProbandAppointment, "proband.id", isRelevantForProbandAppointments, "relevantForProbandAppointments");
 		applyIncludeAppointmentsCriterion(bookingCriteria, isCourseAppointment, "course.id", isRelevantForCourseAppointments, "relevantForCourseAppointments");
 		applyIncludeAppointmentsCriterion(bookingCriteria, isTrialAppointment, "trial.id", isRelevantForTrialAppointments, "relevantForTrialAppointments");
-		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+		List<CategoryCriterion> calendarCriterions = new ArrayList<CategoryCriterion>();
+		if (calendars != null && calendars.size() > 0) {
+			Iterator<String> calendarsIt = calendars.iterator();
+			while (calendarsIt.hasNext()) {
+				calendarCriterions.add(new CategoryCriterion(calendarsIt.next(), "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+			}
+		}
+		CategoryCriterion.applyOr(bookingCriteria, calendarCriterions);
 		bookingCriteria.addOrder(Order.asc("start"));
 		return bookingCriteria.list();
 	}
@@ -198,7 +209,7 @@ public class InventoryBookingDaoImpl
 
 	@Override
 	protected Collection<InventoryBooking> handleFindByDepartmentCategoryInventoryOnBehalfOfProbandCourseTrialCalendarInterval(
-			Long departmentId, Long inventoryCategoryId, Long inventoryId, Long onBehalfOfId, Long probandId, Long courseId, Long trialId, String calendar, Timestamp from,
+			Long departmentId, Long inventoryCategoryId, Long inventoryId, Long onBehalfOfId, Long probandId, Long courseId, Long trialId, Set<String> calendars, Timestamp from,
 			Timestamp to)
 			throws Exception {
 		Criteria bookingCriteria = createBookingCriteria();
@@ -227,7 +238,14 @@ public class InventoryBookingDaoImpl
 		if (trialId != null) {
 			bookingCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
-		CategoryCriterion.apply(bookingCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+		List<CategoryCriterion> calendarCriterions = new ArrayList<CategoryCriterion>();
+		if (calendars != null && calendars.size() > 0) {
+			Iterator<String> calendarsIt = calendars.iterator();
+			while (calendarsIt.hasNext()) {
+				calendarCriterions.add(new CategoryCriterion(calendarsIt.next(), "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+			}
+		}
+		CategoryCriterion.applyOr(bookingCriteria, calendarCriterions);
 		return bookingCriteria.list();
 	}
 

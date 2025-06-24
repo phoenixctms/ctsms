@@ -7,7 +7,11 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -199,7 +203,7 @@ public class DutyRosterTurnDaoImpl
 
 	@Override
 	protected Collection<DutyRosterTurn> handleFindByDepartmentStatusStaffTrialCalendarInterval(
-			Long trialDepartmentId, Long statusId, Long staffId, boolean unassigned, Long trialId, String calendar, Timestamp from, Timestamp to)
+			Long trialDepartmentId, Long statusId, Long staffId, boolean unassigned, Long trialId, Set<String> calendars, Timestamp from, Timestamp to)
 			throws Exception {
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		CriteriaUtil.applyClosedIntervalCriterion(dutyRosterCriteria, from, to, null);
@@ -227,7 +231,14 @@ public class DutyRosterTurnDaoImpl
 				dutyRosterCriteria.add(Restrictions.eq("staff.id", staffId.longValue()));
 			}
 		}
-		CategoryCriterion.apply(dutyRosterCriteria, new CategoryCriterion(calendar, "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+		List<CategoryCriterion> calendarCriterions = new ArrayList<CategoryCriterion>();
+		if (calendars != null && calendars.size() > 0) {
+			Iterator<String> calendarsIt = calendars.iterator();
+			while (calendarsIt.hasNext()) {
+				calendarCriterions.add(new CategoryCriterion(calendarsIt.next(), "calendar", MatchMode.EXACT, EmptyPrefixModes.ALL_ROWS));
+			}
+		}
+		CategoryCriterion.applyOr(dutyRosterCriteria, calendarCriterions);
 		return dutyRosterCriteria.list();
 	}
 

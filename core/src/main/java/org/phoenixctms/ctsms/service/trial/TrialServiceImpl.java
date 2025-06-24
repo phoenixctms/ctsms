@@ -5976,7 +5976,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<DutyRosterTurnOutVO> handleGetDutyRosterInterval(
-			AuthenticationVO auth, Long departmentId, Long statusId, Long staffId, boolean unassigned, Long trialId, String calendar, Date from, Date to, boolean sort)
+			AuthenticationVO auth, Long departmentId, Long statusId, Long staffId, boolean unassigned, Long trialId, Set<String> calendars, Date from, Date to, boolean sort)
 			throws Exception {
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
@@ -5991,7 +5991,7 @@ public class TrialServiceImpl
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
-		Collection dutyRosterTurns = dutyRosterTurnDao.findByDepartmentStatusStaffTrialCalendarInterval(departmentId, statusId, staffId, unassigned, trialId, calendar,
+		Collection dutyRosterTurns = dutyRosterTurnDao.findByDepartmentStatusStaffTrialCalendarInterval(departmentId, statusId, staffId, unassigned, trialId, calendars,
 				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to));
 		dutyRosterTurnDao.toDutyRosterTurnOutVOCollection(dutyRosterTurns);
 		if (sort) {
