@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.phoenixctms.ctsms.compare.InventoryBookingIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.InventoryStatusEntryIntervalScheduleComparator;
@@ -44,6 +46,8 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 
@@ -73,7 +77,8 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 	private Long courseId;
 	private Long trialId;
 	private Long visitTypeId;
-	private String calendar;
+	//private String calendar;
+	Set<String> calendars;
 	private Boolean hideProbandAvailability;
 	private Boolean hideInventoryAvailability;
 	private List<Color> trialColors;
@@ -126,6 +131,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 				setDepartmentId(identity.getDepartment().getId());
 			}
 		}
+		calendars = new LinkedHashSet<String>();
 	}
 
 	@Override
@@ -136,10 +142,9 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 		collidingProbandStatusEntryModelCache.clear();
 		collidingCourseParticipationStatusEntryModelCache.clear();
 	}
-
-	public String getCalendar() {
-		return calendar;
-	}
+	//	public String getCalendar() {
+	//		return calendar;
+	//	}
 
 	public Long getCourseCategoryId() {
 		return courseCategoryId;
@@ -206,7 +211,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			Collection<InventoryBookingOutVO> bookings = null;
 			try {
 				bookings = WebUtil.getServiceLocator().getInventoryService()
-						.getInventoryBookingInterval(auth, departmentId, inventoryCategoryId, inventoryId, responsiblePersonId, probandId, courseId, trialId, calendar, from, to,
+						.getInventoryBookingInterval(auth, departmentId, inventoryCategoryId, inventoryId, responsiblePersonId, probandId, courseId, trialId, calendars, from, to,
 								false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
@@ -396,10 +401,9 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 	public boolean isShowVisitSchedule() {
 		return showVisitSchedule;
 	}
-
-	public void setCalendar(String calendar) {
-		this.calendar = calendar;
-	}
+	//	public void setCalendar(String calendar) {
+	//		this.calendar = calendar;
+	//	}
 
 	public void setCourseCategoryId(Long courseCategoryId) {
 		this.courseCategoryId = courseCategoryId;
@@ -491,5 +495,24 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 
 	public void setShowCollisions(boolean showCollisions) {
 		this.showCollisions = showCollisions;
+	}
+
+	public List<String> getCalendars() {
+		List<String> calendars = new ArrayList<String>();
+		calendars.addAll(this.calendars);
+		return calendars;
+	}
+
+	public void handleCalendarSelect(SelectEvent event) {
+	}
+
+	public void handleCalendarUnselect(UnselectEvent event) {
+	}
+
+	public void setCalendars(List<String> calendars) {
+		this.calendars.clear();
+		if (calendars != null) {
+			this.calendars.addAll(calendars);
+		}
 	}
 }

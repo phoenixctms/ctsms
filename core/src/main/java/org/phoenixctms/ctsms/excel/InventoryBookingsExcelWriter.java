@@ -27,7 +27,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	protected DepartmentVO probandDepartment;
 	protected DepartmentVO courseDepartment;
 	protected DepartmentVO trialDepartment;
-	protected String calendar;
+	protected Collection<String> calendars;
 	protected Date from;
 	protected Date to;
 	protected static final String INVENTORY_BOOKINGS_EXCEL_FILENAME_PREFIX = "inventory_bookings_";
@@ -73,7 +73,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 							temp));
 		}
 		header.getCentre().clear();
-		temp = calendar;
+		temp = calendars != null ? String.join(", ", calendars) : null;
 		if (!CommonUtil.isEmptyString(temp)) {
 			header.getCentre().append(
 					L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.CALENDAR_HEADER_FOOTER, ExcelUtil.DEFAULT_LABEL, temp));
@@ -122,8 +122,8 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 	protected void applyWorkbookSettings(WorkbookSettings settings) {
 	}
 
-	public String getCalendar() {
-		return calendar;
+	public Collection<String> getCalendars() {
+		return calendars;
 	}
 
 	@Override
@@ -204,8 +204,9 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		return true;
 	}
 
-	public void setCalendar(String calendar) {
-		this.calendar = calendar;
+	public void setCalendars(Collection<String> calendars) {
+		this.calendars = calendars;
+		String calendar = calendars != null ? String.join(", ", calendars) : null;
 		if (!CommonUtil.isEmptyString(calendar)) {
 			setSpreadSheetName(L10nUtil.getInventoryBookingsExcelLabel(Locales.USER, InventoryBookingsExcelLabelCodes.SPREADSHEET_NAME, ExcelUtil.DEFAULT_LABEL,
 					calendar));
@@ -269,7 +270,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 		excelVO.setProbandDepartment(probandDepartment);
 		excelVO.setCourseDepartment(courseDepartment);
 		excelVO.setTrialDepartment(trialDepartment);
-		excelVO.setCalendar(calendar);
+		excelVO.setCalendars(calendars);
 		excelVO.setFrom(from);
 		excelVO.setTo(to);
 		excelVO.setRowCount(getVOs().size());
@@ -286,6 +287,7 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 			fileName.append(trialDepartment.getId());
 			fileName.append("_");
 		}
+		String calendar = calendars != null ? String.join("_", calendars) : null;
 		if (!CommonUtil.isEmptyString(calendar)) {
 			fileName.append(CommonUtil.getSafeFilename(calendar, "_"));
 			fileName.append("_");

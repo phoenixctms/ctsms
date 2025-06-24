@@ -510,7 +510,7 @@ public class ScheduleInventoryBookingBean extends InventoryBookingBeanBase {
 		try {
 			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
 			InventoryBookingsExcelVO excel = WebUtil.getServiceLocator().getInventoryService().exportInventoryBookings(
-					WebUtil.getAuthentication(), bookingScheduleModel.getDepartmentId(), null, null, bookingScheduleModel.getCalendar(),
+					WebUtil.getAuthentication(), bookingScheduleModel.getDepartmentId(), null, null, bookingScheduleModel.calendars,
 					range.getStart(), range.getStop(), true, true, null, null, null, null);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
@@ -525,7 +525,7 @@ public class ScheduleInventoryBookingBean extends InventoryBookingBeanBase {
 		try {
 			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
 			InventoryBookingsExcelVO excel = WebUtil.getServiceLocator().getInventoryService().exportInventoryBookings(
-					WebUtil.getAuthentication(), null, bookingScheduleModel.getDepartmentId(), null, bookingScheduleModel.getCalendar(),
+					WebUtil.getAuthentication(), null, bookingScheduleModel.getDepartmentId(), null, bookingScheduleModel.calendars,
 					range.getStart(), range.getStop(), null, null, true, true, null, null);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
@@ -540,7 +540,7 @@ public class ScheduleInventoryBookingBean extends InventoryBookingBeanBase {
 		try {
 			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
 			InventoryBookingsExcelVO excel = WebUtil.getServiceLocator().getInventoryService().exportInventoryBookings(
-					WebUtil.getAuthentication(), null, null, bookingScheduleModel.getDepartmentId(), bookingScheduleModel.getCalendar(),
+					WebUtil.getAuthentication(), null, null, bookingScheduleModel.getDepartmentId(), bookingScheduleModel.calendars,
 					range.getStart(), range.getStop(), null, null, null, null, true, true);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {

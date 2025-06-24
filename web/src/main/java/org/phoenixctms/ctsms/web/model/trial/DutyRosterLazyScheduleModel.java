@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.phoenixctms.ctsms.compare.DutyRosterTurnIntervalScheduleComparator;
 import org.phoenixctms.ctsms.compare.InventoryBookingIntervalScheduleComparator;
@@ -44,6 +46,8 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 
@@ -65,7 +69,8 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	private Long departmentId;
 	private Long staffCategoryId;
 	private Long trialId;
-	private String calendar;
+	//private String calendar;
+	private Set<String> calendars;
 	private Long teamMemberStaffId;
 	private Boolean notify;
 	private Boolean ignoreTimelineEvents;
@@ -121,6 +126,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				setDepartmentId(identity.getDepartment().getId());
 			}
 		}
+		calendars = new LinkedHashSet<String>();
 	}
 
 	@Override
@@ -128,10 +134,9 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 		collidingStaffStatusEntryModelCache.clear();
 		collidingInventoryBookingModelCache.clear();
 	}
-
-	public String getCalendar() {
-		return calendar;
-	}
+	//	public String getCalendar() {
+	//		return calendar;
+	//	}
 
 	public Long getCourseCategoryId() {
 		return courseCategoryId;
@@ -196,7 +201,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			try {
 				dutyRoster = WebUtil.getServiceLocator().getTrialService().getDutyRosterInterval(auth, departmentId, statusId, teamMemberStaffId,
 						Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_UNASSIGED_DUTIES, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_UNASSIGED_DUTIES),
-						trialId, calendar, from, to, false);
+						trialId, calendars, from, to, false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -431,10 +436,9 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 	public boolean isShowVisitSchedule() {
 		return showVisitSchedule;
 	}
-
-	public void setCalendar(String calendar) {
-		this.calendar = calendar;
-	}
+	//	public void setCalendar(String calendar) {
+	//		this.calendar = calendar;
+	//	}
 
 	public void setCourseCategoryId(Long courseCategoryId) {
 		this.courseCategoryId = courseCategoryId;
@@ -522,5 +526,24 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 
 	public void setShowTrialBookings(boolean showTrialBookings) {
 		this.showTrialBookings = showTrialBookings;
+	}
+
+	public List<String> getCalendars() {
+		List<String> calendars = new ArrayList<String>();
+		calendars.addAll(this.calendars);
+		return calendars;
+	}
+
+	public void handleCalendarSelect(SelectEvent event) {
+	}
+
+	public void handleCalendarUnselect(UnselectEvent event) {
+	}
+
+	public void setCalendars(List<String> calendars) {
+		this.calendars.clear();
+		if (calendars != null) {
+			this.calendars.addAll(calendars);
+		}
 	}
 }
