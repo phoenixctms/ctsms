@@ -21,7 +21,7 @@
 				target="head" />
 		</ui:define>
 		<ui:define name="content">
-			<h:form id="dutyrosterschedule_form">
+			<h:form id="dutyrosterschedule_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 				<p:remoteCommand process="teammember_filter"
 					name="changeTeamMemberStaff"
 					rendered="#{scheduleDutyRosterTurnBean.enableTeamMemberFilter}"
@@ -44,7 +44,7 @@
 						<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
 								cellpadding="0" columnClasses="ctsms-bottom-column,ctsms-bottom-column">
 							<h:panelGrid columns="12" cellpadding="2"
-								columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								columnClasses="ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
 								<h:outputLabel for="department_filter"
 									rendered="#{scheduleDutyRosterTurnBean.enableDepartmentFilter}"
 									value="#{triallabels.duty_roster_schedule_department_filter_label}" />
@@ -79,19 +79,34 @@
 								<h:outputLabel for="calendar_filter"
 									value="#{triallabels.duty_roster_schedule_calendar_filter_label}" />
 								<h:panelGroup>
-									<p:selectOneMenu id="calendar_filter"
-										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.calendar}"
-										required="false"
+									<p:autoComplete id="calendar_filter" required="false"
+										value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.calendars}"
 										label="#{triallabels.duty_roster_schedule_calendar_filter}"
-										styleClass="ctsms-control">
-										<f:selectItems
-											value="#{scheduleDutyRosterTurnBean.filterCalendars}"
-											var="selectItem" itemLabel="#{selectItem.label}"
-											itemValue="#{selectItem.value}" />
-										<p:ajax update="tabView"
-											oncomplete="handleDutyRosterDepartmentCategorySelected(xhr, status, args)"
-											listener="#{scheduleDutyRosterTurnBean.handleDepartmentCategoryTrialChange}" />
-									</p:selectOneMenu>
+										styleClass="ctsms-control-larger"
+										minQueryLength="#{autoCompleteMinQueryLengthCategory}"
+										maxResults="#{autoCompleteMaxResultsCategory}"
+										queryDelay="#{autoCompleteQueryDelayCategory}"
+										global="#{autoCompleteGlobalCategory}"
+										scrollHeight="#{autoCompleteScrollHeightCategory}"
+				                        onstart="setSupressWait()"
+				                        completeMethod="#{scheduleDutyRosterTurnBean.completeCalendar}"
+				                        multiple="true" var="calendar" itemValue="#{calendar}"
+										itemLabel="#{calendar}">
+										<p:ajax
+											onstart="setSupressWait()"
+											listener="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.handleCalendarSelect}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											onstart="setSupressWait()"
+											listener="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel.handleCalendarUnselect}"
+											event="itemUnselect"
+											process="@this" />					
+										<p:ajax
+											onstart="setSupressWait()"
+											event="blur"
+											process="@this" />										
+									</p:autoComplete>								
 									<p:tooltip rendered="#{enableTooltips}" for="calendar_filter">
 										<h:outputText
 											value="#{triallabels.duty_roster_schedule_calendar_filter_tooltip}"
