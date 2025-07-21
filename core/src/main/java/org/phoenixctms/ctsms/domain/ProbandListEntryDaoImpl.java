@@ -115,14 +115,21 @@ public class ProbandListEntryDaoImpl
 	}
 
 	@Override
-	protected Collection<ProbandListEntry> handleFindByTrialProbandDepartment(
-			Long trialId, Long probandDepartmentId) throws Exception {
+	protected Collection<ProbandListEntry> handleFindByTrialProbandDepartmentEcrfs(
+			Long trialId, Long probandDepartmentId, Boolean hasEcrfs) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (probandDepartmentId != null) {
 			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", probandDepartmentId.longValue()));
+		}
+		if (hasEcrfs != null) {
+			if (hasEcrfs) {
+				listEntryCriteria.add(Restrictions.isNotEmpty("ecrfStatusEntries"));
+			} else {
+				listEntryCriteria.add(Restrictions.isEmpty("ecrfStatusEntries"));
+			}
 		}
 		return listEntryCriteria.list();
 	}

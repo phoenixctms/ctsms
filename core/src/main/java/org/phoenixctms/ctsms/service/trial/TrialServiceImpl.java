@@ -7396,7 +7396,7 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected TrialECRFProgressSummaryVO handleGetTrialEcrfProgressSummary(AuthenticationVO auth, Long trialId, Long probandDepartmentId, Date from, Date to)
+	protected TrialECRFProgressSummaryVO handleGetTrialEcrfProgressSummary(AuthenticationVO auth, Long trialId, Long probandDepartmentId, boolean dueDetail, Date from, Date to)
 			throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		TrialOutVO trialVO = trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(trialId, trialDao));
@@ -7416,10 +7416,10 @@ public class TrialServiceImpl
 		result.setEcrfOverdueCount(0l);
 		result.setCharge(0.0f);
 		result.setEcrfStatusEntryCount(0l);
-		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao.findByTrialProbandDepartment(trialId, probandDepartmentId).iterator();
+		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao.findByTrialProbandDepartmentEcrfs(trialId, probandDepartmentId, true).iterator();
 		while (listEntriesIt.hasNext()) {
 			ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next());
-			ECRFProgressSummaryVO ecrfProgressSummary = createEcrfProgessSummary(listEntryVO, false, false, true, from, to);
+			ECRFProgressSummaryVO ecrfProgressSummary = createEcrfProgessSummary(listEntryVO, false, false, dueDetail, from, to);
 			result.setEcrfTotalCount(result.getEcrfTotalCount() + ecrfProgressSummary.getEcrfTotalCount());
 			result.setEcrfDoneCount(result.getEcrfDoneCount() + ecrfProgressSummary.getEcrfDoneCount());
 			result.setEcrfOverdueCount(result.getEcrfOverdueCount() + ecrfProgressSummary.getEcrfOverdueCount());
