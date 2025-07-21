@@ -38,12 +38,21 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 	private Collection<ECRFStatusTypeVO> allStatusTypes;
 	private Date start;
 	private Date stop;
+	private boolean dueDetail;
 	private Long probandDepartmentId;
 
 	public EcrfProgressOverviewBean() {
 		super();
 		trialEcrfProgressSummaryCache = new HashMap<Long, TrialECRFProgressSummaryVO>();
 		ecrfProgressSummaryModel = new EcrfProgressSummaryLazyModel();
+		dueDetail = Settings.getBoolean(SettingCodes.ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET);
+		StaffOutVO identity = WebUtil.getUserIdentity();
+		if (identity != null) {
+			if (Settings.getBoolean(SettingCodes.ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_PROBAND_DEPARTMENT_PRESET, Bundle.SETTINGS,
+					DefaultSettings.ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_PROBAND_DEPARTMENT_PRESET)) {
+				setProbandDepartmentId(identity.getDepartment().getId());
+			}
+		}
 	}
 
 	public Collection<ECRFStatusTypeVO> getAllStatusTypes() {
@@ -56,7 +65,7 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 			if (trialEcrfProgressSummaryCache.containsKey(trialVO.getId())) {
 				trialECRFProgressSummaryVO = trialEcrfProgressSummaryCache.get(trialVO.getId());
 			} else {
-				trialECRFProgressSummaryVO = WebUtil.getTrialEcrfProgressSummary(trialVO.getId(), probandDepartmentId, start, stop);
+				trialECRFProgressSummaryVO = WebUtil.getTrialEcrfProgressSummary(trialVO.getId(), probandDepartmentId, dueDetail, start, stop);
 				trialEcrfProgressSummaryCache.put(trialVO.getId(), trialECRFProgressSummaryVO);
 			}
 			return trialECRFProgressSummaryVO;
@@ -221,5 +230,13 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 
 	public void setStop(Date stop) {
 		this.stop = stop;
+	}
+
+	public boolean isDueDetail() {
+		return dueDetail;
+	}
+
+	public void setDueDetail(boolean dueDetail) {
+		this.dueDetail = dueDetail;
 	}
 }

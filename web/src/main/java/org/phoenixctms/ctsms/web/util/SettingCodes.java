@@ -180,6 +180,7 @@ public interface SettingCodes {
 	public final static String TRIAL_MONEY_TRANSFER_SUMMARY_SHOW_PAID_PRESET = "trial_money_transfer_summary_show_paid_preset";
 	public final static String TRIAL_MONEY_TRANSFER_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = "trial_money_transfer_summary_active_identity_department_preset";
 	public final static String ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_DEPARTMENT_PRESET = "ecrf_progress_summary_active_identity_department_preset";
+	public final static String ECRF_PROGRESS_SUMMARY_ACTIVE_IDENTITY_PROBAND_DEPARTMENT_PRESET = "ecrf_progress_summary_active_identity_proband_department_preset";
 	public final static String PROBAND_ADDRESS_AFNUS_PRESET = "proband_address_afnus_preset";
 	public final static String PROBAND_ADDRESS_DELIVER_PRESET = "proband_address_deliver_preset";
 	public final static String PROBAND_CONTACT_NOTIFY_PRESET = "proband_contact_notify_preset";
@@ -603,4 +604,5 @@ public interface SettingCodes {
 	public static final String SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = "show_trial_training_record_menuitems";
 	public final static String TAB_TITLE_LIST_CLIP_MAX_LENGTH = "tab_title_list_clip_max_length";
 	public static final String TRUSTED_HOST_2FA_REQUIRED = "trusted_host_2fa_required";
+	public static final String ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET = "ecrf_progress_summary_show_due_detail_preset";
 }
