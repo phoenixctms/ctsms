@@ -3964,10 +3964,10 @@ public final class WebUtil {
 		return null;
 	}
 
-	public static TrialECRFProgressSummaryVO getTrialEcrfProgressSummary(Long trialId, Long probandDepartmentId, Date from, Date to) {
+	public static TrialECRFProgressSummaryVO getTrialEcrfProgressSummary(Long trialId, Long probandDepartmentId, boolean dueDetail, Date from, Date to) {
 		if (trialId != null) {
 			try {
-				return getServiceLocator().getTrialService().getTrialEcrfProgressSummary(getAuthentication(), trialId, probandDepartmentId, from, to);
+				return getServiceLocator().getTrialService().getTrialEcrfProgressSummary(getAuthentication(), trialId, probandDepartmentId, dueDetail, from, to);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
