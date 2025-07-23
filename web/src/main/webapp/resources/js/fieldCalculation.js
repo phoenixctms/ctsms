@@ -46,6 +46,7 @@ var FieldCalculation = FieldCalculation || {};
 	    'wrong time format'      : "falsches Uhrzeitformat",
 	    'hour required'          : "Stunde erforderlich",
 	    'minute required'        : "Minute erforderlich",
+	    'second required'        : "Sekunde erforderlich",
 	    'invalid time'           : "ungültige Uhrzeit",
 
 	    'customMonthNameToNumberMap' : {
@@ -103,6 +104,7 @@ var FieldCalculation = FieldCalculation || {};
 	    'wrong time format'      : "wrong time format",
 	    'hour required'          : "hour required",
 	    'minute required'        : "minute required",
+	    'second required'        : "second required",
 	    'invalid time'           : "invalid time",
 
 	    'customMonthNameToNumberMap' : {
@@ -1116,7 +1118,11 @@ var FieldCalculation = FieldCalculation || {};
 		if (input == null || input === undefined) {
 
 		} else if ((input instanceof JSJoda.LocalTime) || (input instanceof JSJoda.LocalDateTime) || (input instanceof JSJoda.ZonedDateTime)) {
-			return zeroFill(input.hour(),2) + _getLocalizedMessage('customTimeSeparator',locale) + zeroFill(input.minute(),2);
+			if (input.second() == 0) {
+				return zeroFill(input.hour(),2) + _getLocalizedMessage('customTimeSeparator',locale) + zeroFill(input.minute(),2);
+			} else {
+				return zeroFill(input.hour(),2) + _getLocalizedMessage('customTimeSeparator',locale) + zeroFill(input.minute(),2) + _getLocalizedMessage('customTimeSeparator',locale) + zeroFill(input.second(),2);
+			}
 		}
 		return '';
 	}
@@ -1128,6 +1134,8 @@ var FieldCalculation = FieldCalculation || {};
 			}
 			return null;
 		}
+		var dayRequired = (typeof(nkDay) == typeof(true) ? nkDay : (nkDay != null && nkDay == "required"));
+		var monthRequired = (typeof(nkMonth) == typeof(true) ? nkMonth : (nkMonth != null && nkMonth == "required"));
 		var ary = input.split(_getLocalizedMessage('customDateSeparator',locale));
 		if (ary == null || ary.length != 3 || ary[0].length == 0 || ary[1].length == 0 || ary[2].length == 0) {
 		    if (_testFunction(error)) {
@@ -1136,24 +1144,46 @@ var FieldCalculation = FieldCalculation || {};
 			return null;
 		}
 		var regexp = _getLocalizedMessage('customPartialDatePartRegExp',locale);
-		var dayRequired = (typeof(nkDay) == typeof(true) ? nkDay : (nkDay != null && nkDay == "required"));
-		var monthRequired = (typeof(nkMonth) == typeof(true) ? nkMonth : (nkMonth != null && nkMonth == "required"));
-		if (regexp.test(ary[2])) {
-			if (regexp.test(ary[0]) && regexp.test(ary[1]) && !dayRequired && !monthRequired) {
-
+		if (regexp.test(ary[2])) { 
+			if (regexp.test(ary[1])) { 
+				if (regexp.test(ary[0])) { 
+					
+				} else {
+					if (_testFunction(error)) {
+						error('month required');
+					}
+					return null;
+				}
 			} else {
 				if (_testFunction(error)) {
 					error('year required');
 				}
+				return null;
 			}
-		    return null;
+		} else if (regexp.test(ary[1])) {
+			if (regexp.test(ary[0])) {
+				
+			} else {
+				if (_testFunction(error)) {
+					error('month required');
+				}
+				return null;
+			}
 		}
 		var y = ary[2];
+		if (regexp.test(y)) {
+			y = '1900';
+		} else if (!/^\d{4,4}$/.test(y)) {
+			if (_testFunction(error)) {
+				error('wrong date format');
+			}
+			return null;
+		}
 		var m;
 		var m_nk = false;
 		var customMonthNameToNumberMap = _getLocalizedMessage('customMonthNameToNumberMap',locale);
 		if (regexp.test(ary[1])) {
-		    if (!monthRequired && (nkMonth == null || nkMonth.length == 0)) {
+		    if (!monthRequired && (nkMonth == null || nkMonth.length == 0 || isNaN(nkMonth))) {
 			    nkMonth = '01';
 		    } else if (monthRequired) {
 				if (_testFunction(error)) {
@@ -1171,7 +1201,7 @@ var FieldCalculation = FieldCalculation || {};
 			}
 			return null;
 		}
-		if (!dayRequired && (nkDay == null || nkDay.length == 0)) {
+		if (!dayRequired && (nkDay == null || nkDay.length == 0 || isNaN(nkDay))) {
 		    nkDay = '01';
 		} else if (dayRequired && regexp.test(ary[0])) {
 			if (_testFunction(error)) {
@@ -1195,6 +1225,12 @@ var FieldCalculation = FieldCalculation || {};
 				return null;
 			}
 			d = ary[0];
+			if (!/^\d{2,2}$/.test(d)) {
+				if (_testFunction(error)) {
+					error('wrong date format');
+				}
+				return null;
+			}
 		}
 		var date = JSJoda.LocalDate.of(+y,+m,+d);
 		if (date && (date.year() == +y) && (+y >= 1900) && date.monthValue() == m && date.dayOfMonth() == +d) {
@@ -1207,49 +1243,120 @@ var FieldCalculation = FieldCalculation || {};
 		}
 	}
 
-	function _parseTimeCustom(input,error,nkMinute,locale) {
+	function _parseTimeCustom(input,error,nkMinute,nkSecond,locale) {
 	    if (input == null || input.length == 0) {
 		    if (_testFunction(error)) {
 			    error('time is empty');
 			}
 			return null;
 		}
+		var minuteRequired = (typeof(nkMinute) == typeof(true) ? nkMinute : (nkMinute != null && nkMinute == "required"));
+		var secondRequired;
+		if (typeof(nkSecond) == typeof(true)) {
+			secondRequired = nkSecond;
+		} else if (nkSecond != null) {
+			if (nkSecond == "required") {
+				secondRequired = true;
+			} else {
+				secondRequired = false;
+				if (!/^\d+$/.test(nkSecond)) {
+					locale = nkSecond;
+					nkSecond = null;
+				}
+			}
+		} else {
+			secondRequired = false;
+		}
 		var ary = input.split(_getLocalizedMessage('customTimeSeparator',locale));
-	    if (ary == null || ary.length != 2 || ary[0].length == 0 || ary[1].length == 0) {
+	    if (ary == null ||
+	        !(ary.length == 2 || ary.length == 3) ||
+	        (ary.length == 2 && (ary[0].length == 0 || ary[1].length == 0)) ||
+	        (ary.length == 3 && (ary[0].length == 0 || ary[1].length == 0 || ary[2].length == 0))) {
 		    if (_testFunction(error)) {
 			    error('wrong time format');
 	        }
 			return null;
 	    }
 		var regexp = _getLocalizedMessage('customPartialTimePartRegExp',locale);
-		var minuteRequired = (typeof(nkMinute) == typeof(true) ? nkMinute : (nkMinute != null && nkMinute == "required"));
-		if (regexp.test(ary[0])) {
-			if (regexp.test(ary[1]) && !minuteRequired) {
-
+	    if (regexp.test(ary[0])) {
+	    	if (regexp.test(ary[1])) {
+		    	if (ary.length != 3 || regexp.test(ary[2])) {
+			 		
+				} else {
+					if (_testFunction(error)) {
+					    error('minute required');
+			        }
+			        return null;
+				}
 			} else {
-			    if (_testFunction(error)) {
+				if (_testFunction(error)) {
 				    error('hour required');
 		        }
+		        return null;
 			}
-			return null;
-	    }
+	    } else if (regexp.test(ary[1])) {
+	    	if (ary.length != 3 || regexp.test(ary[2])) {
+		 		
+			} else {
+				if (_testFunction(error)) {
+				    error('minute required');
+		        }
+		        return null;
+			}
+		}
+	    
 		var h = ary[0];
-		if (!minuteRequired && (nkMinute == null || nkMinute.length == 0)) {
-		    nkMinute = '00';
-		} else if (minuteRequired && regexp.test(ary[1])) {
+		if (regexp.test(h)) {
+			h = '00';
+		} else  if(!/^\d{2,2}$/.test(h)) {
 			if (_testFunction(error)) {
-				error('minute required');
+				error('wrong time format');
 			}
 			return null;
 		}
+		if (!minuteRequired && (nkMinute == null || nkMinute.length == 0 || isNaN(nkMinute))) {
+		    nkMinute = '00';
+		} else {
+			if (regexp.test(ary[1])) {
+				if (minuteRequired) {
+					if (_testFunction(error)) {
+						error('minute required');
+					}
+					return null;
+				}
+			} else if (!/^\d{2,2}$/.test(ary[1])) {
+				if (_testFunction(error)) {
+					error('wrong time format');
+				}
+				return null;
+			}
+		}
 		var m = ary[1].replace(regexp,nkMinute);
-		if (+h > 23 || +h < 0 || +m > 59 || +m < 0) {
+		if (!secondRequired && (nkSecond == null || nkSecond.length == 0 || isNaN(nkSecond))) {
+		    nkSecond = '00';
+		} else {
+			if (ary.length != 3 || regexp.test(ary[2])) {
+				if (secondRequired) {
+					if (_testFunction(error)) {
+						error('second required');
+					}
+					return null;
+				}
+			} else if (!/^\d{2,2}$/.test(ary[2])) {
+				if (_testFunction(error)) {
+					error('wrong time format');
+				}
+				return null;
+			}
+		}
+	    var s = ary.length != 3 ? nkSecond : ary[2].replace(regexp,nkSecond);
+		if (+h > 23 || +h < 0 || +m > 59 || +m < 0 || +s > 59 || +s < 0) {
 		    if (_testFunction(error)) {
 			    error('invalid time');
 	        }
 			return null;
 	    } else {
-	    	return JSJoda.LocalTime.of(+h,+m);
+	    	return JSJoda.LocalTime.of(+h,+m,+s);
 	    }
 	}
 
