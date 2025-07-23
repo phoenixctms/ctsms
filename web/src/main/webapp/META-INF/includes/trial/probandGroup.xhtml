@@ -183,7 +183,7 @@
 
 								<p:column
 									sortBy="#{probandListEntry.vo.proband.department.name}"
-									filterBy="#{probandListEntry.vo.trial.department.id}"
+									filterBy="#{probandListEntry.vo.proband.department.id}"
 									filterOptions="#{sessionScopeBean.filterDepartments}">
 									<f:facet name="header">
 										<h:outputText
@@ -192,16 +192,37 @@
 									<h:outputText
 										value="#{probandListEntry.vo.proband.department.name}" />
 								</p:column>
-
-
+		
+								<p:column
+								    sortBy="#{probandListEntry.vo.proband.gender.name}"
+									filterBy="#{probandListEntry.vo.proband.gender.sex}"
+									filterOptions="#{sessionScopeBean.filterSexes}" >
+									
+									<f:facet name="header">
+										<h:outputText
+											value="#{triallabels.proband_group_probandlistentry_list_proband_gender_column}" />
+									</f:facet>
+									<h:outputText value="#{probandListEntry.vo.proband.gender.name}" />
+								</p:column>
+								
+								<p:column
+									sortBy="#{probandListEntry.vo.proband.yearOfBirth}"
+									filterBy="#{probandListEntry.vo.proband.yearOfBirth}" >
+									
+									<f:facet name="header">
+										<h:outputText
+											value="#{triallabels.proband_group_probandlistentry_list_proband_year_of_birth_column}" />
+									</f:facet>
+									<h:outputText value="#{probandListEntry.vo.proband.yearOfBirth}" />
+								</p:column>
 
 								<ui:include src="../shared/probandListEntryTableColumns.xhtml">
 									<ui:param name="probandListEntryModel"
 										value="#{probandGroupBean.getProbandListEntryModel(probandGroup.vo)}" />
 									<ui:param name="probandlistentry_list"
 										value=":tabView:probandgroup_form:probandgroup_list:#{probandGroup.rowIndex}:probandlistentry_list" />
-									<ui:param name="showReimbursementTotalsColumn" value="true" />
-									<ui:param name="showStatusDetails" value="true" />
+									<ui:param name="showReimbursementTotalsColumn" value="false" />
+									<ui:param name="showStatusDetails" value="false" />
 									<ui:param name="byTagInputField" value="false" />
 									<ui:param name="byInquiryInputField" value="true" />
 									<ui:param name="allTrials" value="true" />
