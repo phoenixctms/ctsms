@@ -520,6 +520,27 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 	}
 
+	public StreamedContent getEcrfPdfStreamedContent(boolean blank, boolean section) throws Exception {
+		try {
+			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
+			Long ecrfId = ecrf == null ? null : ecrf.getId();
+			Long visitId = visit != null ? visit.getId() : null;
+			ECRFPDFVO ecrfPdf;
+			if (!section || CommonUtil.isEmptyString(filterSection)) {
+				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrfs(WebUtil.getAuthentication(), null, listEntryId, ecrfId, visitId, null, null, null, null, null,
+						null, blank);
+			} else {
+				ecrfPdf = WebUtil.getServiceLocator().getTrialService().renderEcrf(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection, blank);
+			}
+			return new DefaultStreamedContent(new ByteArrayInputStream(ecrfPdf.getDocumentDatas()), ecrfPdf.getContentType().getMimeType(), ecrfPdf.getFileName());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			throw e;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			throw e;
+		}
+	}
+
 	public ECRFStatusEntryVO getEcrfStatus() {
 		return ecrfStatus;
 	}
