@@ -76,6 +76,8 @@ public class ScheduleRenderer extends org.primefaces.component.schedule.Schedule
 			writer.write(",weekNumberOnClick:" + WebUtil.quoteJSString(schedule.getWeekNumberOnClick(), true));
 		if (schedule.getDateOnClick() != null)
 			writer.write(",dateOnClick:" + WebUtil.quoteJSString(schedule.getDateOnClick(), true));
+		if (schedule.getMonthOnClick() != null)
+			writer.write(",monthOnClick:" + WebUtil.quoteJSString(schedule.getMonthOnClick(), true));
 		//behaviors
 		encodeClientBehaviors(context, schedule);
 		writer.write("});});");
