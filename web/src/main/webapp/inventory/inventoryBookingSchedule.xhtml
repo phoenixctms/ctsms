@@ -501,7 +501,8 @@
 						centerTemplate="title"
 						rightHeaderTemplate="#{applicationScopeBean.scheduleRightHeaderTemplate}"
 						weekNumberOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'WEEK',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));"
-						dateOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'DAY',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));">
+						dateOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'DAY',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));"
+						monthOnClick="openDateRangePeriodDialog(prepareRemoteCommandParameters({#{applicationScopeBean.parameterName('DATE')}:time,#{applicationScopeBean.parameterName('RANGE_PERIOD')}:'MONTH',#{applicationScopeBean.parameterName('RANGE_LABEL')}:label}));">
 						<p:ajax event="dateSelect"
 							listener="#{scheduleInventoryBookingBean.onDateSelect}"
 							onstart="setSupressWait()" update="tabView,messages"

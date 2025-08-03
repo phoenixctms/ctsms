@@ -1999,7 +1999,13 @@ function MonthView(element, calendar) {
 			rowCnt = 6;
 		}
 
-		t.title = formatDate(start, opt('titleFormat'));
+        var title = formatDate(start, opt('titleFormat'));
+        if (opt('monthOnClick')) {
+        	t.title = "<span class='fc-link' onclick=\"var fn = function(time,label) {" + opt('monthOnClick') + "}; fn.call(this," + start.getTime() + ", '" + title + "');\">" + title + '</span>';
+        } else {
+			t.title = title;
+		}
+
 
 		t.start = start;
 		t.end = end;
@@ -2194,7 +2200,6 @@ function BasicView(element, calendar, viewName) {
 	var dateOnClick;
 	var weekNumberTitle;
 	var weekNumberFormat;
-
 
 
 	/* Rendering
@@ -2907,7 +2912,7 @@ function AgendaView(element, calendar, viewName) {
 	var dateOnClick;
 	var weekNumberTitle;
 	var weekNumberFormat;
-
+	
 
 
 	/* Rendering

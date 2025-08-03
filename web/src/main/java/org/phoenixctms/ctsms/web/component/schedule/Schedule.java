@@ -44,7 +44,8 @@ public class Schedule extends org.primefaces.component.schedule.Schedule {
 		timeFormat,
 		timeZone,
 		weekNumberOnClick,
-		dateOnClick;
+		dateOnClick,
+		monthOnClick;
 
 		String toString;
 
@@ -78,9 +79,18 @@ public class Schedule extends org.primefaces.component.schedule.Schedule {
 		return (java.lang.String) getStateHelper().eval(PropertyKeys.dateOnClick, null);
 	}
 
+	public java.lang.String getMonthOnClick() {
+		return (java.lang.String) getStateHelper().eval(PropertyKeys.monthOnClick, null);
+	}
+
 	public void setDateOnClick(java.lang.String _dateOnClick) {
 		getStateHelper().put(PropertyKeys.dateOnClick, _dateOnClick);
 		handleAttribute("dateOnClick", _dateOnClick);
+	}
+
+	public void setMonthOnClick(java.lang.String _monthOnClick) {
+		getStateHelper().put(PropertyKeys.monthOnClick, _monthOnClick);
+		handleAttribute("monthOnClick", _monthOnClick);
 	}
 
 	public String getFamily() {
