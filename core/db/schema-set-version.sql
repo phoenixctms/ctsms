@@ -11,4 +11,4 @@ begin
 end
 $$ language plpgsql;
 
-select set_database_version('010801099');
+select set_database_version('010801100');
