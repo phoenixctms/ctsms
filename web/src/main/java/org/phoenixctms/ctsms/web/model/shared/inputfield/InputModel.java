@@ -36,7 +36,7 @@ import org.primefaces.json.JSONException;
 public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	private final static String INPUT_FIELD_CREATED_COLOR_STYLECLASS_PREFIX = "ctsms-inputfield-created-color-";
-	private final static long MAX_INPUT_FIELD_CREATED_COLORS = 16l;
+	private final static long MAX_INPUT_FIELD_CREATED_COLORS = 3l; // 16l;
 	private int rowIndex;
 	private String errorMessage;
 	protected InputFieldOutVO inputField;
