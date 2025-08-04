@@ -2592,6 +2592,7 @@ public class ProductionDataProvider {
 		createVisitType("inpatient", null, true, true, Color.YELLOWGREEN); // treatment
 		createVisitType("phone", null, true, false, Color.OLIVE);
 		createVisitType("final", null, true, true, Color.ORCHID);
+		createVisitType("homedosing", null, true, false, Color.OLIVE);
 		jobOutput.println("visit types created");
 	}
 
