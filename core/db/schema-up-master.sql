@@ -356,6 +356,17 @@ if get_database_version() < '010801099' then
   perform set_database_version('010801099');
 
 end if;
+
+
+if get_database_version() < '010801100' then
+
+  INSERT INTO visit_type
+  ("id", "name_l10n_key", "max_occurrence", "visible", "color", "travel") VALUES
+  (nextval('hibernate_sequence'), 'homedosing', null, 't', 'OLIVE', 'f');
+
+  perform set_database_version('010801100');
+
+end if;
  
 end
 $$;
