@@ -477,7 +477,10 @@ public interface ServiceExceptionCodes {
 	public final static String INVALID_NEW_PROBAND_LIST_STATUS_TYPE = "invalid_new_proband_list_status_type";
 	public final static String PROBAND_LIST_STATUS_REAL_DATE_LESS_THAN_LAST_DATE = "proband_list_status_real_date_less_than_last_date";
 	public final static String PROBAND_LIST_STATUS_ENTRY_REASON_REQUIRED = "proband_list_status_entry_reason_required";
-	public final static String CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY1 = "cannot_decrypt_proband_list_status_entry";
+	//public final static String CANNOT_DECRYPT_PROBAND_LIST_STATUS_ENTRY = "cannot_decrypt_proband_list_status_entry";
+	public final static String PROBAND_LIST_STATUS_ENTRY_VISIT_SCHEDULE_ITEM_ID_IS_NULL = "proband_list_status_entry_visit_schedule_item_id_is_null";
+	public final static String PROBAND_LIST_STATUS_ENTRY_DUPLICATE_VISIT_SCHEDULE_ITEM = "proband_list_status_entry_duplicate_visit_schedule_item";
+	public final static String PROBAND_LIST_STATUS_ENTRY_WRONG_VISIT_SCHEDULE_ITEM = "proband_list_status_entry_wrong_visit_schedule_item";
 	public final static String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED = "proband_list_entry_tag_js_variable_name_required";
 	public final static String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_INVALID = "proband_list_entry_tag_js_variable_name_invalid";
 	public final static String PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_NOT_UNIQUE = "proband_list_entry_tag_js_variable_name_not_unique";
