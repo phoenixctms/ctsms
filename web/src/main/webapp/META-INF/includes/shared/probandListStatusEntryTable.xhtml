@@ -51,6 +51,13 @@
 				</f:facet>
 				<h:outputText value="#{probandListStatusEntry.vo.status.name}" />
 			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{triallabels.probandliststatus_list_visit_schedule_items_column}" />
+				</f:facet>
+				<h:outputText
+					value="#{applicationScopeBean.clipStringMid(applicationScopeBean.visitScheduleItemsToString(probandListStatusEntry.vo.visitScheduleItems))}" />
+			</p:column>
 			<p:column sortBy="#{probandListStatusEntry.vo.status.count}">
 				<f:facet name="header">
 					<h:outputText value="#{triallabels.probandliststatus_list_status_count_column}" />

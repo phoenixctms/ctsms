@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<html
-	xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
@@ -12,68 +11,114 @@
 	<ui:composition>
 		<h:panelGrid
 			rendered="#{probandListBean.probandListStatusEntryBean.inputVisible}"
-			columns="9"
-			cellpadding="2"
-			columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-			<h:outputLabel
-				for="probandStatusType"
+			columns="12" cellpadding="2"
+			columnClasses="ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
+			<h:outputLabel for="probandStatusType"
 				value="#{triallabels.proband_list_status_entry_input_status_type_label}" />
 			<h:panelGroup>
-				<p:selectOneMenu
-					id="probandStatusType"
+				<p:selectOneMenu id="probandStatusType"
 					value="#{probandListBean.probandListStatusEntryBean.in.statusId}"
 					required="true"
 					label="#{triallabels.proband_list_status_entry_input_status_type}"
 					styleClass="ctsms-control">
 					<f:converter converterId="ctsms.ID" />
-					<f:selectItem
-						itemLabel="#{labels.no_selection_label}"
+					<f:selectItem itemLabel="#{labels.no_selection_label}"
 						itemValue="#{applicationScopeBean.noSelectionValue}" />
 					<f:selectItems
 						value="#{probandListBean.probandListStatusEntryBean.statusTypes}"
-						var="selectItem"
-						itemLabel="#{selectItem.label}"
+						var="selectItem" itemLabel="#{selectItem.label}"
 						itemValue="#{selectItem.value}" />
 					<p:ajax update="probandStatusType_status_message" />
 				</p:selectOneMenu>
-				<p:tooltip
-					rendered="#{enableTooltips}"
-					for="probandStatusType">
+				<p:tooltip rendered="#{enableTooltips}" for="probandStatusType">
 					<h:outputText
 						value="#{empty probandListBean.probandListStatusEntryBean.probandListEntry ? (person ? triallabels.proband_list_status_entry_input_status_type_person_tooltip : triallabels.proband_list_status_entry_input_status_type_animal_tooltip) : (probandListBean.probandListStatusEntryBean.probandListEntry.proband.person ? triallabels.proband_list_status_entry_input_status_type_person_tooltip : triallabels.proband_list_status_entry_input_status_type_animal_tooltip)}"
 						escape="false" />
 				</p:tooltip>
 			</h:panelGroup>
 			<p:message for="probandStatusType" />
-			
+
 			<h:outputLabel />
-			<h:outputText
-				styleClass="ctsms-text-red"
+			<h:outputText styleClass="ctsms-text-red"
 				value="#{probandListBean.probandListStatusEntryBean.showTerminalStateMessage ? triallabels.proband_list_status_entry_input_terminal_state_message : ''} #{probandListBean.probandListStatusEntryBean.getMassMailCount() > 0 ? triallabels.proband_list_status_entry_input_massmail_create_message : ''}"
 				id="probandStatusType_status_message" />
 			<h:outputLabel />
+
+			<h:outputLabel for="visitscheduleitems"
+				value="#{triallabels.proband_list_status_entry_visit_schedule_items_label}" />
+			<h:panelGroup>
+				<p:autoComplete id="visitscheduleitems" required="false"
+					value="#{probandListBean.probandListStatusEntryBean.visitScheduleItems}"
+					label="#{triallabels.proband_list_status_entry_visit_schedule_items}"
+					styleClass="ctsms-control-larger"
+					minQueryLength="#{autoCompleteMinQueryLengthVisitScheduleItem}"
+					maxResults="#{autoCompleteMaxResultsVisitScheduleItem}"
+					queryDelay="#{autoCompleteQueryDelayVisitScheduleItem}"
+					global="#{autoCompleteGlobalVisitScheduleItem}"
+					scrollHeight="#{autoCompleteScrollHeightVisitScheduleItem}"
+					completeMethod="#{probandListBean.probandListStatusEntryBean.completeVisitScheduleItem}"
+					multiple="true" var="visitScheduleItem"
+					itemValue="#{visitScheduleItem}"
+					itemLabel="#{applicationScopeBean.getVisitScheduleItemName(visitScheduleItem.vo)}"
+					converter="ctsms.VisitScheduleItem">
+					<p:ajax process="@this" event="itemSelect"
+						 update="probandStatusType_status_message" />
+					<p:ajax process="@this" event="itemUnselect"
+						 update="probandStatusType_status_message" />
+					<!-- <p:column rendered="#{empty massMailBean.in.trialId}">
+												<h:outputText
+													value="#{visitScheduleItem.vo.trial.name}" />
+											</p:column> 
+											<p:column>
+												<h:outputText
+													value="#{visitScheduleItem.vo.group.token}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{visitScheduleItem.vo.visit.token}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{visitScheduleItem.vo.token}" />
+											</p:column> -->
+					<p:column>
+						<h:outputText
+							value="#{applicationScopeBean.getVisitScheduleItemName(visitScheduleItem.vo)}" />
+					</p:column>
+					<p:column>
+						<h:outputText
+							value="#{applicationScopeBean.clipStringTrailing(visitScheduleItem.vo.description,96)}" />
+					</p:column>
+				</p:autoComplete>
+				<p:tooltip rendered="#{enableTooltips}" for="visitscheduleitems">
+					<h:outputText
+						value="#{triallabels.proband_list_status_entry_visit_schedule_items_tooltip}"
+						escape="false" />
+				</p:tooltip>
+			</h:panelGroup>
+			<p:message for="visitscheduleitems" />
 			
-			<h:outputLabel
-				for="realTimestamp"
+			
+
+			
+			
+			<h:outputLabel for="realTimestamp"
 				value="#{triallabels.proband_list_status_entry_input_real_timestamp_label}" />
 			<h:panelGroup>
-				<p:calendar
-					id="realTimestamp"
+				<p:calendar id="realTimestamp"
 					value="#{probandListBean.probandListStatusEntryBean.in.realTimestamp}"
 					required="true"
 					label="#{triallabels.proband_list_status_entry_input_real_timestamp}"
 					pattern="#{sessionScopeBean.inputDateTimePattern}"
 					yearRange="#{applicationScopeBean.calendarYearRange}"
-					showWeek="true"
-					navigator="true"
+					showWeek="true" navigator="true"
 					locale="#{sessionScopeBean.locale}"
-					styleClass="ctsms-calendar-datetime" >
+					styleClass="ctsms-calendar-datetime">
 					<f:converter converterId="ctsms.DateTime" />
-					<f:attribute name="timeZone" value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+					<f:attribute name="timeZone"
+						value="#{applicationScopeBean.dateUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
 				</p:calendar>
-				<p:tooltip
-					rendered="#{enableTooltips}"
-					for="realTimestamp">
+				<p:tooltip rendered="#{enableTooltips}" for="realTimestamp">
 					<h:outputText
 						value="#{triallabels.proband_list_status_entry_input_real_timestamp_tooltip}"
 						escape="false" />
@@ -83,25 +128,19 @@
 		</h:panelGrid>
 		<h:panelGrid
 			rendered="#{probandListBean.probandListStatusEntryBean.inputVisible}"
-			columns="1"
-			cellpadding="0"
-			styleClass="ctsms-input-panelgrid"
+			columns="1" cellpadding="0" styleClass="ctsms-input-panelgrid"
 			rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 			<h:outputLabel
 				styleClass="#{probandListBean.probandListEntryModel.useReasonEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : 'ctsms-field-icon ctsms-icon-noencryption'}"
 				for="probandliststatusreason"
 				value="#{!probandListBean.probandListEntryModel.useReasonEncryption ? labels.noencryption_warning_label : ''}#{triallabels.proband_list_status_entry_input_reason_label}" />
 			<h:panelGroup>
-				<p:inputTextarea
-					id="probandliststatusreason"
+				<p:inputTextarea id="probandliststatusreason"
 					value="#{probandListBean.probandListStatusEntryBean.in.reason}"
-					required="false"
-					autoResize="false"
-					styleClass="ctsms-textarea"
+					required="false" autoResize="false" styleClass="ctsms-textarea"
 					label="#{triallabels.proband_list_status_entry_input_reason}">
 				</p:inputTextarea>
-				<p:tooltip
-					rendered="#{enableTooltips}"
+				<p:tooltip rendered="#{enableTooltips}"
 					for="probandliststatusreason">
 					<h:outputText
 						value="#{triallabels.proband_list_status_entry_input_reason_tooltip}"
@@ -109,8 +148,10 @@
 				</p:tooltip>
 			</h:panelGroup>
 		</h:panelGrid>
-		<h:outputLabel rendered="#{!probandListBean.probandListStatusEntryBean.inputVisible}" />
-		<h:outputLabel rendered="#{!probandListBean.probandListStatusEntryBean.inputVisible}" />
+		<h:outputLabel
+			rendered="#{!probandListBean.probandListStatusEntryBean.inputVisible}" />
+		<h:outputLabel
+			rendered="#{!probandListBean.probandListStatusEntryBean.inputVisible}" />
 	</ui:composition>
 </h:body>
 </html>

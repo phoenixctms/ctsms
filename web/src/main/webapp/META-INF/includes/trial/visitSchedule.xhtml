@@ -222,6 +222,16 @@
 						</ui:include>
 					</p:column>
 					
+					<p:column >
+						<f:attribute name="visibleDefault" value="false" />
+						<f:facet name="header">
+							<h:outputText
+								value="#{triallabels.visit_schedule_visitschedule_list_mass_mail_count_column}" />
+						</f:facet>
+						<h:outputText
+							value="#{visitScheduleBean.getMassMailCount(visitScheduleItem.vo)}" />
+					</p:column>
+					
 					<p:column sortBy="#{visitScheduleItem.vo.description}" filterBy="#{visitScheduleItem.vo.description}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">

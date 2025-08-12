@@ -3,8 +3,10 @@ package org.phoenixctms.ctsms.web.model.trial;
 import java.io.ByteArrayInputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -946,5 +948,18 @@ public class VisitScheduleBean extends ManagedBeanBase implements VisitScheduleD
 
 	public void setShowCollisions(boolean showCollisions) {
 		this.showCollisions = showCollisions;
+	}
+
+	public Long getMassMailCount(VisitScheduleItemOutVO visitScheduleItem) {
+		if (visitScheduleItem != null) {
+			try {
+				return WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), null, null,
+						new HashSet<Long>(Arrays.asList(visitScheduleItem.getId())), null, null);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return null;
 	}
 }

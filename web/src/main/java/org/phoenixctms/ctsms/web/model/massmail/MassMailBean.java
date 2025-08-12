@@ -762,6 +762,7 @@ public class MassMailBean extends ManagedBeanBase {
 	public List<IDVO> completeVisitScheduleItem(String query) {
 		try {
 			Collection visitScheduleItemVOs = WebUtil.getServiceLocator().getToolsService().completeVisitScheduleItem(WebUtil.getAuthentication(), query, in.getTrialId(), null);
+			visitScheduleItemVOs.removeAll(visitScheduleItems);
 			IDVO.transformVoCollection(visitScheduleItemVOs);
 			return (List<IDVO>) visitScheduleItemVOs;
 		} catch (ClassCastException e) {
