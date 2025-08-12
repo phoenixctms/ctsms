@@ -2175,6 +2175,11 @@
         primary key (CHILDREN_FK, PARENTS_FK)
     );
 
+    create table proband_list_status_entry_visit_schedule_item (
+        PROBAND_LIST_STATUS_ENTRIES_FK BIGINT not null,
+        VISIT_SCHEDULE_ITEMS_FK BIGINT not null
+    );
+
     create table proband_list_status_transition (
         PROBAND_LIST_STATUS_TYPES_FK BIGINT not null,
         TRANSITIONS_FK BIGINT not null
@@ -3819,6 +3824,16 @@
         add constraint PROBAND_CHILDREN_FKC 
         foreign key (CHILDREN_FK) 
         references PROBAND;
+
+    alter table proband_list_status_entry_visit_schedule_item 
+        add constraint PROBAND_LIST_STATUS_ENTRY_VISIT_SCHEDULE_ITEMS_FKC 
+        foreign key (VISIT_SCHEDULE_ITEMS_FK) 
+        references VISIT_SCHEDULE_ITEM;
+
+    alter table proband_list_status_entry_visit_schedule_item 
+        add constraint VISIT_SCHEDULE_ITEM_PROBAND_LIST_STATUS_ENTRIES_FKC 
+        foreign key (PROBAND_LIST_STATUS_ENTRIES_FK) 
+        references PROBAND_LIST_STATUS_ENTRY;
 
     alter table proband_list_status_transition 
         add constraint PROBAND_LIST_STATUS_TYPE_TRANSITIONS_FKC 
