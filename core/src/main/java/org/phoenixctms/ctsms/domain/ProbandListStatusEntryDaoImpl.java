@@ -9,11 +9,17 @@ package org.phoenixctms.ctsms.domain;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.security.CipherText;
@@ -27,6 +33,7 @@ import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.vocycle.ProbandListStatusEntryGraph;
 
 /**
@@ -35,6 +42,7 @@ import org.phoenixctms.ctsms.vocycle.ProbandListStatusEntryGraph;
 public class ProbandListStatusEntryDaoImpl
 		extends ProbandListStatusEntryDaoBase {
 
+	private final static VOIDComparator VISIT_SCHEDULE_ITEM_ID_COMPARATOR = new VOIDComparator<VisitScheduleItemOutVO>(false);
 	private final static Collection<ReEncrypter<ProbandListStatusEntry>> RE_ENCRYPTERS = new ArrayList<ReEncrypter<ProbandListStatusEntry>>();
 	static {
 		RE_ENCRYPTERS.add(new FieldReEncrypter<ProbandListStatusEntry>() {
@@ -134,7 +142,7 @@ public class ProbandListStatusEntryDaoImpl
 
 	@Override
 	protected ProbandListStatusEntry handleFindRecentStatus(
-			Long trialId, Long probandId, Timestamp maxRealTimestamp)
+			Long trialId, Long probandId, Set<Long> visitScheduleItemIds, Timestamp maxRealTimestamp)
 			throws Exception {
 		org.hibernate.Criteria statusEntryCriteria = createStatusEntryCriteria(null);
 		if (maxRealTimestamp != null) {
@@ -148,6 +156,11 @@ public class ProbandListStatusEntryDaoImpl
 			if (probandId != null) {
 				listEntryCriteria.add(Restrictions.eq("proband.id", probandId.longValue()));
 			}
+		}
+		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
+			statusEntryCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", visitScheduleItemIds));
+		} else if (visitScheduleItemIds != null) {
+			statusEntryCriteria.add(Restrictions.isEmpty("visitScheduleItems"));
 		}
 		statusEntryCriteria.addOrder(Order.desc("realTimestamp"));
 		statusEntryCriteria.addOrder(Order.desc("id"));
@@ -218,6 +231,10 @@ public class ProbandListStatusEntryDaoImpl
 				listEntry.removeStatusEntries(target);
 			}
 		}
+		Collection visitScheduleItemIds;
+		if ((visitScheduleItemIds = source.getVisitScheduleItemIds()).size() > 0 || copyIfNull) {
+			target.setVisitScheduleItems(toVisitScheduleItemSet(visitScheduleItemIds));
+		}
 		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
 			try {
 				if (copyIfNull || source.getReason() != null) {
@@ -246,6 +263,28 @@ public class ProbandListStatusEntryDaoImpl
 		ProbandListStatusEntry entity = this.loadProbandListStatusEntryFromProbandListStatusEntryOutVO(probandListStatusEntryOutVO);
 		this.probandListStatusEntryOutVOToEntity(probandListStatusEntryOutVO, entity, true);
 		return entity;
+	}
+
+	private HashSet<VisitScheduleItem> toVisitScheduleItemSet(Collection<Long> visitScheduleItemIds) { // lazyload persistentset prevention
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		HashSet<VisitScheduleItem> result = new HashSet<VisitScheduleItem>(visitScheduleItemIds.size());
+		Iterator<Long> it = visitScheduleItemIds.iterator();
+		while (it.hasNext()) {
+			result.add(visitScheduleItemDao.load(it.next()));
+		}
+		return result;
+	}
+
+	public ArrayList<VisitScheduleItemOutVO> toVisitScheduleItemOutVOCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
+		ArrayList<VisitScheduleItemOutVO> result = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems.size());
+		Iterator<VisitScheduleItem> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			result.add(visitScheduleItemDao.toVisitScheduleItemOutVO(it.next()));
+		}
+		Collections.sort(result, VISIT_SCHEDULE_ITEM_ID_COMPARATOR);
+		return result;
 	}
 
 	/**
@@ -280,6 +319,14 @@ public class ProbandListStatusEntryDaoImpl
 			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
 		} else if (copyIfNull) {
 			target.setModifiedUser(null);
+		}
+		Collection visitScheduleItems = source.getVisitScheduleItems();
+		if (visitScheduleItems.size() > 0) {
+			visitScheduleItems = new ArrayList(visitScheduleItems); //prevent changing VO
+			this.getVisitScheduleItemDao().visitScheduleItemOutVOToEntityCollection(visitScheduleItems);
+			target.setVisitScheduleItems(visitScheduleItems); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getVisitScheduleItems().clear();
 		}
 		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
 			try {
@@ -325,6 +372,7 @@ public class ProbandListStatusEntryDaoImpl
 		if (listEntry != null) {
 			target.setListEntryId(listEntry.getId());
 		}
+		target.setVisitScheduleItemIds(toVisitScheduleItemIdCollection(source.getVisitScheduleItems()));
 		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
 			try {
 				target.setReason((String) CryptoUtil.decryptValue(source.getReasonIv(), source.getEncryptedReason()));
@@ -332,6 +380,16 @@ public class ProbandListStatusEntryDaoImpl
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	private static ArrayList<Long> toVisitScheduleItemIdCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(visitScheduleItems.size());
+		Iterator<VisitScheduleItem> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
 	}
 
 	/**

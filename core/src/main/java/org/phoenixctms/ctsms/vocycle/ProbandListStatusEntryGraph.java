@@ -98,6 +98,7 @@ public class ProbandListStatusEntryGraph extends GraphCycle1Helper<ProbandListSt
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
+		target.setVisitScheduleItems(probandListStatusEntryDaoImpl.toVisitScheduleItemOutVOCollection(source.getVisitScheduleItems()));
 		if (CommonUtil.ENCRPYTED_PROBAND_LIST_STATUS_ENTRY_REASON) {
 			try {
 				if (!CoreUtil.isPassDecryption()) {
