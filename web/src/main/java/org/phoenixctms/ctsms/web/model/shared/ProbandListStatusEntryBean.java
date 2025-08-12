@@ -3,7 +3,10 @@ package org.phoenixctms.ctsms.web.model.shared;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
@@ -16,12 +19,16 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
+import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
+import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 public class ProbandListStatusEntryBean extends ManagedBeanBase {
 
@@ -31,6 +38,11 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			ProbandListStatusTypeVO statusVO = out.getStatus();
 			in.setId(out.getId());
 			in.setListEntryId(listEntryVO == null ? null : listEntryVO.getId());
+			in.getVisitScheduleItemIds().clear();
+			Iterator it = out.getVisitScheduleItems().iterator();
+			while (it.hasNext()) {
+				in.getVisitScheduleItemIds().add(((VisitScheduleItemOutVO) it.next()).getId());
+			}
 			in.setReason(out.getReason());
 			in.setRealTimestamp(out.getRealTimestamp());
 			in.setStatusId(statusVO == null ? null : statusVO.getId());
@@ -42,6 +54,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 		if (in != null) {
 			in.setId(null);
 			in.setListEntryId(probandListEntryId);
+			in.getVisitScheduleItemIds().clear();
 			in.setReason(Messages.getString(MessageCodes.PROBAND_LIST_STATUS_ENTRY_REASON_PRESET));
 			in.setRealTimestamp(new Date());
 			in.setStatusId(null);
@@ -57,10 +70,12 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 	private boolean isLastStatus;
 	private ArrayList<SelectItem> statusTypes;
 	private ProbandListStatusEntryLazyModel probandListStatusEntryModel;
+	private List<VisitScheduleItemOutVO> visitScheduleItems;
 
 	public ProbandListStatusEntryBean() {
 		super();
 		probandListStatusEntryModel = new ProbandListStatusEntryLazyModel();
+		visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>();
 		this.change();
 	}
 
@@ -126,9 +141,24 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 
 	public long getMassMailCount() {
 		if (probandListEntry != null && in.getStatusId() != null) {
+			HashSet<Long> visitScheduleItemIds = new HashSet<Long>(visitScheduleItems.size()); //force unique items to prevent confusion when unselecting a duplicate item
+			Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+			while (it.hasNext()) {
+				VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) it.next();
+				if (visitScheduleItem != null) {
+					visitScheduleItemIds.add(visitScheduleItem.getId());
+				}
+			}
 			try {
-				return WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(), false,
+				long count = WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(),
+						visitScheduleItemIds, false,
 						probandListEntry.getProband().getId());
+				if (count == 0l) {
+					count = WebUtil.getServiceLocator().getMassMailService().getMassMailCount(WebUtil.getAuthentication(), probandListEntry.getTrial().getId(), in.getStatusId(),
+							new HashSet<Long>(), false,
+							probandListEntry.getProband().getId());
+				}
+				return count;
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -256,6 +286,7 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 		} else {
 			statusTypes = new ArrayList<SelectItem>();
 		}
+		loadVisitScheduleItems();
 	}
 
 	@Override
@@ -326,6 +357,15 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 				in.setRealTimestamp(lastStatus.getRealTimestamp());
 			}
 		}
+		LinkedHashSet<Long> visitScheduleItemIds = new LinkedHashSet<Long>(visitScheduleItems.size()); //force unique items to prevent confusion when unselecting a duplicate item
+		Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) it.next();
+			if (visitScheduleItem != null) {
+				visitScheduleItemIds.add(visitScheduleItem.getId());
+			}
+		}
+		in.setVisitScheduleItemIds(new ArrayList<Long>(visitScheduleItemIds));
 	}
 
 	public void setSelectedProbandListStatusEntry(IDVO probandListStatusEntry) {
@@ -338,6 +378,61 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 			}
 			this.initIn();
 			initSets();
+		}
+	}
+
+	public List<IDVO> completeVisitScheduleItem(String query) {
+		if (probandListEntry != null) {
+			try {
+				Collection visitScheduleItemVOs = WebUtil.getServiceLocator().getToolsService().completeVisitScheduleItem(WebUtil.getAuthentication(), query,
+						probandListEntry.getTrial().getId(), null);
+				visitScheduleItemVOs.removeAll(visitScheduleItems);
+				IDVO.transformVoCollection(visitScheduleItemVOs);
+				return (List<IDVO>) visitScheduleItemVOs;
+			} catch (ClassCastException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return new ArrayList<IDVO>();
+	}
+
+	public List<IDVO> getVisitScheduleItems() {
+		return new IDVOList(visitScheduleItems);
+	}
+
+	public void handleVisitScheduleItemSelect(SelectEvent event) {
+	}
+
+	public void handleVisitScheduleItemUnselect(UnselectEvent event) {
+	}
+
+	private void loadVisitScheduleItems() {
+		visitScheduleItems.clear();
+		Iterator<Long> it = in.getVisitScheduleItemIds().iterator();
+		while (it.hasNext()) {
+			VisitScheduleItemOutVO visitScheduleItem = WebUtil.getVisitScheduleItem(it.next());
+			if (visitScheduleItem != null) {
+				visitScheduleItems.add(visitScheduleItem);
+			}
+		}
+	}
+
+	public void setVisitScheduleItems(List<IDVO> visitScheduleItems) {
+		if (visitScheduleItems != null) {
+			ArrayList<VisitScheduleItemOutVO> visitScheduleItemsCopy = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItems.size());
+			Iterator<IDVO> it = visitScheduleItems.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					visitScheduleItemsCopy.add((VisitScheduleItemOutVO) idVo.getVo());
+				}
+			}
+			this.visitScheduleItems.clear();
+			this.visitScheduleItems.addAll(visitScheduleItemsCopy);
+		} else {
+			this.visitScheduleItems.clear();
 		}
 	}
 }
