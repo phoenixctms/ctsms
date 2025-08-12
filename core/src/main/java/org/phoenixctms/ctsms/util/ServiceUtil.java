@@ -252,7 +252,7 @@ public final class ServiceUtil {
 			Long probandListStatusTypeId, ECRF ecrf, ECRFStatusType newState,
 			Timestamp now, User user,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
-			TrialDao trialDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
+			TrialDao trialDao, VisitScheduleItemDao visitScheduleItemDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		if (L10nUtil.containsProbandListStatusReason(Locales.PROBAND_LIST_STATUS_ENTRY_REASON, reasonL10nKey)) {
 			ProbandListStatusType statusType = null;
@@ -276,7 +276,7 @@ public final class ServiceUtil {
 					newProbandListStatusEntry.setStatusId(statusType.getId());
 					return addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, false, false, probandDao, probandListEntryDao, probandListStatusEntryDao,
 							probandListStatusTypeDao,
-							trialDao, massMailDao, massMailRecipientDao, journalEntryDao);
+							trialDao, visitScheduleItemDao, massMailDao, massMailRecipientDao, journalEntryDao);
 				}
 			} else {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_TYPE_REQUIRED);
@@ -289,27 +289,36 @@ public final class ServiceUtil {
 			Long probandListStatusTypeId,
 			Timestamp now, User user,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
-			TrialDao trialDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
+			TrialDao trialDao, VisitScheduleItemDao visitScheduleItemDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
 		return addProbandListStatusEntry(listEntry, signup, reasonL10nKey, args, now, probandListStatusTypeId, null, null, now, user, probandDao, probandListEntryDao,
-				probandListStatusEntryDao, probandListStatusTypeDao, trialDao, massMailDao, massMailRecipientDao, journalEntryDao);
+				probandListStatusEntryDao, probandListStatusTypeDao, trialDao, visitScheduleItemDao, massMailDao, massMailRecipientDao, journalEntryDao);
 	}
 
 	public static ProbandListStatusEntryOutVO addProbandListStatusEntry(ProbandListStatusEntryInVO newProbandListStatusEntry, Boolean signup, Timestamp now, User user,
 			boolean logTrial,
 			boolean logProband,
 			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao,
-			TrialDao trialDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
+			TrialDao trialDao, VisitScheduleItemDao visitScheduleItemDao, MassMailDao massMailDao, MassMailRecipientDao massMailRecipientDao,
 			JournalEntryDao journalEntryDao) throws Exception {
-		checkAddProbandListStatusEntryInput(newProbandListStatusEntry, signup, probandDao, probandListEntryDao, probandListStatusEntryDao, probandListStatusTypeDao);
+		checkAddProbandListStatusEntryInput(newProbandListStatusEntry, signup, trialDao, probandDao, probandListEntryDao, probandListStatusEntryDao, probandListStatusTypeDao,
+				visitScheduleItemDao);
 		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.probandListStatusEntryInVOToEntity(newProbandListStatusEntry);
 		CoreUtil.modifyVersion(probandListStatusEntry, now, user);
 		probandListStatusEntry = probandListStatusEntryDao.create(probandListStatusEntry);
 		ProbandListEntry listEntry = probandListStatusEntry.getListEntry();
 		listEntry.setLastStatus(probandListStatusEntry);
 		probandListEntryDao.update(listEntry);
-		Iterator<MassMail> massMailsIt = massMailDao.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(), false, null)
+		Iterator<MassMail> massMailsIt = massMailDao
+				.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(),
+						new HashSet<Long>(newProbandListStatusEntry.getVisitScheduleItemIds()), false, null)
 				.iterator();
+		if (!massMailsIt.hasNext()) {
+			massMailsIt = massMailDao
+					.findByTrialProbandListStatusTypeLocked(listEntry.getTrial().getId(), newProbandListStatusEntry.getStatusId(),
+							new HashSet<Long>(), false, null)
+					.iterator();
+		}
 		while (massMailsIt.hasNext()) {
 			addResetMassMailRecipient(massMailsIt.next(), listEntry.getProband(), now, user, massMailDao, probandDao, trialDao,
 					massMailRecipientDao, journalEntryDao);
@@ -649,7 +658,8 @@ public final class ServiceUtil {
 	}
 
 	private static void checkAddProbandListStatusEntryInput(ProbandListStatusEntryInVO probandListStatusEntryIn, Boolean signup,
-			ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao, ProbandListStatusTypeDao probandListStatusTypeDao)
+			TrialDao trialDao, ProbandDao probandDao, ProbandListEntryDao probandListEntryDao, ProbandListStatusEntryDao probandListStatusEntryDao,
+			ProbandListStatusTypeDao probandListStatusTypeDao, VisitScheduleItemDao visitScheduleItemDao)
 			throws ServiceException {
 		// referential checks
 		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListStatusEntryIn.getListEntryId(), probandListEntryDao);
@@ -693,6 +703,30 @@ public final class ServiceUtil {
 		String reason = probandListStatusEntryIn.getReason();
 		if (CommonUtil.isEmptyString(reason) && state.isReasonRequired()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_ENTRY_REASON_REQUIRED);
+		}
+		Collection<Long> visitScheduleItemIds = probandListStatusEntryIn.getVisitScheduleItemIds();
+		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
+			//visitScheduleItemVOs = new ArrayList<VisitScheduleItemOutVO>(visitScheduleItemIds.size());
+			Iterator<Long> it = visitScheduleItemIds.iterator();
+			HashSet<Long> dupeCheck = new HashSet<Long>(visitScheduleItemIds.size());
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_ENTRY_VISIT_SCHEDULE_ITEM_ID_IS_NULL);
+				}
+				VisitScheduleItem visitScheduleItem = CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
+				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItem);
+				if (!dupeCheck.add(visitScheduleItem.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_ENTRY_DUPLICATE_VISIT_SCHEDULE_ITEM,
+							visitScheduleItemVO.getName());
+				}
+				if (!probandListEntry.getTrial().equals(visitScheduleItem.getTrial())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_STATUS_ENTRY_WRONG_VISIT_SCHEDULE_ITEM,
+							visitScheduleItemVO.getName(),
+							CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(probandListEntry.getTrial())));
+				}
+				//visitScheduleItemVOs.add(visitScheduleItemVO);
+			}
 		}
 		if ((new ProbandListStatusEntryCollisionFinder(probandDao, probandListEntryDao, probandListStatusEntryDao)).collides(probandListStatusEntryIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED, probandListEntry.getProband().getId().toString());
@@ -2775,11 +2809,13 @@ public final class ServiceUtil {
 			VisitOutVO visitVO;
 			ProbandGroupOutVO groupVO;
 			Date stop;
+			Long visitScheduleItemId;
 			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
 			fieldKey = VisitScheduleExcelWriter.getVisitScheduleAppointmentsStartStopColumnName();
 			if (vo instanceof VisitScheduleAppointmentVO) {
 				VisitScheduleAppointmentVO visitScheduleAppointmentVO = (VisitScheduleAppointmentVO) vo;
 				probandVO = visitScheduleAppointmentVO.getProband();
+				visitScheduleItemId = visitScheduleAppointmentVO.getId();
 				visitScheduleAppointmentVO.setId(id);
 				trialVO = visitScheduleAppointmentVO.getTrial();
 				visitVO = visitScheduleAppointmentVO.getVisit();
@@ -2790,6 +2826,7 @@ public final class ServiceUtil {
 				}
 			} else {
 				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemDao.toVisitScheduleItemOutVO((VisitScheduleItem) vo);
+				visitScheduleItemId = visitScheduleItemVO.getId();
 				visitScheduleItemVO.setId(id);
 				trialVO = visitScheduleItemVO.getTrial();
 				visitVO = visitScheduleItemVO.getVisit();
@@ -2801,7 +2838,12 @@ public final class ServiceUtil {
 				}
 			}
 			if (probandVO != null) {
-				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialVO.getId(), probandVO.getId(), CommonUtil.dateToTimestamp(stop));
+				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialVO.getId(), probandVO.getId(),
+						new HashSet<Long>(Arrays.asList(visitScheduleItemId)), CommonUtil.dateToTimestamp(stop));
+				if (probandListStatusEntry == null) {
+					probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialVO.getId(), probandVO.getId(),
+							new HashSet<Long>(), CommonUtil.dateToTimestamp(stop));
+				}
 				ProbandListStatusEntryOutVO probandListStatusEntryVO = null;
 				if (probandListStatusEntry != null) {
 					probandListStatusEntryVO = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
@@ -5479,6 +5521,13 @@ public final class ServiceUtil {
 						probandListStatusEntryVO, null, journalEntryDao);
 				logSystemMessage(trial, probandListStatusEntryVO.getListEntry().getProband(), now, user, SystemMessageCodes.PROBAND_LIST_STATUS_ENTRY_DELETED,
 						probandListStatusEntryVO, null, journalEntryDao);
+				Iterator<VisitScheduleItem> visitScheduleItemsIt = statusEntry.getVisitScheduleItems().iterator();
+				while (visitScheduleItemsIt.hasNext()) {
+					VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+					visitScheduleItem.removeProbandListStatusEntries(statusEntry);
+					//visitScheduleItemDao.update(visitScheduleItem);
+				}
+				statusEntry.getVisitScheduleItems().clear();
 				statusEntry.setListEntry(null);
 				probandListStatusEntryDao.remove(statusEntry);
 			}

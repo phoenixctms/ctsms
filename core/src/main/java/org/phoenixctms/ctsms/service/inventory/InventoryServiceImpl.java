@@ -189,6 +189,7 @@ public class InventoryServiceImpl
 					this.getProbandListStatusEntryDao(),
 					this.getProbandListStatusTypeDao(),
 					this.getTrialDao(),
+					this.getVisitScheduleItemDao(),
 					this.getMassMailDao(),
 					this.getMassMailRecipientDao(),
 					this.getJournalEntryDao());

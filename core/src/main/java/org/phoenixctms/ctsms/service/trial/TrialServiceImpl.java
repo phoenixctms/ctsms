@@ -14,6 +14,7 @@ import java.text.Format;
 import java.text.MessageFormat;
 import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -524,7 +525,8 @@ public class TrialServiceImpl
 				MassMailDao massMailDao = this.getMassMailDao();
 				TrialDao trialDao = this.getTrialDao();
 				MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-				Iterator<MassMail> massMailsIt = this.getMassMailDao().findByTrialProbandListStatusTypeLocked(trial.getId(), statusType.getId(), false, null).iterator();
+				Iterator<MassMail> massMailsIt = this.getMassMailDao().findByTrialProbandListStatusTypeLocked(trial.getId(), statusType.getId(), new HashSet<Long>(), false, null)
+						.iterator();
 				while (massMailsIt.hasNext()) {
 					ServiceUtil.addResetMassMailRecipient(massMailsIt.next(), proband, now, user, massMailDao, probandDao, trialDao,
 							massMailRecipientDao, journalEntryDao);
@@ -588,6 +590,7 @@ public class TrialServiceImpl
 				this.getProbandListStatusEntryDao(),
 				this.getProbandListStatusTypeDao(),
 				this.getTrialDao(),
+				this.getVisitScheduleItemDao(),
 				this.getMassMailDao(),
 				this.getMassMailRecipientDao(),
 				this.getJournalEntryDao());
@@ -2608,6 +2611,7 @@ public class TrialServiceImpl
 								this.getProbandListStatusEntryDao(),
 								this.getProbandListStatusTypeDao(),
 								this.getTrialDao(),
+								this.getVisitScheduleItemDao(),
 								this.getMassMailDao(),
 								this.getMassMailRecipientDao(),
 								this.getJournalEntryDao());
@@ -3086,7 +3090,7 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		return ServiceUtil.addProbandListStatusEntry(newProbandListStatusEntry, signup, now, user, true, true,
 				this.getProbandDao(), this.getProbandListEntryDao(), this.getProbandListStatusEntryDao(), this.getProbandListStatusTypeDao(),
-				this.getTrialDao(), this.getMassMailDao(), this.getMassMailRecipientDao(),
+				this.getTrialDao(), this.getVisitScheduleItemDao(), this.getMassMailDao(), this.getMassMailRecipientDao(),
 				this.getJournalEntryDao());
 	}
 
@@ -3836,6 +3840,7 @@ public class TrialServiceImpl
 			MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
 			logSystemMessage(massMail, result.getTrial(), now, user, SystemMessageCodes.PROBAND_GROUP_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
 		}
+		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 		visitScheduleItemsIt = probandGroup.getVisitScheduleItems().iterator();
 		while (visitScheduleItemsIt.hasNext()) {
 			VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
@@ -3854,6 +3859,14 @@ public class TrialServiceImpl
 			visitScheduleItem.getDutyRosterTurns().clear();
 			visitScheduleItem.getMassMails().clear();
 			visitScheduleItem.setTrial(null);
+			Iterator<ProbandListStatusEntry> probandListStatusEntriesIt = visitScheduleItem.getProbandListStatusEntries().iterator();
+			while (probandListStatusEntriesIt.hasNext()) {
+				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntriesIt.next();
+				probandListStatusEntry.removeVisitScheduleItems(visitScheduleItem);
+				CoreUtil.modifyVersion(probandListStatusEntry, probandListStatusEntry.getVersion(), now, user);
+				probandListStatusEntryDao.update(probandListStatusEntry);
+			}
+			visitScheduleItem.getProbandListStatusEntries().clear();
 			trial.removeVisitScheduleItems(visitScheduleItem);
 			visitScheduleItemDao.remove(visitScheduleItem);
 		}
@@ -3973,7 +3986,14 @@ public class TrialServiceImpl
 		User user = CoreUtil.getUser();
 		listEntry.setLastStatus(null);
 		probandListEntryDao.update(listEntry);
+		Iterator<VisitScheduleItem> visitScheduleItemsIt = probandListStatusEntry.getVisitScheduleItems().iterator();
+		while (visitScheduleItemsIt.hasNext()) {
+			VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
+			visitScheduleItem.removeProbandListStatusEntries(probandListStatusEntry);
+			//visitScheduleItemDao.update(visitScheduleItem);
+		}
 		listEntry.removeStatusEntries(probandListStatusEntry);
+		probandListStatusEntry.getVisitScheduleItems().clear();
 		probandListStatusEntry.setListEntry(null);
 		probandListStatusEntryDao.remove(probandListStatusEntry);
 		listEntry.setLastStatus(probandListStatusEntryDao.findLastStatus(listEntry.getId()));
@@ -4186,6 +4206,7 @@ public class TrialServiceImpl
 				}
 				visitScheduleItem.getDutyRosterTurns().clear();
 				visitScheduleItem.getMassMails().clear();
+				visitScheduleItem.getProbandListStatusEntries().clear();
 				visitScheduleItem.setTrial(null);
 				if (group != null) {
 					group.removeVisitScheduleItems(visitScheduleItem);
@@ -4506,6 +4527,7 @@ public class TrialServiceImpl
 			MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
 			logSystemMessage(massMail, result.getTrial(), now, user, SystemMessageCodes.VISIT_DELETED_MASS_MAIL_UPDATED, massMailVO, original, journalEntryDao);
 		}
+		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
 		visitScheduleItemsIt = visit.getVisitScheduleItems().iterator();
 		while (visitScheduleItemsIt.hasNext()) {
 			VisitScheduleItem visitScheduleItem = visitScheduleItemsIt.next();
@@ -4524,6 +4546,14 @@ public class TrialServiceImpl
 			visitScheduleItem.getDutyRosterTurns().clear();
 			visitScheduleItem.getMassMails().clear();
 			visitScheduleItem.setTrial(null);
+			Iterator<ProbandListStatusEntry> probandListStatusEntriesIt = visitScheduleItem.getProbandListStatusEntries().iterator();
+			while (probandListStatusEntriesIt.hasNext()) {
+				ProbandListStatusEntry probandListStatusEntry = probandListStatusEntriesIt.next();
+				probandListStatusEntry.removeVisitScheduleItems(visitScheduleItem);
+				CoreUtil.modifyVersion(probandListStatusEntry, probandListStatusEntry.getVersion(), now, user);
+				probandListStatusEntryDao.update(probandListStatusEntry);
+			}
+			visitScheduleItem.getProbandListStatusEntries().clear();
 			trial.removeVisitScheduleItems(visitScheduleItem);
 			visitScheduleItemDao.remove(visitScheduleItem);
 		}
@@ -4581,6 +4611,15 @@ public class TrialServiceImpl
 					this.getJournalEntryDao());
 		}
 		visitScheduleItem.getMassMails().clear();
+		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
+		Iterator<ProbandListStatusEntry> probandListStatusEntriesIt = visitScheduleItem.getProbandListStatusEntries().iterator();
+		while (probandListStatusEntriesIt.hasNext()) {
+			ProbandListStatusEntry probandListStatusEntry = probandListStatusEntriesIt.next();
+			probandListStatusEntry.removeVisitScheduleItems(visitScheduleItem);
+			CoreUtil.modifyVersion(probandListStatusEntry, probandListStatusEntry.getVersion(), now, user);
+			probandListStatusEntryDao.update(probandListStatusEntry);
+		}
+		visitScheduleItem.getProbandListStatusEntries().clear();
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 		Iterator<DutyRosterTurn> dutyRosterTurnsIt = visitScheduleItem.getDutyRosterTurns().iterator();
 		while (dutyRosterTurnsIt.hasNext()) {
@@ -7041,7 +7080,14 @@ public class TrialServiceImpl
 		Proband proband = CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		CheckIDUtil.checkVisitScheduleItemId(visitScheduleItemId, this.getVisitScheduleItemDao());
 		VisitScheduleItem visitScheduleItem = this.getVisitScheduleItemDao().findExpandedDateMode(visitScheduleItemId, probandId).iterator().next();
-		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(visitScheduleItem.getTrial().getId(), probandId, visitScheduleItem.getStop());
+		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(visitScheduleItem.getTrial().getId(), probandId,
+				new HashSet<Long>(Arrays.asList(visitScheduleItem.getId())),
+				visitScheduleItem.getStop());
+		if (probandListStatusEntry == null) {
+			probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(visitScheduleItem.getTrial().getId(), probandId,
+					new HashSet<Long>(),
+					visitScheduleItem.getStop());
+		}
 		ProbandListStatusEntryOutVO result = null;
 		if (probandListStatusEntry != null) {
 			result = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
@@ -7474,7 +7520,7 @@ public class TrialServiceImpl
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
 		MassMailDao massMailDao = this.getMassMailDao();
-		Collection massMails = massMailDao.findByTrialProbandListStatusTypeLocked(trialId, null, null, psf);
+		Collection massMails = massMailDao.findByTrialProbandListStatusTypeLocked(trialId, null, null, null, psf);
 		massMailDao.toMassMailOutVOCollection(massMails);
 		return massMails;
 	}
@@ -7698,8 +7744,15 @@ public class TrialServiceImpl
 			Proband proband = (Proband) visitScheduleItemProband[1];
 			ProbandListEntry listEntry = proband != null ? this.getProbandListEntryDao().findByTrialProband(visitScheduleItem.getTrial().getId(), proband.getId()) : null;
 			ProbandListStatusEntry lastStatus = proband != null
-					? this.getProbandListStatusEntryDao().findRecentStatus(visitScheduleItem.getTrial().getId(), proband.getId(), CommonUtil.dateToTimestamp(to))
+					? this.getProbandListStatusEntryDao().findRecentStatus(visitScheduleItem.getTrial().getId(), proband.getId(),
+							new HashSet<Long>(Arrays.asList(visitScheduleItem.getId())), CommonUtil.dateToTimestamp(to))
 					: null;
+			if (lastStatus == null) {
+				lastStatus = proband != null
+						? this.getProbandListStatusEntryDao().findRecentStatus(visitScheduleItem.getTrial().getId(), proband.getId(), new HashSet<Long>(),
+								CommonUtil.dateToTimestamp(to))
+						: null;
+			}
 			if (listEntry != null
 					|| (lastStatus != null
 							&& !lastStatus.getStatus().isInitial()

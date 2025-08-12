@@ -535,14 +535,21 @@ public class MassMailServiceImpl
 	}
 
 	@Override
-	protected long handleGetMassMailCount(AuthenticationVO auth, Long trialId, Long probandListStatusTypeId, Boolean locked, Long resendProbandId) throws Exception {
+	protected long handleGetMassMailCount(AuthenticationVO auth, Long trialId, Long probandListStatusTypeId, Set<Long> visitScheduleItemIds, Boolean locked, Long resendProbandId)
+			throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		if (visitScheduleItemIds != null) {
+			Iterator<Long> visitScheduleItemIdsIt = visitScheduleItemIds.iterator();
+			while (visitScheduleItemIdsIt.hasNext()) {
+				CheckIDUtil.checkVisitScheduleItemId(visitScheduleItemIdsIt.next(), this.getVisitScheduleItemDao());
+			}
 		}
 		if (resendProbandId != null) {
 			CheckIDUtil.checkProbandId(resendProbandId, this.getProbandDao());
 		}
-		return this.getMassMailDao().getCount(trialId, probandListStatusTypeId, locked, resendProbandId);
+		return this.getMassMailDao().getCount(trialId, probandListStatusTypeId, visitScheduleItemIds, locked, resendProbandId);
 	}
 
 	/**
@@ -770,6 +777,9 @@ public class MassMailServiceImpl
 				Iterator<MassMail> massMailsIt = visitScheduleItem.getMassMails().iterator();
 				while (massMailsIt.hasNext()) {
 					MassMail massMail = massMailsIt.next();
+					if (massMail.getProbandListStatus() != null) {
+						continue; //skip proband status mails with visit schedule item filter
+					}
 					ArrayList<Long> probandIds = new ArrayList<Long>();
 					if (probandId != null) {
 						probandIds.add(probandId);

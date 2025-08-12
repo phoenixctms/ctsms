@@ -81,7 +81,8 @@ public class MassMailDaoImpl
 	}
 
 	@Override
-	protected Collection<MassMail> handleFindByTrialProbandListStatusTypeLocked(Long trialId, Long probandListStatusTypeId, Boolean locked, PSFVO psf) throws Exception {
+	protected Collection<MassMail> handleFindByTrialProbandListStatusTypeLocked(Long trialId, Long probandListStatusTypeId, Set<Long> visitScheduleItemIds, Boolean locked,
+			PSFVO psf) throws Exception {
 		org.hibernate.Criteria massMailCriteria = createMassMailCriteria(null);
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MassMail.class, massMailCriteria);
 		if (trialId != null) {
@@ -89,6 +90,11 @@ public class MassMailDaoImpl
 		}
 		if (probandListStatusTypeId != null) {
 			massMailCriteria.add(Restrictions.eq("probandListStatus.id", probandListStatusTypeId.longValue()));
+		}
+		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
+			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", visitScheduleItemIds));
+		} else if (visitScheduleItemIds != null) {
+			massMailCriteria.add(Restrictions.isEmpty("visitScheduleItems"));
 		}
 		if (locked != null) {
 			criteriaMap.createCriteria("status").add(Restrictions.eq("locked", locked.booleanValue()));
@@ -98,10 +104,10 @@ public class MassMailDaoImpl
 	}
 
 	@Override
-	protected Collection<MassMail> handleFindByVisitScheduleItemsLocked(Set<Long> VisitScheduleItemIds, Boolean locked) throws Exception {
+	protected Collection<MassMail> handleFindByVisitScheduleItemsLocked(Set<Long> visitScheduleItemIds, Boolean locked) throws Exception {
 		org.hibernate.Criteria massMailCriteria = createMassMailCriteria(null);
-		if (VisitScheduleItemIds != null && VisitScheduleItemIds.size() > 0) {
-			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", VisitScheduleItemIds));
+		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
+			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", visitScheduleItemIds));
 		} else {
 			return new ArrayList<MassMail>();
 		}
@@ -113,13 +119,18 @@ public class MassMailDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(Long trialId, Long probandListStatusTypeId, Boolean locked, Long resendProbandId) throws Exception {
+	protected long handleGetCount(Long trialId, Long probandListStatusTypeId, Set<Long> visitScheduleItemIds, Boolean locked, Long resendProbandId) throws Exception {
 		org.hibernate.Criteria massMailCriteria = createMassMailCriteria("massMail0");
 		if (trialId != null) {
 			massMailCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (probandListStatusTypeId != null) {
 			massMailCriteria.add(Restrictions.eq("probandListStatus.id", probandListStatusTypeId.longValue()));
+		}
+		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
+			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", visitScheduleItemIds));
+		} else if (visitScheduleItemIds != null) {
+			massMailCriteria.add(Restrictions.isEmpty("visitScheduleItems"));
 		}
 		if (locked != null) {
 			massMailCriteria.createCriteria("status").add(Restrictions.eq("locked", locked.booleanValue()));

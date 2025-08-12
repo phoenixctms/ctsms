@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.domain.TrialStatusTypeDao;
 import org.phoenixctms.ctsms.domain.TrialTagDao;
 import org.phoenixctms.ctsms.domain.TrialTypeDao;
 import org.phoenixctms.ctsms.domain.UserDao;
+import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -160,6 +161,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	private ProbandListEntryTagDao probandListEntryTagDao;
 	private ProbandTagDao probandTagDao;
 	private ECRFFieldDao ecrfFieldDao;
+	private VisitScheduleItemDao visitScheduleItemDao;
 
 	protected CriterionParser() {
 	}
@@ -825,5 +827,13 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			unfolded = new ArrayList<CriterionInstantVO>();
 		}
 		return unfolded;
+	}
+
+	public VisitScheduleItemDao getVisitScheduleItemDao() {
+		return visitScheduleItemDao;
+	}
+
+	public void setVisitScheduleItemDao(VisitScheduleItemDao visitScheduleItemDao) {
+		this.visitScheduleItemDao = visitScheduleItemDao;
 	}
 }
