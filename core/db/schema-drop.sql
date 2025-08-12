@@ -938,6 +938,12 @@
     alter table proband_children 
         drop constraint PROBAND_CHILDREN_FKC;
 
+    alter table proband_list_status_entry_visit_schedule_item 
+        drop constraint PROBAND_LIST_STATUS_ENTRY_VISIT_SCHEDULE_ITEMS_FKC;
+
+    alter table proband_list_status_entry_visit_schedule_item 
+        drop constraint VISIT_SCHEDULE_ITEM_PROBAND_LIST_STATUS_ENTRIES_FKC;
+
     alter table proband_list_status_transition 
         drop constraint PROBAND_LIST_STATUS_TYPE_TRANSITIONS_FKC;
 
@@ -1302,6 +1308,8 @@
     drop table privacy_consent_status_transition cascade;
 
     drop table proband_children cascade;
+
+    drop table proband_list_status_entry_visit_schedule_item cascade;
 
     drop table proband_list_status_transition cascade;
 

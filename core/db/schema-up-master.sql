@@ -367,6 +367,29 @@ if get_database_version() < '010801100' then
   perform set_database_version('010801100');
 
 end if;
+
+
+if get_database_version() < '010801101' then
+
+  create table proband_list_status_entry_visit_schedule_item (
+    PROBAND_LIST_STATUS_ENTRIES_FK BIGINT not null,
+    VISIT_SCHEDULE_ITEMS_FK BIGINT not null
+  );
+
+  alter table proband_list_status_entry_visit_schedule_item 
+    add constraint PROBAND_LIST_STATUS_ENTRY_VISIT_SCHEDULE_ITEMS_FKC 
+    foreign key (VISIT_SCHEDULE_ITEMS_FK) 
+    references VISIT_SCHEDULE_ITEM;
+
+  alter table proband_list_status_entry_visit_schedule_item 
+    add constraint VISIT_SCHEDULE_ITEM_PROBAND_LIST_STATUS_ENTRIES_FKC 
+    foreign key (PROBAND_LIST_STATUS_ENTRIES_FK) 
+    references PROBAND_LIST_STATUS_ENTRY;
+
+  perform set_database_version('010801101');
+
+end if;
+
  
 end
 $$;
