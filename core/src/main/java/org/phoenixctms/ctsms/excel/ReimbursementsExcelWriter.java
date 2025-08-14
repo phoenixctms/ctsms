@@ -185,6 +185,8 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 									ReimbursementsExcelDefaultSettings.PETTY_CASH_ROW_COLORS),
 							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.PETTY_CASH_HEAD_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
 									ReimbursementsExcelDefaultSettings.PETTY_CASH_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.PETTY_CASH_GROUP_LABEL_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
+									ReimbursementsExcelDefaultSettings.PETTY_CASH_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.PETTY_CASH_ROW_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
 									ReimbursementsExcelDefaultSettings.PETTY_CASH_ROW_FORMAT));
 				case VOUCHER:
@@ -210,6 +212,8 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 									ReimbursementsExcelDefaultSettings.VOUCHER_ROW_COLORS),
 							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.VOUCHER_HEAD_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
 									ReimbursementsExcelDefaultSettings.VOUCHER_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.VOUCHER_GROUP_LABEL_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
+									ReimbursementsExcelDefaultSettings.VOUCHER_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.VOUCHER_ROW_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
 									ReimbursementsExcelDefaultSettings.VOUCHER_ROW_FORMAT));
 				case WIRE_TRANSFER:
@@ -235,6 +239,8 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 									ReimbursementsExcelDefaultSettings.WIRE_TRANSFER_ROW_COLORS),
 							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.WIRE_TRANSFER_HEAD_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
 									ReimbursementsExcelDefaultSettings.WIRE_TRANSFER_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.WIRE_TRANSFER_GROUP_LABEL_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
+									ReimbursementsExcelDefaultSettings.WIRE_TRANSFER_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.WIRE_TRANSFER_ROW_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
 									ReimbursementsExcelDefaultSettings.WIRE_TRANSFER_ROW_FORMAT));
 				default:
@@ -251,6 +257,7 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 							null,
 							true,
 							ExcelCellFormat.getDefaultHeadFormat(),
+							ExcelCellFormat.getDefaultGroupLabelFormat(),
 							ExcelCellFormat.getDefaultRowFormat());
 			}
 		} else {
@@ -271,6 +278,8 @@ public class ReimbursementsExcelWriter extends WorkbookWriter {
 							ReimbursementsExcelDefaultSettings.COL_OFFSET),
 					Settings.getBoolean(ReimbursementsExcelSettingCodes.ROW_COLORS, Bundle.REIMBURSEMENTS_EXCEL, ReimbursementsExcelDefaultSettings.ROW_COLORS),
 					Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.HEAD_FORMAT, Bundle.REIMBURSEMENTS_EXCEL, ReimbursementsExcelDefaultSettings.HEAD_FORMAT),
+					Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.GROUP_LABEL_FORMAT, Bundle.REIMBURSEMENTS_EXCEL,
+							ReimbursementsExcelDefaultSettings.GROUP_LABEL_FORMAT),
 					Settings.getExcelCellFormat(ReimbursementsExcelSettingCodes.ROW_FORMAT, Bundle.REIMBURSEMENTS_EXCEL, ReimbursementsExcelDefaultSettings.ROW_FORMAT));
 		}
 	}

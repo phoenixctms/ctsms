@@ -24,6 +24,7 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = "trial_visit_schedule_row_offset_other_pages";
 	public static final String TRIAL_VISIT_SCHEDULE_COL_OFFSET = "trial_visit_schedule_col_offset";
 	public static final String TRIAL_VISIT_SCHEDULE_GROUP_VISITS = "trial_visit_schedule_group_visits";
+	public static final String TRIAL_VISIT_SCHEDULE_GROUP_DAYS = "trial_visit_schedule_group_days";
 	public static final String TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = "trial_visit_schedule_show_visit_schedule_appointments_start_stop";
 	public static final String PROBAND_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = "proband_visit_schedule_template_file_name";
 	public static final String PROBAND_VISIT_SCHEDULE_AUTOSIZE = "proband_visit_schedule_autosize";
@@ -44,6 +45,7 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String PROBAND_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = "proband_visit_schedule_row_offset_other_pages";
 	public static final String PROBAND_VISIT_SCHEDULE_COL_OFFSET = "proband_visit_schedule_col_offset";
 	public static final String PROBAND_VISIT_SCHEDULE_GROUP_VISITS = "proband_visit_schedule_group_visits";
+	public static final String PROBAND_VISIT_SCHEDULE_GROUP_DAYS = "proband_visit_schedule_group_days";
 	public static final String PROBAND_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = "proband_visit_schedule_show_visit_schedule_appointments_start_stop";
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = "proband_trial_visit_schedule_template_file_name";
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_AUTOSIZE = "proband_trial_visit_schedule_autosize";
@@ -64,6 +66,7 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = "proband_trial_visit_schedule_row_offset_other_pages";
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_COL_OFFSET = "proband_trial_visit_schedule_col_offset";
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_VISITS = "proband_trial_visit_schedule_group_visits";
+	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_DAYS = "proband_trial_visit_schedule_group_days";
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = "proband_trial_visit_schedule_show_visit_schedule_appointments_start_stop";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = "travel_expenses_visit_schedule_template_file_name";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_AUTOSIZE = "travel_expenses_visit_schedule_autosize";
@@ -84,6 +87,7 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = "travel_expenses_visit_schedule_row_offset_other_pages";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_COL_OFFSET = "travel_expenses_visit_schedule_col_offset";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_VISITS = "travel_expenses_visit_schedule_group_visits";
+	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_DAYS = "travel_expenses_visit_schedule_group_days";
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = "travel_expenses_visit_schedule_show_visit_schedule_appointments_start_stop";
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_TEMPLATE_FILE_NAME = "proband_appointment_schedule_template_file_name";
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_AUTOSIZE = "proband_appointment_schedule_autosize";
@@ -104,6 +108,7 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = "proband_appointment_schedule_row_offset_other_pages";
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_COL_OFFSET = "proband_appointment_schedule_col_offset";
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_GROUP_VISITS = "proband_appointment_schedule_group_visits";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_GROUP_DAYS = "proband_appointment_schedule_group_days";
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = "proband_appointment_schedule_show_visit_schedule_appointments_start_stop";
 	public static final String VISIT_PLAN_TEMPLATE_FILE_NAME = "visit_plan_template_file_name";
 	public static final String VISIT_PLAN_AUTOSIZE = "visit_plan_autosize";
@@ -124,7 +129,14 @@ public interface VisitScheduleExcelSettingCodes {
 	public static final String VISIT_PLAN_ROW_OFFSET_OTHER_PAGES = "visit_plan_row_offset_other_pages";
 	public static final String VISIT_PLAN_COL_OFFSET = "visit_plan_col_offset";
 	public static final String VISIT_PLAN_GROUP_VISITS = "visit_plan_group_visits";
+	public static final String VISIT_PLAN_GROUP_DAYS = "visit_plan_group_days";
 	public static final String VISIT_PLAN_SHOW_VISIT_SCHEDULE_APPOINTMENTS_START_STOP = "visit_plan_show_visit_schedule_appointments_start_stop";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String TRIAL_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = "trial_visit_schedule_group_label_format";
+	public static final String PROBAND_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = "proband_visit_schedule_group_label_format";
+	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = "proband_trial_visit_schedule_group_label_format";
+	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = "travel_expenses_visit_schedule_group_label_format";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_GROUP_LABEL_FORMAT = "proband_appointment_schedule_group_label_format";
+	public static final String VISIT_PLAN_GROUP_LABEL_FORMAT = "visit_plan_group_label_format";
 }

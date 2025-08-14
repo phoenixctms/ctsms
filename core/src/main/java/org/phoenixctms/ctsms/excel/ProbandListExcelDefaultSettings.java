@@ -211,6 +211,12 @@ public final class ProbandListExcelDefaultSettings {
 	public final static ArrayList<String> SICL_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final ExcelCellFormat ENROLLMENT_LOG_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat PRE_SCREENING_LOG_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat SCREENING_LOG_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat SICL_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat PROBAND_STATUS_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat PROBAND_LIST_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	static {
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("position");
 		PROBAND_LIST_VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "department" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

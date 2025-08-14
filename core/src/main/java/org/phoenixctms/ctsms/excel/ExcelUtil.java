@@ -508,8 +508,7 @@ public final class ExcelUtil {
 		}
 	}
 
-	private static String getFormatCode(boolean head, DisplayFormat format, Color bgColor, Border border, Alignment alignemnt, VerticalAlignment verticalAlignment) {
-		StringBuilder formatCode = new StringBuilder(head ? "h" : "r");
+	private static String getFormatCode(StringBuilder formatCode, DisplayFormat format, Color bgColor, Border border, Alignment alignemnt, VerticalAlignment verticalAlignment) {
 		formatCode.append("-");
 		if (format instanceof jxl.write.DateFormat) {
 			formatCode.append("d");
@@ -555,7 +554,19 @@ public final class ExcelUtil {
 
 	private static WritableCellFormat getHeadCellFormat(ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
 		WritableCellFormat cellFormat;
-		String formatCode = getFormatCode(true, NumberFormats.TEXT, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
+		String formatCode = getFormatCode(new StringBuilder("h"), NumberFormats.TEXT, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
+		if (!cellFormats.containsKey(formatCode)) {
+			cellFormat = getCellFormat(NumberFormats.TEXT, f);
+			cellFormats.put(formatCode, cellFormat);
+		} else {
+			cellFormat = cellFormats.get(formatCode);
+		}
+		return cellFormat;
+	}
+
+	private static WritableCellFormat getGroupLabelCellFormat(ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
+		WritableCellFormat cellFormat;
+		String formatCode = getFormatCode(new StringBuilder("g"), NumberFormats.TEXT, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
 		if (!cellFormats.containsKey(formatCode)) {
 			cellFormat = getCellFormat(NumberFormats.TEXT, f);
 			cellFormats.put(formatCode, cellFormat);
@@ -567,7 +578,7 @@ public final class ExcelUtil {
 
 	private static WritableCellFormat getRowCellFormat(DisplayFormat format, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) {
 		WritableCellFormat cellFormat;
-		String formatCode = getFormatCode(false, format, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
+		String formatCode = getFormatCode(new StringBuilder("r"), format, f.getBgColor(), f.getBorder(), f.getAlignment(), f.getVerticalAlignment());
 		if (!cellFormats.containsKey(formatCode)) {
 			cellFormat = getCellFormat(format, f);
 			cellFormats.put(formatCode, cellFormat);
@@ -661,6 +672,18 @@ public final class ExcelUtil {
 				cell = new jxl.write.Label(c, r, columnName, getHeadCellFormat(f, cellFormats));
 			} else {
 				cell = new jxl.write.Label(c, r, columnName);
+			}
+			addCell(cell, spreadSheet, c, r, f);
+		}
+	}
+
+	public static void writeGroupLabel(WritableSheet spreadSheet, int c, int r, String group, ExcelCellFormat f, HashMap<String, WritableCellFormat> cellFormats) throws Exception {
+		if (spreadSheet != null) {
+			WritableCell cell;
+			if (f.isOverrideFormat()) {
+				cell = new jxl.write.Label(c, r, group, getGroupLabelCellFormat(f, cellFormats));
+			} else {
+				cell = new jxl.write.Label(c, r, group);
 			}
 			addCell(cell, spreadSheet, c, r, f);
 		}

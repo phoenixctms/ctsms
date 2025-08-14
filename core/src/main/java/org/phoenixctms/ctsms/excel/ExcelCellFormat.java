@@ -190,6 +190,18 @@ public class ExcelCellFormat {
 	private static final ExcelCellFormat DEFAULT_HEAD_FORMAT = new ExcelCellFormat(DEFAULT_HEAD_FONT_NAME, DEFAULT_HEAD_FONT_SIZE, DEFAULT_HEAD_BOLD, DEFAULT_HEAD_BG_COLOR,
 			DEFAULT_HEAD_BORDER, DEFAULT_HEAD_BORDER_STYLE, DEFAULT_HEAD_ALIGNMENT, DEFAULT_HEAD_VERTICAL_ALIGNMENT, true,
 			false, false, false);
+	private static final FontName DEFAULT_GROUP_LABEL_FONT_NAME = WritableFont.ARIAL;
+	private static final int DEFAULT_GROUP_LABEL_FONT_SIZE = 14;
+	private static final Color DEFAULT_GROUP_LABEL_BG_COLOR = Color.LIGHTGRAY;
+	private static final Alignment DEFAULT_GROUP_LABEL_ALIGNMENT = null;
+	private static final VerticalAlignment DEFAULT_GROUP_LABEL_VERTICAL_ALIGNMENT = null;
+	private static final Border DEFAULT_GROUP_LABEL_BORDER = null; //Border.NONE;
+	private static final BorderLineStyle DEFAULT_GROUP_LABEL_BORDER_STYLE = null; //BorderLineStyle.NONE;
+	private static final boolean DEFAULT_GROUP_LABEL_BOLD = true;
+	private static final ExcelCellFormat DEFAULT_GROUP_LABEL_FORMAT = new ExcelCellFormat(DEFAULT_GROUP_LABEL_FONT_NAME, DEFAULT_GROUP_LABEL_FONT_SIZE, DEFAULT_GROUP_LABEL_BOLD,
+			DEFAULT_GROUP_LABEL_BG_COLOR,
+			DEFAULT_GROUP_LABEL_BORDER, DEFAULT_GROUP_LABEL_BORDER_STYLE, DEFAULT_GROUP_LABEL_ALIGNMENT, DEFAULT_GROUP_LABEL_VERTICAL_ALIGNMENT, true,
+			false, false, false);
 	private static final boolean DEFAULT_TIME_USER_TIMEZONE = true;
 	private static final boolean DEFAULT_DATE_USER_TIMEZONE = true;
 	private static final boolean DEFAULT_DATE_TIME_USER_TIMEZONE = true;
@@ -208,6 +220,10 @@ public class ExcelCellFormat {
 
 	public static ExcelCellFormat getDefaultHeadFormat() {
 		return new ExcelCellFormat(DEFAULT_HEAD_FORMAT);
+	}
+
+	public static ExcelCellFormat getDefaultGroupLabelFormat() {
+		return new ExcelCellFormat(DEFAULT_GROUP_LABEL_FORMAT);
 	}
 
 	public static ExcelCellFormat getDefaultRowFormat() {

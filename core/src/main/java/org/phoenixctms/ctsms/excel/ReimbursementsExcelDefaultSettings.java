@@ -71,6 +71,10 @@ public final class ReimbursementsExcelDefaultSettings {
 	public static final boolean WIRE_TRANSFER_AGGREGATE_ADDRESSES = false;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final ExcelCellFormat PETTY_CASH_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat VOUCHER_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat WIRE_TRANSFER_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	static {
 		VO_FIELD_COLUMNS.add("trial" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		VO_FIELD_COLUMNS.add("proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");

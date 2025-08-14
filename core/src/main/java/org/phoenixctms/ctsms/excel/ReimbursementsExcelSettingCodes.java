@@ -61,4 +61,8 @@ public interface ReimbursementsExcelSettingCodes {
 	public static final String WIRE_TRANSFER_AGGREGATE_ADDRESSES = "wire_transfer_aggregate_addresses";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String PETTY_CASH_GROUP_LABEL_FORMAT = "petty_cash_group_label_format";
+	public static final String VOUCHER_GROUP_LABEL_FORMAT = "voucher_group_label_format";
+	public static final String WIRE_TRANSFER_GROUP_LABEL_FORMAT = "wire_transfer_group_label_format";
+	public static final String GROUP_LABEL_FORMAT = "group_label_format";
 }

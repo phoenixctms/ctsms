@@ -57,4 +57,16 @@ public interface VisitScheduleExcelLabelCodes {
 	public static final String VISIT_PLAN_ADDRESS_GROUP_FROM_TO_HEADER_FOOTER = "visit_plan_address_group_from_to_header_footer";
 	public static final String VISIT_SCHEDULE_APPOINTMENT_START_STOP_HEAD = "visit_schedule_appointment_start_stop_head";
 	public static final String VISIT_SCHEDULE_APPOINTMENT_START_STOP_VALUE = "visit_schedule_appointment_start_stop_value";
+	public static final String TRIAL_VISIT_SCHEDULE_GROUP_DAYS_LABEL = "trial_visit_schedule_group_days_label";
+	public static final String PROBAND_VISIT_SCHEDULE_GROUP_DAYS_LABEL = "proband_visit_schedule_group_days_label";
+	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_DAYS_LABEL = "proband_trial_visit_schedule_group_days_label";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_GROUP_DAYS_LABEL = "proband_appointment_schedule_group_days_label";
+	public static final String VISIT_PLAN_GROUP_DAYS_LABEL = "visit_plan_group_days_label";
+	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_DAYS_LABEL = "travel_expenses_visit_schedule_group_days_label";
+	public static final String TRIAL_VISIT_SCHEDULE_GROUP_VISITS_LABEL = "trial_visit_schedule_group_visits_label";
+	public static final String PROBAND_VISIT_SCHEDULE_GROUP_VISITS_LABEL = "proband_visit_schedule_group_visits_label";
+	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_VISITS_LABEL = "proband_trial_visit_schedule_group_visits_label";
+	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_VISITS_LABEL = "travel_expenses_visit_schedule_group_visits_label";
+	public static final String PROBAND_APPOINTMENT_SCHEDULE_GROUP_VISITS_LABEL = "proband_appointment_schedule_group_visits_label";
+	public static final String VISIT_PLAN_GROUP_VISITS_LABEL = "visit_plan_group_visits_label";
 }

@@ -332,6 +332,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_COLORS),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_GROUP_LABEL_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.ENROLLMENT_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.ENROLLMENT_LOG_ROW_FORMAT));
 				case PRE_SCREENING:
@@ -357,6 +359,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_COLORS),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_GROUP_LABEL_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_ROW_FORMAT));
 				case SCREENING:
@@ -382,6 +386,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 									ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_COLORS),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.SCREENING_LOG_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_GROUP_LABEL_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SCREENING_LOG_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SCREENING_LOG_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.SCREENING_LOG_ROW_FORMAT));
 				case SICL:
@@ -404,6 +410,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 									ProbandListExcelDefaultSettings.SICL_COL_OFFSET),
 							Settings.getBoolean(ProbandListExcelSettingCodes.SICL_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_COLORS),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_GROUP_LABEL_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.SICL_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.SICL_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.SICL_ROW_FORMAT));
 				case PROBAND_STATUS:
 					return new SpreadSheetWriter(
@@ -429,6 +437,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 									ProbandListExcelDefaultSettings.PROBAND_STATUS_ROW_COLORS),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_STATUS_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.PROBAND_STATUS_HEAD_FORMAT),
+							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_STATUS_GROUP_LABEL_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+									ProbandListExcelDefaultSettings.PROBAND_STATUS_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_STATUS_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 									ProbandListExcelDefaultSettings.PROBAND_STATUS_ROW_FORMAT));
 				default:
@@ -445,6 +455,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							null,
 							true,
 							ExcelCellFormat.getDefaultHeadFormat(),
+							ExcelCellFormat.getDefaultGroupLabelFormat(),
 							ExcelCellFormat.getDefaultRowFormat());
 			}
 		} else {
@@ -466,6 +477,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 					Settings.getBoolean(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_COLORS, Bundle.PROBAND_LIST_EXCEL, ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_COLORS),
 					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_HEAD_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.PROBAND_LIST_HEAD_FORMAT),
+					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_GROUP_LABEL_FORMAT, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_LIST_GROUP_LABEL_FORMAT),
 					Settings.getExcelCellFormat(ProbandListExcelSettingCodes.PROBAND_LIST_ROW_FORMAT, Bundle.PROBAND_LIST_EXCEL,
 							ProbandListExcelDefaultSettings.PROBAND_LIST_ROW_FORMAT));
 		}

@@ -25,4 +25,5 @@ public interface TeamMembersExcelSettingCodes {
 	public static final String APPEND_HEADER_FOOTER = "append_header_footer";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String GROUP_LABEL_FORMAT = "group_label_format";
 }

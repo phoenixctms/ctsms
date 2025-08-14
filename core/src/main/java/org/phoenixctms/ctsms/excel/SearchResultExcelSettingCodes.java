@@ -122,4 +122,12 @@ public interface SearchResultExcelSettingCodes {
 	public static final String AGGREGATE_PROBAND_CONTACT_DETAILS = "aggregate_proband_contact_details";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String COURSE_GROUP_LABEL_FORMAT = "course_group_label_format";
+	public static final String STAFF_GROUP_LABEL_FORMAT = "staff_group_label_format";
+	public static final String INVENTORY_GROUP_LABEL_FORMAT = "inventory_group_label_format";
+	public static final String USER_GROUP_LABEL_FORMAT = "user_group_label_format";
+	public static final String TRIAL_GROUP_LABEL_FORMAT = "trial_group_label_format";
+	public static final String PROBAND_GROUP_LABEL_FORMAT = "proband_group_label_format";
+	public static final String INPUT_FIELD_GROUP_LABEL_FORMAT = "input_field_group_label_format";
+	public static final String MASS_MAIL_GROUP_LABEL_FORMAT = "mass_mail_group_label_format";
 }
