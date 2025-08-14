@@ -150,6 +150,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 									SearchResultExcelDefaultSettings.INVENTORY_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.INVENTORY_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.INVENTORY_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.INVENTORY_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.INVENTORY_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.INVENTORY_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.INVENTORY_ROW_FORMAT));
 				case STAFF_DB:
@@ -172,6 +174,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(SearchResultExcelSettingCodes.STAFF_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.STAFF_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.STAFF_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.STAFF_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.STAFF_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.STAFF_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.STAFF_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.STAFF_ROW_FORMAT));
 				case COURSE_DB:
@@ -194,6 +198,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(SearchResultExcelSettingCodes.COURSE_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.COURSE_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.COURSE_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.COURSE_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.COURSE_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.COURSE_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.COURSE_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.COURSE_ROW_FORMAT));
 				case TRIAL_DB:
@@ -216,6 +222,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(SearchResultExcelSettingCodes.TRIAL_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.TRIAL_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.TRIAL_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.TRIAL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.TRIAL_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.TRIAL_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.TRIAL_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.TRIAL_ROW_FORMAT));
 				case INPUT_FIELD_DB:
@@ -241,6 +249,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 									SearchResultExcelDefaultSettings.INPUT_FIELD_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.INPUT_FIELD_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.INPUT_FIELD_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.INPUT_FIELD_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.INPUT_FIELD_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.INPUT_FIELD_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.INPUT_FIELD_ROW_FORMAT));
 				case PROBAND_DB:
@@ -263,6 +273,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(SearchResultExcelSettingCodes.PROBAND_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.PROBAND_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.PROBAND_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.PROBAND_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.PROBAND_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.PROBAND_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.PROBAND_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.PROBAND_ROW_FORMAT));
 				case USER_DB:
@@ -286,6 +298,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(SearchResultExcelSettingCodes.USER_ROW_COLORS, Bundle.SEARCH_RESULT_EXCEL, SearchResultExcelDefaultSettings.USER_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.USER_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.USER_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.USER_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.USER_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.USER_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.USER_ROW_FORMAT));
 				case MASS_MAIL_DB:
@@ -311,6 +325,8 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 									SearchResultExcelDefaultSettings.MASS_MAIL_ROW_COLORS),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.MASS_MAIL_HEAD_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.MASS_MAIL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.MASS_MAIL_GROUP_LABEL_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
+									SearchResultExcelDefaultSettings.MASS_MAIL_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(SearchResultExcelSettingCodes.MASS_MAIL_ROW_FORMAT, Bundle.SEARCH_RESULT_EXCEL,
 									SearchResultExcelDefaultSettings.MASS_MAIL_ROW_FORMAT));
 				default:
@@ -328,6 +344,7 @@ public class SearchResultExcelWriter extends WorkbookWriter {
 				null,
 				true,
 				ExcelCellFormat.getDefaultHeadFormat(),
+				ExcelCellFormat.getDefaultGroupLabelFormat(),
 				ExcelCellFormat.getDefaultRowFormat());
 	}
 

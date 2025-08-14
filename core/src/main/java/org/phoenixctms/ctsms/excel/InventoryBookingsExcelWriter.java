@@ -59,6 +59,8 @@ public class InventoryBookingsExcelWriter extends WorkbookWriter {
 						Settings.getBoolean(InventoryBookingsExcelSettingCodes.ROW_COLORS, Bundle.INVENTORY_BOOKINGS_EXCEL, InventoryBookingsExcelDefaultSettings.ROW_COLORS),
 						Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.HEAD_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
 								InventoryBookingsExcelDefaultSettings.HEAD_FORMAT),
+						Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.GROUP_LABEL_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
+								InventoryBookingsExcelDefaultSettings.GROUP_LABEL_FORMAT),
 						Settings.getExcelCellFormat(InventoryBookingsExcelSettingCodes.ROW_FORMAT, Bundle.INVENTORY_BOOKINGS_EXCEL,
 								InventoryBookingsExcelDefaultSettings.ROW_FORMAT)));
 	}

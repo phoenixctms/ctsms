@@ -32,6 +32,7 @@ public class SpreadSheetWriter {
 	private boolean rowColors;
 	private ExcelCellFormat headFormat;
 	private ExcelCellFormat rowFormat;
+	private ExcelCellFormat groupLabelFormat;
 	private final static boolean ENUMERATE_REFERENCES = true;
 	private final static boolean ENUMERATE_COLLECTIONS = false;
 	private final static boolean ENUMERATE_MAPS = false;
@@ -51,7 +52,7 @@ public class SpreadSheetWriter {
 			Integer rowOffsetFirstPage,
 			Integer rowOffsetOtherPages,
 			Integer colOffset,
-			boolean rowColors, ExcelCellFormat headFormat, ExcelCellFormat rowFormat) {
+			boolean rowColors, ExcelCellFormat headFormat, ExcelCellFormat groupLabelFormat, ExcelCellFormat rowFormat) {
 		voColumns = new ArrayList<VOColumn>();
 		this.workbookWriter = workbookWriter;
 		this.voFieldColumnIndexMap = voFieldColumnIndexMap;
@@ -65,6 +66,7 @@ public class SpreadSheetWriter {
 		this.colOffset = colOffset;
 		this.rowColors = rowColors;
 		this.headFormat = headFormat;
+		this.groupLabelFormat = groupLabelFormat;
 		this.rowFormat = rowFormat;
 	}
 
@@ -145,6 +147,19 @@ public class SpreadSheetWriter {
 		}
 	}
 
+	private int writeGroupLabels(WritableSheet spreadSheet, ArrayList<String> groupLabels, int r, ExcelCellFormat f,
+			HashMap<String, WritableCellFormat> cellFormats) throws Exception {
+		if (groupLabels != null) {
+			Iterator<String> it = groupLabels.iterator();
+			while (it.hasNext()) {
+				ExcelUtil.writeGroupLabel(spreadSheet, getColIndex(0), r, it.next(), f, cellFormats);
+				r++;
+			}
+			return groupLabels.size();
+		}
+		return 0;
+	}
+
 	private int writeHeadRow(WritableSheet spreadSheet, int r, HashMap<String, WritableCellFormat> cellFormats) throws Exception {
 		CellView cellView = null;
 		if (autoSize) {
@@ -202,23 +217,33 @@ public class SpreadSheetWriter {
 			spreadSheet = workbook.createSheet(spreadSheetName, workbook.getNumberOfSheets());
 		}
 		HashMap<String, WritableCellFormat> cellFormats = new HashMap<String, WritableCellFormat>();
-		int r = rowOffsetFirstPage != null ? rowOffsetFirstPage : 0;
+		int rPage = rowOffsetFirstPage != null ? rowOffsetFirstPage : 0;
+		int r = rPage;
 		int maxIndexedColumnIndex = writeHeadRow(spreadSheet, r, cellFormats);
-		int c;
-		r += writeHead ? workbookWriter.getRowIncrement(null, null) : 0;
+		int c, increment;
+		boolean newPage;
+		r += writeHead ? 1 : 0;
+		rPage += writeHead ? 1 : 0;
 		if (VOs != null && VOs.size() > 0) {
 			Iterator vosIt = VOs.iterator();
 			Object lastVO = null;
 			while (vosIt.hasNext()) {
 				Object vo = vosIt.next();
-				r += workbookWriter.getRowIncrement(lastVO, vo);
+				increment = writeGroupLabels(spreadSheet, workbookWriter.getGroupLabels(lastVO, vo), r, groupLabelFormat, cellFormats);
+				r += increment;
+				rPage += increment;
 				lastVO = vo;
-				boolean newPage = ((pageBreakAtRow == null) ? false : (r > 0 && (r % pageBreakAtRow.intValue()) == 0));
+				newPage = (pageBreakAtRow == null) ? false : (rPage > 0 && rPage > pageBreakAtRow);
 				if (newPage) {
 					spreadSheet.addRowPageBreak(r);
-					r += rowOffsetOtherPages != null ? rowOffsetOtherPages : 0;
+					rPage = rowOffsetOtherPages != null ? rowOffsetOtherPages : 0;
+					r += rPage;
 					writeHeadRow(spreadSheet, r, cellFormats);
-					r += writeHead ? workbookWriter.getRowIncrement(null, null) : 0;
+					r += 1;
+					rPage += 1;
+					increment = writeGroupLabels(spreadSheet, workbookWriter.getGroupLabels(null, vo), r, groupLabelFormat, cellFormats);
+					r += increment;
+					rPage += increment;
 				}
 				for (c = 0; c < voColumns.size(); c++) {
 					VOColumn voColumn = voColumns.get(c);
@@ -239,25 +264,36 @@ public class SpreadSheetWriter {
 						writeFieldRow(spreadSheet, distinctFieldRows.get(id), maxIndexedColumnIndex, r, rowFormat, cellFormats);
 					}
 				}
+				r += 1;
+				rPage += 1;
 			}
 		} else if (distinctFieldRows != null && distinctFieldRows.size() > 0) {
 			Iterator<HashMap<String, Object>> fieldRowIt = distinctFieldRows.values().iterator();
 			HashMap<String, Object> lastRow = null;
 			while (fieldRowIt.hasNext()) {
 				HashMap<String, Object> row = fieldRowIt.next();
-				r += workbookWriter.getRowIncrement(lastRow, row);
+				increment = writeGroupLabels(spreadSheet, workbookWriter.getGroupLabels(lastRow, row), r, groupLabelFormat, cellFormats);
+				r += increment;
+				rPage += increment;
 				lastRow = row;
-				boolean newPage = ((pageBreakAtRow == null) ? false : (r > 0 && (r % pageBreakAtRow.intValue()) == 0));
+				newPage = (pageBreakAtRow == null) ? false : (rPage > 0 && rPage > pageBreakAtRow);
 				if (newPage) {
 					spreadSheet.addRowPageBreak(r);
-					r += rowOffsetOtherPages != null ? rowOffsetOtherPages : 0;
+					rPage = rowOffsetOtherPages != null ? rowOffsetOtherPages : 0;
+					r += rPage;
 					writeHeadRow(spreadSheet, r, cellFormats);
-					r += writeHead ? workbookWriter.getRowIncrement(null, null) : 0;
+					r += 1;
+					rPage += 1;
+					increment = writeGroupLabels(spreadSheet, workbookWriter.getGroupLabels(null, row), r, groupLabelFormat, cellFormats);
+					r += increment;
+					rPage += increment;
 				}
 				if (rowColors) {
 					rowFormat.setBgColor(null);
 				}
 				writeFieldRow(spreadSheet, row, maxIndexedColumnIndex, r, rowFormat, cellFormats);
+				r += 1;
+				rPage += 1;
 			}
 		}
 		return spreadSheet;

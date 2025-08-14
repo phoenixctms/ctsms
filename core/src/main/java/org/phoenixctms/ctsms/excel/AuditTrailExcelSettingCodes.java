@@ -29,4 +29,6 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String ECRF_FIELD_STATUS_QUEUES = "ecrf_field_status_queues";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String AUDIT_TRAIL_GROUP_LABEL_FORMAT = "audit_trail_group_label_format";
+	public static final String ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT = "ecrf_field_status_group_label_format";
 }

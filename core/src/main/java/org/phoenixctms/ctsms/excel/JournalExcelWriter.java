@@ -123,6 +123,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.INVENTORY_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.INVENTORY_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INVENTORY_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.INVENTORY_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INVENTORY_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.INVENTORY_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.INVENTORY_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.INVENTORY_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INVENTORY_ROW_FORMAT));
 				case STAFF_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -141,6 +143,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.STAFF_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.STAFF_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.STAFF_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.STAFF_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.STAFF_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.STAFF_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.STAFF_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.STAFF_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.STAFF_ROW_FORMAT));
 				case COURSE_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -159,6 +163,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.COURSE_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.COURSE_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.COURSE_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.COURSE_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.COURSE_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.COURSE_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.COURSE_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.COURSE_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.COURSE_ROW_FORMAT));
 				case USER_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -177,6 +183,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.USER_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.USER_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.USER_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.USER_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.USER_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.USER_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.USER_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.USER_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.USER_ROW_FORMAT));
 				case TRIAL_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -195,6 +203,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.TRIAL_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.TRIAL_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.TRIAL_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.TRIAL_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.TRIAL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.TRIAL_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.TRIAL_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.TRIAL_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.TRIAL_ROW_FORMAT));
 				case PROBAND_JOURNAL:
 					return new SpreadSheetWriter(
@@ -215,6 +225,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.PROBAND_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.PROBAND_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.PROBAND_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.PROBAND_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.PROBAND_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.PROBAND_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.PROBAND_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.PROBAND_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.PROBAND_ROW_FORMAT));
 				case CRITERIA_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -234,6 +246,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.CRITERIA_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.CRITERIA_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.CRITERIA_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.CRITERIA_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.CRITERIA_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.CRITERIA_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.CRITERIA_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.CRITERIA_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.CRITERIA_ROW_FORMAT));
 				case INPUT_FIELD_JOURNAL:
 					return new SpreadSheetWriter(
@@ -255,6 +269,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 							Settings.getBoolean(JournalExcelSettingCodes.INPUT_FIELD_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INPUT_FIELD_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.INPUT_FIELD_HEAD_FORMAT, Bundle.JOURNAL_EXCEL,
 									JournalExcelDefaultSettings.INPUT_FIELD_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.INPUT_FIELD_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.INPUT_FIELD_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.INPUT_FIELD_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.INPUT_FIELD_ROW_FORMAT));
 				case ECRF_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -273,6 +289,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.ECRF_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.ECRF_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.ECRF_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.ECRF_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.ECRF_ROW_FORMAT));
 				case MASS_MAIL_JOURNAL:
 					return new SpreadSheetWriter(this,
@@ -292,6 +310,8 @@ public class JournalExcelWriter extends WorkbookWriter {
 									JournalExcelDefaultSettings.MASS_MAIL_COL_OFFSET),
 							Settings.getBoolean(JournalExcelSettingCodes.MASS_MAIL_ROW_COLORS, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_ROW_COLORS),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.MASS_MAIL_HEAD_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_HEAD_FORMAT),
+							Settings.getExcelCellFormat(JournalExcelSettingCodes.MASS_MAIL_GROUP_LABEL_FORMAT, Bundle.JOURNAL_EXCEL,
+									JournalExcelDefaultSettings.MASS_MAIL_GROUP_LABEL_FORMAT),
 							Settings.getExcelCellFormat(JournalExcelSettingCodes.MASS_MAIL_ROW_FORMAT, Bundle.JOURNAL_EXCEL, JournalExcelDefaultSettings.MASS_MAIL_ROW_FORMAT));
 				default:
 			}
@@ -308,6 +328,7 @@ public class JournalExcelWriter extends WorkbookWriter {
 				null,
 				true,
 				ExcelCellFormat.getDefaultHeadFormat(),
+				ExcelCellFormat.getDefaultGroupLabelFormat(),
 				ExcelCellFormat.getDefaultRowFormat());
 	}
 

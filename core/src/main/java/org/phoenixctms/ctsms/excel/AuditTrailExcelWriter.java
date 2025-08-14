@@ -249,6 +249,8 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_COLORS),
 				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_HEAD_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_GROUP_LABEL_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_GROUP_LABEL_FORMAT),
 				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_FORMAT));
 	}
@@ -276,6 +278,8 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_COLORS),
 				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_HEAD_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT),
 				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_ROW_FORMAT));
 	}

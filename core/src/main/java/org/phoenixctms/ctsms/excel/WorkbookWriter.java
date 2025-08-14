@@ -85,14 +85,8 @@ public abstract class WorkbookWriter implements ExcelWriter, ExcelOutput {
 
 	protected abstract void updateExcelVO();
 
-	protected int getRowIncrement(Object lastRow, Object row) {
-		if (lastRow != null) {
-			return 1;
-		} else if (row == null) {
-			return 1;
-		} else {
-			return 0;
-		}
+	protected ArrayList<String> getGroupLabels(Object lastRow, Object row) {
+		return null;
 	}
 
 	@Override

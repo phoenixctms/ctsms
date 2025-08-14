@@ -28,6 +28,7 @@ public final class TeamMembersExcelDefaultSettings {
 	public static final boolean APPEND_HEADER_FOOTER = true;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final ExcelCellFormat GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	static {
 		VO_FIELD_COLUMNS.add("role" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
 		VO_FIELD_COLUMNS.add("staff" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "nameWithTitles");

@@ -197,4 +197,10 @@ public interface ProbandListExcelSettingCodes {
 	public static final String SICL_SHOW_SCREENING_REASON = "sicl_show_screening_reason";
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
+	public static final String ENROLLMENT_LOG_GROUP_LABEL_FORMAT = "enrollment_log_group_label_format";
+	public static final String PRE_SCREENING_LOG_GROUP_LABEL_FORMAT = "pre_screening_log_group_label_format";
+	public static final String SCREENING_LOG_GROUP_LABEL_FORMAT = "screening_log_group_label_format";
+	public static final String SICL_GROUP_LABEL_FORMAT = "sicl_group_label_format";
+	public static final String PROBAND_STATUS_GROUP_LABEL_FORMAT = "proband_status_group_label_format";
+	public static final String PROBAND_LIST_GROUP_LABEL_FORMAT = "proband_list_group_label_format";
 }

@@ -30,6 +30,7 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final Integer TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer TRIAL_VISIT_SCHEDULE_COL_OFFSET = null;
 	public static final boolean TRIAL_VISIT_SCHEDULE_GROUP_VISITS = false;
+	public static final boolean TRIAL_VISIT_SCHEDULE_GROUP_DAYS = false;
 	public static final String PROBAND_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean PROBAND_VISIT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer PROBAND_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -51,6 +52,7 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final Integer PROBAND_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer PROBAND_VISIT_SCHEDULE_COL_OFFSET = null;
 	public static final boolean PROBAND_VISIT_SCHEDULE_GROUP_VISITS = false;
+	public static final boolean PROBAND_VISIT_SCHEDULE_GROUP_DAYS = false;
 	public static final String PROBAND_TRIAL_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -72,6 +74,7 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer PROBAND_TRIAL_VISIT_SCHEDULE_COL_OFFSET = null;
 	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_VISITS = false;
+	public static final boolean PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_DAYS = false;
 	public static final String TRAVEL_EXPENSES_VISIT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -93,6 +96,7 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer TRAVEL_EXPENSES_VISIT_SCHEDULE_COL_OFFSET = null;
 	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_VISITS = false;
+	public static final boolean TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_DAYS = false;
 	public static final String PROBAND_APPOINTMENT_SCHEDULE_TEMPLATE_FILE_NAME = null;
 	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_AUTOSIZE = true;
 	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_PAGE_BREAK_AT_ROW = null;
@@ -114,6 +118,7 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer PROBAND_APPOINTMENT_SCHEDULE_COL_OFFSET = null;
 	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_GROUP_VISITS = false;
+	public static final boolean PROBAND_APPOINTMENT_SCHEDULE_GROUP_DAYS = false;
 	public static final String VISIT_PLAN_TEMPLATE_FILE_NAME = null;
 	public static final boolean VISIT_PLAN_AUTOSIZE = true;
 	public static final Integer VISIT_PLAN_PAGE_BREAK_AT_ROW = null;
@@ -135,8 +140,15 @@ public final class VisitScheduleExcelDefaultSettings {
 	public static final Integer VISIT_PLAN_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer VISIT_PLAN_COL_OFFSET = null;
 	public static final boolean VISIT_PLAN_GROUP_VISITS = false;
+	public static final boolean VISIT_PLAN_GROUP_DAYS = false;
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final ExcelCellFormat TRIAL_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat PROBAND_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat PROBAND_TRIAL_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat TRAVEL_EXPENSES_VISIT_SCHEDULE_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat PROBAND_APPOINTMENT_SCHEDULE_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat VISIT_PLAN_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	static {
 		TRIAL_VISIT_SCHEDULE_VO_FIELD_COLUMNS.add("name");
 		TRIAL_VISIT_SCHEDULE_VO_FIELD_COLUMNS.add("group" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "token");

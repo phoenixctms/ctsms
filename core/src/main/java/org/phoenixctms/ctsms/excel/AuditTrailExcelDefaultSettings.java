@@ -33,6 +33,8 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final ArrayList<String> ECRF_FIELD_STATUS_QUEUES = new ArrayList<String>();
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
+	public static final ExcelCellFormat AUDIT_TRAIL_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	static {
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("ecrfField" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
