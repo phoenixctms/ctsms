@@ -3,7 +3,9 @@ package org.phoenixctms.ctsms.pdf;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.pdfbox.cos.COSName;
@@ -351,6 +353,24 @@ public final class PDFUtil {
 	public static float renderMultilineText(PDPageContentStream contentStream, PDFont font, FontSize fontSize, org.phoenixctms.ctsms.enumeration.Color color, String text, float x,
 			float y, Alignment align, float textBlockWidth) throws IOException {
 		return renderMultilineText(contentStream, font, fontSize, color, text, x, y, align, textBlockWidth, TextDecoration.NONE);
+	}
+
+	public static List<String> getTextLines(String text) {
+		String[] lines;
+		if (text != null) {
+			lines = LINE_BREAK_REGEXP.split(text, -1);
+			return Arrays.asList(lines);
+		} else {
+			return new ArrayList<String>();
+		}
+	}
+
+	public static String getLinesText(List<String> lines) {
+		if (lines != null) {
+			return String.join(PDF_LINE_BREAK, lines);
+		} else {
+			return null;
+		}
 	}
 
 	public static float renderMultilineText(PDPageContentStream contentStream, PDFont font, FontSize fontSize, org.phoenixctms.ctsms.enumeration.Color color, String text, float x,

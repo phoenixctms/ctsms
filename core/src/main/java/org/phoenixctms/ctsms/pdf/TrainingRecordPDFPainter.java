@@ -292,19 +292,18 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 					TrainingRecordPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
 		}
 	}
-
-	@Override
-	public boolean nextBlockFitsOnFullPage() throws Exception {
-		TrainingRecordPDFBlock block = blocks.get(blockIndex);
-		if (BlockType.SECTION.equals(block.getType())) {
-			return (pageHeight
-					- Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_UPPER_MARGIN)
-					- block.getHeight(cursor)) > Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.TRAINING_RECORD_PDF,
-							TrainingRecordPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
-		} else {
-			return true;
-		}
-	}
+	//	@Override
+	//	public boolean nextBlockFitsOnFullPage() throws Exception {
+	//		TrainingRecordPDFBlock block = blocks.get(blockIndex);
+	//		if (BlockType.SECTION.equals(block.getType())) {
+	//			return (pageHeight
+	//					- Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.TRAINING_RECORD_PDF, TrainingRecordPDFDefaultSettings.BLOCKS_UPPER_MARGIN)
+	//					- block.getHeight(cursor)) > Settings.getFloat(TrainingRecordPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.TRAINING_RECORD_PDF,
+	//							TrainingRecordPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
+	//		} else {
+	//			return true;
+	//		}
+	//	}
 
 	@Override
 	public void splitNextBlock() throws Exception {
