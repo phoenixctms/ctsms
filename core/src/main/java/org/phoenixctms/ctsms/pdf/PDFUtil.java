@@ -355,11 +355,11 @@ public final class PDFUtil {
 		return renderMultilineText(contentStream, font, fontSize, color, text, x, y, align, textBlockWidth, TextDecoration.NONE);
 	}
 
-	public static List<String> getTextLines(String text) {
+	public static ArrayList<String> getTextLines(String text) {
 		String[] lines;
 		if (text != null) {
 			lines = LINE_BREAK_REGEXP.split(text, -1);
-			return Arrays.asList(lines);
+			return new ArrayList<String>(Arrays.asList(lines));
 		} else {
 			return new ArrayList<String>();
 		}
