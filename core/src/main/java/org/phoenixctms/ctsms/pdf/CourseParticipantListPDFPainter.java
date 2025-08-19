@@ -362,19 +362,17 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 		if (BlockType.COURSE_DESCRIPTION.equals(block.getType())) {
 			CourseOutVO blockCourse = new CourseOutVO(block.getCourse());
 			CourseParticipantListPDFBlock testBlock = new CourseParticipantListPDFBlock(blockCourse, BlockType.COURSE_DESCRIPTION);
-			ArrayList<String> lines = new ArrayList<String>(PDFUtil.getTextLines(blockCourse.getDescription()));
+			ArrayList<String> lines = PDFUtil.getTextLines(blockCourse.getDescription());
 			int i;
 			for (i = 0; i < lines.size(); i++) {
 				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(0, i + 1)));
 				if ((cursor.getBlockY()
 						- testBlock.getHeight(cursor)) <= Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 								CourseParticipantListPDFDefaultSettings.BLOCKS_LOWER_MARGIN)) {
-					//blockLines.add(lines.get(i));
-					//} else {
 					break;
 				}
 			}
-			if (i > 0) {
+			if (i > 0 && i < lines.size()) {
 				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(0, i)));
 				blocks.add(blockIndex, new CourseParticipantListPDFBlock(blockCourse, BlockType.COURSE_DESCRIPTION));
 				blockCourse = new CourseOutVO(block.getCourse());
