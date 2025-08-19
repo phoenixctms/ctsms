@@ -355,15 +355,6 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 			cursor.setCourse(block.getCourse());
 		}
 	}
-	//	@Override
-	//	public boolean nextBlockFitsOnFullPage() throws Exception {
-	//		CourseParticipantListPDFBlock block = blocks.get(blockIndex);
-	//		if (BlockType.COURSE_DESCRIPTION.equals(block.getType())) {
-	//			return false;
-	//		} else {
-	//			return true;
-	//		}
-	//	}
 
 	@Override
 	public void splitNextBlock() throws Exception {
