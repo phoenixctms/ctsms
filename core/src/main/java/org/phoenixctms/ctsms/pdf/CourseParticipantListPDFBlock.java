@@ -923,4 +923,8 @@ public class CourseParticipantListPDFBlock {
 			}
 		}
 	}
+
+	public void setCourse(CourseOutVO course) {
+		this.course = course;
+	}
 }
