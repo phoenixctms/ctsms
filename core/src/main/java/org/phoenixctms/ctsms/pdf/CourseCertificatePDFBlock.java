@@ -509,4 +509,15 @@ public class CourseCertificatePDFBlock {
 		}
 		return height;
 	}
+
+	
+	public CourseOutVO getCourse() {
+		return course;
+	}
+
+	
+	public void setCourse(CourseOutVO course) {
+		this.course = course;
+	}
+	
 }
