@@ -309,4 +309,33 @@ public class CourseCertificatePDFPainter extends PDFPainterBase implements PDFOu
 			cursor.setParticipation(block.getParticipation());
 		}
 	}
+	
+	
+	@Override
+	public void splitNextBlock() throws Exception {
+		CourseCertificatePDFBlock block = blocks.get(blockIndex);
+		if (BlockType.COURSE_DESCRIPTION.equals(block.getType())) {
+			CourseOutVO blockCourse = new CourseOutVO(block.getCourse());
+			CourseCertificatePDFBlock testBlock = new CourseCertificatePDFBlock(blockCourse, BlockType.COURSE_DESCRIPTION);
+			ArrayList<String> lines = new ArrayList<String>(PDFUtil.getTextLines(blockCourse.getDescription()));
+			int i;
+			for (i = 0; i < lines.size(); i++) {
+				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(0, i + 1)));
+				if ((cursor.getBlockY()
+						- testBlock.getHeight(cursor)) <= Settings.getFloat(CourseCertificatePDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.COURSE_CERTIFICATE_PDF,
+								CourseCertificatePDFDefaultSettings.BLOCKS_LOWER_MARGIN)) {
+					//blockLines.add(lines.get(i));
+					//} else {
+					break;
+				}
+			}
+			if (i > 0) {
+				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(0, i)));
+				blocks.add(blockIndex, new CourseCertificatePDFBlock(blockCourse, BlockType.COURSE_DESCRIPTION));
+				blockCourse = new CourseOutVO(block.getCourse());
+				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(i, lines.size())));
+				block.setCourse(blockCourse);
+			}
+		}
+	}
 }
