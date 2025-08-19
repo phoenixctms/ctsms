@@ -172,18 +172,6 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 					CVPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
 		}
 	}
-	//	@Override
-	//	public boolean nextBlockFitsOnFullPage() throws Exception {
-	//		CVPDFBlock block = blocks.get(blockIndex);
-	//		if (BlockType.CV_SECTION_POSITIONS.equals(block.getType())) {
-	//			return (pageHeight
-	//					- Settings.getFloat(CVPDFSettingCodes.BLOCKS_UPPER_MARGIN, Bundle.CV_PDF, CVPDFDefaultSettings.BLOCKS_UPPER_MARGIN)
-	//					- block.getHeight(cursor)) > Settings.getFloat(CVPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.CV_PDF,
-	//							CVPDFDefaultSettings.BLOCKS_LOWER_MARGIN);
-	//		} else {
-	//			return true;
-	//		}
-	//	}
 
 	@Override
 	public void splitNextBlock() throws Exception {

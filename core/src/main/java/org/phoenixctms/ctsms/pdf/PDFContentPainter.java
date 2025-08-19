@@ -37,7 +37,6 @@ public interface PDFContentPainter {
 	public void loadImages(PDDocument doc) throws Exception;
 
 	public boolean nextBlockFitsOnPage() throws Exception;
-	//public boolean nextBlockFitsOnFullPage() throws Exception;
 
 	public void splitNextBlock() throws Exception;
 
