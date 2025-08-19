@@ -355,4 +355,41 @@ public class CourseParticipantListPDFPainter extends PDFPainterBase implements P
 			cursor.setCourse(block.getCourse());
 		}
 	}
+	//	@Override
+	//	public boolean nextBlockFitsOnFullPage() throws Exception {
+	//		CourseParticipantListPDFBlock block = blocks.get(blockIndex);
+	//		if (BlockType.COURSE_DESCRIPTION.equals(block.getType())) {
+	//			return false;
+	//		} else {
+	//			return true;
+	//		}
+	//	}
+
+	@Override
+	public void splitNextBlock() throws Exception {
+		CourseParticipantListPDFBlock block = blocks.get(blockIndex);
+		if (BlockType.COURSE_DESCRIPTION.equals(block.getType())) {
+			CourseOutVO blockCourse = new CourseOutVO(block.getCourse());
+			CourseParticipantListPDFBlock testBlock = new CourseParticipantListPDFBlock(blockCourse, BlockType.COURSE_DESCRIPTION);
+			ArrayList<String> lines = new ArrayList<String>(PDFUtil.getTextLines(blockCourse.getDescription()));
+			int i;
+			for (i = 0; i < lines.size(); i++) {
+				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(0, i + 1)));
+				if ((cursor.getBlockY()
+						- testBlock.getHeight(cursor)) <= Settings.getFloat(CourseParticipantListPDFSettingCodes.BLOCKS_LOWER_MARGIN, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+								CourseParticipantListPDFDefaultSettings.BLOCKS_LOWER_MARGIN)) {
+					//blockLines.add(lines.get(i));
+					//} else {
+					break;
+				}
+			}
+			if (i > 0) {
+				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(0, i)));
+				blocks.add(blockIndex, new CourseParticipantListPDFBlock(blockCourse, BlockType.COURSE_DESCRIPTION));
+				blockCourse = new CourseOutVO(block.getCourse());
+				blockCourse.setDescription(PDFUtil.getLinesText(lines.subList(i, lines.size())));
+				block.setCourse(blockCourse);
+			}
+		}
+	}
 }
