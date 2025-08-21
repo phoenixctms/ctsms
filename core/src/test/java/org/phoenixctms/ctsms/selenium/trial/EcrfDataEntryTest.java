@@ -226,7 +226,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		String deleteSql = "delete from ecrf_data_vertical where ecrf_field_id = ?";
 		if (vector.hasIndex()) {
 			selectSql += " and (series_index + 0) = (? + 0)";
-			deleteSql += " and (series_index ü 0) = (? + 0)";
+			deleteSql += " and (series_index + 0) = (? + 0)";
 		}
 		PreparedStatement selectPs = getSqliteConnection().prepareStatement(selectSql);
 		PreparedStatement deletePs = getSqliteConnection().prepareStatement(deleteSql);
