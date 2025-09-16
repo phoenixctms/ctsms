@@ -313,7 +313,7 @@ public class TrainingRecordPDFPainter extends PDFPainterBase implements PDFOutpu
 					break;
 				}
 			}
-			if (blockParticipations.size() > 0) {
+			if (blockParticipations.size() > 0 && blockParticipations.size() < block.getParticipations().size()) {
 				blocks.add(blockIndex, new TrainingRecordPDFBlock(block.getTrainingRecordSection(), blockParticipations));
 				block.getParticipations().removeAll(blockParticipations);
 			}

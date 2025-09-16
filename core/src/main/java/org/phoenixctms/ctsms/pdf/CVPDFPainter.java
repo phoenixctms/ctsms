@@ -192,7 +192,7 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 					break;
 				}
 			}
-			if (blockCvPositions.size() > 0) {
+			if (blockCvPositions.size() > 0 && blockCvPositions.size() < block.getCvPositions().size()) {
 				blocks.add(blockIndex, new CVPDFBlock(block.getCvSection(), blockCvPositions));
 				block.getCvPositions().removeAll(blockCvPositions);
 			}
