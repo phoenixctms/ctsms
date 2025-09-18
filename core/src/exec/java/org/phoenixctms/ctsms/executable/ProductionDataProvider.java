@@ -2703,6 +2703,19 @@ public class ProductionDataProvider {
 				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
+				"export_proband_status",
+				"export_proband_status",
+				"{0} -epl=\"\" -id={1} -auth={4} -jid={5} -ll=\"PROBAND_STATUS\"",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
 				"export_enrollment_log",
 				"export_enrollment_log",
 				"{0} -epl=\"\" -id={1} -auth={4} -jid={5} -ll=\"ENROLLMENT\"",

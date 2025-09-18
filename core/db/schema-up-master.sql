@@ -390,6 +390,30 @@ if get_database_version() < '010801101' then
 
 end if;
 
+if get_database_version() < '010801102' then
+
+  insert into JOB_TYPE 
+  (id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+  values (
+  nextval('hibernate_sequence'), 
+  'TRIAL_JOB',
+  'export_pre_screening_log',
+  'export_pre_screening_log',
+  '{0} -epl="" -id={1} -auth={4} -jid={5} -ll="PROBAND_STATUS"',
+  't',
+  'f',
+  'f',
+  'f',
+  'f',
+  't',
+  't',
+  'f',
+  null
+  );
+  
+  perform set_database_version('010801102');
+
+end if;
  
 end
 $$;
