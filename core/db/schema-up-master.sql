@@ -397,8 +397,8 @@ if get_database_version() < '010801102' then
   values (
   nextval('hibernate_sequence'), 
   'TRIAL_JOB',
-  'export_pre_screening_log',
-  'export_pre_screening_log',
+  'export_proband_status',
+  'export_proband_status',
   '{0} -epl="" -id={1} -auth={4} -jid={5} -ll="PROBAND_STATUS"',
   't',
   'f',
