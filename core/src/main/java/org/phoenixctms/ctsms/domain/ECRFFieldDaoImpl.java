@@ -41,6 +41,7 @@ public class ECRFFieldDaoImpl
 			ecrfFieldCriteria.addOrder(Order.asc("trial"));
 			if (ecrfCriteria != null) {
 				ecrfFieldCriteria.addOrder(Order.asc(ecrfCriteria.getAlias() + ".name"));
+				ecrfFieldCriteria.addOrder(Order.asc(ecrfCriteria.getAlias() + ".revision"));
 			} else {
 				ecrfFieldCriteria.addOrder(Order.asc("ecrf"));
 			}
