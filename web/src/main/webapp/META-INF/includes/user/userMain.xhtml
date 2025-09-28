@@ -509,7 +509,7 @@
 								<h:panelGroup>
 									<p:selectBooleanCheckbox
 										id="decryptUntrusted"
-										disabled="#{!userBean.decryptFromUntrustedHosts or userBean.inheritedPropertiesMap['decrypt']}"
+										disabled="#{!userBean.decryptFromUntrustedHosts or userBean.inheritedPropertiesMap['decryptUntrusted']}"
 										value="#{userBean.in.decryptUntrusted}">
 										<p:ajax />
 									</p:selectBooleanCheckbox>
