@@ -87,7 +87,7 @@ public class ProbandListEntryDaoImpl
 		if (!total) {
 			criteriaMap.createCriteria("lastStatus.status", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("count", true));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		CriteriaUtil.applyPSFVO(criteriaMap, psf, psf != null && psf.getFilters().size() > 0);
 		return listEntryCriteria.list();
 	}
 
