@@ -189,6 +189,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	private ArrayList<SelectItem> filterPrivacyConsentStatusTypes;
 	private ArrayList<SelectItem> filterAuthenticationTypes;
 	private ArrayList<SelectItem> filterEcrfFieldStatusTypes;
+	private ArrayList<SelectItem> filterEcrfStatusTypes;
 	private ArrayList<SelectItem> filterMassMailStatusTypes;
 	private ArrayList<SelectItem> filterMassMailTypes;
 	private ArrayList<SelectItem> filterLocales;
@@ -351,6 +352,14 @@ public class SessionScopeBean implements FilterItemsStore {
 			filterEcrfFieldStatusTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
 		}
 		return filterEcrfFieldStatusTypes;
+	}
+
+	public synchronized ArrayList<SelectItem> getFilterEcrfStatusTypes() {
+		if (filterEcrfStatusTypes == null) {
+			filterEcrfStatusTypes = WebUtil.getAllEcrfStatusTypes();
+			filterEcrfStatusTypes.add(0, new SelectItem(CommonUtil.NO_SELECTION_VALUE, ""));
+		}
+		return filterEcrfStatusTypes;
 	}
 
 	public synchronized ArrayList<SelectItem> getFilterEventImportances() {
@@ -943,6 +952,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		filterPrivacyConsentStatusTypes = null;
 		filterAuthenticationTypes = null;
 		filterEcrfFieldStatusTypes = null;
+		filterEcrfStatusTypes = null;
 		filterMassMailStatusTypes = null;
 		filterMassMailTypes = null;
 		filterLocales = null;
