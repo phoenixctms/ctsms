@@ -436,10 +436,18 @@ public final class CriteriaUtil {
 	}
 
 	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf) throws Exception {
+		applyPSFVO(criteriaMap, psf, false);
+	}
+
+	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct) throws Exception {
 		Criteria criteria;
 		if (criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
-			criteria.setProjection(null);
-			criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+			if (distinct) {
+				criteria.setProjection(Projections.distinct(Projections.id()));
+			} else {
+				criteria.setProjection(null);
+				criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+			}
 			if (psf != null) {
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
@@ -454,9 +462,14 @@ public final class CriteriaUtil {
 					}
 				}
 				if (psf.getUpdateRowCount()) {
-					psf.setRowCount((Long) criteria.setProjection(Projections.rowCount()).uniqueResult());
-					criteria.setProjection(null);
-					criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+					if (distinct) {
+						psf.setRowCount((Long) criteria.setProjection(Projections.countDistinct("id")).uniqueResult());
+						criteria.setProjection(Projections.distinct(Projections.id()));
+					} else {
+						psf.setRowCount((Long) criteria.setProjection(Projections.rowCount()).uniqueResult());
+						criteria.setProjection(null);
+						criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
+					}
 				}
 				if (psf.getFirst() != null) {
 					criteria.setFirstResult(psf.getFirst());
@@ -469,7 +482,29 @@ public final class CriteriaUtil {
 					Criteria subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
 					String sortProperty = sortFieldAssociationPath.getPropertyName();
 					subCriteria.addOrder(psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty));
+					if (distinct) {
+						ProjectionList proj = Projections.projectionList();
+						proj.add(Projections.id());
+						proj.add(Projections.property(sortProperty));
+						criteria.setProjection(Projections.distinct(proj));
+					}
 				}
+			}
+			if (distinct) {
+				ArrayList<Long> ids = new ArrayList<Long>();
+				Iterator it = criteria.list().iterator();
+				while (it.hasNext()) {
+					Object[] row = (Object[]) it.next();
+					ids.add((Long) row[0]);
+				}
+				criteriaMap.resetCriteria();
+				if (ids.size() > 0) {
+					criteria.add(Restrictions.in("id", ids));
+				} else {
+					criteria.add(Restrictions.sqlRestriction("1 <> 1"));
+				}
+				criteria.setProjection(null);
+				criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 			}
 		}
 	}
