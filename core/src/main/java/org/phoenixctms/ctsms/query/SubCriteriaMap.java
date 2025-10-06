@@ -1,10 +1,12 @@
 package org.phoenixctms.ctsms.query;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
@@ -40,6 +42,13 @@ public class SubCriteriaMap {
 		propertyClassMap = new HashMap<String, Class>();
 		this.entity = entity;
 		this.criteria = criteria;
+	}
+
+	public void resetCriteria() {
+		List criterionEntries = CommonUtil.getDeclaredFieldValue(this.criteria, "criterionEntries");
+		criterionEntries.clear();
+		List subcriteriaList = CommonUtil.getDeclaredFieldValue(this.criteria, "subcriteriaList");
+		subcriteriaList.clear();
 	}
 
 	private Criteria createCriteria(AssociationPath fullyQualifiedPropertyName, boolean isPropertyAssociation, int... joinTypes) {
