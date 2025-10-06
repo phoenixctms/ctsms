@@ -741,6 +741,28 @@ public final class WebUtil {
 		return types;
 	}
 
+	public static ArrayList<SelectItem> getAllEcrfStatusTypes() {
+		ArrayList<SelectItem> types;
+		Collection<ECRFStatusTypeVO> typeVOs = null;
+		try {
+			typeVOs = getServiceLocator().getSelectionSetService().getAllEcrfStatusTypes(getAuthentication());
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		if (typeVOs != null) {
+			types = new ArrayList<SelectItem>(typeVOs.size());
+			Iterator<ECRFStatusTypeVO> it = typeVOs.iterator();
+			while (it.hasNext()) {
+				ECRFStatusTypeVO typeVO = it.next();
+				types.add(new SelectItem(typeVO.getId().toString(), typeVO.getName()));
+			}
+		} else {
+			types = new ArrayList<SelectItem>();
+		}
+		return types;
+	}
+
 	public static ArrayList<SelectItem> getAllInventoryCategories() {
 		ArrayList<SelectItem> categories;
 		Collection<InventoryCategoryVO> categoryVOs = null;
