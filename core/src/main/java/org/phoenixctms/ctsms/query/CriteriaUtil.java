@@ -494,8 +494,12 @@ public final class CriteriaUtil {
 				ArrayList<Long> ids = new ArrayList<Long>();
 				Iterator it = criteria.list().iterator();
 				while (it.hasNext()) {
-					Object[] row = (Object[]) it.next();
-					ids.add((Long) row[0]);
+					Object row = it.next();
+					if (row instanceof Object[]) {
+						ids.add((Long) ((Object[]) row)[0]);
+					} else {
+						ids.add((Long) row);
+					}
 				}
 				criteriaMap.resetCriteria();
 				if (ids.size() > 0) {
