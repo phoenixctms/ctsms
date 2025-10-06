@@ -255,7 +255,9 @@
 								<ui:param name="idSuffix" value="total" />
 							</ui:include>
 						</p:column>
-						<p:column>
+						<p:column
+							filterBy="#{probandListEntry.vo.ecrfStatusEntries.status.id}"
+							filterOptions="#{sessionScopeBean.filterEcrfStatusTypes}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.trialecrfstatus_proband_list_status_counts_column}" />
