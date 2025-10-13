@@ -44,11 +44,15 @@ public class SubCriteriaMap {
 		this.criteria = criteria;
 	}
 
-	public void resetCriteria() {
+	public void resetCriteria(boolean resetSort) {
 		List criterionEntries = CommonUtil.getDeclaredFieldValue(this.criteria, "criterionEntries");
 		criterionEntries.clear();
 		List subcriteriaList = CommonUtil.getDeclaredFieldValue(this.criteria, "subcriteriaList");
 		subcriteriaList.clear();
+		if (resetSort) {
+			List orderEntries = CommonUtil.getDeclaredFieldValue(this.criteria, "orderEntries");
+			orderEntries.clear();
+		}
 	}
 
 	private Criteria createCriteria(AssociationPath fullyQualifiedPropertyName, boolean isPropertyAssociation, int... joinTypes) {

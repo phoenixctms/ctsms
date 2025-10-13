@@ -436,10 +436,14 @@ public final class CriteriaUtil {
 	}
 
 	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf) throws Exception {
-		applyPSFVO(criteriaMap, psf, false);
+		applyPSFVO(criteriaMap, psf, false, null);
 	}
 
 	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct) throws Exception {
+		applyPSFVO(criteriaMap, psf, distinct, null);
+	}
+
+	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct, ArrayList<Long> idsSorted) throws Exception {
 		Criteria criteria;
 		if (criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
 			if (distinct) {
@@ -448,6 +452,7 @@ public final class CriteriaUtil {
 				criteria.setProjection(null);
 				criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 			}
+			boolean sortJoin = false;
 			if (psf != null) {
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
@@ -479,31 +484,41 @@ public final class CriteriaUtil {
 				}
 				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
 				if (sortFieldAssociationPath.isValid()) {
-					Criteria subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
+					sortJoin = sortFieldAssociationPath.getPathDepth() > 0;
+					Criteria subCriteria;
+					if (sortJoin) {
+						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, "sortJoin", CriteriaSpecification.LEFT_JOIN);
+					} else {
+						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
+					}
 					String sortProperty = sortFieldAssociationPath.getPropertyName();
 					subCriteria.addOrder(psf.getSortOrder() ? Order.asc(sortProperty) : Order.desc(sortProperty));
 					if (distinct) {
 						ProjectionList proj = Projections.projectionList();
 						proj.add(Projections.id());
-						proj.add(Projections.property(sortProperty));
+						proj.add(Projections.property((sortJoin ? "sortJoin." : "") + sortProperty));
 						criteria.setProjection(Projections.distinct(proj));
 					}
 				}
 			}
 			if (distinct) {
-				ArrayList<Long> ids = new ArrayList<Long>();
+				if (idsSorted == null) {
+					idsSorted = new ArrayList<Long>();
+				} else {
+					idsSorted.clear();
+				}
 				Iterator it = criteria.list().iterator();
 				while (it.hasNext()) {
 					Object row = it.next();
 					if (row instanceof Object[]) {
-						ids.add((Long) ((Object[]) row)[0]);
+						idsSorted.add((Long) ((Object[]) row)[0]);
 					} else {
-						ids.add((Long) row);
+						idsSorted.add((Long) row);
 					}
 				}
-				criteriaMap.resetCriteria();
-				if (ids.size() > 0) {
-					criteria.add(Restrictions.in("id", ids));
+				criteriaMap.resetCriteria(sortJoin);
+				if (idsSorted.size() > 0) {
+					criteria.add(Restrictions.in("id", idsSorted));
 				} else {
 					criteria.add(Restrictions.sqlRestriction("1 <> 1"));
 				}

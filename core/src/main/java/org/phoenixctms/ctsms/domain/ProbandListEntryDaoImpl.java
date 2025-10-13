@@ -6,6 +6,7 @@
  */
 package org.phoenixctms.ctsms.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,8 +88,19 @@ public class ProbandListEntryDaoImpl
 		if (!total) {
 			criteriaMap.createCriteria("lastStatus.status", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("count", true));
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf, psf != null && psf.getFilters().size() > 0);
-		return listEntryCriteria.list();
+		if (psf != null && psf.getFilters().size() > 0) {
+			ArrayList<Long> idsSorted = new ArrayList<Long>();
+			CriteriaUtil.applyPSFVO(criteriaMap, psf, true, idsSorted);
+			ArrayList<ProbandListEntry> result = new ArrayList<ProbandListEntry>();
+			Iterator<Long> it = idsSorted.iterator();
+			while (it.hasNext()) {
+				result.add(this.load(it.next()));
+			}
+			return result;
+		} else {
+			CriteriaUtil.applyPSFVO(criteriaMap, psf);
+			return listEntryCriteria.list();
+		}
 	}
 
 	@Override
