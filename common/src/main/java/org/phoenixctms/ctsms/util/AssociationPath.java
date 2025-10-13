@@ -109,6 +109,25 @@ public class AssociationPath {
 		associationPath = new ArrayList<String>();
 	}
 
+	public boolean equals(Object obj) {
+		if (obj != null && obj instanceof AssociationPath) {
+			return this.associationPath.equals(((AssociationPath) obj).associationPath);
+		}
+		return false;
+	}
+
+	public AssociationPath getPrependedPath(String entityName) {
+		AssociationPath path = new AssociationPath(this);
+		path.prependPathElement(entityName);
+		return path;
+	}
+
+	public AssociationPath getAppendedPath(String property) {
+		AssociationPath path = new AssociationPath(this);
+		path.appendPathElement(property);
+		return path;
+	}
+
 	public AssociationPath(String fullQualifiedPropertyName) {
 		valid = false;
 		associationPath = new ArrayList<String>();
@@ -120,6 +139,14 @@ public class AssociationPath {
 		associationPath = new ArrayList<String>();
 		this.aliasedPathString = aliasedPathString;
 		setFullQualifiedPropertyName(fullQualifiedPropertyName);
+	}
+
+	public AssociationPath(AssociationPath path) {
+		this.associationPath = new ArrayList<String>(path.associationPath);
+		this.joinAlias = path.joinAlias;
+		this.joinOrder = path.joinOrder;
+		this.aliasedPathString = path.aliasedPathString;
+		this.valid = path.valid;
 	}
 
 	public void clear() {
@@ -235,7 +262,7 @@ public class AssociationPath {
 			boolean isRoot = rootInterface != null;
 			Iterator<String> it = associationPath.iterator();
 			while (it.hasNext()) {
-				String methodName = it.next(); 
+				String methodName = it.next();
 				Method[] methods;
 				if (isRoot) {
 					methods = rootInterface.getMethods();
@@ -273,6 +300,15 @@ public class AssociationPath {
 	public void prependPathElement(String entityName) {
 		if (associationPath.size() > 0 && entityName != null && entityName.length() > 0) {
 			associationPath.add(0, entityName);
+		}
+	}
+
+	public void appendPathElement(String property) {
+		if (property != null && property.length() > 0) {
+			associationPath.add(property);
+			if (associationPath.size() == 1) {
+				valid = true;
+			}
 		}
 	}
 

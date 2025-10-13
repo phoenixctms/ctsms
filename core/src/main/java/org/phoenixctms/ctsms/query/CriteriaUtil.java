@@ -454,13 +454,29 @@ public final class CriteriaUtil {
 			}
 			boolean sortJoin = false;
 			if (psf != null) {
+				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
+				if (sortFieldAssociationPath.isValid()) {
+					sortJoin = sortFieldAssociationPath.getPathDepth() > 0;
+				}
 				Map<String, String> filters = psf.getFilters();
 				if (filters != null && filters.size() > 0) {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 					while (filterIt.hasNext()) {
 						Map.Entry<String, String> filter = filterIt.next();
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
-						Criteria subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
+						Criteria subCriteria;
+						if (distinct && sortJoin) {
+							if (filterFieldAssociationPath.equals(sortFieldAssociationPath)) {
+								subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath, "sortJoin");
+							} else if (filterFieldAssociationPath.equals(sortFieldAssociationPath.getAppendedPath("id"))) {
+								subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath, "sortJoin");
+								sortFieldAssociationPath = sortFieldAssociationPath.getAppendedPath("id");
+							} else {
+								subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
+							}
+						} else {
+							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
+						}
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
 								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf.getFilterTimeZone()), psf.getFilterTimeZone()));
@@ -482,11 +498,9 @@ public final class CriteriaUtil {
 				if (psf.getPageSize() != null) {
 					criteria.setMaxResults(psf.getPageSize());
 				}
-				AssociationPath sortFieldAssociationPath = new AssociationPath(psf.getSortField());
 				if (sortFieldAssociationPath.isValid()) {
-					sortJoin = sortFieldAssociationPath.getPathDepth() > 0;
 					Criteria subCriteria;
-					if (sortJoin) {
+					if (distinct && sortJoin) {
 						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, "sortJoin", CriteriaSpecification.LEFT_JOIN);
 					} else {
 						subCriteria = criteriaMap.createCriteriaForAttribute(sortFieldAssociationPath, CriteriaSpecification.LEFT_JOIN);
