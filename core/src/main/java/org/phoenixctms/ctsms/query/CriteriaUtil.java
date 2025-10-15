@@ -466,17 +466,23 @@ public final class CriteriaUtil {
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 						Criteria subCriteria;
 						if (distinct && sortJoin) {
-							if (filterFieldAssociationPath.equals(sortFieldAssociationPath)) {
-								subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath, "sortJoin");
-							} else if (filterFieldAssociationPath.equals(sortFieldAssociationPath.getAppendedPath("id"))) {
-								subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath, "sortJoin");
-								sortFieldAssociationPath = sortFieldAssociationPath.getAppendedPath("id");
-							} else {
-								subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
+							AssociationPath path = filterFieldAssociationPath;
+							while (path.isValid()) {
+								if (path.equals(sortFieldAssociationPath)) {
+									subCriteria = criteriaMap.createCriteriaForAttribute(path, "sortJoin");
+									break;
+								} else if (path.equals(sortFieldAssociationPath.append("id"))) {
+									subCriteria = criteriaMap.createCriteriaForAttribute(path, "sortJoin");
+									sortFieldAssociationPath = sortFieldAssociationPath.append("id");
+									break;
+								} else if (path.equals(sortFieldAssociationPath.dropLast())) {
+									subCriteria = criteriaMap.createCriteria(path, "sortJoin");
+									break;
+								}
+								path = path.dropLast();
 							}
-						} else {
-							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						}
+						subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
 								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf.getFilterTimeZone()), psf.getFilterTimeZone()));

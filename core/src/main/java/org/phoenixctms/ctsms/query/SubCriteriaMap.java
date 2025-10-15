@@ -121,6 +121,10 @@ public class SubCriteriaMap {
 		return createCriteria(new AssociationPath(fullyQualifiedPropertyName), true, alias, joinTypes);
 	}
 
+	public Criteria createCriteria(AssociationPath fullyQualifiedPropertyName, String alias, int... joinTypes) {
+		return createCriteria(fullyQualifiedPropertyName, true, alias, joinTypes);
+	}
+
 	public Criteria createCriteriaForAttribute(AssociationPath fullyQualifiedPropertyName, String alias, int... joinTypes) {
 		return createCriteria(fullyQualifiedPropertyName, false, alias, joinTypes);
 	}
