@@ -1436,7 +1436,7 @@ public final class QueryUtil {
 
 	private static void prependRootEntityName(AssociationPath fullyQualifiedPropertyName, String rootEntityName) {
 		if (fullyQualifiedPropertyName.getPathDepth() == 0 || !rootEntityName.equals(fullyQualifiedPropertyName.getPathElement(0))) {
-			fullyQualifiedPropertyName.prependPathElement(rootEntityName);
+			fullyQualifiedPropertyName.prependEntityName(rootEntityName);
 		}
 	}
 

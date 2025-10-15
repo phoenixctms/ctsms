@@ -116,15 +116,27 @@ public class AssociationPath {
 		return false;
 	}
 
-	public AssociationPath getPrependedPath(String entityName) {
+	public AssociationPath prepend(String entityName) {
 		AssociationPath path = new AssociationPath(this);
 		path.prependPathElement(entityName);
 		return path;
 	}
 
-	public AssociationPath getAppendedPath(String property) {
+	public AssociationPath append(String property) {
 		AssociationPath path = new AssociationPath(this);
 		path.appendPathElement(property);
+		return path;
+	}
+
+	public AssociationPath dropFirst() {
+		AssociationPath path = new AssociationPath(this);
+		path.dropFirstPathElement(true);
+		return path;
+	}
+
+	public AssociationPath dropLast() {
+		AssociationPath path = new AssociationPath(this);
+		path.dropLastPathElement(true);
 		return path;
 	}
 
@@ -158,11 +170,34 @@ public class AssociationPath {
 	}
 
 	public void dropFirstPathElement() {
+		dropFirstPathElement(false);
+	}
+
+	private void dropFirstPathElement(boolean clear) {
 		if (associationPath.size() > 1) {
 			associationPath.remove(0);
 			if (associationPath.size() == 0) {
 				valid = false;
 			}
+		} else if (clear) {
+			associationPath.clear();
+			valid = false;
+		}
+	}
+
+	public void dropLastPathElement() {
+		dropLastPathElement(false);
+	}
+
+	private void dropLastPathElement(boolean clear) {
+		if (associationPath.size() > 1) {
+			associationPath.remove(associationPath.size() - 1);
+			if (associationPath.size() == 0) {
+				valid = false;
+			}
+		} else if (clear) {
+			associationPath.clear();
+			valid = false;
 		}
 	}
 
@@ -297,9 +332,18 @@ public class AssociationPath {
 		return valid;
 	}
 
-	public void prependPathElement(String entityName) {
+	public void prependEntityName(String entityName) {
 		if (associationPath.size() > 0 && entityName != null && entityName.length() > 0) {
 			associationPath.add(0, entityName);
+		}
+	}
+
+	public void prependPathElement(String entityName) {
+		if (entityName != null && entityName.length() > 0) {
+			associationPath.add(0, entityName);
+			if (associationPath.size() == 1) {
+				valid = true;
+			}
 		}
 	}
 
