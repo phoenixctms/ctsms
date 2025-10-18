@@ -947,6 +947,7 @@
 									<p:password id="passwordEcrfStatus#{statusType.id}"
 										widgetVar="ecrfStatusPassword#{statusType.id}"
 										required="false" feedback="false" redisplay="false"
+										autocomplete="new-password"
 										label="#{triallabels.ecrf_signing_password}"
 										styleClass="ctsms-password" />
 									<p:tooltip rendered="#{enableTooltips}"
@@ -983,6 +984,7 @@
 							<h:panelGroup>
 								<p:password id="passwordVerifiedEcrfs"
 									widgetVar="ecrfsVerifiedPassword" required="false"
+									autocomplete="new-password"
 									feedback="false" redisplay="false"
 									label="#{triallabels.ecrf_signing_password}"
 									styleClass="ctsms-password" />
@@ -1019,6 +1021,7 @@
 							<h:panelGroup>
 								<p:password id="passwordAllEcrfs" widgetVar="ecrfsAllPassword"
 									required="false" feedback="false" redisplay="false"
+									autocomplete="new-password"
 									label="#{triallabels.ecrf_signing_password}"
 									styleClass="ctsms-password" />
 								<p:tooltip rendered="#{enableTooltips}" for="passwordAllEcrfs">

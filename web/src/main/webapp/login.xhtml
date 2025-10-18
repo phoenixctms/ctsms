@@ -52,6 +52,7 @@
 							<h:panelGroup>
 								<p:inputText id="otp" value="#{sessionScopeBean.otp}"
 									required="true" label="#{labels.login_otp}"
+									autocomplete="new-password"
 									styleClass="ctsms-control" />
 								<p:tooltip rendered="true" for="otp">
 									<h:outputText value="#{labels.login_otp_tooltip}"
@@ -81,6 +82,7 @@
 							<h:panelGroup>
 								<p:password id="password" value="#{sessionScopeBean.password}"
 									required="false" feedback="false"
+									autocomplete="new-password"
 									redisplay="#{sessionScopeBean.localPasswordRequired}"
 									label="#{labels.login_password}" styleClass="ctsms-password" />
 								<p:tooltip rendered="false" for="password">
@@ -96,6 +98,7 @@
 								style="#{sessionScopeBean.localPasswordRequired ? '' : 'display:none;'}">
 								<p:password id="localPassword"
 									value="#{sessionScopeBean.localPassword}" required="false"
+									autocomplete="new-password"
 									feedback="false" redisplay="false"
 									label="#{labels.login_local_password}"
 									styleClass="ctsms-password" />
