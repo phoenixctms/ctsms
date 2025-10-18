@@ -52,7 +52,7 @@
 							<h:panelGroup>
 								<p:inputText id="otp" value="#{sessionScopeBean.otp}"
 									required="true" label="#{labels.login_otp}"
-									autocomplete="new-password"
+									autocomplete="one-time-code"
 									styleClass="ctsms-control" />
 								<p:tooltip rendered="true" for="otp">
 									<h:outputText value="#{labels.login_otp_tooltip}"
