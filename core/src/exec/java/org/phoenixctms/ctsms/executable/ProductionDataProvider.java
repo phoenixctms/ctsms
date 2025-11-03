@@ -1985,6 +1985,17 @@ public class ProductionDataProvider {
 				false,
 				true,
 				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PROBAND_STATUS));
+		ProbandListStatusType icSignedReScreeningProbandListStatusType = createProbandListStatusType("ic_signed_re_screening", Color.SPRINGGREEN,
+				false,
+				false,
+				true,
+				true,
+				false,
+				true,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PROBAND_STATUS));
 		ProbandListStatusType screeningOkProbandListStatusType = createProbandListStatusType("screening_ok", Color.LIMEGREEN,
 				false,
 				false,
@@ -2065,10 +2076,15 @@ public class ProductionDataProvider {
 				icSignedProbandListStatusType,
 				getProbandListStatusTransitions(icSignedProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
 						droppedOutProbandListStatusType));
+		updateProbandListStatusType(
+				icSignedReScreeningProbandListStatusType,
+				getProbandListStatusTransitions(icSignedReScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
+						droppedOutProbandListStatusType));
 		updateProbandListStatusType(screeningOkProbandListStatusType,
 				getProbandListStatusTransitions(screeningOkProbandListStatusType, reScreeningProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType));
 		updateProbandListStatusType(reScreeningProbandListStatusType,
-				getProbandListStatusTransitions(reScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType));
+				getProbandListStatusTransitions(reScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
+						icSignedReScreeningProbandListStatusType));
 		updateProbandListStatusType(screeningFailureProbandListStatusType,
 				getProbandListStatusTransitions(reScreeningProbandListStatusType));
 		updateProbandListStatusType(ongoingProbandListStatusType,
