@@ -749,6 +749,15 @@ public final class DefaultSettings {
 	public static final boolean MASS_MAIL_ATTACH_PROBAND_LETTER_PRESET = false;
 	public static final boolean MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET = false;
 	public static final boolean MASS_MAIL_ATTACH_VISIT_PLANS_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_MASS_MAIL_FILES_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_TRIAL_FILES_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_PROBAND_FILES_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_INQUIRIES_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_ECRFS_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_PROBAND_LETTER_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_REIMBURSEMENTS_OPTIONAL_PRESET = false;
+	public static final boolean MASS_MAIL_ATTACH_VISIT_PLANS_OPTIONAL_PRESET = false;
 	public static final String MASS_MAIL_LOCALE_PRESET = CommonUtil.localeToString(Locale.getDefault());
 	public static final String PUBLIC_FILE_SIGNUP_URL = null;
 	public static final String TRIAL_SIGNUP_URL = null;
