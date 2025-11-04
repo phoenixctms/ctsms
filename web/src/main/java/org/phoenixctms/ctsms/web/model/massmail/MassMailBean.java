@@ -104,6 +104,15 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setAttachProbandLetter(out.getAttachProbandLetter());
 			in.setAttachReimbursementsPdf(out.getAttachReimbursementsPdf());
 			in.setAttachVisitPlans(out.getAttachVisitPlans());
+			in.setAttachInquiriesOptional(out.getAttachInquiriesOptional());
+			in.setAttachProbandListEntryTagsOptional(out.getAttachProbandListEntryTagsOptional());
+			in.setAttachEcrfsOptional(out.getAttachEcrfsOptional());
+			in.setAttachProbandLetterOptional(out.getAttachProbandLetterOptional());
+			in.setAttachReimbursementsPdfOptional(out.getAttachReimbursementsPdfOptional());
+			in.setAttachVisitPlansOptional(out.getAttachVisitPlansOptional());
+			in.setAttachProbandFilesOptional(out.getAttachProbandFilesOptional());
+			in.setAttachTrialFilesOptional(out.getAttachTrialFilesOptional());
+			in.setAttachMassMailFilesOptional(out.getAttachMassMailFilesOptional());
 			in.setVersion(out.getVersion());
 		}
 	}
@@ -161,6 +170,24 @@ public class MassMailBean extends ManagedBeanBase {
 					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_REIMBURSEMENTS_PRESET));
 			in.setAttachVisitPlans(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_VISIT_PLANS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_VISIT_PLANS_PRESET));
+			in.setAttachInquiriesOptional(
+					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_INQUIRIES_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_INQUIRIES_OPTIONAL_PRESET));
+			in.setAttachProbandListEntryTagsOptional(Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_OPTIONAL_PRESET, Bundle.SETTINGS,
+					DefaultSettings.MASS_MAIL_ATTACH_PROBAND_LIST_ENTRY_TAGS_OPTIONAL_PRESET));
+			in.setAttachEcrfsOptional(
+					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_ECRFS_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_ECRFS_OPTIONAL_PRESET));
+			in.setAttachProbandLetterOptional(Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_PROBAND_LETTER_OPTIONAL_PRESET, Bundle.SETTINGS,
+					DefaultSettings.MASS_MAIL_ATTACH_PROBAND_LETTER_OPTIONAL_PRESET));
+			in.setAttachReimbursementsPdfOptional(Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_REIMBURSEMENTS_OPTIONAL_PRESET, Bundle.SETTINGS,
+					DefaultSettings.MASS_MAIL_ATTACH_REIMBURSEMENTS_OPTIONAL_PRESET));
+			in.setAttachVisitPlansOptional(
+					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_VISIT_PLANS_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_VISIT_PLANS_OPTIONAL_PRESET));
+			in.setAttachProbandFilesOptional(Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_PROBAND_FILES_OPTIONAL_PRESET, Bundle.SETTINGS,
+					DefaultSettings.MASS_MAIL_ATTACH_PROBAND_FILES_OPTIONAL_PRESET));
+			in.setAttachTrialFilesOptional(
+					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_TRIAL_FILES_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_TRIAL_FILES_OPTIONAL_PRESET));
+			in.setAttachMassMailFilesOptional(Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_MASS_MAIL_FILES_OPTIONAL_PRESET, Bundle.SETTINGS,
+					DefaultSettings.MASS_MAIL_ATTACH_MASS_MAIL_FILES_OPTIONAL_PRESET));
 			in.setVersion(null);
 		}
 	}

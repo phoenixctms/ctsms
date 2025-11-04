@@ -9,7 +9,8 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<h:form id="massmailmain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+		<h:form id="massmailmain_form"
+			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 			<p:remoteCommand process="@this" name="changeMassMailRecipient"
 				actionListener="#{massMailRecipientBean.change(massMailBean.in.id)}"
 				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
@@ -68,7 +69,7 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="massmailname" />
-									
+
 									<h:outputLabel for="department"
 										value="#{massmaillabels.mass_mail_department_label}" />
 									<h:panelGroup>
@@ -83,9 +84,9 @@
 											dropdown="#{autoCompleteDropdownDepartment}"
 											scrollHeight="#{autoCompleteScrollHeightDepartment}"
 											completeMethod="#{massMailBean.completeDepartment}"
-											forceSelection="true"
-											var="department" itemValue="#{department}"
-											itemLabel="#{department.vo.name}" converter="ctsms.Department">
+											forceSelection="true" var="department"
+											itemValue="#{department}" itemLabel="#{department.vo.name}"
+											converter="ctsms.Department">
 											<p:ajax process="@this" event="itemSelect"
 												listener="#{massMailBean.handleDepartmentSelect}" />
 											<p:ajax process="@this" event="itemUnselect"
@@ -98,12 +99,13 @@
 											</p:column>
 										</p:autoComplete>
 										<p:tooltip rendered="#{enableTooltips}" for="department">
-											<h:outputText value="#{massmaillabels.mass_mail_department_tooltip}"
+											<h:outputText
+												value="#{massmaillabels.mass_mail_department_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="department" />										
-									
+									<p:message for="department" />
+
 									<h:outputLabel for="massmailtype"
 										value="#{massmaillabels.mass_mail_type_label}" />
 									<h:panelGroup>
@@ -185,11 +187,11 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="probandliststatusresend" />
-									
+
 									<h:outputLabel />
 									<h:outputText value="" />
 									<h:outputLabel />
-									
+
 									<h:outputLabel for="visitscheduleitems"
 										value="#{massmaillabels.mass_mail_visit_schedule_items_label}" />
 									<h:panelGroup>
@@ -203,16 +205,17 @@
 											global="#{autoCompleteGlobalVisitScheduleItem}"
 											scrollHeight="#{autoCompleteScrollHeightVisitScheduleItem}"
 											completeMethod="#{massMailBean.completeVisitScheduleItem}"
-											multiple="true" var="visitScheduleItem" itemValue="#{visitScheduleItem}"
-											itemLabel="#{applicationScopeBean.getVisitScheduleItemName(visitScheduleItem.vo)}" converter="ctsms.VisitScheduleItem">
+											multiple="true" var="visitScheduleItem"
+											itemValue="#{visitScheduleItem}"
+											itemLabel="#{applicationScopeBean.getVisitScheduleItemName(visitScheduleItem.vo)}"
+											converter="ctsms.VisitScheduleItem">
 											<p:ajax process="@this" event="itemSelect"
 												listener="#{massMailBean.handleVisitScheduleItemSelect}" />
 											<p:ajax process="@this" event="itemUnselect"
 												listener="#{massMailBean.handleVisitScheduleItemUnselect}" />
 											<p:column rendered="#{empty massMailBean.in.trialId}">
-												<h:outputText
-													value="#{visitScheduleItem.vo.trial.name}" />
-											</p:column> 
+												<h:outputText value="#{visitScheduleItem.vo.trial.name}" />
+											</p:column>
 											<!-- <p:column>
 												<h:outputText
 													value="#{visitScheduleItem.vo.group.token}" />
@@ -234,7 +237,8 @@
 													value="#{applicationScopeBean.clipStringTrailing(visitScheduleItem.vo.description,96)}" />
 											</p:column>
 										</p:autoComplete>
-										<p:tooltip rendered="#{enableTooltips}" for="visitscheduleitems">
+										<p:tooltip rendered="#{enableTooltips}"
+											for="visitscheduleitems">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_visit_schedule_items_tooltip}"
 												escape="false" />
@@ -245,14 +249,13 @@
 									<h:outputLabel />
 									<h:outputText value="" />
 									<h:outputLabel />
-									
+
 									<h:outputLabel for="storemessages"
 										value="#{massmaillabels.mass_mail_storemessages_label}" />
 									<h:panelGroup>
 										<p:selectBooleanCheckbox id="storemessages"
 											value="#{massMailBean.in.storeMessages}" />
-										<p:tooltip rendered="#{enableTooltips}"
-											for="storemessages">
+										<p:tooltip rendered="#{enableTooltips}" for="storemessages">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_storemessages_tooltip}"
 												escape="false" />
@@ -716,8 +719,8 @@
 							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
 								rowClasses="ctsms-input-tied-row">
-								<h:panelGrid columns="7" cellpadding="2"
-									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-text-column">
+								<h:panelGrid columns="10" cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-text-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 									<h:outputLabel for="attachmassmailfiles"
 										value="#{massmaillabels.mass_mail_attachmassmailfiles_label}" />
 									<h:panelGroup>
@@ -732,6 +735,7 @@
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
+
 									<p:message for="attachmassmailfiles" />
 									<h:outputLabel for="massmailfileslogicalpath"
 										value="#{massmaillabels.mass_mail_massmailfileslogicalpath_label}" />
@@ -762,12 +766,31 @@
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="massmailfileslogicalpath" />
-
 
 									<h:outputText
 										value="#{massMailBean.massMailAttachmentFileSystemStats}"
 										id="massmail_attachments_file_system_stats" />
+									<p:message for="massmailfileslogicalpath" />
+
+
+
+
+
+
+									<h:outputLabel for="attachmassmailfilesoptional"
+										value="#{massmaillabels.mass_mail_attachmassmailfilesoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachmassmailfilesoptional"
+											value="#{massMailBean.in.attachMassMailFilesOptional}">
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachmassmailfilesoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachmassmailfilesoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachmassmailfilesoptional" />
 
 									<h:outputLabel for="attachtrialfiles"
 										value="#{massmaillabels.mass_mail_attachtrialfiles_label}" />
@@ -812,11 +835,28 @@
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="trialfileslogicalpath" />
 
 									<h:outputText
 										value="#{massMailBean.trialAttachmentFileSystemStats}"
 										id="trial_attachments_file_system_stats" />
+									<p:message for="trialfileslogicalpath" />
+
+
+
+									<h:outputLabel for="attachtrialfilesoptional"
+										value="#{massmaillabels.mass_mail_attachtrialfilesoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachtrialfilesoptional"
+											value="#{massMailBean.in.attachTrialFilesOptional}">
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachtrialfilesoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachtrialfilesoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachtrialfilesoptional" />
 
 									<h:outputLabel for="attachprobandfiles"
 										value="#{massmaillabels.mass_mail_attachprobandfiles_label}" />
@@ -863,12 +903,31 @@
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="probandfileslogicalpath" />
 
 
 									<h:outputText
 										value="#{massMailBean.probandAttachmentFileSystemStats}"
 										id="proband_attachments_file_system_stats" />
+									<p:message for="probandfileslogicalpath" />
+
+
+
+
+									<h:outputLabel for="attachprobandfilesoptional"
+										value="#{massmaillabels.mass_mail_attachprobandfilesoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachprobandfilesoptional"
+											value="#{massMailBean.in.attachProbandFilesOptional}">
+
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachprobandfilesoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachprobandfilesoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachprobandfilesoptional" />
 
 									<h:outputLabel for="attachinquiries"
 										value="#{massmaillabels.mass_mail_attachinquiries_label}" />
@@ -885,9 +944,24 @@
 
 									<h:outputLabel />
 									<h:outputText value="" />
+									<h:outputText value="" />
 									<h:outputLabel />
 
-									<h:outputText value="" />
+
+
+									<h:outputLabel for="attachinquiriesoptional"
+										value="#{massmaillabels.mass_mail_attachinquiriesoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachinquiriesoptional"
+											value="#{massMailBean.in.attachInquiriesOptional}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachinquiriesoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachinquiriesoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachinquiriesoptional" />
 
 									<h:outputLabel for="attachprobandlistentrytags"
 										value="#{massmaillabels.mass_mail_attachprobandlistentrytags_label}" />
@@ -905,11 +979,26 @@
 
 									<h:outputLabel />
 									<h:outputText value="" />
+									<h:outputText value="" />
 									<h:outputLabel />
 
-									<h:outputText value="" />
-									
-									
+
+
+									<h:outputLabel for="attachprobandlistentrytagsoptional"
+										value="#{massmaillabels.mass_mail_attachprobandlistentrytagsoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="attachprobandlistentrytagsoptional"
+											value="#{massMailBean.in.attachProbandListEntryTagsOptional}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachprobandlistentrytagsoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachprobandlistentrytagsoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachprobandlistentrytagsoptional" />
+
 									<h:outputLabel for="attachvisitplans"
 										value="#{massmaillabels.mass_mail_attachvisitplans_label}" />
 									<h:panelGroup>
@@ -926,10 +1015,24 @@
 
 									<h:outputLabel />
 									<h:outputText value="" />
+									<h:outputText value="" />
 									<h:outputLabel />
 
-									<h:outputText value="" />
 
+
+									<h:outputLabel for="attachvisitplansoptional"
+										value="#{massmaillabels.mass_mail_attachvisitplansoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachvisitplansoptional"
+											value="#{massMailBean.in.attachVisitPlansOptional}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachvisitplansoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachvisitplansoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachvisitplansoptional" />
 
 									<h:outputLabel for="attachecrfs"
 										value="#{massmaillabels.mass_mail_attachecrfs_label}" />
@@ -947,10 +1050,24 @@
 
 									<h:outputLabel />
 									<h:outputText value="" />
+									<h:outputText value="" />
 									<h:outputLabel />
 
-									<h:outputText value="" />
 
+
+									<h:outputLabel for="attachecrfsoptional"
+										value="#{massmaillabels.mass_mail_attachecrfsoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachecrfsoptional"
+											value="#{massMailBean.in.attachEcrfsOptional}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachecrfsoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachecrfsoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachecrfsoptional" />
 
 									<h:outputLabel for="attachprobandletter"
 										value="#{massmaillabels.mass_mail_attachprobandletter_label}" />
@@ -968,10 +1085,24 @@
 
 									<h:outputLabel />
 									<h:outputText value="" />
+									<h:outputText value="" />
 									<h:outputLabel />
 
-									<h:outputText value="" />
 
+
+									<h:outputLabel for="attachprobandletteroptional"
+										value="#{massmaillabels.mass_mail_attachprobandletteroptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachprobandletteroptional"
+											value="#{massMailBean.in.attachProbandLetterOptional}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachprobandletteroptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachprobandletteroptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachprobandletteroptional" />
 
 
 									<h:outputLabel for="attachreimbursementspdf"
@@ -988,7 +1119,27 @@
 									</h:panelGroup>
 									<p:message for="attachreimbursementspdf" />
 
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputText value="" />
+									<h:outputLabel />
 
+
+
+
+									<h:outputLabel for="attachreimbursementspdfoptional"
+										value="#{massmaillabels.mass_mail_attachreimbursementspdfoptional_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="attachreimbursementspdfoptional"
+											value="#{massMailBean.in.attachReimbursementsPdfOptional}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="attachreimbursementspdfoptional">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_attachreimbursementspdfoptional_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="attachreimbursementspdfoptional" />
 
 								</h:panelGrid>
 							</h:panelGrid>
