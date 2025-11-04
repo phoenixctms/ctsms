@@ -165,7 +165,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 		if (massMail.isAttachMassMailFiles()) {
 			Iterator<File> filesIt = fileDao.findFiles(FileModule.MASS_MAIL_DOCUMENT, massMail.getId(), massMail.getMassMailFilesLogicalPath(), true, null, null, null, null, null)
 					.iterator();
-			if (!filesIt.hasNext()) {
+			if (!filesIt.hasNext() && !massMail.isAttachMassMailFilesOptional()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_MASS_MAIL_FILES_ATTACHMENTS);
 			}
 			while (filesIt.hasNext()) {
@@ -176,7 +176,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			Iterator<File> filesIt = fileDao
 					.findFiles(FileModule.TRIAL_DOCUMENT, massMail.getTrial().getId(), massMail.getTrialFilesLogicalPath(), true, null, null, null, null, null)
 					.iterator();
-			if (!filesIt.hasNext()) {
+			if (!filesIt.hasNext() && !massMail.isAttachTrialFilesOptional()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_TRIAL_FILES_ATTACHMENTS);
 			}
 			while (filesIt.hasNext()) {
@@ -188,7 +188,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				Iterator<File> filesIt = fileDao
 						.findFiles(FileModule.PROBAND_DOCUMENT, recipient.getProband().getId(), massMail.getProbandFilesLogicalPath(), true, null, null, null, null, null)
 						.iterator();
-				if (!filesIt.hasNext()) {
+				if (!filesIt.hasNext() && !massMail.isAttachProbandFilesOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_PROBAND_FILES_ATTACHMENTS);
 				}
 				while (filesIt.hasNext()) {
@@ -220,7 +220,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					attachment.setFileName(inquiriesPDF.getFileName());
 					attachment.setContentType(inquiriesPDF.getContentType());
 					attachments.add(attachment);
-				} else {
+				} else if (!massMail.isAttachInquiriesOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_INQUIRIES_ATTACHMENT);
 				}
 			}
@@ -236,7 +236,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					attachment.setFileName(probandListEntryTagsPDF.getFileName());
 					attachment.setContentType(probandListEntryTagsPDF.getContentType());
 					attachments.add(attachment);
-				} else {
+				} else if (!massMail.isAttachProbandListEntryTagsOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_PROBAND_LIST_ENTRY_TAGS_ATTACHMENT);
 				}
 			}
@@ -272,7 +272,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 						count++;
 					}
 				}
-				if (count == 0) {
+				if (count == 0 && !massMail.isAttachVisitPlansOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_VISIT_PLANS_ATTACHMENT);
 				}
 			}
@@ -303,7 +303,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 						count++;
 					}
 				}
-				if (count == 0) {
+				if (count == 0 && !massMail.isAttachEcrfsOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_ECRFS_ATTACHMENTS);
 				}
 			}
@@ -323,7 +323,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					attachment.setFileName(probandLetterPDF.getFileName());
 					attachment.setContentType(probandLetterPDF.getContentType());
 					attachments.add(attachment);
-				} else {
+				} else if (!massMail.isAttachProbandLetterOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_PROBAND_LETTER_ATTACHMENT);
 				}
 			}
@@ -338,7 +338,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					attachment.setFileName(reimbursementsPDF.getFileName());
 					attachment.setContentType(reimbursementsPDF.getContentType());
 					attachments.add(attachment);
-				} else {
+				} else if (!massMail.isAttachReimbursementsPdfOptional()) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_NO_REIMBURSEMENTS_PDF_ATTACHMENT);
 				}
 			}
