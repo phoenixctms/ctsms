@@ -111,20 +111,30 @@ public class DBTool {
 	}
 
 	private static List<Long> getIdsOptionValue(CommandLine line, boolean required) throws Exception {
-		if (required && (!line.hasOption(DBToolOptions.ID_OPT) || line.getOptionValue(DBToolOptions.ID_OPT) == null)) {
-			throw new IllegalArgumentException("entity id (or list of ids) required");
+		if (required && !line.hasOption(DBToolOptions.ID_OPT)) {
+			throw new IllegalArgumentException("entity id required");
 		}
-		String[] list = line.getOptionValue(DBToolOptions.ID_OPT).split("[,;]");
-		ArrayList<Long> result = new ArrayList<Long>(list.length);
-		for (int i = 0; i < list.length; i++) {
-			if (list[i].trim().length() > 0) {
-				try {
-					result.add(Long.parseLong(list[i].trim()));
-				} catch (NumberFormatException e) {
-					if (required) {
-						throw new IllegalArgumentException("entity id: number required");
+		ArrayList<Long> result;
+		String opt = line.getOptionValue(DBToolOptions.ID_OPT);
+		if (opt != null && opt.length() > 0) {
+			String[] list = opt.split("[,;]");
+			result = new ArrayList<Long>(list.length);
+			for (int i = 0; i < list.length; i++) {
+				if (list[i].trim().length() > 0) {
+					try {
+						result.add(Long.parseLong(list[i].trim()));
+					} catch (NumberFormatException e) {
+						if (required) {
+							throw new IllegalArgumentException("entity id: number required");
+						}
 					}
 				}
+			}
+		} else {
+			if (required) {
+				throw new IllegalArgumentException("entity id (or list of ids) required");
+			} else {
+				result = new ArrayList<Long>();
 			}
 		}
 		return result;
