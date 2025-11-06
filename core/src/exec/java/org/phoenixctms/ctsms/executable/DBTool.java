@@ -1,6 +1,9 @@
 package org.phoenixctms.ctsms.executable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -105,6 +108,26 @@ public class DBTool {
 				return null;
 			}
 		}
+	}
+
+	private static List<Long> getIdsOptionValue(CommandLine line, boolean required) throws Exception {
+		if (required && !line.hasOption(DBToolOptions.ID_OPT)) {
+			throw new IllegalArgumentException("entity id (or list of ids) required");
+		}
+		String[] list = line.getOptionValue(DBToolOptions.ID_OPT).split("[,;]");
+		ArrayList<Long> result = new ArrayList<Long>(list.length);
+		for (int i = 0; i < list.length; i++) {
+			if (list[i].trim().length() > 0) {
+				try {
+					result.add(Long.parseLong(list[i].trim()));
+				} catch (NumberFormatException e) {
+					if (required) {
+						throw new IllegalArgumentException("entity id: number required");
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	private static Long getJobIdOptionValue(CommandLine line, boolean required) throws Exception {
@@ -545,7 +568,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_INVENTORY_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inventory will be deleted!")) {
-						dbTool.getServiceMethods().deleteInventory(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteInventory(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INVENTORY_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INVENTORY_DEFERRED_DELETE_OPT);
@@ -557,7 +584,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_STAFF_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - person/organisation will be deleted!")) {
-						dbTool.getServiceMethods().deleteStaff(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteStaff(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_STAFF_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_STAFF_DEFERRED_DELETE_OPT);
@@ -569,7 +600,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_COURSE_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - course will be deleted!")) {
-						dbTool.getServiceMethods().deleteCourse(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteCourse(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_COURSE_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_COURSE_DEFERRED_DELETE_OPT);
@@ -581,7 +616,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_TRIAL_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - trial will be deleted!")) {
-						dbTool.getServiceMethods().deleteTrial(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteTrial(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_TRIAL_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_TRIAL_DEFERRED_DELETE_OPT);
@@ -593,19 +632,31 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_INQUIRY_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inquiry will be deleted!")) {
-						dbTool.getServiceMethods().deleteInquiry(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteInquiry(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_ECRF_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_ECRF_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRFs will be deleted!")) {
-						dbTool.getServiceMethods().deleteEcrf(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteEcrf(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_ECRF_FIELD_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_ECRF_FIELD_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRF fields will be deleted!")) {
-						dbTool.getServiceMethods().deleteEcrfField(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteEcrfField(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT);
@@ -629,7 +680,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_PROBAND_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - proband will be deleted!")) {
-						dbTool.getServiceMethods().deleteProband(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteProband(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_PROBAND_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_PROBAND_DEFERRED_DELETE_OPT);
@@ -641,7 +696,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_MASS_MAIL_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - mass mail will be deleted!")) {
-						dbTool.getServiceMethods().deleteMassMail(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteMassMail(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT);
@@ -653,7 +712,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_USER_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - user will be deleted!")) {
-						dbTool.getServiceMethods().deleteUser(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteUser(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_USER_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_USER_DEFERRED_DELETE_OPT);
@@ -665,7 +728,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_INPUT_FIELD_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - input field will be deleted!")) {
-						dbTool.getServiceMethods().deleteInputField(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteInputField(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT);
@@ -677,7 +744,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_SELECTION_SET_VALUE_OPT);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - selection set value will be deleted!")) {
-						dbTool.getServiceMethods().deleteSelectionSetValue(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteSelectionSetValue(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_SELECTION_SET_VALUE_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_SELECTION_SET_VALUE_DEFERRED_DELETE_OPT);
@@ -689,7 +760,11 @@ public class DBTool {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_CRITERIA_OPT);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - criteria will be deleted!")) {
-						dbTool.getServiceMethods().deleteCriteria(getAuthenticationOptionValue(line), getIdOptionValue(line, true));
+						AuthenticationVO auth = getAuthenticationOptionValue(line);
+						Iterator<Long> it = getIdsOptionValue(line, true).iterator();
+						while (it.hasNext()) {
+							dbTool.getServiceMethods().deleteCriteria(auth, it.next());
+						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_CRITERIA_DEFERRED_DELETE_OPT)) {
 					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_CRITERIA_DEFERRED_DELETE_OPT);
