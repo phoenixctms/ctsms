@@ -111,7 +111,7 @@ public class DBTool {
 	}
 
 	private static List<Long> getIdsOptionValue(CommandLine line, boolean required) throws Exception {
-		if (required && !line.hasOption(DBToolOptions.ID_OPT)) {
+		if (required && (!line.hasOption(DBToolOptions.ID_OPT) || line.getOptionValue(DBToolOptions.ID_OPT) == null)) {
 			throw new IllegalArgumentException("entity id (or list of ids) required");
 		}
 		String[] list = line.getOptionValue(DBToolOptions.ID_OPT).split("[,;]");
