@@ -176,6 +176,8 @@ public class UserDaoImpl
 		if (parent != null) {
 			target.setParentId(parent.getId());
 		}
+		target.setDutyRosterCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getDutyRosterCalendarFilters()));
+		target.setInventoryBookingCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getInventoryBookingCalendarFilters()));
 	}
 
 	/**
@@ -289,6 +291,34 @@ public class UserDaoImpl
 		if ((inheritedPermissionProfileGroups = source.getInheritedPermissionProfileGroups()).size() > 0 || copyIfNull) {
 			target.setInheritedPermissionProfileGroupList(UserReflexionGraph.toInheritedPermissionProfileGroupList(inheritedPermissionProfileGroups));
 		}
+		Collection filters = source.getDutyRosterCalendarFilters();
+		if (filters.size() > 0) {
+			this.getCategoryPresetDao().remove(target.getDutyRosterCalendarFilters());
+			target.getDutyRosterCalendarFilters().clear();
+			Iterator<String> it = filters.iterator();
+			while (it.hasNext()) {
+				CategoryPreset category = this.getCategoryPresetDao().create(it.next());
+				category.setDutyRosterCalendarFilterUser(target);
+				target.getDutyRosterCalendarFilters().add(category);
+			}
+		} else if (copyIfNull) {
+			this.getCategoryPresetDao().remove(target.getDutyRosterCalendarFilters());
+			target.getDutyRosterCalendarFilters().clear();
+		}
+		filters = source.getInventoryBookingCalendarFilters();
+		if (filters.size() > 0) {
+			this.getCategoryPresetDao().remove(target.getInventoryBookingCalendarFilters());
+			target.getInventoryBookingCalendarFilters().clear();
+			Iterator<String> it = filters.iterator();
+			while (it.hasNext()) {
+				CategoryPreset category = this.getCategoryPresetDao().create(it.next());
+				category.setInventoryBookingCalendarFilterUser(target);
+				target.getInventoryBookingCalendarFilters().add(category);
+			}
+		} else if (copyIfNull) {
+			this.getCategoryPresetDao().remove(target.getInventoryBookingCalendarFilters());
+			target.getInventoryBookingCalendarFilters().clear();
+		}
 	}
 
 	/**
@@ -343,6 +373,34 @@ public class UserDaoImpl
 				parent.removeChildren(target);
 			}
 		}
+		Collection filters = source.getDutyRosterCalendarFilters();
+		if (filters.size() > 0) {
+			this.getCategoryPresetDao().remove(target.getDutyRosterCalendarFilters());
+			target.getDutyRosterCalendarFilters().clear();
+			Iterator<String> it = filters.iterator();
+			while (it.hasNext()) {
+				CategoryPreset category = this.getCategoryPresetDao().create(it.next());
+				category.setDutyRosterCalendarFilterUser(target);
+				target.getDutyRosterCalendarFilters().add(category);
+			}
+		} else if (copyIfNull) {
+			this.getCategoryPresetDao().remove(target.getDutyRosterCalendarFilters());
+			target.getDutyRosterCalendarFilters().clear();
+		}
+		filters = source.getInventoryBookingCalendarFilters();
+		if (filters.size() > 0) {
+			this.getCategoryPresetDao().remove(target.getInventoryBookingCalendarFilters());
+			target.getInventoryBookingCalendarFilters().clear();
+			Iterator<String> it = filters.iterator();
+			while (it.hasNext()) {
+				CategoryPreset category = this.getCategoryPresetDao().create(it.next());
+				category.setInventoryBookingCalendarFilterUser(target);
+				target.getInventoryBookingCalendarFilters().add(category);
+			}
+		} else if (copyIfNull) {
+			this.getCategoryPresetDao().remove(target.getInventoryBookingCalendarFilters());
+			target.getInventoryBookingCalendarFilters().clear();
+		}
 	}
 
 	/**
@@ -352,6 +410,8 @@ public class UserDaoImpl
 			User source,
 			UserSettingsInVO target) {
 		super.toUserSettingsInVO(source, target);
+		target.setDutyRosterCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getDutyRosterCalendarFilters()));
+		target.setInventoryBookingCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getInventoryBookingCalendarFilters()));
 	}
 
 	/**
@@ -384,6 +444,34 @@ public class UserDaoImpl
 			inheritedProperties.removeAll(CommonUtil.USER_SETTINGS_INHERITABLE_PROPERTIES);
 			inheritedProperties.addAll(source.getInheritedProperties());
 			target.setInheritedPropertyList(UserReflexionGraph.toInheritedPropertyList(inheritedProperties));
+		}
+		Collection filters = source.getDutyRosterCalendarFilters();
+		if (filters.size() > 0) {
+			this.getCategoryPresetDao().remove(target.getDutyRosterCalendarFilters());
+			target.getDutyRosterCalendarFilters().clear();
+			Iterator<String> it = filters.iterator();
+			while (it.hasNext()) {
+				CategoryPreset category = this.getCategoryPresetDao().create(it.next());
+				category.setDutyRosterCalendarFilterUser(target);
+				target.getDutyRosterCalendarFilters().add(category);
+			}
+		} else if (copyIfNull) {
+			this.getCategoryPresetDao().remove(target.getDutyRosterCalendarFilters());
+			target.getDutyRosterCalendarFilters().clear();
+		}
+		filters = source.getInventoryBookingCalendarFilters();
+		if (filters.size() > 0) {
+			this.getCategoryPresetDao().remove(target.getInventoryBookingCalendarFilters());
+			target.getInventoryBookingCalendarFilters().clear();
+			Iterator<String> it = filters.iterator();
+			while (it.hasNext()) {
+				CategoryPreset category = this.getCategoryPresetDao().create(it.next());
+				category.setInventoryBookingCalendarFilterUser(target);
+				target.getInventoryBookingCalendarFilters().add(category);
+			}
+		} else if (copyIfNull) {
+			this.getCategoryPresetDao().remove(target.getInventoryBookingCalendarFilters());
+			target.getInventoryBookingCalendarFilters().clear();
 		}
 	}
 
@@ -433,6 +521,8 @@ public class UserDaoImpl
 			User source,
 			UserInheritedVO target) {
 		super.toUserInheritedVO(source, target);
+		target.setDutyRosterCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getDutyRosterCalendarFilters()));
+		target.setInventoryBookingCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getInventoryBookingCalendarFilters()));
 		HashMap<Long, HashSet<String>> inheritPropertyMap = new HashMap<Long, HashSet<String>>();
 		setInheritedProperty(source, target, "enableInventoryModule", Boolean.TYPE, inheritPropertyMap);
 		setInheritedProperty(source, target, "enableStaffModule", Boolean.TYPE, inheritPropertyMap);
@@ -459,6 +549,8 @@ public class UserDaoImpl
 		setInheritedProperty(source, target, "theme", String.class, inheritPropertyMap);
 		setInheritedProperty(source, target, "decimalSeparator", String.class, inheritPropertyMap);
 		setInheritedProperty(source, target, "dateFormat", String.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "dutyRosterCalendarFilters", Collection.class, inheritPropertyMap);
+		setInheritedProperty(source, target, "inventoryBookingCalendarFilters", Collection.class, inheritPropertyMap);
 	}
 
 	private static boolean isInherited(User user, String propertyName, HashMap<Long, HashSet<String>> inheritPropertyMap) {
@@ -477,8 +569,14 @@ public class UserDaoImpl
 			if (isInherited(source, propertyName, inheritPropertyMap)) {
 				User parent = source.getParent();
 				if (parent != null) {
-					CommonUtil.getPropertySetter(UserInheritedVO.class, propertyName, type).invoke(target,
-							getInheritedProperty(parent, propertyName, inheritPropertyMap));
+					Object inheritedValue = getInheritedProperty(parent, propertyName, inheritPropertyMap);
+					if (Collection.class.isAssignableFrom(type)) {
+						Collection propertyValue = (Collection) CommonUtil.getPropertyGetter(UserInheritedVO.class, propertyName).invoke(target);
+						propertyValue.clear();
+						propertyValue.addAll(UserReflexionGraph.entityToValueCollection(((Collection) inheritedValue)));
+					} else {
+						CommonUtil.getPropertySetter(UserInheritedVO.class, propertyName, type).invoke(target, inheritedValue);
+					}
 				}
 			}
 		} catch (Exception e) {

@@ -1,6 +1,8 @@
 package org.phoenixctms.ctsms.vocycle;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -9,7 +11,9 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.compare.UserComparator;
+import org.phoenixctms.ctsms.domain.CategoryPreset;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
 import org.phoenixctms.ctsms.domain.Staff;
@@ -29,6 +33,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 
 public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 
+	private final static EntityIDComparator CATEGORY_PRESET_ID_COMPARATOR = new EntityIDComparator(false);
 	private static final boolean LIMIT_INSTANCES = true;
 	private static final boolean LIMIT_PARENTS_DEPTH = true;
 	private static final boolean LIMIT_CHILDREN_DEPTH = true;
@@ -184,6 +189,24 @@ public class UserReflexionGraph extends ReflexionCycleHelper<User, UserOutVO> {
 		target.setChildrenCount(userDaoImpl.getChildrenCount(source.getId()));
 		target.setInheritedProperties(getInheritedProperties(source.getInheritedPropertyList()));
 		target.setInheritedPermissionProfileGroups(getInheritedPermissionProfileGroups(source.getInheritedPermissionProfileGroupList()));
+		target.setDutyRosterCalendarFilters(entityToValueCollection(source.getDutyRosterCalendarFilters()));
+		target.setInventoryBookingCalendarFilters(entityToValueCollection(source.getInventoryBookingCalendarFilters()));
+	}
+
+	public static ArrayList entityToValueCollection(Collection items) {
+		ArrayList result = new ArrayList<String>(items.size());
+		items = new ArrayList(items);
+		Collections.sort((ArrayList) items, CATEGORY_PRESET_ID_COMPARATOR);
+		Iterator it = items.iterator();
+		while (it.hasNext()) {
+			Object item = it.next();
+			if (item instanceof CategoryPreset) {
+				result.add(((CategoryPreset) item).getCategory());
+			} else {
+				throw new UnsupportedOperationException("cannot convert " + item.getClass());
+			}
+		}
+		return result;
 	}
 
 	public static String toInheritedPropertyList(Collection<String> inheritedProperties) {
