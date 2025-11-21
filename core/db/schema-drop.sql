@@ -14,6 +14,12 @@
     alter table BANK_ACCOUNT 
         drop constraint BANK_ACCOUNT_PROBAND_FKC;
 
+    alter table CATEGORY_PRESET 
+        drop constraint CATEGORY_PRESET_DUTY_ROSTER_CALENDAR_FILTER_USER_FKC;
+
+    alter table CATEGORY_PRESET 
+        drop constraint CATEGORY_PRESET_INVENTORY_BOOKING_CALENDAR_FILTER_USER_FKC;
+
     alter table COURSE 
         drop constraint COURSE_CV_SECTION_PRESET_FKC;
 
@@ -1018,6 +1024,8 @@
     drop table BANK_ACCOUNT cascade;
 
     drop table BANK_IDENTIFICATION cascade;
+
+    drop table CATEGORY_PRESET cascade;
 
     drop table CONTACT_DETAIL_TYPE cascade;
 

@@ -121,6 +121,14 @@
         primary key (ID)
     );
 
+    create table CATEGORY_PRESET (
+        ID BIGINT not null,
+        CATEGORY CHARACTER VARYING(1024) not null,
+        DUTY_ROSTER_CALENDAR_FILTER_USER_FK BIGINT,
+        INVENTORY_BOOKING_CALENDAR_FILTER_USER_FK BIGINT,
+        primary key (ID)
+    );
+
     create table CONTACT_DETAIL_TYPE (
         ID BIGINT not null,
         NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
@@ -2293,6 +2301,16 @@
         add constraint BANK_ACCOUNT_PROBAND_FKC 
         foreign key (PROBAND_FK) 
         references PROBAND;
+
+    alter table CATEGORY_PRESET 
+        add constraint CATEGORY_PRESET_DUTY_ROSTER_CALENDAR_FILTER_USER_FKC 
+        foreign key (DUTY_ROSTER_CALENDAR_FILTER_USER_FK) 
+        references users;
+
+    alter table CATEGORY_PRESET 
+        add constraint CATEGORY_PRESET_INVENTORY_BOOKING_CALENDAR_FILTER_USER_FKC 
+        foreign key (INVENTORY_BOOKING_CALENDAR_FILTER_USER_FK) 
+        references users;
 
     alter table COURSE 
         add constraint COURSE_CV_SECTION_PRESET_FKC 
