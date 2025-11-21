@@ -20,6 +20,8 @@ import java.util.Set;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.UserPermissionProfileCollisionFinder;
+import org.phoenixctms.ctsms.domain.CategoryPreset;
+import org.phoenixctms.ctsms.domain.CategoryPresetDao;
 import org.phoenixctms.ctsms.domain.DataTableColumn;
 import org.phoenixctms.ctsms.domain.DataTableColumnDao;
 import org.phoenixctms.ctsms.domain.Department;
@@ -268,6 +270,21 @@ public class UserServiceImpl
 				dataTableColumnDao.remove(tableColumn);
 			}
 			user.getTableColumns().clear();
+			CategoryPresetDao categoryPresetDao = this.getCategoryPresetDao();
+			Iterator<CategoryPreset> filtersIt = user.getDutyRosterCalendarFilters().iterator();
+			while (filtersIt.hasNext()) {
+				CategoryPreset filter = filtersIt.next();
+				filter.setDutyRosterCalendarFilterUser(null);
+				categoryPresetDao.remove(filter);
+			}
+			user.getDutyRosterCalendarFilters().clear();
+			filtersIt = user.getInventoryBookingCalendarFilters().iterator();
+			while (filtersIt.hasNext()) {
+				CategoryPreset filter = filtersIt.next();
+				filter.setInventoryBookingCalendarFilterUser(null);
+				categoryPresetDao.remove(filter);
+			}
+			user.getInventoryBookingCalendarFilters().clear();
 			StaffDao staffDao = this.getStaffDao();
 			Staff identity = user.getIdentity();
 			if (identity != null) {
