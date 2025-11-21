@@ -602,6 +602,8 @@ public class DemoDataProvider {
 			modifiedUser.setDecimalSeparator(user.getDecimalSeparator());
 			modifiedUser.setTheme(user.getTheme());
 			modifiedUser.setTabOrientation(user.getTabOrientation());
+			modifiedUser.getDutyRosterCalendarFilters().clear();
+			modifiedUser.getInventoryBookingCalendarFilters().clear();
 			modifiedUser.setLocked(user.isLocked());
 			modifiedUser.setLockedUntrusted(user.isLockedUntrusted());
 			modifiedUser.setShowTooltips(user.isShowTooltips());

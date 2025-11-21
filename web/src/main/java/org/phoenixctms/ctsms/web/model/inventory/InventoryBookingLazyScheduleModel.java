@@ -131,7 +131,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 				setDepartmentId(identity.getDepartment().getId());
 			}
 		}
-		calendars = new LinkedHashSet<String>();
+		calendars = new LinkedHashSet<String>(WebUtil.getSessionScopeBean().getInventoryBookingCalendarFilters());
 	}
 
 	@Override

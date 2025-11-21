@@ -95,6 +95,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
 			in.setTabOrientation(out.getTabOrientation());
+			in.getDutyRosterCalendarFilters().clear();
+			in.getDutyRosterCalendarFilters().addAll(out.getDutyRosterCalendarFilters());
+			in.getInventoryBookingCalendarFilters().clear();
+			in.getInventoryBookingCalendarFilters().addAll(out.getInventoryBookingCalendarFilters());
 			in.getInheritedProperties().clear();
 			Iterator<String> it = out.getInheritedProperties().iterator();
 			while (it.hasNext()) {
@@ -149,6 +153,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			result.setDecimalSeparator(in.getDecimalSeparator());
 			result.setTheme(in.getTheme());
 			result.setTabOrientation(in.getTabOrientation());
+			result.getDutyRosterCalendarFilters().clear();
+			result.getDutyRosterCalendarFilters().addAll(in.getDutyRosterCalendarFilters());
+			result.getInventoryBookingCalendarFilters().clear();
+			result.getInventoryBookingCalendarFilters().addAll(in.getInventoryBookingCalendarFilters());
 			result.getInheritedProperties().clear();
 			result.getInheritedProperties().addAll(in.getInheritedProperties());
 			result.getInheritedPermissionProfileGroups().clear();
@@ -196,6 +204,10 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 			in.setVersion(null);
 			in.setTheme(Settings.getString(SettingCodes.USER_THEME_PRESET, Bundle.SETTINGS, DefaultSettings.USER_THEME_PRESET));
 			in.setTabOrientation(Settings.getString(SettingCodes.USER_TAB_ORIENTATION_PRESET, Bundle.SETTINGS, DefaultSettings.USER_TAB_ORIENTATION_PRESET));
+			in.setDutyRosterCalendarFilters(
+					Settings.getStringList(SettingCodes.USER_DUTY_ROSTER_CALENDAR_FILTERS_PRESET, Bundle.SETTINGS, DefaultSettings.USER_DUTY_ROSTER_CALENDAR_FILTERS_PRESET));
+			in.setInventoryBookingCalendarFilters(Settings.getStringList(SettingCodes.USER_INVENTORY_BOOKING_CALENDAR_FILTERS_PRESET, Bundle.SETTINGS,
+					DefaultSettings.USER_INVENTORY_BOOKING_CALENDAR_FILTERS_PRESET));
 			in.getInheritedProperties().clear();
 			in.getInheritedPermissionProfileGroups().clear();
 		}
@@ -1159,5 +1171,31 @@ public class UserBean extends UserSettingsBeanBase implements AuthenticationType
 
 	private void loadDepartment() {
 		department = WebUtil.getDepartment(in.getDepartmentId());
+	}
+
+	@Override
+	protected Collection<String> getUserDutyRosterCalendarFilters() {
+		return in != null ? in.getDutyRosterCalendarFilters() : null;
+	}
+
+	@Override
+	protected void setUserDutyRosterCalendarFilters(Collection<String> filters) {
+		if (in != null) {
+			in.getDutyRosterCalendarFilters().clear();
+			in.getDutyRosterCalendarFilters().addAll(filters);
+		}
+	}
+
+	@Override
+	protected Collection<String> getUserInventoryBookingCalendarFilters() {
+		return in != null ? in.getInventoryBookingCalendarFilters() : null;
+	}
+
+	@Override
+	protected void setUserInventoryBookingCalendarFilters(Collection<String> filters) {
+		if (in != null) {
+			in.getInventoryBookingCalendarFilters().clear();
+			in.getInventoryBookingCalendarFilters().addAll(filters);
+		}
 	}
 }

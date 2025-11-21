@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.model.SelectItem;
@@ -41,12 +43,16 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 	private UserInheritedVO parent;
 	private Map<String, String> inheritedPropertiesMap;
 	private HashMap<String, String> inheritedPropertiesTooltipsCache;
+	protected Set<String> dutyRosterCalendarFilters;
+	protected Set<String> inventoryBookingCalendarFilters;
 
 	protected UserSettingsBeanBase() {
 		timeZone = null;
 		tableColumnCount = 0l;
 		inheritedPropertiesMap = new HashMap<String, String>();
 		inheritedPropertiesTooltipsCache = new HashMap<String, String>();
+		dutyRosterCalendarFilters = new LinkedHashSet<String>();
+		inventoryBookingCalendarFilters = new LinkedHashSet<String>();
 	}
 
 	public ArrayList<SelectItem> getDateFormats() {
@@ -99,6 +105,16 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 		if (this.decimalSeparators == null) {
 			this.decimalSeparators = WebUtil.getDecimalSeparators();
 		}
+		dutyRosterCalendarFilters.clear();
+		Collection<String> filters = getUserDutyRosterCalendarFilters();
+		if (filters != null) {
+			dutyRosterCalendarFilters.addAll(filters);
+		}
+		inventoryBookingCalendarFilters.clear();
+		filters = getUserInventoryBookingCalendarFilters();
+		if (filters != null) {
+			inventoryBookingCalendarFilters.addAll(filters);
+		}
 		loadInheritedPropertiesMap();
 		clearInheritedPropertiesTooltips();
 		loadTableColumnCount();
@@ -148,6 +164,8 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 		if (CommonUtil.NO_SELECTION_VALUE.equals(getDecimalSeparator())) {
 			setDecimalSeparator(null);
 		}
+		setUserDutyRosterCalendarFilters(dutyRosterCalendarFilters);
+		setUserInventoryBookingCalendarFilters(inventoryBookingCalendarFilters);
 	}
 
 	public void setTimeZone(TimeZoneVO timeZone) {
@@ -194,6 +212,14 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 	protected abstract Long getParentId();
 
 	protected abstract Collection<String> getInheritedProperties();
+
+	protected abstract Collection<String> getUserDutyRosterCalendarFilters();
+
+	protected abstract void setUserDutyRosterCalendarFilters(Collection<String> filters);
+
+	protected abstract Collection<String> getUserInventoryBookingCalendarFilters();
+
+	protected abstract void setUserInventoryBookingCalendarFilters(Collection<String> filters);
 
 	protected abstract String getUserTimeZone();
 
@@ -268,6 +294,8 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 						} else {
 							inheritedValue = Messages.getString(MessageCodes.CHECKBOX_UNCHECKED);
 						}
+					} else if (inheritedValue instanceof Collection) {
+						inheritedValue = String.join(", ", (Collection) inheritedValue);
 					} else if ("visibleInventoryTabList".equals(propertyName)) {
 						inheritedValue = visibleTabListToString(WebUtil.getSessionScopeBean().getInventoryTabTitles(), visibleTabListToList((String) inheritedValue), ", ");
 					} else if ("visibleStaffTabList".equals(propertyName)) {
@@ -353,5 +381,77 @@ public abstract class UserSettingsBeanBase extends ManagedBeanBase {
 
 	public List<String> getParentUserVisibleTabList() {
 		return visibleTabListToList(parent != null ? parent.getVisibleUserTabList() : null);
+	}
+
+	public List<String> getDutyRosterCalendarFilters() {
+		List<String> filters = new ArrayList<String>();
+		filters.addAll(dutyRosterCalendarFilters);
+		return filters;
+	}
+	//	public void handleDutyRosterCalendarFilterSelect(SelectEvent event) {
+	//	}
+	//
+	//	public void handleDutyRosterCalendarFilterUnselect(UnselectEvent event) {
+	//	}
+
+	public void setDutyRosterCalendarFilters(List<String> filters) {
+		dutyRosterCalendarFilters.clear();
+		if (filters != null) {
+			dutyRosterCalendarFilters.addAll(filters);
+		}
+	}
+
+	public List<String> completeDutyRosterCalendar(String query) {
+		Collection<String> calendars = null;
+		try {
+			calendars = WebUtil.getServiceLocator().getTrialService().getCalendars(WebUtil.getAuthentication(),
+					null, null, null, query, null); // let permission argument override decide...
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		if (calendars != null) {
+			try {
+				return ((List<String>) calendars);
+			} catch (ClassCastException e) {
+			}
+		}
+		return new ArrayList<String>();
+	}
+
+	public List<String> getInventoryBookingCalendarFilters() {
+		List<String> filters = new ArrayList<String>();
+		filters.addAll(inventoryBookingCalendarFilters);
+		return filters;
+	}
+	//	public void handleInventoryBookingCalendarFilterSelect(SelectEvent event) {
+	//	}
+	//
+	//	public void handleInventoryBookingCalendarFilterUnselect(UnselectEvent event) {
+	//	}
+
+	public void setInventoryBookingCalendarFilters(List<String> filters) {
+		inventoryBookingCalendarFilters.clear();
+		if (filters != null) {
+			inventoryBookingCalendarFilters.addAll(filters);
+		}
+	}
+
+	public List<String> completeInventoryBookingCalendar(String query) {
+		Collection<String> calendars = null;
+		try {
+			calendars = WebUtil.getServiceLocator().getInventoryService().getCalendars(WebUtil.getAuthentication(),
+					null, null, null, null, null, query, null); // let permission argument override decide...
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		if (calendars != null) {
+			try {
+				return ((List<String>) calendars);
+			} catch (ClassCastException e) {
+			}
+		}
+		return new ArrayList<String>();
 	}
 }

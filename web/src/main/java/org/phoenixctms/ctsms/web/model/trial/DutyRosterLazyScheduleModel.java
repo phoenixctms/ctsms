@@ -126,7 +126,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 				setDepartmentId(identity.getDepartment().getId());
 			}
 		}
-		calendars = new LinkedHashSet<String>();
+		calendars = new LinkedHashSet<String>(WebUtil.getSessionScopeBean().getDutyRosterCalendarFilters());
 	}
 
 	@Override

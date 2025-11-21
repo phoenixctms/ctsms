@@ -613,6 +613,10 @@ public final class CommonUtil {
 			out.setTabOrientation(in.getTabOrientation());
 			out.setDecimalSeparator(in.getDecimalSeparator());
 			out.setDateFormat(in.getDateFormat());
+			out.getDutyRosterCalendarFilters().clear();
+			out.getDutyRosterCalendarFilters().addAll(in.getDutyRosterCalendarFilters());
+			out.getInventoryBookingCalendarFilters().clear();
+			out.getInventoryBookingCalendarFilters().addAll(in.getInventoryBookingCalendarFilters());
 		}
 	}
 

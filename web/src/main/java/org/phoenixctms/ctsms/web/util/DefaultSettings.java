@@ -25,6 +25,8 @@ public final class DefaultSettings {
 
 	public final static String THEME = "aristo";
 	public final static String TAB_ORIENTATION = "top";
+	public final static ArrayList<String> DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS = new ArrayList<String>();
+	public final static ArrayList<String> DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS = new ArrayList<String>();
 	public final static int MAX_CRITERIONS = 30;
 	public final static String CALENDAR_YEAR_RANGE = "1900:" + ((new GregorianCalendar()).get(GregorianCalendar.YEAR) + 10);
 	public final static String IBAN_MASK = "";
@@ -334,6 +336,8 @@ public final class DefaultSettings {
 	public static final String USER_TIME_ZONE_PRESET = CommonUtil.timeZoneToString(TimeZone.getDefault());
 	public static final String USER_THEME_PRESET = "aristo";
 	public static final String USER_TAB_ORIENTATION_PRESET = "top";
+	public static final ArrayList<String> USER_DUTY_ROSTER_CALENDAR_FILTERS_PRESET = new ArrayList<String>();
+	public static final ArrayList<String> USER_INVENTORY_BOOKING_CALENDAR_FILTERS_PRESET = new ArrayList<String>();
 	public static final AuthenticationType USER_AUTH_METHOD_PRESET = AuthenticationType.LOCAL;
 	public final static boolean USER_SHOW_TOOLTIPS_PRESET = true;
 	public final static boolean HYPERLINK_ACTIVE_PRESET = true;

@@ -841,6 +841,30 @@ public class SessionScopeBean implements FilterItemsStore {
 		}
 	}
 
+	public synchronized Collection<String> getDutyRosterCalendarFilters() {
+		Collection<String> filters = null;
+		if (logon != null && !otpRequired) {
+			filters = logon.getInheritedUser().getDutyRosterCalendarFilters();
+		}
+		if (filters != null && filters.size() > 0) {
+			return new ArrayList<String>(filters);
+		} else {
+			return Settings.getStringList(SettingCodes.DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS, Bundle.SETTINGS, DefaultSettings.DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS);
+		}
+	}
+
+	public synchronized Collection<String> getInventoryBookingCalendarFilters() {
+		Collection<String> filters = null;
+		if (logon != null && !otpRequired) {
+			filters = logon.getInheritedUser().getInventoryBookingCalendarFilters();
+		}
+		if (filters != null && filters.size() > 0) {
+			return new ArrayList<String>(filters);
+		} else {
+			return Settings.getStringList(SettingCodes.DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS, Bundle.SETTINGS, DefaultSettings.DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS);
+		}
+	}
+
 	public synchronized TimeZone getTimeZone() {
 		if (logon != null) { // && !otpRequired) {
 			return CommonUtil.timeZoneFromString(logon.getInheritedUser().getTimeZone());
