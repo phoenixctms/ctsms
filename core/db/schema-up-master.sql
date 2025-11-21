@@ -504,6 +504,30 @@ if get_database_version() < '010801104' then
   perform set_database_version('010801104');
 
 end if;
+
+if get_database_version() < '010801105' then
+
+    create table CATEGORY_PRESET (
+        ID BIGINT not null,
+        CATEGORY CHARACTER VARYING(1024) not null,
+        DUTY_ROSTER_CALENDAR_FILTER_USER_FK BIGINT,
+        INVENTORY_BOOKING_CALENDAR_FILTER_USER_FK BIGINT,
+        primary key (ID)
+    );
+
+    alter table CATEGORY_PRESET 
+        add constraint CATEGORY_PRESET_DUTY_ROSTER_CALENDAR_FILTER_USER_FKC 
+        foreign key (DUTY_ROSTER_CALENDAR_FILTER_USER_FK) 
+        references users;
+
+    alter table CATEGORY_PRESET 
+        add constraint CATEGORY_PRESET_INVENTORY_BOOKING_CALENDAR_FILTER_USER_FKC 
+        foreign key (INVENTORY_BOOKING_CALENDAR_FILTER_USER_FK) 
+        references users;
+        
+    perform set_database_version('010801105');
+
+end if;
  
 end
 $$;
