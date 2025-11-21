@@ -40,6 +40,10 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			in.setVersion(out.getVersion());
 			in.setTheme(out.getTheme());
 			in.setTabOrientation(out.getTabOrientation());
+			in.getDutyRosterCalendarFilters().clear();
+			in.getDutyRosterCalendarFilters().addAll(out.getDutyRosterCalendarFilters());
+			in.getInventoryBookingCalendarFilters().clear();
+			in.getInventoryBookingCalendarFilters().addAll(out.getInventoryBookingCalendarFilters());
 			in.getInheritedProperties().clear();
 			Iterator<String> it = out.getInheritedProperties().iterator();
 			while (it.hasNext()) {
@@ -243,5 +247,31 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 	@Override
 	protected Collection<String> getInheritedProperties() {
 		return in != null ? in.getInheritedProperties() : null;
+	}
+
+	@Override
+	protected Collection<String> getUserDutyRosterCalendarFilters() {
+		return in != null ? in.getDutyRosterCalendarFilters() : null;
+	}
+
+	@Override
+	protected void setUserDutyRosterCalendarFilters(Collection<String> filters) {
+		if (in != null) {
+			in.getDutyRosterCalendarFilters().clear();
+			in.getDutyRosterCalendarFilters().addAll(filters);
+		}
+	}
+
+	@Override
+	protected Collection<String> getUserInventoryBookingCalendarFilters() {
+		return in != null ? in.getInventoryBookingCalendarFilters() : null;
+	}
+
+	@Override
+	protected void setUserInventoryBookingCalendarFilters(Collection<String> filters) {
+		if (in != null) {
+			in.getInventoryBookingCalendarFilters().clear();
+			in.getInventoryBookingCalendarFilters().addAll(filters);
+		}
 	}
 }

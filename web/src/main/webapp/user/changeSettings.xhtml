@@ -11,7 +11,7 @@
 	<ui:composition template="/META-INF/templates/userHomeTemplate.xhtml">
 		<ui:param name="title" value="#{userlabels.change_settings_title}" />
 		<ui:define name="content">
-			<h:form id="changesettings_form">
+			<h:form id="changesettings_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel id="changesettings_input"
@@ -24,7 +24,7 @@
 							rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
 
 							<h:panelGrid columns="4" cellpadding="2"
-								columnClasses="ctsms-checkbox-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								columnClasses="ctsms-checkbox-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
 
 								<ui:include
 									src="/META-INF/includes/shared/userSettingsBaseInput.xhtml">

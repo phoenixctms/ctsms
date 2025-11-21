@@ -11,16 +11,12 @@
 	<ui:composition>
 
 		<h:panelGroup id="locale_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_locale"
+			<p:selectBooleanCheckbox id="inherit_locale"
 				value="#{bean.inheritedPropertiesMap['locale']}">
-				<p:ajax process="@this" update="locale"/>
+				<p:ajax process="@this" update="locale" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
-				for="inherit_locale">
-				<h:outputText
-					value="#{bean.getInheritedPropertyTooltip('locale')}"
+			<p:tooltip rendered="#{enableTooltips}" for="inherit_locale">
+				<h:outputText value="#{bean.getInheritedPropertyTooltip('locale')}"
 					escape="false" />
 			</p:tooltip>
 		</h:panelGroup>
@@ -28,9 +24,8 @@
 		<h:outputLabel for="locale" value="#{userlabels.user_locale_label}" />
 		<h:panelGroup>
 			<p:selectOneMenu id="locale" value="#{bean.locale}"
-				disabled="#{bean.inheritedPropertiesMap['locale']}"
-				required="true" label="#{userlabels.user_locale}"
-				styleClass="ctsms-control">
+				disabled="#{bean.inheritedPropertiesMap['locale']}" required="true"
+				label="#{userlabels.user_locale}" styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
 				<f:selectItems value="#{bean.locales}" var="selectItem"
@@ -45,14 +40,11 @@
 		<p:message for="locale" />
 
 		<h:panelGroup id="timeZone_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_timeZone"
+			<p:selectBooleanCheckbox id="inherit_timeZone"
 				value="#{bean.inheritedPropertiesMap['timeZone']}">
-				<p:ajax process="@this" update="timeZone"/>
+				<p:ajax process="@this" update="timeZone" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
-				for="inherit_timeZone">
+			<p:tooltip rendered="#{enableTooltips}" for="inherit_timeZone">
 				<h:outputText
 					value="#{bean.getInheritedPropertyTooltip('timeZone')}"
 					escape="false" />
@@ -64,18 +56,18 @@
 		<h:panelGroup>
 
 			<p:autoComplete id="timeZone" required="false"
-			    disabled="#{bean.inheritedPropertiesMap['timeZone']}"
-				value="#{bean.timeZone}"
-				label="#{userlabels.user_time_zone}" styleClass="ctsms-control"
+				disabled="#{bean.inheritedPropertiesMap['timeZone']}"
+				value="#{bean.timeZone}" label="#{userlabels.user_time_zone}"
+				styleClass="ctsms-control"
 				minQueryLength="#{autoCompleteMinQueryLengthTimeZone}"
 				maxResults="#{autoCompleteMaxResultsTimeZone}"
 				queryDelay="#{autoCompleteQueryDelayTimeZone}"
 				dropdown="#{autoCompleteDropdownTimeZone}"
 				global="#{autoCompleteGlobalTimeZone}"
 				scrollHeight="#{autoCompleteScrollHeightTimeZone}"
-				completeMethod="#{bean.completeTimeZone}"
-				forceSelection="true" var="timezone" itemValue="#{timezone}"
-				itemLabel="#{timezone.name}" converter="ctsms.TimeZone">
+				completeMethod="#{bean.completeTimeZone}" forceSelection="true"
+				var="timezone" itemValue="#{timezone}" itemLabel="#{timezone.name}"
+				converter="ctsms.TimeZone">
 
 				<p:ajax process="@this" event="itemSelect"
 					listener="#{bean.handleTimeZoneSelect}" />
@@ -94,14 +86,11 @@
 		<p:message for="timeZone" />
 
 		<h:panelGroup id="dateFormat_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_dateFormat"
+			<p:selectBooleanCheckbox id="inherit_dateFormat"
 				value="#{bean.inheritedPropertiesMap['dateFormat']}">
-				<p:ajax process="@this" update="dateFormat"/>
+				<p:ajax process="@this" update="dateFormat" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
-				for="inherit_dateFormat">
+			<p:tooltip rendered="#{enableTooltips}" for="inherit_dateFormat">
 				<h:outputText
 					value="#{bean.getInheritedPropertyTooltip('dateFormat')}"
 					escape="false" />
@@ -131,13 +120,11 @@
 
 
 		<h:panelGroup id="decimalSeparator_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_decimalSeparator"
+			<p:selectBooleanCheckbox id="inherit_decimalSeparator"
 				value="#{bean.inheritedPropertiesMap['decimalSeparator']}">
-				<p:ajax process="@this" update="decimalSeparator"/>
+				<p:ajax process="@this" update="decimalSeparator" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
+			<p:tooltip rendered="#{enableTooltips}"
 				for="inherit_decimalSeparator">
 				<h:outputText
 					value="#{bean.getInheritedPropertyTooltip('decimalSeparator')}"
@@ -155,9 +142,8 @@
 				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItems value="#{bean.decimalSeparators}"
-					var="selectItem" itemLabel="#{selectItem.label}"
-					itemValue="#{selectItem.value}" />
+				<f:selectItems value="#{bean.decimalSeparators}" var="selectItem"
+					itemLabel="#{selectItem.label}" itemValue="#{selectItem.value}" />
 				<p:ajax />
 			</p:selectOneMenu>
 
@@ -169,16 +155,12 @@
 		<p:message for="decimalSeparator" />
 
 		<h:panelGroup id="theme_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_theme"
+			<p:selectBooleanCheckbox id="inherit_theme"
 				value="#{bean.inheritedPropertiesMap['theme']}">
-				<p:ajax process="@this" update="theme"/>
+				<p:ajax process="@this" update="theme" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
-				for="inherit_theme">
-				<h:outputText
-					value="#{bean.getInheritedPropertyTooltip('theme')}"
+			<p:tooltip rendered="#{enableTooltips}" for="inherit_theme">
+				<h:outputText value="#{bean.getInheritedPropertyTooltip('theme')}"
 					escape="false" />
 			</p:tooltip>
 		</h:panelGroup>
@@ -186,9 +168,8 @@
 		<h:outputLabel for="theme" value="#{userlabels.user_theme_label}" />
 		<h:panelGroup>
 			<p:selectOneMenu id="theme" value="#{bean.theme}"
-			    disabled="#{bean.inheritedPropertiesMap['theme']}"
-				required="false" label="#{userlabels.user_theme}"
-				styleClass="ctsms-control">
+				disabled="#{bean.inheritedPropertiesMap['theme']}" required="false"
+				label="#{userlabels.user_theme}" styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
 				<f:selectItems value="#{bean.themes}" var="selectItem"
@@ -201,36 +182,31 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="theme" />
-		
+
 		<h:panelGroup id="tab_orientation_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_tab_orientation"
+			<p:selectBooleanCheckbox id="inherit_tab_orientation"
 				value="#{bean.inheritedPropertiesMap['tabOrientation']}">
-				<p:ajax process="@this" update="tabOrientation"/>
+				<p:ajax process="@this" update="tabOrientation" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
-				for="inherit_tab_orientation">
+			<p:tooltip rendered="#{enableTooltips}" for="inherit_tab_orientation">
 				<h:outputText
 					value="#{bean.getInheritedPropertyTooltip('tabOrientation')}"
 					escape="false" />
 			</p:tooltip>
 		</h:panelGroup>
 
-		<h:outputLabel for="tabOrientation" value="#{userlabels.user_tab_orientation_label}" />
+		<h:outputLabel for="tabOrientation"
+			value="#{userlabels.user_tab_orientation_label}" />
 		<h:panelGroup>
 			<p:selectOneMenu id="tabOrientation" value="#{bean.tabOrientation}"
-			    disabled="#{bean.inheritedPropertiesMap['tabOrientation']}"
+				disabled="#{bean.inheritedPropertiesMap['tabOrientation']}"
 				required="false" label="#{userlabels.user_tab_orientation}"
 				styleClass="ctsms-control">
 				<f:selectItem itemLabel="#{labels.no_selection_label}"
 					itemValue="#{applicationScopeBean.noSelectionValue}" />
-				<f:selectItem itemLabel="#{labels.top_label}"
-					itemValue="top" />
-				<f:selectItem itemLabel="#{labels.left_label}"
-					itemValue="left" />
-				<f:selectItem itemLabel="#{labels.right_label}"
-					itemValue="right" />	
+				<f:selectItem itemLabel="#{labels.top_label}" itemValue="top" />
+				<f:selectItem itemLabel="#{labels.left_label}" itemValue="left" />
+				<f:selectItem itemLabel="#{labels.right_label}" itemValue="right" />
 				<p:ajax />
 			</p:selectOneMenu>
 			<p:tooltip rendered="#{enableTooltips}" for="tabOrientation">
@@ -239,16 +215,13 @@
 			</p:tooltip>
 		</h:panelGroup>
 		<p:message for="tabOrientation" />
-		
+
 		<h:panelGroup id="showTooltips_inherit_input">
-			<p:selectBooleanCheckbox
-				id="inherit_showTooltips"
+			<p:selectBooleanCheckbox id="inherit_showTooltips"
 				value="#{bean.inheritedPropertiesMap['showTooltips']}">
-				<p:ajax process="@this" update="showTooltips"/>
+				<p:ajax process="@this" update="showTooltips" />
 			</p:selectBooleanCheckbox>
-			<p:tooltip
-				rendered="#{enableTooltips}"
-				for="inherit_showTooltips">
+			<p:tooltip rendered="#{enableTooltips}" for="inherit_showTooltips">
 				<h:outputText
 					value="#{bean.getInheritedPropertyTooltip('showTooltips')}"
 					escape="false" />
@@ -270,13 +243,106 @@
 		</h:panelGroup>
 		<p:message for="showTooltips" />
 
+		<h:panelGroup id="dutyRosterCalendarFilters_inherit_input">
+			<p:selectBooleanCheckbox id="inherit_dutyRosterCalendarFilters"
+				value="#{bean.inheritedPropertiesMap['dutyRosterCalendarFilters']}">
+				<p:ajax process="@this" update="dutyRosterCalendarFilters" />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}"
+				for="inherit_dutyRosterCalendarFilters">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('dutyRosterCalendarFilters')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+
+		<h:outputLabel for="dutyRosterCalendarFilters"
+			value="#{userlabels.user_duty_roster_calendar_filters_label}" />
+		<h:panelGroup>
+			<p:autoComplete id="dutyRosterCalendarFilters" required="false"
+				disabled="#{bean.inheritedPropertiesMap['dutyRosterCalendarFilters']}"
+				value="#{bean.dutyRosterCalendarFilters}"
+				label="#{userlabels.user_duty_roster_calendar_filters}"
+				styleClass="ctsms-control-larger"
+				minQueryLength="#{autoCompleteMinQueryLengthCategory}"
+				maxResults="#{autoCompleteMaxResultsCategory}"
+				queryDelay="#{autoCompleteQueryDelayCategory}"
+				global="#{autoCompleteGlobalCategory}"
+				scrollHeight="#{autoCompleteScrollHeightCategory}"
+				completeMethod="#{bean.completeDutyRosterCalendar}" multiple="true"
+				var="calendar" itemValue="#{calendar}" itemLabel="#{calendar}">
+				<!-- <p:ajax
+											listener="#{bean.handleDutyRosterCalendarSelect}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											listener="#{bean.handleDutyRosterCalendarUnselect}"
+											event="itemUnselect"
+											process="@this" /> -->
+				<p:ajax event="blur" process="@this" />
+			</p:autoComplete>
+			<p:tooltip rendered="#{enableTooltips}"
+				for="dutyRosterCalendarFilters">
+				<h:outputText
+					value="#{userlabels.user_duty_roster_calendar_filters_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="dutyRosterCalendarFilters" />
+
+		<h:panelGroup id="inventoryBookingCalendarFilters_inherit_input">
+			<p:selectBooleanCheckbox id="inherit_inventoryBookingCalendarFilters"
+				value="#{bean.inheritedPropertiesMap['inventoryBookingCalendarFilters']}">
+				<p:ajax process="@this" update="inventoryBookingCalendarFilters" />
+			</p:selectBooleanCheckbox>
+			<p:tooltip rendered="#{enableTooltips}"
+				for="inherit_inventoryBookingCalendarFilters">
+				<h:outputText
+					value="#{bean.getInheritedPropertyTooltip('inventoryBookingCalendarFilters')}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+
+		<h:outputLabel for="inventoryBookingCalendarFilters"
+			value="#{userlabels.inventory_booking_calendar_filters_label}" />
+		<h:panelGroup>
+			<p:autoComplete id="inventoryBookingCalendarFilters" required="false"
+				disabled="#{bean.inheritedPropertiesMap['inventoryBookingCalendarFilters']}"
+				value="#{bean.inventoryBookingCalendarFilters}"
+				label="#{userlabels.inventory_booking_calendar_filters}"
+				styleClass="ctsms-control-larger"
+				minQueryLength="#{autoCompleteMinQueryLengthCategory}"
+				maxResults="#{autoCompleteMaxResultsCategory}"
+				queryDelay="#{autoCompleteQueryDelayCategory}"
+				global="#{autoCompleteGlobalCategory}"
+				scrollHeight="#{autoCompleteScrollHeightCategory}"
+				completeMethod="#{bean.completeInventoryBookingCalendar}"
+				multiple="true" var="calendar" itemValue="#{calendar}"
+				itemLabel="#{calendar}">
+				<!-- <p:ajax
+											listener="#{bean.handleInventoryBookingCalendarSelect}"
+											event="itemSelect"
+											process="@this" />
+										<p:ajax
+											listener="#{bean.handleInventoryBookingCalendarUnselect}"
+											event="itemUnselect"
+											process="@this" /> -->
+				<p:ajax event="blur" process="@this" />
+			</p:autoComplete>
+			<p:tooltip rendered="#{enableTooltips}"
+				for="inventoryBookingCalendarFilters">
+				<h:outputText
+					value="#{userlabels.inventory_booking_calendar_filters_tooltip}"
+					escape="false" />
+			</p:tooltip>
+		</h:panelGroup>
+		<p:message for="inventoryBookingCalendarFilters" />
 
 		<h:outputLabel />
 		<h:outputLabel value="#{userlabels.user_table_column_count_label}" />
 		<h:outputText id="user_table_column_count_message"
 			value="#{bean.tableColumnCount}" />
 		<h:outputLabel />
-
 
 	</ui:composition>
 </h:body>
