@@ -416,6 +416,28 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues[0] = "department.id";
 									parameterValues[1] = Long.toString(identity.getDepartment().getId());
 									break;
+								case IDENTITY_TRIAL_TEAM_MEMBER_ID_FILTER:
+									identity = user.getIdentity();
+									if (identity == null) {
+										throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+									}
+									write = true;
+									blankRootParameterValue = new PSFVO();
+									parameterValues = new Object[2];
+									parameterValues[0] = "members.staff.id";
+									parameterValues[1] = Long.toString(identity.getId());
+									break;
+								case IDENTITY_COURSE_LECTURER_ID_FILTER:
+									identity = user.getIdentity();
+									if (identity == null) {
+										throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+									}
+									write = true;
+									blankRootParameterValue = new PSFVO();
+									parameterValues = new Object[2];
+									parameterValues[0] = "lecturers.staff.id";
+									parameterValues[1] = Long.toString(identity.getId());
+									break;
 								case INVENTORY_HYPERLINK_ACTIVE:
 									if (HyperlinkModule.INVENTORY_HYPERLINK.equals((setterRestrictionValues.get(0)))) {
 										write = true;
