@@ -80,12 +80,12 @@ public class TimelineEventDaoImpl
 		CriteriaUtil.applyStopOptionalIntervalCriterion(timelineEventCriteria, from, to, null, true);
 		boolean distinctRoot = false;
 		if (trialId != null || departmentId != null || teamMemberStaffId != null || ignoreTimelineEvents != null) {
-			Criteria trialCriteria = timelineEventCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
+			Criteria trialCriteria = timelineEventCriteria.createCriteria("trial", "timelineEventTrial", CriteriaSpecification.INNER_JOIN);
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
 			if (departmentId != null) {
-				trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
 			}
 			if (ignoreTimelineEvents != null) {
 				trialCriteria.createCriteria("status", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));
@@ -114,12 +114,12 @@ public class TimelineEventDaoImpl
 		Criteria timelineEventCriteria = createTimelineEventCriteria();
 		CriteriaUtil.applyStopOptionalIntervalCriterion(timelineEventCriteria, from, to, null, true);
 		if (trialId != null || departmentId != null || statusId != null) {
-			Criteria trialCriteria = timelineEventCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
+			Criteria trialCriteria = timelineEventCriteria.createCriteria("trial", "timelineEventTrial", CriteriaSpecification.INNER_JOIN);
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
 			if (departmentId != null) {
-				trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
 			}
 			if (statusId != null) {
 				trialCriteria.add(Restrictions.eq("status.id", statusId.longValue()));
@@ -144,7 +144,7 @@ public class TimelineEventDaoImpl
 			timelineEventCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (departmentId != null) {
-			criteriaMap.createCriteria("trial").add(Restrictions.eq("department.id", departmentId.longValue()));
+			CriteriaUtil.applyIdentityTeamMemberCriterion(criteriaMap.createCriteria("trial", "timelineEventTrial"), Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (ignoreTimelineEvents != null) {
 			criteriaMap.createCriteria("trial.status").add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));

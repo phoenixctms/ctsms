@@ -209,13 +209,14 @@ public class DutyRosterTurnDaoImpl
 		CriteriaUtil.applyClosedIntervalCriterion(dutyRosterCriteria, from, to, null);
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
-			trialCriteria = dutyRosterCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN);
+			trialCriteria = dutyRosterCriteria.createCriteria("trial", "dutyRosterTurnTrial", CriteriaSpecification.LEFT_JOIN);
 		} else if (statusId != null || trialId != null) {
 			trialCriteria = dutyRosterCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 		}
 		if (trialDepartmentId != null || statusId != null || trialId != null) {
 			if (trialDepartmentId != null) {
-				trialCriteria.add(Restrictions.or(Restrictions.isNull("dutyRosterTurn.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
+						Restrictions.or(Restrictions.isNull("dutyRosterTurn.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 			}
 			if (statusId != null) {
 				trialCriteria.add(Restrictions.eq("status.id", statusId.longValue()));
@@ -293,13 +294,14 @@ public class DutyRosterTurnDaoImpl
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
-			trialCriteria = dutyRosterCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN);
+			trialCriteria = dutyRosterCriteria.createCriteria("trial", "dutyRosterTurnTrial", CriteriaSpecification.LEFT_JOIN);
 		} else if (trialId != null) {
 			trialCriteria = dutyRosterCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 		}
 		if (trialDepartmentId != null || trialId != null) {
 			if (trialDepartmentId != null) {
-				trialCriteria.add(Restrictions.or(Restrictions.isNull("dutyRosterTurn.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
+						Restrictions.or(Restrictions.isNull("dutyRosterTurn.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 			}
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
@@ -323,13 +325,14 @@ public class DutyRosterTurnDaoImpl
 		Criteria dutyRosterCriteria = createDutyRosterTurnCriteria("dutyRosterTurn");
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
-			trialCriteria = dutyRosterCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN);
+			trialCriteria = dutyRosterCriteria.createCriteria("trial", "dutyRosterTurnTrial", CriteriaSpecification.LEFT_JOIN);
 		} else if (trialId != null) {
 			trialCriteria = dutyRosterCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 		}
 		if (trialDepartmentId != null || trialId != null) {
 			if (trialDepartmentId != null) {
-				trialCriteria.add(Restrictions.or(Restrictions.isNull("dutyRosterTurn.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
+						Restrictions.or(Restrictions.isNull("dutyRosterTurn.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 			}
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));

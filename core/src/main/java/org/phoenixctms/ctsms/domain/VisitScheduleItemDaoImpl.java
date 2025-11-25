@@ -467,12 +467,12 @@ public class VisitScheduleItemDaoImpl
 			idCriterion = null;
 		}
 		if (trialId != null || departmentId != null) {
-			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
+			org.hibernate.Criteria trialCriteria = visitScheduleItemCriteria.createCriteria("trial", "visitScheduleItemTrial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			if (trialId != null) {
 				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.idEq(trialId.longValue()), idCriterion));
 			}
 			if (departmentId != null) {
-				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.eq("department.id", departmentId.longValue()), idCriterion));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, CriteriaUtil.applyOr(Restrictions.eq("department.id", departmentId.longValue()), idCriterion));
 			}
 		}
 		if (internal != null) {
@@ -488,12 +488,12 @@ public class VisitScheduleItemDaoImpl
 		org.hibernate.Criteria visitScheduleItemCriteria = createVisitScheduleItemCriteria("visitScheduleItem");
 		org.hibernate.Criteria trialCriteria = null;
 		if (trialId != null || departmentId != null || statusId != null) {
-			trialCriteria = visitScheduleItemCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
+			trialCriteria = visitScheduleItemCriteria.createCriteria("trial", "visitScheduleItemTrial", CriteriaSpecification.INNER_JOIN); // ? inner join because trial is never null
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
 			if (departmentId != null) {
-				trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
 			}
 			if (statusId != null) {
 				trialCriteria.add(Restrictions.eq("status.id", statusId.longValue()));

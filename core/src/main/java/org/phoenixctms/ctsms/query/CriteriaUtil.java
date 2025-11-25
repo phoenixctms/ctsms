@@ -17,14 +17,19 @@ import java.util.regex.Pattern;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
+import org.phoenixctms.ctsms.domain.LecturerImpl;
+import org.phoenixctms.ctsms.domain.Staff;
+import org.phoenixctms.ctsms.domain.TeamMemberImpl;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -121,6 +126,40 @@ public final class CriteriaUtil {
 			if (criterion != null) {
 				intervalCriteria.add(criterion);
 			}
+		}
+	}
+
+	public static void applyIdentityTeamMemberCriterion(Criteria trialCriteria, org.hibernate.criterion.Criterion or) {
+		Staff identity = CoreUtil.getUser().getIdentity();
+		if (identity != null) {
+			DetachedCriteria subQuery = DetachedCriteria.forClass(TeamMemberImpl.class); // IMPL!!!!
+			subQuery.add(Restrictions.eq("staff.id", identity.getId().longValue()));
+			subQuery.add(Restrictions.eqProperty("trial.id", trialCriteria.getAlias() + ".id"));
+			subQuery.setProjection(Projections.id());
+			if (or != null) {
+				trialCriteria.add(Restrictions.or(or, Subqueries.exists(subQuery)));
+			} else {
+				trialCriteria.add(Subqueries.exists(subQuery));
+			}
+		} else if (or != null) {
+			trialCriteria.add(or);
+		}
+	}
+
+	public static void applyIdentityLecturerCriterion(Criteria courseCriteria, org.hibernate.criterion.Criterion or) {
+		Staff identity = CoreUtil.getUser().getIdentity();
+		if (identity != null) {
+			DetachedCriteria subQuery = DetachedCriteria.forClass(LecturerImpl.class); // IMPL!!!!
+			subQuery.add(Restrictions.eq("staff.id", identity.getId().longValue()));
+			subQuery.add(Restrictions.eqProperty("course.id", courseCriteria.getAlias() + ".id"));
+			subQuery.setProjection(Projections.id());
+			if (or != null) {
+				courseCriteria.add(Restrictions.or(or, Subqueries.exists(subQuery)));
+			} else {
+				courseCriteria.add(Subqueries.exists(subQuery));
+			}
+		} else if (or != null) {
+			courseCriteria.add(or);
 		}
 	}
 
