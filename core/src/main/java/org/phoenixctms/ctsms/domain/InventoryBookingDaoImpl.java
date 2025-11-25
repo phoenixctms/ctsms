@@ -89,7 +89,7 @@ public class InventoryBookingDaoImpl
 		}
 		if (courseDepartmentId != null) {
 			CriteriaUtil.applyIdentityLecturerCriterion(bookingCriteria.createCriteria("course", "inventoryCourse", CriteriaSpecification.LEFT_JOIN),
-					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", courseDepartmentId.longValue())));
 		}
 		if (trialDepartmentId != null) {
 			CriteriaUtil.applyIdentityTeamMemberCriterion(bookingCriteria.createCriteria("trial", "inventoryTrial", CriteriaSpecification.LEFT_JOIN),
