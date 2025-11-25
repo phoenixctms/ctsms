@@ -262,10 +262,10 @@ public class CourseDaoImpl
 	protected Collection<Course> handleFindByDepartmentCategoryInterval(
 			Long departmentId, Long courseCategoryId, Timestamp from, Timestamp to)
 			throws Exception {
-		org.hibernate.Criteria courseCriteria = createCourseCriteria(null);
+		org.hibernate.Criteria courseCriteria = createCourseCriteria("course");
 		CriteriaUtil.applyStartOptionalIntervalCriterion(courseCriteria, from, to, null, true);
 		if (departmentId != null) {
-			courseCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+			CriteriaUtil.applyIdentityLecturerCriterion(courseCriteria, Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (courseCategoryId != null) {
 			courseCriteria.add(Restrictions.eq("category.id", courseCategoryId.longValue()));

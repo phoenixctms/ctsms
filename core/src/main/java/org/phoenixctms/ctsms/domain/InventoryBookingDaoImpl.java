@@ -88,11 +88,11 @@ public class InventoryBookingDaoImpl
 					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", probandDepartmentId.longValue())));
 		}
 		if (courseDepartmentId != null) {
-			bookingCriteria.createCriteria("course", CriteriaSpecification.LEFT_JOIN).add(
-					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", courseDepartmentId.longValue())));
+			CriteriaUtil.applyIdentityLecturerCriterion(bookingCriteria.createCriteria("course", "inventoryCourse", CriteriaSpecification.LEFT_JOIN),
+					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 		}
 		if (trialDepartmentId != null) {
-			bookingCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN).add(
+			CriteriaUtil.applyIdentityTeamMemberCriterion(bookingCriteria.createCriteria("trial", "inventoryTrial", CriteriaSpecification.LEFT_JOIN),
 					Restrictions.or(Restrictions.isNull("department.id"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 		}
 		applyIncludeAppointmentsCriterion(bookingCriteria, isProbandAppointment, "proband.id", isRelevantForProbandAppointments, "relevantForProbandAppointments");
@@ -146,7 +146,8 @@ public class InventoryBookingDaoImpl
 		if (courseCategoryId != null || courseDepartmentId != null || staffId != null) {
 			Criteria courseCriteria = bookingCriteria.createCriteria("course", CriteriaSpecification.INNER_JOIN);
 			if (courseDepartmentId != null) {
-				courseCriteria.add(Restrictions.eq("department.id", courseDepartmentId.longValue()));
+				CriteriaUtil.applyIdentityLecturerCriterion(bookingCriteria.createCriteria("course", "inventoryCourse", CriteriaSpecification.LEFT_JOIN),
+						Restrictions.eq("department.id", courseDepartmentId.longValue()));
 			}
 			if (courseCategoryId != null) {
 				courseCriteria.add(Restrictions.eq("category.id", courseCategoryId.longValue()));
@@ -179,8 +180,8 @@ public class InventoryBookingDaoImpl
 		if (trialId != null) {
 			bookingCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		} else if (trialDepartmentId != null) {
-			Criteria trialCriteria = bookingCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
-			trialCriteria.add(Restrictions.eq("department.id", trialDepartmentId.longValue()));
+			CriteriaUtil.applyIdentityTeamMemberCriterion(bookingCriteria.createCriteria("trial", "inventoryTrial", CriteriaSpecification.LEFT_JOIN),
+					Restrictions.eq("department.id", trialDepartmentId.longValue()));
 		} else {
 			bookingCriteria.add(Restrictions.isNotNull("trial"));
 		}

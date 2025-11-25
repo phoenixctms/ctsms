@@ -72,10 +72,10 @@ public class TrialDaoImpl
 
 	@Override
 	protected Collection<Trial> handleFindByDepartmentPayoffs(Long departmentId, Boolean payoffs, PSFVO psf) throws Exception {
-		org.hibernate.Criteria trialCriteria = createTrialCriteria(null);
+		org.hibernate.Criteria trialCriteria = createTrialCriteria("trial");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Trial.class, trialCriteria);
 		if (departmentId != null) {
-			trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+			CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (payoffs != null) {
 			if (payoffs) {
@@ -104,7 +104,7 @@ public class TrialDaoImpl
 		org.hibernate.Criteria trialCriteria = createTrialCriteria("trial0");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(Trial.class, trialCriteria);
 		if (departmentId != null) {
-			trialCriteria.add(Restrictions.eq("department.id", departmentId.longValue()));
+			CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		DetachedCriteria subQuery = DetachedCriteria.forClass(ECRFImpl.class, "ecrf"); // IMPL!!!!
 		subQuery.setProjection(Projections.id());

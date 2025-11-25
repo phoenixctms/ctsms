@@ -99,7 +99,7 @@ public class MoneyTransferDaoImpl
 			Long probandId) {
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
-			trialCriteria = moneyTransferCriteria.createCriteria("trial", CriteriaSpecification.LEFT_JOIN);
+			trialCriteria = moneyTransferCriteria.createCriteria("trial", "moneyTransferTrial", CriteriaSpecification.LEFT_JOIN);
 		} else if (trialId != null) {
 			trialCriteria = moneyTransferCriteria.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 		}
@@ -119,7 +119,8 @@ public class MoneyTransferDaoImpl
 		}
 		if (trialDepartmentId != null || trialId != null) {
 			if (trialDepartmentId != null) {
-				trialCriteria.add(Restrictions.or(Restrictions.isNull("moneyTransfer.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
+						Restrictions.or(Restrictions.isNull("moneyTransfer.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 			}
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
@@ -165,7 +166,7 @@ public class MoneyTransferDaoImpl
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(MoneyTransfer.class, moneyTransferCriteria);
 		Criteria trialCriteria = null;
 		if (trialDepartmentId != null) {
-			trialCriteria = criteriaMap.createCriteria("trial", CriteriaSpecification.LEFT_JOIN);
+			trialCriteria = criteriaMap.createCriteria("trial", "moneyTransferTrial", CriteriaSpecification.LEFT_JOIN);
 		} else if (trialId != null) {
 			trialCriteria = criteriaMap.createCriteria("trial", CriteriaSpecification.INNER_JOIN);
 		}
@@ -183,7 +184,8 @@ public class MoneyTransferDaoImpl
 		}
 		if (trialDepartmentId != null || trialId != null) {
 			if (trialDepartmentId != null) {
-				trialCriteria.add(Restrictions.or(Restrictions.isNull("moneyTransfer.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
+						Restrictions.or(Restrictions.isNull("moneyTransfer.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
 			}
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
