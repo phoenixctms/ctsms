@@ -145,6 +145,7 @@ public final class CriteriaUtil {
 			DetachedCriteria subQuery = DetachedCriteria.forClass(TeamMemberImpl.class); // IMPL!!!!
 			subQuery.add(Restrictions.eq("staff.id", identity.getId().longValue()));
 			subQuery.add(Restrictions.eqProperty("trial.id", trialCriteria.getAlias() + ".id"));
+			subQuery.add(Restrictions.eq("access", true));
 			subQuery.setProjection(Projections.id());
 			if (trialDepartmentCriterion != null && !ServiceUtil.hasInheritedPermissionProfile(
 					CoreUtil.getUser(),
