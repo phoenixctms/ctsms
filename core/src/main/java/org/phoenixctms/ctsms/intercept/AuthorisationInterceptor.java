@@ -375,6 +375,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 						if (setter.isValid() && argIndexMap.containsKey(setter.getRootEntityName())) {
 							Object blankRootParameterValue = null;
 							Object[] parameterValues = null;
+							ArrayList<Object[]> invocationParameterValues = new ArrayList<Object[]>();
 							boolean write = false;
 							Staff identity;
 							switch (override) {
@@ -385,6 +386,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									write = true;
 									parameterValues = new Object[1];
 									parameterValues[0] = user.getDepartment().getId();
+									invocationParameterValues.add(parameterValues);
 									break;
 								case IDENTITY_DEPARTMENT_ID:
 									identity = user.getIdentity();
@@ -394,6 +396,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									write = true;
 									parameterValues = new Object[1];
 									parameterValues[0] = identity.getDepartment().getId();
+									invocationParameterValues.add(parameterValues);
 									break;
 								case ANY_DEPARTMENT_ID_FILTER:
 									write = false;
@@ -404,6 +407,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues = new Object[2];
 									parameterValues[0] = "department.id";
 									parameterValues[1] = Long.toString(user.getDepartment().getId());
+									invocationParameterValues.add(parameterValues);
 									break;
 								case IDENTITY_DEPARTMENT_ID_FILTER:
 									identity = user.getIdentity();
@@ -415,6 +419,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues = new Object[2];
 									parameterValues[0] = "department.id";
 									parameterValues[1] = Long.toString(identity.getDepartment().getId());
+									invocationParameterValues.add(parameterValues);
 									break;
 								case IDENTITY_TRIAL_TEAM_MEMBER_ID_FILTER:
 									identity = user.getIdentity();
@@ -426,6 +431,11 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues = new Object[2];
 									parameterValues[0] = "members.staff.id";
 									parameterValues[1] = Long.toString(identity.getId());
+									invocationParameterValues.add(parameterValues);
+									parameterValues = new Object[2];
+									parameterValues[0] = "members.access";
+									parameterValues[1] = Boolean.toString(true);
+									invocationParameterValues.add(parameterValues);
 									break;
 								case IDENTITY_COURSE_LECTURER_ID_FILTER:
 									identity = user.getIdentity();
@@ -437,12 +447,14 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									parameterValues = new Object[2];
 									parameterValues[0] = "lecturers.staff.id";
 									parameterValues[1] = Long.toString(identity.getId());
+									invocationParameterValues.add(parameterValues);
 									break;
 								case INVENTORY_HYPERLINK_ACTIVE:
 									if (HyperlinkModule.INVENTORY_HYPERLINK.equals((setterRestrictionValues.get(0)))) {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -452,6 +464,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -461,6 +474,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -470,6 +484,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -479,6 +494,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -488,6 +504,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -497,6 +514,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -506,6 +524,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -515,6 +534,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -524,6 +544,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 										write = true;
 										parameterValues = new Object[1];
 										parameterValues[0] = true;
+										invocationParameterValues.add(parameterValues);
 									} else {
 										write = false;
 									}
@@ -533,16 +554,19 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 											DefaultMessages.UNSUPPORTED_SERVICE_METHOD_PARAMETER_OVERRIDE, new Object[] { override.name() }));
 							}
 							if (write) {
-								if (setter.getPathDepth() > 0) {
+								if (setter.getPathDepth() > 0) { // eg. psf.getFilters.put
 									Object rootParameterValue = getArgument(setter.getRootEntityName(), argIndexMap, args);
 									if (rootParameterValue == null) {
 										rootParameterValue = blankRootParameterValue;
 										setArgument(setter.getRootEntityName(), argIndexMap, args, rootParameterValue);
 									}
 									setter.dropFirstPathElement();
-									setter.invoke(rootParameterValue, false, parameterValues);
-								} else {
-									setArgument(setter.getRootEntityName(), argIndexMap, args, parameterValues[0]);
+									Iterator<Object[]> it = invocationParameterValues.iterator();
+									while (it.hasNext()) {
+										setter.invoke(rootParameterValue, false, it.next());
+									}
+								} else { // eg. departmentId
+									setArgument(setter.getRootEntityName(), argIndexMap, args, invocationParameterValues.iterator().next()[0]);
 								}
 							}
 						}
