@@ -94,7 +94,7 @@ public class MoneyTransferDaoImpl
 		}
 	}
 
-	private static void applyCostTypeCriterions(org.hibernate.Criteria moneyTransferCriteria,
+	private void applyCostTypeCriterions(org.hibernate.Criteria moneyTransferCriteria,
 			Long trialDepartmentId, Long trialId, Long probandDepartmentId,
 			Long probandId) {
 		Criteria trialCriteria = null;
@@ -120,7 +120,9 @@ public class MoneyTransferDaoImpl
 		if (trialDepartmentId != null || trialId != null) {
 			if (trialDepartmentId != null) {
 				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
-						Restrictions.or(Restrictions.isNull("moneyTransfer.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+						Restrictions.eq("department.id", trialDepartmentId.longValue()),
+						Restrictions.isNull("moneyTransfer.trial"),
+						this.getUserPermissionProfileDao());
 			}
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
@@ -185,7 +187,9 @@ public class MoneyTransferDaoImpl
 		if (trialDepartmentId != null || trialId != null) {
 			if (trialDepartmentId != null) {
 				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria,
-						Restrictions.or(Restrictions.isNull("moneyTransfer.trial"), Restrictions.eq("department.id", trialDepartmentId.longValue())));
+						Restrictions.eq("department.id", trialDepartmentId.longValue()),
+						Restrictions.isNull("moneyTransfer.trial"),
+						this.getUserPermissionProfileDao());
 			}
 			if (trialId != null) {
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));

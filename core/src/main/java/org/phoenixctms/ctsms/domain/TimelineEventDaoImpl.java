@@ -85,7 +85,7 @@ public class TimelineEventDaoImpl
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
 			if (departmentId != null) {
-				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()), this.getUserPermissionProfileDao());
 			}
 			if (ignoreTimelineEvents != null) {
 				trialCriteria.createCriteria("status", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));
@@ -119,7 +119,7 @@ public class TimelineEventDaoImpl
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
 			if (departmentId != null) {
-				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()), this.getUserPermissionProfileDao());
 			}
 			if (statusId != null) {
 				trialCriteria.add(Restrictions.eq("status.id", statusId.longValue()));
@@ -144,7 +144,8 @@ public class TimelineEventDaoImpl
 			timelineEventCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (departmentId != null) {
-			CriteriaUtil.applyIdentityTeamMemberCriterion(criteriaMap.createCriteria("trial", "timelineEventTrial"), Restrictions.eq("department.id", departmentId.longValue()));
+			CriteriaUtil.applyIdentityTeamMemberCriterion(criteriaMap.createCriteria("trial", "timelineEventTrial"), Restrictions.eq("department.id", departmentId.longValue()),
+					this.getUserPermissionProfileDao());
 		}
 		if (ignoreTimelineEvents != null) {
 			criteriaMap.createCriteria("trial.status").add(Restrictions.eq("ignoreTimelineEvents", ignoreTimelineEvents.booleanValue()));

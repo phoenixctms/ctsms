@@ -472,7 +472,8 @@ public class VisitScheduleItemDaoImpl
 				trialCriteria.add(CriteriaUtil.applyOr(Restrictions.idEq(trialId.longValue()), idCriterion));
 			}
 			if (departmentId != null) {
-				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, CriteriaUtil.applyOr(Restrictions.eq("department.id", departmentId.longValue()), idCriterion));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()), idCriterion,
+						this.getUserPermissionProfileDao());
 			}
 		}
 		if (internal != null) {
@@ -493,7 +494,7 @@ public class VisitScheduleItemDaoImpl
 				trialCriteria.add(Restrictions.idEq(trialId.longValue()));
 			}
 			if (departmentId != null) {
-				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()));
+				CriteriaUtil.applyIdentityTeamMemberCriterion(trialCriteria, Restrictions.eq("department.id", departmentId.longValue()), this.getUserPermissionProfileDao());
 			}
 			if (statusId != null) {
 				trialCriteria.add(Restrictions.eq("status.id", statusId.longValue()));
