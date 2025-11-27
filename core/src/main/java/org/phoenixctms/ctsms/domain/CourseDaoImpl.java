@@ -265,7 +265,7 @@ public class CourseDaoImpl
 		org.hibernate.Criteria courseCriteria = createCourseCriteria("course");
 		CriteriaUtil.applyStartOptionalIntervalCriterion(courseCriteria, from, to, null, true);
 		if (departmentId != null) {
-			CriteriaUtil.applyIdentityLecturerCriterion(courseCriteria, Restrictions.eq("department.id", departmentId.longValue()));
+			CriteriaUtil.applyIdentityLecturerCriterion(courseCriteria, Restrictions.eq("department.id", departmentId.longValue()), this.getUserPermissionProfileDao());
 		}
 		if (courseCategoryId != null) {
 			courseCriteria.add(Restrictions.eq("category.id", courseCategoryId.longValue()));

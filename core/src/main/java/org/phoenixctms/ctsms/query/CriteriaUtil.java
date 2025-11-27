@@ -30,6 +30,7 @@ import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.domain.LecturerImpl;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.TeamMemberImpl;
+import org.phoenixctms.ctsms.domain.UserPermissionProfileDao;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -40,6 +41,8 @@ import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -51,6 +54,7 @@ import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
+import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.PSFVO;
 
@@ -129,37 +133,61 @@ public final class CriteriaUtil {
 		}
 	}
 
-	public static void applyIdentityTeamMemberCriterion(Criteria trialCriteria, org.hibernate.criterion.Criterion or) {
-		Staff identity = CoreUtil.getUser().getIdentity();
+	public static void applyIdentityTeamMemberCriterion(Criteria trialCriteria, org.hibernate.criterion.Criterion trialDepartmentCriterion,
+			UserPermissionProfileDao userPermissionProfileDao) {
+		applyIdentityTeamMemberCriterion(trialCriteria, trialDepartmentCriterion, null, userPermissionProfileDao);
+	}
+
+	public static void applyIdentityTeamMemberCriterion(Criteria trialCriteria, org.hibernate.criterion.Criterion trialDepartmentCriterion, org.hibernate.criterion.Criterion or,
+			UserPermissionProfileDao userPermissionProfileDao) {
+		Staff identity = CoreUtil.getUser() != null ? CoreUtil.getUser().getIdentity() : null;
 		if (identity != null) {
 			DetachedCriteria subQuery = DetachedCriteria.forClass(TeamMemberImpl.class); // IMPL!!!!
 			subQuery.add(Restrictions.eq("staff.id", identity.getId().longValue()));
 			subQuery.add(Restrictions.eqProperty("trial.id", trialCriteria.getAlias() + ".id"));
 			subQuery.setProjection(Projections.id());
-			if (or != null) {
-				trialCriteria.add(Restrictions.or(or, Subqueries.exists(subQuery)));
+			if (trialDepartmentCriterion != null && !ServiceUtil.hasInheritedPermissionProfile(
+					CoreUtil.getUser(),
+					PermissionProfileGroup.TRIAL,
+					userPermissionProfileDao,
+					PermissionProfile.TRIAL_DETAIL_TEAM_MEMBER,
+					PermissionProfile.TRIAL_MASTER_TEAM_MEMBER,
+					PermissionProfile.TRIAL_VIEW_TEAM_MEMBER)) {
+				trialCriteria.add(Restrictions.or(trialDepartmentCriterion, or != null ? Restrictions.or(or, Subqueries.exists(subQuery)) : Subqueries.exists(subQuery)));
 			} else {
-				trialCriteria.add(Subqueries.exists(subQuery));
+				trialCriteria.add(or != null ? Restrictions.or(or, Subqueries.exists(subQuery)) : Subqueries.exists(subQuery));
 			}
-		} else if (or != null) {
-			trialCriteria.add(or);
+		} else if (trialDepartmentCriterion != null) {
+			trialCriteria.add(or != null ? Restrictions.or(trialDepartmentCriterion, or) : trialDepartmentCriterion);
 		}
 	}
 
-	public static void applyIdentityLecturerCriterion(Criteria courseCriteria, org.hibernate.criterion.Criterion or) {
+	public static void applyIdentityLecturerCriterion(Criteria courseCriteria, org.hibernate.criterion.Criterion courseDepartmentCriterion,
+			UserPermissionProfileDao userPermissionProfileDao) {
+		applyIdentityLecturerCriterion(courseCriteria, courseDepartmentCriterion, null, userPermissionProfileDao);
+	}
+
+	public static void applyIdentityLecturerCriterion(Criteria courseCriteria, org.hibernate.criterion.Criterion courseDepartmentCriterion, org.hibernate.criterion.Criterion or,
+			UserPermissionProfileDao userPermissionProfileDao) {
 		Staff identity = CoreUtil.getUser().getIdentity();
 		if (identity != null) {
 			DetachedCriteria subQuery = DetachedCriteria.forClass(LecturerImpl.class); // IMPL!!!!
 			subQuery.add(Restrictions.eq("staff.id", identity.getId().longValue()));
 			subQuery.add(Restrictions.eqProperty("course.id", courseCriteria.getAlias() + ".id"));
 			subQuery.setProjection(Projections.id());
-			if (or != null) {
-				courseCriteria.add(Restrictions.or(or, Subqueries.exists(subQuery)));
+			if (courseDepartmentCriterion != null && !ServiceUtil.hasInheritedPermissionProfile(
+					CoreUtil.getUser(),
+					PermissionProfileGroup.COURSE,
+					userPermissionProfileDao,
+					PermissionProfile.COURSE_DETAIL_LECTURER,
+					PermissionProfile.COURSE_MASTER_LECTURER,
+					PermissionProfile.COURSE_VIEW_LECTURER)) {
+				courseCriteria.add(Restrictions.or(courseDepartmentCriterion, or != null ? Restrictions.or(or, Subqueries.exists(subQuery)) : Subqueries.exists(subQuery)));
 			} else {
-				courseCriteria.add(Subqueries.exists(subQuery));
+				courseCriteria.add(or != null ? Restrictions.or(or, Subqueries.exists(subQuery)) : Subqueries.exists(subQuery));
 			}
-		} else if (or != null) {
-			courseCriteria.add(or);
+		} else if (courseDepartmentCriterion != null) {
+			courseCriteria.add(or != null ? Restrictions.or(courseDepartmentCriterion, or) : courseDepartmentCriterion);
 		}
 	}
 
