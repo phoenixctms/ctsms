@@ -170,7 +170,7 @@ public final class CriteriaUtil {
 
 	public static void applyIdentityLecturerCriterion(Criteria courseCriteria, org.hibernate.criterion.Criterion courseDepartmentCriterion, org.hibernate.criterion.Criterion or,
 			UserPermissionProfileDao userPermissionProfileDao) {
-		Staff identity = CoreUtil.getUser().getIdentity();
+		Staff identity = CoreUtil.getUser() != null ? CoreUtil.getUser().getIdentity() : null;
 		if (identity != null) {
 			DetachedCriteria subQuery = DetachedCriteria.forClass(LecturerImpl.class); // IMPL!!!!
 			subQuery.add(Restrictions.eq("staff.id", identity.getId().longValue()));
