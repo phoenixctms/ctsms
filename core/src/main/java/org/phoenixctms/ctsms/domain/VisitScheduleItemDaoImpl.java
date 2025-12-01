@@ -215,7 +215,6 @@ public class VisitScheduleItemDaoImpl
 			junction.add(
 					Restrictions.and(Restrictions.eq("mode", VisitScheduleDateMode.TAG_DURATION), Restrictions.and(Restrictions.sqlRestriction("(" + tagStartSql + ") is not null"),
 							CriteriaUtil.getClosedIntervalCriterion(from, to, null, tagStartOffsetSql, durationStopOffsetSql))));
-			visitScheduleItemCriteria.add(junction);
 		} else {
 			junction.add(Restrictions.eq("mode", VisitScheduleDateMode.STATIC));
 			junction.add(Restrictions.and(Restrictions.eq("mode", VisitScheduleDateMode.TAGS), Restrictions.sqlRestriction("(" + tagStartSql + ") < (" + tagStopSql + ")")));
