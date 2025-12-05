@@ -53,34 +53,3 @@ Build and Install
    ```bash
    sudo -u ctsms /ctsms/dbtool.sh --load_demo_data
    ```
-
-Eclipse IDE
------
-The following was tested on a vanilla Windows 10 VM.
-
-1. Prerequisites:
-* download and install a recent Java JDK (eg. Oracle JDK1.8.0 u201 64bit)
-* download and install git
-* download a recent Apache Maven (eg. apache-maven-3.6.0-bin.zip, extract to C:\apache-maven-3.6.0)
-
-2. Setup environment variables:
-- add C:\Program Files\Java\jdk1.8.0_201\bin and C:\apache-maven-3.6.0\bin to "Path" variable
-- add new environment variable "JAVA_HOME" and set it to C:\Program Files\Java\jdk1.8.0_201
-
-3. Clone the Phoenix CTMS java webapp source code:
-* create folder C:\workspaces
-* open Command Prompt, change to C:\workspaces and run
-```
-git clone https://github.com/phoenixctms/ctsms.git
-```
-* change to C:\workspaces\ctsms and run
-```
-mvn install -DskipTests
-```
-
-4. Eclipse IDE:
-* download and run Eclipse Installer (eg. 2020-06), choose flavour "Eclipse IDE for Java EE Developers"
-* launch Eclipse IDE and select workspace C:\workspaces
-* goto Window -> Preferences -> Installed JRE and add and select __JDK__ -JRE (=JAVA_HOME)
-* goto File -> Import... -> Maven -> Existing Maven Project select C:\workspaces\ctsms folder and press "Finish"
-* done. you can now start debugging, ie. select DBTool.java and goto Run -> Debug
