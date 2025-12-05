@@ -48,7 +48,7 @@ import org.apache.tika.detect.DefaultDetector;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.io.TikaInputStream;
 import org.apache.tika.metadata.Metadata;
-import org.apache.tika.metadata.TikaMetadataKeys;
+import org.apache.tika.metadata.TikaMimeKeys;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -311,7 +311,7 @@ public final class CommonUtil {
 	public static String getMimeType(byte[] data, String fileName) throws Throwable {
 		TikaInputStream tikaStream = null;
 		Metadata metadata = new Metadata();
-		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, fileName);
+		metadata.add(TikaMimeKeys.TIKA_MIME_FILE, fileName);
 		try {
 			tikaStream = TikaInputStream.get(data, metadata);
 			return MIME_DETECTOR.detect(tikaStream, metadata).toString();
@@ -330,7 +330,7 @@ public final class CommonUtil {
 	public static String getMimeType(File file) throws Throwable {
 		TikaInputStream tikaStream = null;
 		Metadata metadata = new Metadata();
-		metadata.add(TikaMetadataKeys.RESOURCE_NAME_KEY, file.getName());
+		metadata.add(TikaMimeKeys.TIKA_MIME_FILE, file.getName());
 		try {
 			tikaStream = TikaInputStream.get(file, metadata);
 			return MIME_DETECTOR.detect(tikaStream, metadata).toString();
