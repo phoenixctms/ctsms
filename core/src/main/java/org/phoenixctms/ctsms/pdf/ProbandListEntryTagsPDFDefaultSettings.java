@@ -42,7 +42,7 @@ public final class ProbandListEntryTagsPDFDefaultSettings {
 	public final static String DATE_VALUE_PATTERN = "yyyy/MM/dd";
 	public final static String TIMESTAMP_VALUE_PATTERN = "yyyy/MM/dd HH:mm";
 	public final static String TIME_VALUE_PATTERN = "HH:mm";
-	public final static String FLOAT_VALUE_PATTERN = "#.#######";
+	public final static String FLOAT_VALUE_PATTERN = "#.######";
 	public final static String INTEGER_VALUE_PATTERN = "######";
 	public final static String DECIMAL_SEPARATOR = null;
 	public static final int SELECTION_ITEM_IMAGE_QUALITY = 100;
