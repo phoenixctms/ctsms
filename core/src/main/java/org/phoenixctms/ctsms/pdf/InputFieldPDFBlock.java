@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.pdf;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -485,7 +486,7 @@ public abstract class InputFieldPDFBlock {
 				value = getFloatValue(blank);
 				numberFormat = getFloatValueFormat();
 				if (value != null) {
-					string = numberFormat.format(value);
+					string = numberFormat.format(new BigDecimal(value.toString()));
 				} else {
 					string = (isShowPresetValues() ? getFloatValueFormatPattern() : null);
 					isPresetColor = true;
