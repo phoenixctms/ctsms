@@ -119,8 +119,18 @@ public class ECRFFieldValueDaoImpl
 			ecrfFieldCriteria.createCriteria("field", "inputField0");
 			Junction junction = Restrictions.disjunction();
 			junction.add(Restrictions.ilike("titleL10nKey", fieldQuery, MatchMode.ANYWHERE));
-			junction.add(Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE));
-			junction.add(Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.ilike("externalId", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.and(
+					Restrictions.and(
+							Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+							Restrictions.or(Restrictions.eq("inputField0.externalId", ""), Restrictions.isNull("inputField0.externalId"))),
+					Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("titleL10nKey", ""), Restrictions.isNull("titleL10nKey")),
+					Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+					Restrictions.ilike("inputField0.externalId", fieldQuery, MatchMode.ANYWHERE)));
 			ecrfFieldCriteria.add(junction);
 		}
 	}
