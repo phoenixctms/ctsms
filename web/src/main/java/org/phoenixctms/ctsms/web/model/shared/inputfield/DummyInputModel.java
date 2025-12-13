@@ -183,11 +183,10 @@ public final class DummyInputModel extends InputModel {
 	public Date getTimeValue() {
 		return inputFieldValue == null ? null : inputFieldValue.getTimeValue();
 	}
-
-	@Override
-	public String getUniqueName() {
-		return super.getName();
-	}
+	//	@Override
+	//	public String getUniqueName() {
+	//		return super.getName();
+	//	}
 
 	@Override
 	public String getValueString() {
@@ -390,6 +389,11 @@ public final class DummyInputModel extends InputModel {
 
 	@Override
 	protected String getInputTitle() {
+		return null;
+	}
+
+	@Override
+	protected String getInputExternalId() {
 		return null;
 	}
 }

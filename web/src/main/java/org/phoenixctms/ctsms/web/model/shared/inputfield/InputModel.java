@@ -227,6 +227,17 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		}
 	}
 
+	protected abstract String getInputExternalId();
+
+	public String getName() {
+		String externalId = getInputExternalId();
+		if (CommonUtil.isEmptyString(externalId)) {
+			return super.getName();
+		} else {
+			return externalId;
+		}
+	}
+
 	public abstract Long getLongValue();
 
 	public abstract String getModifiedAnnotation();
@@ -345,8 +356,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		}
 		return "";
 	}
-
-	public abstract String getUniqueName();
+	//public abstract String getUniqueName();
 
 	public abstract String getValueString();
 

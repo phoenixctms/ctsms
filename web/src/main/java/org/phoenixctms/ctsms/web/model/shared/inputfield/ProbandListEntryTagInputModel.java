@@ -182,9 +182,9 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 	public String getName() {
 		if (tagValue != null && tag != null && inputField != null) {
 			if (tagValue.getId() != null) {
-				return Messages.getMessage(MessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_INPUT_TITLE, Long.toString(tag.getPosition()), inputField.getName(), getValueString());
+				return Messages.getMessage(MessageCodes.PROBAND_LIST_ENTRY_TAG_VALUE_INPUT_TITLE, Long.toString(tag.getPosition()), super.getName(), getValueString());
 			} else {
-				return Messages.getMessage(MessageCodes.NEW_PROBAND_LIST_ENTRY_TAG_VALUE_INPUT_TITLE, Long.toString(tag.getPosition()), inputField.getName());
+				return Messages.getMessage(MessageCodes.NEW_PROBAND_LIST_ENTRY_TAG_VALUE_INPUT_TITLE, Long.toString(tag.getPosition()), super.getName());
 			}
 		}
 		return null;
@@ -271,14 +271,13 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 	public Date getTimeValue() {
 		return tagValue == null ? null : tagValue.getTimeValue();
 	}
-
-	@Override
-	public String getUniqueName() {
-		if (tag != null) {
-			return tag.getUniqueName();
-		}
-		return null;
-	}
+	//	@Override
+	//	public String getUniqueName() {
+	//		if (tag != null) {
+	//			return tag.getUniqueName();
+	//		}
+	//		return null;
+	//	}
 
 	@Override
 	public String getValueString() {
@@ -546,6 +545,14 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 	protected String getInputTitle() {
 		if (tag != null) {
 			return tag.getTitle();
+		}
+		return null;
+	}
+
+	@Override
+	protected String getInputExternalId() {
+		if (tag != null) {
+			return tag.getExternalId();
 		}
 		return null;
 	}

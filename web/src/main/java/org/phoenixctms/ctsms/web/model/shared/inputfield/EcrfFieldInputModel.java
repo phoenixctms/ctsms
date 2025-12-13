@@ -168,9 +168,9 @@ public class EcrfFieldInputModel extends InputModel {
 	public String getName() {
 		if (ecrfFieldValue != null && ecrfField != null && inputField != null) {
 			if (ecrfFieldValue.getId() != null) {
-				return Messages.getMessage(MessageCodes.ECRF_FIELD_VALUE_INPUT_TITLE, Long.toString(ecrfField.getPosition()), inputField.getName(), getValueString());
+				return Messages.getMessage(MessageCodes.ECRF_FIELD_VALUE_INPUT_TITLE, Long.toString(ecrfField.getPosition()), super.getName(), getValueString());
 			} else {
-				return Messages.getMessage(MessageCodes.NEW_ECRF_FIELD_VALUE_INPUT_TITLE, Long.toString(ecrfField.getPosition()), inputField.getName());
+				return Messages.getMessage(MessageCodes.NEW_ECRF_FIELD_VALUE_INPUT_TITLE, Long.toString(ecrfField.getPosition()), super.getName());
 			}
 		}
 		return null;
@@ -254,14 +254,13 @@ public class EcrfFieldInputModel extends InputModel {
 	public Date getTimeValue() {
 		return ecrfFieldValue == null ? null : ecrfFieldValue.getTimeValue();
 	}
-
-	@Override
-	public String getUniqueName() {
-		if (ecrfField != null) {
-			return ecrfField.getUniqueName();
-		}
-		return null;
-	}
+	//	@Override
+	//	public String getUniqueName() {
+	//		if (ecrfField != null) {
+	//			return ecrfField.getUniqueName();
+	//		}
+	//		return null;
+	//	}
 
 	@Override
 	public String getValueString() {
@@ -641,6 +640,14 @@ public class EcrfFieldInputModel extends InputModel {
 	protected String getInputTitle() {
 		if (ecrfField != null) {
 			return ecrfField.getTitle();
+		}
+		return null;
+	}
+
+	@Override
+	protected String getInputExternalId() {
+		if (ecrfField != null) {
+			return ecrfField.getExternalId();
 		}
 		return null;
 	}
