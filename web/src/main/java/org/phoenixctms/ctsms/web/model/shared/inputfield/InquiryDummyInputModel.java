@@ -4,7 +4,6 @@ import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
-import org.phoenixctms.ctsms.web.util.Messages;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
@@ -27,15 +26,7 @@ public class InquiryDummyInputModel extends InquiryInputModel {
 
 	@Override
 	public String getName() {
-		if (inquiryValue != null && inquiry != null && inputField != null) {
-			String valueString = getValueString();
-			if (valueString != null && valueString.length() > 0) {
-				return Messages.getMessage(MessageCodes.INQUIRY_VALUE_INPUT_TITLE, Long.toString(inquiry.getPosition()), inputField.getName(), valueString);
-			} else {
-				return Messages.getMessage(MessageCodes.DUMMY_INQUIRY_VALUE_INPUT_TITLE, Long.toString(inquiry.getPosition()), inputField.getName());
-			}
-		}
-		return null;
+		return super.getName(MessageCodes.DUMMY_INQUIRY_VALUE_INPUT_TITLE);
 	}
 
 	@Override

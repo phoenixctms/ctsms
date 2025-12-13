@@ -11,6 +11,8 @@ public abstract class InputFieldConfig {
 	public abstract String getFieldComment();
 
 	public abstract String getName();
+	
+	//protected abstract String getExternalId();
 
 	public abstract String getTitle();
 

@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.web.model.shared.inputfield;
 
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
 
 public final class InputFieldInVOConfig extends InputFieldConfig {
@@ -25,8 +26,17 @@ public final class InputFieldInVOConfig extends InputFieldConfig {
 
 	@Override
 	public String getName() {
-		return inputField == null ? null : inputField.getName();
+		if (inputField == null) {
+			return null;
+		} else {
+			return CommonUtil.isEmptyString(inputField.getExternalId()) ? inputField.getName() : inputField.getExternalId();
+		}
+		//return inputField == null ? null : inputField.getName();
 	}
+	//	@Override
+	//	protected String getExternalId() {
+	//		return inputField == null ? null : inputField.getExternalId();
+	//	}
 
 	@Override
 	public String getTitle() {

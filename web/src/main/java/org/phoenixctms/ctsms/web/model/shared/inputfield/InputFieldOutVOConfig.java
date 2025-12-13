@@ -26,4 +26,8 @@ public final class InputFieldOutVOConfig extends InputFieldOutVOConfigBase {
 	public String getTitle() {
 		return super.getFieldTitle();
 	}
+	//	@Override
+	//	public String getExternalId() {
+	//		return inputField == null ? null : inputField.getExternalId();
+	//	}
 }

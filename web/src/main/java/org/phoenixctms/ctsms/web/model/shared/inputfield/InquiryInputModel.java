@@ -160,16 +160,20 @@ public class InquiryInputModel extends InputModel {
 		return modifiedAnnotation;
 	}
 
-	@Override
-	public String getName() {
+	protected String getName(String newInquiryValueInputTitleCode) {
 		if (inquiryValue != null && inquiry != null && inputField != null) {
 			if (inquiryValue.getId() != null) {
-				return Messages.getMessage(MessageCodes.INQUIRY_VALUE_INPUT_TITLE, Long.toString(inquiry.getPosition()), inputField.getName(), getValueString());
+				return Messages.getMessage(MessageCodes.INQUIRY_VALUE_INPUT_TITLE, Long.toString(inquiry.getPosition()), super.getName(), getValueString());
 			} else {
-				return Messages.getMessage(MessageCodes.NEW_INQUIRY_VALUE_INPUT_TITLE, Long.toString(inquiry.getPosition()), inputField.getName());
+				return Messages.getMessage(newInquiryValueInputTitleCode, Long.toString(inquiry.getPosition()), super.getName());
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public String getName() {
+		return getName(MessageCodes.NEW_INQUIRY_VALUE_INPUT_TITLE);
 	}
 
 	@Override
@@ -242,14 +246,13 @@ public class InquiryInputModel extends InputModel {
 	public Date getTimeValue() {
 		return inquiryValue == null ? null : inquiryValue.getTimeValue();
 	}
-
-	@Override
-	public String getUniqueName() {
-		if (inquiry != null) {
-			return inquiry.getUniqueName();
-		}
-		return null;
-	}
+	//	@Override
+	//	public String getUniqueName() {
+	//		if (inquiry != null) {
+	//			return inquiry.getUniqueName();
+	//		}
+	//		return null;
+	//	}
 
 	@Override
 	public String getValueString() {
@@ -525,6 +528,14 @@ public class InquiryInputModel extends InputModel {
 	protected String getInputTitle() {
 		if (inquiry != null) {
 			return inquiry.getTitle();
+		}
+		return null;
+	}
+
+	@Override
+	protected String getInputExternalId() {
+		if (inquiry != null) {
+			return inquiry.getExternalId();
 		}
 		return null;
 	}
