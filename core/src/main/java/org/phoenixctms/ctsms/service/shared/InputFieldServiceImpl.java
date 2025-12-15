@@ -935,6 +935,7 @@ public class InputFieldServiceImpl
 					ServiceUtil.logSystemMessage(selectionSetValue.getField(), selectionSetValueVO.getField(), now, user, SystemMessageCodes.SELECTION_SET_VALUE_CREATED,
 							selectionSetValueVO, null,
 							journalEntryDao);
+					modifiedSelectionSetValue.setId(selectionSetValue.getId()); //for deferred constraints checks
 				}
 			}
 			it = selectionSetValueIns.iterator();
