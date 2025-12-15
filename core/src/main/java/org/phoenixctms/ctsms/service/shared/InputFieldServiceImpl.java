@@ -416,7 +416,7 @@ public class InputFieldServiceImpl
 		}
 		if (checkDeferredConstraints
 				&& (new InputFieldSelectionSetValueNameCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_NAME_ALREADY_EXISTS);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_NAME_ALREADY_EXISTS, selectionSetValueIn.getName());
 		}
 		String value = selectionSetValueIn.getValue();
 		if (value != null) {
@@ -425,7 +425,7 @@ public class InputFieldServiceImpl
 			}
 			if (checkDeferredConstraints
 					&& (new InputFieldSelectionSetValueValueCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS);
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS, value);
 			}
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_REQUIRED);
@@ -477,10 +477,10 @@ public class InputFieldServiceImpl
 
 	private void checkSelectionSetValueInputDeferredConstraints(InputField inputField, InputFieldSelectionSetValueInVO selectionSetValueIn) throws ServiceException {
 		if ((new InputFieldSelectionSetValueNameCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_NAME_ALREADY_EXISTS);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_NAME_ALREADY_EXISTS, selectionSetValueIn.getName());
 		}
 		if ((new InputFieldSelectionSetValueValueCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS, selectionSetValueIn.getValue());
 		}
 		switch (inputField.getFieldType()) {
 			case AUTOCOMPLETE:
