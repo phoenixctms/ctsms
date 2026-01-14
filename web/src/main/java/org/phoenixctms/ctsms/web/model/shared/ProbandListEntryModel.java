@@ -48,6 +48,10 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 	private static final String INQUIRY_LABEL = "{0}.";
 	private static final String CATEGORY_INQUIRY_LABEL_WITH_TRIAL_NAME = "{0} - {1} - {2}.";
 	private static final String INQUIRY_LABEL_WITH_TRIAL_NAME = "{0} - {1}.";
+	private static final String CATEGORY_INQUIRY_TITLE_LABEL_WITH_TRIAL_NAME = "{0} - {1} - {2}. {3}";
+	private static final String CATEGORY_INQUIRY_TITLE_LABEL = "{0} - {1}. {2}";
+	private static final String INQUIRY_LABEL_TITLE_WITH_TRIAL_NAME = "{0} - {1}. {2}";
+	private static final String INQUIRY_TITLE_LABEL = "{0}. {1}";
 
 	public static ProbandListEntryModel getCachedProbandListEntryModel(ProbandGroupOutVO group, HashMap<Long, ProbandListEntryModel> probandListEntryModelCache,
 			boolean showProbandListEntryTagColumn, boolean showInquiryColumn, boolean total) {
@@ -201,17 +205,34 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		InquiryOutVO inquiry = inquiryValue == null ? null : inquiryValue.getInquiry();
 		if (inquiry != null) {
 			String category = inquiry.getCategory();
-			if (category != null && category.length() > 0) {
-				if (allTrials) {
-					return MessageFormat.format(CATEGORY_INQUIRY_LABEL_WITH_TRIAL_NAME, inquiry.getTrial().getName(), category, Long.toString(inquiry.getPosition()));
+			if (CommonUtil.isEmptyString(inquiry.getTitle())) {
+				if (category != null && category.length() > 0) {
+					if (allTrials) {
+						return MessageFormat.format(CATEGORY_INQUIRY_LABEL_WITH_TRIAL_NAME, inquiry.getTrial().getName(), category, Long.toString(inquiry.getPosition()));
+					} else {
+						return MessageFormat.format(CATEGORY_INQUIRY_LABEL, category, Long.toString(inquiry.getPosition()));
+					}
 				} else {
-					return MessageFormat.format(CATEGORY_INQUIRY_LABEL, category, Long.toString(inquiry.getPosition()));
+					if (allTrials) {
+						return MessageFormat.format(INQUIRY_LABEL_WITH_TRIAL_NAME, inquiry.getTrial().getName(), Long.toString(inquiry.getPosition()));
+					} else {
+						return MessageFormat.format(INQUIRY_LABEL, Long.toString(inquiry.getPosition()));
+					}
 				}
 			} else {
-				if (allTrials) {
-					return MessageFormat.format(INQUIRY_LABEL_WITH_TRIAL_NAME, inquiry.getTrial().getName(), Long.toString(inquiry.getPosition()));
+				if (category != null && category.length() > 0) {
+					if (allTrials) {
+						return MessageFormat.format(CATEGORY_INQUIRY_TITLE_LABEL_WITH_TRIAL_NAME, inquiry.getTrial().getName(), category, Long.toString(inquiry.getPosition()),
+								inquiry.getTitle());
+					} else {
+						return MessageFormat.format(CATEGORY_INQUIRY_TITLE_LABEL, category, Long.toString(inquiry.getPosition()), inquiry.getTitle());
+					}
 				} else {
-					return MessageFormat.format(INQUIRY_LABEL, Long.toString(inquiry.getPosition()));
+					if (allTrials) {
+						return MessageFormat.format(INQUIRY_LABEL_TITLE_WITH_TRIAL_NAME, inquiry.getTrial().getName(), Long.toString(inquiry.getPosition()), inquiry.getTitle());
+					} else {
+						return MessageFormat.format(INQUIRY_TITLE_LABEL, Long.toString(inquiry.getPosition()), inquiry.getTitle());
+					}
 				}
 			}
 		}
@@ -296,6 +317,7 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 									proband.getId(),
 									columnInquiryInputFieldId);
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+					//e.printStackTrace();
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
 				}

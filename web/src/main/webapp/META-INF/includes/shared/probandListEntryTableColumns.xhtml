@@ -487,7 +487,7 @@
 				value="#{allTrials ? probandListEntryModel.getAllTrialsInquiryInputFieldValues(probandListEntry.vo) : probandListEntryModel.getInquiryInputFieldValues(probandListEntry.vo)}"
 				var="inquiryValue"
 				type="definition">
-				<h:outputText value="#{applicationScopeBean.clipStringMid(probandListEntryModel.getAllTrialsInquiryValueLabel(inquiryValue,allTrials))}" />
+				<h:outputText value="#{applicationScopeBean.clipStringMid(probandListEntryModel.getAllTrialsInquiryValueLabel(inquiryValue,allTrials),64)}" />
 				<f:facet name="description">
 					<h:panelGroup
 						rendered="#{probandListEntryModel.isInquiryValueBoolean(inquiryValue)}"
