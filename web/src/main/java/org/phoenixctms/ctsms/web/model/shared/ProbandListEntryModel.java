@@ -42,9 +42,11 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 
 	private static final String PROBAND_LIST_ENTRY_TAG_LABEL_WITH_FIELD_NAME = "{0}. {1}";
 	private static final String PROBAND_LIST_ENTRY_TAG_LABEL = "{0}.";
+	private static final String TRIAL_PROBAND_LIST_ENTRY_TAG_SELECT_ITEM_LABEL = "{0} - {1}";
 	private static final String CATEGORY_INQUIRY_LABEL_WITH_FIELD_NAME = "{0} - {1}. {2}";
 	private static final String CATEGORY_INQUIRY_LABEL = "{0} - {1}.";
 	private static final String INQUIRY_LABEL_WITH_FIELD_NAME = "{0}. {1}";
+	private static final String TRIAL_INQUIRY_SELECT_ITEM_LABEL = "{0} - {1}";
 	private static final String INQUIRY_LABEL = "{0}.";
 	private static final String CATEGORY_INQUIRY_LABEL_WITH_TRIAL_NAME = "{0} - {1} - {2}.";
 	private static final String INQUIRY_LABEL_WITH_TRIAL_NAME = "{0} - {1}.";
@@ -88,6 +90,18 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 		return "";
 	}
 
+	private static String getInquirySelectItemLabel(InquiryOutVO inquiry, boolean uniqueTrial, boolean uniqueFields) {
+		if (inquiry != null) {
+			if (uniqueTrial) {
+				return uniqueFields ? inquiry.getField().getName() : getInquiryLabel(inquiry, true);
+			} else {
+				return MessageFormat.format(TRIAL_INQUIRY_SELECT_ITEM_LABEL, inquiry.getTrial().getName(),
+						uniqueFields ? inquiry.getField().getName() : getInquiryLabel(inquiry, true));
+			}
+		}
+		return "";
+	}
+
 	private static String getProbandListEntryTagLabel(ProbandListEntryTagOutVO listEntryTag, boolean withFieldName) {
 		if (listEntryTag != null) {
 			if (withFieldName) {
@@ -95,6 +109,18 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 						CommonUtil.isEmptyString(listEntryTag.getTitle()) ? listEntryTag.getField().getName() : listEntryTag.getTitle());
 			} else {
 				return MessageFormat.format(PROBAND_LIST_ENTRY_TAG_LABEL, Long.toString(listEntryTag.getPosition()));
+			}
+		}
+		return "";
+	}
+
+	private static String getProbandListEntryTagSelectItemLabel(ProbandListEntryTagOutVO listEntryTag, boolean uniqueTrial, boolean uniqueFields) {
+		if (listEntryTag != null) {
+			if (uniqueTrial) {
+				return uniqueFields ? listEntryTag.getField().getName() : getProbandListEntryTagLabel(listEntryTag, true);
+			} else {
+				return MessageFormat.format(TRIAL_PROBAND_LIST_ENTRY_TAG_SELECT_ITEM_LABEL, listEntryTag.getTrial().getName(),
+						uniqueFields ? listEntryTag.getField().getName() : getProbandListEntryTagLabel(listEntryTag, true));
 			}
 		}
 		return "";
@@ -513,11 +539,21 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 			probandListEntryTags = new ArrayList<SelectItem>(probandListEntryTagVOs.size());
 			probandListEntryTagInputFields = new ArrayList<SelectItem>(probandListEntryTagVOs.size());
 			HashSet<Long> dupeCheck = new HashSet<Long>(probandListEntryTagVOs.size());
+			HashSet<Long> trialIds = new HashSet<Long>(probandListEntryTagVOs.size());
+			HashSet<Long> fieldIds = new HashSet<Long>(probandListEntryTagVOs.size());
+			boolean uniqueFields = true;
 			Iterator<ProbandListEntryTagOutVO> it = probandListEntryTagVOs.iterator();
 			while (it.hasNext()) {
 				ProbandListEntryTagOutVO probandListEntryTagVO = it.next();
+				trialIds.add(probandListEntryTagVO.getTrial().getId());
+				uniqueFields &= fieldIds.add(probandListEntryTagVO.getField().getId());
+			}
+			it = probandListEntryTagVOs.iterator();
+			while (it.hasNext()) {
+				ProbandListEntryTagOutVO probandListEntryTagVO = it.next();
 				if (dupeCheck.add(probandListEntryTagVO.getField().getId())) {
-					probandListEntryTagInputFields.add(new SelectItem(Long.toString(probandListEntryTagVO.getField().getId()), probandListEntryTagVO.getField().getName()));
+					probandListEntryTagInputFields.add(new SelectItem(Long.toString(probandListEntryTagVO.getField().getId()),
+							getProbandListEntryTagSelectItemLabel(probandListEntryTagVO, trialIds.size() <= 1, uniqueFields)));
 				}
 				probandListEntryTags.add(new SelectItem(Long.toString(probandListEntryTagVO.getId()), getProbandListEntryTagLabel(probandListEntryTagVO, true)));
 			}
@@ -559,11 +595,21 @@ public class ProbandListEntryModel extends LazyDataModelBase<ProbandListEntryOut
 				inquiries = new ArrayList<SelectItem>(inquiryVOs.size());
 				inquiryInputFields = new ArrayList<SelectItem>(inquiryVOs.size());
 				HashSet<Long> dupeCheck = new HashSet<Long>(inquiryVOs.size());
+				HashSet<Long> trialIds = new HashSet<Long>(inquiryVOs.size());
+				HashSet<Long> fieldIds = new HashSet<Long>(probandListEntryTagVOs.size());
+				boolean uniqueFields = true;
 				Iterator<InquiryOutVO> it = inquiryVOs.iterator();
 				while (it.hasNext()) {
 					InquiryOutVO inquiryVO = it.next();
+					trialIds.add(inquiryVO.getTrial().getId());
+					uniqueFields &= fieldIds.add(inquiryVO.getField().getId());
+				}
+				it = inquiryVOs.iterator();
+				while (it.hasNext()) {
+					InquiryOutVO inquiryVO = it.next();
 					if (dupeCheck.add(inquiryVO.getField().getId())) {
-						inquiryInputFields.add(new SelectItem(Long.toString(inquiryVO.getField().getId()), inquiryVO.getField().getName()));
+						inquiryInputFields.add(new SelectItem(Long.toString(inquiryVO.getField().getId()),
+								getInquirySelectItemLabel(inquiryVO, trialIds.size() <= 1, uniqueFields)));
 					}
 					inquiries.add(new SelectItem(Long.toString(inquiryVO.getId()), getInquiryLabel(inquiryVO, true)));
 				}
