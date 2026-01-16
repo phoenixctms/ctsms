@@ -162,7 +162,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		if (staff == null) {
 			return false;
 		}
-		if (identity.equals(staff)) {
+		if (staff.equals(identity)) {
 			return true;
 		}
 		Iterator<Staff> childrenIt = identity.getChildren().iterator();
@@ -170,6 +170,19 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			if (isChild(staff, childrenIt.next())) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	private static boolean isParent(Staff staff, Staff identity) {
+		if (staff == null) {
+			return false;
+		}
+		if (staff.equals(identity)) {
+			return true;
+		}
+		if (identity != null) {
+			return isParent(staff, identity.getParent());
 		}
 		return false;
 	}
@@ -712,6 +725,17 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 				}
 				staff = parameterValue == null ? null : CheckIDUtil.checkStaffId((Long) parameterValue, staffDao);
 				if (!isChild(staff, identity)) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
+							permission.getParameterGetter(), staff == null ? null : CommonUtil.staffOutVOToString(staffDao.toStaffOutVO(staff)));
+				}
+				break;
+			case IDENTITY_PARENT:
+				identity = user.getIdentity();
+				if (identity == null) {
+					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+				}
+				staff = parameterValue == null ? null : CheckIDUtil.checkStaffId((Long) parameterValue, staffDao);
+				if (!isParent(staff, identity)) {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_RESTRICTION_VIOLATED, permission.getServiceMethod(),
 							permission.getParameterGetter(), staff == null ? null : CommonUtil.staffOutVOToString(staffDao.toStaffOutVO(staff)));
 				}
