@@ -7754,8 +7754,8 @@ public class TrialServiceImpl
 						: null;
 			}
 			if (lastStatus != null
-					&& !lastStatus.getStatus().isInitial()
-					&& lastStatus.getStatus().getTransitions().size() > 0) {
+					&& !lastStatus.getStatus().isInitial()) {
+				// && lastStatus.getStatus().getTransitions().size() > 0) {
 				// for trial with many probands, display only contacted and not finished subjects:
 				VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO(visitScheduleItem);
 				visitScheduleItemProbandVO.setProband(probandDao.toProbandOutVO(proband));
