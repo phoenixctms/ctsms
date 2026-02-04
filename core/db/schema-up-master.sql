@@ -528,6 +528,16 @@ if get_database_version() < '010801105' then
     perform set_database_version('010801105');
 
 end if;
- 
+
+if get_database_version() < '010801106' then
+
+    ALTER TABLE JOB
+      ADD COLUMN PROGRESS BIGINT,
+      ADD COLUMN PROGRESS_MAX BIGINT;
+
+    perform set_database_version('010801106');
+
+end if;
+
 end
 $$;
