@@ -126,6 +126,17 @@
 					</f:facet>
 					<h:outputText value="#{job.vo.modifiedUser.name} " />
 				</p:column>
+
+				<p:column style="width:120px;">
+					<f:facet name="header">
+						<h:outputText
+							value="#{labels.job_job_list_progress_column}" />
+					</f:facet>
+					<p:progressBar widgetVar="progressBar_#{job.vo.id}"
+						ajax="false"
+						labelTemplate="#{jobBean.getProgressLabel(job.vo)}"
+						value="#{jobBean.getProgressValue(job.vo)}" />
+				</p:column>						
 			</p:dataTable>
 			<p:panel id="job_input">
 				<f:facet name="header">

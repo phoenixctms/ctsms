@@ -850,6 +850,7 @@ public interface MessageCodes {
 	public static final String ECRF_PROGRESS_LABEL = "ecrf_progress_label";
 	public static final String ECRF_SECTION_PROGRESS_LABEL = "ecrf_section_progress_label";
 	public static final String ECRF_SECTION_PROGRESS_SERIES_LABEL = "ecrf_section_progress_series_label";
+	public static final String JOB_PROGRESS_LABEL = "job_progress_label";
 	public static final String NO_ECRF_FIELD_VALUES_TO_SAVE = "no_ecrf_field_values_to_save";
 	public static final String WRONG_PASSWORD = "wrong_password";
 	public static final String MISSING_CONFIG_PARAMETER = "missing_config_parameter";

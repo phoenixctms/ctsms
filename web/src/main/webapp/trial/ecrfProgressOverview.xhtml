@@ -254,6 +254,18 @@
 										value="#{ecrfProgressOverviewBean.getSummaryStatusCountMap(trial.vo)}" />
 								</ui:include>
 							</p:column>
+							<p:column>
+							    
+								<f:facet name="header">
+									<h:outputText
+										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_total_charge_column}" />
+								</f:facet>
+								<h:outputFormat value="#{labels.currency_format}">
+									<f:param
+										value="#{ecrfProgressOverviewBean.getEcrfProgressSummary(trial.vo).charge}" />
+									<f:param value="#{applicationScopeBean.currencySymbol}" />
+								</h:outputFormat>
+							</p:column>
 							<p:column style="width:120px;">
 							    
 								<f:facet name="header">
@@ -276,18 +288,7 @@
 									labelTemplate="#{ecrfProgressOverviewBean.getEcrfProgressSummaryOnTimeLabel(trial.vo)}"
 									value="#{ecrfProgressOverviewBean.getEcrfProgressSummaryOnTimeValue(trial.vo)}" />
 							</p:column>
-							<p:column>
-							    
-								<f:facet name="header">
-									<h:outputText
-										value="#{triallabels.ecrf_progress_overview_ecrf_progress_summary_list_total_charge_column}" />
-								</f:facet>
-								<h:outputFormat value="#{labels.currency_format}">
-									<f:param
-										value="#{ecrfProgressOverviewBean.getEcrfProgressSummary(trial.vo).charge}" />
-									<f:param value="#{applicationScopeBean.currencySymbol}" />
-								</h:outputFormat>
-							</p:column>
+							
 							<p:column style="width:32px;">
 								<p:commandButton type="button"
 									title="#{labels.open_trial_button_label}"

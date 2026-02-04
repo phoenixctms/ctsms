@@ -28,10 +28,14 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -478,5 +482,27 @@ public class JobBean extends ManagedBeanBase {
 
 	public String getAllowTypes() {
 		return allowTypes;
+	}
+
+	public String getProgressLabel(JobOutVO jobVO) {
+		if (jobVO != null && jobVO.getProgress() != null && jobVO.getProgressMax() != null && jobVO.getProgressMax() > 0l) {
+			return Messages.getMessage(MessageCodes.JOB_PROGRESS_LABEL, jobVO.getProgress(),
+					jobVO.getProgressMax());
+			//return Messages.getMessage(MessageCodes.JOB_PROGRESS_LABEL, JobStatus.OK.equals(jobVO.getStatus().getJobStatus()) ? jobVO.getProgressMax() : jobVO.getProgress(),
+			//		jobVO.getProgressMax());
+		}
+		return null;
+	}
+
+	public int getProgressValue(JobOutVO jobVO) {
+		if (jobVO != null && jobVO.getProgress() != null && jobVO.getProgressMax() != null && jobVO.getProgressMax() > 0l) {
+			return Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
+					* jobVO.getProgress()) / (jobVO.getProgressMax()));
+			//return JobStatus.OK.equals(jobVO.getStatus().getJobStatus())
+			//		? Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
+			//		: Math.round(((float) Settings.getInt(SettingCodes.PROGRESS_BAR_MAX_VALUE, Bundle.SETTINGS, DefaultSettings.PROGRESS_BAR_MAX_VALUE)
+			//				* jobVO.getProgress()) / (jobVO.getProgressMax()));
+		}
+		return 0;
 	}
 }
