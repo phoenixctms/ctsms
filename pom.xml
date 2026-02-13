@@ -793,8 +793,11 @@
 			</build>
 		</profile>
 	</profiles>
-
 	<pluginRepositories>
+		<!-- <pluginRepository>
+        	<id>local-maven-repo</id>
+        	<url>file:///${project.basedir}/../repository</url>
+    	</pluginRepository> -->
 		<pluginRepository>
 			<id>maven-repo</id>
 			<name>repo1 maven.org</name>
