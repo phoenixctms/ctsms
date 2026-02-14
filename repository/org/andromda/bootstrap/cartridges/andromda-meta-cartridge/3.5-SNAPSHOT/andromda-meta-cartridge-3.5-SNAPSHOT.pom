@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.andromda.bootstrap.cartridges</groupId>
+  <artifactId>andromda-meta-cartridge</artifactId>
+  <version>3.5-SNAPSHOT</version>
+  <name>AndroMDA Meta Cartridge</name>
+  <description>Produces AndroMDA Metafacades.</description>
+  <url>http://www.andromda.org/andromda-cartridges/andromda-meta-cartridge</url>
+  <inceptionYear>2003</inceptionYear>
+  <organization>
+    <name>AndroMDA.org</name>
+    <url>http://andromda.sourceforge.net/index.html</url>
+  </organization>
+  <licenses>
+    <license>
+      <name>The AndroMDA Project</name>
+      <url>http://andromda.sourceforge.net/license.html</url>
+      <distribution>repo</distribution>
+      <comments>AndroMDA runs under a BSD license</comments>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>bobfields</id>
+      <name>Bob Fields</name>
+      <email>bob@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+    <developer>
+      <id>walter</id>
+      <name>Walter Mourão</name>
+      <email>walter@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+    <developer>
+      <id>mattes3</id>
+      <name>Matthias Bohlen</name>
+      <email>matthias@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+        <role>Documentation</role>
+        <role>Project Admin</role>
+      </roles>
+      <timezone>1</timezone>
+    </developer>
+    <developer>
+      <id>cwbrandon</id>
+      <name>Chad Brandon</name>
+      <email>chad@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+        <role>Documentation</role>
+        <role>Release Manager</role>
+        <role>Project Admin</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+    <developer>
+      <id>amartinwest</id>
+      <name>Martin West</name>
+      <email>martin@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
+    <developer>
+      <id>carloslcuenca</id>
+      <name>Carlos Cuenca</name>
+      <email>carlos@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>1</timezone>
+    </developer>
+    <developer>
+      <id>freter</id>
+      <name>Peter Friese</name>
+      <email>peter@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>1</timezone>
+    </developer>
+    <developer>
+      <id>nbhatia</id>
+      <name>Naresh Bhatia</name>
+      <email>naresh@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+    <developer>
+      <id>stjerman</id>
+      <name>Steve Jerman</name>
+      <email>steve@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>6</timezone>
+    </developer>
+    <developer>
+      <id>joelkoz</id>
+      <name>Joel Kozikowski</name>
+      <email>joel@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-5</timezone>
+    </developer>
+    <developer>
+      <id>catforce</id>
+      <name>Michail Plushnikov</name>
+      <email>michail@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+        <role>Documentation</role>
+        <role>Project Admin</role>
+      </roles>
+      <timezone>1</timezone>
+    </developer>
+    <developer>
+      <id>vancek</id>
+      <name>Vance Karimi</name>
+      <email>vance@andromda.org</email>
+      <organization>AndroMDA</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>8</timezone>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/cartridges/andromda-meta</connection>
+    <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/cartridges/andromda-meta</developerConnection>
+    <url>http://svn.code.sf.net/p/andromda/svn/trunk/cartridges/andromda-meta/</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>https://andromda.atlassian.net/browse/ANDROMDA</url>
+  </issueManagement>
+  <ciManagement>
+    <system>jenkins</system>
+    <url>https://andromdabuild.ci.cloudbees.com/job/Andromda/</url>
+  </ciManagement>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+      <version>1.3</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Profile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Basic_0="http:///Basic_0.profile.uml2" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/1.0.0/UML" xsi:schemaLocation="http:///Basic_0.profile.uml2 pathmap://UML2_PROFILES/Basic.profile.uml2#__LeIQK86Edih9-GG5afQ0g" xmi:id="_9_5_1_12ab03bf_1166891487968_530029_0" name="andromda-messaging" appliedProfile="_6mFRgK86Edih9-GG5afQ0gprofileApplicationandromda-messaging" metamodelReference="_m8qbA686EdiEh75YJ_3n8gmetamodelReferenceandromda-messaging">
+  <eAnnotations xmi:id="_TO1DLCOuEd6UO4QD67EgYg" source="attributes">
+    <details xmi:id="_TO1DLSOuEd6UO4QD67EgYg" key="version" value="0"/>
+  </eAnnotations>
+  <eAnnotations xmi:id="_TO1DLiOuEd6UO4QD67EgYg" source="ePackages">
+    <contents xmi:type="ecore:EPackage" xmi:id="_TO1DLyOuEd6UO4QD67EgYg" name="andromdamessaging_0" nsURI="http:///andromdamessaging_0_TOruBCOuEd6UO4QD67EgYg.profile.uml2" nsPrefix="andromdamessaging_0">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_TO1DMCOuEd6UO4QD67EgYg" name="andromdamessaging__Topic">
+        <eAnnotations xmi:id="_TO1DMSOuEd6UO4QD67EgYg" source="stereotype" references="_9_5_1_12ab03bf_1166891501609_942128_1"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_TO1DMiOuEd6UO4QD67EgYg" name="andromdamessaging__Queue">
+        <eAnnotations xmi:id="_TO1DMyOuEd6UO4QD67EgYg" source="stereotype" references="_9_5_1_12ab03bf_1166891525921_893133_2"/>
+      </eClassifiers>
+    </contents>
+  </eAnnotations>
+  <eAnnotations xmi:id="_Te7JjiOuEd6UO4QD67EgYg" source="appliedStereotypes">
+    <contents xmi:type="Basic_0:Basic__ModelLibrary" xmi:id="_Te7JjyOuEd6UO4QD67EgYg"/>
+  </eAnnotations>
+  <packageImport xmi:id="_m8qbA686EdiEh75YJ_3n8gmetamodelReferenceandromda-messaging" visibility="private">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_METAMODELS/UML2.metamodel.uml2#_m8qbA686EdiEh75YJ_3n8g"/>
+  </packageImport>
+  <packageImport xmi:id="_EfRZoK86EdieaYgxtVWN8QprimitiveTypesandromda-messaging">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_LIBRARIES/UML2PrimitiveTypes.library.uml2#_EfRZoK86EdieaYgxtVWN8Q"/>
+  </packageImport>
+  <packageImport xmi:id="_RjmyoK86EdieaYgxtVWN8QjavaPrimitiveTypesandromda-messaging">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_LIBRARIES/JavaPrimitiveTypes.library.uml2#_RjmyoK86EdieaYgxtVWN8Q"/>
+  </packageImport>
+  <packageImport xmi:type="uml:ProfileApplication" xmi:id="_6mFRgK86Edih9-GG5afQ0gprofileApplicationandromda-messaging">
+    <eAnnotations xmi:id="_Te7JjCOuEd6UO4QD67EgYg" source="attributes">
+      <details xmi:id="_Te7JjSOuEd6UO4QD67EgYg" key="version" value="0"/>
+    </eAnnotations>
+    <importedPackage xmi:type="uml:Profile" href="pathmap://UML2_PROFILES/Basic.profile.uml2#_6mFRgK86Edih9-GG5afQ0g"/>
+    <importedProfile href="pathmap://UML2_PROFILES/Basic.profile.uml2#_6mFRgK86Edih9-GG5afQ0g"/>
+  </packageImport>
+  <ownedMember xmi:type="uml:Extension" xmi:id="_12_1_2e90116_1238689309719_397322_343" memberEnd="_12_1_2e90116_1238689309719_282504_345 _12_1_2e90116_1238689309719_472821_344">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_1_2e90116_1238689309719_282504_345" name="extension_Topic" visibility="private" type="_9_5_1_12ab03bf_1166891501609_942128_1" association="_12_1_2e90116_1238689309719_397322_343" aggregation="composite">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_12_1_2e90116_1238689309719_238127_347" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_12_1_2e90116_1238689309719_18429_346"/>
+    </ownedEnd>
+  </ownedMember>
+  <ownedMember xmi:type="uml:Extension" xmi:id="_12_1_2e90116_1238689309734_130730_348" memberEnd="_12_1_2e90116_1238689309734_6257_350 _12_1_2e90116_1238689309734_736624_349">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_12_1_2e90116_1238689309734_6257_350" name="extension_Queue" visibility="private" type="_9_5_1_12ab03bf_1166891525921_893133_2" association="_12_1_2e90116_1238689309734_130730_348" aggregation="composite">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_12_1_2e90116_1238689309734_975146_352" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_12_1_2e90116_1238689309734_214237_351"/>
+    </ownedEnd>
+  </ownedMember>
+  <ownedMember xmi:type="uml:Stereotype" xmi:id="_9_5_1_12ab03bf_1166891501609_942128_1" name="Topic">
+    <ownedAttribute xmi:id="_12_1_2e90116_1238689309719_472821_344" name="base_Node" visibility="private" association="_12_1_2e90116_1238689309719_397322_343">
+      <type xmi:type="uml:Class" href="pathmap://UML2_METAMODELS/UML2.metamodel.uml2#_m9ngza86EdiEh75YJ_3n8g"/>
+    </ownedAttribute>
+  </ownedMember>
+  <ownedMember xmi:type="uml:Stereotype" xmi:id="_9_5_1_12ab03bf_1166891525921_893133_2" name="Queue">
+    <ownedAttribute xmi:id="_12_1_2e90116_1238689309734_736624_349" name="base_Node" visibility="private" association="_12_1_2e90116_1238689309734_130730_348">
+      <type xmi:type="uml:Class" href="pathmap://UML2_METAMODELS/UML2.metamodel.uml2#_m9ngza86EdiEh75YJ_3n8g"/>
+    </ownedAttribute>
+  </ownedMember>
+</uml:Profile>

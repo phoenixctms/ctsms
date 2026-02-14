@@ -1,0 +1,26 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.andromdapp</groupId>
+        <artifactId>andromda-andromdapp</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <groupId>org.andromda.andromdapp.projects</groupId>
+    <artifactId>andromda-andromdapp-projects</artifactId>
+    <packaging>pom</packaging>
+    <name>AndroMDA Application Generator Projects</name>
+    <description>
+        The grouping of AndroMDApp projects.
+    </description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/andromda-andromdapp/projects</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/andromda-andromdapp/projects</developerConnection>
+        <url>https://svn.code.sf.net/p/andromda/svn/trunk/andromda-andromdapp/projects</url>
+    </scm>
+    <modules>
+        <module>j2ee/maven2</module>
+        <module>csharp/maven2</module>
+        <module>richclient/ant</module>
+    </modules>
+</project>

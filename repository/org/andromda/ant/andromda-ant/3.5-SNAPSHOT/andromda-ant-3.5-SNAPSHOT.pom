@@ -1,0 +1,25 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.ant</groupId>
+        <artifactId>andromda-ant-support</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromda-ant</artifactId>
+    <packaging>jar</packaging>
+    <name>AndroMDA Ant Application Generator</name>
+    <description>Provides generation of AndroMDA Ant based applications</description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/ant/andromda</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/ant/andromda</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/ant/andromda/</url>
+    </scm>
+    <dependencies>
+        <dependency>
+            <groupId>org.andromda.andromdapp</groupId>
+            <artifactId>andromda-andromdapp-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+    </dependencies>
+</project>

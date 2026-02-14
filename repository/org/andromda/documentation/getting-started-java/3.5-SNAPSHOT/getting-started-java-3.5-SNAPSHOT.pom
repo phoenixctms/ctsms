@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.documentation</groupId>
+        <artifactId>andromda-documentation</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>getting-started-java</artifactId>
+    <packaging>pom</packaging>
+    <name>AndroMDA Getting Started Java Documentation</name>
+    <description>The AndroMDA getting started Java documentation</description>
+    <build>
+        <plugins>
+            <!-- Update the timetracker-completed.zip artifact from the source tree before code generation-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <target>
+                                <zip destfile="${project.basedir}/src/site/resources/timetracker-completed.zip">
+                                    <zipfileset dir="${project.basedir}/../samples/timetracker" prefix="timetracker-completed"
+                                     excludes="**/target,**/clean.txt,**/*.log,**/*.0,**/uml2X,**/*.jar,**/*.war,**/*.ear,**/class"/>
+                                </zip>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

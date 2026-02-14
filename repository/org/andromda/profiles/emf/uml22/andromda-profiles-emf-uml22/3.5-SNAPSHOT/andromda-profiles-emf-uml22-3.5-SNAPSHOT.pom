@@ -1,0 +1,44 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.profiles</groupId>
+        <artifactId>andromda-profiles</artifactId>
+        <version>3.5-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <groupId>org.andromda.profiles.emf.uml22</groupId>
+    <artifactId>andromda-profiles-emf-uml22</artifactId>
+    <name>AndroMDA EMF-UML2 2.X Profiles</name>
+    <packaging>pom</packaging>
+    <description>
+        Contains the AndroMDA EMF-UML2 2.X profiles.
+    </description>
+    <scm>
+      <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/profiles/emf/uml22</connection>
+      <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/profiles/emf/uml22</developerConnection>
+      <url>http://svn.code.sf.net/p/andromda/svn/trunk/profiles/emf/uml22/</url>
+    </scm>
+    <build>
+        <plugins>
+            <plugin>
+                <extensions>true</extensions>
+                <groupId>org.andromda.maven.plugins</groupId>
+                <artifactId>andromda-model-archiver-plugin</artifactId>
+                <version>${andromda.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+    <modules>
+        <module>common</module>
+        <module>datatype</module>
+        <module>messaging</module>
+        <module>meta</module>
+        <module>persistence</module>
+        <module>presentation</module>
+        <module>process</module>
+        <module>service</module>
+        <module>webservice</module>
+        <module>xml</module>
+        <module>UML_Standard_Profile</module>
+    </modules>
+</project>

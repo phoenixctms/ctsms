@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="Getting started Java">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="10 steps to write a cartridge">
+            <item name="The task the new cartridge has to do" href="index.html"/>
+            <item name="The main process for analysis, design and implementation of cartridges" href="site2.html"/>
+            <item name="Analyzing the target technology" href="site3.html"/>
+            <item name="Identifying the PSM metaclasses" href="site4.html"/>
+            <item name="Identifying transformation rules" href="site5.html"/>
+            <item name="Model and generate PSM metaclasses" href="site6.html"/>
+            <item name="Designing metafacade classes" href="site7.html"/>
+            <item name="Writing templates" href="site8.html"/>
+            <item name="Writing deployment descriptors (TODO)" href="site9.html"/>
+            <item name="Designing a cartridge test model (TODO)" href="site10.html"/>
+            <item name="Testing a cartridge (TODO)" href="site11.html"/>
+            <item name="Deploying a cartridge (TODO)" href="site12.html"/>
+        </menu>
+        <menu ref="reports"/>
+      </body>
+</project>

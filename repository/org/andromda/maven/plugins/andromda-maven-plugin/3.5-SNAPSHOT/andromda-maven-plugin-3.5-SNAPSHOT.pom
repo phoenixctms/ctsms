@@ -1,0 +1,139 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>andromda-maven-plugins</artifactId>
+        <groupId>org.andromda.maven.plugins</groupId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromda-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <name>AndroMDA Maven Plugin</name>
+    <description>
+        A plugin for running AndroMDA's model processor.
+    </description>
+    <inceptionYear>2005</inceptionYear>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/maven/andromda</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/maven/andromda</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/maven/andromda/</url>
+    </scm>
+    <dependencies>
+        <!-- General dependencies -->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+
+        <!-- Maven dependencies -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+        </dependency>
+
+        <!-- Andromda dependencies -->
+        <dependency>
+            <groupId>org.andromda</groupId>
+            <artifactId>andromda-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>andromda-configuration-mojo</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda.templateengines</groupId>
+            <artifactId>andromda-templateengine-velocity</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Comment out uml14 dependencies for faster performance, if not using uml14 models -->
+        <dependency>
+            <groupId>org.andromda.repositories</groupId>
+            <artifactId>andromda-repository-mdr-uml14</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda.metafacades</groupId>
+            <artifactId>andromda-metafacades-uml14</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Uncomment emf-uml2 and comment uml22 to enable UML2 1.x and RSM6.x processing. Cannot run both together.>
+        <dependency>
+            <groupId>org.andromda.repositories</groupId>
+            <artifactId>andromda-repository-emf-uml2</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency -->
+        <!-- Comment out emf-uml22 to disable UML2 2.x and RSM7 processing. Must uncomment out emf-uml2 above-->
+        <dependency>
+            <groupId>org.andromda.repositories</groupId>
+            <artifactId>andromda-repository-emf-uml22</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- XML Runtime dependencies changed from provided -->
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-ext</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xmlParserAPIs</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <targetPath>META-INF/andromda/mappings</targetPath>
+                <directory>../../andromda-etc/mappings</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-plugin-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

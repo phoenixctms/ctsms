@@ -1,0 +1,23 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda</groupId>
+        <artifactId>andromda</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <groupId>org.andromda.ant</groupId>
+    <artifactId>andromda-ant-support</artifactId>
+    <packaging>pom</packaging>
+    <name>AndroMDA Ant Support</name>
+    <description>The collection of AndroMDA libraries supporting Ant.</description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/ant</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/ant</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/ant/</url>
+    </scm>
+    <modules>
+        <module>andromda</module>
+        <module>task</module>
+    </modules>
+</project>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Cartridges">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="Overview">
+            <item name="About" href="/index.html"/>
+            <item name="Developing" href="/developing.html"/>
+        </menu>
+        <menu name="Schemas">
+            <item name="Descriptor" href="/descriptor-schema.html"/>
+        </menu>
+        <menu name="Available Cartridges">
+            <item name="BPM4Struts" href="/andromda-bpm4struts-cartridge/index.html"/>
+            <item name="jBPM" href="/andromda-jbpm-cartridge/index.html"/>
+            <item name="JSF" href="/andromda-jsf-cartridge/index.html"/>
+            <item name="EJB" href="/andromda-ejb-cartridge/index.html"/>
+            <item name="EJB3" href="/andromda-ejb3-cartridge/index.html"/>
+            <item name="Hibernate" href="/andromda-hibernate-cartridge/index.html"/>
+            <item name="Java" href="/andromda-java-cartridge/index.html"/>
+            <item name="Meta" href="/andromda-meta-cartridge/index.html"/>
+            <item name="Spring" href="/andromda-spring-cartridge/index.html"/>
+            <item name="WebService" href="/andromda-webservice-cartridge/index.html"/>
+            <item name="XmlSchema" href="/andromda-xmlschema-cartridge/index.html"/>
+        </menu>
+    </body>
+</project>

@@ -644,7 +644,7 @@
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<!-- SonarQube apparently has a problem with .xml files -->
 		<sonar.exclusions> **/*.xml</sonar.exclusions>
-		<andromda.version>3.4</andromda.version>
+		<andromda.version>3.5-SNAPSHOT</andromda.version>
 		<java.version>11</java.version>
 		<downloadSources>true</downloadSources>
 		<createChecksum>true</createChecksum>
@@ -794,10 +794,10 @@
 		</profile>
 	</profiles>
 	<pluginRepositories>
-		<!-- <pluginRepository>
+		<pluginRepository>
         	<id>local-maven-repo</id>
         	<url>file:///${project.basedir}/../repository</url>
-    	</pluginRepository> -->
+    	</pluginRepository>
 		<pluginRepository>
 			<id>maven-repo</id>
 			<name>repo1 maven.org</name>

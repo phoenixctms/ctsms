@@ -1,0 +1,67 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.maven.plugins</groupId>
+        <artifactId>andromda-maven-plugins</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <groupId>org.andromda.maven.plugins.site</groupId>
+    <artifactId>andromda-site-plugins</artifactId>
+    <packaging>pom</packaging>
+    <name>AndroMDA Maven Site Plugins</name>
+    <description>
+        The AndroMDA Maven site plugins
+    </description>
+    <inceptionYear>2006</inceptionYear>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/maven/site</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/maven/site</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/maven/site/</url>
+    </scm>
+    <!-- Error when creating site documentation for andromda-site-skin: FileNotFoundException:
+    andromda-all\maven\site\skin\target\classes (Access is denied).
+    Trying to open a directory as an archive file. Works for install phase but not for site. -->
+    <profiles>
+        <profile>
+            <id>install</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>site</module>
+                <module>cartridge</module>
+                <module>skin</module>
+            </modules>
+        </profile>
+        <!-- Remove skin module from all site build profiles -->
+        <profile>
+            <id>sourceforge</id>
+            <modules>
+                <module>site</module>
+                <module>cartridge</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>local</id>
+            <modules>
+                <module>site</module>
+                <module>cartridge</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>andromda-site</id>
+            <modules>
+                <module>site</module>
+                <module>cartridge</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>andromda-site-light</id>
+            <modules>
+                <module>site</module>
+                <module>cartridge</module>
+            </modules>
+        </profile>
+    </profiles>
+</project>

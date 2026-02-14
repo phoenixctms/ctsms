@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Core">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="Schema2XMI">
+            <item name="Schema2XMI" href="andromda-schema2xmi/index.html"/>
+        </menu>
+        <menu name="Script Wrappers">
+            <item name="Script Wrappers" href="andromda-script-wrappers/index.html"/>
+        </menu>
+        <menu name="Tag Libraries">
+            <item name="Tag Libraries" href="andromda-taglibs/andromda-breadcrumbs-taglib/index.html"/>
+            <item name="Breadcrumbs" href="andromda-taglibs/andromda-breadcrumbs-taglib/index.html"/>
+            <item name="Collections" href="andromda-taglibs/andromda-collections-taglib/index.html"/>            
+            <item name="Formatting" href="andromda-taglibs/andromda-formatting-taglib/index.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

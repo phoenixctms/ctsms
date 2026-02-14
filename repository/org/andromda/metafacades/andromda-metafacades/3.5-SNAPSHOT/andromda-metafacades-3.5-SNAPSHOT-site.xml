@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Metafacades">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <links>
+            <item name="Home" href="../index.html"/>
+            <item name="Metafacades" href="/index.html"/>
+        </links>
+        <menu ref="parent"/>
+        <menu name="Overview">
+            <item name="About" href="index.html"/>
+            <item name="Developing" href="developing.html"/>
+            <item name="Configuring" href="configuring.html"/>
+        </menu>
+        <menu name="Schemas">
+            <item name="Descriptor" href="descriptor-schema.html"/>
+        </menu>
+        <menu name="Available Metafacades">
+            <item name="Common UML Metafacades" href="/andromda-uml-metafacades/andromda-metafacades-uml/index.html"/>
+            <item name="UML 1.4 Metafacades" href="/andromda-uml-metafacades/andromda-metafacades-uml14/index.html"/>
+            <!--item name="EMF UML2 1.X Metafacades" href="/andromda-uml-metafacades/emf/andromda-metafacades-emf-uml2/index.html"/-->
+            <item name="EMF UML2 2.X Metafacades" href="/andromda-uml-metafacades/emf/andromda-metafacades-emf-uml22/index.html"/>
+        </menu>
+        <menu name="Downloads">
+            <item name="PDF" href="resources/andromda-metafacades.pdf"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

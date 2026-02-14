@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Core">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="App Generator">
+            <item name="Core" href="../andromda-andromdapp-core/index.html"/>
+            <item name="Projects" href="/index.html"/>            
+            <item name="J2EE Generator" href="../andromda-andromdapp-projects/j2ee/andromda-andromdapp-project-j2ee-maven2/index.html"/>
+            <item name="RichClient Generator" href="../andromda-andromdapp-projects/richclient/andromda-andromdapp-project-richclient-ant/index.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

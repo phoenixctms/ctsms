@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>andromda-maven-plugins</artifactId>
+        <groupId>org.andromda.maven.plugins</groupId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromdanetapp-maven-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <name>AndroMDA .NET Application Generator Maven Plugin</name>
+    <description>
+        A plugin for running AndroMDA's AndroMDANetApp application generator
+        to generate Maven2 AndroMDA powered applications.
+    </description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/maven/andromdanetapp/</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/maven/andromdanetapp/</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/maven/andromdanetapp//</url>
+    </scm>
+    <dependencies>
+        <!-- Maven dependencies -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+        </dependency>
+
+        <!-- Andromda dependencies -->
+        <dependency>
+            <groupId>org.andromda</groupId>
+            <artifactId>andromda-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda.maven.plugins</groupId>
+            <artifactId>andromdapp-maven-plugin</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda.andromdapp</groupId>
+            <artifactId>andromda-andromdapp-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda.andromdapp.projects</groupId>
+            <artifactId>andromda-andromdapp-projects-csharp-maven2</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda.templateengines</groupId>
+            <artifactId>andromda-templateengine-velocity</artifactId>
+            <version>${andromda.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-plugin-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

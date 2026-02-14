@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Metafacades">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <links>
+              <item name="UML Metafacades" href="/index.html"/>
+        </links>
+        <menu ref="parent"/>
+        <menu name="Available Metafacades">
+            <item name="Common UML Metafacades" href="/andromda-metafacades-uml/index.html"/>
+            <item name="UML 1.4 Metafacades" href="/andromda-metafacades-uml14/index.html"/>
+            <item name="EMF UML2 2.X Metafacades" href="/emf/andromda-metafacades-emf-uml22/index.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>
