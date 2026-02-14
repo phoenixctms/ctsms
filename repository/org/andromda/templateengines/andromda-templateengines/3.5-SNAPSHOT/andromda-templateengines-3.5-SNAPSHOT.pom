@@ -1,0 +1,30 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda</groupId>
+        <artifactId>andromda</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <groupId>org.andromda.templateengines</groupId>
+    <artifactId>andromda-templateengines</artifactId>
+    <packaging>pom</packaging>
+    <name>AndroMDA Template Engines</name>
+    <description>The collection of Template Engine implementations.</description>
+    <dependencies>
+        <dependency>
+            <groupId>org.andromda</groupId>
+            <artifactId>andromda-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <modules>
+        <module>andromda-templateengine-velocity</module>
+        <module>andromda-templateengine-freemarker</module>
+    </modules>
+</project>

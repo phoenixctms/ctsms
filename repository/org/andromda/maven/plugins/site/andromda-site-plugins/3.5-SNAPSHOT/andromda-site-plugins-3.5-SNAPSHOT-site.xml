@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Maven site plugins">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="Available Plugins">
+            <item name="AndroMDA Site Cartridge Plugin" href="/andromda-site-cartridge-plugin/index.html"/>
+            <item name="AndroMDA Site Plugin" href="/andromda-site-plugin/index.html"/>
+            <item name="AndroMDA Site Skin" href="/andromda-site-skin/index.html"/>
+        </menu>
+        <menu ref="reports"/>
+      </body>
+</project>

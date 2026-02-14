@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-plugins</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromda-site-cartridge-plugin</artifactId>
+    <packaging>maven-plugin</packaging>
+    <name>AndroMDA Site Cartridge Plugin</name>
+    <description>
+        A plugin that enhances the maven site plugin and perform cartridge specific tasks required
+        at the site creation phase.  One of its tasks is to run AndroMDA over the cartridge HowTo model
+        and unpack the HowTo pictures archive.
+    </description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/maven/site/cartridge</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/maven/site/cartridge</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/maven/site/cartridge/</url>
+    </scm>
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <!-- Maven dependencies -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+        </dependency>
+
+        <!-- Andromda dependencies -->
+        <dependency>
+            <groupId>org.andromda.maven.plugins</groupId>
+            <artifactId>andromda-maven-plugin</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-plugin-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.andromdapp.projects</groupId>
+        <artifactId>andromda-andromdapp-projects</artifactId>
+        <version>3.5-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <artifactId>andromda-andromdapp-projects-csharp-maven2</artifactId>
+    <packaging>jar</packaging>
+    <name>AndroMDA .NET C# Maven2 Project</name>
+    <description>AndroMDA powered .Net C# Maven2 Application</description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/andromda-andromdapp/projects/csharp/maven2</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/andromda-andromdapp/projects/csharp/maven2</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/andromda-andromdapp/projects/charp/maven2</url>
+    </scm>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/configuration.xml</exclude>
+                    <exclude>templates/csharp/maven2/common/pom-with-CS-plugin.xml.vsl</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../../../andromda-etc/andromda-dotnet/Lib/AndroMDA.NHibernateSupport</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>templates/csharp/maven2/lib</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../../../andromda-etc/andromda-dotnet/Lib/NHibernate</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>templates/csharp/maven2/lib</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../../../andromda-etc/andromda-dotnet/Lib/NHibernate.Nullables2</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>templates/csharp/maven2/lib</targetPath>
+            </resource>
+            <resource>
+                <directory>${project.basedir}/../../../../andromda-etc/andromda-dotnet/Lib/NHibernateContrib</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>templates/csharp/maven2/lib</targetPath>
+            </resource>
+
+            <!-- The empty model exists in the andromda repository, but not in the
+                andromdaplugins repo. So, we'll just have to copy it manually for now.-->
+            <!-- resource>
+                <directory>${project.basedir}/../../../../etc/mda/uml</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <targetPath>templates/csharp/maven2/mda/src/main/uml</targetPath>
+            </resource-->
+        </resources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Template Engines">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <links>
+            <item name="Template Engines" href="/index.html"/>
+        </links>
+        <menu ref="parent"/>
+        <menu name="Overview">
+            <item name="About" href="index.html"/>
+            <item name="Developing" href="developing.html"/>
+        </menu>
+        <menu name="Available Template Engines">
+            <item name="Velocity" href="andromda-templateengine-velocity/index.html"/>
+            <item name="Freemarker" href="andromda-templateengine-freemarker/index.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

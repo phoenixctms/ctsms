@@ -1,0 +1,64 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.translationlibraries</groupId>
+        <artifactId>andromda-translation-libraries</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromda-ocl-translation-libraries</artifactId>
+    <packaging>pom</packaging>
+    <name>AndroMDA OCL Translation Libraries</name>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/translation-libraries/ocl</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/translation-libraries/ocl</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/translation-libraries/ocl/</url>
+    </scm>
+    <modules>
+        <module>core</module>
+        <module>testsuite</module>
+        <module>andromda-query</module>
+        <module>andromda-validation</module>
+    </modules>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.andromda.maven.plugins</groupId>
+                    <artifactId>andromda-bootstrap-install-plugin</artifactId>
+                    <version>${andromda.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.andromda.maven.plugins</groupId>
+                    <artifactId>andromda-bootstrap-plugin</artifactId>
+                    <version>${andromda.version}</version>
+                </plugin>
+                <!--Perform xslt transformation of namespace.xml for site generation-->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>xml-maven-plugin</artifactId>
+                    <version>${xml-maven-plugin.version}</version>
+                    <configuration>
+                        <transformationSets>
+                            <transformationSet>
+                                <addedToClasspath>false</addedToClasspath>
+                                <dir>src/main/resources/META-INF/andromda</dir>
+                                <includes>
+                                    <include>namespace.xml</include>
+                                </includes>
+                                <stylesheet>../../../andromda-etc/xsl/namespace.xsl</stylesheet>
+                                <parameters>
+                                    <parameter>
+                                        <name>projectName</name>
+                                        <value>${project.name}</value>
+                                    </parameter>
+                                </parameters>
+                                <outputDir>src/site/xdoc</outputDir>
+                            </transformationSet>
+                        </transformationSets>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

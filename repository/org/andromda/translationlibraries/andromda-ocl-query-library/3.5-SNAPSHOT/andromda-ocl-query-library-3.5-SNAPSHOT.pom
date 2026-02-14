@@ -1,0 +1,65 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.translationlibraries</groupId>
+        <artifactId>andromda-ocl-translation-libraries</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromda-ocl-query-library</artifactId>
+    <packaging>jar</packaging>
+    <name>AndroMDA OCL Query Translation-Library</name>
+    <description>
+        Performs translation of OCL query expressions to different query languages, currently supports
+        Enterprise Java Bean Query Language and Hibernate Query Language.
+    </description>
+    <scm>
+        <connection>scm:svn:http://svn.code.sf.net/p/andromda/svn/trunk/translation-libraries/ocl/andromda-query</connection>
+        <developerConnection>scm:svn:svn+ssh://svn.code.sf.net/p/andromda/svn/trunk/ocl/andromda-query</developerConnection>
+        <url>http://svn.code.sf.net/p/andromda/svn/trunk/translation-libraries/ocl/andromda-query/</url>
+    </scm>
+    <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.andromda</groupId>
+            <artifactId>andromda-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>andromda-ocl-translation-core</artifactId>
+            <version>${andromda.version}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.andromda.maven.plugins</groupId>
+                <artifactId>andromda-bootstrap-plugin</artifactId>
+                <configuration>
+                    <configurationUri>file:${project.basedir}/../conf/test/andromda.xml</configurationUri>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <!--Perform xslt transformation of namespace.xml for site generation-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xml-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+    <properties>
+        <andromda.translationlibrary.model.uri>
+            jar:file:${project.basedir}/src/test/uml/QueryLibraryTestModel.xml.zip!/QueryLibraryTestModel.xml
+        </andromda.translationlibrary.model.uri>
+    </properties>
+</project>

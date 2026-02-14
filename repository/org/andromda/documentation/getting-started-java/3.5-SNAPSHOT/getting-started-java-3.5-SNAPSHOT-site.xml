@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="Getting started Java">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="Getting Started Java">
+            <item name="Introduction" href="index.html"/>
+            <item name="Application Architecture" href="application-architecture.html"/>
+            <item name="Sample Application" href="sample-application.html"/>
+            <item name="Environment Setup" href="env-setup.html"/>
+            <item name="TimeTracker Tour" href="timetracker-tour.html"/>
+            <item name="Development Approach" href="development-approach.html"/>
+            <item name="Starter App" href="create-application.html"/>
+            <item name="UserService Definition" href="userservice-definition.html"/>
+            <item name="UserService Implementation" href="userservice-implementation.html"/>
+            <item name="Search Criteria Panel" href="search-criteria-panel.html"/>
+            <item name="TimeTrackingService Definition" href="timetrackingservice-definition.html"/>
+            <item name="TimeTrackingService Implementation" href="timetrackingservice-implementation.html"/>
+            <item name="Search Results Panel" href="search-results-panel.html"/>
+            <item name="Details Column" href="details-column.html"/>
+            <item name="Customizing the Look and Feel" href="look-and-feel.html"/>
+            <item name="Integrating with Spring Security System" href="security.html"/>
+            <item name="Where to go from here?" href="finish.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

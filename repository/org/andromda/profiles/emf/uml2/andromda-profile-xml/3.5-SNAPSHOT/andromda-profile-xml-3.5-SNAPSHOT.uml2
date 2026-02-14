@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Profile xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/1.0.0/UML" xmi:id="_jl5IDmprEdummsSofer0Pg" name="AndroMDA Profile Xml" metamodelReference="_jl5IF2prEdummsSofer0Pg">
+  <eAnnotations xmi:id="_jl5ID2prEdummsSofer0Pg" source="attributes">
+    <details xmi:id="_jl5IEGprEdummsSofer0Pg" key="version" value="1"/>
+  </eAnnotations>
+  <eAnnotations xmi:id="_jl5IEWprEdummsSofer0Pg" source="ePackages">
+    <contents xmi:type="ecore:EPackage" xmi:id="_whCZpWp0EdutkrH8jZWcfw" name="AndroMDAProfileXml_1" nsURI="http:///AndroMDAProfileXml_1_whCZpGp0EdutkrH8jZWcfw.profile.uml2" nsPrefix="AndroMDAProfileXml_1">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_whCZpmp0EdutkrH8jZWcfw" name="AndroMDAProfileXml__XmlSchemaType">
+        <eAnnotations xmi:id="_whCZp2p0EdutkrH8jZWcfw" source="stereotype" references="_jl5INWprEdummsSofer0Pg"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_whCZqGp0EdutkrH8jZWcfw" name="AndroMDAProfileXml__XmlAttribute">
+        <eAnnotations xmi:id="_whCZqWp0EdutkrH8jZWcfw" source="stereotype" references="_jl5IOGprEdummsSofer0Pg"/>
+      </eClassifiers>
+    </contents>
+    <contents xmi:type="ecore:EPackage" xmi:id="_jl5IEmprEdummsSofer0Pg" name="AndroMDAProfileXml_0" nsURI="http:///AndroMDAProfileXml_0_jks1IWprEdummsSofer0Pg.profile.uml2" nsPrefix="AndroMDAProfileXml_0">
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_jl5IE2prEdummsSofer0Pg" name="AndroMDAProfileXml__XmlSchemaType">
+        <eAnnotations xmi:id="_jl5IFGprEdummsSofer0Pg" source="stereotype" references="_jl5INWprEdummsSofer0Pg"/>
+      </eClassifiers>
+      <eClassifiers xmi:type="ecore:EClass" xmi:id="_jl5IFWprEdummsSofer0Pg" name="AndroMDAProfileXml__XmlAttribute">
+        <eAnnotations xmi:id="_jl5IFmprEdummsSofer0Pg" source="stereotype" references="_jl5IOGprEdummsSofer0Pg"/>
+      </eClassifiers>
+    </contents>
+  </eAnnotations>
+  <packageImport xmi:id="_jl5IF2prEdummsSofer0Pg" visibility="private">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_METAMODELS/UML2.metamodel.uml2#_m8qbA686EdiEh75YJ_3n8g"/>
+  </packageImport>
+  <packageImport xmi:id="_jl5IGGprEdummsSofer0Pg">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_LIBRARIES/UML2PrimitiveTypes.library.uml2#_EfRZoK86EdieaYgxtVWN8Q"/>
+  </packageImport>
+  <packageImport xmi:id="_jl5IGWprEdummsSofer0Pg">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_LIBRARIES/JavaPrimitiveTypes.library.uml2#_RjmyoK86EdieaYgxtVWN8Q"/>
+  </packageImport>
+  <ownedMember xmi:type="uml:Stereotype" xmi:id="_jl5INWprEdummsSofer0Pg" name="XmlSchemaType">
+    <ownedComment xmi:id="_jl5INmprEdummsSofer0Pg">
+      <body>Represents an XML Schema type.</body>
+    </ownedComment>
+    <ownedAttribute xmi:id="_wfQQ82p0EdutkrH8jZWcfw" name="base$Class" association="_wfQQ8Gp0EdutkrH8jZWcfw">
+      <type xmi:type="uml:Class" href="pathmap://UML2_METAMODELS/UML2.metamodel.uml2#_m88uxq86EdiEh75YJ_3n8g"/>
+    </ownedAttribute>
+  </ownedMember>
+  <ownedMember xmi:type="uml:Stereotype" xmi:id="_jl5IOGprEdummsSofer0Pg" name="XmlAttribute">
+    <ownedComment xmi:id="_jl5IOWprEdummsSofer0Pg">
+      <body>Defines whether or not an attribute should be represented as an XML Schema attribute during generation time, if its either false, or not defined, then it will be assumed that the UML attribute should be represented as an XML Schema element instead.</body>
+    </ownedComment>
+    <ownedAttribute xmi:id="_whCZo2p0EdutkrH8jZWcfw" name="base$Property" association="_whCZoGp0EdutkrH8jZWcfw">
+      <type xmi:type="uml:Class" href="pathmap://UML2_METAMODELS/UML2.metamodel.uml2#_m9C1la86EdiEh75YJ_3n8g"/>
+    </ownedAttribute>
+  </ownedMember>
+  <ownedMember xmi:type="uml:Extension" xmi:id="_wfQQ8Gp0EdutkrH8jZWcfw" name="Class_XmlSchemaType" memberEnd="_wfQQ8Wp0EdutkrH8jZWcfw _wfQQ82p0EdutkrH8jZWcfw">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_wfQQ8Wp0EdutkrH8jZWcfw" name="extension$XmlSchemaType" type="_jl5INWprEdummsSofer0Pg" association="_wfQQ8Gp0EdutkrH8jZWcfw" aggregation="composite">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wfQQ8mp0EdutkrH8jZWcfw"/>
+    </ownedEnd>
+  </ownedMember>
+  <ownedMember xmi:type="uml:Extension" xmi:id="_whCZoGp0EdutkrH8jZWcfw" name="Property_XmlAttribute" memberEnd="_whCZoWp0EdutkrH8jZWcfw _whCZo2p0EdutkrH8jZWcfw">
+    <ownedEnd xmi:type="uml:ExtensionEnd" xmi:id="_whCZoWp0EdutkrH8jZWcfw" name="extension$XmlAttribute" type="_jl5IOGprEdummsSofer0Pg" association="_whCZoGp0EdutkrH8jZWcfw" aggregation="composite">
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_whCZomp0EdutkrH8jZWcfw"/>
+    </ownedEnd>
+  </ownedMember>
+</uml:Profile>

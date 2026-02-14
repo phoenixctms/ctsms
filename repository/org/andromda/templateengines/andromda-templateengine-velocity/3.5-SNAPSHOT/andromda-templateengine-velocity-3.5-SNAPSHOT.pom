@@ -1,0 +1,23 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.andromda.templateengines</groupId>
+        <artifactId>andromda-templateengines</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </parent>
+    <artifactId>andromda-templateengine-velocity</artifactId>
+    <packaging>jar</packaging>
+    <name>AndroMDA Velocity Template Engine</name>
+    <description>The template engine that supports Apache's Velocity scripting language.</description>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-tools</artifactId>
+        </dependency>
+    </dependencies>
+</project>

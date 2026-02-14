@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Basic_0="http:///Basic_0.profile.uml2" xmlns:uml="http://www.eclipse.org/uml2/1.0.0/UML" xsi:schemaLocation="http:///Basic_0.profile.uml2 pathmap://UML2_PROFILES/Basic.profile.uml2#__LeIQK86Edih9-GG5afQ0g" xmi:id="_pg7wEBiHEduGO9US2WjLjg" name="AndroMDA Datatypes" appliedProfile="_97koQBiHEduLkrFgTDVTzA">
+  <eAnnotations xmi:id="_-AyfcBiHEduLkrFgTDVTzA" source="appliedStereotypes">
+    <contents xmi:type="Basic_0:Basic__ModelLibrary" xmi:id="_-EqS0BiHEduLkrFgTDVTzA"/>
+  </eAnnotations>
+  <packageImport xmi:id="_pg7wERiHEduGO9US2WjLjg">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML2_LIBRARIES/UML2PrimitiveTypes.library.uml2#_EfRZoK86EdieaYgxtVWN8Q"/>
+  </packageImport>
+  <packageImport xmi:type="uml:ProfileApplication" xmi:id="_97koQBiHEduLkrFgTDVTzA">
+    <eAnnotations xmi:id="_99D2ABiHEduLkrFgTDVTzA" source="attributes">
+      <details xmi:id="_99D2ARiHEduLkrFgTDVTzA" key="version" value="0"/>
+    </eAnnotations>
+    <importedPackage xmi:type="uml:Profile" href="pathmap://UML2_PROFILES/Basic.profile.uml2#_6mFRgK86Edih9-GG5afQ0g"/>
+    <importedProfile href="pathmap://UML2_PROFILES/Basic.profile.uml2#_6mFRgK86Edih9-GG5afQ0g"/>
+  </packageImport>
+  <ownedMember xmi:type="uml:Package" xmi:id="_pg7wExiHEduGO9US2WjLjg" name="datatype">
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wFBiHEduGO9US2WjLjg" name="URL"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wFRiHEduGO9US2WjLjg" name="Blob"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wFhiHEduGO9US2WjLjg" name="boolean"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wFxiHEduGO9US2WjLjg" name="Boolean">
+      <generalization xmi:id="_pg7wGBiHEduGO9US2WjLjg" general="_pg7wFhiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wGRiHEduGO9US2WjLjg" name="Boolean[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wGhiHEduGO9US2WjLjg" name="boolean[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wGxiHEduGO9US2WjLjg" name="Byte">
+      <generalization xmi:id="_pg7wHBiHEduGO9US2WjLjg" general="_pg7wHRiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wHRiHEduGO9US2WjLjg" name="byte"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wHhiHEduGO9US2WjLjg" name="byte[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wHxiHEduGO9US2WjLjg" name="Byte[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wIBiHEduGO9US2WjLjg" name="char"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wIRiHEduGO9US2WjLjg" name="Character">
+      <generalization xmi:id="_pg7wIhiHEduGO9US2WjLjg" general="_pg7wIBiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wIxiHEduGO9US2WjLjg" name="Character[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wJBiHEduGO9US2WjLjg" name="char[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wJRiHEduGO9US2WjLjg" name="Clob"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wJhiHEduGO9US2WjLjg" name="Collection"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wJxiHEduGO9US2WjLjg" name="Date"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wKBiHEduGO9US2WjLjg" name="DateTime">
+      <generalization xmi:id="_pg7wKRiHEduGO9US2WjLjg" general="_pg7wUxiHEduGO9US2WjLjg"/>
+      <generalization xmi:id="_pg7wKhiHEduGO9US2WjLjg" general="_pg7wJxiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wKxiHEduGO9US2WjLjg" name="DateTime[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wLBiHEduGO9US2WjLjg" name="Date[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wLRiHEduGO9US2WjLjg" name="Decimal"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wLhiHEduGO9US2WjLjg" name="Decimal[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wLxiHEduGO9US2WjLjg" name="Document"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wMBiHEduGO9US2WjLjg" name="Double">
+      <generalization xmi:id="_pg7wMRiHEduGO9US2WjLjg" general="_pg7wMhiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wMhiHEduGO9US2WjLjg" name="double"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wMxiHEduGO9US2WjLjg" name="double[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wNBiHEduGO9US2WjLjg" name="Double[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wNRiHEduGO9US2WjLjg" name="File"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wNhiHEduGO9US2WjLjg" name="File[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wNxiHEduGO9US2WjLjg" name="float"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wOBiHEduGO9US2WjLjg" name="Float">
+      <generalization xmi:id="_pg7wORiHEduGO9US2WjLjg" general="_pg7wNxiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wOhiHEduGO9US2WjLjg" name="float[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wOxiHEduGO9US2WjLjg" name="Float[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wPBiHEduGO9US2WjLjg" name="Guid"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wPRiHEduGO9US2WjLjg" name="int"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wPhiHEduGO9US2WjLjg" name="Integer">
+      <generalization xmi:id="_pg7wPxiHEduGO9US2WjLjg" general="_pg7wPRiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wQBiHEduGO9US2WjLjg" name="Integer[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wQRiHEduGO9US2WjLjg" name="int[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wQhiHEduGO9US2WjLjg" name="List">
+      <generalization xmi:id="_pg7wQxiHEduGO9US2WjLjg" general="_pg7wJhiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wRBiHEduGO9US2WjLjg" name="Long">
+      <generalization xmi:id="_pg7wRRiHEduGO9US2WjLjg" general="_pg7wYRiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wRhiHEduGO9US2WjLjg" name="Long[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wRxiHEduGO9US2WjLjg" name="Mappings"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wSBiHEduGO9US2WjLjg" name="Object"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wSRiHEduGO9US2WjLjg" name="Short">
+      <generalization xmi:id="_pg7wShiHEduGO9US2WjLjg" general="_pg7wSxiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wSxiHEduGO9US2WjLjg" name="short"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wTBiHEduGO9US2WjLjg" name="Set">
+      <generalization xmi:id="_pg7wTRiHEduGO9US2WjLjg" general="_pg7wJhiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wThiHEduGO9US2WjLjg" name="Short[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wTxiHEduGO9US2WjLjg" name="Object[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wUBiHEduGO9US2WjLjg" name="String"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wURiHEduGO9US2WjLjg" name="String[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wUhiHEduGO9US2WjLjg" name="short[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wUxiHEduGO9US2WjLjg" name="Time"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wVBiHEduGO9US2WjLjg" name="Timestamp">
+      <generalization xmi:id="_pg7wVRiHEduGO9US2WjLjg" general="_pg7wJxiHEduGO9US2WjLjg"/>
+      <generalization xmi:id="_pg7wVhiHEduGO9US2WjLjg" general="_pg7wUxiHEduGO9US2WjLjg"/>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wVxiHEduGO9US2WjLjg" name="Time[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wWBiHEduGO9US2WjLjg" name="Timestamp[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wWRiHEduGO9US2WjLjg" name="TreeNode">
+      <ownedComment xmi:id="_pg7wWhiHEduGO9US2WjLjg">
+        <body>Represents a node in a tree</body>
+      </ownedComment>
+    </ownedMember>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wWxiHEduGO9US2WjLjg" name="URI"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wXBiHEduGO9US2WjLjg" name="URI[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wXRiHEduGO9US2WjLjg" name="Money"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wXhiHEduGO9US2WjLjg" name="long[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wXxiHEduGO9US2WjLjg" name="Map"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wYBiHEduGO9US2WjLjg" name="URL[]"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wYRiHEduGO9US2WjLjg" name="long"/>
+    <ownedMember xmi:type="uml:PrimitiveType" xmi:id="_pg7wYhiHEduGO9US2WjLjg" name="void"/>
+  </ownedMember>
+</uml:Model>

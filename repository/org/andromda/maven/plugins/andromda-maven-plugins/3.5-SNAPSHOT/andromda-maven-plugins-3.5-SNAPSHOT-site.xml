@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
+ name="AndroMDA Metafacades">
+    <skin>
+        <groupId>org.andromda.maven.plugins.site</groupId>
+        <artifactId>andromda-site-skin</artifactId>
+        <version>3.5-SNAPSHOT</version>
+    </skin>
+    <bannerLeft>
+        <name/>
+    </bannerLeft>
+    <publishDate format="dd MMM yyyy hh:mm zzz"/>
+    <body>
+        <menu ref="parent"/>
+        <menu name="Available Plugins">
+            <item name="Andromda" href="/andromda-maven-plugin/index.html"/>
+            <item name="Andromdapp" href="/andromdapp-maven-plugin/index.html"/>
+            <item name="Andromdanetapp" href="/andromdanetapp-maven-plugin/index.html"/>
+            <item name="Model Archiver" href="/andromda-model-archiver-plugin/index.html"/>
+            <item name="Beautifier" href="/andromda-beautifier-plugin/index.html"/>
+            <item name="Bootstrap" href="/andromda-bootstrap-plugin/index.html"/>
+            <item name="Bootstrap Install" href="/andromda-bootstrap-install-plugin/index.html"/>
+            <item name="Cartridge" href="/andromda-cartridge-plugin/index.html"/>
+            <item name="Translation Library" href="/andromda-translation-library-plugin/index.html"/>
+            <item name="Configuration" href="/andromda-configuration-mojo/index.html"/>
+            <item name="Cartridge Site" href="/andromda-site-plugins/andromda-site-cartridge-plugin/index.html"/>
+            <item name="Site" href="/andromda-site-plugins/andromda-site-plugin/index.html"/>
+        </menu>
+        <menu ref="reports"/>
+      </body>
+</project>
