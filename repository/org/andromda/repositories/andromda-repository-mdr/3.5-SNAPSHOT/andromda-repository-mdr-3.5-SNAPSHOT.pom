@@ -47,10 +47,14 @@
             <groupId>org.andromda.thirdparty.netbeans.mdr</groupId>
             <artifactId>nbmdr</artifactId>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>org.andromda.thirdparty.netbeans.mdr</groupId>
             <artifactId>openide-util</artifactId>
-        </dependency>
+        </dependency> -->
+<dependency>
+    <groupId>org.netbeans.api</groupId>
+    <artifactId>org-openide-util</artifactId>
+</dependency>            
         <dependency>
             <groupId>org.andromda.thirdparty.jmi</groupId>
             <artifactId>mof</artifactId>
