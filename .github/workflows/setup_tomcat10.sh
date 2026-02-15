@@ -4,7 +4,7 @@ apt-get -q -y -o=Dpkg::Use-Pty=0 install tomcat10
 systemctl stop tomcat10
 usermod --append --groups ctsms tomcat
 #VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
-#sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:+CMSClassUnloadingEnabled -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
+#sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
 echo "CTSMS_PROPERTIES=/ctsms/properties" >>/etc/default/tomcat10
 echo "CTSMS_JAVA=/ctsms/java" >>/etc/default/tomcat10
 #echo "JDK_JAVA_OPTIONS=--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" >>/etc/default/tomcat10

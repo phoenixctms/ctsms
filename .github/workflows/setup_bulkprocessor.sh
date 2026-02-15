@@ -17,7 +17,6 @@ libdbd-csv-perl \
 libdbd-mysql-perl \
 libdbd-sqlite3-perl \
 tdsodbc \
-libdbd-odbc-perl \
 libdigest-md5-perl \
 libemail-mime-attachment-stripper-perl \
 libemail-mime-perl \
@@ -59,6 +58,8 @@ libplack-perl \
 libcache-memcached-perl \
 libdancer-session-memcached-perl \
 libgraphviz-perl \
+unixodbc \
+unixodbc-dev \
 gnuplot \
 imagemagick \
 ghostscript \
@@ -73,6 +74,7 @@ else
   cpanm Sys::CpuAffinity
   cpanm threads::shared
 fi
+cpanm --notest DBD::ODBC
 cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 cpanm --notest Spreadsheet::Reader::Format
