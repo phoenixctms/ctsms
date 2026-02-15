@@ -392,11 +392,16 @@
                 <artifactId>nbmdr</artifactId>
                 <version>20050711</version>
             </dependency>
-            <dependency>
+            <!-- <dependency>
                 <groupId>org.andromda.thirdparty.netbeans.mdr</groupId>
                 <artifactId>openide-util</artifactId>
                 <version>20050711</version>
-            </dependency>
+            </dependency> -->
+<dependency>
+    <groupId>org.netbeans.api</groupId>
+    <artifactId>org-openide-util</artifactId>
+    <version>RELEASE180</version>
+</dependency>            
             <!--dependency>
                 <groupId>org.eclipse.uml2</groupId>
                 <artifactId>org.eclipse.uml2.uml.resources</artifactId>
