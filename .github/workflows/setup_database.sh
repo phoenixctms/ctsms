@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create --no-transfer-progress -c
+mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create --no-transfer-progress -c -q
 sudo useradd ctsms -p '*' --groups sudo
 #sudo apt-get install --yes postgresql
 sudo apt-get -q -y install postgresql-plperl
