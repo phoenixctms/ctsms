@@ -1,6 +1,7 @@
 <!-- [![Build and Analyze](https://github.com/phoenixctms/ctsms/actions/workflows/build.yml/badge.svg)](https://github.com/phoenixctms/ctsms/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=phoenixctms_ctsms&metric=alert_status)](https://sonarcloud.io/dashboard?id=phoenixctms_ctsms) -->
 [![Build and Test](https://github.com/phoenixctms/ctsms/actions/workflows/test.yml/badge.svg)](https://github.com/phoenixctms/ctsms/actions/workflows/test.yml)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/phoenixctms/ctsms)
 
 Phoenix CTMS
 =====
