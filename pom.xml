@@ -63,7 +63,8 @@
 		<repository>
             <id>terracotta-snapshots</id>
             <name>Terracotta Repo</name>
-            <url>https://www.terracotta.org/download/reflector/releases</url>
+            <!-- <url>https://www.terracotta.org/download/reflector/releases</url> -->
+            <url>https://repo.terracotta.org/maven2</url>
         </repository>
 		<repository>
 			<id>jbossrepo</id>
@@ -798,6 +799,10 @@
         	<id>local-maven-repo</id>
         	<url>file:///${project.basedir}/../repository</url>
     	</pluginRepository>
+		<pluginRepository>
+        	<id>local-maven-repo-newmaven</id>
+        	<url>file:///${project.basedir}/repository</url>
+    	</pluginRepository>    	
 		<pluginRepository>
 			<id>maven-repo</id>
 			<name>repo1 maven.org</name>
