@@ -40,6 +40,10 @@
         	<id>local-maven-repo</id>
         	<url>file:///${project.basedir}/../repository</url>
     	</repository>
+    	<repository>
+        	<id>local-maven-repo-newmaven</id>
+        	<url>file:///${project.basedir}/repository</url>
+    	</repository>
 		<!-- <repository>
 			<id>primefacerepo</id>
 			<name>PrimeFaces Repository</name>
