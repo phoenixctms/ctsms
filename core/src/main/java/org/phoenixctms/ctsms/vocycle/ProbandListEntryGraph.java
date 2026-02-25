@@ -99,7 +99,7 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 		probandListStatusEntryDao.toProbandListStatusEntryOutVO(source, target, voMap);
 	}
 
-	private static String getInguirySignupUrl(ProbandListEntry listEntry) {
+	private static String getInquirySignupUrl(ProbandListEntry listEntry) {
 		if (listEntry != null) {
 			String signupUrlFormat = Settings.getString(SettingCodes.INQUIRY_SIGNUP_URL, Bundle.SETTINGS, DefaultSettings.INQUIRY_SIGNUP_URL);
 			if (!CommonUtil.isEmptyString(signupUrlFormat)) {
@@ -129,6 +129,6 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
-		target.setInquirySignupUrl(getInguirySignupUrl(source));
+		target.setInquirySignupUrl(getInquirySignupUrl(source));
 	}
 }
