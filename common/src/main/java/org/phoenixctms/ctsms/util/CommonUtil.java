@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.util;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +45,8 @@ import java.util.TreeMap;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
 
 import org.apache.batik.anim.dom.SVGDOMImplementation;
 import org.apache.tika.detect.DefaultDetector;
@@ -106,6 +111,11 @@ import org.w3c.dom.Element;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import fr.marcwrobel.jbanking.bic.Bic;
 import fr.marcwrobel.jbanking.iban.Iban;
@@ -2749,6 +2759,51 @@ public final class CommonUtil {
 			}
 		}
 		return prefix;
+	}
+
+	public final static byte[] generateQRCodeImage(String text, int width, int height, int margin, java.awt.Color bgColor, java.awt.Color fgColor,
+			ErrorCorrectionLevel errorCorrectionLevel) {
+		final byte[] data;
+		if (!CommonUtil.isEmptyString(text)) {
+			Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
+			//hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+			hintMap.put(EncodeHintType.ERROR_CORRECTION, errorCorrectionLevel);
+			hintMap.put(EncodeHintType.MARGIN, margin);
+			QRCodeWriter qrCodeWriter = new QRCodeWriter();
+			BitMatrix byteMatrix = null;
+			try {
+				byteMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hintMap);
+			} catch (Exception e) {
+			}
+			if (byteMatrix != null) {
+				BufferedImage image = new BufferedImage(byteMatrix.getWidth(), byteMatrix.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				image.createGraphics();
+				Graphics2D graphics = (Graphics2D) image.getGraphics();
+				if (bgColor != null) {
+					graphics.setColor(bgColor); //Color.WHITE
+					graphics.fillRect(0, 0, byteMatrix.getWidth(), byteMatrix.getHeight());
+				}
+				graphics.setColor(fgColor); //Color.BLACK
+				for (int i = 0; i < byteMatrix.getWidth(); i++) {
+					for (int j = 0; j < byteMatrix.getHeight(); j++) {
+						if (byteMatrix.get(i, j)) {
+							graphics.fillRect(i, j, 1, 1);
+						}
+					}
+				}
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				try {
+					ImageIO.write(image, CommonUtil.PNG_FILENAME_EXTENSION, baos);
+				} catch (IOException e) {
+				}
+				data = baos.toByteArray();
+			} else {
+				data = null;
+			}
+		} else {
+			data = null;
+		}
+		return data;
 	}
 
 	private CommonUtil() {
