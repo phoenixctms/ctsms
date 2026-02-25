@@ -844,7 +844,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 		if (out != null) {
 			String signupUrlFormat = Settings.getString(SettingCodes.TRIAL_SIGNUP_URL, Bundle.SETTINGS, DefaultSettings.TRIAL_SIGNUP_URL);
 			if (!CommonUtil.isEmptyString(signupUrlFormat)) {
-				return MessageFormat.format(signupUrlFormat, Long.toString(out.getId()));
+				return MessageFormat.format(signupUrlFormat, WebUtil.getHttpBaseUrl(), Long.toString(out.getId()));
 			}
 		}
 		return null;

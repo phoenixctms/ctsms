@@ -14,8 +14,8 @@
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:panel>
-					<h:panelGrid columns="3" cellpadding="2"
-						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+					<h:panelGrid columns="6" cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 						<h:outputLabel for="inquiriestrial"
 							value="#{probandlabels.inquiry_value_inquiries_trial_label}" />
 						<h:panelGroup>
@@ -29,7 +29,7 @@
 								<f:selectItems value="#{inquiryValueBean.trials}"
 									var="selectItem" itemLabel="#{selectItem.label}"
 									itemValue="#{selectItem.value}" />
-								<p:ajax update="inquiry_input_grid"
+								<p:ajax update="inquiriessignup,inquiry_input_grid"
 									listener="#{inquiryValueBean.handleTrialChange}"
 									oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)" />
 							</p:selectOneMenu>
@@ -40,6 +40,39 @@
 							</p:tooltip>
 						</h:panelGroup>
 						<p:message for="inquiriestrial" />
+
+						<h:outputLabel for="inquirysignuplink"
+							value="#{probandlabels.inquiry_signup_link_label}" />
+						<h:panelGroup id="inquiriessignup">
+							<h:outputLink
+								rendered="#{not empty inquiryValueBean.probandListEntry.inquirySignupUrl}"
+								id="inquirysignuplink"
+								value="#{inquiryValueBean.probandListEntry.inquirySignupUrl}"
+								target="_blank">
+								<h:outputText
+									value="#{inquiryValueBean.probandListEntry.inquirySignupUrl}" />
+							</h:outputLink>
+							<p:tooltip
+								rendered="#{enableTooltips and not empty inquiryValueBean.probandListEntry.inquirySignupUrl}"
+								for="inquirysignuplink">
+								<h:outputFormat
+									value="#{probandlabels.inquiry_signup_link_tooltip}"
+									escape="false">
+									<f:param
+										value="#{inquiryValueBean.probandListEntry.inquirySignupUrl}" />
+								</h:outputFormat>
+							</p:tooltip>
+							<h:outputFormat
+								rendered="#{empty inquiryValueBean.probandListEntry.inquirySignupUrl}"
+								styleClass="ui-state-disabled"
+								value="#{empty inquiryValueBean.trial ? probandlabels.inquiry_signup_link_select_trial_label : empty inquiryValueBean.probandListEntry ? probandlabels.inquiry_signup_link_not_participant_label : probandlabels.inquiry_signup_link_not_configured_label}">
+								<f:param value="#{inquiryValueBean.trial.name}" />
+							</h:outputFormat>
+						</h:panelGroup>
+						<p:message
+							rendered="#{not empty inquiryValueBean.probandListEntry.inquirySignupUrl}"
+							for="inquirysignuplink" />
+
 					</h:panelGrid>
 				</p:panel>
 				<h:panelGrid id="inquiry_input_grid" columns="1" cellpadding="0"
@@ -60,7 +93,7 @@
 									<ui:param name="namingContainer"
 										value=":tabView:inquiryvalue_form" />
 									<ui:param name="update"
-										value=":tabView:inquiryvalue_form:inquiriestrial" />
+										value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiriessignup" />
 									<ui:param name="enabled" value="#{inquiryValueBean.editable}" />
 								</ui:include>
 
@@ -81,14 +114,14 @@
 								actionListener="#{inquiryValueBean.reset}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-close" ajax="true" disabled="false"
-								update="inquiriestrial,inquiry_input_grid" />
+								update="inquiriestrial,inquiriessignup,inquiry_input_grid" />
 							<p:commandButton process="@this,inquiry_inputs" id="update"
 								value="#{labels.update_page_button_label}"
 								actionListener="#{inquiryValueBean.update}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
 								disabled="#{!inquiryValueBean.editable}"
-								update="inquiriestrial,inquiry_input_grid">
+								update="inquiriestrial,inquiriessignup,inquiry_input_grid">
 								<f:param name="includeDisabled" value="true" />	
 							</p:commandButton>
 							<p:commandButton process="@this"
@@ -97,7 +130,7 @@
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!inquiryValueBean.created}"
-								update="inquiriestrial,inquiry_input_grid" />
+								update="inquiriestrial,inquiriessignup,inquiry_input_grid" />
 
 
 
@@ -147,7 +180,7 @@
 					<ui:include src="../shared/paginator.xhtml">
 						<ui:param name="valueBean" value="#{inquiryValueBean}" />
 						<ui:param name="update"
-							value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiry_input_grid" />
+							value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiriessignup,:tabView:inquiryvalue_form:inquiry_input_grid" />
 					</ui:include>
 				</h:panelGrid>
 			</h:panelGrid>
