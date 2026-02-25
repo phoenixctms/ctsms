@@ -618,7 +618,7 @@ public class FileBean extends ManagedBeanBase {
 		if (out != null) {
 			String publicFileUrlFormat = Settings.getString(SettingCodes.PUBLIC_FILE_SIGNUP_URL, Bundle.SETTINGS, DefaultSettings.PUBLIC_FILE_SIGNUP_URL);
 			if (!CommonUtil.isEmptyString(publicFileUrlFormat)) {
-				return MessageFormat.format(publicFileUrlFormat, Long.toString(out.getId()));
+				return MessageFormat.format(publicFileUrlFormat, WebUtil.getHttpBaseUrl(), Long.toString(out.getId()));
 			}
 		}
 		return null;

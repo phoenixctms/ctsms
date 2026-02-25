@@ -22,6 +22,7 @@ import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
@@ -45,6 +46,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	private Long probandId;
 	private ProbandOutVO proband;
+	private ProbandListEntryOutVO probandListEntry;
 	private Collection<ProbandAddressOutVO> probandAddresses;
 	private ArrayList<SelectItem> trials;
 	private Long trialsWithoutInquiryValuesCount;
@@ -179,6 +181,10 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		return proband;
 	}
 
+	public ProbandListEntryOutVO getProbandListEntry() {
+		return probandListEntry;
+	}
+
 	@Override
 	protected Collection<ProbandAddressOutVO> getProbandAddresses() {
 		return probandAddresses;
@@ -198,6 +204,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		paginator.initPages(true, trialId);
 		initIn(true, false);
 		loadTrial();
+		loadProbandListEntry();
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		if (WebUtil.isProbandLocked(proband)) {
@@ -211,6 +218,10 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			}
 		}
 		appendRequestContextCallbackInputModelValuesOutArgs(true);
+	}
+
+	protected void loadProbandListEntry() {
+		probandListEntry = WebUtil.getProbandListEntry(trialId, probandId);
 	}
 
 	@PostConstruct
