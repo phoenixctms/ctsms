@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.util;
 public interface ProbandListStatusReasonCodes {
 
 	public static final String ECRF_STATUS = "ecrf_status";
+	public static final String LIST_ENTRY_BEACON_RESET = "list_entry_beacon_reset";
 	public static final String LIST_ENTRY_CREATED = "list_entry_created";
 	public static final String LIST_ENTRY_RANDOMIZED_AND_CREATED = "list_entry_randomized_and_created";
 	public static final String LIST_ENTRY_CREATED_NO_GROUP = "list_entry_created_no_group";

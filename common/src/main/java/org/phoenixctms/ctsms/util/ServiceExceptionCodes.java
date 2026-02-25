@@ -99,6 +99,7 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_LOCKED = "proband_locked";
 	public final static String MASS_MAIL_LOCKED = "mass_mail_locked";
 	public final static String INVALID_PROBAND_ID = "invalid_proband_id";
+	public final static String PROBAND_BEACON_NOT_FOUND = "proband_beacon_not_found";
 	public final static String INVALID_PROBAND_CATEGORY_ID = "invalid_proband_category_id";
 	public final static String INVALID_PROBAND_STATUS_TYPE_ID = "invalid_proband_status_type_id";
 	public final static String INVALID_PROBAND_TAG_ID = "invalid_proband_tag_id";
@@ -159,6 +160,7 @@ public interface ServiceExceptionCodes {
 	public final static String UNRESOLVED_ECRF_FIELD_ISSUES = "unresolved_ecrf_field_issues";
 	public final static String INVALID_PROBAND_LIST_ENTRY_TAG_ID = "invalid_proband_list_entry_tag_id";
 	public final static String INVALID_PROBAND_LIST_ENTRY_ID = "invalid_proband_list_entry_id";
+	public final static String PROBAND_LIST_ENTRY_BEACON_NOT_FOUND = "proband_list_entry_beacon_not_found";
 	public final static String INVALID_PROBAND_LIST_STATUS_TYPE_ID = "invalid_proband_list_status_type_id";
 	public final static String ENTITY_ID_NOT_NULL = "entity_id_not_null";
 	public final static String ENTITY_WAS_MODIFIED_SINCE = "entity_was_modified_since";
