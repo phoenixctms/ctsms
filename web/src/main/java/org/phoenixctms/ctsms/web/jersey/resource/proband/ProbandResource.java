@@ -37,6 +37,7 @@ import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValuesOutVO;
 import org.phoenixctms.ctsms.vo.JobOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
+import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 import org.phoenixctms.ctsms.vo.ProbandImageInVO;
 import org.phoenixctms.ctsms.vo.ProbandImageOutVO;
 import org.phoenixctms.ctsms.vo.ProbandInVO;
@@ -247,9 +248,20 @@ public final class ProbandResource extends ServiceResourceBase {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{id}/list/{resource}")
+	@Path("{id: \\d+}/list/{resource}")
 	public Page list(@PathParam("id") Long id, @PathParam("resource") String resource, @Context UriInfo uriInfo) throws Throwable {
 		return list(auth, id, resource, uriInfo);
+	}
+
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{beacon: [a-zA-Z][a-zA-Z0-9_-]*}/list/probandaddress")
+	public Page<ProbandAddressOutVO> findProbandAddressList(@PathParam("beacon") String beacon, @Context UriInfo uriInfo)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFUriPart psf;
+		return new Page<ProbandAddressOutVO>(
+				WebUtil.getServiceLocator().getProbandService().findProbandAddressList(auth, beacon, psf = new PSFUriPart(uriInfo)),
+				psf);
 	}
 
 	@GET
