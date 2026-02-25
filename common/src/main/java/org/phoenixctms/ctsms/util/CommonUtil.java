@@ -2763,7 +2763,7 @@ public final class CommonUtil {
 
 	public final static byte[] generateQRCodeImage(String text, int width, int height, int margin, java.awt.Color bgColor, java.awt.Color fgColor,
 			ErrorCorrectionLevel errorCorrectionLevel) {
-		final byte[] data;
+		byte[] data = null;
 		if (!CommonUtil.isEmptyString(text)) {
 			Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
 			//hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
@@ -2777,31 +2777,30 @@ public final class CommonUtil {
 			}
 			if (byteMatrix != null) {
 				BufferedImage image = new BufferedImage(byteMatrix.getWidth(), byteMatrix.getHeight(), BufferedImage.TYPE_INT_ARGB);
-				image.createGraphics();
-				Graphics2D graphics = (Graphics2D) image.getGraphics();
-				if (bgColor != null) {
-					graphics.setColor(bgColor); //Color.WHITE
-					graphics.fillRect(0, 0, byteMatrix.getWidth(), byteMatrix.getHeight());
-				}
-				graphics.setColor(fgColor); //Color.BLACK
-				for (int i = 0; i < byteMatrix.getWidth(); i++) {
-					for (int j = 0; j < byteMatrix.getHeight(); j++) {
-						if (byteMatrix.get(i, j)) {
-							graphics.fillRect(i, j, 1, 1);
+				Graphics2D graphics = image.createGraphics();
+				try {
+					if (bgColor != null) {
+						graphics.setColor(bgColor);
+						graphics.fillRect(0, 0, byteMatrix.getWidth(), byteMatrix.getHeight());
+					}
+					graphics.setColor(fgColor != null ? fgColor : java.awt.Color.BLACK);
+					for (int i = 0; i < byteMatrix.getWidth(); i++) {
+						for (int j = 0; j < byteMatrix.getHeight(); j++) {
+							if (byteMatrix.get(i, j)) {
+								graphics.fillRect(i, j, 1, 1);
+							}
 						}
 					}
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					try {
+						ImageIO.write(image, CommonUtil.PNG_FILENAME_EXTENSION, baos);
+					} catch (IOException e) {
+					}
+					data = baos.toByteArray();
+				} finally {
+					graphics.dispose();
 				}
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				try {
-					ImageIO.write(image, CommonUtil.PNG_FILENAME_EXTENSION, baos);
-				} catch (IOException e) {
-				}
-				data = baos.toByteArray();
-			} else {
-				data = null;
 			}
-		} else {
-			data = null;
 		}
 		return data;
 	}

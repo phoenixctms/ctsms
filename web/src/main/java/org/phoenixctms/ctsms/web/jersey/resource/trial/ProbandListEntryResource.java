@@ -17,7 +17,6 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
-import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
@@ -71,7 +70,7 @@ public class ProbandListEntryResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{beacon: [a-zA-Z][a-zA-Z0-9_-]*}")
+	@Path("{beacon: [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}")
 	public ProbandListEntryOutVO findProbandListEntry(@PathParam("beacon") String beacon) throws AuthenticationException, AuthorisationException, ServiceException {
 		return WebUtil.getServiceLocator().getTrialService().findProbandListEntry(auth, beacon);
 	}
@@ -80,14 +79,6 @@ public class ProbandListEntryResource {
 	@Path("{beacon}/resetbeacon")
 	public void resetProbandListEntry(@PathParam("beacon") String beacon) throws AuthenticationException, AuthorisationException, ServiceException {
 		WebUtil.getServiceLocator().getTrialService().resetProbandListEntryBeacon(auth, beacon);
-	}
-
-	@PUT
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{id}/reset")
-	public MassMailRecipientOutVO resetMassMailRecipient(@PathParam("id") Long id, @QueryParam("sent") Boolean sent, @QueryParam("version") Long version)
-			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getMassMailService().resetMassMailRecipient(auth, id, sent, version);
 	}
 
 	@GET

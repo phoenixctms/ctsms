@@ -255,7 +255,7 @@ public final class ProbandResource extends ServiceResourceBase {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	@Path("{beacon: [a-zA-Z][a-zA-Z0-9_-]*}/list/probandaddress")
+	@Path("{beacon: [0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}}/list/probandaddress")
 	public Page<ProbandAddressOutVO> findProbandAddressList(@PathParam("beacon") String beacon, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
