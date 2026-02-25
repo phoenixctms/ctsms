@@ -3326,6 +3326,18 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static ProbandListEntryOutVO getProbandListEntry(Long trialId, Long probandId) {
+		if (trialId != null && probandId != null) {
+			try {
+				return getServiceLocator().getProbandService().getProbandListEntry(getAuthentication(), trialId, probandId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				publishException(e);
+			}
+		}
+		return null;
+	}
+
 	public static Long getProbandListEntryCount(Long trialId, Long probandId, boolean total) {
 		if (trialId != null || probandId != null) {
 			try {
