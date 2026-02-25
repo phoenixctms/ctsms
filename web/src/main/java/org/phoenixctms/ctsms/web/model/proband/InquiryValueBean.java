@@ -260,6 +260,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	@Override
 	protected void initSpecificSets() {
 		loadProband();
+		loadProbandListEntry();
 		probandAddresses = loadProbandAddresses();
 		trialsWithoutInquiryValuesCount = WebUtil.getTrialsFromInquiryValues(probandId, true, null, trials, totalCounts);
 		if (WebUtil.isProbandLocked(proband)) {
