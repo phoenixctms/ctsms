@@ -18,8 +18,7 @@ public class CORSFilter implements ContainerResponseFilter {
 		response.getHttpHeaders().add("Access-Control-Allow-Credentials", "true");
 		response.getHttpHeaders().add("Access-Control-Allow-Methods",
 				"GET, POST, PUT, DELETE, OPTIONS, HEAD");
-		response.getHttpHeaders().add("Access-Control-Allow-Private-Network",
-				"true");
+		//response.getHttpHeaders().add("Access-Control-Allow-Private-Network",			"true");
 		return response;
 	}
 }
