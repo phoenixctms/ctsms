@@ -1394,6 +1394,7 @@
         VERSION BIGINT not null,
         RATING BIGINT,
         RATING_MAX BIGINT,
+        BEACON CHARACTER VARYING(1024) not null unique,
         PROBAND_FK BIGINT not null,
         TRIAL_FK BIGINT not null,
         MODIFIED_USER_FK BIGINT not null,
