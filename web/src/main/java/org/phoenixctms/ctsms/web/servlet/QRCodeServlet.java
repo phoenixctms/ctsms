@@ -1,25 +1,16 @@
 package org.phoenixctms.ctsms.web.servlet;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Hashtable;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 public class QRCodeServlet extends FileServletBase {
@@ -28,6 +19,8 @@ public class QRCodeServlet extends FileServletBase {
 	private final static int DEFAULT_WIDTH = 100;
 	private final static int DEFAULT_HEIGHT = 100;
 	private final static int DEFAULT_MARGIN = 4;
+	private final static Color BG_COLOR = Color.WHITE;
+	private final static Color FG_COLOR = Color.BLACK;
 	private final static String FILE_NAME = "qrcode." + CommonUtil.PNG_FILENAME_EXTENSION;
 
 	@Override
@@ -49,45 +42,8 @@ public class QRCodeServlet extends FileServletBase {
 		} catch (Exception e) {
 		}
 		String text = request.getParameter(GetParamNames.QR_CODE_CHL.toString());
-		final byte[] data;
-		final Long fileSize;
-		if (!CommonUtil.isEmptyString(text)) {
-			Hashtable<EncodeHintType, Object> hintMap = new Hashtable<>();
-			//hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
-			hintMap.put(EncodeHintType.ERROR_CORRECTION, errorCorrectionLevel);
-			hintMap.put(EncodeHintType.MARGIN, margin);
-			QRCodeWriter qrCodeWriter = new QRCodeWriter();
-			BitMatrix byteMatrix = null;
-			try {
-				byteMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height, hintMap);
-			} catch (Exception e) {
-			}
-			if (byteMatrix != null) {
-				BufferedImage image = new BufferedImage(byteMatrix.getWidth(), byteMatrix.getHeight(), BufferedImage.TYPE_INT_RGB);
-				image.createGraphics();
-				Graphics2D graphics = (Graphics2D) image.getGraphics();
-				graphics.setColor(Color.WHITE);
-				graphics.fillRect(0, 0, byteMatrix.getWidth(), byteMatrix.getHeight());
-				graphics.setColor(Color.BLACK);
-				for (int i = 0; i < byteMatrix.getWidth(); i++) {
-					for (int j = 0; j < byteMatrix.getHeight(); j++) {
-						if (byteMatrix.get(i, j)) {
-							graphics.fillRect(i, j, 1, 1);
-						}
-					}
-				}
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				ImageIO.write(image, CommonUtil.PNG_FILENAME_EXTENSION, baos);
-				data = baos.toByteArray();
-				fileSize = (long) data.length;
-			} else {
-				data = null;
-				fileSize = null;
-			}
-		} else {
-			data = null;
-			fileSize = null;
-		}
+		final byte[] data = CommonUtil.generateQRCodeImage(text, width, height, margin, BG_COLOR, FG_COLOR, errorCorrectionLevel);
+		final Long fileSize = (data != null ? (long) data.length : null);
 		return new FileStream() {
 
 			@Override
