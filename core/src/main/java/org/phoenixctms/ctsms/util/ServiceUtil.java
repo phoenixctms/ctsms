@@ -4202,7 +4202,7 @@ public final class ServiceUtil {
 			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap,
 			HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap,
 			HashMap<Long, SignatureVO> signatureVOMap,
-			HashMap<Long, InputFieldImageVO> imageVOMap,
+			HashMap<Long, InputFieldImageVO> inputFieldImageVOMap,
 			InputFieldDao inputFieldDao,
 			ECRFFieldValueDao ecrfFieldValueDao,
 			ECRFStatusEntryDao ecrfStatusEntryDao,
@@ -4243,8 +4243,8 @@ public final class ServiceUtil {
 					}
 					listEntryTagValueVOs.add(listEntryTagValueVO);
 					InputFieldOutVO field = listEntryTagValueVO.getTag().getField();
-					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
-						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !inputFieldImageVOMap.containsKey(field.getId())) {
+						inputFieldImageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
 					}
 				}
 			}
@@ -4325,8 +4325,8 @@ public final class ServiceUtil {
 				Iterator<ECRFFieldValueOutVO> ecrfValuesIt = ecrfValues.iterator();
 				while (ecrfValuesIt.hasNext()) {
 					InputFieldOutVO field = ecrfValuesIt.next().getEcrfField().getField();
-					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
-						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !inputFieldImageVOMap.containsKey(field.getId())) {
+						inputFieldImageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
 					}
 				}
 			}
@@ -4437,9 +4437,10 @@ public final class ServiceUtil {
 			Collection<InquiryValueOutVO> inquiryValues,
 			ArrayList<ProbandOutVO> probandVOs,
 			HashMap<Long, Collection<TrialOutVO>> trialVOMap,
+			Collection<ProbandListEntryOutVO> listEntryVOs,
 			HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap,
-			HashMap<Long, InputFieldImageVO> imageVOMap,
-			HashSet<Long> trialIds, InputFieldDao inputFieldDao) throws Exception {
+			HashMap<Long, InputFieldImageVO> inputFieldImageVOMap,
+			HashSet<Long> trialIds, ProbandListEntryDao listEntrydao, InputFieldDao inputFieldDao) throws Exception {
 		if (inquiryValues.size() > 0) {
 			Collection<TrialOutVO> trialVOs;
 			if (trialVOMap.containsKey(proband.getId())) {
@@ -4450,6 +4451,7 @@ public final class ServiceUtil {
 				probandVOs.add(probandVO);
 			}
 			trialVOs.add(trialVO);
+			listEntryVOs.add(listEntrydao.toProbandListEntryOutVO(listEntrydao.findByTrialProband(trial.getId(), proband.getId())));
 			HashMap<Long, Collection<InquiryValueOutVO>> inquiryValueVOMap;
 			if (valueVOMap.containsKey(proband.getId())) {
 				inquiryValueVOMap = valueVOMap.get(proband.getId());
@@ -4462,8 +4464,8 @@ public final class ServiceUtil {
 				Iterator<InquiryValueOutVO> inquiryValuesIt = inquiryValues.iterator();
 				while (inquiryValuesIt.hasNext()) {
 					InputFieldOutVO field = inquiryValuesIt.next().getInquiry().getField();
-					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
-						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !inputFieldImageVOMap.containsKey(field.getId())) {
+						inputFieldImageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
 					}
 				}
 			}
@@ -4737,7 +4739,7 @@ public final class ServiceUtil {
 			Collection<ProbandListEntryTagValueOutVO> probandListEntryTagValues,
 			ArrayList<ProbandListEntryOutVO> listEntryVOs,
 			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap,
-			HashMap<Long, InputFieldImageVO> imageVOMap, InputFieldDao inputFieldDao) throws Exception {
+			HashMap<Long, InputFieldImageVO> inputFieldImageVOMap, InputFieldDao inputFieldDao) throws Exception {
 		if (probandListEntryTagValues.size() > 0) {
 			listEntryVOs.add(listEntryVO);
 			if (!valueVOMap.containsKey(listEntry.getId())) {
@@ -4745,8 +4747,8 @@ public final class ServiceUtil {
 				Iterator<ProbandListEntryTagValueOutVO> probandListEntryTagValuesIt = probandListEntryTagValues.iterator();
 				while (probandListEntryTagValuesIt.hasNext()) {
 					InputFieldOutVO field = probandListEntryTagValuesIt.next().getTag().getField();
-					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !imageVOMap.containsKey(field.getId())) {
-						imageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
+					if (InputFieldType.SKETCH.equals(field.getFieldType().getType()) && !inputFieldImageVOMap.containsKey(field.getId())) {
+						inputFieldImageVOMap.put(field.getId(), inputFieldDao.toInputFieldImageVO(inputFieldDao.load(field.getId())));
 					}
 				}
 			}
@@ -5875,7 +5877,7 @@ public final class ServiceUtil {
 		HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
 		HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>>();
 		HashMap<Long, SignatureVO> signatureVOMap = new HashMap<Long, SignatureVO>();
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		HashMap<Long, InputFieldImageVO> inputFieldImageVOMap = new HashMap<Long, InputFieldImageVO>();
 		if (listEntry != null) {
 			listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
 			if (ecrf != null) {
@@ -5887,7 +5889,7 @@ public final class ServiceUtil {
 								inputFieldSelectionSetValueDao,
 								ecrfFieldStatusEntryDao,
 								ecrfFieldStatusTypeDao).getPageValues(),
-						listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
+						listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, inputFieldImageVOMap,
 						inputFieldDao,
 						ecrfFieldValueDao,
 						ecrfStatusEntryDao,
@@ -5913,7 +5915,7 @@ public final class ServiceUtil {
 									inputFieldSelectionSetValueDao,
 									ecrfFieldStatusEntryDao,
 									ecrfFieldStatusTypeDao).getPageValues(),
-							listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
+							listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, inputFieldImageVOMap,
 							inputFieldDao,
 							ecrfFieldValueDao,
 							ecrfStatusEntryDao,
@@ -5940,7 +5942,7 @@ public final class ServiceUtil {
 									inputFieldSelectionSetValueDao,
 									ecrfFieldStatusEntryDao,
 									ecrfFieldStatusTypeDao).getPageValues(),
-							listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
+							listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, inputFieldImageVOMap,
 							inputFieldDao,
 							ecrfFieldValueDao,
 							ecrfStatusEntryDao,
@@ -5966,7 +5968,7 @@ public final class ServiceUtil {
 										inputFieldSelectionSetValueDao,
 										ecrfFieldStatusEntryDao,
 										ecrfFieldStatusTypeDao).getPageValues(),
-								listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
+								listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, inputFieldImageVOMap,
 								inputFieldDao,
 								ecrfFieldValueDao,
 								ecrfStatusEntryDao,
@@ -5989,7 +5991,7 @@ public final class ServiceUtil {
 		painter.setListEntryTagValuesVOMap(listEntryTagValuesVOMap);
 		painter.setStatusEntryVOMap(statusEntryVOMap);
 		painter.setSignatureVOMap(signatureVOMap);
-		painter.setImageVOMap(imageVOMap);
+		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
@@ -5998,12 +6000,14 @@ public final class ServiceUtil {
 	}
 
 	public static InquiriesPDFVO renderInquiries(Proband proband, ProbandOutVO probandVO, Collection<Trial> trials, Boolean active, Boolean activeSignup, boolean blank,
-			TrialDao trialDao, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldDao inputFieldDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
+			TrialDao trialDao, ProbandListEntryDao listEntrydao, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldDao inputFieldDao,
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
 			UserDao userDao) throws Exception {
 		ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
 		HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
 		HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>>();
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		Collection<ProbandListEntryOutVO> listEntryVOs = new ArrayList<ProbandListEntryOutVO>();
+		HashMap<Long, InputFieldImageVO> inputFieldImageVOMap = new HashMap<Long, InputFieldImageVO>();
 		HashSet<Long> trialIds = new HashSet<Long>();
 		Iterator<Trial> trialIt = trials.iterator();
 		while (trialIt.hasNext()) {
@@ -6012,13 +6016,14 @@ public final class ServiceUtil {
 			populateInquiriesPDFVOMaps(proband, probandVO, trial, trialVO,
 					getInquiryValues(trial, probandVO, active, activeSignup, false, false, true, null, inquiryDao, inquiryValueDao, inputFieldSelectionSetValueDao)
 							.getPageValues(),
-					probandVOs, trialVOMap, valueVOMap, imageVOMap, trialIds, inputFieldDao);
+					probandVOs, trialVOMap, listEntryVOs, valueVOMap, inputFieldImageVOMap, trialIds, listEntrydao, inputFieldDao);
 		}
 		InquiriesPDFPainter painter = PDFPainterFactory.createInquiriesPDFPainter();
 		painter.setProbandVOs(probandVOs);
 		painter.setTrialVOMap(trialVOMap);
+		painter.setListEntryVOs(listEntryVOs);
 		painter.setValueVOMap(valueVOMap);
-		painter.setImageVOMap(imageVOMap);
+		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
@@ -6034,7 +6039,7 @@ public final class ServiceUtil {
 		ProbandListEntryOutVO listEntryVO;
 		ArrayList<ProbandListEntryOutVO> listEntryVOs = new ArrayList<ProbandListEntryOutVO>();
 		HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		HashMap<Long, InputFieldImageVO> inputFieldImageVOMap = new HashMap<Long, InputFieldImageVO>();
 		if (trial != null) {
 			listEntry = probandListEntryDao.findByTrialProband(trial.getId(), proband.getId());
 			if (listEntry != null) {
@@ -6042,7 +6047,7 @@ public final class ServiceUtil {
 				populateProbandListEntryTagsPDFVOMaps(listEntry, listEntryVO,
 						getProbandListEntryTagValues(listEntryVO, false, false, true, null, probandListEntryTagDao, probandListEntryTagValueDao, inputFieldSelectionSetValueDao)
 								.getPageValues(),
-						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
+						listEntryVOs, valueVOMap, inputFieldImageVOMap, inputFieldDao);
 			}
 		} else {
 			Iterator<ProbandListEntry> listEntryIt = probandListEntryDao.findByTrialProbandSorted(null, proband.getId()).iterator();
@@ -6052,13 +6057,13 @@ public final class ServiceUtil {
 				populateProbandListEntryTagsPDFVOMaps(listEntry, listEntryVO,
 						getProbandListEntryTagValues(listEntryVO, false, false, true, null, probandListEntryTagDao, probandListEntryTagValueDao, inputFieldSelectionSetValueDao)
 								.getPageValues(),
-						listEntryVOs, valueVOMap, imageVOMap, inputFieldDao);
+						listEntryVOs, valueVOMap, inputFieldImageVOMap, inputFieldDao);
 			}
 		}
 		ProbandListEntryTagsPDFPainter painter = PDFPainterFactory.createProbandListEntryTagsPDFPainter();
 		painter.setListEntryVOs(listEntryVOs);
 		painter.setValueVOMap(valueVOMap);
-		painter.setImageVOMap(imageVOMap);
+		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));

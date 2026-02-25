@@ -16,10 +16,16 @@ import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 public class PDFJpeg extends PDJpeg {
 
 	private static final int DEFAULT_USER_SPACE_UNIT_DPI = 72;
 	private final static Color IMAGE_BG_COLOR = Color.WHITE;
+	private final static ErrorCorrectionLevel QRCODE_ERROR_CORRECTION_LEVEL = ErrorCorrectionLevel.L;
+	private final static int QRCODE_DEFAULT_WIDTH = 100;
+	private final static int QRCODE_DEFAULT_HEIGHT = 100;
+	private final static int QRCODE_DEFAULT_MARGIN = 4;
 
 	public static Image createImage(byte[] data, org.phoenixctms.ctsms.enumeration.Color bgColor) {
 		if (data != null && data.length > 0) {
@@ -76,6 +82,20 @@ public class PDFJpeg extends PDJpeg {
 		return prepareImage(doc, image, compressionQualityPercent, dpi);
 	}
 
+	public static PDFJpeg prepareQRCodeImage(PDDocument doc, String text, int compressionQualityPercent, int dpi,
+			org.phoenixctms.ctsms.enumeration.Color bgColor, org.phoenixctms.ctsms.enumeration.Color fgColor) {
+		return prepareQRCodeImage(doc, text, QRCODE_DEFAULT_WIDTH, QRCODE_DEFAULT_HEIGHT, QRCODE_DEFAULT_MARGIN, compressionQualityPercent, dpi, bgColor, fgColor);
+	}
+
+	public static PDFJpeg prepareQRCodeImage(PDDocument doc, String text, int width, int height, int margin, int compressionQualityPercent, int dpi,
+			org.phoenixctms.ctsms.enumeration.Color bgColor, org.phoenixctms.ctsms.enumeration.Color fgColor) {
+		Image image = createImage(
+				CommonUtil.generateQRCodeImage(text, width, height, margin, bgColor != null ? CommonUtil.convertColor(bgColor) : null, CommonUtil.convertColor(fgColor),
+						QRCODE_ERROR_CORRECTION_LEVEL),
+				bgColor);
+		return prepareImage(doc, image, compressionQualityPercent, dpi);
+	}
+
 	public static PDFJpeg prepareSketchImage(PDDocument doc, InputFieldOutVO field,
 			InputFieldImageVO inputFieldImage,
 			byte[] inkValue,
@@ -86,9 +106,9 @@ public class PDFJpeg extends PDJpeg {
 		int width = CommonUtil.safeLongToInt(inputFieldImage.getWidth());
 		int height = CommonUtil.safeLongToInt(inputFieldImage.getHeight());
 		if (inputFieldImage.getHasImage()) {
-			image = PDFJpeg.createImage(inputFieldImage.getDatas(), bgColor);
+			image = createImage(inputFieldImage.getDatas(), bgColor);
 		} else {
-			image = PDFJpeg.createImage(width, height, bgColor);
+			image = createImage(width, height, bgColor);
 		}
 		ArrayList<byte[]> inkValues = new ArrayList<byte[]>();
 		if (renderRegions) {

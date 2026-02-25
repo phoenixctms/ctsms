@@ -25,6 +25,7 @@ import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 
@@ -33,12 +34,14 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected int blockIndex;
 	protected ArrayList<InquiriesPDFBlock> blocks;
 	protected InquiriesPDFBlockCursor cursor;
-	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> inputFieldSketchImages;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> qrCodeImages;
 	protected InquiriesPDFVO pdfVO;
 	protected Collection<ProbandOutVO> probandVOs;
 	protected HashMap<Long, Collection<TrialOutVO>> trialVOMap;
+	protected Collection<ProbandListEntryOutVO> listEntryVOs;
 	protected HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap;
-	protected HashMap<Long, InputFieldImageVO> imageVOMap;
+	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -61,7 +64,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	public InquiriesPDFPainter() {
 		super();
 		blocks = new ArrayList<InquiriesPDFBlock>();
-		images = new HashMap<Long, HashMap<Long, PDFJpeg>>();
+		inputFieldSketchImages = new HashMap<Long, HashMap<Long, PDFJpeg>>();
+		qrCodeImages = new HashMap<Long, HashMap<Long, PDFJpeg>>();
 		pdfVO = new InquiriesPDFVO();
 		cursor = new InquiriesPDFBlockCursor(this);
 		setDrawPageNumbers(Settings.getBoolean(InquiriesPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SHOW_PAGE_NUMBERS));
@@ -201,7 +205,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected PDFJpeg getSketchImage(InquiryValueOutVO value) {
 		InputFieldOutVO field = value.getInquiry().getField();
-		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
+		HashMap<Long, PDFJpeg> sketchImages = inputFieldSketchImages.get(field.getId());
 		if (sketchImages != null) {
 			return sketchImages.get(value.getId());
 		}
@@ -265,7 +269,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		selectboxUncheckedImage = PDFJpeg.prepareScaledImage(doc,
 				PDFUtil.loadImage(Settings.getImageFilename(InquiriesPDFSettingCodes.SELECTBOX_UNCHECKED_IMAGE_FILE_NAME, Bundle.INQUIRIES_PDF, null)),
 				selectionItemImageWidth, selectionItemImageHeight, quality, dpi, bgColor);
-		if (valueVOMap != null && imageVOMap != null
+		if (valueVOMap != null && inputFieldImageVOMap != null
 				&& Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
 			Iterator<HashMap<Long, Collection<InquiryValueOutVO>>> probandMapIt = valueVOMap.values().iterator();
 			while (probandMapIt.hasNext()) {
@@ -276,6 +280,12 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 						putSketchImage(valuesIt.next(), doc);
 					}
 				}
+			}
+		}
+		if (listEntryVOs != null) {
+			Iterator<ProbandListEntryOutVO> listEntryIt = listEntryVOs.iterator();
+			while (listEntryIt.hasNext()) {
+				putQRCodeImage(listEntryIt.next(), doc);
 			}
 		}
 	}
@@ -309,7 +319,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 					Iterator<TrialOutVO> trialIt = trialVOs.iterator();
 					while (trialIt.hasNext()) {
 						TrialOutVO trialVO = trialIt.next();
-						blocks.add(new InquiriesPDFBlock(probandVO, trialVO, now, blank));
+						blocks.add(new InquiriesPDFBlock(probandVO, trialVO,
+								qrCodeImages.get(probandVO.getId()) != null ? qrCodeImages.get(probandVO.getId()).get(trialVO.getId()) : null, now, blank));
 						HashMap<Long, Collection<InquiryValueOutVO>> inquiryValueVOMap = valueVOMap.get(probandVO == null ? null : probandVO.getId());
 						if (inquiryValueVOMap != null) {
 							Collection<InquiryValueOutVO> valueVOs = inquiryValueVOMap.get(trialVO.getId());
@@ -344,14 +355,14 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected boolean putSketchImage(InquiryValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getInquiry().getField();
-		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
+		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
-			if (images.containsKey(field.getId())) {
-				sketchImages = images.get(field.getId());
+			if (inputFieldSketchImages.containsKey(field.getId())) {
+				sketchImages = inputFieldSketchImages.get(field.getId());
 			} else {
 				sketchImages = new HashMap<Long, PDFJpeg>();
-				images.put(field.getId(), sketchImages);
+				inputFieldSketchImages.put(field.getId(), sketchImages);
 			}
 			if (!sketchImages.containsKey(value.getId())) {
 				int quality = Settings.getInt(InquiriesPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
@@ -369,6 +380,32 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 								quality, dpi, bgColor));
 				return true;
 			}
+		}
+		return false;
+	}
+
+	protected boolean putQRCodeImage(ProbandListEntryOutVO listEntry, PDDocument doc) throws Exception {
+		if (listEntry != null && !CommonUtil.isEmptyString(listEntry.getInquirySignupUrl())) {
+			HashMap<Long, PDFJpeg> listEntryQrCodeImages;
+			if (qrCodeImages.containsKey(listEntry.getProband().getId())) {
+				listEntryQrCodeImages = qrCodeImages.get(listEntry.getProband().getId());
+			} else {
+				listEntryQrCodeImages = new HashMap<Long, PDFJpeg>();
+				qrCodeImages.put(listEntry.getProband().getId(), listEntryQrCodeImages);
+			}
+			int quality = Settings.getInt(InquiriesPDFSettingCodes.QRCODE_IMAGE_QUALITY, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_IMAGE_QUALITY);
+			int dpi = Settings.getInt(InquiriesPDFSettingCodes.QRCODE_IMAGE_DPI, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_IMAGE_DPI);
+			Color bgColor = Settings.getColor(InquiriesPDFSettingCodes.QRCODE_IMAGE_BG_COLOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_IMAGE_BG_COLOR);
+			Color fgColor = Settings.getColor(InquiriesPDFSettingCodes.QRCODE_COLOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_COLOR);
+			listEntryQrCodeImages.put(listEntry.getTrial().getId(),
+					PDFJpeg.prepareQRCodeImage(
+							doc,
+							listEntry.getInquirySignupUrl(),
+							Settings.getInt(InquiriesPDFSettingCodes.QRCODE_IMAGE_WIDTH, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_IMAGE_WIDTH),
+							Settings.getInt(InquiriesPDFSettingCodes.QRCODE_IMAGE_HEIGHT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_IMAGE_HEIGHT),
+							Settings.getInt(InquiriesPDFSettingCodes.QRCODE_IMAGE_MARGIN, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.QRCODE_IMAGE_MARGIN),
+							quality, dpi, bgColor, fgColor));
+			return true;
 		}
 		return false;
 	}
@@ -399,7 +436,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		selectboxCheckedImage = null;
 		selectboxCheckedPresetImage = null;
 		selectboxUncheckedImage = null;
-		images.clear();
+		inputFieldSketchImages.clear();
+		qrCodeImages.clear();
 		updateInquiriesPDFVO();
 	}
 
@@ -416,8 +454,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.blank = blank;
 	}
 
-	public void setImageVOMap(HashMap<Long, InputFieldImageVO> imageVOMap) {
-		this.imageVOMap = imageVOMap;
+	public void setInputFieldImageVOMap(HashMap<Long, InputFieldImageVO> inputFieldImageVOMap) {
+		this.inputFieldImageVOMap = inputFieldImageVOMap;
 	}
 
 	@Override
@@ -440,6 +478,10 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	public void setTrialVOMap(HashMap<Long, Collection<TrialOutVO>> trialVOMap) {
 		this.trialVOMap = trialVOMap;
+	}
+
+	public void setListEntryVOs(Collection<ProbandListEntryOutVO> listEntryVOs) {
+		this.listEntryVOs = listEntryVOs;
 	}
 
 	public void setValueVOMap(HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap) {

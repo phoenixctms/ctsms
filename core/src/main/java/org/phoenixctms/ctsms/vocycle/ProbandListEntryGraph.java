@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.vocycle;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 
 import org.phoenixctms.ctsms.domain.Proband;
@@ -14,6 +15,11 @@ import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
+import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 
@@ -93,6 +99,16 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 		probandListStatusEntryDao.toProbandListStatusEntryOutVO(source, target, voMap);
 	}
 
+	private static String getInguirySignupUrl(ProbandListEntry listEntry) {
+		if (listEntry != null) {
+			String signupUrlFormat = Settings.getString(SettingCodes.INQUIRY_SIGNUP_URL, Bundle.SETTINGS, DefaultSettings.INQUIRY_SIGNUP_URL);
+			if (!CommonUtil.isEmptyString(signupUrlFormat)) {
+				return MessageFormat.format(signupUrlFormat, Settings.getHttpBaseUrl(), listEntry.getBeacon(), Long.toString(listEntry.getId()));
+			}
+		}
+		return null;
+	}
+
 	@Override
 	protected void toVORemainingFields(ProbandListEntry source,
 			ProbandListEntryOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
@@ -113,5 +129,6 @@ public class ProbandListEntryGraph extends GraphCycle1Helper<ProbandListEntry, P
 		if (modifiedUser != null) {
 			target.setModifiedUser(userDao.toUserOutVO(modifiedUser));
 		}
+		target.setInquirySignupUrl(getInguirySignupUrl(source));
 	}
 }

@@ -80,6 +80,7 @@ import org.phoenixctms.ctsms.domain.ProbandDao;
 import org.phoenixctms.ctsms.domain.ProbandGroup;
 import org.phoenixctms.ctsms.domain.ProbandGroupDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntry;
+import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntry;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusType;
@@ -144,6 +145,7 @@ import org.phoenixctms.ctsms.vo.ProbandImageInVO;
 import org.phoenixctms.ctsms.vo.ProbandImageOutVO;
 import org.phoenixctms.ctsms.vo.ProbandInVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
@@ -2073,7 +2075,8 @@ public class ProbandServiceImpl
 		}
 		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
 				trials, active,
-				activeSignup, blank, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				activeSignup, blank, this.getTrialDao(), this.getProbandListEntryDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(),
+				this.getInputFieldSelectionSetValueDao(),
 				this.getUserDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		if (trial != null) {
@@ -2110,7 +2113,8 @@ public class ProbandServiceImpl
 		}
 		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
 				trials,
-				null, activeSignup, false, this.getTrialDao(), this.getInquiryDao(), inquiryValueDao, this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				null, activeSignup, false, this.getTrialDao(), this.getProbandListEntryDao(), this.getInquiryDao(), inquiryValueDao, this.getInputFieldDao(),
+				this.getInputFieldSelectionSetValueDao(),
 				this.getUserDao());
 		ServiceUtil.logSystemMessage(proband, (TrialOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 				SystemMessageCodes.INQUIRIES_SIGNUP_PDF_RENDERED,
@@ -2132,7 +2136,8 @@ public class ProbandServiceImpl
 		trials.add(trial);
 		InquiriesPDFVO result = ServiceUtil.renderInquiries(proband, probandVO,
 				trials, active,
-				activeSignup, blank, this.getTrialDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(),
+				activeSignup, blank, this.getTrialDao(), this.getProbandListEntryDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(),
+				this.getInputFieldSelectionSetValueDao(),
 				this.getUserDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
@@ -2955,5 +2960,29 @@ public class ProbandServiceImpl
 		Collection duplicateProbands = probandDao.findProbandDuplicates(alias, excludeId, limit);
 		probandDao.toProbandOutVOCollection(duplicateProbands);
 		return duplicateProbands;
+	}
+
+	@Override
+	protected Collection<ProbandAddressOutVO> handleFindProbandAddressList(AuthenticationVO auth, String beacon, PSFVO psf) throws Exception {
+		CommonUtil.parseUUID(beacon);
+		Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
+		if (proband == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_BEACON_NOT_FOUND, beacon);
+		}
+		ProbandAddressDao addressDao = this.getProbandAddressDao();
+		Collection probandAddresses = addressDao.findByProband(proband.getId(), null, null, null, psf);
+		addressDao.toProbandAddressOutVOCollection(probandAddresses);
+		return probandAddresses;
+	}
+
+	@Override
+	protected ProbandListEntryOutVO handleGetProbandListEntry(
+			AuthenticationVO auth, Long trialId, Long probandId) throws Exception {
+		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
+		CheckIDUtil.checkTrialId(trialId, getTrialDao());
+		CheckIDUtil.checkProbandId(probandId, getProbandDao());
+		ProbandListEntry probandListEntry = probandListEntryDao.findByTrialProband(trialId, probandId);
+		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
+		return result;
 	}
 }

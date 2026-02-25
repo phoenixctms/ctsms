@@ -39,7 +39,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected int blockIndex;
 	protected ArrayList<EcrfPDFBlock> blocks;
 	protected EcrfPDFBlockCursor cursor;
-	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> inputFieldSketchImages;
 	protected ECRFPDFVO pdfVO;
 	protected Collection<ProbandListEntryOutVO> listEntryVOs;
 	protected TreeSet<VisitOutVO> visitVOs;
@@ -49,7 +49,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap;
 	protected HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap;
 	protected HashMap<Long, SignatureVO> signatureVOMap;
-	protected HashMap<Long, InputFieldImageVO> imageVOMap;
+	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -75,7 +75,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	public EcrfPDFPainter() {
 		super();
 		blocks = new ArrayList<EcrfPDFBlock>();
-		images = new HashMap<Long, HashMap<Long, PDFJpeg>>();
+		inputFieldSketchImages = new HashMap<Long, HashMap<Long, PDFJpeg>>();
 		pdfVO = new ECRFPDFVO();
 		cursor = new EcrfPDFBlockCursor(this);
 		setDrawPageNumbers(Settings.getBoolean(EcrfPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SHOW_PAGE_NUMBERS));
@@ -278,7 +278,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected PDFJpeg getSketchImage(ECRFFieldValueOutVO value) {
 		InputFieldOutVO field = value.getEcrfField().getField();
-		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
+		HashMap<Long, PDFJpeg> sketchImages = inputFieldSketchImages.get(field.getId());
 		if (sketchImages != null) {
 			return sketchImages.get(value.getId());
 		}
@@ -287,7 +287,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected PDFJpeg getSketchImage(ProbandListEntryTagValueOutVO value) {
 		InputFieldOutVO field = value.getTag().getField();
-		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
+		HashMap<Long, PDFJpeg> sketchImages = inputFieldSketchImages.get(field.getId());
 		if (sketchImages != null) {
 			return sketchImages.get(value.getId());
 		}
@@ -376,7 +376,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		signatureAvailableImage = PDFJpeg.prepareScaledImage(doc,
 				PDFUtil.loadImage(Settings.getImageFilename(EcrfPDFSettingCodes.SIGNATURE_AVAILABLE_IMAGE_FILE_NAME, Bundle.ECRF_PDF, null)),
 				signatureImageWidth, signatureImageHeight, quality, dpi, bgColor);
-		if (imageVOMap != null && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
+		if (inputFieldImageVOMap != null && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
 			if (valueVOMap != null) {
 				Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
 				while (listEntryEcrfVisitValuesIt.hasNext()) {
@@ -518,14 +518,14 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected boolean putSketchImage(ECRFFieldValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getEcrfField().getField();
-		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
+		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
-			if (images.containsKey(field.getId())) {
-				sketchImages = images.get(field.getId());
+			if (inputFieldSketchImages.containsKey(field.getId())) {
+				sketchImages = inputFieldSketchImages.get(field.getId());
 			} else {
 				sketchImages = new HashMap<Long, PDFJpeg>();
-				images.put(field.getId(), sketchImages);
+				inputFieldSketchImages.put(field.getId(), sketchImages);
 			}
 			if (!sketchImages.containsKey(value.getId())) {
 				int quality = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
@@ -549,14 +549,14 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getTag().getField();
-		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
+		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
-			if (images.containsKey(field.getId())) {
-				sketchImages = images.get(field.getId());
+			if (inputFieldSketchImages.containsKey(field.getId())) {
+				sketchImages = inputFieldSketchImages.get(field.getId());
 			} else {
 				sketchImages = new HashMap<Long, PDFJpeg>();
-				images.put(field.getId(), sketchImages);
+				inputFieldSketchImages.put(field.getId(), sketchImages);
 			}
 			if (!sketchImages.containsKey(value.getId())) {
 				int quality = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
@@ -606,7 +606,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		signatureValidImage = null;
 		signatureInvalidImage = null;
 		signatureAvailableImage = null;
-		images.clear();
+		inputFieldSketchImages.clear();
 		updateECRFPDFVO();
 	}
 
@@ -631,8 +631,8 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.ecrfVOs = ecrfVOs;
 	}
 
-	public void setImageVOMap(HashMap<Long, InputFieldImageVO> imageVOMap) {
-		this.imageVOMap = imageVOMap;
+	public void setInputFieldImageVOMap(HashMap<Long, InputFieldImageVO> inputFieldImageVOMap) {
+		this.inputFieldImageVOMap = inputFieldImageVOMap;
 	}
 
 	public void setListEntryTagValuesVOMap(HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap) {

@@ -72,6 +72,13 @@ public final class InquiriesPDFDefaultSettings {
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	public static final boolean DATE_TIME_USER_TIME_ZONE = true;
+	public static final Color QRCODE_COLOR = Color.BLACK;
+	public static final int QRCODE_IMAGE_WIDTH = 500;
+	public static final int QRCODE_IMAGE_HEIGHT = 500;
+	public static final int QRCODE_IMAGE_MARGIN = 2;
+	public static final int QRCODE_IMAGE_QUALITY = 100;
+	public static final int QRCODE_IMAGE_DPI = 300;
+	public static final Color QRCODE_IMAGE_BG_COLOR = null;
 
 	private InquiriesPDFDefaultSettings() {
 	}

@@ -211,7 +211,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				}
 				InquiriesPDFVO inquiriesPDF = ServiceUtil.renderInquiries(recipient.getProband(), recipientVO.getProband(),
 						trials, INQUIRIES_ACTIVE,
-						INQUIRIES_ACTIVE_SIGNUP, INQUIRIES_BLANK, trialDao, inquiryDao, inquiryValueDao, inputFieldDao, inputFieldSelectionSetValueDao,
+						INQUIRIES_ACTIVE_SIGNUP, INQUIRIES_BLANK, trialDao, probandListEntryDao, inquiryDao, inquiryValueDao, inputFieldDao, inputFieldSelectionSetValueDao,
 						userDao);
 				if (inquiriesPDF.getTrials().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
