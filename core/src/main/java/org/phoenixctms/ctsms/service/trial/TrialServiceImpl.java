@@ -445,6 +445,7 @@ public class TrialServiceImpl
 		}
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntry listEntry = probandListEntryDao.probandListEntryInVOToEntity(newProbandListEntry);
+		listEntry.setBeacon(CommonUtil.generateUUID());
 		if (proband != null) {
 			listEntry.setProband(proband);
 			proband.addTrialParticipations(listEntry);
@@ -7906,10 +7907,10 @@ public class TrialServiceImpl
 		HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap = new HashMap<Long, Collection<ProbandListEntryTagValueOutVO>>();
 		HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap = new HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>>();
 		HashMap<Long, SignatureVO> signatureVOMap = new HashMap<Long, SignatureVO>();
-		HashMap<Long, InputFieldImageVO> imageVOMap = new HashMap<Long, InputFieldImageVO>();
+		HashMap<Long, InputFieldImageVO> inputFieldImageVOMap = new HashMap<Long, InputFieldImageVO>();
 		ServiceUtil.populateEcrfPDFVOMaps(listEntryVO, ecrfVO, visitVO, blank,
 				getEcrfFieldValues(listEntryVO, ecrfVO, visitVO, section, null, blank, false, false, null, null).getPageValues(),
-				listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, imageVOMap,
+				listEntryVOs, ecrfVOs, visitVOs, valueVOMap, logVOMap, listEntryTagValuesVOMap, statusEntryVOMap, signatureVOMap, inputFieldImageVOMap,
 				this.getInputFieldDao(),
 				this.getECRFFieldValueDao(),
 				this.getECRFStatusEntryDao(),
@@ -7927,7 +7928,7 @@ public class TrialServiceImpl
 		painter.setListEntryTagValuesVOMap(listEntryTagValuesVOMap);
 		painter.setStatusEntryVOMap(statusEntryVOMap);
 		painter.setSignatureVOMap(signatureVOMap);
-		painter.setImageVOMap(imageVOMap);
+		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
@@ -9259,5 +9260,47 @@ public class TrialServiceImpl
 			Collections.sort((ArrayList) inventoryBookings, new InventoryBookingIntervalComparator(false));
 		}
 		return inventoryBookings;
+	}
+
+	@Override
+	protected ProbandListEntryOutVO handleFindProbandListEntry(AuthenticationVO auth, String beacon) throws Exception {
+		CommonUtil.parseUUID(beacon);
+		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
+		ProbandListEntry probandListEntry = probandListEntryDao.searchUniqueBeacon(beacon);
+		if (probandListEntry == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_BEACON_NOT_FOUND, beacon);
+		}
+		ProbandListEntryOutVO result = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
+		return result;
+	}
+
+	@Override
+	protected void handleResetProbandListEntryBeacon(AuthenticationVO auth, String beacon) throws Exception {
+		CommonUtil.parseUUID(beacon);
+		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
+		ProbandListEntry listEntry = probandListEntryDao.searchUniqueBeacon(beacon);
+		if (listEntry == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_BEACON_NOT_FOUND, beacon);
+		}
+		probandListEntryDao.refresh(listEntry, LockMode.PESSIMISTIC_WRITE);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		listEntry.setBeacon(CommonUtil.generateUUID());
+		CoreUtil.modifyVersion(listEntry, listEntry.getVersion(), listEntry.getModifiedTimestamp(), listEntry.getModifiedUser());
+		probandListEntryDao.update(listEntry);
+		try {
+			ServiceUtil.addProbandListStatusEntry(listEntry, null, ProbandListStatusReasonCodes.LIST_ENTRY_BEACON_RESET,
+					new Object[] {}, now, null, now, CoreUtil.getUser(),
+					this.getProbandDao(),
+					this.getProbandListEntryDao(),
+					this.getProbandListStatusEntryDao(),
+					this.getProbandListStatusTypeDao(),
+					this.getTrialDao(),
+					this.getVisitScheduleItemDao(),
+					this.getMassMailDao(),
+					this.getMassMailRecipientDao(),
+					this.getJournalEntryDao());
+		} catch (ServiceException e) {
+			// already end state
+		}
 	}
 }

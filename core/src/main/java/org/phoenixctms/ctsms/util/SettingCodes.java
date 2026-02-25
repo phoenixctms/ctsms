@@ -319,4 +319,5 @@ public interface SettingCodes {
 	public static final String ORGANISATION_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "organisation_duplicates_autocomplete_default_result_limit";
 	public static final String PERSON_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "person_duplicates_autocomplete_default_result_limit";
 	public static final String PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = "proband_duplicates_autocomplete_default_result_limit";
+	public static final String INQUIRY_SIGNUP_URL = "inquiry_signup_url";
 }

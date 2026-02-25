@@ -33,11 +33,11 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	protected int blockIndex;
 	protected ArrayList<ProbandListEntryTagsPDFBlock> blocks;
 	protected ProbandListEntryTagsPDFBlockCursor cursor;
-	protected HashMap<Long, HashMap<Long, PDFJpeg>> images;
+	protected HashMap<Long, HashMap<Long, PDFJpeg>> inputFieldSketchImages;
 	protected ProbandListEntryTagsPDFVO pdfVO;
 	protected Collection<ProbandListEntryOutVO> listEntryVOs;
 	protected HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap;
-	protected HashMap<Long, InputFieldImageVO> imageVOMap;
+	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -60,7 +60,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	public ProbandListEntryTagsPDFPainter() {
 		super();
 		blocks = new ArrayList<ProbandListEntryTagsPDFBlock>();
-		images = new HashMap<Long, HashMap<Long, PDFJpeg>>();
+		inputFieldSketchImages = new HashMap<Long, HashMap<Long, PDFJpeg>>();
 		pdfVO = new ProbandListEntryTagsPDFVO();
 		cursor = new ProbandListEntryTagsPDFBlockCursor(this);
 		setDrawPageNumbers(Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -189,7 +189,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 
 	protected PDFJpeg getSketchImage(ProbandListEntryTagValueOutVO value) {
 		InputFieldOutVO field = value.getTag().getField();
-		HashMap<Long, PDFJpeg> sketchImages = images.get(field.getId());
+		HashMap<Long, PDFJpeg> sketchImages = inputFieldSketchImages.get(field.getId());
 		if (sketchImages != null) {
 			return sketchImages.get(value.getId());
 		}
@@ -261,7 +261,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				PDFUtil.loadImage(Settings.getImageFilename(ProbandListEntryTagsPDFSettingCodes.SELECTBOX_UNCHECKED_IMAGE_FILE_NAME, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, null)),
 				selectionItemImageWidth, selectionItemImageHeight, quality, dpi, bgColor);
 		if (valueVOMap != null
-				&& imageVOMap != null
+				&& inputFieldImageVOMap != null
 				&& Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 						ProbandListEntryTagsPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
 			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryMapIt = valueVOMap.values().iterator();
@@ -308,14 +308,14 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 
 	protected boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getTag().getField();
-		InputFieldImageVO inputFieldImage = imageVOMap.get(field.getId());
+		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
-			if (images.containsKey(field.getId())) {
-				sketchImages = images.get(field.getId());
+			if (inputFieldSketchImages.containsKey(field.getId())) {
+				sketchImages = inputFieldSketchImages.get(field.getId());
 			} else {
 				sketchImages = new HashMap<Long, PDFJpeg>();
-				images.put(field.getId(), sketchImages);
+				inputFieldSketchImages.put(field.getId(), sketchImages);
 			}
 			if (!sketchImages.containsKey(value.getId())) {
 				int quality = Settings.getInt(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
@@ -372,7 +372,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		selectboxCheckedImage = null;
 		selectboxCheckedPresetImage = null;
 		selectboxUncheckedImage = null;
-		images.clear();
+		inputFieldSketchImages.clear();
 		updateProbandListEntryTagsPDFVO();
 	}
 
@@ -389,8 +389,8 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		this.blank = blank;
 	}
 
-	public void setImageVOMap(HashMap<Long, InputFieldImageVO> imageVOMap) {
-		this.imageVOMap = imageVOMap;
+	public void setInputFieldImageVOMap(HashMap<Long, InputFieldImageVO> inputFieldImageVOMap) {
+		this.inputFieldImageVOMap = inputFieldImageVOMap;
 	}
 
 	public void setListEntryVOs(Collection<ProbandListEntryOutVO> listEntryVOs) {

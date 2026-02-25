@@ -72,10 +72,11 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		this.type = BlockType.INPUT_FIELD;
 	}
 
-	public InquiriesPDFBlock(ProbandOutVO proband, TrialOutVO trial, Date now, boolean blank) {
+	public InquiriesPDFBlock(ProbandOutVO proband, TrialOutVO trial, PDFJpeg ximage, Date now, boolean blank) {
 		super();
 		this.proband = proband;
 		this.trial = trial;
+		this.ximage = ximage;
 		this.now = now;
 		this.blank = blank;
 		this.type = BlockType.NEW_PROBAND_TRIAL;
@@ -417,7 +418,6 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 		float height2;
 		float height;
 		float width;
-		PDFJpeg ximage;
 		switch (type) {
 			case PAGE_TITLE:
 				height = PDFUtil.renderMultilineText(contentStream, cursor.getFontB(), FontSize.BIG, getTextColor(),
@@ -461,6 +461,11 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 							y,
 							Alignment.TOP_CENTER,
 							cursor.getBlockWidth());
+					if (ximage != null) {
+						y -= Settings.getFloat(InquiriesPDFSettingCodes.Y_HEADLINE_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_HEADLINE_INDENT);
+						PDFUtil.renderImage(contentStream, ximage, cursor.getBlockCenterX(), y, Alignment.TOP_CENTER);
+						y -= ximage.getHeightPoints();
+					}
 					y -= Settings.getFloat(InquiriesPDFSettingCodes.Y_HEADLINE_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.Y_HEADLINE_INDENT);
 				}
 				y1 = y;
