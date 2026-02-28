@@ -51,7 +51,11 @@ public class PermissionDaoImpl
 				}
 				profilePermissionCritria.add(Subqueries.propertyIn("profile", subQuery));
 			} else if (profiles != null) {
-				profilePermissionCritria.add(Restrictions.in("profile", profiles));
+				if (profiles.size() > 0) {
+					profilePermissionCritria.add(Restrictions.in("profile", profiles));
+				} else {
+					profilePermissionCritria.add(Restrictions.sqlRestriction("1 <> 1"));
+				}
 			}
 		}
 		return permissionCritria.list();
