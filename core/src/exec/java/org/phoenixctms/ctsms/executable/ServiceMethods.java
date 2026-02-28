@@ -33,6 +33,7 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.service.course.CourseService;
 import org.phoenixctms.ctsms.service.inventory.InventoryService;
 import org.phoenixctms.ctsms.service.massmail.MassMailService;
@@ -565,19 +566,60 @@ public class ServiceMethods {
 	}
 
 	public long performAllDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
-		return performInventoryDeferredDelete(auth, remove) +
-				performStaffDeferredDelete(auth, remove) +
-				performCourseDeferredDelete(auth, remove) +
-				performTrialDeferredDelete(auth, remove) +
-				performInquiryDeferredDelete(auth, null, remove) +
-				performEcrfDeferredDelete(auth, null, remove) +
-				performEcrfFieldDeferredDelete(auth, null, remove) +
-				performProbandDeferredDelete(auth, remove) +
-				performMassMailDeferredDelete(auth, remove) +
-				performInputFieldDeferredDelete(auth, remove) +
-				performSelectionSetValueDeferredDelete(auth, remove) +
-				performUserDeferredDelete(auth, remove) +
-				performCriteriaDeferredDelete(auth, remove);
+		long count = 0l;
+		try {
+			count += performInventoryDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performStaffDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performCourseDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performTrialDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performInquiryDeferredDelete(auth, null, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performEcrfDeferredDelete(auth, null, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performEcrfFieldDeferredDelete(auth, null, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performProbandDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performMassMailDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performInputFieldDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performSelectionSetValueDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performUserDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		try {
+			count += performCriteriaDeferredDelete(auth, remove);
+		} catch (AuthorisationException e) {
+		}
+		return count;
 	}
 
 	public long performCourseDeferredDelete(AuthenticationVO auth, boolean remove) throws Exception {
