@@ -37,6 +37,10 @@
 				actionListener="#{trialAssociationBean.handleRandomizationListCodesChange}"
 				update=":tabView:trialassociation_form:association_lists:randomizationlistcodes_list" />
 
+			<p:remoteCommand process="@this" name="changeStratificationChart"
+				actionListener="#{trialAssociationBean.handleStratificationChartChange}"
+				update=":tabView:trialassociation_form:association_lists:stratificationChart" />				
+
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:tabView onTabChange="handleTrialAssociationTabChange(index)"
@@ -555,6 +559,81 @@
 							</p:toolbar>
 						</h:panelGrid>
 					</p:tab>
+
+					<p:tab
+						title="#{triallabels.trial_association_stratification_chart_tab_label}">
+						<h:panelGrid columns="1" cellpadding="0"
+							styleClass="ctsms-content-panelgrid">
+							<p:panel>
+								<p:donutChart id="stratificationChart"
+									value="#{trialAssociationBean.stratificationChartBean.chartModel}"
+									legendPosition="e" styleClass="ctsms-chart" fill="true"
+									legendCols="#{trialAssociationBean.stratificationChartBean.getLegendCols(10)}"
+									shadow="true" sliceMargin="5" showDataLabels="true"
+									dataFormat="percent"
+									seriesColors="#{trialAssociationBean.stratificationChartBean.seriesColors}" />
+							</p:panel>
+							<p:toolbar>
+								<p:toolbarGroup align="right">
+									<p:commandButton
+										disabled="#{!trialAssociationBean.stratificationChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_sicl_button_label}"
+										title="#{triallabels.export_sicl_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.stratificationChartBean.siclExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.stratificationChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_pre_screening_log_button_label}"
+										title="#{triallabels.export_pre_screening_log_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.stratificationChartBean.preScreeningLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.stratificationChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_screening_log_button_label}"
+										title="#{triallabels.export_screening_log_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.stratificationChartBean.screeningLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.stratificationChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_enrollment_log_button_label}"
+										title="#{triallabels.export_enrollment_log_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.stratificationChartBean.enrollmentLogExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton
+										disabled="#{!trialAssociationBean.stratificationChartBean.enableExports}"
+										immediate="true" ajax="false"
+										value="#{triallabels.export_proband_status_button_label}"
+										title="#{triallabels.export_proband_status_button_title}"
+										icon="ui-icon ui-icon-xls">
+										<p:fileDownload
+											value="#{trialAssociationBean.stratificationChartBean.probandStatusExcelStreamedContent}" />
+									</p:commandButton>
+									<p:commandButton process="@this"
+										actionListener="#{trialAssociationBean.stratificationChartBean.updateChart}"
+										value="#{labels.update_chart_button_label}"
+										icon="ui-icon-refresh" ajax="true" update="stratificationChart" />
+								</p:toolbarGroup>
+								<p:separator />
+								<p:toolbarGroup align="right">
+									<ui:include src="../shared/toolbarAjaxStatus.xhtml" />
+								</p:toolbarGroup>
+							</p:toolbar>
+						</h:panelGrid>
+					</p:tab>
+
+
 					<p:tab
 						title="#{triallabels.trial_association_randomization_list_codes_tab_label}">
 						<h:panelGrid columns="1" cellpadding="0"

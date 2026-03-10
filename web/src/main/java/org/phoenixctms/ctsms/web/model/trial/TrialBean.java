@@ -161,7 +161,7 @@ public class TrialBean extends GenerateRandomListBean implements VariablePeriodS
 			switch (getRandomizationMode()) {
 				case GROUP_STRATIFIED:
 				case TAG_SELECT_STRATIFIED:
-					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_USED);
+					Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMIZATION_LIST_USED);
 					break;
 				default:
 					break;

@@ -296,11 +296,11 @@ public class RandomizationListBean extends GenerateRandomListBean {
 					case TAG_TEXT_STRATIFIED:
 						break;
 					default:
-						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
+						Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMIZATION_LIST_NOT_USED);
 						break;
 				}
 			} else {
-				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMISATION_LIST_NOT_USED);
+				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.STRATIFICATION_RANDOMIZATION_LIST_NOT_USED);
 			}
 		}
 	}
