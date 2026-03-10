@@ -263,6 +263,27 @@ public class ProbandListEntryDaoImpl
 	}
 
 	@Override
+	protected long handleGetTrialStratificationTagValuesCount(
+			Long trialId, Set<Long> selectionSetValueIds) throws Exception {
+		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
+			applyStratificationTagValuesCriterions(listEntryCriteria, selectionSetValueIds);
+			Iterator it = listEntryCriteria.list().iterator();
+			long result = 0l;
+			while (it.hasNext()) {
+				it.next();
+				result++;
+			}
+			return result;
+		} else {
+			return (Long) listEntryCriteria.setProjection(Projections.rowCount()).uniqueResult();
+		}
+	}
+
+	@Override
 	protected ProbandListEntry handleGetByRandomizationListCode(
 			RandomizationListCode code) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();

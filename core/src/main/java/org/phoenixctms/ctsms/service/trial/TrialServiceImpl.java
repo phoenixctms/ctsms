@@ -209,6 +209,7 @@ import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.StaffStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffTagVO;
 import org.phoenixctms.ctsms.vo.StaffTagValueOutVO;
+import org.phoenixctms.ctsms.vo.StratificationPermutationVO;
 import org.phoenixctms.ctsms.vo.StratificationRandomizationListInVO;
 import org.phoenixctms.ctsms.vo.StratificationRandomizationListOutVO;
 import org.phoenixctms.ctsms.vo.TeamMemberInVO;
@@ -9302,5 +9303,27 @@ public class TrialServiceImpl
 		} catch (ServiceException e) {
 			// already end state
 		}
+	}
+
+	@Override
+	protected Collection<StratificationPermutationVO> handleGetStratificationPermutations(AuthenticationVO auth, Long trialId) throws Exception {
+		CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
+		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
+		Iterator<Object[]> permutationsIt = this.getProbandListEntryTagDao().getTrialStratificationPermutations(trialId).iterator();
+		Collection<StratificationPermutationVO> result = new ArrayList<StratificationPermutationVO>();
+		while (permutationsIt.hasNext()) {
+			Object[] permutation = permutationsIt.next();
+			Set<Long> selectionSetValueIds = new LinkedHashSet<Long>();
+			StratificationPermutationVO stratificationPermutation = new StratificationPermutationVO();
+			for (int i = 0; i < permutation.length; i++) {
+				InputFieldSelectionSetValue value = (InputFieldSelectionSetValue) permutation[i];
+				selectionSetValueIds.add(value.getId());
+				stratificationPermutation.getValues().add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(value));
+			}
+			stratificationPermutation.setCount(probandListEntryDao.getTrialStratificationTagValuesCount(trialId, selectionSetValueIds));
+			result.add(stratificationPermutation);
+		}
+		return result;
 	}
 }
