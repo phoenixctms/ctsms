@@ -7,7 +7,11 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Junction;
@@ -15,6 +19,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.compare.InputFieldSelectionSetValueComparator;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -173,6 +178,47 @@ public class ProbandListEntryTagDaoImpl
 			listEntryTagCriteria.add(Restrictions.eq("randomize", randomize.booleanValue()));
 		}
 		return listEntryTagCriteria.list();
+	}
+
+	@Override
+	protected Collection<Object[]> handleGetTrialStratificationPermutations(Long trialId) throws Exception {
+		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
+		if (trialId != null) {
+			listEntryTagCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		listEntryTagCriteria.add(Restrictions.eq("stratification", true));
+		List<List<InputFieldSelectionSetValue>> valueLists = new ArrayList<>();
+		Iterator<ProbandListEntryTag> tagsIt = listEntryTagCriteria.list().iterator();
+		while (tagsIt.hasNext()) {
+			ProbandListEntryTag tag = tagsIt.next();
+			List<InputFieldSelectionSetValue> values = new ArrayList<>(tag.getField().getSelectionSetValues());
+			if (!values.isEmpty()) {
+				Collections.sort(values, new InputFieldSelectionSetValueComparator());
+				valueLists.add(values);
+			}
+		}
+		List<Object[]> permutations = new ArrayList<>();
+		if (!valueLists.isEmpty()) {
+			generatePermutations(valueLists, 0, new Object[valueLists.size()], permutations);
+		}
+		return permutations;
+	}
+
+	private static void generatePermutations(
+			List<List<InputFieldSelectionSetValue>> valueLists,
+			int depth,
+			Object[] currentPath,
+			List<Object[]> result) {
+		if (depth == valueLists.size()) {
+			result.add(currentPath.clone());
+			return;
+		}
+		Iterator<InputFieldSelectionSetValue> valuesIt = valueLists.get(depth).iterator();
+		while (valuesIt.hasNext()) {
+			InputFieldSelectionSetValue value = valuesIt.next();
+			currentPath[depth] = value;
+			generatePermutations(valueLists, depth + 1, currentPath, result);
+		}
 	}
 
 	@Override
