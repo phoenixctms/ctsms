@@ -471,8 +471,11 @@ function handleTrialAssociationTabChange(index) {
 		break;
 	case 5:
 		changeDepartmentChart();
-		break;		
+		break;
 	case 6:
+		changeStratificationChart();
+		break;		
+	case 7:
 		changeRandomizationListCodes();
 		break;
 

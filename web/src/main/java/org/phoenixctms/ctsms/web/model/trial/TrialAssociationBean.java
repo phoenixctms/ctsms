@@ -33,6 +33,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 	private BookingDurationSummaryModel bookingDurationModel;
 	private EnrollmentChartBean enrollmentChartBean;
 	private DepartmentChartBean departmentChartBean;
+	private StratificationChartBean stratificationChartBean;
 	private RandomizationListCodeLazyModel randomizationListCodeModel;
 
 	public TrialAssociationBean() {
@@ -44,6 +45,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		bookingDurationModel = new BookingDurationSummaryModel(BookingDurationSummaryType.TRIAL);
 		enrollmentChartBean = new EnrollmentChartBean();
 		departmentChartBean = new DepartmentChartBean();
+		stratificationChartBean = new StratificationChartBean();
 		randomizationListCodeModel = new RandomizationListCodeLazyModel();
 	}
 
@@ -104,6 +106,10 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		return randomizationListCodeModel;
 	}
 
+	public StratificationChartBean getStratificationChartBean() {
+		return stratificationChartBean;
+	}
+
 	public void handleBookingDurationSummaryChange() {
 		now = new Date();
 		bookingDurationModel.reset(now, BookingDurationSummaryType.TRIAL, trialId);
@@ -115,6 +121,10 @@ public class TrialAssociationBean extends ManagedBeanBase {
 
 	public void handleDepartmentChartChange() {
 		departmentChartBean.changeRootEntity(trialId);
+	}
+
+	public void handleStratificationChartChange() {
+		stratificationChartBean.changeRootEntity(trialId);
 	}
 
 	public void handleShiftDurationSummaryChange() {
@@ -158,6 +168,7 @@ public class TrialAssociationBean extends ManagedBeanBase {
 		bookingDurationModel.reset(now, BookingDurationSummaryType.TRIAL, null);
 		enrollmentChartBean.changeRootEntity(null);
 		departmentChartBean.changeRootEntity(null);
+		stratificationChartBean.changeRootEntity(null);
 	}
 
 	@Override

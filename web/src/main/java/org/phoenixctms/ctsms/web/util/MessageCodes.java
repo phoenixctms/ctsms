@@ -904,8 +904,8 @@ public interface MessageCodes {
 	public static final String MASS_MAIL_PROGRESS_LABEL = "mass_mail_progress_label";
 	public static final String GENERATE_GROUP_RANDOMIZATION_LIST_TITLE = "generate_group_randomization_list_title";
 	public static final String GENERATE_TAG_RANDOMIZATION_LIST_TITLE = "generate_tag_randomization_list_title";
-	public static final String STRATIFICATION_RANDOMISATION_LIST_NOT_USED = "stratification_randomisation_list_not_used";
-	public static final String STRATIFICATION_RANDOMISATION_LIST_USED = "stratification_randomisation_list_used";
+	public static final String STRATIFICATION_RANDOMIZATION_LIST_NOT_USED = "stratification_randomization_list_not_used";
+	public static final String STRATIFICATION_RANDOMIZATION_LIST_USED = "stratification_randomization_list_used";
 	public static final String USER_NEW_DEPARTMENT_PASSWORD_LABEL = "user_new_department_password_label";
 	public static final String USER_OLD_DEPARTMENT_PASSWORD_LABEL = "user_old_department_password_label";
 	public static final String PASSWORD_DEPARTMENT_PASSWORD_LABEL = "password_department_password_label";
