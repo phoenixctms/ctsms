@@ -136,6 +136,7 @@
         mvn dependency:tree
         mvn -f core/pom.xml -Dmaven.test.skip=true
         mvn -f common/pom.xml -Dmaven.test.skip=true
+        mvn clean install -P migrate-and-deploy -DskipTests
         mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=create
         mvn -f core/pom.xml org.andromda.maven.plugins:andromdapp-maven-plugin:schema -Dtasks=drop
 

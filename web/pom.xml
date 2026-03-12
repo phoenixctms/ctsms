@@ -15,8 +15,6 @@
 		<theme.version>1.0.6</theme.version>
 		<jersey.version>1.20-SNAPSHOT</jersey.version>
 		<sonar.projectKey>phoenixctms_ctsms_web</sonar.projectKey>
-		<!-- <sonar.sources>.</sonar.sources> -->
-		<!-- <sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions> -->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -345,9 +343,14 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<!-- <version>1.3.3</version> -->
 			<version>1.6.0</version>
 			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<version>4.2.0</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -366,9 +369,7 @@
 				<executions>
 					<execution>
 						<id>default-minify</id>
-						<!-- http://samaxes.github.io/minify-maven-plugin/minify-mojo.html -->
 						<configuration>
-							<!-- <verbose>true</verbose> -->
 							<skipMerge>true</skipMerge>
 							<cssSourceDir>resources/css</cssSourceDir>
 							<cssSourceIncludes>
@@ -411,4 +412,57 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>migrate-and-deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>3.1.0</version>
+						<executions>
+							<execution>
+								<id>jakarta-migrate</id>
+								<phase>install</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>cmd</executable>
+									<arguments>
+										<argument>/c</argument>
+										<argument>migrate.bat</argument>
+										<argument>${project.version}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<version>2.2</version>
+						<executions>
+							<execution>
+								<id>auto-deploy</id>
+								<phase>install</phase>
+								<goals>
+									<goal>deploy-only</goal>
+								</goals>
+								<configuration>
+									<url>http://localhost:8080/manager/text</url>
+									<server>TomcatServer</server>
+									<warFile>
+										${project.build.directory}/ctsms-${project.version}-migrated.war</warFile>
+									<path>/ctsms-web</path>
+									<update>true</update>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
