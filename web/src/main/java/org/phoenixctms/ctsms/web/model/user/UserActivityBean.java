@@ -20,7 +20,7 @@ import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
-@ManagedBean
+@ManagedBean(eager = true)
 @ViewScoped
 public class UserActivityBean extends ManagedBeanBase {
 
@@ -33,6 +33,7 @@ public class UserActivityBean extends ManagedBeanBase {
 
 	public UserActivityBean() {
 		super();
+		//System.out.println("UserActivityBean ctor");
 		userActivityModel = new UserActivityLazyModel();
 	}
 
@@ -196,7 +197,7 @@ public class UserActivityBean extends ManagedBeanBase {
 			Collection<JournalCategoryVO> categoryVOs = null;
 			try {
 				categoryVOs = WebUtil.getServiceLocator().getSelectionSetService().getJournalCategories(WebUtil.getAuthentication(), null, null);
-			} catch (ServiceException|AuthorisationException|IllegalArgumentException e) {
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}

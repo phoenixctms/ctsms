@@ -127,7 +127,37 @@ public class DataTable extends org.primefaces.component.datatable.DataTable {
 	}
 
 	public List<Object> getSelectedRowKeys() {
-		return getSelectedRowKeys();
+		// We must override this because the base class method is package-private
+		// and invisible to our package.
+		Object selection = this.getSelection();
+		List<Object> keys = new ArrayList<Object>();
+		if (selection == null) {
+			return keys;
+		}
+		boolean hasRowKeyVe = this.getValueExpression("rowKey") != null;
+		String var = this.getVar();
+		Map<String, Object> requestMap = FacesContext.getCurrentInstance().getExternalContext().getRequestMap();
+		if (this.isSingleSelectionMode()) {
+			if (hasRowKeyVe) {
+				requestMap.put(var, selection);
+				keys.add(this.getRowKey());
+			} else {
+				keys.add(this.getRowKeyFromModel(selection));
+			}
+		} else {
+			// Handle multiple selection (Array)
+			int length = java.lang.reflect.Array.getLength(selection);
+			for (int i = 0; i < length; i++) {
+				Object item = java.lang.reflect.Array.get(selection, i);
+				if (hasRowKeyVe) {
+					requestMap.put(var, item);
+					keys.add(this.getRowKey());
+				} else {
+					keys.add(this.getRowKeyFromModel(item));
+				}
+			}
+		}
+		return keys;
 	}
 
 	@Override
