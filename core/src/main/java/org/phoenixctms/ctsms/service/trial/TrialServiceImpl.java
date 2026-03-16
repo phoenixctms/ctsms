@@ -5316,7 +5316,7 @@ public class TrialServiceImpl
 			HashMap<Long, VisitScheduleItem> visitScheduleAppointmentMap;
 			if (showVisitScheduleAppointmentsStart || showVisitScheduleAppointmentsStop || showVisitScheduleAppointmentsStartStop) {
 				Collection<Object[]> visitScheduleAppointments = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(probandListEntryVO.getTrial().getId(),
-						null, probandListEntryVO.getProband().getId(), null, null, visitScheduleAppointmentsInternal, null, null);
+						null, null, probandListEntryVO.getProband().getId(), null, null, visitScheduleAppointmentsInternal, null, null);
 				visitScheduleAppointmentMap = new HashMap<Long, VisitScheduleItem>(visitScheduleAppointments.size());
 				Iterator<Object[]> visitScheduleAppointmentsIt = visitScheduleAppointments.iterator();
 				while (visitScheduleAppointmentsIt.hasNext()) {
@@ -5790,7 +5790,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected VisitScheduleExcelVO handleExportVisitAppointmentSchedule(
-			AuthenticationVO auth, Long trialId, Long probandId, Long trialDepartmentId, Date from, Date to) throws Exception {
+			AuthenticationVO auth, Long trialId, Long probandId, Long trialDepartmentId, Long probandDepartmentId, Date from, Date to) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = null;
 		TrialOutVO trialVO = null;
@@ -5810,6 +5810,9 @@ public class TrialServiceImpl
 		if (trialDepartmentId != null) {
 			trialDepartmentVO = departmentDao.toDepartmentVO(CheckIDUtil.checkDepartmentId(trialDepartmentId, departmentDao));
 		}
+		if (probandDepartmentId != null) {
+			CheckIDUtil.checkDepartmentId(probandDepartmentId, departmentDao);
+		}
 		VisitScheduleExcelWriter.Styles style = VisitScheduleExcelWriter.Styles.PROBAND_APPOINTMENT_SCHEDULE;
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		Collection visitScheduleItems;
@@ -5817,7 +5820,7 @@ public class TrialServiceImpl
 		switch (style) {
 			case PROBAND_APPOINTMENT_SCHEDULE:
 				visitScheduleItems = new ArrayList<VisitScheduleAppointmentVO>();
-				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, probandId, null, null,
+				it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, probandDepartmentId, probandId, null, null,
 						false, CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
 				while (it.hasNext()) {
 					Object[] visitScheduleItemProband = (Object[]) it.next();
@@ -7700,9 +7703,6 @@ public class TrialServiceImpl
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
-		if (departmentId != null) {
-			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
-		}
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		if (id != null) {
 			CheckIDUtil.checkVisitScheduleItemId(id, visitScheduleItemDao);
@@ -7719,12 +7719,15 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<VisitScheduleAppointmentVO> handleGetVisitScheduleItemInterval(AuthenticationVO auth, Long trialId,
-			Long departmentId, Long probandId, Long statusId, Long visitTypeId, Date from, Date to, boolean sort) throws Exception {
+			Long trialDepartmentId, Long probandDepartmentId, Long probandId, Long statusId, Long visitTypeId, Date from, Date to, boolean sort) throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		}
-		if (departmentId != null) {
-			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		if (trialDepartmentId != null) {
+			CheckIDUtil.checkDepartmentId(trialDepartmentId, this.getDepartmentDao());
+		}
+		if (probandDepartmentId != null) {
+			CheckIDUtil.checkDepartmentId(probandDepartmentId, this.getDepartmentDao());
 		}
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
@@ -7738,8 +7741,10 @@ public class TrialServiceImpl
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		ProbandDao probandDao = this.getProbandDao();
 		ArrayList<VisitScheduleAppointmentVO> result = new ArrayList<VisitScheduleAppointmentVO>();
-		Iterator<Object[]> it = visitScheduleItemDao.findByTrialDepartmentStatusTypeInterval(trialId, departmentId, probandId, statusId, visitTypeId, false,
-				CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to)).iterator();
+		Iterator<Object[]> it = visitScheduleItemDao
+				.findByTrialDepartmentStatusTypeInterval(trialId, trialDepartmentId, probandDepartmentId, probandId, statusId, visitTypeId, false,
+						CommonUtil.dateToTimestamp(from), CommonUtil.dateToTimestamp(to))
+				.iterator();
 		while (it.hasNext()) {
 			Object[] visitScheduleItemProband = it.next();
 			VisitScheduleItem visitScheduleItem = (VisitScheduleItem) visitScheduleItemProband[0];
@@ -8927,7 +8932,7 @@ public class TrialServiceImpl
 				org.phoenixctms.ctsms.enumeration.NotificationType.VISIT_SCHEDULE_ITEM_REMINDER);
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		Iterator<Map.Entry> visitScheduleItemScheduleIt = visitScheduleItemDao
-				.findVisitScheduleItemSchedule(now, visitScheduleItem.getId(), listEntry != null ? listEntry.getProband().getId() : null, null, null, true, false,
+				.findVisitScheduleItemSchedule(now, visitScheduleItem.getId(), listEntry != null ? listEntry.getProband().getId() : null, null, null, null, true, false,
 						Settings.getVariablePeriod(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD, Settings.Bundle.SETTINGS,
 								DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD),
 						Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,

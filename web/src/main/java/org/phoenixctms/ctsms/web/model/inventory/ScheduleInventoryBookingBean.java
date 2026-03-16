@@ -556,7 +556,7 @@ public class ScheduleInventoryBookingBean extends InventoryBookingBeanBase {
 			RangeIntervalVO range = WebUtil.getServiceLocator().getToolsService().getRangeInterval(date, rangePeriod);
 			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitAppointmentSchedule(
 					WebUtil.getAuthentication(), bookingScheduleModel.getTrialId(),
-					bookingScheduleModel.getProbandId(), bookingScheduleModel.getDepartmentId(), range.getStart(), range.getStop());
+					bookingScheduleModel.getProbandId(), bookingScheduleModel.getDepartmentId(), null, range.getStart(), range.getStop());
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

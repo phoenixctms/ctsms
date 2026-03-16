@@ -288,7 +288,7 @@ public class InventoryBookingLazyScheduleModel extends LazyScheduleModelBase {
 			Collection<VisitScheduleAppointmentVO> visitScheduleAppointments = null;
 			try {
 				visitScheduleAppointments = WebUtil.getServiceLocator().getTrialService()
-						.getVisitScheduleItemInterval(auth, trialId, departmentId, probandId, null, visitTypeId, from, to, false);
+						.getVisitScheduleItemInterval(auth, trialId, departmentId, null, probandId, null, visitTypeId, from, to, false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

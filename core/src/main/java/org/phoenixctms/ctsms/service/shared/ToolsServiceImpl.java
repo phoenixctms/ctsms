@@ -1218,7 +1218,8 @@ public class ToolsServiceImpl
 		Long visitScheduleItemReminderPeriodDays = Settings.getLongNullable(SettingCodes.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS, Settings.Bundle.SETTINGS,
 				DefaultSettings.NOTIFICATION_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS);
 		Iterator<Map.Entry> visitScheduleItemScheduleIt = this.getVisitScheduleItemDao()
-				.findVisitScheduleItemSchedule(today, null, null, null, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false)
+				.findVisitScheduleItemSchedule(today, null, null, null, departmentId, null, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays,
+						false)
 				.entrySet().iterator();
 		while (visitScheduleItemScheduleIt.hasNext()) {
 			Entry visitScheduleItemSchedule = visitScheduleItemScheduleIt.next();

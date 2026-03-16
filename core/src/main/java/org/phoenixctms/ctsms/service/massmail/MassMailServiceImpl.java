@@ -763,7 +763,7 @@ public class MassMailServiceImpl
 				DefaultSettings.MASS_MAIL_VISIT_SCHEDULE_ITEM_REMINDER_PERIOD_DAYS);
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		Iterator<Map.Entry> visitScheduleItemScheduleIt = visitScheduleItemDao
-				.findVisitScheduleItemSchedule(today, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false)
+				.findVisitScheduleItemSchedule(today, null, departmentId, true, false, visitScheduleItemReminderPeriod, visitScheduleItemReminderPeriodDays, false)
 				.entrySet().iterator();
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();

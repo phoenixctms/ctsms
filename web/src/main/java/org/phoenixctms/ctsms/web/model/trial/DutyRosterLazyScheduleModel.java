@@ -296,7 +296,7 @@ public class DutyRosterLazyScheduleModel extends LazyScheduleModelBase {
 			Collection<VisitScheduleAppointmentVO> visitScheduleAppointments = null;
 			try {
 				visitScheduleAppointments = WebUtil.getServiceLocator().getTrialService()
-						.getVisitScheduleItemInterval(auth, trialId, departmentId, null, statusId, visitTypeId, from, to, false);
+						.getVisitScheduleItemInterval(auth, trialId, departmentId, null, null, statusId, visitTypeId, from, to, false);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

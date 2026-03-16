@@ -672,7 +672,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			VisitScheduleExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportVisitAppointmentSchedule(
 					WebUtil.getAuthentication(), dutyRosterScheduleModel.getTrialId(),
 					null,
-					dutyRosterScheduleModel.getDepartmentId(), range.getStart(), range.getStop());
+					dutyRosterScheduleModel.getDepartmentId(), null, range.getStart(), range.getStop());
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
