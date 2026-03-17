@@ -277,14 +277,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createInquiry(inputField, trial, category, position, true, true, true, false, true, true, null, null, null, null, null);
 	}
 
-	public InputFieldOutVO createIntegerField(String name, String category, String title, String comment, Long longPreset, Long lowerLimit,
+	public InputFieldOutVO createIntegerField(String name, String category, String title, String bottomComment, Long longPreset, Long lowerLimit,
 			Long upperLimit, String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.INTEGER);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setLongLowerLimit(lowerLimit);
 		newInputField.setLongUpperLimit(upperLimit);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -298,14 +298,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createIntegerField(name, null, title, null, null, null, null, null);
 	}
 
-	public InputFieldOutVO createMultiLineTextField(String name, String category, String title, String comment, String textPreset, String regExp,
+	public InputFieldOutVO createMultiLineTextField(String name, String category, String title, String bottomComment, String textPreset, String regExp,
 			String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.MULTI_LINE_TEXT);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setRegExp(regExp);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setTextPreset(textPreset);
@@ -318,7 +318,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createMultiLineTextField(name, null, title, null, null, null, null);
 	}
 
-	public InputFieldOutVO createSelectManyField(String name, String category, String title, String comment,
+	public InputFieldOutVO createSelectManyField(String name, String category, String title, String bottomComment,
 			boolean vertical, TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues,
 			Integer minSelections, Integer maxSelections, String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -326,7 +326,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinSelections(minSelections);
 		newInputField.setMaxSelections(maxSelections);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -340,7 +340,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createSelectManyField(name, null, title, null, true, selectionSetValues, null, null, null);
 	}
 
-	public InputFieldOutVO createSelectOneDropdownField(String name, String category, String title, String comment,
+	public InputFieldOutVO createSelectOneDropdownField(String name, String category, String title, String bottomComment,
 			TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues)
 			throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -348,7 +348,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
 		info("select one dropdown input field ID " + inputField.getId() + " created: " + inputField.getName());
 		addSelectionSetValues(inputField, selectionSetValues);
@@ -359,7 +359,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createSelectOneDropdownField(name, null, title, null, selectionSetValues);
 	}
 
-	public InputFieldOutVO createSelectOneRadioField(String name, String category, String title, String comment, boolean vertical,
+	public InputFieldOutVO createSelectOneRadioField(String name, String category, String title, String bottomComment, boolean vertical,
 			TreeMap<InputFieldValuesEnum, Boolean> selectionSetValues)
 			throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -367,7 +367,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
 		info("select one radio input field " + inputField.getId() + " created: " + inputField.getName());
 		addSelectionSetValues(inputField, selectionSetValues);
@@ -378,14 +378,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createSelectOneRadioField(name, null, title, null, true, selectionSetValues);
 	}
 
-	public InputFieldOutVO createSingleLineTextField(String name, String category, String title, String comment, String textPreset, String regExp,
+	public InputFieldOutVO createSingleLineTextField(String name, String category, String title, String bottomComment, String textPreset, String regExp,
 			String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.SINGLE_LINE_TEXT);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setRegExp(regExp);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setTextPreset(textPreset);
@@ -398,13 +398,13 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createSingleLineTextField(name, null, title, null, null, null, null);
 	}
 
-	public InputFieldOutVO createAutoCompleteField(String name, String category, String title, String comment, boolean learn, boolean strict) throws Exception {
+	public InputFieldOutVO createAutoCompleteField(String name, String category, String title, String bottomComment, boolean learn, boolean strict) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.AUTOCOMPLETE);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setLearn(learn);
 		newInputField.setStrict(strict);
 		InputFieldOutVO out = inputFieldService.addInputField(auth, newInputField);
@@ -416,7 +416,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createAutoCompleteField(name, null, title, null, true, false);
 	}
 
-	public InputFieldOutVO createSketchField(String name, String category, String title, String comment, String resourceFileName,
+	public InputFieldOutVO createSketchField(String name, String category, String title, String bottomComment, String resourceFileName,
 			TreeMap<InputFieldValuesEnum, InkStroke> inkRegions,
 			Integer minSelections, Integer maxSelections, String validationErrorMessage) throws Throwable {
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -426,7 +426,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinSelections(minSelections);
 		newInputField.setMaxSelections(maxSelections);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -443,14 +443,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createSketchField(name, null, title, null, null, inkRegions, null, null, null);
 	}
 
-	public InputFieldOutVO createTimeField(String name, String category, String title, String comment, Date timePreset, Date minTime, Date maxTime,
+	public InputFieldOutVO createTimeField(String name, String category, String title, String bottomComment, Date timePreset, Date minTime, Date maxTime,
 			String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.TIME);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinTime(minTime);
 		newInputField.setMaxTime(maxTime);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -464,14 +464,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createTimeField(name, null, title, null, null, null, null, null);
 	}
 
-	public InputFieldOutVO createTimestampField(String name, String category, String title, String comment, Date timestampPreset, Date minTimestamp,
+	public InputFieldOutVO createTimestampField(String name, String category, String title, String bottomComment, Date timestampPreset, Date minTimestamp,
 			Date maxTimestamp, boolean isUserTimeZone, String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.TIMESTAMP);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinTimestamp(minTimestamp);
 		newInputField.setMaxTimestamp(maxTimestamp);
 		newInputField.setUserTimeZone(isUserTimeZone);
@@ -486,13 +486,13 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createTimestampField(name, null, title, null, null, null, null, false, null);
 	}
 
-	public InputFieldOutVO createCheckBoxField(String name, String category, String title, String comment, boolean booleanPreset) throws Exception {
+	public InputFieldOutVO createCheckBoxField(String name, String category, String title, String bottomComment, boolean booleanPreset) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.CHECKBOX);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setBooleanPreset(booleanPreset);
 		InputFieldOutVO out = inputFieldService.addInputField(auth, newInputField);
 		info("check box input field " + out.getId() + " created: " + out.getName());
@@ -503,14 +503,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createCheckBoxField(name, null, title, null, false);
 	}
 
-	public InputFieldOutVO createDateField(String name, String category, String title, String comment, Date datePreset, Date minDate, Date maxDate,
+	public InputFieldOutVO createDateField(String name, String category, String title, String bottomComment, Date datePreset, Date minDate, Date maxDate,
 			String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.DATE);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinDate(minDate);
 		newInputField.setMaxDate(maxDate);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -524,14 +524,14 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return createDateField(name, null, title, null, null, null, null, null);
 	}
 
-	public InputFieldOutVO createFloatField(String name, String category, String title, String comment, Float floatPreset, Float lowerLimit,
+	public InputFieldOutVO createFloatField(String name, String category, String title, String bottomComment, Float floatPreset, Float lowerLimit,
 			Float upperLimit, String validationErrorMessage) throws Exception {
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.FLOAT);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setFloatLowerLimit(lowerLimit);
 		newInputField.setFloatUpperLimit(upperLimit);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
