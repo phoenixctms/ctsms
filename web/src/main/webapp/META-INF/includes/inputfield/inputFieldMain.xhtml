@@ -76,7 +76,37 @@
 						columns="1"
 						cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-row,ctsms-fileupload-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						rowClasses="ctsms-textarea-row,ctsms-input-row,ctsms-fileupload-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
+						
+						
+						<h:panelGrid
+							columns="1"
+							cellpadding="0"
+							styleClass="ctsms-input-panelgrid"
+							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+							<h:outputLabel
+								for="inputfieldtopcomment"
+								value="#{inputfieldlabels.input_field_top_comment_label}" />
+							<h:panelGroup>
+								<p:inputTextarea
+									id="inputfieldtopcomment"
+									value="#{inputFieldBean.in.topComment}"
+									required="false"
+									autoResize="false"
+									styleClass="ctsms-textarea"
+									label="#{inputfieldlabels.input_field_top_comment}">
+									<p:ajax />
+								</p:inputTextarea>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="inputfieldtopcomment">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_top_comment_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+						</h:panelGrid>						
+						
 						<h:panelGrid
 							columns="3"
 							cellpadding="2"
@@ -813,11 +843,6 @@
 								for="timePreset"
 								rendered="#{inputFieldBean.config.time}" />
 
-
-
-								
-								
-								
 							<h:outputLabel
 								for="width"
 								rendered="#{inputFieldBean.config.sketch}"
@@ -956,23 +981,23 @@
 							styleClass="ctsms-input-panelgrid"
 							rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 							<h:outputLabel
-								for="inputfieldcomment"
-								value="#{inputfieldlabels.input_field_comment_label}" />
+								for="inputfieldbottomcomment"
+								value="#{inputfieldlabels.input_field_bottom_comment_label}" />
 							<h:panelGroup>
 								<p:inputTextarea
-									id="inputfieldcomment"
-									value="#{inputFieldBean.in.comment}"
+									id="inputfieldbottomcomment"
+									value="#{inputFieldBean.in.bottomComment}"
 									required="false"
 									autoResize="false"
 									styleClass="ctsms-textarea"
-									label="#{inputfieldlabels.input_field_comment}">
+									label="#{inputfieldlabels.input_field_bottom_comment}">
 									<p:ajax />
 								</p:inputTextarea>
 								<p:tooltip
 									rendered="#{enableTooltips}"
-									for="inputfieldcomment">
+									for="inputfieldbottomcomment">
 									<h:outputText
-										value="#{inputfieldlabels.input_field_comment_tooltip}"
+										value="#{inputfieldlabels.input_field_bottom_comment_tooltip}"
 										escape="false" />
 								</p:tooltip>
 							</h:panelGroup>
