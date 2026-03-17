@@ -2133,7 +2133,8 @@ public final class ServiceUtil {
 			}
 			localizedInputField.setName(L10nUtil.getInputFieldName(locale, localizedInputField.getNameL10nKey()));
 			localizedInputField.setTitle(L10nUtil.getInputFieldTitle(locale, localizedInputField.getTitleL10nKey()));
-			localizedInputField.setComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getCommentL10nKey()));
+			localizedInputField.setTopComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getTopCommentL10nKey()));
+			localizedInputField.setBottomComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getBottomCommentL10nKey()));
 			localizedInputField.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(locale, localizedInputField.getValidationErrorMsgL10nKey()));
 			inputField = localizedInputField;
 			ECRFFieldOutVO localizedEcrfFieldVO = new ECRFFieldOutVO();
@@ -2275,7 +2276,8 @@ public final class ServiceUtil {
 			}
 			localizedInputField.setName(L10nUtil.getInputFieldName(locale, localizedInputField.getNameL10nKey()));
 			localizedInputField.setTitle(L10nUtil.getInputFieldTitle(locale, localizedInputField.getTitleL10nKey()));
-			localizedInputField.setComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getCommentL10nKey()));
+			localizedInputField.setTopComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getTopCommentL10nKey()));
+			localizedInputField.setBottomComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getBottomCommentL10nKey()));
 			localizedInputField.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(locale, localizedInputField.getValidationErrorMsgL10nKey()));
 			inputField = localizedInputField;
 			InquiryOutVO localizedInquiryVO = new InquiryOutVO();
@@ -2402,7 +2404,8 @@ public final class ServiceUtil {
 			}
 			localizedInputField.setName(L10nUtil.getInputFieldName(locale, localizedInputField.getNameL10nKey()));
 			localizedInputField.setTitle(L10nUtil.getInputFieldTitle(locale, localizedInputField.getTitleL10nKey()));
-			localizedInputField.setComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getCommentL10nKey()));
+			localizedInputField.setTopComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getTopCommentL10nKey()));
+			localizedInputField.setBottomComment(L10nUtil.getInputFieldComment(locale, localizedInputField.getBottomCommentL10nKey()));
 			localizedInputField.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(locale, localizedInputField.getValidationErrorMsgL10nKey()));
 			inputField = localizedInputField;
 			ProbandListEntryTagOutVO localizedListEntryTagVO = new ProbandListEntryTagOutVO();

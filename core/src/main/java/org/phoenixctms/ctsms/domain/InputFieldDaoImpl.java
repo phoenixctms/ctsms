@@ -289,7 +289,8 @@ public class InputFieldDaoImpl
 		target.setTextPresetL10nKey(source.getTextPreset());
 		target.setNameL10nKey(source.getName());
 		target.setTitleL10nKey(source.getTitle());
-		target.setCommentL10nKey(source.getComment());
+		target.setBottomCommentL10nKey(source.getBottomComment());
+		target.setTopCommentL10nKey(source.getTopComment());
 		target.setValidationErrorMsgL10nKey(source.getValidationErrorMsg());
 		if (source.getDatas() != null && source.getDatas().length > 0) {
 			target.setData(source.getDatas());
@@ -421,7 +422,8 @@ public class InputFieldDaoImpl
 		target.setTextPreset(source.getTextPresetL10nKey());
 		target.setName(source.getNameL10nKey());
 		target.setTitle(source.getTitleL10nKey());
-		target.setComment(source.getCommentL10nKey());
+		target.setBottomComment(source.getBottomCommentL10nKey());
+		target.setBottomComment(source.getBottomCommentL10nKey());
 		target.setValidationErrorMsg(source.getValidationErrorMsgL10nKey());
 		target.setDatas(source.getData());
 		if (contentType != null) {
