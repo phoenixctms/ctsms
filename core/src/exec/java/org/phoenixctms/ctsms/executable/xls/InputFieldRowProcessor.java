@@ -28,8 +28,9 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int CATEGORY_COLUMN_INDEX = 3;
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 4;
 	private final static int FIELD_TYPE_COLUMN_INDEX = 5;
-	private final static int COMMENT_COLUMN_INDEX = 6;
-	private final static int PRESET_COLUMN_INDEX = 7;
+	private final static int TOP_COMMENT_COLUMN_INDEX = 6;
+	private final static int BOTTOM_COMMENT_COLUMN_INDEX = 7;
+	private final static int PRESET_COLUMN_INDEX = 8;
 	private final static int TEXT_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int BOOLEAN_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int LONG_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
@@ -37,12 +38,12 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int DATE_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int TIME_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int TIMESTAMP_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
-	private final static int VALIDATION_ERROR_MSG_COLUMN_INDEX = 8;
-	private final static int PARAM_1_COLUMN_INDEX = 9;
-	private final static int PARAM_2_COLUMN_INDEX = 10;
-	private final static int PARAM_3_COLUMN_INDEX = 11;
-	private final static int PARAM_4_COLUMN_INDEX = 12;
-	private final static int PARAM_5_COLUMN_INDEX = 13;
+	private final static int VALIDATION_ERROR_MSG_COLUMN_INDEX = 9;
+	private final static int PARAM_1_COLUMN_INDEX = 10;
+	private final static int PARAM_2_COLUMN_INDEX = 11;
+	private final static int PARAM_3_COLUMN_INDEX = 12;
+	private final static int PARAM_4_COLUMN_INDEX = 13;
+	private final static int PARAM_5_COLUMN_INDEX = 14;
 	private final static int REGEXP_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
@@ -68,7 +69,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private int categoryColumnIndex;
 	private int externalIdColumnIndex;
 	private int fieldTypeColumnIndex;
-	private int commentColumnIndex;
+	private int topCommentColumnIndex;
+	private int bottomCommentColumnIndex;
 	private int textPresetColumnIndex;
 	private int booleanPresetColumnIndex;
 	private int longPresetColumnIndex;
@@ -121,8 +123,12 @@ public class InputFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, categoryColumnIndex);
 	}
 
-	private String getComment(String[] values) {
-		return getColumnValue(values, commentColumnIndex);
+	private String getTopComment(String[] values) {
+		return getColumnValue(values, topCommentColumnIndex);
+	}
+
+	private String getBottomComment(String[] values) {
+		return getColumnValue(values, bottomCommentColumnIndex);
 	}
 
 	private String getDatePreset(String[] values) {
@@ -263,7 +269,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 		categoryColumnIndex = CATEGORY_COLUMN_INDEX;
 		externalIdColumnIndex = EXTERNAL_ID_COLUMN_INDEX;
 		fieldTypeColumnIndex = FIELD_TYPE_COLUMN_INDEX;
-		commentColumnIndex = COMMENT_COLUMN_INDEX;
+		topCommentColumnIndex = TOP_COMMENT_COLUMN_INDEX;
+		bottomCommentColumnIndex = BOTTOM_COMMENT_COLUMN_INDEX;
 		textPresetColumnIndex = TEXT_PRESET_COLUMN_INDEX;
 		booleanPresetColumnIndex = BOOLEAN_PRESET_COLUMN_INDEX;
 		longPresetColumnIndex = LONG_PRESET_COLUMN_INDEX;
@@ -307,7 +314,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 				.append(getCategory(values))
 				.append(getExternalId(values))
 				.append(getFieldType(values))
-				.append(getComment(values))
+				.append(getTopComment(values))
+				.append(getBottomComment(values))
 				.append(getTextPreset(values))
 				.append(getBooleanPreset(values))
 				.append(getLongPreset(values))
@@ -426,7 +434,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 			default:
 				break;
 		}
-		inputFieldIn.setComment(getComment(values));
+		inputFieldIn.setTopComment(getTopComment(values));
+		inputFieldIn.setBottomComment(getBottomComment(values));
 		inputFieldIn.setValidationErrorMsg(CommonUtil.isEmptyString(getValidationErrorMsg(values)) ? null : getValidationErrorMsg(values));
 		InputFieldOutVO inputFieldVO = inputFieldService.addUpdateInputField(context.getAuth(), inputFieldIn,
 				((XlsImporter) context.getImporter()).getSelectionSetValueRowProcessor().getSelectionSetValues(name));
