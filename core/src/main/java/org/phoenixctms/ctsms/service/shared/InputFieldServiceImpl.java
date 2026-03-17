@@ -992,7 +992,8 @@ public class InputFieldServiceImpl
 		}
 		InputField newInputField = InputField.Factory.newInstance();
 		newInputField.setBooleanPreset(originalInputField.getBooleanPreset());
-		newInputField.setCommentL10nKey(originalInputField.getCommentL10nKey());
+		newInputField.setTopCommentL10nKey(originalInputField.getTopCommentL10nKey());
+		newInputField.setBottomCommentL10nKey(originalInputField.getBottomCommentL10nKey());
 		newInputField.setDatePreset(originalInputField.getDatePreset());
 		newInputField.setFieldType(originalInputField.getFieldType());
 		newInputField.setFloatLowerLimit(originalInputField.getFloatLowerLimit());

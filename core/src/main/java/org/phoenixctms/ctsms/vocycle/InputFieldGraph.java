@@ -118,13 +118,15 @@ public class InputFieldGraph extends GraphCycleNHelper<InputField, InputFieldOut
 			target.setTextPreset(L10nUtil.getInputFieldTextPreset(Locales.USER, source.getTextPresetL10nKey()));
 			target.setName(L10nUtil.getInputFieldName(Locales.USER, source.getNameL10nKey()));
 			target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
-			target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getCommentL10nKey()));
+			target.setBottomComment(L10nUtil.getInputFieldComment(Locales.USER, source.getBottomCommentL10nKey()));
+			target.setTopComment(L10nUtil.getInputFieldComment(Locales.USER, source.getTopCommentL10nKey()));
 			target.setValidationErrorMsg(L10nUtil.getInputFieldValidationErrorMsg(Locales.USER, source.getValidationErrorMsgL10nKey()));
 		} else {
 			target.setTextPreset(source.getTextPresetL10nKey());
 			target.setName(source.getNameL10nKey());
 			target.setTitle(source.getTitleL10nKey());
-			target.setComment(source.getCommentL10nKey());
+			target.setBottomComment(source.getBottomCommentL10nKey());
+			target.setTopComment(source.getTopCommentL10nKey());
 			target.setValidationErrorMsg(source.getValidationErrorMsgL10nKey());
 		}
 		if (InputFieldType.AUTOCOMPLETE.equals(source.getFieldType())) {
