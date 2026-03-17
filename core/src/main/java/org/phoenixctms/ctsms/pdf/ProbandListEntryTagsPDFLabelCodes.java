@@ -8,7 +8,8 @@ public interface ProbandListEntryTagsPDFLabelCodes {
 	public final static String INPUT_FIELD_NAME = "input_field_name";
 	public static final String INPUT_FIELD_TITLE = "input_field_title";
 	public static final String INPUT_FIELD_TITLE_OPTIONAL = "input_field_title_optional";
-	public static final String INPUT_FIELD_COMMENT = "input_field_comment";
+	public static final String INPUT_FIELD_TOP_COMMENT = "input_field_top_comment";
+	public static final String INPUT_FIELD_BOTTOM_COMMENT = "input_field_bottom_comment";
 	public static final String INPUT_FIELD_VALIDATION_ERROR_MESSAGE = "input_field_validation_error_message";
 	public static final String SELECTION_SET_VALUE_NAME = "selection_set_value_name";
 	public static final String TRIAL_NAME_LABEL = "trial_name_label";

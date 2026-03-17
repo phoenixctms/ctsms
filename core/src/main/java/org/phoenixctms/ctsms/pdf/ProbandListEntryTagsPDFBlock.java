@@ -142,8 +142,15 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected String getInputFieldCommentLabel(String comment) {
-		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.INPUT_FIELD_COMMENT, PDFUtil.DEFAULT_LABEL, comment);
+	protected String getInputFieldTopCommentLabel(String comment) {
+		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.INPUT_FIELD_TOP_COMMENT, PDFUtil.DEFAULT_LABEL,
+				comment);
+	}
+
+	@Override
+	protected String getInputFieldBottomCommentLabel(String comment) {
+		return L10nUtil.getProbandListEntryTagsPDFLabel(Locales.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFLabelCodes.INPUT_FIELD_BOTTOM_COMMENT, PDFUtil.DEFAULT_LABEL,
+				comment);
 	}
 
 	@Override

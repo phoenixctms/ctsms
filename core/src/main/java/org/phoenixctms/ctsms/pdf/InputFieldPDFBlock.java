@@ -109,20 +109,35 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract Float getHorizontalSelectionItemWidth();
 
-	private String getInputFieldComment() {
+	private String getInputFieldTopComment() {
 		String comment;
 		if (inputField.getLocalized()) {
-			comment = L10nUtil.getInputFieldComment(getLabelLocale(), inputField.getCommentL10nKey());
+			comment = L10nUtil.getInputFieldComment(getLabelLocale(), inputField.getTopCommentL10nKey());
 		} else {
-			comment = inputField.getCommentL10nKey();
+			comment = inputField.getTopCommentL10nKey();
 		}
 		if (comment == null) {
 			comment = "";
 		}
-		return getInputFieldCommentLabel(comment);
+		return getInputFieldTopCommentLabel(comment);
 	}
 
-	protected abstract String getInputFieldCommentLabel(String comment);
+	protected abstract String getInputFieldTopCommentLabel(String comment);
+
+	private String getInputFieldBottomComment() {
+		String comment;
+		if (inputField.getLocalized()) {
+			comment = L10nUtil.getInputFieldComment(getLabelLocale(), inputField.getBottomCommentL10nKey());
+		} else {
+			comment = inputField.getBottomCommentL10nKey();
+		}
+		if (comment == null) {
+			comment = "";
+		}
+		return getInputFieldBottomCommentLabel(comment);
+	}
+
+	protected abstract String getInputFieldBottomCommentLabel(String comment);
 
 	private String getInputFieldName() {
 		String name;
@@ -398,6 +413,25 @@ public abstract class InputFieldPDFBlock {
 		return ximage.getHeightPoints();
 	}
 
+	private float renderTopComment(float x, float y, PDPageContentStream contentStream, InputFieldPDFBlockCursor cursor) throws Exception {
+		float y1 = y;
+		String inputFieldTopComment = getInputFieldTopComment();
+		if (!CommonUtil.isEmptyString(inputFieldTopComment)) {
+			y1 -= PDFUtil.renderMultilineText(
+					contentStream,
+					cursor.getFontC(),
+					PDFUtil.FontSize.SMALL,
+					getTextColor(),
+					inputFieldTopComment,
+					x + getXFrameIndent(),
+					y1,
+					PDFUtil.Alignment.TOP_LEFT,
+					cursor.getBlockIndentedWidth() - 2.0f * getXFrameIndent());
+			y1 -= getYFrameIndent();
+		}
+		return y - y1;
+	}
+
 	private float renderComments(float x, float y, PDPageContentStream contentStream, InputFieldPDFBlockCursor cursor) throws Exception {
 		float y1 = y;
 		if (blank) {
@@ -416,14 +450,14 @@ public abstract class InputFieldPDFBlock {
 				y1 -= getYFrameIndent();
 			}
 		}
-		String inputFieldComment = getInputFieldComment();
-		if (!CommonUtil.isEmptyString(inputFieldComment)) {
+		String inputFieldBottomComment = getInputFieldBottomComment();
+		if (!CommonUtil.isEmptyString(inputFieldBottomComment)) {
 			y1 -= PDFUtil.renderMultilineText(
 					contentStream,
 					cursor.getFontC(),
 					PDFUtil.FontSize.SMALL,
 					getTextColor(),
-					inputFieldComment,
+					inputFieldBottomComment,
 					x + getXFrameIndent(),
 					y1,
 					PDFUtil.Alignment.TOP_LEFT,
@@ -571,6 +605,7 @@ public abstract class InputFieldPDFBlock {
 			case MULTI_LINE_TEXT:
 				x = cursor.getBlockIndentedX();
 				y = cursor.getBlockY() - getYFrameIndent();
+				y -= renderTopComment(x, y, contentStream, cursor);
 				if (isInputFieldLongTitle()) {
 					y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
 					y -= renderTextValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, fieldType, contentStream, cursor) + getYFrameIndent();
@@ -592,6 +627,7 @@ public abstract class InputFieldPDFBlock {
 			case TIME:
 				x = cursor.getBlockIndentedX();
 				y = cursor.getBlockY() - getYFrameIndent();
+				y -= renderTopComment(x, y, contentStream, cursor);
 				if (isInputFieldLongTitle()) {
 					y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
 					y -= renderFormattedValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, fieldType, contentStream, cursor) + getYFrameIndent();
@@ -613,6 +649,7 @@ public abstract class InputFieldPDFBlock {
 			case SELECT_MANY_V:
 				x = cursor.getBlockIndentedX();
 				y = cursor.getBlockY() - getYFrameIndent();
+				y -= renderTopComment(x, y, contentStream, cursor);
 				if (isInputFieldLongTitle()) {
 					y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
 					y -= renderSelectionValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, fieldType, contentStream, cursor) + getYFrameIndent();
@@ -630,6 +667,7 @@ public abstract class InputFieldPDFBlock {
 			case CHECKBOX:
 				x = cursor.getBlockIndentedX();
 				y = cursor.getBlockY() - getYFrameIndent();
+				y -= renderTopComment(x, y, contentStream, cursor);
 				if (isInputFieldLongTitle()) {
 					y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
 					y -= renderBooleanValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, contentStream, cursor) + getYFrameIndent();
@@ -647,6 +685,7 @@ public abstract class InputFieldPDFBlock {
 			case SKETCH:
 				x = cursor.getBlockIndentedX();
 				y = cursor.getBlockY() - getYFrameIndent();
+				y -= renderTopComment(x, y, contentStream, cursor);
 				if (isInputFieldLongTitle()) {
 					y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
 					y -= (getRenderSketchImages() ? 0.0f : renderSelectionValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, fieldType, contentStream, cursor))

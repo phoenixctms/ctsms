@@ -160,8 +160,13 @@ public class InquiriesPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
-	protected String getInputFieldCommentLabel(String comment) {
-		return L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.INPUT_FIELD_COMMENT, PDFUtil.DEFAULT_LABEL, comment);
+	protected String getInputFieldTopCommentLabel(String comment) {
+		return L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.INPUT_FIELD_TOP_COMMENT, PDFUtil.DEFAULT_LABEL, comment);
+	}
+
+	@Override
+	protected String getInputFieldBottomCommentLabel(String comment) {
+		return L10nUtil.getInquiriesPDFLabel(Locales.INQUIRIES_PDF, InquiriesPDFLabelCodes.INPUT_FIELD_BOTTOM_COMMENT, PDFUtil.DEFAULT_LABEL, comment);
 	}
 
 	@Override
