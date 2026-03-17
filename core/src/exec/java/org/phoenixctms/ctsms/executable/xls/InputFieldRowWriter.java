@@ -25,8 +25,9 @@ public class InputFieldRowWriter extends RowWriter {
 	private final static int CATEGORY_COLUMN_INDEX = 3;
 	private final static int EXTERNAL_ID_COLUMN_INDEX = 4;
 	private final static int FIELD_TYPE_COLUMN_INDEX = 5;
-	private final static int COMMENT_COLUMN_INDEX = 6;
-	private final static int PRESET_COLUMN_INDEX = 7;
+	private final static int TOP_COMMENT_COLUMN_INDEX = 6;
+	private final static int BOTTOM_COMMENT_COLUMN_INDEX = 7;
+	private final static int PRESET_COLUMN_INDEX = 8;
 	private final static int TEXT_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int BOOLEAN_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int LONG_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
@@ -34,12 +35,12 @@ public class InputFieldRowWriter extends RowWriter {
 	private final static int DATE_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int TIME_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
 	private final static int TIMESTAMP_PRESET_COLUMN_INDEX = PRESET_COLUMN_INDEX;
-	private final static int VALIDATION_ERROR_MSG_COLUMN_INDEX = 8;
-	private final static int PARAM_1_COLUMN_INDEX = 9;
-	private final static int PARAM_2_COLUMN_INDEX = 10;
-	private final static int PARAM_3_COLUMN_INDEX = 11;
-	private final static int PARAM_4_COLUMN_INDEX = 12;
-	private final static int PARAM_5_COLUMN_INDEX = 13;
+	private final static int VALIDATION_ERROR_MSG_COLUMN_INDEX = 9;
+	private final static int PARAM_1_COLUMN_INDEX = 10;
+	private final static int PARAM_2_COLUMN_INDEX = 11;
+	private final static int PARAM_3_COLUMN_INDEX = 12;
+	private final static int PARAM_4_COLUMN_INDEX = 13;
+	private final static int PARAM_5_COLUMN_INDEX = 14;
 	private final static int REGEXP_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
@@ -65,7 +66,8 @@ public class InputFieldRowWriter extends RowWriter {
 	private int categoryColumnIndex;
 	private int externalIdColumnIndex;
 	private int fieldTypeColumnIndex;
-	private int commentColumnIndex;
+	private int topCommentColumnIndex;
+	private int bottomCommentColumnIndex;
 	private int presetColumnIndex;
 	private int textPresetColumnIndex;
 	private int booleanPresetColumnIndex;
@@ -135,8 +137,10 @@ public class InputFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(externalIdColumnIndex, maxColumnIndex);
 		fieldTypeColumnIndex = FIELD_TYPE_COLUMN_INDEX;
 		maxColumnIndex = Math.max(fieldTypeColumnIndex, maxColumnIndex);
-		commentColumnIndex = COMMENT_COLUMN_INDEX;
-		maxColumnIndex = Math.max(commentColumnIndex, maxColumnIndex);
+		topCommentColumnIndex = TOP_COMMENT_COLUMN_INDEX;
+		maxColumnIndex = Math.max(topCommentColumnIndex, maxColumnIndex);
+		bottomCommentColumnIndex = BOTTOM_COMMENT_COLUMN_INDEX;
+		maxColumnIndex = Math.max(bottomCommentColumnIndex, maxColumnIndex);
 		presetColumnIndex = PRESET_COLUMN_INDEX;
 		maxColumnIndex = Math.max(presetColumnIndex, maxColumnIndex);
 		textPresetColumnIndex = TEXT_PRESET_COLUMN_INDEX;
@@ -225,7 +229,8 @@ public class InputFieldRowWriter extends RowWriter {
 		values[categoryColumnIndex] = "category";
 		values[externalIdColumnIndex] = "external id";
 		values[fieldTypeColumnIndex] = "field type";
-		values[commentColumnIndex] = "comment";
+		values[topCommentColumnIndex] = "top comment";
+		values[bottomCommentColumnIndex] = "bottom comment";
 		values[presetColumnIndex] = "preset value";
 		values[validationErrorMsgColumnIndex] = "validation error message";
 		values[param1ColumnIndex] = "param1 (lower limit/min selections/learn/regexp)";
@@ -311,7 +316,8 @@ public class InputFieldRowWriter extends RowWriter {
 			default:
 				break;
 		}
-		values[commentColumnIndex] = inputField.getCommentL10nKey();
+		values[topCommentColumnIndex] = inputField.getTopCommentL10nKey();
+		values[bottomCommentColumnIndex] = inputField.getBottomCommentL10nKey();
 		values[validationErrorMsgColumnIndex] = inputField.getValidationErrorMsgL10nKey();
 		printRow(values);
 	}
