@@ -8,9 +8,15 @@ import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 public abstract class InputFieldOutVOConfigBase extends InputFieldConfig {
 
 	@Override
-	public String getFieldComment() {
+	public String getTopComment() {
 		InputFieldOutVO inputField = getInputField();
-		return inputField == null ? null : inputField.getComment();
+		return inputField == null ? null : inputField.getTopComment();
+	}
+
+	@Override
+	public String getBottomComment() {
+		InputFieldOutVO inputField = getInputField();
+		return inputField == null ? null : inputField.getBottomComment();
 	}
 
 	public abstract InputFieldOutVO getInputField();

@@ -408,8 +408,12 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		return false;
 	}
 
-	public final boolean isFieldCommentEmpty() {
-		return CommonUtil.isEmptyString(getFieldComment());
+	public final boolean isTopCommentEmpty() {
+		return CommonUtil.isEmptyString(getTopComment());
+	}
+
+	public final boolean isBottomCommentEmpty() {
+		return CommonUtil.isEmptyString(getBottomComment());
 	}
 
 	public final boolean isHasOutput() {

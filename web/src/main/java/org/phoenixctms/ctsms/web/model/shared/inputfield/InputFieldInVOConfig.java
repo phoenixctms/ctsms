@@ -16,8 +16,13 @@ public final class InputFieldInVOConfig extends InputFieldConfig {
 	}
 
 	@Override
-	public String getFieldComment() {
-		return inputField == null ? null : inputField.getComment();
+	public String getTopComment() {
+		return inputField == null ? null : inputField.getTopComment();
+	}
+
+	@Override
+	public String getBottomComment() {
+		return inputField == null ? null : inputField.getBottomComment();
 	}
 
 	public InputFieldInVO getInputField() {

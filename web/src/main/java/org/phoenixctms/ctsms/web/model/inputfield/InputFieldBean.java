@@ -58,7 +58,8 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		if (in != null && out != null) {
 			InputFieldTypeVO fieldTypeVO = out.getFieldType();
 			in.setBooleanPreset(out.getBooleanPreset());
-			in.setComment(out.getCommentL10nKey());
+			in.setTopComment(out.getTopCommentL10nKey());
+			in.setBottomComment(out.getBottomCommentL10nKey());
 			in.setDatePreset(out.getDatePreset());
 			in.setFieldType(fieldTypeVO == null ? null : fieldTypeVO.getType());
 			in.setFloatLowerLimit(out.getFloatLowerLimit());
@@ -101,7 +102,8 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	public static void initInputFieldDefaultValues(InputFieldInVO in) {
 		if (in != null) {
 			in.setBooleanPreset(Settings.getBoolean(SettingCodes.INPUT_FIELD_BOOLEAN_PRESET_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_BOOLEAN_PRESET_PRESET));
-			in.setComment(Messages.getString(MessageCodes.INPUT_FIELD_COMMENT_PRESET));
+			in.setTopComment(Messages.getString(MessageCodes.INPUT_FIELD_TOP_COMMENT_PRESET));
+			in.setBottomComment(Messages.getString(MessageCodes.INPUT_FIELD_BOTTOM_COMMENT_PRESET));
 			in.setDatePreset(DefaultSettings.INPUT_FIELD_DATE_PRESET_PRESET);
 			in.setFieldType(Settings.getInputFieldType(SettingCodes.INPUT_FIELD_FIELD_TYPE_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_FIELD_TYPE_PRESET));
 			in.setFloatLowerLimit(Settings.getFloatNullable(SettingCodes.INPUT_FIELD_FLOAT_LOWER_LIMIT_PRESET, Bundle.SETTINGS,

@@ -8,10 +8,11 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
 public abstract class InputFieldConfig {
 
-	public abstract String getFieldComment();
+	public abstract String getTopComment();
+
+	public abstract String getBottomComment();
 
 	public abstract String getName();
-	
 	//protected abstract String getExternalId();
 
 	public abstract String getTitle();

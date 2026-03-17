@@ -181,7 +181,8 @@ public interface MessageCodes {
 	public static final String COURSE_CV_TITLE_PRESET = "course_cv_title_preset";
 	public static final String COURSE_DESCRIPTION_PRESET = "course_description_preset";
 	public static final String COURSE_NAME_PRESET = "course_name_preset";
-	public static final String INPUT_FIELD_COMMENT_PRESET = "input_field_comment_preset";
+	public static final String INPUT_FIELD_TOP_COMMENT_PRESET = "input_field_top_comment_preset";
+	public static final String INPUT_FIELD_BOTTOM_COMMENT_PRESET = "input_field_bottom_comment_preset";
 	public static final String INPUT_FIELD_NAME_PRESET = "input_field_name_preset";
 	public static final String INPUT_FIELD_EXTERNAL_ID_PRESET = "input_field_external_id_preset";
 	public static final String INPUT_FIELD_CATEGORY_PRESET = "input_field_category_preset";

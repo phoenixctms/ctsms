@@ -27,7 +27,13 @@
 				update="row#{index}" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-input-panelgrid"
-				rowClasses="#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{fieldInput.hasOutput ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.fieldCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
+				rowClasses="#{!fieldInput.topCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{fieldInput.multiLineText ? 'ctsms-textarea-row' : (fieldInput.sketch ? 'ctsms-sketchpad-row' : 'ctsms-input-row')},#{fieldInput.hasOutput ? 'ctsms-inputfield-output-row,' : ''}#{!fieldInput.bottomCommentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.commentEmpty ? 'ctsms-inputfield-comment-row,' : ''}#{!fieldInput.statusCommentEmpty ? 'ctsms-inputfield-statuscomment-row,' : ''}#{((not (!enabled)) and fieldInput.reasonForChangeRequired and reasonForChangeRequired) ? 'ctsms-inputfield-reasonforchange-row,' : ''}ctsms-toolbar-row">
+				<ui:include src="multiLineOutputText.xhtml">
+					<ui:param name="multiLineText" value="#{fieldInput.topComment}" />
+					<ui:param name="rendered" value="#{!fieldInput.topCommentEmpty}" />
+					<ui:param name="multiLineTextClass" value="" />
+					<ui:param name="escapeHtml" value="true" />
+				</ui:include>
 				<h:panelGrid
 					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch)}"
 					columns="#{fieldInput.longTitle ? 1 : 4}"
@@ -399,8 +405,8 @@
 						id="#{fieldInput.outputId}"></div>
 				</h:panelGroup>
 				<ui:include src="multiLineOutputText.xhtml">
-					<ui:param name="multiLineText" value="#{fieldInput.fieldComment}" />
-					<ui:param name="rendered" value="#{!fieldInput.fieldCommentEmpty}" />
+					<ui:param name="multiLineText" value="#{fieldInput.bottomComment}" />
+					<ui:param name="rendered" value="#{!fieldInput.bottomCommentEmpty}" />
 					<ui:param name="multiLineTextClass" value="" />
 					<ui:param name="escapeHtml" value="true" />
 				</ui:include>
