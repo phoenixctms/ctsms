@@ -633,14 +633,14 @@ public class DemoDataProvider {
 		return userVO;
 	}
 
-	private InputFieldOutVO createCheckBoxField(AuthenticationVO auth, String name, String category, String title, String comment, boolean booleanPreset) throws Exception {
+	private InputFieldOutVO createCheckBoxField(AuthenticationVO auth, String name, String category, String title, String bottomComment, boolean booleanPreset) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
 		newInputField.setFieldType(InputFieldType.CHECKBOX);
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setBooleanPreset(booleanPreset);
 		InputFieldOutVO out = inputFieldService.addInputField(auth, newInputField);
 		jobOutput.println("check box input field created: " + out.getName());
@@ -831,7 +831,7 @@ public class DemoDataProvider {
 		return criterias;
 	}
 
-	private InputFieldOutVO createDateField(AuthenticationVO auth, String name, String category, String title, String comment, Date datePreset, Date minDate, Date maxDate,
+	private InputFieldOutVO createDateField(AuthenticationVO auth, String name, String category, String title, String bottomComment, Date datePreset, Date minDate, Date maxDate,
 			String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -839,7 +839,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinDate(minDate);
 		newInputField.setMaxDate(maxDate);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -1157,7 +1157,7 @@ public class DemoDataProvider {
 		}
 	}
 
-	private InputFieldOutVO createFloatField(AuthenticationVO auth, String name, String category, String title, String comment, Float floatPreset, Float lowerLimit,
+	private InputFieldOutVO createFloatField(AuthenticationVO auth, String name, String category, String title, String bottomComment, Float floatPreset, Float lowerLimit,
 			Float upperLimit, String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -1165,7 +1165,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setFloatLowerLimit(lowerLimit);
 		newInputField.setFloatUpperLimit(upperLimit);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -1521,7 +1521,7 @@ public class DemoDataProvider {
 		return out;
 	}
 
-	private InputFieldOutVO createIntegerField(AuthenticationVO auth, String name, String category, String title, String comment, Long longPreset, Long lowerLimit,
+	private InputFieldOutVO createIntegerField(AuthenticationVO auth, String name, String category, String title, String bottomComment, Long longPreset, Long lowerLimit,
 			Long upperLimit, String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -1529,7 +1529,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setLongLowerLimit(lowerLimit);
 		newInputField.setLongUpperLimit(upperLimit);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -1581,7 +1581,7 @@ public class DemoDataProvider {
 		}
 	}
 
-	private InputFieldOutVO createMultiLineTextField(AuthenticationVO auth, String name, String category, String title, String comment, String textPreset, String regExp,
+	private InputFieldOutVO createMultiLineTextField(AuthenticationVO auth, String name, String category, String title, String bottomComment, String textPreset, String regExp,
 			String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -1589,7 +1589,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setRegExp(regExp);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setTextPreset(textPreset);
@@ -1731,7 +1731,7 @@ public class DemoDataProvider {
 		}
 	}
 
-	private InputFieldOutVO createSelectManyField(AuthenticationVO auth, String name, String category, String title, String comment,
+	private InputFieldOutVO createSelectManyField(AuthenticationVO auth, String name, String category, String title, String bottomComment,
 			boolean vertical, TreeMap<InputFieldValues, Boolean> selectionSetValues,
 			Integer minSelections, Integer maxSelections, String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
@@ -1740,7 +1740,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinSelections(minSelections);
 		newInputField.setMaxSelections(maxSelections);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -1750,7 +1750,7 @@ public class DemoDataProvider {
 		return inputField;
 	}
 
-	private InputFieldOutVO createSelectOneDropdownField(AuthenticationVO auth, String name, String category, String title, String comment,
+	private InputFieldOutVO createSelectOneDropdownField(AuthenticationVO auth, String name, String category, String title, String bottomComment,
 			TreeMap<InputFieldValues, Boolean> selectionSetValues)
 			throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
@@ -1759,14 +1759,14 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
 		jobOutput.println("select one dropdown input field created: " + inputField.getName());
 		addSelectionSetValues(auth, inputField, selectionSetValues);
 		return inputField;
 	}
 
-	private InputFieldOutVO createSelectOneRadioField(AuthenticationVO auth, String name, String category, String title, String comment, boolean vertical,
+	private InputFieldOutVO createSelectOneRadioField(AuthenticationVO auth, String name, String category, String title, String bottomComment, boolean vertical,
 			TreeMap<InputFieldValues, Boolean> selectionSetValues)
 			throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
@@ -1775,14 +1775,14 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
 		jobOutput.println("select one radio input field created: " + inputField.getName());
 		addSelectionSetValues(auth, inputField, selectionSetValues);
 		return inputField;
 	}
 
-	private InputFieldOutVO createSingleLineTextField(AuthenticationVO auth, String name, String category, String title, String comment, String textPreset, String regExp,
+	private InputFieldOutVO createSingleLineTextField(AuthenticationVO auth, String name, String category, String title, String bottomComment, String textPreset, String regExp,
 			String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -1790,7 +1790,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setRegExp(regExp);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
 		newInputField.setTextPreset(textPreset);
@@ -1799,7 +1799,7 @@ public class DemoDataProvider {
 		return out;
 	}
 
-	private InputFieldOutVO createSketchField(AuthenticationVO auth, String name, String category, String title, String comment, String resourceFileName,
+	private InputFieldOutVO createSketchField(AuthenticationVO auth, String name, String category, String title, String bottomComment, String resourceFileName,
 			TreeMap<InputFieldValues, InkStroke> inkRegions,
 			Integer minSelections, Integer maxSelections, String validationErrorMessage) throws Throwable {
 		auth = (auth == null ? getRandomAuth() : auth);
@@ -1810,7 +1810,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinSelections(minSelections);
 		newInputField.setMaxSelections(maxSelections);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -1915,7 +1915,7 @@ public class DemoDataProvider {
 		return staff;
 	}
 
-	private InputFieldOutVO createTimeField(AuthenticationVO auth, String name, String category, String title, String comment, Date timePreset, Date minTime, Date maxTime,
+	private InputFieldOutVO createTimeField(AuthenticationVO auth, String name, String category, String title, String bottomComment, Date timePreset, Date minTime, Date maxTime,
 			String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -1923,7 +1923,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinTime(minTime);
 		newInputField.setMaxTime(maxTime);
 		newInputField.setValidationErrorMsg(validationErrorMessage);
@@ -1955,7 +1955,7 @@ public class DemoDataProvider {
 		return out;
 	}
 
-	private InputFieldOutVO createTimestampField(AuthenticationVO auth, String name, String category, String title, String comment, Date timestampPreset, Date minTimestamp,
+	private InputFieldOutVO createTimestampField(AuthenticationVO auth, String name, String category, String title, String bottomComment, Date timestampPreset, Date minTimestamp,
 			Date maxTimestamp, boolean isUserTimeZone, String validationErrorMessage) throws Exception {
 		auth = (auth == null ? getRandomAuth() : auth);
 		InputFieldInVO newInputField = new InputFieldInVO();
@@ -1963,7 +1963,7 @@ public class DemoDataProvider {
 		newInputField.setName(name);
 		newInputField.setTitle(title);
 		newInputField.setCategory(category);
-		newInputField.setComment(comment);
+		newInputField.setBottomComment(bottomComment);
 		newInputField.setMinTimestamp(minTimestamp);
 		newInputField.setMaxTimestamp(maxTimestamp);
 		newInputField.setUserTimeZone(isUserTimeZone);
