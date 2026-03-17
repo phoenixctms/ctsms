@@ -422,7 +422,7 @@ public class InputFieldDaoImpl
 		target.setTextPreset(source.getTextPresetL10nKey());
 		target.setName(source.getNameL10nKey());
 		target.setTitle(source.getTitleL10nKey());
-		target.setBottomComment(source.getBottomCommentL10nKey());
+		target.setTopComment(source.getTopCommentL10nKey());
 		target.setBottomComment(source.getBottomCommentL10nKey());
 		target.setValidationErrorMsg(source.getValidationErrorMsgL10nKey());
 		target.setDatas(source.getData());
