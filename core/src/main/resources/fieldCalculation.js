@@ -66,8 +66,8 @@ var FieldCalculation = FieldCalculation || {};
 	    'customMonthNumberToName' : ['JAN','FEB','MÄR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DEZ'],
 	    'customDateSeparator' : '-',
 	    'customTimeSeparator' : ':',
-	    'customPartialDatePartRegExp' : /NK|NA|ND/,
-	    'customPartialTimePartRegExp' : /NK|NA|ND/
+	    'customPartialDatePartRegExp' : /NK|NA|ND/i,
+	    'customPartialTimePartRegExp' : /NK|NA|ND/i
 	};
 	localizedMessages['en'] = {
 	    'errorSectionIndex'      : "%s - %s (index %d)%s%s",
@@ -124,8 +124,8 @@ var FieldCalculation = FieldCalculation || {};
 	    'customMonthNumberToName' : ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'],
 	    'customDateSeparator' : '-',
 	    'customTimeSeparator' : ':',
-	    'customPartialDatePartRegExp' : /NK|NA|ND/,
-	    'customPartialTimePartRegExp' : /NK|NA|ND/
+	    'customPartialDatePartRegExp' : /NK|NA|ND/i,
+	    'customPartialTimePartRegExp' : /NK|NA|ND/i
 	};
 
 	function _cloneJSON(obj) {
@@ -1193,8 +1193,8 @@ var FieldCalculation = FieldCalculation || {};
 			}
 			m = ary[1].replace(regexp,nkMonth);
 			m_nk = true;
-		} else if (ary[1] in customMonthNameToNumberMap) {
-			m = customMonthNameToNumberMap[ary[1]];
+		} else if (ary[1].toUpperCase() in customMonthNameToNumberMap) {
+			m = customMonthNameToNumberMap[ary[1].toUpperCase()];
 		} else {
 		    if (_testFunction(error)) {
 			    error('month not regognized');
