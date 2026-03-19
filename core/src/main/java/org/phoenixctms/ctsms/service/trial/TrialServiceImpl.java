@@ -1297,7 +1297,7 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_SERIES_FLAG_INCONSISTENT, ecrfFieldIn.getSection());
 		}
 		if ((new EcrfFieldPositionCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_POSITION_NOT_UNIQUE, ecrfFieldIn.getSection(), ecrfFieldIn.getPosition().toString());
 		}
 		if (!CommonUtil.isEmptyString(ecrfFieldIn.getJsVariableName())) {
 			if ((new EcrfFieldJsVariableNameCollisionFinder(this.getECRFDao(), this.getECRFFieldDao())).collides(ecrfFieldIn)) {
@@ -1530,7 +1530,7 @@ public class TrialServiceImpl
 			}
 		}
 		if ((new InquiryPositionCollisionFinder(this.getTrialDao(), this.getInquiryDao())).collides(inquiryIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_POSITION_NOT_UNIQUE);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_POSITION_NOT_UNIQUE, inquiryIn.getCategory(), inquiryIn.getPosition().toString());
 		}
 	}
 
@@ -1677,7 +1677,7 @@ public class TrialServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_POSITION_REQUIRED);
 			}
 			if ((new ProbandListEntryPositionCollisionFinder(trialDao, probandListEntryDao)).collides(probandListEntryIn)) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_POSITION_NOT_UNIQUE);
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_POSITION_NOT_UNIQUE, probandListEntryIn.getPosition().toString());
 			}
 		}
 		if (probandListEntryIn.getRatingMax() != null) {
@@ -1714,7 +1714,7 @@ public class TrialServiceImpl
 			}
 		}
 		if ((new ProbandListEntryTagPositionCollisionFinder(this.getTrialDao(), this.getProbandListEntryTagDao())).collides(listTagIn)) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_POSITION_NOT_UNIQUE);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_POSITION_NOT_UNIQUE, listTagIn.getPosition().toString());
 		}
 		Randomization.checkProbandListEntryTagInput(trial, field, listTagIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
 				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
