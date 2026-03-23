@@ -17,7 +17,7 @@
 				rendered="#{showLength}"
 				styleClass="ctsms-text-length"
 				escape="false">
-				<f:param value="#{multiLineText.length()}" />
+				<f:param value="#{empty multiLineText ? 0 : multiLineText.length()}" />
 			</h:outputFormat>
 		</h:panelGroup>
 	</ui:composition>
