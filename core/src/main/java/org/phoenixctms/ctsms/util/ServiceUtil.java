@@ -3435,7 +3435,7 @@ public final class ServiceUtil {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_SUBJECT_FORMAT, format, e.getMessage());
 			}
 		}
-		return null;
+		return "";
 	}
 
 	private static Iterator<KeyValueString> getMassMailTemplateModelKeyValueIterator(Class vo, boolean enumerateEntities, boolean excludeEncryptedFields) throws Exception {
