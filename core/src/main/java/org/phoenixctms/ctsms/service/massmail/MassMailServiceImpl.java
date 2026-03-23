@@ -10,6 +10,7 @@
 package org.phoenixctms.ctsms.service.massmail;
 
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -224,6 +225,13 @@ public class MassMailServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_BCC, massMailIn.getBcc(), e.getMessage());
 			}
 		}
+		if (!CommonUtil.isEmptyString(massMailIn.getPhoneToEmailFormat())) {
+			try {
+				MessageFormat.format(massMailIn.getPhoneToEmailFormat(), "");
+			} catch (Exception e) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_PHONE_TO_EMAIL_FORMAT, massMailIn.getPhoneToEmailFormat(), e.getMessage());
+			}
+		}
 		if (!massMailIn.getAttachMassMailFiles() && massMailIn.getMassMailFilesLogicalPath() != null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_NOT_NULL);
 		}
@@ -308,6 +316,8 @@ public class MassMailServiceImpl
 		massMailVO.setCc(massMailIn.getCc());
 		massMailVO.setBcc(massMailIn.getBcc());
 		massMailVO.setUseBeacon(massMailIn.getUseBeacon());
+		massMailVO.setHtml(massMailIn.getHtml());
+		massMailVO.setPhoneToEmailFormat(massMailIn.getPhoneToEmailFormat());
 		massMailVO.setAttachMassMailFiles(massMailIn.getAttachMassMailFiles());
 		massMailVO.setMassMailFilesLogicalPath(massMailIn.getMassMailFilesLogicalPath());
 		massMailVO.setAttachTrialFiles(massMailIn.getAttachTrialFiles());

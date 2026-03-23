@@ -34,7 +34,7 @@ public class NotificationEmailSender extends EmailSender<Notification, Staff> {
 	}
 
 	@Override
-	protected boolean isHtml() {
+	protected boolean isHtml(Notification notification) {
 		return HTML;
 	}
 
@@ -52,12 +52,12 @@ public class NotificationEmailSender extends EmailSender<Notification, Staff> {
 		String subject = notification.getSubject();
 		if (!CommonUtil.isEmptyString(subject)) {
 			mimeMessageHelper.setSubject(subject);
-		} else {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
+			//		} else {
+			//			throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
 		}
 		String message = notification.getMessage();
 		if (!CommonUtil.isEmptyString(message)) {
-			mimeMessageHelper.setText(message, isHtml());
+			mimeMessageHelper.setText(message, isHtml(notification));
 			text.append(message);
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_MESSAGE);

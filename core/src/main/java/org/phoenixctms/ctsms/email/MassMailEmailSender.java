@@ -106,7 +106,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient> {
 
-	private final static boolean HTML = true;
 	private final static PaymentMethod PAYOFF_PAYMENT_METHOD = null;
 	private final static Boolean PAYOFF_PAID = false;
 	private final static Boolean INQUIRIES_ACTIVE = null;
@@ -364,8 +363,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 	}
 
 	@Override
-	protected boolean isHtml() {
-		return HTML;
+	protected boolean isHtml(MassMail massMail) {
+		return massMail.isHtml();
 	}
 
 	public boolean isStrictEmailAddresses() {
@@ -426,8 +425,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					massMailVO.getTrial(), massMailVO.getProbandListStatus(), massMailVO.getVisitScheduleItems());
 			if (!CommonUtil.isEmptyString(subject)) {
 				mimeMessageHelper.setSubject(subject);
-			} else {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
+				//} else {
+				//	throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
 			}
 			String message = ServiceUtil.getMassMailMessage(velocityEngine, massMailVO, probandVO, recipientVO.getBeacon(), now, null, trialTagValueDao, probandListEntryDao,
 					probandListEntryTagValueDao, inventoryBookingDao,
@@ -441,10 +440,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					journalEntryDao);
 			if (!CommonUtil.isEmptyString(message)) {
 				text.append(message);
-				if (massMailVO.getUseBeacon() && isHtml()) {
+				if (massMailVO.getUseBeacon() && isHtml(massMail)) {
 					text.append(getBeaconImageHtmlElement(recipientVO.getBeacon()));
 				}
-				mimeMessageHelper.setText(text.toString(), isHtml());
+				mimeMessageHelper.setText(text.toString(), isHtml(massMail));
 			} else {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_MESSAGE);
 			}
@@ -452,14 +451,21 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				Iterator<ProbandContactDetailValue> contactsIt = recipient.getProband().getContactDetailValues().iterator();
 				while (contactsIt.hasNext()) {
 					ProbandContactDetailValue contact = contactsIt.next();
-					ContactDetailType contactType;
-					if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
-						ProbandContactDetailValueOutVO contactVO = probandContactDetailValueDao.toProbandContactDetailValueOutVO(contact);
-						if (contactVO.isDecrypted()) {
-							mimeMessageHelper.addTo(contactVO.getValue(),
-									MessageFormat.format(EMAIL_TO_PERSONAL_NAME, probandVO.getName(), L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
-						} else {
-							throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_CONTACT_DETAIL_VALUE);
+					if (!contact.isNa() && contact.isNotify()) {
+						ContactDetailType contactType = contact.getType();
+						if (contactType.isEmail() || contactType.isPhone()) {
+							ProbandContactDetailValueOutVO contactVO = probandContactDetailValueDao.toProbandContactDetailValueOutVO(contact);
+							if (contactVO.isDecrypted()) {
+								if (contactType.isEmail() && CommonUtil.isEmptyString(massMail.getPhoneToEmailFormat())) {
+									mimeMessageHelper.addTo(contactVO.getValue(),
+											MessageFormat.format(EMAIL_TO_PERSONAL_NAME, probandVO.getName(),
+													L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
+								} else if (contactType.isPhone() && !CommonUtil.isEmptyString(massMail.getPhoneToEmailFormat())) {
+									mimeMessageHelper.addTo(MessageFormat.format(massMail.getPhoneToEmailFormat(), contactVO.getValue()));
+								}
+							} else {
+								throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_CONTACT_DETAIL_VALUE);
+							}
 						}
 					}
 				}
@@ -469,10 +475,17 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				Iterator<StaffContactDetailValue> contactsIt = recipient.getProband().getPhysician().getContactDetailValues().iterator();
 				while (contactsIt.hasNext()) {
 					StaffContactDetailValue contact = contactsIt.next();
-					ContactDetailType contactType;
-					if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
-						mimeMessageHelper.addTo(contact.getValue(),
-								MessageFormat.format(EMAIL_TO_PERSONAL_NAME, physicianVO.getName(), L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
+					if (!contact.isNa() && contact.isNotify()) {
+						ContactDetailType contactType = contact.getType();
+						if (contactType.isEmail() || contactType.isPhone()) {
+							if (contactType.isEmail() && CommonUtil.isEmptyString(massMail.getPhoneToEmailFormat())) {
+								mimeMessageHelper.addTo(contact.getValue(),
+										MessageFormat.format(EMAIL_TO_PERSONAL_NAME, physicianVO.getName(),
+												L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
+							} else if (contactType.isPhone() && !CommonUtil.isEmptyString(massMail.getPhoneToEmailFormat())) {
+								mimeMessageHelper.addTo(MessageFormat.format(massMail.getPhoneToEmailFormat(), contact.getValue()));
+							}
+						}
 					}
 				}
 			}
@@ -484,12 +497,16 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 						Iterator<StaffContactDetailValue> contactsIt = teamMember.getStaff().getContactDetailValues().iterator();
 						while (contactsIt.hasNext()) {
 							StaffContactDetailValue contact = contactsIt.next();
-							ContactDetailType contactType;
-							if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
-								StaffContactDetailValueOutVO contactVO = staffContactDetailValueDao.toStaffContactDetailValueOutVO(contact);
-								mimeMessageHelper.addTo(contact.getValue(),
-										MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getStaff().getName(),
-												L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
+							ContactDetailType contactType = contact.getType();
+							if (contactType.isEmail() || contactType.isPhone()) {
+								if (contactType.isEmail() && CommonUtil.isEmptyString(massMail.getPhoneToEmailFormat())) {
+									StaffContactDetailValueOutVO contactVO = staffContactDetailValueDao.toStaffContactDetailValueOutVO(contact);
+									mimeMessageHelper.addTo(contact.getValue(),
+											MessageFormat.format(EMAIL_TO_PERSONAL_NAME, contactVO.getStaff().getName(),
+													L10nUtil.getContactDetailTypeName(locale, contactType.getNameL10nKey())));
+								} else if (contactType.isPhone() && !CommonUtil.isEmptyString(massMail.getPhoneToEmailFormat())) {
+									mimeMessageHelper.addTo(MessageFormat.format(massMail.getPhoneToEmailFormat(), contact.getValue()));
+								}
 							}
 						}
 					}
