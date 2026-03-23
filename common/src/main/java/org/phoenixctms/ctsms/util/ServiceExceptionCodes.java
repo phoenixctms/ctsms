@@ -800,6 +800,7 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_WRONG_VISIT_SCHEDULE_ITEM = "mass_mail_wrong_visit_schedule_item";
 	public static final String MASS_MAIL_VISIT_SCHEDULE_ITEMS_REQUIRED = "mass_mail_visit_schedule_items_required";
 	public static final String MASS_MAIL_INVALID_SUBJECT_FORMAT = "mass_mail_invalid_subject_format";
+	public static final String MASS_MAIL_INVALID_PHONE_TO_EMAIL_FORMAT = "mass_mail_invalid_phone_to_email_format";
 	public static final String MASS_MAIL_INVALID_TEXT_TEMPLATE = "mass_mail_invalid_text_template";
 	public static final String MASS_MAIL_INVALID_OTHER_TO = "mass_mail_invalid_other_to";
 	public static final String MASS_MAIL_OTHER_TO_REQUIRED = "mass_mail_other_to_required";
@@ -812,7 +813,7 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_ATTACH_TRIAL_FILES_NOT_FALSE = "mass_mail_attach_trial_files_not_false";
 	//public static final String MASS_MAIL_ATTACH_VISIT_PLAN_NOT_FALSE = "mass_mail_attach_visit_plan_not_false";
 	public static final String MASS_MAIL_RECIPIENT_ALREADY_EXISTS = "mass_mail_recipient_already_exists";
-	public static final String EMAIL_EMPTY_SUBJECT = "email_empty_subject";
+	//public static final String EMAIL_EMPTY_SUBJECT = "email_empty_subject";
 	public static final String EMAIL_EMPTY_MESSAGE = "email_empty_message";
 	public static final String SENDING_MASS_MAILS_DISABLED = "sending_mass_mails_disabled";
 	public static final String EMAIL_NOTIFICATIONS_DISABLED = "email_notifications_disabled";

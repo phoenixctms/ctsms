@@ -3376,63 +3376,66 @@ public final class ServiceUtil {
 
 	public static String getMassMailSubject(String format, Locales locale, String maleSalutation, String femaleSalutation, ProbandOutVO proband, TrialOutVO trial,
 			ProbandListStatusTypeVO probandListStatusType, Collection<VisitScheduleItemOutVO> visitScheduleItems) throws ServiceException {
-		Object[] args = new String[10 + (visitScheduleItems != null ? 3 * visitScheduleItems.size() : 0)];
-		args[0] = CommonUtil.getGenderSpecificSalutation(proband, maleSalutation, femaleSalutation);
-		if (proband != null) {
-			args[1] = proband.getFirstName();
-			args[2] = proband.getLastName();
-		} else {
-			args[1] = "";
-			args[2] = "";
-		}
-		args[3] = CommonUtil.getProbandName(proband, true, false,
-				L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
-				L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
-				L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME));
-		if (proband != null) {
-			args[4] = CommonUtil.getGenderSpecificSalutation(proband.getPhysician(), maleSalutation, femaleSalutation);
-			if (proband.getPhysician() != null) {
-				args[5] = proband.getPhysician().getFirstName();
-				args[6] = proband.getPhysician().getLastName();
+		if (format != null) {
+			Object[] args = new String[10 + (visitScheduleItems != null ? 3 * visitScheduleItems.size() : 0)];
+			args[0] = CommonUtil.getGenderSpecificSalutation(proband, maleSalutation, femaleSalutation);
+			if (proband != null) {
+				args[1] = proband.getFirstName();
+				args[2] = proband.getLastName();
 			} else {
+				args[1] = "";
+				args[2] = "";
+			}
+			args[3] = CommonUtil.getProbandName(proband, true, false,
+					L10nUtil.getString(MessageCodes.ENCRYPTED_PROBAND_NAME, DefaultMessages.ENCRYPTED_PROBAND_NAME),
+					L10nUtil.getString(MessageCodes.NEW_BLINDED_PROBAND_NAME, DefaultMessages.NEW_BLINDED_PROBAND_NAME),
+					L10nUtil.getString(MessageCodes.BLINDED_PROBAND_NAME, DefaultMessages.BLINDED_PROBAND_NAME));
+			if (proband != null) {
+				args[4] = CommonUtil.getGenderSpecificSalutation(proband.getPhysician(), maleSalutation, femaleSalutation);
+				if (proband.getPhysician() != null) {
+					args[5] = proband.getPhysician().getFirstName();
+					args[6] = proband.getPhysician().getLastName();
+				} else {
+					args[5] = "";
+					args[6] = "";
+				}
+				args[7] = CommonUtil.getStaffName(proband.getPhysician(), true, false);
+			} else {
+				args[4] = "";
 				args[5] = "";
 				args[6] = "";
+				args[7] = "";
 			}
-			args[7] = CommonUtil.getStaffName(proband.getPhysician(), true, false);
-		} else {
-			args[4] = "";
-			args[5] = "";
-			args[6] = "";
-			args[7] = "";
-		}
-		if (trial != null) {
-			args[8] = trial.getName();
-		} else {
-			args[8] = "";
-		}
-		if (probandListStatusType != null) {
-			args[9] = L10nUtil.getProbandListStatusTypeName(locale, probandListStatusType.getNameL10nKey());
-		} else {
-			args[9] = "";
-		}
-		if (visitScheduleItems != null) {
-			int j = 10;
-			Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
-			while (it.hasNext()) {
-				VisitScheduleItemOutVO visitScheduleItem = it.next();
-				args[j] = visitScheduleItem.getName();
-				j += 1;
-				args[j] = visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getTitle() : "";
-				j += 1;
-				args[j] = visitScheduleItem.getToken() != null ? visitScheduleItem.getToken() : "";
-				j += 1;
+			if (trial != null) {
+				args[8] = trial.getName();
+			} else {
+				args[8] = "";
+			}
+			if (probandListStatusType != null) {
+				args[9] = L10nUtil.getProbandListStatusTypeName(locale, probandListStatusType.getNameL10nKey());
+			} else {
+				args[9] = "";
+			}
+			if (visitScheduleItems != null) {
+				int j = 10;
+				Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
+				while (it.hasNext()) {
+					VisitScheduleItemOutVO visitScheduleItem = it.next();
+					args[j] = visitScheduleItem.getName();
+					j += 1;
+					args[j] = visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getTitle() : "";
+					j += 1;
+					args[j] = visitScheduleItem.getToken() != null ? visitScheduleItem.getToken() : "";
+					j += 1;
+				}
+			}
+			try {
+				return MessageFormat.format(format, args);
+			} catch (Exception e) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_SUBJECT_FORMAT, format, e.getMessage());
 			}
 		}
-		try {
-			return MessageFormat.format(format, args);
-		} catch (Exception e) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_SUBJECT_FORMAT, format, e.getMessage());
-		}
+		return null;
 	}
 
 	private static Iterator<KeyValueString> getMassMailTemplateModelKeyValueIterator(Class vo, boolean enumerateEntities, boolean excludeEncryptedFields) throws Exception {

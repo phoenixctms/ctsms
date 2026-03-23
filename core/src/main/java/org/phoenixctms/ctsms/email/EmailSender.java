@@ -43,7 +43,7 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 					Multipart multipart = new MimeMultipart();
 					Iterator<EmailAttachmentVO> it = attachments.iterator();
 					MimeBodyPart messageBodyPart = new MimeBodyPart();
-					messageBodyPart.setText(text.toString(), getEncoding(), isHtml() ? HTML_CONTENT_SUBTYPE : PLAIN_CONTENT_SUBTYPE);
+					messageBodyPart.setText(text.toString(), getEncoding(), isHtml(entity) ? HTML_CONTENT_SUBTYPE : PLAIN_CONTENT_SUBTYPE);
 					multipart.addBodyPart(messageBodyPart);
 					while (it.hasNext()) {
 						EmailAttachmentVO attachment = it.next();
@@ -87,7 +87,7 @@ public abstract class EmailSender<ENTITY, RECIPIENT> {
 		return 0;
 	}
 
-	protected abstract boolean isHtml();
+	protected abstract boolean isHtml(ENTITY entity);
 
 	protected abstract MimeMessage loadMessage(ENTITY entity, RECIPIENT recipient, Date now) throws Exception;
 
