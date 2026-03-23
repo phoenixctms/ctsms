@@ -12,6 +12,13 @@
 	<ui:composition>
 		<h:panelGroup rendered="#{rendered}">
 			<pre class="ui-widget ctsms-multilinetext #{multiLineTextClass}"><h:outputText escape="#{escapeHtml}" value="#{multiLineText}" /></pre>
+			<h:outputFormat
+				value="#{labels.text_length_label}"
+				rendered="#{showLength}"
+				styleClass="ctsms-text-length"
+				escape="false">
+				<f:param value="#{multiLineText.length()}" />
+			</h:outputFormat>
 		</h:panelGroup>
 	</ui:composition>
 </h:body>

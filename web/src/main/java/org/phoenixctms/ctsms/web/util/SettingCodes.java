@@ -581,6 +581,8 @@ public interface SettingCodes {
 	public static final String MASS_MAIL_CC_PRESET = "mass_mail_cc_preset";
 	public static final String MASS_MAIL_BCC_PRESET = "mass_mail_bcc_preset";
 	public static final String MASS_MAIL_USE_BEACON_PRESET = "mass_mail_use_beacon_preset";
+	public static final String MASS_MAIL_HTML_PRESET = "mass_mail_html_preset";
+	public static final String MASS_MAIL_PHONE_TO_EMAIL_FORMAT_PRESET = "mass_mail_phone_to_email_format_preset";
 	public static final String MASS_MAIL_ATTACH_MASS_MAIL_FILES_PRESET = "mass_mail_attach_mass_mail_files_preset";
 	public static final String MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_PRESET = "mass_mail_mass_mail_files_logical_path_preset";
 	public static final String MASS_MAIL_ATTACH_TRIAL_FILES_PRESET = "mass_mail_attach_trial_files_preset";

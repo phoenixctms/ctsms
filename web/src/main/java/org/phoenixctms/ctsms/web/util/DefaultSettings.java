@@ -742,6 +742,8 @@ public final class DefaultSettings {
 	public static final String MASS_MAIL_CC_PRESET = "";
 	public static final String MASS_MAIL_BCC_PRESET = "";
 	public static final boolean MASS_MAIL_USE_BEACON_PRESET = false;
+	public static final boolean MASS_MAIL_HTML_PRESET = true;
+	public static final String MASS_MAIL_PHONE_TO_EMAIL_FORMAT_PRESET = "";
 	public static final boolean MASS_MAIL_ATTACH_MASS_MAIL_FILES_PRESET = false;
 	public static final String MASS_MAIL_MASS_MAIL_FILES_LOGICAL_PATH_PRESET = "";
 	public static final boolean MASS_MAIL_ATTACH_TRIAL_FILES_PRESET = false;
