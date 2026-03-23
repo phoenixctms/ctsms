@@ -538,6 +538,24 @@
 									</h:panelGroup>
 									<p:message for="usebeacon" />
 
+									<h:outputLabel for="phonetoemailformat"
+										value="#{massmaillabels.mass_mail_phone_to_email_format_label}" />
+									<h:panelGroup>
+										<p:inputText id="phonetoemailformat"
+											value="#{massMailBean.in.phoneToEmailFormat}"
+											required="false"
+											label="#{massmaillabels.mass_mail_phone_to_email_format}"
+											styleClass="ctsms-control-max">
+										</p:inputText>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="phonetoemailformat">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_phone_to_email_format_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="phonetoemailformat" />
+
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
@@ -547,9 +565,10 @@
 							</f:facet>
 							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
-								rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-textarea-row">
+								rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-textarea-row,ctsms-textarea-row">
 								<h:panelGrid columns="9" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+
 									<h:outputLabel for="locale"
 										value="#{massmaillabels.mass_mail_locale_label}" />
 									<h:panelGroup>
@@ -600,14 +619,15 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="femalesalutation" />
+
 								</h:panelGrid>
-								<h:panelGrid columns="3" cellpadding="2"
-									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+								<h:panelGrid columns="9" cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
 									<h:outputLabel for="subjectformat"
 										value="#{massmaillabels.mass_mail_subject_format_label}" />
 									<h:panelGroup>
 										<p:inputText id="subjectformat"
-											value="#{massMailBean.in.subjectFormat}" required="true"
+											value="#{massMailBean.in.subjectFormat}" required="false"
 											label="#{massmaillabels.mass_mail_subject_format}"
 											styleClass="ctsms-control-max">
 										</p:inputText>
@@ -618,27 +638,72 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="subjectformat" />
+
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputLabel />
+
+									<h:outputLabel for="html"
+										value="#{massmaillabels.mass_mail_html_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="html"
+											value="#{massMailBean.in.html}">
+											<p:ajax process="@this"
+												update="texttemplate_input,texttemplate_html_input" />
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}" for="html">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_html_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="html" />
+
 								</h:panelGrid>
 								<h:panelGrid columns="1" cellpadding="0"
-									styleClass="ctsms-input-panelgrid"
+									styleClass="ctsms-input-panelgrid" id="texttemplate_html_input"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-									<h:outputLabel for="texttemplate"
+									<h:outputLabel for="texttemplate_html"
+										rendered="#{massMailBean.in.html}"
 										value="#{massmaillabels.mass_mail_texttemplate_label}" />
-									<h:panelGroup>
-										<p:editor id="texttemplate"
-											value="#{massMailBean.in.textTemplate}" required="true"
+									<h:panelGroup rendered="#{massMailBean.in.html}">
+										<p:editor id="texttemplate_html" required="true"
+											value="#{massMailBean.in.textTemplate}"
 											controls="font bold italic underline strikethrough color indent outdent bullets numbering image link unlink source"
 											height="280" styleClass="ctsms-editor"
 											label="#{massmaillabels.mass_mail_texttemplate}">
 										</p:editor>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="texttemplate_html">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_texttemplate_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="texttemplate_html"
+										rendered="#{massMailBean.in.html}" />
+								</h:panelGrid>
 
+								<h:panelGrid columns="1" cellpadding="0" id="texttemplate_input"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+									<h:outputLabel for="texttemplate"
+										rendered="#{not massMailBean.in.html}"
+										value="#{massmaillabels.mass_mail_texttemplate_label}" />
+									<h:panelGroup rendered="#{not massMailBean.in.html}">
+										<p:inputTextarea id="texttemplate" required="true"
+											value="#{massMailBean.in.textTemplate}" autoResize="false"
+											styleClass="ctsms-textarea"
+											label="#{massmaillabels.mass_mail_texttemplate}">
+										</p:inputTextarea>
 										<p:tooltip rendered="#{enableTooltips}" for="texttemplate">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_texttemplate_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="texttemplate" />
+									<p:message for="texttemplate"
+										rendered="#{not massMailBean.in.html}" />
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
@@ -680,8 +745,11 @@
 								<h:panelGrid columns="2" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
 									<h:outputLabel
+										rendered="#{not empty massMailBean.previewSubject}"
 										value="#{massmaillabels.mass_mail_previewsubject_label}" />
-									<h:outputText value="#{massMailBean.previewSubject}" />
+									<h:outputText
+										rendered="#{not empty massMailBean.previewSubject}"
+										value="#{massMailBean.previewSubject}" />
 								</h:panelGrid>
 
 								<h:panelGrid columns="1" cellpadding="2" style="width:100%;">
@@ -693,7 +761,16 @@
 											value="#{massMailBean.previewText}" />
 										<ui:param name="multiLineTextClass"
 											value="ctsms-email-message" />
-										<ui:param name="rendered" value="true" />
+										<ui:param name="rendered" value="#{massMailBean.in.html}" />
+										<ui:param name="escapeHtml" value="false" />
+									</ui:include>
+
+									<ui:include src="../shared/multiLineOutputText.xhtml">
+										<ui:param name="multiLineText"
+											value="#{massMailBean.previewText}" />
+										<ui:param name="multiLineTextClass" value="ctsms-monospaced" />
+										<ui:param name="rendered" value="#{not massMailBean.in.html}" />
+										<ui:param name="showLength" value="true" />
 										<ui:param name="escapeHtml" value="false" />
 									</ui:include>
 
@@ -771,11 +848,6 @@
 										value="#{massMailBean.massMailAttachmentFileSystemStats}"
 										id="massmail_attachments_file_system_stats" />
 									<p:message for="massmailfileslogicalpath" />
-
-
-
-
-
 
 									<h:outputLabel for="attachmassmailfilesoptional"
 										value="#{massmaillabels.mass_mail_attachmassmailfilesoptional_label}" />
@@ -904,14 +976,10 @@
 										</p:tooltip>
 									</h:panelGroup>
 
-
 									<h:outputText
 										value="#{massMailBean.probandAttachmentFileSystemStats}"
 										id="proband_attachments_file_system_stats" />
 									<p:message for="probandfileslogicalpath" />
-
-
-
 
 									<h:outputLabel for="attachprobandfilesoptional"
 										value="#{massmaillabels.mass_mail_attachprobandfilesoptional_label}" />

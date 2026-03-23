@@ -92,6 +92,8 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setCc(out.getCc());
 			in.setBcc(out.getBcc());
 			in.setUseBeacon(out.getUseBeacon());
+			in.setHtml(out.getHtml());
+			in.setPhoneToEmailFormat(out.getPhoneToEmailFormat());
 			in.setAttachMassMailFiles(out.getAttachMassMailFiles());
 			in.setMassMailFilesLogicalPath(out.getMassMailFilesLogicalPath());
 			in.setAttachTrialFiles(out.getAttachTrialFiles());
@@ -149,6 +151,9 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setCc(Settings.getString(SettingCodes.MASS_MAIL_CC_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_CC_PRESET));
 			in.setBcc(Settings.getString(SettingCodes.MASS_MAIL_BCC_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_BCC_PRESET));
 			in.setUseBeacon(Settings.getBoolean(SettingCodes.MASS_MAIL_USE_BEACON_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_USE_BEACON_PRESET));
+			in.setHtml(Settings.getBoolean(SettingCodes.MASS_MAIL_HTML_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_HTML_PRESET));
+			in.setPhoneToEmailFormat(
+					Settings.getString(SettingCodes.MASS_MAIL_PHONE_TO_EMAIL_FORMAT_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PHONE_TO_EMAIL_FORMAT_PRESET));
 			in.setAttachMassMailFiles(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_ATTACH_MASS_MAIL_FILES_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_ATTACH_MASS_MAIL_FILES_PRESET));
 			in.setMassMailFilesLogicalPath(
