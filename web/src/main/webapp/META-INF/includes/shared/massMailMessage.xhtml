@@ -82,9 +82,9 @@
 				<h:panelGrid columns="2" cellpadding="2"
 					style="width: auto !important;"
 					columnClasses="ctsms-label-for-column,ctsms-text-column-bold">
-					<h:outputLabel
+					<h:outputLabel rendered="#{not empty message.subject}"
 						value="#{massmaillabels.mass_mail_recipient_message_subject_label}" />
-					<h:outputText value="#{message.subject}" />
+					<h:outputText rendered="#{not empty message.subject}" value="#{message.subject}" />
 				</h:panelGrid>
 				<h:panelGrid columns="1" cellpadding="2" style="width:100%;">
 					<h:outputText
@@ -92,9 +92,18 @@
 					<ui:include src="multiLineOutputText.xhtml">
 						<ui:param name="multiLineText" value="#{message.text}" />
 						<ui:param name="multiLineTextClass" value="ctsms-email-message" />
-						<ui:param name="rendered" value="true" />
+						<ui:param name="rendered" value="#{massMailBean.in.html}" />
 						<ui:param name="escapeHtml" value="false" />
 					</ui:include>
+
+					<ui:include src="multiLineOutputText.xhtml">
+						<ui:param name="multiLineText" value="#{message.text}" />
+						<ui:param name="multiLineTextClass" value="ctsms-monospaced" />
+						<ui:param name="rendered" value="#{not massMailBean.in.html}" />
+						<ui:param name="showLength" value="true" />
+						<ui:param name="escapeHtml" value="true" />
+					</ui:include>
+
 				</h:panelGrid>
 			</h:panelGrid>
 		</h:panelGrid>
