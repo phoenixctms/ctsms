@@ -94,6 +94,10 @@ td .ui-selectonemenu {
 	position: absolute;
 	width: 320px;
 	z-index: 100000;
+	
+	max-height: 400px; /* Adjust this value to your preference */
+    overflow-y: auto;
+    overflow-x: hidden; /* Prevents awkward horizontal shifting */
 }
 
 .ui-tooltip img {
