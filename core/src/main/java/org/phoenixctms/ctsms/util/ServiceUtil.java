@@ -320,8 +320,12 @@ public final class ServiceUtil {
 					.iterator();
 		}
 		while (massMailsIt.hasNext()) {
-			addResetMassMailRecipient(massMailsIt.next(), listEntry.getProband(), now, user, massMailDao, probandDao, trialDao,
-					massMailRecipientDao, journalEntryDao);
+			MassMail massMail = massMailsIt.next();
+			Proband proband = listEntry.getProband();
+			if (massMail.getDepartment().equals(proband.getDepartment())) {
+				addResetMassMailRecipient(massMail, proband, now, user, massMailDao, probandDao, trialDao,
+						massMailRecipientDao, journalEntryDao);
+			}
 		}
 		ProbandListStatusEntryOutVO result = probandListStatusEntryDao.toProbandListStatusEntryOutVO(probandListStatusEntry);
 		if (logProband) {

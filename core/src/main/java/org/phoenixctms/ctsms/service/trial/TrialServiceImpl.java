@@ -530,8 +530,11 @@ public class TrialServiceImpl
 				Iterator<MassMail> massMailsIt = this.getMassMailDao().findByTrialProbandListStatusTypeLocked(trial.getId(), statusType.getId(), new HashSet<Long>(), false, null)
 						.iterator();
 				while (massMailsIt.hasNext()) {
-					ServiceUtil.addResetMassMailRecipient(massMailsIt.next(), proband, now, user, massMailDao, probandDao, trialDao,
-							massMailRecipientDao, journalEntryDao);
+					MassMail massMail = massMailsIt.next();
+					if (massMail.getDepartment().equals(proband.getDepartment())) {
+						ServiceUtil.addResetMassMailRecipient(massMail, proband, now, user, massMailDao, probandDao, trialDao,
+								massMailRecipientDao, journalEntryDao);
+					}
 				}
 			}
 		}
