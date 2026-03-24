@@ -828,17 +828,20 @@ public class MassMailServiceImpl
 										count++;
 									}
 								} else {
-									MassMailRecipientInVO newMassMailRecipient = new MassMailRecipientInVO();
-									newMassMailRecipient.setMassMailId(massMail.getId());
-									newMassMailRecipient.setProbandId(probandId);
-									newMassMailRecipient.setToken(token);
-									//try {
-									ServiceUtil.addMassMailRecipient(newMassMailRecipient, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
-											massMailRecipientDao,
-											this.getJournalEntryDao());
-									count++;
-									//} catch (ServiceException e) {
-									//}
+									Proband proband = listEntry != null ? listEntry.getProband() : this.getProbandDao().load(probandId);
+									if (massMail.getDepartment().equals(proband.getDepartment())) {
+										MassMailRecipientInVO newMassMailRecipient = new MassMailRecipientInVO();
+										newMassMailRecipient.setMassMailId(massMail.getId());
+										newMassMailRecipient.setProbandId(probandId);
+										newMassMailRecipient.setToken(token);
+										//try {
+										ServiceUtil.addMassMailRecipient(newMassMailRecipient, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
+												massMailRecipientDao,
+												this.getJournalEntryDao());
+										count++;
+										//} catch (ServiceException e) {
+										//}
+									}
 								}
 							} catch (ServiceException e) {
 							}
