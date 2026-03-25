@@ -151,6 +151,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<ProbandGroupOutVO> probandGroups;
 	private Collection<ProbandListEntryTagValueJsonVO> probandListEntryTagValues;
+	//private Collection<InquiryValueJsonVO> inquiryValuesOut;
 	private Paginator paginator;
 	private ArrayList<ECRFFieldValueInVO> ecrfFieldValuesIn;
 	private Collection<ECRFFieldValueOutVO> ecrfFieldValuesOut;
@@ -305,6 +306,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				Collection<ProbandListEntryTagValueJsonVO> tagValues = null;
 				Collection<VisitScheduleItemOutVO> visitSchedule = null;
 				Collection<ProbandGroupOutVO> groups = null;
+				//Collection<InquiryValueJsonVO> inquiryValues = null;
 				ArrayList<ECRFFieldValueJsonVO> out = new ArrayList<ECRFFieldValueJsonVO>(jsEcrfFieldValuesOut.size());
 				HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap = new HashMap<Long, ECRFFieldOutVO>(ecrfFieldValuesOut.size());
 				HashMap<Long, HashSet<Long>> visibleIndexMap = new HashMap<Long, HashSet<Long>>(ecrfFieldValuesOut.size());
@@ -341,15 +343,18 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 							tagValues = loadProbandListEntryTagValues(listEntry);
 							visitSchedule = loadVisitScheduleItems(listEntry, ecrfVisit);
 							groups = loadProbandGroups(listEntry);
+							//inquiryValues = loadInquiryValues(listEntry);
 						} else {
 							tagValues = probandListEntryTagValues;
 							visitSchedule = visitScheduleItems;
 							groups = probandGroups;
+							//inquiryValues = inquiryValuesOut;
 						}
 					} else {
 						tagValues = loadProbandListEntryTagValues(null);
 						visitSchedule = loadVisitScheduleItems(null, null);
 						groups = loadProbandGroups(null);
+						//inquiryValues = loadInquiryValues(null);
 					}
 				}
 				if (!CommonUtil.isEmptyString(deltaErrorMessageId)) {
@@ -363,6 +368,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						JsUtil.encodeBase64(JsUtil.voToJson(listEntry), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(visitSchedule), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(groups), false));
+				//requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64.toString(),
+				//		JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(inquiryValues), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
 			}
@@ -732,6 +739,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		probandListEntryTagValues = loadProbandListEntryTagValues(probandListEntry);
 		visitScheduleItems = loadVisitScheduleItems(probandListEntry, visit);
 		probandGroups = loadProbandGroups(probandListEntry);
+		//inquiryValuesOut = loadInquiryValues(probandListEntry);
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 	}
@@ -823,6 +831,18 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 		return null;
 	}
+	//	private Collection<InquiryValueJsonVO> loadInquiryValues(ProbandListEntryOutVO listEntry) {
+	//		if (listEntry != null) {
+	//			try {
+	//				return WebUtil.getServiceLocator().getProbandService().getInquiryJsonValues(WebUtil.getAuthentication(), listEntry.getTrial().getId(),
+	//						listEntry.getProband().getId(), true, null);
+	//			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+	//			} catch (AuthenticationException e) {
+	//				WebUtil.publishException(e);
+	//			}
+	//		}
+	//		return null;
+	//	}
 
 	private Collection<VisitScheduleItemOutVO> loadVisitScheduleItems(ProbandListEntryOutVO listEntry, VisitOutVO ecrfVisit) {
 		if (listEntry != null) { // && listEntry.getGroup() != null) {
