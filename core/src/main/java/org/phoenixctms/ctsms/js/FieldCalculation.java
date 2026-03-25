@@ -58,6 +58,7 @@ public class FieldCalculation {
 	private final static String AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64 = "inputFieldProbandListEntryBase64";
 	private final static String AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64 = "inputFieldVisitScheduleItemsBase64";
 	private final static String AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64 = "inputFieldProbandGroupsBase64";
+	private final static String AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64 = "inputFieldInquiryValuesBase64";
 	private final static String AJAX_INPUT_FIELD_ACTIVE_USER_BASE64 = "activeUserBase64";
 	private final static String AJAX_INPUT_FIELD_LOCALE = "inputFieldLocale";
 	private final static String AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64 = "inputFieldVariableValuesBase64";
@@ -200,6 +201,10 @@ public class FieldCalculation {
 
 	public void setProbandListEntryTagValues(Collection<ProbandListEntryTagValueJsonVO> probandListEntryTagValues) {
 		args.put(AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_TAG_VALUES_BASE64, encode(probandListEntryTagValues));
+	}
+
+	public void setInquiryValues(Collection<ProbandListEntryTagValueJsonVO> inquiryValues) {
+		args.put(AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64, encode(inquiryValues));
 	}
 
 	public void setTrial(TrialOutVO trial) {
