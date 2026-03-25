@@ -176,6 +176,7 @@ var AJAX_INPUT_FIELD_LOCALE = "inputFieldLocale";
 
 var AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64 = 'inputFieldVariableValuesBase64';
 var AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_TAG_VALUES_BASE64 = "probandListEntryTagValuesBase64";
+var AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64 = "inputFieldInquiryValuesBase64";
 
 var INPUT_FIELD_OUTPUT_ID_PREFIX = 'inputfield_output_';
 var INPUT_FIELD_OUTPUT_ID_INDEX_SEPARATOR = '_';

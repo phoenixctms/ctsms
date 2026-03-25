@@ -746,6 +746,20 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			}
 			return result;
 		};
+		
+		mask["findInquiryValues"] = function(condition) {
+			var result = [];
+			if (_testFunction(condition)) {
+				for ( var category in inputFieldVars.inquiryValues ) {
+					for ( var position in inputFieldVars.inquiryValues[category] ) {
+						if (condition(inputFieldVars.inquiryValues[category][position])) {
+							result.push(_getInputFieldVariableValue(inputFieldVars.inquiryValues[category][position]));
+						}
+					}
+				}
+			}
+			return result;
+		};		
 
 		var _throwError = function(message,localize,noColon) {
 		    if (noColon) {
@@ -1710,6 +1724,19 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 				for (var i = 0; i < probandListEntryTagValues.length; i++) {
 					_sanitizeJsonValues(probandListEntryTagValues[i]);
 					inputFieldVars.tagValues[probandListEntryTagValues[i].position] = probandListEntryTagValues[i];
+				}
+			}
+		}
+		if (_testPropertyExists(args, AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64)) {
+			var inquiryValues = _decode(args[AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64]);
+			inputFieldVars.inquiryValues = {};
+			if (inquiryValues != null) {
+				for (var i = 0; i < inquiryValues.length; i++) {
+					_sanitizeJsonValues(inquiryValues[i]);
+					if (!inputFieldVars.inquiryValues[inquiryValues[i].category]) {
+					    inputFieldVars.inquiryValues[inquiryValues[i].category] = {};
+					}					
+					inputFieldVars.inquiryValues[inquiryValues[i].category][inquiryValues[i].position] = inquiryValues[i];
 				}
 			}
 		}
