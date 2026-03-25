@@ -861,6 +861,10 @@ public class TrialServiceImpl
 		Collection<ProbandListEntryTagValueJsonVO> probandListEntryTagValues = ServiceUtil.getProbandListEntryTagJsonValues(
 				probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), true, null, null),
 				false, probandListEntryTagValueDao, inputFieldSelectionSetValueDao);
+		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+		//Collection<InquiryValueJsonVO> inquiryValues = ServiceUtil.getInquiryJsonValues(
+		//		inquiryValueDao.findByProbandTrialActiveJs(listEntry.getProband().getId(), listEntry.getTrial().getId(), null, null, sort, null, null), false, inquiryValueDao,
+		//		inputFieldSelectionSetValueDao);
 		HashMap<String, Long> maxSeriesIndexMap = null;
 		HashMap<String, Long> fieldMaxPositionMap = null;
 		HashMap<String, Long> fieldMinPositionMap = null;
@@ -891,6 +895,7 @@ public class TrialServiceImpl
 		fieldCalculation.setActiveUser(userVO);
 		fieldCalculation.setLocale(Locales.AUDIT_TRAIL);
 		fieldCalculation.setProbandListEntryTagValues(probandListEntryTagValues);
+		//fieldCalculation.setInquiryValues(inquiryValues);
 		fieldCalculation.setVisitScheduleItems(visitScheduleItems);
 		fieldCalculation.setProbandGroups(probandGroups);
 		fieldCalculation.setECRFFieldInputFieldVariableValues(jsValues);

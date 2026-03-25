@@ -1698,6 +1698,16 @@ public class ProbandServiceImpl
 	}
 
 	@Override
+	protected Collection<InquiryValueJsonVO> handleGetInquiryJsonValues(AuthenticationVO auth, Long trialId, Long probandId, boolean sort, PSFVO psf)
+			throws Exception {
+		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		Proband proband = CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
+		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+		return ServiceUtil.getInquiryJsonValues(inquiryValueDao.findByProbandTrialActiveJs(proband.getId(), trial.getId(), null, null, sort, null, null), false, inquiryValueDao,
+				this.getInputFieldSelectionSetValueDao());
+	}
+
+	@Override
 	protected MedicationOutVO handleGetMedication(AuthenticationVO auth, Long medicationId) throws Exception {
 		MedicationDao medicationDao = this.getMedicationDao();
 		Medication medication = CheckIDUtil.checkMedicationId(medicationId, medicationDao);
