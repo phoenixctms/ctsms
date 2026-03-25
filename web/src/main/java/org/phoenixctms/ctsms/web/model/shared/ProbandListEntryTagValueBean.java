@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
+import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
@@ -132,6 +133,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	private List<Object[]> paddedInputModels;
 	private Collection<ProbandGroupOutVO> probandGroups;
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
+	private Collection<InquiryValueJsonVO> inquiryValuesOut;
 
 	public ProbandListEntryTagValueBean() {
 		super();
@@ -196,12 +198,13 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				ProbandListEntryOutVO listEntry = null;
 				Collection<VisitScheduleItemOutVO> visitSchedule = null;
 				Collection<ProbandGroupOutVO> groups = null;
+				Collection<InquiryValueJsonVO> inquiryValues = null;
 				ArrayList<ProbandListEntryTagValueJsonVO> out = new ArrayList<ProbandListEntryTagValueJsonVO>(jsTagValuesOut.size());
 				HashMap<Long, ProbandListEntryTagOutVO> tagVOsMap = new HashMap<Long, ProbandListEntryTagOutVO>(tagValuesOut.size());
 				Iterator<ProbandListEntryTagValueOutVO> tagIt = tagValuesOut.iterator();
 				while (tagIt.hasNext()) {
 					ProbandListEntryTagValueOutVO tagValueVO = tagIt.next();
-					listEntry = tagValueVO.getListEntry();
+					listEntry = tagValueVO.getListEntry(); //get the listentry from the tag values
 					ProbandListEntryTagOutVO tagVO = tagValueVO.getTag();
 					if (!CommonUtil.isEmptyString(tagVO.getJsVariableName())) {
 						tagVOsMap.put(tagVO.getId(), tagVO);
@@ -218,19 +221,19 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				if (listEntry != null) {
 					if (probandListEntry != null) {
 						if (listEntry.getProband().getId() != probandListEntry.getProband().getId()) {
+							//use the listentry from the tag values, if it differs from the selected one
 							visitSchedule = loadVisitScheduleItems(listEntry);
-							groups = loadProbandGroups(probandListEntry);
+							groups = loadProbandGroups(listEntry);
+							inquiryValues = loadInquiryValues(listEntry);
 						} else {
-							//if (visitScheduleItemStartTagsCount != null && visitScheduleItemStartTagsCount > 0) {
-							//	visitSchedule = loadVisitScheduleItems(listEntry);
-							//} else {
 							visitSchedule = visitScheduleItems;
-							//}
 							groups = probandGroups;
+							inquiryValues = inquiryValuesOut;
 						}
 					} else {
 						visitSchedule = loadVisitScheduleItems(null);
-						groups = loadProbandGroups(probandListEntry);
+						groups = loadProbandGroups(null);
+						inquiryValues = loadInquiryValues(null);
 					}
 				}
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VARIABLE_VALUES_BASE64.toString(),
@@ -239,6 +242,8 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 						JsUtil.encodeBase64(JsUtil.voToJson(listEntry), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_VISIT_SCHEDULE_ITEMS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(visitSchedule), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_PROBAND_GROUPS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(groups), false));
+				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_INQUIRY_VALUES_BASE64.toString(),
+						JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(inquiryValues), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
 			}
@@ -405,6 +410,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		probandListEntry = WebUtil.getProbandListEntry(probandListEntryId);
 		visitScheduleItems = loadVisitScheduleItems(probandListEntry);
 		probandGroups = loadProbandGroups(probandListEntry);
+		inquiryValuesOut = loadInquiryValues(probandListEntry);
 		updateInputModelModifiedAnnotations();
 	}
 
@@ -462,6 +468,19 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				return WebUtil
 						.getServiceLocator()
 						.getTrialService().getProbandGroupList(WebUtil.getAuthentication(), listEntry.getTrial().getId(), null);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return null;
+	}
+
+	private Collection<InquiryValueJsonVO> loadInquiryValues(ProbandListEntryOutVO listEntry) {
+		if (listEntry != null) {
+			try {
+				return WebUtil.getServiceLocator().getProbandService().getInquiryJsonValues(WebUtil.getAuthentication(), listEntry.getTrial().getId(),
+						listEntry.getProband().getId(), true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -539,9 +558,9 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	private void updateInputModelModifiedAnnotations() {
 		if (tagValuesOut != null && tagValuesOut.size() > 0) {
 			HashMap<Long, ProbandListEntryTagValueOutVO> tagValuesOutMap = new HashMap<Long, ProbandListEntryTagValueOutVO>(tagValuesOut.size());
-			Iterator<ProbandListEntryTagValueOutVO> inquiryValuesOutIt = tagValuesOut.iterator();
-			while (inquiryValuesOutIt.hasNext()) {
-				ProbandListEntryTagValueOutVO out = inquiryValuesOutIt.next();
+			Iterator<ProbandListEntryTagValueOutVO> tagValuesOutIt = tagValuesOut.iterator();
+			while (tagValuesOutIt.hasNext()) {
+				ProbandListEntryTagValueOutVO out = tagValuesOutIt.next();
 				tagValuesOutMap.put(out.getTag().getId(), out);
 			}
 			Iterator<ProbandListEntryTagInputModel> it = inputModels.iterator();
