@@ -1547,7 +1547,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
-			    if (inputFieldSelectionSetVals) {
+			    if (inputFieldSelectionSetVals && inputFieldVariableValue.selectionValueIds != null) {
 					var res = [];
     		        for (var j = 0; j < inputFieldVariableValue.selectionValueIds.length; j++) {
 			            var id = inputFieldVariableValue.selectionValueIds[j];
