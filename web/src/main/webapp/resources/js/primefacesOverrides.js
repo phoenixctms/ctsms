@@ -1823,7 +1823,68 @@ PrimeFaces.widget.LineChart = PrimeFaces.widget.BaseWidget.extend({
 
 });
 
+PrimeFaces.widget.DonutChart = PrimeFaces.widget.BaseWidget.extend({
+    
+    init: function(cfg) {
+        this._super(cfg);
+        
+        this.jqpId = this.id.replace(/:/g,"\\:");
+        var _self = this;
 
+        //renderer options
+        var rendererCfg = {
+            diameter : this.cfg.diameter,
+            sliceMargin : this.cfg.sliceMargin,
+            fill: this.cfg.fill,
+            shadow : this.cfg.shadow,
+            showDataLabels : this.cfg.showDataLabels,
+            dataLabels : this.cfg.dataFormat || "percent",
+            maxLegendItems: 45,
+            maxLegendColumns: 3
+        }
+
+        //renderer configuration
+        this.cfg.seriesDefaults = {
+            renderer: $.jqplot.DonutRenderer,
+            rendererOptions: rendererCfg
+        };
+
+        this.cfg.highlighter = {show:false}; //default highlighter 
+
+        if(this.jq.is(':visible')) {
+            this.draw();
+        } 
+        else {
+            var hiddenParent = this.jq.parents('.ui-hidden-container:first'),
+            hiddenParentWidget = hiddenParent.data('widget');
+
+            if(hiddenParentWidget) {
+                hiddenParentWidget.addOnshowHandler(function() {
+                    return _self.draw();
+                });
+            }
+        }
+    },
+    
+    draw: function(){
+        if(this.jq.is(':visible')) {
+            //events
+            PrimeFaces.widget.ChartUtils.bindItemSelectListener(this);
+
+            //highlighter
+            PrimeFaces.widget.ChartUtils.bindHighlighter(this);
+
+            //render chart
+            this.plot = $.jqplot(this.jqpId, this.cfg.data, this.cfg);
+
+            return true;
+        } 
+        else {
+            return false;
+        }
+    }
+    
+});
 
 /**
  * PrimeFaces ProgressBar widget
