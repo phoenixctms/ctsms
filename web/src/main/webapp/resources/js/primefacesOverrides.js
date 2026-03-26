@@ -1839,8 +1839,8 @@ PrimeFaces.widget.DonutChart = PrimeFaces.widget.BaseWidget.extend({
             shadow : this.cfg.shadow,
             showDataLabels : this.cfg.showDataLabels,
             dataLabels : this.cfg.dataFormat || "percent",
-            maxLegendItems: 45,
-            maxLegendColumns: 3
+            maxLegendItems: 60,
+            maxLegendColumns: 4
         }
 
         //renderer configuration
