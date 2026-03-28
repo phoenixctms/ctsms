@@ -10,6 +10,7 @@ public interface ProbandListExcelSettingCodes {
 	public static final String PROBAND_LIST_ROW_OFFSET_FIRST_PAGE = "proband_list_row_offset_first_page";
 	public static final String PROBAND_LIST_ROW_OFFSET_OTHER_PAGES = "proband_list_row_offset_other_pages";
 	public static final String PROBAND_LIST_COL_OFFSET = "proband_list_col_offset";
+	public static final String PROBAND_LIST_HORIZONTAL_FREEZE_COL = "proband_list_horizontal_freeze_col";
 	public static final String PROBAND_STATUS_TEMPLATE_FILE_NAME = "proband_status_template_file_name";
 	public static final String PROBAND_STATUS_AUTOSIZE = "proband_status_autosize";
 	public static final String PROBAND_STATUS_WRITEHEAD = "proband_status_writehead";
@@ -17,6 +18,7 @@ public interface ProbandListExcelSettingCodes {
 	public static final String PROBAND_STATUS_ROW_OFFSET_FIRST_PAGE = "proband_status_row_offset_first_page";
 	public static final String PROBAND_STATUS_ROW_OFFSET_OTHER_PAGES = "proband_status_row_offset_other_pages";
 	public static final String PROBAND_STATUS_COL_OFFSET = "proband_status_col_offset";
+	public static final String PROBAND_STATUS_HORIZONTAL_FREEZE_COL = "proband_status_horizontal_freeze_col";
 	public static final String ENROLLMENT_LOG_TEMPLATE_FILE_NAME = "enrollment_log_template_file_name";
 	public static final String ENROLLMENT_LOG_AUTOSIZE = "enrollment_log_autosize";
 	public static final String ENROLLMENT_LOG_WRITEHEAD = "enrollment_log_writehead";
@@ -24,6 +26,7 @@ public interface ProbandListExcelSettingCodes {
 	public static final String ENROLLMENT_LOG_ROW_OFFSET_FIRST_PAGE = "enrollment_log_row_offset_first_page";
 	public static final String ENROLLMENT_LOG_ROW_OFFSET_OTHER_PAGES = "enrollment_log_row_offset_other_pages";
 	public static final String ENROLLMENT_LOG_COL_OFFSET = "enrollment_log_col_offset";
+	public static final String ENROLLMENT_LOG_HORIZONTAL_FREEZE_COL = "enrollment_log_horizontal_freeze_col";
 	public static final String SCREENING_LOG_TEMPLATE_FILE_NAME = "screening_log_template_file_name";
 	public static final String SCREENING_LOG_AUTOSIZE = "screening_log_autosize";
 	public static final String SCREENING_LOG_WRITEHEAD = "screening_log_writehead";
@@ -31,6 +34,7 @@ public interface ProbandListExcelSettingCodes {
 	public static final String SCREENING_LOG_ROW_OFFSET_FIRST_PAGE = "screening_log_row_offset_first_page";
 	public static final String SCREENING_LOG_ROW_OFFSET_OTHER_PAGES = "screening_log_row_offset_other_pages";
 	public static final String SCREENING_LOG_COL_OFFSET = "screening_log_col_offset";
+	public static final String SCREENING_LOG_HORIZONTAL_FREEZE_COL = "screening_log_horizontal_freeze_col";
 	public static final String PRE_SCREENING_LOG_TEMPLATE_FILE_NAME = "pre_screening_log_template_file_name";
 	public static final String PRE_SCREENING_LOG_AUTOSIZE = "pre_screening_log_autosize";
 	public static final String PRE_SCREENING_LOG_WRITEHEAD = "pre_screening_log_writehead";
@@ -38,6 +42,7 @@ public interface ProbandListExcelSettingCodes {
 	public static final String PRE_SCREENING_LOG_ROW_OFFSET_FIRST_PAGE = "pre_screening_log_row_offset_first_page";
 	public static final String PRE_SCREENING_LOG_ROW_OFFSET_OTHER_PAGES = "pre_screening_log_row_offset_other_pages";
 	public static final String PRE_SCREENING_LOG_COL_OFFSET = "pre_screening_log_col_offset";
+	public static final String PRE_SCREENING_LOG_HORIZONTAL_FREEZE_COL = "pre_screening_log_horizontal_freeze_col";
 	public static final String SICL_TEMPLATE_FILE_NAME = "sicl_template_file_name";
 	public static final String SICL_AUTOSIZE = "sicl_autosize";
 	public static final String SICL_WRITEHEAD = "sicl_writehead";
@@ -45,6 +50,7 @@ public interface ProbandListExcelSettingCodes {
 	public static final String SICL_ROW_OFFSET_FIRST_PAGE = "sicl_row_offset_first_page";
 	public static final String SICL_ROW_OFFSET_OTHER_PAGES = "sicl_row_offset_other_pages";
 	public static final String SICL_COL_OFFSET = "sicl_col_offset";
+	public static final String SICL_HORIZONTAL_FREEZE_COL = "sicl_horizontal_freeze_col";
 	public static final String PROBAND_LIST_SCALE_FACTOR = "proband_list_scale_factor";
 	public static final String PROBAND_STATUS_SCALE_FACTOR = "proband_status_scale_factor";
 	public static final String ENROLLMENT_LOG_SCALE_FACTOR = "enrollment_log_scale_factor";

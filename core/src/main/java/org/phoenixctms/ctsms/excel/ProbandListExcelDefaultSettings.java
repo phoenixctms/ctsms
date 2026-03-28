@@ -19,12 +19,14 @@ public final class ProbandListExcelDefaultSettings {
 	public static final Integer PROBAND_LIST_ROW_OFFSET_FIRST_PAGE = null;
 	public static final Integer PROBAND_LIST_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer PROBAND_LIST_COL_OFFSET = null;
+	public static final Integer PROBAND_LIST_HORIZONTAL_FREEZE_COL = null;
 	public static final boolean PROBAND_STATUS_AUTOSIZE = true;
 	public static final boolean PROBAND_STATUS_WRITEHEAD = true;
 	public static final Integer PROBAND_STATUS_PAGE_BREAK_AT_ROW = null;
 	public static final Integer PROBAND_STATUS_ROW_OFFSET_FIRST_PAGE = null;
 	public static final Integer PROBAND_STATUS_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer PROBAND_STATUS_COL_OFFSET = null;
+	public static final Integer PROBAND_STATUS_HORIZONTAL_FREEZE_COL = null;
 	public static final String ENROLLMENT_LOG_TEMPLATE_FILE_NAME = null;
 	public static final boolean ENROLLMENT_LOG_AUTOSIZE = true;
 	public static final boolean ENROLLMENT_LOG_WRITEHEAD = true;
@@ -32,6 +34,7 @@ public final class ProbandListExcelDefaultSettings {
 	public static final Integer ENROLLMENT_LOG_ROW_OFFSET_FIRST_PAGE = null;
 	public static final Integer ENROLLMENT_LOG_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer ENROLLMENT_LOG_COL_OFFSET = null;
+	public static final Integer ENROLLMENT_LOG_HORIZONTAL_FREEZE_COL = null;
 	public static final String SCREENING_LOG_TEMPLATE_FILE_NAME = null;
 	public static final boolean SCREENING_LOG_AUTOSIZE = true;
 	public static final boolean SCREENING_LOG_WRITEHEAD = true;
@@ -39,6 +42,7 @@ public final class ProbandListExcelDefaultSettings {
 	public static final Integer SCREENING_LOG_ROW_OFFSET_FIRST_PAGE = null;
 	public static final Integer SCREENING_LOG_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer SCREENING_LOG_COL_OFFSET = null;
+	public static final Integer SCREENING_LOG_HORIZONTAL_FREEZE_COL = null;
 	public static final String PRE_SCREENING_LOG_TEMPLATE_FILE_NAME = null;
 	public static final boolean PRE_SCREENING_LOG_AUTOSIZE = true;
 	public static final boolean PRE_SCREENING_LOG_WRITEHEAD = true;
@@ -46,6 +50,7 @@ public final class ProbandListExcelDefaultSettings {
 	public static final Integer PRE_SCREENING_LOG_ROW_OFFSET_FIRST_PAGE = null;
 	public static final Integer PRE_SCREENING_LOG_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer PRE_SCREENING_LOG_COL_OFFSET = null;
+	public static final Integer PRE_SCREENING_LOG_HORIZONTAL_FREEZE_COL = null;
 	public static final String SICL_TEMPLATE_FILE_NAME = null;
 	public static final boolean SICL_AUTOSIZE = true;
 	public static final boolean SICL_WRITEHEAD = true;
@@ -53,6 +58,7 @@ public final class ProbandListExcelDefaultSettings {
 	public static final Integer SICL_ROW_OFFSET_FIRST_PAGE = null;
 	public static final Integer SICL_ROW_OFFSET_OTHER_PAGES = null;
 	public static final Integer SICL_COL_OFFSET = null;
+	public static final Integer SICL_HORIZONTAL_FREEZE_COL = null;
 	public static final Integer PROBAND_LIST_SCALE_FACTOR = null;
 	public static final Integer PROBAND_STATUS_SCALE_FACTOR = null;
 	public static final Integer ENROLLMENT_LOG_SCALE_FACTOR = null;

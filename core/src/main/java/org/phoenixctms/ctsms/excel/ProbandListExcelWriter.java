@@ -245,6 +245,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 	@Override
 	public void applySpreadsheetSettings(WritableSheet spreadSheet, int sheetIndex) throws Exception {
 		Integer scaleFactor = null;
+		Integer horizontalFreezeCol = null;
 		if (logLevel != null) {
 			switch (logLevel) {
 				case ENROLLMENT:
@@ -254,6 +255,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_APPEND_HEADER_FOOTER)) {
 						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 					}
+					horizontalFreezeCol = Settings.getIntNullable(ProbandListExcelSettingCodes.ENROLLMENT_LOG_HORIZONTAL_FREEZE_COL, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.ENROLLMENT_LOG_HORIZONTAL_FREEZE_COL);
 					break;
 				case PRE_SCREENING:
 					scaleFactor = Settings.getIntNullable(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_SCALE_FACTOR, Bundle.PROBAND_LIST_EXCEL,
@@ -262,6 +265,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_APPEND_HEADER_FOOTER)) {
 						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 					}
+					horizontalFreezeCol = Settings.getIntNullable(ProbandListExcelSettingCodes.PRE_SCREENING_LOG_HORIZONTAL_FREEZE_COL, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PRE_SCREENING_LOG_HORIZONTAL_FREEZE_COL);
 					break;
 				case SCREENING:
 					scaleFactor = Settings.getIntNullable(ProbandListExcelSettingCodes.SCREENING_LOG_SCALE_FACTOR, Bundle.PROBAND_LIST_EXCEL,
@@ -270,6 +275,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							ProbandListExcelDefaultSettings.SCREENING_LOG_APPEND_HEADER_FOOTER)) {
 						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 					}
+					horizontalFreezeCol = Settings.getIntNullable(ProbandListExcelSettingCodes.SCREENING_LOG_HORIZONTAL_FREEZE_COL, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SCREENING_LOG_HORIZONTAL_FREEZE_COL);
 					break;
 				case SICL:
 					scaleFactor = Settings.getIntNullable(ProbandListExcelSettingCodes.SICL_SCALE_FACTOR, Bundle.PROBAND_LIST_EXCEL,
@@ -278,6 +285,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							ProbandListExcelDefaultSettings.SICL_APPEND_HEADER_FOOTER)) {
 						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 					}
+					horizontalFreezeCol = Settings.getIntNullable(ProbandListExcelSettingCodes.SICL_HORIZONTAL_FREEZE_COL, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.SICL_HORIZONTAL_FREEZE_COL);
 					break;
 				case PROBAND_STATUS:
 					scaleFactor = Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_STATUS_SCALE_FACTOR, Bundle.PROBAND_LIST_EXCEL,
@@ -286,6 +295,8 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 							ProbandListExcelDefaultSettings.PROBAND_STATUS_APPEND_HEADER_FOOTER)) {
 						appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 					}
+					horizontalFreezeCol = Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_STATUS_HORIZONTAL_FREEZE_COL, Bundle.PROBAND_LIST_EXCEL,
+							ProbandListExcelDefaultSettings.PROBAND_STATUS_HORIZONTAL_FREEZE_COL);
 					break;
 				default:
 			}
@@ -296,9 +307,14 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 					ProbandListExcelDefaultSettings.PROBAND_LIST_APPEND_HEADER_FOOTER)) {
 				appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 			}
+			horizontalFreezeCol = Settings.getIntNullable(ProbandListExcelSettingCodes.PROBAND_LIST_HORIZONTAL_FREEZE_COL, Bundle.PROBAND_LIST_EXCEL,
+					ProbandListExcelDefaultSettings.PROBAND_LIST_HORIZONTAL_FREEZE_COL);
 		}
 		if (scaleFactor != null && scaleFactor.intValue() > 0) {
 			spreadSheet.getSettings().setScaleFactor(scaleFactor);
+		}
+		if (horizontalFreezeCol != null && horizontalFreezeCol.intValue() >= 0) {
+			spreadSheet.getSettings().setHorizontalFreeze(horizontalFreezeCol);
 		}
 	}
 
