@@ -25,5 +25,20 @@ if get_database_version() < '010901003' then
   
 end if;
 
+
+if get_database_version() < '010901004' then
+
+  ALTER TABLE TEAM_MEMBER RENAME COLUMN ecrf TO ecrf_entry;
+  
+  ALTER TABLE TEAM_MEMBER ADD COLUMN ecrf_design BOOLEAN;
+  UPDATE TEAM_MEMBER SET ecrf_design = 'f';
+  ALTER TABLE TEAM_MEMBER ALTER ecrf_design SET NOT NULL;  
+  
+  UPDATE permission set restriction = 'TRIAL_IDENTITY_TEAM_MEMBER_ECRF_ENTRY' where restriction = 'TRIAL_IDENTITY_TEAM_MEMBER_ECRF';
+
+  perform set_database_version('010901004');
+  
+end if;
+
 end
 $$;
