@@ -371,7 +371,8 @@ public final class DefaultSettings {
 	public static final boolean TEAM_MEMBER_SIGN_PRESET = false;
 	public static final boolean TEAM_MEMBER_RESOLVE_PRESET = false;
 	public static final boolean TEAM_MEMBER_VERIFY_PRESET = false;
-	public static final boolean TEAM_MEMBER_ECRF_PRESET = true;
+	public static final boolean TEAM_MEMBER_ECRF_ENTRY_PRESET = true;
+	public static final boolean TEAM_MEMBER_ECRF_DESIGN_PRESET = false;
 	public static final boolean TEAM_MEMBER_NOTIFY_TIMELINE_EVENT_PRESET = true;
 	public static final boolean TEAM_MEMBER_NOTIFY_ECRF_VALIDATED_STATUS_PRESET = false;
 	public static final boolean TEAM_MEMBER_NOTIFY_ECRF_REVIEW_STATUS_PRESET = false;

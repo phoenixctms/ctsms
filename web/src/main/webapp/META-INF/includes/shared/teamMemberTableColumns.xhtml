@@ -34,19 +34,33 @@
 			</ui:include>
 		</p:column>
 		<p:column
-			sortBy="#{teamMember.vo.ecrf}"
-			filterBy="#{teamMember.vo.ecrf}"
+			sortBy="#{teamMember.vo.ecrfEntry}"
+			filterBy="#{teamMember.vo.ecrfEntry}"
 			filterOptions="#{sessionScopeBean.filterBooleans}">
 
 			<f:facet name="header">
-				<h:outputText value="#{triallabels.team_member_list_ecrf_column}" />
+				<h:outputText value="#{triallabels.team_member_list_ecrf_entry_column}" />
 			</f:facet>
 			<ui:include src="listBooleanIcon.xhtml">
 				<ui:param
 					name="value"
-					value="#{teamMember.vo.ecrf}" />
+					value="#{teamMember.vo.ecrfEntry}" />
 			</ui:include>
 		</p:column>		
+		<p:column
+			sortBy="#{teamMember.vo.ecrfDesign}"
+			filterBy="#{teamMember.vo.ecrfDesign}"
+			filterOptions="#{sessionScopeBean.filterBooleans}">
+
+			<f:facet name="header">
+				<h:outputText value="#{triallabels.team_member_list_ecrf_design_column}" />
+			</f:facet>
+			<ui:include src="listBooleanIcon.xhtml">
+				<ui:param
+					name="value"
+					value="#{teamMember.vo.ecrfDesign}" />
+			</ui:include>
+		</p:column>			
 		<p:column
 			sortBy="#{teamMember.vo.sign}"
 			filterBy="#{teamMember.vo.sign}"
