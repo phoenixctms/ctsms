@@ -1763,7 +1763,12 @@ public class TrialServiceImpl
 
 	private void checkTeamMemberInput(TeamMemberInVO teamMemberIn) throws ServiceException {
 		Staff staff = CheckIDUtil.checkStaffId(teamMemberIn.getStaffId(), this.getStaffDao());
-		if (teamMemberIn.getEcrf()) {
+		if (teamMemberIn.getEcrfEntry()) {
+			if (!teamMemberIn.getAccess()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ACCESS_FALSE);
+			}
+		}
+		if (teamMemberIn.getEcrfDesign()) {
 			if (!teamMemberIn.getAccess()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ACCESS_FALSE);
 			}
@@ -1772,7 +1777,7 @@ public class TrialServiceImpl
 			if (!teamMemberIn.getAccess()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ACCESS_FALSE);
 			}
-			if (!teamMemberIn.getEcrf()) {
+			if (!teamMemberIn.getEcrfEntry()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ECRF_FALSE);
 			}
 			if (!staff.isPerson()) {
@@ -1783,7 +1788,7 @@ public class TrialServiceImpl
 			if (!teamMemberIn.getAccess()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ACCESS_FALSE);
 			}
-			if (!teamMemberIn.getEcrf()) {
+			if (!teamMemberIn.getEcrfEntry()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ECRF_FALSE);
 			}
 			if (!staff.isPerson()) {
@@ -1794,7 +1799,7 @@ public class TrialServiceImpl
 			if (!teamMemberIn.getAccess()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ACCESS_FALSE);
 			}
-			if (!teamMemberIn.getEcrf()) {
+			if (!teamMemberIn.getEcrfEntry()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TEAM_MEMBER_ECRF_FALSE);
 			}
 			if (!staff.isPerson()) {
@@ -3132,7 +3137,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<TeamMemberOutVO> handleAddTeamMembers(
-			AuthenticationVO auth, Long trialId, Long roleId, boolean access, boolean ecrf,
+			AuthenticationVO auth, Long trialId, Long roleId, boolean access, boolean ecrfEntry, boolean ecrfDesign,
 			boolean sign, boolean resolve, boolean verify, Set<Long> staffIds) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
@@ -3152,7 +3157,8 @@ public class TrialServiceImpl
 				newTeamMember.setSign(sign);
 				newTeamMember.setResolve(resolve);
 				newTeamMember.setVerify(verify);
-				newTeamMember.setEcrf(ecrf);
+				newTeamMember.setEcrfEntry(ecrfEntry);
+				newTeamMember.setEcrfDesign(ecrfDesign);
 				newTeamMember.setRoleId(roleId);
 				newTeamMember.setStaffId(staffId);
 				newTeamMember.setTrialId(trialId);
