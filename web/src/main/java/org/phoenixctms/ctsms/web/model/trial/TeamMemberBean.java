@@ -60,7 +60,8 @@ public class TeamMemberBean extends ManagedBeanBase {
 			in.setSign(out.getSign());
 			in.setResolve(out.getResolve());
 			in.setVerify(out.getVerify());
-			in.setEcrf(out.getEcrf());
+			in.setEcrfEntry(out.getEcrfEntry());
+			in.setEcrfDesign(out.getEcrfDesign());
 			in.setNotifyTimelineEvent(out.getNotifyTimelineEvent());
 			in.setNotifyEcrfValidatedStatus(out.getNotifyEcrfValidatedStatus());
 			in.setNotifyEcrfReviewStatus(out.getNotifyEcrfReviewStatus());
@@ -93,7 +94,8 @@ public class TeamMemberBean extends ManagedBeanBase {
 			in.setSign(Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET));
 			in.setResolve(Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET));
 			in.setVerify(Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET));
-			in.setEcrf(Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_PRESET));
+			in.setEcrfEntry(Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_ENTRY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_ENTRY_PRESET));
+			in.setEcrfDesign(Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_DESIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_DESIGN_PRESET));
 		}
 	}
 
@@ -105,6 +107,11 @@ public class TeamMemberBean extends ManagedBeanBase {
 	private StaffMultiPickerModel staffMultiPicker;
 	private Long bulkAddRoleId;
 	private boolean bulkAddAccess;
+	private boolean bulkAddSign;
+	private boolean bulkAddResolve;
+	private boolean bulkAddVerify;
+	private boolean bulkAddEcrfEntry;
+	private boolean bulkAddEcrfDesign;
 	private ArrayList<SelectItem> availableRoles;
 	private TeamMemberLazyModel teamMemberModel;
 	private HashMap<Long, ShiftDurationSummaryModel> shiftDurationModelCache;
@@ -150,10 +157,11 @@ public class TeamMemberBean extends ManagedBeanBase {
 				Set<Long> ids = this.staffMultiPicker.getSelectionIds();
 				Iterator<TeamMemberOutVO> it = WebUtil.getServiceLocator().getTrialService()
 						.addTeamMembers(WebUtil.getAuthentication(), trialId, bulkAddRoleId, bulkAddAccess,
-								Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_PRESET),
-								Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET),
-								Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET),
-								Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET), ids)
+								bulkAddEcrfEntry,
+								bulkAddEcrfDesign,
+								bulkAddSign,
+								bulkAddResolve,
+								bulkAddVerify, ids)
 						.iterator();
 				while (it.hasNext()) {
 					this.staffMultiPicker.removeId(it.next().getStaff().getId());
@@ -197,6 +205,11 @@ public class TeamMemberBean extends ManagedBeanBase {
 		staffMultiPicker.clear();
 		bulkAddRoleId = null;
 		bulkAddAccess = Settings.getBoolean(SettingCodes.TEAM_MEMBER_ACCESS_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ACCESS_PRESET);
+		bulkAddSign = Settings.getBoolean(SettingCodes.TEAM_MEMBER_SIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_SIGN_PRESET);
+		bulkAddResolve = Settings.getBoolean(SettingCodes.TEAM_MEMBER_RESOLVE_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_RESOLVE_PRESET);
+		bulkAddVerify = Settings.getBoolean(SettingCodes.TEAM_MEMBER_VERIFY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_VERIFY_PRESET);
+		bulkAddEcrfEntry = Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_ENTRY_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_ENTRY_PRESET);
+		bulkAddEcrfDesign = Settings.getBoolean(SettingCodes.TEAM_MEMBER_ECRF_DESIGN_PRESET, Bundle.SETTINGS, DefaultSettings.TEAM_MEMBER_ECRF_DESIGN_PRESET);
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -297,18 +310,37 @@ public class TeamMemberBean extends ManagedBeanBase {
 
 	public void handleAccessChange() {
 		if (!in.getAccess()) {
-			in.setEcrf(false);
+			in.setEcrfEntry(false);
+			in.setEcrfDesign(false);
 			in.setSign(false);
 			in.setResolve(false);
 			in.setVerify(false);
 		}
 	}
 
-	public void handleEcrfChange() {
-		if (!in.getEcrf()) {
+	public void handleEcrfEntryChange() {
+		if (!in.getEcrfEntry()) {
 			in.setSign(false);
 			in.setResolve(false);
 			in.setVerify(false);
+		}
+	}
+
+	public void handleBulkAddAccessChange() {
+		if (!bulkAddAccess) {
+			bulkAddEcrfEntry = false;
+			bulkAddEcrfDesign = false;
+			bulkAddSign = false;
+			bulkAddResolve = false;
+			bulkAddVerify = false;
+		}
+	}
+
+	public void handleBulkAddEcrfEntryChange() {
+		if (!bulkAddEcrfEntry) {
+			bulkAddSign = false;
+			bulkAddResolve = false;
+			bulkAddVerify = false;
 		}
 	}
 
@@ -428,7 +460,8 @@ public class TeamMemberBean extends ManagedBeanBase {
 
 	private void sanitizeInVals() {
 		if (!in.getAccess()) {
-			in.setEcrf(false);
+			in.setEcrfEntry(false);
+			in.setEcrfDesign(false);
 			in.setSign(false);
 			in.setResolve(false);
 			in.setVerify(false);
@@ -437,6 +470,46 @@ public class TeamMemberBean extends ManagedBeanBase {
 
 	public void setBulkAddAccess(boolean bulkAddAccess) {
 		this.bulkAddAccess = bulkAddAccess;
+	}
+
+	public boolean isBulkAddSign() {
+		return bulkAddSign;
+	}
+
+	public void setBulkAddSign(boolean bulkAddSign) {
+		this.bulkAddSign = bulkAddSign;
+	}
+
+	public boolean isBulkAddResolve() {
+		return bulkAddResolve;
+	}
+
+	public void setBulkAddResolve(boolean bulkAddResolve) {
+		this.bulkAddResolve = bulkAddResolve;
+	}
+
+	public boolean isBulkAddVerify() {
+		return bulkAddVerify;
+	}
+
+	public void setBulkAddVerify(boolean bulkAddVerify) {
+		this.bulkAddVerify = bulkAddVerify;
+	}
+
+	public boolean isBulkAddEcrfEntry() {
+		return bulkAddEcrfEntry;
+	}
+
+	public void setBulkAddEcrfEntry(boolean bulkAddEcrfEntry) {
+		this.bulkAddEcrfEntry = bulkAddEcrfEntry;
+	}
+
+	public boolean isBulkAddEcrfDesign() {
+		return bulkAddEcrfDesign;
+	}
+
+	public void setBulkAddEcrfDesign(boolean bulkAddEcrfDesign) {
+		this.bulkAddEcrfDesign = bulkAddEcrfDesign;
 	}
 
 	public void setBulkAddRoleId(Long bulkAddRoleId) {

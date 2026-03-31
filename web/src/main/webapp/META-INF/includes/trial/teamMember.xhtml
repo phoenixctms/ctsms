@@ -245,12 +245,14 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="bulkAddTeamMemberRole" />
+								
 								<h:outputLabel for="bulkAddAccess"
 									value="#{triallabels.bulkadd_team_member_access_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="bulkAddAccess"
 										value="#{teamMemberBean.bulkAddAccess}">
-										<p:ajax />
+										<p:ajax listener="#{teamMemberBean.handleBulkAddAccessChange}"
+											update="bulkAddEcrfEntry,bulkAddEcrfDesign,bulkAddSign,bulkAddResolve,bulkAddVerify" />
 									</p:selectBooleanCheckbox>
 									<p:tooltip rendered="#{enableTooltips}" for="bulkAddAccess">
 										<h:outputText
@@ -259,6 +261,81 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="bulkAddAccess" />
+								
+								<h:outputLabel for="bulkAddEcrfEntry"
+									value="#{triallabels.bulkadd_team_member_ecrf_entry_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddEcrfEntry"
+										disabled="#{!teamMemberBean.bulkAddAccess}"
+										value="#{teamMemberBean.bulkAddEcrfEntry}">
+										<p:ajax listener="#{teamMemberBean.handleBulkAddEcrfEntryChange}"
+											update="bulkAddSign,bulkAddResolve,bulkAddVerify" />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="bulkAddEcrfEntry">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_ecrf_entry_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddEcrfEntry" />
+								
+
+								<h:outputLabel for="bulkAddEcrfDesign"
+									value="#{triallabels.bulkadd_team_member_ecrf_design_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddEcrfDesign"
+										disabled="#{!teamMemberBean.bulkAddAccess}"
+										value="#{teamMemberBean.bulkAddEcrfDesign}">
+										<p:ajax  />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="bulkAddEcrfDesign">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_ecrf_design_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddEcrfDesign" />		
+								
+								<h:outputLabel for="bulkAddSign"
+									value="#{triallabels.bulkadd_team_member_sign_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddSign"
+										disabled="#{!teamMemberBean.bulkAddAccess or !teamMemberBean.bulkAddEcrfEntry}"
+										value="#{teamMemberBean.bulkAddSign}" />
+									<p:tooltip rendered="#{enableTooltips}" for="bulkAddSign">
+										<h:outputText value="#{triallabels.bulkadd_team_member_sign_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddSign" />
+
+								<h:outputLabel for="bulkAddResolve"
+									value="#{triallabels.bulkadd_team_member_resolve_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddResolve"
+										disabled="#{!teamMemberBean.bulkAddAccess or !teamMemberBean.bulkAddEcrfEntry}"
+										value="#{teamMemberBean.bulkAddResolve}" />
+									<p:tooltip rendered="#{enableTooltips}" for="bulkAddResolve">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_resolve_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddResolve" />
+
+								<h:outputLabel for="bulkAddVerify"
+									value="#{triallabels.bulkadd_team_member_verify_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddVerify"
+										disabled="#{!teamMemberBean.bulkAddAccess or !teamMemberBean.bulkAddEcrfEntry}"
+										value="#{teamMemberBean.bulkAddVerify}" />
+									<p:tooltip rendered="#{enableTooltips}" for="bulkAddVerify">
+										<h:outputText
+											value="#{triallabels.bulkadd_team_member_verify_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddVerify" />								
 
 							</h:panelGrid>
 
@@ -266,7 +343,7 @@
 							<p:toolbar>
 								<p:toolbarGroup align="right">
 									<p:commandButton
-										process="@this,bulkAddTeamMemberRole,bulkAddAccess"
+										process="@this,bulkAddTeamMemberRole,bulkAddAccess,bulkAddEcrfEntry,bulkAddEcrfDesign"
 										id="bulkAdd" value="#{labels.add_button_label}"
 										actionListener="#{teamMemberBean.addBulk}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
@@ -274,7 +351,6 @@
 										disabled="#{!teamMemberBean.staffBulkCreateable}"
 										update="team_member_list,team_member_bulkadd" />
 								</p:toolbarGroup>
-
 							</p:toolbar>
 						</h:panelGrid>
 					</p:panel>
@@ -346,7 +422,7 @@
 									<p:selectBooleanCheckbox id="access"
 										value="#{teamMemberBean.in.access}">
 										<p:ajax listener="#{teamMemberBean.handleAccessChange}"
-											update="ecrf,sign,resolve,verify" />
+											update="ecrfEntry,ecrfDesign,sign,resolve,verify" />
 									</p:selectBooleanCheckbox>
 									<p:tooltip rendered="#{enableTooltips}" for="access">
 										<h:outputText
@@ -356,28 +432,51 @@
 								</h:panelGroup>
 								<p:message for="access" />
 								
-								<h:outputLabel for="ecrf"
-									value="#{triallabels.team_member_ecrf_label}" />
+								<h:outputLabel for="ecrfEntry"
+									value="#{triallabels.team_member_ecrf_entry_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox id="ecrf"
+									<p:selectBooleanCheckbox id="ecrfEntry"
 										disabled="#{!teamMemberBean.in.access}"
-										value="#{teamMemberBean.in.ecrf}">
-										<p:ajax listener="#{teamMemberBean.handleEcrfChange}"
+										value="#{teamMemberBean.in.ecrfEntry}">
+										<p:ajax listener="#{teamMemberBean.handleEcrfEntryChange}"
 											update="sign,resolve,verify" />
 									</p:selectBooleanCheckbox>
-									<p:tooltip rendered="#{enableTooltips}" for="ecrf">
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfEntry">
 										<h:outputText
-											value="#{triallabels.team_member_ecrf_tooltip}"
+											value="#{triallabels.team_member_ecrf_entry_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="ecrf" />
+								<p:message for="ecrfEntry" />
+								
+
+								<h:outputLabel for="ecrfDesign"
+									value="#{triallabels.team_member_ecrf_design_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="ecrfDesign"
+										disabled="#{!teamMemberBean.in.access}"
+										value="#{teamMemberBean.in.ecrfDesign}">
+										<p:ajax  />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}" for="ecrfDesign">
+										<h:outputText
+											value="#{triallabels.team_member_ecrf_design_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="ecrfDesign" />
+								
+								
+								<h:outputLabel />
+								<h:outputText value="" />
+								<h:outputLabel />
+								
 
 								<h:outputLabel for="sign"
 									value="#{triallabels.team_member_sign_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="sign"
-										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrf}"
+										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrfEntry}"
 										value="#{teamMemberBean.in.sign}" />
 									<p:tooltip rendered="#{enableTooltips}" for="sign">
 										<h:outputText value="#{triallabels.team_member_sign_tooltip}"
@@ -390,7 +489,7 @@
 									value="#{triallabels.team_member_resolve_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="resolve"
-										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrf}"
+										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrfEntry}"
 										value="#{teamMemberBean.in.resolve}" />
 									<p:tooltip rendered="#{enableTooltips}" for="resolve">
 										<h:outputText
@@ -404,7 +503,7 @@
 									value="#{triallabels.team_member_verify_label}" />
 								<h:panelGroup>
 									<p:selectBooleanCheckbox id="verify"
-										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrf}"
+										disabled="#{!teamMemberBean.in.access or !teamMemberBean.in.ecrfEntry}"
 										value="#{teamMemberBean.in.verify}" />
 									<p:tooltip rendered="#{enableTooltips}" for="verify">
 										<h:outputText
