@@ -10,6 +10,8 @@ public interface MassMailMessageTemplateParameters {
 	public static final String TRIAL_TAG_VALUES = TRIAL_PREFIX + "tagvalues";
 	public static final String PROBAND_LIST_ENTRY_OUT_VO_PREFIX = "listentry" + TEMPLATE_MODEL_FIELD_NAME_ASSOCIATION_PATH_SEPARATOR;
 	public static final String PROBAND_LIST_ENTRY_TAG_VALUES = PROBAND_LIST_ENTRY_OUT_VO_PREFIX + "tagvalues";
+	public static final String VISIT_SCHEDULE_ITEMS = "visits";
+	public static final String NEXT_VISIT_SCHEDULE_ITEM = "next_visit";
 	public static final Object PROBAND_LIST_ENTRY_TAG_VALUES_VALUE = "value";
 	public static final String TRIAL_INVENTORY_BOOKINGS = TRIAL_PREFIX + "bookings";
 	public static final String PROBAND_INVENTORY_BOOKINGS = PROBAND_PREFIX + "bookings";

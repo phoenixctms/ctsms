@@ -49,6 +49,7 @@ import org.phoenixctms.ctsms.compare.MoneyTransferOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandOutVOComparator;
 import org.phoenixctms.ctsms.compare.VisitOutVOTokenComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleAppointmentIntervalComparator;
+import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.MassMailMessageTemplateParameters;
@@ -1513,7 +1514,7 @@ public final class ServiceUtil {
 	}
 
 	private static Map createMassMailTemplateModel(MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters, TrialTagValueDao trialTagValueDao,
-			ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao, VisitScheduleItemDao visitScheduleItemDao,
 			InventoryBookingDao inventoryBookingDao,
 			ProbandTagValueDao probandTagValueDao,
 			ProbandContactDetailValueDao probandContactDetailValueDao,
@@ -1664,11 +1665,11 @@ public final class ServiceUtil {
 			Collection models = new ArrayList();
 			Collection probandTagValues = probandTagValueDao.findByProband(proband.getId(), null);
 			probandTagValueDao.toProbandTagValueOutVOCollection(probandTagValues);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator probandTagValuesIt = probandTagValues.iterator();
 			while (probandTagValuesIt.hasNext()) {
 				ProbandTagValueOutVO probandTagValue = (ProbandTagValueOutVO) probandTagValuesIt.next();
 				Map probandTagValueModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandTagValue).iterator();
@@ -1685,11 +1686,11 @@ public final class ServiceUtil {
 			models = new ArrayList();
 			Collection probandContactDetailValues = probandContactDetailValueDao.findByProband(proband.getId(), null, null, null, null, null);
 			probandContactDetailValueDao.toProbandContactDetailValueOutVOCollection(probandContactDetailValues);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandContactDetailValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator probandContactDetailValuesIt = probandContactDetailValues.iterator();
 			while (probandContactDetailValuesIt.hasNext()) {
 				ProbandContactDetailValueOutVO probandContactDetailValue = (ProbandContactDetailValueOutVO) probandContactDetailValuesIt.next();
 				Map probandContactDetailValueModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandContactDetailValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandContactDetailValue).iterator();
@@ -1706,11 +1707,11 @@ public final class ServiceUtil {
 			models = new ArrayList();
 			Collection probandAddresses = probandAddressDao.findByProband(proband.getId(), null, null, null, null);
 			probandAddressDao.toProbandAddressOutVOCollection(probandAddresses);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandAddressOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator probandAddressesIt = probandAddresses.iterator();
 			while (probandAddressesIt.hasNext()) {
 				ProbandAddressOutVO probandAddress = (ProbandAddressOutVO) probandAddressesIt.next();
 				Map probandAddressModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandAddressOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(probandAddress).iterator();
@@ -1727,11 +1728,11 @@ public final class ServiceUtil {
 			models = new ArrayList();
 			Collection diagnoses = diagnosisDao.findByProband(proband.getId(), null);
 			diagnosisDao.toDiagnosisOutVOCollection(diagnoses);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(DiagnosisOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator diagnosesIt = diagnoses.iterator();
 			while (diagnosesIt.hasNext()) {
 				DiagnosisOutVO diagnosis = (DiagnosisOutVO) diagnosesIt.next();
 				Map diagnosesModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(DiagnosisOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(diagnosis).iterator();
@@ -1748,11 +1749,11 @@ public final class ServiceUtil {
 			models = new ArrayList();
 			Collection procedures = procedureDao.findByProband(proband.getId(), null);
 			procedureDao.toProcedureOutVOCollection(procedures);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(ProcedureOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator proceduresIt = procedures.iterator();
 			while (proceduresIt.hasNext()) {
 				ProcedureOutVO procedure = (ProcedureOutVO) proceduresIt.next();
 				Map proceduresModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(ProcedureOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(procedure).iterator();
@@ -1769,11 +1770,11 @@ public final class ServiceUtil {
 			models = new ArrayList();
 			Collection medications = medicationDao.findByProband(proband.getId(), null);
 			medicationDao.toMedicationOutVOCollection(medications);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(MedicationOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator medicationsIt = medications.iterator();
 			while (medicationsIt.hasNext()) {
 				MedicationOutVO medication = (MedicationOutVO) medicationsIt.next();
 				Map medicationsModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(MedicationOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(medication).iterator();
@@ -1790,11 +1791,11 @@ public final class ServiceUtil {
 			models = new ArrayList();
 			Collection bankAccounts = bankAccountDao.findByProband(proband.getId(), null, null, null);
 			bankAccountDao.toBankAccountOutVOCollection(bankAccounts);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(BankAccountOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator bankAccountsIt = bankAccounts.iterator();
 			while (bankAccountsIt.hasNext()) {
 				BankAccountOutVO bankAccount = (BankAccountOutVO) bankAccountsIt.next();
 				Map bankAccountsModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(BankAccountOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(bankAccount).iterator();
@@ -1818,11 +1819,11 @@ public final class ServiceUtil {
 			Collection models = new ArrayList();
 			Collection trialTagValues = trialTagValueDao.findByTrial(massMail.getTrial().getId(), null);
 			trialTagValueDao.toTrialTagValueOutVOCollection(trialTagValues);
-			voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 			Iterator trialTagValuesIt = trialTagValues.iterator();
 			while (trialTagValuesIt.hasNext()) {
 				TrialTagValueOutVO trialTagValue = (TrialTagValueOutVO) trialTagValuesIt.next();
 				Map trialTagValueModel = CoreUtil.createEmptyTemplateModel();
+				voFieldIt = getMassMailTemplateModelKeyValueIterator(TrialTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 				while (voFieldIt.hasNext()) {
 					KeyValueString keyValuePair = voFieldIt.next();
 					Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(trialTagValue).iterator();
@@ -1842,11 +1843,11 @@ public final class ServiceUtil {
 					models = new ArrayList();
 					Collection listEntryTagValues = probandListEntryTagValueDao.findByListEntryListEntryTag(probandListEntry.getId(), null);
 					probandListEntryTagValueDao.toProbandListEntryTagValueOutVOCollection(listEntryTagValues);
-					voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandListEntryTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 					Iterator listEntryTagValuesIt = listEntryTagValues.iterator();
 					while (listEntryTagValuesIt.hasNext()) {
 						ProbandListEntryTagValueOutVO listEntryTagValue = (ProbandListEntryTagValueOutVO) listEntryTagValuesIt.next();
 						Map listEntryTagValueModel = CoreUtil.createEmptyTemplateModel();
+						voFieldIt = getMassMailTemplateModelKeyValueIterator(ProbandListEntryTagValueOutVO.class, enumerateEntities, excludeEncryptedFields);
 						while (voFieldIt.hasNext()) {
 							KeyValueString keyValuePair = voFieldIt.next();
 							Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(listEntryTagValue).iterator();
@@ -1862,15 +1863,71 @@ public final class ServiceUtil {
 						models.add(listEntryTagValueModel);
 					}
 					model.put(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES, models);
+					models = new ArrayList();
+					Iterator visitScheduleItemsIt = massMail.getVisitScheduleItems().iterator();
+					HashSet<Long> visitScheduleItemIds = new HashSet<Long>();
+					while (visitScheduleItemsIt.hasNext()) {
+						visitScheduleItemIds.add(((VisitScheduleItemOutVO) visitScheduleItemsIt.next()).getId());
+					}
+					Collection visitScheduleItems = visitScheduleItemDao.findByInterval(massMail.getTrial().getId(),
+							probandListEntry.getGroup() != null ? probandListEntry.getGroup().getId() : null, proband.getId(), false, null, null);
+					visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+					visitScheduleItems = new ArrayList(visitScheduleItems);
+					Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+					visitScheduleItemsIt = visitScheduleItems.iterator();
+					while (visitScheduleItemsIt.hasNext()) {
+						VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) visitScheduleItemsIt.next();
+						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
+							Map visitScheduleItemModel = CoreUtil.createEmptyTemplateModel();
+							voFieldIt = getMassMailTemplateModelKeyValueIterator(VisitScheduleItemOutVO.class, enumerateEntities, excludeEncryptedFields);
+							while (voFieldIt.hasNext()) {
+								KeyValueString keyValuePair = voFieldIt.next();
+								Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(visitScheduleItem).iterator();
+								while (indexesKeysIt.hasNext()) {
+									ArrayList<Object> indexesKeys = indexesKeysIt.next();
+									visitScheduleItemModel.put(keyValuePair.getKey(indexesKeys),
+											keyValuePair.getValue(locale, visitScheduleItem, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+													excludeEncryptedFields));
+								}
+							}
+							models.add(visitScheduleItemModel);
+						}
+					}
+					model.put(MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEMS, models);
+					visitScheduleItems = visitScheduleItemDao.findByInterval(massMail.getTrial().getId(),
+							probandListEntry.getGroup() != null ? probandListEntry.getGroup().getId() : null, proband.getId(), false, CommonUtil.dateToTimestamp(now), null);
+					visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+					visitScheduleItems = new ArrayList(visitScheduleItems);
+					Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+					visitScheduleItemsIt = visitScheduleItems.iterator();
+					Map visitScheduleItemModel = CoreUtil.createEmptyTemplateModel();
+					while (visitScheduleItemsIt.hasNext()) {
+						VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) visitScheduleItemsIt.next();
+						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
+							voFieldIt = getMassMailTemplateModelKeyValueIterator(VisitScheduleItemOutVO.class, enumerateEntities, excludeEncryptedFields);
+							while (voFieldIt.hasNext()) {
+								KeyValueString keyValuePair = voFieldIt.next();
+								Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(visitScheduleItem).iterator();
+								while (indexesKeysIt.hasNext()) {
+									ArrayList<Object> indexesKeys = indexesKeysIt.next();
+									visitScheduleItemModel.put(keyValuePair.getKey(indexesKeys),
+											keyValuePair.getValue(locale, visitScheduleItem, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+													excludeEncryptedFields));
+								}
+							}
+							break;
+						}
+					}
+					model.put(MassMailMessageTemplateParameters.NEXT_VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
 				}
 				models = new ArrayList();
 				Collection inventoryBookings = inventoryBookingDao.findByProbandTrial(proband.getId(), massMail.getTrial().getId(), true, null, true);
 				inventoryBookingDao.toInventoryBookingOutVOCollection(inventoryBookings);
-				voFieldIt = getMassMailTemplateModelKeyValueIterator(InventoryBookingOutVO.class, enumerateEntities, excludeEncryptedFields);
 				Iterator inventoryBookingsIt = inventoryBookings.iterator();
 				while (inventoryBookingsIt.hasNext()) {
 					InventoryBookingOutVO inventoryBooking = (InventoryBookingOutVO) inventoryBookingsIt.next();
 					Map inventoryBookingModel = CoreUtil.createEmptyTemplateModel();
+					voFieldIt = getMassMailTemplateModelKeyValueIterator(InventoryBookingOutVO.class, enumerateEntities, excludeEncryptedFields);
 					while (voFieldIt.hasNext()) {
 						KeyValueString keyValuePair = voFieldIt.next();
 						Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(inventoryBooking).iterator();
@@ -3349,6 +3406,7 @@ public final class ServiceUtil {
 
 	public static String getMassMailMessage(VelocityEngine velocityEngine, MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters,
 			TrialTagValueDao trialTagValueDao, ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
+			VisitScheduleItemDao visitScheduleItemDao,
 			InventoryBookingDao inventoryBookingDao,
 			ProbandTagValueDao probandTagValueDao,
 			ProbandContactDetailValueDao probandContactDetailValueDao,
@@ -3362,7 +3420,7 @@ public final class ServiceUtil {
 		StringWriter result = new StringWriter();
 		try {
 			Map model = createMassMailTemplateModel(massMail, proband, beacon, now, messageParameters, trialTagValueDao, probandListEntryDao, probandListEntryTagValueDao,
-					inventoryBookingDao,
+					visitScheduleItemDao, inventoryBookingDao,
 					probandTagValueDao,
 					probandContactDetailValueDao,
 					probandAddressDao,

@@ -188,7 +188,7 @@ public class MassMailServiceImpl
 				null, trialVO,
 				probandListStatusTypeVO, visitScheduleItemVOs);
 		ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn), null, null, now, null, this.getTrialTagValueDao(), this.getProbandListEntryDao(),
-				this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
+				this.getProbandListEntryTagValueDao(), this.getVisitScheduleItemDao(), this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
 				this.getProbandContactDetailValueDao(),
 				this.getProbandAddressDao(),
@@ -662,7 +662,8 @@ public class MassMailServiceImpl
 		return ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn),
 				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null, null,
 				new Timestamp(System.currentTimeMillis()),
-				null, this.getTrialTagValueDao(), this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao(), this.getInventoryBookingDao(),
+				null, this.getTrialTagValueDao(), this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao(), this.getVisitScheduleItemDao(),
+				this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
 				this.getProbandContactDetailValueDao(),
 				this.getProbandAddressDao(),
