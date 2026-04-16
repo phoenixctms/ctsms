@@ -74,6 +74,26 @@ public class DBTool {
 		return new AuthenticationVO(username, password, null, null, "localhost");
 	}
 
+	private static String getUsernameOptionValue(CommandLine line) {
+		String username;
+		if (line.hasOption(DBToolOptions.AUTH_OPT)) {
+			try {
+				String[] auth = (new String(Base64.decodeBase64(line.getOptionValue(DBToolOptions.AUTH_OPT)), CommonUtil.BASE64_CHARSET)).split("\n", 2);
+				return auth[0];
+			} catch (Exception e) {
+			}
+		} else {
+			if (line.hasOption(DBToolOptions.USERNAME_OPT)) {
+				return line.getOptionValue(DBToolOptions.USERNAME_OPT);
+			}
+		}
+		return null;
+	}
+
+	private static Option getTaskAndLockProcess(String opt, CommandLine line) {
+		return DBToolOptions.getTaskAndLockProcess(opt, getUsernameOptionValue(line));
+	}
+
 	private static String getDepartmentL10nKeyOptionValue(CommandLine line, boolean required) throws Exception {
 		if (required && !line.hasOption(DBToolOptions.DEPARTMENT_L10N_KEY_OPT)) {
 			throw new IllegalArgumentException("department l10n name required");
@@ -239,126 +259,126 @@ public class DBTool {
 			try {
 				setPropertiesFile(line);
 				if (line.hasOption(DBToolOptions.INIT_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INIT_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INIT_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - master data records will be (re-)created!")) {
 						dbTool.getProductionDataProvider().initializeDB();
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadCriterionProperties(line.getOptionValue(DBToolOptions.IMPORT_CRITERION_PROPERTIES_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.SCAN_MISSING_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SCAN_MISSING_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.SCAN_MISSING_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getExternalFileChecker().scanMissingExternalFiles(false) > 0l;
 				} else if (line.hasOption(DBToolOptions.SCAN_ORPHANED_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SCAN_ORPHANED_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.SCAN_ORPHANED_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getExternalFileChecker().scanOrphanedExternalFiles(false) > 0l;
 				} else if (line.hasOption(DBToolOptions.DELETE_MISSING_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_MISSING_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_MISSING_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - file records will be deleted!")) {
 						sendEmail = dbTool.getExternalFileChecker().scanMissingExternalFiles(true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_ORPHANED_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_ORPHANED_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_ORPHANED_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "file system will be modified - files will be deleted!")) {
 						sendEmail = dbTool.getExternalFileChecker().scanOrphanedExternalFiles(true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_BANK_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_BANK_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_BANK_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadBankIdentifications(line.getOptionValue(DBToolOptions.IMPORT_BANK_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_COUNTRY_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_COUNTRY_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_COUNTRY_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter()
 							.loadCountries(line.getOptionValue(DBToolOptions.IMPORT_COUNTRY_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_TITLE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_TITLE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_TITLE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadTitles(line.getOptionValue(DBToolOptions.IMPORT_TITLE_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_STREET_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_STREET_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_STREET_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadStreets(line.getOptionValue(DBToolOptions.IMPORT_STREET_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							true) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_ZIP_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ZIP_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_ZIP_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadZips(line.getOptionValue(DBToolOptions.IMPORT_ZIP_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_INVENTORY_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_INVENTORY_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_INVENTORY_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_INVENTORY_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.INVENTORY_DOCUMENT, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_STAFF_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_STAFF_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_STAFF_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_STAFF_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							FileModule.STAFF_DOCUMENT, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_COURSE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_COURSE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_COURSE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_COURSE_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							FileModule.COURSE_DOCUMENT, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_TRIAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_TRIAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_TRIAL_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_TRIAL_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							FileModule.TRIAL_DOCUMENT, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_PROBAND_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_PROBAND_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_PROBAND_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_PROBAND_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							FileModule.PROBAND_DOCUMENT, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_INPUT_FIELD_IMAGE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_INPUT_FIELD_IMAGE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_INPUT_FIELD_IMAGE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_INPUT_FIELD_IMAGE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.INPUT_FIELD_IMAGE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_STAFF_IMAGE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_STAFF_IMAGE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_STAFF_IMAGE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_STAFF_IMAGE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.STAFF_IMAGE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_PROBAND_IMAGE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_PROBAND_IMAGE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_PROBAND_IMAGE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_PROBAND_IMAGE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.PROBAND_IMAGE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_JOB_FILE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.JOB_FILE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_COURSE_CERTIFICATE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.COURSE_CERTIFICATE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_MASS_MAIL_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							FileModule.MASS_MAIL_DOCUMENT, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT)) {
-					dbTool.getJobOutput().printPrelude(DBToolOptions.getTaskAndLockProcess(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT));
+					dbTool.getJobOutput().printPrelude(getTaskAndLockProcess(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_INTERACTIVE_OPT, line));
 					dbTool.getDepartmentManager().interactiveChangeDepartmentPassword();
 				} else if (line.hasOption(DBToolOptions.CREATE_DEPARTMENT_INTERACTIVE_OPT)) {
-					dbTool.getJobOutput().printPrelude(DBToolOptions.getTaskAndLockProcess(DBToolOptions.CREATE_DEPARTMENT_INTERACTIVE_OPT));
+					dbTool.getJobOutput().printPrelude(getTaskAndLockProcess(DBToolOptions.CREATE_DEPARTMENT_INTERACTIVE_OPT, line));
 					dbTool.getDepartmentManager().interactiveCreateDepartment();
 				} else if (line.hasOption(DBToolOptions.CREATE_USER_INTERACTIVE_OPT)) {
-					dbTool.getJobOutput().printPrelude(DBToolOptions.getTaskAndLockProcess(DBToolOptions.CREATE_USER_INTERACTIVE_OPT));
+					dbTool.getJobOutput().printPrelude(getTaskAndLockProcess(DBToolOptions.CREATE_USER_INTERACTIVE_OPT, line));
 					dbTool.getDepartmentManager().interactiveCreateUser();
 				} else if (line.hasOption(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (!line.hasOption(DBToolOptions.OLD_DEPARTMENT_PASSWORD_OPT)) {
 						throw new IllegalArgumentException("old department password required");
@@ -366,15 +386,15 @@ public class DBTool {
 					dbTool.getDepartmentManager().changeDepartmentPassword(getDepartmentL10nKeyOptionValue(line, true), getNewDepartmentPassword(line),
 							line.getOptionValue(DBToolOptions.OLD_DEPARTMENT_PASSWORD_OPT));
 				} else if (line.hasOption(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_USER_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_USER_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.CHANGE_DEPARTMENT_PASSWORD_USER_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					dbTool.getDepartmentManager().changeDepartmentPassword(getAuthenticationOptionValue(line), getNewDepartmentPassword(line));
 				} else if (line.hasOption(DBToolOptions.CREATE_DEPARTMENT_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CREATE_DEPARTMENT_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.CREATE_DEPARTMENT_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					dbTool.getDepartmentManager().createDepartment(getDepartmentL10nKeyOptionValue(line, true), getDepartmentPassword(line));
 				} else if (line.hasOption(DBToolOptions.CREATE_USER_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.CREATE_USER_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.CREATE_USER_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (!line.hasOption(DBToolOptions.USERNAME_OPT)) {
 						throw new IllegalArgumentException("new username required");
@@ -386,7 +406,7 @@ public class DBTool {
 							line.getOptionValue(DBToolOptions.USERNAME_OPT), line.getOptionValue(DBToolOptions.PASSWORD_OPT),
 							line.getOptionValue(DBToolOptions.USER_LANG_OPT), line.getOptionValue(DBToolOptions.PERMISSION_PROFILES_OPT));
 				} else if (line.hasOption(DBToolOptions.UPDATE_PROBAND_DEPARTMENT_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.UPDATE_PROBAND_DEPARTMENT_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.UPDATE_PROBAND_DEPARTMENT_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					dbTool.getServiceMethods().updateProbandDepartment(
 							getAuthenticationOptionValue(line),
@@ -394,7 +414,7 @@ public class DBTool {
 							line.getOptionValue(DBToolOptions.NEW_DEPARTMENT_PASSWORD_OPT),
 							line.getOptionValue(DBToolOptions.OLD_DEPARTMENT_PASSWORD_OPT));
 				} else if (line.hasOption(DBToolOptions.LOAD_DEMO_DATA_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.LOAD_DEMO_DATA_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.LOAD_DEMO_DATA_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - created test data records will remain!")) {
 						dbTool.getDemoDataProvider().createDepartmentsAndUsers(3, 5);
@@ -412,75 +432,75 @@ public class DBTool {
 						dbTool.getDemoDataProvider().createCriterias();
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_INVENTORY_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_INVENTORY_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_INVENTORY_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line),
 							line.getOptionValue(DBToolOptions.IMPORT_INVENTORY_DOCUMENT_FILES_OPT),
 							FileModule.INVENTORY_DOCUMENT, getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_STAFF_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_STAFF_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_STAFF_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line), line.getOptionValue(DBToolOptions.IMPORT_STAFF_DOCUMENT_FILES_OPT),
 							FileModule.STAFF_DOCUMENT, getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_COURSE_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_COURSE_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_COURSE_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line), line.getOptionValue(DBToolOptions.IMPORT_COURSE_DOCUMENT_FILES_OPT),
 							FileModule.COURSE_DOCUMENT, getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_TRIAL_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_TRIAL_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_TRIAL_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line), line.getOptionValue(DBToolOptions.IMPORT_TRIAL_DOCUMENT_FILES_OPT),
 							FileModule.TRIAL_DOCUMENT, getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_PROBAND_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_PROBAND_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_PROBAND_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line), line.getOptionValue(DBToolOptions.IMPORT_PROBAND_DOCUMENT_FILES_OPT),
 							FileModule.PROBAND_DOCUMENT, getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getFileSystemLoader().importFiles(getAuthenticationOptionValue(line),
 							line.getOptionValue(DBToolOptions.IMPORT_MASS_MAIL_DOCUMENT_FILES_OPT),
 							FileModule.MASS_MAIL_DOCUMENT, getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.REMOVE_INVENTORY_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_INVENTORY_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_INVENTORY_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.INVENTORY_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.REMOVE_STAFF_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_STAFF_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_STAFF_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.STAFF_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.REMOVE_COURSE_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_COURSE_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_COURSE_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.COURSE_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.REMOVE_TRIAL_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_TRIAL_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_TRIAL_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.TRIAL_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.REMOVE_PROBAND_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_PROBAND_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_PROBAND_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.PROBAND_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_MASS_MAIL_DOCUMENT_FILES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB and file system will be modified - records and files will be deleted!")) {
 						sendEmail = dbTool.getFileSystemLoader().deleteFileRecords(FileModule.MASS_MAIL_DOCUMENT, getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_INVENTORY_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_INVENTORY_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_INVENTORY_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -488,7 +508,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_STAFF_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_STAFF_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_STAFF_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -496,7 +516,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_COURSE_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_COURSE_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_COURSE_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -504,7 +524,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_TRIAL_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_TRIAL_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_TRIAL_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -512,7 +532,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_PROBAND_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_PROBAND_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_PROBAND_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -520,7 +540,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_INPUT_FIELD_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_INPUT_FIELD_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_INPUT_FIELD_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -528,7 +548,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_USER_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_USER_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_USER_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -536,7 +556,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_CRITERIA_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_CRITERIA_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_CRITERIA_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -544,7 +564,7 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PURGE_MASS_MAIL_JOURNAL)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PURGE_MASS_MAIL_JOURNAL);
+					job = getTaskAndLockProcess(DBToolOptions.PURGE_MASS_MAIL_JOURNAL, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - records will be deleted!")) {
 						Object[] period = getVariablePeriodOptionValue(line, true);
@@ -552,30 +572,30 @@ public class DBTool {
 								getIdOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PREPARE_NOTIFICATIONS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PREPARE_NOTIFICATIONS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PREPARE_NOTIFICATIONS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getNotificationSender().prepareNotifications(getDepartmentL10nKeyOptionValue(line, false)) > 0l;
 				} else if (line.hasOption(DBToolOptions.SEND_NOTIFICATIONS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SEND_NOTIFICATIONS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.SEND_NOTIFICATIONS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getNotificationSender().processNotifications(getDepartmentL10nKeyOptionValue(line, false), getLimitOptionValue(line, false)) > 0l;
 				} else if (line.hasOption(DBToolOptions.PREPARE_MASS_MAIL_RECIPIENTS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PREPARE_MASS_MAIL_RECIPIENTS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PREPARE_MASS_MAIL_RECIPIENTS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getMassMailSender().prepareRecipients(getAuthenticationOptionValue(line), getDepartmentL10nKeyOptionValue(line, false)) > 0l;
 				} else if (line.hasOption(DBToolOptions.SEND_MASS_MAILS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SEND_MASS_MAILS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.SEND_MASS_MAILS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getMassMailSender().processMassMails(getAuthenticationOptionValue(line), getDepartmentL10nKeyOptionValue(line, false),
 							getLimitOptionValue(line, false)) > 0l;
 				} else if (line.hasOption(DBToolOptions.REMOVE_PROBANDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.REMOVE_PROBANDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.REMOVE_PROBANDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - probands will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().deleteProbands(getDepartmentL10nKeyOptionValue(line, false), getLimitOptionValue(line, false)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_INVENTORY_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_INVENTORY_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_INVENTORY_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inventory will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -585,13 +605,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INVENTORY_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INVENTORY_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_INVENTORY_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inventory items will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performInventoryDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_STAFF_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_STAFF_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_STAFF_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - person/organisation will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -601,13 +621,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_STAFF_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_STAFF_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_STAFF_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - persons/organisations will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performStaffDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_COURSE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_COURSE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_COURSE_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - course will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -617,13 +637,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_COURSE_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_COURSE_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_COURSE_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - courses will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performCourseDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_TRIAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_TRIAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_TRIAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - trial will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -633,13 +653,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_TRIAL_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_TRIAL_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_TRIAL_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - trials will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performTrialDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_INQUIRY_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_INQUIRY_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_INQUIRY_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inquiry will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -649,7 +669,7 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_ECRF_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_ECRF_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_ECRF_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRFs will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -659,7 +679,7 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_ECRF_FIELD_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_ECRF_FIELD_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_ECRF_FIELD_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRF fields will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -669,25 +689,25 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_INQUIRY_DEFERRED_DELETE_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - inquiries will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performInquiryDeferredDelete(getAuthenticationOptionValue(line), getIdOptionValue(line, false), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_ECRF_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_ECRF_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_ECRF_DEFERRED_DELETE_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRFs will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performEcrfDeferredDelete(getAuthenticationOptionValue(line), getIdOptionValue(line, false), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_ECRF_FIELD_DEFERRED_DELETE_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRF fields will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performEcrfFieldDeferredDelete(getAuthenticationOptionValue(line), getIdOptionValue(line, false), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_PROBAND_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_PROBAND_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_PROBAND_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - proband will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -697,13 +717,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_PROBAND_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_PROBAND_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_PROBAND_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - probands will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performProbandDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_MASS_MAIL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_MASS_MAIL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_MASS_MAIL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - mass mail will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -713,13 +733,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_MASS_MAIL_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - mass mails will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performMassMailDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_USER_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_USER_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_USER_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - user will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -729,13 +749,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_USER_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_USER_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_USER_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - users will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performUserDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_INPUT_FIELD_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_INPUT_FIELD_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_INPUT_FIELD_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - input field will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -745,13 +765,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_INPUT_FIELD_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - input fields will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performInputFieldDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_SELECTION_SET_VALUE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_SELECTION_SET_VALUE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_SELECTION_SET_VALUE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - selection set value will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -761,13 +781,13 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_SELECTION_SET_VALUE_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_SELECTION_SET_VALUE_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_SELECTION_SET_VALUE_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - selection set values will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performSelectionSetValueDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.DELETE_CRITERIA_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.DELETE_CRITERIA_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.DELETE_CRITERIA_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - criteria will be deleted!")) {
 						AuthenticationVO auth = getAuthenticationOptionValue(line);
@@ -777,28 +797,28 @@ public class DBTool {
 						}
 					}
 				} else if (line.hasOption(DBToolOptions.PERFORM_CRITERIA_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_CRITERIA_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_CRITERIA_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - criteria items will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performCriteriaDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.SCAN_ALL_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.SCAN_ALL_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.SCAN_ALL_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getServiceMethods().performAllDeferredDelete(null, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.PERFORM_ALL_DEFERRED_DELETE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PERFORM_ALL_DEFERRED_DELETE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PERFORM_ALL_DEFERRED_DELETE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - items will be deleted!")) {
 						sendEmail = dbTool.getServiceMethods().performAllDeferredDelete(getAuthenticationOptionValue(line), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_PERMISSION_DEFINITIONS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_PERMISSION_DEFINITIONS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_PERMISSION_DEFINITIONS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadPermissionDefinitions(line.getOptionValue(DBToolOptions.IMPORT_PERMISSION_DEFINITIONS_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), true) > 0l;
 				} else if (line.hasOption(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testOverwriteFile(line, ExecUtil.formatFileName(line.getOptionValue(DBToolOptions.PATCH_USER_IDENTITY_DEPARTMENT_PERMISSION_OPT), "{0}_new.{1}"))) {
 						sendEmail = dbTool.getFileExporter().exportPermissionDefinitions(
@@ -809,85 +829,85 @@ public class DBTool {
 										line.getOptionValue(DBToolOptions.ENCODING_OPT))) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT))) {
 						sendEmail = dbTool.getFileExporter().exportPermissionTemplate(line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITION_TEMPLATE_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					if (dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT))) {
 						sendEmail = dbTool.getFileExporter().exportPermissionDefinitions(line.getOptionValue(DBToolOptions.EXPORT_PERMISSION_DEFINITIONS_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_IMAGE_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_IMAGE_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_IMAGE_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandImageInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_COMMENT_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_COMMENT_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_COMMENT_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandCommentInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandNameNormalizedInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getPersonNameNormalizedInitializer().update() > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getOrganisationNameNormalizedInitializer().update() > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_ADDRESS_PROVINCE_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandAddressProvinceInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_TRIAL_DOCUMENT_FILES_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getFileDecryptInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandListStatusEntryReasonDecryptInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getJournalSystemMessageCodeInitializer().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.HELP_OPT)) {
-					dbTool.getJobOutput().printPrelude(DBToolOptions.getTaskAndLockProcess(DBToolOptions.HELP_OPT));
+					dbTool.getJobOutput().printPrelude(getTaskAndLockProcess(DBToolOptions.HELP_OPT, line));
 					HelpFormatter formatter = new HelpFormatter();
 					formatter.printHelp(2 * formatter.getWidth(), "dbtool [task <arg>] [option1 <arg> option2 <arg> ...]", "", DBToolOptions.options, "");
 				} else if (line.hasOption(DBToolOptions.IMPORT_ICD_SYSTEMATICS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ICD_SYSTEMATICS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_ICD_SYSTEMATICS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getClamlImporter().loadIcdSyst(line.getOptionValue(DBToolOptions.IMPORT_ICD_SYSTEMATICS_OPT),
 							line.hasOption(DBToolOptions.FLUSH_REVISION_OPT),
 							line.getOptionValue(DBToolOptions.ICD_SYSTEMATICS_REVISION_OPT), line.getOptionValue(DBToolOptions.SYSTEMATICS_LANG_OPT)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_ALPHA_IDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ALPHA_IDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_ALPHA_IDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadAlphaIds(line.getOptionValue(DBToolOptions.IMPORT_ALPHA_IDS_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							line.hasOption(DBToolOptions.FLUSH_REVISION_OPT), line.getOptionValue(DBToolOptions.ALPHA_ID_REVISION_OPT),
 							line.getOptionValue(DBToolOptions.ICD_SYSTEMATICS_REVISION_OPT)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_OPS_SYSTEMATICS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_OPS_SYSTEMATICS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_OPS_SYSTEMATICS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getClamlImporter().loadOpsSyst(line.getOptionValue(DBToolOptions.IMPORT_OPS_SYSTEMATICS_OPT),
 							line.hasOption(DBToolOptions.FLUSH_REVISION_OPT),
 							line.getOptionValue(DBToolOptions.OPS_SYSTEMATICS_REVISION_OPT), line.getOptionValue(DBToolOptions.SYSTEMATICS_LANG_OPT)) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_OPS_CODES_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_OPS_CODES_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_OPS_CODES_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadOpsCodes(line.getOptionValue(DBToolOptions.IMPORT_OPS_CODES_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							line.hasOption(DBToolOptions.FLUSH_REVISION_OPT), line.getOptionValue(DBToolOptions.OPS_CODE_REVISION_OPT),
 							line.getOptionValue(DBToolOptions.OPS_SYSTEMATICS_REVISION_OPT)) > 0l;
 				} else if (line.hasOption(DBToolOptions.EXPORT_CRITERIA_RESULT_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_RESULT_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_RESULT_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_RESULT_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_RESULT_OPT))) {
@@ -895,7 +915,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_RESULT_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT))) {
@@ -903,7 +923,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_COURSE_PARTICIPANT_LISTS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_CRITERIA_CVS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_CVS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_CVS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_CVS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_CVS_OPT))) {
@@ -911,7 +931,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_CVS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_CRITERIA_PROBAND_LETTERS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_PROBAND_LETTERS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_PROBAND_LETTERS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_PROBAND_LETTERS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_PROBAND_LETTERS_OPT))) {
@@ -919,7 +939,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_PROBAND_LETTERS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_LIST_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_OPT))) {
@@ -928,14 +948,14 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_INPUT_FIELDS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_INPUT_FIELDS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_INPUT_FIELDS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - input fields and selection set values will be updated!")) {
 						sendEmail = dbTool.getXlsImporter().loadInputFields(line.getOptionValue(DBToolOptions.IMPORT_INPUT_FIELDS_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT), getAuthenticationOptionValue(line)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_ECRFS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ECRFS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_ECRFS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - eCRFs, eCRF fields, input fields and selection set values will be updated!")) {
 						sendEmail = dbTool.getXlsImporter().loadEcrfs(line.getOptionValue(DBToolOptions.IMPORT_ECRFS_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
@@ -943,7 +963,7 @@ public class DBTool {
 								getIdOptionValue(line, true)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_INPUT_FIELD_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT))) {
@@ -953,7 +973,7 @@ public class DBTool {
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_ECRFS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_ECRFS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_ECRFS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT))) {
@@ -963,7 +983,7 @@ public class DBTool {
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (dbTool.testForced(line, "DB will be modified - randomization lists will be updated!")) {
 						sendEmail = dbTool.getXlsImporter().loadRandomizationLists(line.getOptionValue(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT),
@@ -971,12 +991,12 @@ public class DBTool {
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true), true) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_ASPS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.IMPORT_ASPS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_ASPS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getXlsImporter().loadAsps(line.getOptionValue(DBToolOptions.IMPORT_ASPS_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
 							line.hasOption(DBToolOptions.FLUSH_REVISION_OPT), line.getOptionValue(DBToolOptions.ASP_REVISION_OPT)) > 0l;
 				} else if (line.hasOption(DBToolOptions.EXPORT_ECRF_PDFS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_ECRF_PDFS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_ECRF_PDFS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_ECRF_PDFS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRF_PDFS_OPT))) {
@@ -984,7 +1004,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_ECRF_PDFS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT))) {
@@ -992,11 +1012,11 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_DONE_ECRF_PDFS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.VALIDATE_PENDING_ECRFS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.VALIDATE_PENDING_ECRFS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.VALIDATE_PENDING_ECRFS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					sendEmail = dbTool.getServiceMethods().validatePendingTrialEcrfs(getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 				} else if (line.hasOption(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT))) {
@@ -1004,7 +1024,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_AUDIT_TRAIL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT))) {
@@ -1012,7 +1032,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_INVENTORY_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT))) {
@@ -1020,7 +1040,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_STAFF_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT))) {
@@ -1028,7 +1048,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_COURSE_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT))) {
@@ -1036,7 +1056,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_TRIAL_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT))) {
@@ -1044,7 +1064,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_ECRF_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT))) {
@@ -1052,7 +1072,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT))) {
@@ -1060,7 +1080,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_MASS_MAIL_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_MASS_MAIL_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_MASS_MAIL_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_MASS_MAIL_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_MASS_MAIL_JOURNAL_OPT))) {
@@ -1068,7 +1088,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_MASS_MAIL_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_USER_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_USER_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_USER_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_USER_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_USER_JOURNAL_OPT))) {
@@ -1076,7 +1096,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_USER_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT))) {
@@ -1084,7 +1104,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_CRITERIA_JOURNAL_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT))) {
@@ -1092,7 +1112,7 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_INVENTORY_BOOKINGS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT))
 							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT))) {
@@ -1100,15 +1120,15 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.EXPORT_VISIT_SCHEDULE_APPOINTMENTS_OPT)) > 0l;
 					}
 				} else if (line.hasOption(DBToolOptions.RUN_DAILY_JOBS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.RUN_DAILY_JOBS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.RUN_DAILY_JOBS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getJobRunner().processJobs(getAuthenticationOptionValue(line), true, null, null) > 0l;
 				} else if (line.hasOption(DBToolOptions.RUN_WEEKLY_JOBS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.RUN_WEEKLY_JOBS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.RUN_WEEKLY_JOBS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getJobRunner().processJobs(getAuthenticationOptionValue(line), null, true, null) > 0l;
 				} else if (line.hasOption(DBToolOptions.RUN_MONTHLY_JOBS_OPT)) {
-					job = DBToolOptions.getTaskAndLockProcess(DBToolOptions.RUN_MONTHLY_JOBS_OPT);
+					job = getTaskAndLockProcess(DBToolOptions.RUN_MONTHLY_JOBS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getJobRunner().processJobs(getAuthenticationOptionValue(line), null, null, true) > 0l;
 				}

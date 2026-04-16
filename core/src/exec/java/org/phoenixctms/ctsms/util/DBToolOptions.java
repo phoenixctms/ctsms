@@ -16,7 +16,7 @@ public final class DBToolOptions {
 
 		DEFAULT_LOCK_ID("dbtool.init"),
 		NOTIFICATION_LOCK_ID("dbtool.notification"),
-		MASS_MAIL_LOCK_ID("dbtool.massmail"),
+		MASS_MAIL_LOCK_ID("dbtool.massmail.{0}"),
 		VALIDATE_ECRF_LOCK_ID("dbtool.validateecrf"),
 		JOB_LOCK_ID("dbtool.job");
 
@@ -420,13 +420,13 @@ public final class DBToolOptions {
 		options.addOption(registerOptionalOption(USER_LANG_OPT, "user_lang", "user language", 1));
 	}
 
-	public static Option getTaskAndLockProcess(String opt) {
+	public static Option getTaskAndLockProcess(String opt, String username) {
 		Iterator<LockId> lockIdsIt = taskLockIdsMap.get(opt).iterator();
 		while (lockIdsIt.hasNext()) {
-			ExecUtil.lockProcess(MessageFormat.format(
+			ExecUtil.lockProcess(MessageFormat.format(MessageFormat.format(
 					ExecSettings.getString(ExecSettingCodes.DBTOOL_LOCK_FILE_NAME,
 							ExecDefaultSettings.DBTOOL_LOCK_FILE_NAME),
-					lockIdsIt.next().toString()));
+					lockIdsIt.next().toString()), CommonUtil.getSafeFilename(username)));
 		}
 		return taskOptionMap.get(opt);
 	}
