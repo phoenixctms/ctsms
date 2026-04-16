@@ -1894,7 +1894,7 @@ public final class ServiceUtil {
 						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
 							models.add(visitScheduleItemModel);
 						}
-						if (visitScheduleItem.getToken().equals(token)) {
+						if (visitScheduleItem.getName().equals(token)) {
 							model.put(MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
 						}
 					}
