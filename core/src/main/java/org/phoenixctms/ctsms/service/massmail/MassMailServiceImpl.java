@@ -187,7 +187,7 @@ public class MassMailServiceImpl
 		ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(), L10nUtil.getLocales(massMailIn.getLocale()), massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				null, trialVO,
 				probandListStatusTypeVO, visitScheduleItemVOs);
-		ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn), null, null, now, null, this.getTrialTagValueDao(), this.getProbandListEntryDao(),
+		ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn), null, null, null, now, null, this.getTrialTagValueDao(), this.getProbandListEntryDao(),
 				this.getProbandListEntryTagValueDao(), this.getVisitScheduleItemDao(), this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
 				this.getProbandContactDetailValueDao(),
@@ -660,7 +660,7 @@ public class MassMailServiceImpl
 	@Override
 	protected String handleGetText(AuthenticationVO auth, MassMailInVO massMailIn, Long probandId) throws Exception {
 		return ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn),
-				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null, null,
+				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null, null, null,
 				new Timestamp(System.currentTimeMillis()),
 				null, this.getTrialTagValueDao(), this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao(), this.getVisitScheduleItemDao(),
 				this.getInventoryBookingDao(),

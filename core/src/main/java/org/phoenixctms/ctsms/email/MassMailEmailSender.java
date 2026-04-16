@@ -428,7 +428,8 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				//} else {
 				//	throw L10nUtil.initServiceException(ServiceExceptionCodes.EMAIL_EMPTY_SUBJECT);
 			}
-			String message = ServiceUtil.getMassMailMessage(velocityEngine, massMailVO, probandVO, recipientVO.getBeacon(), now, null, trialTagValueDao, probandListEntryDao,
+			String message = ServiceUtil.getMassMailMessage(velocityEngine, massMailVO, probandVO, recipientVO.getBeacon(), recipientVO.getToken(), now, null, trialTagValueDao,
+					probandListEntryDao,
 					probandListEntryTagValueDao, visitScheduleItemDao, inventoryBookingDao,
 					probandTagValueDao,
 					probandContactDetailValueDao,

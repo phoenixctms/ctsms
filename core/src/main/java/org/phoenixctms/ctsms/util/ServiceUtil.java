@@ -1513,7 +1513,8 @@ public final class ServiceUtil {
 		}
 	}
 
-	private static Map createMassMailTemplateModel(MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters, TrialTagValueDao trialTagValueDao,
+	private static Map createMassMailTemplateModel(MassMailOutVO massMail, ProbandOutVO proband, String beacon, String token, Date now, Map messageParameters,
+			TrialTagValueDao trialTagValueDao,
 			ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao, VisitScheduleItemDao visitScheduleItemDao,
 			InventoryBookingDao inventoryBookingDao,
 			ProbandTagValueDao probandTagValueDao,
@@ -1869,6 +1870,7 @@ public final class ServiceUtil {
 					while (visitScheduleItemsIt.hasNext()) {
 						visitScheduleItemIds.add(((VisitScheduleItemOutVO) visitScheduleItemsIt.next()).getId());
 					}
+					model.put(MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEM, CoreUtil.createEmptyTemplateModel());
 					Collection visitScheduleItems = visitScheduleItemDao.findByInterval(massMail.getTrial().getId(),
 							probandListEntry.getGroup() != null ? probandListEntry.getGroup().getId() : null, proband.getId(), false, null, null);
 					visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
@@ -1877,48 +1879,51 @@ public final class ServiceUtil {
 					visitScheduleItemsIt = visitScheduleItems.iterator();
 					while (visitScheduleItemsIt.hasNext()) {
 						VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) visitScheduleItemsIt.next();
-						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
-							Map visitScheduleItemModel = CoreUtil.createEmptyTemplateModel();
-							voFieldIt = getMassMailTemplateModelKeyValueIterator(VisitScheduleItemOutVO.class, enumerateEntities, excludeEncryptedFields);
-							while (voFieldIt.hasNext()) {
-								KeyValueString keyValuePair = voFieldIt.next();
-								Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(visitScheduleItem).iterator();
-								while (indexesKeysIt.hasNext()) {
-									ArrayList<Object> indexesKeys = indexesKeysIt.next();
-									visitScheduleItemModel.put(keyValuePair.getKey(indexesKeys),
-											keyValuePair.getValue(locale, visitScheduleItem, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
-													excludeEncryptedFields));
-								}
+						Map visitScheduleItemModel = CoreUtil.createEmptyTemplateModel();
+						voFieldIt = getMassMailTemplateModelKeyValueIterator(VisitScheduleItemOutVO.class, enumerateEntities, excludeEncryptedFields);
+						while (voFieldIt.hasNext()) {
+							KeyValueString keyValuePair = voFieldIt.next();
+							Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(visitScheduleItem).iterator();
+							while (indexesKeysIt.hasNext()) {
+								ArrayList<Object> indexesKeys = indexesKeysIt.next();
+								visitScheduleItemModel.put(keyValuePair.getKey(indexesKeys),
+										keyValuePair.getValue(locale, visitScheduleItem, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+												excludeEncryptedFields));
 							}
+						}
+						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
 							models.add(visitScheduleItemModel);
+						}
+						if (visitScheduleItem.getToken().equals(token)) {
+							model.put(MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
 						}
 					}
 					model.put(MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEMS, models);
-					visitScheduleItems = visitScheduleItemDao.findByInterval(massMail.getTrial().getId(),
-							probandListEntry.getGroup() != null ? probandListEntry.getGroup().getId() : null, proband.getId(), false, CommonUtil.dateToTimestamp(now), null);
-					visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
-					visitScheduleItems = new ArrayList(visitScheduleItems);
-					Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
-					visitScheduleItemsIt = visitScheduleItems.iterator();
-					Map visitScheduleItemModel = CoreUtil.createEmptyTemplateModel();
-					while (visitScheduleItemsIt.hasNext()) {
-						VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) visitScheduleItemsIt.next();
-						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
-							voFieldIt = getMassMailTemplateModelKeyValueIterator(VisitScheduleItemOutVO.class, enumerateEntities, excludeEncryptedFields);
-							while (voFieldIt.hasNext()) {
-								KeyValueString keyValuePair = voFieldIt.next();
-								Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(visitScheduleItem).iterator();
-								while (indexesKeysIt.hasNext()) {
-									ArrayList<Object> indexesKeys = indexesKeysIt.next();
-									visitScheduleItemModel.put(keyValuePair.getKey(indexesKeys),
-											keyValuePair.getValue(locale, visitScheduleItem, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
-													excludeEncryptedFields));
-								}
-							}
-							break;
-						}
-					}
-					model.put(MassMailMessageTemplateParameters.NEXT_VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
+					//					visitScheduleItems = visitScheduleItemDao.findByInterval(massMail.getTrial().getId(),
+					//							probandListEntry.getGroup() != null ? probandListEntry.getGroup().getId() : null, proband.getId(), false, CommonUtil.dateToTimestamp(now), null);
+					//					visitScheduleItemDao.toVisitScheduleItemOutVOCollection(visitScheduleItems);
+					//					visitScheduleItems = new ArrayList(visitScheduleItems);
+					//					Collections.sort((ArrayList) visitScheduleItems, new VisitScheduleItemIntervalComparator(false));
+					//					visitScheduleItemsIt = visitScheduleItems.iterator();
+					//					Map visitScheduleItemModel = CoreUtil.createEmptyTemplateModel();
+					//					while (visitScheduleItemsIt.hasNext()) {
+					//						VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) visitScheduleItemsIt.next();
+					//						if (visitScheduleItemIds.contains(visitScheduleItem.getId())) {
+					//							voFieldIt = getMassMailTemplateModelKeyValueIterator(VisitScheduleItemOutVO.class, enumerateEntities, excludeEncryptedFields);
+					//							while (voFieldIt.hasNext()) {
+					//								KeyValueString keyValuePair = voFieldIt.next();
+					//								Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(visitScheduleItem).iterator();
+					//								while (indexesKeysIt.hasNext()) {
+					//									ArrayList<Object> indexesKeys = indexesKeysIt.next();
+					//									visitScheduleItemModel.put(keyValuePair.getKey(indexesKeys),
+					//											keyValuePair.getValue(locale, visitScheduleItem, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+					//													excludeEncryptedFields));
+					//								}
+					//							}
+					//							break;
+					//						}
+					//					}
+					//					model.put(MassMailMessageTemplateParameters.NEXT_VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
 				}
 				models = new ArrayList();
 				Collection inventoryBookings = inventoryBookingDao.findByProbandTrial(proband.getId(), massMail.getTrial().getId(), true, null, true);
@@ -3404,7 +3409,8 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static String getMassMailMessage(VelocityEngine velocityEngine, MassMailOutVO massMail, ProbandOutVO proband, String beacon, Date now, Map messageParameters,
+	public static String getMassMailMessage(VelocityEngine velocityEngine, MassMailOutVO massMail, ProbandOutVO proband, String beacon, String token, Date now,
+			Map messageParameters,
 			TrialTagValueDao trialTagValueDao, ProbandListEntryDao probandListEntryDao, ProbandListEntryTagValueDao probandListEntryTagValueDao,
 			VisitScheduleItemDao visitScheduleItemDao,
 			InventoryBookingDao inventoryBookingDao,
@@ -3419,7 +3425,7 @@ public final class ServiceUtil {
 			throws ServiceException {
 		StringWriter result = new StringWriter();
 		try {
-			Map model = createMassMailTemplateModel(massMail, proband, beacon, now, messageParameters, trialTagValueDao, probandListEntryDao, probandListEntryTagValueDao,
+			Map model = createMassMailTemplateModel(massMail, proband, beacon, token, now, messageParameters, trialTagValueDao, probandListEntryDao, probandListEntryTagValueDao,
 					visitScheduleItemDao, inventoryBookingDao,
 					probandTagValueDao,
 					probandContactDetailValueDao,
