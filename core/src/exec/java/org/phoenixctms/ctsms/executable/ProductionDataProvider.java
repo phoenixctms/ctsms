@@ -1842,7 +1842,7 @@ public class ProductionDataProvider {
 		createProbandCategory("new_person", Color.WHITESMOKE, true, false, true, false, "ctsms-probandcategory-new-person", true, false, false);
 		createProbandCategory("new_animal", Color.WHITESMOKE, false, true, false, false, "ctsms-probandcategory-new-animal", true, false, false);
 		createProbandCategory("signup", Color.ANTIQUEWHITE, true, false, true, true, "ctsms-probandcategory-signup", true, true, false);
-		createProbandCategory("signup_verified", Color.PALEGREEN, true, false, true, true, "ctsms-probandcategory-signup-verified", false, true, false);
+		createProbandCategory("signup_verified", Color.PALEGREEN, true, false, true, false, "ctsms-probandcategory-signup-verified", false, true, false);
 		createProbandCategory("migrated", Color.SEASHELL, true, true, false, false, "ctsms-probandcategory-migrated", false, false, false);
 		createProbandCategory("test", Color.PAPAYAWHIP, true, true, false, false, "ctsms-probandcategory-test", false, false, false);
 		createProbandCategory("unable_to_reach", Color.GHOSTWHITE, true, false, true, false, "ctsms-probandcategory-unable-to-reach", false, false, false);
