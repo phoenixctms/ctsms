@@ -222,12 +222,16 @@ public interface SystemMessageCodes {
 	public final static String PROBAND_LIST_ENTRY_TAG_POSITIONS_ROTATED_UP = "proband_list_entry_tag_positions_rotated_up";
 	public final static String PROBAND_CREATED = "proband_created";
 	public final static String PROBAND_UPDATED = "proband_updated";
+	public final static String PROBAND_MERGED = "proband_merged";
 	public final static String PROBAND_DEPARTMENT_UPDATED = "proband_department_updated";
 	public final static String PROBAND_DELETED = "proband_deleted";
 	public final static String PROBAND_DELETED_PARENT_REMOVED = "proband_deleted_parent_removed";
 	public final static String PROBAND_DELETED_PATIENT_REMOVED = "proband_deleted_patient_removed";
+	public final static String PROBAND_MERGED_PATIENT_REMOVED = "proband_merged_patient_removed";
 	public final static String PROBAND_DELETED_MASS_MAIL_RECIPIENT_UPDATED = "proband_deleted_mass_mail_recipient_updated";
 	public final static String PROBAND_DELETED_MASS_MAIL_RECIPIENT_DELETED = "proband_deleted_mass_mail_recipient_deleted";
+	public final static String PROBAND_MERGED_MASS_MAIL_RECIPIENT_UPDATED = "proband_merged_mass_mail_recipient_updated";
+	public final static String PROBAND_MERGED_MASS_MAIL_RECIPIENT_DELETED = "proband_merged_mass_mail_recipient_deleted";
 	public final static String PROBAND_IMAGE_CREATED = "proband_image_created";
 	public final static String PROBAND_IMAGE_UPDATED = "proband_image_updated";
 	public final static String PROBAND_IMAGE_CLEARED = "proband_image_cleared";
@@ -280,6 +284,7 @@ public interface SystemMessageCodes {
 	public final static String ECRF_FIELD_VALUE_UPDATED = "ecrf_field_value_updated";
 	public final static String ECRF_FIELD_VALUE_DELETED = "ecrf_field_value_deleted";
 	public final static String ECRF_FIELD_VALUES_CLEARED = "ecrf_field_values_cleared";
+	public final static String INQUIRY_VALUES_CLEARED = "inquiry_values_cleared";
 	public final static String ECRF_FIELD_STATUS_ENTRY_CREATED = "ecrf_field_status_entry_created";
 	public final static String ECRF_FIELD_STATUS_ENTRY_DELETED = "ecrf_field_status_entry_deleted";
 	public final static String INPUT_FIELD_CREATED = "input_field_created";

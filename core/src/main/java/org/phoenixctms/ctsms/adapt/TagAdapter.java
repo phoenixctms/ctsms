@@ -21,12 +21,18 @@ public abstract class TagAdapter<ROOT, TAG, TAGVALUE, VO> {
 	protected abstract TAG checkTagId(Long tagId) throws ServiceException;
 
 	public final void checkTagValueInput(VO tagValueIn) throws ServiceException {
+		checkTagValueInput(tagValueIn, true);
+	}
+
+	public final void checkTagValueInput(VO tagValueIn, boolean checkRoot) throws ServiceException {
 		// referential checks
 		ROOT root = checkRootId(getRootId(tagValueIn));
 		TAG tag = checkTagId(getTagId(tagValueIn));
 		// other input checks
 		if (root != null && tag != null) {
-			checkRootTagConstraints(root, tag, tagValueIn);
+			if (checkRoot) {
+				checkRootTagConstraints(root, tag, tagValueIn);
+			}
 			Iterator<TAGVALUE> it = getTagValues(root).iterator();
 			int tagCount = 0;
 			while (it.hasNext()) {
