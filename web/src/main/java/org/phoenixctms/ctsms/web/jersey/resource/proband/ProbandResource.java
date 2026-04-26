@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.jersey.resource.proband;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -183,6 +184,14 @@ public final class ProbandResource extends ServiceResourceBase {
 		PSFUriPart psf = new PSFUriPart(uriInfo, "active", "active_signup", "sort", "load_all_js_values");
 		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, active, activeSignup, id, sort, loadAllJsValues, psf);
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
+	}
+
+	@DELETE
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{id}/inquiryvalues/{trialId}")
+	public Collection<InquiryValueOutVO> clearInquiryValues(@PathParam("id") Long id, @PathParam("trialId") Long trialId)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getProbandService().clearInquiryValues(auth, trialId, id);
 	}
 
 	@GET

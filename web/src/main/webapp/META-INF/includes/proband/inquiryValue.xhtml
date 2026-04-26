@@ -124,6 +124,13 @@
 								update="inquiriestrial,inquiriessignup,inquiry_input_grid">
 								<f:param name="includeDisabled" value="true" />	
 							</p:commandButton>
+							
+							<p:commandButton
+								value="#{probandlabels.clear_inquiry_button_label}"
+								onclick="inquiryClearConfirmation.show();"
+								disabled="#{!inquiryValueBean.removable}"
+								icon="ui-icon ui-icon-trash" type="button" />
+							
 							<p:commandButton process="@this"
 								value="#{labels.load_button_label}"
 								actionListener="#{inquiryValueBean.load}"
@@ -131,10 +138,6 @@
 								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!inquiryValueBean.created}"
 								update="inquiriestrial,inquiriessignup,inquiry_input_grid" />
-
-
-
-
 
 							<p:splitButton immediate="true" ajax="false"
 								disabled="#{empty inquiryValueBean.trials}"
@@ -184,6 +187,28 @@
 					</ui:include>
 				</h:panelGrid>
 			</h:panelGrid>
+			
+			<p:confirmDialog appendToBody="false" severity="alert"
+				widgetVar="inquiryClearConfirmation">
+				<f:facet name="message">
+
+					<h:outputText
+						value="#{probandlabels.inquiry_clear_confirmation_dialog_message}"
+						escape="false" />
+				</f:facet>
+
+				<p:commandButton process="@this" value="#{labels.yes_button_label}"
+					actionListener="#{inquiryValueBean.delete}"
+					onstart="inquiryClearConfirmation.hide();"
+					oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
+					icon="ui-icon ui-icon-trash" ajax="true"
+					update=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiriessignup,:tabView:inquiryvalue_form:inquiry_input_grid" />
+
+				<p:commandButton value="#{labels.no_button_label}"
+					onclick="inquiryClearConfirmation.hide();" type="button" />
+
+			</p:confirmDialog>			
+			
 		</h:form>
 	</ui:composition>
 </h:body>

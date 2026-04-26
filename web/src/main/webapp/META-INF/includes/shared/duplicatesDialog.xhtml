@@ -10,17 +10,18 @@
 <h:body>
 	<ui:composition>
 <script type="text/javascript">
+    var #{duplicatesDialog}MergeId = null;
     function #{duplicatesDialog}Pop(xhr, status, args) {
        	if (_testPropertyExists(args, AJAX_DUPLICATE_COUNT) &amp;&amp; args[AJAX_DUPLICATE_COUNT] &gt; 0) {
        		#{duplicatesDialog}PopRemoteCommand();
        	}
     }           
 </script>
-		<p:dialog widgetVar="#{duplicatesDialog}" modal="true"
+		<p:dialog widgetVar="#{duplicatesDialog}" modal="true" 
 			header="#{labels.duplicates_dialog_title}" showEffect="#{effect}"
 			hideEffect="#{effect}" styleClass="ctsms-duplicates-dialog">
 			<h:panelGrid columns="1" cellpadding="0"
-				styleClass="ctsms-input-panelgrid" id="#{duplicatesDialog}_input"
+				styleClass="ctsms-input-panelgrid" id="#{duplicatesDialog}"
 				rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row">
 				<h:outputText rendered="#{empty duplicateItems}"
 					value="#{labels.no_duplicates_dialog_message}"
@@ -39,7 +40,14 @@
 						<p:commandButton type="button"
 							title="#{openDuplicateButtonLabel}"
 							icon="ui-icon ui-icon-extlink"
-							onclick="#{openDuplicate}(#{duplicate.vo.id})" />
+							onclick="#{openDuplicate}(#{duplicate.vo.id})" />					
+						<p:commandButton type="button"
+						    rendered="#{not empty mergeDuplicate}"
+						    disabled="#{!duplicatesBean.editable}"
+							title="#{mergeDuplicateButtonLabel}"
+							icon="ui-icon ui-icon-scissors"
+							onclick="#{duplicatesDialog}MergeId=#{duplicate.vo.id};#{duplicatesDialog}MergeConfirmation.show();" />		
+
 						<h:outputText value=" " />
 						<h:outputText
 							value="#{applicationScopeBean.escapeHtml(duplicate.vo.name)}"
@@ -64,29 +72,29 @@
 						</h:outputFormat>
 					</p:column>
 				</p:dataList>
-				<p:messages id="#{duplicatesDialog}_messages" />
+				<p:messages for="#{duplicatesDialog}Messages"  />
 				<p:toolbar>
 					<p:toolbarGroup align="right">
 						<p:remoteCommand process="@this"
 							actionListener="#{duplicatesBean.loadDuplicates}"
 							name="#{duplicatesDialog}Show"
-							update="#{duplicatesDialog}_input,#{duplicatesDialog}_messages"
+							update="#{duplicatesDialog}"
 							oncomplete="#{duplicatesDialog}.show()">
 							<f:attribute name="messages_id"
-								value="#{duplicatesDialog}_messages" />
+								value="#{duplicatesDialog}Messages" />
 						</p:remoteCommand>
 						<p:remoteCommand process="@this"
 							name="#{duplicatesDialog}PopRemoteCommand"
-							update="#{duplicatesDialog}_input,#{duplicatesDialog}_messages"
+							update="#{duplicatesDialog}"
 							oncomplete="#{duplicatesDialog}.show()">
 						</p:remoteCommand>
 						<p:commandButton process="@this"
 							value="#{labels.load_button_label}"
 							actionListener="#{duplicatesBean.loadDuplicates}"
 							icon="ui-icon-refresh" ajax="true" disabled="false"
-							update="#{duplicatesDialog}_input,#{duplicatesDialog}_messages">
+							update="#{duplicatesDialog}">
 							<f:attribute name="messages_id"
-								value="#{duplicatesDialog}_messages" />
+								value="#{duplicatesDialog}Messages" />
 						</p:commandButton>
 					</p:toolbarGroup>
 					<p:separator />
@@ -96,6 +104,20 @@
 				</p:toolbar>
 			</h:panelGrid>
 		</p:dialog>
+		<p:confirmDialog appendToBody="false" severity="info"
+			widgetVar="#{duplicatesDialog}MergeConfirmation">
+			<f:facet name="message">
+				<h:outputText
+					value="#{labels.merge_confirmation_dialog_message}"
+					escape="false" />
+			</f:facet>
+			<p:commandButton type="button"
+				value="#{labels.yes_button_label}"
+				icon="ui-icon ui-icon-scissors"
+				onclick="#{duplicatesDialog}MergeConfirmation.hide();#{mergeDuplicate}(prepareRemoteCommandParameters({#{mergeDuplicateParameterName}:#{duplicatesDialog}MergeId}));" />
+			<p:commandButton value="#{labels.no_button_label}"
+				onclick="#{duplicatesDialog}MergeConfirmation.hide()" type="button" />
+		</p:confirmDialog>		
 	</ui:composition>
 </h:body>
 </html>

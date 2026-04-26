@@ -105,6 +105,7 @@ public interface MessageCodes {
 	public final static String BULK_ADD_TEAM_MEMBER_ROLE_REQUIRED = "bulk_add_team_member_role_required";
 	public final static String BULK_ADD_OPERATION_INCOMPLETE = "bulk_add_operation_incomplete";
 	public final static String CLONE_ADD_OPERATION_SUCCESSFUL = "clone_add_operation_successful";
+	public final static String MERGE_OPERATION_SUCCESSFUL = "merge_operation_successful";
 	public final static String BULK_DELETE_OPERATION_INCOMPLETE = "bulk_delete_operation_incomplete";
 	public final static String BULK_DELETE_OPERATION_SUCCESSFUL = "bulk_delete_operation_successful";
 	public final static String BULK_UPDATE_OPERATION_SUCCESSFUL = "bulk_update_operation_successful";

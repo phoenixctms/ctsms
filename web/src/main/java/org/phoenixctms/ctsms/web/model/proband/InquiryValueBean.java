@@ -50,6 +50,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	private Collection<ProbandAddressOutVO> probandAddresses;
 	private ArrayList<SelectItem> trials;
 	private Long trialsWithoutInquiryValuesCount;
+	private Long inquiryValuesCount;
 	private Object[] totalCounts;
 
 	public InquiryValueBean() {
@@ -58,6 +59,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		proband = null;
 		probandAddresses = null;
 		trialsWithoutInquiryValuesCount = null;
+		inquiryValuesCount = null;
 		totalCounts = new Object[3];
 		trials = new ArrayList<SelectItem>();
 	}
@@ -205,6 +207,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		initIn(true, false);
 		loadTrial();
 		loadProbandListEntry();
+		loadInquiryValuesCount();
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		if (WebUtil.isProbandLocked(proband)) {
@@ -222,6 +225,16 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	protected void loadProbandListEntry() {
 		probandListEntry = WebUtil.getProbandListEntry(trialId, probandId);
+	}
+
+	protected void loadInquiryValuesCount() {
+		inquiryValuesCount = null;
+		try {
+			inquiryValuesCount = WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), trialId, null, null, probandId);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
 	}
 
 	@PostConstruct
@@ -263,6 +276,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		loadProbandListEntry();
 		probandAddresses = loadProbandAddresses();
 		trialsWithoutInquiryValuesCount = WebUtil.getTrialsFromInquiryValues(probandId, true, null, trials, totalCounts);
+		loadInquiryValuesCount();
 		if (WebUtil.isProbandLocked(proband)) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.PROBAND_LOCKED);
 		}
@@ -286,6 +300,11 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isRemovable() {
+		return inquiryValuesCount != null && inquiryValuesCount > 0l && isEditable();
 	}
 
 	@Override
@@ -350,6 +369,26 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			WebUtil.publishException(e);
 		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+		return ERROR_OUTCOME;
+	}
+
+	@Override
+	public String deleteAction() {
+		try {
+			Long trialId = trial == null ? null : trial.getId();
+			Long probandId = proband == null ? null : proband.getId();
+			WebUtil.getServiceLocator().getProbandService().clearInquiryValues(WebUtil.getAuthentication(), trialId, probandId);
+			portionInquiryValues(null);
+			initIn(true, false);
+			initSets();
+			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
+			return DELETE_OUTCOME;
+		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
 	}

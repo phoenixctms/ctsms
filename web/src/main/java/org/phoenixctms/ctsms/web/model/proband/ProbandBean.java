@@ -234,10 +234,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			return ADD_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
@@ -312,9 +312,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
 			}
 		}
@@ -333,6 +333,53 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			initSets();
 			appendRequestContextCallbackArgs(true);
 		}
+	}
+
+	public final void merge(ActionEvent ae) {
+		String messagesClientId = (String) ae.getComponent().getAttributes().get("messages_id");
+		Long probandId = WebUtil.getLongParamValue(GetParamNames.PROBAND_ID);
+		actionPostProcess(mergeAction(probandId, messagesClientId));
+	}
+
+	public String mergeAction(Long probandId) {
+		return mergeAction(probandId, "inputMessages");
+	}
+
+	protected String mergeAction(Long probandId, String messagesClientId) {
+		try {
+			out = WebUtil.getServiceLocator().getProbandService().mergeProbands(WebUtil.getAuthentication(), probandId, in.getId(),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_INSTANCES, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_INSTANCES),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_PARENTS_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_PARENTS_DEPTH),
+					Settings.getIntNullable(SettingCodes.GRAPH_MAX_PROBAND_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_PROBAND_CHILDREN_DEPTH));
+			initIn();
+			initSets();
+			Messages.addLocalizedMessageClientId("inputMessages", FacesMessage.SEVERITY_INFO, MessageCodes.MERGE_OPERATION_SUCCESSFUL);
+			if (!"inputMessages".equals(messagesClientId)) {
+				Messages.addLocalizedMessageClientId(messagesClientId, FacesMessage.SEVERITY_INFO, MessageCodes.MERGE_OPERATION_SUCCESSFUL);
+			}
+			return MERGE_OUTCOME;
+		} catch (ServiceException e1) {
+			ArrayList<String> errorMessages;
+			try {
+				errorMessages = (ArrayList<String>) e1.getData();
+			} catch (ClassCastException e2) {
+				errorMessages = null;
+			}
+			if (errorMessages != null && errorMessages.size() > 0) {
+				Iterator<String> it = errorMessages.iterator();
+				while (it.hasNext()) {
+					Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_ERROR, it.next());
+				}
+			} else {
+				Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_ERROR, e1.getMessage());
+			}
+		} catch (AuthenticationException e) {
+			Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_ERROR, e.getMessage());
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessageClientId(messagesClientId, FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+		return ERROR_OUTCOME;
 	}
 
 	public List<String> completeCitizenship(String query) {
@@ -391,9 +438,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			out = null;
 			return DELETE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
@@ -801,9 +848,9 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			}
 			return LOAD_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		} finally {
 			initIn();
@@ -991,10 +1038,10 @@ public class ProbandBean extends ManagedBeanBase implements SexSelectorListener 
 			return UPDATE_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;

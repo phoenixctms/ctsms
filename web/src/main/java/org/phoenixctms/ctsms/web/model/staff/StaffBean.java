@@ -196,10 +196,10 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			return ADD_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
@@ -256,9 +256,9 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_PARENT_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_PARENT_DEPTH),
 						Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			} catch (AuthenticationException e) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+				Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 				WebUtil.publishException(e);
 			}
 		}
@@ -341,9 +341,9 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			out = null;
 			return DELETE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
@@ -663,9 +663,9 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			return LOAD_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		} finally {
 			initIn();
@@ -803,10 +803,10 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			return UPDATE_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			in.copy(backup);
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			Messages.addMessageClientId("inputMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());
 			WebUtil.publishException(e);
 		}
 		return ERROR_OUTCOME;
