@@ -2428,7 +2428,7 @@ public class TrialServiceImpl
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InputFieldValueDao inputFieldValueDao = this.getInputFieldValueDao();
-		ArrayList<ECRFFieldValueOutVO> result = new ArrayList<ECRFFieldValueOutVO>(values.size());
+		final ArrayList<ECRFFieldValueOutVO> result = new ArrayList<ECRFFieldValueOutVO>(values.size());
 		Iterator<ECRFFieldValue> ecrfFieldValuesIt = values.iterator();
 		while (ecrfFieldValuesIt.hasNext()) {
 			ECRFFieldValue fieldValue = ecrfFieldValuesIt.next();
@@ -2437,10 +2437,18 @@ public class TrialServiceImpl
 			fieldValue.getEcrfField().removeFieldValues(fieldValue);
 			ServiceUtil.removeEcrfFieldValue(fieldValue, now, user, false, false, inputFieldValueDao, ecrfFieldValueDao, journalEntryDao);
 		}
-		ServiceUtil.logSystemMessage(listEntry.getProband(), listEntryVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED, result,
-				null, journalEntryDao);
-		ServiceUtil.logSystemMessage(listEntry.getTrial(), listEntryVO.getProband(), now, user, SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED, result, null,
-				journalEntryDao);
+		ServiceUtil.logSystemMessage(listEntry.getProband(), listEntryVO.getTrial(), now, user, SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED, new Object() {
+
+			public ArrayList<ECRFFieldValueOutVO> getDeletedValues() {
+				return result;
+			}
+		}, null, journalEntryDao);
+		ServiceUtil.logSystemMessage(listEntry.getTrial(), listEntryVO.getProband(), now, user, SystemMessageCodes.ECRF_FIELD_VALUES_CLEARED, new Object() {
+
+			public ArrayList<ECRFFieldValueOutVO> getDeletedValues() {
+				return result;
+			}
+		}, null, journalEntryDao);
 		return result;
 	}
 

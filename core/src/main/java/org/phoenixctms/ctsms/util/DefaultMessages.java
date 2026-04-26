@@ -211,4 +211,5 @@ public interface DefaultMessages {
 	public static final String UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE = "unsupported visit schedule date mode {0}";
 	public static final String UNSUPPORTED_RANGE_PERIOD = "range period {0} is not supported";
 	public static final String UNSUPPORTED_OTP_AUTHENTICATOR_TYPE = "unsupported OTP authentication service {0}";
+	public final static String PROBAND_MERGED_COMMENT = "proband ID {0} data merged/added";
 }

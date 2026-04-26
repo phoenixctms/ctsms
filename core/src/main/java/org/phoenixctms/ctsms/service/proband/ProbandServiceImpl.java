@@ -26,15 +26,19 @@ import javax.crypto.SecretKey;
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.DiagnosisCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InquiryValueCollisionFinder;
+import org.phoenixctms.ctsms.adapt.MassMailRecipientCollisionFinder;
 import org.phoenixctms.ctsms.adapt.MaxCostTypesAdapter;
 import org.phoenixctms.ctsms.adapt.MedicationCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandAddressTypeTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandContactDetailTypeTagAdapter;
+import org.phoenixctms.ctsms.adapt.ProbandListEntryProbandCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandStatusEntryCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandTagAdapter;
 import org.phoenixctms.ctsms.adapt.ProcedureCollisionFinder;
+import org.phoenixctms.ctsms.compare.EntityIDComparator;
 import org.phoenixctms.ctsms.compare.InquiryValueOutVOComparator;
 import org.phoenixctms.ctsms.compare.ProbandStatusEntryIntervalComparator;
+import org.phoenixctms.ctsms.domain.AddressTypeDao;
 import org.phoenixctms.ctsms.domain.AlphaId;
 import org.phoenixctms.ctsms.domain.AnimalContactParticulars;
 import org.phoenixctms.ctsms.domain.Asp;
@@ -43,21 +47,31 @@ import org.phoenixctms.ctsms.domain.AspSubstance;
 import org.phoenixctms.ctsms.domain.AspSubstanceDao;
 import org.phoenixctms.ctsms.domain.BankAccount;
 import org.phoenixctms.ctsms.domain.BankAccountDao;
+import org.phoenixctms.ctsms.domain.ContactDetailTypeDao;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.Diagnosis;
 import org.phoenixctms.ctsms.domain.DiagnosisDao;
+import org.phoenixctms.ctsms.domain.ECRFFieldStatusEntryDao;
+import org.phoenixctms.ctsms.domain.ECRFFieldValueDao;
+import org.phoenixctms.ctsms.domain.ECRFStatusEntryDao;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldValue;
+import org.phoenixctms.ctsms.domain.InputFieldValueDao;
 import org.phoenixctms.ctsms.domain.Inquiry;
 import org.phoenixctms.ctsms.domain.InquiryDao;
 import org.phoenixctms.ctsms.domain.InquiryValue;
 import org.phoenixctms.ctsms.domain.InquiryValueDao;
+import org.phoenixctms.ctsms.domain.InventoryBooking;
 import org.phoenixctms.ctsms.domain.InventoryBookingDao;
+import org.phoenixctms.ctsms.domain.Job;
+import org.phoenixctms.ctsms.domain.JobDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
+import org.phoenixctms.ctsms.domain.MassMail;
+import org.phoenixctms.ctsms.domain.MassMailDao;
 import org.phoenixctms.ctsms.domain.MassMailRecipient;
 import org.phoenixctms.ctsms.domain.MassMailRecipientDao;
 import org.phoenixctms.ctsms.domain.Medication;
@@ -65,7 +79,9 @@ import org.phoenixctms.ctsms.domain.MedicationDao;
 import org.phoenixctms.ctsms.domain.MimeType;
 import org.phoenixctms.ctsms.domain.MoneyTransfer;
 import org.phoenixctms.ctsms.domain.MoneyTransferDao;
+import org.phoenixctms.ctsms.domain.Notification;
 import org.phoenixctms.ctsms.domain.NotificationDao;
+import org.phoenixctms.ctsms.domain.NotificationRecipientDao;
 import org.phoenixctms.ctsms.domain.OpsCode;
 import org.phoenixctms.ctsms.domain.PrivacyConsentStatusType;
 import org.phoenixctms.ctsms.domain.PrivacyConsentStatusTypeDao;
@@ -81,13 +97,17 @@ import org.phoenixctms.ctsms.domain.ProbandGroup;
 import org.phoenixctms.ctsms.domain.ProbandGroupDao;
 import org.phoenixctms.ctsms.domain.ProbandListEntry;
 import org.phoenixctms.ctsms.domain.ProbandListEntryDao;
+import org.phoenixctms.ctsms.domain.ProbandListEntryTagValueDao;
+import org.phoenixctms.ctsms.domain.ProbandListStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntry;
 import org.phoenixctms.ctsms.domain.ProbandStatusEntryDao;
 import org.phoenixctms.ctsms.domain.ProbandStatusType;
+import org.phoenixctms.ctsms.domain.ProbandTagDao;
 import org.phoenixctms.ctsms.domain.ProbandTagValue;
 import org.phoenixctms.ctsms.domain.ProbandTagValueDao;
 import org.phoenixctms.ctsms.domain.Procedure;
 import org.phoenixctms.ctsms.domain.ProcedureDao;
+import org.phoenixctms.ctsms.domain.SignatureDao;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.Trial;
 import org.phoenixctms.ctsms.domain.TrialDao;
@@ -109,9 +129,11 @@ import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
@@ -131,6 +153,8 @@ import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.InquiryValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValuesOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
+import org.phoenixctms.ctsms.vo.MassMailRecipientInVO;
+import org.phoenixctms.ctsms.vo.MassMailRecipientOutVO;
 import org.phoenixctms.ctsms.vo.MedicationInVO;
 import org.phoenixctms.ctsms.vo.MedicationOutVO;
 import org.phoenixctms.ctsms.vo.MoneyTransferInVO;
@@ -145,6 +169,7 @@ import org.phoenixctms.ctsms.vo.ProbandImageInVO;
 import org.phoenixctms.ctsms.vo.ProbandImageOutVO;
 import org.phoenixctms.ctsms.vo.ProbandInVO;
 import org.phoenixctms.ctsms.vo.ProbandLetterPDFVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryInVO;
@@ -499,6 +524,36 @@ public class ProbandServiceImpl
 		}
 	}
 
+	private void checkParents(Proband child) throws ServiceException {
+		Iterator<Proband> parentsIt = child.getParents().iterator();
+		int parentCount = 0;
+		HashSet<Sex> parentGenders = new HashSet<Sex>(Sex.literals().size());
+		while (parentsIt.hasNext()) {
+			Proband parent = parentsIt.next();
+			if (parent.isPerson()) {
+				ProbandContactParticulars personParticlars = parent.getPersonParticulars();
+				if (personParticlars != null && personParticlars.getGender() != null) {
+					if (!parentGenders.add(personParticlars.getGender())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CHILD_PARENT_WITH_SAME_SEX, child.getId().toString(),
+								L10nUtil.getSexName(Locales.USER, personParticlars.getGender().name()));
+					}
+				}
+			} else {
+				AnimalContactParticulars animalParticlars = parent.getAnimalParticulars();
+				if (animalParticlars != null && animalParticlars.getGender() != null) {
+					if (!parentGenders.add(animalParticlars.getGender())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CHILD_PARENT_WITH_SAME_SEX, child.getId().toString(),
+								L10nUtil.getSexName(Locales.USER, animalParticlars.getGender().name()));
+					}
+				}
+			}
+			parentCount++;
+		}
+		if (parentCount > 2) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_CHILD_TWO_PARENTS, child.getId().toString());
+		}
+	}
+
 	private void checkParents(ProbandInVO probandIn, Proband child) throws ServiceException {
 		Iterator<Proband> parentsIt = child.getParents().iterator();
 		int parentCount = 0;
@@ -706,6 +761,548 @@ public class ProbandServiceImpl
 		} else if (probandIn.getRating() != null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_RATING_NOT_NULL);
 		}
+	}
+
+	@Override
+	protected ProbandOutVO handleMergeProbands(AuthenticationVO auth, Long sourceProbandId, Long targetProbandId, Integer maxInstances, Integer maxParentsDepth,
+			Integer maxChildrenDepth) throws Exception {
+		ProbandDao probandDao = this.getProbandDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
+		//lock involved subjects in determinsitic order:
+		ArrayList<Proband> locks = new ArrayList<Proband>();
+		Proband sourceProband = CheckIDUtil.checkProbandId(sourceProbandId, probandDao);
+		Proband targetProband = CheckIDUtil.checkProbandId(targetProbandId, probandDao);
+		locks.add(sourceProband);
+		locks.add(targetProband);
+		locks.addAll(sourceProband.getParents());
+		locks.addAll(sourceProband.getChildren());
+		locks.sort(new EntityIDComparator<>(false));
+		Iterator<Proband> locksIt = locks.iterator();
+		while (locksIt.hasNext()) {
+			probandDao.lock(locksIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
+		ProbandOutVO original = probandDao.toProbandOutVO(targetProband, maxInstances, maxParentsDepth, maxChildrenDepth);
+		ProbandOutVO targetProbandVO = original;
+		ProbandOutVO sourceProbandVO = probandDao.toProbandOutVO(sourceProband, maxInstances, maxParentsDepth, maxChildrenDepth);
+		ServiceException firstException = null;
+		ArrayList<String> errorMessages = new ArrayList<String>();
+		//abort early:
+		if (!original.isDecrypted()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
+		}
+		if (!sourceProband.getDepartment().equals(targetProband.getDepartment())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_MISMATCH);
+		}
+		if (sourceProband.isBlinded() != targetProband.isBlinded()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_BLINDED_MISMATCH);
+		}
+		if (sourceProband.isPerson() != targetProband.isPerson()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_PERSON_FLAG_MISMATCH);
+		}
+		//update proband:
+		ProbandInVO sourceProbandIn = probandDao.toProbandInVO(sourceProband);
+		ProbandInVO targetProbandIn = probandDao.toProbandInVO(targetProband);
+		//in.setPerson(out.getPerson());
+		//in.setBlinded(out.getBlinded());
+		if (CommonUtil.isEmptyString(targetProbandIn.getCitizenship())) {
+			targetProbandIn.setCitizenship(sourceProbandIn.getCitizenship());
+		}
+		StringBuilder comment = new StringBuilder(targetProbandIn.getComment());
+		if (!comment.isEmpty()) {
+			comment.append("\n\n");
+		}
+		comment.append(L10nUtil.getMessage(MessageCodes.PROBAND_MERGED_COMMENT, DefaultMessages.PROBAND_MERGED_COMMENT, sourceProbandId.toString()));
+		if (!CommonUtil.isEmptyString(sourceProbandIn.getComment())) {
+			comment.append(":\n\n");
+			comment.append(sourceProbandIn.getComment());
+		}
+		targetProbandIn.setComment(comment.toString());
+		if (targetProbandIn.getDateOfBirth() == null) {
+			targetProbandIn.setDateOfBirth(sourceProbandIn.getDateOfBirth());
+		}
+		//if (targetProband.getCategory().isPreset() xxx) {
+		//	targetProbandIn.setCategoryId(sourceProbandIn.getCategoryId());
+		//}
+		//in.setDepartmentId(departmentVO == null ? null : departmentVO.getId());
+		//in.setCategoryId(categoryVO == null ? null : categoryVO.getId());
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		Staff physician = sourceProband.getPhysician();
+		if (targetProbandIn.getPhysicianId() == null) {
+			targetProbandIn.setPhysicianId(sourceProbandIn.getPhysicianId());
+		} else if (physician != null) {
+			ServiceUtil.logSystemMessage(physician, sourceProbandVO, now, user, SystemMessageCodes.PROBAND_MERGED_PATIENT_REMOVED, sourceProbandVO, null, journalEntryDao);
+		}
+		//in.setFirstName(out.getFirstName());
+		//in.setLastName(out.getLastName());
+		//in.setAnimalName(out.getAnimalName());
+		if (targetProbandIn.getGender() == null) {
+			targetProbandIn.setGender(sourceProbandIn.getGender());
+		}
+		//in.setAlias(out.getAlias());
+		//in.setId(out.getId());
+		//in.setVersion(out.getVersion());
+		if ((CommonUtil.isEmptyString(sourceProbandIn.getPostpositionedTitle1()) ? 1 : 0) +
+				(CommonUtil.isEmptyString(sourceProbandIn.getPostpositionedTitle2()) ? 1 : 0) +
+				(CommonUtil.isEmptyString(sourceProbandIn.getPostpositionedTitle3()) ? 1 : 0) > (CommonUtil.isEmptyString(targetProbandIn.getPostpositionedTitle1()) ? 1 : 0) +
+						(CommonUtil.isEmptyString(targetProbandIn.getPostpositionedTitle2()) ? 1 : 0) +
+						(CommonUtil.isEmptyString(targetProbandIn.getPostpositionedTitle3()) ? 1 : 0)) {
+			targetProbandIn.setPostpositionedTitle1(sourceProbandIn.getPostpositionedTitle1());
+			targetProbandIn.setPostpositionedTitle2(sourceProbandIn.getPostpositionedTitle2());
+			targetProbandIn.setPostpositionedTitle3(sourceProbandIn.getPostpositionedTitle3());
+		}
+		if ((CommonUtil.isEmptyString(sourceProbandIn.getPrefixedTitle1()) ? 1 : 0) +
+				(CommonUtil.isEmptyString(sourceProbandIn.getPrefixedTitle2()) ? 1 : 0) +
+				(CommonUtil.isEmptyString(sourceProbandIn.getPrefixedTitle3()) ? 1 : 0) > (CommonUtil.isEmptyString(targetProbandIn.getPrefixedTitle1()) ? 1 : 0) +
+						(CommonUtil.isEmptyString(targetProbandIn.getPrefixedTitle2()) ? 1 : 0) +
+						(CommonUtil.isEmptyString(targetProbandIn.getPrefixedTitle3()) ? 1 : 0)) {
+			targetProbandIn.setPrefixedTitle1(sourceProbandIn.getPrefixedTitle1());
+			targetProbandIn.setPrefixedTitle2(sourceProbandIn.getPrefixedTitle2());
+			targetProbandIn.setPrefixedTitle3(sourceProbandIn.getPrefixedTitle3());
+		}
+		if (sourceProbandIn.getRating() != null && sourceProbandIn.getRatingMax() != null) {
+			Long rating = sourceProbandIn.getRating();
+			Long max = sourceProbandIn.getRatingMax();
+			// Safety check for division by zero or invalid scales
+			if (max > 0l) {
+				// Calculate middle point (e.g., (5+1)/2 = 3.0 or (3+1)/2 = 2.0)
+				double neutralPoint = (max + 1.0) / 2.0;
+				// Compare the Long rating to the double neutral point
+				if (Double.compare(rating.doubleValue(), neutralPoint) != 0) {
+					targetProbandIn.setRating(sourceProbandIn.getRating());
+					targetProbandIn.setRatingMax(sourceProbandIn.getRatingMax());
+				}
+			}
+		}
+		if (sourceProband.getPrivacyConsentStatus().isConfirm() && !targetProband.getPrivacyConsentStatus().isConfirm()) {
+			targetProband.setPrivacyConsentStatus(sourceProband.getPrivacyConsentStatus());
+		}
+		Proband originalProband = targetProband;
+		probandDao.evict(originalProband);
+		targetProband = probandDao.probandInVOToEntity(targetProbandIn);
+		CoreUtil.modifyVersion(originalProband, targetProband, now, user);
+		probandDao.update(targetProband);
+		//move over parents:
+		Iterator<Proband> parentsIt = sourceProband.getParents().iterator();
+		while (parentsIt.hasNext()) {
+			Proband parent = parentsIt.next();
+			parent.removeChildren(sourceProband);
+			targetProband.addParents(parent);
+			parent.addChildren(targetProband);
+			probandDao.update(parent);
+		}
+		sourceProband.getParents().clear();
+		try {
+			checkParents(targetProband);
+		} catch (ServiceException e) {
+			if (firstException == null) {
+				firstException = e;
+			}
+			errorMessages.add(e.getMessage());
+		}
+		//move over children:
+		Iterator<Proband> childrenIt = sourceProband.getChildren().iterator();
+		while (childrenIt.hasNext()) {
+			Proband child = childrenIt.next();
+			child.removeParents(sourceProband);
+			targetProband.addChildren(child);
+			child.addParents(targetProband);
+			probandDao.update(child);
+		}
+		sourceProband.getChildren().clear();
+		try {
+			(new ProbandReflexionGraph(probandDao)).checkGraphLoop(targetProband, true, true);
+		} catch (ServiceException e) {
+			if (firstException == null) {
+				firstException = e;
+			}
+			errorMessages.add(e.getMessage());
+		}
+		//move tag values:
+		ProbandTagDao probandTagDao = this.getProbandTagDao();
+		ProbandTagValueDao probandTagValueDao = this.getProbandTagValueDao();
+		Iterator<ProbandTagValue> tagValuesIt = sourceProband.getTagValues().iterator();
+		while (tagValuesIt.hasNext()) {
+			ProbandTagValue tagValue = tagValuesIt.next();
+			try {
+				ProbandTagValueInVO in = probandTagValueDao.toProbandTagValueInVO(tagValue);
+				in.setProbandId(targetProbandIn.getId());
+				(new ProbandTagAdapter(probandDao, probandTagDao)).checkTagValueInput(in, false);
+			} catch (ServiceException e) {
+				if (firstException == null) {
+					firstException = e;
+				}
+				errorMessages.add(e.getMessage());
+				tagValue.setProband(null);
+				probandTagValueDao.remove(tagValue);
+				continue;
+			}
+			tagValue.setProband(targetProband);
+			targetProband.getTagValues().add(tagValue);
+			probandTagValueDao.update(tagValue);
+		}
+		sourceProband.getTagValues().clear();
+		//move contact detail values:
+		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
+		ContactDetailTypeDao contactDetailTypeDao = this.getContactDetailTypeDao();
+		Iterator<ProbandContactDetailValue> contactDetailValuesIt = sourceProband.getContactDetailValues().iterator();
+		while (contactDetailValuesIt.hasNext()) {
+			ProbandContactDetailValue contactDetailValue = contactDetailValuesIt.next();
+			try {
+				ProbandContactDetailValueInVO in = probandContactDetailValueDao.toProbandContactDetailValueInVO(contactDetailValue);
+				in.setProbandId(targetProbandIn.getId());
+				(new ProbandContactDetailTypeTagAdapter(probandDao, contactDetailTypeDao)).checkTagValueInput(in, false);
+			} catch (ServiceException e) {
+				if (firstException == null) {
+					firstException = e;
+				}
+				errorMessages.add(e.getMessage());
+				contactDetailValue.setProband(null);
+				probandContactDetailValueDao.remove(contactDetailValue);
+				continue;
+			}
+			contactDetailValue.setProband(targetProband);
+			targetProband.getContactDetailValues().add(contactDetailValue);
+			probandContactDetailValueDao.update(contactDetailValue);
+		}
+		sourceProband.getContactDetailValues().clear();
+		//move addresses:
+		AddressTypeDao addressTypeDao = this.getAddressTypeDao();
+		ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
+		Iterator<ProbandAddress> addressesIt = sourceProband.getAddresses().iterator();
+		while (addressesIt.hasNext()) {
+			ProbandAddress address = addressesIt.next();
+			try {
+				ProbandAddressInVO in = probandAddressDao.toProbandAddressInVO(address);
+				in.setProbandId(targetProbandIn.getId());
+				(new ProbandAddressTypeTagAdapter(probandDao, addressTypeDao)).checkTagValueInput(in, false);
+			} catch (ServiceException e) {
+				if (firstException == null) {
+					firstException = e;
+				}
+				errorMessages.add(e.getMessage());
+				address.setProband(null);
+				probandAddressDao.remove(address);
+				continue;
+			}
+			address.setProband(targetProband);
+			targetProband.getAddresses().add(address);
+			probandAddressDao.update(address);
+		}
+		sourceProband.getAddresses().clear();
+		//move proband status:
+		ProbandStatusEntryDao probandStatusEntryDao = this.getProbandStatusEntryDao();
+		Iterator<ProbandStatusEntry> statusEntriesIt = sourceProband.getStatusEntries().iterator();
+		while (statusEntriesIt.hasNext()) {
+			ProbandStatusEntry statusEntry = statusEntriesIt.next();
+			ProbandStatusEntryInVO in = probandStatusEntryDao.toProbandStatusEntryInVO(statusEntry);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new ProbandStatusEntryCollisionFinder(probandDao, probandStatusEntryDao)).collides(in)) {
+				try {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_STATUS_ENTRY_OVERLAPPING);
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+				}
+				statusEntry.setProband(null);
+				probandStatusEntryDao.remove(statusEntry);
+				continue;
+			}
+			statusEntry.setProband(targetProband);
+			targetProband.getStatusEntries().add(statusEntry);
+			probandStatusEntryDao.update(statusEntry);
+		}
+		sourceProband.getStatusEntries().clear();
+		//move diagnoses:
+		DiagnosisDao diagnosisDao = this.getDiagnosisDao();
+		Iterator<Diagnosis> diagnosesIt = sourceProband.getDiagnoses().iterator();
+		while (diagnosesIt.hasNext()) {
+			Diagnosis diagnosis = diagnosesIt.next();
+			DiagnosisInVO in = diagnosisDao.toDiagnosisInVO(diagnosis);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new DiagnosisCollisionFinder(probandDao, diagnosisDao)).collides(in)) {
+				try {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.DIAGNOSIS_OVERLAPPING);
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+				}
+				diagnosis.setProband(null);
+				diagnosisDao.remove(diagnosis);
+				continue;
+			}
+			diagnosis.setProband(targetProband);
+			targetProband.getDiagnoses().add(diagnosis);
+			diagnosisDao.update(diagnosis);
+		}
+		sourceProband.getDiagnoses().clear();
+		//move procedures:
+		ProcedureDao procedureDao = this.getProcedureDao();
+		Iterator<Procedure> proceduresIt = sourceProband.getProcedures().iterator();
+		while (proceduresIt.hasNext()) {
+			Procedure procedure = proceduresIt.next();
+			ProcedureInVO in = procedureDao.toProcedureInVO(procedure);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new ProcedureCollisionFinder(probandDao, procedureDao)).collides(in)) {
+				try {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROCEDURE_OVERLAPPING);
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+				}
+				procedure.setProband(null);
+				procedureDao.remove(procedure);
+				continue;
+			}
+			procedure.setProband(targetProband);
+			targetProband.getProcedures().add(procedure);
+			procedureDao.update(procedure);
+		}
+		sourceProband.getProcedures().clear();
+		//move medications:
+		MedicationDao medicationDao = this.getMedicationDao();
+		Iterator<Medication> medicationsIt = sourceProband.getMedications().iterator();
+		while (medicationsIt.hasNext()) {
+			Medication medication = medicationsIt.next();
+			MedicationInVO in = medicationDao.toMedicationInVO(medication);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new MedicationCollisionFinder(probandDao, medicationDao)).collides(in)) {
+				try {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MEDICATION_OVERLAPPING);
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+				}
+				medication.setProband(null);
+				medicationDao.remove(medication);
+				continue;
+			}
+			if (medication.getDiagnosis() != null && !targetProband.getDiagnoses().contains(medication.getDiagnosis())) {
+				medication.getDiagnosis().removeMedications(medication);
+				medication.setDiagnosis(null);
+			}
+			if (medication.getProcedure() != null && !targetProband.getProcedures().contains(medication.getProcedure())) {
+				medication.getProcedure().removeMedications(medication);
+				medication.setProcedure(null);
+			}
+			medication.setProband(targetProband);
+			targetProband.getMedications().add(medication);
+			medicationDao.update(medication);
+		}
+		sourceProband.getMedications().clear();
+		//move bookings:
+		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
+		Iterator<InventoryBooking> bookingsIt = sourceProband.getInventoryBookings().iterator();
+		while (bookingsIt.hasNext()) {
+			InventoryBooking booking = bookingsIt.next();
+			booking.setProband(targetProband);
+			targetProband.getInventoryBookings().add(booking);
+			inventoryBookingDao.update(booking);
+		}
+		sourceProband.getInventoryBookings().clear();
+		//move trial participations:
+		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
+		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
+		ProbandListEntryTagValueDao probandListEntryTagValueDao = this.getProbandListEntryTagValueDao();
+		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+		SignatureDao signatureDao = this.getSignatureDao();
+		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
+		InputFieldValueDao inputFieldValueDao = this.getInputFieldValueDao();
+		NotificationDao notificationDao = this.getNotificationDao();
+		NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
+		TrialDao trialDao = this.getTrialDao();
+		Iterator<ProbandListEntry> trialParticipationsIt = sourceProband.getTrialParticipations().iterator();
+		while (trialParticipationsIt.hasNext()) {
+			ProbandListEntry probandListEntry = trialParticipationsIt.next();
+			ProbandListEntryInVO in = probandListEntryDao.toProbandListEntryInVO(probandListEntry);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new ProbandListEntryProbandCollisionFinder(trialDao, probandListEntryDao)).collides(in)) {
+				if (!probandListEntry.getLastStatus().getStatus().isInitial()
+						|| probandListEntry.getEcrfStatusEntries().size() > 0
+						|| probandListEntry.getTagValues().size() > 0) {
+					try {
+						throw L10nUtil
+								.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, targetProbandIn.getId().toString());
+					} catch (ServiceException e) {
+						if (firstException == null) {
+							firstException = e;
+						}
+						errorMessages.add(e.getMessage());
+					}
+				}
+				probandListEntry.getTrial().removeProbandListEntries(probandListEntry);
+				ProbandGroup group = probandListEntry.getGroup();
+				if (group != null) {
+					group.removeProbandListEntries(probandListEntry);
+				}
+				ServiceUtil.removeProbandListEntry(probandListEntry, true, now, user, true, false, probandListStatusEntryDao, probandListEntryTagValueDao, ecrfFieldValueDao,
+						ecrfFieldStatusEntryDao, signatureDao,
+						ecrfStatusEntryDao, inputFieldValueDao, journalEntryDao,
+						probandListEntryDao, notificationDao, notificationRecipientDao);
+				continue;
+			}
+			probandListEntry.setProband(targetProband);
+			targetProband.getTrialParticipations().add(probandListEntry);
+			probandListEntryDao.update(probandListEntry);
+		}
+		sourceProband.getTrialParticipations().clear();
+		//move inquiry values:
+		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+		InputFieldDao inputFieldDao = this.getInputFieldDao();
+		Iterator<InquiryValue> inquiryValuesIt = sourceProband.getInquiryValues().iterator();
+		while (inquiryValuesIt.hasNext()) {
+			InquiryValue inquiryValue = inquiryValuesIt.next();
+			InquiryValueInVO in = inquiryValueDao.toInquiryValueInVO(inquiryValue);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new InquiryValueCollisionFinder(probandDao, inquiryValueDao)).collides(in)) {
+				try {
+					throw L10nUtil
+							.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_ALREADY_EXISTS,
+									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inquiryValue.getInquiry().getField())));
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+				}
+				inquiryValue.getInquiry().removeInquiryValues(inquiryValue);
+				ServiceUtil.removeInquiryValue(inquiryValue, now, user,
+						Settings.getBoolean(SettingCodes.LOG_INQUIRY_VALUE_TRIAL, Bundle.SETTINGS, DefaultSettings.LOG_INQUIRY_VALUE_TRIAL),
+						false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
+				continue;
+			}
+			inquiryValue.setProband(targetProband);
+			targetProband.getInquiryValues().add(inquiryValue);
+			inquiryValueDao.update(inquiryValue);
+		}
+		sourceProband.getInquiryValues().clear();
+		//move money transfers:
+		MoneyTransferDao moneyTransferDao = this.getMoneyTransferDao();
+		Iterator<MoneyTransfer> moneyTransfersIt = sourceProband.getMoneyTransfers().iterator();
+		while (moneyTransfersIt.hasNext()) {
+			MoneyTransfer moneyTransfer = moneyTransfersIt.next();
+			moneyTransfer.setProband(targetProband);
+			targetProband.getMoneyTransfers().add(moneyTransfer);
+			moneyTransferDao.update(moneyTransfer);
+		}
+		sourceProband.getMoneyTransfers().clear();
+		//move bank accounts:
+		BankAccountDao bankAccountDao = this.getBankAccountDao();
+		Iterator<BankAccount> bankAccountIt = sourceProband.getBankAccounts().iterator();
+		while (bankAccountIt.hasNext()) {
+			BankAccount bankAccount = bankAccountIt.next();
+			bankAccount.setProband(targetProband);
+			targetProband.getBankAccounts().add(bankAccount);
+			bankAccountDao.update(bankAccount);
+		}
+		sourceProband.getBankAccounts().clear();
+		//move mass mail recipients:
+		boolean keepSentMassMailRecipients = Settings.getBoolean(SettingCodes.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS, Bundle.SETTINGS,
+				DefaultSettings.REMOVE_PROBAND_KEEP_SENT_MASS_MAIL_RECIPIENTS);
+		MassMailDao massMailDao = this.getMassMailDao();
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		Iterator<MassMailRecipient> massMailReceiptsIt = sourceProband.getMassMailReceipts().iterator();
+		while (massMailReceiptsIt.hasNext()) {
+			MassMailRecipient recipient = massMailReceiptsIt.next();
+			MassMailRecipientInVO in = massMailRecipientDao.toMassMailRecipientInVO(recipient);
+			in.setProbandId(targetProbandIn.getId());
+			if ((new MassMailRecipientCollisionFinder(massMailDao, massMailRecipientDao)).collides(in)) {
+				massMailRecipientDao.lock(recipient, LockMode.PESSIMISTIC_WRITE);
+				MassMailRecipientOutVO originalRecipient = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+				MassMail massMail = recipient.getMassMail();
+				if (recipient.isSent() && keepSentMassMailRecipients) {
+					recipient.setProband(null);
+					CoreUtil.modifyVersion(recipient, recipient.getVersion(), now, user);
+					massMailRecipientDao.update(recipient);
+					MassMailRecipientOutVO recipientVO = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
+					ServiceUtil.logSystemMessage(massMail, sourceProbandVO, now, user, SystemMessageCodes.PROBAND_MERGED_MASS_MAIL_RECIPIENT_UPDATED, recipientVO,
+							originalRecipient,
+							journalEntryDao);
+				} else {
+					ServiceUtil.logSystemMessage(massMail, sourceProbandVO, now, user, SystemMessageCodes.PROBAND_MERGED_MASS_MAIL_RECIPIENT_DELETED, originalRecipient, null,
+							journalEntryDao);
+					massMail.removeRecipients(recipient);
+					recipient.setMassMail(null);
+					recipient.setProband(null);
+					massMailRecipientDao.remove(recipient);
+				}
+				continue;
+			}
+			recipient.setProband(targetProband);
+			targetProband.getMassMailReceipts().add(recipient);
+			massMailRecipientDao.update(recipient);
+		}
+		sourceProband.getMassMailReceipts().clear();
+		//move jobs:
+		JobDao jobDao = this.getJobDao();
+		Iterator<Job> jobsIt = sourceProband.getJobs().iterator();
+		while (jobsIt.hasNext()) {
+			Job job = jobsIt.next();
+			job.setProband(targetProband);
+			targetProband.getJobs().add(job);
+			jobDao.update(job);
+		}
+		sourceProband.getJobs().clear();
+		//move files:
+		FileDao fileDao = this.getFileDao();
+		Iterator<File> filesIt = sourceProband.getFiles().iterator();
+		while (filesIt.hasNext()) {
+			File file = filesIt.next();
+			file.setProband(targetProband);
+			targetProband.getFiles().add(file);
+			fileDao.update(file);
+		}
+		sourceProband.getFiles().clear();
+		//move notifications:
+		Iterator<Notification> notificationsIt = sourceProband.getNotifications().iterator();
+		while (notificationsIt.hasNext()) {
+			Notification notification = notificationsIt.next();
+			notification.setProband(targetProband);
+			targetProband.getNotifications().add(notification);
+			notificationDao.update(notification);
+		}
+		sourceProband.getNotifications().clear();
+		//move journal entries:
+		Iterator<JournalEntry> journalEntriesIt = sourceProband.getJournalEntries().iterator();
+		while (journalEntriesIt.hasNext()) {
+			JournalEntry journalEntry = journalEntriesIt.next();
+			journalEntry.setProband(targetProband);
+			targetProband.getJournalEntries().add(journalEntry);
+			journalEntryDao.update(journalEntry);
+		}
+		sourceProband.getJournalEntries().clear();
+		//remove source proband:
+		if (physician != null) {
+			physician.removePatients(sourceProband);
+			sourceProband.setPhysician(null);
+		}
+		ProbandContactParticulars personParticulars = sourceProband.getPersonParticulars();
+		AnimalContactParticulars animalParticulars = sourceProband.getAnimalParticulars();
+		probandDao.remove(sourceProband);
+		if (personParticulars != null) {
+			this.getProbandContactParticularsDao().remove(personParticulars);
+		}
+		if (animalParticulars != null) {
+			this.getAnimalContactParticularsDao().remove(animalParticulars);
+		}
+		if (firstException != null) {
+			firstException.setData(errorMessages);
+			throw firstException;
+		}
+		ProbandOutVO result = probandDao.toProbandOutVO(targetProband, maxInstances, maxParentsDepth, maxChildrenDepth);
+		journalEntryDao.addSystemMessage(targetProband, now, user, SystemMessageCodes.PROBAND_MERGED, new Object[] { Long.toString(sourceProbandVO.getId()) },
+				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.PROBAND_JOURNAL, null)) });
+		return result;
 	}
 
 	private void checkProbandLoop(Proband proband) throws ServiceException {
@@ -1695,6 +2292,68 @@ public class ProbandServiceImpl
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(CheckIDUtil.checkProbandId(probandId, probandDao));
 		return getInquiryValues(trial, category, probandVO, active, activeSignup, Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION,
 				Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION), loadAllJsValues, sort, psf);
+	}
+
+	@Override
+	protected Collection<InquiryValueOutVO> handleClearInquiryValues(AuthenticationVO auth, Long trialId, String category, Long probandId) throws Exception {
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		checkClearInquiryValues(trialId, probandId);
+		return clearInquiryValues(this.getTrialDao().load(trialId), this.getProbandDao().load(probandId),
+				ServiceUtil.getInquiryValues(this.getInquiryValueDao().findByProbandTrialCategoryActiveJs(probandId, trialId, category, null, null, true, null, null)), now, user);
+	}
+
+	@Override
+	protected Collection<InquiryValueOutVO> handleClearInquiryValues(AuthenticationVO auth, Long trialId, Long probandId) throws Exception {
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		checkClearInquiryValues(trialId, probandId);
+		return clearInquiryValues(this.getTrialDao().load(trialId), this.getProbandDao().load(probandId),
+				ServiceUtil.getInquiryValues(this.getInquiryValueDao().findByProbandTrialActiveJs(probandId, trialId, null, null, true, null, null)), now, user);
+	}
+
+	private void checkClearInquiryValues(Long trialId, Long probandId) throws Exception {
+		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		ServiceUtil.checkTrialLocked(trial);
+		if (!trial.getStatus().isInquiryValueInputEnabled()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_INPUT_DISABLED_FOR_TRIAL,
+					CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
+		}
+		Proband proband = CheckIDUtil.checkProbandId(probandId, this.getProbandDao(), LockMode.PESSIMISTIC_WRITE);
+		ServiceUtil.checkProbandLocked(proband);
+	}
+
+	private ArrayList<InquiryValueOutVO> clearInquiryValues(Trial trial, Proband proband, Collection<InquiryValue> values,
+			Timestamp now, User user) throws Exception {
+		ProbandOutVO probandVO = this.getProbandDao().toProbandOutVO(proband);
+		TrialOutVO trialVO = this.getTrialDao().toTrialOutVO(trial);
+		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		InputFieldValueDao inputFieldValueDao = this.getInputFieldValueDao();
+		final ArrayList<InquiryValueOutVO> result = new ArrayList<InquiryValueOutVO>(values.size());
+		Iterator<InquiryValue> inquiryValuesIt = values.iterator();
+		while (inquiryValuesIt.hasNext()) {
+			InquiryValue fieldValue = inquiryValuesIt.next();
+			result.add(inquiryValueDao.toInquiryValueOutVO(fieldValue));
+			fieldValue.getProband().removeInquiryValues(fieldValue);
+			fieldValue.getInquiry().removeInquiryValues(fieldValue);
+			ServiceUtil.removeInquiryValue(fieldValue, now, user, false, false, inputFieldValueDao, inquiryValueDao, journalEntryDao);
+		}
+		ServiceUtil.logSystemMessage(proband, trialVO, now, user, SystemMessageCodes.INQUIRY_VALUES_CLEARED, new Object() {
+
+			public ArrayList<InquiryValueOutVO> getDeletedValues() {
+				return result;
+			}
+		},
+				null, journalEntryDao);
+		ServiceUtil.logSystemMessage(trial, probandVO, now, user, SystemMessageCodes.INQUIRY_VALUES_CLEARED, new Object() {
+
+			public ArrayList<InquiryValueOutVO> getDeletedValues() {
+				return result;
+			}
+		}, null,
+				journalEntryDao);
+		return result;
 	}
 
 	@Override

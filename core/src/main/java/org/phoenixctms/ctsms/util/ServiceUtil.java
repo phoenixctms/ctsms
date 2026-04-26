@@ -3360,6 +3360,19 @@ public final class ServiceUtil {
 		return result;
 	}
 
+	public static Collection<InquiryValue> getInquiryValues(Collection<Map> inquiryValues) throws Exception {
+		ArrayList<InquiryValue> result = new ArrayList<InquiryValue>(inquiryValues.size());
+		Iterator<Map> inquiryValuesIt = inquiryValues.iterator();
+		while (inquiryValuesIt.hasNext()) {
+			Map<String, Object> entities = inquiryValuesIt.next();
+			InquiryValue inquiryValue = (InquiryValue) entities.get(INQUIRY_VALUE_DAO_INQUIRY_VALUE_ALIAS);
+			if (inquiryValue != null) {
+				result.add(inquiryValue);
+			}
+		}
+		return result;
+	}
+
 	public static InquiryValuesOutVO getInquiryValues(Trial trial, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues, boolean loadAllJsValues,
 			boolean sort,
 			PSFVO psf, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
