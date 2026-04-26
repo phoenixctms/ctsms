@@ -22,6 +22,7 @@ public abstract class ManagedBeanBase {
 	protected final static String BULK_DELETE_OUTCOME = "bulkdelete";
 	protected final static String BULK_UPDATE_OUTCOME = "bulkupdate";
 	protected final static String VALID_OUTCOME = "valid";
+	protected final static String MERGE_OUTCOME = "merge";
 
 	protected void actionPostProcess(String outcome) {
 		boolean success = true;

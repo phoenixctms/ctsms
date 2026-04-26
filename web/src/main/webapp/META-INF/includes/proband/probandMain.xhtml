@@ -170,6 +170,13 @@
 				actionListener="#{probandBean.changeByNode()}"
 				oncomplete="handleProbandChanged(xhr, status, args)"
 				update="parent_tree,child_tree,proband_input" />
+			<p:remoteCommand process="@this" name="mergeProband"
+				actionListener="#{probandBean.merge}"
+				oncomplete="handleProbandChanged(xhr, status, args)"
+				update="parent_tree,child_tree,proband_input,duplicateProbandsDialog" >
+				<f:attribute name="messages_id"
+								value="duplicateProbandsDialogMessages" />
+			</p:remoteCommand>				
 			<h:panelGrid columns="2" cellpadding="0"
 				styleClass="ctsms-content-panelgrid ctsms-content-panelgrid-maxheight"
 				columnClasses="ctsms-proband-tree-column,ctsms-proband-input-column">
@@ -730,11 +737,6 @@
 								styleClass="ctsms-input-panelgrid" rowClasses="ctsms-input-row">
 								<h:panelGrid columns="3" cellpadding="2"
 									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-
-
-
-
-
 									<h:outputLabel for="physician"
 										value="#{probandlabels.proband_physician_label}" />
 									<h:panelGrid columns="4" cellpadding="0">
@@ -761,11 +763,6 @@
 											onclick="openNewStaff()" />
 									</h:panelGrid>
 									<p:message for="physician" />
-
-
-
-
-
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
@@ -841,7 +838,7 @@
 								</p:dataList>
 							</h:panelGrid>
 						</p:fieldset>
-						<p:messages />
+						<p:messages for="inputMessages"/>
 						<p:toolbar>
 							<p:toolbarGroup align="left">
 								<h:outputText styleClass="ctsms-toolbar-text"
@@ -967,6 +964,9 @@
 				<ui:param name="openDuplicate" value="openProband" />
 				<ui:param name="openDuplicateButtonLabel" value="#{labels.open_proband_button_label}" />
                 <ui:param name="duplicateIdFormat" value="#{labels.duplicate_proband_id_format}" /> 
+                <ui:param name="mergeDuplicate" value="mergeProband" /> 
+                <ui:param name="mergeDuplicateParameterName" value="#{applicationScopeBean.parameterName('PROBAND_ID')}" />
+                <ui:param name="mergeDuplicateButtonLabel" value="#{labels.merge_proband_button_label}" /> 
 			</ui:include>
 		</h:form>
 	</ui:composition>
