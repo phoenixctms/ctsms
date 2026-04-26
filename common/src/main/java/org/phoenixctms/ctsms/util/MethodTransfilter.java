@@ -42,7 +42,7 @@ public class MethodTransfilter {
 	public final static MethodTransfilter getVoMethodTransfilter(final boolean lowerCaseFieldNames) {
 		return new MethodTransfilter() {
 
-			private final Pattern VO_GETTER_METHOD_NAME_EXCLUSION_REGEXP = Pattern.compile("^((isSet)|(getClass)|(getDeclaringClass))");
+			private final Pattern VO_GETTER_METHOD_NAME_EXCLUSION_REGEXP = Pattern.compile("^((isSet)|(getClass)|(getFirst)|(getLast)|(getDeclaringClass))");
 
 			@Override
 			public boolean exclude(Method method) {
