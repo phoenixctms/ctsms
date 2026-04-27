@@ -789,6 +789,8 @@ public class ProbandServiceImpl
 		ProbandOutVO original = probandDao.toProbandOutVO(targetProband, maxInstances, maxParentsDepth, maxChildrenDepth);
 		ProbandOutVO targetProbandVO = original;
 		ProbandOutVO sourceProbandVO = probandDao.toProbandOutVO(sourceProband, maxInstances, maxParentsDepth, maxChildrenDepth);
+		ProbandImageOutVO sourceProbandImageVO = probandDao.toProbandImageOutVO(sourceProband);
+		ProbandImageOutVO targetProbandImageVO = probandDao.toProbandImageOutVO(targetProband);
 		ServiceException firstException = null;
 		ArrayList<String> errorMessages = new ArrayList<String>();
 		//abort early:
@@ -879,14 +881,21 @@ public class ProbandServiceImpl
 				}
 			}
 		}
-		if (sourceProband.getPrivacyConsentStatus().isConfirm() && !targetProband.getPrivacyConsentStatus().isConfirm()) {
-			targetProband.setPrivacyConsentStatus(sourceProband.getPrivacyConsentStatus());
-		}
 		Proband originalProband = targetProband;
 		probandDao.evict(originalProband);
 		targetProband = probandDao.probandInVOToEntity(targetProbandIn);
+		if (sourceProband.getPrivacyConsentStatus().isConfirm() && !targetProband.getPrivacyConsentStatus().isConfirm()) {
+			targetProband.setPrivacyConsentStatus(sourceProband.getPrivacyConsentStatus());
+		}
 		CoreUtil.modifyVersion(originalProband, targetProband, now, user);
 		probandDao.update(targetProband);
+		//copy image:
+		if (!targetProbandImageVO.getHasImage() && sourceProbandImageVO.getHasImage()) {
+			ProbandImageInVO in = probandDao.toProbandImageInVO(sourceProband);
+			in.setId(targetProbandId);
+			Proband proband = probandDao.probandImageInVOToEntity(in);
+			probandDao.update(proband);
+		}
 		//move over parents:
 		Iterator<Proband> parentsIt = sourceProband.getParents().iterator();
 		while (parentsIt.hasNext()) {
@@ -1172,7 +1181,8 @@ public class ProbandServiceImpl
 						|| probandListEntry.getTagValues().size() > 0) {
 					try {
 						throw L10nUtil
-								.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, targetProbandIn.getId().toString());
+								.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, targetProbandIn.getId().toString(),
+										CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(probandListEntry.getTrial())));
 					} catch (ServiceException e) {
 						if (firstException == null) {
 							firstException = e;
@@ -3294,12 +3304,14 @@ public class ProbandServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_PERSON_FLAG_CHANGED);
 		}
 		boolean originalPrivacyConsentControl = originalProband.getCategory().isPrivacyConsentControl();
+		boolean originalPrivacyConsentStatusAutoDelete = originalProband.getPrivacyConsentStatus().isAutoDelete();
+		boolean originalPrivacyConsentStatusConfirm = originalProband.getPrivacyConsentStatus().isConfirm();
 		probandDao.evict(originalProband);
 		Proband proband = probandDao.probandInVOToEntity(modifiedProband);
 		checkProbandLoop(proband);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		CoreUtil.modifyVersion(originalProband, proband, now, user);
-		if (!originalPrivacyConsentControl && proband.getCategory().isPrivacyConsentControl()) {
+		if (!originalPrivacyConsentControl && proband.getCategory().isPrivacyConsentControl() && !originalPrivacyConsentStatusConfirm && originalPrivacyConsentStatusAutoDelete) {
 			ServiceUtil.resetAutoDeleteDeadline(proband, now);
 			proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findInitialStates().iterator().next());
 		}
