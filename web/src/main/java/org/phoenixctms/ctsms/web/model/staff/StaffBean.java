@@ -192,7 +192,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			initIn();
 			initSets();
-			addOperationSuccessMessage(MessageCodes.ADD_OPERATION_SUCCESSFUL);
+			addOperationSuccessMessage("inputMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);
 			return ADD_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
@@ -336,7 +336,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 			initIn();
 			initSets();
 			if (!out.getDeferredDelete()) {
-				addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);
+				addOperationSuccessMessage("inputMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			}
 			out = null;
 			return DELETE_OUTCOME;
@@ -799,7 +799,7 @@ public class StaffBean extends ManagedBeanBase implements SexSelectorListener {
 					Settings.getIntNullable(SettingCodes.GRAPH_MAX_STAFF_CHILDREN_DEPTH, Bundle.SETTINGS, DefaultSettings.GRAPH_MAX_STAFF_CHILDREN_DEPTH));
 			initIn();
 			initSets();
-			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
+			addOperationSuccessMessage("inputMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
 			return UPDATE_OUTCOME;
 		} catch (ServiceException | IllegalArgumentException | AuthorisationException e) {
 			in.copy(backup);
