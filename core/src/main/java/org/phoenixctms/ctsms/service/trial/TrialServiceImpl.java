@@ -1670,7 +1670,8 @@ public class TrialServiceImpl
 			}
 			if ((new ProbandListEntryProbandCollisionFinder(trialDao, probandListEntryDao)).collides(probandListEntryIn)) {
 				throw L10nUtil
-						.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, proband.getId().toString());
+						.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_ALREADY_PARTICIPATING, proband.getId().toString(),
+								CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(trial)));
 			}
 			if (now != null && (new ProbandListEntryStatusCollisionFinder(probandDao, trialDao, probandListEntryDao, now)).collides(probandListEntryIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_PROBAND_BLOCKED, proband.getId().toString());
