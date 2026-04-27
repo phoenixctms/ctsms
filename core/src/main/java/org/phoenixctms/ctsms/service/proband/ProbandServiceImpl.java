@@ -774,6 +774,9 @@ public class ProbandServiceImpl
 		ArrayList<Proband> locks = new ArrayList<Proband>();
 		Proband sourceProband = CheckIDUtil.checkProbandId(sourceProbandId, probandDao);
 		Proband targetProband = CheckIDUtil.checkProbandId(targetProbandId, probandDao);
+		if (sourceProbandId.equals(targetProbandId)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_MERGE_SAME_RECORD);
+		}
 		locks.add(sourceProband);
 		locks.add(targetProband);
 		locks.addAll(sourceProband.getParents());
@@ -809,8 +812,9 @@ public class ProbandServiceImpl
 		if (CommonUtil.isEmptyString(targetProbandIn.getCitizenship())) {
 			targetProbandIn.setCitizenship(sourceProbandIn.getCitizenship());
 		}
-		StringBuilder comment = new StringBuilder(targetProbandIn.getComment());
-		if (!comment.isEmpty()) {
+		StringBuilder comment = new StringBuilder();
+		if (!CommonUtil.isEmptyString(targetProbandIn.getComment())) {
+			comment.append(targetProbandIn.getComment());
 			comment.append("\n\n");
 		}
 		comment.append(L10nUtil.getMessage(MessageCodes.PROBAND_MERGED_COMMENT, DefaultMessages.PROBAND_MERGED_COMMENT, sourceProbandId.toString()));
@@ -893,14 +897,6 @@ public class ProbandServiceImpl
 			probandDao.update(parent);
 		}
 		sourceProband.getParents().clear();
-		try {
-			checkParents(targetProband);
-		} catch (ServiceException e) {
-			if (firstException == null) {
-				firstException = e;
-			}
-			errorMessages.add(e.getMessage());
-		}
 		//move over children:
 		Iterator<Proband> childrenIt = sourceProband.getChildren().iterator();
 		while (childrenIt.hasNext()) {
@@ -911,6 +907,14 @@ public class ProbandServiceImpl
 			probandDao.update(child);
 		}
 		sourceProband.getChildren().clear();
+		try {
+			checkParents(targetProband);
+		} catch (ServiceException e) {
+			if (firstException == null) {
+				firstException = e;
+			}
+			errorMessages.add(e.getMessage());
+		}
 		try {
 			(new ProbandReflexionGraph(probandDao)).checkGraphLoop(targetProband, true, true);
 		} catch (ServiceException e) {
@@ -946,18 +950,34 @@ public class ProbandServiceImpl
 		//move contact detail values:
 		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		ContactDetailTypeDao contactDetailTypeDao = this.getContactDetailTypeDao();
-		Iterator<ProbandContactDetailValue> contactDetailValuesIt = sourceProband.getContactDetailValues().iterator();
-		while (contactDetailValuesIt.hasNext()) {
-			ProbandContactDetailValue contactDetailValue = contactDetailValuesIt.next();
-			try {
-				ProbandContactDetailValueInVO in = probandContactDetailValueDao.toProbandContactDetailValueInVO(contactDetailValue);
-				in.setProbandId(targetProbandIn.getId());
-				(new ProbandContactDetailTypeTagAdapter(probandDao, contactDetailTypeDao)).checkTagValueInput(in, false);
-			} catch (ServiceException e) {
-				if (firstException == null) {
-					firstException = e;
+		Iterator<ProbandContactDetailValue> sourceContactDetailValuesIt = sourceProband.getContactDetailValues().iterator();
+		HashSet<String> contactDetailValuesDupeCheck = new HashSet<String>();
+		Iterator<ProbandContactDetailValue> targetContactDetailValuesIt = targetProband.getContactDetailValues().iterator();
+		while (targetContactDetailValuesIt.hasNext()) {
+			ProbandContactDetailValue contactDetailValue = targetContactDetailValuesIt.next();
+			String value = probandContactDetailValueDao.toProbandContactDetailValueOutVO(contactDetailValue).getValue();
+			if (!CommonUtil.isEmptyString(value)) {
+				contactDetailValuesDupeCheck.add(value.toLowerCase());
+			}
+		}
+		while (sourceContactDetailValuesIt.hasNext()) {
+			ProbandContactDetailValue contactDetailValue = sourceContactDetailValuesIt.next();
+			String value = probandContactDetailValueDao.toProbandContactDetailValueOutVO(contactDetailValue).getValue();
+			if (CommonUtil.isEmptyString(value) || contactDetailValuesDupeCheck.add(value.toLowerCase())) {
+				try {
+					ProbandContactDetailValueInVO in = probandContactDetailValueDao.toProbandContactDetailValueInVO(contactDetailValue);
+					in.setProbandId(targetProbandIn.getId());
+					(new ProbandContactDetailTypeTagAdapter(probandDao, contactDetailTypeDao)).checkTagValueInput(in, false);
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+					contactDetailValue.setProband(null);
+					probandContactDetailValueDao.remove(contactDetailValue);
+					continue;
 				}
-				errorMessages.add(e.getMessage());
+			} else {
 				contactDetailValue.setProband(null);
 				probandContactDetailValueDao.remove(contactDetailValue);
 				continue;
@@ -971,17 +991,37 @@ public class ProbandServiceImpl
 		AddressTypeDao addressTypeDao = this.getAddressTypeDao();
 		ProbandAddressDao probandAddressDao = this.getProbandAddressDao();
 		Iterator<ProbandAddress> addressesIt = sourceProband.getAddresses().iterator();
+		boolean targetProbandHasWireTransferAddress = probandAddressDao.getCount(targetProbandIn.getId(), null, null, true) > 0;
+		HashSet<String> addressesDupeCheck = new HashSet<String>();
+		Iterator<ProbandAddress> targetAddressesIt = targetProband.getAddresses().iterator();
+		while (targetAddressesIt.hasNext()) {
+			ProbandAddress address = targetAddressesIt.next();
+			String name = probandAddressDao.toProbandAddressOutVO(address).getName();
+			if (!CommonUtil.isEmptyString(name)) {
+				addressesDupeCheck.add(name.toLowerCase());
+			}
+		}
 		while (addressesIt.hasNext()) {
 			ProbandAddress address = addressesIt.next();
-			try {
-				ProbandAddressInVO in = probandAddressDao.toProbandAddressInVO(address);
-				in.setProbandId(targetProbandIn.getId());
-				(new ProbandAddressTypeTagAdapter(probandDao, addressTypeDao)).checkTagValueInput(in, false);
-			} catch (ServiceException e) {
-				if (firstException == null) {
-					firstException = e;
+			String name = probandAddressDao.toProbandAddressOutVO(address).getName();
+			if (CommonUtil.isEmptyString(name) || addressesDupeCheck.add(name.toLowerCase())) {
+				if (address.isWireTransfer() && targetProbandHasWireTransferAddress) {
+					address.setWireTransfer(false);
 				}
-				errorMessages.add(e.getMessage());
+				try {
+					ProbandAddressInVO in = probandAddressDao.toProbandAddressInVO(address);
+					in.setProbandId(targetProbandIn.getId());
+					(new ProbandAddressTypeTagAdapter(probandDao, addressTypeDao)).checkTagValueInput(in, false);
+				} catch (ServiceException e) {
+					if (firstException == null) {
+						firstException = e;
+					}
+					errorMessages.add(e.getMessage());
+					address.setProband(null);
+					probandAddressDao.remove(address);
+					continue;
+				}
+			} else {
 				address.setProband(null);
 				probandAddressDao.remove(address);
 				continue;
@@ -1801,7 +1841,7 @@ public class ProbandServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_ADDRESS);
 		}
 		ServiceUtil.checkProbandLocked(proband);
-		if (address.isWireTransfer() && addressDao.getCount(address.getProband().getId(), null, null, null) > 1) {
+		if (address.isWireTransfer() && addressDao.getCount(address.getProband().getId(), null, null, false) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DELETE_WIRE_TRANSFER_PROBAND_ADDRESS);
 		}
 		proband.removeAddresses(address);

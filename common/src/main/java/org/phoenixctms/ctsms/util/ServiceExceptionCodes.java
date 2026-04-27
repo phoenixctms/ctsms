@@ -12,6 +12,7 @@ public interface ServiceExceptionCodes {
 	public final static String PROBAND_DEPARTMENT_CHANGED = "proband_department_changed";
 	public final static String PROBAND_DEPARTMENT_NOT_CHANGED = "proband_department_not_changed";
 	public final static String PROBAND_DEPARTMENT_MISMATCH = "proband_department_mismatch";
+	public final static String PROBAND_MERGE_SAME_RECORD = "proband_merge_same_record";
 	public final static String PROBAND_BLINDED_MISMATCH = "proband_blinded_mismatch";
 	public final static String PROBAND_PERSON_FLAG_MISMATCH = "proband_person_flag_mismatch";
 	public final static String STAFF_ADDRESS_ALREADY_ANOTHER_ADDRESS_MARKED_FOR_CV = "staff_address_already_another_address_marked_for_cv";
