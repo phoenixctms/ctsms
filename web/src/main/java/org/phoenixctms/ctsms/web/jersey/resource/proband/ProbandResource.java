@@ -189,9 +189,9 @@ public final class ProbandResource extends ServiceResourceBase {
 	@DELETE
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/inquiryvalues/{trialId}")
-	public Collection<InquiryValueOutVO> clearInquiryValues(@PathParam("id") Long id, @PathParam("trialId") Long trialId)
+	public Collection<InquiryValueOutVO> clearInquiryValues(@PathParam("id") Long id, @PathParam("trialId") Long trialId, @QueryParam("category") String category)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getProbandService().clearInquiryValues(auth, trialId, id);
+		return WebUtil.getServiceLocator().getProbandService().clearInquiryValues(auth, trialId, category, id);
 	}
 
 	@GET

@@ -40,5 +40,38 @@ if get_database_version() < '010901004' then
   
 end if;
 
+if get_database_version() < '010901005' then
+
+  update proband_category set "delete" = 'f' where name_l10n_key = 'signup_verified';
+
+  perform set_database_version('010901005');
+  
+end if;
+
+if get_database_version() < '010901006' then
+
+  insert into JOB_TYPE 
+  (id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+  values (
+  nextval('hibernate_sequence'), 
+  'TRIAL_JOB',
+  'import_inquiry_data',
+  'import_inquiry_data',
+  '{12} --task=cleanup --task=import_inquiry_data_horizontal --task=cleanup -id={1} -auth={4} -jid={5} -tz={6} --force --skip-errors',
+  't',
+  'f',
+  'f',
+  'f',
+  't',
+  'f',
+  'f',
+  't',
+  null
+  );
+
+  perform set_database_version('010901006');
+  
+end if;
+
 end
 $$;
