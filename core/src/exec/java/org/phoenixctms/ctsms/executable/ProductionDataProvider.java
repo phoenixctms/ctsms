@@ -2900,6 +2900,19 @@ public class ProductionDataProvider {
 				false,
 				true);
 		createJobType(
+				JobModule.TRIAL_JOB,
+				"import_inquiry_data",
+				"import_inquiry_data",
+				"{12} --task=cleanup --task=import_inquiry_data_horizontal --task=cleanup -id={1} -auth={4} -jid={5} -tz={6} --force --skip-errors",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				true);
+		createJobType(
 				JobModule.INPUT_FIELD_JOB,
 				"export_input_field",
 				"export_input_field",
