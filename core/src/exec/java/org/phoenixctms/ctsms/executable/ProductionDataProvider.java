@@ -2849,8 +2849,8 @@ public class ProductionDataProvider {
 				true);
 		createJobType(
 				JobModule.TRIAL_JOB,
-				"export_signed_ecrf_pdfs",
-				"export_signed_ecrf_pdfs",
+				"export_done_ecrf_pdfs",
+				"export_done_ecrf_pdfs",
 				"{10} --task=cleanup_all --task=publish_ecrf_data_pdfs --task=cleanup_all -id={1} -auth={4} -jid={5} --upload --signed --force",
 				true,
 				false,
