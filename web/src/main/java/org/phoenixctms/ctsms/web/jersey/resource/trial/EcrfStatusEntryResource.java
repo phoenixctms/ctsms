@@ -76,7 +76,7 @@ public class EcrfStatusEntryResource {
 			@QueryParam("visit_id") Long visitId, @QueryParam("load_all_js_values") Boolean loadAllJsValues, @QueryParam("query") String query, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf = new PSFUriPart(uriInfo, "visit_id", "load_all_js_values", "query");
-		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, listEntryId, ecrfId, visitId, false, loadAllJsValues, query, psf);
+		ECRFFieldValuesOutVO values = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValues(auth, listEntryId, ecrfId, visitId, true, loadAllJsValues, query, psf);
 		return new JsValuesOutVOPage<ECRFFieldValueOutVO, ECRFFieldValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
 	}
 
