@@ -426,6 +426,12 @@
 										icon="ui-icon-refresh" ajax="true"
 										disabled="#{!ecrfBean.created}"
 										update="ecrf_list,ecrf_matrix,ecrf_clone,ecrf_input" />
+									<p:commandButton immediate="true" ajax="false"
+										value="#{triallabels.open_ecrf_specification_button_label}"
+										icon="ui-icon ui-icon-pdf">
+										<p:fileDownload
+											value="#{ecrfBean.ecrfSpecificationPdfStreamedContent}" />
+									</p:commandButton>
 								</p:toolbarGroup>
 								<p:separator />
 								<p:toolbarGroup align="right">

@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,6 +19,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.vo.ECRFInVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.ECRFSpecificationPDFVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
@@ -40,6 +42,8 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean
 @ViewScoped
@@ -621,5 +625,25 @@ public class EcrfBean extends ManagedBeanBase {
 			}
 		}
 		in.setVisitIds(new ArrayList<Long>(visitIds));
+	}
+
+	public StreamedContent getEcrfSpecificationPdfStreamedContent() throws Exception {
+		if (in.getTrialId() != null) {
+			try {
+				ECRFSpecificationPDFVO ecrfSpecification = WebUtil.getServiceLocator().getTrialService().renderEcrfSpecification(WebUtil.getAuthentication(), in.getTrialId());
+				return new DefaultStreamedContent(new ByteArrayInputStream(ecrfSpecification.getDocumentDatas()), ecrfSpecification.getContentType().getMimeType(),
+						ecrfSpecification.getFileName());
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+				throw e;
+			} catch (AuthorisationException e) {
+				throw e;
+			} catch (ServiceException e) {
+				throw e;
+			} catch (IllegalArgumentException e) {
+				throw e;
+			}
+		}
+		return null;
 	}
 }
