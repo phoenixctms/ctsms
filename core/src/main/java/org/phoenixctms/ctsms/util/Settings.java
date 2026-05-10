@@ -44,6 +44,7 @@ public final class Settings {
 		TRAINING_RECORD_PDF,
 		REIMBURSEMENTS_PDF,
 		COURSE_PARTICIPANT_LIST_PDF,
+		ECRF_SPECIFICATION_PDF,
 		PROBAND_LETTER_PDF,
 		COURSE_CERTIFICATE_PDF,
 		JOURNAL_EXCEL,
@@ -66,6 +67,7 @@ public final class Settings {
 	private static String trainingRecordPdfSettingsBundleBasename;
 	private static String reimbursementsPdfSettingsBundleBasename;
 	private static String courseParticipantListPdfSettingsBundleBasename;
+	private static String ecrfSpecificationPdfSettingsBundleBasename;
 	private static String probandLetterPdfSettingsBundleBasename;
 	private static String courseCertificatePdfSettingsBundleBasename;
 	private static String ecrfPdfSettingsBundleBasename;
@@ -281,6 +283,8 @@ public final class Settings {
 				return getBundle(reimbursementsPdfSettingsBundleBasename);
 			case COURSE_PARTICIPANT_LIST_PDF:
 				return getBundle(courseParticipantListPdfSettingsBundleBasename);
+			case ECRF_SPECIFICATION_PDF:
+				return getBundle(ecrfSpecificationPdfSettingsBundleBasename);
 			case PROBAND_LETTER_PDF:
 				return getBundle(probandLetterPdfSettingsBundleBasename);
 			case COURSE_CERTIFICATE_PDF:
@@ -539,6 +543,13 @@ public final class Settings {
 			String courseParticipantListPdfSettingsBundleBasename) {
 		Settings.courseParticipantListPdfSettingsBundleBasename = courseParticipantListPdfSettingsBundleBasename;
 		getBundle(courseParticipantListPdfSettingsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setEcrfSpecificationPdfSettingsBundleBasename(
+			String ecrfSpecificationPdfSettingsBundleBasename) {
+		Settings.ecrfSpecificationPdfSettingsBundleBasename = ecrfSpecificationPdfSettingsBundleBasename;
+		getBundle(ecrfSpecificationPdfSettingsBundleBasename);
 	}
 
 	@Autowired(required = true)

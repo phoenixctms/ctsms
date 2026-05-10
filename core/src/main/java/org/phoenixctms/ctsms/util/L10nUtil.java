@@ -57,6 +57,7 @@ public final class L10nUtil {
 		TRAINING_RECORD_PDF,
 		REIMBURSEMENTS_PDF,
 		COURSE_PARTICIPANT_LIST_PDF,
+		ECRF_SPECIFICATION_PDF,
 		PROBAND_LETTER_PDF,
 		COURSE_CERTIFICATE_PDF,
 		ECRF_PDF,
@@ -95,6 +96,7 @@ public final class L10nUtil {
 	private static String probandListEntryTagsPdfLabelsBundleBasename;
 	private static String reimbursementsPdfLabelsBundleBasename;
 	private static String courseParticipantListPdfLabelsBundleBasename;
+	private static String ecrfSpecificationPdfLabelsBundleBasename;
 	private static String probandLetterPdfLabelsBundleBasename;
 	private static String courseCertificatePdfLabelsBundleBasename;
 	private static String searchResultExcelLabelsBundleBasename;
@@ -158,6 +160,7 @@ public final class L10nUtil {
 	private static Locale inquiriesPdfLocale;
 	private static Locale probandListEntryTagsPdfLocale;
 	private static Locale courseParticipantListPdfLocale;
+	private static Locale ecrfSpecificationPdfLocale;
 	private static Locale probandLetterPdfLocale;
 	private static Locale courseCertificatePdfLocale;
 	private static String visitTypesBundleBasename;
@@ -432,6 +435,10 @@ public final class L10nUtil {
 		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, courseParticipantListPdfLabelsBundleBasename), defaultName);
 	}
 
+	public static String getEcrfSpecificationPDFLabel(Locales locale, String l10nKey, String defaultName, Object... args) {
+		return CommonUtil.getMessage(l10nKey, args, getBundle(locale, ecrfSpecificationPdfLabelsBundleBasename), defaultName);
+	}
+
 	public static String getCourseParticipationStatusTypeName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, courseParticipationStatusTypesBundleBasename), DefaultMessages.COURSE_PARTICIPATION_STATUS_TYPE_NAME);
 	}
@@ -673,6 +680,8 @@ public final class L10nUtil {
 				return reimbursementsPdfLocale;
 			case COURSE_PARTICIPANT_LIST_PDF:
 				return courseParticipantListPdfLocale;
+			case ECRF_SPECIFICATION_PDF:
+				return ecrfSpecificationPdfLocale;
 			case PROBAND_LETTER_PDF:
 				return probandLetterPdfLocale;
 			case COURSE_CERTIFICATE_PDF:
@@ -1047,9 +1056,22 @@ public final class L10nUtil {
 	}
 
 	@Autowired(required = true)
+	public void setEcrfSpecificationPdfLabelsBundleBasename(
+			String ecrfSpecificationPdfLabelsBundleBasename) {
+		L10nUtil.ecrfSpecificationPdfLabelsBundleBasename = ecrfSpecificationPdfLabelsBundleBasename;
+		getBundle(Locales.DEFAULT, ecrfSpecificationPdfLabelsBundleBasename);
+	}
+
+	@Autowired(required = true)
 	public void setCourseParticipantListPdfLocale(
 			String courseParticipantListPdfLocale) {
 		L10nUtil.courseParticipantListPdfLocale = getLocaleFromString(courseParticipantListPdfLocale);
+	}
+
+	@Autowired(required = true)
+	public void setEcrfSpecificationPdfLocale(
+			String ecrfSpecificationPdfLocale) {
+		L10nUtil.ecrfSpecificationPdfLocale = getLocaleFromString(ecrfSpecificationPdfLocale);
 	}
 
 	@Autowired(required = true)

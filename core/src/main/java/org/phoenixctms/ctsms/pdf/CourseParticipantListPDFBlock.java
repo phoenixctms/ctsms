@@ -729,7 +729,7 @@ public class CourseParticipantListPDFBlock {
 								y2,
 								PDFUtil.Alignment.TOP_CENTER,
 								columnWidth
-										- 2
+										- 2.0f
 												* Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 														CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT)));
 						x += columnWidth;
@@ -810,7 +810,9 @@ public class CourseParticipantListPDFBlock {
 						CourseParticipantListPDFDefaultSettings.PARTICIPANT_TABLE_TEXT_COLOR), getParticipantName(), x, y1, PDFUtil.Alignment.TOP_LEFT,
 						Settings.getFloat(
 								CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_COLUMN_PARTICIPANT_WIDTH, Bundle.COURSE_PARTICIPANT_LIST_PDF,
-								CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_PARTICIPANT_WIDTH));
+								CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_COLUMN_PARTICIPANT_WIDTH)
+								- 2.0f * Settings.getFloat(CourseParticipantListPDFSettingCodes.X_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
+										CourseParticipantListPDFDefaultSettings.X_PARTICIPANT_TABLE_FRAME_INDENT));
 				y1 -= Settings.getFloat(CourseParticipantListPDFSettingCodes.Y_PARTICIPANT_TABLE_FRAME_INDENT, Bundle.COURSE_PARTICIPANT_LIST_PDF,
 						CourseParticipantListPDFDefaultSettings.Y_PARTICIPANT_TABLE_FRAME_INDENT);
 				height = cursor.getBlockY() - y1;
