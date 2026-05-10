@@ -66,6 +66,19 @@ public final class PDFPainterFactory {
 		}
 	}
 
+	public static EcrfSpecificationPDFPainter createEcrfSpecificationPDFPainter() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		String className = Settings.getString(EcrfPDFSettingCodes.PAINTER_CLASS, Bundle.ECRF_SPECIFICATION_PDF,
+				EcrfPDFDefaultSettings.PAINTER_CLASS);
+		if (CommonUtil.isEmptyString(className)) {
+			return new EcrfSpecificationPDFPainter();
+		} else {
+			return (EcrfSpecificationPDFPainter) Compile.loadClass(className,
+					Settings.getStringList(EcrfPDFSettingCodes.PAINTER_SOURCE_FILES, Bundle.ECRF_SPECIFICATION_PDF,
+							EcrfPDFDefaultSettings.PAINTER_SOURCE_FILES))
+					.newInstance();
+		}
+	}
+
 	public static InquiriesPDFPainter createInquiriesPDFPainter() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String className = Settings.getString(InquiriesPDFSettingCodes.PAINTER_CLASS, Bundle.INQUIRIES_PDF,
 				InquiriesPDFDefaultSettings.PAINTER_CLASS);

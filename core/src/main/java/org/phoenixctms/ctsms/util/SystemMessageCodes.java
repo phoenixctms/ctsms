@@ -155,6 +155,7 @@ public interface SystemMessageCodes {
 	public final static String ECRF_VALIDATED = "ecrf_validated";
 	public final static String ECRF_PDF_RENDERED = "ecrf_pdf_rendered";
 	public final static String ECRFS_PDF_RENDERED = "ecrfs_pdf_rendered";
+	public final static String ECRF_SPECIFICATION_PDF_RENDERED = "ecrf_specification_pdf_rendered";
 	public final static String INQUIRY_PDF_RENDERED = "inquiry_pdf_rendered";
 	public final static String INQUIRIES_PDF_RENDERED = "inquiries_pdf_rendered";
 	public final static String INQUIRIES_SIGNUP_PDF_RENDERED = "inquiries_signup_pdf_rendered";

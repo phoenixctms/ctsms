@@ -108,6 +108,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.FieldCalculation;
 import org.phoenixctms.ctsms.js.ValidationError;
 import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
+import org.phoenixctms.ctsms.pdf.EcrfSpecificationPDFPainter;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.PDFPainterFactory;
 import org.phoenixctms.ctsms.security.CipherText;
@@ -156,6 +157,7 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressSummaryVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressVO;
+import org.phoenixctms.ctsms.vo.ECRFSpecificationPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFVisitVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
@@ -9352,6 +9354,40 @@ public class TrialServiceImpl
 			stratificationPermutation.setCount(probandListEntryDao.getTrialStratificationTagValuesCount(trialId, selectionSetValueIds));
 			result.add(stratificationPermutation);
 		}
+		return result;
+	}
+
+	@Override
+	protected ECRFSpecificationPDFVO handleRenderEcrfSpecification(AuthenticationVO auth, Long trialId) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
+		ECRFDao ecrfDao = this.getECRFDao();
+		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
+		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
+		Collection ecrfs = ecrfDao.findByTrialActiveSorted(trialId, true, true, null);
+		ArrayList<ECRFOutVO> ecrfVOs = new ArrayList<ECRFOutVO>(ecrfs.size());
+		HashMap<Long, Collection<ECRFFieldOutVO>> ecrfFieldsVOMap = new HashMap<Long, Collection<ECRFFieldOutVO>>(ecrfVOs.size());
+		Iterator<ECRF> ecrfsIt = ecrfs.iterator();
+		while (ecrfsIt.hasNext()) {
+			ECRF ecrf = ecrfsIt.next();
+			ecrfVOs.add(ecrfDao.toECRFOutVO(ecrf));
+			Collection ecrfFields = ecrfFieldDao.findByTrialEcrfSeriesJs(trialId, ecrf.getId(), true, null, null, null);
+			ecrfFieldDao.toECRFFieldOutVOCollection(ecrfFields);
+			ecrfFieldsVOMap.put(ecrf.getId(), ecrfFields);
+		}
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		EcrfSpecificationPDFPainter painter = PDFPainterFactory.createEcrfSpecificationPDFPainter();
+		painter.setTrialVO(trialVO);
+		painter.setEcrfVOs(ecrfVOs);
+		painter.setEcrfFieldVOMap(ecrfFieldsVOMap);
+		User user = CoreUtil.getUser();
+		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
+		(new PDFImprinter(painter, painter)).render();
+		ECRFSpecificationPDFVO result = painter.getPdfVO();
+		ServiceUtil.logSystemMessage(trial, trialVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), user,
+				SystemMessageCodes.ECRF_SPECIFICATION_PDF_RENDERED,
+				result, null, journalEntryDao);
 		return result;
 	}
 }
