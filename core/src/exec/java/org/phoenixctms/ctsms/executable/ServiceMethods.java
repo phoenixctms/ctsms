@@ -309,6 +309,8 @@ public class ServiceMethods {
 			long count = 0l;
 			StringBuilder sb = new StringBuilder(result.getTrial().getName() + " audit trail (" + result.getAuditTrailRowCount() + ")");
 			count += result.getAuditTrailRowCount();
+			sb.append(", eCRF progress (" + result.getEcrfProgressRowCount() + ")");
+			count += result.getEcrfProgressRowCount();
 			Iterator<ECRFFieldStatusQueue> it = result.getEcrfFieldStatusRowCountMap().keySet().iterator();
 			while (it.hasNext()) {
 				ECRFFieldStatusQueue queue = it.next();
