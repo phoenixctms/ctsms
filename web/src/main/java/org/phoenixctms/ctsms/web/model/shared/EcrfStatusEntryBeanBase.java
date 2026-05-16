@@ -417,7 +417,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 	public ECRFFieldStatusQueueCountVO getEcrfFieldStatusCount(ECRFOutVO ecrfVO, VisitOutVO visitVO, String queues) {
 		ECRFProgressVO ecrfProgress = getCachedEcrfProgress(probandListEntry, ecrfVO, visitVO);
 		ECRFFieldStatusQueueCountVO result = null;
-		if (ecrfProgress != null && ecrfProgress.getStatus() != null) {
+		if (ecrfProgress != null && ecrfProgress.getStatusEntry() != null) {
 			ArrayList<Enum<ECRFFieldStatusQueue>> queuesToInclude = WebUtil.getEnumList(queues, ECRFFieldStatusQueue.class);
 			result = new ECRFFieldStatusQueueCountVO();
 			Iterator<ECRFFieldStatusQueueCountVO> it = ecrfProgress.getEcrfFieldStatusQueueCounts().iterator();
@@ -698,8 +698,8 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			Iterator<ECRFProgressVO> it = progressSummary.getEcrfs().iterator();
 			HashMap<Long, Long> countMap = new HashMap<Long, Long>();
 			while (it.hasNext()) {
-				ECRFStatusTypeVO status = it.next().getStatus();
-				Long id = (status != null ? status.getId() : null);
+				ECRFStatusEntryVO statusEntry = it.next().getStatusEntry();
+				Long id = (statusEntry != null ? statusEntry.getStatus().getId() : null);
 				if (id != null) {
 					Long count;
 					if (countMap.containsKey(id)) {

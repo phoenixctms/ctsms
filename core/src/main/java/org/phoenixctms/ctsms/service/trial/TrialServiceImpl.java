@@ -1547,8 +1547,8 @@ public class TrialServiceImpl
 	private void checkMissingEcrfFieldValues(ProbandListEntry listEntry, ECRF ecrf, Visit visit) throws Exception {
 		ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry), this.getECRFDao().toECRFOutVO(ecrf),
 				this.getVisitDao().toVisitOutVO(visit),
-				false, false, null, null,
-				this.getECRFStatusEntryDao(), this.getECRFStatusTypeDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
+				false, false, false, null, null,
+				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 		if (ecrfProgress.getMandatoryFieldCount() > ecrfProgress.getMandatorySavedValueCount()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_MISSING, ecrfProgress.getMandatorySavedValueCount(), ecrfProgress.getMandatoryFieldCount());
@@ -2027,8 +2027,8 @@ public class TrialServiceImpl
 				this.getProbandListEntryDao().toProbandListEntryOutVO(listEntry),
 				this.getECRFDao().toECRFOutVO(ecrf),
 				this.getVisitDao().toVisitOutVO(visit),
-				false, false, null, null,
-				this.getECRFStatusEntryDao(), this.getECRFStatusTypeDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
+				false, false, false, null, null,
+				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 		Iterator<ECRFFieldStatusQueueCountVO> it = ecrfProgress.getEcrfFieldStatusQueueCounts().iterator();
 		long unresolved = 0l;
@@ -2455,13 +2455,16 @@ public class TrialServiceImpl
 		return result;
 	}
 
-	private ECRFProgressSummaryVO createEcrfProgessSummary(ProbandListEntryOutVO listEntryVO, boolean ecrfDetail, boolean sectionDetail, boolean dueDetail, Date from, Date to)
+	private ECRFProgressSummaryVO createEcrfProgessSummary(ProbandListEntryOutVO listEntryVO, boolean ecrfDetail, boolean sectionDetail, boolean dueDetail, boolean signatureDetail,
+			Date from, Date to)
 			throws Exception {
 		ECRFDao ecrfDao = this.getECRFDao();
 		VisitDao visitDao = this.getVisitDao();
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
+		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
-		ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
+		//ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
+		SignatureDao signatureDao = this.getSignatureDao();
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		ECRFProgressSummaryVO result = new ECRFProgressSummaryVO();
 		result.setListEntry(listEntryVO);
@@ -2474,7 +2477,7 @@ public class TrialServiceImpl
 		}
 		if (ecrfDetail) {
 			ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
-			ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
+			//ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 			Iterator<ECRF> ecrfIt = ecrfDao.findByTrialGroupVisitActiveSorted(listEntryVO.getTrial().getId(),
 					listEntryVO.getGroup() != null ? listEntryVO.getGroup().getId() : null, null, true, true, null).iterator();
 			while (ecrfIt.hasNext()) {
@@ -2484,13 +2487,13 @@ public class TrialServiceImpl
 					ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 					while (visitIt.hasNext()) {
 						Visit visit = visitIt.next();
-						ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitDao.toVisitOutVO(visit), dueDetail, sectionDetail,
+						ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitDao.toVisitOutVO(visit), dueDetail, signatureDetail, sectionDetail,
 								from, to,
-								ecrfStatusEntryDao, ecrfStatusTypeDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
+								ecrfStatusEntryDao, signatureDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
 						if (ecrfProgress != null) {
 							result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
-							if (ecrfProgress.getStatus() != null) {
-								if (ecrfProgress.getStatus().getDone()) {
+							if (ecrfProgress.getStatusEntry() != null) {
+								if (ecrfProgress.getStatusEntry().getStatus().getDone()) {
 									result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
 								}
 							}
@@ -2504,13 +2507,13 @@ public class TrialServiceImpl
 						}
 					}
 				} else {
-					ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfDao.toECRFOutVO(ecrf), null, dueDetail, sectionDetail,
+					ECRFProgressVO ecrfProgress = ServiceUtil.populateEcrfProgress(listEntryVO, ecrfDao.toECRFOutVO(ecrf), null, dueDetail, signatureDetail, sectionDetail,
 							from, to,
-							ecrfStatusEntryDao, ecrfStatusTypeDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
+							ecrfStatusEntryDao, signatureDao, ecrfFieldDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, visitScheduleItemDao);
 					if (ecrfProgress != null) {
 						result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
-						if (ecrfProgress.getStatus() != null) {
-							if (ecrfProgress.getStatus().getDone()) {
+						if (ecrfProgress.getStatusEntry() != null) {
+							if (ecrfProgress.getStatusEntry().getStatus().getDone()) {
 								result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
 							}
 						}
@@ -2537,12 +2540,12 @@ public class TrialServiceImpl
 				if (visitIt.hasNext()) {
 					while (visitIt.hasNext()) {
 						Visit visit = visitIt.next();
-						ECRFProgressVO ecrfProgress = ServiceUtil.createEcrfProgress(listEntryVO, ecrfVO, visitDao.toVisitOutVO(visit), dueDetail, from,
-								to, ecrfStatusEntryDao, ecrfStatusTypeDao,
+						ECRFProgressVO ecrfProgress = ServiceUtil.createEcrfProgress(listEntryVO, ecrfVO, visitDao.toVisitOutVO(visit), dueDetail, signatureDetail, from,
+								to, ecrfStatusEntryDao, signatureDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, //ecrfStatusTypeDao,
 								visitScheduleItemDao);
 						if (ecrfProgress != null) {
 							result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
-							if (ecrfProgress.getStatus() != null && ecrfProgress.getStatus().getDone()) {
+							if (ecrfProgress.getStatusEntry() != null && ecrfProgress.getStatusEntry().getStatus().getDone()) {
 								result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
 							}
 							if (ecrfProgress.getOverdue()) {
@@ -2553,12 +2556,12 @@ public class TrialServiceImpl
 						}
 					}
 				} else {
-					ECRFProgressVO ecrfProgress = ServiceUtil.createEcrfProgress(listEntryVO, ecrfVO, null, dueDetail, from,
-							to, ecrfStatusEntryDao, ecrfStatusTypeDao,
+					ECRFProgressVO ecrfProgress = ServiceUtil.createEcrfProgress(listEntryVO, ecrfVO, null, dueDetail, signatureDetail, from,
+							to, ecrfStatusEntryDao, signatureDao, ecrfFieldValueDao, ecrfFieldStatusEntryDao, //ecrfStatusTypeDao,
 							visitScheduleItemDao);
 					if (ecrfProgress != null) {
 						result.setEcrfTotalCount(result.getEcrfTotalCount() + 1l);
-						if (ecrfProgress.getStatus() != null && ecrfProgress.getStatus().getDone()) {
+						if (ecrfProgress.getStatusEntry() != null && ecrfProgress.getStatusEntry().getStatus().getDone()) {
 							result.setEcrfDoneCount(result.getEcrfDoneCount() + 1l);
 						}
 						if (ecrfProgress.getOverdue()) {
@@ -4732,12 +4735,21 @@ public class TrialServiceImpl
 			}
 			fieldValueVOs.add(fieldValueVO);
 		}
-		writer.setVOs(fieldValueVOs);
+		writer.setFieldValueVOs(fieldValueVOs);
+		ArrayList<ECRFProgressVO> ecrfProgressVOs = new ArrayList<ECRFProgressVO>();
+		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao
+				.findByTrialProbandSorted(trial != null ? trial.getId() : null, listEntry != null ? listEntry.getProband().getId() : null)
+				.iterator();
+		while (listEntriesIt.hasNext()) {
+			ecrfProgressVOs.addAll(createEcrfProgessSummary(probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next()),
+					true, false, false, true, null, null).getEcrfs());
+		}
+		writer.setEcrfProgressVOs(ecrfProgressVOs);
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
 		for (int i = 0; i < queues.length; i++) {
 			Collection statusEntries = ecrfFieldStatusEntryDao.getLog(queues[i], trialId, null, probandListEntryId, ecrfId, visitId, false, true, null);
 			ecrfFieldStatusEntryDao.toECRFFieldStatusEntryOutVOCollection(statusEntries);
-			writer.setVOs(queues[i], statusEntries);
+			writer.setFieldStatusVOs(queues[i], statusEntries);
 		}
 		User user = CoreUtil.getUser();
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
@@ -6622,8 +6634,8 @@ public class TrialServiceImpl
 		if (visitId != null) {
 			visitVO = this.getVisitDao().toVisitOutVO(CheckIDUtil.checkVisitId(visitId, this.getVisitDao()));
 		}
-		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, sectionDetail, null, null,
-				this.getECRFStatusEntryDao(), this.getECRFStatusTypeDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
+		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, false, sectionDetail, null, null,
+				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 	}
 
@@ -6638,8 +6650,8 @@ public class TrialServiceImpl
 		if (visitId != null) {
 			visitVO = this.getVisitDao().toVisitOutVO(CheckIDUtil.checkVisitId(visitId, this.getVisitDao()));
 		}
-		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, null, null, section,
-				this.getECRFStatusEntryDao(), this.getECRFStatusTypeDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
+		return ServiceUtil.populateEcrfProgress(listEntryVO, ecrfVO, visitVO, false, false, null, null, section,
+				this.getECRFStatusEntryDao(), this.getSignatureDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getECRFFieldStatusEntryDao(),
 				this.getVisitScheduleItemDao());
 	}
 
@@ -6648,7 +6660,7 @@ public class TrialServiceImpl
 			throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao));
-		return createEcrfProgessSummary(listEntryVO, ecrfDetail, sectionDetail, false, null, null);
+		return createEcrfProgessSummary(listEntryVO, ecrfDetail, sectionDetail, false, false, null, null);
 	}
 
 	@Override
@@ -7495,7 +7507,7 @@ public class TrialServiceImpl
 		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao.findByTrialProbandDepartmentEcrfs(trialId, probandDepartmentId, true).iterator();
 		while (listEntriesIt.hasNext()) {
 			ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next());
-			ECRFProgressSummaryVO ecrfProgressSummary = createEcrfProgessSummary(listEntryVO, false, false, dueDetail, from, to);
+			ECRFProgressSummaryVO ecrfProgressSummary = createEcrfProgessSummary(listEntryVO, false, false, dueDetail, false, from, to);
 			result.setEcrfTotalCount(result.getEcrfTotalCount() + ecrfProgressSummary.getEcrfTotalCount());
 			result.setEcrfDoneCount(result.getEcrfDoneCount() + ecrfProgressSummary.getEcrfDoneCount());
 			result.setEcrfOverdueCount(result.getEcrfOverdueCount() + ecrfProgressSummary.getEcrfOverdueCount());

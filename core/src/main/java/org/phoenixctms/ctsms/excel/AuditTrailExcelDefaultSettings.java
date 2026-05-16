@@ -18,6 +18,18 @@ public final class AuditTrailExcelDefaultSettings {
 	public final static ArrayList<String> AUDIT_TRAIL_VO_FIELD_COLUMNS = new ArrayList<String>();
 	public static final boolean AUDIT_TRAIL_WRITEHEAD = true;
 	public static final boolean AUDIT_TRAIL_APPEND_HEADER_FOOTER = false;
+	public static final boolean ECRF_PROGRESS_AUTOSIZE = true;
+	public static final Integer ECRF_PROGRESS_PAGE_BREAK_AT_ROW = null;
+	public static final Integer ECRF_PROGRESS_ROW_OFFSET_FIRST_PAGE = null;
+	public static final Integer ECRF_PROGRESS_ROW_OFFSET_OTHER_PAGES = null;
+	public static final Integer ECRF_PROGRESS_COL_OFFSET = null;
+	public static final Integer ECRF_PROGRESS_SCALE_FACTOR = null;
+	public static final ExcelCellFormat ECRF_PROGRESS_HEAD_FORMAT = ExcelCellFormat.getDefaultHeadFormat();
+	public static final ExcelCellFormat ECRF_PROGRESS_ROW_FORMAT = ExcelCellFormat.getDefaultRowFormat();
+	public static final boolean ECRF_PROGRESS_ROW_COLORS = false;
+	public final static ArrayList<String> ECRF_PROGRESS_VO_FIELD_COLUMNS = new ArrayList<String>();
+	public static final boolean ECRF_PROGRESS_WRITEHEAD = true;
+	public static final boolean ECRF_PROGRESS_APPEND_HEADER_FOOTER = false;
 	public static final boolean ECRF_FIELD_STATUS_AUTOSIZE = true;
 	public static final Integer ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW = null;
 	public static final Integer ECRF_FIELD_STATUS_ROW_OFFSET_FIRST_PAGE = null;
@@ -34,6 +46,7 @@ public final class AuditTrailExcelDefaultSettings {
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	public static final ExcelCellFormat AUDIT_TRAIL_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
+	public static final ExcelCellFormat ECRF_PROGRESS_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	public static final ExcelCellFormat ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT = ExcelCellFormat.getDefaultGroupLabelFormat();
 	static {
 		AUDIT_TRAIL_VO_FIELD_COLUMNS.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
@@ -63,6 +76,34 @@ public final class AuditTrailExcelDefaultSettings {
 		ECRF_FIELD_STATUS_QUEUES.add("VALIDATION");
 		ECRF_FIELD_STATUS_QUEUES.add("QUERY");
 		ECRF_FIELD_STATUS_QUEUES.add("ANNOTATION");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("listEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "proband" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "id");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS.add("ecrf" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS.add("visit" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "token");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "validated");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "verified");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "review");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "status" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "done");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "modifiedUser" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "modifiedTimestamp");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS.add("statusEntry" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR
+				+ "signee" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "name");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "timestamp");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "verified");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "verificationTimestamp");
+		//ECRF_PROGRESS_VO_FIELD_COLUMNS.add("signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "comment");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "description");
+		ECRF_PROGRESS_VO_FIELD_COLUMNS
+				.add("signature" + ExcelUtil.COLUMN_NAME_ASSOCIATION_PATH_SEPARATOR + "valid");
 	}
 
 	private AuditTrailExcelDefaultSettings() {

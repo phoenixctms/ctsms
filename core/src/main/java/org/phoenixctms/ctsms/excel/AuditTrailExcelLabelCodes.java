@@ -10,11 +10,13 @@ public interface AuditTrailExcelLabelCodes {
 	public static final String PAGE_NUMBER_HEADER_FOOTER_2 = "page_number_header_footer_2";
 	public static final String DATE_REQUESTING_USER_HEADER_FOOTER = "date_requesting_user_header_footer";
 	public static final String AUDIT_TRAIL_SPREADSHEET_NAME = "audit_trail_spreadsheet_name";
-	public static final String VALIDATION_ECRF_STATUS_SPREADSHEET_NAME = "validation_ecrf_status_spreadsheet_name";
-	public static final String QUERY_ECRF_STATUS_SPREADSHEET_NAME = "query_ecrf_status_spreadsheet_name";
-	public static final String ANNOTATION_ECRF_STATUS_SPREADSHEET_NAME = "annotation_ecrf_status_spreadsheet_name";
+	public static final String ECRF_PROGRESS_SPREADSHEET_NAME = "ecrf_progress_spreadsheet_name";
+	public static final String VALIDATION_ECRF_FIELD_STATUS_SPREADSHEET_NAME = "validation_ecrf_field_status_spreadsheet_name";
+	public static final String QUERY_ECRF_FIELD_STATUS_SPREADSHEET_NAME = "query_ecrf_field_status_spreadsheet_name";
+	public static final String ANNOTATION_ECRF_FIELD_STATUS_SPREADSHEET_NAME = "annotation_ecrf_field_status_spreadsheet_name";
 	public static final String AUDIT_TRAIL_VO_FIELD_COLUMNS = "audit_trail_vo_field_columns";
 	public static final String ECRF_FIELD_STATUS_VO_FIELD_COLUMNS = "ecrf_field_status_vo_field_columns";
+	public static final String ECRF_PROGRESS_VO_FIELD_COLUMNS = "ecrf_progress_vo_field_columns";
 	public static final String ECRF_FIELD_VALUE_HEAD = "ecrf_field_value_head";
 	public static final String CHECKBOX_UNCHECKED = "checkbox_unchecked";
 	public static final String CHECKBOX_CHECKED = "checkbox_checked";
