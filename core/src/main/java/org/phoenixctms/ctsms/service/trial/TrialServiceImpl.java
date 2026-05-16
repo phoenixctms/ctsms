@@ -4737,12 +4737,16 @@ public class TrialServiceImpl
 		}
 		writer.setFieldValueVOs(fieldValueVOs);
 		ArrayList<ECRFProgressVO> ecrfProgressVOs = new ArrayList<ECRFProgressVO>();
+		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		Iterator<ProbandListEntry> listEntriesIt = probandListEntryDao
 				.findByTrialProbandSorted(trial != null ? trial.getId() : null, listEntry != null ? listEntry.getProband().getId() : null)
 				.iterator();
 		while (listEntriesIt.hasNext()) {
-			ecrfProgressVOs.addAll(createEcrfProgessSummary(probandListEntryDao.toProbandListEntryOutVO(listEntriesIt.next()),
-					true, false, false, true, null, null).getEcrfs());
+			listEntry = listEntriesIt.next();
+			if (ecrfStatusEntryDao.getCount(listEntry.getId(), null, null, null, null, null, null, null, null) > 0l) {
+				ecrfProgressVOs.addAll(createEcrfProgessSummary(probandListEntryDao.toProbandListEntryOutVO(listEntry),
+						true, false, false, true, null, null).getEcrfs());
+			}
 		}
 		writer.setEcrfProgressVOs(ecrfProgressVOs);
 		ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao = this.getECRFFieldStatusEntryDao();
