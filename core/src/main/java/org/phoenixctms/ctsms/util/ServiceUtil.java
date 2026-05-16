@@ -1444,16 +1444,16 @@ public final class ServiceUtil {
 		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null);
 		if (statusEntry != null) {
 			result.setStatusEntry(ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry));
-			if (signatureDetail) {
-				Signature signature = signatureDao.findRecentSignature(SignatureModule.ECRF_SIGNATURE, statusEntry.getId());
-				if (signature != null) {
-					result.setSignature(getVerifiedEcrfSignatureVO(signature,
-							signatureDao,
-							ecrfFieldValueDao,
-							ecrfFieldStatusEntryDao));
-				}
-			}
 			if (result.getStatusEntry().getStatus().isDone()) {
+				if (signatureDetail) {
+					Signature signature = signatureDao.findRecentSignature(SignatureModule.ECRF_SIGNATURE, statusEntry.getId());
+					if (signature != null) {
+						result.setSignature(getVerifiedEcrfSignatureVO(signature,
+								signatureDao,
+								ecrfFieldValueDao,
+								ecrfFieldStatusEntryDao));
+					}
+				}
 				result.setCharge(ecrfVO.getCharge());
 				if (dueDetail) {
 					Date dueDate = null;
