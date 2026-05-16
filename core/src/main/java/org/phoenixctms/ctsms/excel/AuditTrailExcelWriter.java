@@ -349,11 +349,15 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		return trial;
 	}
 
-	public Collection getVOs() {
+	public Collection getFieldValueVOs() {
 		return getSpreadSheetWriters().get(0).getVOs();
 	}
 
-	public Collection getVOs(ECRFFieldStatusQueue queue) {
+	public Collection getEcrfProgressVOs() {
+		return getSpreadSheetWriters().get(1).getVOs();
+	}
+
+	public Collection getFieldStatusVOs(ECRFFieldStatusQueue queue) {
 		return getSpreadSheetWriters().get(queueSheetIndexMap.get(queue)).getVOs();
 	}
 
@@ -443,12 +447,13 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		excelVO.setListEntry(listEntry);
 		excelVO.setEcrf(ecrf);
 		excelVO.setVisit(visit);
-		excelVO.setAuditTrailRowCount(getVOs().size());
+		excelVO.setAuditTrailRowCount(getFieldValueVOs().size());
+		excelVO.setEcrfProgressRowCount(getEcrfProgressVOs().size());
 		LinkedHashMap<ECRFFieldStatusQueue, Long> ecrfFieldStatusRowCountMap = new LinkedHashMap<ECRFFieldStatusQueue, Long>(queueSheetIndexMap.size());
 		Iterator<ECRFFieldStatusQueue> it = queueSheetIndexMap.keySet().iterator();
 		while (it.hasNext()) {
 			ECRFFieldStatusQueue queue = it.next();
-			ecrfFieldStatusRowCountMap.put(queue, new Long(getVOs(queue).size()));
+			ecrfFieldStatusRowCountMap.put(queue, new Long(getFieldStatusVOs(queue).size()));
 		}
 		excelVO.setEcrfFieldStatusRowCountMap(ecrfFieldStatusRowCountMap);
 		StringBuilder fileName = new StringBuilder(AUDIT_TRAIL_EXCEL_FILENAME_PREFIX);
