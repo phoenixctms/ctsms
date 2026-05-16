@@ -1403,9 +1403,13 @@ public final class ServiceUtil {
 		return painter;
 	}
 
-	public static ECRFProgressVO createEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, Date from, Date to,
+	public static ECRFProgressVO createEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean signatureDetail,
+			Date from, Date to,
 			ECRFStatusEntryDao ecrfStatusEntryDao,
-			ECRFStatusTypeDao ecrfStatusTypeDao,
+			//ECRFStatusTypeDao ecrfStatusTypeDao,
+			SignatureDao signatureDao,
+			ECRFFieldValueDao ecrfFieldValueDao,
+			ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao,
 			VisitScheduleItemDao visitScheduleItemDao) throws Exception {
 		Timestamp ecrfVisitScheduleItemDate = null;
 		if (from != null || to != null) {
@@ -1433,13 +1437,23 @@ public final class ServiceUtil {
 		result.setEcrf(ecrfVO);
 		result.setListEntry(listEntryVO);
 		result.setVisit(visitVO);
-		result.setStatus(null);
+		result.setStatusEntry(null);
+		result.setSignature(null);
 		result.setCharge(0.0f);
 		result.setOverdue(false);
 		ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null);
 		if (statusEntry != null) {
-			result.setStatus(ecrfStatusTypeDao.toECRFStatusTypeVO(statusEntry.getStatus()));
-			if (result.getStatus().isDone()) {
+			result.setStatusEntry(ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry));
+			if (signatureDetail) {
+				Signature signature = signatureDao.findRecentSignature(SignatureModule.ECRF_SIGNATURE, statusEntry.getId());
+				if (signature != null) {
+					result.setSignature(getVerifiedEcrfSignatureVO(signature,
+							signatureDao,
+							ecrfFieldValueDao,
+							ecrfFieldStatusEntryDao));
+				}
+			}
+			if (result.getStatusEntry().getStatus().isDone()) {
 				result.setCharge(ecrfVO.getCharge());
 				if (dueDetail) {
 					Date dueDate = null;
@@ -4420,12 +4434,16 @@ public final class ServiceUtil {
 		}
 	}
 
-	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean sectionDetail, Date from,
+	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean signatureDetail,
+			boolean sectionDetail, Date from,
 			Date to,
-			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
+			ECRFStatusEntryDao ecrfStatusEntryDao, //ECRFStatusTypeDao ecrfStatusTypeDao,
+			SignatureDao signatureDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
 			throws Exception {
-		ECRFProgressVO result = createEcrfProgress(listEntryVO, ecrfVO, visitVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+		ECRFProgressVO result = createEcrfProgress(listEntryVO, ecrfVO, visitVO, dueDetail, signatureDetail, from, to, ecrfStatusEntryDao, signatureDao, ecrfFieldValueDao,
+				ecrfFieldStatusEntryDao,
+				visitScheduleItemDao);
 		if (result != null) {
 			if (sectionDetail) {
 				populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSeriesJs(null, ecrfVO.getId(), true, null, null, null), listEntryVO, ecrfVO, visitVO, result, true,
@@ -4438,12 +4456,15 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, Date from, Date to,
+	public static ECRFProgressVO populateEcrfProgress(ProbandListEntryOutVO listEntryVO, ECRFOutVO ecrfVO, VisitOutVO visitVO, boolean dueDetail, boolean signatureDetail,
+			Date from, Date to,
 			String section,
-			ECRFStatusEntryDao ecrfStatusEntryDao, ECRFStatusTypeDao ecrfStatusTypeDao,
+			ECRFStatusEntryDao ecrfStatusEntryDao, SignatureDao signatureDao, // ECRFStatusTypeDao ecrfStatusTypeDao,
 			ECRFFieldDao ecrfFieldDao, ECRFFieldValueDao ecrfFieldValueDao, ECRFFieldStatusEntryDao ecrfFieldStatusEntryDao, VisitScheduleItemDao visitScheduleItemDao)
 			throws Exception {
-		ECRFProgressVO result = createEcrfProgress(listEntryVO, ecrfVO, visitVO, dueDetail, from, to, ecrfStatusEntryDao, ecrfStatusTypeDao, visitScheduleItemDao);
+		ECRFProgressVO result = createEcrfProgress(listEntryVO, ecrfVO, visitVO, dueDetail, signatureDetail, from, to, ecrfStatusEntryDao, signatureDao, ecrfFieldValueDao,
+				ecrfFieldStatusEntryDao,
+				visitScheduleItemDao);
 		if (result != null) {
 			populateEcrfSectionProgress(ecrfFieldDao.findByTrialEcrfSectionSeriesJs(null, ecrfVO.getId(), section, true, null, null, null), listEntryVO, ecrfVO, visitVO, result,
 					false,

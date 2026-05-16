@@ -24,6 +24,7 @@ import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.ECRFProgressVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -144,10 +145,11 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		super();
 		excelVO = new AuditTrailExcelVO();
 		getSpreadSheetWriters().add(createAuditTrailSpreadSheetWriter(omitFields));
+		getSpreadSheetWriters().add(createEcrfProgressSpreadSheetWriter(omitFields));
 		queueSheetIndexMap = new LinkedHashMap<ECRFFieldStatusQueue, Integer>(queues.length);
 		for (int i = 0; i < queues.length; i++) {
 			getSpreadSheetWriters().add(createEcrfFieldStatusSpreadSheetWriter(omitFields));
-			queueSheetIndexMap.put(queues[i], i + 1);
+			queueSheetIndexMap.put(queues[i], i + 2);
 		}
 	}
 
@@ -208,6 +210,14 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 					appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
 				}
 				break;
+			case 1:
+				scaleFactor = Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_PROGRESS_SCALE_FACTOR, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_SCALE_FACTOR);
+				if (Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_PROGRESS_APPEND_HEADER_FOOTER, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_APPEND_HEADER_FOOTER)) {
+					appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
+				}
+				break;
 			default:
 				scaleFactor = Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_FIELD_STATUS_SCALE_FACTOR, Bundle.AUDIT_TRAIL_EXCEL,
 						AuditTrailExcelDefaultSettings.ECRF_FIELD_STATUS_SCALE_FACTOR);
@@ -253,6 +263,35 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_GROUP_LABEL_FORMAT),
 				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.AUDIT_TRAIL_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
 						AuditTrailExcelDefaultSettings.AUDIT_TRAIL_ROW_FORMAT));
+	}
+
+	protected SpreadSheetWriter createEcrfProgressSpreadSheetWriter(boolean omitFields) {
+		return new SpreadSheetWriter(this,
+				getColumnIndexMap(L10nUtil.getAuditTrailExcelColumns(Locales.USER, AuditTrailExcelLabelCodes.ECRF_PROGRESS_VO_FIELD_COLUMNS,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_VO_FIELD_COLUMNS)),
+				Settings.getInt(AuditTrailExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+				omitFields,
+				Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_PROGRESS_AUTOSIZE, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_AUTOSIZE),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_PROGRESS_WRITEHEAD, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_WRITEHEAD),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_PROGRESS_PAGE_BREAK_AT_ROW, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_PAGE_BREAK_AT_ROW),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_PROGRESS_ROW_OFFSET_FIRST_PAGE, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_ROW_OFFSET_FIRST_PAGE),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_PROGRESS_ROW_OFFSET_OTHER_PAGES, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_ROW_OFFSET_FIRST_PAGE),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.ECRF_PROGRESS_COL_OFFSET, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_COL_OFFSET),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.ECRF_PROGRESS_ROW_COLORS, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_ROW_COLORS),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_PROGRESS_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_HEAD_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_PROGRESS_GROUP_LABEL_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_GROUP_LABEL_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.ECRF_PROGRESS_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.ECRF_PROGRESS_ROW_FORMAT));
 	}
 
 	protected SpreadSheetWriter createEcrfFieldStatusSpreadSheetWriter(boolean omitFields) {
@@ -342,18 +381,21 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		String labelCode = AuditTrailExcelLabelCodes.AUDIT_TRAIL_SPREADSHEET_NAME;
 		getSpreadSheetWriters().get(0).setSpreadSheetName(
 				L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName));
+		labelCode = AuditTrailExcelLabelCodes.ECRF_PROGRESS_SPREADSHEET_NAME;
+		getSpreadSheetWriters().get(1).setSpreadSheetName(
+				L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName));
 		Iterator<Entry<ECRFFieldStatusQueue, Integer>> it = queueSheetIndexMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<ECRFFieldStatusQueue, Integer> queueSheetIndex = it.next();
 			switch (queueSheetIndex.getKey()) {
 				case VALIDATION:
-					labelCode = AuditTrailExcelLabelCodes.VALIDATION_ECRF_STATUS_SPREADSHEET_NAME;
+					labelCode = AuditTrailExcelLabelCodes.VALIDATION_ECRF_FIELD_STATUS_SPREADSHEET_NAME;
 					break;
 				case QUERY:
-					labelCode = AuditTrailExcelLabelCodes.QUERY_ECRF_STATUS_SPREADSHEET_NAME;
+					labelCode = AuditTrailExcelLabelCodes.QUERY_ECRF_FIELD_STATUS_SPREADSHEET_NAME;
 					break;
 				case ANNOTATION:
-					labelCode = AuditTrailExcelLabelCodes.ANNOTATION_ECRF_STATUS_SPREADSHEET_NAME;
+					labelCode = AuditTrailExcelLabelCodes.ANNOTATION_ECRF_FIELD_STATUS_SPREADSHEET_NAME;
 					break;
 				default:
 					continue;
@@ -368,7 +410,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		setSpreadSheetName(CommonUtil.trialOutVOToString(trial));
 	}
 
-	public void setVOs(Collection VOs) {
+	public void setFieldValueVOs(Collection<ECRFFieldValueOutVO> VOs) {
 		getSpreadSheetWriters().get(0).setVOs(VOs);
 		ArrayList<String> distinctColumnNames = new ArrayList<String>();
 		String fieldKey = getEcrfFieldValueColumnName();
@@ -385,7 +427,11 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().get(0).setDistinctFieldRows(distinctFieldRows);
 	}
 
-	public void setVOs(ECRFFieldStatusQueue queue, Collection VOs) {
+	public void setEcrfProgressVOs(Collection<ECRFProgressVO> VOs) {
+		getSpreadSheetWriters().get(1).setVOs(VOs);
+	}
+
+	public void setFieldStatusVOs(ECRFFieldStatusQueue queue, Collection VOs) {
 		getSpreadSheetWriters().get(queueSheetIndexMap.get(queue)).setVOs(VOs);
 	}
 

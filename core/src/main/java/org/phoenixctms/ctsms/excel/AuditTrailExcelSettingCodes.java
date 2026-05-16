@@ -15,6 +15,17 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String AUDIT_TRAIL_ROW_COLORS = "audit_trail_row_colors";
 	public static final String AUDIT_TRAIL_WRITEHEAD = "audit_trail_writehead";
 	public static final String AUDIT_TRAIL_APPEND_HEADER_FOOTER = "audit_trail_append_header_footer";
+	public static final String ECRF_PROGRESS_AUTOSIZE = "ecrf_progress_autosize";
+	public static final String ECRF_PROGRESS_PAGE_BREAK_AT_ROW = "ecrf_progress_page_break_at_row";
+	public static final String ECRF_PROGRESS_ROW_OFFSET_FIRST_PAGE = "ecrf_progress_row_offset_first_page";
+	public static final String ECRF_PROGRESS_ROW_OFFSET_OTHER_PAGES = "ecrf_progress_row_offset_other_pages";
+	public static final String ECRF_PROGRESS_COL_OFFSET = "ecrf_progress_col_offset";
+	public static final String ECRF_PROGRESS_SCALE_FACTOR = "ecrf_progress_scale_factor";
+	public static final String ECRF_PROGRESS_HEAD_FORMAT = "ecrf_progress_head_format";
+	public static final String ECRF_PROGRESS_ROW_FORMAT = "ecrf_progress_row_format";
+	public static final String ECRF_PROGRESS_ROW_COLORS = "ecrf_progress_row_colors";
+	public static final String ECRF_PROGRESS_WRITEHEAD = "ecrf_progress_writehead";
+	public static final String ECRF_PROGRESS_APPEND_HEADER_FOOTER = "ecrf_progress_append_header_footer";
 	public static final String ECRF_FIELD_STATUS_AUTOSIZE = "ecrf_field_status_autosize";
 	public static final String ECRF_FIELD_STATUS_PAGE_BREAK_AT_ROW = "ecrf_field_status_page_break_at_row";
 	public static final String ECRF_FIELD_STATUS_ROW_OFFSET_FIRST_PAGE = "ecrf_field_status_row_offset_first_page";
@@ -30,5 +41,6 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String AUDIT_TRAIL_GROUP_LABEL_FORMAT = "audit_trail_group_label_format";
+	public static final String ECRF_PROGRESS_GROUP_LABEL_FORMAT = "ecrf_progress_group_label_format";
 	public static final String ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT = "ecrf_field_status_group_label_format";
 }

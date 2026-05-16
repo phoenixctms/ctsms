@@ -15,6 +15,7 @@ import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusQueueCountVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressSummaryVO;
 import org.phoenixctms.ctsms.vo.ECRFProgressVO;
+import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialECRFProgressSummaryVO;
@@ -162,8 +163,8 @@ public class EcrfProgressOverviewBean extends ManagedBeanBase {
 			while (listEntryIt.hasNext()) {
 				Iterator<ECRFProgressVO> ecrfIt = listEntryIt.next().getEcrfs().iterator();
 				while (ecrfIt.hasNext()) {
-					ECRFStatusTypeVO status = ecrfIt.next().getStatus();
-					Long id = (status != null ? status.getId() : null);
+					ECRFStatusEntryVO statusEntry = ecrfIt.next().getStatusEntry();
+					Long id = (statusEntry != null ? statusEntry.getStatus().getId() : null);
 					if (id != null) {
 						Long count;
 						if (countMap.containsKey(id)) {
