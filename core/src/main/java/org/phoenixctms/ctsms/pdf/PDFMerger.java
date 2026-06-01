@@ -5,18 +5,12 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFMergerUtility;
-
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.security.VerifyMD5InputStream;
 import org.phoenixctms.ctsms.util.DefaultMessages;
-import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
-import org.phoenixctms.ctsms.util.SettingCodes;
-import org.phoenixctms.ctsms.util.Settings;
-import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 
 public class PDFMerger implements PDFOutput {
@@ -24,7 +18,6 @@ public class PDFMerger implements PDFOutput {
 	private PDFMergerUtility merger;
 	private FileDao fileDao;
 	public final static String AGGREGATED_PDF_FILES_FILENAME_PREFIX = "aggregated_pdfs_";
-
 
 	public PDFMerger(FileDao fileDao) {
 		merger = new PDFMergerUtility();
@@ -47,7 +40,7 @@ public class PDFMerger implements PDFOutput {
 				FileStreamOutVO streamVO = fileDao.toFileStreamOutVO(filesIt.next());
 				if (streamVO.isDecrypted()) {
 					((VerifyMD5InputStream) streamVO.getStream()).setOn(false);
-					merger.addSource(streamVO.getStream());
+					merger.addSource(streamVO.getStream(), streamVO.getFileName());
 					fileCount++;
 				} else {
 					streamVO.getStream().close();

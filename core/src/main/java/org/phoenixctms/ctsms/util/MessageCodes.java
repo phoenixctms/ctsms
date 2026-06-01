@@ -130,4 +130,5 @@ public interface MessageCodes {
 	public static final String UNSUPPORTED_VISIT_SCHEDULE_DATE_MODE = "unsupported_visit_schedule_date_mode";
 	public static final String UNSUPPORTED_OTP_AUTHENTICATOR_TYPE = "unsupported_otp_authenticator_type";
 	public final static String PROBAND_MERGED_COMMENT = "proband_merged_comment";
+	public static final String AGGREGATED_PDF_FILENAMES_FORMAT = "aggregated_pdf_filenames_format";
 }
