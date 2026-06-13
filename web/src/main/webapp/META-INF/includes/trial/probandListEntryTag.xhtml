@@ -304,6 +304,7 @@
 								</p:column>
 								<p:column>
 									<h:outputText
+									    styleClass="#{inputField.vo.deferredDelete ? 'ctsms-strikethrough' : ''}"
 										value="#{applicationScopeBean.escapeHtml(inputField.vo.name)}"
 										escape="false" />
 								</p:column>

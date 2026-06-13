@@ -523,6 +523,7 @@
 										</p:column>
 										<p:column>
 											<h:outputText
+											    styleClass="#{course.vo.deferredDelete ? 'ctsms-strikethrough' : ''}"
 												value="#{applicationScopeBean.escapeHtml(course.vo.name)}"
 												escape="false" />
 										</p:column>

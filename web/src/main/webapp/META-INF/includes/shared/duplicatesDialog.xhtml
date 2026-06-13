@@ -50,6 +50,7 @@
 
 						<h:outputText value=" " />
 						<h:outputText
+						    styleClass="#{duplicate.vo.deferredDelete ? 'ctsms-strikethrough' : ''}"
 							value="#{applicationScopeBean.escapeHtml(duplicate.vo.name)}"
 							escape="false" />
 						<h:outputText rendered="#{not empty duplicate.vo.dateOfBirth}" value=" " />
