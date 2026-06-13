@@ -1423,7 +1423,7 @@ overflow-y:scroll;
 	border-style: hidden !important;
 	padding: 2px !important;
 	max-width: 400px;
-	/* width: 100%; */
+	width: 1%;
 }
 
 .ctsms-systemmessage-left-column div {
@@ -1433,11 +1433,16 @@ overflow-y:scroll;
 .ctsms-systemmessage-right-column {
 	vertical-align: top;
 	padding: 2px !important;
+	text-align: right;
+}
+
+.ctsms-systemmessage-right-column > table {
+	display: inline-block;
 	max-width: 700px;
 	overflow-x: auto !important;
-	display: block;
 	border: 1px solid;
 	margin: 2px !important;
+	text-align: left;
 }
 
 .ctsms-systemmessage-right-column div {
@@ -1449,7 +1454,7 @@ overflow-y:scroll;
 	border-style: hidden !important;
 	padding: 2px !important;
 	max-width: 400px;
-	/* width: 100%; */
+	width: 1%;
 }
 
 .ctsms-audittrail-left-column div {
@@ -1459,11 +1464,16 @@ overflow-y:scroll;
 .ctsms-audittrail-right-column {
 	vertical-align: top;
 	padding: 2px !important;
+	text-align: right;
+}
+
+.ctsms-audittrail-right-column > table {
+	display: inline-block;
 	max-width: 700px;
 	overflow-x: auto !important;
-	display: block;
 	border: 1px solid;
 	margin: 2px !important;
+	text-align: left;
 }
 
 .ctsms-audittrail-right-column div {
