@@ -200,6 +200,7 @@
 								</p:column>
 								<p:column>
 									<h:outputText
+									    styleClass="#{proband.vo.deferredDelete ? 'ctsms-strikethrough' : ''}"
 										value="#{applicationScopeBean.escapeHtml(proband.vo.name)}"
 										escape="false" />
 								</p:column>
