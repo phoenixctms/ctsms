@@ -462,13 +462,15 @@ public class ECRFFieldValueDaoImpl
 		ecrfFieldValueCriteria.add(Restrictions.eq("ecrfField.id", ecrfFieldId.longValue()));
 		if (index != null) {
 			ecrfFieldValueCriteria.add(Restrictions.eq("index", index.longValue()));
-		} else {
-			ecrfFieldValueCriteria.add(Restrictions.isNull("index"));
 		}
 		if (!auditTrail) {
 			// uncorrelated - fast:
 			// value with max id only:
-			applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, visitId, ecrfFieldId, index);
+			if (index != null) {
+				applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, visitId, ecrfFieldId, index);
+			} else {
+				applyEcrfFieldValueMaxIdSubCriteria(ecrfFieldValueCriteria, null, null, probandListEntryId, visitId, ecrfFieldId);
+			}
 		}
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ECRFFieldValue.class, ecrfFieldValueCriteria);
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
