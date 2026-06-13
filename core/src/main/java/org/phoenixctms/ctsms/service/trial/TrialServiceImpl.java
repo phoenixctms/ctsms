@@ -631,7 +631,7 @@ public class TrialServiceImpl
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Visit visit = ecrfStatusEntry.getVisit();
 		checkEcrfFieldValueIndex(ecrfField, ecrfFieldValueIn.getListEntryId(), visit != null ? visit.getId() : null, ecrfFieldValueIn.getEcrfFieldId(),
-				ecrfFieldValueIn.getIndex());
+				ecrfFieldValueIn.getIndex(), false);
 		ProbandListEntry listEntry = ecrfStatusEntry.getListEntry();
 		boolean isAuditTrail = ecrfField.isAuditTrail() && ecrfStatusEntry.getStatus().isAuditTrail();
 		if (id == null) {
@@ -1349,7 +1349,8 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkEcrfFieldValueIndex(ECRFField ecrfField, Long probandListEntryId, Long visitId, Long ecrfFieldId, Long index) throws ServiceException {
+	private void checkEcrfFieldValueIndex(ECRFField ecrfField, Long probandListEntryId, Long visitId, Long ecrfFieldId, Long index, boolean allowNullSeriesIndex)
+			throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		if (!ecrfField.isSeries()) {
 			if (index != null) {
@@ -1358,8 +1359,11 @@ public class TrialServiceImpl
 			}
 		} else {
 			if (index == null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
-						CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
+				if (!allowNullSeriesIndex) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INDEX_NULL,
+							CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(ecrfField.getField())));
+				}
+				return;
 			}
 			Long maxIndex = this.getECRFFieldValueDao().getMaxIndex(probandListEntryId, visitId, ecrfFieldId);
 			if (maxIndex == null) {
@@ -6360,29 +6364,35 @@ public class TrialServiceImpl
 		if (visitId != null) {
 			visitVO = this.getVisitDao().toVisitOutVO(CheckIDUtil.checkVisitId(visitId, this.getVisitDao()));
 		}
-		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, visitVO != null ? visitVO.getId() : null, ecrfFieldId, index);
+		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, visitVO != null ? visitVO.getId() : null, ecrfFieldId, index, true);
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		Iterator<ECRFFieldValue> it = ecrfFieldValueDao
 				.findByListEntryVisitEcrfFieldIndex(probandListEntryId, visitVO != null ? visitVO.getId() : null, ecrfFieldId, index, false, true, null).iterator();
 		if (it.hasNext()) {
-			ECRFFieldValue ecrfFieldValue = it.next();
-			result.getPageValues().add(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue));
-			if (!CommonUtil.isEmptyString(ecrfFieldValue.getEcrfField().getJsVariableName()) && ecrfField.getEcrf().isEnableBrowserFieldCalculation()
-					&& Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
-							DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION)) {
-				result.getJsValues().add(ecrfFieldValueDao.toECRFFieldValueJsonVO(ecrfFieldValue)); // always return a js value?
+			while (it.hasNext()) {
+				ECRFFieldValue ecrfFieldValue = it.next();
+				result.getPageValues().add(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue));
+				if (!CommonUtil.isEmptyString(ecrfFieldValue.getEcrfField().getJsVariableName()) && ecrfField.getEcrf().isEnableBrowserFieldCalculation()
+						&& Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
+								DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION)) {
+					result.getJsValues().add(ecrfFieldValueDao.toECRFFieldValueJsonVO(ecrfFieldValue)); // always return a js value?
+				}
 			}
 		} else {
+			Long presetIndex = index;
+			if (presetIndex == null && ecrfField.isSeries()) {
+				presetIndex = 0l;
+			}
 			result.getPageValues().add(
 					ServiceUtil.createPresetEcrfFieldOutValue(probandListEntryDao.toProbandListEntryOutVO(listEntry), visitVO,
-							ecrfFieldDao.toECRFFieldOutVO(ecrfField), index, null,
+							ecrfFieldDao.toECRFFieldOutVO(ecrfField), presetIndex, null,
 							this.getECRFFieldStatusEntryDao(), this.getECRFFieldStatusTypeDao()));
 			if (!CommonUtil.isEmptyString(ecrfField.getJsVariableName()) && ecrfField.getEcrf().isEnableBrowserFieldCalculation()
 					&& Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 							DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION)) {
 				result.getJsValues()
-						.add(ServiceUtil.createPresetEcrfFieldJsonValue(ecrfField, visitVO != null ? visitVO.getId() : null, index, this.getInputFieldSelectionSetValueDao()));
+						.add(ServiceUtil.createPresetEcrfFieldJsonValue(ecrfField, visitVO != null ? visitVO.getId() : null, presetIndex, this.getInputFieldSelectionSetValueDao()));
 			}
 		}
 		return result;
@@ -6398,7 +6408,7 @@ public class TrialServiceImpl
 		if (visitId != null) {
 			CheckIDUtil.checkVisitId(visitId, this.getVisitDao());
 		}
-		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, visitId, ecrfFieldId, index);
+		checkEcrfFieldValueIndex(ecrfField, probandListEntryId, visitId, ecrfFieldId, index, true);
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		ECRFFieldValuesOutVO result = new ECRFFieldValuesOutVO();
 		Iterator<ECRFFieldValue> it = ecrfFieldValueDao.findByListEntryVisitEcrfFieldIndex(probandListEntryId, visitId, ecrfFieldId, index, auditTrail, sort, psf).iterator();
