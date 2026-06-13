@@ -112,7 +112,7 @@ public class PDFMergerUtility extends org.apache.pdfbox.util.PDFMergerUtility {
 				PDPageContentStream contentStream = new PDPageContentStream(document, page, true, true, true);
 				PDRectangle mediaBox = page.findMediaBox();
 				float x = 5.0f;
-				float y = mediaBox.getHeight() - 5.0f;
+				float y = mediaBox.getHeight() - 10.0f;
 				PDFUtil.renderTextLine(contentStream, PDType1Font.HELVETICA, PDFUtil.FontSize.MEDIUM, Color.BLACK, fileNameLabel, x, y, PDFUtil.Alignment.TOP_LEFT);
 				contentStream.close();
 			}
