@@ -483,6 +483,21 @@ public class ProbandDaoImpl
 	}
 
 	@Override
+	protected long handleGetCountByAliasRegex(boolean person, String aliasRegex) throws Exception {
+		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		org.hibernate.Criteria particularsCriteria;
+		if (person) {
+			particularsCriteria = probandCriteria.createCriteria("personParticulars");
+		} else {
+			particularsCriteria = probandCriteria.createCriteria("animalParticulars");
+		}
+		particularsCriteria.add(CriteriaUtil.columnMatchesRegex("alias", aliasRegex, true));
+		return (Long) probandCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	
+
+	@Override
 	protected Proband handleFindByMaxAlias(boolean person, String aliasPattern) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
 		org.hibernate.Criteria particularsCriteria;
@@ -496,6 +511,23 @@ public class ProbandDaoImpl
 		probandCriteria.setMaxResults(1);
 		return (Proband) probandCriteria.uniqueResult();
 	}
+
+	@Override
+	protected Proband handleFindByMaxAliasRegex(boolean person, String aliasRegex) throws Exception {
+		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		org.hibernate.Criteria particularsCriteria;
+		if (person) {
+			particularsCriteria = probandCriteria.createCriteria("personParticulars", "particulars");
+		} else {
+			particularsCriteria = probandCriteria.createCriteria("animalParticulars", "particulars");
+		}
+		particularsCriteria.add(CriteriaUtil.columnMatchesRegex("alias", aliasRegex, true));
+		probandCriteria.addOrder(Order.desc("particulars.alias"));
+		probandCriteria.setMaxResults(1);
+		return (Proband) probandCriteria.uniqueResult();
+	}
+
+
 
 	private org.hibernate.Criteria createProbandCriteria(String alias) {
 		org.hibernate.Criteria probandCriteria;

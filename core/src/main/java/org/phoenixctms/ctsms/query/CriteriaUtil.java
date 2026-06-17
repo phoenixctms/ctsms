@@ -55,6 +55,9 @@ import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.vo.PSFVO;
 
@@ -95,6 +98,30 @@ public final class CriteriaUtil {
 	}
 	private final static String UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE = "unsupported binary restriction criterion type {0}";
 	private final static String UNSUPPORTED_UNARY_RESTRICTION_CRITERION_TYPE = "unsupported unary restriction criterion type {0}";
+
+	public static org.hibernate.criterion.Criterion columnMatchesRegex(String columnName, String regexPattern, boolean caseSensitive) {
+		return columnMatchesRegex(columnName, regexPattern, caseSensitive, false);
+	}
+
+	public static org.hibernate.criterion.Criterion columnMatchesRegex(String columnName, String regexPattern, boolean caseSensitive, boolean negate) {
+		String regexOperator;
+		if (negate) {
+			regexOperator = Settings.getString(
+					caseSensitive ? SettingCodes.SQL_COLUMN_MATCHES_REGEX_OPERATOR_NOT : SettingCodes.SQL_COLUMN_MATCHES_REGEX_OPERATOR_CASE_INSENSITIVE_NOT,
+					Bundle.SETTINGS,
+					null);
+		} else {
+			regexOperator = Settings.getString(
+					caseSensitive ? SettingCodes.SQL_COLUMN_MATCHES_REGEX_OPERATOR : SettingCodes.SQL_COLUMN_MATCHES_REGEX_OPERATOR_CASE_INSENSITIVE,
+					Bundle.SETTINGS,
+					null);
+		}
+		return Restrictions.sqlRestriction(
+				MessageFormat.format(Settings.getString(SettingCodes.SQL_COLUMN_MATCHES_REGEX_TERM, Bundle.SETTINGS, null),
+						"{alias}." + columnName, regexOperator),
+				regexPattern,
+				Hibernate.STRING);
+	}
 
 	private static <T> void addReminderItem(ArrayList<T> resultSet, ReminderEntityAdapter reminderItem, Date reminderStart, Boolean notify) {
 		if (!reminderItem.isDismissable() || !reminderItem.isRecurrenceDismissed(reminderStart)) {// !(reminderItem.isDismissed() && reminderStart.compareTo(new

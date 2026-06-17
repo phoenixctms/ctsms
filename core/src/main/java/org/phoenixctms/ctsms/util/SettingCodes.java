@@ -29,6 +29,11 @@ public interface SettingCodes {
 	public static final String SQL_INTERSECT_KEYWORD = "sql_intersect_keyword";
 	public static final String SQL_EXCEPT_KEYWORD = "sql_except_keyword";
 	public static final String SQL_ADD_SECONDS_TERM = "sql_add_seconds_term";
+	public static final String SQL_COLUMN_MATCHES_REGEX_TERM = "sql_column_matches_regex_term";
+	public static final String SQL_COLUMN_MATCHES_REGEX_OPERATOR = "sql_column_matches_regex_operator";
+	public static final String SQL_COLUMN_MATCHES_REGEX_OPERATOR_CASE_INSENSITIVE = "sql_column_matches_regex_operator_case_insensitive";
+	public static final String SQL_COLUMN_MATCHES_REGEX_OPERATOR_NOT = "sql_column_matches_regex_operator_not";
+	public static final String SQL_COLUMN_MATCHES_REGEX_OPERATOR_CASE_INSENSITIVE_NOT = "sql_column_matches_regex_operator_case_insensitive_not";
 	public static final String LDAP_FAILOVER = "ldap_failover";
 	public static final String PASSWORD_MIN_LENGTH = "password_min_length";
 	public static final String PASSWORD_MAX_LENGTH = "password_max_length";
