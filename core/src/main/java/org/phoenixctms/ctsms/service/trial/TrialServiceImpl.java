@@ -10,6 +10,7 @@ package org.phoenixctms.ctsms.service.trial;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.MessageFormat;
 import java.text.ParsePosition;
@@ -1936,32 +1937,13 @@ public class TrialServiceImpl
 
 	private String getNewProbandAlias(Trial trial, User user) throws Exception {
 		try {
-			MessageFormat likeFormat = new MessageFormat(CommonUtil.escapeSqlLikeWildcards(trial.getProbandAliasFormat()));
-			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, null);
-			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, null);
-			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX, null);
-			likeFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX, null);
 			String departmentToken = user.getDepartment().getNameL10nKey();
-			String likePattern = likeFormat.format(
-					new Object[] {
-							CommonUtil.escapeSqlLikeWildcards(departmentToken), // {0}
-							null, // {1}
-							null, // {2}
-							null, // {3}
-							null, // {4}
-							null, // {5}
-							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {6}
-							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {7}
-							CommonUtil.SQL_LIKE_PERCENT_WILDCARD, // {8}
-							CommonUtil.SQL_LIKE_PERCENT_WILDCARD // {9}
-					},
-					new StringBuffer(),
-					null).toString();
-			long count0based = this.getProbandDao().getCountByAlias(trial.getType().isPerson(), likePattern);
+			String aliasRegexPattern = buildProbandAliasRegexPattern(trial.getProbandAliasFormat(), departmentToken);
+			long count0based = this.getProbandDao().getCountByAliasRegex(trial.getType().isPerson(), aliasRegexPattern);
 			long count1based = count0based + 1l;
 			long maxAlias0based = 0l;
 			long maxAlias1based = 1l;
-			Proband maxAliasProband = this.getProbandDao().findByMaxAlias(trial.getType().isPerson(), likePattern);
+			Proband maxAliasProband = this.getProbandDao().findByMaxAliasRegex(trial.getType().isPerson(), aliasRegexPattern);
 			if (maxAliasProband != null) {
 				String alias;
 				if (maxAliasProband.isPerson()) {
@@ -1996,13 +1978,62 @@ public class TrialServiceImpl
 					maxAlias1based, // {7}
 					count0based, // {8}
 					count1based); // {9}
-			if (this.getProbandDao().getCountByAlias(trial.getType().isPerson(), CommonUtil.escapeSqlLikeWildcards(alias)) > 0l) {
+			if (this.getProbandDao().getCountByAliasRegex(trial.getType().isPerson(),
+					"^" + CommonUtil.escapeRegexLiteral(alias) + "$") > 0l) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_PROBAND_ALIAS_ALREADY_EXISTS, alias);
 			}
 			return alias;
 		} catch (IllegalArgumentException e) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_MALFORMED_PROBAND_ALIAS_PATTERN);
 		}
+	}
+
+	private static final String PROBAND_ALIAS_REGEX_DIGIT_PLACEHOLDER = "\u0001";
+
+	private static String buildProbandAliasRegexPattern(String probandAliasFormat, String departmentToken) throws Exception {
+		MessageFormat regexFormat = new MessageFormat(probandAliasFormat);
+		Format[] argFormats = regexFormat.getFormatsByArgumentIndex();
+		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, null);
+		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, null);
+		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX, null);
+		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX, null);
+		int numberIndex = argFormats.length - 1;
+		Object[] regexArgs = new Object[] {
+				departmentToken, // {0}
+				null, // {1}
+				null, // {2}
+				null, // {3}
+				null, // {4}
+				null, // {5}
+				null, // {6}
+				null, // {7}
+				null, // {8}
+				null // {9}
+		};
+		regexArgs[numberIndex] = PROBAND_ALIAS_REGEX_DIGIT_PLACEHOLDER;
+		String digitRegex = getProbandAliasDigitRegex((java.text.NumberFormat) argFormats[numberIndex]);
+		String formatted = regexFormat.format(regexArgs, new StringBuffer(), null).toString();
+		String[] parts = formatted.split(PROBAND_ALIAS_REGEX_DIGIT_PLACEHOLDER, -1);
+		StringBuilder regex = new StringBuilder("^");
+		regex.append(CommonUtil.escapeRegexLiteral(parts[0]));
+		for (int i = 1; i < parts.length; i++) {
+			regex.append(digitRegex);
+			if (parts[i].length() > 0) {
+				regex.append(CommonUtil.escapeRegexLiteral(parts[i]));
+			}
+		}
+		regex.append("$");
+		return regex.toString();
+	}
+
+	private static String getProbandAliasDigitRegex(java.text.NumberFormat numberFormat) {
+		if (numberFormat instanceof DecimalFormat) {
+			int minDigits = ((DecimalFormat) numberFormat).getMinimumIntegerDigits();
+			if (minDigits > 1) {
+				return "[0-9]{" + minDigits + "," + minDigits + "}";
+			}
+		}
+		return "[0-9]+";
 	}
 
 	private static long parseFormatLongAndIncrement(String input, String format, int index, long defaultValue) {
@@ -6392,7 +6423,8 @@ public class TrialServiceImpl
 					&& Settings.getBoolean(SettingCodes.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 							DefaultSettings.ECRF_FIELD_VALUES_ENABLE_BROWSER_FIELD_CALCULATION)) {
 				result.getJsValues()
-						.add(ServiceUtil.createPresetEcrfFieldJsonValue(ecrfField, visitVO != null ? visitVO.getId() : null, presetIndex, this.getInputFieldSelectionSetValueDao()));
+						.add(ServiceUtil.createPresetEcrfFieldJsonValue(ecrfField, visitVO != null ? visitVO.getId() : null, presetIndex,
+								this.getInputFieldSelectionSetValueDao()));
 			}
 		}
 		return result;
