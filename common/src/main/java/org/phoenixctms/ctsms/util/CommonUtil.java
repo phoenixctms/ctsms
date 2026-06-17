@@ -892,6 +892,38 @@ public final class CommonUtil {
 		return queryString;
 	}
 
+	public static String escapeRegexLiteral(String literal) {
+		if (literal == null || literal.isEmpty()) {
+			return "";
+		}
+		StringBuilder escaped = new StringBuilder(literal.length() * 2);
+		for (int i = 0; i < literal.length(); i++) {
+			char c = literal.charAt(i);
+			switch (c) {
+				case '\\':
+				case '.':
+				case '[':
+				case ']':
+				case '(':
+				case ')':
+				case '{':
+				case '}':
+				case '*':
+				case '+':
+				case '?':
+				case '|':
+				case '^':
+				case '$':
+					escaped.append('\\');
+					escaped.append(c);
+					break;
+				default:
+					escaped.append(c);
+			}
+		}
+		return escaped.toString();
+	}
+
 	public static String criteriaOutVOToString(CriteriaOutVO criteria) {
 		if (criteria != null) {
 			return criteria.getLabel();
