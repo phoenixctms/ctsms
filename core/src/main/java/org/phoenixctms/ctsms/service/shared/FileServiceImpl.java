@@ -550,14 +550,14 @@ public class FileServiceImpl
 	}
 
 	@Override
-	protected FilePDFVO handleAggregatePDFFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+	protected FilePDFVO handleAggregatePDFFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval, Boolean active, Boolean publicFile,
 			PSFVO psf)
 			throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, CoreUtil.PDF_MIMETYPE_STRING, psf);
+		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, approval, active, publicFile, null, CoreUtil.PDF_MIMETYPE_STRING, psf);
 		PDFMerger merger = new PDFMerger(fileDao);
 		merger.setFiles(files);
 		fileDao.toFileOutVOCollection(files);
@@ -601,14 +601,14 @@ public class FileServiceImpl
 	}
 
 	@Override
-	protected Collection<FileOutVO> handleDeleteFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+	protected Collection<FileOutVO> handleDeleteFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval, Boolean active, Boolean publicFile,
 			PSFVO psf)
 			throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Iterator<File> it = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, null, psf).iterator();
+		Iterator<File> it = fileDao.findFiles(module, id, logicalPath, subTree, approval, active, publicFile, null, null, psf).iterator();
 		ArrayList<FileOutVO> result = new ArrayList<FileOutVO>();
 		while (it.hasNext()) {
 			result.add(deleteFileHelper(it.next().getId(), now, user));
@@ -644,36 +644,36 @@ public class FileServiceImpl
 	}
 
 	@Override
-	protected long handleGetFileCount(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile)
+	protected long handleGetFileCount(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval, Boolean active, Boolean publicFile)
 			throws Exception {
 		checkFileModuleId(module, id);
-		return this.getFileDao().getCount(module, id, logicalPath, subTree, active, publicFile, null, null);
+		return this.getFileDao().getCount(module, id, logicalPath, subTree, approval, active, publicFile, null, null);
 	}
 
 	@Override
-	protected String handleGetFileCountSafe(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+	protected String handleGetFileCountSafe(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval, Boolean active, Boolean publicFile,
 			Integer limit)
 			throws Exception {
 		checkFileModuleId(module, id);
-		return this.getFileDao().getCountSafe(module, id, logicalPath, subTree, active, publicFile, null, null, limit);
+		return this.getFileDao().getCountSafe(module, id, logicalPath, subTree, approval, active, publicFile, null, null, limit);
 	}
 
 	@Override
 	protected Collection<String> handleGetFileFolders(AuthenticationVO auth, FileModule module,
-			Long id, String parentLogicalPath, boolean complete, Boolean active, Boolean publicFile, PSFVO psf) throws Exception {
-		return this.getFileDao().findFileFolders(module, id, parentLogicalPath, complete, active, publicFile, null, psf);
+			Long id, String parentLogicalPath, boolean complete, Boolean approval, Boolean active, Boolean publicFile, PSFVO psf) throws Exception {
+		return this.getFileDao().findFileFolders(module, id, parentLogicalPath, complete, approval, active, publicFile, null, psf);
 	}
 
 	/**
 	 * @see org.phoenixctms.ctsms.service.shared.FileService#getFiles(FileModule, Long, String, Boolean, PSFVO)
 	 */
 	@Override
-	protected Collection<FileOutVO> handleGetFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile,
+	protected Collection<FileOutVO> handleGetFiles(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval, Boolean active, Boolean publicFile,
 			PSFVO psf)
 			throws Exception {
 		checkFileModuleId(module, id);
 		FileDao fileDao = this.getFileDao();
-		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, active, publicFile, null, null, psf);
+		Collection files = fileDao.findFiles(module, id, logicalPath, subTree, approval, active, publicFile, null, null, psf);
 		fileDao.toFileOutVOCollection(files);
 		return files;
 	}
@@ -692,10 +692,10 @@ public class FileServiceImpl
 	}
 
 	@Override
-	protected long handleGetFolderSize(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean active, Boolean publicFile)
+	protected long handleGetFolderSize(AuthenticationVO auth, FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval, Boolean active, Boolean publicFile)
 			throws Exception {
 		checkFileModuleId(module, id);
-		return this.getFileDao().getFileSizeSum(module, id, logicalPath, subTree, active, publicFile, null, null);
+		return this.getFileDao().getFileSizeSum(module, id, logicalPath, subTree, approval, active, publicFile, null, null);
 	}
 
 	/**
