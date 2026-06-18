@@ -137,7 +137,7 @@ public class FileSystemLoader {
 					psf.setFirst(pageNumber - 1); // always 1, isIncrementPageNumber = false
 					psf.setPageSize(pageSize);
 				}
-				return dao.findFiles(module, id, null, false, null, null, null, null, psf);
+				return dao.findFiles(module, id, null, false, false, null, null, null, null, psf);
 			}
 
 			@Override

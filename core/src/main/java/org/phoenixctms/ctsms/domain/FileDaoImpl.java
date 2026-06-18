@@ -102,11 +102,17 @@ public class FileDaoImpl
 		}
 	}
 
-	private final static void applyActiveCriterion(org.hibernate.Criteria criteria, Boolean active) {
-		if (active != null) {
-			User user = CoreUtil.getUser();
-			if (user != null) {
-				if (active) {
+	private final static void applyActiveCriterion(org.hibernate.Criteria criteria, Boolean approval, Boolean active) {
+		if (active == null) {
+			return;
+		}
+		User user = CoreUtil.getUser();
+		if (approval != null) {
+			if (approval == false) {
+				return;
+			}
+			if (approval == true && user != null) {
+				if (active == true) {
 					DetachedCriteria subQuery = DetachedCriteria.forClass(FileImpl.class, "file1"); // IMPL!!!!
 					subQuery.setProjection(Projections.id());
 					subQuery.add(Restrictions.eqProperty("id", "file0.id"));
@@ -130,15 +136,15 @@ public class FileDaoImpl
 									Subqueries.exists(subQuery)),
 							//Restrictions.isNotNull("departments0.id")),
 							Restrictions.eq("modifiedUser.id", user.getId().longValue())));
-				} else {
+				} else if (active == false) {
 					criteria.add(Restrictions.or(
 							Restrictions.eq("active", false),
 							Restrictions.eq("modifiedUser.id", user.getId().longValue())));
 				}
-			} else {
-				criteria.add(Restrictions.eq("active", active.booleanValue()));
+				return;
 			}
 		}
+		criteria.add(Restrictions.eq("active", active == true));
 	}
 
 	private final static void applySubTreeCriterion(org.hibernate.Criteria criteria, boolean subTree, String logicalPath) {
@@ -745,7 +751,7 @@ public class FileDaoImpl
 
 	@Override
 	protected Collection<String> handleFindFileFolders(FileModule module,
-			Long id, String parentLogicalPath, boolean complete, Boolean active, Boolean publicFile, Boolean image, PSFVO psf) throws Exception {
+			Long id, String parentLogicalPath, boolean complete, Boolean approval, Boolean active, Boolean publicFile, Boolean image, PSFVO psf) throws Exception {
 		org.hibernate.Criteria fileFolderPresetCriteria = this.getSession().createCriteria(FileFolderPreset.class);
 		fileFolderPresetCriteria.setCacheable(true);
 		boolean useParentPath;
@@ -795,7 +801,7 @@ public class FileDaoImpl
 			if (useParentPath) {
 				fileCriteria.add(Restrictions.like("logicalPath", parentLogicalFolder, MatchMode.START));
 			}
-			applyActiveCriterion(fileCriteria, active);
+			applyActiveCriterion(fileCriteria, approval, active);
 			if (publicFile != null) {
 				fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 			}
@@ -821,13 +827,13 @@ public class FileDaoImpl
 	}
 
 	@Override
-	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath, boolean subTree,
+	protected Collection<File> handleFindFiles(FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType, PSFVO psf) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(File.class, fileCriteria);
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		applyActiveCriterion(fileCriteria, active);
+		applyActiveCriterion(fileCriteria, approval, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
@@ -837,12 +843,12 @@ public class FileDaoImpl
 	}
 
 	@Override
-	protected long handleGetCount(FileModule module, Long id, String logicalPath, boolean subTree,
+	protected long handleGetCount(FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		applyActiveCriterion(fileCriteria, active);
+		applyActiveCriterion(fileCriteria, approval, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
@@ -851,12 +857,12 @@ public class FileDaoImpl
 	}
 
 	@Override
-	protected String handleGetCountSafe(FileModule module, Long id, String logicalPath, boolean subTree,
+	protected String handleGetCountSafe(FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType, Integer limit) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		applyActiveCriterion(fileCriteria, active);
+		applyActiveCriterion(fileCriteria, approval, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}
@@ -875,12 +881,12 @@ public class FileDaoImpl
 	}
 
 	@Override
-	protected long handleGetFileSizeSum(FileModule module, Long id, String logicalPath, boolean subTree,
+	protected long handleGetFileSizeSum(FileModule module, Long id, String logicalPath, boolean subTree, Boolean approval,
 			Boolean active, Boolean publicFile, Boolean image, String mimeType) throws Exception {
 		org.hibernate.Criteria fileCriteria = createFileCriteria("file0");
 		applyModuleIdCriterions(fileCriteria, module, id);
 		applySubTreeCriterion(fileCriteria, subTree, logicalPath);
-		applyActiveCriterion(fileCriteria, active);
+		applyActiveCriterion(fileCriteria, approval, active);
 		if (publicFile != null) {
 			fileCriteria.add(Restrictions.eq("publicFile", publicFile.booleanValue()));
 		}

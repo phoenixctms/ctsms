@@ -1120,7 +1120,7 @@ public class DemoDataProvider {
 		newFile.setModule(module);
 		if (folders.size() == 0) {
 			folders.add(CommonUtil.LOGICAL_PATH_SEPARATOR);
-			folders.addAll(fileService.getFileFolders(auth, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, false, null, null, null));
+			folders.addAll(fileService.getFileFolders(auth, module, id, CommonUtil.LOGICAL_PATH_SEPARATOR, false, false, null, null, null));
 		}
 		StringBuilder logicalPath = new StringBuilder(random.getRandomElement(folders));
 		if (random.getRandomBoolean(50)) {
