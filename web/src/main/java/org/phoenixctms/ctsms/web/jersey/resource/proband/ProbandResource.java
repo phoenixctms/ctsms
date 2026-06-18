@@ -92,7 +92,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	@GET
 	@Path("{id}/files/pdf")
 	public Response aggregatePDFFiles(@PathParam("id") Long id, @Context UriInfo uriInfo) throws AuthenticationException, AuthorisationException, ServiceException {
-		FilePDFVO vo = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, false, null, null, new PSFUriPart(uriInfo));
+		FilePDFVO vo = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, false, WebUtil.getFileApproval(fileModule), null, null, new PSFUriPart(uriInfo));
 		// http://stackoverflow.com/questions/9204287/how-to-return-a-png-image-from-jersey-rest-service-method-to-the-browser
 		// non-streamed
 		ResponseBuilder response = Response.ok(vo.getDocumentDatas(), vo.getContentType().getMimeType());
@@ -105,7 +105,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	@Path("{id}/files/pdf/head")
 	public FilePDFVO aggregatePDFFilesHead(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		FilePDFVO result = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, false, null, null, new PSFUriPart(uriInfo));
+		FilePDFVO result = WebUtil.getServiceLocator().getFileService().aggregatePDFFiles(auth, fileModule, id, null, false, WebUtil.getFileApproval(fileModule), null, null, new PSFUriPart(uriInfo));
 		result.setDocumentDatas(null);
 		return result;
 	}
@@ -134,7 +134,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	public Page<String> getFileFolders(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<String>(WebUtil.getServiceLocator().getFileService().getFileFolders(auth, fileModule, id, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<String>(WebUtil.getServiceLocator().getFileService().getFileFolders(auth, fileModule, id, null, false, WebUtil.getFileApproval(fileModule), null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public final class ProbandResource extends ServiceResourceBase {
 	public Page<FileOutVO> getFiles(@PathParam("id") Long id, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
-		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, fileModule, id, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
+		return new Page<FileOutVO>(WebUtil.getServiceLocator().getFileService().getFiles(auth, fileModule, id, null, false, WebUtil.getFileApproval(fileModule), null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@GET

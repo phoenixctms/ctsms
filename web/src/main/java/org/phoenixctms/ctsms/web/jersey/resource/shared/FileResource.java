@@ -78,7 +78,7 @@ public final class FileResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(
-				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.COURSE_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.COURSE_DOCUMENT, null, null, false, WebUtil.getFileApproval(FileModule.COURSE_DOCUMENT), null, null, psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 
@@ -105,7 +105,7 @@ public final class FileResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(
-				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.INVENTORY_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.INVENTORY_DOCUMENT, null, null, false, WebUtil.getFileApproval(FileModule.INVENTORY_DOCUMENT), null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@GET
@@ -115,7 +115,7 @@ public final class FileResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(
-				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.MASS_MAIL_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)), psf);
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.MASS_MAIL_DOCUMENT, null, null, false, WebUtil.getFileApproval(FileModule.MASS_MAIL_DOCUMENT), null, null, psf = new PSFUriPart(uriInfo)), psf);
 	}
 
 	@GET
@@ -125,7 +125,7 @@ public final class FileResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(
-				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.PROBAND_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.PROBAND_DOCUMENT, null, null, false, WebUtil.getFileApproval(FileModule.PROBAND_DOCUMENT), null, null, psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 
@@ -136,7 +136,7 @@ public final class FileResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(
-				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.STAFF_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.STAFF_DOCUMENT, null, null, false, WebUtil.getFileApproval(FileModule.STAFF_DOCUMENT), null, null, psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 
@@ -147,7 +147,7 @@ public final class FileResource {
 			throws AuthenticationException, AuthorisationException, ServiceException {
 		PSFUriPart psf;
 		return new Page<FileOutVO>(
-				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.TRIAL_DOCUMENT, null, null, false, null, null, psf = new PSFUriPart(uriInfo)),
+				WebUtil.getServiceLocator().getFileService().getFiles(auth, FileModule.TRIAL_DOCUMENT, null, null, false, WebUtil.getFileApproval(FileModule.TRIAL_DOCUMENT), null, null, psf = new PSFUriPart(uriInfo)),
 				psf);
 	}
 
