@@ -128,14 +128,14 @@ public class FileBean extends ManagedBeanBase {
 		}
 	}
 
-	private static void loadFileFolderTree(TreeNode parent, FileOutVO selected, boolean select, FileModule module, Long id, String parentLogicalPath, Boolean active,
+	private void loadFileFolderTree(TreeNode parent, FileOutVO selected, boolean select, FileModule module, Long id, String parentLogicalPath, Boolean active,
 			Boolean publicFile, PSFVO psf,
 			int depth,
 			boolean selectable) {
 		if (module != null) {
 			Collection<String> folders = null;
 			try {
-				folders = WebUtil.getServiceLocator().getFileService().getFileFolders(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
+				folders = WebUtil.getServiceLocator().getFileService().getFileFolders(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, isApproval(), active, publicFile, psf);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -161,7 +161,7 @@ public class FileBean extends ManagedBeanBase {
 			}
 			Collection<FileOutVO> fileVOs = null;
 			try {
-				fileVOs = WebUtil.getServiceLocator().getFileService().getFiles(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, active, publicFile, psf);
+				fileVOs = WebUtil.getServiceLocator().getFileService().getFiles(WebUtil.getAuthentication(), module, id, parentLogicalPath, false, isApproval(), active, publicFile, psf);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -504,7 +504,7 @@ public class FileBean extends ManagedBeanBase {
 				throw new IllegalArgumentException(Messages.getString(MessageCodes.NO_FILE_FILTERS));
 			}
 			Collection<FileOutVO> files = WebUtil.getServiceLocator().getFileService()
-					.deleteFiles(WebUtil.getAuthentication(), module, entityId, null, false, null, null, sf);
+					.deleteFiles(WebUtil.getAuthentication(), module, entityId, null, false, isApproval(), null, null, sf);
 			long itemsLeft = sf.getRowCount() - files.size();
 			if (itemsLeft > 0) {
 				Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.BULK_DELETE_OPERATION_INCOMPLETE, files.size(), sf.getRowCount());
@@ -532,7 +532,7 @@ public class FileBean extends ManagedBeanBase {
 		if (entityId != null) {
 			try {
 				FilePDFVO aggregatedPDFFiles = WebUtil.getServiceLocator().getFileService()
-						.aggregatePDFFiles(WebUtil.getAuthentication(), module, entityId, null, false, null, null, createSFVO());
+						.aggregatePDFFiles(WebUtil.getAuthentication(), module, entityId, null, false, isApproval(), null, null, createSFVO());
 				return new DefaultStreamedContent(new ByteArrayInputStream(aggregatedPDFFiles.getDocumentDatas()), aggregatedPDFFiles.getContentType().getMimeType(),
 						aggregatedPDFFiles.getFileName());
 			} catch (AuthenticationException e) {
@@ -895,25 +895,7 @@ public class FileBean extends ManagedBeanBase {
 	}
 
 	public boolean isApproval() {
-		if (module != null) {
-			switch (module) {
-				case INVENTORY_DOCUMENT:
-					return Settings.getBoolean(SettingCodes.INVENTORY_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.INVENTORY_FILE_APPROVAL_DEFAULT);
-				case STAFF_DOCUMENT:
-					return Settings.getBoolean(SettingCodes.STAFF_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.STAFF_FILE_APPROVAL_DEFAULT);
-				case COURSE_DOCUMENT:
-					return Settings.getBoolean(SettingCodes.COURSE_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.COURSE_FILE_APPROVAL_DEFAULT);
-				case TRIAL_DOCUMENT:
-					return Settings.getBoolean(SettingCodes.TRIAL_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.TRIAL_FILE_APPROVAL_DEFAULT);
-				case PROBAND_DOCUMENT:
-					return Settings.getBoolean(SettingCodes.PROBAND_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.PROBAND_FILE_APPROVAL_DEFAULT);
-				case MASS_MAIL_DOCUMENT:
-					return Settings.getBoolean(SettingCodes.MASS_MAIL_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FILE_APPROVAL_DEFAULT);
-				default:
-					break;
-			}
-		}
-		return true;
+		return WebUtil.getFileApproval(module);
 	}
 
 	@Override

@@ -340,9 +340,9 @@ public class MassMailBean extends ManagedBeanBase {
 			long totalSize = 0l;
 			try {
 				totalFileCount = WebUtil.getServiceLocator().getFileService().getFileCount(WebUtil.getAuthentication(), FileModule.MASS_MAIL_DOCUMENT,
-						in.getId(), in.getMassMailFilesLogicalPath(), true, null, null);
+						in.getId(), in.getMassMailFilesLogicalPath(), true, null, true, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.MASS_MAIL_DOCUMENT,
-						in.getId(), in.getMassMailFilesLogicalPath(), true, null, null);
+						in.getId(), in.getMassMailFilesLogicalPath(), true, null, true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -395,9 +395,9 @@ public class MassMailBean extends ManagedBeanBase {
 			long totalSize = 0l;
 			try {
 				totalFileCount = WebUtil.getServiceLocator().getFileService().getFileCount(WebUtil.getAuthentication(), FileModule.PROBAND_DOCUMENT,
-						previewProbandId, in.getProbandFilesLogicalPath(), true, null, null);
+						previewProbandId, in.getProbandFilesLogicalPath(), true, null, true, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.PROBAND_DOCUMENT,
-						previewProbandId, in.getProbandFilesLogicalPath(), true, null, null);
+						previewProbandId, in.getProbandFilesLogicalPath(), true, null, true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -459,9 +459,9 @@ public class MassMailBean extends ManagedBeanBase {
 			long totalSize = 0l;
 			try {
 				totalFileCount = WebUtil.getServiceLocator().getFileService().getFileCount(WebUtil.getAuthentication(), FileModule.TRIAL_DOCUMENT,
-						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, null);
+						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, true, null);
 				totalSize = WebUtil.getServiceLocator().getFileService().getFolderSize(WebUtil.getAuthentication(), FileModule.TRIAL_DOCUMENT,
-						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, null);
+						in.getTrialId(), in.getTrialFilesLogicalPath(), true, null, true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

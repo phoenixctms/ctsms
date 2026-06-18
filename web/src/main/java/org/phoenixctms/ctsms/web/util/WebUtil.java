@@ -329,7 +329,7 @@ public final class WebUtil {
 	public static List<String> completeLogicalPath(FileModule module, Long entityId, String query) {
 		Collection<String> folders = null;
 		try {
-			folders = getServiceLocator().getFileService().getFileFolders(getAuthentication(), module, entityId, query, true, null, null, null);
+			folders = getServiceLocator().getFileService().getFileFolders(getAuthentication(), module, entityId, query, true, getFileApproval(module), null, null, null);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			publishException(e);
@@ -3946,10 +3946,32 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static boolean getFileApproval(FileModule module) {
+		if (module != null) {
+			switch (module) {
+				case INVENTORY_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.INVENTORY_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.INVENTORY_FILE_APPROVAL_DEFAULT);
+				case STAFF_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.STAFF_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.STAFF_FILE_APPROVAL_DEFAULT);
+				case COURSE_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.COURSE_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.COURSE_FILE_APPROVAL_DEFAULT);
+				case TRIAL_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.TRIAL_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.TRIAL_FILE_APPROVAL_DEFAULT);
+				case PROBAND_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.PROBAND_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.PROBAND_FILE_APPROVAL_DEFAULT);
+				case MASS_MAIL_DOCUMENT:
+					return Settings.getBoolean(SettingCodes.MASS_MAIL_FILE_APPROVAL, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FILE_APPROVAL_DEFAULT);
+				default:
+					break;
+			}
+		}
+		return false;
+	}
+
 	public static Long getFileCount(FileModule module, Long id) {
 		if (module != null && id != null) {
 			try {
-				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, true, null, null);
+				return getServiceLocator().getFileService().getFileCount(getAuthentication(), module, id, null, true, getFileApproval(module), null, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
@@ -3961,7 +3983,7 @@ public final class WebUtil {
 	public static String getFileCountSafe(FileModule module, Long id, Integer limit) {
 		if (module != null && id != null) {
 			try {
-				return getServiceLocator().getFileService().getFileCountSafe(getAuthentication(), module, id, null, true, null, null, limit);
+				return getServiceLocator().getFileService().getFileCountSafe(getAuthentication(), module, id, null, true, getFileApproval(module), null, null, limit);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				publishException(e);
