@@ -109,6 +109,8 @@ public final class QueryUtil {
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
 				new String[] { "alias", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS, ALTERNATIVE_FILTER_ALIAS_VARIANTS });
+		ALTERNATIVE_FILTER_MAP.put("PersonContactParticulars.lastName",
+				new String[] { "firstName", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.blocks",
 				"proband.diagnoses.code.systematics.blocks.last", "{0} = ?",
@@ -254,15 +256,33 @@ public final class QueryUtil {
 				for (int i = altFilterArr.length - 1; i >= 0; i--) {
 					String altFilter = altFilterArr[i];
 					if (ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) || ALTERNATIVE_FILTER_LAST_NAME_VARIANTS.equals(altFilter)) {
-						if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
-							String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
-									: "lastNameNormalizedHash";
+						String normalizedPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalized" : "lastNameNormalized";
+						String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
+								: "lastNameNormalizedHash";
+						if ("ProbandContactParticulars".equals(pathClass.getSimpleName())) {
+							if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
+								AssociationPath variantPath = new AssociationPath(
+										filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + normalizedHashPropertyName);
+								String variantPropertyName = aliasPropertyName(entityClass, variantPath, entityName, explicitJoinsMap, propertyClassMap);
+								StringBuilder variantHql = new StringBuilder();
+								ArrayList<QueryParameterValue> variantQueryValues = new ArrayList<QueryParameterValue>();
+								appendNormalizedHashVariantsOr(variantHql, variantQueryValues, variantPropertyName,
+										CommonUtil.getOrganisationNameVariants(value).iterator());
+								if (variantHql.length() > 0) {
+									if (orHqlWhereClause.length() > 0) {
+										orHqlWhereClause.append(" or ");
+									}
+									orHqlWhereClause.append(variantHql);
+									orQueryValues.addAll(variantQueryValues);
+								}
+							}
+						} else if ("PersonContactParticulars".equals(pathClass.getSimpleName())) {
 							AssociationPath variantPath = new AssociationPath(
-									filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + normalizedHashPropertyName);
+									filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + normalizedPropertyName);
 							String variantPropertyName = aliasPropertyName(entityClass, variantPath, entityName, explicitJoinsMap, propertyClassMap);
 							StringBuilder variantHql = new StringBuilder();
 							ArrayList<QueryParameterValue> variantQueryValues = new ArrayList<QueryParameterValue>();
-							appendNormalizedHashVariantsOr(variantHql, variantQueryValues, variantPropertyName,
+							appendStringEqVariantsOr(variantHql, variantQueryValues, variantPropertyName,
 									CommonUtil.getOrganisationNameVariants(value).iterator());
 							if (variantHql.length() > 0) {
 								if (orHqlWhereClause.length() > 0) {

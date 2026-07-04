@@ -99,6 +99,8 @@ public final class CriteriaUtil {
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
 				new String[] { "alias", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS, ALTERNATIVE_FILTER_ALIAS_VARIANTS });
+		ALTERNATIVE_FILTER_MAP.put("PersonContactParticulars.lastName",
+				new String[] { "firstName", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
 	}
 	private final static String UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE = "unsupported binary restriction criterion type {0}";
@@ -152,10 +154,15 @@ public final class CriteriaUtil {
 				for (int i = altFilterArr.length - 1; i >= 0; i--) {
 					String altFilter = altFilterArr[i];
 					if (ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) || ALTERNATIVE_FILTER_LAST_NAME_VARIANTS.equals(altFilter)) {
-						if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
-							String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
-									: "lastNameNormalizedHash";
-							or = applyOr(getNormalizedHashVariantsCriterion(normalizedHashPropertyName, value), or);
+						if ("ProbandContactParticulars".equals(pathClass.getSimpleName())) {
+							if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
+								String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
+										: "lastNameNormalizedHash";
+								or = applyOr(getNormalizedHashVariantsCriterion(normalizedHashPropertyName, value), or);
+							}
+						} else if ("PersonContactParticulars".equals(pathClass.getSimpleName())) {
+							String normalizedPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalized" : "lastNameNormalized";
+							or = applyOr(getNormalizedVariantsCriterion(normalizedPropertyName, value), or);
 						}
 					} else if (ALTERNATIVE_FILTER_ALIAS_VARIANTS.equals(altFilter)) {
 						or = applyOr(getAliasVariantsCriterion(value), or);
@@ -180,6 +187,19 @@ public final class CriteriaUtil {
 			while (aliasVariantsIt.hasNext()) {
 				String[] aliasVariant = aliasVariantsIt.next();
 				disjunction.add(Restrictions.eq("aliasNormalized", aliasVariant[0]));
+			}
+			return disjunction;
+		}
+		return null;
+	}
+
+	private static org.hibernate.criterion.Criterion getNormalizedVariantsCriterion(String normalizedPropertyName, String value) {
+		Iterator<String[]> nameVariantsIt = CommonUtil.getOrganisationNameVariants(value).iterator();
+		if (nameVariantsIt.hasNext()) {
+			Junction disjunction = Restrictions.disjunction();
+			while (nameVariantsIt.hasNext()) {
+				String[] nameVariant = nameVariantsIt.next();
+				disjunction.add(Restrictions.eq(normalizedPropertyName, nameVariant[0]));
 			}
 			return disjunction;
 		}
