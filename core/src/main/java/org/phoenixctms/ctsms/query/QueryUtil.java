@@ -63,6 +63,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
@@ -100,11 +101,15 @@ public final class QueryUtil {
 		}
 	}
 
-	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
+	private final static String ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS = "firstNameVariants";
+	private final static String ALTERNATIVE_FILTER_LAST_NAME_VARIANTS = "lastNameVariants";
+	private final static String ALTERNATIVE_FILTER_ALIAS_VARIANTS = "aliasVariants";
+	private final static HashMap<String, String[]> ALTERNATIVE_FILTER_MAP = new HashMap<String, String[]>();
 	private final static HashMap<String, ArrayList<StaticCriterionTerm>> FIXED_CRITERION_TERMS_MAP = new HashMap<String, ArrayList<StaticCriterionTerm>>();
 	static {
-		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
-		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
+		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
+				new String[] { "alias", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS, ALTERNATIVE_FILTER_ALIAS_VARIANTS });
+		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.blocks",
 				"proband.diagnoses.code.systematics.blocks.last", "{0} = ?",
 				new QueryParameterValue(true));
@@ -231,9 +236,115 @@ public final class QueryUtil {
 		return hqlTerm;
 	}
 
+	private static final class AlternativeFilterRef {
+
+		private String orPropertyName;
+		private Class orPropertyClass;
+	}
+
+	private static AlternativeFilterRef applyAlternativeFilter(StringBuilder orHqlWhereClause, ArrayList<QueryParameterValue> orQueryValues, Class entityClass,
+			String entityName, AssociationPath filterFieldAssociationPath, String value, String timeZone, HashMap<String, AssociationPath> explicitJoinsMap,
+			HashMap<String, Class> propertyClassMap) {
+		AlternativeFilterRef result = new AlternativeFilterRef();
+		Class pathClass = propertyClassMap.get(filterFieldAssociationPath.getPathString());
+		if (pathClass != null) {
+			String[] altFilterArr = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR
+					+ filterFieldAssociationPath.getPropertyName());
+			if (altFilterArr != null && altFilterArr.length > 0) {
+				for (int i = altFilterArr.length - 1; i >= 0; i--) {
+					String altFilter = altFilterArr[i];
+					if (ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) || ALTERNATIVE_FILTER_LAST_NAME_VARIANTS.equals(altFilter)) {
+						if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
+							String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
+									: "lastNameNormalizedHash";
+							AssociationPath variantPath = new AssociationPath(
+									filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + normalizedHashPropertyName);
+							String variantPropertyName = aliasPropertyName(entityClass, variantPath, entityName, explicitJoinsMap, propertyClassMap);
+							StringBuilder variantHql = new StringBuilder();
+							ArrayList<QueryParameterValue> variantQueryValues = new ArrayList<QueryParameterValue>();
+							appendNormalizedHashVariantsOr(variantHql, variantQueryValues, variantPropertyName,
+									CommonUtil.getOrganisationNameVariants(value).iterator());
+							if (variantHql.length() > 0) {
+								if (orHqlWhereClause.length() > 0) {
+									orHqlWhereClause.append(" or ");
+								}
+								orHqlWhereClause.append(variantHql);
+								orQueryValues.addAll(variantQueryValues);
+							}
+						}
+					} else if (ALTERNATIVE_FILTER_ALIAS_VARIANTS.equals(altFilter)) {
+						AssociationPath variantPath = new AssociationPath(
+								filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + "aliasNormalized");
+						String variantPropertyName = aliasPropertyName(entityClass, variantPath, entityName, explicitJoinsMap, propertyClassMap);
+						StringBuilder variantHql = new StringBuilder();
+						ArrayList<QueryParameterValue> variantQueryValues = new ArrayList<QueryParameterValue>();
+						appendStringEqVariantsOr(variantHql, variantQueryValues, variantPropertyName, CommonUtil.getAliasVariants(value).iterator());
+						if (variantHql.length() > 0) {
+							if (orHqlWhereClause.length() > 0) {
+								orHqlWhereClause.append(" or ");
+							}
+							orHqlWhereClause.append(variantHql);
+							orQueryValues.addAll(variantQueryValues);
+						}
+					} else {
+						AssociationPath altFilterFieldAssociationPath = new AssociationPath(
+								filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
+						result.orPropertyName = aliasPropertyName(entityClass, altFilterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
+						result.orPropertyClass = propertyClassMap.get(altFilterFieldAssociationPath.getFullQualifiedPropertyName());
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	private static void appendNormalizedHashVariantsOr(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName,
+			Iterator<String[]> variantsIt) {
+		if (variantsIt.hasNext()) {
+			hqlWhereClause.append("(");
+			boolean first = true;
+			while (variantsIt.hasNext()) {
+				if (!first) {
+					hqlWhereClause.append(" or ");
+				}
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				CriterionInstantVO criterion = new CriterionInstantVO();
+				criterion.setStringValue(variantsIt.next()[0]);
+				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+				first = false;
+			}
+			hqlWhereClause.append(")");
+		}
+	}
+
+	private static void appendStringEqVariantsOr(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName,
+			Iterator<String[]> variantsIt) {
+		if (variantsIt.hasNext()) {
+			hqlWhereClause.append("(");
+			boolean first = true;
+			while (variantsIt.hasNext()) {
+				if (!first) {
+					hqlWhereClause.append(" or ");
+				}
+				hqlWhereClause.append(propertyName);
+				hqlWhereClause.append(" = ?");
+				queryValues.add(new QueryParameterValue(String.class, variantsIt.next()[0]));
+				first = false;
+			}
+			hqlWhereClause.append(")");
+		}
+	}
+
 	private static void applyFilter(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, Class propertyClass, String value,
 			String orPropertyName, Class orPropertyClass, String timeZone) {
-		if (!CommonUtil.isEmptyString(orPropertyName)) {
+		applyFilter(hqlWhereClause, queryValues, propertyName, propertyClass, value, orPropertyName, orPropertyClass, timeZone, null, null);
+	}
+
+	private static void applyFilter(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, Class propertyClass, String value,
+			String orPropertyName, Class orPropertyClass, String timeZone, StringBuilder orHqlWhereClause, ArrayList<QueryParameterValue> orQueryValues) {
+		boolean hasOr = !CommonUtil.isEmptyString(orPropertyName) || (orHqlWhereClause != null && orHqlWhereClause.length() > 0);
+		if (hasOr) {
 			hqlWhereClause.append("(");
 		}
 		if (propertyClass.equals(String.class)) {
@@ -477,9 +588,18 @@ public final class QueryUtil {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(CommonUtil.INPUT_TYPE_NOT_SUPPORTED, propertyClass.toString()));
 		}
-		if (!CommonUtil.isEmptyString(orPropertyName)) {
+		if (hasOr) {
 			hqlWhereClause.append(" or ");
-			applyFilter(hqlWhereClause, queryValues, orPropertyName, orPropertyClass, value, null, null, timeZone);
+			if (orHqlWhereClause != null && orHqlWhereClause.length() > 0) {
+				hqlWhereClause.append(orHqlWhereClause);
+				queryValues.addAll(orQueryValues);
+				if (!CommonUtil.isEmptyString(orPropertyName)) {
+					hqlWhereClause.append(" or ");
+				}
+			}
+			if (!CommonUtil.isEmptyString(orPropertyName)) {
+				applyFilter(hqlWhereClause, queryValues, orPropertyName, orPropertyClass, value, null, null, timeZone);
+			}
 			hqlWhereClause.append(")");
 		}
 	}
@@ -1109,18 +1229,10 @@ public final class QueryUtil {
 					Map.Entry<String, String> filter = filterIt.next();
 					AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
 					String filterField = aliasPropertyName(entityClass, filterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
-					AssociationPath altFilterFieldAssociationPath = null;
-					String altFilterField = null;
-					Class pathClass = propertyClassMap.get(filterFieldAssociationPath.getPathString());
-					if (pathClass != null) {
-						String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR
-								+ filterFieldAssociationPath.getPropertyName());
-						if (!CommonUtil.isEmptyString(altFilter)) {
-							altFilterFieldAssociationPath = new AssociationPath(
-									filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
-							altFilterField = aliasPropertyName(entityClass, altFilterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
-						}
-					}
+					StringBuilder altOrHqlWhereClause = new StringBuilder();
+					ArrayList<QueryParameterValue> altOrQueryValues = new ArrayList<QueryParameterValue>();
+					AlternativeFilterRef altFilterRef = applyAlternativeFilter(altOrHqlWhereClause, altOrQueryValues, entityClass, entityName, filterFieldAssociationPath,
+							filter.getValue(), psf.getFilterTimeZone(), explicitJoinsMap, propertyClassMap);
 					if (firstFilter) {
 						if (whereAppended) {
 							hqlWhereClause.append(" and (");
@@ -1133,8 +1245,7 @@ public final class QueryUtil {
 						hqlWhereClause.append(" and ");
 					}
 					applyFilter(hqlWhereClause, queryValues, filterField, propertyClassMap.get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-							altFilterField, altFilterFieldAssociationPath != null ? propertyClassMap.get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()) : null,
-							psf.getFilterTimeZone());
+							altFilterRef.orPropertyName, altFilterRef.orPropertyClass, psf.getFilterTimeZone(), altOrHqlWhereClause, altOrQueryValues);
 					if (!filterIt.hasNext()) {
 						hqlWhereClause.append(")");
 					}
