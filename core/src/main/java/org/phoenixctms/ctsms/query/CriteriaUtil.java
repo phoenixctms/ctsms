@@ -52,6 +52,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
@@ -91,10 +92,14 @@ public final class CriteriaUtil {
 		EXACT_STRING_FILTER_ENTITY_FIELDS.add("code"); //randomization list code
 	}
 	private final static String ALIAS_PREFIX = "_";
-	private final static HashMap<String, String> ALTERNATIVE_FILTER_MAP = new HashMap<String, String>();
+	private final static String ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS = "firstNameVariants";
+	private final static String ALTERNATIVE_FILTER_LAST_NAME_VARIANTS = "lastNameVariants";
+	private final static String ALTERNATIVE_FILTER_ALIAS_VARIANTS = "aliasVariants";
+	private final static HashMap<String, String[]> ALTERNATIVE_FILTER_MAP = new HashMap<String, String[]>();
 	static {
-		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash", "alias");
-		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", "alias");
+		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
+				new String[] { "alias", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS, ALTERNATIVE_FILTER_ALIAS_VARIANTS });
+		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
 	}
 	private final static String UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE = "unsupported binary restriction criterion type {0}";
 	private final static String UNSUPPORTED_UNARY_RESTRICTION_CRITERION_TYPE = "unsupported unary restriction criterion type {0}";
@@ -135,18 +140,61 @@ public final class CriteriaUtil {
 		}
 	}
 
-	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value, String timeZone)
+	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value, PSFVO psf)
 			throws Exception {
+		String timeZone = psf != null ? psf.getFilterTimeZone() : null;
 		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
 		if (pathClass != null) {
-			String altFilter = ALTERNATIVE_FILTER_MAP.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + filterFieldAssociationPath.getPropertyName());
-			if (!CommonUtil.isEmptyString(altFilter)) {
-				AssociationPath altFilterFieldAssociationPath = new AssociationPath(
-						filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
-				criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
-				return applyFilter(altFilterFieldAssociationPath.getPropertyName(),
-						criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, null, timeZone);
+			String[] altFilterArr = ALTERNATIVE_FILTER_MAP
+					.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + filterFieldAssociationPath.getPropertyName());
+			if (altFilterArr != null && altFilterArr.length > 0) {
+				org.hibernate.criterion.Criterion or = null;
+				for (int i = altFilterArr.length - 1; i >= 0; i--) {
+					String altFilter = altFilterArr[i];
+					if (ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) || ALTERNATIVE_FILTER_LAST_NAME_VARIANTS.equals(altFilter)) {
+						if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
+							String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
+									: "lastNameNormalizedHash";
+							or = applyOr(getNormalizedHashVariantsCriterion(normalizedHashPropertyName, value), or);
+						}
+					} else if (ALTERNATIVE_FILTER_ALIAS_VARIANTS.equals(altFilter)) {
+						or = applyOr(getAliasVariantsCriterion(value), or);
+					} else {
+						AssociationPath altFilterFieldAssociationPath = new AssociationPath(
+								filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
+						criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
+						or = applyFilter(altFilterFieldAssociationPath.getPropertyName(),
+								criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, or, timeZone);
+					}
+				}
+				return or;
 			}
+		}
+		return null;
+	}
+
+	private static org.hibernate.criterion.Criterion getAliasVariantsCriterion(String value) {
+		Iterator<String[]> aliasVariantsIt = CommonUtil.getAliasVariants(value).iterator();
+		if (aliasVariantsIt.hasNext()) {
+			Junction disjunction = Restrictions.disjunction();
+			while (aliasVariantsIt.hasNext()) {
+				String[] aliasVariant = aliasVariantsIt.next();
+				disjunction.add(Restrictions.eq("aliasNormalized", aliasVariant[0]));
+			}
+			return disjunction;
+		}
+		return null;
+	}
+
+	private static org.hibernate.criterion.Criterion getNormalizedHashVariantsCriterion(String normalizedHashPropertyName, String value) throws Exception {
+		Iterator<String[]> nameVariantsIt = CommonUtil.getOrganisationNameVariants(value).iterator();
+		if (nameVariantsIt.hasNext()) {
+			Junction disjunction = Restrictions.disjunction();
+			while (nameVariantsIt.hasNext()) {
+				String[] nameVariant = nameVariantsIt.next();
+				disjunction.add(Restrictions.eq(normalizedHashPropertyName, CryptoUtil.hashForSearch(nameVariant[0])));
+			}
+			return disjunction;
 		}
 		return null;
 	}
@@ -580,7 +628,7 @@ public final class CriteriaUtil {
 						subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf.getFilterTimeZone()), psf.getFilterTimeZone()));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf), psf.getFilterTimeZone()));
 					}
 				}
 				if (psf.getUpdateRowCount()) {
@@ -1030,7 +1078,7 @@ public final class CriteriaUtil {
 						}
 						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf.getFilterTimeZone()), psf.getFilterTimeZone()));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf), psf.getFilterTimeZone()));
 					}
 				}
 				Long count = null;
