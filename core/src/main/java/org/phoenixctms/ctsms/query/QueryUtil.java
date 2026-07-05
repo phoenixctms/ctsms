@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.hql.QueryTranslator;
 import org.hibernate.hql.QueryTranslatorFactory;
@@ -246,7 +248,7 @@ public final class QueryUtil {
 
 	private static AlternativeFilterRef applyAlternativeFilter(StringBuilder orHqlWhereClause, ArrayList<QueryParameterValue> orQueryValues, Class entityClass,
 			String entityName, AssociationPath filterFieldAssociationPath, String value, String timeZone, HashMap<String, AssociationPath> explicitJoinsMap,
-			HashMap<String, Class> propertyClassMap) {
+			HashMap<String, Class> propertyClassMap) throws Exception {
 		AlternativeFilterRef result = new AlternativeFilterRef();
 		Class pathClass = propertyClassMap.get(filterFieldAssociationPath.getPathString());
 		if (pathClass != null) {
@@ -318,8 +320,42 @@ public final class QueryUtil {
 		return result;
 	}
 
+	private static void appendHashForSearchTextLikeHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
+			throws Exception {
+		if (CommonUtil.isEmptyString(text)) {
+			return;
+		}
+		List<String> substrings = CommonUtil.generateWordSubstrings(text, CryptoUtil.WORD_SUBSTRING_MIN_LENGTH);
+		if (substrings.isEmpty()) {
+			hqlWhereClause.append(propertyName);
+			hqlWhereClause.append(" like ?");
+			CriterionInstantVO criterion = new CriterionInstantVO();
+			criterion.setStringValue(text);
+			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+			return;
+		}
+		if (substrings.size() > 1) {
+			hqlWhereClause.append("(");
+		}
+		boolean first = true;
+		for (String substring : substrings) {
+			if (!first) {
+				hqlWhereClause.append(" or ");
+			}
+			hqlWhereClause.append(propertyName);
+			hqlWhereClause.append(" like ?");
+			CriterionInstantVO criterion = new CriterionInstantVO();
+			criterion.setStringValue(substring);
+			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+			first = false;
+		}
+		if (substrings.size() > 1) {
+			hqlWhereClause.append(")");
+		}
+	}
+
 	private static void appendNormalizedHashVariantsOr(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName,
-			Iterator<String[]> variantsIt) {
+			Iterator<String[]> variantsIt) throws Exception {
 		if (variantsIt.hasNext()) {
 			hqlWhereClause.append("(");
 			boolean first = true;
@@ -327,11 +363,7 @@ public final class QueryUtil {
 				if (!first) {
 					hqlWhereClause.append(" or ");
 				}
-				hqlWhereClause.append(propertyName);
-				hqlWhereClause.append(" = ?");
-				CriterionInstantVO criterion = new CriterionInstantVO();
-				criterion.setStringValue(variantsIt.next()[0]);
-				queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+				appendHashForSearchTextLikeHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
 				first = false;
 			}
 			hqlWhereClause.append(")");
@@ -357,12 +389,12 @@ public final class QueryUtil {
 	}
 
 	private static void applyFilter(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, Class propertyClass, String value,
-			String orPropertyName, Class orPropertyClass, String timeZone) {
+			String orPropertyName, Class orPropertyClass, String timeZone) throws Exception {
 		applyFilter(hqlWhereClause, queryValues, propertyName, propertyClass, value, orPropertyName, orPropertyClass, timeZone, null, null);
 	}
 
 	private static void applyFilter(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, Class propertyClass, String value,
-			String orPropertyName, Class orPropertyClass, String timeZone, StringBuilder orHqlWhereClause, ArrayList<QueryParameterValue> orQueryValues) {
+			String orPropertyName, Class orPropertyClass, String timeZone, StringBuilder orHqlWhereClause, ArrayList<QueryParameterValue> orQueryValues) throws Exception {
 		boolean hasOr = !CommonUtil.isEmptyString(orPropertyName) || (orHqlWhereClause != null && orHqlWhereClause.length() > 0);
 		if (hasOr) {
 			hqlWhereClause.append("(");
@@ -589,10 +621,7 @@ public final class QueryUtil {
 			}
 			//STRING_HASH:
 			hqlWhereClause.append(" or ");
-			hqlWhereClause.append(propertyName);
-			hqlWhereClause.append(" = ?");
-			criterion.setStringValue(value);
-			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+			appendHashForSearchTextLikeHql(hqlWhereClause, queryValues, propertyName, value);
 			//TIMESTAMP_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
@@ -1644,7 +1673,10 @@ public final class QueryUtil {
 				query.setString(pos, value.getStringValue());
 				break;
 			case STRING_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getStringValue()));
+				byte[] stringHash = CryptoUtil.hashForSearch(value.getStringValue());
+				if (stringHash != null) {
+					query.setBinary(pos, hashForSearchMatchPattern(stringHash, MatchMode.ANYWHERE));
+				}
 				break;
 			case TIMESTAMP:
 				query.setTimestamp(pos, value.getTimestampValue());
@@ -1719,6 +1751,12 @@ public final class QueryUtil {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(CommonUtil.INPUT_TYPE_NOT_SUPPORTED, propertyClass.toString()));
 		}
+	}
+
+	private static byte[] hashForSearchMatchPattern(byte[] hash, MatchMode matchMode) {
+		return CryptoUtil.hashForSearchMatchPattern(hash,
+				MatchMode.END.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode),
+				MatchMode.START.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode));
 	}
 
 	private static void setQueryValues(Query query, ArrayList<QueryParameterValue> queryValues, HashMap<NamedParameterValues, Object> namedParameterValuesCache) throws Exception {

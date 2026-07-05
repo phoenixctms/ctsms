@@ -219,22 +219,24 @@ public final class CriteriaUtil {
 		return null;
 	}
 
-	private static byte[] hashForSearchLikePattern(byte[] hash) {
-		byte[] pattern = new byte[hash.length + 2];
-		pattern[0] = (byte) '%';
-		System.arraycopy(hash, 0, pattern, 1, hash.length);
-		pattern[pattern.length - 1] = (byte) '%';
-		return pattern;
+	private static byte[] hashForSearchMatchPattern(byte[] hash, MatchMode matchMode) {
+		return CryptoUtil.hashForSearchMatchPattern(hash,
+				MatchMode.END.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode),
+				MatchMode.START.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode));
 	}
 
-	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(String propertyName, byte[] hash) {
+	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(String propertyName, byte[] hash, MatchMode matchMode) {
 		if (hash == null) {
 			return null;
 		}
 		return Restrictions.sqlRestriction(
 				"{alias}." + propertyName + " like ?",
-				hashForSearchLikePattern(hash),
+				hashForSearchMatchPattern(hash, matchMode),
 				Hibernate.BINARY);
+	}
+
+	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(String propertyName, byte[] hash) {
+		return hashForSearchHashLikeCriterion(propertyName, hash, MatchMode.ANYWHERE);
 	}
 
 	private static void addHashForSearchLike(Junction junction, String propertyName, byte[] hash) {
