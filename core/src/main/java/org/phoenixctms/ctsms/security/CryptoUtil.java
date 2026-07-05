@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.security;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,6 +17,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -424,8 +426,85 @@ public final class CryptoUtil {
 		return KeyFactory.getInstance(ASYMMETRIC_ALGORITHM).generatePublic(new X509EncodedKeySpec(publicKey));
 	}
 
+	public static final int WORD_SUBSTRING_MIN_LENGTH = 3;
+
 	private static byte[] hashForSearch(byte[] plainText) throws Exception {
 		return encryptHashForSearch(getMD5DigestForSearch(plainText));
+	}
+
+	private static byte[] hashForSearchValue(Serializable value) throws Exception {
+		return hashForSearch(CoreUtil.serialize(value));
+	}
+
+	private static byte[] hashForSearchValue(SecretKey departmentKey, Serializable value) throws Exception {
+		return encryptHashForSearch(departmentKey, getMD5DigestForSearch(CoreUtil.serialize(value)));
+	}
+
+	private static byte[] hashForSearchValue(byte[] salt, String password, Serializable value) throws Exception {
+		return encryptHashForSearch(salt, password, getMD5DigestForSearch(CoreUtil.serialize(value)));
+	}
+
+	private static byte[] hashForSearchFromText(String text) throws Exception {
+		if (text == null) {
+			return null;
+		}
+		List<String> substrings = CommonUtil.generateWordSubstrings(text, WORD_SUBSTRING_MIN_LENGTH);
+		if (substrings.isEmpty()) {
+			if (!CommonUtil.isEmptyString(text)) {
+				return hashForSearchValue(text);
+			}
+			return null;
+		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		for (String substring : substrings) {
+			byte[] hash = hashForSearchValue(substring);
+			if (hash != null) {
+				out.write(hash, 0, hash.length);
+			}
+		}
+		return out.size() > 0 ? out.toByteArray() : null;
+	}
+
+	private static byte[] hashForSearchFromText(SecretKey departmentKey, String text) throws Exception {
+		if (text == null) {
+			return null;
+		}
+		List<String> substrings = CommonUtil.generateWordSubstrings(text, WORD_SUBSTRING_MIN_LENGTH);
+		if (substrings.isEmpty()) {
+			if (!CommonUtil.isEmptyString(text)) {
+				return hashForSearchValue(departmentKey, text);
+			}
+			return null;
+		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		for (String substring : substrings) {
+			byte[] hash = hashForSearchValue(departmentKey, substring);
+			if (hash != null) {
+				out.write(hash, 0, hash.length);
+			}
+		}
+		return out.size() > 0 ? out.toByteArray() : null;
+	}
+
+	private static byte[] hashForSearchFromText(byte[] salt, String password, String text) throws Exception {
+		if (text == null) {
+			return null;
+		}
+		List<String> substrings = CommonUtil.generateWordSubstrings(text, WORD_SUBSTRING_MIN_LENGTH);
+		if (substrings.isEmpty()) {
+			if (!CommonUtil.isEmptyString(text)) {
+				return hashForSearchValue(salt, password, text);
+			}
+			return null;
+		}
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		for (String substring : substrings) {
+			byte[] hash = hashForSearchValue(salt, password, substring);
+			if (hash != null) {
+				out.write(hash, 0, hash.length);
+			}
+		}
+		return out.size() > 0 ? out.toByteArray() : null;
 	}
 
 	public static byte[] hashForSearch(byte[] salt, String password, byte[] plainText) throws Exception {
@@ -433,14 +512,24 @@ public final class CryptoUtil {
 	}
 
 	public static byte[] hashForSearch(byte[] salt, String password, Serializable value) throws Exception {
-		return hashForSearch(salt, password, CoreUtil.serialize(value));
+		if (value instanceof String) {
+			return hashForSearchFromText(salt, password, (String) value);
+		}
+		return hashForSearchValue(salt, password, value);
 	}
 
 	public static byte[] hashForSearch(Serializable value) throws Exception {
-		return hashForSearch(CoreUtil.serialize(value));
+		if (value instanceof String) {
+			return hashForSearchFromText((String) value);
+		}
+		return hashForSearchValue(value);
 	}
 
 	public static byte[] hashForSearch(SecretKey departmentKey, byte[] plainText) throws Exception {
+		Object value = CoreUtil.deserialize(plainText);
+		if (value instanceof String) {
+			return hashForSearchFromText(departmentKey, (String) value);
+		}
 		return encryptHashForSearch(departmentKey, getMD5DigestForSearch(plainText));
 	}
 

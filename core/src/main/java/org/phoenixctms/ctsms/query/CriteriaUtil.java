@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.query;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
@@ -244,7 +245,7 @@ public final class CriteriaUtil {
 	}
 
 	private static void addHashForSearchTextLike(Junction junction, String propertyName, String text) throws Exception {
-		List<String> substrings = CommonUtil.generateWordSubstrings(text);
+		List<String> substrings = CommonUtil.generateWordSubstrings(text, CryptoUtil.WORD_SUBSTRING_MIN_LENGTH);
 		if (substrings.isEmpty()) {
 			if (!CommonUtil.isEmptyString(text)) {
 				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(text));
@@ -255,6 +256,26 @@ public final class CriteriaUtil {
 				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(substringIt.next()));
 			}
 		}
+	}
+
+	public static org.hibernate.criterion.Criterion getHashForSearchTextLikeCriterion(String propertyName, String text) throws Exception {
+		if (CommonUtil.isEmptyString(text)) {
+			return null;
+		}
+		List<String> substrings = CommonUtil.generateWordSubstrings(text, CryptoUtil.WORD_SUBSTRING_MIN_LENGTH);
+		if (substrings.isEmpty()) {
+			return hashForSearchHashLikeCriterion(propertyName, CryptoUtil.hashForSearch(text));
+		}
+		Junction disjunction = Restrictions.disjunction();
+		Iterator<String> substringIt = substrings.iterator();
+		while (substringIt.hasNext()) {
+			addHashForSearchLike(disjunction, propertyName, CryptoUtil.hashForSearch(substringIt.next()));
+		}
+		return disjunction;
+	}
+
+	public static org.hibernate.criterion.Criterion getHashForSearchValueLikeCriterion(String propertyName, Serializable value) throws Exception {
+		return hashForSearchHashLikeCriterion(propertyName, CryptoUtil.hashForSearch(value));
 	}
 
 	public static void applyClosedIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {

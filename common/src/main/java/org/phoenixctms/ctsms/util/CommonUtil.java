@@ -2707,18 +2707,16 @@ public final class CommonUtil {
 		return result;
 	}
 
-	public static final int WORD_SUBSTRING_MIN_LENGTH = 3;
-
-	public static List<String> generateWordSubstrings(String text) {
+	public static List<String> generateWordSubstrings(String text, int minLength) {
 		List<String> result = new ArrayList<String>();
 		if (isEmptyString(text)) {
 			return result;
 		}
 		for (String word : text.split("[^\\p{L}\\p{N}]+")) {
-			if (word.length() < WORD_SUBSTRING_MIN_LENGTH) {
+			if (word.length() < minLength) {
 				continue;
 			}
-			for (int len = WORD_SUBSTRING_MIN_LENGTH; len <= word.length(); len++) {
+			for (int len = minLength; len <= word.length(); len++) {
 				for (int start = 0; start <= word.length() - len; start++) {
 					result.add(word.substring(start, start + len));
 				}
