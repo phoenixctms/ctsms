@@ -211,12 +211,50 @@ public final class CriteriaUtil {
 		if (nameVariantsIt.hasNext()) {
 			Junction disjunction = Restrictions.disjunction();
 			while (nameVariantsIt.hasNext()) {
-				String[] nameVariant = nameVariantsIt.next();
-				disjunction.add(Restrictions.eq(normalizedHashPropertyName, CryptoUtil.hashForSearch(nameVariant[0])));
+				addHashForSearchTextLike(disjunction, normalizedHashPropertyName, nameVariantsIt.next()[0]);
 			}
 			return disjunction;
 		}
 		return null;
+	}
+
+	private static byte[] hashForSearchLikePattern(byte[] hash) {
+		byte[] pattern = new byte[hash.length + 2];
+		pattern[0] = (byte) '%';
+		System.arraycopy(hash, 0, pattern, 1, hash.length);
+		pattern[pattern.length - 1] = (byte) '%';
+		return pattern;
+	}
+
+	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(String propertyName, byte[] hash) {
+		if (hash == null) {
+			return null;
+		}
+		return Restrictions.sqlRestriction(
+				"{alias}." + propertyName + " like ?",
+				hashForSearchLikePattern(hash),
+				Hibernate.BINARY);
+	}
+
+	private static void addHashForSearchLike(Junction junction, String propertyName, byte[] hash) {
+		org.hibernate.criterion.Criterion criterion = hashForSearchHashLikeCriterion(propertyName, hash);
+		if (criterion != null) {
+			junction.add(criterion);
+		}
+	}
+
+	private static void addHashForSearchTextLike(Junction junction, String propertyName, String text) throws Exception {
+		List<String> substrings = CommonUtil.generateWordSubstrings(text);
+		if (substrings.isEmpty()) {
+			if (!CommonUtil.isEmptyString(text)) {
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(text));
+			}
+		} else {
+			Iterator<String> substringIt = substrings.iterator();
+			while (substringIt.hasNext()) {
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(substringIt.next()));
+			}
+		}
 	}
 
 	public static void applyClosedIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
@@ -492,36 +530,36 @@ public final class CriteriaUtil {
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) {
 			Junction junction = Restrictions.disjunction();
 			//BOOLEAN_HASH:
-			junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(new Boolean(value))));
+			addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(new Boolean(value)));
 			//DATE_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat())); //, CommonUtil.timeZoneFromString(timeZone));
-				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(date)));
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(date));
 			} catch (IllegalArgumentException e) {
 			}
 			//TIME_HASH:
 			try {
 				Date time = CommonUtil.parseDate(value, CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()));
-				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(time)));
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(time));
 			} catch (IllegalArgumentException e) {
 			}
 			//LONG_HASH:
 			try {
 				Long lng = new Long(value);
-				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(lng)));
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(lng));
 			} catch (NumberFormatException e) {
 			}
 			//FLOAT_HASH:
 			Float flt = CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator());
 			if (flt != null) {
-				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(flt)));
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(flt));
 			}
 			//STRING_HASH:
-			junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(value)));
+			addHashForSearchTextLike(junction, propertyName, value);
 			//TIMESTAMP_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
-				junction.add(Restrictions.eq(propertyName, CryptoUtil.hashForSearch(date)));
+				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(date));
 			} catch (IllegalArgumentException e) {
 			}
 			return applyOr(junction, or);

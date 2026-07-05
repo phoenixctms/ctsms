@@ -2707,6 +2707,26 @@ public final class CommonUtil {
 		return result;
 	}
 
+	public static final int WORD_SUBSTRING_MIN_LENGTH = 3;
+
+	public static List<String> generateWordSubstrings(String text) {
+		List<String> result = new ArrayList<String>();
+		if (isEmptyString(text)) {
+			return result;
+		}
+		for (String word : text.split("[^\\p{L}\\p{N}]+")) {
+			if (word.length() < WORD_SUBSTRING_MIN_LENGTH) {
+				continue;
+			}
+			for (int len = WORD_SUBSTRING_MIN_LENGTH; len <= word.length(); len++) {
+				for (int start = 0; start <= word.length() - len; start++) {
+					result.add(word.substring(start, start + len));
+				}
+			}
+		}
+		return result;
+	}
+
 	public static String normalizeFirstName(String firstName) {
 		try {
 			return normalizeName(firstName, false).iterator().next();
