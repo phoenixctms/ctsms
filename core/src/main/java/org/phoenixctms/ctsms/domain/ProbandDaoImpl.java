@@ -566,14 +566,21 @@ public class ProbandDaoImpl
 				Disjunction disjunction = Restrictions.disjunction();
 				while (personNameVariantsIt.hasNext()) {
 					String[] personNameVariant = personNameVariantsIt.next();
-					disjunction.add(Restrictions.and(
-							Restrictions.eq("firstNameNormalizedHash", CryptoUtil.hashForSearch(personNameVariant[0])),
-							Restrictions.eq("lastNameNormalizedHash", CryptoUtil.hashForSearch(personNameVariant[1]))));
+					org.hibernate.criterion.Criterion firstNameCriterion = CriteriaUtil.getHashForSearchTextLikeCriterion("firstNameNormalizedHash",
+							personNameVariant[0]);
+					org.hibernate.criterion.Criterion lastNameCriterion = CriteriaUtil.getHashForSearchTextLikeCriterion("lastNameNormalizedHash",
+							personNameVariant[1]);
+					if (firstNameCriterion != null && lastNameCriterion != null) {
+						disjunction.add(Restrictions.and(firstNameCriterion, lastNameCriterion));
+					}
 				}
 				personParticularsCriteria.add(disjunction);
 			}
 			if (dateOfBirth != null) {
-				personParticularsCriteria.add(Restrictions.eq("dateOfBirthHash", CryptoUtil.hashForSearch(dateOfBirth)));
+				org.hibernate.criterion.Criterion dateOfBirthCriterion = CriteriaUtil.getHashForSearchValueLikeCriterion("dateOfBirthHash", dateOfBirth);
+				if (dateOfBirthCriterion != null) {
+					personParticularsCriteria.add(dateOfBirthCriterion);
+				}
 			}
 			if (excludeId != null) {
 				probandCriteria.add(Restrictions.not(Restrictions.idEq(excludeId.longValue())));
