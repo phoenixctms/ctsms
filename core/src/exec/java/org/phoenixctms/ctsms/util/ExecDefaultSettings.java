@@ -28,6 +28,7 @@ public class ExecDefaultSettings {
 	public static final String USER_VISIBLE_PROBAND_TAB_LIST_PRESET = null;
 	public static final String USER_VISIBLE_MASS_MAIL_TAB_LIST_PRESET = null;
 	public static final String USER_VISIBLE_USER_TAB_LIST_PRESET = null;
+	public static final int HASH_REINDEX_THREADS = Math.min(4, Runtime.getRuntime().availableProcessors());
 
 	private ExecDefaultSettings() {
 	}

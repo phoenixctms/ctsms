@@ -229,6 +229,28 @@ public class UserContext extends VOCacheContext {
 		this.inheritedUser = inheritedUser;
 	}
 
+	public UserContext copyForThread() {
+		UserContext copy = new UserContext(user, inheritedUser, lastPassword, plainPassword, host, realm);
+		copy.isLocaleSet = isLocaleSet;
+		copy.locale = locale;
+		copy.isTimeZoneSet = isTimeZoneSet;
+		copy.timeZone = timeZone;
+		copy.isDateFormatSet = isDateFormatSet;
+		copy.dateFormat = dateFormat;
+		copy.isDecimalSeparatorSet = isDecimalSeparatorSet;
+		copy.decimalSeparator = decimalSeparator;
+		copy.isPlainDepartmentPasswordSet = isPlainDepartmentPasswordSet;
+		copy.plainDepartmentPassword = plainDepartmentPassword;
+		copy.isDepartmentKeySet = isDepartmentKeySet;
+		copy.departmentKey = departmentKey;
+		copy.isPrivateKeySet = isPrivateKeySet;
+		copy.privateKey = privateKey;
+		copy.isPublicKeySet = isPublicKeySet;
+		copy.publicKey = publicKey;
+		copy.isTrustedHost = isTrustedHost;
+		return copy;
+	}
+
 	@Override
 	public String toString() {
 		return getName();

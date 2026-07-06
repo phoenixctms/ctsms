@@ -27,6 +27,7 @@ import org.phoenixctms.ctsms.executable.migration.JournalSystemMessageCodeInitia
 import org.phoenixctms.ctsms.executable.migration.OrganisationNameNormalizedInitializer;
 import org.phoenixctms.ctsms.executable.migration.PersonNameNormalizedInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandAddressProvinceInitializer;
+import org.phoenixctms.ctsms.executable.migration.EncryptedStringHashReindexLauncher;
 import org.phoenixctms.ctsms.executable.migration.ProbandCommentInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandImageInitializer;
 import org.phoenixctms.ctsms.executable.migration.ProbandListStatusEntryReasonDecryptInitializer;
@@ -854,6 +855,10 @@ public class DBTool {
 					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getProbandNameNormalizedInitializer().update(getAuthenticationOptionValue(line)) > 0l;
+				} else if (line.hasOption(DBToolOptions.REINDEX_ENCRYPTED_STRING_HASHES_OPT)) {
+					job = getTaskAndLockProcess(DBToolOptions.REINDEX_ENCRYPTED_STRING_HASHES_OPT, line);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getEncryptedStringHashReindexLauncher().update(getAuthenticationOptionValue(line)) > 0l;
 				} else if (line.hasOption(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT)) {
 					job = getTaskAndLockProcess(DBToolOptions.INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);
@@ -1202,6 +1207,7 @@ public class DBTool {
 	private ProbandImageInitializer probandImageInitializer;
 	private ProbandCommentInitializer probandCommentInitializer;
 	private ProbandNameNormalizedInitializer probandNameNormalizedInitializer;
+	private EncryptedStringHashReindexLauncher encryptedStringHashReindexLauncher;
 	private PersonNameNormalizedInitializer personNameNormalizedInitializer;
 	private OrganisationNameNormalizedInitializer organisationNameNormalizedInitializer;
 	private ProbandAddressProvinceInitializer probandAddressProvinceInitializer;
@@ -1361,6 +1367,14 @@ public class DBTool {
 			probandNameNormalizedInitializer.setJobOutput(getJobOutput());
 		}
 		return probandNameNormalizedInitializer;
+	}
+
+	private EncryptedStringHashReindexLauncher getEncryptedStringHashReindexLauncher() {
+		if (encryptedStringHashReindexLauncher == null) {
+			encryptedStringHashReindexLauncher = context.getBean(EncryptedStringHashReindexLauncher.class);
+			encryptedStringHashReindexLauncher.setJobOutput(getJobOutput());
+		}
+		return encryptedStringHashReindexLauncher;
 	}
 
 	private PersonNameNormalizedInitializer getPersonNameNormalizedInitializer() {

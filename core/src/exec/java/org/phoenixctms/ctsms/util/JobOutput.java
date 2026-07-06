@@ -29,6 +29,8 @@ public class JobOutput extends JobEmailSenderBase implements ProcessorJobOutput 
 	protected JobService jobService;
 	private final static String LINE_FORMAT = "{0}";
 	private final static String LINE_FORMAT_WITH_TIMESTAMP = "{0}: {1}";
+	private final static String LINE_FORMAT_WITH_THREAD = "[{0}] {1}";
+	private final static String LINE_FORMAT_WITH_TIMESTAMP_AND_THREAD = "[{0}] {1}: {2}";
 	private final static boolean ALWAYS_PRINT_TIMESTAMP = false;
 	private final static String JOB_FILE_NAME_FORMAT = "{0}.{1}";
 	private JobUpdateVO job;
@@ -62,6 +64,27 @@ public class JobOutput extends JobEmailSenderBase implements ProcessorJobOutput 
 	private Date start;
 	private StringBuilder output;
 	private JavaMailSender mailSender;
+	private static final ThreadLocal<Integer> linePrefixThreadNumber = new ThreadLocal<Integer>();
+
+	public static void setLinePrefixThreadNumber(int threadNumber) {
+		linePrefixThreadNumber.set(threadNumber);
+	}
+
+	public static void clearLinePrefixThreadNumber() {
+		linePrefixThreadNumber.remove();
+	}
+
+	public static int getCurrentThreadNumber() {
+		String name = Thread.currentThread().getName();
+		int dash = name.lastIndexOf('-');
+		if (dash >= 0 && dash < name.length() - 1) {
+			try {
+				return Integer.parseInt(name.substring(dash + 1));
+			} catch (NumberFormatException e) {
+			}
+		}
+		return (int) Thread.currentThread().getId();
+	}
 
 	public JobOutput() {
 		reset();
@@ -137,19 +160,29 @@ public class JobOutput extends JobEmailSenderBase implements ProcessorJobOutput 
 	}
 
 	public void println(String line, boolean withTimestamp) {
-		if (output.length() > 0) {
-			output.append("\n");
-		}
-		String lineFormatted;
-		if (withTimestamp) {
-			lineFormatted = MessageFormat.format(LINE_FORMAT_WITH_TIMESTAMP,
-					CommonUtil.formatDate(new Date(), ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN)), line);
-		} else {
-			lineFormatted = MessageFormat.format(LINE_FORMAT, line);
-		}
-		output.append(lineFormatted);
-		if (this.job == null) {
-			System.out.println(lineFormatted);
+		synchronized (this) {
+			if (output.length() > 0) {
+				output.append("\n");
+			}
+			String lineFormatted;
+			Integer threadNumber = linePrefixThreadNumber.get();
+			if (withTimestamp) {
+				String timestamp = CommonUtil.formatDate(new Date(),
+						ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN));
+				if (threadNumber != null) {
+					lineFormatted = MessageFormat.format(LINE_FORMAT_WITH_TIMESTAMP_AND_THREAD, threadNumber, timestamp, line);
+				} else {
+					lineFormatted = MessageFormat.format(LINE_FORMAT_WITH_TIMESTAMP, timestamp, line);
+				}
+			} else if (threadNumber != null) {
+				lineFormatted = MessageFormat.format(LINE_FORMAT_WITH_THREAD, threadNumber, line);
+			} else {
+				lineFormatted = MessageFormat.format(LINE_FORMAT, line);
+			}
+			output.append(lineFormatted);
+			if (this.job == null) {
+				System.out.println(lineFormatted);
+			}
 		}
 	}
 

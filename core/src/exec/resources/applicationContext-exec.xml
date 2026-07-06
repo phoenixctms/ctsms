@@ -103,7 +103,105 @@
 		<property
 			name="authenticator"
 			ref="authenticator" />
-	</bean>	
+	</bean>
+	<bean
+		id="probandContactParticularsHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandContactParticularsHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="probandAddressHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandAddressHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="bankAccountHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.BankAccountHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="fileHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.FileHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="journalEntryHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.JournalEntryHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="probandTagValueHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandTagValueHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="probandContactDetailValueHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandContactDetailValueHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="procedureHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProcedureHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="medicationHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.MedicationHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="diagnosisHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.DiagnosisHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="moneyTransferHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.MoneyTransferHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="probandStatusEntryHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandStatusEntryHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="probandListStatusEntryHashReindexInitializer"
+		class="org.phoenixctms.ctsms.executable.migration.ProbandListStatusEntryHashReindexInitializer">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
+	<bean
+		id="encryptedStringHashReindexLauncher"
+		class="org.phoenixctms.ctsms.executable.migration.EncryptedStringHashReindexLauncher">
+		<property
+			name="authenticator"
+			ref="authenticator" />
+	</bean>
 	<bean
 		id="probandAddressProvinceInitializer"
 		class="org.phoenixctms.ctsms.executable.migration.ProbandAddressProvinceInitializer">

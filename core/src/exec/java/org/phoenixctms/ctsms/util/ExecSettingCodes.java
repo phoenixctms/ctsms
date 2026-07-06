@@ -23,4 +23,5 @@ public interface ExecSettingCodes {
 	public final static String USER_VISIBLE_PROBAND_TAB_LIST_PRESET = "user_visible_proband_tab_list_preset";
 	public final static String USER_VISIBLE_MASS_MAIL_TAB_LIST_PRESET = "user_visible_mass_mail_tab_list_preset";
 	public final static String USER_VISIBLE_USER_TAB_LIST_PRESET = "user_visible_user_tab_list_preset";
+	public static final String HASH_REINDEX_THREADS = "hash_reindex_threads";
 }
