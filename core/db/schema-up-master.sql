@@ -73,5 +73,51 @@ if get_database_version() < '010901006' then
   
 end if;
 
+if get_database_version() < '010901007' then
+
+  -- String hash columns are not indexed: concatenated substring search hashes can exceed btree row size limits,
+  -- and LIKE '%hash%' does not use btree indexes anyway.
+
+  drop index if exists medication_comment_hash;
+  drop index if exists money_transfer_comment_hash;
+  drop index if exists proband_contact_particulars_comment_hash;
+  drop index if exists procedure_comment_hash;
+  drop index if exists proband_tag_value_value_hash;
+  drop index if exists proband_status_entry_comment_hash;
+  drop index if exists proband_list_status_entry_reason_hash;
+  drop index if exists proband_contact_particulars_data_hash;
+  drop index if exists proband_contact_particulars_file_name_hash;
+  drop index if exists proband_contact_particulars_citizenship_hash;
+  drop index if exists proband_contact_particulars_last_name_hash;
+  drop index if exists proband_contact_particulars_last_name_normalized_hash;
+  drop index if exists proband_contact_particulars_first_name_hash;
+  drop index if exists proband_contact_particulars_first_name_normalized_hash;
+  drop index if exists proband_contact_detail_value_comment_hash;
+  drop index if exists proband_contact_detail_value_value_hash;
+  drop index if exists proband_address_care_of_hash;
+  drop index if exists proband_address_door_number_hash;
+  drop index if exists proband_address_entrance_hash;
+  drop index if exists proband_address_house_number_hash;
+  drop index if exists proband_address_street_name_hash;
+  drop index if exists proband_address_city_name_hash;
+  drop index if exists proband_address_zip_code_hash;
+  drop index if exists proband_address_country_name_hash;
+  drop index if exists journal_entry_title_hash;
+  drop index if exists journal_entry_comment_hash;
+  drop index if exists file_file_name_hash;
+  drop index if exists file_comment_hash;
+  drop index if exists file_title_hash;
+  drop index if exists diagnosis_comment_hash;
+  drop index if exists bank_account_bank_name_hash;
+  drop index if exists bank_account_bic_hash;
+  drop index if exists bank_account_iban_hash;
+  drop index if exists bank_account_bank_code_number_hash;
+  drop index if exists bank_account_account_number_hash;
+  drop index if exists bank_account_account_holder_name_hash;
+
+  perform set_database_version('010901007');
+
+end if;
+
 end
 $$;

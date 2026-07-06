@@ -134,48 +134,50 @@ create index journal_entry_user_fk_system_message_code ON JOURNAL_ENTRY (USER_FK
 create index journal_entry_massmail_fk_system_message_code ON JOURNAL_ENTRY (MASS_MAIL_FK,SYSTEM_MESSAGE_CODE);
 create index journal_entry_criteria_fk_system_message_code ON JOURNAL_ENTRY (CRITERIA_FK,SYSTEM_MESSAGE_CODE);
 
--- hash columns:
+-- string hash columns: not indexed when using substring search hashes (variable length; LIKE '%hash%' is not btree-friendly).
+-- Uncomment when hash_for_search_word_substring_min_length=null (full-string hash only, fixed 16-byte blocks).
 --SELECT 'CREATE INDEX ' || table_name || '_' || column_name || ' ON ' || table_name || ' (' || column_name || ');' FROM information_schema.columns where table_catalog='ctsms' and right(column_name,5)='_hash';
 
-CREATE INDEX medication_comment_hash ON medication (comment_hash);
-CREATE INDEX money_transfer_comment_hash ON money_transfer (comment_hash);
-CREATE INDEX proband_contact_particulars_comment_hash ON proband_contact_particulars (comment_hash);
-CREATE INDEX procedure_comment_hash ON procedure (comment_hash);
-CREATE INDEX proband_tag_value_value_hash ON proband_tag_value (value_hash);
-CREATE INDEX proband_status_entry_comment_hash ON proband_status_entry (comment_hash);
-CREATE INDEX proband_list_status_entry_reason_hash ON proband_list_status_entry (reason_hash);
-CREATE INDEX proband_contact_particulars_data_hash ON proband_contact_particulars (data_hash);
-CREATE INDEX proband_contact_particulars_file_name_hash ON proband_contact_particulars (file_name_hash);
-CREATE INDEX proband_contact_particulars_citizenship_hash ON proband_contact_particulars (citizenship_hash);
+--CREATE INDEX medication_comment_hash ON medication (comment_hash);
+--CREATE INDEX money_transfer_comment_hash ON money_transfer (comment_hash);
+--CREATE INDEX proband_contact_particulars_comment_hash ON proband_contact_particulars (comment_hash);
+--CREATE INDEX procedure_comment_hash ON procedure (comment_hash);
+--CREATE INDEX proband_tag_value_value_hash ON proband_tag_value (value_hash);
+--CREATE INDEX proband_status_entry_comment_hash ON proband_status_entry (comment_hash);
+--CREATE INDEX proband_list_status_entry_reason_hash ON proband_list_status_entry (reason_hash);
+--CREATE INDEX proband_contact_particulars_data_hash ON proband_contact_particulars (data_hash);
+--CREATE INDEX proband_contact_particulars_file_name_hash ON proband_contact_particulars (file_name_hash);
+--CREATE INDEX proband_contact_particulars_citizenship_hash ON proband_contact_particulars (citizenship_hash);
+--CREATE INDEX proband_contact_particulars_last_name_hash ON proband_contact_particulars (last_name_hash);
+--CREATE INDEX proband_contact_particulars_last_name_normalized_hash ON proband_contact_particulars (last_name_normalized_hash);
+--CREATE INDEX proband_contact_particulars_first_name_hash ON proband_contact_particulars (first_name_hash);
+--CREATE INDEX proband_contact_particulars_first_name_normalized_hash ON proband_contact_particulars (first_name_normalized_hash);
+--CREATE INDEX proband_contact_detail_value_comment_hash ON proband_contact_detail_value (comment_hash);
+--CREATE INDEX proband_contact_detail_value_value_hash ON proband_contact_detail_value (value_hash);
+--CREATE INDEX proband_address_care_of_hash ON proband_address (care_of_hash);
+--CREATE INDEX proband_address_door_number_hash ON proband_address (door_number_hash);
+--CREATE INDEX proband_address_entrance_hash ON proband_address (entrance_hash);
+--CREATE INDEX proband_address_house_number_hash ON proband_address (house_number_hash);
+--CREATE INDEX proband_address_street_name_hash ON proband_address (street_name_hash);
+--CREATE INDEX proband_address_city_name_hash ON proband_address (city_name_hash);
+--CREATE INDEX proband_address_zip_code_hash ON proband_address (zip_code_hash);
+--CREATE INDEX proband_address_country_name_hash ON proband_address (country_name_hash);
+--CREATE INDEX journal_entry_title_hash ON journal_entry (title_hash);
+--CREATE INDEX journal_entry_comment_hash ON journal_entry (comment_hash);
+--CREATE INDEX file_file_name_hash ON file (file_name_hash);
+--CREATE INDEX file_comment_hash ON file (comment_hash);
+--CREATE INDEX file_title_hash ON file (title_hash);
+--CREATE INDEX diagnosis_comment_hash ON diagnosis (comment_hash);
+--CREATE INDEX bank_account_bank_name_hash ON bank_account (bank_name_hash);
+--CREATE INDEX bank_account_bic_hash ON bank_account (bic_hash);
+--CREATE INDEX bank_account_iban_hash ON bank_account (iban_hash);
+--CREATE INDEX bank_account_bank_code_number_hash ON bank_account (bank_code_number_hash);
+--CREATE INDEX bank_account_account_number_hash ON bank_account (account_number_hash);
+--CREATE INDEX bank_account_account_holder_name_hash ON bank_account (account_holder_name_hash);
+
 CREATE INDEX proband_contact_particulars_date_of_birth_hash ON proband_contact_particulars (date_of_birth_hash);
-CREATE INDEX proband_contact_particulars_last_name_hash ON proband_contact_particulars (last_name_hash);
-CREATE INDEX proband_contact_particulars_last_name_normalized_hash ON proband_contact_particulars (last_name_normalized_hash);
-CREATE INDEX proband_contact_particulars_first_name_hash ON proband_contact_particulars (first_name_hash);
-CREATE INDEX proband_contact_particulars_first_name_normalized_hash ON proband_contact_particulars (first_name_normalized_hash);
-CREATE INDEX proband_contact_detail_value_comment_hash ON proband_contact_detail_value (comment_hash);
-CREATE INDEX proband_contact_detail_value_value_hash ON proband_contact_detail_value (value_hash);
-CREATE INDEX proband_address_care_of_hash ON proband_address (care_of_hash);
-CREATE INDEX proband_address_door_number_hash ON proband_address (door_number_hash);
-CREATE INDEX proband_address_entrance_hash ON proband_address (entrance_hash);
-CREATE INDEX proband_address_house_number_hash ON proband_address (house_number_hash);
-CREATE INDEX proband_address_street_name_hash ON proband_address (street_name_hash);
-CREATE INDEX proband_address_city_name_hash ON proband_address (city_name_hash);
-CREATE INDEX proband_address_zip_code_hash ON proband_address (zip_code_hash);
-CREATE INDEX proband_address_country_name_hash ON proband_address (country_name_hash);
 CREATE INDEX password_password_hash ON password (password_hash);
-CREATE INDEX journal_entry_title_hash ON journal_entry (title_hash);
-CREATE INDEX journal_entry_comment_hash ON journal_entry (comment_hash);
-CREATE INDEX file_file_name_hash ON file (file_name_hash);
-CREATE INDEX file_comment_hash ON file (comment_hash);
-CREATE INDEX file_title_hash ON file (title_hash);
-CREATE INDEX diagnosis_comment_hash ON diagnosis (comment_hash);
 CREATE INDEX department_department_password_hash ON department (department_password_hash);
-CREATE INDEX bank_account_bank_name_hash ON bank_account (bank_name_hash);
-CREATE INDEX bank_account_bic_hash ON bank_account (bic_hash);
-CREATE INDEX bank_account_iban_hash ON bank_account (iban_hash);
-CREATE INDEX bank_account_bank_code_number_hash ON bank_account (bank_code_number_hash);
-CREATE INDEX bank_account_account_number_hash ON bank_account (account_number_hash);
-CREATE INDEX bank_account_account_holder_name_hash ON bank_account (account_holder_name_hash);
 
 CREATE INDEX proband_contact_particulars_alias_normalized ON proband_contact_particulars (alias_normalized);
 CREATE INDEX person_contact_particulars_first_name_normalized ON person_contact_particulars (first_name_normalized);
