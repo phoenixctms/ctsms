@@ -513,13 +513,14 @@ public class UserDaoImpl
 
 	@Override
 	public UserInheritedVO toUserInheritedVO(final User entity) {
-		return super.toUserInheritedVO(entity);
+		return super.toUserInheritedVO(loadUserForTransform(entity));
 	}
 
 	@Override
 	public void toUserInheritedVO(
 			User source,
 			UserInheritedVO target) {
+		source = loadUserForTransform(source);
 		super.toUserInheritedVO(source, target);
 		target.setDutyRosterCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getDutyRosterCalendarFilters()));
 		target.setInventoryBookingCalendarFilters(UserReflexionGraph.entityToValueCollection(source.getInventoryBookingCalendarFilters()));
@@ -551,6 +552,13 @@ public class UserDaoImpl
 		setInheritedProperty(source, target, "dateFormat", String.class, inheritPropertyMap);
 		setInheritedProperty(source, target, "dutyRosterCalendarFilters", Collection.class, inheritPropertyMap);
 		setInheritedProperty(source, target, "inventoryBookingCalendarFilters", Collection.class, inheritPropertyMap);
+	}
+
+	private User loadUserForTransform(User entity) {
+		if (entity != null && entity.getId() != null) {
+			return this.load(entity.getId());
+		}
+		return entity;
 	}
 
 	private static boolean isInherited(User user, String propertyName, HashMap<Long, HashSet<String>> inheritPropertyMap) {
