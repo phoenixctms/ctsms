@@ -145,6 +145,7 @@ public final class DBToolOptions {
 	public final static String INITIALIZE_DECRYPTED_PROBAND_LIST_STATUS_REASONS_OPT = "idplsr";
 	public final static String INITIALIZE_PROBAND_COMMENT_FIELDS_OPT = "ipcf";
 	public final static String INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT = "ipnnf";
+	public final static String REINDEX_ENCRYPTED_STRING_HASHES_OPT = "resh";
 	public final static String INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT = "isnnf";
 	public final static String INITIALIZE_ORGANISATION_NAME_NORMALIZED_FIELDS_OPT = "ionnf";
 	public final static String INITIALIZE_JOURNAL_SYSTEM_MESSAGE_CODE_OPT = "ijsmc";
@@ -314,6 +315,9 @@ public final class DBToolOptions {
 		tasks.addOption(
 				registerTaskOption(INITIALIZE_PROBAND_NAME_NORMALIZED_FIELDS_OPT, "initialize_proband_name_normalized_fields",
 						"(migration) initialize proband normalized firstname, lastname, alias fields", 0, LockId.DEFAULT_LOCK_ID));
+		tasks.addOption(
+				registerTaskOption(REINDEX_ENCRYPTED_STRING_HASHES_OPT, "reindex_encrypted_string_hashes",
+						"(migration) reindex encrypted string search hashes", 0, LockId.DEFAULT_LOCK_ID));
 		tasks.addOption(
 				registerTaskOption(INITIALIZE_STAFF_NAME_NORMALIZED_FIELDS_OPT, "initialize_staff_name_normalized_fields",
 						"(migration) initialize staff normalized firstname, lastname fields", 0, LockId.DEFAULT_LOCK_ID));
