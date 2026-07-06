@@ -144,8 +144,6 @@ public abstract class EncryptedStringHashReindexInitializer<ENTITY, DAO> extends
 
 			@Override
 			protected boolean process(Collection<ENTITY> page, Object passThrough) throws Exception {
-				Map<String, Object> inOut = (Map<String, Object>) passThrough;
-				inOut.put("pageUpdated", 0l);
 				Iterator<ENTITY> it = page.iterator();
 				while (it.hasNext()) {
 					if (!process(it.next(), passThrough)) {
@@ -180,7 +178,6 @@ public abstract class EncryptedStringHashReindexInitializer<ENTITY, DAO> extends
 				}
 				if (updated) {
 					persist(this.dao, entity);
-					inOut.put("pageUpdated", ((Long) inOut.get("pageUpdated")) + 1l);
 					inOut.put("updated", ((Long) inOut.get("updated")) + 1l);
 				} else {
 					inOut.put("skipped", ((Long) inOut.get("skipped")) + 1l);
@@ -202,10 +199,6 @@ public abstract class EncryptedStringHashReindexInitializer<ENTITY, DAO> extends
 
 	private void printProgress(Object passThrough) {
 		Map<String, Object> inOut = (Map<String, Object>) passThrough;
-		long pageUpdated = (Long) inOut.get("pageUpdated");
-		if (pageUpdated > 0) {
-			jobOutput.println("row updated");
-		}
 		jobOutput.println(getEntityLabel() + ": " + formatProgressSummary((Long) inOut.get("updated"), (Long) inOut.get("skipped"), (Long) inOut.get("failed")));
 	}
 
