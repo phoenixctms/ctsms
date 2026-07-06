@@ -426,23 +426,6 @@ public final class CryptoUtil {
 		return KeyFactory.getInstance(ASYMMETRIC_ALGORITHM).generatePublic(new X509EncodedKeySpec(publicKey));
 	}
 
-	public static byte[] hashForSearchMatchPattern(byte[] hash, boolean prefixWildcard, boolean suffixWildcard) {
-		if (hash == null) {
-			return null;
-		}
-		byte[] pattern = new byte[hash.length + (prefixWildcard ? 1 : 0) + (suffixWildcard ? 1 : 0)];
-		int pos = 0;
-		if (prefixWildcard) {
-			pattern[pos++] = (byte) '%';
-		}
-		System.arraycopy(hash, 0, pattern, pos, hash.length);
-		pos += hash.length;
-		if (suffixWildcard) {
-			pattern[pos] = (byte) '%';
-		}
-		return pattern;
-	}
-
 	private static byte[] hashForSearch(byte[] plainText) throws Exception {
 		return encryptHashForSearch(getMD5DigestForSearch(plainText));
 	}
@@ -459,12 +442,24 @@ public final class CryptoUtil {
 		return encryptHashForSearch(salt, password, getMD5DigestForSearch(CoreUtil.serialize(value)));
 	}
 
+	private static CommonUtil.WordSubstringMatchMode getHashForSearchWordSubstringMatchMode() {
+		return CommonUtil.WordSubstringMatchMode.fromString(
+				Settings.getString(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MATCH_MODE, Bundle.SETTINGS,
+						DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MATCH_MODE),
+				CommonUtil.WordSubstringMatchMode.ANYWHERE);
+	}
+
+	private static List<String> getHashForSearchWordSubstrings(String text) {
+		Integer minLength = Settings.getIntNullable(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH, Bundle.SETTINGS,
+				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH);
+		return CommonUtil.generateWordSubstrings(text, minLength, getHashForSearchWordSubstringMatchMode());
+	}
+
 	private static byte[] hashForSearchFromText(String text) throws Exception {
 		if (text == null) {
 			return null;
 		}
-		List<String> substrings = CommonUtil.generateWordSubstrings(text, Settings.getIntNullable(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH, Bundle.SETTINGS,
-				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH));
+		List<String> substrings = getHashForSearchWordSubstrings(text);
 		if (substrings.isEmpty()) {
 			if (!CommonUtil.isEmptyString(text)) {
 				return hashForSearchValue(text);
@@ -485,8 +480,7 @@ public final class CryptoUtil {
 		if (text == null) {
 			return null;
 		}
-		List<String> substrings = CommonUtil.generateWordSubstrings(text, Settings.getIntNullable(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH, Bundle.SETTINGS,
-				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH));
+		List<String> substrings = getHashForSearchWordSubstrings(text);
 		if (substrings.isEmpty()) {
 			if (!CommonUtil.isEmptyString(text)) {
 				return hashForSearchValue(departmentKey, text);
@@ -507,8 +501,7 @@ public final class CryptoUtil {
 		if (text == null) {
 			return null;
 		}
-		List<String> substrings = CommonUtil.generateWordSubstrings(text, Settings.getIntNullable(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH, Bundle.SETTINGS,
-				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH));
+		List<String> substrings = getHashForSearchWordSubstrings(text);
 		if (substrings.isEmpty()) {
 			if (!CommonUtil.isEmptyString(text)) {
 				return hashForSearchValue(salt, password, text);

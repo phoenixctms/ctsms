@@ -20,7 +20,6 @@ import java.util.regex.Pattern;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.hql.QueryTranslator;
 import org.hibernate.hql.QueryTranslatorFactory;
@@ -320,13 +319,14 @@ public final class QueryUtil {
 		return result;
 	}
 
-	private static void appendHashForSearchTextLikeHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
+	private static void appendHashForSearchContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
 			throws Exception {
 		if (CommonUtil.isEmptyString(text)) {
 			return;
 		}
+		hqlWhereClause.append("bytelocate(?, ");
 		hqlWhereClause.append(propertyName);
-		hqlWhereClause.append(" like ?");
+		hqlWhereClause.append(") > 0");
 		CriterionInstantVO criterion = new CriterionInstantVO();
 		criterion.setStringValue(text);
 		queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
@@ -341,7 +341,7 @@ public final class QueryUtil {
 				if (!first) {
 					hqlWhereClause.append(" or ");
 				}
-				appendHashForSearchTextLikeHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
+				appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
 				first = false;
 			}
 			hqlWhereClause.append(")");
@@ -599,7 +599,7 @@ public final class QueryUtil {
 			}
 			//STRING_HASH:
 			hqlWhereClause.append(" or ");
-			appendHashForSearchTextLikeHql(hqlWhereClause, queryValues, propertyName, value);
+			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, value);
 			//TIMESTAMP_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
@@ -1653,7 +1653,7 @@ public final class QueryUtil {
 			case STRING_HASH:
 				byte[] stringHash = CryptoUtil.hashForSearchFilter(value.getStringValue());
 				if (stringHash != null) {
-					query.setBinary(pos, hashForSearchMatchPattern(stringHash, MatchMode.ANYWHERE));
+					query.setBinary(pos, stringHash);
 				}
 				break;
 			case TIMESTAMP:
@@ -1729,12 +1729,6 @@ public final class QueryUtil {
 			// illegal type...
 			throw new IllegalArgumentException(MessageFormat.format(CommonUtil.INPUT_TYPE_NOT_SUPPORTED, propertyClass.toString()));
 		}
-	}
-
-	private static byte[] hashForSearchMatchPattern(byte[] hash, MatchMode matchMode) {
-		return CryptoUtil.hashForSearchMatchPattern(hash,
-				MatchMode.END.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode),
-				MatchMode.START.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode));
 	}
 
 	private static void setQueryValues(Query query, ArrayList<QueryParameterValue> queryValues, HashMap<NamedParameterValues, Object> namedParameterValuesCache) throws Exception {
