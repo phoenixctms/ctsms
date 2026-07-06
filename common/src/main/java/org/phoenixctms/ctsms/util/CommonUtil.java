@@ -279,6 +279,9 @@ public final class CommonUtil {
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
+	// Split on non-word characters (whitespace, dash, comma, underscore, colon, semicolon, etc.).
+	// Word characters are Unicode letters (eg. é, ä, ß), combining marks, and digits.
+	private final static Pattern HASH_FOR_SEARCH_WORD_SEPARATOR_PATTERN = Pattern.compile("[\\s\\p{P}\\p{S}]+");
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
 	private static final String ECRF_NAME = "{0}";
 	private static final String ECRF_VISIT_NAME = "{0}@{1}";
@@ -2707,16 +2710,16 @@ public final class CommonUtil {
 		return result;
 	}
 
-	public static List<String> generateWordSubstrings(String text, int minLength) {
+	public static List<String> generateWordSubstrings(String text, Integer minLength) {
 		List<String> result = new ArrayList<String>();
-		if (isEmptyString(text)) {
+		if (minLength == null || isEmptyString(text)) {
 			return result;
 		}
-		for (String word : text.split("[^\\p{L}\\p{N}]+")) {
-			if (word.length() < minLength) {
+		for (String word : HASH_FOR_SEARCH_WORD_SEPARATOR_PATTERN.split(text)) {
+			if (word.length() < minLength.intValue()) {
 				continue;
 			}
-			for (int len = minLength; len <= word.length(); len++) {
+			for (int len = minLength.intValue(); len <= word.length(); len++) {
 				for (int start = 0; start <= word.length() - len; start++) {
 					result.add(word.substring(start, start + len));
 				}
