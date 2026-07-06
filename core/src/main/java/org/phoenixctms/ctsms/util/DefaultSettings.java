@@ -108,6 +108,7 @@ public final class DefaultSettings {
 	public static final String PROBAND_LIST_STATUS_REASON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm";
 	public static final int PROBAND_LAST_NAME_INDEX_LENGTH = 0;
 	public static final boolean HASH_FOR_SEARCH = false;
+	public static final Integer HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH = null; // Full-string hash only
 	public static final boolean ENABLE_AUTHORISATION = true;
 	public static final boolean ENABLE_HOST_BASED_AUTHORISATION = true;
 	public static final String SIGNATURE_COMMENT_LINE_SEPARATOR = "\n";

@@ -566,9 +566,9 @@ public class ProbandDaoImpl
 				Disjunction disjunction = Restrictions.disjunction();
 				while (personNameVariantsIt.hasNext()) {
 					String[] personNameVariant = personNameVariantsIt.next();
-					org.hibernate.criterion.Criterion firstNameCriterion = CriteriaUtil.getHashForSearchTextLikeCriterion("firstNameNormalizedHash",
+					org.hibernate.criterion.Criterion firstNameCriterion = CriteriaUtil.getHashForSearchTextLikeCriterion(personParticularsCriteria, "firstNameNormalizedHash",
 							personNameVariant[0]);
-					org.hibernate.criterion.Criterion lastNameCriterion = CriteriaUtil.getHashForSearchTextLikeCriterion("lastNameNormalizedHash",
+					org.hibernate.criterion.Criterion lastNameCriterion = CriteriaUtil.getHashForSearchTextLikeCriterion(personParticularsCriteria, "lastNameNormalizedHash",
 							personNameVariant[1]);
 					if (firstNameCriterion != null && lastNameCriterion != null) {
 						disjunction.add(Restrictions.and(firstNameCriterion, lastNameCriterion));
@@ -577,7 +577,7 @@ public class ProbandDaoImpl
 				personParticularsCriteria.add(disjunction);
 			}
 			if (dateOfBirth != null) {
-				org.hibernate.criterion.Criterion dateOfBirthCriterion = CriteriaUtil.getHashForSearchValueLikeCriterion("dateOfBirthHash", dateOfBirth);
+				org.hibernate.criterion.Criterion dateOfBirthCriterion = CriteriaUtil.getHashForSearchValueLikeCriterion(personParticularsCriteria, "dateOfBirthHash", dateOfBirth);
 				if (dateOfBirthCriterion != null) {
 					personParticularsCriteria.add(dateOfBirthCriterion);
 				}

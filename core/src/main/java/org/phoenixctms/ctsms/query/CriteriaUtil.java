@@ -26,6 +26,12 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
+import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.persister.entity.AbstractEntityPersister;
+import org.hibernate.type.AssociationType;
+import org.hibernate.type.ComponentType;
+import org.hibernate.type.EntityType;
+import org.hibernate.type.Type;
 import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.domain.LecturerImpl;
@@ -143,8 +149,8 @@ public final class CriteriaUtil {
 		}
 	}
 
-	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, String value, PSFVO psf)
-			throws Exception {
+	private static org.hibernate.criterion.Criterion applyAlternativeFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, Criteria filterCriteria,
+			String value, PSFVO psf) throws Exception {
 		String timeZone = psf != null ? psf.getFilterTimeZone() : null;
 		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
 		if (pathClass != null) {
@@ -159,7 +165,7 @@ public final class CriteriaUtil {
 							if (Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH, Bundle.SETTINGS, DefaultSettings.HASH_FOR_SEARCH)) {
 								String normalizedHashPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalizedHash"
 										: "lastNameNormalizedHash";
-								or = applyOr(getNormalizedHashVariantsCriterion(normalizedHashPropertyName, value), or);
+								or = applyOr(getNormalizedHashVariantsCriterion(filterCriteria, normalizedHashPropertyName, value), or);
 							}
 						} else if ("PersonContactParticulars".equals(pathClass.getSimpleName())) {
 							String normalizedPropertyName = ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS.equals(altFilter) ? "firstNameNormalized" : "lastNameNormalized";
@@ -170,8 +176,8 @@ public final class CriteriaUtil {
 					} else {
 						AssociationPath altFilterFieldAssociationPath = new AssociationPath(
 								filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
-						criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
-						or = applyFilter(altFilterFieldAssociationPath.getPropertyName(),
+						Criteria altCriteria = criteriaMap.createCriteriaForAttribute(altFilterFieldAssociationPath);
+						or = applyFilter(altCriteria, altFilterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(altFilterFieldAssociationPath.getFullQualifiedPropertyName()), value, or, timeZone);
 					}
 				}
@@ -207,16 +213,62 @@ public final class CriteriaUtil {
 		return null;
 	}
 
-	private static org.hibernate.criterion.Criterion getNormalizedHashVariantsCriterion(String normalizedHashPropertyName, String value) throws Exception {
+	private static org.hibernate.criterion.Criterion getNormalizedHashVariantsCriterion(Criteria filterCriteria, String normalizedHashPropertyName, String value)
+			throws Exception {
 		Iterator<String[]> nameVariantsIt = CommonUtil.getOrganisationNameVariants(value).iterator();
 		if (nameVariantsIt.hasNext()) {
 			Junction disjunction = Restrictions.disjunction();
 			while (nameVariantsIt.hasNext()) {
-				addHashForSearchTextLike(disjunction, normalizedHashPropertyName, nameVariantsIt.next()[0]);
+				addHashForSearchTextLike(disjunction, filterCriteria, normalizedHashPropertyName, nameVariantsIt.next()[0]);
 			}
 			return disjunction;
 		}
 		return null;
+	}
+
+	private static org.hibernate.impl.CriteriaImpl getRootCriteriaImpl(Criteria criteria) {
+		Criteria current = criteria;
+		while (current instanceof org.hibernate.impl.CriteriaImpl.Subcriteria) {
+			current = ((org.hibernate.impl.CriteriaImpl.Subcriteria) current).getParent();
+		}
+		return (org.hibernate.impl.CriteriaImpl) current;
+	}
+
+	private static ArrayList<String> getSubcriteriaPath(Criteria criteria) {
+		ArrayList<String> pathElements = new ArrayList<String>();
+		Criteria current = criteria;
+		while (current instanceof org.hibernate.impl.CriteriaImpl.Subcriteria) {
+			org.hibernate.impl.CriteriaImpl.Subcriteria subcriteria = (org.hibernate.impl.CriteriaImpl.Subcriteria) current;
+			pathElements.add(0, subcriteria.getPath());
+			current = subcriteria.getParent();
+		}
+		return pathElements;
+	}
+
+	private static String getHashColumnName(Criteria criteria, String propertyName) {
+		org.hibernate.impl.CriteriaImpl rootCriteria = getRootCriteriaImpl(criteria);
+		SessionFactoryImplementor factory = rootCriteria.getSession().getFactory();
+		String[] implementors = factory.getImplementors(rootCriteria.getEntityOrClassName());
+		AbstractEntityPersister persister = (AbstractEntityPersister) factory.getEntityPersister(implementors[0]);
+		if (criteria instanceof org.hibernate.impl.CriteriaImpl) {
+			return persister.getPropertyColumnNames(propertyName)[0];
+		}
+		ArrayList<String> pathElements = getSubcriteriaPath(criteria);
+		String resolvedPropertyName = propertyName;
+		for (int i = 0; i < pathElements.size(); i++) {
+			String pathElement = pathElements.get(i);
+			Type propertyType = persister.getPropertyType(pathElement);
+			if (propertyType.isEntityType()) {
+				persister = (AbstractEntityPersister) factory.getEntityPersister(((EntityType) propertyType).getAssociatedEntityName());
+			} else if (propertyType.isComponentType()) {
+				resolvedPropertyName = pathElement + "." + resolvedPropertyName;
+			} else if (propertyType.isAssociationType()) {
+				persister = (AbstractEntityPersister) factory.getEntityPersister(((AssociationType) propertyType).getAssociatedEntityName(factory));
+			} else {
+				throw new IllegalArgumentException("Unsupported criteria path element: " + pathElement);
+			}
+		}
+		return persister.getPropertyColumnNames(resolvedPropertyName)[0];
 	}
 
 	private static byte[] hashForSearchMatchPattern(byte[] hash, MatchMode matchMode) {
@@ -225,59 +277,42 @@ public final class CriteriaUtil {
 				MatchMode.START.equals(matchMode) || MatchMode.ANYWHERE.equals(matchMode));
 	}
 
-	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(String propertyName, byte[] hash, MatchMode matchMode) {
+	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(Criteria filterCriteria, String propertyName, byte[] hash, MatchMode matchMode) {
 		if (hash == null) {
 			return null;
 		}
 		return Restrictions.sqlRestriction(
-				"{alias}." + propertyName + " like ?",
+				"{alias}." + getHashColumnName(filterCriteria, propertyName) + " like ?",
 				hashForSearchMatchPattern(hash, matchMode),
 				Hibernate.BINARY);
 	}
 
-	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(String propertyName, byte[] hash) {
-		return hashForSearchHashLikeCriterion(propertyName, hash, MatchMode.ANYWHERE);
+	private static org.hibernate.criterion.Criterion hashForSearchHashLikeCriterion(Criteria filterCriteria, String propertyName, byte[] hash) {
+		return hashForSearchHashLikeCriterion(filterCriteria, propertyName, hash, MatchMode.ANYWHERE);
 	}
 
-	private static void addHashForSearchLike(Junction junction, String propertyName, byte[] hash) {
-		org.hibernate.criterion.Criterion criterion = hashForSearchHashLikeCriterion(propertyName, hash);
+	private static void addHashForSearchLike(Junction junction, Criteria filterCriteria, String propertyName, byte[] hash) {
+		org.hibernate.criterion.Criterion criterion = hashForSearchHashLikeCriterion(filterCriteria, propertyName, hash);
 		if (criterion != null) {
 			junction.add(criterion);
 		}
 	}
 
-	private static void addHashForSearchTextLike(Junction junction, String propertyName, String text) throws Exception {
-		List<String> substrings = CommonUtil.generateWordSubstrings(text, CryptoUtil.WORD_SUBSTRING_MIN_LENGTH);
-		if (substrings.isEmpty()) {
-			if (!CommonUtil.isEmptyString(text)) {
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(text));
-			}
-		} else {
-			Iterator<String> substringIt = substrings.iterator();
-			while (substringIt.hasNext()) {
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(substringIt.next()));
-			}
+	private static void addHashForSearchTextLike(Junction junction, Criteria filterCriteria, String propertyName, String text) throws Exception {
+		if (!CommonUtil.isEmptyString(text)) {
+			addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(text));
 		}
 	}
 
-	public static org.hibernate.criterion.Criterion getHashForSearchTextLikeCriterion(String propertyName, String text) throws Exception {
+	public static org.hibernate.criterion.Criterion getHashForSearchTextLikeCriterion(Criteria filterCriteria, String propertyName, String text) throws Exception {
 		if (CommonUtil.isEmptyString(text)) {
 			return null;
 		}
-		List<String> substrings = CommonUtil.generateWordSubstrings(text, CryptoUtil.WORD_SUBSTRING_MIN_LENGTH);
-		if (substrings.isEmpty()) {
-			return hashForSearchHashLikeCriterion(propertyName, CryptoUtil.hashForSearch(text));
-		}
-		Junction disjunction = Restrictions.disjunction();
-		Iterator<String> substringIt = substrings.iterator();
-		while (substringIt.hasNext()) {
-			addHashForSearchLike(disjunction, propertyName, CryptoUtil.hashForSearch(substringIt.next()));
-		}
-		return disjunction;
+		return hashForSearchHashLikeCriterion(filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(text));
 	}
 
-	public static org.hibernate.criterion.Criterion getHashForSearchValueLikeCriterion(String propertyName, Serializable value) throws Exception {
-		return hashForSearchHashLikeCriterion(propertyName, CryptoUtil.hashForSearch(value));
+	public static org.hibernate.criterion.Criterion getHashForSearchValueLikeCriterion(Criteria filterCriteria, String propertyName, Serializable value) throws Exception {
+		return hashForSearchHashLikeCriterion(filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(value));
 	}
 
 	public static void applyClosedIntervalCriterion(Criteria intervalCriteria, Timestamp from, Timestamp to, org.hibernate.criterion.Criterion or) {
@@ -455,8 +490,8 @@ public final class CriteriaUtil {
 				or);
 	}
 
-	private static org.hibernate.criterion.Criterion applyFilter(String propertyName, Class propertyClass, String value, org.hibernate.criterion.Criterion or, String timeZone)
-			throws Exception {
+	private static org.hibernate.criterion.Criterion applyFilter(Criteria filterCriteria, String propertyName, Class propertyClass, String value,
+			org.hibernate.criterion.Criterion or, String timeZone) throws Exception {
 		if (propertyClass.equals(String.class)) {
 			if (EXACT_STRING_FILTER_ENTITY_FIELDS.contains(propertyName)) {
 				return applyOr(Restrictions.eq(propertyName, new String(value)), or);
@@ -553,36 +588,36 @@ public final class CriteriaUtil {
 		} else if (propertyClass.isArray() && propertyClass.getComponentType().equals(java.lang.Byte.TYPE)) {
 			Junction junction = Restrictions.disjunction();
 			//BOOLEAN_HASH:
-			addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(new Boolean(value)));
+			addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(new Boolean(value)));
 			//DATE_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDatePattern(CoreUtil.getUserContext().getDateFormat())); //, CommonUtil.timeZoneFromString(timeZone));
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(date));
+				addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(date));
 			} catch (IllegalArgumentException e) {
 			}
 			//TIME_HASH:
 			try {
 				Date time = CommonUtil.parseDate(value, CommonUtil.getInputTimePattern(CoreUtil.getUserContext().getDateFormat()));
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(time));
+				addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(time));
 			} catch (IllegalArgumentException e) {
 			}
 			//LONG_HASH:
 			try {
 				Long lng = new Long(value);
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(lng));
+				addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(lng));
 			} catch (NumberFormatException e) {
 			}
 			//FLOAT_HASH:
 			Float flt = CommonUtil.parseFloat(value, CoreUtil.getUserContext().getDecimalSeparator());
 			if (flt != null) {
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(flt));
+				addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(flt));
 			}
 			//STRING_HASH:
-			addHashForSearchTextLike(junction, propertyName, value);
+			addHashForSearchTextLike(junction, filterCriteria, propertyName, value);
 			//TIMESTAMP_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
-				addHashForSearchLike(junction, propertyName, CryptoUtil.hashForSearch(date));
+				addHashForSearchLike(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(date));
 			} catch (IllegalArgumentException e) {
 			}
 			return applyOr(junction, or);
@@ -707,9 +742,9 @@ public final class CriteriaUtil {
 							}
 						}
 						subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
-						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
+						subCriteria.add(applyFilter(subCriteria, filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf), psf.getFilterTimeZone()));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, subCriteria, filter.getValue(), psf), psf.getFilterTimeZone()));
 					}
 				}
 				if (psf.getUpdateRowCount()) {
@@ -1157,9 +1192,9 @@ public final class CriteriaUtil {
 						} else {
 							subCriteria = criteriaMap.createCriteriaForAttribute(filterFieldAssociationPath);
 						}
-						subCriteria.add(applyFilter(filterFieldAssociationPath.getPropertyName(),
+						subCriteria.add(applyFilter(subCriteria, filterFieldAssociationPath.getPropertyName(),
 								criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getFullQualifiedPropertyName()), filter.getValue(),
-								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, filter.getValue(), psf), psf.getFilterTimeZone()));
+								applyAlternativeFilter(criteriaMap, filterFieldAssociationPath, subCriteria, filter.getValue(), psf), psf.getFilterTimeZone()));
 					}
 				}
 				Long count = null;

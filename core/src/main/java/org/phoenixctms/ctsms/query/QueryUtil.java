@@ -325,33 +325,11 @@ public final class QueryUtil {
 		if (CommonUtil.isEmptyString(text)) {
 			return;
 		}
-		List<String> substrings = CommonUtil.generateWordSubstrings(text, CryptoUtil.WORD_SUBSTRING_MIN_LENGTH);
-		if (substrings.isEmpty()) {
-			hqlWhereClause.append(propertyName);
-			hqlWhereClause.append(" like ?");
-			CriterionInstantVO criterion = new CriterionInstantVO();
-			criterion.setStringValue(text);
-			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
-			return;
-		}
-		if (substrings.size() > 1) {
-			hqlWhereClause.append("(");
-		}
-		boolean first = true;
-		for (String substring : substrings) {
-			if (!first) {
-				hqlWhereClause.append(" or ");
-			}
-			hqlWhereClause.append(propertyName);
-			hqlWhereClause.append(" like ?");
-			CriterionInstantVO criterion = new CriterionInstantVO();
-			criterion.setStringValue(substring);
-			queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
-			first = false;
-		}
-		if (substrings.size() > 1) {
-			hqlWhereClause.append(")");
-		}
+		hqlWhereClause.append(propertyName);
+		hqlWhereClause.append(" like ?");
+		CriterionInstantVO criterion = new CriterionInstantVO();
+		criterion.setStringValue(text);
+		queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
 	}
 
 	private static void appendNormalizedHashVariantsOr(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName,
@@ -1643,37 +1621,37 @@ public final class QueryUtil {
 				query.setBoolean(pos, value.getBooleanValue());
 				break;
 			case BOOLEAN_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getBooleanValue()));
+				query.setBinary(pos, CryptoUtil.hashForSearchFilter(value.getBooleanValue()));
 				break;
 			case DATE:
 				query.setDate(pos, value.getDateValue());
 				break;
 			case DATE_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getDateValue()));
+				query.setBinary(pos, CryptoUtil.hashForSearchFilter(value.getDateValue()));
 				break;
 			case TIME:
 				query.setTime(pos, value.getTimeValue());
 				break;
 			case TIME_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getTimeValue()));
+				query.setBinary(pos, CryptoUtil.hashForSearchFilter(value.getTimeValue()));
 				break;
 			case FLOAT:
 				query.setFloat(pos, value.getFloatValue().floatValue());
 				break;
 			case FLOAT_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getFloatValue()));
+				query.setBinary(pos, CryptoUtil.hashForSearchFilter(value.getFloatValue()));
 				break;
 			case LONG:
 				query.setBigInteger(pos, new BigInteger(value.getLongValue().toString()));
 				break;
 			case LONG_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getLongValue()));
+				query.setBinary(pos, CryptoUtil.hashForSearchFilter(value.getLongValue()));
 				break;
 			case STRING:
 				query.setString(pos, value.getStringValue());
 				break;
 			case STRING_HASH:
-				byte[] stringHash = CryptoUtil.hashForSearch(value.getStringValue());
+				byte[] stringHash = CryptoUtil.hashForSearchFilter(value.getStringValue());
 				if (stringHash != null) {
 					query.setBinary(pos, hashForSearchMatchPattern(stringHash, MatchMode.ANYWHERE));
 				}
@@ -1682,7 +1660,7 @@ public final class QueryUtil {
 				query.setTimestamp(pos, value.getTimestampValue());
 				break;
 			case TIMESTAMP_HASH:
-				query.setBinary(pos, CryptoUtil.hashForSearch(value.getTimestampValue()));
+				query.setBinary(pos, CryptoUtil.hashForSearchFilter(value.getTimestampValue()));
 				break;
 			case NONE:
 				break;
