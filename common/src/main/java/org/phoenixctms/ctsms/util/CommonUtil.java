@@ -126,6 +126,17 @@ public final class CommonUtil {
 		LEADING, MID, TRAILING
 	}
 
+	public enum WordSubstringMatchMode {
+		EXACT, START, END, ANYWHERE;
+
+		public static WordSubstringMatchMode fromString(String value, WordSubstringMatchMode defaultValue) {
+			if (isEmptyString(value)) {
+				return defaultValue;
+			}
+			return valueOf(value.trim().toUpperCase());
+		}
+	}
+
 	public final static HashSet<String> VO_EQUALS_EXCLUDES = new HashSet<String>();
 	static {
 		VO_EQUALS_EXCLUDES.add("CourseOutVO.getPrecedingCourses");
@@ -280,7 +291,6 @@ public final class CommonUtil {
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
 	private final static Pattern SQL_LIKE_WILDCARD_REGEXP = Pattern.compile("(" + SQL_LIKE_PERCENT_WILDCARD + "|" + SQL_LIKE_UNDERSCORE_WILDCARD + ")");
 	// Split on non-word characters (whitespace, dash, comma, underscore, colon, semicolon, etc.).
-	// Word characters are Unicode letters (eg. é, ä, ß), combining marks, and digits.
 	private final static Pattern HASH_FOR_SEARCH_WORD_SEPARATOR_PATTERN = Pattern.compile("[\\s\\p{P}\\p{S}]+");
 	public static final String LOCAL_HOST_ADDRESS = getLocalHostAddress();
 	private static final String ECRF_NAME = "{0}";
@@ -2711,18 +2721,44 @@ public final class CommonUtil {
 	}
 
 	public static List<String> generateWordSubstrings(String text, Integer minLength) {
+		return generateWordSubstrings(text, minLength, WordSubstringMatchMode.ANYWHERE);
+	}
+
+	public static List<String> generateWordSubstrings(String text, Integer minLength, WordSubstringMatchMode matchMode) {
 		List<String> result = new ArrayList<String>();
 		if (minLength == null || isEmptyString(text)) {
 			return result;
 		}
+		if (matchMode == null) {
+			matchMode = WordSubstringMatchMode.ANYWHERE;
+		}
+		int min = minLength.intValue();
 		for (String word : HASH_FOR_SEARCH_WORD_SEPARATOR_PATTERN.split(text)) {
-			if (word.length() < minLength.intValue()) {
+			if (word.length() < min) {
 				continue;
 			}
-			for (int len = minLength.intValue(); len <= word.length(); len++) {
-				for (int start = 0; start <= word.length() - len; start++) {
-					result.add(word.substring(start, start + len));
-				}
+			switch (matchMode) {
+				case EXACT:
+					result.add(word);
+					break;
+				case START:
+					for (int len = min; len <= word.length(); len++) {
+						result.add(word.substring(0, len));
+					}
+					break;
+				case END:
+					for (int len = min; len <= word.length(); len++) {
+						result.add(word.substring(word.length() - len));
+					}
+					break;
+				case ANYWHERE:
+				default:
+					for (int len = min; len <= word.length(); len++) {
+						for (int start = 0; start <= word.length() - len; start++) {
+							result.add(word.substring(start, start + len));
+						}
+					}
+					break;
 			}
 		}
 		return result;

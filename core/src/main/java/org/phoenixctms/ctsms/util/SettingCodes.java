@@ -163,6 +163,7 @@ public interface SettingCodes {
 	public static final String PROBAND_LAST_NAME_INDEX_LENGTH = "proband_last_name_index_length";
 	public static final String HASH_FOR_SEARCH = "hash_for_search";
 	public static final String HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH = "hash_for_search_word_substring_min_length";
+	public static final String HASH_FOR_SEARCH_WORD_SUBSTRING_MATCH_MODE = "hash_for_search_word_substring_match_mode";
 	public static final String ENABLE_AUTHORISATION = "enable_authorisation";
 	public final static String ENABLE_HOST_BASED_AUTHORISATION = "enable_host_based_authorisation";
 	public static final String TRUSTED_IP_RANGES = "trusted_ip_ranges";

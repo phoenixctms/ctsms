@@ -136,6 +136,8 @@ create index journal_entry_criteria_fk_system_message_code ON JOURNAL_ENTRY (CRI
 
 -- string hash columns: not indexed when using substring search hashes (variable length; LIKE '%hash%' is not btree-friendly).
 -- Uncomment when hash_for_search_word_substring_min_length=null (full-string hash only, fixed 16-byte blocks).
+-- When hash_for_search_word_substring_min_length is set, hash_for_search_word_substring_match_mode controls
+-- which substrings are hashed on persist (EXACT, START, END, ANYWHERE); reindex after changing either setting.
 --SELECT 'CREATE INDEX ' || table_name || '_' || column_name || ' ON ' || table_name || ' (' || column_name || ');' FROM information_schema.columns where table_catalog='ctsms' and right(column_name,5)='_hash';
 
 --CREATE INDEX medication_comment_hash ON medication (comment_hash);
