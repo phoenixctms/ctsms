@@ -110,6 +110,7 @@ public final class DefaultSettings {
 	public static final boolean HASH_FOR_SEARCH = false;
 	public static final Integer HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH = null; // Full-string hash only
 	public static final String HASH_FOR_SEARCH_WORD_SUBSTRING_MATCH_MODE = "ANYWHERE";
+	public static final boolean HASH_FOR_SEARCH_WORD_SUBSTRING_CASE_INSENSITIVE = true;
 	public static final boolean ENABLE_AUTHORISATION = true;
 	public static final boolean ENABLE_HOST_BASED_AUTHORISATION = true;
 	public static final String SIGNATURE_COMMENT_LINE_SEPARATOR = "\n";

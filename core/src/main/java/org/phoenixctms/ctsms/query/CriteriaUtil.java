@@ -287,8 +287,12 @@ public final class CriteriaUtil {
 	}
 
 	private static void addHashForSearchTextContains(Junction junction, Criteria filterCriteria, String propertyName, String text) throws Exception {
-		if (!CommonUtil.isEmptyString(text)) {
-			addHashForSearchContains(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(text));
+		if (CommonUtil.isEmptyString(text)) {
+			return;
+		}
+		List<String> variants = CryptoUtil.getHashForSearchFilterTextVariants(text);
+		for (int i = 0; i < variants.size(); i++) {
+			addHashForSearchContains(junction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(variants.get(i)));
 		}
 	}
 
@@ -296,7 +300,15 @@ public final class CriteriaUtil {
 		if (CommonUtil.isEmptyString(text)) {
 			return null;
 		}
-		return hashForSearchHashContainsCriterion(filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(text));
+		List<String> variants = CryptoUtil.getHashForSearchFilterTextVariants(text);
+		if (variants.size() == 1) {
+			return hashForSearchHashContainsCriterion(filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(variants.get(0)));
+		}
+		Junction disjunction = Restrictions.disjunction();
+		for (int i = 0; i < variants.size(); i++) {
+			addHashForSearchContains(disjunction, filterCriteria, propertyName, CryptoUtil.hashForSearchFilter(variants.get(i)));
+		}
+		return disjunction;
 	}
 
 	public static org.hibernate.criterion.Criterion getHashForSearchValueLikeCriterion(Criteria filterCriteria, String propertyName, Serializable value) throws Exception {

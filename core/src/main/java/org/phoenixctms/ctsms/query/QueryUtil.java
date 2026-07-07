@@ -332,6 +332,26 @@ public final class QueryUtil {
 		queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
 	}
 
+	private static void appendHashForSearchTextContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
+			throws Exception {
+		List<String> variants = CryptoUtil.getHashForSearchFilterTextVariants(text);
+		if (variants.isEmpty()) {
+			return;
+		}
+		if (variants.size() == 1) {
+			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variants.get(0));
+			return;
+		}
+		hqlWhereClause.append("(");
+		for (int i = 0; i < variants.size(); i++) {
+			if (i > 0) {
+				hqlWhereClause.append(" or ");
+			}
+			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variants.get(i));
+		}
+		hqlWhereClause.append(")");
+	}
+
 	private static void appendNormalizedHashVariantsOr(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName,
 			Iterator<String[]> variantsIt) throws Exception {
 		if (variantsIt.hasNext()) {
@@ -341,7 +361,7 @@ public final class QueryUtil {
 				if (!first) {
 					hqlWhereClause.append(" or ");
 				}
-				appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
+				appendHashForSearchTextContainsHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
 				first = false;
 			}
 			hqlWhereClause.append(")");
@@ -599,7 +619,7 @@ public final class QueryUtil {
 			}
 			//STRING_HASH:
 			hqlWhereClause.append(" or ");
-			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, value);
+			appendHashForSearchTextContainsHql(hqlWhereClause, queryValues, propertyName, value);
 			//TIMESTAMP_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));

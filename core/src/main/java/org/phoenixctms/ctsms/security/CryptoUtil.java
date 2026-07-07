@@ -17,6 +17,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -452,7 +453,31 @@ public final class CryptoUtil {
 	private static List<String> getHashForSearchWordSubstrings(String text) {
 		Integer minLength = Settings.getIntNullable(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH, Bundle.SETTINGS,
 				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH);
-		return CommonUtil.generateWordSubstrings(text, minLength, getHashForSearchWordSubstringMatchMode());
+		return CommonUtil.generateWordSubstrings(text, minLength, getHashForSearchWordSubstringMatchMode(), isHashForSearchWordSubstringCaseInsensitive());
+	}
+
+	private static boolean isHashForSearchWordSubstringCaseInsensitive() {
+		if (!Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_CASE_INSENSITIVE, Bundle.SETTINGS,
+				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_CASE_INSENSITIVE)) {
+			return false;
+		}
+		return Settings.getIntNullable(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH, Bundle.SETTINGS,
+				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_MIN_LENGTH) != null;
+	}
+
+	public static List<String> getHashForSearchFilterTextVariants(String text) {
+		ArrayList<String> variants = new ArrayList<String>();
+		if (CommonUtil.isEmptyString(text)) {
+			return variants;
+		}
+		variants.add(text);
+		if (isHashForSearchWordSubstringCaseInsensitive()) {
+			String lower = text.toLowerCase();
+			if (!lower.equals(text)) {
+				variants.add(lower);
+			}
+		}
+		return variants;
 	}
 
 	private static byte[] hashForSearchFromText(String text) throws Exception {
