@@ -2721,10 +2721,14 @@ public final class CommonUtil {
 	}
 
 	public static List<String> generateWordSubstrings(String text, Integer minLength) {
-		return generateWordSubstrings(text, minLength, WordSubstringMatchMode.ANYWHERE);
+		return generateWordSubstrings(text, minLength, WordSubstringMatchMode.ANYWHERE, false);
 	}
 
 	public static List<String> generateWordSubstrings(String text, Integer minLength, WordSubstringMatchMode matchMode) {
+		return generateWordSubstrings(text, minLength, matchMode, false);
+	}
+
+	public static List<String> generateWordSubstrings(String text, Integer minLength, WordSubstringMatchMode matchMode, boolean caseInsensitive) {
 		List<String> result = new ArrayList<String>();
 		if (minLength == null || isEmptyString(text)) {
 			return result;
@@ -2739,23 +2743,26 @@ public final class CommonUtil {
 			}
 			switch (matchMode) {
 				case EXACT:
-					result.add(word);
+					result.add(caseInsensitive ? word.toLowerCase() : word);
 					break;
 				case START:
 					for (int len = min; len <= word.length(); len++) {
-						result.add(word.substring(0, len));
+						String substring = word.substring(0, len);
+						result.add(caseInsensitive ? substring.toLowerCase() : substring);
 					}
 					break;
 				case END:
 					for (int len = min; len <= word.length(); len++) {
-						result.add(word.substring(word.length() - len));
+						String substring = word.substring(word.length() - len);
+						result.add(caseInsensitive ? substring.toLowerCase() : substring);
 					}
 					break;
 				case ANYWHERE:
 				default:
 					for (int len = min; len <= word.length(); len++) {
 						for (int start = 0; start <= word.length() - len; start++) {
-							result.add(word.substring(start, start + len));
+							String substring = word.substring(start, start + len);
+							result.add(caseInsensitive ? substring.toLowerCase() : substring);
 						}
 					}
 					break;
