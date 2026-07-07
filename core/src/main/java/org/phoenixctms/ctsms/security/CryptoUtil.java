@@ -456,15 +456,12 @@ public final class CryptoUtil {
 	}
 
 	private static byte[] hashForSearchFromText(String text) throws Exception {
-		if (text == null) {
-			return null;
+		if (CommonUtil.isEmptyString(text)) {
+			return hashForSearchValue(null);
 		}
 		List<String> substrings = getHashForSearchWordSubstrings(text);
 		if (substrings.isEmpty()) {
-			if (!CommonUtil.isEmptyString(text)) {
-				return hashForSearchValue(text);
-			}
-			return null;
+			return hashForSearchValue(text);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		for (String substring : substrings) {
@@ -477,15 +474,12 @@ public final class CryptoUtil {
 	}
 
 	private static byte[] hashForSearchFromText(SecretKey departmentKey, String text) throws Exception {
-		if (text == null) {
-			return null;
+		if (CommonUtil.isEmptyString(text)) {
+			return hashForSearchValue(departmentKey, null);
 		}
 		List<String> substrings = getHashForSearchWordSubstrings(text);
 		if (substrings.isEmpty()) {
-			if (!CommonUtil.isEmptyString(text)) {
-				return hashForSearchValue(departmentKey, text);
-			}
-			return null;
+			return hashForSearchValue(departmentKey, text);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		for (String substring : substrings) {
@@ -498,15 +492,12 @@ public final class CryptoUtil {
 	}
 
 	private static byte[] hashForSearchFromText(byte[] salt, String password, String text) throws Exception {
-		if (text == null) {
-			return null;
+		if (CommonUtil.isEmptyString(text)) {
+			return hashForSearchValue(salt, password, null);
 		}
 		List<String> substrings = getHashForSearchWordSubstrings(text);
 		if (substrings.isEmpty()) {
-			if (!CommonUtil.isEmptyString(text)) {
-				return hashForSearchValue(salt, password, text);
-			}
-			return null;
+			return hashForSearchValue(salt, password, text);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		for (String substring : substrings) {

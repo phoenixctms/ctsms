@@ -167,6 +167,9 @@ public abstract class EncryptedStringHashReindexInitializer<ENTITY, DAO> extends
 					try {
 						String plainText = (String) CryptoUtil.decryptValue(field.getIv(entity), field.getEncrypted(entity));
 						byte[] newHash = CryptoUtil.hashForSearch(field.transformPlainText(plainText));
+						if (newHash == null) {
+							continue;
+						}
 						if (!Arrays.equals(newHash, field.getHash(entity))) {
 							field.setHash(entity, newHash);
 							updated = true;
