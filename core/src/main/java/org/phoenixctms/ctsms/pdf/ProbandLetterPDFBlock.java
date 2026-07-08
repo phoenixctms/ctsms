@@ -18,10 +18,11 @@ import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 public class ProbandLetterPDFBlock {
 
 	public enum BlockType {
-		NEW_LETTER, NEW_PAGE, ADDRESS, PROBAND_ID, FIRST_PAGE_DATE, SECOND_PAGE_DATE, SALUTATION
+		NEW_LETTER, NEW_PAGE, ADDRESS, PROBAND_ID, FIRST_PAGE_DATE, SECOND_PAGE_DATE, SALUTATION, QR_CODE
 	}
 
 	protected ProbandAddressOutVO address;
+	protected PDFJpeg ximage;
 	protected Date now;
 	protected BlockType type;
 
@@ -37,6 +38,11 @@ public class ProbandLetterPDFBlock {
 	public ProbandLetterPDFBlock(ProbandAddressOutVO address, BlockType type) {
 		this.address = address;
 		this.type = type;
+	}
+
+	public ProbandLetterPDFBlock(PDFJpeg ximage) {
+		this.ximage = ximage;
+		this.type = BlockType.QR_CODE;
 	}
 
 	public ProbandAddressOutVO getAddress() {
@@ -241,6 +247,15 @@ public class ProbandLetterPDFBlock {
 					y -= PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.SIZE11,
 							Settings.getColor(ProbandLetterPDFSettingCodes.TEXT_COLOR, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.TEXT_COLOR), line, x, y,
 							PDFUtil.Alignment.TOP_LEFT);
+				}
+				height = cursor.getBlockY() - y;
+				break;
+			case QR_CODE:
+				x = cursor.getBlockX() + cursor.getBlockWidth();
+				y = Settings.getFloat(ProbandLetterPDFSettingCodes.QRCODE_Y, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_Y);
+				if (ximage != null) {
+					PDFUtil.renderImage(contentStream, ximage, x, y, PDFUtil.Alignment.TOP_RIGHT);
+					y -= ximage.getHeightPoints();
 				}
 				height = cursor.getBlockY() - y;
 				break;
