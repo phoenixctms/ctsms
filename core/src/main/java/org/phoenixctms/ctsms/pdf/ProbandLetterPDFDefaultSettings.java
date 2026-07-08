@@ -29,6 +29,14 @@ public final class ProbandLetterPDFDefaultSettings {
 	public static final String PAINTER_CLASS = null;
 	public static final ArrayList<String> PAINTER_SOURCE_FILES = null;
 	public static final boolean DATE_USER_TIME_ZONE = true;
+	public static final float QRCODE_Y = PROBAND_ID_Y + 70.0f;
+	public static final Color QRCODE_COLOR = Color.BLACK;
+	public static final int QRCODE_IMAGE_WIDTH = 250;
+	public static final int QRCODE_IMAGE_HEIGHT = 250;
+	public static final int QRCODE_IMAGE_MARGIN = 2;
+	public static final int QRCODE_IMAGE_QUALITY = 100;
+	public static final int QRCODE_IMAGE_DPI = 300;
+	public static final Color QRCODE_IMAGE_BG_COLOR = null;
 
 	private ProbandLetterPDFDefaultSettings() {
 	}
