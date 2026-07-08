@@ -121,10 +121,10 @@ public final class ServiceUtil {
 	public final static boolean LOG_ADD_UPDATE_ECRF_NO_DIFF = false;
 	public final static boolean LOG_ADD_UPDATE_INPUT_FIELD_NO_DIFF = false;
 	public final static VelocityStringUtils VELOCITY_STRING_UTILS = new VelocityStringUtils();
-	private final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
-	private final static String BEACON_CONFIRM_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
+	public final static String BEACON_UNSUBSCRIBE_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
+	public final static String BEACON_CONFIRM_URL = "{0}/{1}/{2}"; // "{0}/{1}?{2}={3}";
 	public final static String BEACON_IMAGE_HTML_ELEMENT = "<img src=\"{0}/{1}/{2}.{3}\"/>";
-	private final static String DUMMY_BEACON = "dummy";
+	public final static String DUMMY_BEACON = "dummy";
 	private final static EcrfFieldValueInVOInputFieldValueEqualsAdapter ECRF_FIELD_VALUE_EQUALS_ADAPTER = new EcrfFieldValueInVOInputFieldValueEqualsAdapter();
 	private final static ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter PROBAND_LIST_ENTRY_TAG_VALUE_EQUALS_ADAPTER = new ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter();
 	private final static InquiryValueInVOInputFieldValueEqualsAdapter INQUIRY_VALUE_EQUALS_ADAPTER = new InquiryValueInVOInputFieldValueEqualsAdapter();
