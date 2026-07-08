@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.pdf;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,11 +14,13 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFBlock.BlockType;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
@@ -40,9 +43,12 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 	protected final static PDRectangle DEFAULT_PAGE_SIZE = PDPage.PAGE_SIZE_A4;
 	protected static final String PROBAND_LETTER_PDF_FILENAME_PREFIX = "proband_letter_";
 
+	protected HashMap<Long, PDFJpeg> qrCodeImages;
+
 	public ProbandLetterPDFPainter() {
 		super();
 		blocks = new ArrayList<ProbandLetterPDFBlock>();
+		qrCodeImages = new HashMap<Long, PDFJpeg>();
 		pdfVO = new ProbandLetterPDFVO();
 		cursor = new ProbandLetterPDFBlockCursor(this);
 		setDrawPageNumbers(Settings.getBoolean(ProbandLetterPDFSettingCodes.SHOW_PAGE_NUMBERS, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.SHOW_PAGE_NUMBERS));
@@ -133,6 +139,12 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 
 	@Override
 	public void loadImages(PDDocument doc) throws Exception {
+		if (probandVOs != null) {
+			Iterator<ProbandOutVO> probandIt = probandVOs.iterator();
+			while (probandIt.hasNext()) {
+				putQRCodeImage(probandIt.next(), doc);
+			}
+		}
 	}
 
 	@Override
@@ -152,7 +164,8 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 		if (probandVOs != null && addressVOMap != null) {
 			Iterator<ProbandOutVO> probandIt = probandVOs.iterator();
 			while (probandIt.hasNext()) {
-				Collection<ProbandAddressOutVO> addressVOs = addressVOMap.get(probandIt.next().getId());
+				ProbandOutVO probandVO = probandIt.next();
+				Collection<ProbandAddressOutVO> addressVOs = addressVOMap.get(probandVO.getId());
 				if (addressVOs != null) {
 					Iterator<ProbandAddressOutVO> addressIt = addressVOs.iterator();
 					while (addressIt.hasNext()) {
@@ -164,9 +177,11 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 						blocks.add(new ProbandLetterPDFBlock(BlockType.NEW_PAGE));
 						blocks.add(new ProbandLetterPDFBlock(now, BlockType.SECOND_PAGE_DATE));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.PROBAND_ID));
+						blocks.add(new ProbandLetterPDFBlock(qrCodeImages.get(probandVO.getId())));
 						blocks.add(new ProbandLetterPDFBlock(BlockType.NEW_PAGE));
 						blocks.add(new ProbandLetterPDFBlock(now, BlockType.SECOND_PAGE_DATE));
 						blocks.add(new ProbandLetterPDFBlock(addressVO, BlockType.PROBAND_ID));
+						blocks.add(new ProbandLetterPDFBlock(qrCodeImages.get(probandVO.getId())));
 					}
 				}
 			}
@@ -189,6 +204,7 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 		fontA = null;
 		fontB = null;
 		fontC = null;
+		qrCodeImages.clear();
 		updateProbandLetterPDFVO();
 	}
 
@@ -242,6 +258,27 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 		if (BlockType.NEW_LETTER.equals(block.getType())) {
 			cursor.setAddress(block.getAddress());
 		}
+	}
+
+	protected boolean putQRCodeImage(ProbandOutVO proband, PDDocument doc) throws Exception {
+		if (proband != null) {
+			String beacon = proband.getBeacon();
+			int quality = Settings.getInt(ProbandLetterPDFSettingCodes.QRCODE_IMAGE_QUALITY, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_IMAGE_QUALITY);
+			int dpi = Settings.getInt(ProbandLetterPDFSettingCodes.QRCODE_IMAGE_DPI, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_IMAGE_DPI);
+			Color bgColor = Settings.getColor(ProbandLetterPDFSettingCodes.QRCODE_IMAGE_BG_COLOR, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_IMAGE_BG_COLOR);
+			Color fgColor = Settings.getColor(ProbandLetterPDFSettingCodes.QRCODE_COLOR, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_COLOR);
+			qrCodeImages.put(proband.getId(),
+					PDFJpeg.prepareQRCodeImage(
+							doc,
+							MessageFormat.format(ServiceUtil.BEACON_CONFIRM_URL, Settings.getHttpBaseUrl(),
+									CommonUtil.CONFIRM_PATH, beacon != null ? beacon : ServiceUtil.DUMMY_BEACON),
+							Settings.getInt(ProbandLetterPDFSettingCodes.QRCODE_IMAGE_WIDTH, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_IMAGE_WIDTH),
+							Settings.getInt(ProbandLetterPDFSettingCodes.QRCODE_IMAGE_HEIGHT, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_IMAGE_HEIGHT),
+							Settings.getInt(ProbandLetterPDFSettingCodes.QRCODE_IMAGE_MARGIN, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_IMAGE_MARGIN),
+							quality, dpi, bgColor, fgColor));
+			return true;
+		}
+		return false;
 	}
 
 	protected void updateProbandLetterPDFVO() {
