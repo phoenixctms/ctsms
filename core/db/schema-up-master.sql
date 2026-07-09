@@ -119,5 +119,199 @@ if get_database_version() < '010901007' then
 
 end if;
 
+if get_database_version() < '010901008' then
+
+  insert into PROBAND_LIST_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "reason_required", "blocking", "count", "screening", "ic", "ecrf_value_input_enabled", "signup", "person")
+  values (nextval('hibernate_sequence'), 'ORANGERED', 'f', 'ic_not_signed', 'f', 'f', 'f', 'f', 't', 't', 'f', 't');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'PROBAND_STATUS' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "reason_required", "blocking", "count", "screening", "ic", "ecrf_value_input_enabled", "signup", "person")
+  values (nextval('hibernate_sequence'), 'GOLD', 'f', 'screening_result_pending', 'f', 't', 't', 't', 'f', 't', 'f', 't');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'SCREENING' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "reason_required", "blocking", "count", "screening", "ic", "ecrf_value_input_enabled", "signup", "person")
+  values (nextval('hibernate_sequence'), 'ORANGERED', 'f', 'ic_not_signed_re_screening', 'f', 'f', 'f', 't', 't', 't', 'f', 't');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed_re_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'SCREENING' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "reason_required", "blocking", "count", "screening", "ic", "ecrf_value_input_enabled", "signup", "person")
+  values (nextval('hibernate_sequence'), 'GOLD', 'f', 're_screening_result_pending', 'f', 't', 't', 't', 'f', 't', 'f', 't');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'SCREENING' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TYPE
+    ("id", "color", "initial", "name_l10n_key", "reason_required", "blocking", "count", "screening", "ic", "ecrf_value_input_enabled", "signup", "person")
+  values (nextval('hibernate_sequence'), 'GREEN', 'f', 'ongoing_randomized', 'f', 't', 't', 'f', 'f', 't', 'f', 't');
+
+  insert into PROBAND_LIST_STATUS_TYPE_LOG_LEVEL
+    ("proband_list_status_types_fk","log_levels_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1),
+    (select id from PROBAND_LIST_STATUS_LOG_LEVEL where log_level = 'ENROLLMENT' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'candidate' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'acceptance' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_signed' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_ok' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed_re_screening' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_signed_re_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_ok' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_failure' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'dropped_out' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_ok' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'screening_failure' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 're_screening_result_pending' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'dropped_out' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'dropped_out' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ongoing_randomized' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'completed' limit 1)
+  );
+
+  perform set_database_version('010901008');
+
+end if;
+
 end
 $$;
