@@ -1974,6 +1974,17 @@ public class ProductionDataProvider {
 				false,
 				true,
 				getProbandListStatusLogLevels());
+		ProbandListStatusType icNotSignedProbandListStatusType = createProbandListStatusType("ic_not_signed", Color.ORANGERED,
+				false,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PROBAND_STATUS));
 		ProbandListStatusType icSignedProbandListStatusType = createProbandListStatusType("ic_signed", Color.SPRINGGREEN,
 				false,
 				false,
@@ -1996,6 +2007,39 @@ public class ProductionDataProvider {
 				false,
 				true,
 				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.PROBAND_STATUS));
+		ProbandListStatusType screeningResultPendingProbandListStatusType = createProbandListStatusType("screening_result_pending", Color.GOLD,
+				false,
+				false,
+				true,
+				true,
+				true,
+				false,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
+		ProbandListStatusType icNotSignedReScreeningProbandListStatusType = createProbandListStatusType("ic_not_signed_re_screening", Color.ORANGERED,
+				false,
+				false,
+				false,
+				false,
+				true,
+				true,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
+		ProbandListStatusType reScreeningResultPendingProbandListStatusType = createProbandListStatusType("re_screening_result_pending", Color.GOLD,
+				false,
+				false,
+				true,
+				true,
+				true,
+				false,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.SCREENING));
 		ProbandListStatusType screeningOkProbandListStatusType = createProbandListStatusType("screening_ok", Color.LIMEGREEN,
 				false,
 				false,
@@ -2040,6 +2084,17 @@ public class ProductionDataProvider {
 				false,
 				true,
 				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.ENROLLMENT));
+		ProbandListStatusType ongoingRandomizedProbandListStatusType = createProbandListStatusType("ongoing_randomized", Color.GREEN,
+				false,
+				false,
+				true,
+				true,
+				false,
+				false,
+				true,
+				false,
+				true,
+				getProbandListStatusLogLevels(org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel.ENROLLMENT));
 		ProbandListStatusType droppedOutProbandListStatusType = createProbandListStatusType("dropped_out", Color.TOMATO,
 				false,
 				true,
@@ -2063,7 +2118,8 @@ public class ProductionDataProvider {
 				true,
 				getProbandListStatusLogLevels());
 		updateProbandListStatusType(candidateProbandListStatusType,
-				getProbandListStatusTransitions(candidateProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType, ongoingProbandListStatusType));
+				getProbandListStatusTransitions(candidateProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType, ongoingProbandListStatusType,
+						ongoingRandomizedProbandListStatusType));
 		updateProbandListStatusType(signupProbandListStatusType,
 				getProbandListStatusTransitions(signupProbandListStatusType, contactedProbandListStatusType, cancelledProbandListStatusType));
 		updateProbandListStatusType(contactedProbandListStatusType,
@@ -2071,24 +2127,38 @@ public class ProductionDataProvider {
 		updateProbandListStatusType(cancelledProbandListStatusType,
 				getProbandListStatusTransitions());
 		updateProbandListStatusType(acceptanceProbandListStatusType,
-				getProbandListStatusTransitions(contactedProbandListStatusType, acceptanceProbandListStatusType, icSignedProbandListStatusType, cancelledProbandListStatusType));
+				getProbandListStatusTransitions(contactedProbandListStatusType, acceptanceProbandListStatusType, icSignedProbandListStatusType, icNotSignedProbandListStatusType,
+						cancelledProbandListStatusType));
+		updateProbandListStatusType(icNotSignedProbandListStatusType,
+				getProbandListStatusTransitions());
 		updateProbandListStatusType(
 				icSignedProbandListStatusType,
 				getProbandListStatusTransitions(icSignedProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
+						droppedOutProbandListStatusType, screeningResultPendingProbandListStatusType));
+		updateProbandListStatusType(screeningResultPendingProbandListStatusType,
+				getProbandListStatusTransitions(screeningResultPendingProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
 						droppedOutProbandListStatusType));
 		updateProbandListStatusType(
 				icSignedReScreeningProbandListStatusType,
 				getProbandListStatusTransitions(icSignedReScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
+						droppedOutProbandListStatusType, reScreeningResultPendingProbandListStatusType));
+		updateProbandListStatusType(reScreeningResultPendingProbandListStatusType,
+				getProbandListStatusTransitions(reScreeningResultPendingProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
 						droppedOutProbandListStatusType));
 		updateProbandListStatusType(screeningOkProbandListStatusType,
-				getProbandListStatusTransitions(screeningOkProbandListStatusType, reScreeningProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType));
+				getProbandListStatusTransitions(screeningOkProbandListStatusType, reScreeningProbandListStatusType, ongoingProbandListStatusType, ongoingRandomizedProbandListStatusType,
+						droppedOutProbandListStatusType));
 		updateProbandListStatusType(reScreeningProbandListStatusType,
 				getProbandListStatusTransitions(reScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
-						icSignedReScreeningProbandListStatusType));
+						icSignedReScreeningProbandListStatusType, icNotSignedReScreeningProbandListStatusType));
+		updateProbandListStatusType(icNotSignedReScreeningProbandListStatusType,
+				getProbandListStatusTransitions());
 		updateProbandListStatusType(screeningFailureProbandListStatusType,
 				getProbandListStatusTransitions(reScreeningProbandListStatusType));
 		updateProbandListStatusType(ongoingProbandListStatusType,
-				getProbandListStatusTransitions(ongoingProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
+				getProbandListStatusTransitions(ongoingProbandListStatusType, ongoingRandomizedProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
+		updateProbandListStatusType(ongoingRandomizedProbandListStatusType,
+				getProbandListStatusTransitions(ongoingRandomizedProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
 		updateProbandListStatusType(droppedOutProbandListStatusType,
 				getProbandListStatusTransitions());
 		updateProbandListStatusType(completedProbandListStatusType,
