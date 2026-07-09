@@ -18,7 +18,7 @@ import org.phoenixctms.ctsms.vo.ProbandAddressOutVO;
 public class ProbandLetterPDFBlock {
 
 	public enum BlockType {
-		NEW_LETTER, NEW_PAGE, ADDRESS, PROBAND_ID, FIRST_PAGE_DATE, SECOND_PAGE_DATE, SALUTATION, QR_CODE
+		NEW_LETTER, NEW_PAGE, ADDRESS, PROBAND_ID, FIRST_PAGE_DATE, SECOND_PAGE_DATE, SALUTATION, CONFIRMATION_LINK
 	}
 
 	protected ProbandAddressOutVO address;
@@ -42,7 +42,7 @@ public class ProbandLetterPDFBlock {
 
 	public ProbandLetterPDFBlock(PDFJpeg ximage) {
 		this.ximage = ximage;
-		this.type = BlockType.QR_CODE;
+		this.type = BlockType.CONFIRMATION_LINK;
 	}
 
 	public ProbandAddressOutVO getAddress() {
@@ -250,7 +250,7 @@ public class ProbandLetterPDFBlock {
 				}
 				height = cursor.getBlockY() - y;
 				break;
-			case QR_CODE:
+			case CONFIRMATION_LINK:
 				x = cursor.getBlockX() + cursor.getBlockWidth();
 				y = Settings.getFloat(ProbandLetterPDFSettingCodes.QRCODE_Y, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.QRCODE_Y);
 				if (ximage != null) {
