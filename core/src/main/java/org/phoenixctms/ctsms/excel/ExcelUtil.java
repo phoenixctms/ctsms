@@ -58,22 +58,25 @@ public final class ExcelUtil {
 	private final static HashMap<Color, Colour> COLOR_MAPPING = new HashMap<Color, Colour>();
 	static {
 		// http://jexcelapi.sourceforge.net/resources/javadocs/2_6_10/docs/jxl/format/Colour.html
+		// lighter JXL palette entries than the web/css colours for softer excel backgrounds
 		COLOR_MAPPING.put(Color.LIGHTYELLOW, Colour.IVORY);
+		COLOR_MAPPING.put(Color.YELLOW, Colour.VERY_LIGHT_YELLOW);
 		COLOR_MAPPING.put(Color.ORANGE, Colour.LIGHT_ORANGE);
-		COLOR_MAPPING.put(Color.DARKORANGE, Colour.ORANGE);
+		COLOR_MAPPING.put(Color.DARKORANGE, Colour.LIGHT_ORANGE);
 		COLOR_MAPPING.put(Color.SPRINGGREEN, Colour.LIGHT_GREEN);
-		COLOR_MAPPING.put(Color.LIMEGREEN, Colour.BRIGHT_GREEN);
-		COLOR_MAPPING.put(Color.LIME, Colour.LIME);
+		COLOR_MAPPING.put(Color.LIMEGREEN, Colour.LIGHT_GREEN);
+		COLOR_MAPPING.put(Color.LIME, Colour.LIGHT_GREEN);
 		COLOR_MAPPING.put(Color.TOMATO, Colour.CORAL);
 		COLOR_MAPPING.put(Color.MEDIUMSEAGREEN, Colour.SEA_GREEN);
-		COLOR_MAPPING.put(Color.RED, Colour.RED);
+		COLOR_MAPPING.put(Color.RED, Colour.ROSE);
 		COLOR_MAPPING.put(Color.ORANGERED, Colour.TAN);
+		COLOR_MAPPING.put(Color.CYAN, Colour.LIGHT_TURQUOISE);
 		COLOR_MAPPING.put(Color.LIGHTGRAY, Colour.GREY_25_PERCENT);
-		COLOR_MAPPING.put(Color.GREEN, Colour.GREEN);
+		COLOR_MAPPING.put(Color.GREEN, Colour.LIGHT_GREEN);
 		COLOR_MAPPING.put(Color.GAINSBORO, Colour.GREY_50_PERCENT);
 		COLOR_MAPPING.put(Color.SALMON, Colour.CORAL);
 		COLOR_MAPPING.put(Color.LIGHTSKYBLUE, Colour.SKY_BLUE);
-		COLOR_MAPPING.put(Color.OLIVE, Colour.DARK_YELLOW);
+		COLOR_MAPPING.put(Color.OLIVE, Colour.GOLD);
 		COLOR_MAPPING.put(Color.YELLOWGREEN, Colour.GOLD);
 		COLOR_MAPPING.put(Color.KHAKI, Colour.VERY_LIGHT_YELLOW);
 		COLOR_MAPPING.put(Color.ORCHID, Colour.ROSE);
