@@ -3,9 +3,14 @@ package org.phoenixctms.ctsms.excel;
 import java.io.File;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
+import org.phoenixctms.ctsms.domain.ProbandListStatusEntry;
+import org.phoenixctms.ctsms.domain.ProbandListStatusEntryDao;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -144,6 +149,7 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 	protected ProbandListExcelVO excelVO;
 	protected ProbandListStatusLogLevel logLevel;
 	protected TrialOutVO trial;
+	protected HashMap<Long, HashMap<String, Color>> distinctFieldRowCellColors;
 	protected static final String PROBAND_LIST_EXCEL_FILENAME_PREFIX = "proband_list_";
 
 	public static String getICAgeColumnName() {
@@ -193,6 +199,22 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 				(visitScheduleItem != null && visitScheduleItem.getGroup() != null) ? visitScheduleItem.getGroup().getToken() : null,
 				(visitScheduleItem != null && visitScheduleItem.getVisit() != null) ? visitScheduleItem.getVisit().getToken() : null,
 				visitScheduleItem == null ? null : visitScheduleItem.getToken());
+	}
+
+	public static Color getVisitScheduleAppointmentRecentStatusColor(ProbandListStatusEntryDao probandListStatusEntryDao, Long trialId, Long probandId,
+			Long visitScheduleItemId, Date timestamp) {
+		if (probandListStatusEntryDao == null || trialId == null || probandId == null || visitScheduleItemId == null || timestamp == null) {
+			return null;
+		}
+		ProbandListStatusEntry probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialId, probandId,
+				new HashSet<Long>(Arrays.asList(visitScheduleItemId)), CommonUtil.dateToTimestamp(timestamp));
+		if (probandListStatusEntry == null) {
+			probandListStatusEntry = probandListStatusEntryDao.findRecentStatus(trialId, probandId, new HashSet<Long>(), CommonUtil.dateToTimestamp(timestamp));
+		}
+		if (probandListStatusEntry != null) {
+			return probandListStatusEntry.getStatus().getColor();
+		}
+		return null;
 	}
 
 	protected ProbandListExcelWriter() {
@@ -571,6 +593,10 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 		getSpreadSheetWriters().get(0).setDistinctFieldRows(distinctFieldRows);
 	}
 
+	public void setDistinctFieldRowCellColors(HashMap<Long, HashMap<String, Color>> distinctFieldRowCellColors) {
+		this.distinctFieldRowCellColors = distinctFieldRowCellColors;
+	}
+
 	@Override
 	public void setSpreadSheetName(String spreadSheetName) {
 		if (CommonUtil.isEmptyString(spreadSheetName)) {
@@ -647,11 +673,25 @@ public class ProbandListExcelWriter extends WorkbookWriter {
 	}
 
 	@Override
-	public Color voToColor(Object vo) {
+	public Color voToRowColor(Object vo) {
 		if (vo instanceof ProbandListEntryOutVO) {
 			ProbandListStatusEntryOutVO lastStatus = ((ProbandListEntryOutVO) vo).getLastStatus();
 			if (lastStatus != null) {
 				return lastStatus.getStatus().getColor();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Color voToCellColor(Object vo, String columnName) {
+		if (distinctFieldRowCellColors != null) {
+			Long id = CommonUtil.getVOId(vo);
+			if (id != null) {
+				HashMap<String, Color> fieldRowCellColors = distinctFieldRowCellColors.get(id);
+				if (fieldRowCellColors != null && fieldRowCellColors.containsKey(columnName)) {
+					return fieldRowCellColors.get(columnName);
+				}
 			}
 		}
 		return null;
