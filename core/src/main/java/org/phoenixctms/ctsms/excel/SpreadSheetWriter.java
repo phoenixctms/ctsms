@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
 
 import jxl.CellView;
@@ -127,7 +128,7 @@ public class SpreadSheetWriter {
 	}
 
 	private void writeFieldRow(WritableSheet spreadSheet, HashMap<String, Object> fieldRow, int maxIndexedColumnIndex, int r, ExcelCellFormat f,
-			HashMap<String, WritableCellFormat> cellFormats) throws Exception {
+			HashMap<String, WritableCellFormat> cellFormats, Object vo) throws Exception {
 		if (fieldRow != null && distinctColumnNames != null && distinctColumnNames.size() > 0) {
 			int c = maxIndexedColumnIndex;
 			for (int d = 0; d < distinctColumnNames.size(); d++) {
@@ -137,6 +138,13 @@ public class SpreadSheetWriter {
 				if (columnIndex == null) {
 					c++;
 					columnIndex = c;
+				}
+				if (rowColors) {
+					Color bgColor = workbookWriter.voToCellColor(vo, columnName);
+					if (bgColor == null) {
+						bgColor = workbookWriter.voToRowColor(vo);
+					}
+					f.setBgColor(bgColor);
 				}
 				if (fieldValue != null) {
 					ExcelUtil.writeCell(spreadSheet, getColIndex(columnIndex.intValue()), r, fieldValue.getClass(), fieldValue, f, cellFormats, false);
@@ -250,7 +258,7 @@ public class SpreadSheetWriter {
 					Integer columnIndex = getColumnIndex(voColumn.getColumnName());
 					if (columnIndex != null) {
 						if (rowColors) {
-							rowFormat.setBgColor(workbookWriter.voToColor(vo));
+							rowFormat.setBgColor(workbookWriter.voToRowColor(vo));
 						}
 						voColumn.writeCell(spreadSheet, getColIndex(columnIndex.intValue()), r, vo, rowFormat, cellFormats);
 					}
@@ -258,10 +266,7 @@ public class SpreadSheetWriter {
 				if (distinctFieldRows != null && distinctFieldRows.size() > 0) {
 					Long id = CommonUtil.getVOId(vo);
 					if (id != null && distinctFieldRows.containsKey(id)) {
-						if (rowColors) {
-							rowFormat.setBgColor(workbookWriter.voToColor(vo));
-						}
-						writeFieldRow(spreadSheet, distinctFieldRows.get(id), maxIndexedColumnIndex, r, rowFormat, cellFormats);
+						writeFieldRow(spreadSheet, distinctFieldRows.get(id), maxIndexedColumnIndex, r, rowFormat, cellFormats, vo);
 					}
 				}
 				r += 1;
@@ -288,10 +293,7 @@ public class SpreadSheetWriter {
 					r += increment;
 					rPage += increment;
 				}
-				if (rowColors) {
-					rowFormat.setBgColor(null);
-				}
-				writeFieldRow(spreadSheet, row, maxIndexedColumnIndex, r, rowFormat, cellFormats);
+				writeFieldRow(spreadSheet, row, maxIndexedColumnIndex, r, rowFormat, cellFormats, null);
 				r += 1;
 				rPage += 1;
 			}
