@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.enumeration.Color;
 
 import jxl.WorkbookSettings;
 import jxl.write.WritableSheet;
@@ -86,6 +87,11 @@ public abstract class WorkbookWriter implements ExcelWriter, ExcelOutput {
 	protected abstract void updateExcelVO();
 
 	protected ArrayList<String> getGroupLabels(Object lastRow, Object row) {
+		return null;
+	}
+
+	@Override
+	public Color voToCellColor(Object vo, String columnName) {
 		return null;
 	}
 

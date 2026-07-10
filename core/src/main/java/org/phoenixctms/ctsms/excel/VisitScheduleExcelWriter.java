@@ -1023,7 +1023,7 @@ public class VisitScheduleExcelWriter extends WorkbookWriter {
 	}
 
 	@Override
-	public Color voToColor(Object vo) {
+	public Color voToRowColor(Object vo) {
 		if (vo instanceof VisitScheduleItemOutVO) {
 			VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) vo;
 			Object distinctVo = getDistinctFieldRows().get(visitScheduleItem.getId()).get(RECENT_PROBAND_LIST_STATUS_ENTRY);

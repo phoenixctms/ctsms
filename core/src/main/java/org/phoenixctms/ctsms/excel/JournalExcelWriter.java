@@ -631,7 +631,7 @@ public class JournalExcelWriter extends WorkbookWriter {
 	}
 
 	@Override
-	public Color voToColor(Object vo) {
+	public Color voToRowColor(Object vo) {
 		return null;
 	}
 }

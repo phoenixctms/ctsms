@@ -15,7 +15,9 @@ public interface ExcelWriter {
 
 	public void init() throws Exception;
 
-	public Color voToColor(Object vo);
+	public Color voToRowColor(Object vo);
+
+	public Color voToCellColor(Object vo, String columnName);
 
 	public void writeSpreadSheets(WritableWorkbook workbook) throws Exception;
 }

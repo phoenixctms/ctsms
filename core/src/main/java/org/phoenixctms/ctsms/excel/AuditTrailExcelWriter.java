@@ -484,7 +484,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	}
 
 	@Override
-	public Color voToColor(Object vo) {
+	public Color voToRowColor(Object vo) {
 		if (vo instanceof ECRFFieldStatusEntryOutVO) {
 			return ((ECRFFieldStatusEntryOutVO) vo).getStatus().getColor();
 		}
