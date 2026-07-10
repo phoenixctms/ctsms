@@ -80,6 +80,7 @@ import org.phoenixctms.ctsms.compare.VisitScheduleItemIntervalComparator;
 import org.phoenixctms.ctsms.compare.VisitScheduleItemOutVOComparator;
 import org.phoenixctms.ctsms.domain.*;
 import org.phoenixctms.ctsms.email.NotificationMessageTemplateParameters;
+import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
@@ -5260,11 +5261,13 @@ public class TrialServiceImpl
 		ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
 		ArrayList<ProbandListEntryOutVO> VOs = new ArrayList<ProbandListEntryOutVO>(probandListEntries.size());
 		HashMap<Long, HashMap<String, Object>> distinctFieldRows = new HashMap<Long, HashMap<String, Object>>(probandListEntries.size());
+		HashMap<Long, HashMap<String, Color>> distinctFieldRowCellColors = new HashMap<Long, HashMap<String, Color>>(probandListEntries.size());
 		Iterator<ProbandListEntry> probandListEntriesIt = probandListEntries.iterator();
 		while (probandListEntriesIt.hasNext()) {
 			ProbandListEntry probandListEntry = probandListEntriesIt.next();
 			ProbandListEntryOutVO probandListEntryVO = probandListEntryDao.toProbandListEntryOutVO(probandListEntry);
 			HashMap<String, Object> fieldRow = new HashMap<String, Object>(distinctColumnNames.size());
+			HashMap<String, Color> fieldRowCellColors = new HashMap<String, Color>();
 			String fieldKey;
 			Collection tagValues = showTags ? probandTagValueDao.findByProband(probandListEntryVO.getProband().getId(), null) : new ArrayList<ProbandTagValue>();
 			probandTagValueDao.toProbandTagValueOutVOCollection(tagValues);
@@ -5406,18 +5409,42 @@ public class TrialServiceImpl
 			visitScheduleItemsIt = visitScheduleItems.iterator();
 			while (visitScheduleItemsIt.hasNext()) {
 				VisitScheduleItemOutVO visitScheduleItemVO = visitScheduleItemsIt.next();
-				VisitScheduleItem visitScheduleAppointment = visitScheduleAppointmentMap.get(visitScheduleItemVO.getId());
+				VisitScheduleItem visitScheduleAppointment = visitScheduleAppointmentMap == null ? null : visitScheduleAppointmentMap.get(visitScheduleItemVO.getId());
+				Long listEntryTrialId = probandListEntryVO.getTrial().getId();
+				Long listEntryProbandId = probandListEntryVO.getProband().getId();
+				Long visitScheduleItemId = visitScheduleItemVO.getId();
 				if (showVisitScheduleAppointmentsStart) {
 					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStartColumnName(visitScheduleItemVO);
-					fieldRow.put(fieldKey, visitScheduleAppointment.getStart());
+					if (visitScheduleAppointment != null) {
+						fieldRow.put(fieldKey, visitScheduleAppointment.getStart());
+						Color cellColor = ProbandListExcelWriter.getVisitScheduleAppointmentRecentStatusColor(probandListStatusEntryDao, listEntryTrialId, listEntryProbandId,
+								visitScheduleItemId, visitScheduleAppointment.getStart());
+						if (cellColor != null) {
+							fieldRowCellColors.put(fieldKey, cellColor);
+						}
+					}
 				}
 				if (showVisitScheduleAppointmentsStop) {
 					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStopColumnName(visitScheduleItemVO);
-					fieldRow.put(fieldKey, visitScheduleAppointment.getStop());
+					if (visitScheduleAppointment != null) {
+						fieldRow.put(fieldKey, visitScheduleAppointment.getStop());
+						Color cellColor = ProbandListExcelWriter.getVisitScheduleAppointmentRecentStatusColor(probandListStatusEntryDao, listEntryTrialId, listEntryProbandId,
+								visitScheduleItemId, visitScheduleAppointment.getStop());
+						if (cellColor != null) {
+							fieldRowCellColors.put(fieldKey, cellColor);
+						}
+					}
 				}
 				if (showVisitScheduleAppointmentsStartStop) {
 					fieldKey = ProbandListExcelWriter.getVisitScheduleAppointmentsStartStopColumnName(visitScheduleItemVO);
 					fieldRow.put(fieldKey, ProbandListExcelWriter.getVisitScheduleAppointmentValue(visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleAppointment)));
+					if (visitScheduleAppointment != null) {
+						Color cellColor = ProbandListExcelWriter.getVisitScheduleAppointmentRecentStatusColor(probandListStatusEntryDao, listEntryTrialId, listEntryProbandId,
+								visitScheduleItemId, visitScheduleAppointment.getStop());
+						if (cellColor != null) {
+							fieldRowCellColors.put(fieldKey, cellColor);
+						}
+					}
 				}
 			}
 			HashMap<Long, InquiryValue> inquiryValueMap;
@@ -5552,10 +5579,14 @@ public class TrialServiceImpl
 			}
 			VOs.add(probandListEntryVO);
 			distinctFieldRows.put(probandListEntryVO.getId(), fieldRow);
+			if (fieldRowCellColors.size() > 0) {
+				distinctFieldRowCellColors.put(probandListEntryVO.getId(), fieldRowCellColors);
+			}
 		}
 		writer.setVOs(VOs);
 		writer.setDistinctColumnNames(distinctColumnNames);
 		writer.setDistinctFieldRows(distinctFieldRows);
+		writer.setDistinctFieldRowCellColors(distinctFieldRowCellColors);
 		User user = CoreUtil.getUser();
 		writer.getExcelVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new ExcelExporter(writer, writer)).write();
