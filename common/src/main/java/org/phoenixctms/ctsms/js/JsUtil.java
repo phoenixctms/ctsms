@@ -30,6 +30,7 @@ public final class JsUtil {
 
 	public final static String INPUT_JSON_DATETIME_PATTERN = "yyyy-MM-dd " + CommonUtil.DEFAULT_INPUT_TIME_PATTERN;
 	public final static String VO_JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	public final static String API_JSON_DATETIME_PATTERN = VO_JSON_DATETIME_PATTERN;
 	public static final GsonExclusionStrategy[] GSON_EXCLUSION_STRATEGIES = new GsonExclusionStrategy[] {
 			new GsonExclusionStrategy(UserOutVO.class, "modifiedUser"),
 			new GsonExclusionStrategy(UserOutVO.class, "children"),
