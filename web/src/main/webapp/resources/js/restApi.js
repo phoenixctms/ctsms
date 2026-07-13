@@ -134,12 +134,28 @@ var RestApi = RestApi || {};
 		if (url == null || url.length === 0) {
 			return null;
 		}
+		var data = null;
 		var req = createSessionRequest('GET', path);
 		req.dataType = 'json';
 		req.async = false;
+		req.success = function(result) {
+			data = result;
+		};
 		var jqXHR = ajaxRequest(req);
-		if (jqXHR && jqXHR.status === 200 && jqXHR.responseJSON != null) {
-			return jqXHR.responseJSON;
+		if (data != null) {
+			return data;
+		}
+		if (jqXHR && jqXHR.status === 200) {
+			if (jqXHR.responseJSON != null) {
+				return jqXHR.responseJSON;
+			}
+			if (jqXHR.responseText != null && jqXHR.responseText.length > 0) {
+				try {
+					return JSON.parse(jqXHR.responseText);
+				} catch (e) {
+					// ignore
+				}
+			}
 		}
 		return null;
 	}
