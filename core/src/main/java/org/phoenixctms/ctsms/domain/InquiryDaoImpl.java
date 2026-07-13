@@ -9,7 +9,9 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -83,6 +85,28 @@ public class InquiryDaoImpl
 		return null;
 	}
 
+	private static String buildUniqueInquiryNameSql() {
+		String trialName = "(select t.name from trial t where t.id = {alias}.trial_fk)";
+		String category = "{alias}.category";
+		String position = "cast({alias}.position as varchar)";
+		String inputFieldName = "(select f.name_l10n_key from input_field f where f.id = {alias}.field_fk)";
+		String withCategory = "concat(" + trialName + ", ' - ', " + category + ", ' - ', " + position + ", '. ', " + inputFieldName + ")";
+		String plain = "concat(" + trialName + ", ' - ', " + position + ", '. ', " + inputFieldName + ")";
+		return "case when (" + category + " is not null and length(" + category + ") > 0) then " + withCategory + " else " + plain + " end";
+	}
+
+	private static Criterion getUniqueInquiryNameMatchRestriction(String nameInfixPattern) {
+		return Restrictions.sqlRestriction(
+				"lower(" + buildUniqueInquiryNameSql() + ") like ?",
+				nameInfixPattern,
+				Hibernate.STRING);
+	}
+
+	private static void addUniqueInquiryNameMatchRestriction(Junction junction, String nameInfix) {
+		junction.add(getUniqueInquiryNameMatchRestriction(
+				MatchMode.ANYWHERE.toMatchString(nameInfix.toLowerCase())));
+	}
+
 	private org.hibernate.Criteria createInquiryCriteria() {
 		org.hibernate.Criteria inquiryCriteria = this.getSession().createCriteria(Inquiry.class);
 		return inquiryCriteria;
@@ -107,6 +131,7 @@ public class InquiryDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			addUniqueInquiryNameMatchRestriction(junction, nameInfix);
 			inquiryCriteria.add(junction);
 		}
 		applySortOrders(inquiryCriteria);
