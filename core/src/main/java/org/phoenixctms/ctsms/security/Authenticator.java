@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.security;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -56,11 +57,23 @@ public class Authenticator {
 
 	public String issueJwt(AuthenticationVO auth, String realm, Long validityPeriodSecs) throws Exception {
 		authenticate(auth, true, realm);
+		return buildJwtFromUserContext(validityPeriodSecs);
+	}
+
+	public String buildJwtFromUserContext(Long validityPeriodSecs) throws Exception {
+		UserContext userContext = CoreUtil.getUserContext();
+		User user = CoreUtil.getUser();
+		if (user == null) {
+			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.AUTHENTICATION_REQUIRED);
+		}
+		String plainPassword = userContext.getPlainPassword();
+		if (plainPassword == null) {
+			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.AUTHENTICATION_REQUIRED);
+		}
 		JwtBuilder jwtBuilder = Jwts.builder();
 		//prevent attacks that use signed claims as starting point:
 		jwtBuilder.setId(CommonUtil.generateUUID());
 		//user id to lookup when verifying:
-		User user = CoreUtil.getUser();
 		jwtBuilder.setSubject(Long.toString(user.getId()));
 		if (validityPeriodSecs != null) {
 			//expiry, if specified
@@ -72,9 +85,9 @@ public class Authenticator {
 		jwtBuilder.setIssuer(Settings.getInstanceName());
 		//encrypt the user password with the user's private key, and add it to payload:
 		jwtBuilder.setHeaderParam(JWT_PWD_HEADER_KEY,
-				new String(Base64.encodeBase64(CryptoUtil.encrypt(CoreUtil.getUserContext().getPrivateKey(), auth.getPassword().getBytes()))));
+				Base64.encodeBase64String(CryptoUtil.encrypt(userContext.getPrivateKey(), plainPassword.getBytes(StandardCharsets.UTF_8))));
 		//sign payload with a key derived from the user department's department key:
-		jwtBuilder.signWith(CryptoUtil.createJwtKey(CoreUtil.getUserContext().getDepartmentKey()));
+		jwtBuilder.signWith(CryptoUtil.createJwtKey(userContext.getDepartmentKey()));
 		return jwtBuilder.compact();
 	}
 
@@ -92,7 +105,8 @@ public class Authenticator {
 						credentials[0] = user.getName();
 						//decrypt the user password using the user's public key:
 						String plainPassword = new String(
-								CryptoUtil.decrypt(CryptoUtil.getPublicKey(user.getKeyPair().getPublicKey()), Base64.decodeBase64((String) jwsHeader.get(JWT_PWD_HEADER_KEY))));
+								CryptoUtil.decrypt(CryptoUtil.getPublicKey(user.getKeyPair().getPublicKey()), Base64.decodeBase64((String) jwsHeader.get(JWT_PWD_HEADER_KEY))),
+								StandardCharsets.UTF_8);
 						credentials[1] = plainPassword;
 						//get the jwt signing key from the user's department key:
 						String plainDepartmentPassword = CryptoUtil.decryptDepartmentPassword(passwordDao.findLastPassword(user.getId()), plainPassword);

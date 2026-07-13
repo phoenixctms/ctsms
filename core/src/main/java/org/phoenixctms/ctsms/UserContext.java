@@ -204,6 +204,10 @@ public class UserContext extends VOCacheContext {
 		this.lastPassword = lastPassword;
 	}
 
+	public String getPlainPassword() {
+		return plainPassword;
+	}
+
 	public void setPlainPassword(String plainPassword) {
 		resetDecrypted();
 		this.plainPassword = plainPassword;
