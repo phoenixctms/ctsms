@@ -65,7 +65,7 @@ public class GsonMessageBodyHandler implements MessageBodyReader<Object>, Messag
 	private final static boolean ENABLE_TIMEZONE_CONVERSION = true;
 	private final static String API_JSON_SERIALIZE_VALUE_CHARSET = "UTF8";
 	private final static String API_JSON_DESERIALIZE_VALUE_CHARSET = "UTF8";
-	private final static String API_JSON_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	private final static String API_JSON_DATETIME_PATTERN = JsUtil.API_JSON_DATETIME_PATTERN;
 	public static final String TIMEZONE_QUERY_PARAM = "tz";
 	private final static String FIELD_VALUE_VO_TIMESTAMP_FIELD_NAME = "timestampValue";
 	private final static String FIELD_VALUE_VO_DATE_FIELD_NAME = "dateValue";
