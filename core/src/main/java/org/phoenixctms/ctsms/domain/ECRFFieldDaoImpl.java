@@ -8,7 +8,9 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -83,6 +85,34 @@ public class ECRFFieldDaoImpl
 			}
 		}
 		return null;
+	}
+
+	private static String buildUniqueECRFFieldNameSql() {
+		String section = "{alias}.section";
+		String trialName = "(select t.name from trial t where t.id = {alias}.trial_fk)";
+		String ecrfName = "(select e.name from ecrf e where e.id = {alias}.ecrf_fk)";
+		String revision = "(select e.revision from ecrf e where e.id = {alias}.ecrf_fk)";
+		String inputFieldName = "(select f.name_l10n_key from input_field f where f.id = {alias}.field_fk)";
+		String position = "cast({alias}.position as varchar)";
+		String withSectionRevision = "concat(" + trialName + ", ' - ', " + ecrfName + ", ' (', " + revision + ", ') - ', " + section + ", ' - ', " + position + ", '. ', "
+				+ inputFieldName + ")";
+		String withSection = "concat(" + trialName + ", ' - ', " + ecrfName + ", ' - ', " + section + ", ' - ', " + position + ", '. ', " + inputFieldName + ")";
+		String withRevision = "concat(" + trialName + ", ' - ', " + ecrfName + ", ' (', " + revision + ", ') - ', " + position + ", '. ', " + inputFieldName + ")";
+		String plain = "concat(" + trialName + ", ' - ', " + ecrfName + ", ' - ', " + position + ", '. ', " + inputFieldName + ")";
+		return "case when (" + section + " is not null and length(" + section + ") > 0) then "
+				+ "case when (" + revision + " is not null and length(" + revision + ") > 0) then " + withSectionRevision + " else " + withSection + " end "
+				+ "else case when (" + revision + " is not null and length(" + revision + ") > 0) then " + withRevision + " else " + plain + " end end";
+	}
+
+	private static Criterion getUniqueECRFFieldNameMatchRestriction(String nameInfixPattern) {
+		return Restrictions.sqlRestriction("lower(" + buildUniqueECRFFieldNameSql() + ") like ?",
+				nameInfixPattern,
+				Hibernate.STRING);
+	}
+
+	private void addUniqueECRFFieldNameMatchRestriction(Junction junction, String nameInfix) {
+		junction.add(getUniqueECRFFieldNameMatchRestriction(
+				MatchMode.ANYWHERE.toMatchString(nameInfix.toLowerCase())));
 	}
 
 	private org.hibernate.Criteria createEcrfFieldCriteria() {
@@ -221,6 +251,7 @@ public class ECRFFieldDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "ecrf0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			addUniqueECRFFieldNameMatchRestriction(junction, nameInfix);
 			ecrfFieldCriteria.add(junction);
 		}
 		applySortOrders(ecrfFieldCriteria, ecrfCriteria);

@@ -13,7 +13,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -76,6 +78,25 @@ public class ProbandListEntryTagDaoImpl
 		return null;
 	}
 
+	private static String buildUniqueProbandListEntryTagNameSql() {
+		String trialName = "(select t.name from trial t where t.id = {alias}.trial_fk)";
+		String position = "cast({alias}.position as varchar)";
+		String inputFieldName = "(select f.name_l10n_key from input_field f where f.id = {alias}.field_fk)";
+		return "concat(" + trialName + ", ' - ', " + position + ", '. ', " + inputFieldName + ")";
+	}
+
+	private static Criterion getUniqueProbandListEntryTagNameMatchRestriction(String nameInfixPattern) {
+		return Restrictions.sqlRestriction(
+				"lower(" + buildUniqueProbandListEntryTagNameSql() + ") like ?",
+				nameInfixPattern,
+				Hibernate.STRING);
+	}
+
+	private static void addUniqueProbandListEntryTagNameMatchRestriction(Junction junction, String nameInfix) {
+		junction.add(getUniqueProbandListEntryTagNameMatchRestriction(
+				MatchMode.ANYWHERE.toMatchString(nameInfix.toLowerCase())));
+	}
+
 	private org.hibernate.Criteria createListEntryTagCriteria() {
 		org.hibernate.Criteria listEntryTagCriteria = this.getSession().createCriteria(ProbandListEntryTag.class);
 		return listEntryTagCriteria;
@@ -102,6 +123,7 @@ public class ProbandListEntryTagDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			addUniqueProbandListEntryTagNameMatchRestriction(junction, nameInfix);
 			listEntryTagCriteria.add(junction);
 		}
 		applySortOrders(listEntryTagCriteria);
