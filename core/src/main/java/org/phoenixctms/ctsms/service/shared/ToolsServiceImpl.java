@@ -1085,11 +1085,7 @@ public class ToolsServiceImpl
 			}
 		}
 		if (jwt) {
-			try {
-				lastPasswordVO.setJwt(authenticator.buildJwtFromUserContext(getRestApiJwtValidityPeriodSecs(auth)));
-			} catch (Exception e) {
-				lastPasswordVO.setJwt(null);
-			}
+			lastPasswordVO.setJwt(authenticator.buildJwtFromUserContext(getRestApiJwtValidityPeriodSecs(auth)));
 		}
 		return lastPasswordVO;
 	}
