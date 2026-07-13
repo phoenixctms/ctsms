@@ -703,6 +703,13 @@ public class SessionScopeBean implements FilterItemsStore {
 		return logon;
 	}
 
+	public synchronized String getRestApiJwt() {
+		if (isLoggedIn() && logon != null) {
+			return logon.getJwt();
+		}
+		return null;
+	}
+
 	public synchronized MenuModel getMassMailEntityMenuModel() {
 		return DynamicEntityMenu.getMassMailEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
@@ -1245,7 +1252,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
-			logon = WebUtil.getServiceLocator().getToolsService().logon(auth);
+			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true);
 			auth.setLocalPassword(null);
 			clearAuthenticationFailedMessage();
 			if (logon.getEnable2fa()

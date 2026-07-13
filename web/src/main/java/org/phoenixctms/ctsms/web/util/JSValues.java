@@ -258,6 +258,7 @@ public enum JSValues {
 	JQPLOT_DATE_PATTERN(DateUtil.JQPLOT_DATE_PATTERN),
 	INPUT_JSON_DATETIME_PATTERN(JsUtil.INPUT_JSON_DATETIME_PATTERN),
 	VO_JSON_DATETIME_PATTERN(JsUtil.VO_JSON_DATETIME_PATTERN),
+	API_JSON_DATETIME_PATTERN(JsUtil.API_JSON_DATETIME_PATTERN),
 	AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64("criteriaJournalTabTitleBase64"),
 	AJAX_CRITERIA_JOURNAL_ENTRY_COUNT("criteriaJournalEntryCount"),
 	AJAX_CRITERIA_JOB_TAB_TITLE_BASE64("criteriaJobTabTitleBase64"),
@@ -355,6 +356,7 @@ public enum JSValues {
 	MASS_MAIL_START_URL(Urls.MASS_MAIL_START
 			.value()),
 	REST_API_URL(""),
+	REST_API_JWT(""),
 	// multiple window navigation:
 	INVENTORY_ENTITY_WINDOW_NAME("inventory"),
 	STAFF_ENTITY_WINDOW_NAME("staff"),
@@ -498,6 +500,12 @@ public enum JSValues {
 				return Urls.viewIdToUrl((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest(), value);
 			case REST_API_URL:
 				return ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getContextPath() + "/" + WebUtil.REST_API_PATH + "/";
+			case REST_API_JWT:
+				String restApiJwt = WebUtil.getRestApiJwt();
+				if (restApiJwt != null) {
+					return restApiJwt;
+				}
+				return WebUtil.JS_NULL;
 			case INVENTORY_ENTITY_WINDOW_NAME:
 			case STAFF_ENTITY_WINDOW_NAME:
 			case COURSE_ENTITY_WINDOW_NAME:

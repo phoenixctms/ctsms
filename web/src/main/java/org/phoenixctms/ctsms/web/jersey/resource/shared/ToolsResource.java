@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,6 +31,7 @@ import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
+import org.phoenixctms.ctsms.vo.PasswordOutVO;
 import org.phoenixctms.ctsms.vo.PasswordPolicyVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.web.jersey.index.CompleteIndex;
@@ -179,6 +181,13 @@ public final class ToolsResource {
 	public ResourceIndex index(@Context Application application,
 			@Context HttpServletRequest request) throws Exception {
 		return new ResourceIndex(IndexResource.getResourceIndexNode(ToolsResource.class, request));
+	}
+
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("logon")
+	public PasswordOutVO logon(@QueryParam("jwt") @DefaultValue("false") boolean jwt) throws AuthenticationException, AuthorisationException, ServiceException {
+		return WebUtil.getServiceLocator().getToolsService().logon(auth, jwt);
 	}
 
 	@POST

@@ -1045,7 +1045,7 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected PasswordOutVO handleLogon(AuthenticationVO auth) throws Exception {
+	protected PasswordOutVO handleLogon(AuthenticationVO auth, boolean jwt) throws Exception {
 		Password lastPassword = null;
 		User user = null;
 		Timestamp now = null;
@@ -1084,7 +1084,24 @@ public class ToolsServiceImpl
 				passwordDao.update(lastPassword);
 			}
 		}
-		return passwordDao.toPasswordOutVO(lastPassword);
+		if (jwt) {
+			try {
+				lastPasswordVO.setJwt(authenticator.buildJwtFromUserContext(getRestApiJwtValidityPeriodSecs(auth)));
+			} catch (Exception e) {
+				lastPasswordVO.setJwt(null);
+			}
+		}
+		return lastPasswordVO;
+	}
+
+	private Long getRestApiJwtValidityPeriodSecs(AuthenticationVO auth) {
+		int maxInactiveIntervalMinutes;
+		if (CoreUtil.checkHostIp(auth != null ? auth.getHost() : null)) {
+			maxInactiveIntervalMinutes = Settings.getInt("session_timeout_trusted", Bundle.SETTINGS, 60);
+		} else {
+			maxInactiveIntervalMinutes = Settings.getInt("session_timeout", Bundle.SETTINGS, 60);
+		}
+		return Long.valueOf(maxInactiveIntervalMinutes * 60l);
 	}
 
 	@Override
