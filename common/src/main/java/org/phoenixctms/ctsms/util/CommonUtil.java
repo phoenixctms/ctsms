@@ -127,6 +127,7 @@ public final class CommonUtil {
 	}
 
 	public enum WordSubstringMatchMode {
+
 		EXACT, START, END, ANYWHERE;
 
 		public static WordSubstringMatchMode fromString(String value, WordSubstringMatchMode defaultValue) {
@@ -286,6 +287,8 @@ public final class CommonUtil {
 	public static final String BEACON_PATH = "beacon";
 	public static final String UNSUBSCRIBE_PATH = "unsubscribe";
 	public static final String CONFIRM_PATH = "confirm";
+	public static final String API_REALM = "api";
+	public static final String DBTOOL_REALM = "dbtool";
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
