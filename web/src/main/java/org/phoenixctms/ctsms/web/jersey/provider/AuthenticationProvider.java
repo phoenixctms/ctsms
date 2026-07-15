@@ -55,6 +55,7 @@ public class AuthenticationProvider
 				AuthenticationVO result = new AuthenticationVO();
 				result.setHost(host);
 				result.setJwt(authHeaderValue.substring(BEARER_AUTHENTICATION_SCHEME.length()).trim());
+				result.setRealm(CommonUtil.API_REALM);
 				return result;
 			}
 		}
