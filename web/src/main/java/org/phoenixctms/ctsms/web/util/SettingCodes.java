@@ -494,7 +494,6 @@ public interface SettingCodes {
 	public static final String DEFAULT_GEOLOCATION_LONGITUDE = "default_geolocation_longitude";
 	public static final String DEFAULT_GEOLOCATION_LATITUDE = "default_geolocation_latitude";
 	public static final String GOOGLE_API_URL = "google_api_url";
-	public static final String REST_API_2FA_JWT_ONLY = "api_2fa_jwt_only";
 	public static final String API_TITLE = "api_title";
 	public static final String API_TRUSTED_HOSTS_ONLY = "api_trusted_hosts_only";
 	public static final String API_TRUSTED_HOSTS_ONLY_WHITELIST_PATH_REGEXP = "api_trusted_hosts_only_whitelist_path_regexp";
