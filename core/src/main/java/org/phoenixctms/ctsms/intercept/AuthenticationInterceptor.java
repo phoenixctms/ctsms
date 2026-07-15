@@ -3,7 +3,6 @@ package org.phoenixctms.ctsms.intercept;
 import java.lang.reflect.Method;
 
 import org.phoenixctms.ctsms.security.Authenticator;
-import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.springframework.aop.AfterReturningAdvice;
@@ -35,12 +34,7 @@ public class AuthenticationInterceptor implements MethodBeforeAdvice, AfterRetur
 
 	@Override
 	public void before(Method method, Object[] args, Object object) throws Throwable {
-		AuthenticationVO auth = getAuthentication(args);
-		String realm = CoreUtil.getServiceMethodName(method);
-		if (auth != null && !CommonUtil.isEmptyString(auth.getRealm())) {
-			realm = auth.getRealm();
-		}
-		authenticator.authenticate(auth, false, realm);
+		authenticator.authenticate(getAuthentication(args), false, CoreUtil.getServiceMethodName(method));
 	}
 
 	public void setAuthenticator(Authenticator authenticator) {
