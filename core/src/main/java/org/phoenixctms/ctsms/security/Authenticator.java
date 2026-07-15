@@ -131,6 +131,26 @@ public class Authenticator {
 		return credentials;
 	}
 
+	public void rejectRestApiBasicAuthFor2fa(String username) throws AuthenticationException {
+		if (!Settings.getBoolean(SettingCodes.REST_API_2FA_JWT_ONLY, Bundle.SETTINGS, DefaultSettings.REST_API_2FA_JWT_ONLY)
+				|| CommonUtil.isEmptyString(username)) {
+			return;
+		}
+		User user;
+		try {
+			user = (User) userDao.searchUniqueName(UserDao.TRANSFORM_NONE, username);
+		} catch (Throwable t) {
+			return;
+		}
+		if (user == null) {
+			return;
+		}
+		Password lastPassword = passwordDao.findLastPassword(user.getId());
+		if (lastPassword != null && lastPassword.isEnable2fa()) {
+			throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.REST_API_2FA_NOT_SUPPORTED);
+		}
+	}
+
 	public Authenticator() {
 	}
 

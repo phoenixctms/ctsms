@@ -1449,6 +1449,10 @@ public class ToolsServiceImpl
 		return authenticator.verifyJwt(jwt);
 	}
 
+	public void rejectRestApiBasicAuthFor2fa(String username) throws Exception {
+		authenticator.rejectRestApiBasicAuthFor2fa(username);
+	}
+
 	@Override
 	protected boolean handleIsProbandListEntryTagUserTimeZone(Long probandListEntryTagId) throws Exception {
 		return CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagId, this.getProbandListEntryTagDao()).getField().isUserTimeZone();
