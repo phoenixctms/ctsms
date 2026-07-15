@@ -72,7 +72,7 @@ public class DBTool {
 				password = line.getOptionValue(DBToolOptions.PASSWORD_OPT);
 			}
 		}
-		return new AuthenticationVO(username, password, null, null, "localhost", CommonUtil.EXEC_REALM);
+		return new AuthenticationVO(username, password, null, null, "localhost", CommonUtil.EXEC_REALM, null);
 	}
 
 	private static String getUsernameOptionValue(CommandLine line) {

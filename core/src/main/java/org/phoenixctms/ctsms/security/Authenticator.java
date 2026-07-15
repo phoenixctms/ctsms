@@ -132,6 +132,14 @@ public class Authenticator {
 		return credentials;
 	}
 
+	private void resolveCredentialsFromJwt(AuthenticationVO auth) throws Exception {
+		if (!CommonUtil.isEmptyString(auth.getJwt()) && CommonUtil.isEmptyString(auth.getUsername())) {
+			String[] credentials = verifyJwt(auth.getJwt());
+			auth.setUsername(credentials[0]);
+			auth.setPassword(credentials[1]);
+		}
+	}
+
 	public Authenticator() {
 	}
 
@@ -140,7 +148,8 @@ public class Authenticator {
 	}
 
 	public Password authenticate(AuthenticationVO auth, boolean logon, String methodName) throws Exception {
-		if (auth != null && auth.getUsername() != null) {
+		if (auth != null && (auth.getUsername() != null || !CommonUtil.isEmptyString(auth.getJwt()))) {
+			resolveCredentialsFromJwt(auth);
 			User user = null;
 			try {
 				user = (User) userDao.searchUniqueName(UserDao.TRANSFORM_NONE, auth.getUsername());
@@ -171,10 +180,11 @@ public class Authenticator {
 				}
 			}
 			if (CommonUtil.API_REALM.equals(auth.getRealm())
+					&& CommonUtil.isEmptyString(auth.getJwt())
 					&& Settings.getBoolean(SettingCodes.API_2FA_JWT_ONLY, Bundle.SETTINGS, DefaultSettings.API_2FA_JWT_ONLY)) {
 				Password lastPassword = passwordDao.findLastPassword(user.getId());
 				if (lastPassword != null && lastPassword.isEnable2fa()) {
-					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.REST_API_2FA_NOT_SUPPORTED);
+					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.API_2FA_NOT_SUPPORTED);
 				}
 			}
 			switch (user.getAuthMethod()) {

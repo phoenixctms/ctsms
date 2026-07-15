@@ -2,14 +2,10 @@ package org.phoenixctms.ctsms.web.jersey.provider;
 
 import java.lang.reflect.Type;
 
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
 
-import org.phoenixctms.ctsms.exception.AuthenticationException;
-import org.phoenixctms.ctsms.exception.AuthorisationException;
-import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -48,30 +44,23 @@ public class AuthenticationProvider
 	@Override
 	public AuthenticationVO getValue(HttpContext c) {
 		String authHeaderValue = c.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
-		String[] credentials = null;
-		boolean basicCredentials = false;
+		String host = WebUtil.getRemoteHost(request);
 		if (authHeaderValue != null) {
 			if (authHeaderValue.toLowerCase().startsWith(BASIC_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
-				credentials = JsUtil.decodeBase64(authHeaderValue.substring(BASIC_AUTHENTICATION_SCHEME.length()).trim()).split(":", 2);
-				basicCredentials = true;
-			} else if (authHeaderValue.toLowerCase().startsWith(BEARER_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
-				String token = authHeaderValue.substring(BEARER_AUTHENTICATION_SCHEME.length()).trim();
-				try {
-					credentials = WebUtil.getServiceLocator().getToolsService().verifyJwt(token);
-				} catch (AuthenticationException | AuthorisationException | ServiceException e) {
-					throw new WebApplicationException(e);
+				String[] credentials = JsUtil.decodeBase64(authHeaderValue.substring(BASIC_AUTHENTICATION_SCHEME.length()).trim()).split(":", 2);
+				if (credentials.length == 2) {
+					return new AuthenticationVO(credentials[0], credentials[1], null, null, host, CommonUtil.API_REALM, null);
 				}
+			} else if (authHeaderValue.toLowerCase().startsWith(BEARER_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
+				AuthenticationVO result = new AuthenticationVO();
+				result.setHost(host);
+				result.setJwt(authHeaderValue.substring(BEARER_AUTHENTICATION_SCHEME.length()).trim());
+				return result;
 			}
 		}
-		AuthenticationVO result;
-		if (credentials != null && credentials.length == 2) {
-			result = new AuthenticationVO(credentials[0], credentials[1], null, null, WebUtil.getRemoteHost(request),
-					basicCredentials ? CommonUtil.API_REALM : null);
-		} else {
-			result = new AuthenticationVO();
-			result.setHost(WebUtil.getRemoteHost(request));
-			result.setRealm(CommonUtil.API_REALM);
-		}
+		AuthenticationVO result = new AuthenticationVO();
+		result.setHost(host);
+		result.setRealm(CommonUtil.API_REALM);
 		return result;
 	}
 }
