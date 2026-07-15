@@ -11,7 +11,6 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
-import org.phoenixctms.ctsms.service.shared.ToolsServiceImpl;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.web.util.WebUtil;
@@ -50,12 +49,11 @@ public class AuthenticationProvider
 	public AuthenticationVO getValue(HttpContext c) {
 		String authHeaderValue = c.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
 		String[] credentials = null;
+		boolean basicCredentials = false;
 		if (authHeaderValue != null) {
 			if (authHeaderValue.toLowerCase().startsWith(BASIC_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
 				credentials = JsUtil.decodeBase64(authHeaderValue.substring(BASIC_AUTHENTICATION_SCHEME.length()).trim()).split(":", 2);
-				if (credentials.length == 2) {
-					rejectRestApiBasicAuthFor2fa(credentials[0]);
-				}
+				basicCredentials = true;
 			} else if (authHeaderValue.toLowerCase().startsWith(BEARER_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
 				String token = authHeaderValue.substring(BEARER_AUTHENTICATION_SCHEME.length()).trim();
 				try {
@@ -67,24 +65,13 @@ public class AuthenticationProvider
 		}
 		AuthenticationVO result;
 		if (credentials != null && credentials.length == 2) {
-			result = new AuthenticationVO(credentials[0], credentials[1], null, null, WebUtil.getRemoteHost(request), CommonUtil.API_REALM);
+			result = new AuthenticationVO(credentials[0], credentials[1], null, null, WebUtil.getRemoteHost(request),
+					basicCredentials ? CommonUtil.API_REALM : null);
 		} else {
 			result = new AuthenticationVO();
 			result.setHost(WebUtil.getRemoteHost(request));
 			result.setRealm(CommonUtil.API_REALM);
 		}
 		return result;
-	}
-
-	private void rejectRestApiBasicAuthFor2fa(String username) {
-		try {
-			((ToolsServiceImpl) WebUtil.getServiceLocator().getToolsService()).rejectRestApiBasicAuthFor2fa(username);
-		} catch (AuthenticationException e) {
-			throw new WebApplicationException(e);
-		} catch (AuthorisationException | ServiceException e) {
-			throw new WebApplicationException(e);
-		} catch (Exception e) {
-			throw new WebApplicationException(e);
-		}
 	}
 }
