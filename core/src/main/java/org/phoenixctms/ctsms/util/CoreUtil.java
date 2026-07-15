@@ -758,6 +758,10 @@ public final class CoreUtil implements ApplicationContextAware {
 		return result.toString();
 	}
 
+	public static String getServiceMethodName(Class<?> serviceClass, String methodName) {
+		return serviceClass.getName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + methodName;
+	}
+
 	public static String getStackTrace(Throwable t) {
 		final Writer result = new StringWriter();
 		final PrintWriter printWriter = new PrintWriter(result);
@@ -882,10 +886,10 @@ public final class CoreUtil implements ApplicationContextAware {
 
 	public static boolean isPassDecryption() {
 		UserContext userContext = getUserContext();
-		if (CommonUtil.isEmptyString(userContext.getRealm())) {
-			// skip trusted host check when using dbtool:
+		if (CommonUtil.isEmptyString(userContext.getRealm()) || CommonUtil.EXEC_REALM.equals(userContext.getRealm())) {
+			// skip trusted host check when using exec tools:
 			return userContext.getInheritedUser().isDecrypt();
-		} else if (PASS_DECRYPTION_REALMS.contains(userContext.getRealm())
+		} else if (PASS_DECRYPTION_REALMS.contains(userContext.getMethodName())
 				&& Settings.getBoolean(SettingCodes.SIGNUP_FROM_UNTRUSTED_HOSTS, Bundle.SETTINGS, DefaultSettings.SIGNUP_FROM_UNTRUSTED_HOSTS)) {
 			// skip trusted host check for method used by signup (if enabled):
 			return userContext.getInheritedUser().isDecrypt();

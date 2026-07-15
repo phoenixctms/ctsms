@@ -23,6 +23,7 @@ public class UserContext extends VOCacheContext {
 	private String plainPassword;
 	private String host;
 	private String realm;
+	private String methodName;
 	private Locale locale;
 	private TimeZone timeZone;
 	private String dateFormat;
@@ -130,6 +131,10 @@ public class UserContext extends VOCacheContext {
 		return publicKey;
 	}
 
+	public String getMethodName() {
+		return methodName;
+	}
+
 	public String getRealm() {
 		return realm;
 	}
@@ -166,6 +171,7 @@ public class UserContext extends VOCacheContext {
 		this.plainPassword = null;
 		this.host = null;
 		this.realm = null;
+		this.methodName = null;
 		isTrustedHost = null;
 		locale = null;
 		isLocaleSet = false;
@@ -223,6 +229,10 @@ public class UserContext extends VOCacheContext {
 		isPublicKeySet = true;
 	}
 
+	public void setMethodName(String methodName) {
+		this.methodName = methodName;
+	}
+
 	public void setRealm(String realm) {
 		this.realm = realm;
 	}
@@ -252,6 +262,7 @@ public class UserContext extends VOCacheContext {
 		copy.isPublicKeySet = isPublicKeySet;
 		copy.publicKey = publicKey;
 		copy.isTrustedHost = isTrustedHost;
+		copy.methodName = methodName;
 		return copy;
 	}
 

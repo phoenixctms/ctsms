@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -55,8 +56,8 @@ public class Authenticator {
 	private LdapService ldapService2;
 	private final static String JWT_PWD_HEADER_KEY = "pwd";
 
-	public String issueJwt(AuthenticationVO auth, String realm, Long validityPeriodSecs) throws Exception {
-		authenticate(auth, true, realm);
+	public String issueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
+		authenticate(auth, true, CoreUtil.getServiceMethodName(ToolsService.class, "issueJwt"));
 		return buildJwtFromUserContext(validityPeriodSecs);
 	}
 
@@ -138,7 +139,7 @@ public class Authenticator {
 		return authenticate(auth, logon, null);
 	}
 
-	public Password authenticate(AuthenticationVO auth, boolean logon, String realm) throws Exception {
+	public Password authenticate(AuthenticationVO auth, boolean logon, String methodName) throws Exception {
 		if (auth != null && auth.getUsername() != null) {
 			User user = null;
 			try {
@@ -151,7 +152,8 @@ public class Authenticator {
 			UserContext userContext = CoreUtil.getUserContext();
 			userContext.setUser(user, userDao.toUserInheritedVO(user));
 			userContext.setHost(auth.getHost());
-			userContext.setRealm(realm);
+			userContext.setRealm(auth.getRealm());
+			userContext.setMethodName(methodName);
 			if (user == null) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.UNKNOWN_USER, auth.getUsername());
 			}
@@ -168,7 +170,7 @@ public class Authenticator {
 					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, auth.getUsername(), auth.getHost());
 				}
 			}
-			if (CommonUtil.API_REALM.equals(realm)
+			if (CommonUtil.API_REALM.equals(auth.getRealm())
 					&& Settings.getBoolean(SettingCodes.REST_API_2FA_JWT_ONLY, Bundle.SETTINGS, DefaultSettings.REST_API_2FA_JWT_ONLY)) {
 				Password lastPassword = passwordDao.findLastPassword(user.getId());
 				if (lastPassword != null && lastPassword.isEnable2fa()) {

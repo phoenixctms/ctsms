@@ -1440,8 +1440,8 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected String handleIssueJwt(AuthenticationVO auth, String realm, Long validityPeriodSecs) throws Exception {
-		return authenticator.issueJwt(auth, realm, validityPeriodSecs);
+	protected String handleIssueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
+		return authenticator.issueJwt(auth, validityPeriodSecs);
 	}
 
 	@Override
