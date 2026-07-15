@@ -27,6 +27,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -195,7 +196,7 @@ public final class ToolsResource {
 	@Path("login")
 	public Response issueJwt(@QueryParam("validity_secs") Long validityPeriodSecs) throws AuthenticationException, AuthorisationException, ServiceException {
 		return Response.ok(WebUtil.getServiceLocator().getToolsService().issueJwt(auth,
-				Settings.getString(SettingCodes.API_REALM, Bundle.SETTINGS, DefaultSettings.API_REALM),
+				CommonUtil.API_REALM,
 				validityPeriodSecs)).build();
 	}
 }

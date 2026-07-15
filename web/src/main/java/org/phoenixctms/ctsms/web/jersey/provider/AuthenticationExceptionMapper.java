@@ -7,10 +7,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 import org.phoenixctms.ctsms.exception.AuthenticationException;
-import org.phoenixctms.ctsms.web.util.DefaultSettings;
-import org.phoenixctms.ctsms.web.util.SettingCodes;
-import org.phoenixctms.ctsms.web.util.Settings;
-import org.phoenixctms.ctsms.web.util.Settings.Bundle;
+import org.phoenixctms.ctsms.util.CommonUtil;
 
 @Provider
 public class AuthenticationExceptionMapper extends ExceptionMapperBase implements
@@ -19,6 +16,6 @@ public class AuthenticationExceptionMapper extends ExceptionMapperBase implement
 	@Override
 	public Response toResponse(AuthenticationException ex) {
 		return buildJsonResponse(Status.UNAUTHORIZED, ex).header(HttpHeaders.WWW_AUTHENTICATE,
-				"Basic realm=\"" + Settings.getString(SettingCodes.API_REALM, Bundle.SETTINGS, DefaultSettings.API_REALM) + "\"").build();
+				"Basic realm=\"" + CommonUtil.API_REALM + "\"").build();
 	}
 }

@@ -29,6 +29,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.FilePDFVO;
@@ -464,7 +465,7 @@ public final class IndexResource {
 		rootNode.addProperty(JS_INSTANCE_FIELD, WebUtil.getInstanceName());
 		rootNode.addProperty(JS_VERSION_FIELD, Settings.getString(SettingCodes.API_VERSION, Bundle.SETTINGS, DefaultSettings.API_VERSION));
 		rootNode.addProperty(JS_JVM_FIELD, System.getProperty("java.version"));
-		rootNode.addProperty(JS_REALM_FIELD, Settings.getString(SettingCodes.API_REALM, Bundle.SETTINGS, DefaultSettings.API_REALM));
+		rootNode.addProperty(JS_REALM_FIELD, CommonUtil.API_REALM);
 		AnnouncementVO announcement = WebUtil.getServiceLocator().getToolsService().getAnnouncement();
 		if (announcement != null) {
 			rootNode.addProperty(JS_ANNOUNCEMENT_FIELD, announcement.getMessage());

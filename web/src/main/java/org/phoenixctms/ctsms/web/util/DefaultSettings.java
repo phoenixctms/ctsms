@@ -45,7 +45,7 @@ public final class DefaultSettings {
 	public final static String ANALYTICS_UUID = null;
 	public final static String ANALYTICS_VERSION = null;
 	public final static String VALIDATION_REPORTS_URL = null;
-	public final static String API_REALM = "api";
+	public final static boolean REST_API_2FA_JWT_ONLY = false;
 	public final static String API_TITLE = "REST API";
 	public static final boolean API_TRUSTED_HOSTS_ONLY = true;
 	public final static String API_TRUSTED_HOSTS_ONLY_WHITELIST_REGEXP = null; // "/tools";
