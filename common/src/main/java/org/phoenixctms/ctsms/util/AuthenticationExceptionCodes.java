@@ -19,4 +19,5 @@ public interface AuthenticationExceptionCodes {
 	public final static String WRONG_REMOTE_PASSWORD = "wrong_remote_password";
 	public final static String INVALID_JWT = "invalid_jwt";
 	public final static String INVALID_OTP = "invalid_otp";
+	public final static String REST_API_2FA_NOT_SUPPORTED = "rest_api_2fa_not_supported";
 }
