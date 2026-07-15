@@ -171,7 +171,7 @@ public class Authenticator {
 				}
 			}
 			if (CommonUtil.API_REALM.equals(auth.getRealm())
-					&& Settings.getBoolean(SettingCodes.REST_API_2FA_JWT_ONLY, Bundle.SETTINGS, DefaultSettings.REST_API_2FA_JWT_ONLY)) {
+					&& Settings.getBoolean(SettingCodes.API_2FA_JWT_ONLY, Bundle.SETTINGS, DefaultSettings.API_2FA_JWT_ONLY)) {
 				Password lastPassword = passwordDao.findLastPassword(user.getId());
 				if (lastPassword != null && lastPassword.isEnable2fa()) {
 					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.REST_API_2FA_NOT_SUPPORTED);
