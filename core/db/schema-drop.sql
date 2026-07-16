@@ -926,6 +926,12 @@
     alter table mass_mail_visit_schedule_item 
         drop constraint MASS_MAIL_VISIT_SCHEDULE_ITEMS_FKC;
 
+    alter table mass_mail_ecrf 
+        drop constraint ecrf_MASS_MAILS_FKC;
+
+    alter table mass_mail_ecrf 
+        drop constraint MASS_MAIL_ECRFS_FKC;
+
     alter table medication_ingredient 
         drop constraint ASP_SUBSTANCE_MEDICATIONS_FKC;
 
@@ -1310,6 +1316,8 @@
     drop table mass_mail_status_transition cascade;
 
     drop table mass_mail_visit_schedule_item cascade;
+
+    drop table mass_mail_ecrf cascade;
 
     drop table medication_ingredient cascade;
 
