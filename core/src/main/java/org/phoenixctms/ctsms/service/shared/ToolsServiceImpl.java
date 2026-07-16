@@ -1441,6 +1441,7 @@ public class ToolsServiceImpl
 
 	@Override
 	protected String handleIssueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
+		authenticator.authenticate(auth, true, CoreUtil.getServiceMethodName(ToolsService.class, "issueJwt"));
 		return authenticator.issueJwt(auth, validityPeriodSecs);
 	}
 

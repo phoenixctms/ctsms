@@ -57,7 +57,6 @@ public class Authenticator {
 	private final static String JWT_PWD_HEADER_KEY = "pwd";
 
 	public String issueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
-		authenticate(auth, true, CoreUtil.getServiceMethodName(ToolsService.class, "issueJwt"));
 		return buildJwtFromUserContext(validityPeriodSecs);
 	}
 
