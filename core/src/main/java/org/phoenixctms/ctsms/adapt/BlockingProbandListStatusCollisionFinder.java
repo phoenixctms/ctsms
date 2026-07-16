@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.adapt;
 
 import java.sql.Timestamp;
+import java.util.Iterator;
 
 import org.phoenixctms.ctsms.domain.Proband;
 import org.phoenixctms.ctsms.domain.ProbandListStatusEntry;
@@ -18,6 +19,21 @@ public abstract class BlockingProbandListStatusCollisionFinder<IN, ENTITY> exten
 
 	protected abstract Trial getTrial(IN in) throws ServiceException;
 
+	/**
+	 * True if the status can leave itself (i.e. has at least one transition to a different status).
+	 * Self-only transitions are treated as terminal, same as an empty transition set.
+	 */
+	private static boolean hasOutgoingTransitions(ProbandListStatusType statusType) {
+		Iterator<ProbandListStatusType> it = statusType.getTransitions().iterator();
+		while (it.hasNext()) {
+			ProbandListStatusType transition = it.next();
+			if (transition != null && !statusType.getId().equals(transition.getId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	protected boolean match(IN in,
 			ENTITY existing, Proband root) throws ServiceException {
@@ -28,7 +44,7 @@ public abstract class BlockingProbandListStatusCollisionFinder<IN, ENTITY> exten
 				return false;
 			} else {
 				ProbandListStatusType statusType = lastStatus.getStatus();
-				if (statusType.getTransitions().size() > 0) {
+				if (hasOutgoingTransitions(statusType)) {
 					return statusType.isBlocking();
 				} else if (statusType.isBlocking()) {
 					VariablePeriod blockingPeriod;
