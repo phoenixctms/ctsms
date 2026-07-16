@@ -24,6 +24,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
+import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.MassMailInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
@@ -63,6 +64,11 @@ public class MassMailBean extends ManagedBeanBase {
 			Iterator it = out.getVisitScheduleItems().iterator();
 			while (it.hasNext()) {
 				in.getVisitScheduleItemIds().add(((VisitScheduleItemOutVO) it.next()).getId());
+			}
+			in.getEcrfIds().clear();
+			it = out.getEcrfs().iterator();
+			while (it.hasNext()) {
+				in.getEcrfIds().add(((ECRFOutVO) it.next()).getId());
 			}
 			in.setId(out.getId());
 			in.setName(out.getName());
@@ -132,6 +138,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setTypeId(null);
 			in.setProbandListStatusId(null);
 			in.getVisitScheduleItemIds().clear();
+			in.getEcrfIds().clear();
 			in.setProbandListStatusResend(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET));
 			in.setTrialId(null);
@@ -206,6 +213,7 @@ public class MassMailBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> probandListStatusTypes;
 	private ArrayList<SelectItem> locales;
 	private List<VisitScheduleItemOutVO> visitScheduleItems;
+	private List<ECRFOutVO> ecrfs;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
 	private Long previewProbandId;
@@ -216,6 +224,7 @@ public class MassMailBean extends ManagedBeanBase {
 	public MassMailBean() {
 		super();
 		visitScheduleItems = new ArrayList<VisitScheduleItemOutVO>();
+		ecrfs = new ArrayList<ECRFOutVO>();
 		tabCountMap = new HashMap<String, Object>();
 		tabTitleMap = new HashMap<String, String>();
 	}
@@ -585,6 +594,7 @@ public class MassMailBean extends ManagedBeanBase {
 		loadMassMailStatusType();
 		probandListStatusTypes = WebUtil.getAllProbandListStatusTypes(null);
 		loadVisitScheduleItems();
+		loadEcrfs();
 		if (this.locales == null) {
 			this.locales = WebUtil.getLocales();
 		}
@@ -665,14 +675,23 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setDepartmentId(null);
 		}
 		LinkedHashSet<Long> visitScheduleItemIds = new LinkedHashSet<Long>(visitScheduleItems.size()); //force unique items to prevent confusion when unselecting a duplicate item
-		Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
-		while (it.hasNext()) {
-			VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) it.next();
+		Iterator<VisitScheduleItemOutVO> visitScheduleItemsIt = visitScheduleItems.iterator();
+		while (visitScheduleItemsIt.hasNext()) {
+			VisitScheduleItemOutVO visitScheduleItem = (VisitScheduleItemOutVO) visitScheduleItemsIt.next();
 			if (visitScheduleItem != null) {
 				visitScheduleItemIds.add(visitScheduleItem.getId());
 			}
 		}
 		in.setVisitScheduleItemIds(new ArrayList<Long>(visitScheduleItemIds));
+		LinkedHashSet<Long> ecrfIds = new LinkedHashSet<Long>(ecrfs.size()); //force unique items to prevent confusion when unselecting a duplicate item
+		Iterator<ECRFOutVO> ecrfsIt = ecrfs.iterator();
+		while (ecrfsIt.hasNext()) {
+			ECRFOutVO ecrf = ecrfsIt.next();
+			if (ecrf != null) {
+				ecrfIds.add(ecrf.getId());
+			}
+		}
+		in.setEcrfIds(new ArrayList<Long>(ecrfIds));
 		if (in.getAttachMassMailFiles()) {
 			in.setMassMailFilesLogicalPath(CommonUtil.fixLogicalPathFolderName(in.getMassMailFilesLogicalPath()));
 		} else {
@@ -823,6 +842,38 @@ public class MassMailBean extends ManagedBeanBase {
 			if (visitScheduleItem != null) {
 				visitScheduleItems.add(visitScheduleItem);
 			}
+		}
+	}
+
+	private void loadEcrfs() {
+		ecrfs.clear();
+		Iterator<Long> it = in.getEcrfIds().iterator();
+		while (it.hasNext()) {
+			ECRFOutVO ecrf = WebUtil.getEcrf(it.next());
+			if (ecrf != null) {
+				ecrfs.add(ecrf);
+			}
+		}
+	}
+
+	public List<IDVO> getEcrfs() {
+		return new IDVOList(ecrfs);
+	}
+
+	public void setEcrfs(List<IDVO> ecrfs) {
+		if (ecrfs != null) {
+			ArrayList<ECRFOutVO> ecrfsCopy = new ArrayList<ECRFOutVO>(ecrfs.size());
+			Iterator<IDVO> it = ecrfs.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					ecrfsCopy.add((ECRFOutVO) idVo.getVo());
+				}
+			}
+			this.ecrfs.clear();
+			this.ecrfs.addAll(ecrfsCopy);
+		} else {
+			this.ecrfs.clear();
 		}
 	}
 
