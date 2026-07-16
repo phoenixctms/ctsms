@@ -36,6 +36,7 @@ import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.security.Authenticator;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
@@ -65,6 +66,8 @@ import org.phoenixctms.ctsms.vo.TrialOutVO;
 public class JobServiceImpl extends JobServiceBase {
 
 	private final static int JOB_OUTPUT_MAX_LENGTH = 64 * 1024;
+
+	private Authenticator authenticator;
 
 	private static JournalEntry logSystemMessage(Trial trial, TrialOutVO trialVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
@@ -366,7 +369,7 @@ public class JobServiceImpl extends JobServiceBase {
 		if (!job.getType().isDaily()
 				&& !job.getType().isWeekly()
 				&& !job.getType().isMonthly()) {
-			CoreUtil.launchJob(auth, job, false);
+			CoreUtil.launchJob(auth, job, false, authenticator);
 		}
 		return result;
 	}
@@ -497,5 +500,9 @@ public class JobServiceImpl extends JobServiceBase {
 		Job job = CheckIDUtil.checkJobId(jobId, jobDao);
 		JobFileVO result = jobDao.toJobFileVO(job);
 		return result;
+	}
+
+	public void setAuthenticator(Authenticator authenticator) {
+		this.authenticator = authenticator;
 	}
 }

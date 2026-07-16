@@ -11,7 +11,6 @@ import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
@@ -50,43 +49,29 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class DBTool {
 
 	private static AuthenticationVO getAuthenticationOptionValue(CommandLine line) throws Exception {
-		String username;
-		String password;
 		if (line.hasOption(DBToolOptions.AUTH_OPT)) {
-			try {
-				String[] auth = (new String(Base64.decodeBase64(line.getOptionValue(DBToolOptions.AUTH_OPT)), CommonUtil.BASE64_CHARSET)).split("\n", 2);
-				username = auth[0];
-				password = auth[1];
-			} catch (Exception e) {
-				throw new IllegalArgumentException("invalid base64 auth", e);
-			}
-		} else {
-			if (!line.hasOption(DBToolOptions.USERNAME_OPT)) {
-				throw new IllegalArgumentException("username required");
-			} else {
-				username = line.getOptionValue(DBToolOptions.USERNAME_OPT);
-			}
-			if (!line.hasOption(DBToolOptions.PASSWORD_OPT)) {
-				throw new IllegalArgumentException("password required");
-			} else {
-				password = line.getOptionValue(DBToolOptions.PASSWORD_OPT);
-			}
+			AuthenticationVO result = new AuthenticationVO();
+			result.setHost("localhost");
+			result.setRealm(CommonUtil.EXEC_REALM);
+			result.setJwt(line.getOptionValue(DBToolOptions.AUTH_OPT));
+			return result;
 		}
-		return new AuthenticationVO(username, password, null, null, "localhost", CommonUtil.EXEC_REALM, null);
+		if (!line.hasOption(DBToolOptions.USERNAME_OPT)) {
+			throw new IllegalArgumentException("username required");
+		}
+		if (!line.hasOption(DBToolOptions.PASSWORD_OPT)) {
+			throw new IllegalArgumentException("password required");
+		}
+		return new AuthenticationVO(line.getOptionValue(DBToolOptions.USERNAME_OPT), line.getOptionValue(DBToolOptions.PASSWORD_OPT), null, null, "localhost",
+				CommonUtil.EXEC_REALM, null);
 	}
 
 	private static String getUsernameOptionValue(CommandLine line) {
-		String username;
 		if (line.hasOption(DBToolOptions.AUTH_OPT)) {
-			try {
-				String[] auth = (new String(Base64.decodeBase64(line.getOptionValue(DBToolOptions.AUTH_OPT)), CommonUtil.BASE64_CHARSET)).split("\n", 2);
-				return auth[0];
-			} catch (Exception e) {
-			}
-		} else {
-			if (line.hasOption(DBToolOptions.USERNAME_OPT)) {
-				return line.getOptionValue(DBToolOptions.USERNAME_OPT);
-			}
+			return "jwt";
+		}
+		if (line.hasOption(DBToolOptions.USERNAME_OPT)) {
+			return line.getOptionValue(DBToolOptions.USERNAME_OPT);
 		}
 		return null;
 	}

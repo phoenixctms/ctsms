@@ -24,6 +24,14 @@
         </to>
     </mapping>
 	<mapping>
+        <from><![CDATA[<!-- JobService service property merge-point -->]]></from>
+        <to>
+            <![CDATA[
+                <property name="authenticator" ref="authenticator"/>
+            ]]>
+        </to>
+    </mapping>
+	<mapping>
         <from><![CDATA[<!-- SearchService service property merge-point -->]]></from>
         <to>
             <![CDATA[

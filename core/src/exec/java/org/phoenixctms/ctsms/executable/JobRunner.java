@@ -4,11 +4,8 @@ import java.util.Iterator;
 
 import org.phoenixctms.ctsms.domain.Job;
 import org.phoenixctms.ctsms.domain.JobDao;
-import org.phoenixctms.ctsms.domain.PasswordDao;
-import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.security.Authenticator;
-import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.service.user.UserService;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.JobOutput;
@@ -22,8 +19,6 @@ public class JobRunner {
 	private UserDao userDao;
 	@Autowired
 	private JobDao jobDao;
-	@Autowired
-	private PasswordDao passwordDao;
 	@Autowired
 	private UserService userService;
 	private JobOutput jobOutput;
@@ -39,18 +34,14 @@ public class JobRunner {
 			jobOutput.println("department: " + userVO.getDepartment().getName());
 		} catch (Exception e) {
 		}
-		String plainDepartmentPassword = CryptoUtil.decryptDepartmentPassword(authenticator.authenticate(auth, false), auth.getPassword());
+		authenticator.authenticate(auth, false);
 		long count = 0l;
 		if (userVO != null) {
 			Iterator<Job> jobsIt = jobDao.findPending(userVO.getDepartment().getId(), daily, weekly, monthly).iterator();
 			while (jobsIt.hasNext()) {
 				Job job = jobsIt.next();
 				jobOutput.println("running job ID " + Long.toString(job.getId()));
-				User jobUser = job.getModifiedUser();
-				AuthenticationVO jobUserAuth = new AuthenticationVO();
-				jobUserAuth.setUsername(jobUser.getName());
-				jobUserAuth.setPassword(CryptoUtil.decryptPassword(passwordDao.findLastPassword(jobUser.getId()), plainDepartmentPassword));
-				CoreUtil.launchJob(jobUserAuth, job, true);
+				CoreUtil.launchJob(auth, job, true, authenticator);
 				count += 1l;
 			}
 		}
