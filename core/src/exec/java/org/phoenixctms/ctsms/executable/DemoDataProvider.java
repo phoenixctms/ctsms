@@ -2910,14 +2910,27 @@ public class DemoDataProvider {
 		ProbandListStatusTypeVO newState = null;
 		Collection<ProbandListStatusTypeVO> newStates = selectionSetService.getProbandListStatusTypeTransitions(auth, probandListEntry.getLastStatus().getStatus().getId());
 		if (newStates != null && newStates.size() > 0) {
-			HashSet<Long> newStateIds = new HashSet<Long>(newStates.size());
-			Iterator<ProbandListStatusTypeVO> it = newStates.iterator();
+			Long currentStatusId = probandListEntry.getLastStatus().getStatus().getId();
+			ArrayList<ProbandListStatusTypeVO> progressStates = new ArrayList<ProbandListStatusTypeVO>(newStates.size());
+			Iterator<ProbandListStatusTypeVO> progressIt = newStates.iterator();
+			while (progressIt.hasNext()) {
+				ProbandListStatusTypeVO state = progressIt.next();
+				if (!currentStatusId.equals(state.getId())) {
+					progressStates.add(state);
+				}
+			}
+			// Self-only transitions are terminal (same as an empty transition set).
+			if (progressStates.isEmpty()) {
+				return null;
+			}
+			HashSet<Long> newStateIds = new HashSet<Long>(progressStates.size());
+			Iterator<ProbandListStatusTypeVO> it = progressStates.iterator();
 			while (it.hasNext()) {
 				newStateIds.add(it.next().getId());
 			}
 			if (!allowPassed) {
 				while (newState == null) {
-					newState = random.getRandomElement(newStates);
+					newState = random.getRandomElement(progressStates);
 					newState = probandListStatusMarkov(newState, probandListStatusTypeMap);
 					if (!newStateIds.contains(newState.getId())) {
 						newState = null;
@@ -2927,7 +2940,7 @@ public class DemoDataProvider {
 				}
 			} else {
 				while (newState == null) {
-					newState = random.getRandomElement(newStates);
+					newState = random.getRandomElement(progressStates);
 					newState = probandListStatusMarkov(newState, probandListStatusTypeMap);
 					if (!newStateIds.contains(newState.getId())) {
 						newState = null;
