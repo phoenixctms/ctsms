@@ -2174,6 +2174,11 @@
         SELECTION_VALUES_FK BIGINT not null
     );
 
+    create table mass_mail_ecrf (
+        ECRFS_FK BIGINT not null,
+        MASS_MAILS_FK BIGINT not null
+    );
+
     create table mass_mail_status_transition (
         MASS_MAIL_STATUS_TYPES_FK BIGINT not null,
         TRANSITIONS_FK BIGINT not null
@@ -2182,11 +2187,6 @@
     create table mass_mail_visit_schedule_item (
         MASS_MAILS_FK BIGINT not null,
         VISIT_SCHEDULE_ITEMS_FK BIGINT not null
-    );
-
-    create table mass_mail_ecrf (
-        MASS_MAILS_FK BIGINT not null,
-        ECRFS_FK BIGINT not null
     );
 
     create table medication_ingredient (
@@ -3815,6 +3815,16 @@
         foreign key (INPUT_FIELD_VALUES_FK) 
         references INPUT_FIELD_VALUE;
 
+    alter table mass_mail_ecrf 
+        add constraint MASS_MAIL_ECRFS_FKC 
+        foreign key (ECRFS_FK) 
+        references ecrf;
+
+    alter table mass_mail_ecrf 
+        add constraint ecrf_MASS_MAILS_FKC 
+        foreign key (MASS_MAILS_FK) 
+        references MASS_MAIL;
+
     alter table mass_mail_status_transition 
         add constraint MASS_MAIL_STATUS_TYPE_MASS_MAIL_STATUS_TYPES_FKC 
         foreign key (MASS_MAIL_STATUS_TYPES_FK) 
@@ -3834,16 +3844,6 @@
         add constraint MASS_MAIL_VISIT_SCHEDULE_ITEMS_FKC 
         foreign key (VISIT_SCHEDULE_ITEMS_FK) 
         references VISIT_SCHEDULE_ITEM;
-
-    alter table mass_mail_ecrf 
-        add constraint ecrf_MASS_MAILS_FKC 
-        foreign key (MASS_MAILS_FK) 
-        references MASS_MAIL;
-
-    alter table mass_mail_ecrf 
-        add constraint MASS_MAIL_ECRFS_FKC 
-        foreign key (ECRFS_FK) 
-        references ECRF;
 
     alter table medication_ingredient 
         add constraint ASP_SUBSTANCE_MEDICATIONS_FKC 

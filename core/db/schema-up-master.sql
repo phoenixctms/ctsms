@@ -379,19 +379,19 @@ if get_database_version() < '010901010' then
   values (nextval('hibernate_sequence'), 'ecrf_status', 't', 't', 'f', 'f', 't');
 
   create table mass_mail_ecrf (
-    MASS_MAILS_FK BIGINT not null,
-    ECRFS_FK BIGINT not null
+    ECRFS_FK BIGINT not null,
+    MASS_MAILS_FK BIGINT not null
   );
+
+  alter table mass_mail_ecrf
+    add constraint MASS_MAIL_ECRFS_FKC
+    foreign key (ECRFS_FK)
+    references ecrf;
 
   alter table mass_mail_ecrf
     add constraint ecrf_MASS_MAILS_FKC
     foreign key (MASS_MAILS_FK)
     references MASS_MAIL;
-
-  alter table mass_mail_ecrf
-    add constraint MASS_MAIL_ECRFS_FKC
-    foreign key (ECRFS_FK)
-    references ECRF;
 
   insert into ecrf_status_action
     ("id", "action")

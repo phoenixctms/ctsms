@@ -536,7 +536,7 @@ public class TrialServiceImpl
 				while (massMailsIt.hasNext()) {
 					MassMail massMail = massMailsIt.next();
 					if (massMail.getDepartment().equals(proband.getDepartment())) {
-						ServiceUtil.addResetMassMailRecipient(massMail, proband, now, user, massMailDao, probandDao, trialDao,
+						ServiceUtil.addResetMassMailRecipient(massMail, proband, null, now, user, massMailDao, probandDao, trialDao,
 								massMailRecipientDao, journalEntryDao);
 					}
 				}
@@ -2724,17 +2724,8 @@ public class TrialServiceImpl
 					this.getSignatureDao().addEcrfSignature(statusEntry, now);
 					break;
 				case ADD_MASSMAIL_RECIPIENT:
-					Iterator<MassMail> massMailsIt = ecrf.getMassMails().iterator();
-					while (massMailsIt.hasNext()) {
-						MassMail massMail = massMailsIt.next();
-						if (massMail.getStatus() != null && !massMail.getStatus().isLocked()) {
-							Proband proband = listEntry.getProband();
-							if (massMail.getDepartment().equals(proband.getDepartment())) {
-								ServiceUtil.addResetMassMailRecipient(massMail, proband, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
-										this.getMassMailRecipientDao(), this.getJournalEntryDao());
-							}
-						}
-					}
+					ServiceUtil.addEcrfMassMailRecipients(statusEntry, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
+							this.getMassMailRecipientDao(), this.getJournalEntryDao(), this.getECRFDao());
 					break;
 				default:
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
@@ -8953,6 +8944,10 @@ public class TrialServiceImpl
 			ecrfStatusEntryDao.update(statusEntry);
 			if (hasEcrfStatusAction(statusEntry.getStatus(), org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS)) {
 				this.getNotificationDao().addNotification(statusEntry, now, null);
+			}
+			if (hasEcrfStatusAction(statusEntry.getStatus(), org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT)) {
+				ServiceUtil.addEcrfMassMailRecipients(statusEntry, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
+						this.getMassMailRecipientDao(), this.getJournalEntryDao(), this.getECRFDao());
 			}
 			ECRFStatusEntryVO result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 			ServiceUtil.logSystemMessage(statusEntry.getListEntry().getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_VALIDATED, result, original,
