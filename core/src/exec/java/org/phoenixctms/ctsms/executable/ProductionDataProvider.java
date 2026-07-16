@@ -2125,12 +2125,12 @@ public class ProductionDataProvider {
 		updateProbandListStatusType(contactedProbandListStatusType,
 				getProbandListStatusTransitions(contactedProbandListStatusType, cancelledProbandListStatusType, acceptanceProbandListStatusType));
 		updateProbandListStatusType(cancelledProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(cancelledProbandListStatusType));
 		updateProbandListStatusType(acceptanceProbandListStatusType,
 				getProbandListStatusTransitions(contactedProbandListStatusType, acceptanceProbandListStatusType, icSignedProbandListStatusType, icNotSignedProbandListStatusType,
 						cancelledProbandListStatusType));
 		updateProbandListStatusType(icNotSignedProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(icNotSignedProbandListStatusType));
 		updateProbandListStatusType(
 				icSignedProbandListStatusType,
 				getProbandListStatusTransitions(icSignedProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
@@ -2152,7 +2152,7 @@ public class ProductionDataProvider {
 				getProbandListStatusTransitions(reScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
 						icSignedReScreeningProbandListStatusType, icNotSignedReScreeningProbandListStatusType));
 		updateProbandListStatusType(icNotSignedReScreeningProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(icNotSignedReScreeningProbandListStatusType));
 		updateProbandListStatusType(screeningFailureProbandListStatusType,
 				getProbandListStatusTransitions(reScreeningProbandListStatusType));
 		updateProbandListStatusType(ongoingProbandListStatusType,
@@ -2160,9 +2160,9 @@ public class ProductionDataProvider {
 		updateProbandListStatusType(ongoingRandomizedProbandListStatusType,
 				getProbandListStatusTransitions(ongoingRandomizedProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
 		updateProbandListStatusType(droppedOutProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(droppedOutProbandListStatusType));
 		updateProbandListStatusType(completedProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(completedProbandListStatusType));
 		ProbandListStatusType animalUnderTestProbandListStatusType = createProbandListStatusType("animal_under_test", Color.LIGHTYELLOW,
 				true,
 				false,
@@ -2199,9 +2199,9 @@ public class ProductionDataProvider {
 		updateProbandListStatusType(animalUnderTestProbandListStatusType,
 				getProbandListStatusTransitions(animalUnderTestProbandListStatusType, animalDroppedOutProbandListStatusType, animalCompletedProbandListStatusType));
 		updateProbandListStatusType(animalDroppedOutProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(animalDroppedOutProbandListStatusType));
 		updateProbandListStatusType(animalCompletedProbandListStatusType,
-				getProbandListStatusTransitions());
+				getProbandListStatusTransitions(animalCompletedProbandListStatusType));
 		jobOutput.println("proband states created");
 	}
 
