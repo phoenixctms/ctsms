@@ -403,9 +403,9 @@ public final class DBToolOptions {
 		options.addOption(registerOptionalOption(FLUSH_REVISION_OPT, "flush_revision", "flush alpha id, ops code, asp, asp, icd or ops systematics records prior to import",
 				0));
 		options.addOption(registerOptionalOption(ENCODING_OPT, "encoding", "encoding of file to import/export", 1));
+		options.addOption(registerOptionalOption(AUTH_OPT, "auth", "JWT", 1));
 		options.addOption(registerOptionalOption(USERNAME_OPT, "username", "username", 1));
 		options.addOption(registerOptionalOption(PASSWORD_OPT, "password", "user password", 1));
-		options.addOption(registerOptionalOption(AUTH_OPT, "auth", "base64 encoded username and password", 1));
 		options.addOption(registerOptionalOption(PERMISSION_PROFILES_OPT, "permission_profiles", "list of permission profiles", 1));
 		options.addOption(registerOptionalOption(ID_OPT, "entity_id", "record id of entity", 1));
 		options.addOption(registerOptionalOption(JOB_ID_OPT, "job_id", "job id", 1));

@@ -52,7 +52,9 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.security.Authenticator;
 import org.phoenixctms.ctsms.security.IPAddressValidation;
+import org.phoenixctms.ctsms.service.shared.JobServiceImpl;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.diff_match_patch.Diff;
@@ -960,7 +962,11 @@ public final class CoreUtil implements ApplicationContextAware {
 		entity.getClass().getMethod(ENTITY_MODIFIED_USER_SETTER_METHOD_NAME, User.class).invoke(entity, modifiedUser);
 	}
 
-	public static Process launchJob(AuthenticationVO auth, Job job, boolean blocking) throws IllegalArgumentException {
+	private static String getJobJwt(Authenticator authenticator) throws Exception {
+		return authenticator.buildJwtFromUserContext(Settings.getLongNullable(SettingCodes.JOB_JWT_VALIDITY_SECS, Bundle.SETTINGS, DefaultSettings.JOB_JWT_VALIDITY_SECS));
+	}
+
+	public static Process launchJob(AuthenticationVO auth, Job job, boolean blocking, Authenticator authenticator) throws IllegalArgumentException {
 		Long id;
 		switch (job.getType().getModule()) {
 			case TRIAL_JOB:
@@ -990,12 +996,13 @@ public final class CoreUtil implements ApplicationContextAware {
 		try {
 			String username = auth.getUsername() != null ? auth.getUsername().trim() : "";
 			String password = auth.getPassword() != null ? auth.getPassword().trim() : "";
+			String jwtAuth = getJobJwt(authenticator);
 			String command = MessageFormat.format(job.getType().getCommandFormat(),
 					Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL),
 					Long.toString(id),
 					username,
 					password,
-					new String(Base64.encodeBase64((username + "\n" + password).getBytes(CommonUtil.BASE64_CHARSET), false, false)),
+					jwtAuth,
 					Long.toString(job.getId()),
 					getUserContext().getTimeZone().getID(),
 					null,
