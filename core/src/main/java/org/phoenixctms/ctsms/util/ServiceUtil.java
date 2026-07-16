@@ -1938,6 +1938,28 @@ public final class ServiceUtil {
 					//						}
 					//					}
 					//					model.put(MassMailMessageTemplateParameters.NEXT_VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
+					models = new ArrayList();
+					Iterator<ECRFOutVO> ecrfIt = massMail.getEcrfs().iterator();
+					while (ecrfIt.hasNext()) {
+						ECRFOutVO ecrf = (ECRFOutVO) ecrfIt.next();
+						Map ecrfModel = CoreUtil.createEmptyTemplateModel();
+						voFieldIt = getMassMailTemplateModelKeyValueIterator(ECRFOutVO.class, enumerateEntities, excludeEncryptedFields);
+						while (voFieldIt.hasNext()) {
+							KeyValueString keyValuePair = voFieldIt.next();
+							Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(ecrf).iterator();
+							while (indexesKeysIt.hasNext()) {
+								ArrayList<Object> indexesKeys = indexesKeysIt.next();
+								ecrfModel.put(keyValuePair.getKey(indexesKeys),
+										keyValuePair.getValue(locale, ecrf, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+												excludeEncryptedFields));
+							}
+						}
+						models.add(ecrfModel);
+						if (ecrf.getUniqueName().equals(token)) {
+							model.put(MassMailMessageTemplateParameters.ECRF, ecrfModel);
+						}
+					}
+					model.put(MassMailMessageTemplateParameters.ECRFS, models);
 				}
 				models = new ArrayList();
 				Collection inventoryBookings = inventoryBookingDao.findByProbandTrial(proband.getId(), massMail.getTrial().getId(), true, null, true);

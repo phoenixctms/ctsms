@@ -803,6 +803,10 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_DUPLICATE_VISIT_SCHEDULE_ITEM = "mass_mail_duplicate_visit_schedule_item";
 	public static final String MASS_MAIL_WRONG_VISIT_SCHEDULE_ITEM = "mass_mail_wrong_visit_schedule_item";
 	public static final String MASS_MAIL_VISIT_SCHEDULE_ITEMS_REQUIRED = "mass_mail_visit_schedule_items_required";
+	public static final String MASS_MAIL_ECRF_ID_IS_NULL = "mass_mail_ecrf_id_is_null";
+	public static final String MASS_MAIL_DUPLICATE_ECRF = "mass_mail_duplicate_ecrf";
+	public static final String MASS_MAIL_WRONG_ECRF = "mass_mail_wrong_ecrf";
+	public static final String MASS_MAIL_ECRFS_REQUIRED = "mass_mail_ecrfs_required";
 	public static final String MASS_MAIL_INVALID_SUBJECT_FORMAT = "mass_mail_invalid_subject_format";
 	public static final String MASS_MAIL_INVALID_PHONE_TO_EMAIL_FORMAT = "mass_mail_invalid_phone_to_email_format";
 	public static final String MASS_MAIL_INVALID_TEXT_TEMPLATE = "mass_mail_invalid_text_template";

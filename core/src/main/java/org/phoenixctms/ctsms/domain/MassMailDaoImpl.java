@@ -28,6 +28,7 @@ import org.phoenixctms.ctsms.query.QueryUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
+import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.MassMailInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
@@ -45,6 +46,7 @@ public class MassMailDaoImpl
 		extends MassMailDaoBase {
 
 	private final static VOIDComparator VISIT_SCHEDULE_ITEM_ID_COMPARATOR = new VOIDComparator<VisitScheduleItemOutVO>(false);
+	private final static VOIDComparator ECRF_ID_COMPARATOR = new VOIDComparator<ECRFOutVO>(false);
 
 	private org.hibernate.Criteria createMassMailCriteria(String alias) {
 		org.hibernate.Criteria massMailCriteria;
@@ -225,6 +227,10 @@ public class MassMailDaoImpl
 		if ((visitScheduleItemIds = source.getVisitScheduleItemIds()).size() > 0 || copyIfNull) {
 			target.setVisitScheduleItems(toVisitScheduleItemSet(visitScheduleItemIds));
 		}
+		Collection ecrfIds;
+		if ((ecrfIds = source.getEcrfIds()).size() > 0 || copyIfNull) {
+			target.setEcrfs(toEcrfSet(ecrfIds));
+		}
 	}
 
 	private HashSet<VisitScheduleItem> toVisitScheduleItemSet(Collection<Long> visitScheduleItemIds) { // lazyload persistentset prevention
@@ -233,6 +239,16 @@ public class MassMailDaoImpl
 		Iterator<Long> it = visitScheduleItemIds.iterator();
 		while (it.hasNext()) {
 			result.add(visitScheduleItemDao.load(it.next()));
+		}
+		return result;
+	}
+
+	private HashSet<ECRF> toEcrfSet(Collection<Long> ecrfIds) { // lazyload persistentset prevention
+		ECRFDao ecrfDao = this.getECRFDao();
+		HashSet<ECRF> result = new HashSet<ECRF>(ecrfIds.size());
+		Iterator<Long> it = ecrfIds.iterator();
+		while (it.hasNext()) {
+			result.add(ecrfDao.load(it.next()));
 		}
 		return result;
 	}
@@ -246,6 +262,18 @@ public class MassMailDaoImpl
 			result.add(visitScheduleItemDao.toVisitScheduleItemOutVO(it.next()));
 		}
 		Collections.sort(result, VISIT_SCHEDULE_ITEM_ID_COMPARATOR);
+		return result;
+	}
+
+	private ArrayList<ECRFOutVO> toEcrfOutVOCollection(Collection<ECRF> ecrfs) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		ECRFDao ecrfDao = this.getECRFDao();
+		ArrayList<ECRFOutVO> result = new ArrayList<ECRFOutVO>(ecrfs.size());
+		Iterator<ECRF> it = ecrfs.iterator();
+		while (it.hasNext()) {
+			result.add(ecrfDao.toECRFOutVO(it.next()));
+		}
+		Collections.sort(result, ECRF_ID_COMPARATOR);
 		return result;
 	}
 
@@ -306,6 +334,14 @@ public class MassMailDaoImpl
 		} else if (copyIfNull) {
 			target.getVisitScheduleItems().clear();
 		}
+		Collection ecrfs = source.getEcrfs();
+		if (ecrfs.size() > 0) {
+			ecrfs = new ArrayList(ecrfs); //prevent changing VO
+			this.getECRFDao().eCRFOutVOToEntityCollection(ecrfs);
+			target.setEcrfs(ecrfs); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getEcrfs().clear();
+		}
 	}
 
 	@Override
@@ -339,11 +375,22 @@ public class MassMailDaoImpl
 			target.setTrialId(trial.getId());
 		}
 		target.setVisitScheduleItemIds(toVisitScheduleItemIdCollection(source.getVisitScheduleItems()));
+		target.setEcrfIds(toEcrfIdCollection(source.getEcrfs()));
 	}
 
 	private static ArrayList<Long> toVisitScheduleItemIdCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
 		ArrayList<Long> result = new ArrayList<Long>(visitScheduleItems.size());
 		Iterator<VisitScheduleItem> it = visitScheduleItems.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
+	}
+
+	private static ArrayList<Long> toEcrfIdCollection(Collection<ECRF> ecrfs) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(ecrfs.size());
+		Iterator<ECRF> it = ecrfs.iterator();
 		while (it.hasNext()) {
 			result.add(it.next().getId());
 		}
@@ -386,5 +433,6 @@ public class MassMailDaoImpl
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
 		target.setVisitScheduleItems(toVisitScheduleItemOutVOCollection(source.getVisitScheduleItems()));
+		target.setEcrfs(toEcrfOutVOCollection(source.getEcrfs()));
 	}
 }
