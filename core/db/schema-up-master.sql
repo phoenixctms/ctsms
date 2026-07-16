@@ -368,5 +368,38 @@ if get_database_version() < '010901009' then
 
 end if;
 
+if get_database_version() < '010901010' then
+
+  ALTER TABLE MASS_MAIL_TYPE ADD COLUMN ECRFS_REQUIRED BOOLEAN;
+  UPDATE MASS_MAIL_TYPE SET ECRFS_REQUIRED = 'f';
+  ALTER TABLE MASS_MAIL_TYPE ALTER ECRFS_REQUIRED SET NOT NULL;
+
+  insert into MASS_MAIL_TYPE
+    ("id", "name_l10n_key", "visible", "trial_required", "proband_list_staus_required", "visit_schedule_items_required", "ecrfs_required")
+  values (nextval('hibernate_sequence'), 'ecrf_status', 't', 't', 'f', 'f', 't');
+
+  create table mass_mail_ecrf (
+    MASS_MAILS_FK BIGINT not null,
+    ECRFS_FK BIGINT not null
+  );
+
+  alter table mass_mail_ecrf
+    add constraint ecrf_MASS_MAILS_FKC
+    foreign key (MASS_MAILS_FK)
+    references MASS_MAIL;
+
+  alter table mass_mail_ecrf
+    add constraint MASS_MAIL_ECRFS_FKC
+    foreign key (ECRFS_FK)
+    references ECRF;
+
+  insert into ecrf_status_action
+    ("id", "action")
+  values (nextval('hibernate_sequence'), 'ADD_MASSMAIL_RECIPIENT');
+
+  perform set_database_version('010901010');
+
+end if;
+
 end
 $$;
