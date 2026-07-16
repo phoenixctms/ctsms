@@ -1592,24 +1592,27 @@ public class ProductionDataProvider {
 		jobOutput.println("mass mail states created");
 	}
 
-	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired, boolean visitScheduleItemsRequired) {
+	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired, boolean visitScheduleItemsRequired,
+			boolean ecrfsRequired) {
 		MassMailType massMailType = MassMailType.Factory.newInstance();
 		massMailType.setNameL10nKey(nameL10nKey);
 		massMailType.setVisible(visible);
 		massMailType.setTrialRequired(trialRequired);
 		massMailType.setProbandListStausRequired(probandListStausRequired);
 		massMailType.setVisitScheduleItemsRequired(visitScheduleItemsRequired);
+		massMailType.setEcrfsRequired(ecrfsRequired);
 		massMailType = massMailTypeDao.create(massMailType);
 		return massMailType;
 	}
 
 	protected void createMassMailTypes() {
-		createMassMailType("regulatory", true, false, false, false);
-		createMassMailType("welcome", true, false, false, false);
-		createMassMailType("newsletter", true, false, false, false);
-		createMassMailType("study_specific", true, true, false, false);
-		createMassMailType("enrollment", true, true, true, false);
-		createMassMailType("visit_reminder", true, true, false, true);
+		createMassMailType("regulatory", true, false, false, false, false);
+		createMassMailType("welcome", true, false, false, false, false);
+		createMassMailType("newsletter", true, false, false, false, false);
+		createMassMailType("study_specific", true, true, false, false, false);
+		createMassMailType("enrollment", true, true, true, false, false);
+		createMassMailType("visit_reminder", true, true, false, true, false);
+		createMassMailType("ecrf_status", true, true, false, false, true);
 		jobOutput.println("mass mail types created");
 	}
 
@@ -2146,7 +2149,8 @@ public class ProductionDataProvider {
 				getProbandListStatusTransitions(reScreeningResultPendingProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
 						droppedOutProbandListStatusType));
 		updateProbandListStatusType(screeningOkProbandListStatusType,
-				getProbandListStatusTransitions(screeningOkProbandListStatusType, reScreeningProbandListStatusType, ongoingProbandListStatusType, ongoingRandomizedProbandListStatusType,
+				getProbandListStatusTransitions(screeningOkProbandListStatusType, reScreeningProbandListStatusType, ongoingProbandListStatusType,
+						ongoingRandomizedProbandListStatusType,
 						droppedOutProbandListStatusType));
 		updateProbandListStatusType(reScreeningProbandListStatusType,
 				getProbandListStatusTransitions(reScreeningProbandListStatusType, screeningOkProbandListStatusType, screeningFailureProbandListStatusType,
@@ -2156,9 +2160,11 @@ public class ProductionDataProvider {
 		updateProbandListStatusType(screeningFailureProbandListStatusType,
 				getProbandListStatusTransitions(reScreeningProbandListStatusType));
 		updateProbandListStatusType(ongoingProbandListStatusType,
-				getProbandListStatusTransitions(ongoingProbandListStatusType, ongoingRandomizedProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
+				getProbandListStatusTransitions(ongoingProbandListStatusType, ongoingRandomizedProbandListStatusType, droppedOutProbandListStatusType,
+						completedProbandListStatusType));
 		updateProbandListStatusType(ongoingRandomizedProbandListStatusType,
-				getProbandListStatusTransitions(ongoingRandomizedProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType, completedProbandListStatusType));
+				getProbandListStatusTransitions(ongoingRandomizedProbandListStatusType, ongoingProbandListStatusType, droppedOutProbandListStatusType,
+						completedProbandListStatusType));
 		updateProbandListStatusType(droppedOutProbandListStatusType,
 				getProbandListStatusTransitions(droppedOutProbandListStatusType));
 		updateProbandListStatusType(completedProbandListStatusType,

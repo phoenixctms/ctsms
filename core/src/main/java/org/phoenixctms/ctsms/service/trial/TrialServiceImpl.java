@@ -3732,6 +3732,20 @@ public class TrialServiceImpl
 				ServiceUtil.removeEcrfStatusEntry(ecrfStatusEntry, true, signatureDao, ecrfStatusEntryDao, notificationDao, notificationRecipientDao);
 			}
 			ecrf.getEcrfStatusEntries().clear();
+			MassMailDao massMailDao = this.getMassMailDao();
+			Iterator<MassMail> massMailsIt = ecrf.getMassMails().iterator();
+			while (massMailsIt.hasNext()) {
+				MassMail massMail = massMailsIt.next();
+				massMailDao.lock(massMail, LockMode.PESSIMISTIC_WRITE);
+				MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
+				massMail.removeEcrfs(ecrf);
+				CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
+				massMailDao.update(massMail);
+				MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
+				logSystemMessage(massMail, result.getTrial(), now, user, SystemMessageCodes.ECRF_DELETED_MASS_MAIL_UPDATED, massMailVO, original,
+						this.getJournalEntryDao());
+			}
+			ecrf.getMassMails().clear();
 			ecrfDao.remove(ecrf);
 			ServiceUtil.logSystemMessage(trial, result.getTrial(), now, user, SystemMessageCodes.ECRF_DELETED, result, null, journalEntryDao);
 		}
@@ -4235,6 +4249,7 @@ public class TrialServiceImpl
 				MassMailOutVO original = massMailDao.toMassMailOutVO(massMail);
 				massMail.setTrial(null);
 				massMail.getVisitScheduleItems().clear();
+				massMail.getEcrfs().clear();
 				CoreUtil.modifyVersion(massMail, massMail.getVersion(), now, user);
 				massMailDao.update(massMail);
 				MassMailOutVO massMailVO = massMailDao.toMassMailOutVO(massMail);
@@ -4383,6 +4398,7 @@ public class TrialServiceImpl
 					visitsIt.next().removeEcrfs(ecrf);
 				}
 				ecrf.getVisits().clear();
+				ecrf.getMassMails().clear();
 				ecrfDao.remove(ecrf);
 			}
 			trial.getEcrfs().clear();

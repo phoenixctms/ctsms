@@ -123,6 +123,7 @@ public interface SystemMessageCodes {
 	public final static String VISIT_SCHEDULE_ITEM_UPDATED = "visit_schedule_item_updated";
 	public final static String VISIT_SCHEDULE_ITEM_DELETED = "visit_schedule_item_deleted";
 	public final static String VISIT_SCHEDULE_ITEM_DELETED_MASS_MAIL_UPDATED = "visit_schedule_item_deleted_mass_mail_updated";
+	public static final String ECRF_DELETED_MASS_MAIL_UPDATED = "ecrf_deleted_mass_mail_updated";
 	public final static String VISIT_SCHEDULE_EXPORTED = "visit_schedule_exported";
 	public final static String VISIT_SCHEDULE_ITEMS_EXPORTED = "visit_schedule_items_exported";
 	public final static String VISIT_PLAN_EXPORTED = "visit_plan_exported";

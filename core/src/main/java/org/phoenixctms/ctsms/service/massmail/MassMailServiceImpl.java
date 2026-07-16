@@ -27,6 +27,8 @@ import javax.mail.internet.InternetAddress;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.hibernate.LockMode;
+import org.phoenixctms.ctsms.domain.ECRF;
+import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
@@ -67,6 +69,7 @@ import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
+import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.EmailMessageVO;
 import org.phoenixctms.ctsms.vo.MassMailInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
@@ -183,6 +186,37 @@ public class MassMailServiceImpl
 						L10nUtil.getMassMailTypeName(Locales.USER, massMailType.getNameL10nKey()));
 			}
 		}
+		ArrayList<ECRFOutVO> ecrfVOs = null;
+		ECRFDao ecrfDao = this.getECRFDao();
+		Collection<Long> ecrfIds = massMailIn.getEcrfIds();
+		if (ecrfIds != null && ecrfIds.size() > 0) {
+			ecrfVOs = new ArrayList<ECRFOutVO>(ecrfIds.size());
+			Iterator<Long> it = ecrfIds.iterator();
+			HashSet<Long> dupeCheck = new HashSet<Long>(ecrfIds.size());
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ECRF_ID_IS_NULL);
+				}
+				ECRF ecrf = CheckIDUtil.checkEcrfId(id, ecrfDao);
+				ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+				if (!dupeCheck.add(ecrf.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_DUPLICATE_ECRF,
+							ecrfVO.getName());
+				}
+				if (!trial.equals(ecrf.getTrial())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_WRONG_ECRF,
+							ecrfVO.getName(),
+							CommonUtil.trialOutVOToString(trialVO));
+				}
+				ecrfVOs.add(ecrfVO);
+			}
+		} else {
+			if (massMailType.isEcrfsRequired()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ECRFS_REQUIRED,
+						L10nUtil.getMassMailTypeName(Locales.USER, massMailType.getNameL10nKey()));
+			}
+		}
 		ServiceUtil.checkLocale(massMailIn.getLocale());
 		ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(), L10nUtil.getLocales(massMailIn.getLocale()), massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				null, trialVO,
@@ -285,6 +319,12 @@ public class MassMailServiceImpl
 		while (it.hasNext()) {
 			visitScheduleItemVOs.add(visitScheduleItemDao.toVisitScheduleItemOutVO(visitScheduleItemDao.load(it.next())));
 		}
+		ECRFDao ecrfDao = this.getECRFDao();
+		ArrayList<ECRFOutVO> ecrfVOs = new ArrayList<ECRFOutVO>(massMailIn.getEcrfIds().size());
+		it = massMailIn.getEcrfIds().iterator();
+		while (it.hasNext()) {
+			ecrfVOs.add(ecrfDao.toECRFOutVO(ecrfDao.load(it.next())));
+		}
 		if (massMailIn.getId() != null) {
 			massMailVO.setId(massMailIn.getId());
 		}
@@ -299,6 +339,7 @@ public class MassMailServiceImpl
 		massMailVO.setProbandListStatus(probandListStatusTypeVO);
 		massMailVO.setProbandListStatusResend(massMailIn.getProbandListStatusResend());
 		massMailVO.setVisitScheduleItems(visitScheduleItemVOs);
+		massMailVO.setEcrfs(ecrfVOs);
 		massMailVO.setTrial(trialVO);
 		massMailVO.setFromAddress(massMailIn.getFromAddress());
 		massMailVO.setFromName(massMailIn.getFromName());
@@ -455,6 +496,12 @@ public class MassMailServiceImpl
 				visitScheduleItem.removeMassMails(massMail);
 			}
 			massMail.getVisitScheduleItems().clear();
+			Iterator<ECRF> ecrfIt = massMail.getEcrfs().iterator();
+			while (ecrfIt.hasNext()) {
+				ECRF ecrf = ecrfIt.next();
+				ecrf.removeMassMails(massMail);
+			}
+			massMail.getEcrfs().clear();
 			Iterator<JournalEntry> journalEntriesIt = massMail.getJournalEntries().iterator();
 			while (journalEntriesIt.hasNext()) {
 				JournalEntry journalEntry = journalEntriesIt.next();
@@ -643,6 +690,12 @@ public class MassMailServiceImpl
 		Iterator<Long> it = massMailIn.getVisitScheduleItemIds().iterator();
 		while (it.hasNext()) {
 			visitScheduleItemVOs.add(visitScheduleItemDao.toVisitScheduleItemOutVO(CheckIDUtil.checkVisitScheduleItemId(it.next(), visitScheduleItemDao)));
+		}
+		ECRFDao ecrfDao = this.getECRFDao();
+		ArrayList<ECRFOutVO> ecrfVOs = new ArrayList<ECRFOutVO>(massMailIn.getEcrfIds().size());
+		it = massMailIn.getEcrfIds().iterator();
+		while (it.hasNext()) {
+			ecrfVOs.add(ecrfDao.toECRFOutVO(CheckIDUtil.checkEcrfId(it.next(), ecrfDao)));
 		}
 		ProbandDao probandDao = this.getProbandDao();
 		TrialDao trialDao = this.getTrialDao();
