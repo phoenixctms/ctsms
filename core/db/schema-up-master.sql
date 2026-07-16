@@ -313,5 +313,60 @@ if get_database_version() < '010901008' then
 
 end if;
 
+if get_database_version() < '010901009' then
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'cancelled' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'cancelled' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed_re_screening' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'ic_not_signed_re_screening' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'dropped_out' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'dropped_out' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'completed' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'completed' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'animal_dropped_out' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'animal_dropped_out' limit 1)
+  );
+
+  insert into PROBAND_LIST_STATUS_TRANSITION
+    ("proband_list_status_types_fk","transitions_fk")
+  values (
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'animal_completed' limit 1),
+    (select id from PROBAND_LIST_STATUS_TYPE where name_l10n_key = 'animal_completed' limit 1)
+  );
+
+  perform set_database_version('010901009');
+
+end if;
+
 end
 $$;
