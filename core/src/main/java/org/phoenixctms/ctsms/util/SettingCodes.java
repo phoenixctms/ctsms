@@ -95,6 +95,7 @@ public interface SettingCodes {
 	public static final String LOGON_ENABLE2FA = "logon_enable2fa";
 	public static final String LOGON_OTP_AUTHENTICATOR = "logon_otp_authenticator";
 	public static final String API_2FA_JWT_ONLY = "api_2fa_jwt_only";
+	public static final String JOB_JWT_VALIDITY_SECS = "job_jwt_validity_secs";
 	public static final String SUPPORTED_LOCALES = "supported_locales";
 	public static final String NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD = "notification_expiring_course_reminder_period";
 	public static final String NOTIFICATION_EXPIRING_COURSE_REMINDER_PERIOD_DAYS = "notification_expiring_course_reminder_period_days";
