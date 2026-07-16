@@ -2723,6 +2723,19 @@ public class TrialServiceImpl
 				case SIGN_ECRF:
 					this.getSignatureDao().addEcrfSignature(statusEntry, now);
 					break;
+				case ADD_MASSMAIL_RECIPIENT:
+					Iterator<MassMail> massMailsIt = ecrf.getMassMails().iterator();
+					while (massMailsIt.hasNext()) {
+						MassMail massMail = massMailsIt.next();
+						if (massMail.getStatus() != null && !massMail.getStatus().isLocked()) {
+							Proband proband = listEntry.getProband();
+							if (massMail.getDepartment().equals(proband.getDepartment())) {
+								ServiceUtil.addResetMassMailRecipient(massMail, proband, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
+										this.getMassMailRecipientDao(), this.getJournalEntryDao());
+							}
+						}
+					}
+					break;
 				default:
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
 			}
