@@ -43,6 +43,7 @@ import org.phoenixctms.ctsms.domain.Course;
 import org.phoenixctms.ctsms.domain.CourseParticipationStatusEntry;
 import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.DepartmentDao;
+import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
 import org.phoenixctms.ctsms.domain.File;
 import org.phoenixctms.ctsms.domain.FileDao;
@@ -124,6 +125,7 @@ import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CalendarWeekVO;
 import org.phoenixctms.ctsms.vo.DBModuleVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
+import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
@@ -1530,5 +1532,15 @@ public class ToolsServiceImpl
 			}
 		}
 		return result;
+	}
+
+	@Override
+	protected Collection<ECRFOutVO> handleCompleteEcrf(AuthenticationVO auth, String nameInfix, Long trialId, Integer limit) throws Exception {
+		CoreUtil.setUser(auth, this.getUserDao());
+		// no check for trialId ...
+		ECRFDao ecrfDao = this.getECRFDao();
+		Collection ecrfs = ecrfDao.findEcrfs(trialId, nameInfix, limit);
+		ecrfDao.toECRFOutVOCollection(ecrfs);
+		return ecrfs;
 	}
 }
