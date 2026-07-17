@@ -14,9 +14,12 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
@@ -31,6 +34,10 @@ import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.ECRFInVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -62,6 +69,34 @@ public class ECRFDaoImpl
 
 	private static String getUniqueEcrfName(ECRFOutVO ecrfVO) {
 		return getUniqueEcrfName(ecrfVO, null);
+	}
+
+	private static String buildUniqueEcrfNameSql() {
+		String trialName = "(select t.name from trial t where t.id = {alias}.trial_fk)";
+		String name = "{alias}.name";
+		String revision = "{alias}.revision";
+		String withRevision = "concat(" + trialName + ", ' - ', " + name + ", ' (', " + revision + ", ')')";
+		String plain = "concat(" + trialName + ", ' - ', " + name + ")";
+		return "case when (" + revision + " is not null and length(" + revision + ") > 0) then " + withRevision + " else " + plain + " end";
+	}
+
+	private static Criterion getUniqueEcrfNameMatchRestriction(String nameInfixPattern) {
+		return Restrictions.sqlRestriction("lower(" + buildUniqueEcrfNameSql() + ") like ?",
+				nameInfixPattern,
+				Hibernate.STRING);
+	}
+
+	private static void addUniqueEcrfNameMatchRestriction(Junction junction, String nameInfix) {
+		junction.add(getUniqueEcrfNameMatchRestriction(
+				MatchMode.ANYWHERE.toMatchString(nameInfix.toLowerCase())));
+	}
+
+	private static void applySortOrders(org.hibernate.Criteria ecrfCriteria) {
+		if (ecrfCriteria != null) {
+			ecrfCriteria.addOrder(Order.asc("trial"));
+			ecrfCriteria.addOrder(Order.asc("name"));
+			ecrfCriteria.addOrder(Order.asc("revision"));
+		}
 	}
 
 	private org.hibernate.Criteria createEcrfCriteria(String alias) {
@@ -600,5 +635,27 @@ public class ECRFDaoImpl
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}
 		target.setUniqueName(getUniqueEcrfName(target));
+	}
+
+	@Override
+	protected Collection<ECRF> handleFindEcrfs(Long trialId, String nameInfix, Integer limit) throws Exception {
+		org.hibernate.Criteria ecrfCriteria = createEcrfCriteria(null);
+		if (trialId != null) {
+			ecrfCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (!CommonUtil.isEmptyString(nameInfix)) {
+			ecrfCriteria.createCriteria("trial", "trial0", CriteriaSpecification.INNER_JOIN);
+			Junction junction = Restrictions.disjunction();
+			junction.add((new CategoryCriterion(nameInfix, "name", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "title", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "revision", MatchMode.ANYWHERE)).getRestriction());
+			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
+			addUniqueEcrfNameMatchRestriction(junction, nameInfix);
+			ecrfCriteria.add(junction);
+		}
+		applySortOrders(ecrfCriteria);
+		CriteriaUtil.applyLimit(limit, Settings.getIntNullable(SettingCodes.ECRF_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.ECRF_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT), ecrfCriteria);
+		return ecrfCriteria.list();
 	}
 }
