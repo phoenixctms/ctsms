@@ -339,6 +339,9 @@
         drop constraint MASS_MAIL_PROBAND_LIST_STATUS_FKC;
 
     alter table MASS_MAIL 
+        drop constraint MASS_MAIL_ECRF_STATUS_FKC;
+
+    alter table MASS_MAIL 
         drop constraint MASS_MAIL_STATUS_FKC;
 
     alter table MASS_MAIL 
