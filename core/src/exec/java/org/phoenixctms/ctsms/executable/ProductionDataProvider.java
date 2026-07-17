@@ -1592,27 +1592,28 @@ public class ProductionDataProvider {
 		jobOutput.println("mass mail states created");
 	}
 
-	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStausRequired, boolean visitScheduleItemsRequired,
-			boolean ecrfsRequired) {
+	protected MassMailType createMassMailType(String nameL10nKey, boolean visible, boolean trialRequired, boolean probandListStatusRequired, boolean visitScheduleItemsRequired,
+			boolean ecrfsRequired, boolean ecrfStatusRequired) {
 		MassMailType massMailType = MassMailType.Factory.newInstance();
 		massMailType.setNameL10nKey(nameL10nKey);
 		massMailType.setVisible(visible);
 		massMailType.setTrialRequired(trialRequired);
-		massMailType.setProbandListStausRequired(probandListStausRequired);
+		massMailType.setProbandListStatusRequired(probandListStatusRequired);
 		massMailType.setVisitScheduleItemsRequired(visitScheduleItemsRequired);
 		massMailType.setEcrfsRequired(ecrfsRequired);
+		massMailType.setEcrfStatusRequired(ecrfStatusRequired);
 		massMailType = massMailTypeDao.create(massMailType);
 		return massMailType;
 	}
 
 	protected void createMassMailTypes() {
-		createMassMailType("regulatory", true, false, false, false, false);
-		createMassMailType("welcome", true, false, false, false, false);
-		createMassMailType("newsletter", true, false, false, false, false);
-		createMassMailType("study_specific", true, true, false, false, false);
-		createMassMailType("enrollment", true, true, true, false, false);
-		createMassMailType("visit_reminder", true, true, false, true, false);
-		createMassMailType("ecrf_status", true, true, false, false, true);
+		createMassMailType("regulatory", true, false, false, false, false, false);
+		createMassMailType("welcome", true, false, false, false, false, false);
+		createMassMailType("newsletter", true, false, false, false, false, false);
+		createMassMailType("study_specific", true, true, false, false, false, false);
+		createMassMailType("enrollment", true, true, true, false, false, false);
+		createMassMailType("visit_reminder", true, true, false, true, false, false);
+		createMassMailType("ecrf_status", true, true, false, false, true, true);
 		jobOutput.println("mass mail types created");
 	}
 

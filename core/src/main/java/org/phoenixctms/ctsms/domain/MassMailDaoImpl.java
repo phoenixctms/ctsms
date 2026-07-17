@@ -29,6 +29,7 @@ import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
@@ -197,6 +198,7 @@ public class MassMailDaoImpl
 		Long statusId = source.getStatusId();
 		Long typeId = source.getTypeId();
 		Long probandListStatusId = source.getProbandListStatusId();
+		Long ecrfStatusId = source.getEcrfStatusId();
 		Long trialId = source.getTrialId();
 		if (departmentId != null) {
 			target.setDepartment(this.getDepartmentDao().load(departmentId));
@@ -217,6 +219,11 @@ public class MassMailDaoImpl
 			target.setProbandListStatus(this.getProbandListStatusTypeDao().load(probandListStatusId));
 		} else if (copyIfNull) {
 			target.setProbandListStatus(null);
+		}
+		if (ecrfStatusId != null) {
+			target.setEcrfStatus(this.getECRFStatusTypeDao().load(ecrfStatusId));
+		} else if (copyIfNull) {
+			target.setEcrfStatus(null);
 		}
 		if (trialId != null) {
 			target.setTrial(this.getTrialDao().load(trialId));
@@ -295,6 +302,7 @@ public class MassMailDaoImpl
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		MassMailTypeVO typeVO = source.getType();
 		ProbandListStatusTypeVO probandListStatusVO = source.getProbandListStatus();
+		ECRFStatusTypeVO ecrfStatusVO = source.getEcrfStatus();
 		TrialOutVO trialVO = source.getTrial();
 		if (statusVO != null) {
 			target.setStatus(this.getMassMailStatusTypeDao().massMailStatusTypeVOToEntity(statusVO));
@@ -320,6 +328,11 @@ public class MassMailDaoImpl
 			target.setProbandListStatus(this.getProbandListStatusTypeDao().probandListStatusTypeVOToEntity(probandListStatusVO));
 		} else if (copyIfNull) {
 			target.setProbandListStatus(null);
+		}
+		if (ecrfStatusVO != null) {
+			target.setEcrfStatus(this.getECRFStatusTypeDao().eCRFStatusTypeVOToEntity(ecrfStatusVO));
+		} else if (copyIfNull) {
+			target.setEcrfStatus(null);
 		}
 		if (trialVO != null) {
 			target.setTrial(this.getTrialDao().trialOutVOToEntity(trialVO));
@@ -358,6 +371,7 @@ public class MassMailDaoImpl
 		MassMailStatusType status = source.getStatus();
 		MassMailType type = source.getType();
 		ProbandListStatusType probandListStatus = source.getProbandListStatus();
+		ECRFStatusType ecrfStatus = source.getEcrfStatus();
 		Trial trial = source.getTrial();
 		if (department != null) {
 			target.setDepartmentId(department.getId());
@@ -370,6 +384,9 @@ public class MassMailDaoImpl
 		}
 		if (probandListStatus != null) {
 			target.setProbandListStatusId(probandListStatus.getId());
+		}
+		if (ecrfStatus != null) {
+			target.setEcrfStatusId(ecrfStatus.getId());
 		}
 		if (trial != null) {
 			target.setTrialId(trial.getId());
@@ -413,6 +430,7 @@ public class MassMailDaoImpl
 		User modifiedUser = source.getModifiedUser();
 		MassMailType type = source.getType();
 		ProbandListStatusType probandListStatus = source.getProbandListStatus();
+		ECRFStatusType ecrfStatus = source.getEcrfStatus();
 		Trial trial = source.getTrial();
 		if (status != null) {
 			target.setStatus(this.getMassMailStatusTypeDao().toMassMailStatusTypeVO(status));
@@ -428,6 +446,9 @@ public class MassMailDaoImpl
 		}
 		if (probandListStatus != null) {
 			target.setProbandListStatus(this.getProbandListStatusTypeDao().toProbandListStatusTypeVO(probandListStatus));
+		}
+		if (ecrfStatus != null) {
+			target.setEcrfStatus(this.getECRFStatusTypeDao().toECRFStatusTypeVO(ecrfStatus));
 		}
 		if (trial != null) {
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
