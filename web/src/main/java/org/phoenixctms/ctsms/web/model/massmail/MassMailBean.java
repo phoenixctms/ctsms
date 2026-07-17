@@ -25,6 +25,7 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
@@ -59,6 +60,7 @@ public class MassMailBean extends ManagedBeanBase {
 			MassMailStatusTypeVO statusVO = out.getStatus();
 			MassMailTypeVO typeVO = out.getType();
 			ProbandListStatusTypeVO probandListStatus = out.getProbandListStatus();
+			ECRFStatusTypeVO ecrfStatus = out.getEcrfStatus();
 			TrialOutVO trial = out.getTrial();
 			in.getVisitScheduleItemIds().clear();
 			Iterator it = out.getVisitScheduleItems().iterator();
@@ -81,6 +83,8 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setTypeId(typeVO == null ? null : typeVO.getId());
 			in.setProbandListStatusId(probandListStatus == null ? null : probandListStatus.getId());
 			in.setProbandListStatusResend(out.getProbandListStatusResend());
+			in.setEcrfStatusId(ecrfStatus == null ? null : ecrfStatus.getId());
+			in.setEcrfStatusResend(out.getEcrfStatusResend());
 			in.setTrialId(trial == null ? null : trial.getId());
 			in.setFromAddress(out.getFromAddress());
 			in.setFromName(out.getFromName());
@@ -141,6 +145,8 @@ public class MassMailBean extends ManagedBeanBase {
 			in.getEcrfIds().clear();
 			in.setProbandListStatusResend(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET));
+			in.setEcrfStatusId(null);
+			in.setEcrfStatusResend(false);
 			in.setTrialId(null);
 			in.setFromAddress(Settings.getString(SettingCodes.MASS_MAIL_FROM_ADDRESS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FROM_ADDRESS_PRESET));
 			in.setFromName(Settings.getString(SettingCodes.MASS_MAIL_FROM_NAME_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FROM_NAME_PRESET));
@@ -211,6 +217,7 @@ public class MassMailBean extends ManagedBeanBase {
 	private ArrayList<SelectItem> massMailTypes;
 	private MassMailStatusTypeVO massMailStatusType;
 	private ArrayList<SelectItem> probandListStatusTypes;
+	private ArrayList<SelectItem> ecrfStatusTypes;
 	private ArrayList<SelectItem> locales;
 	private List<VisitScheduleItemOutVO> visitScheduleItems;
 	private List<ECRFOutVO> ecrfs;
@@ -420,6 +427,10 @@ public class MassMailBean extends ManagedBeanBase {
 		return probandListStatusTypes;
 	}
 
+	public ArrayList<SelectItem> getEcrfStatusTypes() {
+		return ecrfStatusTypes;
+	}
+
 	public boolean getShowTerminalStateMessage() {
 		if (in.getStatusId() != null) {
 			Collection<MassMailStatusTypeVO> statusTypeVOs = null;
@@ -593,6 +604,7 @@ public class MassMailBean extends ManagedBeanBase {
 		}
 		loadMassMailStatusType();
 		probandListStatusTypes = WebUtil.getAllProbandListStatusTypes(null);
+		ecrfStatusTypes = WebUtil.getAllEcrfStatusTypes();
 		loadVisitScheduleItems();
 		loadEcrfs();
 		if (this.locales == null) {
@@ -824,6 +836,20 @@ public class MassMailBean extends ManagedBeanBase {
 		return new ArrayList<IDVO>();
 	}
 
+	public List<IDVO> completeEcrf(String query) {
+		try {
+			Collection ecrfVOs = WebUtil.getServiceLocator().getToolsService().completeEcrf(WebUtil.getAuthentication(), query, in.getTrialId(), null);
+			ecrfVOs.removeAll(ecrfs);
+			IDVO.transformVoCollection(ecrfVOs);
+			return (List<IDVO>) ecrfVOs;
+		} catch (ClassCastException e) {
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return new ArrayList<IDVO>();
+	}
+
 	public List<IDVO> getVisitScheduleItems() {
 		return new IDVOList(visitScheduleItems);
 	}
@@ -832,6 +858,12 @@ public class MassMailBean extends ManagedBeanBase {
 	}
 
 	public void handleVisitScheduleItemUnselect(UnselectEvent event) {
+	}
+
+	public void handleEcrfSelect(SelectEvent event) {
+	}
+
+	public void handleEcrfUnselect(UnselectEvent event) {
 	}
 
 	private void loadVisitScheduleItems() {

@@ -246,6 +246,85 @@
 									</h:panelGroup>
 									<p:message for="visitscheduleitems" />
 
+									<h:outputLabel for="ecrfs"
+										value="#{massmaillabels.mass_mail_ecrfs_label}" />
+									<h:panelGroup>
+										<p:autoComplete id="ecrfs" required="false"
+											value="#{massMailBean.ecrfs}"
+											label="#{massmaillabels.mass_mail_ecrfs}"
+											styleClass="ctsms-control-larger"
+											minQueryLength="#{autoCompleteMinQueryLengthEcrf}"
+											maxResults="#{autoCompleteMaxResultsEcrf}"
+											queryDelay="#{autoCompleteQueryDelayEcrf}"
+											global="#{autoCompleteGlobalEcrf}"
+											scrollHeight="#{autoCompleteScrollHeightEcrf}"
+											completeMethod="#{massMailBean.completeEcrf}"
+											multiple="true" var="ecrf"
+											itemValue="#{ecrf}"
+											itemLabel="#{applicationScopeBean.getEcrfName(ecrf.vo)}"
+											converter="ctsms.Ecrf">
+											<p:ajax process="@this" event="itemSelect"
+												listener="#{massMailBean.handleEcrfSelect}" />
+											<p:ajax process="@this" event="itemUnselect"
+												listener="#{massMailBean.handleEcrfUnselect}" />
+											<p:column rendered="#{empty massMailBean.in.trialId}">
+												<h:outputText value="#{ecrf.vo.trial.name}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{applicationScopeBean.getEcrfName(ecrf.vo)}" />
+											</p:column>
+											<p:column>
+												<h:outputText
+													value="#{applicationScopeBean.clipStringTrailing(ecrf.vo.title,96)}" />
+											</p:column>
+										</p:autoComplete>
+										<p:tooltip rendered="#{enableTooltips}" for="ecrfs">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_ecrfs_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="ecrfs" />
+
+									<h:outputLabel for="ecrfstatus"
+										value="#{massmaillabels.mass_mail_ecrf_status_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu id="ecrfstatus"
+											value="#{massMailBean.in.ecrfStatusId}"
+											required="false"
+											label="#{massmaillabels.mass_mail_ecrf_status}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems value="#{massMailBean.ecrfStatusTypes}"
+												var="selectItem" itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+										</p:selectOneMenu>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="ecrfstatus">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_ecrf_status_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="ecrfstatus" />
+
+									<h:outputLabel for="ecrfstatusresend"
+										value="#{massmaillabels.mass_mail_ecrfstatusresend_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="ecrfstatusresend"
+											value="#{massMailBean.in.ecrfStatusResend}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="ecrfstatusresend">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_ecrfstatusresend_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="ecrfstatusresend" />
+
 									<h:outputLabel />
 									<h:outputText value="" />
 									<h:outputLabel />
