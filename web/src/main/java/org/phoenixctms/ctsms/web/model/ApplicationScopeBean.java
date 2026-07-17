@@ -806,6 +806,13 @@ public class ApplicationScopeBean {
 		return "";
 	}
 
+	public String getEcrfName(ECRFOutVO ecrf) {
+		if (ecrf != null) {
+			return ecrf.getUniqueName();
+		}
+		return "";
+	}
+
 	public String visitScheduleItemsToString(Collection<VisitScheduleItemOutVO> visitScheduleItems) {
 		if (visitScheduleItems != null) {
 			Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
