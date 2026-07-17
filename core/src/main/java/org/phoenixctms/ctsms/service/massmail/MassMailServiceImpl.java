@@ -70,6 +70,7 @@ import org.phoenixctms.ctsms.util.SystemMessageCodes;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.EmailMessageVO;
 import org.phoenixctms.ctsms.vo.MassMailInVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
@@ -147,12 +148,23 @@ public class MassMailServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_WRONG_PROBAND_LIST_STATUS_TYPE, probandListStatusTypeVO.getName());
 			}
 		} else {
-			if (massMailType.isProbandListStausRequired()) {
+			if (massMailType.isProbandListStatusRequired()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_PROBAND_LIST_STATUS_TYPE_REQUIRED,
 						L10nUtil.getMassMailTypeName(Locales.USER, massMailType.getNameL10nKey()));
 			}
 			if (massMailIn.getProbandListStatusResend()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_NOT_FALSE);
+			}
+		}
+		if (massMailIn.getEcrfStatusId() != null) {
+			CheckIDUtil.checkEcrfStatusTypeId(massMailIn.getEcrfStatusId(), this.getECRFStatusTypeDao());
+		} else {
+			if (massMailType.isEcrfStatusRequired()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ECRF_STATUS_TYPE_REQUIRED,
+						L10nUtil.getMassMailTypeName(Locales.USER, massMailType.getNameL10nKey()));
+			}
+			if (massMailIn.getEcrfStatusResend()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ECRF_STATUS_RESEND_NOT_FALSE);
 			}
 		}
 		ArrayList<VisitScheduleItemOutVO> visitScheduleItemVOs = null;
@@ -312,6 +324,9 @@ public class MassMailServiceImpl
 		MassMailTypeVO typeVO = massMailIn.getTypeId() != null ? this.getMassMailTypeDao().toMassMailTypeVO(this.getMassMailTypeDao().load(massMailIn.getTypeId())) : null;
 		ProbandListStatusTypeVO probandListStatusTypeVO = massMailIn.getProbandListStatusId() != null ? this.getProbandListStatusTypeDao()
 				.toProbandListStatusTypeVO(this.getProbandListStatusTypeDao().load(massMailIn.getProbandListStatusId())) : null;
+		ECRFStatusTypeVO ecrfStatusTypeVO = massMailIn.getEcrfStatusId() != null
+				? this.getECRFStatusTypeDao().toECRFStatusTypeVO(this.getECRFStatusTypeDao().load(massMailIn.getEcrfStatusId()))
+				: null;
 		TrialOutVO trialVO = massMailIn.getTrialId() != null ? this.getTrialDao().toTrialOutVO(this.getTrialDao().load(massMailIn.getTrialId())) : null;
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
 		ArrayList<VisitScheduleItemOutVO> visitScheduleItemVOs = new ArrayList<VisitScheduleItemOutVO>(massMailIn.getVisitScheduleItemIds().size());
@@ -338,6 +353,8 @@ public class MassMailServiceImpl
 		massMailVO.setType(typeVO);
 		massMailVO.setProbandListStatus(probandListStatusTypeVO);
 		massMailVO.setProbandListStatusResend(massMailIn.getProbandListStatusResend());
+		massMailVO.setEcrfStatus(ecrfStatusTypeVO);
+		massMailVO.setEcrfStatusResend(massMailIn.getEcrfStatusResend());
 		massMailVO.setVisitScheduleItems(visitScheduleItemVOs);
 		massMailVO.setEcrfs(ecrfVOs);
 		massMailVO.setTrial(trialVO);

@@ -807,6 +807,8 @@ public interface ServiceExceptionCodes {
 	public static final String MASS_MAIL_DUPLICATE_ECRF = "mass_mail_duplicate_ecrf";
 	public static final String MASS_MAIL_WRONG_ECRF = "mass_mail_wrong_ecrf";
 	public static final String MASS_MAIL_ECRFS_REQUIRED = "mass_mail_ecrfs_required";
+	public static final String MASS_MAIL_ECRF_STATUS_TYPE_REQUIRED = "mass_mail_ecrf_status_type_required";
+	public static final String MASS_MAIL_ECRF_STATUS_RESEND_NOT_FALSE = "mass_mail_ecrf_status_resend_not_false";
 	public static final String MASS_MAIL_INVALID_SUBJECT_FORMAT = "mass_mail_invalid_subject_format";
 	public static final String MASS_MAIL_INVALID_PHONE_TO_EMAIL_FORMAT = "mass_mail_invalid_phone_to_email_format";
 	public static final String MASS_MAIL_INVALID_TEXT_TEMPLATE = "mass_mail_invalid_text_template";

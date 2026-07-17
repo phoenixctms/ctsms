@@ -360,7 +360,7 @@ public final class ServiceUtil {
 			result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 			logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
 			logSystemMessage(massMail, result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
-		} else if (massMail.isProbandListStatusResend() || (token != null && !token.equals(recipient.getToken()))) {
+		} else if (massMail.isProbandListStatusResend() || massMail.isEcrfStatusResend() || (token != null && !token.equals(recipient.getToken()))) {
 			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 			MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 			resetMassMailRecipient(recipient, original);
@@ -385,7 +385,9 @@ public final class ServiceUtil {
 		while (massMailsIt.hasNext()) {
 			MassMail massMail = massMailsIt.next();
 			if (massMail.getStatus() != null && !massMail.getStatus().isLocked()) {
-				if (massMail.getDepartment().equals(proband.getDepartment())) {
+				if (massMail.getEcrfStatus() != null && statusEntry.getStatus() != null
+						&& massMail.getEcrfStatus().getId().equals(statusEntry.getStatus().getId())
+						&& massMail.getDepartment().equals(proband.getDepartment())) {
 					addResetMassMailRecipient(massMail, proband, token, now, user, massMailDao, probandDao, trialDao, massMailRecipientDao, journalEntryDao);
 				}
 			}
