@@ -924,12 +924,14 @@
         ATTACH_MASS_MAIL_FILES_OPTIONAL BOOLEAN not null,
         HTML BOOLEAN not null,
         PHONE_TO_EMAIL_FORMAT CHARACTER VARYING(1024),
+        ECRF_STATUS_RESEND BOOLEAN not null,
         DEPARTMENT_FK BIGINT not null,
         STATUS_FK BIGINT not null,
         TYPE_FK BIGINT not null,
         PROBAND_LIST_STATUS_FK BIGINT,
         TRIAL_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
+        ECRF_STATUS_FK BIGINT,
         primary key (ID)
     );
 
@@ -976,9 +978,10 @@
         NAME_L10N_KEY CHARACTER VARYING(1024) not null unique,
         VISIBLE BOOLEAN not null,
         TRIAL_REQUIRED BOOLEAN not null,
-        PROBAND_LIST_STAUS_REQUIRED BOOLEAN not null,
+        PROBAND_LIST_STATUS_REQUIRED BOOLEAN not null,
         VISIT_SCHEDULE_ITEMS_REQUIRED BOOLEAN not null,
         ECRFS_REQUIRED BOOLEAN not null,
+        ECRF_STATUS_REQUIRED BOOLEAN not null,
         primary key (ID)
     );
 
@@ -2854,6 +2857,11 @@
         add constraint MASS_MAIL_PROBAND_LIST_STATUS_FKC 
         foreign key (PROBAND_LIST_STATUS_FK) 
         references PROBAND_LIST_STATUS_TYPE;
+
+    alter table MASS_MAIL 
+        add constraint MASS_MAIL_ECRF_STATUS_FKC 
+        foreign key (ECRF_STATUS_FK) 
+        references ecrf_status_type;
 
     alter table MASS_MAIL 
         add constraint MASS_MAIL_STATUS_FKC 
