@@ -185,7 +185,7 @@ public class MassMailServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_DUPLICATE_VISIT_SCHEDULE_ITEM,
 							visitScheduleItemVO.getName());
 				}
-				if (!trial.equals(visitScheduleItem.getTrial())) {
+				if (trial == null || !trial.equals(visitScheduleItem.getTrial())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_WRONG_VISIT_SCHEDULE_ITEM,
 							visitScheduleItemVO.getName(),
 							CommonUtil.trialOutVOToString(trialVO));
@@ -216,7 +216,7 @@ public class MassMailServiceImpl
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_DUPLICATE_ECRF,
 							ecrfVO.getName());
 				}
-				if (!trial.equals(ecrf.getTrial())) {
+				if (trial == null || !trial.equals(ecrf.getTrial())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_WRONG_ECRF,
 							ecrfVO.getName(),
 							CommonUtil.trialOutVOToString(trialVO));
