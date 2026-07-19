@@ -536,7 +536,7 @@ public class TrialServiceImpl
 				while (massMailsIt.hasNext()) {
 					MassMail massMail = massMailsIt.next();
 					if (massMail.getDepartment().equals(proband.getDepartment())) {
-						ServiceUtil.addResetMassMailRecipient(massMail, proband, null, now, user, massMailDao, probandDao, trialDao,
+						ServiceUtil.addResetMassMailRecipient(massMail, proband, null, massMail.isProbandListStatusResend(), now, user, massMailDao, probandDao, trialDao,
 								massMailRecipientDao, journalEntryDao);
 					}
 				}
