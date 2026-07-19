@@ -44,7 +44,7 @@
 					</f:facet>
 					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
-						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
+						rowClasses="ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-input-tied-row,ctsms-message-row,ctsms-toolbar-row">
 						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText value="#{massmaillabels.mass_mail_main_field_set}" />
@@ -127,7 +127,56 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="massmailtype" />
-									<h:outputLabel for="trial"
+
+									<h:outputLabel for="storemessages"
+										value="#{massmaillabels.mass_mail_storemessages_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="storemessages"
+											value="#{massMailBean.in.storeMessages}" />
+										<p:tooltip rendered="#{enableTooltips}" for="storemessages">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_storemessages_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="storemessages" />
+								</h:panelGrid>
+								<h:panelGrid columns="1" cellpadding="0"
+									styleClass="ctsms-input-panelgrid"
+									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
+									<h:outputLabel for="massmaildescription"
+										value="#{massmaillabels.mass_mail_description_label}" />
+									<h:panelGroup>
+										<p:inputTextarea id="massmaildescription"
+											value="#{massMailBean.in.description}" required="false"
+											autoResize="false" styleClass="ctsms-textarea"
+											label="#{massmaillabels.mass_mail_description}">
+											<p:ajax />
+										</p:inputTextarea>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="massmaildescription">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_description_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+								</h:panelGrid>
+							</h:panelGrid>
+						</p:fieldset>
+
+						<p:fieldset toggleable="true" collapsed="false">
+							<f:facet name="legend">
+								<h:outputText
+									value="#{massmaillabels.mass_mail_trial_field_set}" />
+							</f:facet>
+
+							<h:panelGrid columns="1" cellpadding="0"
+								styleClass="ctsms-input-panelgrid"
+								rowClasses="ctsms-input-tied-row">
+								<h:panelGrid columns="9" cellpadding="2"
+									columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+
+<h:outputLabel for="trial"
 										value="#{massmaillabels.mass_mail_trial_label}" />
 									<h:panelGrid columns="3" cellpadding="0">
 										<h:panelGroup>
@@ -150,6 +199,15 @@
 											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:massmailmain_form:visitscheduleitems',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
 									</h:panelGrid>
 									<p:message for="trial" />
+
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputLabel />
+
+									<h:outputLabel />
+									<h:outputText value="" />
+									<h:outputLabel />
+
 									<h:outputLabel for="probandliststatus"
 										value="#{massmaillabels.mass_mail_proband_list_status_label}" />
 									<h:panelGroup>
@@ -173,24 +231,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="probandliststatus" />
-
-									<h:outputLabel for="probandliststatusresend"
-										value="#{massmaillabels.mass_mail_probandliststatusresend_label}" />
-									<h:panelGroup>
-										<p:selectBooleanCheckbox id="probandliststatusresend"
-											value="#{massMailBean.in.probandListStatusResend}" />
-										<p:tooltip rendered="#{enableTooltips}"
-											for="probandliststatusresend">
-											<h:outputText
-												value="#{massmaillabels.mass_mail_probandliststatusresend_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
-									<p:message for="probandliststatusresend" />
-
-									<h:outputLabel />
-									<h:outputText value="" />
-									<h:outputLabel />
 
 									<h:outputLabel for="visitscheduleitems"
 										value="#{massmaillabels.mass_mail_visit_schedule_items_label}" />
@@ -246,6 +286,42 @@
 									</h:panelGroup>
 									<p:message for="visitscheduleitems" />
 
+									<h:outputLabel for="probandliststatusresend"
+										value="#{massmaillabels.mass_mail_probandliststatusresend_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="probandliststatusresend"
+											value="#{massMailBean.in.probandListStatusResend}" />
+										<p:tooltip rendered="#{enableTooltips}"
+											for="probandliststatusresend">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_probandliststatusresend_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="probandliststatusresend" />
+
+									<h:outputLabel for="ecrfstatus"
+										value="#{massmaillabels.mass_mail_ecrf_status_label}" />
+									<h:panelGroup>
+										<p:selectOneMenu id="ecrfstatus"
+											value="#{massMailBean.in.ecrfStatusId}" required="false"
+											label="#{massmaillabels.mass_mail_ecrf_status}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems value="#{massMailBean.ecrfStatusTypes}"
+												var="selectItem" itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+										</p:selectOneMenu>
+										<p:tooltip rendered="#{enableTooltips}" for="ecrfstatus">
+											<h:outputText
+												value="#{massmaillabels.mass_mail_ecrf_status_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="ecrfstatus" />
+
 									<h:outputLabel for="ecrfs"
 										value="#{massmaillabels.mass_mail_ecrfs_label}" />
 									<h:panelGroup>
@@ -258,9 +334,8 @@
 											queryDelay="#{autoCompleteQueryDelayEcrf}"
 											global="#{autoCompleteGlobalEcrf}"
 											scrollHeight="#{autoCompleteScrollHeightEcrf}"
-											completeMethod="#{massMailBean.completeEcrf}"
-											multiple="true" var="ecrf"
-											itemValue="#{ecrf}"
+											completeMethod="#{massMailBean.completeEcrf}" multiple="true"
+											var="ecrf" itemValue="#{ecrf}"
 											itemLabel="#{applicationScopeBean.getEcrfName(ecrf.vo)}"
 											converter="ctsms.Ecrf">
 											<p:ajax process="@this" event="itemSelect"
@@ -287,37 +362,12 @@
 									</h:panelGroup>
 									<p:message for="ecrfs" />
 
-									<h:outputLabel for="ecrfstatus"
-										value="#{massmaillabels.mass_mail_ecrf_status_label}" />
-									<h:panelGroup>
-										<p:selectOneMenu id="ecrfstatus"
-											value="#{massMailBean.in.ecrfStatusId}"
-											required="false"
-											label="#{massmaillabels.mass_mail_ecrf_status}"
-											styleClass="ctsms-control">
-											<f:converter converterId="ctsms.ID" />
-											<f:selectItem itemLabel="#{labels.no_selection_label}"
-												itemValue="#{applicationScopeBean.noSelectionValue}" />
-											<f:selectItems value="#{massMailBean.ecrfStatusTypes}"
-												var="selectItem" itemLabel="#{selectItem.label}"
-												itemValue="#{selectItem.value}" />
-										</p:selectOneMenu>
-										<p:tooltip rendered="#{enableTooltips}"
-											for="ecrfstatus">
-											<h:outputText
-												value="#{massmaillabels.mass_mail_ecrf_status_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
-									<p:message for="ecrfstatus" />
-
 									<h:outputLabel for="ecrfstatusresend"
 										value="#{massmaillabels.mass_mail_ecrfstatusresend_label}" />
 									<h:panelGroup>
 										<p:selectBooleanCheckbox id="ecrfstatusresend"
 											value="#{massMailBean.in.ecrfStatusResend}" />
-										<p:tooltip rendered="#{enableTooltips}"
-											for="ecrfstatusresend">
+										<p:tooltip rendered="#{enableTooltips}" for="ecrfstatusresend">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_ecrfstatusresend_tooltip}"
 												escape="false" />
@@ -325,45 +375,10 @@
 									</h:panelGroup>
 									<p:message for="ecrfstatusresend" />
 
-									<h:outputLabel />
-									<h:outputText value="" />
-									<h:outputLabel />
-
-									<h:outputLabel for="storemessages"
-										value="#{massmaillabels.mass_mail_storemessages_label}" />
-									<h:panelGroup>
-										<p:selectBooleanCheckbox id="storemessages"
-											value="#{massMailBean.in.storeMessages}" />
-										<p:tooltip rendered="#{enableTooltips}" for="storemessages">
-											<h:outputText
-												value="#{massmaillabels.mass_mail_storemessages_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
-									<p:message for="storemessages" />
-								</h:panelGrid>
-								<h:panelGrid columns="1" cellpadding="0"
-									styleClass="ctsms-input-panelgrid"
-									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-									<h:outputLabel for="massmaildescription"
-										value="#{massmaillabels.mass_mail_description_label}" />
-									<h:panelGroup>
-										<p:inputTextarea id="massmaildescription"
-											value="#{massMailBean.in.description}" required="false"
-											autoResize="false" styleClass="ctsms-textarea"
-											label="#{massmaillabels.mass_mail_description}">
-											<p:ajax />
-										</p:inputTextarea>
-										<p:tooltip rendered="#{enableTooltips}"
-											for="massmaildescription">
-											<h:outputText
-												value="#{massmaillabels.mass_mail_description_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
+
 						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText
@@ -436,7 +451,6 @@
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>
-
 
 						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
@@ -511,7 +525,6 @@
 							</h:panelGrid>
 						</p:fieldset>
 
-
 						<p:fieldset toggleable="true" collapsed="false">
 							<f:facet name="legend">
 								<h:outputText value="#{massmaillabels.recipients_field_set}" />
@@ -546,7 +559,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="physicianto" />
-
 
 									<h:outputLabel for="trialteamto"
 										value="#{massmaillabels.mass_mail_trialteamto_label}" />
@@ -601,8 +613,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bcc" />
-
-
 
 									<h:outputLabel for="usebeacon"
 										value="#{massmaillabels.mass_mail_usebeacon_label}" />
