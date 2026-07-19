@@ -324,7 +324,7 @@ public final class ServiceUtil {
 			MassMail massMail = massMailsIt.next();
 			Proband proband = listEntry.getProband();
 			if (massMail.getDepartment().equals(proband.getDepartment())) {
-				addResetMassMailRecipient(massMail, proband, null, now, user, massMailDao, probandDao, trialDao,
+				addResetMassMailRecipient(massMail, proband, null, massMail.isProbandListStatusResend(), now, user, massMailDao, probandDao, trialDao,
 						massMailRecipientDao, journalEntryDao);
 			}
 		}
@@ -340,7 +340,8 @@ public final class ServiceUtil {
 		return result;
 	}
 
-	public static MassMailRecipientOutVO addResetMassMailRecipient(MassMail massMail, Proband proband, String token, Timestamp now, User user, MassMailDao massMailDao,
+	public static MassMailRecipientOutVO addResetMassMailRecipient(MassMail massMail, Proband proband, String token, boolean resend, Timestamp now, User user,
+			MassMailDao massMailDao,
 			ProbandDao probandDao,
 			TrialDao trialDao,
 			MassMailRecipientDao massMailRecipientDao, JournalEntryDao journalEntryDao) throws Exception {
@@ -360,7 +361,7 @@ public final class ServiceUtil {
 			result = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 			logSystemMessage(proband, result.getMassMail(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
 			logSystemMessage(massMail, result.getProband(), now, user, SystemMessageCodes.MASS_MAIL_RECIPIENT_CREATED, result, null, journalEntryDao);
-		} else if (massMail.isProbandListStatusResend() || massMail.isEcrfStatusResend() || (token != null && !token.equals(recipient.getToken()))) {
+		} else if (resend || (token != null && !token.equals(recipient.getToken()))) {
 			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 			MassMailRecipientOutVO original = massMailRecipientDao.toMassMailRecipientOutVO(recipient);
 			resetMassMailRecipient(recipient, original);
@@ -388,7 +389,8 @@ public final class ServiceUtil {
 				if (massMail.getEcrfStatus() != null && statusEntry.getStatus() != null
 						&& massMail.getEcrfStatus().getId().equals(statusEntry.getStatus().getId())
 						&& massMail.getDepartment().equals(proband.getDepartment())) {
-					addResetMassMailRecipient(massMail, proband, token, now, user, massMailDao, probandDao, trialDao, massMailRecipientDao, journalEntryDao);
+					addResetMassMailRecipient(massMail, proband, token, massMail.isEcrfStatusResend(), now, user, massMailDao, probandDao, trialDao, massMailRecipientDao,
+							journalEntryDao);
 				}
 			}
 		}
