@@ -7894,8 +7894,9 @@ public class TrialServiceImpl
 								CommonUtil.dateToTimestamp(to))
 						: null;
 			}
-			if (lastStatus != null
-					&& !lastStatus.getStatus().isInitial()) {
+			if ((lastStatus != null
+					&& !lastStatus.getStatus().isInitial())
+					|| (proband != null && ServiceUtil.VISIT_SCHEDULE_DATE_MODES_DYNAMIC.contains(visitScheduleItem.getMode()))) {
 				// && lastStatus.getStatus().getTransitions().size() > 0) {
 				// for trial with many probands, display only contacted and not finished subjects:
 				VisitScheduleAppointmentVO visitScheduleItemProbandVO = visitScheduleItemDao.toVisitScheduleAppointmentVO(visitScheduleItem);
