@@ -13,10 +13,6 @@ var RestApi = RestApi || {};
 		? API_JSON_DATETIME_PATTERN
 		: 'yyyy-MM-dd HH:mm:ss';
 
-	function getApiJsonDateTimePattern() {
-		return apiJsonDateTimePattern;
-	}
-
 	function dateTimeFormat(value) {
 		if (value == null) {
 			return null;
@@ -219,7 +215,6 @@ var RestApi = RestApi || {};
 	RestApi.ajaxPost = ajaxPost;
 	RestApi.loadSearchMaps = loadSearchMaps;
 	RestApi.searchByCriteria = searchByCriteria;
-	RestApi.getApiJsonDateTimePattern = getApiJsonDateTimePattern;
 	RestApi.dateTimeFormat = dateTimeFormat;
 
 	if (debug_level >= 1) {
