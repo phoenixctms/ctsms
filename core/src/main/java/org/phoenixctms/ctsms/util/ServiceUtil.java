@@ -131,6 +131,8 @@ public final class ServiceUtil {
 	public final static String GROUP_VISIT_SPLIT_SEPARATOR = ";";
 	public final static String GROUP_VISIT_SPLIT_REGEX_PATTERN = Pattern.quote(GROUP_VISIT_SPLIT_SEPARATOR);
 	private final static Pattern GROUP_VISIT_BLOCK_SPLIT_REGEXP = Pattern.compile(GROUP_VISIT_SPLIT_REGEX_PATTERN);
+	public final static ArrayList<VisitScheduleDateMode> VISIT_SCHEDULE_DATE_MODES_DYNAMIC = new ArrayList<VisitScheduleDateMode>(
+			Arrays.asList(VisitScheduleDateMode.TAGS, VisitScheduleDateMode.TAG_DURATION));
 
 	public static void checkProbandGroupToken(String token) throws ServiceException {
 		if (GROUP_VISIT_BLOCK_SPLIT_REGEXP.matcher(token).find()) {
