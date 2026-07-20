@@ -1103,6 +1103,25 @@ public class ProductionDataProvider {
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
 						incompleteSignedEcrfStatusType));
+		ECRFStatusAction addMassMailRecipientAction = eCRFStatusActionDao.searchUniqueAction(
+				org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT);
+		ECRFStatusType[] allEcrfStatusTypes = new ECRFStatusType[] {
+				inProgressEcrfStatusType,
+				skippedEcrfStatusType,
+				skippedVerifiedEcrfStatusType,
+				skippedSignedEcrfStatusType,
+				validatedEcrfStatusType,
+				completeEcrfStatusType,
+				completeVerifiedEcrfStatusType,
+				completeSignedEcrfStatusType,
+				incompleteEcrfStatusType,
+				incompleteVerifiedEcrfStatusType,
+				incompleteSignedEcrfStatusType
+		};
+		for (int i = 0; i < allEcrfStatusTypes.length; i++) {
+			allEcrfStatusTypes[i].getActions().add(addMassMailRecipientAction);
+			eCRFStatusTypeDao.update(allEcrfStatusTypes[i]);
+		}
 		jobOutput.println("eCRF states created");
 	}
 
