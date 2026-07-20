@@ -387,8 +387,7 @@ public final class ServiceUtil {
 			MassMail massMail = massMailsIt.next();
 			if (massMail.getStatus() != null && !massMail.getStatus().isLocked()) {
 				if (massMail.getEcrfStatus() != null && statusEntry.getStatus() != null
-						&& massMail.getEcrfStatus().getId().equals(statusEntry.getStatus().getId())
-						&& massMail.getDepartment().equals(proband.getDepartment())) {
+						&& massMail.getEcrfStatus().getId().equals(statusEntry.getStatus().getId())) {
 					addResetMassMailRecipient(massMail, proband, token, massMail.isEcrfStatusResend(), now, user, massMailDao, probandDao, trialDao, massMailRecipientDao,
 							journalEntryDao);
 				}
