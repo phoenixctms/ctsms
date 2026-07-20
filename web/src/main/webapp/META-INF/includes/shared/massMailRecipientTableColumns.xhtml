@@ -38,6 +38,15 @@
 				styleClass="#{massMailRecipient.vo.sent ? 'ui-state-disabled' : ''}"
 				value="#{applicationScopeBean.clipStringTrailing(massMailRecipient.vo.errorMessage,48)}" />
 		</p:column>
+		<p:column sortBy="#{massMailRecipient.vo.token}"
+			filterBy="#{massMailRecipient.vo.token}">
+			<f:attribute name="visibleDefault" value="false" />
+			<f:facet name="header">
+				<h:outputText
+					value="#{massmaillabels.mass_mail_recipient_mass_mail_recipient_list_token_column}" />
+			</f:facet>
+			<h:outputText value="#{massMailRecipient.vo.token}" />
+		</p:column>
 		<p:column sortBy="#{massMailRecipient.vo.processedTimestamp}">
 			<f:facet name="header">
 				<h:outputText
