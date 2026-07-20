@@ -397,6 +397,17 @@ if get_database_version() < '010901010' then
     ("id", "action")
   values (nextval('hibernate_sequence'), 'ADD_MASSMAIL_RECIPIENT');
 
+  insert into ecrf_status_type_action
+    ("e_c_r_f_status_types_fk", "actions_fk")
+  select
+    est."id",
+    esa."id"
+  from
+    ecrf_status_type est,
+    ecrf_status_action esa
+  where
+    esa."action" = 'ADD_MASSMAIL_RECIPIENT';
+
   perform set_database_version('010901010');
 
 end if;
