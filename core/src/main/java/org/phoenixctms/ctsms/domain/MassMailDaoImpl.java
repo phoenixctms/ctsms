@@ -425,7 +425,6 @@ public class MassMailDaoImpl
 			MassMail source,
 			MassMailOutVO target) {
 		super.toMassMailOutVO(source, target);
-		target.setStoreMessages(source.isStoreMessages());
 		MassMailStatusType status = source.getStatus();
 		Department department = source.getDepartment();
 		User modifiedUser = source.getModifiedUser();
