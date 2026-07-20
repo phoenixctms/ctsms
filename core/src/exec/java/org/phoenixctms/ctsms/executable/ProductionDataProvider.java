@@ -907,7 +907,8 @@ public class ProductionDataProvider {
 				false,
 				false,
 				getEcrfStatusActions(
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType skippedEcrfStatusType = createEcrfStatusType("skipped", Color.DARKGREY,
 				"ui-icon-arrowthick-1-e",
 				true,
@@ -921,7 +922,8 @@ public class ProductionDataProvider {
 				false,
 				false,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_STATUS_ENTRIES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CLEAR_VALUES,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType skippedVerifiedEcrfStatusType = createEcrfStatusType(
 				"skipped_verified",
 				Color.LIGHTSKYBLUE,
@@ -937,7 +939,8 @@ public class ProductionDataProvider {
 				true,
 				false,
 				getEcrfStatusActions(
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType skippedSignedEcrfStatusType = createEcrfStatusType("skipped_signed", Color.ORCHID,
 				"ui-icon-radio-on",
 				false,
@@ -952,7 +955,8 @@ public class ProductionDataProvider {
 				true,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType validatedEcrfStatusType = createEcrfStatusType("validated", Color.YELLOWGREEN,
 				"ui-icon-gear",
 				false,
@@ -966,7 +970,8 @@ public class ProductionDataProvider {
 				false,
 				false,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_MISSING_VALUES, org.phoenixctms.ctsms.enumeration.ECRFStatusAction.VALIDATE_VALUES,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType completeEcrfStatusType = createEcrfStatusType(
 				"complete",
 				Color.LIGHTYELLOW,
@@ -981,7 +986,8 @@ public class ProductionDataProvider {
 				true,
 				false,
 				false,
-				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType completeVerifiedEcrfStatusType = createEcrfStatusType(
 				"complete_verified",
 				Color.LIGHTSKYBLUE,
@@ -997,7 +1003,8 @@ public class ProductionDataProvider {
 				true,
 				false,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NO_UNRESOLVED_FIELD_STATUS_ENTRIES,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType completeSignedEcrfStatusType = createEcrfStatusType("complete_signed", Color.ORCHID,
 				"ui-icon-bullet",
 				false,
@@ -1012,7 +1019,8 @@ public class ProductionDataProvider {
 				true,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType incompleteEcrfStatusType = createEcrfStatusType("incomplete", Color.TOMATO,
 				"ui-icon-close",
 				false,
@@ -1026,7 +1034,8 @@ public class ProductionDataProvider {
 				false,
 				false,
 				getEcrfStatusActions(
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType incompleteVerifiedEcrfStatusType = createEcrfStatusType(
 				"incomplete_verified",
 				Color.LIGHTSKYBLUE,
@@ -1042,7 +1051,8 @@ public class ProductionDataProvider {
 				true,
 				false,
 				getEcrfStatusActions(
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.NOTIFY_ECRF_STATUS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		ECRFStatusType incompleteSignedEcrfStatusType = createEcrfStatusType("incomplete_signed", Color.ORCHID,
 				"ui-icon-radio-off",
 				false,
@@ -1057,7 +1067,8 @@ public class ProductionDataProvider {
 				true,
 				getEcrfStatusActions(org.phoenixctms.ctsms.enumeration.ECRFStatusAction.SIGN_ECRF,
 						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CREATE_PROBAND_LIST_STATUS_ENTRY,
-						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS));
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.CANCEL_NOTIFICATIONS,
+						org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT));
 		updateEcrfStatusType(inProgressEcrfStatusType,
 				getEcrfStatusTransitions(
 						skippedEcrfStatusType,
@@ -1103,25 +1114,6 @@ public class ProductionDataProvider {
 				getEcrfStatusTransitions(
 						inProgressEcrfStatusType,
 						incompleteSignedEcrfStatusType));
-		ECRFStatusAction addMassMailRecipientAction = eCRFStatusActionDao.searchUniqueAction(
-				org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT);
-		ECRFStatusType[] allEcrfStatusTypes = new ECRFStatusType[] {
-				inProgressEcrfStatusType,
-				skippedEcrfStatusType,
-				skippedVerifiedEcrfStatusType,
-				skippedSignedEcrfStatusType,
-				validatedEcrfStatusType,
-				completeEcrfStatusType,
-				completeVerifiedEcrfStatusType,
-				completeSignedEcrfStatusType,
-				incompleteEcrfStatusType,
-				incompleteVerifiedEcrfStatusType,
-				incompleteSignedEcrfStatusType
-		};
-		for (int i = 0; i < allEcrfStatusTypes.length; i++) {
-			allEcrfStatusTypes[i].getActions().add(addMassMailRecipientAction);
-			eCRFStatusTypeDao.update(allEcrfStatusTypes[i]);
-		}
 		jobOutput.println("eCRF states created");
 	}
 
