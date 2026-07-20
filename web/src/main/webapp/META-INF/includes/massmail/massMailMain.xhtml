@@ -193,10 +193,10 @@
 										</h:panelGroup>
 										<p:commandButton title="#{labels.pick_trial_button_label}"
 											icon="ui-icon ui-icon-search" type="button"
-											onclick="openTrialPickerAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName',':tabView:massmailmain_form:visitscheduleitems',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
+											onclick="openTrialPickerAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName',':tabView:massmailmain_form:visitscheduleitems,:tabView:massmailmain_form:ecrfs',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
 										<p:commandButton title="#{labels.clear_trial_button_label}"
 											icon="ui-icon ui-icon-close" type="button"
-											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:massmailmain_form:visitscheduleitems',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
+											onclick="clearIDAjaxUpdate(':tabView:massmailmain_form:trial',':tabView:massmailmain_form:trialName','#{applicationScopeBean.noTrialPickedMessage}',':tabView:massmailmain_form:visitscheduleitems,:tabView:massmailmain_form:ecrfs',':tabView:massmailmain_form:trial_attachments_file_system_stats')" />
 									</h:panelGrid>
 									<p:message for="trial" />
 
