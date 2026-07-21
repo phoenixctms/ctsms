@@ -311,6 +311,10 @@ var RestApi = RestApi || {};
 			if (pageQuery.s != null) {
 				query.push('s=' + encodeURIComponent(pageQuery.s));
 			}
+			// Intentional RestApi bypass of USER_/IDENTITY_DEPARTMENT_ID_FILTER (AuthorisationInterceptor).
+			if (pageQuery.any_department === true || pageQuery.any_department === 'true') {
+				query.push('any_department=true');
+			}
 			if (query.length > 0) {
 				path += '?' + query.join('&');
 			}
