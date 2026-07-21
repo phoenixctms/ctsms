@@ -1,5 +1,7 @@
 package org.phoenixctms.ctsms.web.jersey.provider;
 
+import java.util.List;
+
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -27,7 +29,13 @@ public class AuthenticationExceptionMapper extends ExceptionMapperBase implement
 	}
 
 	private String getWwwAuthenticateValue() {
-		String authHeaderValue = headers != null ? headers.getHeaderString(HttpHeaders.AUTHORIZATION) : null;
+		String authHeaderValue = null;
+		if (headers != null) {
+			List<String> authHeaders = headers.getRequestHeader(HttpHeaders.AUTHORIZATION);
+			if (authHeaders != null && !authHeaders.isEmpty()) {
+				authHeaderValue = authHeaders.get(0);
+			}
+		}
 		if (authHeaderValue != null
 				&& authHeaderValue.toLowerCase().startsWith(BEARER_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
 			// Avoid browser HTTP Basic password prompts on failed JWT (XHR) requests.

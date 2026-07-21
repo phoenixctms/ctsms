@@ -41,10 +41,6 @@ import org.phoenixctms.ctsms.web.jersey.resource.ArgsUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.wrapper.AddUserPasswordWrapper;
 import org.phoenixctms.ctsms.web.jersey.wrapper.NoShortcutSerializationWrapper;
-import org.phoenixctms.ctsms.web.util.DefaultSettings;
-import org.phoenixctms.ctsms.web.util.SettingCodes;
-import org.phoenixctms.ctsms.web.util.Settings;
-import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import com.google.gson.JsonElement;
@@ -186,14 +182,21 @@ public final class ToolsResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("logon")
-	public PasswordOutVO logon(@QueryParam("jwt") @DefaultValue("false") boolean jwt) throws AuthenticationException, AuthorisationException, ServiceException {
-		return WebUtil.getServiceLocator().getToolsService().logon(auth, jwt);
+	public PasswordOutVO logon(@QueryParam("jwt") @DefaultValue("false") boolean jwt,
+			@QueryParam("validity_secs") Long validityPeriodSecs) throws AuthenticationException, AuthorisationException, ServiceException {
+		if (jwt && validityPeriodSecs == null) {
+			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs();
+		}
+		return WebUtil.getServiceLocator().getToolsService().logon(auth, jwt, validityPeriodSecs);
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("login")
 	public Response issueJwt(@QueryParam("validity_secs") Long validityPeriodSecs) throws AuthenticationException, AuthorisationException, ServiceException {
+		if (validityPeriodSecs == null) {
+			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs();
+		}
 		return Response.ok(WebUtil.getServiceLocator().getToolsService().issueJwt(auth, validityPeriodSecs)).build();
 	}
 }

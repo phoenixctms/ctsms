@@ -5026,14 +5026,18 @@ public final class WebUtil {
 		setSessionTimeout(null);
 	}
 
-	public static void setSessionTimeout(HttpSession session) {
-		int maxInactiveInterval;
+	public static Long getRestApiJwtValidityPeriodSecs() {
+		int maxInactiveIntervalMinutes;
 		if (isTrustedHost()) {
-			maxInactiveInterval = Settings.getInt(SettingCodes.SESSION_TIMEOUT_TRUSTED, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT_TRUSTED);
+			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT_TRUSTED, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT_TRUSTED);
 		} else {
-			maxInactiveInterval = Settings.getInt(SettingCodes.SESSION_TIMEOUT, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT);
+			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT);
 		}
-		maxInactiveInterval *= 60;
+		return Long.valueOf(maxInactiveIntervalMinutes * 60L);
+	}
+
+	public static void setSessionTimeout(HttpSession session) {
+		int maxInactiveInterval = getRestApiJwtValidityPeriodSecs().intValue();
 		if (session != null) {
 			session.setMaxInactiveInterval(maxInactiveInterval);
 		} else {
