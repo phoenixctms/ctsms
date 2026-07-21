@@ -5036,6 +5036,16 @@ public final class WebUtil {
 		return Long.valueOf(maxInactiveIntervalMinutes * 60L);
 	}
 
+	public static Long getRestApiJwtValidityPeriodSecs(HttpServletRequest request) {
+		int maxInactiveIntervalMinutes;
+		if (isTrustedHost(request)) {
+			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT_TRUSTED, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT_TRUSTED);
+		} else {
+			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT);
+		}
+		return Long.valueOf(maxInactiveIntervalMinutes * 60L);
+	}
+
 	public static void setSessionTimeout(HttpSession session) {
 		int maxInactiveInterval = getRestApiJwtValidityPeriodSecs().intValue();
 		if (session != null) {
