@@ -12,8 +12,26 @@ var RestApi = RestApi || {};
 		? API_JSON_DATETIME_PATTERN
 		: 'yyyy-MM-dd HH:mm:ss';
 
+	var JWT_REFRESH_SKEW_MS = 60 * 1000;
+
+	var sessionJwt = typeof REST_API_JWT !== 'undefined' ? REST_API_JWT : null;
+	var sessionJwtExpiresAtMs = null;
+	var sessionJwtValiditySecs = null;
+	var refreshingJwt = false;
+	var jwtRefreshTimer = null;
+
 	function getApiJsonDateTimePattern() {
 		return apiJsonDateTimePattern;
+	}
+
+	function normalizeApiDateTimeString(value) {
+		if (value == null || value.length === 0) {
+			return null;
+		}
+		if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+			return value + ' 00:00:00';
+		}
+		return value;
 	}
 
 	function dateTimeFormat(value) {
@@ -21,7 +39,7 @@ var RestApi = RestApi || {};
 			return null;
 		}
 		if (typeof value === 'string') {
-			return value;
+			return normalizeApiDateTimeString(value);
 		}
 		if (typeof JSJoda !== 'undefined') {
 			var dateTime;
@@ -61,6 +79,115 @@ var RestApi = RestApi || {};
 		return null;
 	}
 
+	function base64UrlDecode(value) {
+		var base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+		while (base64.length % 4) {
+			base64 += '=';
+		}
+		try {
+			if (typeof atob === 'function') {
+				return atob(base64);
+			}
+		} catch (e) {
+			// ignore
+		}
+		return null;
+	}
+
+	function parseJwtClaims(jwt) {
+		if (jwt == null || jwt.length === 0) {
+			return null;
+		}
+		try {
+			var parts = jwt.split('.');
+			if (parts.length < 2) {
+				return null;
+			}
+			var json = base64UrlDecode(parts[1]);
+			if (json == null || json.length === 0) {
+				return null;
+			}
+			return JSON.parse(json);
+		} catch (e) {
+			return null;
+		}
+	}
+
+	function applySessionJwt(jwt) {
+		sessionJwt = jwt;
+		if (typeof REST_API_JWT !== 'undefined') {
+			REST_API_JWT = jwt;
+		}
+		var claims = parseJwtClaims(jwt);
+		if (claims != null && claims.exp != null) {
+			sessionJwtExpiresAtMs = claims.exp * 1000;
+			if (claims.iat != null) {
+				sessionJwtValiditySecs = claims.exp - claims.iat;
+			}
+		} else {
+			sessionJwtExpiresAtMs = null;
+		}
+		scheduleJwtRefresh();
+	}
+
+	function sessionJwtNeedsRefresh() {
+		if (sessionJwt == null || sessionJwt.length === 0) {
+			return false;
+		}
+		if (sessionJwtExpiresAtMs == null) {
+			return false;
+		}
+		return Date.now() >= (sessionJwtExpiresAtMs - JWT_REFRESH_SKEW_MS);
+	}
+
+	function refreshSessionJwtIfRequired() {
+		if (!sessionJwtNeedsRefresh() || refreshingJwt || url == null || url.length === 0) {
+			return;
+		}
+		refreshingJwt = true;
+		try {
+			var path = 'tools/login';
+			var validitySecs = sessionJwtValiditySecs;
+			if (validitySecs != null) {
+				path += '?validity_secs=' + encodeURIComponent(validitySecs);
+			}
+			var req = {};
+			req.url = url + path;
+			req.type = 'POST';
+			req.dataType = 'json';
+			req.async = false;
+			setBearerAuth(req, sessionJwt);
+			req.success = function(result) {
+				if (typeof result === 'string' && result.length > 0) {
+					if (debug_level >= 1) {
+						console.log('rest api jwt refreshed');
+					}
+					applySessionJwt(result);
+				}
+			};
+			if (debug_level >= 1) {
+				console.log('rest api request: ' + req.url);
+			}
+			jQuery.ajax(req);
+		} finally {
+			refreshingJwt = false;
+		}
+	}
+
+	function scheduleJwtRefresh() {
+		if (jwtRefreshTimer != null) {
+			clearTimeout(jwtRefreshTimer);
+			jwtRefreshTimer = null;
+		}
+		if (sessionJwtExpiresAtMs == null) {
+			return;
+		}
+		var delay = Math.max(1000, sessionJwtExpiresAtMs - Date.now() - JWT_REFRESH_SKEW_MS);
+		jwtRefreshTimer = setTimeout(function() {
+			refreshSessionJwtIfRequired();
+		}, delay);
+	}
+
 	function setBearerAuth(jqueryRequest, jwt) {
 		if (jwt != null && jwt.length > 0) {
 			jqueryRequest.beforeSend = function(xhr) {
@@ -81,7 +208,7 @@ var RestApi = RestApi || {};
 		} else if (usernameOrJwt !== undefined) {
 			var jwt = usernameOrJwt;
 			if (jwt == null || jwt.length === 0) {
-				jwt = typeof REST_API_JWT !== 'undefined' ? REST_API_JWT : null;
+				jwt = sessionJwt;
 			}
 			setBearerAuth(jqueryRequest, jwt);
 		}
@@ -93,6 +220,9 @@ var RestApi = RestApi || {};
 	}
 
 	function ajaxRequest(jqueryRequest) {
+		if (!refreshingJwt) {
+			refreshSessionJwtIfRequired();
+		}
 		if (debug_level >= 1) {
 			console.log("rest api request: " + jqueryRequest.url);
 		}
@@ -209,6 +339,9 @@ var RestApi = RestApi || {};
 		return ajaxPost(path, criteria);
 	}
 
+	if (sessionJwt != null && sessionJwt.length > 0) {
+		applySessionJwt(sessionJwt);
+	}
 
 	RestApi.createRequest = createRequest;
 	RestApi.createSessionRequest = createSessionRequest;
