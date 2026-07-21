@@ -110,6 +110,10 @@ var RestApi = RestApi || {};
 		return 1;
 	}
 
+	function debounceTrailing(key, delayMs, fn) {
+		return debounce(key, delayMs, fn);
+	}
+
 	function debounceIsCurrent() {
 		return true;
 	}
@@ -131,6 +135,7 @@ var RestApi = RestApi || {};
 	RestApi.searchByCriteria = searchByCriteria;
 	RestApi.dateTimeFormat = dateTimeFormat;
 	RestApi.debounce = debounce;
+	RestApi.debounceTrailing = debounceTrailing;
 	RestApi.debounceIsCurrent = debounceIsCurrent;
 	RestApi.trackRequest = trackRequest;
 	RestApi.abortRequest = abortRequest;

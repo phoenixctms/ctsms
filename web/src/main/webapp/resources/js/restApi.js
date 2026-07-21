@@ -330,7 +330,7 @@ var RestApi = RestApi || {};
 		var stateKey = debounceStateKey(key);
 		var state = debounceStates[stateKey];
 		if (state == null) {
-			state = debounceStates[stateKey] = { seq: 0, xhr: null, lastInvoke: 0 };
+			state = debounceStates[stateKey] = { seq: 0, xhr: null, lastInvoke: 0, timer: null };
 		}
 		return state;
 	}
@@ -400,10 +400,43 @@ var RestApi = RestApi || {};
 		state.seq += 1;
 		var seq = state.seq;
 		abortTrackedRequest(state);
+		if (typeof console !== 'undefined' && console.log) {
+			console.log('RestApi.debounce: run for key "' + key + '" (seq=' + seq + ')');
+		}
 		if (typeof fn === 'function') {
 			fn(seq);
 		}
 		return seq;
+	}
+
+	/**
+	 * Trailing/idle debounce: resets a timer on each call; runs fn(seq) once after
+	 * delayMs without another call for the same key.
+	 */
+	function debounceTrailing(key, delayMs, fn) {
+		var state = getDebounceState(key);
+		var delay = (delayMs == null || isNaN(delayMs)) ? 400 : delayMs;
+		if (state.timer != null) {
+			clearTimeout(state.timer);
+			state.timer = null;
+		}
+		if (typeof console !== 'undefined' && console.log) {
+			console.log('RestApi.debounceTrailing: scheduled key "' + key + '" in ' + delay + 'ms');
+		}
+		state.timer = setTimeout(function() {
+			state.timer = null;
+			writeLastInvoke(key, state, Date.now());
+			state.seq += 1;
+			var seq = state.seq;
+			abortTrackedRequest(state);
+			if (typeof console !== 'undefined' && console.log) {
+				console.log('RestApi.debounceTrailing: run for key "' + key + '" (seq=' + seq + ')');
+			}
+			if (typeof fn === 'function') {
+				fn(seq);
+			}
+		}, delay);
+		return state.seq;
 	}
 
 	function debounceIsCurrent(key, seq) {
@@ -421,6 +454,10 @@ var RestApi = RestApi || {};
 
 	function abortRequest(key) {
 		var state = getDebounceState(key);
+		if (state.timer != null) {
+			clearTimeout(state.timer);
+			state.timer = null;
+		}
 		abortTrackedRequest(state);
 		state.seq += 1;
 		writeLastInvoke(key, state, Date.now());
@@ -440,6 +477,7 @@ var RestApi = RestApi || {};
 	RestApi.searchByCriteria = searchByCriteria;
 	RestApi.dateTimeFormat = dateTimeFormat;
 	RestApi.debounce = debounce;
+	RestApi.debounceTrailing = debounceTrailing;
 	RestApi.debounceIsCurrent = debounceIsCurrent;
 	RestApi.trackRequest = trackRequest;
 	RestApi.abortRequest = abortRequest;
