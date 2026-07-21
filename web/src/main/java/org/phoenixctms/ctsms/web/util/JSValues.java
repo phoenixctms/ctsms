@@ -357,6 +357,7 @@ public enum JSValues {
 			.value()),
 	REST_API_URL(""),
 	REST_API_JWT(""),
+	JWT_REFRESH_SKEW_SECS(""),
 	// multiple window navigation:
 	INVENTORY_ENTITY_WINDOW_NAME("inventory"),
 	STAFF_ENTITY_WINDOW_NAME("staff"),
@@ -429,6 +430,7 @@ public enum JSValues {
 			case HIGHLIGHT_TEXT_INPUT:
 			case LIST_INITIAL_POSITION:
 			case FIELD_CALCULATION_DECODE_BASE64:
+			case JWT_REFRESH_SKEW_SECS:
 				return this.toString();
 			default:
 				return WebUtil.quoteJSString(this.toString(), true);
@@ -576,6 +578,8 @@ public enum JSValues {
 				return Boolean.toString(Settings.getBoolean(SettingCodes.SKETCH_REGIONS_VISIBLE, Bundle.SETTINGS, DefaultSettings.SKETCH_REGIONS_VISIBLE));
 			case FIELD_CALCULATION_DEBUG_LEVEL:
 				return Integer.toString(Settings.getInt(SettingCodes.FIELD_CALCULATION_DEBUG_LEVEL, Bundle.SETTINGS, DefaultSettings.FIELD_CALCULATION_DEBUG_LEVEL));
+			case JWT_REFRESH_SKEW_SECS:
+				return Integer.toString(Settings.getInt(SettingCodes.JWT_REFRESH_SKEW_SECS, Bundle.SETTINGS, DefaultSettings.JWT_REFRESH_SKEW_SECS));
 			case PF_LOCALE_STRING:
 				try {
 					return LocaleConverter.getLocaleString(WebUtil.getLocale(), '_');

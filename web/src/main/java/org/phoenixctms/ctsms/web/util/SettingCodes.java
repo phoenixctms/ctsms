@@ -17,6 +17,7 @@ public interface SettingCodes {
 	public final static String NA_STATUS_COLOR = "na_status_color";
 	public final static String SESSION_TIMEOUT = "session_timeout";
 	public final static String SESSION_TIMEOUT_TRUSTED = "session_timeout_trusted";
+	public final static String JWT_REFRESH_SKEW_SECS = "jwt_refresh_skew_secs";
 	public final static String CONTACT_EMAIL = "contact_email";
 	public final static String META_DESCRIPTION = "meta_description";
 	public final static String BANNER_IMAGE_URL = "banner_image_url";
