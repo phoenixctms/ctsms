@@ -128,6 +128,12 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
 	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
 	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
+	/**
+	 * Reserved PSF filter / RestApi query param. When true, skips configured USER_/IDENTITY_DEPARTMENT_ID_FILTER
+	 * injection (intentional RestApi bypass for cross-department search use cases).
+	 * Must match PSFUriPart.ANY_DEPARTMENT_QUERY_PARAM.
+	 */
+	public static final String ANY_DEPARTMENT_FILTER_PARAM = "any_department";
 
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
@@ -135,6 +141,22 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 			return args[index];
 		}
 		return null;
+	}
+
+	/**
+	 * Intentional RestApi bypass of configured department PSF filter overrides.
+	 * Consumes and removes {@link #ANY_DEPARTMENT_FILTER_PARAM} so it is never applied as a criteria property.
+	 */
+	private static boolean consumeAnyDepartmentFilter(Object psfArg) {
+		if (!(psfArg instanceof PSFVO)) {
+			return false;
+		}
+		Map filters = ((PSFVO) psfArg).getFilters();
+		if (filters == null || !filters.containsKey(ANY_DEPARTMENT_FILTER_PARAM)) {
+			return false;
+		}
+		Object value = filters.remove(ANY_DEPARTMENT_FILTER_PARAM);
+		return Boolean.parseBoolean(value == null ? null : value.toString());
 	}
 
 	private static boolean getParameterValues(String parameterGetter, ArrayList<Object> parameterValues, Map<String, Integer> argIndexMap, Object[] args) throws Exception {
@@ -416,24 +438,32 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									write = false;
 									break;
 								case USER_DEPARTMENT_ID_FILTER:
-									write = true;
-									blankRootParameterValue = new PSFVO();
-									parameterValues = new Object[2];
-									parameterValues[0] = "department.id";
-									parameterValues[1] = Long.toString(user.getDepartment().getId());
-									invocationParameterValues.add(parameterValues);
+									if (consumeAnyDepartmentFilter(getArgument(setter.getRootEntityName(), argIndexMap, args))) {
+										write = false;
+									} else {
+										write = true;
+										blankRootParameterValue = new PSFVO();
+										parameterValues = new Object[2];
+										parameterValues[0] = "department.id";
+										parameterValues[1] = Long.toString(user.getDepartment().getId());
+										invocationParameterValues.add(parameterValues);
+									}
 									break;
 								case IDENTITY_DEPARTMENT_ID_FILTER:
-									identity = user.getIdentity();
-									if (identity == null) {
-										throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+									if (consumeAnyDepartmentFilter(getArgument(setter.getRootEntityName(), argIndexMap, args))) {
+										write = false;
+									} else {
+										identity = user.getIdentity();
+										if (identity == null) {
+											throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NO_IDENTITY);
+										}
+										write = true;
+										blankRootParameterValue = new PSFVO();
+										parameterValues = new Object[2];
+										parameterValues[0] = "department.id";
+										parameterValues[1] = Long.toString(identity.getDepartment().getId());
+										invocationParameterValues.add(parameterValues);
 									}
-									write = true;
-									blankRootParameterValue = new PSFVO();
-									parameterValues = new Object[2];
-									parameterValues[0] = "department.id";
-									parameterValues[1] = Long.toString(identity.getDepartment().getId());
-									invocationParameterValues.add(parameterValues);
 									break;
 								case IDENTITY_TRIAL_TEAM_MEMBER_ID_FILTER:
 									identity = user.getIdentity();

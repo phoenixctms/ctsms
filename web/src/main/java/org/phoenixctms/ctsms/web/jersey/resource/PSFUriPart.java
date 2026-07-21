@@ -25,6 +25,8 @@ public class PSFUriPart extends PSFVO {
 	private static final String PAGE_NUMBER_QUERY_PARAM = "p";
 	private static final String PAGE_SIZE_QUERY_PARAM = "s";
 	private static final String UPDATE_ROW_COUNT_QUERY_PARAM = "c";
+	/** RestApi: when true, skips interceptor department.id PSF filter (AuthorisationInterceptor). */
+	public static final String ANY_DEPARTMENT_QUERY_PARAM = "any_department";
 	private boolean slurp;
 	private HashSet<String> slurpExcludes;
 	private final static LinkedHashSet<NamedParameter> NAMED_QUERY_PARAMETERS = new LinkedHashSet<NamedParameter>();
@@ -36,6 +38,7 @@ public class PSFUriPart extends PSFVO {
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(PAGE_SIZE_QUERY_PARAM, Integer.class));
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(UPDATE_ROW_COUNT_QUERY_PARAM, Boolean.TYPE));
 		NAMED_QUERY_PARAMETERS.add(new NamedParameter(GsonMessageBodyHandler.TIMEZONE_QUERY_PARAM, String.class));
+		NAMED_QUERY_PARAMETERS.add(new NamedParameter(ANY_DEPARTMENT_QUERY_PARAM, Boolean.TYPE));
 		SLURPED_QUERY_PARAMETERS.addAll(NAMED_QUERY_PARAMETERS);
 		SLURPED_QUERY_PARAMETERS.add(new NamedParameter("*", String.class));
 	}
