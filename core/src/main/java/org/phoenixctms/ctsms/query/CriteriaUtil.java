@@ -722,8 +722,8 @@ public final class CriteriaUtil {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 					while (filterIt.hasNext()) {
 						Map.Entry<String, String> filter = filterIt.next();
-						// Reserved RestApi flag (AuthorisationInterceptor.ANY_DEPARTMENT_FILTER_PARAM); never a domain property.
-						if ("any_department".equals(filter.getKey())) {
+						// Reserved RestApi flag (CommonUtil.ANY_DEPARTMENT_FILTER_PARAM); never a domain property.
+						if (CommonUtil.ANY_DEPARTMENT_FILTER_PARAM.equals(filter.getKey())) {
 							continue;
 						}
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
@@ -1186,8 +1186,8 @@ public final class CriteriaUtil {
 					Iterator<Map.Entry<String, String>> filterIt = filters.entrySet().iterator();
 					while (filterIt.hasNext()) {
 						Map.Entry<String, String> filter = filterIt.next();
-						// Reserved RestApi flag (AuthorisationInterceptor.ANY_DEPARTMENT_FILTER_PARAM); never a domain property.
-						if ("any_department".equals(filter.getKey())) {
+						// Reserved RestApi flag (CommonUtil.ANY_DEPARTMENT_FILTER_PARAM); never a domain property.
+						if (CommonUtil.ANY_DEPARTMENT_FILTER_PARAM.equals(filter.getKey())) {
 							continue;
 						}
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());

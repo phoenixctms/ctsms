@@ -289,6 +289,11 @@ public final class CommonUtil {
 	public static final String CONFIRM_PATH = "confirm";
 	public static final String API_REALM = "api";
 	public static final String EXEC_REALM = "exec";
+	/**
+	 * RestApi PSF filter / query param: when true, skips USER_/IDENTITY_DEPARTMENT_ID_FILTER injection
+	 * and is ignored by CriteriaUtil.apply*PSFVO (not a domain property).
+	 */
+	public static final String ANY_DEPARTMENT_FILTER_PARAM = "any_department";
 	private final static Pattern MESSAGE_FORMAT_PLACEHOLDER_REGEXP = Pattern.compile("(\\{\\d+\\})");
 	public static String SQL_LIKE_PERCENT_WILDCARD = "%";
 	public static String SQL_LIKE_UNDERSCORE_WILDCARD = "_";
