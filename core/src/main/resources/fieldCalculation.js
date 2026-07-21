@@ -594,6 +594,13 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 		mask["$visit"] = inputFieldVariable.value.visitToken;
 
 		mask["getEnteredValue"] = _getEnteredValue;
+		mask["valueEquals"] = function(a, b) {
+			if (arguments.length >= 2) {
+				return _equalInputFieldValues(a, b) === true;
+			}
+			// Default: compare previous value to entered (reliable for selections/dates).
+			return _equalInputFieldValues(inputFieldVariable.oldValue, inputFieldVariable.enteredValue) === true;
+		};
 		
 		var _printSelectionSetValues = function(value, separator, selectionSetValueField) {
 			if (!(value instanceof Array)) {
@@ -1550,7 +1557,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_MANY_V":
 			    if (inputFieldSelectionSetVals && inputFieldVariableValue.selectionValueIds != null) {
 					var res = [];
-    		        for (var j = 0; j < inputFieldVariableValue.selectionValueIds.length; j++) {
+			        for (var j = 0; j < inputFieldVariableValue.selectionValueIds.length; j++) {
 			            var id = inputFieldVariableValue.selectionValueIds[j];
 			            for (var i = 0; i < inputFieldSelectionSetVals.length; i++) {
 			                if (inputFieldSelectionSetVals[i].id == id) {
@@ -1589,37 +1596,40 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 
 	function _equalInputFieldVariable(inputFieldVariable) {
 		if (inputFieldVariable != null) {
-			var value = inputFieldVariable.value;
-			var enteredValue = inputFieldVariable.enteredValue;
-			if (value != null && enteredValue != null) {
-				switch (value.inputFieldType) {
-				case "SINGLE_LINE_TEXT":
-				case "MULTI_LINE_TEXT":
-				case "AUTOCOMPLETE":
-					return value.textValue === enteredValue.textValue || ((value.textValue == null || value.textValue.length == 0) && (enteredValue.textValue == null || enteredValue.textValue.length == 0));
-				case "SELECT_ONE_DROPDOWN":
-				case "SELECT_ONE_RADIO_H":
-				case "SELECT_ONE_RADIO_V":
-				case "SELECT_MANY_H":
-				case "SELECT_MANY_V":
-					return _selectionSetValueIdsEqual(value.selectionValueIds, enteredValue.selectionValueIds);
-				case "CHECKBOX":
-					return value.booleanValue == enteredValue.booleanValue;
-				case "INTEGER":
-					return value.longValue == enteredValue.longValue;
-				case "FLOAT":
-					return Math.abs(value.floatValue - enteredValue.floatValue) <= floatEpsilon;
-				case "DATE":
-					return _dateEqual(value.dateValue, enteredValue.dateValue);
-				case "TIME":
-					return _dateEqual(value.timeValue, enteredValue.timeValue);
-				case "TIMESTAMP":
-					return _dateEqual(value.timestampValue, enteredValue.timestampValue);
-				case "SKETCH":
-					return value.inkValues == enteredValue.inkValues && _selectionSetValueIdsEqual(value.selectionValueIds, enteredValue.selectionValueIds);
-				default:
+			return _equalInputFieldValues(inputFieldVariable.value, inputFieldVariable.enteredValue);
+		}
+		return null;
+	}
 
-				}
+	function _equalInputFieldValues(value, enteredValue) {
+		if (value != null && enteredValue != null) {
+			switch (value.inputFieldType) {
+			case "SINGLE_LINE_TEXT":
+			case "MULTI_LINE_TEXT":
+			case "AUTOCOMPLETE":
+				return value.textValue === enteredValue.textValue || ((value.textValue == null || value.textValue.length == 0) && (enteredValue.textValue == null || enteredValue.textValue.length == 0));
+			case "SELECT_ONE_DROPDOWN":
+			case "SELECT_ONE_RADIO_H":
+			case "SELECT_ONE_RADIO_V":
+			case "SELECT_MANY_H":
+			case "SELECT_MANY_V":
+				return _selectionSetValueIdsEqual(value.selectionValueIds, enteredValue.selectionValueIds);
+			case "CHECKBOX":
+				return value.booleanValue == enteredValue.booleanValue;
+			case "INTEGER":
+				return value.longValue == enteredValue.longValue;
+			case "FLOAT":
+				return Math.abs(value.floatValue - enteredValue.floatValue) <= floatEpsilon;
+			case "DATE":
+				return _dateEqual(value.dateValue, enteredValue.dateValue);
+			case "TIME":
+				return _dateEqual(value.timeValue, enteredValue.timeValue);
+			case "TIMESTAMP":
+				return _dateEqual(value.timestampValue, enteredValue.timestampValue);
+			case "SKETCH":
+				return value.inkValues == enteredValue.inkValues && _selectionSetValueIdsEqual(value.selectionValueIds, enteredValue.selectionValueIds);
+			default:
+
 			}
 		}
 		return null;
@@ -1754,7 +1764,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 					inputFieldVars.inquiryValues[inquiryValues[i].category][inquiryValues[i].position] = inquiryValues[i];
 				}
 			}
-		}	
+		}
 		if (_testPropertyExists(args, AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64)) {
 			inputFieldVars.probandListEntry = _decode(args[AJAX_INPUT_FIELD_PROBAND_LIST_ENTRY_BASE64]);
 		}

@@ -131,7 +131,8 @@ var RestApi = RestApi || {};
 		if (sessionJwtExpires == null) {
 			return false;
 		}
-		return Date.now() >= (sessionJwtExpires - JWT_REFRESH_SKEW_SECS * 1000);
+		var skewSecs = (typeof JWT_REFRESH_SKEW_SECS !== 'undefined') ? JWT_REFRESH_SKEW_SECS : 55;
+		return Date.now() >= (sessionJwtExpires - skewSecs * 1000);
 	}
 
 	function refreshSessionJwtIfRequired() {
@@ -317,8 +318,8 @@ var RestApi = RestApi || {};
 		return ajaxPost(path, criteria);
 	}
 
-	// Persist debounce/XHR state on RestApi so FieldCalculation expressions
-	// (evaluated with a fresh mask each time) can share timers across keystrokes.
+	// Persist last-invoke time (sessionStorage + in-memory) so FieldCalculation
+	// expressions can rate-limit RestApi work across evaluations with a fresh mask.
 	var debounceStates = {};
 
 	function debounceStateKey(key) {
@@ -329,9 +330,42 @@ var RestApi = RestApi || {};
 		var stateKey = debounceStateKey(key);
 		var state = debounceStates[stateKey];
 		if (state == null) {
-			state = debounceStates[stateKey] = { timer: null, seq: 0, xhr: null };
+			state = debounceStates[stateKey] = { seq: 0, xhr: null, lastInvoke: 0 };
 		}
 		return state;
+	}
+
+	function debounceStorageKey(key) {
+		return 'ctsms.RestApi.debounce.' + debounceStateKey(key);
+	}
+
+	function readLastInvoke(key, state) {
+		var last = state.lastInvoke || 0;
+		try {
+			if (typeof sessionStorage !== 'undefined') {
+				var stored = sessionStorage.getItem(debounceStorageKey(key));
+				if (stored != null && stored !== '') {
+					var parsed = parseInt(stored, 10);
+					if (!isNaN(parsed) && parsed > last) {
+						last = parsed;
+					}
+				}
+			}
+		} catch (e) {
+			// private mode / disabled storage
+		}
+		return last;
+	}
+
+	function writeLastInvoke(key, state, timestamp) {
+		state.lastInvoke = timestamp;
+		try {
+			if (typeof sessionStorage !== 'undefined') {
+				sessionStorage.setItem(debounceStorageKey(key), '' + timestamp);
+			}
+		} catch (e) {
+			// private mode / disabled storage
+		}
 	}
 
 	function abortTrackedRequest(state) {
@@ -345,22 +379,31 @@ var RestApi = RestApi || {};
 		state.xhr = null;
 	}
 
+	/**
+	 * Rate-limit by last invocation time (not idle debounce).
+	 * Runs fn(seq) only when delayMs or more have elapsed since the last run for key.
+	 * Returns seq when fired, or null when skipped.
+	 */
 	function debounce(key, delayMs, fn) {
 		var state = getDebounceState(key);
-		if (state.timer != null) {
-			clearTimeout(state.timer);
-		}
 		var delay = (delayMs == null || isNaN(delayMs)) ? 300 : delayMs;
-		state.timer = setTimeout(function() {
-			state.timer = null;
-			state.seq += 1;
-			var seq = state.seq;
-			abortTrackedRequest(state);
-			if (typeof fn === 'function') {
-				fn(seq);
+		var now = Date.now();
+		var last = readLastInvoke(key, state);
+		if (last > 0 && (now - last) < delay) {
+			var remainingMs = delay - (now - last);
+			if (typeof console !== 'undefined' && console.log) {
+				console.log('RestApi.debounce: rate-limit skip for key "' + key + '" (' + remainingMs + 'ms remaining)');
 			}
-		}, delay);
-		return state.seq;
+			return null;
+		}
+		writeLastInvoke(key, state, now);
+		state.seq += 1;
+		var seq = state.seq;
+		abortTrackedRequest(state);
+		if (typeof fn === 'function') {
+			fn(seq);
+		}
+		return seq;
 	}
 
 	function debounceIsCurrent(key, seq) {
@@ -378,12 +421,9 @@ var RestApi = RestApi || {};
 
 	function abortRequest(key) {
 		var state = getDebounceState(key);
-		if (state.timer != null) {
-			clearTimeout(state.timer);
-			state.timer = null;
-		}
 		abortTrackedRequest(state);
 		state.seq += 1;
+		writeLastInvoke(key, state, Date.now());
 	}
 
 	if (sessionJwt != null && sessionJwt.length > 0) {
