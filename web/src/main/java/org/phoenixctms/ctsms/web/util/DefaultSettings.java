@@ -39,7 +39,7 @@ public final class DefaultSettings {
 	public static final Boolean SHOW_HOLIDAYS = null; // both
 	public final static int SESSION_TIMEOUT = 60;
 	public final static int SESSION_TIMEOUT_TRUSTED = 60;
-	public final static int JWT_REFRESH_SKEW_SECS = 60;
+	public final static int JWT_REFRESH_SKEW_SECS = 55;
 	public final static String META_DESCRIPTION = "{0}";
 	public final static String CONTACT_EMAIL = "nobody@{0}";
 	public final static String BANNER_IMAGE_URL = "https://www.phoenixctms.org/analytics.php";

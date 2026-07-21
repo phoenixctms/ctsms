@@ -103,10 +103,11 @@ var RestApi = RestApi || {};
 	}
 
 	function debounce(key, delayMs, fn) {
+		// No browser timers/storage in Nashorn: always run.
 		if (typeof fn === 'function') {
 			fn(1);
 		}
-		return 0;
+		return 1;
 	}
 
 	function debounceIsCurrent() {
