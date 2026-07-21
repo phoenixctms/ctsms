@@ -48,7 +48,7 @@ public final class DefaultSettings {
 	public final static String VALIDATION_REPORTS_URL = null;
 	public final static String API_TITLE = "REST API";
 	public static final boolean API_TRUSTED_HOSTS_ONLY = true;
-	public final static String API_TRUSTED_HOSTS_ONLY_WHITELIST_REGEXP = null; // "/tools";
+	public final static String API_TRUSTED_HOSTS_ONLY_WHITELIST_REGEXP = null; // "/tools|/selectionset|/search/proband";
 	public final static String API_VERSION = "0.0.0";
 	public static final boolean ENABLE_TOOLTIPS = true;
 	public static final boolean TRIAL_STATUS_UPDATE_REQUIRES_PASSWORD = true;
