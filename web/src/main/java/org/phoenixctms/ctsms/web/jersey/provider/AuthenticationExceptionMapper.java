@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.jersey.provider;
 
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -13,9 +14,25 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 public class AuthenticationExceptionMapper extends ExceptionMapperBase implements
 		ExceptionMapper<AuthenticationException> {
 
+	private final static String BASIC_AUTHENTICATION_SCHEME = "Basic";
+	private final static String BEARER_AUTHENTICATION_SCHEME = "Bearer";
+
+	@Context
+	private HttpHeaders headers;
+
 	@Override
 	public Response toResponse(AuthenticationException ex) {
 		return buildJsonResponse(Status.UNAUTHORIZED, ex).header(HttpHeaders.WWW_AUTHENTICATE,
-				"Basic realm=\"" + CommonUtil.API_REALM + "\"").build();
+				getWwwAuthenticateValue()).build();
+	}
+
+	private String getWwwAuthenticateValue() {
+		String authHeaderValue = headers != null ? headers.getHeaderString(HttpHeaders.AUTHORIZATION) : null;
+		if (authHeaderValue != null
+				&& authHeaderValue.toLowerCase().startsWith(BEARER_AUTHENTICATION_SCHEME.toLowerCase() + " ")) {
+			// Avoid browser HTTP Basic password prompts on failed JWT (XHR) requests.
+			return BEARER_AUTHENTICATION_SCHEME + " realm=\"" + CommonUtil.API_REALM + "\"";
+		}
+		return BASIC_AUTHENTICATION_SCHEME + " realm=\"" + CommonUtil.API_REALM + "\"";
 	}
 }
