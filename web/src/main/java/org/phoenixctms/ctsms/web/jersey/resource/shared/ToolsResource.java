@@ -27,6 +27,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.AssociationPath;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.MethodTransfilter;
 import org.phoenixctms.ctsms.vo.AnnouncementVO;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
@@ -199,6 +200,16 @@ public final class ToolsResource {
 		if (validityPeriodSecs == null) {
 			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs(request);
 		}
-		return Response.ok(WebUtil.getServiceLocator().getToolsService().issueJwt(auth, validityPeriodSecs)).build();
+		try {
+			return Response.ok(WebUtil.getServiceLocator().getToolsService().issueJwt(auth, validityPeriodSecs)).build();
+		} catch (AuthenticationException e) {
+			// Browser RestApi JWT can expire while the JSF session is still idle-valid.
+			// Fall back to the session JWT (renewed with session credentials if needed).
+			String sessionJwt = WebUtil.getRestApiJwt(request);
+			if (!CommonUtil.isEmptyString(sessionJwt)) {
+				return Response.ok(sessionJwt).build();
+			}
+			throw e;
+		}
 	}
 }
