@@ -317,6 +317,75 @@ var RestApi = RestApi || {};
 		return ajaxPost(path, criteria);
 	}
 
+	// Persist debounce/XHR state on RestApi so FieldCalculation expressions
+	// (evaluated with a fresh mask each time) can share timers across keystrokes.
+	var debounceStates = {};
+
+	function debounceStateKey(key) {
+		return (key == null || key === '') ? '_default' : ('' + key);
+	}
+
+	function getDebounceState(key) {
+		var stateKey = debounceStateKey(key);
+		var state = debounceStates[stateKey];
+		if (state == null) {
+			state = debounceStates[stateKey] = { timer: null, seq: 0, xhr: null };
+		}
+		return state;
+	}
+
+	function abortTrackedRequest(state) {
+		if (state.xhr != null && typeof state.xhr.abort === 'function') {
+			try {
+				state.xhr.abort();
+			} catch (e) {
+				// ignore
+			}
+		}
+		state.xhr = null;
+	}
+
+	function debounce(key, delayMs, fn) {
+		var state = getDebounceState(key);
+		if (state.timer != null) {
+			clearTimeout(state.timer);
+		}
+		var delay = (delayMs == null || isNaN(delayMs)) ? 300 : delayMs;
+		state.timer = setTimeout(function() {
+			state.timer = null;
+			state.seq += 1;
+			var seq = state.seq;
+			abortTrackedRequest(state);
+			if (typeof fn === 'function') {
+				fn(seq);
+			}
+		}, delay);
+		return state.seq;
+	}
+
+	function debounceIsCurrent(key, seq) {
+		return getDebounceState(key).seq === seq;
+	}
+
+	function trackRequest(key, jqXHR) {
+		var state = getDebounceState(key);
+		if (state.xhr != null && state.xhr !== jqXHR) {
+			abortTrackedRequest(state);
+		}
+		state.xhr = jqXHR;
+		return jqXHR;
+	}
+
+	function abortRequest(key) {
+		var state = getDebounceState(key);
+		if (state.timer != null) {
+			clearTimeout(state.timer);
+			state.timer = null;
+		}
+		abortTrackedRequest(state);
+		state.seq += 1;
+	}
+
 	if (sessionJwt != null && sessionJwt.length > 0) {
 		applySessionJwt(sessionJwt);
 	}
@@ -330,6 +399,10 @@ var RestApi = RestApi || {};
 	RestApi.loadSearchMaps = loadSearchMaps;
 	RestApi.searchByCriteria = searchByCriteria;
 	RestApi.dateTimeFormat = dateTimeFormat;
+	RestApi.debounce = debounce;
+	RestApi.debounceIsCurrent = debounceIsCurrent;
+	RestApi.trackRequest = trackRequest;
+	RestApi.abortRequest = abortRequest;
 
 	if (debug_level >= 1) {
 		console.log("rest api utilities loaded");

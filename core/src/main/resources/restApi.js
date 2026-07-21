@@ -102,6 +102,24 @@ var RestApi = RestApi || {};
 		return unsupported('searchByCriteria');
 	}
 
+	function debounce(key, delayMs, fn) {
+		if (typeof fn === 'function') {
+			fn(1);
+		}
+		return 0;
+	}
+
+	function debounceIsCurrent() {
+		return true;
+	}
+
+	function trackRequest(key, jqXHR) {
+		return jqXHR;
+	}
+
+	function abortRequest() {
+	}
+
 	RestApi.createRequest = createRequest;
 	RestApi.createSessionRequest = createSessionRequest;
 	RestApi.executeRequest = executeRequest;
@@ -111,6 +129,10 @@ var RestApi = RestApi || {};
 	RestApi.loadSearchMaps = loadSearchMaps;
 	RestApi.searchByCriteria = searchByCriteria;
 	RestApi.dateTimeFormat = dateTimeFormat;
+	RestApi.debounce = debounce;
+	RestApi.debounceIsCurrent = debounceIsCurrent;
+	RestApi.trackRequest = trackRequest;
+	RestApi.abortRequest = abortRequest;
 
 	if (debug_level >= 1) {
 		console.log("rest api utilities loaded (server-side stubs for HTTP)");
