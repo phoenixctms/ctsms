@@ -596,9 +596,13 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 		mask["getEnteredValue"] = _getEnteredValue;
 		mask["valueEquals"] = function(a, b) {
 			if (arguments.length >= 2) {
-				return _equalInputFieldValues(a, b) === true;
+				// Wrapper VOs (have inputFieldType) vs raw extracted mask values.
+				if (a != null && a.inputFieldType != null) {
+					return _equalInputFieldValues(a, b) === true;
+				}
+				return _equalExtractedValues(a, b);
 			}
-			// Default: compare previous value to entered (reliable for selections/dates).
+			// Default: compare previous value to entered (wrapper objects).
 			return _equalInputFieldValues(inputFieldVariable.oldValue, inputFieldVariable.enteredValue) === true;
 		};
 		
@@ -1633,6 +1637,39 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			}
 		}
 		return null;
+	}
+
+	// Equality for values exposed on the expression mask ($value, $enteredValue, args, …),
+	// which are raw results of _getInputFieldVariableValue (no inputFieldType).
+	function _equalExtractedValues(a, b) {
+		if (a === b) {
+			return true;
+		}
+		if ((a == null || a === '') && (b == null || b === '')) {
+			return true;
+		}
+		if (a == null || b == null) {
+			return false;
+		}
+		if (a instanceof Array || b instanceof Array) {
+			return _selectionSetValueIdsEqual(a, b);
+		}
+		if (typeof a === 'object' && typeof b === 'object' && (('ids' in a) || ('ink' in a)) && (('ids' in b) || ('ink' in b))) {
+			return a.ink == b.ink && _selectionSetValueIdsEqual(a.ids, b.ids);
+		}
+		if (typeof a.equals === 'function' && typeof b.equals === 'function') {
+			return a.equals(b);
+		}
+		if (typeof a === 'number' && typeof b === 'number') {
+			return Math.abs(a - b) <= floatEpsilon;
+		}
+		if (typeof a === 'boolean' && typeof b === 'boolean') {
+			return a == b;
+		}
+		if (typeof a === 'string' && typeof b === 'string') {
+			return a === b;
+		}
+		return false;
 	}
 
 	function _dateEqual(date1, date2) {
