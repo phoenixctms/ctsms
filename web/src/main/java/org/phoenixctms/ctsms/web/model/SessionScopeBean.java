@@ -709,13 +709,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	private static Long getRestApiJwtValidityPeriodSecs() {
-		int maxInactiveIntervalMinutes;
-		if (WebUtil.isTrustedHost()) {
-			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT_TRUSTED, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT_TRUSTED);
-		} else {
-			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT);
-		}
-		return Long.valueOf(maxInactiveIntervalMinutes * 60L);
+		return WebUtil.getRestApiJwtValidityPeriodSecs();
 	}
 
 	private static Long getJwtExpirationEpochSecs(String jwt) {
@@ -748,9 +742,16 @@ public class SessionScopeBean implements FilterItemsStore {
 		}
 		Long expEpochSecs = getJwtExpirationEpochSecs(jwt);
 		if (expEpochSecs == null) {
-			return false;
+			// Core logon may issue a JWT without exp; web always sets lifetime from session_timeout.
+			return true;
 		}
-		return System.currentTimeMillis() / 1000L >= expEpochSecs.longValue() - skewSecs;
+		long nowEpochSecs = System.currentTimeMillis() / 1000L;
+		// Re-issue when remaining lifetime exceeds the web session timeout.
+		long remainingSecs = expEpochSecs.longValue() - nowEpochSecs;
+		if (remainingSecs > getRestApiJwtValidityPeriodSecs().longValue()) {
+			return true;
+		}
+		return nowEpochSecs >= expEpochSecs.longValue() - skewSecs;
 	}
 
 	public synchronized String getRestApiJwt() {
@@ -1322,7 +1323,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
-			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true);
+			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true, WebUtil.getRestApiJwtValidityPeriodSecs());
 			auth.setLocalPassword(null);
 			clearAuthenticationFailedMessage();
 			if (logon.getEnable2fa()
@@ -1333,6 +1334,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			} else {
 				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
 				WebUtil.setSessionTimeout();
+				renewRestApiJwtIfRequired();
 				failedAttempts = 0;
 				outcome = getLoginOutcome(true);
 			}
@@ -1392,6 +1394,7 @@ public class SessionScopeBean implements FilterItemsStore {
 				WebUtil.getServiceLocator().getUserService().verifyOTP(auth, logon.getInheritedUser().getId(), logon.getOtpToken(), null);
 				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
 				WebUtil.setSessionTimeout();
+				renewRestApiJwtIfRequired();
 				failedAttempts = 0;
 				outcome = getLoginOutcome(true);
 			} catch (ServiceException e) {
