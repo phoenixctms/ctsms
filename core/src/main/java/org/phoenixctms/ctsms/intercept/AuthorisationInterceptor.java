@@ -134,6 +134,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	 * Must match PSFUriPart.ANY_DEPARTMENT_QUERY_PARAM.
 	 */
 	public static final String ANY_DEPARTMENT_FILTER_PARAM = "any_department";
+	private static final ThreadLocal<Boolean> IGNORE_DEPARTMENT_ID_FILTER = new ThreadLocal<Boolean>();
 
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
@@ -157,6 +158,23 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 		}
 		Object value = filters.remove(ANY_DEPARTMENT_FILTER_PARAM);
 		return Boolean.parseBoolean(value == null ? null : value.toString());
+	}
+
+	/** Strip any_department from every PSFVO arg; return true if any requested the bypass. */
+	private static boolean consumeAnyDepartmentFilterFromArgs(Object[] args) {
+		boolean ignore = false;
+		if (args != null) {
+			for (int i = 0; i < args.length; i++) {
+				if (consumeAnyDepartmentFilter(args[i])) {
+					ignore = true;
+				}
+			}
+		}
+		return ignore;
+	}
+
+	private static boolean ignoreDepartmentIdFilter() {
+		return Boolean.TRUE.equals(IGNORE_DEPARTMENT_ID_FILTER.get());
 	}
 
 	private static boolean getParameterValues(String parameterGetter, ArrayList<Object> parameterValues, Map<String, Integer> argIndexMap, Object[] args) throws Exception {
@@ -326,6 +344,16 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	@Override
 	public void before(Method method, Object[] args, Object object) throws Throwable {
 		if (Settings.getBoolean(SettingCodes.ENABLE_AUTHORISATION, Bundle.SETTINGS, DefaultSettings.ENABLE_AUTHORISATION)) {
+			try {
+				IGNORE_DEPARTMENT_ID_FILTER.set(consumeAnyDepartmentFilterFromArgs(args));
+				beforeAuthorised(method, args, object);
+			} finally {
+				IGNORE_DEPARTMENT_ID_FILTER.remove();
+			}
+		}
+	}
+
+	private void beforeAuthorised(Method method, Object[] args, Object object) throws Throwable {
 			User user = CoreUtil.getUser();
 			if (user == null) {
 				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NOT_AUTHENTICATED);
@@ -438,7 +466,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									write = false;
 									break;
 								case USER_DEPARTMENT_ID_FILTER:
-									if (consumeAnyDepartmentFilter(getArgument(setter.getRootEntityName(), argIndexMap, args))) {
+									if (ignoreDepartmentIdFilter()) {
 										write = false;
 									} else {
 										write = true;
@@ -450,7 +478,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case IDENTITY_DEPARTMENT_ID_FILTER:
-									if (consumeAnyDepartmentFilter(getArgument(setter.getRootEntityName(), argIndexMap, args))) {
+									if (ignoreDepartmentIdFilter()) {
 										write = false;
 									} else {
 										identity = user.getIdentity();
@@ -625,7 +653,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_DISJUNCTIVE_RESTRICTION_NOT_SATISFIED, (Object[]) serviceMethodNameParameter);
 				}
 			}
-		}
 	}
 
 	private static void checkHostIp(String ipRanges, String serviceMethod) throws Exception {
