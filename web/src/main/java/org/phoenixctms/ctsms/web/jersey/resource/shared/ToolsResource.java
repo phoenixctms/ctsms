@@ -94,6 +94,8 @@ public final class ToolsResource {
 
 	@Context
 	AuthenticationVO auth;
+	@Context
+	HttpServletRequest request;
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -185,7 +187,7 @@ public final class ToolsResource {
 	public PasswordOutVO logon(@QueryParam("jwt") @DefaultValue("false") boolean jwt,
 			@QueryParam("validity_secs") Long validityPeriodSecs) throws AuthenticationException, AuthorisationException, ServiceException {
 		if (jwt && validityPeriodSecs == null) {
-			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs();
+			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs(request);
 		}
 		return WebUtil.getServiceLocator().getToolsService().logon(auth, jwt, validityPeriodSecs);
 	}
@@ -195,7 +197,7 @@ public final class ToolsResource {
 	@Path("login")
 	public Response issueJwt(@QueryParam("validity_secs") Long validityPeriodSecs) throws AuthenticationException, AuthorisationException, ServiceException {
 		if (validityPeriodSecs == null) {
-			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs();
+			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs(request);
 		}
 		return Response.ok(WebUtil.getServiceLocator().getToolsService().issueJwt(auth, validityPeriodSecs)).build();
 	}
