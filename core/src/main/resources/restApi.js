@@ -12,10 +12,8 @@ var RestApi = RestApi || {};
 		? API_JSON_DATETIME_PATTERN
 		: 'yyyy-MM-dd HH:mm:ss';
 
-	var JWT_REFRESH_SKEW_MS = 60 * 1000;
-
 	var sessionJwt = typeof REST_API_JWT !== 'undefined' ? REST_API_JWT : null;
-	var sessionJwtExpiresAtMs = null;
+	var sessionJwtExpires = null;
 	var sessionJwtValiditySecs = null;
 	var refreshingJwt = false;
 	var jwtRefreshTimer = null;
@@ -120,12 +118,12 @@ var RestApi = RestApi || {};
 		}
 		var claims = parseJwtClaims(jwt);
 		if (claims != null && claims.exp != null) {
-			sessionJwtExpiresAtMs = claims.exp * 1000;
+			sessionJwtExpires = claims.exp * 1000;
 			if (claims.iat != null) {
 				sessionJwtValiditySecs = claims.exp - claims.iat;
 			}
 		} else {
-			sessionJwtExpiresAtMs = null;
+			sessionJwtExpires = null;
 		}
 		scheduleJwtRefresh();
 	}
@@ -134,10 +132,10 @@ var RestApi = RestApi || {};
 		if (sessionJwt == null || sessionJwt.length === 0) {
 			return false;
 		}
-		if (sessionJwtExpiresAtMs == null) {
+		if (sessionJwtExpires == null) {
 			return false;
 		}
-		return Date.now() >= (sessionJwtExpiresAtMs - JWT_REFRESH_SKEW_MS);
+		return Date.now() >= (sessionJwtExpires - JWT_REFRESH_SKEW_SECS * 1000);
 	}
 
 	function refreshSessionJwtIfRequired() {
@@ -179,10 +177,10 @@ var RestApi = RestApi || {};
 			clearTimeout(jwtRefreshTimer);
 			jwtRefreshTimer = null;
 		}
-		if (sessionJwtExpiresAtMs == null) {
+		if (sessionJwtExpires == null) {
 			return;
 		}
-		var delay = Math.max(1000, sessionJwtExpiresAtMs - Date.now() - JWT_REFRESH_SKEW_MS);
+		var delay = Math.max(1000, sessionJwtExpires - Date.now() - JWT_REFRESH_SKEW_SECS * 1000);
 		jwtRefreshTimer = setTimeout(function() {
 			refreshSessionJwtIfRequired();
 		}, delay);

@@ -708,8 +708,6 @@ public class SessionScopeBean implements FilterItemsStore {
 		return logon;
 	}
 
-	private static final long REST_API_JWT_REFRESH_SKEW_MILLIS = 60L * 1000L;
-
 	private static Long getRestApiJwtValidityPeriodSecs() {
 		int maxInactiveIntervalMinutes;
 		if (WebUtil.isTrustedHost()) {
@@ -744,7 +742,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return null;
 	}
 
-	private static boolean isJwtExpiringSoon(String jwt, long skewMillis) {
+	private static boolean isJwtExpiringSoon(String jwt, long skewSecs) {
 		if (CommonUtil.isEmptyString(jwt)) {
 			return true;
 		}
@@ -752,7 +750,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		if (expEpochSecs == null) {
 			return false;
 		}
-		return System.currentTimeMillis() >= (expEpochSecs.longValue() * 1000L) - skewMillis;
+		return System.currentTimeMillis() / 1000L >= expEpochSecs.longValue() - skewSecs;
 	}
 
 	public synchronized String getRestApiJwt() {
@@ -767,7 +765,8 @@ public class SessionScopeBean implements FilterItemsStore {
 		if (!isLoggedIn() || logon == null || auth == null) {
 			return;
 		}
-		if (!isJwtExpiringSoon(logon.getJwt(), REST_API_JWT_REFRESH_SKEW_MILLIS)) {
+		if (!isJwtExpiringSoon(logon.getJwt(),
+				Settings.getInt(SettingCodes.JWT_REFRESH_SKEW_SECS, Bundle.SETTINGS, DefaultSettings.JWT_REFRESH_SKEW_SECS))) {
 			return;
 		}
 		try {
