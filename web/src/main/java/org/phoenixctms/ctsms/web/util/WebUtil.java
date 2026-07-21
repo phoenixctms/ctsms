@@ -1309,6 +1309,16 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static String getRestApiJwt(HttpServletRequest request) {
+		if (request != null) {
+			SessionScopeBean sessionScopeBean = getSessionScopeBean(request.getSession(false));
+			if (sessionScopeBean != null) {
+				return sessionScopeBean.getRestApiJwt();
+			}
+		}
+		return null;
+	}
+
 	public static ArrayList<SelectItem> getAuthenticationTypes() {
 		ArrayList<SelectItem> methods;
 		Collection<AuthenticationTypeVO> methodVOs = null;
