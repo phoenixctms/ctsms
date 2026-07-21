@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +28,7 @@ import javax.faces.event.PhaseId;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
@@ -64,6 +66,9 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 @ManagedBean
 @SessionScoped
@@ -703,11 +708,77 @@ public class SessionScopeBean implements FilterItemsStore {
 		return logon;
 	}
 
+	private static final long REST_API_JWT_REFRESH_SKEW_MILLIS = 60L * 1000L;
+
+	private static Long getRestApiJwtValidityPeriodSecs() {
+		int maxInactiveIntervalMinutes;
+		if (WebUtil.isTrustedHost()) {
+			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT_TRUSTED, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT_TRUSTED);
+		} else {
+			maxInactiveIntervalMinutes = Settings.getInt(SettingCodes.SESSION_TIMEOUT, Bundle.SETTINGS, DefaultSettings.SESSION_TIMEOUT);
+		}
+		return Long.valueOf(maxInactiveIntervalMinutes * 60L);
+	}
+
+	private static Long getJwtExpirationEpochSecs(String jwt) {
+		if (CommonUtil.isEmptyString(jwt)) {
+			return null;
+		}
+		try {
+			String[] parts = jwt.split("\\.");
+			if (parts.length < 2) {
+				return null;
+			}
+			String payload = parts[1].replace('-', '+').replace('_', '/');
+			byte[] decoded = Base64.decodeBase64(payload);
+			if (decoded == null || decoded.length == 0) {
+				return null;
+			}
+			JsonElement json = new JsonParser().parse(new String(decoded, StandardCharsets.UTF_8));
+			if (json != null && json.isJsonObject() && json.getAsJsonObject().has("exp")) {
+				return json.getAsJsonObject().get("exp").getAsLong();
+			}
+		} catch (Exception e) {
+			// ignore malformed token
+		}
+		return null;
+	}
+
+	private static boolean isJwtExpiringSoon(String jwt, long skewMillis) {
+		if (CommonUtil.isEmptyString(jwt)) {
+			return true;
+		}
+		Long expEpochSecs = getJwtExpirationEpochSecs(jwt);
+		if (expEpochSecs == null) {
+			return false;
+		}
+		return System.currentTimeMillis() >= (expEpochSecs.longValue() * 1000L) - skewMillis;
+	}
+
 	public synchronized String getRestApiJwt() {
+		renewRestApiJwtIfRequired();
 		if (isLoggedIn() && logon != null) {
 			return logon.getJwt();
 		}
 		return null;
+	}
+
+	public synchronized void renewRestApiJwtIfRequired() {
+		if (!isLoggedIn() || logon == null || auth == null) {
+			return;
+		}
+		if (!isJwtExpiringSoon(logon.getJwt(), REST_API_JWT_REFRESH_SKEW_MILLIS)) {
+			return;
+		}
+		try {
+			String jwt = WebUtil.getServiceLocator().getToolsService().issueJwt(auth, getRestApiJwtValidityPeriodSecs());
+			if (!CommonUtil.isEmptyString(jwt)) {
+				logon.setJwt(jwt);
+			}
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
 	}
 
 	public synchronized MenuModel getMassMailEntityMenuModel() {
