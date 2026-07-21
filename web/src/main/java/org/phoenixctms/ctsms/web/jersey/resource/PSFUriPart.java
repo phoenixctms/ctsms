@@ -25,8 +25,8 @@ public class PSFUriPart extends PSFVO {
 	private static final String PAGE_NUMBER_QUERY_PARAM = "p";
 	private static final String PAGE_SIZE_QUERY_PARAM = "s";
 	private static final String UPDATE_ROW_COUNT_QUERY_PARAM = "c";
-	/** RestApi: when true, skips interceptor department.id PSF filter (AuthorisationInterceptor). */
-	public static final String ANY_DEPARTMENT_QUERY_PARAM = "any_department";
+	/** RestApi: when true, skips interceptor department.id PSF filter (see CommonUtil.ANY_DEPARTMENT_FILTER_PARAM). */
+	public static final String ANY_DEPARTMENT_QUERY_PARAM = CommonUtil.ANY_DEPARTMENT_FILTER_PARAM;
 	private boolean slurp;
 	private HashSet<String> slurpExcludes;
 	private final static LinkedHashSet<NamedParameter> NAMED_QUERY_PARAMETERS = new LinkedHashSet<NamedParameter>();

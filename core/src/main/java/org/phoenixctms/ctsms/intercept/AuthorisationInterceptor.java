@@ -128,13 +128,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	private static final String PARAMETER_GETTER_SETTER_SEPARATOR = ",";
 	private static final Pattern PARAMETER_GETTER_SETTER_SEPARATOR_REGEXP = Pattern.compile(" *" + Pattern.quote(PARAMETER_GETTER_SETTER_SEPARATOR) + " *");
 	private static final Pattern DEFAULT_DISJUNCTION_GROUP_SEPARATOR_REGEXP = Pattern.compile(" *: *");
-	/**
-	 * Reserved PSF filter / RestApi query param. When true, skips configured USER_/IDENTITY_DEPARTMENT_ID_FILTER
-	 * injection (intentional RestApi bypass for cross-department search use cases).
-	 * Must match PSFUriPart.ANY_DEPARTMENT_QUERY_PARAM.
-	 */
-	public static final String ANY_DEPARTMENT_FILTER_PARAM = "any_department";
-	private static final ThreadLocal<Boolean> IGNORE_DEPARTMENT_ID_FILTER = new ThreadLocal<Boolean>();
 
 	private static Object getArgument(String parameterName, Map<String, Integer> argumentIndexMap, Object[] args) {
 		Integer index = argumentIndexMap.get(parameterName);
@@ -146,35 +139,32 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 
 	/**
 	 * Intentional RestApi bypass of configured department PSF filter overrides.
-	 * Consumes and removes {@link #ANY_DEPARTMENT_FILTER_PARAM} so it is never applied as a criteria property.
+	 * Reads {@link CommonUtil#ANY_DEPARTMENT_FILTER_PARAM} from psf.filters (does not remove; cleared after auth).
 	 */
-	private static boolean consumeAnyDepartmentFilter(Object psfArg) {
+	private static boolean isAnyDepartmentRequested(Object psfArg) {
 		if (!(psfArg instanceof PSFVO)) {
 			return false;
 		}
 		Map filters = ((PSFVO) psfArg).getFilters();
-		if (filters == null || !filters.containsKey(ANY_DEPARTMENT_FILTER_PARAM)) {
+		if (filters == null || !filters.containsKey(CommonUtil.ANY_DEPARTMENT_FILTER_PARAM)) {
 			return false;
 		}
-		Object value = filters.remove(ANY_DEPARTMENT_FILTER_PARAM);
+		Object value = filters.get(CommonUtil.ANY_DEPARTMENT_FILTER_PARAM);
 		return Boolean.parseBoolean(value == null ? null : value.toString());
 	}
 
-	/** Strip any_department from every PSFVO arg; return true if any requested the bypass. */
-	private static boolean consumeAnyDepartmentFilterFromArgs(Object[] args) {
-		boolean ignore = false;
-		if (args != null) {
-			for (int i = 0; i < args.length; i++) {
-				if (consumeAnyDepartmentFilter(args[i])) {
-					ignore = true;
+	private static void clearAnyDepartmentFilter(Object[] args) {
+		if (args == null) {
+			return;
+		}
+		for (int i = 0; i < args.length; i++) {
+			if (args[i] instanceof PSFVO) {
+				Map filters = ((PSFVO) args[i]).getFilters();
+				if (filters != null) {
+					filters.remove(CommonUtil.ANY_DEPARTMENT_FILTER_PARAM);
 				}
 			}
 		}
-		return ignore;
-	}
-
-	private static boolean ignoreDepartmentIdFilter() {
-		return Boolean.TRUE.equals(IGNORE_DEPARTMENT_ID_FILTER.get());
 	}
 
 	private static boolean getParameterValues(String parameterGetter, ArrayList<Object> parameterValues, Map<String, Integer> argIndexMap, Object[] args) throws Exception {
@@ -344,16 +334,6 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 	@Override
 	public void before(Method method, Object[] args, Object object) throws Throwable {
 		if (Settings.getBoolean(SettingCodes.ENABLE_AUTHORISATION, Bundle.SETTINGS, DefaultSettings.ENABLE_AUTHORISATION)) {
-			try {
-				IGNORE_DEPARTMENT_ID_FILTER.set(consumeAnyDepartmentFilterFromArgs(args));
-				beforeAuthorised(method, args, object);
-			} finally {
-				IGNORE_DEPARTMENT_ID_FILTER.remove();
-			}
-		}
-	}
-
-	private void beforeAuthorised(Method method, Object[] args, Object object) throws Throwable {
 			User user = CoreUtil.getUser();
 			if (user == null) {
 				throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.NOT_AUTHENTICATED);
@@ -466,7 +446,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									write = false;
 									break;
 								case USER_DEPARTMENT_ID_FILTER:
-									if (ignoreDepartmentIdFilter()) {
+									if (isAnyDepartmentRequested(getArgument(setter.getRootEntityName(), argIndexMap, args))) {
 										write = false;
 									} else {
 										write = true;
@@ -478,7 +458,7 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 									}
 									break;
 								case IDENTITY_DEPARTMENT_ID_FILTER:
-									if (ignoreDepartmentIdFilter()) {
+									if (isAnyDepartmentRequested(getArgument(setter.getRootEntityName(), argIndexMap, args))) {
 										write = false;
 									} else {
 										identity = user.getIdentity();
@@ -653,6 +633,8 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					throw L10nUtil.initAuthorisationException(AuthorisationExceptionCodes.PARAMETER_DISJUNCTIVE_RESTRICTION_NOT_SATISFIED, (Object[]) serviceMethodNameParameter);
 				}
 			}
+			clearAnyDepartmentFilter(args);
+		}
 	}
 
 	private static void checkHostIp(String ipRanges, String serviceMethod) throws Exception {
