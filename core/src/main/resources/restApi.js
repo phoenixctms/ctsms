@@ -2,21 +2,16 @@ var RestApi = RestApi || {};
 
 (function(RestApi) {
 
-	var url = REST_API_URL;
-
 	var debug_level = 1;
-
-	var searchMapsCache = {};
 
 	var apiJsonDateTimePattern = typeof API_JSON_DATETIME_PATTERN !== 'undefined'
 		? API_JSON_DATETIME_PATTERN
 		: 'yyyy-MM-dd HH:mm:ss';
 
-	var sessionJwt = typeof REST_API_JWT !== 'undefined' ? REST_API_JWT : null;
-	var sessionJwtExpires = null;
-	var sessionJwtValiditySecs = null;
-	var refreshingJwt = false;
-	var jwtRefreshTimer = null;
+	function unsupported(name) {
+		console.log('RestApi.' + name + ': HTTP not supported in server-side FieldCalculation');
+		return null;
+	}
 
 	function getApiJsonDateTimePattern() {
 		return apiJsonDateTimePattern;
@@ -77,268 +72,36 @@ var RestApi = RestApi || {};
 		return null;
 	}
 
-	function base64UrlDecode(value) {
-		var base64 = value.replace(/-/g, '+').replace(/_/g, '/');
-		while (base64.length % 4) {
-			base64 += '=';
-		}
-		try {
-			if (typeof atob === 'function') {
-				return atob(base64);
-			}
-		} catch (e) {
-			// ignore
-		}
-		return null;
+	function createRequest() {
+		return unsupported('createRequest');
 	}
 
-	function parseJwtClaims(jwt) {
-		if (jwt == null || jwt.length === 0) {
-			return null;
-		}
-		try {
-			var parts = jwt.split('.');
-			if (parts.length < 2) {
-				return null;
-			}
-			var json = base64UrlDecode(parts[1]);
-			if (json == null || json.length === 0) {
-				return null;
-			}
-			return JSON.parse(json);
-		} catch (e) {
-			return null;
-		}
+	function createSessionRequest() {
+		return unsupported('createSessionRequest');
 	}
 
-	function applySessionJwt(jwt) {
-		sessionJwt = jwt;
-		if (typeof REST_API_JWT !== 'undefined') {
-			REST_API_JWT = jwt;
-		}
-		var claims = parseJwtClaims(jwt);
-		if (claims != null && claims.exp != null) {
-			sessionJwtExpires = claims.exp * 1000;
-			if (claims.iat != null) {
-				sessionJwtValiditySecs = claims.exp - claims.iat;
-			}
-		} else {
-			sessionJwtExpires = null;
-		}
-		scheduleJwtRefresh();
+	function executeRequest() {
+		return unsupported('executeRequest');
 	}
 
-	function sessionJwtNeedsRefresh() {
-		if (sessionJwt == null || sessionJwt.length === 0) {
-			return false;
-		}
-		if (sessionJwtExpires == null) {
-			return false;
-		}
-		return Date.now() >= (sessionJwtExpires - JWT_REFRESH_SKEW_SECS * 1000);
+	function ajaxGet() {
+		return unsupported('ajaxGet');
 	}
 
-	function refreshSessionJwtIfRequired() {
-		if (!sessionJwtNeedsRefresh() || refreshingJwt || url == null || url.length === 0) {
-			return;
-		}
-		refreshingJwt = true;
-		try {
-			var path = 'tools/login';
-			var validitySecs = sessionJwtValiditySecs;
-			if (validitySecs != null) {
-				path += '?validity_secs=' + encodeURIComponent(validitySecs);
-			}
-			var req = {};
-			req.url = url + path;
-			req.type = 'POST';
-			req.dataType = 'json';
-			req.async = false;
-			setBearerAuth(req, sessionJwt);
-			req.success = function(result) {
-				if (typeof result === 'string' && result.length > 0) {
-					if (debug_level >= 1) {
-						console.log('rest api jwt refreshed');
-					}
-					applySessionJwt(result);
-				}
-			};
-			if (debug_level >= 1) {
-				console.log('rest api request: ' + req.url);
-			}
-			jQuery.ajax(req);
-		} finally {
-			refreshingJwt = false;
-		}
+	function ajaxGetSync() {
+		return unsupported('ajaxGetSync');
 	}
 
-	function scheduleJwtRefresh() {
-		if (jwtRefreshTimer != null) {
-			clearTimeout(jwtRefreshTimer);
-			jwtRefreshTimer = null;
-		}
-		if (sessionJwtExpires == null) {
-			return;
-		}
-		var delay = Math.max(1000, sessionJwtExpires - Date.now() - JWT_REFRESH_SKEW_SECS * 1000);
-		jwtRefreshTimer = setTimeout(function() {
-			refreshSessionJwtIfRequired();
-		}, delay);
+	function ajaxPost() {
+		return unsupported('ajaxPost');
 	}
 
-	function setBearerAuth(jqueryRequest, jwt) {
-		if (jwt != null && jwt.length > 0) {
-			jqueryRequest.beforeSend = function(xhr) {
-				xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
-			};
-		}
+	function loadSearchMaps() {
+		return unsupported('loadSearchMaps');
 	}
 
-	function createRequest(method, path, usernameOrJwt, password) {
-		var jqueryRequest = {};
-		jqueryRequest.url = url + path;
-		jqueryRequest.type = method;
-		if (password !== undefined) {
-			if (usernameOrJwt != null && usernameOrJwt.length > 0) {
-				jqueryRequest.username = usernameOrJwt;
-				jqueryRequest.password = password;
-			}
-		} else if (usernameOrJwt !== undefined) {
-			var jwt = usernameOrJwt;
-			if (jwt == null || jwt.length === 0) {
-				jwt = sessionJwt;
-			}
-			setBearerAuth(jqueryRequest, jwt);
-		}
-		return jqueryRequest;
-	}
-
-	function createSessionRequest(method, path) {
-		return createRequest(method, path, null);
-	}
-
-	function ajaxRequest(jqueryRequest) {
-		if (!refreshingJwt) {
-			refreshSessionJwtIfRequired();
-		}
-		if (debug_level >= 1) {
-			console.log("rest api request: " + jqueryRequest.url);
-		}
-		if (url != null && url.length > 0) {
-			return jQuery.ajax(jqueryRequest);
-		}
-		return null;
-	}
-
-	function executeRequest(jqueryRequest) {
-		ajaxRequest(jqueryRequest);
-	}
-
-	function unwrapAjaxData(result) {
-		if (jQuery.isArray(result) && result.length >= 1 && typeof result[1] === 'string') {
-			return result[0];
-		}
-		return result;
-	}
-
-	function mapByField(items, field) {
-		var map = {};
-		if (items) {
-			for (var i = 0; i < items.length; i++) {
-				map[items[i][field]] = items[i].id;
-			}
-		}
-		return map;
-	}
-
-	function ajaxGet(path) {
-		var req = createSessionRequest('GET', path);
-		req.dataType = 'json';
-		return ajaxRequest(req);
-	}
-
-	function ajaxGetSync(path) {
-		if (url == null || url.length === 0) {
-			return null;
-		}
-		var data = null;
-		var req = createSessionRequest('GET', path);
-		req.dataType = 'json';
-		req.async = false;
-		req.success = function(result) {
-			data = result;
-		};
-		var jqXHR = ajaxRequest(req);
-		if (data != null) {
-			return data;
-		}
-		if (jqXHR && jqXHR.status === 200) {
-			if (jqXHR.responseJSON != null) {
-				return jqXHR.responseJSON;
-			}
-			if (jqXHR.responseText != null && jqXHR.responseText.length > 0) {
-				try {
-					return JSON.parse(jqXHR.responseText);
-				} catch (e) {
-					// ignore
-				}
-			}
-		}
-		return null;
-	}
-
-	function ajaxPost(path, body) {
-		var req = createSessionRequest('POST', path);
-		req.contentType = 'application/json';
-		req.dataType = 'json';
-		req.data = JSON.stringify(body);
-		return ajaxRequest(req);
-	}
-
-	function loadSearchMaps(module) {
-		if (searchMapsCache[module]) {
-			var cached = jQuery.Deferred();
-			cached.resolve(searchMapsCache[module]);
-			return cached.promise();
-		}
-		var deferred = jQuery.Deferred();
-		jQuery.when(
-			ajaxGet('selectionset/criterionproperties?module=' + encodeURIComponent(module)),
-			ajaxGet('selectionset/allcriteriarestrictions'),
-			ajaxGet('selectionset/allcriterionties')
-		).done(function(propResult, restrResult, tieResult) {
-			var maps = {
-				properties: mapByField(unwrapAjaxData(propResult), 'nameL10nKey'),
-				restrictions: mapByField(unwrapAjaxData(restrResult), 'nameL10nKey'),
-				ties: mapByField(unwrapAjaxData(tieResult), 'nameL10nKey')
-			};
-			searchMapsCache[module] = maps;
-			deferred.resolve(maps);
-		}).fail(function() {
-			deferred.rejectWith(this, arguments);
-		});
-		return deferred.promise();
-	}
-
-	function searchByCriteria(entity, criteria, pageQuery) {
-		var path = 'search/' + entity + '/search';
-		if (pageQuery) {
-			var query = [];
-			if (pageQuery.p != null) {
-				query.push('p=' + encodeURIComponent(pageQuery.p));
-			}
-			if (pageQuery.s != null) {
-				query.push('s=' + encodeURIComponent(pageQuery.s));
-			}
-			if (query.length > 0) {
-				path += '?' + query.join('&');
-			}
-		}
-		return ajaxPost(path, criteria);
-	}
-
-	if (sessionJwt != null && sessionJwt.length > 0) {
-		applySessionJwt(sessionJwt);
+	function searchByCriteria() {
+		return unsupported('searchByCriteria');
 	}
 
 	RestApi.createRequest = createRequest;
@@ -353,7 +116,7 @@ var RestApi = RestApi || {};
 	RestApi.dateTimeFormat = dateTimeFormat;
 
 	if (debug_level >= 1) {
-		console.log("rest api utilities loaded");
+		console.log("rest api utilities loaded (server-side stubs for HTTP)");
 	}
 
 })(window.RestApi);
