@@ -581,7 +581,9 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
         update: this.id
     },
     tabindex = newPanel.index(),
-    onTabShow = this.cfg.onTabShow;
+    onTabShow = this.cfg.onTabShow,
+    // Keep previous nodes so a failed/aborted request can restore the pane.
+    previousContents = newPanel.contents().detach();
 
     newPanel.html(
         '<div class="ctsms-tab-loading">' +
@@ -594,6 +596,13 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
     this.show(newPanel);
     this.cfg.onTabShow = onTabShow;
 
+    function restorePreviousContents() {
+        if (previousContents) {
+            newPanel.empty().append(previousContents);
+            previousContents = null;
+        }
+    }
+
     options.onsuccess = function(responseXML) {
         var xmlDoc = $(responseXML.documentElement),
         updates = xmlDoc.find("update");
@@ -604,6 +613,7 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
             content = update.text();
 
             if(id == _self.id){
+                previousContents = null;
                 newPanel.html(content);
 
                 if(_self.cfg.cache) {
@@ -620,7 +630,23 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
         return true;
     };
 
-    options.oncomplete = function() {
+    options.onerror = function(status, errorThrown) {
+        restorePreviousContents();
+    };
+
+    options.oncomplete = function(xhr, status) {
+        if (status !== 'success') {
+            // Covers error/abort/timeout; onerror may already have restored.
+            restorePreviousContents();
+            return;
+        }
+
+        // Success without a panel update would leave the spinner; restore instead.
+        if (previousContents) {
+            restorePreviousContents();
+            return;
+        }
+
         if(_self.cfg.onTabShow) {
             _self.cfg.onTabShow.call(_self, newPanel);
         }
