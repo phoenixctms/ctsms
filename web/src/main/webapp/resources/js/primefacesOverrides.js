@@ -571,6 +571,8 @@ PrimeFaces.widget.TabView.prototype.getTabTitle = function(index) {
 }
 
 //http://forum.primefaces.org/viewtopic.php?f=3&t=17987
+// Approach A: clear stale panel HTML and show a loading placeholder immediately,
+// but defer onTabShow until content is loaded (avoids changeXxx racing an empty panel).
 PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
     var _self = this,
     options = {
@@ -578,7 +580,19 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
         process: this.id + "_activeIndex",
         update: this.id
     },
-    tabindex = newPanel.index();
+    tabindex = newPanel.index(),
+    onTabShow = this.cfg.onTabShow;
+
+    newPanel.html(
+        '<div class="ctsms-tab-loading">' +
+            '<span class="ctsms-field-icon ctsms-icon-loading"></span>' +
+        '</div>'
+    );
+
+    // Show loading state now; suppress onTabShow until AJAX content is in place.
+    this.cfg.onTabShow = null;
+    this.show(newPanel);
+    this.cfg.onTabShow = onTabShow;
 
     options.onsuccess = function(responseXML) {
         var xmlDoc = $(responseXML.documentElement),
@@ -607,7 +621,9 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
     };
 
     options.oncomplete = function() {
-        _self.show(newPanel);
+        if(_self.cfg.onTabShow) {
+            _self.cfg.onTabShow.call(_self, newPanel);
+        }
     };
 
     options.params = [
