@@ -647,8 +647,9 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
             return;
         }
 
-        if(_self.cfg.onTabShow) {
-            _self.cfg.onTabShow.call(_self, newPanel);
+        // Use the callback captured for this request, and only if this panel is still active.
+        if (onTabShow && tabindex === _self.getActiveIndex()) {
+            onTabShow.call(_self, newPanel);
         }
     };
 
