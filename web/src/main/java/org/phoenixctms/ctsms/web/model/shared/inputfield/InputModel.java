@@ -421,7 +421,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public final boolean isJsValueExpressionEmpty() {
-		return CommonUtil.isEmptyString(JavaScriptCompressor.compress(getJsValueExpression()));
+		return JavaScriptCompressor.isEffectivelyEmpty(getJsValueExpression());
 	}
 
 	public abstract boolean isJsVariable();
