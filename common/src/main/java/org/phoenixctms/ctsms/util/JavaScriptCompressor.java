@@ -150,6 +150,9 @@ public class JavaScriptCompressor {
 			} else if (isWhitespace()) {
 				// Compress whitespace
 				skipWhiteSpace();
+			} else if (ch == '`') {
+				// ES6 template literals: preserve //, /* */, quotes, newlines until closing `
+				renderTemplateLiteral();
 			} else if ((ch == '"') || (ch == '\'')) {
 				// Handle strings
 				renderString();
@@ -254,6 +257,113 @@ public class JavaScriptCompressor {
 					nextChar();
 				}
 			}
+		}
+	}
+
+	/**
+	 * Emits an ES6 template literal intact (delimiters and contents), including
+	 * embedded newlines, quotes, and comment-like {@code //} / {@code /*} text.
+	 * Nested {@code ${...}} expressions are scanned with brace/string/template
+	 * awareness so the closing backtick is not missed.
+	 */
+	private void renderTemplateLiteral() {
+		append(ch); // opening `
+		nextChar();
+		while (!endReached) {
+			if (ch == '\\') {
+				append(ch);
+				nextChar();
+				if (endReached) {
+					return;
+				}
+				append(ch);
+				nextChar();
+				continue;
+			}
+			if (ch == '`') {
+				append(ch);
+				nextChar();
+				return;
+			}
+			if (ch == '$') {
+				append(ch);
+				nextChar();
+				if (ch == '{') {
+					append(ch);
+					nextChar();
+					renderTemplateExpression();
+				}
+				continue;
+			}
+			append(ch); // newlines, quotes, /*, //, etc.
+			nextChar();
+		}
+	}
+
+	/**
+	 * Emits a {@code ${...}} expression body until the matching {@code }},
+	 * respecting nested braces, strings, templates, and comments.
+	 */
+	private void renderTemplateExpression() {
+		int depth = 1;
+		while (!endReached && depth > 0) {
+			if (ch == '"' || ch == '\'') {
+				renderString();
+				continue;
+			}
+			if (ch == '`') {
+				renderTemplateLiteral();
+				continue;
+			}
+			if (ch == '/') {
+				nextChar();
+				if (ch == '/') {
+					append('/');
+					append('/');
+					nextChar();
+					while (!endReached && ch != LINE_FEED && ch != CARRIAGE_RETURN) {
+						append(ch);
+						nextChar();
+					}
+					continue;
+				}
+				if (ch == '*') {
+					append('/');
+					append('*');
+					nextChar();
+					while (!endReached) {
+						if (ch == '*') {
+							append(ch);
+							nextChar();
+							if (ch == '/') {
+								append(ch);
+								nextChar();
+								break;
+							}
+						} else {
+							append(ch);
+							nextChar();
+						}
+					}
+					continue;
+				}
+				append('/');
+				continue;
+			}
+			if (ch == '{') {
+				depth++;
+				append(ch);
+				nextChar();
+				continue;
+			}
+			if (ch == '}') {
+				depth--;
+				append(ch);
+				nextChar();
+				continue;
+			}
+			append(ch);
+			nextChar();
 		}
 	}
 
