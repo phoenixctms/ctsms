@@ -128,6 +128,8 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.ProbandListStatusReasonCodes;
+import org.phoenixctms.ctsms.util.SelectMessageFormat;
+import org.phoenixctms.ctsms.util.SelectMessageFormatResolved;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
@@ -1891,7 +1893,7 @@ public class TrialServiceImpl
 		}
 		if (!CommonUtil.isEmptyString(trialIn.getProbandAliasFormat())) {
 			try {
-				Format[] argFormats = (new MessageFormat(trialIn.getProbandAliasFormat())).getFormatsByArgumentIndex();
+				Format[] argFormats = (new MessageFormat(SelectMessageFormat.sanitize(trialIn.getProbandAliasFormat()))).getFormatsByArgumentIndex();
 				if (argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX + 1
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX + 1
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + 1
@@ -1944,8 +1946,11 @@ public class TrialServiceImpl
 
 	private String getNewProbandAlias(Trial trial, User user) throws Exception {
 		try {
-			String departmentToken = user.getDepartment().getNameL10nKey();
-			String aliasRegexPattern = buildProbandAliasRegexPattern(trial.getProbandAliasFormat(), departmentToken);
+			SelectMessageFormatResolved resolved = SelectMessageFormat.resolve(trial.getProbandAliasFormat(),
+					user.getDepartment().getNameL10nKey());
+			String probandAliasFormat = resolved.getFormat();
+			String departmentToken = resolved.getArgument();
+			String aliasRegexPattern = buildProbandAliasRegexPattern(probandAliasFormat, departmentToken);
 			long count0based = this.getProbandDao().getCountByAliasRegex(trial.getType().isPerson(), aliasRegexPattern);
 			long count1based = count0based + 1l;
 			long maxAlias0based = 0l;
@@ -1958,7 +1963,7 @@ public class TrialServiceImpl
 				} else {
 					alias = maxAliasProband.getAnimalParticulars().getAlias();
 				}
-				String maxAliasFormat = (new MessageFormat(trial.getProbandAliasFormat())).format(
+				String maxAliasFormat = (new MessageFormat(probandAliasFormat)).format(
 						new Object[] {
 								departmentToken, // {0}
 								null, // {1}
@@ -1974,7 +1979,7 @@ public class TrialServiceImpl
 				maxAlias1based = parseFormatLongAndIncrement(alias, maxAliasFormat,
 						PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, maxAlias1based);
 			}
-			String alias = MessageFormat.format(trial.getProbandAliasFormat(),
+			String alias = MessageFormat.format(probandAliasFormat,
 					departmentToken, // {0}
 					null, // {1}
 					null, // {2}
