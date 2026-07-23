@@ -470,8 +470,11 @@ public class ProbandDaoImpl
 	}
 
 	@Override
-	protected long handleGetCountByAlias(boolean person, String aliasPattern) throws Exception {
+	protected long handleGetCountByAlias(Long trialId, boolean person, String aliasPattern) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		if (trialId != null) {
+			probandCriteria.createCriteria("trialParticipations").add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
 		org.hibernate.Criteria particularsCriteria;
 		if (person) {
 			particularsCriteria = probandCriteria.createCriteria("personParticulars");
@@ -483,8 +486,11 @@ public class ProbandDaoImpl
 	}
 
 	@Override
-	protected long handleGetCountByAliasRegex(boolean person, String aliasRegex) throws Exception {
+	protected long handleGetCountByAliasRegex(Long trialId, boolean person, String aliasRegex) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		if (trialId != null) {
+			probandCriteria.createCriteria("trialParticipations").add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
 		org.hibernate.Criteria particularsCriteria;
 		if (person) {
 			particularsCriteria = probandCriteria.createCriteria("personParticulars");
@@ -498,8 +504,11 @@ public class ProbandDaoImpl
 	
 
 	@Override
-	protected Proband handleFindByMaxAlias(boolean person, String aliasPattern) throws Exception {
+	protected Proband handleFindByMaxAlias(Long trialId, boolean person, String aliasPattern) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		if (trialId != null) {
+			probandCriteria.createCriteria("trialParticipations").add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
 		org.hibernate.Criteria particularsCriteria;
 		if (person) {
 			particularsCriteria = probandCriteria.createCriteria("personParticulars", "particulars");
@@ -513,8 +522,11 @@ public class ProbandDaoImpl
 	}
 
 	@Override
-	protected Proband handleFindByMaxAliasRegex(boolean person, String aliasRegex) throws Exception {
+	protected Proband handleFindByMaxAliasRegex(Long trialId, boolean person, String aliasRegex) throws Exception {
 		org.hibernate.Criteria probandCriteria = createProbandCriteria(null);
+		if (trialId != null) {
+			probandCriteria.createCriteria("trialParticipations").add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
 		org.hibernate.Criteria particularsCriteria;
 		if (person) {
 			particularsCriteria = probandCriteria.createCriteria("personParticulars", "particulars");
