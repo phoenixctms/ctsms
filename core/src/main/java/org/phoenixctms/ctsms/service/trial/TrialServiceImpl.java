@@ -1952,11 +1952,11 @@ public class TrialServiceImpl
 			String probandAliasFormat = resolved.getFormat();
 			String departmentToken = resolved.getArgument();
 			String aliasRegexPattern = buildProbandAliasRegexPattern(probandAliasFormat, departmentToken);
-			long count0based = this.getProbandDao().getCountByAliasRegex(trial.getType().isPerson(), aliasRegexPattern);
+			long count0based = this.getProbandDao().getCountByAliasRegex(trial.getId(), trial.getType().isPerson(), aliasRegexPattern);
 			long count1based = count0based + 1l;
 			long maxAlias0based = 0l;
 			long maxAlias1based = 1l;
-			Proband maxAliasProband = this.getProbandDao().findByMaxAliasRegex(trial.getType().isPerson(), aliasRegexPattern);
+			Proband maxAliasProband = this.getProbandDao().findByMaxAliasRegex(trial.getId(), trial.getType().isPerson(), aliasRegexPattern);
 			if (maxAliasProband != null) {
 				String alias;
 				if (maxAliasProband.isPerson()) {
@@ -1991,7 +1991,7 @@ public class TrialServiceImpl
 					maxAlias1based, // {7}
 					count0based, // {8}
 					count1based); // {9}
-			if (this.getProbandDao().getCountByAliasRegex(trial.getType().isPerson(),
+			if (this.getProbandDao().getCountByAliasRegex(trial.getId(), trial.getType().isPerson(),
 					"^" + CommonUtil.escapeRegexLiteral(alias) + "$") > 0l) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_PROBAND_ALIAS_ALREADY_EXISTS, alias);
 			}
