@@ -592,9 +592,17 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
     );
 
     // Show loading state now; suppress onTabShow until AJAX content is in place.
+    // always restore cfg.onTabShow — show()/onshowHandlers must not leave it null.
     this.cfg.onTabShow = null;
-    this.show(newPanel);
-    this.cfg.onTabShow = onTabShow;
+    try {
+        this.show(newPanel);
+    } catch (e) {
+        if (window.console && console.error) {
+            console.error(e);
+        }
+    } finally {
+        this.cfg.onTabShow = onTabShow;
+    }
 
     function restorePreviousContents() {
         if (previousContents) {
@@ -635,21 +643,28 @@ PrimeFaces.widget.TabView.prototype.loadDynamicTab = function(newPanel) {
     };
 
     options.oncomplete = function(xhr, status) {
-        if (status !== 'success') {
-            // Covers error/abort/timeout; onerror may already have restored.
-            restorePreviousContents();
-            return;
-        }
+        // Must not throw: AjaxUtils.send polls the queue only after oncomplete returns.
+        try {
+            if (status !== 'success') {
+                // Covers error/abort/timeout; onerror may already have restored.
+                restorePreviousContents();
+                return;
+            }
 
-        // Success without a panel update would leave the spinner; restore instead.
-        if (previousContents) {
-            restorePreviousContents();
-            return;
-        }
+            // Success without a panel update would leave the spinner; restore instead.
+            if (previousContents) {
+                restorePreviousContents();
+                return;
+            }
 
-        // Use the callback captured for this request, and only if this panel is still active.
-        if (onTabShow && tabindex === _self.getActiveIndex()) {
-            onTabShow.call(_self, newPanel);
+            // Use the callback captured for this request, and only if this panel is still active.
+            if (onTabShow && tabindex == _self.getActiveIndex()) {
+                onTabShow.call(_self, newPanel);
+            }
+        } catch (e) {
+            if (window.console && console.error) {
+                console.error(e);
+            }
         }
     };
 
