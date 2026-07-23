@@ -1893,6 +1893,7 @@ public class TrialServiceImpl
 		}
 		if (!CommonUtil.isEmptyString(trialIn.getProbandAliasFormat())) {
 			try {
+				SelectMessageFormat.validate(trialIn.getProbandAliasFormat());
 				Format[] argFormats = (new MessageFormat(SelectMessageFormat.sanitize(trialIn.getProbandAliasFormat()))).getFormatsByArgumentIndex();
 				if (argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX + 1
 						&& argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX + 1
