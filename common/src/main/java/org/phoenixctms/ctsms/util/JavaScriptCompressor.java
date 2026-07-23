@@ -131,6 +131,9 @@ public class JavaScriptCompressor {
 	/** Bounds scanning so comment/regex edge cases cannot spin forever. */
 	private int steps;
 	private final int maxSteps;
+	/** Caps mutual recursion between template literals and ${...} expressions. */
+	private static final int MAX_TEMPLATE_NESTING = 64;
+	private int templateNesting;
 
 	/**
 	 * Creates a new <code>JavaScriptCompressor</code> instance.
@@ -173,6 +176,16 @@ public class JavaScriptCompressor {
 				nextChar();
 			}
 		}
+	}
+
+	private void enterTemplateNesting() {
+		if (++templateNesting > MAX_TEMPLATE_NESTING) {
+			throw new IllegalStateException("JavaScriptCompressor template nesting limit exceeded");
+		}
+	}
+
+	private void leaveTemplateNesting() {
+		templateNesting--;
 	}
 
 	/**
@@ -267,36 +280,41 @@ public class JavaScriptCompressor {
 	 * awareness so the closing backtick is not missed.
 	 */
 	private void renderTemplateLiteral() {
-		append(ch); // opening `
-		nextChar();
-		while (!endReached) {
-			if (ch == '\\') {
-				append(ch);
-				nextChar();
-				if (endReached) {
-					return;
-				}
-				append(ch);
-				nextChar();
-				continue;
-			}
-			if (ch == '`') {
-				append(ch);
-				nextChar();
-				return;
-			}
-			if (ch == '$') {
-				append(ch);
-				nextChar();
-				if (ch == '{') {
+		enterTemplateNesting();
+		try {
+			append(ch); // opening `
+			nextChar();
+			while (!endReached) {
+				if (ch == '\\') {
 					append(ch);
 					nextChar();
-					renderTemplateExpression();
+					if (endReached) {
+						return;
+					}
+					append(ch);
+					nextChar();
+					continue;
 				}
-				continue;
+				if (ch == '`') {
+					append(ch);
+					nextChar();
+					return;
+				}
+				if (ch == '$') {
+					append(ch);
+					nextChar();
+					if (ch == '{') {
+						append(ch);
+						nextChar();
+						renderTemplateExpression();
+					}
+					continue;
+				}
+				append(ch); // newlines, quotes, /*, //, etc.
+				nextChar();
 			}
-			append(ch); // newlines, quotes, /*, //, etc.
-			nextChar();
+		} finally {
+			leaveTemplateNesting();
 		}
 	}
 
@@ -305,65 +323,70 @@ public class JavaScriptCompressor {
 	 * respecting nested braces, strings, templates, and comments.
 	 */
 	private void renderTemplateExpression() {
-		int depth = 1;
-		while (!endReached && depth > 0) {
-			if (ch == '"' || ch == '\'') {
-				renderString();
-				continue;
-			}
-			if (ch == '`') {
-				renderTemplateLiteral();
-				continue;
-			}
-			if (ch == '/') {
-				nextChar();
-				if (ch == '/') {
-					append('/');
-					append('/');
-					nextChar();
-					while (!endReached && ch != LINE_FEED && ch != CARRIAGE_RETURN) {
-						append(ch);
-						nextChar();
-					}
+		enterTemplateNesting();
+		try {
+			int depth = 1;
+			while (!endReached && depth > 0) {
+				if (ch == '"' || ch == '\'') {
+					renderString();
 					continue;
 				}
-				if (ch == '*') {
-					append('/');
-					append('*');
+				if (ch == '`') {
+					renderTemplateLiteral();
+					continue;
+				}
+				if (ch == '/') {
 					nextChar();
-					while (!endReached) {
-						if (ch == '*') {
-							append(ch);
-							nextChar();
-							if (ch == '/') {
-								append(ch);
-								nextChar();
-								break;
-							}
-						} else {
+					if (ch == '/') {
+						append('/');
+						append('/');
+						nextChar();
+						while (!endReached && ch != LINE_FEED && ch != CARRIAGE_RETURN) {
 							append(ch);
 							nextChar();
 						}
+						continue;
 					}
+					if (ch == '*') {
+						append('/');
+						append('*');
+						nextChar();
+						while (!endReached) {
+							if (ch == '*') {
+								append(ch);
+								nextChar();
+								if (ch == '/') {
+									append(ch);
+									nextChar();
+									break;
+								}
+							} else {
+								append(ch);
+								nextChar();
+							}
+						}
+						continue;
+					}
+					append('/');
 					continue;
 				}
-				append('/');
-				continue;
-			}
-			if (ch == '{') {
-				depth++;
+				if (ch == '{') {
+					depth++;
+					append(ch);
+					nextChar();
+					continue;
+				}
+				if (ch == '}') {
+					depth--;
+					append(ch);
+					nextChar();
+					continue;
+				}
 				append(ch);
 				nextChar();
-				continue;
 			}
-			if (ch == '}') {
-				depth--;
-				append(ch);
-				nextChar();
-				continue;
-			}
-			append(ch);
-			nextChar();
+		} finally {
+			leaveTemplateNesting();
 		}
 	}
 
