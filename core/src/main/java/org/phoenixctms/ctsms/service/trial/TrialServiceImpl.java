@@ -1052,7 +1052,13 @@ public class TrialServiceImpl
 	}
 
 	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
-		CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		// Bulk addUpdateEcrf (import) already holds a PESSIMISTIC_WRITE on the eCRF for the whole txn.
+		// Skipping INPUT_FIELD FOR UPDATE there avoids locking every linked field until commit.
+		if (checkDeferredConstraints) {
+			CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		} else {
+			CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao());
+		}
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
@@ -2077,7 +2083,13 @@ public class TrialServiceImpl
 	}
 
 	private void checkUpdateEcrfFieldInput(ECRFField originalEcrfField, ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
-		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		// See checkAddEcrfFieldInput: bulk path skips INPUT_FIELD row locks; interactive path keeps them.
+		InputField field;
+		if (checkDeferredConstraints) {
+			field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		} else {
+			field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao());
+		}
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalEcrfField.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_TRIAL_CHANGED);
