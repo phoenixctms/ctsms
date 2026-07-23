@@ -1054,13 +1054,7 @@ public class TrialServiceImpl
 	}
 
 	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
-		// Bulk addUpdateEcrf (import) already holds a PESSIMISTIC_WRITE on the eCRF for the whole txn.
-		// Skipping INPUT_FIELD FOR UPDATE there avoids locking every linked field until commit.
-		if (checkDeferredConstraints) {
-			CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
-		} else {
-			CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao());
-		}
+		CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
@@ -1289,8 +1283,8 @@ public class TrialServiceImpl
 		if (ecrfFieldIn.getSection() != null && !ecrfFieldIn.getSection().trim().equals(ecrfFieldIn.getSection())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_FIELD_SECTION, ecrfFieldIn.getSection());
 		}
-		boolean hasJsValueExpression = !CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsValueExpression()));
-		boolean hasJsOutputExpression = !CommonUtil.isEmptyString(JavaScriptCompressor.compress(ecrfFieldIn.getJsOutputExpression()));
+		boolean hasJsValueExpression = !JavaScriptCompressor.isEffectivelyEmpty(ecrfFieldIn.getJsValueExpression());
+		boolean hasJsOutputExpression = !JavaScriptCompressor.isEffectivelyEmpty(ecrfFieldIn.getJsOutputExpression());
 		if (CommonUtil.isEmptyString(ecrfFieldIn.getJsVariableName())) {
 			if (hasJsValueExpression || hasJsOutputExpression) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_JS_VARIABLE_NAME_REQUIRED);
@@ -1539,10 +1533,10 @@ public class TrialServiceImpl
 
 	private void checkInquiryInput(InquiryInVO inquiryIn) throws ServiceException {
 		if (CommonUtil.isEmptyString(inquiryIn.getJsVariableName())) {
-			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(inquiryIn.getJsValueExpression()))) {
+			if (!JavaScriptCompressor.isEffectivelyEmpty(inquiryIn.getJsValueExpression())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_REQUIRED);
 			}
-			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(inquiryIn.getJsOutputExpression()))) {
+			if (!JavaScriptCompressor.isEffectivelyEmpty(inquiryIn.getJsOutputExpression())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_REQUIRED);
 			}
 		} else {
@@ -1724,10 +1718,10 @@ public class TrialServiceImpl
 
 	private void checkProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn, Trial trial, InputField field) throws ServiceException {
 		if (CommonUtil.isEmptyString(listTagIn.getJsVariableName())) {
-			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(listTagIn.getJsValueExpression()))) {
+			if (!JavaScriptCompressor.isEffectivelyEmpty(listTagIn.getJsValueExpression())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED);
 			}
-			if (!CommonUtil.isEmptyString(JavaScriptCompressor.compress(listTagIn.getJsOutputExpression()))) {
+			if (!JavaScriptCompressor.isEffectivelyEmpty(listTagIn.getJsOutputExpression())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED);
 			}
 		} else {
@@ -2089,13 +2083,7 @@ public class TrialServiceImpl
 	}
 
 	private void checkUpdateEcrfFieldInput(ECRFField originalEcrfField, ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
-		// See checkAddEcrfFieldInput: bulk path skips INPUT_FIELD row locks; interactive path keeps them.
-		InputField field;
-		if (checkDeferredConstraints) {
-			field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
-		} else {
-			field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao());
-		}
+		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalEcrfField.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_TRIAL_CHANGED);
