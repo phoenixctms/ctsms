@@ -246,10 +246,14 @@ public class TrialServiceImpl
 
 	private final static String SHUFFLE_SEED_RANDOM_ALGORITHM = CoreUtil.RANDOM_ALGORITHM;
 	private final static java.util.regex.Pattern JS_VARIABLE_NAME_REGEXP = Pattern.compile("^[A-Za-z_][A-Za-z0-9_]*$");
-	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX = 6;
-	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX = 7;
-	private final static int PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX = 8;
-	private final static int PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX = 9;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_GLOBAL_INDEX = 2;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_ANY_DEPT_GLOBAL_INDEX = 3;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_INDEX = 4;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_ANY_DEPT_INDEX = 5;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_GLOBAL_INDEX = 6;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_GLOBAL_INDEX = 7;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX = 8;
+	private final static int PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX = 9;
 
 	private static void copyInquiryValueInToOut(InquiryValueOutVO out, InquiryValueInVO in, InquiryOutVO inquiryVO, ProbandOutVO probandVO, UserOutVO modifiedUserVO, Date now) {
 		if (in != null && out != null) {
@@ -1889,10 +1893,8 @@ public class TrialServiceImpl
 			try {
 				SelectMessageFormat.validate(trialIn.getProbandAliasFormat());
 				Format[] argFormats = (new MessageFormat(SelectMessageFormat.sanitize(trialIn.getProbandAliasFormat()))).getFormatsByArgumentIndex();
-				if (argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX + 1
-						&& argFormats.length != PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX + 1
-						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX + 1
-						&& argFormats.length != PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX + 1) {
+				if (argFormats.length < PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_GLOBAL_INDEX + 1
+						|| argFormats.length > PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX + 1) {
 					throw new IllegalArgumentException();
 				}
 			} catch (IllegalArgumentException e) {
@@ -1945,47 +1947,36 @@ public class TrialServiceImpl
 					user.getDepartment().getNameL10nKey());
 			String probandAliasFormat = resolved.getFormat();
 			String departmentToken = resolved.getArgument();
-			String aliasRegexPattern = buildProbandAliasRegexPattern(probandAliasFormat, departmentToken);
-			long count0based = this.getProbandDao().getCountByAliasRegex(trial.getId(), trial.getType().isPerson(), aliasRegexPattern);
-			long count1based = count0based + 1l;
-			long maxAlias0based = 0l;
-			long maxAlias1based = 1l;
-			Proband maxAliasProband = this.getProbandDao().findByMaxAliasRegex(trial.getId(), trial.getType().isPerson(), aliasRegexPattern);
-			if (maxAliasProband != null) {
-				String alias;
-				if (maxAliasProband.isPerson()) {
-					alias = maxAliasProband.getPersonParticulars().getAlias();
-				} else {
-					alias = maxAliasProband.getAnimalParticulars().getAlias();
-				}
-				String maxAliasFormat = (new MessageFormat(probandAliasFormat)).format(
-						new Object[] {
-								departmentToken, // {0}
-								null, // {1}
-								null, // {2}
-								null, // {3}
-								null, // {4}
-								null // {5}
-						},
-						new StringBuffer(),
-						null).toString();
-				maxAlias0based = parseFormatLongAndIncrement(alias, maxAliasFormat,
-						PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, maxAlias0based);
-				maxAlias1based = parseFormatLongAndIncrement(alias, maxAliasFormat,
-						PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, maxAlias1based);
-			}
+			boolean person = trial.getType().isPerson();
+			Long trialId = trial.getId();
+			String siteRegexPattern = buildProbandAliasRegexPattern(probandAliasFormat, departmentToken);
+			String anyDeptRegexPattern = buildProbandAliasRegexPattern(probandAliasFormat, null);
+			String siteMaxAliasFormat = buildMaxAliasParseFormat(probandAliasFormat, departmentToken);
+			String anyDeptMaxAliasFormat = buildMaxAliasParseFormat(probandAliasFormat, null);
+			long[] maxAliasAnyDeptGlobal = resolveMaxAliasPair(null, person, anyDeptRegexPattern, anyDeptMaxAliasFormat,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_GLOBAL_INDEX,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_ANY_DEPT_GLOBAL_INDEX);
+			long[] maxAliasAnyDept = resolveMaxAliasPair(trialId, person, anyDeptRegexPattern, anyDeptMaxAliasFormat,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_INDEX,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_ANY_DEPT_INDEX);
+			long[] maxAliasGlobal = resolveMaxAliasPair(null, person, siteRegexPattern, siteMaxAliasFormat,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_GLOBAL_INDEX,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_GLOBAL_INDEX);
+			long[] maxAlias = resolveMaxAliasPair(trialId, person, siteRegexPattern, siteMaxAliasFormat,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX,
+					PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX);
 			String alias = MessageFormat.format(probandAliasFormat,
 					departmentToken, // {0}
 					null, // {1}
-					null, // {2}
-					null, // {3}
-					null, // {4}
-					null, // {5}
-					maxAlias0based, // {6}
-					maxAlias1based, // {7}
-					count0based, // {8}
-					count1based); // {9}
-			if (this.getProbandDao().getCountByAliasRegex(trial.getId(), trial.getType().isPerson(),
+					maxAliasAnyDeptGlobal[0], // {2} trialId=null, any dept
+					maxAliasAnyDeptGlobal[1], // {3} trialId=null, any dept
+					maxAliasAnyDept[0], // {4} any dept
+					maxAliasAnyDept[1], // {5} any dept
+					maxAliasGlobal[0], // {6} trialId=null
+					maxAliasGlobal[1], // {7} trialId=null
+					maxAlias[0], // {8}
+					maxAlias[1]); // {9}
+			if (this.getProbandDao().getCountByAliasRegex(trialId, person,
 					"^" + CommonUtil.escapeRegexLiteral(alias) + "$") > 0l) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.TRIAL_PROBAND_ALIAS_ALREADY_EXISTS, alias);
 			}
@@ -1995,18 +1986,51 @@ public class TrialServiceImpl
 		}
 	}
 
+	private long[] resolveMaxAliasPair(Long trialId, boolean person, String aliasRegexPattern, String maxAliasFormat,
+			int index0based, int index1based) throws Exception {
+		long maxAlias0based = 0l;
+		long maxAlias1based = 1l;
+		Proband maxAliasProband = this.getProbandDao().findByMaxAliasRegex(trialId, person, aliasRegexPattern);
+		if (maxAliasProband != null) {
+			String alias;
+			if (maxAliasProband.isPerson()) {
+				alias = maxAliasProband.getPersonParticulars().getAlias();
+			} else {
+				alias = maxAliasProband.getAnimalParticulars().getAlias();
+			}
+			maxAlias0based = parseFormatLongAndIncrement(alias, maxAliasFormat, index0based, maxAlias0based);
+			maxAlias1based = parseFormatLongAndIncrement(alias, maxAliasFormat, index1based, maxAlias1based);
+		}
+		return new long[] { maxAlias0based, maxAlias1based };
+	}
+
+	private static String buildMaxAliasParseFormat(String probandAliasFormat, String departmentToken) {
+		MessageFormat maxAliasFormat = new MessageFormat(probandAliasFormat);
+		for (int i = PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_GLOBAL_INDEX; i <= PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX; i++) {
+			maxAliasFormat.setFormatByArgumentIndex(i, null);
+		}
+		Object[] args;
+		if (departmentToken != null) {
+			args = new Object[] { departmentToken };
+		} else {
+			args = new Object[0];
+		}
+		return maxAliasFormat.format(args, new StringBuffer(), null).toString();
+	}
+
 	private static final String PROBAND_ALIAS_REGEX_DIGIT_PLACEHOLDER = "\u0001";
+	private static final String PROBAND_ALIAS_REGEX_DEPT_PLACEHOLDER = "\u0002";
 
 	private static String buildProbandAliasRegexPattern(String probandAliasFormat, String departmentToken) throws Exception {
 		MessageFormat regexFormat = new MessageFormat(probandAliasFormat);
 		Format[] argFormats = regexFormat.getFormatsByArgumentIndex();
-		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_INDEX, null);
-		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX, null);
-		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_0BASED_INDEX, null);
-		regexFormat.setFormatByArgumentIndex(PROBAND_ALIAS_FORMAT_PROBAND_COUNT_1BASED_INDEX, null);
+		for (int i = PROBAND_ALIAS_FORMAT_MAX_ALIAS_0BASED_ANY_DEPT_GLOBAL_INDEX; i <= PROBAND_ALIAS_FORMAT_MAX_ALIAS_1BASED_INDEX; i++) {
+			regexFormat.setFormatByArgumentIndex(i, null);
+		}
 		int numberIndex = argFormats.length - 1;
+		boolean wildcardDept = (departmentToken == null);
 		Object[] regexArgs = new Object[] {
-				departmentToken, // {0}
+				wildcardDept ? PROBAND_ALIAS_REGEX_DEPT_PLACEHOLDER : departmentToken, // {0}
 				null, // {1}
 				null, // {2}
 				null, // {3}
@@ -2022,15 +2046,31 @@ public class TrialServiceImpl
 		String formatted = regexFormat.format(regexArgs, new StringBuffer(), null).toString();
 		String[] parts = formatted.split(PROBAND_ALIAS_REGEX_DIGIT_PLACEHOLDER, -1);
 		StringBuilder regex = new StringBuilder("^");
-		regex.append(CommonUtil.escapeRegexLiteral(parts[0]));
+		appendProbandAliasRegexLiteralPart(regex, parts[0], wildcardDept);
 		for (int i = 1; i < parts.length; i++) {
 			regex.append(digitRegex);
-			if (parts[i].length() > 0) {
-				regex.append(CommonUtil.escapeRegexLiteral(parts[i]));
-			}
+			appendProbandAliasRegexLiteralPart(regex, parts[i], wildcardDept);
 		}
 		regex.append("$");
 		return regex.toString();
+	}
+
+	private static void appendProbandAliasRegexLiteralPart(StringBuilder regex, String part, boolean wildcardDept) {
+		if (!wildcardDept || part.indexOf(PROBAND_ALIAS_REGEX_DEPT_PLACEHOLDER) < 0) {
+			if (part.length() > 0) {
+				regex.append(CommonUtil.escapeRegexLiteral(part));
+			}
+			return;
+		}
+		String[] deptParts = part.split(PROBAND_ALIAS_REGEX_DEPT_PLACEHOLDER, -1);
+		for (int i = 0; i < deptParts.length; i++) {
+			if (i > 0) {
+				regex.append(".*?");
+			}
+			if (deptParts[i].length() > 0) {
+				regex.append(CommonUtil.escapeRegexLiteral(deptParts[i]));
+			}
+		}
 	}
 
 	private static String getProbandAliasDigitRegex(java.text.NumberFormat numberFormat) {
