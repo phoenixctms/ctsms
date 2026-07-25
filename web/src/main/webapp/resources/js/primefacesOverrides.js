@@ -724,6 +724,10 @@ PrimeFaces.widget.SelectManyCheckbox.prototype.getValue = function() {
 
 PrimeFaces.widget.SelectManyCheckbox.prototype.setValue = function(value) {
 
+  // apply calculated value may pass null; treat as clear
+  if (value == null) {
+    value = [];
+  }
   if (value instanceof Array) {
     $(this.inputs).each(function() {
 
@@ -737,7 +741,8 @@ PrimeFaces.widget.SelectManyCheckbox.prototype.setValue = function(value) {
 		if (value[i] instanceof Array) {
 		  throw new Error('value element is an array');
 		}
-        if (value[i] === itemValue) {
+        // option values are strings; calculated selection ids may be numbers
+        if (value[i] == itemValue) {
           found = true;
           break;
         }
@@ -770,10 +775,16 @@ PrimeFaces.widget.SelectOneMenu.prototype.getValue = function() {
 
 PrimeFaces.widget.SelectOneMenu.prototype.setValue = function(value) {
 
+  // apply calculated value returns selection id array; [] / null => clear
+  if (value instanceof Array) {
+    value = value.length > 0 ? value[0] : null;
+  }
+
   var _self = this;
   var index = -1;
   for ( var i = 0; i < _self.options.length; i++) {
-    if (_self.options[i].value === value) {
+    // option values are strings; calculated selection ids may be numbers
+    if (_self.options[i].value == value) {
       index = _self.options[i].index;
       break;
     }
@@ -794,8 +805,13 @@ PrimeFaces.widget.SelectOneRadio.prototype.getValue = function() {
 
 PrimeFaces.widget.SelectOneRadio.prototype.setValue = function(value) {
 
+  // apply calculated value returns selection id array; [] / null => clear
+  if (value instanceof Array) {
+    value = value.length > 0 ? value[0] : null;
+  }
+
   var _self = this;
-  // unselect previous
+  // unselect previous visual
   _self.checkedRadio.removeClass('ui-state-active').children('.ui-radiobutton-icon').removeClass('ui-icon ui-icon-bullet');
 
   $(this.inputs).each(function() {
@@ -803,7 +819,8 @@ PrimeFaces.widget.SelectOneRadio.prototype.setValue = function(value) {
     var input = $(this);
     var radio = input.parent().next();
 
-    var found = (input.attr('value') === value);
+    // option values are strings; calculated selection ids may be numbers
+    var found = (value != null && value !== '' && input.attr('value') == value);
     if (found) {
       input.attr('checked', 'checked');
       radio.children('.ui-radiobutton-icon').addClass('ui-icon ui-icon-bullet');
@@ -812,6 +829,11 @@ PrimeFaces.widget.SelectOneRadio.prototype.setValue = function(value) {
         radio.addClass('ui-state-active');
       }
       _self.checkedRadio = radio;
+    } else {
+      // must clear other inputs; otherwise several stay :checked and getValue()
+      // returns the first (wrong) id — breaks valueEquals / delta after manual change
+      input.removeAttr('checked');
+      radio.removeClass('ui-state-active').children('.ui-radiobutton-icon').removeClass('ui-icon ui-icon-bullet');
     }
 
   });
