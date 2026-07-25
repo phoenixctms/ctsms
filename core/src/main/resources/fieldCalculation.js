@@ -23,6 +23,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	    'mustBeUnchecked'        : " darf nicht angekreuzt sein",
 	    'mustBeUnselected'       : " darf nicht gesetzt sein",
 	    'mustBeUnmarked'         : " darf nicht markiert sein",
+	    'selectOneMultipleSelectionIds' : "darf höchstens eine Auswahl-ID liefern (erhalten: %d)",
 
 	    'true'                   : "angekreuzt",
 	    'false'                  : "nicht angekreuzt",
@@ -81,6 +82,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	    'mustBeUnchecked'        : " must be unchecked",
 	    'mustBeUnselected'       : " must not be selected",
 	    'mustBeUnmarked'         : " must not be marked",
+	    'selectOneMultipleSelectionIds' : "must return at most one selection id (got %d)",
 
 	    'true'                   : "checked",
 	    'false'                  : "unchecked",
@@ -387,7 +389,17 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			if (evaluation != null) {
 				inputFieldVariable.oldValue = _cloneJSON(inputFieldVariable.value);
 				inputFieldVariable.valueErrorMessage = evaluation.errorMessage;
-				_setInputFieldVariableValue(inputFieldVariable.value, evaluation.returnValue);
+				if (evaluation.errorMessage == null || evaluation.errorMessage.length == 0) {
+					try {
+						_setInputFieldVariableValue(inputFieldVariable.value, evaluation.returnValue);
+					} catch (e) {
+						if (_testPropertyExists(e, 'msg')) {
+							inputFieldVariable.valueErrorMessage = e.msg;
+						} else {
+							inputFieldVariable.valueErrorMessage = "value expression " + inputFieldVariable.value.jsVariableName + ": " + e.toString();
+						}
+					}
+				}
 			}
 
 
@@ -1466,6 +1478,15 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 						}
 					}
 				}
+				if ((inputFieldVariableValue.inputFieldType == "SELECT_ONE_DROPDOWN"
+						|| inputFieldVariableValue.inputFieldType == "SELECT_ONE_RADIO_H"
+						|| inputFieldVariableValue.inputFieldType == "SELECT_ONE_RADIO_V")
+						&& newValue.length > 1) {
+					var locale = (inputFieldVars.locale != null && (inputFieldVars.locale in localizedMessages)) ? inputFieldVars.locale : defaultLocale;
+					var detail = sprintf(localizedMessages[locale]['selectOneMultipleSelectionIds'], newValue.length);
+					var variableName = inputFieldVariableValue.jsVariableName;
+					throw { msg: (variableName != null && variableName.length > 0) ? ("value expression " + variableName + ": " + detail) : detail };
+				}
 				inputFieldVariableValue.selectionValueIds = newValue;
 				break;
 			case "CHECKBOX":
@@ -2213,7 +2234,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	function selectOneDropdownApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue ? newValue[0] : null);
+		widget.setValue(newValue);
 		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
@@ -2223,7 +2244,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	function selectOneRadioApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
 		silent = true;
 		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue ? newValue[0] : null);
+		widget.setValue(newValue);
 		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
