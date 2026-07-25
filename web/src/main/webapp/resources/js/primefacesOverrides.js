@@ -781,49 +781,17 @@ PrimeFaces.widget.SelectOneMenu.prototype.setValue = function(value) {
   }
 
   var _self = this;
-
-  // Empty calculated selection must clear backing <select> and panel UI.
-  // Otherwise null matches no option and the previous selection stays active.
-  if (value == null || value === '') {
-    _self.options.filter(':selected').removeAttr('selected');
-    var emptyOption = _self.options.filter('[value=""]');
-    if (emptyOption.length) {
-      emptyOption.attr('selected', 'selected');
-    }
-    if (_self.input && _self.input.length) {
-      _self.input.val('');
-    }
-    _self.value = '';
-    var emptyText = emptyOption.length ? emptyOption.text() : '';
-    if (_self.setLabel) {
-      _self.setLabel(emptyText);
-    } else if (_self.label && _self.label.length) {
-      if (_self.cfg && _self.cfg.editable) {
-        _self.label.val(emptyText);
-      } else {
-        _self.label.text(emptyText);
-      }
-    }
-    if (_self.focusItem) {
-      _self.focusItem.removeClass('ui-state-highlight');
-    }
-    if (_self.items && emptyOption.length) {
-      var emptyItem = _self.items.eq(emptyOption.index());
-      emptyItem.addClass('ui-state-highlight');
-      _self.focusItem = emptyItem;
-    }
-    return;
-  }
-
   var index = -1;
+  // null/undefined/'' -> no-selection option (empty string)
+  var matchValue = (value == null || value === '') ? '' : value;
   for ( var i = 0; i < _self.options.length; i++) {
     // option values are strings; calculated selection ids may be numbers
-    if (_self.options[i].value == value) {
+    if (_self.options[i].value == matchValue) {
       index = _self.options[i].index;
       break;
     }
   }
-  if (index > 0) {
+  if (index >= 0) {
     _self.selectItem(_self.items.eq(index));
   }
 
