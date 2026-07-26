@@ -380,10 +380,12 @@ public final class ServiceUtil {
 	}
 
 	public static void addEcrfMassMailRecipients(ECRFStatusEntry statusEntry, Timestamp now, User user, MassMailDao massMailDao, ProbandDao probandDao, TrialDao trialDao,
-			MassMailRecipientDao massMailRecipientDao, JournalEntryDao journalEntryDao, ECRFDao ecrfDao) throws Exception {
+			MassMailRecipientDao massMailRecipientDao, JournalEntryDao journalEntryDao, ECRFDao ecrfDao, VisitDao visitDao) throws Exception {
 		ProbandListEntry listEntry = statusEntry.getListEntry();
 		Proband proband = listEntry.getProband();
-		String token = ecrfDao.toECRFOutVO(statusEntry.getEcrf()).getUniqueName();
+		ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(statusEntry.getEcrf());
+		VisitOutVO visitVO = statusEntry.getVisit() != null ? visitDao.toVisitOutVO(statusEntry.getVisit()) : null;
+		String token = ECRFDaoImpl.getUniqueEcrfName(ecrfVO, visitVO);
 		Iterator<MassMail> massMailsIt = statusEntry.getEcrf().getMassMails().iterator();
 		while (massMailsIt.hasNext()) {
 			MassMail massMail = massMailsIt.next();
@@ -1564,7 +1566,10 @@ public final class ServiceUtil {
 			ProcedureDao procedureDao,
 			MedicationDao medicationDao,
 			BankAccountDao bankAccountDao,
-			JournalEntryDao journalEntryDao) throws Exception {
+			JournalEntryDao journalEntryDao,
+			ECRFDao ecrfDao,
+			ECRFStatusEntryDao ecrfStatusEntryDao,
+			VisitDao visitDao) throws Exception {
 		Map model = CoreUtil.createEmptyTemplateModel();
 		boolean enumerateEntities = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES, Bundle.SETTINGS,
 				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES);
@@ -1964,28 +1969,60 @@ public final class ServiceUtil {
 					//						}
 					//					}
 					//					model.put(MassMailMessageTemplateParameters.NEXT_VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
-					models = new ArrayList();
-					Iterator<ECRFOutVO> ecrfIt = massMail.getEcrfs().iterator();
-					while (ecrfIt.hasNext()) {
-						ECRFOutVO ecrf = (ECRFOutVO) ecrfIt.next();
-						Map ecrfModel = CoreUtil.createEmptyTemplateModel();
-						voFieldIt = getMassMailTemplateModelKeyValueIterator(ECRFOutVO.class, enumerateEntities, excludeEncryptedFields);
-						while (voFieldIt.hasNext()) {
-							KeyValueString keyValuePair = voFieldIt.next();
-							Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(ecrf).iterator();
-							while (indexesKeysIt.hasNext()) {
-								ArrayList<Object> indexesKeys = indexesKeysIt.next();
-								ecrfModel.put(keyValuePair.getKey(indexesKeys),
-										keyValuePair.getValue(locale, ecrf, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
-												excludeEncryptedFields));
+					model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, CoreUtil.createEmptyTemplateModel());
+					if (token != null) {
+						Iterator ecrfIt = ecrfDao.findByTrialActiveSorted(massMail.getTrial().getId(), null, true, null).iterator();
+						while (ecrfIt.hasNext()) {
+							ECRF ecrf = (ECRF) ecrfIt.next();
+							ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
+							Iterator<Visit> visitIt = ecrf.getVisits().iterator();
+							if (visitIt.hasNext()) {
+								while (visitIt.hasNext()) {
+									Visit visit = visitIt.next();
+									VisitOutVO visitVO = visitDao.toVisitOutVO(visit);
+									if (token.equals(ECRFDaoImpl.getUniqueEcrfName(ecrfVO, visitVO))) {
+										ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(probandListEntry.getId(), ecrf.getId(), visit.getId());
+										if (statusEntry != null) {
+											ECRFStatusEntryVO statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
+											Map ecrfStatusEntryModel = CoreUtil.createEmptyTemplateModel();
+											voFieldIt = getMassMailTemplateModelKeyValueIterator(ECRFStatusEntryVO.class, enumerateEntities, excludeEncryptedFields);
+											while (voFieldIt.hasNext()) {
+												KeyValueString keyValuePair = voFieldIt.next();
+												Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(statusEntryVO).iterator();
+												while (indexesKeysIt.hasNext()) {
+													ArrayList<Object> indexesKeys = indexesKeysIt.next();
+													ecrfStatusEntryModel.put(keyValuePair.getKey(indexesKeys),
+															keyValuePair.getValue(locale, statusEntryVO, indexesKeys, datetimePattern, datePattern, timePattern,
+																	enumerateEntities, excludeEncryptedFields));
+												}
+											}
+											model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, ecrfStatusEntryModel);
+										}
+									}
+								}
+							} else {
+								if (token.equals(ECRFDaoImpl.getUniqueEcrfName(ecrfVO, null))) {
+									ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(probandListEntry.getId(), ecrf.getId(), null);
+									if (statusEntry != null) {
+										ECRFStatusEntryVO statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
+										Map ecrfStatusEntryModel = CoreUtil.createEmptyTemplateModel();
+										voFieldIt = getMassMailTemplateModelKeyValueIterator(ECRFStatusEntryVO.class, enumerateEntities, excludeEncryptedFields);
+										while (voFieldIt.hasNext()) {
+											KeyValueString keyValuePair = voFieldIt.next();
+											Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(statusEntryVO).iterator();
+											while (indexesKeysIt.hasNext()) {
+												ArrayList<Object> indexesKeys = indexesKeysIt.next();
+												ecrfStatusEntryModel.put(keyValuePair.getKey(indexesKeys),
+														keyValuePair.getValue(locale, statusEntryVO, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+																excludeEncryptedFields));
+											}
+										}
+										model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, ecrfStatusEntryModel);
+									}
+								}
 							}
 						}
-						models.add(ecrfModel);
-						if (ecrf.getUniqueName().equals(token)) {
-							model.put(MassMailMessageTemplateParameters.ECRF, ecrfModel);
-						}
 					}
-					model.put(MassMailMessageTemplateParameters.ECRFS, models);
 				}
 				models = new ArrayList();
 				Collection inventoryBookings = inventoryBookingDao.findByProbandTrial(proband.getId(), massMail.getTrial().getId(), true, null, true);
@@ -3496,7 +3533,10 @@ public final class ServiceUtil {
 			ProcedureDao procedureDao,
 			MedicationDao medicationDao,
 			BankAccountDao bankAccountDao,
-			JournalEntryDao journalEntryDao)
+			JournalEntryDao journalEntryDao,
+			ECRFDao ecrfDao,
+			ECRFStatusEntryDao ecrfStatusEntryDao,
+			VisitDao visitDao)
 			throws ServiceException {
 		StringWriter result = new StringWriter();
 		try {
@@ -3509,7 +3549,10 @@ public final class ServiceUtil {
 					procedureDao,
 					medicationDao,
 					bankAccountDao,
-					journalEntryDao);
+					journalEntryDao,
+					ecrfDao,
+					ecrfStatusEntryDao,
+					visitDao);
 			velocityEngine.evaluate(new VelocityContext(model), result, massMail.getName(), massMail.getTextTemplate());
 		} catch (Exception e) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_INVALID_TEXT_TEMPLATE, massMail.getTextTemplate(), e.getMessage());

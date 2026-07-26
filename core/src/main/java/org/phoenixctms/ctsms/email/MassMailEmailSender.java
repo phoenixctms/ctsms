@@ -438,7 +438,10 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					procedureDao,
 					medicationDao,
 					bankAccountDao,
-					journalEntryDao);
+					journalEntryDao,
+					eCRFDao,
+					eCRFStatusEntryDao,
+					visitDao);
 			if (!CommonUtil.isEmptyString(message)) {
 				text.append(message);
 				if (massMailVO.getUseBeacon() && isHtml(massMail)) {

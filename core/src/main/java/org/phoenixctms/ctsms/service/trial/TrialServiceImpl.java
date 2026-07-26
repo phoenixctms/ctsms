@@ -2771,7 +2771,7 @@ public class TrialServiceImpl
 					break;
 				case ADD_MASSMAIL_RECIPIENT:
 					ServiceUtil.addEcrfMassMailRecipients(statusEntry, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
-							this.getMassMailRecipientDao(), this.getJournalEntryDao(), this.getECRFDao());
+							this.getMassMailRecipientDao(), this.getJournalEntryDao(), this.getECRFDao(), this.getVisitDao());
 					break;
 				default:
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.UNSUPPORTED_ECRF_STATUS_ACTION, ecrfStatusAction.getAction());
@@ -8994,7 +8994,7 @@ public class TrialServiceImpl
 			}
 			if (hasEcrfStatusAction(statusEntry.getStatus(), org.phoenixctms.ctsms.enumeration.ECRFStatusAction.ADD_MASSMAIL_RECIPIENT)) {
 				ServiceUtil.addEcrfMassMailRecipients(statusEntry, now, user, this.getMassMailDao(), this.getProbandDao(), this.getTrialDao(),
-						this.getMassMailRecipientDao(), this.getJournalEntryDao(), this.getECRFDao());
+						this.getMassMailRecipientDao(), this.getJournalEntryDao(), this.getECRFDao(), this.getVisitDao());
 			}
 			ECRFStatusEntryVO result = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
 			ServiceUtil.logSystemMessage(statusEntry.getListEntry().getTrial(), result.getListEntry().getProband(), now, user, SystemMessageCodes.ECRF_VALIDATED, result, original,
