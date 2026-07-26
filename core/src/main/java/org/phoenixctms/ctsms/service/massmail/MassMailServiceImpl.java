@@ -242,7 +242,10 @@ public class MassMailServiceImpl
 				this.getProcedureDao(),
 				this.getMedicationDao(),
 				this.getBankAccountDao(),
-				this.getJournalEntryDao());
+				this.getJournalEntryDao(),
+				this.getECRFDao(),
+				this.getECRFStatusEntryDao(),
+				this.getVisitDao());
 		CoreUtil.checkEmailAddress(massMailIn.getFromAddress(), true);
 		CoreUtil.checkEmailAddress(massMailIn.getReplyToAddress(), true);
 		if (!CommonUtil.isEmptyString(massMailIn.getOtherTo())) {
@@ -741,7 +744,10 @@ public class MassMailServiceImpl
 				this.getProcedureDao(),
 				this.getMedicationDao(),
 				this.getBankAccountDao(),
-				this.getJournalEntryDao());
+				this.getJournalEntryDao(),
+				this.getECRFDao(),
+				this.getECRFStatusEntryDao(),
+				this.getVisitDao());
 	}
 
 	@Override
