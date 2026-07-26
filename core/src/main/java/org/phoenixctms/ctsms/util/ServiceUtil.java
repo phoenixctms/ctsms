@@ -1971,13 +1971,14 @@ public final class ServiceUtil {
 					//					model.put(MassMailMessageTemplateParameters.NEXT_VISIT_SCHEDULE_ITEM, visitScheduleItemModel);
 					model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, CoreUtil.createEmptyTemplateModel());
 					if (token != null) {
+						boolean ecrfStatusEntryFound = false;
 						Iterator ecrfIt = ecrfDao.findByTrialActiveSorted(massMail.getTrial().getId(), null, true, null).iterator();
-						while (ecrfIt.hasNext()) {
+						while (!ecrfStatusEntryFound && ecrfIt.hasNext()) {
 							ECRF ecrf = (ECRF) ecrfIt.next();
 							ECRFOutVO ecrfVO = ecrfDao.toECRFOutVO(ecrf);
 							Iterator<Visit> visitIt = ecrf.getVisits().iterator();
 							if (visitIt.hasNext()) {
-								while (visitIt.hasNext()) {
+								while (!ecrfStatusEntryFound && visitIt.hasNext()) {
 									Visit visit = visitIt.next();
 									VisitOutVO visitVO = visitDao.toVisitOutVO(visit);
 									if (token.equals(ECRFDaoImpl.getUniqueEcrfName(ecrfVO, visitVO))) {
@@ -1997,28 +1998,28 @@ public final class ServiceUtil {
 												}
 											}
 											model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, ecrfStatusEntryModel);
+											ecrfStatusEntryFound = true;
 										}
 									}
 								}
-							} else {
-								if (token.equals(ECRFDaoImpl.getUniqueEcrfName(ecrfVO, null))) {
-									ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(probandListEntry.getId(), ecrf.getId(), null);
-									if (statusEntry != null) {
-										ECRFStatusEntryVO statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
-										Map ecrfStatusEntryModel = CoreUtil.createEmptyTemplateModel();
-										voFieldIt = getMassMailTemplateModelKeyValueIterator(ECRFStatusEntryVO.class, enumerateEntities, excludeEncryptedFields);
-										while (voFieldIt.hasNext()) {
-											KeyValueString keyValuePair = voFieldIt.next();
-											Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(statusEntryVO).iterator();
-											while (indexesKeysIt.hasNext()) {
-												ArrayList<Object> indexesKeys = indexesKeysIt.next();
-												ecrfStatusEntryModel.put(keyValuePair.getKey(indexesKeys),
-														keyValuePair.getValue(locale, statusEntryVO, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
-																excludeEncryptedFields));
-											}
+							} else if (token.equals(ECRFDaoImpl.getUniqueEcrfName(ecrfVO, null))) {
+								ECRFStatusEntry statusEntry = ecrfStatusEntryDao.findByListEntryEcrfVisit(probandListEntry.getId(), ecrf.getId(), null);
+								if (statusEntry != null) {
+									ECRFStatusEntryVO statusEntryVO = ecrfStatusEntryDao.toECRFStatusEntryVO(statusEntry);
+									Map ecrfStatusEntryModel = CoreUtil.createEmptyTemplateModel();
+									voFieldIt = getMassMailTemplateModelKeyValueIterator(ECRFStatusEntryVO.class, enumerateEntities, excludeEncryptedFields);
+									while (voFieldIt.hasNext()) {
+										KeyValueString keyValuePair = voFieldIt.next();
+										Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(statusEntryVO).iterator();
+										while (indexesKeysIt.hasNext()) {
+											ArrayList<Object> indexesKeys = indexesKeysIt.next();
+											ecrfStatusEntryModel.put(keyValuePair.getKey(indexesKeys),
+													keyValuePair.getValue(locale, statusEntryVO, indexesKeys, datetimePattern, datePattern, timePattern, enumerateEntities,
+															excludeEncryptedFields));
 										}
-										model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, ecrfStatusEntryModel);
 									}
+									model.put(MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, ecrfStatusEntryModel);
+									ecrfStatusEntryFound = true;
 								}
 							}
 						}
@@ -2065,7 +2066,7 @@ public final class ServiceUtil {
 		if (massMail != null) {
 			model.put(MassMailMessageTemplateParameters.SUBJECT,
 					getMassMailSubject(massMail.getSubjectFormat(), locale, massMail.getMaleSalutation(), massMail.getFemaleSalutation(), proband, massMail.getTrial(),
-							massMail.getProbandListStatus(), massMail.getVisitScheduleItems()));
+							massMail.getProbandListStatus(), massMail.getEcrfStatus(), token));
 			model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,
 					CommonUtil.getGenderSpecificSalutation(proband, massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
 			if (proband != null) {
@@ -3561,9 +3562,9 @@ public final class ServiceUtil {
 	}
 
 	public static String getMassMailSubject(String format, Locales locale, String maleSalutation, String femaleSalutation, ProbandOutVO proband, TrialOutVO trial,
-			ProbandListStatusTypeVO probandListStatusType, Collection<VisitScheduleItemOutVO> visitScheduleItems) throws ServiceException {
+			ProbandListStatusTypeVO probandListStatusType, ECRFStatusTypeVO ecrfStatusType, String token) throws ServiceException {
 		if (format != null) {
-			Object[] args = new String[10 + (visitScheduleItems != null ? 3 * visitScheduleItems.size() : 0)];
+			Object[] args = new String[12];
 			args[0] = CommonUtil.getGenderSpecificSalutation(proband, maleSalutation, femaleSalutation);
 			if (proband != null) {
 				args[1] = proband.getFirstName();
@@ -3602,19 +3603,12 @@ public final class ServiceUtil {
 			} else {
 				args[9] = "";
 			}
-			if (visitScheduleItems != null) {
-				int j = 10;
-				Iterator<VisitScheduleItemOutVO> it = visitScheduleItems.iterator();
-				while (it.hasNext()) {
-					VisitScheduleItemOutVO visitScheduleItem = it.next();
-					args[j] = visitScheduleItem.getName();
-					j += 1;
-					args[j] = visitScheduleItem.getVisit() != null ? visitScheduleItem.getVisit().getTitle() : "";
-					j += 1;
-					args[j] = visitScheduleItem.getToken() != null ? visitScheduleItem.getToken() : "";
-					j += 1;
-				}
+			if (ecrfStatusType != null) {
+				args[10] = L10nUtil.getEcrfStatusTypeName(locale, ecrfStatusType.getNameL10nKey());
+			} else {
+				args[10] = "";
 			}
+			args[11] = token != null ? token : "";
 			try {
 				return MessageFormat.format(format, args);
 			} catch (Exception e) {

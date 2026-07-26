@@ -156,8 +156,10 @@ public class MassMailServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_NOT_FALSE);
 			}
 		}
+		ECRFStatusTypeVO ecrfStatusTypeVO = null;
 		if (massMailIn.getEcrfStatusId() != null) {
-			CheckIDUtil.checkEcrfStatusTypeId(massMailIn.getEcrfStatusId(), this.getECRFStatusTypeDao());
+			ecrfStatusTypeVO = this.getECRFStatusTypeDao()
+					.toECRFStatusTypeVO(CheckIDUtil.checkEcrfStatusTypeId(massMailIn.getEcrfStatusId(), this.getECRFStatusTypeDao()));
 		} else {
 			if (massMailType.isEcrfStatusRequired()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_ECRF_STATUS_TYPE_REQUIRED,
@@ -232,7 +234,7 @@ public class MassMailServiceImpl
 		ServiceUtil.checkLocale(massMailIn.getLocale());
 		ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(), L10nUtil.getLocales(massMailIn.getLocale()), massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
 				null, trialVO,
-				probandListStatusTypeVO, visitScheduleItemVOs);
+				probandListStatusTypeVO, ecrfStatusTypeVO, null);
 		ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn), null, null, null, now, null, this.getTrialTagValueDao(), this.getProbandListEntryDao(),
 				this.getProbandListEntryTagValueDao(), this.getVisitScheduleItemDao(), this.getInventoryBookingDao(),
 				this.getProbandTagValueDao(),
@@ -705,21 +707,12 @@ public class MassMailServiceImpl
 
 	@Override
 	protected String handleGetSubject(AuthenticationVO auth, MassMailInVO massMailIn, Long probandId) throws ServiceException {
-		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
-		ArrayList<VisitScheduleItemOutVO> visitScheduleItemVOs = new ArrayList<VisitScheduleItemOutVO>(massMailIn.getVisitScheduleItemIds().size());
-		Iterator<Long> it = massMailIn.getVisitScheduleItemIds().iterator();
-		while (it.hasNext()) {
-			visitScheduleItemVOs.add(visitScheduleItemDao.toVisitScheduleItemOutVO(CheckIDUtil.checkVisitScheduleItemId(it.next(), visitScheduleItemDao)));
-		}
-		ECRFDao ecrfDao = this.getECRFDao();
-		ArrayList<ECRFOutVO> ecrfVOs = new ArrayList<ECRFOutVO>(massMailIn.getEcrfIds().size());
-		it = massMailIn.getEcrfIds().iterator();
-		while (it.hasNext()) {
-			ecrfVOs.add(ecrfDao.toECRFOutVO(CheckIDUtil.checkEcrfId(it.next(), ecrfDao)));
-		}
 		ProbandDao probandDao = this.getProbandDao();
 		TrialDao trialDao = this.getTrialDao();
 		ProbandListStatusTypeDao probandListStatusTypeDao = this.getProbandListStatusTypeDao();
+		ECRFStatusTypeVO ecrfStatusTypeVO = massMailIn.getEcrfStatusId() != null
+				? this.getECRFStatusTypeDao().toECRFStatusTypeVO(CheckIDUtil.checkEcrfStatusTypeId(massMailIn.getEcrfStatusId(), this.getECRFStatusTypeDao()))
+				: null;
 		return ServiceUtil.getMassMailSubject(massMailIn.getSubjectFormat(),
 				L10nUtil.getLocales(massMailIn.getLocale()),
 				massMailIn.getMaleSalutation(), massMailIn.getFemaleSalutation(),
@@ -727,7 +720,7 @@ public class MassMailServiceImpl
 				massMailIn.getTrialId() != null ? trialDao.toTrialOutVO(CheckIDUtil.checkTrialId(massMailIn.getTrialId(), trialDao)) : null,
 				massMailIn.getProbandListStatusId() != null ? probandListStatusTypeDao
 						.toProbandListStatusTypeVO(CheckIDUtil.checkProbandListStatusTypeId(massMailIn.getProbandListStatusId(), probandListStatusTypeDao)) : null,
-				visitScheduleItemVOs);
+				ecrfStatusTypeVO, null);
 	}
 
 	@Override
