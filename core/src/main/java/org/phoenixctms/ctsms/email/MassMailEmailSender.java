@@ -422,7 +422,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 			}
 			Locales locale = L10nUtil.getLocales(massMailVO.getLocale());
 			String subject = ServiceUtil.getMassMailSubject(massMailVO.getSubjectFormat(), locale, massMailVO.getMaleSalutation(), massMailVO.getFemaleSalutation(), probandVO,
-					massMailVO.getTrial(), massMailVO.getProbandListStatus(), massMailVO.getVisitScheduleItems());
+					massMailVO.getTrial(), massMailVO.getProbandListStatus(), massMailVO.getEcrfStatus(), recipientVO.getToken());
 			if (!CommonUtil.isEmptyString(subject)) {
 				mimeMessageHelper.setSubject(subject);
 				//} else {
