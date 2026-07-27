@@ -1078,7 +1078,7 @@ public class ToolsServiceImpl
 					userVO = this.getUserDao().toUserOutVO(user);
 					CommonUtil.copyInheritedUserToOut(this.getUserDao().toUserInheritedVO(user), userVO);
 				}
-				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.FAILED_LOGON, lastPasswordVO, null, journalEntryDao);
+				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.INVALID_CREDENTIALS, lastPasswordVO, null, journalEntryDao);
 			}
 			throw e;
 		} finally {
