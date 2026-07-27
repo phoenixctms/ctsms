@@ -1323,12 +1323,12 @@ public class SessionScopeBean implements FilterItemsStore {
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
-			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true, WebUtil.getRestApiJwtValidityPeriodSecs());
+			boolean requireOtp = Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED)
+					|| !WebUtil.isTrustedHost();
+			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true, WebUtil.getRestApiJwtValidityPeriodSecs(), requireOtp);
 			auth.setLocalPassword(null);
 			clearAuthenticationFailedMessage();
-			if (logon.getEnable2fa()
-					&& (Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED)
-							|| !WebUtil.isTrustedHost())) {
+			if (logon.getEnable2fa() && requireOtp) {
 				otpRequired = true;
 				outcome = getLoginOutcome(false);
 			} else {

@@ -1047,7 +1047,7 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected PasswordOutVO handleLogon(AuthenticationVO auth, boolean jwt, Long validityPeriodSecs) throws Exception {
+	protected PasswordOutVO handleLogon(AuthenticationVO auth, boolean jwt, Long validityPeriodSecs, boolean otpRequired) throws Exception {
 		Password lastPassword = null;
 		User user = null;
 		Timestamp now = null;
@@ -1060,12 +1060,14 @@ public class ToolsServiceImpl
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
-			if (lastPassword.isEnable2fa()) {
+			boolean effectiveOtp = lastPassword.isEnable2fa() && otpRequired;
+			if (effectiveOtp) {
 				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
 				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));
+			} else {
+				userVO = lastPasswordVO.getInheritedUser();
+				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);
 			}
-			userVO = lastPasswordVO.getInheritedUser();
-			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.CREDENTIALS_VERIFIED, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
 			lastPassword = CoreUtil.getLastPassword();
 			user = CoreUtil.getUser();
@@ -1078,7 +1080,7 @@ public class ToolsServiceImpl
 					userVO = this.getUserDao().toUserOutVO(user);
 					CommonUtil.copyInheritedUserToOut(this.getUserDao().toUserInheritedVO(user), userVO);
 				}
-				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.LOGON_FAILED, lastPasswordVO, null, journalEntryDao);
+				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.FAILED_LOGON, lastPasswordVO, null, journalEntryDao);
 			}
 			throw e;
 		} finally {
