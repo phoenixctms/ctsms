@@ -803,7 +803,7 @@ public class UserServiceImpl
 			Timestamp now = new Timestamp(System.currentTimeMillis());
 			if (!OTPAuthenticator.getInstance(password.getOtpType())
 					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpToken)) {
-				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.INVALID_OTP, passwordVO, null,
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.LOGON_FAILED, passwordVO, null,
 						this.getJournalEntryDao());
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_OTP);
 			} else {
@@ -814,7 +814,7 @@ public class UserServiceImpl
 				if (password.getLastSuccessfulLogonTimestamp() != null) {
 					now = password.getLastSuccessfulLogonTimestamp();
 				}
-				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.OTP_VERIFIED, passwordVO, null,
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.LOGON_SUCCESSFUL, passwordVO, null,
 						this.getJournalEntryDao());
 			}
 		}

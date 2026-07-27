@@ -336,10 +336,8 @@ public interface SystemMessageCodes {
 	public final static String JOURNAL_EXPORTED = "journal_exported";
 	public final static String ECRF_JOURNAL_EXPORTED = "ecrf_journal_exported";
 	public final static String DEPARTMENT_PASSWORD_CHANGED = "department_password_changed";
-	public final static String INVALID_CREDENTIALS = "invalid_credentials";
-	public final static String CREDENTIALS_VERIFIED = "credentials_verified";
-	public final static String INVALID_OTP = "invalid_otp";
-	public final static String OTP_VERIFIED = "otp_verified";
+	public final static String LOGON_FAILED = "logon_failed";
+	public final static String LOGON_SUCCESSFUL = "logon_successful";
 	public final static String PASSWORD_CREATED = "password_created";
 	public final static String LOCAL_PASSWORD_CREATED = "local_password_created";
 	public static final String PROBAND_LETTER_PDF_RENDERED = "proband_letter_pdf_rendered";
