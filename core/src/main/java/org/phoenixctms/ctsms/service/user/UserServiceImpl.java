@@ -814,7 +814,7 @@ public class UserServiceImpl
 				if (password.getLastSuccessfulLogonTimestamp() != null) {
 					now = password.getLastSuccessfulLogonTimestamp();
 				}
-				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.LOGON_SUCCESSFUL, passwordVO, null,
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.OTP_VERIFIED, passwordVO, null,
 						this.getJournalEntryDao());
 			}
 		}
