@@ -811,9 +811,6 @@ public class UserServiceImpl
 					password.setShowOtpRegistrationInfo(false);
 					this.getPasswordDao().update(password);
 				}
-				if (password.getLastSuccessfulLogonTimestamp() != null) {
-					now = password.getLastSuccessfulLogonTimestamp();
-				}
 				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.OTP_VERIFIED, passwordVO, null,
 						this.getJournalEntryDao());
 			}

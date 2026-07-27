@@ -437,5 +437,14 @@ if get_database_version() < '010901011' then
 
 end if;
 
+if get_database_version() < '010901012' then
+
+  UPDATE JOURNAL_ENTRY SET SYSTEM_MESSAGE_CODE = 'logon_successful' WHERE SYSTEM_MESSAGE_CODE = 'successful_logon';
+  UPDATE JOURNAL_ENTRY SET SYSTEM_MESSAGE_CODE = 'logon_failed' WHERE SYSTEM_MESSAGE_CODE = 'failed_logon';
+
+  perform set_database_version('010901012');
+
+end if;
+
 end
 $$;
