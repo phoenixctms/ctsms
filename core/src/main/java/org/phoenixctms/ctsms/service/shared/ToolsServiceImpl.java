@@ -1063,9 +1063,10 @@ public class ToolsServiceImpl
 			if (lastPassword.isEnable2fa()) {
 				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
 				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));
+			} else {
+				userVO = lastPasswordVO.getInheritedUser();
+				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.LOGON_SUCCESSFUL, lastPasswordVO, null, journalEntryDao);
 			}
-			userVO = lastPasswordVO.getInheritedUser();
-			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.CREDENTIALS_VERIFIED, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
 			lastPassword = CoreUtil.getLastPassword();
 			user = CoreUtil.getUser();
@@ -1078,7 +1079,7 @@ public class ToolsServiceImpl
 					userVO = this.getUserDao().toUserOutVO(user);
 					CommonUtil.copyInheritedUserToOut(this.getUserDao().toUserInheritedVO(user), userVO);
 				}
-				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.INVALID_CREDENTIALS, lastPasswordVO, null, journalEntryDao);
+				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.LOGON_FAILED, lastPasswordVO, null, journalEntryDao);
 			}
 			throw e;
 		} finally {
