@@ -42,6 +42,10 @@ import org.phoenixctms.ctsms.web.jersey.resource.ArgsUriPart;
 import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.wrapper.AddUserPasswordWrapper;
 import org.phoenixctms.ctsms.web.jersey.wrapper.NoShortcutSerializationWrapper;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
 import com.google.gson.JsonElement;
@@ -190,7 +194,9 @@ public final class ToolsResource {
 		if (jwt && validityPeriodSecs == null) {
 			validityPeriodSecs = WebUtil.getRestApiJwtValidityPeriodSecs(request);
 		}
-		return WebUtil.getServiceLocator().getToolsService().logon(auth, jwt, validityPeriodSecs);
+		return WebUtil.getServiceLocator().getToolsService().logon(auth, jwt, validityPeriodSecs,
+				Settings.getBoolean(SettingCodes.TRUSTED_HOST_2FA_REQUIRED, Bundle.SETTINGS, DefaultSettings.TRUSTED_HOST_2FA_REQUIRED)
+						|| !WebUtil.isTrustedHost(request));
 	}
 
 	@POST
