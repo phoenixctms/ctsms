@@ -1063,10 +1063,9 @@ public class ToolsServiceImpl
 			if (lastPassword.isEnable2fa()) {
 				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
 				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));
-			} else {
-				userVO = lastPasswordVO.getInheritedUser();
-				ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.LOGON_SUCCESSFUL, lastPasswordVO, null, journalEntryDao);
 			}
+			userVO = lastPasswordVO.getInheritedUser();
+			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.CREDENTIALS_VERIFIED, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
 			lastPassword = CoreUtil.getLastPassword();
 			user = CoreUtil.getUser();
