@@ -799,19 +799,21 @@ public class UserServiceImpl
 		}
 		Password password = this.getPasswordDao().findLastPassword(user.getId());
 		if (password != null && password.isEnable2fa()) {
+			PasswordOutVO passwordVO = this.getPasswordDao().toPasswordOutVO(password);
+			Timestamp now = new Timestamp(System.currentTimeMillis());
 			if (!OTPAuthenticator.getInstance(password.getOtpType())
 					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpToken)) {
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.INVALID_OTP, passwordVO, null,
+						this.getJournalEntryDao());
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_OTP);
 			} else {
 				if (password.isShowOtpRegistrationInfo()) {
 					password.setShowOtpRegistrationInfo(false);
 					this.getPasswordDao().update(password);
 				}
-				Timestamp now = password.getLastSuccessfulLogonTimestamp();
-				if (now == null) {
-					now = new Timestamp(System.currentTimeMillis());
+				if (password.getLastSuccessfulLogonTimestamp() != null) {
+					now = password.getLastSuccessfulLogonTimestamp();
 				}
-				PasswordOutVO passwordVO = this.getPasswordDao().toPasswordOutVO(password);
 				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.OTP_VERIFIED, passwordVO, null,
 						this.getJournalEntryDao());
 			}
