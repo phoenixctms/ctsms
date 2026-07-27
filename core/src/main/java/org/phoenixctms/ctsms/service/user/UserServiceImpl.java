@@ -802,9 +802,18 @@ public class UserServiceImpl
 			if (!OTPAuthenticator.getInstance(password.getOtpType())
 					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpToken)) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_OTP);
-			} else if (password.isShowOtpRegistrationInfo()) {
-				password.setShowOtpRegistrationInfo(false);
-				this.getPasswordDao().update(password);
+			} else {
+				if (password.isShowOtpRegistrationInfo()) {
+					password.setShowOtpRegistrationInfo(false);
+					this.getPasswordDao().update(password);
+				}
+				Timestamp now = password.getLastSuccessfulLogonTimestamp();
+				if (now == null) {
+					now = new Timestamp(System.currentTimeMillis());
+				}
+				PasswordOutVO passwordVO = this.getPasswordDao().toPasswordOutVO(password);
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.OTP_VERIFIED, passwordVO, null,
+						this.getJournalEntryDao());
 			}
 		}
 	}

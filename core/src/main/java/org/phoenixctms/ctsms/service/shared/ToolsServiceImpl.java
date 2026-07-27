@@ -1065,7 +1065,7 @@ public class ToolsServiceImpl
 				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));
 			}
 			userVO = lastPasswordVO.getInheritedUser();
-			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.SUCCESSFUL_LOGON, lastPasswordVO, null, journalEntryDao);
+			ServiceUtil.logSystemMessage(user, userVO, now, user, SystemMessageCodes.CREDENTIALS_VERIFIED, lastPasswordVO, null, journalEntryDao);
 		} catch (AuthenticationException e) {
 			lastPassword = CoreUtil.getLastPassword();
 			user = CoreUtil.getUser();
