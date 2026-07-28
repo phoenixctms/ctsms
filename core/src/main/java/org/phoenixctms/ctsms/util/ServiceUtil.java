@@ -4119,10 +4119,20 @@ public final class ServiceUtil {
 
 	public static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
 			JournalEntryDao journalEntryDao) throws Exception {
+		return logSystemMessage(user, userVO, now, modified, systemMessageCode, result, original, null, journalEntryDao);
+	}
+
+	public static JournalEntry logSystemMessage(User user, UserOutVO userVO, Timestamp now, User modified, String systemMessageCode, Object result, Object original,
+			String otp, JournalEntryDao journalEntryDao) throws Exception {
 		if (user == null) {
 			return null;
 		}
-		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode, new Object[] { CommonUtil.userOutVOToString(userVO) },
+		String otpDetail = "";
+		if (!CommonUtil.isEmptyString(otp)) {
+			otpDetail = L10nUtil.getSystemMessageTitle(Locales.JOURNAL, "logon_otp_detail", new Object[] { otp });
+		}
+		return journalEntryDao.addSystemMessage(user, now, modified, systemMessageCode,
+				new Object[] { CommonUtil.userOutVOToString(userVO), otpDetail },
 				new Object[] { CoreUtil.getSystemMessageCommentContent(result, original, !CommonUtil.getUseJournalEncryption(JournalModule.USER_JOURNAL, null)) });
 	}
 

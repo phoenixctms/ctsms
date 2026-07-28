@@ -801,9 +801,10 @@ public class UserServiceImpl
 		if (password != null && password.isEnable2fa()) {
 			PasswordOutVO passwordVO = this.getPasswordDao().toPasswordOutVO(password);
 			Timestamp now = new Timestamp(System.currentTimeMillis());
+			String otp = auth.getOtp();
 			if (!OTPAuthenticator.getInstance(password.getOtpType())
-					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), auth.getOtp(), otpToken)) {
-				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.FAILED_LOGON, passwordVO, null,
+					.verifyOtp(CryptoUtil.decryptOtpSecret(password, CryptoUtil.decryptPassword(password, plainDepartmentPassword)), otp, otpToken)) {
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.FAILED_LOGON, passwordVO, null, otp,
 						this.getJournalEntryDao());
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_OTP);
 			} else {
@@ -811,7 +812,7 @@ public class UserServiceImpl
 					password.setShowOtpRegistrationInfo(false);
 					this.getPasswordDao().update(password);
 				}
-				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.SUCCESSFUL_LOGON, passwordVO, null,
+				ServiceUtil.logSystemMessage(user, passwordVO.getInheritedUser(), now, user, SystemMessageCodes.SUCCESSFUL_LOGON, passwordVO, null, otp,
 						this.getJournalEntryDao());
 			}
 		}
