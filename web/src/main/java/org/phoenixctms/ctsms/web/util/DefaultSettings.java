@@ -800,6 +800,7 @@ public final class DefaultSettings {
 	public static final boolean SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = false;
 	public final static int TAB_TITLE_LIST_CLIP_MAX_LENGTH = 56;
 	public static final boolean TRUSTED_HOST_2FA_REQUIRED = false;
+	public static final boolean API_TRUSTED_HOST_2FA_REQUIRED = false;
 	public static final boolean ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET = false;
 
 	private DefaultSettings() {
