@@ -1047,7 +1047,7 @@ public class ToolsServiceImpl
 	}
 
 	@Override
-	protected PasswordOutVO handleLogon(AuthenticationVO auth, boolean jwt, Long validityPeriodSecs, boolean otpRequired) throws Exception {
+	protected PasswordOutVO handleLogon(AuthenticationVO auth, boolean jwt, Long validityPeriodSecs) throws Exception {
 		Password lastPassword = null;
 		User user = null;
 		Timestamp now = null;
@@ -1056,11 +1056,11 @@ public class ToolsServiceImpl
 		PasswordOutVO lastPasswordVO;
 		UserOutVO userVO;
 		try {
-			lastPassword = authenticator.authenticate(auth, true);
+			lastPassword = authenticator.authenticate(auth, true, CoreUtil.getServiceMethodName(ToolsService.class, "logon"));
 			user = lastPassword.getUser();
 			now = lastPassword.getLastSuccessfulLogonTimestamp();
 			lastPasswordVO = passwordDao.toPasswordOutVO(lastPassword);
-			boolean effectiveOtp = lastPassword.isEnable2fa() && otpRequired;
+			boolean effectiveOtp = lastPassword.isEnable2fa() && auth.isOtpRequired();
 			if (effectiveOtp) {
 				OTPAuthenticator otpAuthenticator = OTPAuthenticator.getInstance(lastPassword.getOtpType());
 				lastPasswordVO.setOtpToken(otpAuthenticator.sendOtp(user));

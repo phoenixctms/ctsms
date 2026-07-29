@@ -2466,7 +2466,7 @@ public class DemoDataProvider {
 	}
 
 	private AuthenticationVO getAuth(int departmentNum, int userNum) {
-		return new AuthenticationVO(getUsername(departmentNum, userNum), getUserPassword(departmentNum, userNum), null, null, "localhost", CommonUtil.EXEC_REALM, null);
+		return new AuthenticationVO(getUsername(departmentNum, userNum), getUserPassword(departmentNum, userNum), null, null, "localhost", CommonUtil.EXEC_REALM, null, false);
 	}
 
 	private CriteriaOutVO getCriteria(AuthenticationVO auth, SearchCriteria criteria) throws Throwable {
@@ -2957,7 +2957,7 @@ public class DemoDataProvider {
 
 	private AuthenticationVO getRandomAuth(int departmentNum) {
 		int userNum = random.nextInt(usersPerDepartmentCount);
-		return new AuthenticationVO(getUsername(departmentNum, userNum), getUserPassword(departmentNum, userNum), null, null, "localhost", CommonUtil.EXEC_REALM, null);
+		return new AuthenticationVO(getUsername(departmentNum, userNum), getUserPassword(departmentNum, userNum), null, null, "localhost", CommonUtil.EXEC_REALM, null, false);
 	}
 
 	private AuthenticationVO getRandomAuth(long departmentId) {

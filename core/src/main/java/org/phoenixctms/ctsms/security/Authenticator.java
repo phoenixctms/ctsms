@@ -178,9 +178,10 @@ public class Authenticator {
 					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.HOST_NOT_ALLOWED_OR_UNKNOWN_HOST, auth.getUsername(), auth.getHost());
 				}
 			}
-			if (CommonUtil.API_REALM.equals(auth.getRealm())
+			// OTP challenge is started by ToolsService.logon; do not reject that path.
+			if (auth.isOtpRequired()
 					&& CommonUtil.isEmptyString(auth.getJwt())
-					&& Settings.getBoolean(SettingCodes.API_2FA_JWT_ONLY, Bundle.SETTINGS, DefaultSettings.API_2FA_JWT_ONLY)) {
+					&& !CoreUtil.getServiceMethodName(ToolsService.class, "logon").equals(methodName)) {
 				Password lastPassword = passwordDao.findLastPassword(user.getId());
 				if (lastPassword != null && lastPassword.isEnable2fa()) {
 					throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.API_2FA_NOT_SUPPORTED);

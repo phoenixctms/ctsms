@@ -621,5 +621,6 @@ public interface SettingCodes {
 	public static final String SHOW_TRIAL_TRAINING_RECORD_MENUITEMS = "show_trial_training_record_menuitems";
 	public final static String TAB_TITLE_LIST_CLIP_MAX_LENGTH = "tab_title_list_clip_max_length";
 	public static final String TRUSTED_HOST_2FA_REQUIRED = "trusted_host_2fa_required";
+	public static final String API_TRUSTED_HOST_2FA_REQUIRED = "api_trusted_host_2fa_required";
 	public static final String ECRF_PROGRESS_SUMMARY_SHOW_DUE_DETAIL_PRESET = "ecrf_progress_summary_show_due_detail_preset";
 }
