@@ -55,6 +55,7 @@ public class Authenticator {
 	private LdapService ldapService1;
 	private LdapService ldapService2;
 	private final static String JWT_PWD_HEADER_KEY = "pwd";
+	private final static String JWT_USERNAME_CLAIM = "username";
 
 	public String issueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
 		return buildJwtFromUserContext(validityPeriodSecs);
@@ -75,6 +76,7 @@ public class Authenticator {
 		jwtBuilder.setId(CommonUtil.generateUUID());
 		//user id to lookup when verifying:
 		jwtBuilder.setSubject(Long.toString(user.getId()));
+		jwtBuilder.claim(JWT_USERNAME_CLAIM, user.getName());
 		if (validityPeriodSecs != null) {
 			//expiry, if specified
 			jwtBuilder.setExpiration(new Date(System.currentTimeMillis() + validityPeriodSecs * 1000l));
