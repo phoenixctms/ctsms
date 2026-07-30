@@ -2144,7 +2144,8 @@ public class TrialServiceImpl
 		}
 		//long valueCount = this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false);
 		if (!field.equals(originalEcrfField.getField()) && this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false) > 0) {
-			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_INPUT_FIELD_CHANGED);
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_INPUT_FIELD_CHANGED,
+					this.getECRFFieldDao().toLightECRFFieldOutVO(originalEcrfField).getUniqueName());
 		}
 		if (originalEcrfField.isSeries() != ecrfFieldIn.getSeries()) {
 			if (this.getECRFFieldValueDao().getCount(ecrfFieldIn.getId(), false) > 0) {
