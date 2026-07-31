@@ -774,6 +774,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			String jwt = WebUtil.getServiceLocator().getToolsService().issueJwt(auth, getRestApiJwtValidityPeriodSecs());
 			if (!CommonUtil.isEmptyString(jwt)) {
 				logon.setJwt(jwt);
+				auth.setJwt(jwt);
 			}
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
@@ -1320,6 +1321,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized String login() {
 		logon = null;
 		otpRequired = false;
+		auth.setJwt(null);
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
 		try {
@@ -1327,6 +1329,7 @@ public class SessionScopeBean implements FilterItemsStore {
 					|| !WebUtil.isTrustedHost());
 			logon = WebUtil.getServiceLocator().getToolsService().logon(auth, true, WebUtil.getRestApiJwtValidityPeriodSecs());
 			auth.setLocalPassword(null);
+			auth.setJwt(logon.getJwt());
 			clearAuthenticationFailedMessage();
 			if (logon.getEnable2fa() && auth.isOtpRequired()) {
 				otpRequired = true;
@@ -1428,6 +1431,9 @@ public class SessionScopeBean implements FilterItemsStore {
 			} finally {
 				otpRequired = false;
 				auth.setOtp(null);
+				if (logon == null) {
+					auth.setJwt(null);
+				}
 				initSets();
 			}
 		} else {
@@ -1437,6 +1443,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			auth.setPassword(null);
 			auth.setLocalPassword(null);
 			auth.setOtp(null);
+			auth.setJwt(null);
 			clearAuthenticationFailedMessage();
 			initSets();
 			outcome = getLoginOutcome(false);
@@ -1494,6 +1501,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		auth.setPassword(null);
 		auth.setLocalPassword(null);
 		auth.setOtp(null);
+		auth.setJwt(null);
 		clearAuthenticationFailedMessage();
 		initSets();
 		return getLoginOutcome(false);
