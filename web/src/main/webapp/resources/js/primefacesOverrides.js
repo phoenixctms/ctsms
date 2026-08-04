@@ -707,6 +707,50 @@ PrimeFaces.widget.SelectBooleanCheckbox.prototype.setValue = function(value) {
   }
 }
 
+// PF 3.3.1 BaseWidget.refresh() re-runs init/bindEvents without unbinding.
+// After AJAX that can stack handlers on surviving nodes; clear first.
+PrimeFaces.widget.SelectManyCheckbox.prototype.refresh = function(cfg) {
+  if (this.outputs) {
+    this.outputs.unbind();
+  }
+  if (this.inputs) {
+    this.inputs.unbind();
+  }
+  if (this.labels) {
+    this.labels.unbind();
+  }
+  return this.init(cfg);
+}
+
+PrimeFaces.widget.SelectOneRadio.prototype.refresh = function(cfg) {
+  if (this.outputs) {
+    this.outputs.unbind();
+  }
+  if (this.inputs) {
+    this.inputs.unbind();
+  }
+  if (this.labels) {
+    this.labels.unbind();
+  }
+  return this.init(cfg);
+}
+
+// Tooltip tips are moved to document.body; unbind old target handlers on ajax refresh.
+PrimeFaces.widget.Tooltip.prototype.refresh = function(cfg) {
+  if (this.target && this.cfg) {
+    if (this.cfg.showEvent) {
+      this.target.unbind(this.cfg.showEvent);
+    }
+    if (this.cfg.hideEvent) {
+      this.target.unbind(this.cfg.hideEvent);
+    }
+  }
+  if (this.timeout) {
+    clearTimeout(this.timeout);
+  }
+  return this.init(cfg);
+}
+
 PrimeFaces.widget.SelectManyCheckbox.prototype.getValue = function() {
 
   var result = [];

@@ -32,6 +32,36 @@ td .ui-selectonemenu {
     margin: 3px 3px;
 }
 
+/*
+ * SelectManyCheckbox (PF 3.3.1): hidden inputs use position:absolute inside
+ * .ui-helper-hidden-accessible, but .ui-chkbox is not a positioning context
+ * (unlike .ui-radiobutton). After AJAX/reflow those helpers can cover the
+ * option list with theme chrome and steal clicks until a full reload.
+ */
+.ui-selectmanycheckbox .ui-chkbox {
+	position: relative;
+}
+
+.ui-selectmanycheckbox .ui-helper-hidden-accessible,
+.ui-selectoneradio .ui-helper-hidden-accessible {
+	width: 1px !important;
+	height: 1px !important;
+	margin: -1px !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	clip: rect(0, 0, 0, 0) !important;
+	border: 0 !important;
+}
+
+.ui-selectmanycheckbox,
+.ui-selectmanycheckbox tr,
+.ui-selectmanycheckbox td {
+	border: none !important;
+	background: none !important;
+	background-image: none !important;
+	box-shadow: none !important;
+}
+
 .ui-expanded-row-content  {
 	text-shadow: unset !important;
 }
