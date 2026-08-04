@@ -70,6 +70,7 @@
 							<h:panelGroup>
 								<p:inputText id="username" value="#{sessionScopeBean.username}"
 									required="true" label="#{labels.login_username}"
+									autocomplete="username"
 									styleClass="ctsms-control" />
 								<p:tooltip rendered="false" for="username">
 									<h:outputText value="#{labels.login_username_tooltip}"
@@ -82,7 +83,7 @@
 							<h:panelGroup>
 								<p:password id="password" value="#{sessionScopeBean.password}"
 									required="false" feedback="false"
-									autocomplete="new-password"
+									autocomplete="current-password"
 									redisplay="#{sessionScopeBean.localPasswordRequired}"
 									label="#{labels.login_password}" styleClass="ctsms-password" />
 								<p:tooltip rendered="false" for="password">

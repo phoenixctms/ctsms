@@ -1581,3 +1581,67 @@ function rgb2hex(rgb) {
     }
     return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 }
+
+var AUTOFILL_SKIP_TYPES = {
+	hidden : true,
+	submit : true,
+	button : true,
+	checkbox : true,
+	radio : true,
+	file : true,
+	image : true,
+	reset : true
+};
+
+var AUTOFILL_READONLY_TYPES = {
+	text : true,
+	email : true,
+	tel : true,
+	search : true,
+	url : true,
+	password : true,
+	number : true,
+	date : true,
+	datetime : true,
+	'datetime-local' : true,
+	month : true,
+	week : true,
+	time : true
+};
+
+function disableBrowserAutofill(root) {
+	if (typeof IS_LOGIN_WINDOW !== 'undefined' && IS_LOGIN_WINDOW) {
+		return;
+	}
+	var $root = root ? jQuery(root) : jQuery(document);
+	$root.find('form').attr('autocomplete', 'off');
+	$root.find('input, textarea, select').each(function() {
+		var el = this;
+		var $el = jQuery(el);
+		var tag = (el.tagName || '').toLowerCase();
+		var type = (el.type || '').toLowerCase();
+		if (tag === 'input' && AUTOFILL_SKIP_TYPES[type]) {
+			return;
+		}
+		$el.attr('autocomplete', 'ctsms-off');
+		var useReadonly = tag === 'textarea'
+				|| (tag === 'input' && (!type || AUTOFILL_READONLY_TYPES[type]));
+		if (!useReadonly || $el.data('ctsmsAutofillGuard')) {
+			return;
+		}
+		$el.data('ctsmsAutofillGuard', true);
+		if (!$el.prop('readonly')) {
+			$el.prop('readonly', true);
+			$el.one('focus.ctsmsAutofill', function() {
+				jQuery(this).prop('readonly', false);
+			});
+		}
+	});
+}
+
+jQuery(function() {
+	disableBrowserAutofill();
+});
+jQuery(document).ajaxComplete(function() {
+	disableBrowserAutofill();
+});
