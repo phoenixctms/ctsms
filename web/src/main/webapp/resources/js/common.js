@@ -1609,7 +1609,7 @@ var AUTOFILL_READONLY_TYPES = {
 	time : true
 };
 
-function disableBrowserAutofill(root) {
+function disableBrowserAutofill(root, reinit) {
 	if (typeof IS_LOGIN_WINDOW !== 'undefined' && IS_LOGIN_WINDOW) {
 		return;
 	}
@@ -1626,14 +1626,34 @@ function disableBrowserAutofill(root) {
 		$el.attr('autocomplete', 'ctsms-off');
 		var useReadonly = tag === 'textarea'
 				|| (tag === 'input' && (!type || AUTOFILL_READONLY_TYPES[type]));
-		if (!useReadonly || $el.data('ctsmsAutofillGuard')) {
+		if (!useReadonly) {
+			return;
+		}
+		if (reinit) {
+			$el.removeData('ctsmsAutofillGuard');
+			$el.removeData('ctsmsAutofillUnlocked');
+			$el.off('focus.ctsmsAutofill');
+		}
+		// User already unlocked this field; keep editable across AJAX (e.g. autocomplete).
+		if ($el.data('ctsmsAutofillUnlocked')) {
+			return;
+		}
+		// Stale guard: marked protected but editable again without unlock (reused/reinit).
+		if ($el.data('ctsmsAutofillGuard') && !$el.prop('readonly')) {
+			$el.removeData('ctsmsAutofillGuard');
+			$el.off('focus.ctsmsAutofill');
+		}
+		if ($el.data('ctsmsAutofillGuard')) {
 			return;
 		}
 		$el.data('ctsmsAutofillGuard', true);
-		if (!$el.prop('readonly')) {
+		if (!$el.prop('readonly') && $el[0] !== document.activeElement) {
 			$el.prop('readonly', true);
 			$el.one('focus.ctsmsAutofill', function() {
-				jQuery(this).prop('readonly', false);
+				jQuery(this)
+					.prop('readonly', false)
+					.removeData('ctsmsAutofillGuard')
+					.data('ctsmsAutofillUnlocked', true);
 			});
 		}
 	});
