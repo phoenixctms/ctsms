@@ -806,7 +806,7 @@ public class ToolsServiceImpl
 						result.append(fileNameExtensionsString);
 						result.append(")");
 						try {
-							Pattern.compile(result.toString() + ")$/");
+							Pattern.compile(result.toString() + ")$/i");
 						} catch (PatternSyntaxException e) {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.INVALID_REGEXP_PATTERN_FROM_FILE_EXTENSION, fileNameExtensionsString, e.getMessage());
 						}
@@ -836,7 +836,7 @@ public class ToolsServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.NO_MIME_TYPES_OR_FILE_EXTENSIONS);
 		}
 		if (CommonUtil.FILE_EXTENSION_REGEXP_MODE) {
-			result.append(")$/");
+			result.append(")$/i");
 		}
 		return result.toString();
 	}

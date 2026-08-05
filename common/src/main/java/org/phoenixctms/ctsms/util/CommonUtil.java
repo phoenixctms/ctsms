@@ -158,7 +158,9 @@ public final class CommonUtil {
 	private final static String DEFAULT_INPUT_DATETIME_PATTERN = DEFAULT_INPUT_DATE_PATTERN + " " + DEFAULT_INPUT_TIME_PATTERN; // "yyyy-MM-dd HH:mm"; //must not be locale
 	public final static String DIGITS_ONLY_DATETIME_PATTERN = "yyyyMMddHHmmss";
 	public final static boolean FILE_EXTENSION_REGEXP_MODE = true; // different primefaces versions(?), etc...
-	public final static String DEFAULT_FILE_EXTENSION_PATTERN = (FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)([a-zA-Z0-9]+)$/" : "*.*");
+	// Case-insensitive (/i): Windows/Office often keep uppercase extensions (.CSV); without /i,
+	// PrimeFaces allowTypes only matches via MIME (text/csv), which Office remaps to application/vnd.ms-excel.
+	public final static String DEFAULT_FILE_EXTENSION_PATTERN = (FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)([a-zA-Z0-9]+)$/i" : "*.*");
 	public final static Pattern FILE_EXTENSION_PATTERN_REGEXP = Pattern.compile("^\\*\\.[a-zA-Z0-9]+$");
 	public final static boolean HTML_SYSTEM_MESSAGES_COMMENTS = true;
 	public final static boolean HTML_AUDIT_TRAIL_CHANGE_COMMENTS = true;
