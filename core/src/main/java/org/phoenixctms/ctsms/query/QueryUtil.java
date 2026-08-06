@@ -826,12 +826,28 @@ public final class QueryUtil {
 								hqlTerm.append(".id != ?");
 								break;
 							case EQ:
-								hqlTerm.append(propertyName);
-								hqlTerm.append(" = ?");
+								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
+										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
+									int before = queryValues.size();
+									appendHashForSearchTextContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
+									queryValueAdded = queryValues.size() > before;
+								} else {
+									hqlTerm.append(propertyName);
+									hqlTerm.append(" = ?");
+								}
 								break;
 							case NE:
-								hqlTerm.append(propertyName);
-								hqlTerm.append(" != ?");
+								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
+										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
+									int before = queryValues.size();
+									hqlTerm.append("not (");
+									appendHashForSearchTextContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
+									hqlTerm.append(")");
+									queryValueAdded = queryValues.size() > before;
+								} else {
+									hqlTerm.append(propertyName);
+									hqlTerm.append(" != ?");
+								}
 								break;
 							case GT:
 								hqlTerm.append(propertyName);
@@ -850,13 +866,27 @@ public final class QueryUtil {
 								hqlTerm.append(" <= ?");
 								break;
 							case LIKE:
-								hqlTerm.append(propertyName);
-								hqlTerm.append(" like ?");
+								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
+										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
+									int before = queryValues.size();
+									appendHashForSearchTextContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
+									queryValueAdded = queryValues.size() > before;
+								} else {
+									hqlTerm.append(propertyName);
+									hqlTerm.append(" like ?");
+								}
 								break;
 							case ILIKE:
-								hqlTerm.append("lower(");
-								hqlTerm.append(propertyName);
-								hqlTerm.append(") like lower(?)");
+								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
+										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
+									int before = queryValues.size();
+									appendHashForSearchTextContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
+									queryValueAdded = queryValues.size() > before;
+								} else {
+									hqlTerm.append("lower(");
+									hqlTerm.append(propertyName);
+									hqlTerm.append(") like lower(?)");
+								}
 								break;
 							case IS_EMPTY:
 								hqlTerm.append(propertyName);
