@@ -488,10 +488,15 @@ public final class CryptoUtil {
 		if (substrings.isEmpty()) {
 			return hashForSearchValue(text);
 		}
+		// Leading block = exact full-string digest so EQ can use position(? in col) = 1
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] exactHash = hashForSearchValue(text);
+		if (exactHash != null) {
+			out.write(exactHash, 0, exactHash.length);
+		}
 		for (String substring : substrings) {
 			byte[] hash = hashForSearchValue(substring);
-			if (hash != null) {
+			if (hash != null && (exactHash == null || !Arrays.equals(hash, exactHash))) {
 				out.write(hash, 0, hash.length);
 			}
 		}
@@ -507,9 +512,13 @@ public final class CryptoUtil {
 			return hashForSearchValue(departmentKey, text);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] exactHash = hashForSearchValue(departmentKey, text);
+		if (exactHash != null) {
+			out.write(exactHash, 0, exactHash.length);
+		}
 		for (String substring : substrings) {
 			byte[] hash = hashForSearchValue(departmentKey, substring);
-			if (hash != null) {
+			if (hash != null && (exactHash == null || !Arrays.equals(hash, exactHash))) {
 				out.write(hash, 0, hash.length);
 			}
 		}
@@ -525,9 +534,13 @@ public final class CryptoUtil {
 			return hashForSearchValue(salt, password, text);
 		}
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] exactHash = hashForSearchValue(salt, password, text);
+		if (exactHash != null) {
+			out.write(exactHash, 0, exactHash.length);
+		}
 		for (String substring : substrings) {
 			byte[] hash = hashForSearchValue(salt, password, substring);
-			if (hash != null) {
+			if (hash != null && (exactHash == null || !Arrays.equals(hash, exactHash))) {
 				out.write(hash, 0, hash.length);
 			}
 		}
