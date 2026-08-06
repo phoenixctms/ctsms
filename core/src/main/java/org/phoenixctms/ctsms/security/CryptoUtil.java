@@ -456,7 +456,7 @@ public final class CryptoUtil {
 		return CommonUtil.generateWordSubstrings(text, minLength, getHashForSearchWordSubstringMatchMode(), isHashForSearchWordSubstringCaseInsensitive());
 	}
 
-	private static boolean isHashForSearchWordSubstringCaseInsensitive() {
+	public static boolean isHashForSearchWordSubstringCaseInsensitive() {
 		if (!Settings.getBoolean(SettingCodes.HASH_FOR_SEARCH_WORD_SUBSTRING_CASE_INSENSITIVE, Bundle.SETTINGS,
 				DefaultSettings.HASH_FOR_SEARCH_WORD_SUBSTRING_CASE_INSENSITIVE)) {
 			return false;
