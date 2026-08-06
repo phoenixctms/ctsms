@@ -104,6 +104,8 @@ public final class CriteriaUtil {
 	private final static String ALTERNATIVE_FILTER_ALIAS_VARIANTS = "aliasVariants";
 	private final static HashMap<String, String[]> ALTERNATIVE_FILTER_MAP = new HashMap<String, String[]>();
 	static {
+		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.firstNameHash",
+				new String[] { ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
 				new String[] { "alias", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS, ALTERNATIVE_FILTER_ALIAS_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("PersonContactParticulars.lastName",
