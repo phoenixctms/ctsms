@@ -319,10 +319,10 @@ public final class QueryUtil {
 		return result;
 	}
 
-	private static void appendHashForSearchContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
+	private static boolean appendHashForSearchContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
 			throws Exception {
 		if (CommonUtil.isEmptyString(text)) {
-			return;
+			return false;
 		}
 		hqlWhereClause.append("bytelocate(?, ");
 		hqlWhereClause.append(propertyName);
@@ -330,13 +330,14 @@ public final class QueryUtil {
 		CriterionInstantVO criterion = new CriterionInstantVO();
 		criterion.setStringValue(text);
 		queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+		return true;
 	}
 
 	/** EQ: full-string digest is stored as the leading block — match prefix only. */
-	private static void appendHashForSearchEqHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
+	private static boolean appendHashForSearchEqHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
 			throws Exception {
 		if (CommonUtil.isEmptyString(text)) {
-			return;
+			return false;
 		}
 		hqlWhereClause.append("bytelocate(?, ");
 		hqlWhereClause.append(propertyName);
@@ -344,42 +345,30 @@ public final class QueryUtil {
 		CriterionInstantVO criterion = new CriterionInstantVO();
 		criterion.setStringValue(text);
 		queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
+		return true;
 	}
 
-	private static void appendHashForSearchTextContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
+	private static boolean appendHashForSearchVariantsContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
 			throws Exception {
-		appendHashForSearchTextContainsHql(hqlWhereClause, queryValues, propertyName, text, false);
-	}
-
-	private static void appendHashForSearchTextContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text,
-			boolean caseInsensitive) throws Exception {
-		if (caseInsensitive) {
-			if (!CryptoUtil.isHashForSearchWordSubstringCaseInsensitive()) {
-				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_CRITERION_RESTRICTION,
-						DefaultMessages.UNSUPPORTED_CRITERION_RESTRICTION, new Object[] { "ILIKE" }));
-			}
-			if (CommonUtil.isEmptyString(text)) {
-				return;
-			}
-			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, text.toLowerCase());
-			return;
-		}
 		List<String> variants = CryptoUtil.getHashForSearchFilterTextVariants(text);
 		if (variants.isEmpty()) {
-			return;
+			return false;
 		}
 		if (variants.size() == 1) {
-			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variants.get(0));
-			return;
+			return appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variants.get(0));
 		}
 		hqlWhereClause.append("(");
+		boolean added = false;
 		for (int i = 0; i < variants.size(); i++) {
 			if (i > 0) {
 				hqlWhereClause.append(" or ");
 			}
-			appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variants.get(i));
+			if (appendHashForSearchContainsHql(hqlWhereClause, queryValues, propertyName, variants.get(i))) {
+				added = true;
+			}
 		}
 		hqlWhereClause.append(")");
+		return added;
 	}
 
 	private static void appendNormalizedHashVariantsOr(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName,
@@ -391,7 +380,7 @@ public final class QueryUtil {
 				if (!first) {
 					hqlWhereClause.append(" or ");
 				}
-				appendHashForSearchTextContainsHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
+				appendHashForSearchVariantsContainsHql(hqlWhereClause, queryValues, propertyName, variantsIt.next()[0]);
 				first = false;
 			}
 			hqlWhereClause.append(")");
@@ -649,7 +638,7 @@ public final class QueryUtil {
 			}
 			//STRING_HASH:
 			hqlWhereClause.append(" or ");
-			appendHashForSearchTextContainsHql(hqlWhereClause, queryValues, propertyName, value);
+			appendHashForSearchVariantsContainsHql(hqlWhereClause, queryValues, propertyName, value);
 			//TIMESTAMP_HASH:
 			try {
 				Date date = CommonUtil.parseDate(value, CommonUtil.getInputDateTimePattern(CoreUtil.getUserContext().getDateFormat()), CommonUtil.timeZoneFromString(timeZone));
@@ -858,9 +847,7 @@ public final class QueryUtil {
 							case EQ:
 								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
 										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
-									int before = queryValues.size();
-									appendHashForSearchEqHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
-									queryValueAdded = queryValues.size() > before;
+									queryValueAdded = appendHashForSearchEqHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
 								} else {
 									hqlTerm.append(propertyName);
 									hqlTerm.append(" = ?");
@@ -869,11 +856,9 @@ public final class QueryUtil {
 							case NE:
 								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
 										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
-									int before = queryValues.size();
 									hqlTerm.append("not (");
-									appendHashForSearchEqHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
+									queryValueAdded = appendHashForSearchEqHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
 									hqlTerm.append(")");
-									queryValueAdded = queryValues.size() > before;
 								} else {
 									hqlTerm.append(propertyName);
 									hqlTerm.append(" != ?");
@@ -898,9 +883,7 @@ public final class QueryUtil {
 							case LIKE:
 								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
 										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
-									int before = queryValues.size();
-									appendHashForSearchTextContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
-									queryValueAdded = queryValues.size() > before;
+									queryValueAdded = appendHashForSearchContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue());
 								} else {
 									hqlTerm.append(propertyName);
 									hqlTerm.append(" like ?");
@@ -909,9 +892,12 @@ public final class QueryUtil {
 							case ILIKE:
 								if (CriterionValueType.STRING_HASH.equals(property.getValueType())
 										&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
-									int before = queryValues.size();
-									appendHashForSearchTextContainsHql(hqlTerm, queryValues, propertyName, criterion.getStringValue(), true);
-									queryValueAdded = queryValues.size() > before;
+									if (!CryptoUtil.isHashForSearchWordSubstringCaseInsensitive()) {
+										throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_CRITERION_RESTRICTION,
+												DefaultMessages.UNSUPPORTED_CRITERION_RESTRICTION, new Object[] { "ILIKE" }));
+									}
+									queryValueAdded = appendHashForSearchContainsHql(hqlTerm, queryValues, propertyName,
+											criterion.getStringValue().toLowerCase());
 								} else {
 									hqlTerm.append("lower(");
 									hqlTerm.append(propertyName);
