@@ -348,6 +348,58 @@ public final class QueryUtil {
 		return true;
 	}
 
+	/**
+	 * Normalize criterion search text for a normalized-name property leaf.
+	 * When {@code preserveLikeWildcards} is true, {@code %} and {@code _} are kept and only
+	 * intervening literal segments are normalized (for STRING LIKE/ILIKE). Hash properties
+	 * always use full normalization ({@code preserveLikeWildcards == false}).
+	 */
+	private static String normalizeCriterionNameSearchText(String leaf, String text, boolean preserveLikeWildcards) {
+		if (!preserveLikeWildcards) {
+			return normalizeCriterionNameSearchTextLiteral(leaf, text);
+		}
+		if (text == null) {
+			return null;
+		}
+		StringBuilder result = new StringBuilder(text.length());
+		StringBuilder literal = new StringBuilder();
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			if (c == '%' || c == '_') {
+				if (literal.length() > 0) {
+					String normalized = normalizeCriterionNameSearchTextLiteral(leaf, literal.toString());
+					if (normalized != null) {
+						result.append(normalized);
+					}
+					literal.setLength(0);
+				}
+				result.append(c);
+			} else {
+				literal.append(c);
+			}
+		}
+		if (literal.length() > 0) {
+			String normalized = normalizeCriterionNameSearchTextLiteral(leaf, literal.toString());
+			if (normalized != null) {
+				result.append(normalized);
+			}
+		}
+		return result.toString();
+	}
+
+	private static String normalizeCriterionNameSearchTextLiteral(String leaf, String text) {
+		if ("firstNameNormalized".equals(leaf) || "firstNameNormalizedHash".equals(leaf)) {
+			return CommonUtil.normalizeFirstName(text);
+		} else if ("lastNameNormalized".equals(leaf) || "lastNameNormalizedHash".equals(leaf)) {
+			return CommonUtil.normalizeLastName(text);
+		} else if ("organisationNameNormalized".equals(leaf)) {
+			return CommonUtil.normalizeOrganisationName(text);
+		} else if ("aliasNormalized".equals(leaf)) {
+			return CommonUtil.normalizeAlias(text);
+		}
+		return text;
+	}
+
 	private static boolean appendHashForSearchVariantsContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
 			throws Exception {
 		List<String> variants = CryptoUtil.getHashForSearchFilterTextVariants(text);
@@ -835,14 +887,13 @@ public final class QueryUtil {
 						String propertyName = aliasPropertyName(entityClass, propertyNameAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
 						if (!CommonUtil.isEmptyString(criterion.getStringValue())) {
 							String leaf = propertyNameAssociationPath.getPropertyName();
-							if ("firstNameNormalized".equals(leaf) || "firstNameNormalizedHash".equals(leaf)) {
-								criterion.setStringValue(CommonUtil.normalizeFirstName(criterion.getStringValue()));
-							} else if ("lastNameNormalized".equals(leaf) || "lastNameNormalizedHash".equals(leaf)) {
-								criterion.setStringValue(CommonUtil.normalizeLastName(criterion.getStringValue()));
-							} else if ("organisationNameNormalized".equals(leaf)) {
-								criterion.setStringValue(CommonUtil.normalizeOrganisationName(criterion.getStringValue()));
-							} else if ("aliasNormalized".equals(leaf)) {
-								criterion.setStringValue(CommonUtil.normalizeAlias(criterion.getStringValue()));
+							boolean preserveLikeWildcards = (org.phoenixctms.ctsms.enumeration.CriterionRestriction.LIKE.equals(restriction)
+									|| org.phoenixctms.ctsms.enumeration.CriterionRestriction.ILIKE.equals(restriction))
+									&& !leaf.endsWith("NormalizedHash");
+							if ("firstNameNormalized".equals(leaf) || "firstNameNormalizedHash".equals(leaf)
+									|| "lastNameNormalized".equals(leaf) || "lastNameNormalizedHash".equals(leaf)
+									|| "organisationNameNormalized".equals(leaf) || "aliasNormalized".equals(leaf)) {
+								criterion.setStringValue(normalizeCriterionNameSearchText(leaf, criterion.getStringValue(), preserveLikeWildcards));
 							}
 						}
 						hqlTerm = new StringBuilder();
