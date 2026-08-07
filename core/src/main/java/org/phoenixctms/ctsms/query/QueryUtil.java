@@ -107,20 +107,12 @@ public final class QueryUtil {
 	private final static String ALTERNATIVE_FILTER_ALIAS_VARIANTS = "aliasVariants";
 	private final static HashMap<String, String[]> ALTERNATIVE_FILTER_MAP = new HashMap<String, String[]>();
 	private final static HashMap<String, ArrayList<StaticCriterionTerm>> FIXED_CRITERION_TERMS_MAP = new HashMap<String, ArrayList<StaticCriterionTerm>>();
-	/** Leaf property names of stored normalized contact-name fields (and their search-hash counterparts). */
-	private final static HashMap<String, String> NORMALIZED_NAME_PROPERTIES = new HashMap<String, String>();
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
 				new String[] { "alias", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS, ALTERNATIVE_FILTER_ALIAS_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("PersonContactParticulars.lastName",
 				new String[] { "firstName", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
-		NORMALIZED_NAME_PROPERTIES.put("firstNameNormalized", "firstName");
-		NORMALIZED_NAME_PROPERTIES.put("firstNameNormalizedHash", "firstName");
-		NORMALIZED_NAME_PROPERTIES.put("lastNameNormalized", "lastName");
-		NORMALIZED_NAME_PROPERTIES.put("lastNameNormalizedHash", "lastName");
-		NORMALIZED_NAME_PROPERTIES.put("organisationNameNormalized", "organisationName");
-		NORMALIZED_NAME_PROPERTIES.put("aliasNormalized", "alias");
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.blocks",
 				"proband.diagnoses.code.systematics.blocks.last", "{0} = ?",
 				new QueryParameterValue(true));
@@ -354,22 +346,6 @@ public final class QueryUtil {
 		criterion.setStringValue(text);
 		queryValues.add(new QueryParameterValue(propertyName, CriterionValueType.STRING_HASH, criterion));
 		return true;
-	}
-
-	private static String normalizeNameProperty(String propertyName, String name) {
-		String kind = NORMALIZED_NAME_PROPERTIES.get(propertyName);
-		if (kind == null) {
-			return name;
-		} else if ("firstName".equals(kind)) {
-			return CommonUtil.normalizeFirstName(name);
-		} else if ("lastName".equals(kind)) {
-			return CommonUtil.normalizeLastName(name);
-		} else if ("organisationName".equals(kind)) {
-			return CommonUtil.normalizeOrganisationName(name);
-		} else if ("alias".equals(kind)) {
-			return CommonUtil.normalizeAlias(name);
-		}
-		return name;
 	}
 
 	private static boolean appendHashForSearchVariantsContainsHql(StringBuilder hqlWhereClause, ArrayList<QueryParameterValue> queryValues, String propertyName, String text)
@@ -857,9 +833,17 @@ public final class QueryUtil {
 					if (property != null && restriction != null) {
 						AssociationPath propertyNameAssociationPath = new AssociationPath(property.getProperty());
 						String propertyName = aliasPropertyName(entityClass, propertyNameAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
-						if (NORMALIZED_NAME_PROPERTIES.containsKey(propertyNameAssociationPath.getPropertyName())
-								&& !CommonUtil.isEmptyString(criterion.getStringValue())) {
-							criterion.setStringValue(normalizeNameProperty(propertyNameAssociationPath.getPropertyName(), criterion.getStringValue()));
+						if (!CommonUtil.isEmptyString(criterion.getStringValue())) {
+							String leaf = propertyNameAssociationPath.getPropertyName();
+							if ("firstNameNormalized".equals(leaf) || "firstNameNormalizedHash".equals(leaf)) {
+								criterion.setStringValue(CommonUtil.normalizeFirstName(criterion.getStringValue()));
+							} else if ("lastNameNormalized".equals(leaf) || "lastNameNormalizedHash".equals(leaf)) {
+								criterion.setStringValue(CommonUtil.normalizeLastName(criterion.getStringValue()));
+							} else if ("organisationNameNormalized".equals(leaf)) {
+								criterion.setStringValue(CommonUtil.normalizeOrganisationName(criterion.getStringValue()));
+							} else if ("aliasNormalized".equals(leaf)) {
+								criterion.setStringValue(CommonUtil.normalizeAlias(criterion.getStringValue()));
+							}
 						}
 						hqlTerm = new StringBuilder();
 						boolean queryValueAdded = false;
