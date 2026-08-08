@@ -2348,8 +2348,10 @@ public class ProbandServiceImpl
 	protected Collection<InquiryValueOutVO> handleClearInquiryValues(AuthenticationVO auth, Long trialId, String category, Long probandId) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		checkClearInquiryValues(trialId, probandId);
-		return clearInquiryValues(this.getTrialDao().load(trialId), this.getProbandDao().load(probandId),
+		Object[] locked = checkClearInquiryValues(trialId, probandId);
+		Trial trial = (Trial) locked[0];
+		Proband proband = (Proband) locked[1];
+		return clearInquiryValues(trial, proband,
 				ServiceUtil.getInquiryValues(this.getInquiryValueDao().findByProbandTrialCategoryActiveJs(probandId, trialId, category, null, null, true, null, null)), now, user);
 	}
 
@@ -2357,13 +2359,17 @@ public class ProbandServiceImpl
 	protected Collection<InquiryValueOutVO> handleClearInquiryValues(AuthenticationVO auth, Long trialId, Long probandId) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		checkClearInquiryValues(trialId, probandId);
-		return clearInquiryValues(this.getTrialDao().load(trialId), this.getProbandDao().load(probandId),
+		Object[] locked = checkClearInquiryValues(trialId, probandId);
+		Trial trial = (Trial) locked[0];
+		Proband proband = (Proband) locked[1];
+		return clearInquiryValues(trial, proband,
 				ServiceUtil.getInquiryValues(this.getInquiryValueDao().findByProbandTrialActiveJs(probandId, trialId, null, null, true, null, null)), now, user);
 	}
 
-	private void checkClearInquiryValues(Long trialId, Long probandId) throws Exception {
-		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+	private Object[] checkClearInquiryValues(Long trialId, Long probandId) throws Exception {
+		// Lock trial then proband: concurrent clears of different probands still mutate shared
+		// inquiry.inquiryValues and can race on InputFieldValue deletes.
+		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
 		if (!trial.getStatus().isInquiryValueInputEnabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_INPUT_DISABLED_FOR_TRIAL,
@@ -2371,6 +2377,7 @@ public class ProbandServiceImpl
 		}
 		Proband proband = CheckIDUtil.checkProbandId(probandId, this.getProbandDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkProbandLocked(proband);
+		return new Object[] { trial, proband };
 	}
 
 	private ArrayList<InquiryValueOutVO> clearInquiryValues(Trial trial, Proband proband, Collection<InquiryValue> values,
