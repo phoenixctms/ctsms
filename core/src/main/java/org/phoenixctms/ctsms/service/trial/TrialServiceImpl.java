@@ -1261,6 +1261,9 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_ECRF, ecrf.getName());
 		}
 		ProbandListEntry listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao(), LockMode.PESSIMISTIC_WRITE);
+		// Lock eCRF for clear as well: concurrent clears of different listentries still
+		// mutate shared ecrfField.fieldValues and can race on InputFieldValue deletes.
+		this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
 		if (!ecrf.getTrial().equals(listEntry.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_WRONG_TRIAL);
 		}
@@ -1268,7 +1271,6 @@ public class TrialServiceImpl
 		ECRFStatusEntry statusEntry = this.getECRFStatusEntryDao().findByListEntryEcrfVisit(listEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null);
 		if (statusEntry == null) {
 			ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
-			this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
 			Object[] resultItems = addEcrfStatusEntry(listEntry, ecrf, visit, statusType, null, now, user);
 			statusEntry = (ECRFStatusEntry) resultItems[0];
 		}
@@ -3642,7 +3644,7 @@ public class TrialServiceImpl
 		ProbandListEntry listEntry = checkClearEcrfFieldValues(probandListEntryId, ecrfId, visitId, now, user);
 		clearEcrfFieldStatusEntries(listEntry,
 				this.getECRFFieldStatusEntryDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true, null), now, user);
-		return clearEcrfFieldValues(this.getProbandListEntryDao().load(probandListEntryId),
+		return clearEcrfFieldValues(listEntry,
 				this.getECRFFieldValueDao().findByListEntryEcrfVisitSection(probandListEntryId, ecrfId, visitId, section, true, null), now, user);
 	}
 
