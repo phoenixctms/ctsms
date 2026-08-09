@@ -358,6 +358,7 @@ public enum JSValues {
 	REST_API_URL(""),
 	REST_API_JWT(""),
 	JWT_REFRESH_SKEW_SECS(""),
+	AJAX_REST_API_JWT("restApiJwt"),
 	// multiple window navigation:
 	INVENTORY_ENTITY_WINDOW_NAME("inventory"),
 	STAFF_ENTITY_WINDOW_NAME("staff"),
