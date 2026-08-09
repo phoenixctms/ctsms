@@ -592,6 +592,11 @@ public class ApplicationScopeBean {
 			if (ajaxKeepAliveJsCallbackArgs != null) {
 				requestContext.addCallbackParam(JSValues.AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS.toString(), ajaxKeepAliveJsCallbackArgs);
 			}
+			// Renew-if-needed (or always when rest_api_jwt_reissue_on_ajax) and push to browser.
+			String restApiJwt = WebUtil.getRestApiJwt();
+			if (restApiJwt != null) {
+				requestContext.addCallbackParam(JSValues.AJAX_REST_API_JWT.toString(), restApiJwt);
+			}
 		}
 	}
 

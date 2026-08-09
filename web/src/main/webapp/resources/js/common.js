@@ -232,7 +232,24 @@ function handleKeepAliveCallback(xhr, status, args) {
 			}
 		}
 	}
+	applyRestApiJwtFromKeepAlive(args);
 
+}
+
+function applyRestApiJwtFromKeepAlive(args) {
+	if (args == null || !_testPropertyExists(args, AJAX_REST_API_JWT)) {
+		return;
+	}
+	var jwt = args[AJAX_REST_API_JWT];
+	if (jwt == null || jwt.length === 0) {
+		return;
+	}
+	if (typeof REST_API_JWT !== 'undefined') {
+		REST_API_JWT = jwt;
+	}
+	if (typeof RestApi !== 'undefined' && typeof RestApi.applySessionJwt === 'function') {
+		RestApi.applySessionJwt(jwt);
+	}
 }
 
 function keepAliveExec(functionName, args) {

@@ -485,6 +485,7 @@ var RestApi = RestApi || {};
 	RestApi.debounceIsCurrent = debounceIsCurrent;
 	RestApi.trackRequest = trackRequest;
 	RestApi.abortRequest = abortRequest;
+	RestApi.applySessionJwt = applySessionJwt;
 
 	if (debug_level >= 1) {
 		console.log("rest api utilities loaded");

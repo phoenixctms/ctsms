@@ -18,6 +18,7 @@ public interface SettingCodes {
 	public final static String SESSION_TIMEOUT = "session_timeout";
 	public final static String SESSION_TIMEOUT_TRUSTED = "session_timeout_trusted";
 	public final static String JWT_REFRESH_SKEW_SECS = "jwt_refresh_skew_secs";
+	public final static String REST_API_JWT_REISSUE_ON_AJAX = "rest_api_jwt_reissue_on_ajax";
 	public final static String CONTACT_EMAIL = "contact_email";
 	public final static String META_DESCRIPTION = "meta_description";
 	public final static String BANNER_IMAGE_URL = "banner_image_url";
