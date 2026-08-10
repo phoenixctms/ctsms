@@ -222,7 +222,7 @@ function handleReload(xhr, status, args) {
 function handleKeepAliveCallback(xhr, status, args) {
 
 	if (_testFlag(args, AJAX_OPERATION_SUCCESS)) {
-		applyRestApiJwtFromKeepAlive(args);
+		applyRestApiJwtFromArgs(args);
 		if (_testPropertyExists(args, AJAX_KEEP_ALIVE_JS_CALLBACK)) {
 			var ajaxKeepAliveJsCallback = args[AJAX_KEEP_ALIVE_JS_CALLBACK];
 			if (_testFunction(window[ajaxKeepAliveJsCallback])) {
@@ -238,7 +238,7 @@ function handleKeepAliveCallback(xhr, status, args) {
 
 }
 
-function applyRestApiJwtFromKeepAlive(args) {
+function applyRestApiJwtFromArgs(args) {
 	if (args == null || !_testPropertyExists(args, AJAX_REST_API_JWT)) {
 		return;
 	}
