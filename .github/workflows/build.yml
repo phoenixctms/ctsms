@@ -36,4 +36,5 @@ jobs:
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-        run: mvn verify -DskipTests --no-transfer-progress -c
+        # sonar-maven-plugin is bound to verify in pom.xml; skip analysis in CI (no SONAR_TOKEN).
+        run: mvn verify -DskipTests -Dsonar.skip=true --no-transfer-progress -c
