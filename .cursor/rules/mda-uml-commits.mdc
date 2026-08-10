@@ -1,0 +1,13 @@
+---
+description: Always include all MDA UML files when committing model changes
+globs: mda/src/main/uml/**
+alwaysApply: false
+---
+
+# MDA / UML commits
+
+When committing AndroMDA / MagicDraw model changes under `mda/src/main/uml/`:
+
+- Include **all** modified files in that directory in the same UML/MDA commit (e.g. `ctsms.uml`, `ctsms.xml`, and every changed `*.profile.uml` / related profile file).
+- Do **not** leave MagicDraw/AndroMDA profile rewrites unstaged or split into a follow-up commit.
+- Prefer staging with `git add mda/src/main/uml/` (or equivalent) rather than cherry-picking individual UML files.
