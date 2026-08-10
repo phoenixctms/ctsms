@@ -755,7 +755,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getRestApiJwt() {
-		renewRestApiJwtIfRequired();
+		renewRestApiJwtIfRequired(true);
 		if (isLoggedIn() && logon != null) {
 			return logon.getJwt();
 		}
@@ -763,11 +763,16 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized void renewRestApiJwtIfRequired() {
+		renewRestApiJwtIfRequired(false);
+	}
+
+	private void renewRestApiJwtIfRequired(boolean allowAjaxForcedReissue) {
 		if (!isLoggedIn() || logon == null || auth == null) {
 			return;
 		}
-		boolean reissueOnAjax = Settings.getBoolean(SettingCodes.REST_API_JWT_REISSUE_ON_AJAX, Bundle.SETTINGS,
-				DefaultSettings.REST_API_JWT_REISSUE_ON_AJAX);
+		boolean reissueOnAjax = allowAjaxForcedReissue
+				&& Settings.getBoolean(SettingCodes.REST_API_JWT_REISSUE_ON_AJAX, Bundle.SETTINGS,
+						DefaultSettings.REST_API_JWT_REISSUE_ON_AJAX);
 		if (!reissueOnAjax && !isJwtExpiringSoon(logon.getJwt(),
 				Settings.getInt(SettingCodes.JWT_REFRESH_SKEW_SECS, Bundle.SETTINGS, DefaultSettings.JWT_REFRESH_SKEW_SECS))) {
 			return;
