@@ -175,6 +175,21 @@ public final class WebUtil {
 		return requestContext;
 	}
 
+	/**
+	 * Renew RestApi JWT if near expiry (or always when rest_api_jwt_reissue_on_ajax)
+	 * and push it as a PrimeFaces callback param for browser RestApi clients.
+	 */
+	public static void appendRestApiJwtCallbackParam(RequestContext context) {
+		RequestContext requestContext = context == null ? RequestContext.getCurrentInstance() : context;
+		if (requestContext == null) {
+			return;
+		}
+		String restApiJwt = getRestApiJwt();
+		if (restApiJwt != null) {
+			requestContext.addCallbackParam(JSValues.AJAX_REST_API_JWT.toString(), restApiJwt);
+		}
+	}
+
 	public static String beautifyJson(String json) {
 		try {
 			JsonElement je = JSON_PARSER.parse(json);

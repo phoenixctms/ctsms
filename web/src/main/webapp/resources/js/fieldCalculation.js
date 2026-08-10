@@ -1733,7 +1733,26 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 		return true;
 	}
 
+	function _applyRestApiJwtFromArgs(args) {
+		var key = (typeof AJAX_REST_API_JWT !== 'undefined') ? AJAX_REST_API_JWT : 'restApiJwt';
+		if (args == null || !_testPropertyExists(args, key)) {
+			return;
+		}
+		var jwt = args[key];
+		if (jwt == null || jwt.length === 0) {
+			return;
+		}
+		if (typeof REST_API_JWT !== 'undefined') {
+			REST_API_JWT = jwt;
+		}
+		if (typeof RestApi !== 'undefined' && typeof RestApi.applySessionJwt === 'function') {
+			RestApi.applySessionJwt(jwt);
+		}
+	}
+
 	function handleInitInputFieldVariables(xhr, status, args) {
+
+		_applyRestApiJwtFromArgs(args);
 
 		if (_testFlag(args, AJAX_OPERATION_SUCCESS)) {
 			if (FIELD_CALCULATION_DEBUG_LEVEL >= 1) {
