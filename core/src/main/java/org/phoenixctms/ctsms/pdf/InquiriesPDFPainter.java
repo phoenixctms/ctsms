@@ -282,7 +282,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 				}
 			}
 		}
-		if (listEntryVOs != null) {
+		if (listEntryVOs != null
+				&& Settings.getBoolean(InquiriesPDFSettingCodes.SHOW_QRCODE, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SHOW_QRCODE)) {
 			Iterator<ProbandListEntryOutVO> listEntryIt = listEntryVOs.iterator();
 			while (listEntryIt.hasNext()) {
 				putQRCodeImage(listEntryIt.next(), doc);

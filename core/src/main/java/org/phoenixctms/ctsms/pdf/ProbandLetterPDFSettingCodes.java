@@ -29,6 +29,7 @@ public interface ProbandLetterPDFSettingCodes {
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String DATE_USER_TIME_ZONE = "date_user_time_zone";
+	public static final String SHOW_QRCODE = "show_qrcode";
 	public static final String QRCODE_Y = "qrcode_y";
 	public static final String QRCODE_COLOR = "qrcode_color";
 	public static final String QRCODE_IMAGE_WIDTH = "qrcode_image_width";

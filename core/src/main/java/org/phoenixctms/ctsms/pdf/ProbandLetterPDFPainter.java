@@ -139,7 +139,8 @@ public class ProbandLetterPDFPainter extends PDFPainterBase implements PDFOutput
 
 	@Override
 	public void loadImages(PDDocument doc) throws Exception {
-		if (probandVOs != null) {
+		if (probandVOs != null
+				&& Settings.getBoolean(ProbandLetterPDFSettingCodes.SHOW_QRCODE, Bundle.PROBAND_LETTER_PDF, ProbandLetterPDFDefaultSettings.SHOW_QRCODE)) {
 			Iterator<ProbandOutVO> probandIt = probandVOs.iterator();
 			while (probandIt.hasNext()) {
 				putQRCodeImage(probandIt.next(), doc);

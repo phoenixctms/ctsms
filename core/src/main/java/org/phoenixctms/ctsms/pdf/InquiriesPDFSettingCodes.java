@@ -85,6 +85,7 @@ public interface InquiriesPDFSettingCodes {
 	public static final String PAINTER_CLASS = "painter_class";
 	public static final String PAINTER_SOURCE_FILES = "painter_source_files";
 	public static final String DATE_TIME_USER_TIME_ZONE = "date_time_user_time_zone";
+	public static final String SHOW_QRCODE = "show_qrcode";
 	public static final String QRCODE_COLOR = "qrcode_color";
 	public static final String QRCODE_IMAGE_WIDTH = "qrcode_image_width";
 	public static final String QRCODE_IMAGE_HEIGHT = "qrcode_image_height";
