@@ -755,11 +755,32 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized String getRestApiJwt() {
+		// RestApi-related AJAX (e.g. keep-alive): re-issue only if rest_api_jwt_reissue_on_ajax, else skew renew.
 		renewRestApiJwtIfRequired(true);
 		if (isLoggedIn() && logon != null) {
 			return logon.getJwt();
 		}
 		return null;
+	}
+
+	/**
+	 * Always re-issue RestApi JWT — page render and FieldCalculation handleInit (Signup issue_jwt parity).
+	 */
+	public synchronized String reissueRestApiJwt() {
+		if (!isLoggedIn() || logon == null || auth == null) {
+			return null;
+		}
+		try {
+			String jwt = WebUtil.getServiceLocator().getToolsService().issueJwt(auth, getRestApiJwtValidityPeriodSecs());
+			if (!CommonUtil.isEmptyString(jwt)) {
+				logon.setJwt(jwt);
+				auth.setJwt(jwt);
+			}
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		}
+		return logon.getJwt();
 	}
 
 	public synchronized void renewRestApiJwtIfRequired() {

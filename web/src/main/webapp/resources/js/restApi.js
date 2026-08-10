@@ -109,6 +109,7 @@ var RestApi = RestApi || {};
 	}
 
 	function applySessionJwt(jwt) {
+		var previousJwt = sessionJwt;
 		sessionJwt = jwt;
 		if (typeof REST_API_JWT !== 'undefined') {
 			REST_API_JWT = jwt;
@@ -121,6 +122,10 @@ var RestApi = RestApi || {};
 			}
 		} else {
 			sessionJwtExpires = null;
+		}
+		if (jwt != null && jwt.length > 0 && jwt !== previousJwt) {
+			var expLabel = (claims != null && claims.exp != null) ? (' exp=' + claims.exp) : '';
+			console.log('RestApi session JWT applied' + expLabel);
 		}
 	}
 

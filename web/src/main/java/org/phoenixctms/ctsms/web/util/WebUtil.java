@@ -176,18 +176,33 @@ public final class WebUtil {
 	}
 
 	/**
-	 * Renew RestApi JWT if near expiry (or always when rest_api_jwt_reissue_on_ajax)
-	 * and push it as a PrimeFaces callback param for browser RestApi clients.
+	 * Push RestApi JWT as a PrimeFaces callback param.
+	 * Keep-alive / general AJAX: skew renew, or always re-issue when rest_api_jwt_reissue_on_ajax (Signup json_response).
 	 */
 	public static void appendRestApiJwtCallbackParam(RequestContext context) {
+		appendRestApiJwtCallbackParam(context, false);
+	}
+
+	/**
+	 * @param forFieldInit when true (FieldCalculation handleInit), always re-issue; when false, AJAX policy via getRestApiJwt.
+	 */
+	public static void appendRestApiJwtCallbackParam(RequestContext context, boolean forFieldInit) {
 		RequestContext requestContext = context == null ? RequestContext.getCurrentInstance() : context;
 		if (requestContext == null) {
 			return;
 		}
-		String restApiJwt = getRestApiJwt();
+		String restApiJwt = forFieldInit ? reissueRestApiJwt() : getRestApiJwt();
 		if (restApiJwt != null) {
 			requestContext.addCallbackParam(JSValues.AJAX_REST_API_JWT.toString(), restApiJwt);
 		}
+	}
+
+	public static String reissueRestApiJwt() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			return sessionScopeBean.reissueRestApiJwt();
+		}
+		return null;
 	}
 
 	public static String beautifyJson(String json) {
