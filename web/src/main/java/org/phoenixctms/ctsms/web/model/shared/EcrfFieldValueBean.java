@@ -372,8 +372,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				//		JsUtil.encodeBase64(JsUtil.inputFieldVariableValueToJson(inquiryValues), false));
 				requestContext.addCallbackParam(JSValues.AJAX_INPUT_FIELD_ACTIVE_USER_BASE64.toString(),
 						JsUtil.encodeBase64(JsUtil.voToJson(WebUtil.getUser()), false));
-				WebUtil.appendRestApiJwtCallbackParam(requestContext);
 			}
+			WebUtil.appendRestApiJwtCallbackParam(requestContext);
 		}
 	}
 
