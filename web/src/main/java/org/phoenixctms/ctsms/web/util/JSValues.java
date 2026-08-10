@@ -504,7 +504,8 @@ public enum JSValues {
 			case REST_API_URL:
 				return ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getContextPath() + "/" + WebUtil.REST_API_PATH + "/";
 			case REST_API_JWT:
-				String restApiJwt = WebUtil.getRestApiJwt();
+				// Page render: always re-issue (Signup get_template / issue_jwt parity).
+				String restApiJwt = WebUtil.reissueRestApiJwt();
 				if (restApiJwt != null) {
 					return restApiJwt;
 				}

@@ -592,7 +592,7 @@ public class ApplicationScopeBean {
 			if (ajaxKeepAliveJsCallbackArgs != null) {
 				requestContext.addCallbackParam(JSValues.AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS.toString(), ajaxKeepAliveJsCallbackArgs);
 			}
-			// Renew-if-needed (or always when rest_api_jwt_reissue_on_ajax) and push to browser.
+			// Renew-if-needed (or always when rest_api_jwt_reissue_on_ajax); field-init uses forced reissue separately.
 			WebUtil.appendRestApiJwtCallbackParam(requestContext);
 		}
 	}
