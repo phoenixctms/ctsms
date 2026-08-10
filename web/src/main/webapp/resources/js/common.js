@@ -221,18 +221,20 @@ function handleReload(xhr, status, args) {
 
 function handleKeepAliveCallback(xhr, status, args) {
 
-	if (_testFlag(args, AJAX_OPERATION_SUCCESS) && _testPropertyExists(args, AJAX_KEEP_ALIVE_JS_CALLBACK)) {
-		var ajaxKeepAliveJsCallback = args[AJAX_KEEP_ALIVE_JS_CALLBACK];
-		if (_testFunction(window[ajaxKeepAliveJsCallback])) {
-			if (_testPropertyExists(args, AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS)) {
-				var ajaxKeepAliveJsCallbackArgs = JSON.parse(args[AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS]);
-				window[ajaxKeepAliveJsCallback](ajaxKeepAliveJsCallbackArgs);
-			} else {
-				window[ajaxKeepAliveJsCallback]();
+	if (_testFlag(args, AJAX_OPERATION_SUCCESS)) {
+		applyRestApiJwtFromKeepAlive(args);
+		if (_testPropertyExists(args, AJAX_KEEP_ALIVE_JS_CALLBACK)) {
+			var ajaxKeepAliveJsCallback = args[AJAX_KEEP_ALIVE_JS_CALLBACK];
+			if (_testFunction(window[ajaxKeepAliveJsCallback])) {
+				if (_testPropertyExists(args, AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS)) {
+					var ajaxKeepAliveJsCallbackArgs = JSON.parse(args[AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS]);
+					window[ajaxKeepAliveJsCallback](ajaxKeepAliveJsCallbackArgs);
+				} else {
+					window[ajaxKeepAliveJsCallback]();
+				}
 			}
 		}
 	}
-	applyRestApiJwtFromKeepAlive(args);
 
 }
 
