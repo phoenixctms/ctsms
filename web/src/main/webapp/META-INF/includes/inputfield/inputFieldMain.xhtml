@@ -423,7 +423,11 @@
 								rendered="#{inputFieldBean.config.checkBox}" />
 							<h:outputLabel
 								for="longLowerLimit"
-								rendered="#{inputFieldBean.config.integer}"
+								rendered="#{inputFieldBean.config.integer and not applicationScopeBean.inputFieldIntegerText}"
+								value="#{inputfieldlabels.input_field_long_lower_limit_label}" />
+							<h:outputLabel
+								for="longLowerLimitText"
+								rendered="#{inputFieldBean.config.integer and applicationScopeBean.inputFieldIntegerText}"
 								value="#{inputfieldlabels.input_field_long_lower_limit_label}" />
 							<h:panelGroup rendered="#{inputFieldBean.config.integer}">
 								<p:spinner
@@ -431,10 +435,27 @@
 									value="#{inputFieldBean.in.longLowerLimit}"
 									styleClass="ctsms-spinner"
 									required="false"
+									rendered="#{not applicationScopeBean.inputFieldIntegerText}"
 									label="#{inputfieldlabels.input_field_long_lower_limit}" />
+								<p:inputText
+									id="longLowerLimitText"
+									value="#{inputFieldBean.in.longLowerLimit}"
+									styleClass="ctsms-control-integer"
+									required="false"
+									rendered="#{applicationScopeBean.inputFieldIntegerText}"
+									label="#{inputfieldlabels.input_field_long_lower_limit}">
+									<f:converter converterId="javax.faces.Long" />
+								</p:inputText>
 								<p:tooltip
-									rendered="#{enableTooltips}"
+									rendered="#{enableTooltips and not applicationScopeBean.inputFieldIntegerText}"
 									for="longLowerLimit">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_long_lower_limit_tooltip}"
+										escape="false" />
+								</p:tooltip>
+								<p:tooltip
+									rendered="#{enableTooltips and applicationScopeBean.inputFieldIntegerText}"
+									for="longLowerLimitText">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_long_lower_limit_tooltip}"
 										escape="false" />
@@ -442,10 +463,17 @@
 							</h:panelGroup>
 							<p:message
 								for="longLowerLimit"
-								rendered="#{inputFieldBean.config.integer}" />
+								rendered="#{inputFieldBean.config.integer and not applicationScopeBean.inputFieldIntegerText}" />
+							<p:message
+								for="longLowerLimitText"
+								rendered="#{inputFieldBean.config.integer and applicationScopeBean.inputFieldIntegerText}" />
 							<h:outputLabel
 								for="longUpperLimit"
-								rendered="#{inputFieldBean.config.integer}"
+								rendered="#{inputFieldBean.config.integer and not applicationScopeBean.inputFieldIntegerText}"
+								value="#{inputfieldlabels.input_field_long_upper_limit_label}" />
+							<h:outputLabel
+								for="longUpperLimitText"
+								rendered="#{inputFieldBean.config.integer and applicationScopeBean.inputFieldIntegerText}"
 								value="#{inputfieldlabels.input_field_long_upper_limit_label}" />
 							<h:panelGroup rendered="#{inputFieldBean.config.integer}">
 								<p:spinner
@@ -453,10 +481,27 @@
 									value="#{inputFieldBean.in.longUpperLimit}"
 									styleClass="ctsms-spinner"
 									required="false"
+									rendered="#{not applicationScopeBean.inputFieldIntegerText}"
 									label="#{inputfieldlabels.input_field_long_upper_limit}" />
+								<p:inputText
+									id="longUpperLimitText"
+									value="#{inputFieldBean.in.longUpperLimit}"
+									styleClass="ctsms-control-integer"
+									required="false"
+									rendered="#{applicationScopeBean.inputFieldIntegerText}"
+									label="#{inputfieldlabels.input_field_long_upper_limit}">
+									<f:converter converterId="javax.faces.Long" />
+								</p:inputText>
 								<p:tooltip
-									rendered="#{enableTooltips}"
+									rendered="#{enableTooltips and not applicationScopeBean.inputFieldIntegerText}"
 									for="longUpperLimit">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_long_upper_limit_tooltip}"
+										escape="false" />
+								</p:tooltip>
+								<p:tooltip
+									rendered="#{enableTooltips and applicationScopeBean.inputFieldIntegerText}"
+									for="longUpperLimitText">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_long_upper_limit_tooltip}"
 										escape="false" />
@@ -464,10 +509,17 @@
 							</h:panelGroup>
 							<p:message
 								for="longUpperLimit"
-								rendered="#{inputFieldBean.config.integer}" />
+								rendered="#{inputFieldBean.config.integer and not applicationScopeBean.inputFieldIntegerText}" />
+							<p:message
+								for="longUpperLimitText"
+								rendered="#{inputFieldBean.config.integer and applicationScopeBean.inputFieldIntegerText}" />
 							<h:outputLabel
 								for="longPreset"
-								rendered="#{inputFieldBean.config.integer}"
+								rendered="#{inputFieldBean.config.integer and not applicationScopeBean.inputFieldIntegerText}"
+								value="#{inputfieldlabels.input_field_long_preset_label}" />
+							<h:outputLabel
+								for="longPresetText"
+								rendered="#{inputFieldBean.config.integer and applicationScopeBean.inputFieldIntegerText}"
 								value="#{inputfieldlabels.input_field_long_preset_label}" />
 							<h:panelGroup rendered="#{inputFieldBean.config.integer}">
 								<p:spinner
@@ -475,10 +527,27 @@
 									value="#{inputFieldBean.in.longPreset}"
 									styleClass="ctsms-spinner"
 									required="false"
+									rendered="#{not applicationScopeBean.inputFieldIntegerText}"
 									label="#{inputfieldlabels.input_field_long_preset}" />
+								<p:inputText
+									id="longPresetText"
+									value="#{inputFieldBean.in.longPreset}"
+									styleClass="ctsms-control-integer"
+									required="false"
+									rendered="#{applicationScopeBean.inputFieldIntegerText}"
+									label="#{inputfieldlabels.input_field_long_preset}">
+									<f:converter converterId="javax.faces.Long" />
+								</p:inputText>
 								<p:tooltip
-									rendered="#{enableTooltips}"
+									rendered="#{enableTooltips and not applicationScopeBean.inputFieldIntegerText}"
 									for="longPreset">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_long_preset_tooltip}"
+										escape="false" />
+								</p:tooltip>
+								<p:tooltip
+									rendered="#{enableTooltips and applicationScopeBean.inputFieldIntegerText}"
+									for="longPresetText">
 									<h:outputText
 										value="#{inputfieldlabels.input_field_long_preset_tooltip}"
 										escape="false" />
@@ -486,7 +555,10 @@
 							</h:panelGroup>
 							<p:message
 								for="longPreset"
-								rendered="#{inputFieldBean.config.integer}" />
+								rendered="#{inputFieldBean.config.integer and not applicationScopeBean.inputFieldIntegerText}" />
+							<p:message
+								for="longPresetText"
+								rendered="#{inputFieldBean.config.integer and applicationScopeBean.inputFieldIntegerText}" />
 							<h:outputLabel
 								for="floatLowerLimit"
 								rendered="#{inputFieldBean.config.float}"

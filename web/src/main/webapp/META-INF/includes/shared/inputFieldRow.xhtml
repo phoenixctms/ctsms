@@ -66,7 +66,12 @@
 						rendered="#{fieldInput.checkBox}" value="#{fieldInput.title}" />
 					<h:outputLabel for="integer#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-						rendered="#{fieldInput.integer}" value="#{fieldInput.title}" />
+						rendered="#{fieldInput.integer and not applicationScopeBean.inputFieldIntegerText}"
+						value="#{fieldInput.title}" />
+					<h:outputLabel for="integerText#{index}"
+						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
+						rendered="#{fieldInput.integer and applicationScopeBean.inputFieldIntegerText}"
+						value="#{fieldInput.title}" />
 					<h:outputLabel for="float#{index}"
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 						rendered="#{fieldInput.float}" value="#{fieldInput.title}" />
@@ -216,7 +221,7 @@
 						<p:spinner id="integer#{index}"
 							widgetVar="#{fieldInput.widgetVar}"
 							value="#{fieldInput.longValue}" label="#{fieldInput.label}"
-							rendered="#{fieldInput.integer}"
+							rendered="#{fieldInput.integer and not applicationScopeBean.inputFieldIntegerText}"
 							required="#{!optional and !fieldInput.optional}"
 							requiredMessage="#{fieldInput.requiredMessage}"
 							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
@@ -226,8 +231,26 @@
 							<p:ajax event="blur" process="@this" />
 						</p:spinner>
 						<p:tooltip
-							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.integer}"
+							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.integer and not applicationScopeBean.inputFieldIntegerText}"
 							for="integer#{index}">
+							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
+						</p:tooltip>
+						<p:inputText id="integerText#{index}"
+							widgetVar="#{fieldInput.widgetVar}"
+							value="#{fieldInput.longValue}" label="#{fieldInput.label}"
+							rendered="#{fieldInput.integer and applicationScopeBean.inputFieldIntegerText}"
+							required="#{!optional and !fieldInput.optional}"
+							requiredMessage="#{fieldInput.requiredMessage}"
+							disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
+							styleClass="ctsms-control-integer" autocomplete="off"
+							onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}"
+							onchange="#{fieldInput.getEventJSCall('FieldCalculation.integerOnChange')}">
+							<f:converter converterId="javax.faces.Long" />
+							<p:ajax />
+						</p:inputText>
+						<p:tooltip
+							rendered="#{enableTooltips and fieldInput.showTooltip and fieldInput.integer and applicationScopeBean.inputFieldIntegerText}"
+							for="integerText#{index}">
 							<h:outputText value="#{fieldInput.tooltip}" escape="false" />
 						</p:tooltip>
 						<p:inputText id="float#{index}"
@@ -338,7 +361,10 @@
 					<p:message for="autocomplete#{index}"
 						rendered="#{fieldInput.autocomplete}" />
 					<p:message for="checkBox#{index}" rendered="#{fieldInput.checkBox}" />
-					<p:message for="integer#{index}" rendered="#{fieldInput.integer}" />
+					<p:message for="integer#{index}"
+						rendered="#{fieldInput.integer and not applicationScopeBean.inputFieldIntegerText}" />
+					<p:message for="integerText#{index}"
+						rendered="#{fieldInput.integer and applicationScopeBean.inputFieldIntegerText}" />
 					<p:message for="float#{index}" rendered="#{fieldInput.float}" />
 					<p:message for="date#{index}" rendered="#{fieldInput.date}" />
 					<p:message for="timestamp#{index}"
