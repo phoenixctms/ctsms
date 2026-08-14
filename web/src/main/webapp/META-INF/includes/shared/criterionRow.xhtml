@@ -154,12 +154,22 @@
 				value="#{searchBean.criterionsIn[index].longValue}"
 				required="false"
 				label="#{labels.criterion_long} #{searchBean.criterionsIn[index].position}"
-				rendered="#{searchBean.isInteger[index] and searchBean.isCriterionPropertyRendered[index]}"
+				rendered="#{searchBean.isInteger[index] and searchBean.isCriterionPropertyRendered[index] and not applicationScopeBean.inputFieldIntegerText}"
 				styleClass="ctsms-spinner">
 				<p:ajax
 												event="blur"
 												process="@this" />
 			</p:spinner>
+			<p:inputText
+				id="integerText#{index}"
+				value="#{searchBean.criterionsIn[index].longValue}"
+				required="false"
+				label="#{labels.criterion_long} #{searchBean.criterionsIn[index].position}"
+				rendered="#{searchBean.isInteger[index] and searchBean.isCriterionPropertyRendered[index] and applicationScopeBean.inputFieldIntegerText}"
+				styleClass="ctsms-control-integer">
+				<f:converter converterId="javax.faces.Long" />
+				<p:ajax />
+			</p:inputText>
 			<p:selectBooleanCheckbox
 				id="boolean#{index}"
 				value="#{searchBean.criterionsIn[index].booleanValue}"

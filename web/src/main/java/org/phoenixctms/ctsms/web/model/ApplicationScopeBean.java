@@ -552,6 +552,10 @@ public class ApplicationScopeBean {
 		return Settings.getBoolean(SettingCodes.HIGHLIGHT_TEXT_INPUT, Bundle.SETTINGS, DefaultSettings.HIGHLIGHT_TEXT_INPUT);
 	}
 
+	public boolean isInputFieldIntegerText() {
+		return Settings.getBoolean(SettingCodes.INPUT_FIELD_INTEGER_TEXT, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_INTEGER_TEXT);
+	}
+
 	public boolean isHtmlAuditTrailChangeComments() {
 		return CommonUtil.HTML_AUDIT_TRAIL_CHANGE_COMMENTS;
 	}

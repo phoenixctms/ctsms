@@ -315,6 +315,7 @@ public final class DefaultSettings {
 	public static final Long INPUT_FIELD_LONG_LOWER_LIMIT_PRESET = null;
 	public static final Long INPUT_FIELD_LONG_PRESET_PRESET = null;
 	public static final Long INPUT_FIELD_LONG_UPPER_LIMIT_PRESET = null;
+	public static final boolean INPUT_FIELD_INTEGER_TEXT = true;
 	public static final Date INPUT_FIELD_MAX_DATE_PRESET = null;
 	public static final Date INPUT_FIELD_MAX_TIMESTAMP_PRESET = null;
 	public static final Date INPUT_FIELD_MIN_DATE_PRESET = null;

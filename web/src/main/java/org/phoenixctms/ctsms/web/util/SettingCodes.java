@@ -239,6 +239,7 @@ public interface SettingCodes {
 	public final static String INPUT_FIELD_LONG_LOWER_LIMIT_PRESET = "input_field_long_lower_limit_preset";
 	public final static String INPUT_FIELD_LONG_PRESET_PRESET = "input_field_long_preset_preset";
 	public final static String INPUT_FIELD_LONG_UPPER_LIMIT_PRESET = "input_field_long_upper_limit_preset";
+	public final static String INPUT_FIELD_INTEGER_TEXT = "input_field_integer_text";
 	public static final String INPUT_FIELD_LEARN_PRESET = "input_field_learn_preset";
 	public static final String INPUT_FIELD_SELECTION_SET_VALUE_LOCALIZED_PRESET = "input_field_selection_set_value_localized_preset";
 	public final static String INVENTORY_BOOKABLE_PRESET = "inventory_bookable_preset";
