@@ -39,7 +39,11 @@
 
 			<p:remoteCommand process="@this" name="changeStratificationChart"
 				actionListener="#{trialAssociationBean.handleStratificationChartChange}"
-				update=":tabView:trialassociation_form:association_lists:stratificationChart" />				
+				update=":tabView:trialassociation_form:association_lists:stratificationChart" />
+
+			<script type="text/javascript">
+				trialAssociationDepartmentChartVisible = #{sessionScopeBean.probandAllDepartments};
+			</script>				
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
@@ -462,7 +466,7 @@
 							</p:toolbar>
 						</h:panelGrid>
 					</p:tab>
-					<p:tab
+					<p:tab rendered="#{sessionScopeBean.probandAllDepartments}"
 						title="#{triallabels.trial_association_department_chart_tab_label}">
 						<h:panelGrid columns="1" cellpadding="0"
 							styleClass="ctsms-content-panelgrid">

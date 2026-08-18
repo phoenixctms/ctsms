@@ -208,6 +208,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	private boolean authenticationFailed;
 	private boolean localPasswordRequired;
 	private boolean otpRequired;
+	private Boolean probandAllDepartments;
 	private String authenticationFailedMessage;
 	private MenuModel userMenuModel;
 	private ColumnManagementBean columnManager;
@@ -221,6 +222,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		authenticationFailed = false;
 		localPasswordRequired = false;
 		otpRequired = false;
+		probandAllDepartments = null;
 		authenticationFailedMessage = null;
 	}
 
@@ -1104,6 +1106,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		probandVisibleTabSet = null;
 		massMailVisibleTabSet = null;
 		userVisibleTabSet = null;
+		probandAllDepartments = null;
 	}
 
 	public synchronized boolean isAuthenticationFailed() {
@@ -1142,6 +1145,13 @@ public class SessionScopeBean implements FilterItemsStore {
 
 	public synchronized boolean isLoggedIn() {
 		return logon != null && !otpRequired;
+	}
+
+	public synchronized boolean isProbandAllDepartments() {
+		if (probandAllDepartments == null) {
+			probandAllDepartments = WebUtil.hasProbandAllDepartmentsPermission();
+		}
+		return probandAllDepartments;
 	}
 
 	public synchronized boolean isShowStatusBarInfo() {
@@ -1349,6 +1359,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	public synchronized String login() {
 		logon = null;
 		otpRequired = false;
+		probandAllDepartments = null;
 		auth.setJwt(null);
 		auth.setHost(WebUtil.getRemoteHost());
 		String outcome;
