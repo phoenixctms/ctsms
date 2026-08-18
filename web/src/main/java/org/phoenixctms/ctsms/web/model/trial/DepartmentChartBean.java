@@ -199,7 +199,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 		Collection<ProbandListStatusEntryOutVO> initialProbandListStatus = null;
 		if (trialId != null) {
 			try {
-				initialProbandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, false, true, null);
+				initialProbandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, null, false, true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

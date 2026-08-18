@@ -144,7 +144,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 		seriesColors.clear();
 		Collection<StratificationPermutationVO> permutations = null;
 		try {
-			permutations = WebUtil.getServiceLocator().getTrialService().getStratificationPermutations(WebUtil.getAuthentication(), trialId);
+			permutations = WebUtil.getServiceLocator().getTrialService().getStratificationPermutations(WebUtil.getAuthentication(), trialId, null);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

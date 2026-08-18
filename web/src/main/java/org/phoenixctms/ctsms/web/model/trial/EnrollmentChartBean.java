@@ -194,7 +194,7 @@ public class EnrollmentChartBean extends ManagedBeanBase {
 		Collection<ProbandListStatusEntryOutVO> probandListStatus = null;
 		if (trialId != null) {
 			try {
-				probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, false, null, null);
+				probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, null, false, null, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
