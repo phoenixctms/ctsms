@@ -45,6 +45,8 @@ import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
+import org.phoenixctms.ctsms.enumeration.PermissionProfile;
+import org.phoenixctms.ctsms.enumeration.PermissionProfileGroup;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -4782,6 +4784,37 @@ public final class WebUtil {
 	public static boolean isMassMailLocked(MassMailOutVO massMail) {
 		if (massMail != null) {
 			return massMail.getStatus().getLocked();
+		}
+		return false;
+	}
+
+	public static boolean hasProbandAllDepartmentsPermission() {
+		SessionScopeBean sessionScopeBean = getSessionScopeBean();
+		if (sessionScopeBean != null) {
+			PasswordOutVO logon = sessionScopeBean.getLogon();
+			if (logon != null && logon.getInheritedUser() != null) {
+				try {
+					Collection<UserPermissionProfileOutVO> profiles = getServiceLocator().getUserService().getPermissionProfiles(getAuthentication(),
+							logon.getInheritedUser().getId(), PermissionProfileGroup.PROBAND, true, true);
+					if (profiles != null) {
+						Iterator<UserPermissionProfileOutVO> it = profiles.iterator();
+						while (it.hasNext()) {
+							UserPermissionProfileOutVO userPermissionProfile = it.next();
+							if (userPermissionProfile != null && userPermissionProfile.getProfile() != null) {
+								PermissionProfile profile = userPermissionProfile.getProfile().getProfile();
+								if (PermissionProfile.PROBAND_MASTER_ALL_DEPARTMENTS.equals(profile)
+										|| PermissionProfile.PROBAND_DETAIL_ALL_DEPARTMENTS.equals(profile)
+										|| PermissionProfile.PROBAND_VIEW_ALL_DEPARTMENTS.equals(profile)) {
+									return true;
+								}
+							}
+						}
+					}
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					publishException(e);
+				}
+			}
 		}
 		return false;
 	}
