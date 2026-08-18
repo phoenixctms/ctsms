@@ -289,7 +289,7 @@ public class ProbandListEntryBean extends ProbandListEntryBeanBase {
 				Collection<ProbandListStatusEntryOutVO> probandListStatus = null;
 				Collection probandListStatusFiltered = new ArrayList<ProbandListStatusEntryOutVO>();
 				try {
-					probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, proband.getId(), false, null,
+					probandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, proband.getId(), null, false, null,
 							null);
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {

@@ -267,10 +267,13 @@ public class ProbandListEntryDaoImpl
 
 	@Override
 	protected long handleGetTrialStratificationTagValuesCount(
-			Long trialId, Set<Long> selectionSetValueIds) throws Exception {
+			Long trialId, Long departmentId, Set<Long> selectionSetValueIds) throws Exception {
 		org.hibernate.Criteria listEntryCriteria = createListEntryCriteria();
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (departmentId != null) {
+			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
 			applyStratificationTagValuesCriterions(listEntryCriteria, selectionSetValueIds);
