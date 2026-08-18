@@ -523,7 +523,7 @@ public class ServiceMethods {
 	}
 
 	public long exportProbandList(AuthenticationVO auth, Long id, ProbandListStatusLogLevel logLevel, String fileName) throws Exception {
-		ProbandListExcelVO result = trialService.exportProbandList(auth, id, logLevel);
+		ProbandListExcelVO result = trialService.exportProbandList(auth, id, null, logLevel);
 		if (result != null) {
 			jobOutput.println(result.getTrial().getName() + " " + (result.getLogLevel() != null ? result.getLogLevel().name() : "[full subject list]") + ": "
 					+ result.getRowCount() + " probands");

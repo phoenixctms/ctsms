@@ -4871,15 +4871,18 @@ public class TrialServiceImpl
 
 	@Override
 	protected ProbandListExcelVO handleExportProbandList(
-			AuthenticationVO auth, Long trialId, ProbandListStatusLogLevel logLevel) throws Exception {
+			AuthenticationVO auth, Long trialId, Long departmentId, ProbandListStatusLogLevel logLevel) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
 		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
 		boolean passDecryption = CoreUtil.isPassDecryption();
 		ProbandListExcelWriter writer = ExcelWriterFactory.createProbandListExcelWriter(logLevel, !passDecryption);
 		writer.setTrial(trialVO);
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
-		Collection probandListEntries = probandListEntryDao.getProbandList(trialId, logLevel, false);
+		Collection probandListEntries = probandListEntryDao.getProbandList(trialId, departmentId, logLevel, false);
 		boolean showProbandListEntryTags;
 		boolean showAllProbandListEntryTags;
 		boolean showAllProbandListEntryTagDates;

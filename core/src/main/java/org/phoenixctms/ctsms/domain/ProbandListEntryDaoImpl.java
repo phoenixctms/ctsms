@@ -173,7 +173,7 @@ public class ProbandListEntryDaoImpl
 
 	@Override
 	protected Collection<ProbandListEntry> handleGetProbandList(
-			Long trialId, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel logLevel, boolean last)
+			Long trialId, Long departmentId, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel logLevel, boolean last)
 			throws Exception {
 		// http://stackoverflow.com/questions/1648426/hibernate-detached-queries-as-a-part-of-the-criteria-query
 		// https://forum.hibernate.org/viewtopic.php?p=2317841#2317841
@@ -181,6 +181,9 @@ public class ProbandListEntryDaoImpl
 		boolean distinctRoot = false;
 		if (trialId != null) {
 			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (departmentId != null) {
+			listEntryCriteria.createCriteria("proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (logLevel != null) {
 			org.hibernate.Criteria statusEntryCriteria;
