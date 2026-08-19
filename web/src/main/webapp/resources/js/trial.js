@@ -452,11 +452,6 @@ function handleTrialTimelineDelete() {
 
 
 function handleTrialAssociationTabChange(index) {
-
-	var departmentChartIndex = 5;
-	if (typeof trialAssociationDepartmentChartVisible != 'undefined' && !trialAssociationDepartmentChartVisible && index >= departmentChartIndex) {
-		index++;
-	}
 	switch (index) {
 	case 0:
 		changeTrialCourses();
