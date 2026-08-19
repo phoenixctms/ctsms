@@ -2127,18 +2127,7 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 
 	function integerOnChange(variableName, index, widget, outputId) {
 
-		if (!silent) {
-			var v = widget.getValue();
-			if (v === '' || v === null || v === undefined) {
-				v = null;
-			} else if (typeof v === 'string') {
-				v = parseInt(v, 10);
-				if (isNaN(v)) {
-					v = null;
-				}
-			}
-			_inputFieldOnChange(variableName, index, v);
-		}
+		if (!silent) _inputFieldOnChange(variableName, index, widget.getValue());
 
 	}
 

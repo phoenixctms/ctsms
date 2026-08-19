@@ -2132,8 +2132,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			if (v === '' || v === null || v === undefined) {
 				v = null;
 			} else if (typeof v === 'string') {
-				v = parseInt(v, 10);
-				if (isNaN(v)) {
+				v = Number.parseInt(v, 10);
+				if (Number.isNaN(v)) {
 					v = null;
 				}
 			}
