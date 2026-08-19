@@ -33,7 +33,7 @@ This GitHub repository contains all tiers of the main JEE web application. Trans
 
 Build and Install
 -----
-1. Prepare a vanilla _Debian Bullseye_ Linux instance (ie. from [debian-11.2.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.2.0-amd64-netinst.iso)):
+1. Prepare a vanilla _Debian 13 (Trixie)_ Linux instance (ie. from [debian-13.6.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.6.0-amd64-netinst.iso)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
   * The procedure was also successfully tested with latest _Ubuntu_
