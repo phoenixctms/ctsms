@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.pdf;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.pdfbox.cos.COSArray;
@@ -14,6 +15,7 @@ import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.apache.pdfbox.util.Matrix;
+import org.apache.pdfbox.util.PDFOperator;
 import org.apache.pdfbox.util.PDFStreamEngine;
 import org.apache.pdfbox.util.operator.Concatenate;
 import org.apache.pdfbox.util.operator.GRestore;
@@ -196,6 +198,13 @@ public final class PDFPageNormalizer {
 			registerOperatorProcessor("q", new GSave());
 			registerOperatorProcessor("Q", new GRestore());
 			registerOperatorProcessor("cm", new Concatenate());
+		}
+
+		protected void processOperator(PDFOperator operator, List arguments) throws IOException {
+			String operation = operator.getOperation();
+			if ("q".equals(operation) || "Q".equals(operation) || "cm".equals(operation)) {
+				super.processOperator(operator, arguments);
+			}
 		}
 	}
 }
