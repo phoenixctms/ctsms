@@ -72,7 +72,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 
 	public StreamedContent getEnrollmentLogExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.ENROLLMENT);
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.ENROLLMENT);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -85,7 +85,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 	public StreamedContent getPreScreeningLogExcelStreamedContent() throws Exception {
 		try {
 			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService()
-					.exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.PRE_SCREENING);
+					.exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.PRE_SCREENING);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -97,7 +97,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 
 	public StreamedContent getScreeningLogExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.SCREENING);
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.SCREENING);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -113,7 +113,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 
 	public StreamedContent getSiclExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.SICL);
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.SICL);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -125,7 +125,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 
 	public StreamedContent getProbandStatusExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId,
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null,
 					ProbandListStatusLogLevel.PROBAND_STATUS);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
@@ -144,7 +144,7 @@ public class StratificationChartBean extends ManagedBeanBase {
 		seriesColors.clear();
 		Collection<StratificationPermutationVO> permutations = null;
 		try {
-			permutations = WebUtil.getServiceLocator().getTrialService().getStratificationPermutations(WebUtil.getAuthentication(), trialId);
+			permutations = WebUtil.getServiceLocator().getTrialService().getStratificationPermutations(WebUtil.getAuthentication(), trialId, null);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);

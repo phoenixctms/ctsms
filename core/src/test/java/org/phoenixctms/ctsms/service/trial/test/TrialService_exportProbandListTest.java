@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>exportProbandList</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#exportProbandList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#exportProbandList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_exportProbandListTest extends TrialServiceBaseTest {

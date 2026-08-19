@@ -89,7 +89,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 
 	public StreamedContent getEnrollmentLogExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.ENROLLMENT);
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.ENROLLMENT);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -114,7 +114,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 	public StreamedContent getPreScreeningLogExcelStreamedContent() throws Exception {
 		try {
 			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService()
-					.exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.PRE_SCREENING);
+					.exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.PRE_SCREENING);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -126,7 +126,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 
 	public StreamedContent getScreeningLogExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.SCREENING);
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.SCREENING);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -142,7 +142,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 
 	public StreamedContent getSiclExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, ProbandListStatusLogLevel.SICL);
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null, ProbandListStatusLogLevel.SICL);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
@@ -154,7 +154,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 
 	public StreamedContent getProbandStatusExcelStreamedContent() throws Exception {
 		try {
-			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId,
+			ProbandListExcelVO excel = WebUtil.getServiceLocator().getTrialService().exportProbandList(WebUtil.getAuthentication(), trialId, null,
 					ProbandListStatusLogLevel.PROBAND_STATUS);
 			return new DefaultStreamedContent(new ByteArrayInputStream(excel.getDocumentDatas()), excel.getContentType().getMimeType(), excel.getFileName());
 		} catch (AuthenticationException e) {
@@ -199,7 +199,7 @@ public class DepartmentChartBean extends ManagedBeanBase {
 		Collection<ProbandListStatusEntryOutVO> initialProbandListStatus = null;
 		if (trialId != null) {
 			try {
-				initialProbandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, false, true, null);
+				initialProbandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, null, false, true, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);

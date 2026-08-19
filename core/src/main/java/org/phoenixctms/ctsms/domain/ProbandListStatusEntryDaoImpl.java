@@ -108,7 +108,7 @@ public class ProbandListStatusEntryDaoImpl
 
 	@Override
 	protected Collection<ProbandListStatusEntry> handleFindByTrialProband(
-			Long trialId, Long probandId, boolean last, Boolean initial, PSFVO psf)
+			Long trialId, Long probandId, Long departmentId, boolean last, Boolean initial, PSFVO psf)
 			throws Exception {
 		org.hibernate.Criteria statusEntryCriteria = createStatusEntryCriteria("probandListStatusEntry");
 		SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandListStatusEntry.class, statusEntryCriteria);
@@ -117,6 +117,9 @@ public class ProbandListStatusEntryDaoImpl
 		}
 		if (probandId != null) {
 			criteriaMap.createCriteria("listEntry").add(Restrictions.eq("proband.id", probandId.longValue()));
+		}
+		if (departmentId != null) {
+			criteriaMap.createCriteria("listEntry.proband", CriteriaSpecification.INNER_JOIN).add(Restrictions.eq("department.id", departmentId.longValue()));
 		}
 		if (initial != null) {
 			criteriaMap.createCriteria("status").add(Restrictions.eq("initial", initial.booleanValue()));

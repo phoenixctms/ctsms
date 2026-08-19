@@ -4871,15 +4871,18 @@ public class TrialServiceImpl
 
 	@Override
 	protected ProbandListExcelVO handleExportProbandList(
-			AuthenticationVO auth, Long trialId, ProbandListStatusLogLevel logLevel) throws Exception {
+			AuthenticationVO auth, Long trialId, Long departmentId, ProbandListStatusLogLevel logLevel) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
 		TrialOutVO trialVO = trialDao.toTrialOutVO(trial);
 		boolean passDecryption = CoreUtil.isPassDecryption();
 		ProbandListExcelWriter writer = ExcelWriterFactory.createProbandListExcelWriter(logLevel, !passDecryption);
 		writer.setTrial(trialVO);
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
-		Collection probandListEntries = probandListEntryDao.getProbandList(trialId, logLevel, false);
+		Collection probandListEntries = probandListEntryDao.getProbandList(trialId, departmentId, logLevel, false);
 		boolean showProbandListEntryTags;
 		boolean showAllProbandListEntryTags;
 		boolean showAllProbandListEntryTagDates;
@@ -7238,7 +7241,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ProbandListStatusEntryOutVO> handleGetProbandListStatus(
-			AuthenticationVO auth, Long trialId, Long probandId, boolean last, Boolean initial, PSFVO psf)
+			AuthenticationVO auth, Long trialId, Long probandId, Long departmentId, boolean last, Boolean initial, PSFVO psf)
 			throws Exception {
 		if (trialId != null) {
 			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
@@ -7246,8 +7249,11 @@ public class TrialServiceImpl
 		if (probandId != null) {
 			CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
 		}
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
 		ProbandListStatusEntryDao probandListStatusEntryDao = this.getProbandListStatusEntryDao();
-		Collection statusEntries = probandListStatusEntryDao.findByTrialProband(trialId, probandId, last, initial, psf);
+		Collection statusEntries = probandListStatusEntryDao.findByTrialProband(trialId, probandId, departmentId, last, initial, psf);
 		probandListStatusEntryDao.toProbandListStatusEntryOutVOCollection(statusEntries);
 		return statusEntries;
 	}
@@ -9499,8 +9505,11 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected Collection<StratificationPermutationVO> handleGetStratificationPermutations(AuthenticationVO auth, Long trialId) throws Exception {
+	protected Collection<StratificationPermutationVO> handleGetStratificationPermutations(AuthenticationVO auth, Long trialId, Long departmentId) throws Exception {
 		CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		if (departmentId != null) {
+			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		}
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		Iterator<Object[]> permutationsIt = this.getProbandListEntryTagDao().getTrialStratificationPermutations(trialId).iterator();
@@ -9514,7 +9523,7 @@ public class TrialServiceImpl
 				selectionSetValueIds.add(value.getId());
 				stratificationPermutation.getValues().add(inputFieldSelectionSetValueDao.toInputFieldSelectionSetValueOutVO(value));
 			}
-			stratificationPermutation.setCount(probandListEntryDao.getTrialStratificationTagValuesCount(trialId, selectionSetValueIds));
+			stratificationPermutation.setCount(probandListEntryDao.getTrialStratificationTagValuesCount(trialId, departmentId, selectionSetValueIds));
 			result.add(stratificationPermutation);
 		}
 		return result;

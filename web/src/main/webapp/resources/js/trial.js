@@ -452,7 +452,6 @@ function handleTrialTimelineDelete() {
 
 
 function handleTrialAssociationTabChange(index) {
-
 	switch (index) {
 	case 0:
 		changeTrialCourses();
