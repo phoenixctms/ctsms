@@ -140,8 +140,7 @@
 						
 						<p:column
 							sortBy="#{statusEntry.vo.proband.department}"
-							filterBy="#{statusEntry.vo.proband.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{statusEntry.vo.proband.department.name}">
 							<f:facet name="header">
 								<h:outputText value="#{probandlabels.proband_status_overview_probandstatus_list_proband_department_column}" />
 							</f:facet>

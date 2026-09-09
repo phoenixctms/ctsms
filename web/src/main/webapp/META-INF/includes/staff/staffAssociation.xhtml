@@ -62,8 +62,7 @@
 									<h:outputText value="#{user.vo.name}" />
 								</p:column>
 								<p:column sortBy="#{user.vo.department}"
-									filterBy="#{user.vo.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{user.vo.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_account_list_user_department_column}" />
@@ -137,8 +136,7 @@
 									<h:outputText value="#{inventory.vo.name}" />
 								</p:column>
 								<p:column sortBy="#{inventory.vo.department}"
-									filterBy="#{inventory.vo.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{inventory.vo.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_ownershipinventory_list_inventory_department_column}" />
@@ -224,8 +222,7 @@
 									<h:outputText value="#{booking.vo.inventory.name}" />
 								</p:column>
 								<p:column sortBy="#{booking.vo.inventory.department}"
-									filterBy="#{booking.vo.inventory.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{booking.vo.inventory.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_inventorybooking_list_inventory_department_column}" />
@@ -625,8 +622,7 @@
 									<h:outputText value="#{course.vo.name}" />
 								</p:column>
 								<p:column sortBy="#{course.vo.department}"
-									filterBy="#{course.vo.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{course.vo.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_institutioncourses_list_course_department_column}" />
@@ -707,8 +703,7 @@
 									<h:outputText value="#{cvPosition.vo.staff.name}" />
 								</p:column>
 								<p:column sortBy="#{cvPosition.vo.staff.department}"
-									filterBy="#{cvPosition.vo.staff.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{cvPosition.vo.staff.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_institutioncvpositions_list_staff_department_column}" />
@@ -825,8 +820,7 @@
 									<h:outputText value="#{lecturer.vo.course.name}" />
 								</p:column>
 								<p:column sortBy="#{lecturer.vo.course.department}"
-									filterBy="#{lecturer.vo.course.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{lecturer.vo.course.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_lectures_list_course_department_column}" />
@@ -914,8 +908,7 @@
 									<h:outputText value="#{teamMember.vo.trial.name}" />
 								</p:column>
 								<p:column sortBy="#{teamMember.vo.trial.department}"
-									filterBy="#{teamMember.vo.trial.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{teamMember.vo.trial.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_trial_membership_list_trial_department_column}" />
@@ -1058,8 +1051,7 @@
 								</p:column>
 
 								<p:column sortBy="#{proband.vo.department}"
-									filterBy="#{proband.vo.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{proband.vo.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{stafflabels.staff_association_patients_list_proband_department_column}" />

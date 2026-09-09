@@ -145,8 +145,7 @@
 			<p:column
 				rendered="#{showInventory}"
 				sortBy="#{bookingDurationSummaryDetail.vo.inventory.department.name}"
-				filterBy="#{bookingDurationSummaryDetail.vo.inventory.department.id}"
-				filterOptions="#{sessionScopeBean.filterDepartments}">
+				filterBy="#{bookingDurationSummaryDetail.vo.inventory.department.name}">
 				<f:facet name="header">
 					<h:outputText value="#{labels.booking_duration_summary_table_inventory_department_column}" />
 				</f:facet>

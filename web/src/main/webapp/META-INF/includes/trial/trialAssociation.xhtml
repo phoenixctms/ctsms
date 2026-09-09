@@ -93,8 +93,7 @@
 									<h:outputText value="#{course.vo.name}" />
 								</p:column>
 								<p:column sortBy="#{course.vo.department}"
-									filterBy="#{course.vo.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{course.vo.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{triallabels.trial_association_courses_list_course_department_column}" />
@@ -187,8 +186,7 @@
 									<h:outputText value="#{massMail.vo.name}" />
 								</p:column>
 								<p:column sortBy="#{massMail.vo.department}"
-									filterBy="#{massMail.vo.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{massMail.vo.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{triallabels.trial_association_massmails_list_mass_mail_department_column}" />

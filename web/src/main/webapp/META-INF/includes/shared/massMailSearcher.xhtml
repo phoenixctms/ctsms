@@ -126,8 +126,7 @@
 					<h:outputText value="#{massMail.vo.name}" />
 				</p:column>
 				<p:column sortBy="#{massMail.vo.department}"
-					filterBy="#{massMail.vo.department.id}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{massMail.vo.department.name}">
 					<f:facet name="header">
 						<h:outputText
 							value="#{massmaillabels.search_mass_mail_result_list_mass_mail_department_column}" />

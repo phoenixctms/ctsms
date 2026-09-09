@@ -117,8 +117,7 @@
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{statusEntry.vo.staff.department}"
-							filterBy="#{statusEntry.vo.staff.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{statusEntry.vo.staff.department.name}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{courselabels.admin_expiring_participation_overview_expiringparticipation_list_staff_department_column}" />

@@ -70,8 +70,7 @@
 									<h:outputText value="#{probandListEntryTag.vo.trial.name}" />
 								</p:column>
 								<p:column sortBy="#{probandListEntryTag.vo.trial.department}"
-									filterBy="#{probandListEntryTag.vo.trial.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{probandListEntryTag.vo.trial.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_probandlistentrytag_list_trial_department_column}" />
@@ -211,8 +210,7 @@
 									<h:outputText value="#{inquiry.vo.trial.name}" />
 								</p:column>
 								<p:column sortBy="#{inquiry.vo.trial.department}"
-									filterBy="#{inquiry.vo.trial.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{inquiry.vo.trial.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_inquiry_list_trial_department_column}" />
@@ -400,8 +398,7 @@
 									<h:outputText value="#{ecrfField.vo.trial.name}" />
 								</p:column>
 								<p:column sortBy="#{ecrfField.vo.trial.department}"
-									filterBy="#{ecrfField.vo.trial.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{ecrfField.vo.trial.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{inputfieldlabels.input_field_association_ecrffield_list_trial_department_column}" />

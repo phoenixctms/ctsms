@@ -1,7 +1,10 @@
 package org.phoenixctms.ctsms.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
@@ -526,6 +529,34 @@ public final class L10nUtil {
 
 	public static String getDepartmentName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, departmentsBundleBasename), DefaultMessages.DEPARTMENT_NAME);
+	}
+
+	public static boolean departmentNameMatches(String nameL10nKey, String translatedName, String nameInfix) {
+		String name = (nameInfix != null ? nameInfix.trim().toLowerCase() : null);
+		if (name == null || name.length() == 0) {
+			return true;
+		}
+		if (nameL10nKey != null && nameL10nKey.toLowerCase().contains(name)) {
+			return true;
+		}
+		return translatedName != null && translatedName.toLowerCase().contains(name);
+	}
+
+	public static Collection<String> getMatchingDepartmentNameL10nKeys(String nameInfix) {
+		ArrayList<String> matchingKeys = new ArrayList<String>();
+		String name = (nameInfix != null ? nameInfix.trim().toLowerCase() : null);
+		if (name == null || name.length() == 0) {
+			return matchingKeys;
+		}
+		Map<String, String> symbols = CommonUtil.getBundleSymbolMap(getBundle(Locales.USER, departmentsBundleBasename), false);
+		Iterator<Map.Entry<String, String>> it = symbols.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, String> entry = it.next();
+			if (departmentNameMatches(entry.getKey(), entry.getValue(), nameInfix)) {
+				matchingKeys.add(entry.getKey());
+			}
+		}
+		return matchingKeys;
 	}
 
 	public static String getEcrfFieldStatusTypeName(Locales locale, String l10nKey) {

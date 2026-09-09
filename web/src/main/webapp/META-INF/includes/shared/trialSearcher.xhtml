@@ -176,8 +176,7 @@
 				</p:column>
 				<p:column
 					sortBy="#{trial.vo.department}"
-					filterBy="#{trial.vo.department.id}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{trial.vo.department.name}">
 					<f:facet name="header">
 						<h:outputText value="#{triallabels.search_trial_result_list_trial_department_column}" />
 					</f:facet>

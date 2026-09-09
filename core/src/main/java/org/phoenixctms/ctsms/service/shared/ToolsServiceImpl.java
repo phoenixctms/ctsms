@@ -1506,7 +1506,6 @@ public class ToolsServiceImpl
 			limit = Settings.getIntNullable(SettingCodes.DEPARTMENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT, Bundle.SETTINGS,
 					DefaultSettings.DEPARTMENT_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT);
 		}
-		String name = (nameInfix != null ? nameInfix.trim().toLowerCase() : null);
 		HashSet<Long> ids = new HashSet<Long>();
 		if (departmentIds != null) {
 			ids.addAll(departmentIds);
@@ -1520,7 +1519,7 @@ public class ToolsServiceImpl
 			DepartmentVO departmentVO = (DepartmentVO) it.next();
 			if ((limit == null || result.size() < limit)
 					&& (departmentVO.getVisible() || ids.contains(departmentVO.getId()))
-					&& (name == null || name.length() == 0 || departmentVO.getName().toLowerCase().contains(name) || departmentVO.getNameL10nKey().toLowerCase().contains(name))) {
+					&& L10nUtil.departmentNameMatches(departmentVO.getNameL10nKey(), departmentVO.getName(), nameInfix)) {
 				result.add(departmentVO);
 			}
 		}
