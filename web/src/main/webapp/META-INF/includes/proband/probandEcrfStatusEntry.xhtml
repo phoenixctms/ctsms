@@ -99,8 +99,7 @@
 							</ui:include>
 						</p:column>
 						<p:column sortBy="#{probandListEntry.vo.trial.department}"
-							filterBy="#{probandListEntry.vo.trial.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{probandListEntry.vo.trial.department.name}">
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
 								<h:outputText

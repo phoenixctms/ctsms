@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,7 @@ import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
 import org.phoenixctms.ctsms.adapt.ExpirationEntityAdapter;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
+import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.LecturerImpl;
 import org.phoenixctms.ctsms.domain.Staff;
 import org.phoenixctms.ctsms.domain.TeamMemberImpl;
@@ -102,6 +104,9 @@ public final class CriteriaUtil {
 	private final static String ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS = "firstNameVariants";
 	private final static String ALTERNATIVE_FILTER_LAST_NAME_VARIANTS = "lastNameVariants";
 	private final static String ALTERNATIVE_FILTER_ALIAS_VARIANTS = "aliasVariants";
+	private final static String ALTERNATIVE_FILTER_DEPARTMENT_NAME = "departmentName";
+	private final static String DEPARTMENT_NAME_PROPERTY = "name";
+	private final static String DEPARTMENT_NAME_L10N_KEY_PROPERTY = "nameL10nKey";
 	private final static HashMap<String, String[]> ALTERNATIVE_FILTER_MAP = new HashMap<String, String[]>();
 	static {
 		ALTERNATIVE_FILTER_MAP.put("ProbandContactParticulars.lastNameHash",
@@ -109,6 +114,7 @@ public final class CriteriaUtil {
 		ALTERNATIVE_FILTER_MAP.put("PersonContactParticulars.lastName",
 				new String[] { "firstName", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
+		ALTERNATIVE_FILTER_MAP.put("Department.nameL10nKey", new String[] { ALTERNATIVE_FILTER_DEPARTMENT_NAME });
 	}
 	private final static String UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE = "unsupported binary restriction criterion type {0}";
 	private final static String UNSUPPORTED_UNARY_RESTRICTION_CRITERION_TYPE = "unsupported unary restriction criterion type {0}";
@@ -173,6 +179,8 @@ public final class CriteriaUtil {
 						}
 					} else if (ALTERNATIVE_FILTER_ALIAS_VARIANTS.equals(altFilter)) {
 						or = applyOr(getAliasVariantsCriterion(value), or);
+					} else if (ALTERNATIVE_FILTER_DEPARTMENT_NAME.equals(altFilter)) {
+						or = applyOr(getDepartmentNameCriterion(value), or);
 					} else {
 						AssociationPath altFilterFieldAssociationPath = new AssociationPath(
 								filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + altFilter);
@@ -185,6 +193,30 @@ public final class CriteriaUtil {
 			}
 		}
 		return null;
+	}
+
+	private static org.hibernate.criterion.Criterion getDepartmentNameCriterion(String value) {
+		Collection<String> matchingKeys = L10nUtil.getMatchingDepartmentNameL10nKeys(value);
+		if (matchingKeys != null && matchingKeys.size() > 0) {
+			return Restrictions.in(DEPARTMENT_NAME_L10N_KEY_PROPERTY, matchingKeys);
+		}
+		return null;
+	}
+
+	private static AssociationPath rewriteDepartmentNameFilter(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath) {
+		if (criteriaMap != null && filterFieldAssociationPath != null && filterFieldAssociationPath.isValid()
+				&& DEPARTMENT_NAME_PROPERTY.equals(filterFieldAssociationPath.getPropertyName())
+				&& filterFieldAssociationPath.getPathDepth() > 0) {
+			AssociationPath parentPath = filterFieldAssociationPath.dropLast();
+			if (parentPath.isValid()) {
+				criteriaMap.createCriteria(parentPath);
+				Class parentClass = criteriaMap.getPropertyClassMap().get(parentPath.getFullQualifiedPropertyName());
+				if (parentClass != null && Department.class.equals(parentClass)) {
+					return parentPath.append(DEPARTMENT_NAME_L10N_KEY_PROPERTY);
+				}
+			}
+		}
+		return filterFieldAssociationPath;
 	}
 
 	private static org.hibernate.criterion.Criterion getAliasVariantsCriterion(String value) {
@@ -727,6 +759,7 @@ public final class CriteriaUtil {
 							continue;
 						}
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
+						filterFieldAssociationPath = rewriteDepartmentNameFilter(criteriaMap, filterFieldAssociationPath);
 						Criteria subCriteria;
 						if (distinct && sortJoin) {
 							AssociationPath path = filterFieldAssociationPath;
@@ -1191,6 +1224,7 @@ public final class CriteriaUtil {
 							continue;
 						}
 						AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
+						filterFieldAssociationPath = rewriteDepartmentNameFilter(criteriaMap, filterFieldAssociationPath);
 						Criteria subCriteria;
 						if (sortFieldAssociationPath.isValid()
 								&& sortFieldAssociationPath.getPathDepth() >= 1

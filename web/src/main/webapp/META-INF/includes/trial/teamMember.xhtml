@@ -93,8 +93,7 @@
 					</p:column>
 
 					<p:column sortBy="#{teamMember.vo.staff.department}"
-						filterBy="#{teamMember.vo.staff.department.id}"
-						filterOptions="#{sessionScopeBean.filterDepartments}">
+						filterBy="#{teamMember.vo.staff.department.name}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText

@@ -183,8 +183,7 @@
 
 								<p:column
 									sortBy="#{probandListEntry.vo.proband.department.name}"
-									filterBy="#{probandListEntry.vo.proband.department.id}"
-									filterOptions="#{sessionScopeBean.filterDepartments}">
+									filterBy="#{probandListEntry.vo.proband.department.name}">
 									<f:facet name="header">
 										<h:outputText
 											value="#{triallabels.proband_group_probandlistentry_list_proband_department_column}" />

@@ -115,8 +115,7 @@
 								</ui:include>
 							</p:column>
 							<p:column sortBy="#{proband.vo.department}"
-								filterBy="#{proband.vo.department.id}"
-								filterOptions="#{sessionScopeBean.filterDepartments}">
+								filterBy="#{proband.vo.department.name}">
 								<f:facet name="header">
 									<h:outputText
 										value="#{probandlabels.auto_deletion_proband_overview_autodeletionproband_list_proband_department_column}" />

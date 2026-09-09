@@ -161,8 +161,7 @@
 				</p:column>
 				<p:column
 					sortBy="#{inventory.vo.department}"
-					filterBy="#{inventory.vo.department.id}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{inventory.vo.department.name}">
 					<f:facet name="header">
 						<h:outputText value="#{inventorylabels.search_inventory_result_list_inventory_department_column}" />
 					</f:facet>

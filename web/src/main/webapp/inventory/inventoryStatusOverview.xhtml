@@ -120,8 +120,7 @@
 						</p:column>
 						<p:column
 							sortBy="#{statusEntry.vo.inventory.department}"
-							filterBy="#{statusEntry.vo.inventory.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{statusEntry.vo.inventory.department.name}">
 							<f:facet name="header">
 								<h:outputText value="#{inventorylabels.inventory_status_overview_inventorystatus_list_inventory_department_column}" />
 							</f:facet>

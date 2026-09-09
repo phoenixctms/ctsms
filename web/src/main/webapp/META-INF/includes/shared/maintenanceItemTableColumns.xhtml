@@ -26,8 +26,7 @@
 		</p:column>
 		<p:column
 			sortBy="#{maintenanceItem.vo.inventory.department}"
-			filterBy="#{maintenanceItem.vo.inventory.department.id}"
-			filterOptions="#{sessionScopeBean.filterDepartments}">
+			filterBy="#{maintenanceItem.vo.inventory.department.name}">
 			<f:facet name="header">
 				<h:outputText value="#{inventorylabels.inventorymaintenance_list_inventory_department_column}" />
 			</f:facet>

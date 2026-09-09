@@ -84,8 +84,7 @@
 				</p:column>
 				
 				<p:column rendered="#{hyperlinkBean.approval}"
-					filterBy="#{hyperlink.vo.departments}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{hyperlink.vo.departments.name}">
 					<f:facet name="header">
 						<h:outputText
 							value="#{labels.hyperlink_hyperlink_list_departments_column}" />

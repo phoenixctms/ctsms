@@ -120,8 +120,7 @@
 						</p:column>
 						<p:column
 							sortBy="#{statusEntry.vo.staff.department}"
-							filterBy="#{statusEntry.vo.staff.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{statusEntry.vo.staff.department.name}">
 							<f:facet name="header">
 								<h:outputText value="#{stafflabels.staff_status_overview_staffstatus_list_staff_department_column}" />
 							</f:facet>

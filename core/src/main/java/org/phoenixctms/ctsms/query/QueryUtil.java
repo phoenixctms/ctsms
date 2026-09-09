@@ -35,6 +35,7 @@ import org.phoenixctms.ctsms.domain.CriterionRestriction;
 import org.phoenixctms.ctsms.domain.CriterionRestrictionDao;
 import org.phoenixctms.ctsms.domain.CriterionTie;
 import org.phoenixctms.ctsms.domain.CriterionTieDao;
+import org.phoenixctms.ctsms.domain.Department;
 import org.phoenixctms.ctsms.domain.InputFieldImpl;
 import org.phoenixctms.ctsms.domain.InventoryImpl;
 import org.phoenixctms.ctsms.domain.MassMailImpl;
@@ -105,6 +106,9 @@ public final class QueryUtil {
 	private final static String ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS = "firstNameVariants";
 	private final static String ALTERNATIVE_FILTER_LAST_NAME_VARIANTS = "lastNameVariants";
 	private final static String ALTERNATIVE_FILTER_ALIAS_VARIANTS = "aliasVariants";
+	private final static String ALTERNATIVE_FILTER_DEPARTMENT_NAME = "departmentName";
+	private final static String DEPARTMENT_NAME_PROPERTY = "name";
+	private final static String DEPARTMENT_NAME_L10N_KEY_PROPERTY = "nameL10nKey";
 	private final static HashMap<String, String[]> ALTERNATIVE_FILTER_MAP = new HashMap<String, String[]>();
 	private final static HashMap<String, ArrayList<StaticCriterionTerm>> FIXED_CRITERION_TERMS_MAP = new HashMap<String, ArrayList<StaticCriterionTerm>>();
 	static {
@@ -113,6 +117,7 @@ public final class QueryUtil {
 		ALTERNATIVE_FILTER_MAP.put("PersonContactParticulars.lastName",
 				new String[] { "firstName", ALTERNATIVE_FILTER_FIRST_NAME_VARIANTS, ALTERNATIVE_FILTER_LAST_NAME_VARIANTS });
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
+		ALTERNATIVE_FILTER_MAP.put("Department.nameL10nKey", new String[] { ALTERNATIVE_FILTER_DEPARTMENT_NAME });
 		addPropertyCriterionTerms("proband.diagnoses.code.systematics.blocks",
 				"proband.diagnoses.code.systematics.blocks.last", "{0} = ?",
 				new QueryParameterValue(true));
@@ -194,6 +199,23 @@ public final class QueryUtil {
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.INVALID_PROPERTY_ASSOCIATION_PATH, DefaultMessages.INVALID_PROPERTY_ASSOCIATION_PATH,
 					new Object[] { fullyQualifiedPropertyName.getPathString() }));
 		}
+	}
+
+	private static AssociationPath rewriteDepartmentNameFilter(Class entityClass, String entityName, AssociationPath filterFieldAssociationPath,
+			HashMap<String, AssociationPath> explicitJoinsMap, HashMap<String, Class> propertyClassMap) {
+		if (filterFieldAssociationPath != null && filterFieldAssociationPath.isValid()
+				&& DEPARTMENT_NAME_PROPERTY.equals(filterFieldAssociationPath.getPropertyName())
+				&& filterFieldAssociationPath.getPathDepth() > 0) {
+			AssociationPath parentPath = filterFieldAssociationPath.dropLast();
+			if (parentPath.isValid()) {
+				aliasPropertyName(entityClass, parentPath, entityName, explicitJoinsMap, propertyClassMap);
+				Class parentClass = propertyClassMap.get(parentPath.getFullQualifiedPropertyName());
+				if (parentClass != null && Department.class.equals(parentClass)) {
+					return parentPath.append(DEPARTMENT_NAME_L10N_KEY_PROPERTY);
+				}
+			}
+		}
+		return filterFieldAssociationPath;
 	}
 
 	private static void appendJoins(StringBuilder statement, HashMap<String, AssociationPath> explicitJoinsMap) {
@@ -306,6 +328,30 @@ public final class QueryUtil {
 							}
 							orHqlWhereClause.append(variantHql);
 							orQueryValues.addAll(variantQueryValues);
+						}
+					} else if (ALTERNATIVE_FILTER_DEPARTMENT_NAME.equals(altFilter)) {
+						AssociationPath variantPath = new AssociationPath(
+								filterFieldAssociationPath.getPathString() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + DEPARTMENT_NAME_L10N_KEY_PROPERTY);
+						String variantPropertyName = aliasPropertyName(entityClass, variantPath, entityName, explicitJoinsMap, propertyClassMap);
+						Collection<String> matchingKeys = L10nUtil.getMatchingDepartmentNameL10nKeys(value);
+						if (matchingKeys != null && matchingKeys.size() > 0) {
+							if (orHqlWhereClause.length() > 0) {
+								orHqlWhereClause.append(" or ");
+							}
+							orHqlWhereClause.append(variantPropertyName);
+							orHqlWhereClause.append(" in (");
+							boolean first = true;
+							Iterator<String> matchingKeyIt = matchingKeys.iterator();
+							while (matchingKeyIt.hasNext()) {
+								if (first) {
+									first = false;
+								} else {
+									orHqlWhereClause.append(", ");
+								}
+								orHqlWhereClause.append("?");
+								orQueryValues.add(new QueryParameterValue(String.class, matchingKeyIt.next()));
+							}
+							orHqlWhereClause.append(")");
 						}
 					} else {
 						AssociationPath altFilterFieldAssociationPath = new AssociationPath(
@@ -1333,6 +1379,7 @@ public final class QueryUtil {
 				while (filterIt.hasNext()) {
 					Map.Entry<String, String> filter = filterIt.next();
 					AssociationPath filterFieldAssociationPath = new AssociationPath(filter.getKey());
+					filterFieldAssociationPath = rewriteDepartmentNameFilter(entityClass, entityName, filterFieldAssociationPath, explicitJoinsMap, propertyClassMap);
 					String filterField = aliasPropertyName(entityClass, filterFieldAssociationPath, entityName, explicitJoinsMap, propertyClassMap);
 					StringBuilder altOrHqlWhereClause = new StringBuilder();
 					ArrayList<QueryParameterValue> altOrQueryValues = new ArrayList<QueryParameterValue>();

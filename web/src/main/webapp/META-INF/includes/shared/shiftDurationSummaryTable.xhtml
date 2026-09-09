@@ -145,8 +145,7 @@
 			<p:column
 				rendered="#{showTrials}"
 				sortBy="#{shiftDurationSummaryDetail.vo.trial.department.name}"
-				filterBy="#{shiftDurationSummaryDetail.vo.trial.department.id}"
-				filterOptions="#{sessionScopeBean.filterDepartments}">
+				filterBy="#{shiftDurationSummaryDetail.vo.trial.department.name}">
 				<f:facet name="header">
 					<h:outputText value="#{labels.shift_duration_summary_table_trial_department_column}" />
 				</f:facet>
@@ -173,8 +172,7 @@
 			<p:column
 				rendered="#{showStaff}"
 				sortBy="#{shiftDurationSummaryDetail.vo.staff.department.name}"
-				filterBy="#{shiftDurationSummaryDetail.vo.staff.department.id}"
-				filterOptions="#{sessionScopeBean.filterDepartments}">
+				filterBy="#{shiftDurationSummaryDetail.vo.staff.department.name}">
 				<f:facet name="header">
 					<h:outputText value="#{labels.shift_duration_summary_table_staff_department_column}" />
 				</f:facet>

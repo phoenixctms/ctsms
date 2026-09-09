@@ -122,8 +122,7 @@
 					</p:column>
 					<p:column
 						sortBy="#{fieldStatusEntry.vo.listEntry.proband.department}"
-						filterBy="#{fieldStatusEntry.vo.listEntry.proband.department.id}"
-						filterOptions="#{sessionScopeBean.filterDepartments}">
+						filterBy="#{fieldStatusEntry.vo.listEntry.proband.department.name}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
 							<h:outputText

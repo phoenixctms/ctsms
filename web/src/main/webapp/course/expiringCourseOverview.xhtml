@@ -107,8 +107,7 @@
 							<h:outputText value="#{course.vo.name}" />
 						</p:column>
 						<p:column sortBy="#{course.vo.department}"
-							filterBy="#{course.vo.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{course.vo.department.name}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{courselabels.expiring_course_overview_expiringcourse_list_course_department_column}" />

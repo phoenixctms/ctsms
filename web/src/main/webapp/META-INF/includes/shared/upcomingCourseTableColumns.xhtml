@@ -26,8 +26,7 @@
 		</p:column>
 		<p:column
 			sortBy="#{course.vo.department}"
-			filterBy="#{course.vo.department.id}"
-			filterOptions="#{sessionScopeBean.filterDepartments}">
+			filterBy="#{course.vo.department.name}">
 			<f:facet name="header">
 				<h:outputText value="#{courselabels.admin_upcoming_course_overview_upcomingcourse_list_course_department_column}" />
 			</f:facet>

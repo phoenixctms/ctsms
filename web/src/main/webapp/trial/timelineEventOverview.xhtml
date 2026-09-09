@@ -149,8 +149,7 @@
 							</p:column>
 							<p:column
 								sortBy="#{timelineEvent.vo.trial.department}"
-								filterBy="#{timelineEvent.vo.trial.department.id}"
-								filterOptions="#{sessionScopeBean.filterDepartments}">
+								filterBy="#{timelineEvent.vo.trial.department.name}">
 								<f:facet name="header">
 									<h:outputText value="#{triallabels.timeline_event_overview_timelineevent_list_trial_department_column}" />
 								</f:facet>

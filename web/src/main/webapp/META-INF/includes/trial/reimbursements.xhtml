@@ -344,8 +344,7 @@
 
 
 						<p:column sortBy="#{summary.vo.department}"
-							filterBy="#{summary.vo.department.id}"
-							filterOptions="#{sessionScopeBean.filterDepartments}">
+							filterBy="#{summary.vo.department.name}">
 							<f:facet name="header">
 								<h:outputText
 									value="#{triallabels.reimbursements_proband_money_transfer_no_participation_summary_list_proband_department_column}" />

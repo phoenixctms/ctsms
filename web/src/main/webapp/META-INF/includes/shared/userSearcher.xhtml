@@ -161,8 +161,7 @@
 				</p:column>
 				<p:column
 					sortBy="#{user.vo.department}"
-					filterBy="#{user.vo.department.id}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{user.vo.department.name}">
 					<f:facet name="header">
 						<h:outputText value="#{userlabels.search_user_result_list_user_department_column}" />
 					</f:facet>
@@ -219,8 +218,7 @@
 					</ui:include>
 				</p:column>
 				<p:column
-					filterBy="#{user.vo.identity.department.id}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{user.vo.identity.department.name}">
 					<f:facet name="header">
 						<h:outputText value="#{userlabels.search_user_result_list_identity_department_column}" />
 					</f:facet>

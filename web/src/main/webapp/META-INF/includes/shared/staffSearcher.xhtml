@@ -172,8 +172,7 @@
 				</p:column>
 				<p:column
 					sortBy="#{staff.vo.department}"
-					filterBy="#{staff.vo.department.id}"
-					filterOptions="#{sessionScopeBean.filterDepartments}">
+					filterBy="#{staff.vo.department.name}">
 					<f:facet name="header">
 						<h:outputText value="#{stafflabels.search_staff_result_list_staff_department_column}" />
 					</f:facet>
