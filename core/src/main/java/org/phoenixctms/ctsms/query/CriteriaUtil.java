@@ -209,14 +209,28 @@ public final class CriteriaUtil {
 				&& filterFieldAssociationPath.getPathDepth() > 0) {
 			AssociationPath parentPath = filterFieldAssociationPath.dropLast();
 			if (parentPath.isValid()) {
-				criteriaMap.createCriteria(parentPath.getFullQualifiedPropertyName());
-				Class parentClass = criteriaMap.getPropertyClassMap().get(parentPath.getFullQualifiedPropertyName());
-				if (parentClass != null && Department.class.equals(parentClass)) {
-					return parentPath.append(DEPARTMENT_NAME_L10N_KEY_PROPERTY);
+				try {
+					Class parentClass = resolveAssociationClass(criteriaMap.getEntity(), parentPath);
+					if (parentClass != null && Department.class.equals(parentClass)) {
+						return parentPath.append(DEPARTMENT_NAME_L10N_KEY_PROPERTY);
+					}
+				} catch (IllegalArgumentException e) {
 				}
 			}
 		}
 		return filterFieldAssociationPath;
+	}
+
+	private static Class resolveAssociationClass(Class entity, AssociationPath path) {
+		if (entity == null || path == null || !path.isValid()) {
+			return null;
+		}
+		Class propertyClass = entity;
+		ArrayList<String> fullPath = path.getFullPath();
+		for (int i = 0; i < fullPath.size(); i++) {
+			propertyClass = CoreUtil.getPropertyClass(propertyClass, fullPath.get(i));
+		}
+		return propertyClass;
 	}
 
 	private static org.hibernate.criterion.Criterion getAliasVariantsCriterion(String value) {
