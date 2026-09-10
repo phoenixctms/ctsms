@@ -209,7 +209,7 @@ public final class CriteriaUtil {
 				&& filterFieldAssociationPath.getPathDepth() > 0) {
 			AssociationPath parentPath = filterFieldAssociationPath.dropLast();
 			if (parentPath.isValid()) {
-				criteriaMap.createCriteria(parentPath);
+				criteriaMap.createCriteria(parentPath.getFullQualifiedPropertyName());
 				Class parentClass = criteriaMap.getPropertyClassMap().get(parentPath.getFullQualifiedPropertyName());
 				if (parentClass != null && Department.class.equals(parentClass)) {
 					return parentPath.append(DEPARTMENT_NAME_L10N_KEY_PROPERTY);
