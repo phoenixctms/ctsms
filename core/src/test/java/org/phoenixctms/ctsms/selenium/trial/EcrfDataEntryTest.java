@@ -49,6 +49,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 	private Long probandId;
 	private XlsImporter xlsImporter;
 	private final static Pattern FILE_NAME_ID_REGEXP = Pattern.compile("'([0-9a-z._-]+)' \\(file ID (\\d+)\\)");
+	private final static long FILE_DOWNLOAD_TIMEOUT_MS = 60_000L;
 	private String exportFile;
 	private Connection connection;
 
@@ -158,6 +159,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 
 	@Test(description = "Execute trial job for exporting eCRF data as SQLite database.")
 	public void test_06_export_ecrf_data_job() throws Throwable {
+		setSkipScreenshot(true);
 		clickTab("tabView:trialjobs");
 		String job = "export eCRF data";
 		clickJobTypeSelectOneRadio("tabView:trialjob_form", job);
@@ -167,22 +169,43 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 				Matcher matcher = FILE_NAME_ID_REGEXP.matcher(getJobOutput("tabView:trialjob_form"));
 				while (matcher.find()) {
 					String fileName = matcher.group(1);
-					String url = getUrl("file?fileid=" + matcher.group(2));
+					String fileId = matcher.group(2);
+					if (!isExportedEcrfFile(fileName)) {
+						info("skipping non-export file '" + fileName + "' (file ID " + fileId + ")");
+						continue;
+					}
+					String url = getUrl("file?fileid=" + fileId);
 					File file = new File(getTestDirectory(), fileName);
 					getChromeDriver().get(url);
-					while (!file.exists()) {
-						Thread.sleep(200);
-					}
+					waitForDownloadedFile(file);
 					info(fileName + " saved");
 					if (CommonUtil.getMimeType(file).equals("application/x-sqlite3")) {
 						exportFile = file.getCanonicalPath();
 					}
 					info("file " + file.getCanonicalPath() + " saved");
 				}
+				if (CommonUtil.isEmptyString(exportFile)) {
+					testFailed("SQLite export file not downloaded");
+				}
 				return;
 			}
 		}
 		testFailed(job + " failed");
+	}
+
+	private static boolean isExportedEcrfFile(String fileName) {
+		String lower = fileName.toLowerCase();
+		return lower.endsWith(".db") || lower.endsWith(".csv") || lower.endsWith(".xlsx") || lower.endsWith(".xls");
+	}
+
+	private void waitForDownloadedFile(File file) throws InterruptedException {
+		long deadline = System.currentTimeMillis() + FILE_DOWNLOAD_TIMEOUT_MS;
+		while (!file.exists()) {
+			if (System.currentTimeMillis() >= deadline) {
+				testFailed("timeout waiting for download of " + file.getName());
+			}
+			Thread.sleep(200);
+		}
 	}
 
 	@Test(description = "Verify exported values found in the SQLite database with the expected values provided by the 'validation' spreadsheet of the eCRF setup (ecrf.xls).")
