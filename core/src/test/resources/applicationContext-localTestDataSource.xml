@@ -22,7 +22,7 @@
 			value="ctsms" />
 		<property
 			name="url"
-			value="jdbc:postgresql://localhost/ctsms_test" /> 
+			value="jdbc:postgresql://localhost/ctsms_test?sslmode=disable&amp;gssEncMode=disable" /> 
 	</bean>
 	<!-- (local) Transaction Manager -->
 	<bean

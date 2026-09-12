@@ -731,10 +731,10 @@
 					For DB2 use: jdbc:db2:ctsms For Informix use: jdbc:informix-sqli://localhost:1557/ctsms:INFORMIXSERVER=myserver
 					For MSSQL use: jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=ctsms
 					For Pointbase use: jdbc:pointbase:server://@pointbase.server@:@pointbase.port/pointbase.ctsms@,new
-					For Postgres use: jdbc:postgresql://localhost/ctsms For Sybase use: jdbc:sybase:Tds:localhost:5000/ctsms?JCONNECT_VERSION=6
+					For Postgres use: jdbc:postgresql://localhost/ctsms?sslmode=disable&amp;gssEncMode=disable For Sybase use: jdbc:sybase:Tds:localhost:5000/ctsms?JCONNECT_VERSION=6
 					For SapDB use: jdbc:sapdb://127.0.0.1/ctsms For Progress use: jdbc:JdbcProgress:T:localhost:3305:ctsms -->
 				<jdbc.url>
-					jdbc:postgresql://localhost/ctsms
+					jdbc:postgresql://localhost/ctsms?sslmode=disable&amp;gssEncMode=disable
 				</jdbc.url>
 				<!-- Enter id/password for the database connection -->
 				<jdbc.username>
