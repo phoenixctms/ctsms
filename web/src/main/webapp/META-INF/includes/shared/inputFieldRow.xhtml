@@ -11,7 +11,9 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<p:fieldset id="row#{index}" rendered="#{rendered}"
+		<h:panelGroup layout="block" styleClass="ctsms-inputfieldrow"
+			rendered="#{rendered}">
+		<p:fieldset id="row#{index}"
 			toggleable="#{toggleable}"
 			styleClass="#{fieldInput.getColor(optional)}"
 			collapsed="#{toggleable and fieldInput.collapsed}">
@@ -605,6 +607,7 @@
 				</p:toolbar>
 			</h:panelGrid>
 		</p:fieldset>
+		</h:panelGroup>
 	</ui:composition>
 </h:body>
 </html>
