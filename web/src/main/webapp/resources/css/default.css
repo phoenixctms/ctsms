@@ -1004,33 +1004,59 @@ div.timeline-event-content {
 	width: 100%;
 }
 
-/* Equal-height inputFieldRow fieldsets within a fields-per-row grid.
-   Table cells already share the row height; height:1px lets percentage
-   heights on the fieldset fill that cell. Flex then pins the toolbar. */
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td {
-	height: 1px;
+/* Equal-height inputFieldRow fieldsets in a fields-per-row grid.
+   Percentage height on table-cell children does not stretch fieldsets;
+   turn the inner h:panelGrid into a CSS grid so cells share row height. */
+.ctsms-values-datagrid>div>table>tbody>tr>td>table {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(0, 1fr);
+	align-items: stretch;
 }
 
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ui-fieldset {
-	height: 100%;
-	box-sizing: border-box;
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody,
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr {
+	display: contents;
+}
+
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td {
 	display: flex;
 	flex-direction: column;
-	min-width: 0;
+	height: auto;
+	width: auto;
 }
 
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ui-fieldset>.ui-fieldset-legend {
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-width: 0;
+	min-height: 0;
+}
+
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow>.ui-fieldset {
+	flex: 1 1 auto;
+	height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow>.ui-fieldset>.ui-fieldset-legend {
 	flex: 0 0 auto;
 }
 
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ui-fieldset>.ui-fieldset-content {
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow>.ui-fieldset>.ui-fieldset-content {
 	flex: 1 1 auto;
 	min-height: 0;
 	display: flex;
 	flex-direction: column;
 }
 
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ui-fieldset>.ui-fieldset-content>.ctsms-input-panelgrid {
+.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow>.ui-fieldset>.ui-fieldset-content>.ctsms-input-panelgrid {
 	flex: 1 1 auto;
 	height: 100%;
 }
