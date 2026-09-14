@@ -14,7 +14,7 @@
 		<p:dataGrid var="inputModelRow"
 			value="#{ecrfStatusEntryBean.ecrfFieldValueBean.inputModelsMap[section]}"
 			paginator="false" columns="1"
-			styleClass="ctsms-values-datagrid-#{ecrfStatusEntryBean.ecrfFieldValueBean.paginator.fieldsPerRow}"
+			styleClass="ctsms-values-datagrid ctsms-values-datagrid-#{ecrfStatusEntryBean.ecrfFieldValueBean.paginator.fieldsPerRow}"
 			id="section_inputs">
 			<p:column>
 				<h:panelGrid
