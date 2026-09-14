@@ -106,6 +106,7 @@ public class PDFMergerUtility extends org.apache.pdfbox.util.PDFMergerUtility {
 			Iterator pagesIt = document.getDocumentCatalog().getAllPages().iterator();
 			while (pagesIt.hasNext()) {
 				PDPage page = (PDPage) pagesIt.next();
+				PDFPageNormalizer.normalize(document, page);
 				// The 5-argument constructor ensures the graphics state is reset.
 				// This prevents existing page transformations (like scaling or rotation) 
 				// from ruining our text placement.

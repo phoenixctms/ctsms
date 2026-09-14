@@ -54,8 +54,10 @@ public class PDFImprinter {
 			}
 			if (pageNum > templatePages.size()) {
 				page = doc.importPage((PDPage) templatePages.get(templatePages.size() - 1));
+				PDFPageNormalizer.normalize(doc, page);
 			} else if (pageNum > 0) {
 				page = doc.importPage((PDPage) templatePages.get(pageNum - 1));
+				PDFPageNormalizer.normalize(doc, page);
 			} else {
 				page = new PDPage(PDPage.PAGE_SIZE_A4);
 				doc.addPage(page);
@@ -94,10 +96,11 @@ public class PDFImprinter {
 	}
 
 	private PDPageContentStream openContentStream(PDPage page, boolean setPageSize, boolean applyPageOrientation) throws IOException {
-		contentStream = new PDPageContentStream(doc, page, true, false);
+		contentStream = new PDPageContentStream(doc, page, true, false, true);
 		if (painter != null) {
 			PDRectangle pageSize = page.findMediaBox();
-			if (PageOrientation.LANDSCAPE.equals(painter.getPageOrientation())) {
+			boolean applyLandscapeTransform = PageOrientation.LANDSCAPE.equals(painter.getPageOrientation()) && page.findRotation() != 0;
+			if (applyLandscapeTransform) {
 				if (setPageSize) {
 					painter.setPageHeight(pageSize.getWidth());
 					painter.setPageWidth(pageSize.getHeight());
@@ -217,8 +220,13 @@ public class PDFImprinter {
 					PDDocument document = null;
 					try {
 						document = PDDocument.load(documentStream);
+						int pageIndex = doc.getNumberOfPages();
 						getAppender().appendDocument(doc, document);
 						painter.startNewPages(document.getNumberOfPages());
+						List pages = doc.getDocumentCatalog().getAllPages();
+						for (int i = pageIndex; i < pages.size(); i++) {
+							PDFPageNormalizer.normalize(doc, (PDPage) pages.get(i));
+						}
 					} finally {
 						if (document != null) {
 							document.close();
