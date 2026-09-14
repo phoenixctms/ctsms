@@ -1005,31 +1005,19 @@ div.timeline-event-content {
 }
 
 /* Equal-height inputFieldRow fieldsets in a fields-per-row grid.
-   Percentage height on table-cell children does not stretch fieldsets;
-   turn the inner h:panelGrid into a CSS grid so cells share row height. */
+   Keep h:panelGrid table rows/columns (and ctsms-values-datagrid-N widths).
+   height:1px on the cell lets the wrapper fill the row height. */
 .ctsms-values-datagrid>div>table>tbody>tr>td>table {
-	display: grid;
-	grid-auto-flow: column;
-	grid-auto-columns: minmax(0, 1fr);
-	align-items: stretch;
-	column-gap: 8px;
-	margin-bottom: 8px;
-}
-
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody,
-.ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr {
-	display: contents;
+	border-collapse: separate;
+	border-spacing: 8px 8px;
 }
 
 .ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td {
-	display: flex;
-	flex-direction: column;
-	height: auto;
-	width: auto;
+	height: 1px;
 }
 
 .ctsms-values-datagrid>div>table>tbody>tr>td>table>tbody>tr>td>.ctsms-inputfieldrow {
-	flex: 1 1 auto;
+	height: 100%;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
