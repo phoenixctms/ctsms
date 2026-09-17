@@ -479,28 +479,13 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkAddEcrfFieldReasonForChangeRequired" />
-									<h:outputLabel for="bulkAddEcrfFieldNotify"
-										value="#{triallabels.ecrffield_notify_label}" />
-									<h:panelGroup>
-										<p:selectBooleanCheckbox id="bulkAddEcrfFieldNotify"
-											value="#{ecrfFieldBean.bulkAddNotify}">
-											<p:ajax />
-										</p:selectBooleanCheckbox>
-										<p:tooltip rendered="#{enableTooltips}"
-											for="bulkAddEcrfFieldNotify">
-											<h:outputText
-												value="#{triallabels.ecrffield_notify_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
-									<p:message for="bulkAddEcrfFieldNotify" />
 								</h:panelGrid>
 
 								<p:messages />
 								<p:toolbar>
 									<p:toolbarGroup align="right">
 										<p:commandButton
-											process="@this,bulkAddEcrfFieldSeries,bulkAddEcrfFieldOptional,bulkAddEcrfFieldAuditTrail,bulkAddEcrfFieldReasonForChangeRequired,bulkAddEcrfFieldNotify"
+											process="@this,bulkAddEcrfFieldSeries,bulkAddEcrfFieldOptional,bulkAddEcrfFieldAuditTrail,bulkAddEcrfFieldReasonForChangeRequired"
 											id="bulkAdd" value="#{labels.add_button_label}"
 											actionListener="#{ecrfFieldBean.addBulk}"
 											oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
