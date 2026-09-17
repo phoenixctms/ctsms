@@ -104,7 +104,8 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 	private ProbandListEntryTagLazyModel probandListEntryTagModel;
 	private InputFieldMultiPickerModel inputFieldMultiPicker;
 	private boolean bulkAddOptional;
-	private boolean bulkAddExcel;
+	private boolean bulkAddExcelValue;
+	private boolean bulkAddExcelDate;
 	private boolean bulkAddEcrf;
 	private boolean bulkAddStratification;
 	private boolean bulkAddRandomize;
@@ -145,7 +146,8 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		try {
 			Set<Long> ids = this.inputFieldMultiPicker.getSelectionIds();
 			Iterator<ProbandListEntryTagOutVO> it = WebUtil.getServiceLocator().getTrialService()
-					.addProbandListEntryTags(WebUtil.getAuthentication(), trialId, bulkAddOptional, bulkAddExcel, bulkAddEcrf, bulkAddStratification, bulkAddRandomize, ids)
+					.addProbandListEntryTags(WebUtil.getAuthentication(), trialId, bulkAddOptional, bulkAddExcelValue, bulkAddExcelDate, bulkAddEcrf, bulkAddStratification,
+							bulkAddRandomize, ids)
 					.iterator();
 			while (it.hasNext()) {
 				this.inputFieldMultiPicker.removeId(it.next().getField().getId());
@@ -186,7 +188,8 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		this.trialId = id;
 		this.inputFieldMultiPicker.clear();
 		bulkAddOptional = Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_OPTIONAL_PRESET);
-		bulkAddExcel = Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET);
+		bulkAddExcelValue = Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET);
+		bulkAddExcelDate = Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET);
 		bulkAddEcrf = Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_ECRF_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_ECRF_PRESET);
 		bulkAddStratification = Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_STRATIFICATION_PRESET, Bundle.SETTINGS,
 				DefaultSettings.PROBAND_LIST_ENTRY_TAG_STRATIFICATION_PRESET);
@@ -302,8 +305,12 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		return bulkAddEcrf;
 	}
 
-	public boolean isBulkAddExcel() {
-		return bulkAddExcel;
+	public boolean isBulkAddExcelDate() {
+		return bulkAddExcelDate;
+	}
+
+	public boolean isBulkAddExcelValue() {
+		return bulkAddExcelValue;
 	}
 
 	public boolean isBulkAddOptional() {
@@ -467,8 +474,12 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		this.bulkAddEcrf = bulkAddEcrf;
 	}
 
-	public void setBulkAddExcel(boolean bulkAddExcel) {
-		this.bulkAddExcel = bulkAddExcel;
+	public void setBulkAddExcelDate(boolean bulkAddExcelDate) {
+		this.bulkAddExcelDate = bulkAddExcelDate;
+	}
+
+	public void setBulkAddExcelValue(boolean bulkAddExcelValue) {
+		this.bulkAddExcelValue = bulkAddExcelValue;
 	}
 
 	public void setBulkAddOptional(boolean bulkAddOptional) {

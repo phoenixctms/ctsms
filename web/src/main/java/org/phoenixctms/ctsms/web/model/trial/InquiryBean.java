@@ -109,7 +109,9 @@ public class InquiryBean extends ManagedBeanBase {
 	private InputFieldMultiPickerModel inputFieldMultiPicker;
 	private String bulkAddCategory;
 	private boolean bulkAddOptional;
-	private boolean bulkAddExcel;
+	private boolean bulkAddExcelValue;
+	private boolean bulkAddExcelDate;
+	private boolean bulkAddActiveSignup;
 	private String deferredDeleteReason;
 
 	public InquiryBean() {
@@ -149,7 +151,8 @@ public class InquiryBean extends ManagedBeanBase {
 			if (bulkAddCategory != null && bulkAddCategory.length() > 0) {
 				Set<Long> ids = this.inputFieldMultiPicker.getSelectionIds();
 				Iterator<InquiryOutVO> it = WebUtil.getServiceLocator().getTrialService()
-						.addInquiries(WebUtil.getAuthentication(), trialId, bulkAddCategory, bulkAddOptional, bulkAddExcel, ids).iterator();
+						.addInquiries(WebUtil.getAuthentication(), trialId, bulkAddCategory, bulkAddOptional, bulkAddExcelValue, bulkAddExcelDate, bulkAddActiveSignup, ids)
+						.iterator();
 				while (it.hasNext()) {
 					this.inputFieldMultiPicker.removeId(it.next().getField().getId());
 				}
@@ -192,7 +195,9 @@ public class InquiryBean extends ManagedBeanBase {
 		this.inputFieldMultiPicker.clear();
 		bulkAddCategory = Messages.getString(MessageCodes.INQUIRY_CATEGORY_PRESET);
 		bulkAddOptional = Settings.getBoolean(SettingCodes.INQUIRY_OPTIONAL_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_OPTIONAL_PRESET);
-		bulkAddExcel = Settings.getBoolean(SettingCodes.INQUIRY_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXCEL_PRESET);
+		bulkAddExcelValue = Settings.getBoolean(SettingCodes.INQUIRY_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXCEL_PRESET);
+		bulkAddExcelDate = Settings.getBoolean(SettingCodes.INQUIRY_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXCEL_PRESET);
+		bulkAddActiveSignup = Settings.getBoolean(SettingCodes.INQUIRY_ACTIVE_SIGNUP_PRESET, Bundle.SETTINGS, DefaultSettings.INQUIRY_ACTIVE_SIGNUP_PRESET);
 		initIn();
 		initSets();
 		return CHANGE_OUTCOME;
@@ -379,8 +384,16 @@ public class InquiryBean extends ManagedBeanBase {
 		}
 	}
 
-	public boolean isBulkAddExcel() {
-		return bulkAddExcel;
+	public boolean isBulkAddActiveSignup() {
+		return bulkAddActiveSignup;
+	}
+
+	public boolean isBulkAddExcelDate() {
+		return bulkAddExcelDate;
+	}
+
+	public boolean isBulkAddExcelValue() {
+		return bulkAddExcelValue;
 	}
 
 	public boolean isBulkAddOptional() {
@@ -538,8 +551,16 @@ public class InquiryBean extends ManagedBeanBase {
 		this.bulkAddCategory = bulkAddCategory;
 	}
 
-	public void setBulkAddExcel(boolean bulkAddExcel) {
-		this.bulkAddExcel = bulkAddExcel;
+	public void setBulkAddActiveSignup(boolean bulkAddActiveSignup) {
+		this.bulkAddActiveSignup = bulkAddActiveSignup;
+	}
+
+	public void setBulkAddExcelDate(boolean bulkAddExcelDate) {
+		this.bulkAddExcelDate = bulkAddExcelDate;
+	}
+
+	public void setBulkAddExcelValue(boolean bulkAddExcelValue) {
+		this.bulkAddExcelValue = bulkAddExcelValue;
 	}
 
 	public void setBulkAddOptional(boolean bulkAddOptional) {
