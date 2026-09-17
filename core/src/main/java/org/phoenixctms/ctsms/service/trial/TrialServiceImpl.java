@@ -2977,7 +2977,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ECRFFieldOutVO> handleAddEcrfFields(AuthenticationVO auth, Long ecrfId, String section, boolean series, boolean optional, boolean auditTrail,
-			boolean reasonForChangeRequired, boolean notify, Set<Long> inputFieldIds)
+			boolean reasonForChangeRequired, Set<Long> inputFieldIds)
 			throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		Long position = this.getECRFFieldDao().findMaxPosition(ecrfId, section);
@@ -3001,7 +3001,7 @@ public class TrialServiceImpl
 				newEcrfField.setOptional(optional);
 				newEcrfField.setAuditTrail(auditTrail);
 				newEcrfField.setReasonForChangeRequired(reasonForChangeRequired);
-				newEcrfField.setNotify(notify);
+				newEcrfField.setNotify(false);
 				newEcrfField.setSeries(series);
 				newEcrfField.setEcrfId(ecrf.getId());
 				newEcrfField.setTrialId(ecrf.getTrial().getId());

@@ -122,7 +122,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private boolean bulkAddSeries;
 	private boolean bulkAddAuditTrail;
 	private boolean bulkAddReasonForChangeRequired;
-	private boolean bulkAddNotify;
 	private String oldSection;
 	private String newSection;
 	private boolean newSeries;
@@ -170,8 +169,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 				}
 				Set<Long> ids = this.inputFieldMultiPicker.getSelectionIds();
 				Iterator<ECRFFieldOutVO> it = WebUtil.getServiceLocator().getTrialService()
-						.addEcrfFields(WebUtil.getAuthentication(), ecrfId, bulkAddSection, bulkAddSeries, bulkAddOptional, bulkAddAuditTrail, bulkAddReasonForChangeRequired,
-								bulkAddNotify, ids)
+						.addEcrfFields(WebUtil.getAuthentication(), ecrfId, bulkAddSection, bulkAddSeries, bulkAddOptional, bulkAddAuditTrail, bulkAddReasonForChangeRequired, ids)
 						.iterator();
 				while (it.hasNext()) {
 					this.inputFieldMultiPicker.removeId(it.next().getField().getId());
@@ -224,7 +222,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		bulkAddSeries = Settings.getBoolean(SettingCodes.ECRF_FIELD_SERIES_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_SERIES_PRESET);
 		bulkAddAuditTrail = Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET);
 		bulkAddReasonForChangeRequired = Settings.getBoolean(SettingCodes.ECRF_FIELD_AUDIT_TRAIL_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_AUDIT_TRAIL_PRESET);
-		bulkAddNotify = false;
 		newSeries = Settings.getBoolean(SettingCodes.ECRF_FIELD_SERIES_PRESET, Bundle.SETTINGS, DefaultSettings.ECRF_FIELD_SERIES_PRESET);
 		initIn();
 		initSets();
@@ -490,10 +487,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return bulkAddAuditTrail;
 	}
 
-	public boolean isBulkAddNotify() {
-		return bulkAddNotify;
-	}
-
 	public boolean isBulkAddReasonForChangeRequired() {
 		return bulkAddReasonForChangeRequired;
 	}
@@ -673,10 +666,6 @@ public class EcrfFieldBean extends ManagedBeanBase {
 
 	public void setBulkAddAuditTrail(boolean bulkAddAuditTrail) {
 		this.bulkAddAuditTrail = bulkAddAuditTrail;
-	}
-
-	public void setBulkAddNotify(boolean bulkAddNotify) {
-		this.bulkAddNotify = bulkAddNotify;
 	}
 
 	public void setBulkAddReasonForChangeRequired(boolean bulkAddReasonForChangeRequired) {
