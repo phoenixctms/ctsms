@@ -450,7 +450,9 @@
 									<h:panelGroup>
 										<p:selectBooleanCheckbox id="bulkAddEcrfFieldAuditTrail"
 											value="#{ecrfFieldBean.bulkAddAuditTrail}">
-											<p:ajax />
+											<p:ajax
+												listener="#{ecrfFieldBean.handleBulkAddAuditTrailChange}"
+												update="bulkAddEcrfFieldReasonForChangeRequired" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}"
 											for="bulkAddEcrfFieldAuditTrail">
@@ -460,13 +462,45 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="bulkAddEcrfFieldAuditTrail" />
+									<h:outputLabel for="bulkAddEcrfFieldReasonForChangeRequired"
+										value="#{triallabels.ecrffield_reason_for_change_required_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox
+											id="bulkAddEcrfFieldReasonForChangeRequired"
+											disabled="#{!ecrfFieldBean.bulkAddAuditTrail}"
+											value="#{ecrfFieldBean.bulkAddReasonForChangeRequired}">
+											<p:ajax />
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="bulkAddEcrfFieldReasonForChangeRequired">
+											<h:outputText
+												value="#{triallabels.ecrffield_reason_for_change_required_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="bulkAddEcrfFieldReasonForChangeRequired" />
+									<h:outputLabel for="bulkAddEcrfFieldNotify"
+										value="#{triallabels.ecrffield_notify_label}" />
+									<h:panelGroup>
+										<p:selectBooleanCheckbox id="bulkAddEcrfFieldNotify"
+											value="#{ecrfFieldBean.bulkAddNotify}">
+											<p:ajax />
+										</p:selectBooleanCheckbox>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="bulkAddEcrfFieldNotify">
+											<h:outputText
+												value="#{triallabels.ecrffield_notify_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:message for="bulkAddEcrfFieldNotify" />
 								</h:panelGrid>
 
 								<p:messages />
 								<p:toolbar>
 									<p:toolbarGroup align="right">
 										<p:commandButton
-											process="@this,bulkAddEcrfFieldSeries,bulkAddEcrfFieldOptional,bulkAddEcrfFieldAuditTrail"
+											process="@this,bulkAddEcrfFieldSeries,bulkAddEcrfFieldOptional,bulkAddEcrfFieldAuditTrail,bulkAddEcrfFieldReasonForChangeRequired,bulkAddEcrfFieldNotify"
 											id="bulkAdd" value="#{labels.add_button_label}"
 											actionListener="#{ecrfFieldBean.addBulk}"
 											oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"

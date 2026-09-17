@@ -327,21 +327,38 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="bulkAddProbandListEntryTagOptional" />
-								<h:outputLabel for="bulkAddProbandListEntryTagExcel"
-									value="#{triallabels.bulkadd_proband_list_entry_tag_excel_label}" />
+								<h:outputLabel for="bulkAddProbandListEntryTagExcelValue"
+									value="#{triallabels.proband_list_entry_tag_excel_value_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox id="bulkAddProbandListEntryTagExcel"
-										value="#{probandListEntryTagBean.bulkAddExcel}">
+									<p:selectBooleanCheckbox
+										id="bulkAddProbandListEntryTagExcelValue"
+										value="#{probandListEntryTagBean.bulkAddExcelValue}">
 										<p:ajax />
 									</p:selectBooleanCheckbox>
 									<p:tooltip rendered="#{enableTooltips}"
-										for="bulkAddProbandListEntryTagExcel">
+										for="bulkAddProbandListEntryTagExcelValue">
 										<h:outputText
-											value="#{triallabels.bulkadd_proband_list_entry_tag_excel_tooltip}"
+											value="#{triallabels.proband_list_entry_tag_excel_value_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="bulkAddProbandListEntryTagExcel" />
+								<p:message for="bulkAddProbandListEntryTagExcelValue" />
+								<h:outputLabel for="bulkAddProbandListEntryTagExcelDate"
+									value="#{triallabels.proband_list_entry_tag_excel_date_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox
+										id="bulkAddProbandListEntryTagExcelDate"
+										value="#{probandListEntryTagBean.bulkAddExcelDate}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="bulkAddProbandListEntryTagExcelDate">
+										<h:outputText
+											value="#{triallabels.proband_list_entry_tag_excel_date_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddProbandListEntryTagExcelDate" />
 
 								<h:outputLabel for="bulkAddProbandListEntryTagEcrf"
 									value="#{triallabels.bulkadd_proband_list_entry_tag_ecrf_label}" />
@@ -399,7 +416,7 @@
 							<p:toolbar>
 								<p:toolbarGroup align="right">
 									<p:commandButton
-										process="@this,bulkAddProbandListEntryTagOptional,bulkAddProbandListEntryTagExcel,bulkAddProbandListEntryTagEcrf,bulkAddProbandListEntryTagStratification,bulkAddProbandListEntryTagRandomize"
+										process="@this,bulkAddProbandListEntryTagOptional,bulkAddProbandListEntryTagExcelValue,bulkAddProbandListEntryTagExcelDate,bulkAddProbandListEntryTagEcrf,bulkAddProbandListEntryTagStratification,bulkAddProbandListEntryTagRandomize"
 										id="bulkAdd" value="#{labels.add_button_label}"
 										actionListener="#{probandListEntryTagBean.addBulk}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"

@@ -2977,7 +2977,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ECRFFieldOutVO> handleAddEcrfFields(AuthenticationVO auth, Long ecrfId, String section, boolean series, boolean optional, boolean auditTrail,
-			Set<Long> inputFieldIds)
+			boolean reasonForChangeRequired, boolean notify, Set<Long> inputFieldIds)
 			throws Exception {
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
 		Long position = this.getECRFFieldDao().findMaxPosition(ecrfId, section);
@@ -3000,8 +3000,8 @@ public class TrialServiceImpl
 				newEcrfField.setRef(CommonUtil.generateShortUUID());
 				newEcrfField.setOptional(optional);
 				newEcrfField.setAuditTrail(auditTrail);
-				newEcrfField.setReasonForChangeRequired(auditTrail);
-				newEcrfField.setNotify(false);
+				newEcrfField.setReasonForChangeRequired(reasonForChangeRequired);
+				newEcrfField.setNotify(notify);
 				newEcrfField.setSeries(series);
 				newEcrfField.setEcrfId(ecrf.getId());
 				newEcrfField.setTrialId(ecrf.getTrial().getId());
@@ -3029,7 +3029,7 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<InquiryOutVO> handleAddInquiries(
-			AuthenticationVO auth, Long trialId, String category, boolean optional, boolean excel, Set<Long> inputFieldIds)
+			AuthenticationVO auth, Long trialId, String category, boolean optional, boolean excelValue, boolean excelDate, boolean activeSignup, Set<Long> inputFieldIds)
 			throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		Long position = this.getInquiryDao().findMaxPosition(trialId, category);
@@ -3050,10 +3050,10 @@ public class TrialServiceImpl
 				newInquiry.setFieldId(inputFieldId);
 				newInquiry.setCategory(category);
 				newInquiry.setOptional(optional);
-				newInquiry.setExcelValue(excel);
-				newInquiry.setExcelDate(excel);
+				newInquiry.setExcelValue(excelValue);
+				newInquiry.setExcelDate(excelDate);
 				newInquiry.setActive(true);
-				newInquiry.setActiveSignup(true);
+				newInquiry.setActiveSignup(activeSignup);
 				newInquiry.setTrialId(trial.getId());
 				try {
 					result.add(addInquiry(newInquiry, now, user));
@@ -3164,7 +3164,8 @@ public class TrialServiceImpl
 
 	@Override
 	protected Collection<ProbandListEntryTagOutVO> handleAddProbandListEntryTags(
-			AuthenticationVO auth, Long trialId, boolean optional, boolean excel, boolean ecrf, boolean stratification, boolean randomize, Set<Long> inputFieldIds)
+			AuthenticationVO auth, Long trialId, boolean optional, boolean excelValue, boolean excelDate, boolean ecrf, boolean stratification, boolean randomize,
+			Set<Long> inputFieldIds)
 			throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		Long position = this.getProbandListEntryTagDao().findMaxPosition(trialId);
@@ -3183,8 +3184,8 @@ public class TrialServiceImpl
 				ProbandListEntryTagInVO newProbandListEntryTag = new ProbandListEntryTagInVO();
 				newProbandListEntryTag.setPosition(position);
 				newProbandListEntryTag.setOptional(optional);
-				newProbandListEntryTag.setExcelValue(excel);
-				newProbandListEntryTag.setExcelDate(excel);
+				newProbandListEntryTag.setExcelValue(excelValue);
+				newProbandListEntryTag.setExcelDate(excelDate);
 				newProbandListEntryTag.setEcrfValue(ecrf);
 				newProbandListEntryTag.setStratification(stratification);
 				newProbandListEntryTag.setRandomize(randomize);

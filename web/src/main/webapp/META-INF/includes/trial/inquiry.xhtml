@@ -349,28 +349,58 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="bulkAddInquiryOptional" />
-								<h:outputLabel for="bulkAddInquiryExcel"
-									value="#{triallabels.bulkadd_inquiry_excel_label}" />
+								<h:outputLabel for="bulkAddInquiryExcelValue"
+									value="#{triallabels.inquiry_excel_value_label}" />
 								<h:panelGroup>
-									<p:selectBooleanCheckbox id="bulkAddInquiryExcel"
-										value="#{inquiryBean.bulkAddExcel}">
+									<p:selectBooleanCheckbox id="bulkAddInquiryExcelValue"
+										value="#{inquiryBean.bulkAddExcelValue}">
 										<p:ajax />
 									</p:selectBooleanCheckbox>
 									<p:tooltip rendered="#{enableTooltips}"
-										for="bulkAddInquiryExcel">
+										for="bulkAddInquiryExcelValue">
 										<h:outputText
-											value="#{triallabels.bulkadd_inquiry_excel_tooltip}"
+											value="#{triallabels.inquiry_excel_value_tooltip}"
 											escape="false" />
 									</p:tooltip>
 								</h:panelGroup>
-								<p:message for="bulkAddInquiryExcel" />
+								<p:message for="bulkAddInquiryExcelValue" />
+								<h:outputLabel for="bulkAddInquiryExcelDate"
+									value="#{triallabels.inquiry_excel_date_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddInquiryExcelDate"
+										value="#{inquiryBean.bulkAddExcelDate}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="bulkAddInquiryExcelDate">
+										<h:outputText
+											value="#{triallabels.inquiry_excel_date_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddInquiryExcelDate" />
+								<h:outputLabel for="bulkAddInquiryActiveSignup"
+									value="#{triallabels.inquiry_active_signup_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="bulkAddInquiryActiveSignup"
+										value="#{inquiryBean.bulkAddActiveSignup}">
+										<p:ajax />
+									</p:selectBooleanCheckbox>
+									<p:tooltip rendered="#{enableTooltips}"
+										for="bulkAddInquiryActiveSignup">
+										<h:outputText
+											value="#{triallabels.inquiry_active_signup_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="bulkAddInquiryActiveSignup" />
 							</h:panelGrid>
 
 							<p:messages />
 							<p:toolbar>
 								<p:toolbarGroup align="right">
 									<p:commandButton
-										process="@this,bulkAddInquiryOptional,bulkAddInquiryExcel"
+										process="@this,bulkAddInquiryOptional,bulkAddInquiryExcelValue,bulkAddInquiryExcelDate,bulkAddInquiryActiveSignup"
 										id="bulkAdd" value="#{labels.add_button_label}"
 										actionListener="#{inquiryBean.addBulk}"
 										oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
