@@ -39,7 +39,7 @@ final class DutyRosterTurnIcsWriter {
 	}
 
 	private static void appendEvent(StringBuilder sb, DutyRosterTurnOutVO turn, String host, SimpleDateFormat utc, Date now) {
-		if (turn == null || turn.getId() == null || turn.getStart() == null || turn.getStop() == null) {
+		if (turn == null || !turn.isSetId() || turn.getStart() == null || turn.getStop() == null) {
 			return;
 		}
 		sb.append("BEGIN:VEVENT").append(CRLF);

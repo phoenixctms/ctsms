@@ -12,7 +12,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -73,7 +72,7 @@ public class DutyRosterTurnResource {
 		Collection<DutyRosterTurnOutVO> dutyRosterTurns = loadDutyRosterInterval(departmentId, statusId, staffId, unassigned, trialId, calendar, from, to, sort, true);
 		String ics = DutyRosterTurnIcsWriter.toIcalendar(dutyRosterTurns, WebUtil.getHttpHost());
 		ResponseBuilder response = Response.ok(ics, TEXT_CALENDAR + ";charset=UTF-8");
-		response.header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + ICS_FILENAME + "\"");
+		response.header("Content-Disposition", "inline; filename=\"" + ICS_FILENAME + "\"");
 		return response.build();
 	}
 
