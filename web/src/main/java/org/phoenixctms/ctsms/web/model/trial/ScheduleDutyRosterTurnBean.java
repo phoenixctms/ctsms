@@ -764,8 +764,8 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_HOLIDAY_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_HOLIDAY_FILTER);
 	}
 
-	public boolean isShowGoogleCalendarQr() {
-		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_QR, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_QR)
+	public boolean isShowGoogleCalendarUrl() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL)
 				&& !CommonUtil.isEmptyString(getGoogleCalendarIcsUrl());
 	}
 
@@ -782,19 +782,6 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 			}
 		}
 		return googleCalendarIcsUrl;
-	}
-
-	public String getGoogleCalendarQrCodeUrl() {
-		String icsUrl = getGoogleCalendarIcsUrl();
-		if (CommonUtil.isEmptyString(icsUrl)) {
-			return null;
-		}
-		StringBuilder sb = new StringBuilder("/chart?");
-		sb.append(GetParamNames.QR_CODE_CHS.toString()).append("=180x180");
-		sb.append("&").append(GetParamNames.QR_CODE_CHLD.toString()).append("=").append(urlEncode("L|1"));
-		sb.append("&cht=qr");
-		sb.append("&").append(GetParamNames.QR_CODE_CHL.toString()).append("=").append(urlEncode(icsUrl));
-		return sb.toString();
 	}
 
 	private String getDutyRosterIcsJwt() {

@@ -53,7 +53,7 @@ public final class DefaultSettings {
 	public static final int API_DUTYROSTER_ICS_PAST_DAYS = 365;
 	public static final int API_DUTYROSTER_ICS_FUTURE_DAYS = 730;
 	public static final Long API_DUTYROSTER_ICS_JWT_VALIDITY_SECS = 31536000l;
-	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_QR = true;
+	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL = true;
 	public final static String API_VERSION = "0.0.0";
 	public static final boolean ENABLE_TOOLTIPS = true;
 	public static final boolean TRIAL_STATUS_UPDATE_REQUIRES_PASSWORD = true;
