@@ -503,7 +503,7 @@ public interface SettingCodes {
 	public static final String API_DUTYROSTER_ICS_PAST_DAYS = "api_dutyroster_ics_past_days";
 	public static final String API_DUTYROSTER_ICS_FUTURE_DAYS = "api_dutyroster_ics_future_days";
 	public static final String API_DUTYROSTER_ICS_JWT_VALIDITY_SECS = "api_dutyroster_ics_jwt_validity_secs";
-	public static final String DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_QR = "duty_roster_schedule_show_google_calendar_qr";
+	public static final String DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL = "duty_roster_schedule_show_google_calendar_url";
 	public static final String API_VERSION = "api_version";
 	public static final String INPUT_FIELD_DELTA_SUMMARY_MAX = "input_field_delta_summary_max";
 	public static final String FIELD_CALCULATION_DEBUG_LEVEL = "field_calculation_debug_level";
