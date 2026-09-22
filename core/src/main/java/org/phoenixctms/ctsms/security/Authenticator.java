@@ -18,6 +18,7 @@ import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
+import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -37,6 +38,7 @@ import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.PasswordOutVO;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtParserBuilder;
@@ -85,6 +87,9 @@ public class Authenticator {
 		}
 		//prevent using JWT across instances:
 		jwtBuilder.setIssuer(Settings.getInstanceName());
+		if (CommonUtil.DUTYROSTER_ICS_REALM.equals(userContext.getRealm())) {
+			jwtBuilder.setAudience(CommonUtil.DUTYROSTER_ICS_REALM);
+		}
 		//encrypt the user password with the user's private key, and add it to payload:
 		jwtBuilder.setHeaderParam(JWT_PWD_HEADER_KEY,
 				Base64.encodeBase64String(CryptoUtil.encrypt(userContext.getPrivateKey(), plainPassword.getBytes(StandardCharsets.UTF_8))));
@@ -94,6 +99,10 @@ public class Authenticator {
 	}
 
 	public String[] verifyJwt(String jwt) throws Exception {
+		return verifyJwt(jwt, null);
+	}
+
+	private String[] verifyJwt(String jwt, String[] audienceOut) throws Exception {
 		final String[] credentials = new String[2];
 		try {
 			JwtParserBuilder parserBuilder = Jwts.parserBuilder();
@@ -120,7 +129,10 @@ public class Authenticator {
 				}
 			});
 			//verify if jwt is authentic:
-			parserBuilder.build().parseClaimsJws(jwt);
+			Jws<Claims> jws = parserBuilder.build().parseClaimsJws(jwt);
+			if (audienceOut != null && audienceOut.length > 0) {
+				audienceOut[0] = jws.getBody().getAudience();
+			}
 		} catch (Throwable t) {
 			AuthenticationException e = L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_JWT, jwt);
 			if (t instanceof RuntimeException) {
@@ -133,12 +145,15 @@ public class Authenticator {
 		return credentials;
 	}
 
-	private void resolveCredentialsFromJwt(AuthenticationVO auth) throws Exception {
+	private String resolveCredentialsFromJwt(AuthenticationVO auth) throws Exception {
 		if (!CommonUtil.isEmptyString(auth.getJwt()) && CommonUtil.isEmptyString(auth.getUsername())) {
-			String[] credentials = verifyJwt(auth.getJwt());
+			String[] audienceOut = new String[1];
+			String[] credentials = verifyJwt(auth.getJwt(), audienceOut);
 			auth.setUsername(credentials[0]);
 			auth.setPassword(credentials[1]);
+			return audienceOut[0];
 		}
+		return null;
 	}
 
 	public Authenticator() {
@@ -150,7 +165,11 @@ public class Authenticator {
 
 	public Password authenticate(AuthenticationVO auth, boolean logon, String methodName) throws Exception {
 		if (auth != null && (auth.getUsername() != null || !CommonUtil.isEmptyString(auth.getJwt()))) {
-			resolveCredentialsFromJwt(auth);
+			String jwtAudience = resolveCredentialsFromJwt(auth);
+			if (CommonUtil.DUTYROSTER_ICS_REALM.equals(jwtAudience)
+					&& !CoreUtil.getServiceMethodName(TrialService.class, "getDutyRosterInterval").equals(methodName)) {
+				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_JWT, auth.getJwt());
+			}
 			User user = null;
 			try {
 				user = (User) userDao.searchUniqueName(UserDao.TRANSFORM_NONE, auth.getUsername());
