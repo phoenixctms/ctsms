@@ -41,8 +41,8 @@
 				<h:panelGrid columns="1" cellpadding="0"
 					styleClass="ctsms-content-panelgrid">
 					<p:panel>
-						<h:panelGrid columns="2" styleClass="ctsms-content-panelgrid"
-								cellpadding="0" columnClasses="ctsms-bottom-column,ctsms-bottom-column">
+						<h:panelGrid columns="3" styleClass="ctsms-content-panelgrid"
+								cellpadding="0" columnClasses="ctsms-bottom-column,ctsms-bottom-column,ctsms-bottom-column">
 							<h:panelGrid columns="12" cellpadding="2"
 								columnClasses="ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column,ctsms-label-for-top-column,ctsms-input-top-column,ctsms-message-for-top-column">
 								<h:outputLabel for="department_filter"
@@ -507,6 +507,17 @@
 									title="#{triallabels.refresh_duty_roster_schedule_button_title}"
 									icon="ui-icon-refresh" />
 							</h:panelGrid>
+							<h:panelGroup id="google_calendar_qr"
+								rendered="#{scheduleDutyRosterTurnBean.showGoogleCalendarQr}">
+								<h:outputLink value="#{scheduleDutyRosterTurnBean.googleCalendarIcsUrl}"
+									target="_blank"
+									title="#{triallabels.duty_roster_schedule_google_calendar_qr_tooltip}">
+									<h:graphicImage
+										value="#{scheduleDutyRosterTurnBean.googleCalendarQrCodeUrl}"
+										alt="#{triallabels.duty_roster_schedule_google_calendar_qr_alt}"
+										style="width:180px;height:180px;display:block;" />
+								</h:outputLink>
+							</h:panelGroup>
 						</h:panelGrid>
 					</p:panel>
 					<ctsms:schedule

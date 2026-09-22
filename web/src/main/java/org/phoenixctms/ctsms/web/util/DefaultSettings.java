@@ -49,7 +49,11 @@ public final class DefaultSettings {
 	public final static String VALIDATION_REPORTS_URL = null;
 	public final static String API_TITLE = "REST API";
 	public static final boolean API_TRUSTED_HOSTS_ONLY = true;
-	public final static String API_TRUSTED_HOSTS_ONLY_WHITELIST_REGEXP = null; // "/tools|/selectionset|/search/proband";
+	public final static String API_TRUSTED_HOSTS_ONLY_WHITELIST_REGEXP = "/dutyrosterturn/ics"; // "/tools|/selectionset|/search/proband";
+	public static final int API_DUTYROSTER_ICS_PAST_DAYS = 365;
+	public static final int API_DUTYROSTER_ICS_FUTURE_DAYS = 730;
+	public static final Long API_DUTYROSTER_ICS_JWT_VALIDITY_SECS = 31536000l;
+	public static final boolean DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_QR = true;
 	public final static String API_VERSION = "0.0.0";
 	public static final boolean ENABLE_TOOLTIPS = true;
 	public static final boolean TRIAL_STATUS_UPDATE_REQUIRES_PASSWORD = true;
