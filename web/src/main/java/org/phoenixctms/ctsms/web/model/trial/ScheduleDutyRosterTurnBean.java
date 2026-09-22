@@ -19,6 +19,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.web.jersey.resource.trial.DutyRosterTurnResource;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnInVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 import org.phoenixctms.ctsms.vo.RangeIntervalVO;
@@ -797,9 +798,16 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	}
 
 	private String getDutyRosterIcsJwt() {
+		AuthenticationVO sessionAuth = WebUtil.getAuthentication();
+		if (sessionAuth == null) {
+			return null;
+		}
+		AuthenticationVO icsAuth = new AuthenticationVO();
+		icsAuth.copy(sessionAuth);
+		icsAuth.setRealm(CommonUtil.DUTYROSTER_ICS_REALM);
 		Long validitySecs = Settings.getLongNullable(SettingCodes.API_DUTYROSTER_ICS_JWT_VALIDITY_SECS, Bundle.SETTINGS, DefaultSettings.API_DUTYROSTER_ICS_JWT_VALIDITY_SECS);
 		try {
-			String jwt = WebUtil.getServiceLocator().getToolsService().issueJwt(WebUtil.getAuthentication(), validitySecs);
+			String jwt = WebUtil.getServiceLocator().getToolsService().issueJwt(icsAuth, validitySecs);
 			if (!CommonUtil.isEmptyString(jwt)) {
 				return jwt;
 			}
@@ -807,7 +815,7 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		}
-		return WebUtil.getRestApiJwt();
+		return null;
 	}
 
 	private static String urlEncode(String value) {
