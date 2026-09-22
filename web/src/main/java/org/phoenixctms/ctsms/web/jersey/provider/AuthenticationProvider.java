@@ -9,6 +9,7 @@ import javax.ws.rs.ext.Provider;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.web.jersey.resource.trial.DutyRosterTurnResource;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -45,6 +46,17 @@ public class AuthenticationProvider
 		return ComponentScope.PerRequest;
 	}
 
+	private static String getDutyRosterIcsJwtQueryParam(HttpContext c) {
+		if (c == null || c.getUriInfo() == null) {
+			return null;
+		}
+		String path = c.getUriInfo().getPath();
+		if (path == null || !path.contains("dutyrosterturn") || !path.endsWith("ics")) {
+			return null;
+		}
+		return c.getUriInfo().getQueryParameters().getFirst(DutyRosterTurnResource.JWT_QUERY_PARAM);
+	}
+
 	@Override
 	public AuthenticationVO getValue(HttpContext c) {
 		String authHeaderValue = c.getRequest().getHeaderValue(HttpHeaders.AUTHORIZATION);
@@ -65,6 +77,15 @@ public class AuthenticationProvider
 				result.setOtpRequired(otpRequired);
 				return result;
 			}
+		}
+		String jwt = getDutyRosterIcsJwtQueryParam(c);
+		if (!CommonUtil.isEmptyString(jwt)) {
+			AuthenticationVO result = new AuthenticationVO();
+			result.setHost(host);
+			result.setJwt(jwt);
+			result.setRealm(CommonUtil.API_REALM);
+			result.setOtpRequired(otpRequired);
+			return result;
 		}
 		AuthenticationVO result = new AuthenticationVO();
 		result.setHost(host);
