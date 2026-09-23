@@ -538,6 +538,12 @@ public interface MessageCodes {
 	public static final String SEARCH_CRITERIONS_WITH_SET_OPS_LABEL = "search_criterions_with_set_ops_label";
 	public static final String SEARCH_CRITERIONS_INVALID_LABEL = "search_criterions_invalid_label";
 	public static final String SEARCH_CRITERIONS_UNCHECKED_LABEL = "search_criterions_unchecked_label";
+	public static final String SEARCH_QUERY_TEXT_INVALID = "search_query_text_invalid";
+	public static final String SEARCH_QUERY_TEXT_UNKNOWN_PROPERTY = "search_query_text_unknown_property";
+	public static final String SEARCH_QUERY_TEXT_UNKNOWN_RESTRICTION = "search_query_text_unknown_restriction";
+	public static final String SEARCH_QUERY_TEXT_UNKNOWN_TIE = "search_query_text_unknown_tie";
+	public static final String SEARCH_QUERY_TEXT_INVALID_VALUE = "search_query_text_invalid_value";
+	public static final String SEARCH_QUERY_TEXT_TOO_MANY = "search_query_text_too_many";
 	public static final String CALENDAR_WEEK = "calendar_week";
 	public static final String ACTIVE_USERS = "active_users";
 	public final static String EMPTY_CHART_LABEL = "empty_chart_label";
