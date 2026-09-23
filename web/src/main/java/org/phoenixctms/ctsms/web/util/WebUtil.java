@@ -3,8 +3,10 @@ package org.phoenixctms.ctsms.web.util;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -58,6 +60,7 @@ import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.*;
 import org.phoenixctms.ctsms.web.model.ApplicationScopeBean;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
+import org.phoenixctms.ctsms.web.jersey.resource.trial.DutyRosterTurnResource;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
@@ -4309,6 +4312,51 @@ public final class WebUtil {
 			return sessionScopeBean.getUserIdentity();
 		}
 		return null;
+	}
+
+	public static boolean isShowDutyRosterGoogleCalendarUrl() {
+		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL)
+				&& getUserIdentity() != null;
+	}
+
+	public static String getDutyRosterGoogleCalendarIcsUrl() {
+		String jwt = issueDutyRosterIcsJwt();
+		if (CommonUtil.isEmptyString(jwt)) {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(getHttpBaseUrl());
+		sb.append("/").append(REST_API_PATH).append(DutyRosterTurnResource.ICS_PATH);
+		sb.append("?").append(JWT_QUERY_PARAM).append("=").append(urlEncodeUtf8(jwt));
+		return sb.toString();
+	}
+
+	private static String issueDutyRosterIcsJwt() {
+		AuthenticationVO sessionAuth = getAuthentication();
+		if (sessionAuth == null) {
+			return null;
+		}
+		AuthenticationVO icsAuth = new AuthenticationVO();
+		icsAuth.copy(sessionAuth);
+		icsAuth.setRealm(CommonUtil.DUTYROSTER_ICS_REALM);
+		Long validitySecs = Settings.getLongNullable(SettingCodes.API_DUTYROSTER_ICS_JWT_VALIDITY_SECS, Bundle.SETTINGS, DefaultSettings.API_DUTYROSTER_ICS_JWT_VALIDITY_SECS);
+		try {
+			String jwt = getServiceLocator().getToolsService().issueJwt(icsAuth, validitySecs);
+			if (!CommonUtil.isEmptyString(jwt)) {
+				return jwt;
+			}
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		return null;
+	}
+
+	private static String urlEncodeUtf8(String value) {
+		try {
+			return URLEncoder.encode(value, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return value;
+		}
 	}
 
 	public static String getUserIdentityString(UserOutVO user) {
