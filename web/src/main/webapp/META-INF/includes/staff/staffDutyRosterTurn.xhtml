@@ -167,14 +167,6 @@
 					<f:facet name="header">
 						<h:outputText value="#{staffDutyRosterTurnBean.title}" />
 					</f:facet>
-					<ui:include src="../shared/dutyRosterGoogleCalendarUrl.xhtml">
-						<ui:param name="dutyRosterTurnBean"
-							value="#{staffDutyRosterTurnBean}" />
-						<ui:param name="googleCalendarUrlLabel"
-							value="#{stafflabels.staff_duty_roster_turn_google_calendar_url_label}" />
-						<ui:param name="googleCalendarUrlTooltip"
-							value="#{stafflabels.staff_duty_roster_turn_google_calendar_url_tooltip}" />
-					</ui:include>
 					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-input-panelgrid"
 						rowClasses="ctsms-input-tied-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row">
@@ -188,6 +180,18 @@
 									value=":tabView:staffdutyrosterturn_form" />
 								<ui:param name="visitScheduleItemChangeUpdate"
 									value=":tabView:staffdutyrosterturn_form:trial,:tabView:staffdutyrosterturn_form:trialName" />
+							</ui:include>
+							<ui:include src="../shared/dutyRosterGoogleCalendarUrl.xhtml">
+								<ui:param name="googleCalendarUrlBean"
+									value="#{staffDutyRosterTurnBean}" />
+								<ui:param name="googleCalendarUrlLabel"
+									value="#{stafflabels.staff_duty_roster_turn_google_calendar_url_label}" />
+								<ui:param name="googleCalendarUrlTooltip"
+									value="#{stafflabels.staff_duty_roster_turn_google_calendar_url_tooltip}" />
+								<ui:param name="googleCalendarUrlFormRow"
+									value="#{false}" />
+								<ui:param name="googleCalendarUrlFilterRow"
+									value="#{true}" />
 							</ui:include>
 						</h:panelGrid>
 						<h:panelGrid rendered="#{staffDutyRosterTurnBean.inputVisible}"

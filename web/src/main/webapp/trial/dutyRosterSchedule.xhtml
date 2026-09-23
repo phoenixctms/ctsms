@@ -493,6 +493,19 @@
 								<p:message
 									rendered="#{scheduleDutyRosterTurnBean.enableHolidayFilter}"
 									for="holiday_filter" />
+
+								<ui:include src="/META-INF/includes/shared/dutyRosterGoogleCalendarUrl.xhtml">
+									<ui:param name="googleCalendarUrlBean"
+										value="#{scheduleDutyRosterTurnBean}" />
+									<ui:param name="googleCalendarUrlLabel"
+										value="#{triallabels.duty_roster_schedule_google_calendar_url_label}" />
+									<ui:param name="googleCalendarUrlTooltip"
+										value="#{triallabels.duty_roster_schedule_google_calendar_url_tooltip}" />
+									<ui:param name="googleCalendarUrlFormRow"
+										value="#{false}" />
+									<ui:param name="googleCalendarUrlFilterRow"
+										value="#{true}" />
+								</ui:include>
 							</h:panelGrid>
 							<h:panelGrid columns="2" cellpadding="2"
 								columnClasses="ctsms-ajaxstatus-column,ctsms-filters-button-column">
@@ -509,14 +522,6 @@
 							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>
-					<ui:include src="/META-INF/includes/shared/dutyRosterGoogleCalendarUrl.xhtml">
-						<ui:param name="dutyRosterTurnBean"
-							value="#{scheduleDutyRosterTurnBean}" />
-						<ui:param name="googleCalendarUrlLabel"
-							value="#{triallabels.duty_roster_schedule_google_calendar_url_label}" />
-						<ui:param name="googleCalendarUrlTooltip"
-							value="#{triallabels.duty_roster_schedule_google_calendar_url_tooltip}" />
-					</ui:include>
 					<ctsms:schedule
 						value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel}"
 						editable="true" draggable="true" resizable="true"

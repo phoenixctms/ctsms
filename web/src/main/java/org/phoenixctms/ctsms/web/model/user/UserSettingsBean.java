@@ -57,6 +57,7 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 
 	private UserSettingsInVO in;
 	private UserOutVO out;
+	private String googleCalendarIcsUrl;
 
 	public UserSettingsBean() {
 		super();
@@ -273,5 +274,16 @@ public class UserSettingsBean extends UserSettingsBeanBase {
 			in.getInventoryBookingCalendarFilters().clear();
 			in.getInventoryBookingCalendarFilters().addAll(filters);
 		}
+	}
+
+	public boolean isShowGoogleCalendarUrl() {
+		return WebUtil.isShowDutyRosterGoogleCalendarUrl() && !CommonUtil.isEmptyString(getGoogleCalendarIcsUrl());
+	}
+
+	public String getGoogleCalendarIcsUrl() {
+		if (googleCalendarIcsUrl == null) {
+			googleCalendarIcsUrl = WebUtil.getDutyRosterGoogleCalendarIcsUrl();
+		}
+		return googleCalendarIcsUrl;
 	}
 }
