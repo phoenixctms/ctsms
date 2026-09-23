@@ -124,6 +124,21 @@ jobs:
         run: |
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.proband.* "Proband Tests" git@phoenixctms.org
           /home/runner/work/ctsms/ctsms/.github/workflows/run_selenium_test.sh org.phoenixctms.ctsms.selenium.trial.* "Trial Tests" git@phoenixctms.org
+      - name: OWASP ZAP baseline
+        if: success()
+        continue-on-error: true
+        run: |
+          docker run --rm --network host \
+            -v "${{ github.workspace }}:/zap/wrk:rw" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t http://127.0.0.1:8080/ -I -m 5 -r zap-report.html
+      - name: Upload ZAP report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-baseline-report
+          path: zap-report.html
+          if-no-files-found: warn
 #      - name: test perl selenium remote
 #        run: |
 #          perl /home/runner/work/ctsms/ctsms/.github/workflows/seleniumtest.pl
