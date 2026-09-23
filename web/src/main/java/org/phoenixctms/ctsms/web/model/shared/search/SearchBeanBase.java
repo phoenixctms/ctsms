@@ -173,6 +173,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
 	private String deferredDeleteReason;
+	private String queryText;
+	private String queryTextFormat;
 
 	protected SearchBeanBase() {
 		super();
@@ -185,6 +187,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		for (int i = 0; i < maxCriterions; i++) {
 			criterionIndexes[i] = Integer.toString(i);
 		}
+		queryText = "";
+		queryTextFormat = QueryText.FORMAT_EXPRESSION;
 	}
 
 	@Override
@@ -895,6 +899,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
+		refreshQueryText();
 	}
 
 	protected abstract void initSpecificSets();
@@ -1210,5 +1215,77 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERION_ROW_COLORS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(getCriterionRowColor()), false));
 			requestContext.addCallbackParam(JSValues.AJAX_INTERMEDIATE_SETS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(intermediateSets), false));
 		}
+	}
+
+	public void applyQueryText() {
+		try {
+			QueryText.Parsed parsed = QueryText.parse(queryText, getDBModule(), propertyVOsMap, tieVOsMap, restrictionVOsMap, WebUtil.getDateFormat(),
+					WebUtil.getDecimalSeparator(), Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
+			if (parsed.isLabelSet()) {
+				criteriaIn.setLabel(parsed.getLabel());
+			}
+			if (parsed.isCategorySet()) {
+				criteriaIn.setCategory(parsed.getCategory());
+			}
+			if (parsed.isCommentSet()) {
+				criteriaIn.setComment(parsed.getComment());
+			}
+			if (parsed.getLoadByDefault() != null) {
+				criteriaIn.setLoadByDefault(parsed.getLoadByDefault().booleanValue());
+			}
+			criterionsIn.clear();
+			criterionsIn.addAll(parsed.getCriterions());
+			if (criterionsIn.isEmpty()) {
+				CriterionInVO criterionIn = new CriterionInVO();
+				initCriterionDefaultValues(criterionIn);
+				criterionsIn.add(criterionIn);
+			}
+			normalizeCriterionPositions(criterionsIn);
+			for (int i = 0; i < criterionsIn.size(); i++) {
+				sanitizeCriterionVals(criterionsIn.get(i), i);
+			}
+			updateInstantCriteria(true);
+			refreshQueryText();
+		} catch (QueryText.ParseException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+
+	public String getQueryText() {
+		return queryText;
+	}
+
+	public String getQueryTextCodeMirrorMode() {
+		return QueryText.FORMAT_JSON.equals(queryTextFormat) ? "{name: 'javascript', json: true}" : "javascript";
+	}
+
+	public String getQueryTextFormat() {
+		return queryTextFormat;
+	}
+
+	public void loadQueryText() {
+		refreshQueryText();
+	}
+
+	private void refreshQueryText() {
+		if (propertyVOsMap == null || tieVOsMap == null || restrictionVOsMap == null) {
+			return;
+		}
+		String dateFormat = WebUtil.getDateFormat();
+		String decimalSeparator = WebUtil.getDecimalSeparator();
+		if (QueryText.FORMAT_JSON.equals(queryTextFormat)) {
+			queryText = QueryText.toJson(criterionsIn, propertyVOsMap, tieVOsMap, restrictionVOsMap, dateFormat, decimalSeparator);
+		} else {
+			queryTextFormat = QueryText.FORMAT_EXPRESSION;
+			queryText = QueryText.toExpression(criterionsIn, propertyVOsMap, tieVOsMap, restrictionVOsMap, dateFormat, decimalSeparator);
+		}
+	}
+
+	public void setQueryText(String queryText) {
+		this.queryText = queryText;
+	}
+
+	public void setQueryTextFormat(String queryTextFormat) {
+		this.queryTextFormat = queryTextFormat;
 	}
 }
