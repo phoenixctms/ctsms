@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title>duty roster google calendar url</title>
+</h:head>
+<h:body>
+	<ui:composition>
+		<h:panelGroup id="google_calendar_url"
+			rendered="#{dutyRosterTurnBean.showGoogleCalendarUrl}">
+			<h:outputText value="#{googleCalendarUrlLabel} " />
+			<h:outputLink value="#{dutyRosterTurnBean.googleCalendarIcsUrl}"
+				target="_blank" title="#{googleCalendarUrlTooltip}">
+				<h:outputText value="#{dutyRosterTurnBean.googleCalendarIcsUrl}"
+					style="word-break:break-all;" />
+			</h:outputLink>
+		</h:panelGroup>
+	</ui:composition>
+</h:body>
+</html>

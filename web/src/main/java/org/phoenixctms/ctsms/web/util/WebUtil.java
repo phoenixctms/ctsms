@@ -95,6 +95,7 @@ public final class WebUtil {
 	}
 
 	public static final String REST_API_PATH = "rest";
+	public static final String JWT_QUERY_PARAM = "jwt";
 	public static final int IMAGE_STORE_MAX_SIZE = 2;
 	private final static String COLOR_STYLECLASS_PREFIX = "ctsms-color-";
 	private static final String INPUT_FIELD_TYPE_ICON_STYLECLASS_PREFIX = "ctsms-inputfieldtype-";

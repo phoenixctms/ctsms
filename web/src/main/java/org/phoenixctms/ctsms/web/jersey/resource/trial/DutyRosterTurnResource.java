@@ -33,7 +33,6 @@ import io.swagger.annotations.Api;
 public class DutyRosterTurnResource {
 
 	public static final String ICS_PATH = "/dutyrosterturn/ics";
-	public static final String JWT_QUERY_PARAM = "jwt";
 	public static final String TEXT_CALENDAR = "text/calendar";
 	private static final String ICS_FILENAME = "dutyroster.ics";
 

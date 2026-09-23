@@ -9,7 +9,6 @@ import javax.ws.rs.ext.Provider;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
-import org.phoenixctms.ctsms.web.jersey.resource.trial.DutyRosterTurnResource;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
@@ -54,7 +53,7 @@ public class AuthenticationProvider
 		if (path == null || !path.contains("dutyrosterturn") || !path.endsWith("ics")) {
 			return null;
 		}
-		return c.getUriInfo().getQueryParameters().getFirst(DutyRosterTurnResource.JWT_QUERY_PARAM);
+		return c.getUriInfo().getQueryParameters().getFirst(WebUtil.JWT_QUERY_PARAM);
 	}
 
 	@Override
