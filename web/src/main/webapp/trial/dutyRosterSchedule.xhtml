@@ -509,17 +509,14 @@
 							</h:panelGrid>
 						</h:panelGrid>
 					</p:panel>
-					<h:panelGroup id="google_calendar_url"
-						rendered="#{scheduleDutyRosterTurnBean.showGoogleCalendarUrl}">
-						<h:outputText
-							value="#{triallabels.duty_roster_schedule_google_calendar_url_label} " />
-						<h:outputLink value="#{scheduleDutyRosterTurnBean.googleCalendarIcsUrl}"
-							target="_blank"
-							title="#{triallabels.duty_roster_schedule_google_calendar_url_tooltip}">
-							<h:outputText value="#{scheduleDutyRosterTurnBean.googleCalendarIcsUrl}"
-								style="word-break:break-all;" />
-						</h:outputLink>
-					</h:panelGroup>
+					<ui:include src="/META-INF/includes/shared/dutyRosterGoogleCalendarUrl.xhtml">
+						<ui:param name="dutyRosterTurnBean"
+							value="#{scheduleDutyRosterTurnBean}" />
+						<ui:param name="googleCalendarUrlLabel"
+							value="#{triallabels.duty_roster_schedule_google_calendar_url_label}" />
+						<ui:param name="googleCalendarUrlTooltip"
+							value="#{triallabels.duty_roster_schedule_google_calendar_url_tooltip}" />
+					</ui:include>
 					<ctsms:schedule
 						value="#{scheduleDutyRosterTurnBean.dutyRosterScheduleModel}"
 						editable="true" draggable="true" resizable="true"

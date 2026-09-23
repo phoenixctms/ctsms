@@ -1,8 +1,6 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,8 +16,6 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.web.jersey.resource.trial.DutyRosterTurnResource;
-import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnInVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingsExcelVO;
 import org.phoenixctms.ctsms.vo.RangeIntervalVO;
@@ -84,7 +80,6 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	private CourseEvent courseEvent;
 	private ProbandStatusEvent probandStatusEvent;
 	private TimelineEvent timelineEvent;
-	private String googleCalendarIcsUrl;
 
 	public ScheduleDutyRosterTurnBean() {
 		super();
@@ -762,54 +757,5 @@ public class ScheduleDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 
 	public boolean isEnableHolidayFilter() {
 		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_ENABLE_HOLIDAY_FILTER, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_ENABLE_HOLIDAY_FILTER);
-	}
-
-	public boolean isShowGoogleCalendarUrl() {
-		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL)
-				&& !CommonUtil.isEmptyString(getGoogleCalendarIcsUrl());
-	}
-
-	public String getGoogleCalendarIcsUrl() {
-		if (googleCalendarIcsUrl == null) {
-			String jwt = getDutyRosterIcsJwt();
-			if (CommonUtil.isEmptyString(jwt)) {
-				googleCalendarIcsUrl = "";
-			} else {
-				StringBuilder sb = new StringBuilder(WebUtil.getHttpBaseUrl());
-				sb.append("/").append(WebUtil.REST_API_PATH).append(DutyRosterTurnResource.ICS_PATH);
-				sb.append("?").append(DutyRosterTurnResource.JWT_QUERY_PARAM).append("=").append(urlEncode(jwt));
-				googleCalendarIcsUrl = sb.toString();
-			}
-		}
-		return googleCalendarIcsUrl;
-	}
-
-	private String getDutyRosterIcsJwt() {
-		AuthenticationVO sessionAuth = WebUtil.getAuthentication();
-		if (sessionAuth == null) {
-			return null;
-		}
-		AuthenticationVO icsAuth = new AuthenticationVO();
-		icsAuth.copy(sessionAuth);
-		icsAuth.setRealm(CommonUtil.DUTYROSTER_ICS_REALM);
-		Long validitySecs = Settings.getLongNullable(SettingCodes.API_DUTYROSTER_ICS_JWT_VALIDITY_SECS, Bundle.SETTINGS, DefaultSettings.API_DUTYROSTER_ICS_JWT_VALIDITY_SECS);
-		try {
-			String jwt = WebUtil.getServiceLocator().getToolsService().issueJwt(icsAuth, validitySecs);
-			if (!CommonUtil.isEmptyString(jwt)) {
-				return jwt;
-			}
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
-		}
-		return null;
-	}
-
-	private static String urlEncode(String value) {
-		try {
-			return URLEncoder.encode(value, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			return value;
-		}
 	}
 }

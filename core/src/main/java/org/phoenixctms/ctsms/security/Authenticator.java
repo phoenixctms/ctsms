@@ -183,6 +183,7 @@ public class Authenticator {
 			userContext.setHost(auth.getHost());
 			userContext.setRealm(auth.getRealm());
 			userContext.setMethodName(methodName);
+			userContext.setJwtAudience(jwtAudience);
 			if (user == null) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.UNKNOWN_USER, auth.getUsername());
 			}
