@@ -173,6 +173,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
 	private String deferredDeleteReason;
+	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
+	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
 	private String queryText;
 	private String queryTextFormat;
 
@@ -188,7 +190,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			criterionIndexes[i] = Integer.toString(i);
 		}
 		queryText = "";
-		queryTextFormat = QueryText.FORMAT_EXPRESSION;
+		queryTextFormat = QUERY_TEXT_FORMAT_EXPRESSION;
 	}
 
 	@Override
@@ -1219,22 +1221,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public void applyQueryText() {
 		try {
-			QueryText.Parsed parsed = QueryText.parse(queryText, getDBModule(), propertyVOsMap, tieVOsMap, restrictionVOsMap, WebUtil.getDateFormat(),
-					WebUtil.getDecimalSeparator(), Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
-			if (parsed.isLabelSet()) {
-				criteriaIn.setLabel(parsed.getLabel());
-			}
-			if (parsed.isCategorySet()) {
-				criteriaIn.setCategory(parsed.getCategory());
-			}
-			if (parsed.isCommentSet()) {
-				criteriaIn.setComment(parsed.getComment());
-			}
-			if (parsed.getLoadByDefault() != null) {
-				criteriaIn.setLoadByDefault(parsed.getLoadByDefault().booleanValue());
-			}
+			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText);
 			criterionsIn.clear();
-			criterionsIn.addAll(parsed.getCriterions());
+			if (parsed != null) {
+				criterionsIn.addAll(parsed);
+			}
 			if (criterionsIn.isEmpty()) {
 				CriterionInVO criterionIn = new CriterionInVO();
 				initCriterionDefaultValues(criterionIn);
@@ -1246,7 +1237,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 			updateInstantCriteria(true);
 			refreshQueryText();
-		} catch (QueryText.ParseException e) {
+		} catch (ServiceException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 	}
@@ -1256,7 +1251,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 
 	public String getQueryTextCodeMirrorMode() {
-		return QueryText.FORMAT_JSON.equals(queryTextFormat) ? "{name: 'javascript', json: true}" : "javascript";
+		return QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat) ? "{name: 'javascript', json: true}" : "javascript";
 	}
 
 	public String getQueryTextFormat() {
@@ -1268,16 +1263,19 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 
 	private void refreshQueryText() {
-		if (propertyVOsMap == null || tieVOsMap == null || restrictionVOsMap == null) {
-			return;
+		if (!QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)) {
+			queryTextFormat = QUERY_TEXT_FORMAT_EXPRESSION;
 		}
-		String dateFormat = WebUtil.getDateFormat();
-		String decimalSeparator = WebUtil.getDecimalSeparator();
-		if (QueryText.FORMAT_JSON.equals(queryTextFormat)) {
-			queryText = QueryText.toJson(criterionsIn, propertyVOsMap, tieVOsMap, restrictionVOsMap, dateFormat, decimalSeparator);
-		} else {
-			queryTextFormat = QueryText.FORMAT_EXPRESSION;
-			queryText = QueryText.toExpression(criterionsIn, propertyVOsMap, tieVOsMap, restrictionVOsMap, dateFormat, decimalSeparator);
+		try {
+			String text = WebUtil.getServiceLocator().getSearchService().formatCriterionText(WebUtil.getAuthentication(), getDBModule(), getNewCriterions(),
+					QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat));
+			queryText = text == null ? "" : text;
+		} catch (ServiceException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 	}
 

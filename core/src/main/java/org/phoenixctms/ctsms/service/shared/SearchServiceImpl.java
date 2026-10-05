@@ -930,6 +930,18 @@ public class SearchServiceImpl
 	}
 
 	@Override
+	protected String handleFormatCriterionText(AuthenticationVO auth, DBModule module, Set<CriterionInVO> criterions, boolean json) throws Exception {
+		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
+		ArrayList<CriterionInstantVO> sortedCriterions = new ArrayList<CriterionInstantVO>(instantCriteria.getCriterions());
+		return criterionSyntaxParser.formatCriterionText(sortedCriterions, json);
+	}
+
+	@Override
+	protected Collection<CriterionInVO> handleParseCriterionText(AuthenticationVO auth, DBModule module, String text) throws Exception {
+		return criterionSyntaxParser.parseCriterionText(module, text);
+	}
+
+	@Override
 	protected CourseParticipantListPDFVO handleRenderCourseParticipantListPDFs(AuthenticationVO auth, CriteriaInVO criteria,
 			Set<CriterionInVO> criterions, PSFVO psf) throws Exception {
 		CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());

@@ -865,4 +865,11 @@ public interface ServiceExceptionCodes {
 	public final static String ALL_DEPARMTENTS_PERMISSION_REQUIRED = "all_deparmtents_permission_required";
 	public final static String HYPERLINK_NOT_ACTIVE = "hyperlink_not_active";
 	public final static String ENCRYPTED_FILE = "encrypted_file";
+	public static final String CRITERION_TEXT_INVALID = "criterion_text_invalid";
+	public static final String CRITERION_TEXT_UNKNOWN_PROPERTY = "criterion_text_unknown_property";
+	public static final String CRITERION_TEXT_UNKNOWN_RESTRICTION = "criterion_text_unknown_restriction";
+	public static final String CRITERION_TEXT_UNKNOWN_TIE = "criterion_text_unknown_tie";
+	public static final String CRITERION_TEXT_INVALID_VALUE = "criterion_text_invalid_value";
+	public static final String CRITERION_TEXT_TOO_MANY = "criterion_text_too_many";
+	public static final String CRITERION_TEXT_MODULE_MISMATCH = "criterion_text_module_mismatch";
 }
