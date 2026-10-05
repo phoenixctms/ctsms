@@ -1,0 +1,133 @@
+name: OWASP ZAP baseline
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches-ignore:
+      - 'l10n_master'
+  workflow_dispatch:
+
+jobs:
+  zap:
+    name: OWASP ZAP baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up JDK
+        run: |
+          sudo apt-get update
+          sudo apt-get -q -y install default-jdk
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+        with:
+          maven-version: 3.8.7
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build
+        run: |
+          VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          COMMIT=$(git log --format=%B -n 1 "$GITHUB_SHA")
+          COMMIT_MESSAGE_REGEX="[Mm]erge [a-zA-Z0-9]+ into [a-zA-Z0-9]+"
+          if [[ $COMMIT =~ $COMMIT_MESSAGE_REGEX ]];
+          then
+              COMMIT=$(echo "$COMMIT" | sed -e 's/[Mm]erge \([a-zA-Z0-9]\+\) into [a-zA-Z0-9]\+/\1/' | cut -c 1-7)
+          else
+              COMMIT=$(git rev-parse --short HEAD)
+          fi
+          echo "COMMIT=$COMMIT" >> $GITHUB_ENV
+          sed -r -i "s/<application.version>([^<]+)<\/application.version>/<application.version>\1 [$COMMIT]<\/application.version>/" /home/runner/work/ctsms/ctsms/pom.xml
+          UUID="test-"
+          UUID+=$(cat /proc/sys/kernel/random/uuid)
+          sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /home/runner/work/ctsms/ctsms/pom.xml
+          mvn install -DskipTests --no-transfer-progress -c
+      - name: Setup database
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
+      - name: Download master data
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
+      - name: Setup BulkProcessor
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+      - name: Setup dbtool.sh
+        env:
+          MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
+          MAIL_SENDER_PORT: ${{ secrets.MAIL_SENDER_PORT }}
+          MAIL_SENDER_PROTOCOL: ${{ secrets.MAIL_SENDER_PROTOCOL }}
+          MAIL_SENDER_USERNAME: ${{ secrets.MAIL_SENDER_USERNAME }}
+          MAIL_SENDER_PASSWORD: ${{ secrets.MAIL_SENDER_PASSWORD }}
+          MAIL_SENDER_AUTH: ${{ secrets.MAIL_SENDER_AUTH }}
+          MAIL_SENDER_STARTTLS: ${{ secrets.MAIL_SENDER_STARTTLS }}
+          MAIL_SENDER_ADDRESS: ${{ secrets.MAIL_SENDER_ADDRESS }}
+        run: |
+          sudo echo "email_exec_from_address=$MAIL_SENDER_ADDRESS" >> /ctsms/properties/ctsms-settings.properties
+          sudo echo "email_exec_from_name=Phoenix CTMS Automated Tests" >> /ctsms/properties/ctsms-settings.properties
+          sudo echo "job_mail_sender_host=$MAIL_SENDER_HOST" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_port=$MAIL_SENDER_PORT" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_protocol=$MAIL_SENDER_PROTOCOL" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_username=$MAIL_SENDER_USERNAME" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo echo "job_mail_sender_password=$MAIL_SENDER_PASSWORD" >> /ctsms/properties/ctsms-applicationcontext.properties
+          sudo touch /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chown ctsms:ctsms /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chmod 777 /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "mail.smtp.auth=$MAIL_SENDER_AUTH" >> /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo echo "mail.smtp.starttls.enable=$MAIL_SENDER_STARTTLS" >> /ctsms/properties/ctsms-job-mail-sender.properties
+          sudo chown ctsms:ctsms /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh
+          sudo mv /home/runner/work/ctsms/ctsms/.github/workflows/dbtool.sh /ctsms/dbtool.sh
+          sudo chmod 777 /home
+          sudo chmod 777 /home/runner
+          sudo chmod 777 /home/runner/work
+          sudo chmod 777 /home/runner/work/ctsms
+          sudo chmod 777 /home/runner/work/ctsms/ctsms/web -R
+      - name: Initialize database
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+          /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
+      - name: Setup Tomcat
+        run: |
+          sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+      - name: Wait for Tomcat
+        run: |
+          for i in $(seq 1 36); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://127.0.0.1:8080/ || true)
+            if [ -n "$code" ] && [ "$code" != "000" ]; then
+              echo "Tomcat responded with HTTP $code"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "Tomcat did not respond on port 8080"
+          exit 1
+      - name: OWASP ZAP baseline
+        continue-on-error: true
+        run: |
+          mkdir -p zap-wrk
+          chmod 777 zap-wrk
+          docker run --rm --network host \
+            -v "${{ github.workspace }}/zap-wrk:/zap/wrk:rw" \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t http://127.0.0.1:8080/ -I -m 5 -r zap-report.html
+      - name: Make ZAP report readable
+        if: always()
+        run: sudo chmod -R a+rX zap-wrk || true
+      - name: Upload ZAP report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-baseline-report
+          path: zap-wrk/zap-report.html
+          if-no-files-found: warn

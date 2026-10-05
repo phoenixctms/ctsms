@@ -142,6 +142,15 @@ public class StaffDutyRosterTurnBean extends DutyRosterTurnBeanBase {
 	}
 
 	@Override
+	public boolean isShowGoogleCalendarUrl() {
+		StaffOutVO identity = WebUtil.getUserIdentity();
+		if (identity == null || staffId == null || !staffId.equals(identity.getId())) {
+			return false;
+		}
+		return super.isShowGoogleCalendarUrl();
+	}
+
+	@Override
 	public boolean isCreateable() {
 		return (this.in.getStaffId() == null ? false : WebUtil.isStaffAllocatable(staff));
 	}

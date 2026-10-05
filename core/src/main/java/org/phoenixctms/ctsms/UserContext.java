@@ -24,6 +24,7 @@ public class UserContext extends VOCacheContext {
 	private String host;
 	private String realm;
 	private String methodName;
+	private String jwtAudience;
 	private Locale locale;
 	private TimeZone timeZone;
 	private String dateFormat;
@@ -139,6 +140,10 @@ public class UserContext extends VOCacheContext {
 		return realm;
 	}
 
+	public String getJwtAudience() {
+		return jwtAudience;
+	}
+
 	public TimeZone getTimeZone() {
 		if (!isTimeZoneSet && inheritedUser != null) {
 			timeZone = CommonUtil.timeZoneFromString(inheritedUser.getTimeZone());
@@ -172,6 +177,7 @@ public class UserContext extends VOCacheContext {
 		this.host = null;
 		this.realm = null;
 		this.methodName = null;
+		this.jwtAudience = null;
 		isTrustedHost = null;
 		locale = null;
 		isLocaleSet = false;
@@ -237,6 +243,10 @@ public class UserContext extends VOCacheContext {
 		this.realm = realm;
 	}
 
+	public void setJwtAudience(String jwtAudience) {
+		this.jwtAudience = jwtAudience;
+	}
+
 	public void setUser(User user, UserInheritedVO inheritedUser) {
 		reset();
 		this.user = user;
@@ -263,6 +273,7 @@ public class UserContext extends VOCacheContext {
 		copy.publicKey = publicKey;
 		copy.isTrustedHost = isTrustedHost;
 		copy.methodName = methodName;
+		copy.jwtAudience = jwtAudience;
 		return copy;
 	}
 

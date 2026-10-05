@@ -291,6 +291,7 @@ public final class CommonUtil {
 	public static final String CONFIRM_PATH = "confirm";
 	public static final String API_REALM = "api";
 	public static final String EXEC_REALM = "exec";
+	public static final String DUTYROSTER_ICS_REALM = "dutyroster-ics";
 	/**
 	 * RestApi PSF filter / query param: when true, skips USER_/IDENTITY_DEPARTMENT_ID_FILTER injection
 	 * and is ignored by CriteriaUtil.apply*PSFVO (not a domain property).

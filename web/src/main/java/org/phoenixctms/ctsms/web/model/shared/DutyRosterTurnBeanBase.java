@@ -66,6 +66,7 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 	protected HashMap<Long, CollidingStaffStatusEntryEagerModel> collidingStaffStatusEntryModelCache;
 	protected HashMap<Long, CollidingInventoryBookingEagerModel> collidingInventoryBookingModelCache;
 	protected boolean showCollisions;
+	private String googleCalendarIcsUrl;
 	private static final String VISIT_SCHEDULE_ITEM_NAME = "{0}";
 	private static final String TRIAL_VISIT_SCHEDULE_ITEM_NAME = "{0}: {1}";
 
@@ -424,5 +425,16 @@ public abstract class DutyRosterTurnBeanBase extends ManagedBeanBase {
 
 	public void setShowCollisions(boolean showCollisions) {
 		this.showCollisions = showCollisions;
+	}
+
+	public boolean isShowGoogleCalendarUrl() {
+		return WebUtil.isShowDutyRosterGoogleCalendarUrl() && !CommonUtil.isEmptyString(getGoogleCalendarIcsUrl());
+	}
+
+	public String getGoogleCalendarIcsUrl() {
+		if (googleCalendarIcsUrl == null) {
+			googleCalendarIcsUrl = WebUtil.getDutyRosterGoogleCalendarIcsUrl();
+		}
+		return googleCalendarIcsUrl;
 	}
 }

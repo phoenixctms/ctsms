@@ -31,6 +31,19 @@
 									<ui:param name="bean" value="#{userSettingsBean}" />
 								</ui:include>
 
+								<ui:include src="/META-INF/includes/shared/dutyRosterGoogleCalendarUrl.xhtml">
+									<ui:param name="googleCalendarUrlBean"
+										value="#{userSettingsBean}" />
+									<ui:param name="googleCalendarUrlLabel"
+										value="#{userlabels.user_settings_google_calendar_url_label}" />
+									<ui:param name="googleCalendarUrlTooltip"
+										value="#{userlabels.user_settings_google_calendar_url_tooltip}" />
+									<ui:param name="googleCalendarUrlFormRow"
+										value="#{true}" />
+									<ui:param name="googleCalendarUrlFilterRow"
+										value="#{false}" />
+								</ui:include>
+
 							</h:panelGrid>
 
 							<p:messages id="messages" />

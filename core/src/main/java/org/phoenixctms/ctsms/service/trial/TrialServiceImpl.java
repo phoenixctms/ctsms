@@ -6202,6 +6202,15 @@ public class TrialServiceImpl
 	protected Collection<DutyRosterTurnOutVO> handleGetDutyRosterInterval(
 			AuthenticationVO auth, Long departmentId, Long statusId, Long staffId, boolean unassigned, Long trialId, Set<String> calendars, Date from, Date to, boolean sort)
 			throws Exception {
+		if (CommonUtil.DUTYROSTER_ICS_REALM.equals(CoreUtil.getUserContext().getJwtAudience())) {
+			User user = CoreUtil.getUser();
+			Staff identity = user != null ? user.getIdentity() : null;
+			if (identity == null) {
+				return new ArrayList<DutyRosterTurnOutVO>();
+			}
+			staffId = identity.getId();
+			unassigned = false;
+		}
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
