@@ -400,21 +400,25 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		return probandTagDao;
 	}
 
-	private HashMap<Long, CriterionProperty> getPropertyMap() {
+	HashMap<Long, CriterionProperty> getPropertyMap() {
 		if (propertyMap == null) {
 			propertyMap = QueryUtil.createCriterionPropertyMap(null, criterionPropertyDao);
 		}
 		return propertyMap;
 	}
 
-	private HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> getRestrictionMap() {
+	HashMap<Long, CriterionProperty> getPropertyMap(DBModule module) {
+		return QueryUtil.createCriterionPropertyMap(module, criterionPropertyDao);
+	}
+
+	HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> getRestrictionMap() {
 		if (restrictionMap == null) {
 			restrictionMap = QueryUtil.createCriterionRestrictionMap(criterionRestrictionDao);
 		}
 		return restrictionMap;
 	}
 
-	private HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> getRestrictionNameMap() {
+	HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> getRestrictionNameMap() {
 		if (restrictionNameMap == null) {
 			restrictionNameMap = QueryUtil.createCriterionRestrictionNameMap(criterionRestrictionDao);
 		}
@@ -487,14 +491,14 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 		return teamMemberRoleDao;
 	}
 
-	private HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionTie> getTieMap() {
+	HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionTie> getTieMap() {
 		if (tieMap == null) {
 			tieMap = QueryUtil.createCriterionTieMap(criterionTieDao);
 		}
 		return tieMap;
 	}
 
-	private HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, String> getTieNameMap() {
+	HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, String> getTieNameMap() {
 		if (tieNameMap == null) {
 			tieNameMap = QueryUtil.createCriterionTieNameMap(criterionTieDao);
 		}

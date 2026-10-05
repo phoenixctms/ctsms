@@ -1,4 +1,4 @@
-package org.phoenixctms.ctsms.web.model.shared.search;
+package org.phoenixctms.ctsms.query.parser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,16 +7,25 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.phoenixctms.ctsms.compare.VOPositionComparator;
+import org.phoenixctms.ctsms.domain.CriterionProperty;
+import org.phoenixctms.ctsms.enumeration.CriterionTie;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
+import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
+import org.phoenixctms.ctsms.util.L10nUtil;
+import org.phoenixctms.ctsms.util.L10nUtil.Locales;
+import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
-import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
-import org.phoenixctms.ctsms.vo.CriterionTieVO;
-import org.phoenixctms.ctsms.web.util.MessageCodes;
-import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.vo.CriterionInstantVO;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,82 +37,12 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 
 /**
- * Converts query terms to and from a pretty-printed expression or JSON.
- * The expression uses the same layout as the criterion pretty-printer
- * (position, indentation, localized conjunction / property / operator, stored value).
- * JSON accepts either criterion input objects or the REST criteria/criterion documents.
+ * Reads and writes the criterion text formats. Expression output is produced by
+ * {@link CriterionParser}; this class reads that text back and converts JSON.
  */
-public final class QueryText {
+final class CriterionText {
 
-	public static final String FORMAT_EXPRESSION = "EXPRESSION";
-	public static final String FORMAT_JSON = "JSON";
-	private static final String INDENT = "  ";
 	private static final Gson JSON = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
-
-	public static final class ParseException extends Exception {
-
-		private static final long serialVersionUID = 1L;
-
-		public ParseException(String message) {
-			super(message);
-		}
-	}
-
-	public static final class Parsed {
-
-		private final ArrayList<CriterionInVO> criterions;
-		private final String label;
-		private final boolean labelSet;
-		private final String category;
-		private final boolean categorySet;
-		private final String comment;
-		private final boolean commentSet;
-		private final Boolean loadByDefault;
-
-		private Parsed(ArrayList<CriterionInVO> criterions, String label, boolean labelSet, String category, boolean categorySet, String comment,
-				boolean commentSet, Boolean loadByDefault) {
-			this.criterions = criterions;
-			this.label = label;
-			this.labelSet = labelSet;
-			this.category = category;
-			this.categorySet = categorySet;
-			this.comment = comment;
-			this.commentSet = commentSet;
-			this.loadByDefault = loadByDefault;
-		}
-
-		public ArrayList<CriterionInVO> getCriterions() {
-			return criterions;
-		}
-
-		public String getLabel() {
-			return label;
-		}
-
-		public boolean isLabelSet() {
-			return labelSet;
-		}
-
-		public String getCategory() {
-			return category;
-		}
-
-		public boolean isCategorySet() {
-			return categorySet;
-		}
-
-		public String getComment() {
-			return comment;
-		}
-
-		public boolean isCommentSet() {
-			return commentSet;
-		}
-
-		public Boolean getLoadByDefault() {
-			return loadByDefault;
-		}
-	}
 
 	private static final class TermResult {
 
@@ -129,10 +68,10 @@ public final class QueryText {
 
 	private static final class Catalog {
 
-		private final HashMap<Long, CriterionPropertyVO> properties;
-		private final HashMap<Long, CriterionTieVO> ties;
+		private final HashMap<Long, CriterionProperty> properties;
+		private final HashMap<Long, CriterionTie> ties;
 		private final HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions;
-		private final HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, Long> tieIds;
+		private final HashMap<CriterionTie, Long> tieIds;
 		private final List<NamedId> propertyNames;
 		private final List<NamedId> tieNames;
 		private final List<NamedId> restrictionNames;
@@ -141,71 +80,52 @@ public final class QueryText {
 		private final int maxCriterions;
 		private final DBModule module;
 
-		private Catalog(DBModule module, HashMap<Long, CriterionPropertyVO> properties, HashMap<Long, CriterionTieVO> ties,
-				HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions, String userDateFormat, String userDecimalSeparator,
-				int maxCriterions) {
+		private Catalog(CriterionParser parser, DBModule module) {
 			this.module = module;
-			this.properties = properties;
-			this.ties = ties;
-			this.restrictions = restrictions;
-			this.userDateFormat = userDateFormat;
-			this.userDecimalSeparator = userDecimalSeparator;
-			this.maxCriterions = maxCriterions;
-			this.tieIds = new HashMap<org.phoenixctms.ctsms.enumeration.CriterionTie, Long>();
+			this.properties = parser.getPropertyMap(module);
+			this.ties = parser.getTieMap();
+			this.restrictions = parser.getRestrictionMap();
+			this.userDateFormat = CoreUtil.getUserContext().getDateFormat();
+			this.userDecimalSeparator = CoreUtil.getUserContext().getDecimalSeparator();
+			this.maxCriterions = Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS);
+			this.tieIds = new HashMap<CriterionTie, Long>();
 			this.propertyNames = new ArrayList<NamedId>();
 			this.tieNames = new ArrayList<NamedId>();
 			this.restrictionNames = new ArrayList<NamedId>();
+			HashMap<CriterionTie, String> tieNamesByEnum = parser.getTieNameMap();
 			if (ties != null) {
-				Iterator<CriterionTieVO> tieIt = ties.values().iterator();
+				Iterator<Map.Entry<Long, CriterionTie>> tieIt = ties.entrySet().iterator();
 				while (tieIt.hasNext()) {
-					CriterionTieVO tie = tieIt.next();
-					if (tie == null || tie.getId() == null || tie.getTie() == null) {
+					Map.Entry<Long, CriterionTie> entry = tieIt.next();
+					if (entry.getKey() == null || entry.getValue() == null) {
 						continue;
 					}
-					tieIds.put(tie.getTie(), tie.getId());
-					addName(tieNames, tie.getTie().name(), tie.getId());
-					addName(tieNames, tie.getName(), tie.getId());
+					tieIds.put(entry.getValue(), entry.getKey());
+					addName(tieNames, entry.getValue().name(), entry.getKey());
+					addName(tieNames, tieNamesByEnum.get(entry.getValue()), entry.getKey());
 				}
 			}
 			if (properties != null) {
-				Iterator<CriterionPropertyVO> propertyIt = properties.values().iterator();
+				Iterator<CriterionProperty> propertyIt = properties.values().iterator();
 				while (propertyIt.hasNext()) {
-					CriterionPropertyVO property = propertyIt.next();
+					CriterionProperty property = propertyIt.next();
 					if (property == null || property.getId() == null) {
 						continue;
 					}
 					addName(propertyNames, property.getProperty(), property.getId());
-					addName(propertyNames, property.getName(), property.getId());
+					addName(propertyNames, L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey()), property.getId());
 				}
 			}
+			HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionNamesByEnum = parser.getRestrictionNameMap();
 			if (restrictions != null) {
-				Iterator<java.util.Map.Entry<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>> restrictionIt = restrictions.entrySet().iterator();
+				Iterator<Map.Entry<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>> restrictionIt = restrictions.entrySet().iterator();
 				while (restrictionIt.hasNext()) {
-					java.util.Map.Entry<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> entry = restrictionIt.next();
+					Map.Entry<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> entry = restrictionIt.next();
 					if (entry.getKey() == null || entry.getValue() == null) {
 						continue;
 					}
 					addName(restrictionNames, entry.getValue().name(), entry.getKey());
-				}
-			}
-			if (properties != null) {
-				Iterator<CriterionPropertyVO> propertyIt = properties.values().iterator();
-				while (propertyIt.hasNext()) {
-					CriterionPropertyVO property = propertyIt.next();
-					if (property == null || property.getValidRestrictions() == null) {
-						continue;
-					}
-					Iterator<org.phoenixctms.ctsms.vo.CriterionRestrictionVO> restrictionIt = property.getValidRestrictions().iterator();
-					while (restrictionIt.hasNext()) {
-						org.phoenixctms.ctsms.vo.CriterionRestrictionVO restriction = restrictionIt.next();
-						if (restriction == null || restriction.getId() == null) {
-							continue;
-						}
-						addName(restrictionNames, restriction.getName(), restriction.getId());
-						if (restriction.getRestriction() != null) {
-							addName(restrictionNames, restriction.getRestriction().name(), restriction.getId());
-						}
-					}
+					addName(restrictionNames, restrictionNamesByEnum.get(entry.getValue()), entry.getKey());
 				}
 			}
 			sortByLength(propertyNames);
@@ -214,94 +134,21 @@ public final class QueryText {
 		}
 	}
 
-	private QueryText() {
+	private CriterionText() {
 	}
 
-	public static String toExpression(ArrayList<CriterionInVO> criterions, HashMap<Long, CriterionPropertyVO> properties, HashMap<Long, CriterionTieVO> ties,
-			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions, String userDateFormat, String userDecimalSeparator) {
-		if (criterions == null || criterions.isEmpty()) {
-			return "";
-		}
-		int digits = 1;
-		for (int i = 0; i < criterions.size(); i++) {
-			CriterionInVO criterion = criterions.get(i);
-			if (criterion != null && criterion.getPosition() != null) {
-				digits = Math.max(digits, Long.toString(criterion.getPosition()).length());
-			}
-		}
-		String positionFormat = "%0" + digits + "d";
-		StringBuilder result = new StringBuilder();
-		int indent = 0;
-		boolean any = false;
-		for (int i = 0; i < criterions.size(); i++) {
-			CriterionInVO criterion = criterions.get(i);
-			if (criterion == null) {
-				continue;
-			}
-			CriterionTieVO tie = tieOf(criterion, ties);
-			CriterionPropertyVO property = propertyOf(criterion, properties);
-			org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionOf(criterion, restrictions);
-			boolean left = tie != null && org.phoenixctms.ctsms.enumeration.CriterionTie.LEFT_PARENTHESIS.equals(tie.getTie());
-			boolean right = tie != null && org.phoenixctms.ctsms.enumeration.CriterionTie.RIGHT_PARENTHESIS.equals(tie.getTie());
-			boolean blank = tie != null && CommonUtil.isBlankCriterionTie(tie.getTie());
-			if (tie == null && property == null) {
-				continue;
-			}
-			if (right) {
-				indent = Math.max(0, indent - 1);
-			}
-			if (any) {
-				result.append('\n');
-			}
-			any = true;
-			if (criterion.getPosition() != null) {
-				result.append(String.format(positionFormat, criterion.getPosition()));
-				result.append(':');
-			}
-			for (int j = 0; j < indent; j++) {
-				result.append(INDENT);
-			}
-			if (blank || (tie != null && property == null)) {
-				result.append(tieLabel(tie));
-			} else {
-				if (tie != null) {
-					result.append(tieLabel(tie));
-					result.append(' ');
-				}
-				if (property != null) {
-					result.append(propertyLabel(property));
-					if (restriction != null) {
-						result.append(' ');
-						result.append(restrictionLabel(restriction, property));
-						if (hasValue(property, restriction)) {
-							String value = CommonUtil.getCriterionValueAsString(criterion, property.getValueType(), userDateFormat, userDecimalSeparator);
-							if (!CommonUtil.isEmptyString(value)) {
-								result.append(' ');
-								result.append(value.replace('\r', ' ').replace('\n', ' '));
-							}
-						}
-					}
-				}
-			}
-			if (left) {
-				indent++;
-			}
-		}
-		return result.toString();
-	}
-
-	public static String toJson(ArrayList<CriterionInVO> criterions, HashMap<Long, CriterionPropertyVO> properties, HashMap<Long, CriterionTieVO> ties,
-			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions, String userDateFormat, String userDecimalSeparator) {
+	static String toJson(CriterionParser parser, ArrayList<CriterionInstantVO> criterions) {
+		Catalog catalog = new Catalog(parser, null);
 		JsonArray array = new JsonArray();
 		if (criterions != null) {
 			for (int i = 0; i < criterions.size(); i++) {
-				CriterionInVO criterion = criterions.get(i);
+				CriterionInstantVO criterion = criterions.get(i);
 				if (criterion == null) {
 					continue;
 				}
-				CriterionTieVO tie = tieOf(criterion, ties);
-				CriterionPropertyVO property = propertyOf(criterion, properties);
-				org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionOf(criterion, restrictions);
+				CriterionTie tie = tieOf(criterion, catalog.ties);
+				CriterionProperty property = propertyOf(criterion, catalog.properties);
+				org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionOf(criterion, catalog.restrictions);
 				if (tie == null && property == null) {
 					continue;
 				}
@@ -309,15 +156,15 @@ public final class QueryText {
 				if (criterion.getPosition() != null) {
 					object.addProperty("position", criterion.getPosition());
 				}
-				if (tie != null && tie.getTie() != null) {
-					object.addProperty("tie", tie.getTie().name());
+				if (tie != null) {
+					object.addProperty("tie", tie.name());
 				}
 				if (property != null) {
 					object.addProperty("property", property.getProperty());
 					if (restriction != null) {
 						object.addProperty("restriction", restriction.name());
 					}
-					appendJsonValue(object, criterion, property, restriction, userDateFormat, userDecimalSeparator);
+					appendJsonValue(object, criterion, property, restriction, catalog);
 				}
 				array.add(object);
 			}
@@ -325,18 +172,16 @@ public final class QueryText {
 		return JSON.toJson(array);
 	}
 
-	public static Parsed parse(String text, DBModule module, HashMap<Long, CriterionPropertyVO> properties, HashMap<Long, CriterionTieVO> ties,
-			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions, String userDateFormat, String userDecimalSeparator, int maxCriterions)
-			throws ParseException {
-		Catalog catalog = new Catalog(module, properties, ties, restrictions, userDateFormat, userDecimalSeparator, maxCriterions);
+	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text) throws ServiceException {
+		Catalog catalog = new Catalog(parser, module);
 		String source = text == null ? "" : text.trim();
 		if (source.length() == 0) {
-			return new Parsed(new ArrayList<CriterionInVO>(), null, false, null, false, null, false, null);
+			return new ArrayList<CriterionInVO>();
 		}
 		if (source.charAt(0) == '{' || source.charAt(0) == '[') {
 			return parseJson(source, catalog);
 		}
-		return new Parsed(parseExpression(source, catalog), null, false, null, false, null, false, null);
+		return parseExpression(source, catalog);
 	}
 
 	private static void addName(List<NamedId> names, String name, Long id) {
@@ -355,12 +200,12 @@ public final class QueryText {
 		names.add(new NamedId(token, id));
 	}
 
-	private static void appendJsonValue(JsonObject object, CriterionInVO criterion, CriterionPropertyVO property,
-			org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction, String userDateFormat, String userDecimalSeparator) {
+	private static void appendJsonValue(JsonObject object, CriterionInstantVO criterion, CriterionProperty property,
+			org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction, Catalog catalog) {
 		if (!hasValue(property, restriction)) {
 			return;
 		}
-		String value = CommonUtil.getCriterionValueAsString(criterion, property.getValueType(), userDateFormat, userDecimalSeparator);
+		String value = CommonUtil.getCriterionValueAsString(criterion, property.getValueType(), catalog.userDateFormat, catalog.userDecimalSeparator);
 		if (CommonUtil.isEmptyString(value)) {
 			return;
 		}
@@ -408,13 +253,13 @@ public final class QueryText {
 		return criterion;
 	}
 
-	private static void checkSize(ArrayList<CriterionInVO> criterions, Catalog catalog) throws ParseException {
+	private static void checkSize(ArrayList<CriterionInVO> criterions, Catalog catalog) throws ServiceException {
 		if (criterions.size() >= catalog.maxCriterions) {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_TOO_MANY, Integer.toString(catalog.maxCriterions)));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_TOO_MANY, Integer.toString(catalog.maxCriterions));
 		}
 	}
 
-	private static Long findExact(List<NamedId> names, String token) throws ParseException {
+	private static Long findExact(List<NamedId> names, String token) {
 		if (CommonUtil.isEmptyString(token)) {
 			return null;
 		}
@@ -426,7 +271,7 @@ public final class QueryText {
 		return null;
 	}
 
-	private static boolean hasValue(CriterionPropertyVO property, org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction) {
+	private static boolean hasValue(CriterionProperty property, org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction) {
 		return property != null && property.getValueType() != null && !CriterionValueType.NONE.equals(property.getValueType())
 				&& !CommonUtil.isUnaryCriterionRestriction(restriction);
 	}
@@ -457,7 +302,7 @@ public final class QueryText {
 		return null;
 	}
 
-	private static ArrayList<CriterionInVO> parseExpression(String text, Catalog catalog) throws ParseException {
+	private static ArrayList<CriterionInVO> parseExpression(String text, Catalog catalog) throws ServiceException {
 		ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>();
 		Long pendingTieId = null;
 		int i = 0;
@@ -475,11 +320,10 @@ public final class QueryText {
 					criterions.add(pending);
 					pendingTieId = null;
 				}
-				org.phoenixctms.ctsms.enumeration.CriterionTie parenthesis = text.charAt(i) == '(' ? org.phoenixctms.ctsms.enumeration.CriterionTie.LEFT_PARENTHESIS
-						: org.phoenixctms.ctsms.enumeration.CriterionTie.RIGHT_PARENTHESIS;
+				CriterionTie parenthesis = text.charAt(i) == '(' ? CriterionTie.LEFT_PARENTHESIS : CriterionTie.RIGHT_PARENTHESIS;
 				Long tieId = catalog.tieIds.get(parenthesis);
 				if (tieId == null) {
-					throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_UNKNOWN_TIE, String.valueOf(text.charAt(i))));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_TIE, String.valueOf(text.charAt(i)));
 				}
 				checkSize(criterions, catalog);
 				CriterionInVO criterion = blankCriterion();
@@ -517,8 +361,8 @@ public final class QueryText {
 				continue;
 			}
 			if (tie != null) {
-				CriterionTieVO tieVO = catalog.ties.get(tie.id);
-				boolean logical = tieVO != null && !CommonUtil.isBlankCriterionTie(tieVO.getTie());
+				CriterionTie tieEnum = catalog.ties.get(tie.id);
+				boolean logical = tieEnum != null && !CommonUtil.isBlankCriterionTie(tieEnum);
 				if (logical) {
 					if (pendingTieId != null) {
 						throw invalid(text, i);
@@ -549,20 +393,13 @@ public final class QueryText {
 		return criterions;
 	}
 
-	private static Parsed parseJson(String text, Catalog catalog) throws ParseException {
+	private static ArrayList<CriterionInVO> parseJson(String text, Catalog catalog) throws ServiceException {
 		JsonElement root;
 		try {
 			root = new JsonParser().parse(text);
 		} catch (JsonSyntaxException e) {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID, e.getMessage()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, e.getMessage());
 		}
-		String label = null;
-		boolean labelSet = false;
-		String category = null;
-		boolean categorySet = false;
-		String comment = null;
-		boolean commentSet = false;
-		Boolean loadByDefault = null;
 		JsonArray criterionsArray;
 		if (root.isJsonArray()) {
 			criterionsArray = root.getAsJsonArray();
@@ -571,23 +408,8 @@ public final class QueryText {
 			if (object.has("module") && !object.get("module").isJsonNull() && catalog.module != null) {
 				String moduleName = jsonString(object.get("module"));
 				if (!CommonUtil.isEmptyString(moduleName) && !catalog.module.name().equals(moduleName)) {
-					throw new ParseException(Messages.getMessage(MessageCodes.CRITERIA_MODULE_MISMATCH, moduleName, catalog.module.name()));
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_MODULE_MISMATCH, moduleName, catalog.module.name());
 				}
-			}
-			if (object.has("label")) {
-				labelSet = true;
-				label = object.get("label").isJsonNull() ? null : jsonString(object.get("label"));
-			}
-			if (object.has("category")) {
-				categorySet = true;
-				category = object.get("category").isJsonNull() ? null : jsonString(object.get("category"));
-			}
-			if (object.has("comment")) {
-				commentSet = true;
-				comment = object.get("comment").isJsonNull() ? null : jsonString(object.get("comment"));
-			}
-			if (object.has("loadByDefault") && object.get("loadByDefault").isJsonPrimitive() && object.get("loadByDefault").getAsJsonPrimitive().isBoolean()) {
-				loadByDefault = object.get("loadByDefault").getAsBoolean();
 			}
 			if (object.has("criterions") && object.get("criterions").isJsonArray()) {
 				criterionsArray = object.getAsJsonArray("criterions");
@@ -595,16 +417,16 @@ public final class QueryText {
 				criterionsArray = new JsonArray();
 				criterionsArray.add(object);
 			} else {
-				throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID, "criterions"));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, "criterions");
 			}
 		} else {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID, text));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, text);
 		}
 		ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>();
 		for (int i = 0; i < criterionsArray.size(); i++) {
 			JsonElement element = criterionsArray.get(i);
 			if (element == null || !element.isJsonObject()) {
-				throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID, String.valueOf(i + 1)));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, String.valueOf(i + 1));
 			}
 			checkSize(criterions, catalog);
 			criterions.add(parseJsonCriterion(element.getAsJsonObject(), catalog));
@@ -619,33 +441,29 @@ public final class QueryText {
 		if (positioned) {
 			Collections.sort(criterions, new VOPositionComparator(false));
 		}
-		return new Parsed(criterions, label, labelSet, category, categorySet, comment, commentSet, loadByDefault);
+		return criterions;
 	}
 
-	private static CriterionInVO parseJsonCriterion(JsonObject object, Catalog catalog) throws ParseException {
+	private static CriterionInVO parseJsonCriterion(JsonObject object, Catalog catalog) throws ServiceException {
 		CriterionInVO criterion = blankCriterion();
 		if (object.has("position") && !object.get("position").isJsonNull()) {
-			Long position = readLong(object.get("position"));
-			criterion.setPosition(position);
+			criterion.setPosition(readLong(object.get("position")));
 		}
 		if (object.has("tieId") || object.has("tie")) {
 			JsonElement tieElement = object.has("tie") ? object.get("tie") : object.get("tieId");
-			Long tieId = resolveRef(tieElement, catalog.tieNames, catalog.ties.keySet(), MessageCodes.SEARCH_QUERY_TEXT_UNKNOWN_TIE, "tie", "name");
-			criterion.setTieId(tieId);
+			criterion.setTieId(resolveRef(tieElement, catalog.tieNames, catalog.ties.keySet(), ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_TIE, "tie", "name"));
 		}
 		if (object.has("propertyId") || object.has("property")) {
 			JsonElement propertyElement = object.has("property") ? object.get("property") : object.get("propertyId");
-			Long propertyId = resolveRef(propertyElement, catalog.propertyNames, catalog.properties.keySet(), MessageCodes.SEARCH_QUERY_TEXT_UNKNOWN_PROPERTY, "property",
-					"name");
-			criterion.setPropertyId(propertyId);
+			criterion.setPropertyId(resolveRef(propertyElement, catalog.propertyNames, catalog.properties.keySet(), ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_PROPERTY,
+					"property", "name"));
 		}
 		if (object.has("restrictionId") || object.has("restriction")) {
 			JsonElement restrictionElement = object.has("restriction") ? object.get("restriction") : object.get("restrictionId");
-			Long restrictionId = resolveRef(restrictionElement, catalog.restrictionNames, catalog.restrictions.keySet(), MessageCodes.SEARCH_QUERY_TEXT_UNKNOWN_RESTRICTION,
-					"restriction", "name");
-			criterion.setRestrictionId(restrictionId);
+			criterion.setRestrictionId(resolveRef(restrictionElement, catalog.restrictionNames, catalog.restrictions.keySet(),
+					ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_RESTRICTION, "restriction", "name"));
 		}
-		CriterionPropertyVO property = propertyOf(criterion, catalog.properties);
+		CriterionProperty property = propertyOf(criterion, catalog.properties);
 		org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionOf(criterion, catalog.restrictions);
 		if (property != null && hasValue(property, restriction)) {
 			setJsonValue(criterion, object, property, catalog);
@@ -653,20 +471,20 @@ public final class QueryText {
 		return criterion;
 	}
 
-	private static TermResult parseTerm(String text, int offset, Catalog catalog, boolean bracket) throws ParseException {
+	private static TermResult parseTerm(String text, int offset, Catalog catalog, boolean bracket) throws ServiceException {
 		int start = skipSeparators(text, offset);
 		NamedId property = matchLongest(text, start, catalog.propertyNames);
 		if (property == null) {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_UNKNOWN_PROPERTY, snippet(text, start)));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_PROPERTY, snippet(text, start));
 		}
-		CriterionPropertyVO propertyVO = catalog.properties.get(property.id);
+		CriterionProperty propertyEntity = catalog.properties.get(property.id);
 		int i = start + property.name.length();
 		while (i < text.length() && (text.charAt(i) == ' ' || text.charAt(i) == '\t')) {
 			i++;
 		}
 		NamedId restriction = matchLongest(text, i, catalog.restrictionNames);
 		if (restriction == null) {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_UNKNOWN_RESTRICTION, snippet(text, i)));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_RESTRICTION, snippet(text, i));
 		}
 		org.phoenixctms.ctsms.enumeration.CriterionRestriction restrictionEnum = catalog.restrictions.get(restriction.id);
 		i += restriction.name.length();
@@ -700,22 +518,30 @@ public final class QueryText {
 		CriterionInVO criterion = blankCriterion();
 		criterion.setPropertyId(property.id);
 		criterion.setRestrictionId(restriction.id);
-		if (hasValue(propertyVO, restrictionEnum) && !CommonUtil.isEmptyString(value)) {
-			setStringValue(criterion, propertyVO, value, catalog);
+		if (hasValue(propertyEntity, restrictionEnum) && !CommonUtil.isEmptyString(value)) {
+			setStringValue(criterion, propertyEntity, value, catalog);
 		}
 		return new TermResult(criterion, next);
 	}
 
-	private static CriterionPropertyVO propertyOf(CriterionInVO criterion, HashMap<Long, CriterionPropertyVO> properties) {
+	private static CriterionProperty propertyOf(CriterionInVO criterion, HashMap<Long, CriterionProperty> properties) {
 		if (criterion == null || criterion.getPropertyId() == null || properties == null) {
 			return null;
 		}
 		return properties.get(criterion.getPropertyId());
 	}
 
-	private static String propertyLabel(CriterionPropertyVO property) {
-		if (!CommonUtil.isEmptyString(property.getName())) {
-			return property.getName();
+	private static CriterionProperty propertyOf(CriterionInstantVO criterion, HashMap<Long, CriterionProperty> properties) {
+		if (criterion == null || criterion.getPropertyId() == null || properties == null) {
+			return null;
+		}
+		return properties.get(criterion.getPropertyId());
+	}
+
+	private static String propertyLabel(CriterionProperty property) {
+		String name = L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey());
+		if (!CommonUtil.isEmptyString(name)) {
+			return name;
 		}
 		return property.getProperty();
 	}
@@ -728,20 +554,15 @@ public final class QueryText {
 		return restrictions.get(criterion.getRestrictionId());
 	}
 
-	private static String restrictionLabel(org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction, CriterionPropertyVO property) {
-		if (property.getValidRestrictions() != null) {
-			Iterator<org.phoenixctms.ctsms.vo.CriterionRestrictionVO> it = property.getValidRestrictions().iterator();
-			while (it.hasNext()) {
-				org.phoenixctms.ctsms.vo.CriterionRestrictionVO restrictionVO = it.next();
-				if (restrictionVO != null && restriction.equals(restrictionVO.getRestriction()) && !CommonUtil.isEmptyString(restrictionVO.getName())) {
-					return restrictionVO.getName();
-				}
-			}
+	private static org.phoenixctms.ctsms.enumeration.CriterionRestriction restrictionOf(CriterionInstantVO criterion,
+			HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions) {
+		if (criterion == null || criterion.getRestrictionId() == null || restrictions == null) {
+			return null;
 		}
-		return restriction.name();
+		return restrictions.get(criterion.getRestrictionId());
 	}
 
-	private static Long readLong(JsonElement element) throws ParseException {
+	private static Long readLong(JsonElement element) throws ServiceException {
 		if (element == null || element.isJsonNull()) {
 			return null;
 		}
@@ -756,12 +577,12 @@ public final class QueryText {
 				}
 			}
 		} catch (RuntimeException e) {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID, element.toString()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, element.toString());
 		}
 		return null;
 	}
 
-	private static Long resolveRef(JsonElement element, List<NamedId> names, java.util.Set<Long> knownIds, String unknownCode, String... fields) throws ParseException {
+	private static Long resolveRef(JsonElement element, List<NamedId> names, java.util.Set<Long> knownIds, String unknownCode, String... fields) throws ServiceException {
 		if (element == null || element.isJsonNull()) {
 			return null;
 		}
@@ -772,12 +593,12 @@ public final class QueryText {
 				if (knownIds != null && knownIds.contains(id)) {
 					return id;
 				}
-				throw new ParseException(Messages.getMessage(unknownCode, id.toString()));
+				throw L10nUtil.initServiceException(unknownCode, id.toString());
 			}
 			String token = primitive.getAsString();
 			Long id = findExact(names, token);
 			if (id == null) {
-				throw new ParseException(Messages.getMessage(unknownCode, token));
+				throw L10nUtil.initServiceException(unknownCode, token);
 			}
 			return id;
 		}
@@ -797,12 +618,12 @@ public final class QueryText {
 					}
 				}
 			}
-			throw new ParseException(Messages.getMessage(unknownCode, object.toString()));
+			throw L10nUtil.initServiceException(unknownCode, object.toString());
 		}
-		throw new ParseException(Messages.getMessage(unknownCode, element.toString()));
+		throw L10nUtil.initServiceException(unknownCode, element.toString());
 	}
 
-	private static void setJsonValue(CriterionInVO criterion, JsonObject object, CriterionPropertyVO property, Catalog catalog) throws ParseException {
+	private static void setJsonValue(CriterionInVO criterion, JsonObject object, CriterionProperty property, Catalog catalog) throws ServiceException {
 		CriterionValueType type = property.getValueType();
 		String field = valueField(type);
 		if (!object.has(field) || object.get(field).isJsonNull()) {
@@ -842,14 +663,14 @@ public final class QueryText {
 					setStringValue(criterion, property, jsonString(element), catalog);
 					break;
 			}
-		} catch (ParseException e) {
+		} catch (ServiceException e) {
 			throw e;
 		} catch (RuntimeException e) {
-			throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID_VALUE, propertyLabel(property), element.toString()));
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), element.toString());
 		}
 	}
 
-	private static void setStringValue(CriterionInVO criterion, CriterionPropertyVO property, String value, Catalog catalog) throws ParseException {
+	private static void setStringValue(CriterionInVO criterion, CriterionProperty property, String value, Catalog catalog) throws ServiceException {
 		if (CommonUtil.isEmptyString(value)) {
 			return;
 		}
@@ -858,14 +679,14 @@ public final class QueryText {
 			CommonUtil.setCriterionValueFromString(criterion, type, value.trim(), catalog.userDateFormat, catalog.userDecimalSeparator);
 		} catch (RuntimeException first) {
 			if (!setAlternateValue(criterion, type, value.trim())) {
-				throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID_VALUE, propertyLabel(property), value.trim()));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), value.trim());
 			}
 			return;
 		}
 		if ((CriterionValueType.FLOAT.equals(type) || CriterionValueType.FLOAT_HASH.equals(type)) && criterion.getFloatValue() == null) {
 			Float dotted = CommonUtil.parseFloat(value.trim(), ".");
 			if (dotted == null) {
-				throw new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID_VALUE, propertyLabel(property), value.trim()));
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), value.trim());
 			}
 			criterion.setFloatValue(dotted);
 		}
@@ -963,22 +784,15 @@ public final class QueryText {
 		});
 	}
 
-	private static ParseException invalid(String text, int offset) {
-		return new ParseException(Messages.getMessage(MessageCodes.SEARCH_QUERY_TEXT_INVALID, snippet(text, offset)));
+	private static ServiceException invalid(String text, int offset) {
+		return L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID, snippet(text, offset));
 	}
 
-	private static CriterionTieVO tieOf(CriterionInVO criterion, HashMap<Long, CriterionTieVO> ties) {
+	private static CriterionTie tieOf(CriterionInstantVO criterion, HashMap<Long, CriterionTie> ties) {
 		if (criterion == null || criterion.getTieId() == null || ties == null) {
 			return null;
 		}
 		return ties.get(criterion.getTieId());
-	}
-
-	private static String tieLabel(CriterionTieVO tie) {
-		if (!CommonUtil.isEmptyString(tie.getName())) {
-			return tie.getName();
-		}
-		return tie.getTie().name();
 	}
 
 	private static String valueField(CriterionValueType type) {

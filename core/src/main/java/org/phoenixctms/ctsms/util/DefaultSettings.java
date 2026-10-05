@@ -274,6 +274,7 @@ public final class DefaultSettings {
 	public static final Integer PERSON_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final Integer PROBAND_DUPLICATES_AUTOCOMPLETE_DEFAULT_RESULT_LIMIT = 5;
 	public static final String INQUIRY_SIGNUP_URL = null;
+	public static final int MAX_CRITERIONS = 60;
 	public static final Long JOB_JWT_VALIDITY_SECS = 86400l;
 	static {
 		NEW_ECRF_FIELD_STATUS_NOTIFICATION_QUEUES.add("VALIDATION");
