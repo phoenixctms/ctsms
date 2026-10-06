@@ -4314,9 +4314,7 @@ public final class WebUtil {
 	}
 
 	public static boolean isShowDutyRosterGoogleCalendarUrl() {
-		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL)
-				&& getUserIdentity() != null
-				&& !CommonUtil.isEmptyString(getDutyRosterGoogleCalendarIcsBaseUrl());
+		return getUserIdentity() != null && !CommonUtil.isEmptyString(getDutyRosterGoogleCalendarIcsBaseUrl());
 	}
 
 	public static String getDutyRosterGoogleCalendarIcsUrl() {
