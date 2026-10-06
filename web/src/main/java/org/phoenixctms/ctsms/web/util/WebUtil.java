@@ -60,7 +60,6 @@ import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.*;
 import org.phoenixctms.ctsms.web.model.ApplicationScopeBean;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
-import org.phoenixctms.ctsms.web.jersey.resource.trial.DutyRosterTurnResource;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
@@ -4316,18 +4315,25 @@ public final class WebUtil {
 
 	public static boolean isShowDutyRosterGoogleCalendarUrl() {
 		return Settings.getBoolean(SettingCodes.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_SCHEDULE_SHOW_GOOGLE_CALENDAR_URL)
-				&& getUserIdentity() != null;
+				&& getUserIdentity() != null
+				&& !CommonUtil.isEmptyString(getDutyRosterGoogleCalendarIcsBaseUrl());
 	}
 
 	public static String getDutyRosterGoogleCalendarIcsUrl() {
 		String jwt = issueDutyRosterIcsJwt();
-		if (CommonUtil.isEmptyString(jwt)) {
+		String baseUrl = getDutyRosterGoogleCalendarIcsBaseUrl();
+		if (CommonUtil.isEmptyString(jwt) || CommonUtil.isEmptyString(baseUrl)) {
 			return "";
 		}
-		StringBuilder sb = new StringBuilder(getHttpBaseUrl());
-		sb.append("/").append(REST_API_PATH).append(DutyRosterTurnResource.ICS_PATH);
-		sb.append("?").append(JWT_QUERY_PARAM).append("=").append(urlEncodeUtf8(jwt));
+		StringBuilder sb = new StringBuilder(baseUrl);
+		sb.append(baseUrl.indexOf('?') >= 0 ? '&' : '?');
+		sb.append(JWT_QUERY_PARAM).append("=").append(urlEncodeUtf8(jwt));
 		return sb.toString();
+	}
+
+	private static String getDutyRosterGoogleCalendarIcsBaseUrl() {
+		String baseUrl = Settings.getString(SettingCodes.DUTY_ROSTER_GOOGLE_CALENDAR_ICS_BASE_URL, Bundle.SETTINGS, DefaultSettings.DUTY_ROSTER_GOOGLE_CALENDAR_ICS_BASE_URL);
+		return baseUrl == null ? "" : baseUrl.trim();
 	}
 
 	private static String issueDutyRosterIcsJwt() {
