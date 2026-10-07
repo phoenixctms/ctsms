@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetDetailVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.conversion.IDVOConverter;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
@@ -690,6 +691,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public void handleCategoryChange() {
 		criteriaModel.updateRowCount();
+		DataTable dataTable = (DataTable) WebUtil.findComponentById("criteria_list");
+		if (dataTable != null) {
+			dataTable.setFirst(0);
+		}
 	}
 
 	public void handlePropertyChange(int criterionIndex) {
