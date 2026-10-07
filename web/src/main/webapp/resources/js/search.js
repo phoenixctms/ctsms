@@ -9,6 +9,11 @@ function syncQueryTextEditor() {
 function refreshQueryTextEditor() {
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.refresh();
+		window.setTimeout(function() {
+			if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+				queryTextEditor.instance.refresh();
+			}
+		}, 50);
 	}
 }
 
