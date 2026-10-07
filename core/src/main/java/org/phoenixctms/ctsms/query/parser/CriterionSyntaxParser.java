@@ -81,7 +81,7 @@ public class CriterionSyntaxParser extends CriterionParser {
 			return CriterionText.toJson(this, present);
 		}
 		ArrayList<CriterionInstantVO> tokens = unFoldTokens(present);
-		return getInfixStyleExpressionPrettyString(tokens, getPositionDigits(tokens), false, false);
+		return getInfixStyleExpressionPrettyString(tokens, getPositionDigits(tokens), true, false);
 	}
 
 	public ArrayList<CriterionInVO> parseCriterionText(DBModule module, String text) throws ServiceException {

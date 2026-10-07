@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.phoenixctms.ctsms.compare.VOPositionComparator;
 import org.phoenixctms.ctsms.domain.CriterionProperty;
+import org.phoenixctms.ctsms.domain.CriterionRestriction;
 import org.phoenixctms.ctsms.enumeration.CriterionTie;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -68,9 +71,11 @@ final class CriterionText {
 
 	private static final class Catalog {
 
+		private final CriterionParser parser;
 		private final HashMap<Long, CriterionProperty> properties;
 		private final HashMap<Long, CriterionTie> ties;
 		private final HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions;
+		private final HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionLabels;
 		private final HashMap<CriterionTie, Long> tieIds;
 		private final List<NamedId> propertyNames;
 		private final List<NamedId> tieNames;
@@ -81,6 +86,7 @@ final class CriterionText {
 		private final DBModule module;
 
 		private Catalog(CriterionParser parser, DBModule module) {
+			this.parser = parser;
 			this.module = module;
 			this.properties = parser.getPropertyMap(module);
 			this.ties = parser.getTieMap();
@@ -116,7 +122,8 @@ final class CriterionText {
 					addName(propertyNames, L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey()), property.getId());
 				}
 			}
-			HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionNamesByEnum = parser.getRestrictionNameMap();
+			this.restrictionLabels = parser.getRestrictionNameMap();
+			HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionNamesByEnum = this.restrictionLabels;
 			if (restrictions != null) {
 				Iterator<Map.Entry<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>> restrictionIt = restrictions.entrySet().iterator();
 				while (restrictionIt.hasNext()) {
@@ -160,9 +167,10 @@ final class CriterionText {
 					object.addProperty("tie", tie.name());
 				}
 				if (property != null) {
-					object.addProperty("property", property.getProperty());
+					object.addProperty("property", propertyLabel(property));
 					if (restriction != null) {
-						object.addProperty("restriction", restriction.name());
+						String restrictionLabel = catalog.restrictionLabels == null ? null : catalog.restrictionLabels.get(restriction);
+						object.addProperty("restriction", CommonUtil.isEmptyString(restrictionLabel) ? restriction.name() : restrictionLabel);
 					}
 					appendJsonValue(object, criterion, property, restriction, catalog);
 				}
@@ -174,14 +182,16 @@ final class CriterionText {
 
 	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text) throws ServiceException {
 		Catalog catalog = new Catalog(parser, module);
-		String source = text == null ? "" : text.trim();
-		if (source.length() == 0) {
+		String source = text == null ? "" : text;
+		int content = indexOfContent(source);
+		if (content >= source.length()) {
 			return new ArrayList<CriterionInVO>();
 		}
-		if (source.charAt(0) == '{' || source.charAt(0) == '[') {
-			return parseJson(source, catalog);
+		char first = source.charAt(content);
+		if (first == '{' || first == '[') {
+			return parseJson(stripSlashComments(source.substring(content)), catalog);
 		}
-		return parseExpression(source, catalog);
+		return parseExpression(source.substring(content), catalog);
 	}
 
 	private static void addName(List<NamedId> names, String name, Long id) {
@@ -193,7 +203,7 @@ final class CriterionText {
 			return;
 		}
 		for (int i = 0; i < names.size(); i++) {
-			if (names.get(i).name.equals(token)) {
+			if (names.get(i).name.equals(token) && names.get(i).id.equals(id)) {
 				return;
 			}
 		}
@@ -203,6 +213,15 @@ final class CriterionText {
 	private static void appendJsonValue(JsonObject object, CriterionInstantVO criterion, CriterionProperty property,
 			org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction, Catalog catalog) {
 		if (!hasValue(property, restriction)) {
+			return;
+		}
+		String named = null;
+		try {
+			named = catalog.parser.getResolvedCriterionValueString(criterion, property, false);
+		} catch (ServiceException ignored) {
+		}
+		if (!CommonUtil.isEmptyString(named) && isNamedValueProperty(property)) {
+			object.addProperty(valueField(property.getValueType()), named);
 			return;
 		}
 		String value = CommonUtil.getCriterionValueAsString(criterion, property.getValueType(), catalog.userDateFormat, catalog.userDecimalSeparator);
@@ -237,6 +256,10 @@ final class CriterionText {
 		}
 	}
 
+	private static boolean isNamedValueProperty(CriterionProperty property) {
+		return property != null && (property.getPicker() != null || !CommonUtil.isEmptyString(property.getEntityName()));
+	}
+
 	private static CriterionInVO blankCriterion() {
 		CriterionInVO criterion = new CriterionInVO();
 		criterion.setBooleanValue(false);
@@ -260,11 +283,15 @@ final class CriterionText {
 	}
 
 	private static Long findExact(List<NamedId> names, String token) {
+		return findExact(names, token, null);
+	}
+
+	private static Long findExact(List<NamedId> names, String token, Set<Long> allowedIds) {
 		if (CommonUtil.isEmptyString(token)) {
 			return null;
 		}
 		String trimmed = token.trim();
-		NamedId match = matchLongest(trimmed, 0, names);
+		NamedId match = matchLongest(trimmed, 0, names, allowedIds);
 		if (match != null && match.name.length() == trimmed.length()) {
 			return match.id;
 		}
@@ -281,7 +308,23 @@ final class CriterionText {
 			return true;
 		}
 		char c = text.charAt(index);
-		return Character.isWhitespace(c) || c == '<' || c == '(' || c == ')' || c == '>';
+		return Character.isWhitespace(c) || c == '<' || c == '(' || c == ')' || c == '>' || c == '=' || c == '!' || c == '#';
+	}
+
+	private static boolean isOperatorName(String name) {
+		if (name == null || name.length() == 0) {
+			return false;
+		}
+		char last = name.charAt(name.length() - 1);
+		return last == '=' || last == '<' || last == '>' || last == '!';
+	}
+
+	private static boolean isValueStart(String text, int index) {
+		if (index >= text.length()) {
+			return true;
+		}
+		char c = text.charAt(index);
+		return Character.isLetterOrDigit(c) || c == '"' || c == '-' || c == '.' || c == '+';
 	}
 
 	private static String jsonString(JsonElement element) {
@@ -292,14 +335,40 @@ final class CriterionText {
 	}
 
 	private static NamedId matchLongest(String text, int offset, List<NamedId> names) {
+		return matchLongest(text, offset, names, null);
+	}
+
+	private static NamedId matchLongest(String text, int offset, List<NamedId> names, Set<Long> allowedIds) {
 		for (int i = 0; i < names.size(); i++) {
 			NamedId candidate = names.get(i);
+			if (allowedIds != null && !allowedIds.contains(candidate.id)) {
+				continue;
+			}
 			int end = offset + candidate.name.length();
-			if (end <= text.length() && text.regionMatches(true, offset, candidate.name, 0, candidate.name.length()) && isBoundary(text, end)) {
+			if (end <= text.length() && text.regionMatches(true, offset, candidate.name, 0, candidate.name.length())
+					&& (isBoundary(text, end) || (isOperatorName(candidate.name) && isValueStart(text, end)))) {
 				return candidate;
 			}
 		}
 		return null;
+	}
+
+	private static Set<Long> validRestrictionIds(CriterionProperty property) {
+		if (property == null || property.getValidRestrictions() == null || property.getValidRestrictions().isEmpty()) {
+			return null;
+		}
+		HashSet<Long> ids = new HashSet<Long>();
+		Iterator it = property.getValidRestrictions().iterator();
+		while (it.hasNext()) {
+			Object item = it.next();
+			if (item instanceof CriterionRestriction) {
+				CriterionRestriction restriction = (CriterionRestriction) item;
+				if (restriction.getId() != null) {
+					ids.add(restriction.getId());
+				}
+			}
+		}
+		return ids.isEmpty() ? null : ids;
 	}
 
 	private static ArrayList<CriterionInVO> parseExpression(String text, Catalog catalog) throws ServiceException {
@@ -460,7 +529,8 @@ final class CriterionText {
 		}
 		if (object.has("restrictionId") || object.has("restriction")) {
 			JsonElement restrictionElement = object.has("restriction") ? object.get("restriction") : object.get("restrictionId");
-			criterion.setRestrictionId(resolveRef(restrictionElement, catalog.restrictionNames, catalog.restrictions.keySet(),
+			Set<Long> allowed = validRestrictionIds(propertyOf(criterion, catalog.properties));
+			criterion.setRestrictionId(resolveRef(restrictionElement, catalog.restrictionNames, allowed != null ? allowed : catalog.restrictions.keySet(),
 					ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_RESTRICTION, "restriction", "name"));
 		}
 		CriterionProperty property = propertyOf(criterion, catalog.properties);
@@ -482,7 +552,7 @@ final class CriterionText {
 		while (i < text.length() && (text.charAt(i) == ' ' || text.charAt(i) == '\t')) {
 			i++;
 		}
-		NamedId restriction = matchLongest(text, i, catalog.restrictionNames);
+		NamedId restriction = matchLongest(text, i, catalog.restrictionNames, validRestrictionIds(propertyEntity));
 		if (restriction == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_RESTRICTION, snippet(text, i));
 		}
@@ -498,7 +568,7 @@ final class CriterionText {
 			next = text.length();
 		} else {
 			int end = i;
-			while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r') {
+			while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r' && text.charAt(end) != '#') {
 				if (text.charAt(end) == ')' && (end == i || Character.isWhitespace(text.charAt(end - 1)))) {
 					break;
 				}
@@ -596,7 +666,7 @@ final class CriterionText {
 				throw L10nUtil.initServiceException(unknownCode, id.toString());
 			}
 			String token = primitive.getAsString();
-			Long id = findExact(names, token);
+			Long id = findExact(names, token, knownIds);
 			if (id == null) {
 				throw L10nUtil.initServiceException(unknownCode, token);
 			}
@@ -612,7 +682,7 @@ final class CriterionText {
 			}
 			for (int i = 0; i < fields.length; i++) {
 				if (object.has(fields[i]) && object.get(fields[i]).isJsonPrimitive()) {
-					Long id = findExact(names, object.get(fields[i]).getAsString());
+					Long id = findExact(names, object.get(fields[i]).getAsString(), knownIds);
 					if (id != null) {
 						return id;
 					}
@@ -674,19 +744,26 @@ final class CriterionText {
 		if (CommonUtil.isEmptyString(value)) {
 			return;
 		}
+		String trimmed = value.trim();
+		if (isNamedValueProperty(property)) {
+			if (!catalog.parser.applyNamedCriterionValue(criterion, property, trimmed)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), trimmed);
+			}
+			return;
+		}
 		CriterionValueType type = property.getValueType();
 		try {
-			CommonUtil.setCriterionValueFromString(criterion, type, value.trim(), catalog.userDateFormat, catalog.userDecimalSeparator);
+			CommonUtil.setCriterionValueFromString(criterion, type, trimmed, catalog.userDateFormat, catalog.userDecimalSeparator);
 		} catch (RuntimeException first) {
-			if (!setAlternateValue(criterion, type, value.trim())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), value.trim());
+			if (!setAlternateValue(criterion, type, trimmed)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), trimmed);
 			}
 			return;
 		}
 		if ((CriterionValueType.FLOAT.equals(type) || CriterionValueType.FLOAT_HASH.equals(type)) && criterion.getFloatValue() == null) {
-			Float dotted = CommonUtil.parseFloat(value.trim(), ".");
+			Float dotted = CommonUtil.parseFloat(trimmed, ".");
 			if (dotted == null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), value.trim());
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), trimmed);
 			}
 			criterion.setFloatValue(dotted);
 		}
@@ -746,11 +823,47 @@ final class CriterionText {
 				|| object.has("stringValue") || object.has("longValue") || object.has("booleanValue") || object.has("floatValue");
 	}
 
+	private static int indexOfContent(String text) {
+		int i = 0;
+		int n = text.length();
+		while (i < n) {
+			char c = text.charAt(i);
+			if (Character.isWhitespace(c)) {
+				i++;
+				continue;
+			}
+			if (c == '#' || (c == '/' && i + 1 < n && text.charAt(i + 1) == '/')) {
+				i = skipLine(text, i);
+				continue;
+			}
+			break;
+		}
+		return i;
+	}
+
+	private static int skipLine(String text, int i) {
+		int n = text.length();
+		while (i < n && text.charAt(i) != '\n' && text.charAt(i) != '\r') {
+			i++;
+		}
+		if (i < n && text.charAt(i) == '\r') {
+			i++;
+		}
+		if (i < n && text.charAt(i) == '\n') {
+			i++;
+		}
+		return i;
+	}
+
 	private static int skipSeparators(String text, int i) {
 		int n = text.length();
 		while (i < n) {
 			if (Character.isWhitespace(text.charAt(i))) {
 				i++;
+				continue;
+			}
+			if (text.charAt(i) == '#') {
+				i = skipLine(text, i);
 				continue;
 			}
 			int j = i;
@@ -764,6 +877,37 @@ final class CriterionText {
 			break;
 		}
 		return i;
+	}
+
+	private static String stripSlashComments(String text) {
+		StringBuilder out = new StringBuilder(text.length());
+		boolean inString = false;
+		boolean escape = false;
+		for (int i = 0; i < text.length(); i++) {
+			char c = text.charAt(i);
+			if (inString) {
+				out.append(c);
+				if (escape) {
+					escape = false;
+				} else if (c == '\\') {
+					escape = true;
+				} else if (c == '"') {
+					inString = false;
+				}
+				continue;
+			}
+			if (c == '"') {
+				inString = true;
+				out.append(c);
+				continue;
+			}
+			if (c == '/' && i + 1 < text.length() && text.charAt(i + 1) == '/') {
+				i = skipLine(text, i) - 1;
+				continue;
+			}
+			out.append(c);
+		}
+		return out.toString();
 	}
 
 	private static String snippet(String text, int offset) {
