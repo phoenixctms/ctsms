@@ -149,6 +149,7 @@ table.ctsms-criterion-position tr:nth-child(2) {
 }
 
 .ctsms-query-text-format-column {
+	width: 1%;
 	white-space: nowrap;
 	text-align: right;
 	vertical-align: middle;
@@ -157,6 +158,20 @@ table.ctsms-criterion-position tr:nth-child(2) {
 
 .ctsms-query-text-format-column label {
 	margin-right: 4px;
+	vertical-align: middle;
+}
+
+.ctsms-query-text-format-column .ui-selectonemenu {
+	display: inline-block;
+	width: auto !important;
+	min-width: 8.5em;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.ctsms-query-text-format-column .ui-selectonemenu-label {
+	width: auto !important;
+	padding-right: 1.6em;
 }
 
 .ctsms-query-text-apply {

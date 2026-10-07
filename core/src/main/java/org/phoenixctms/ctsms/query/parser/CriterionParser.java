@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.query.parser;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -56,6 +57,7 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.OmittedFields;
+import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionInstantVO;
 
 public abstract class CriterionParser extends ExpressionParser<CriterionInstantVO> {
@@ -357,6 +359,219 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			}
 		}
 		return PRETTY_PRINT_EMPTY_VALUE;
+	}
+
+	String getResolvedCriterionValueString(CriterionInstantVO token, CriterionProperty property, boolean obfuscateCriterions) throws ServiceException {
+		if (property == null || token == null) {
+			return PRETTY_PRINT_EMPTY_VALUE;
+		}
+		if (property.getPicker() != null) {
+			return getPickerCriterionValueString(property.getPicker(), token.getLongValue(), obfuscateCriterions);
+		}
+		if (!CommonUtil.isEmptyString(property.getEntityName())) {
+			String getNameMethodName = property.getGetNameMethodName();
+			if (CommonUtil.isEmptyString(getNameMethodName)) {
+				getNameMethodName = DEFAULT_GET_NAME_METHOD_NAME;
+			}
+			if (CoreUtil.isEnumerationClass(property.getEntityName())) {
+				return getEnumerationCriterionValueString(property.getEntityName(), token.getStringValue(), getNameMethodName);
+			}
+			return getValueObjectCriterionValueString(property.getEntityName(), token.getLongValue(), getNameMethodName);
+		}
+		return getCriterionValueString(token, property);
+	}
+
+	boolean applyNamedCriterionValue(CriterionInVO criterion, CriterionProperty property, String value) throws ServiceException {
+		if (criterion == null || property == null || CommonUtil.isEmptyString(value)) {
+			return false;
+		}
+		String trimmed = value.trim();
+		if (property.getPicker() != null) {
+			Long id = findPickerId(property.getPicker(), trimmed);
+			if (id != null) {
+				criterion.setLongValue(id);
+				return true;
+			}
+			return false;
+		}
+		if (CommonUtil.isEmptyString(property.getEntityName())) {
+			return false;
+		}
+		String getNameMethodName = property.getGetNameMethodName();
+		if (CommonUtil.isEmptyString(getNameMethodName)) {
+			getNameMethodName = DEFAULT_GET_NAME_METHOD_NAME;
+		}
+		if (CoreUtil.isEnumerationClass(property.getEntityName())) {
+			String enumValue = findEnumerationValue(property.getEntityName(), trimmed, getNameMethodName);
+			if (enumValue != null) {
+				criterion.setStringValue(enumValue);
+				return true;
+			}
+			return false;
+		}
+		Long id = findEntityId(property.getEntityName(), trimmed, getNameMethodName);
+		if (id != null) {
+			criterion.setLongValue(id);
+			return true;
+		}
+		return false;
+	}
+
+	private Long findPickerId(DBModule pickerModule, String value) throws ServiceException {
+		if (value.matches("-?\\d+")) {
+			try {
+				Long id = Long.valueOf(value);
+				getPickerCriterionValueString(pickerModule, id, false);
+				return id;
+			} catch (RuntimeException | ServiceException ignored) {
+			}
+		}
+		Collection entities = loadAll(daoForPicker(pickerModule));
+		if (entities != null) {
+			Iterator it = entities.iterator();
+			while (it.hasNext()) {
+				Long id = entityId(it.next());
+				if (id == null) {
+					continue;
+				}
+				try {
+					String name = getPickerCriterionValueString(pickerModule, id, false);
+					if (value.equalsIgnoreCase(name)) {
+						return id;
+					}
+				} catch (ServiceException ignored) {
+				}
+			}
+		}
+		return null;
+	}
+
+	private Long findEntityId(String entityName, String value, String getNameMethodName) throws ServiceException {
+		if (value.matches("-?\\d+")) {
+			try {
+				Long id = Long.valueOf(value);
+				getValueObjectCriterionValueString(entityName, id, getNameMethodName);
+				return id;
+			} catch (RuntimeException | ServiceException ignored) {
+			}
+		}
+		try {
+			Collection entities = loadAll(getDao(entityName));
+			if (entities != null) {
+				Iterator it = entities.iterator();
+				while (it.hasNext()) {
+					Long id = entityId(it.next());
+					if (id == null) {
+						continue;
+					}
+					try {
+						String name = getValueObjectCriterionValueString(entityName, id, getNameMethodName);
+						if (value.equalsIgnoreCase(name)) {
+							return id;
+						}
+					} catch (ServiceException ignored) {
+					}
+				}
+			}
+		} catch (ServiceException e) {
+			throw e;
+		} catch (Exception ignored) {
+		}
+		return null;
+	}
+
+	private String findEnumerationValue(String enumName, String value, String getNameMethodName) {
+		try {
+			CoreUtil.getEnumerationItem(enumName, value);
+			return value;
+		} catch (Exception ignored) {
+		}
+		try {
+			Object[] items = (Object[]) Class.forName(CoreUtil.getEnumerationClassName(enumName)).getMethod("values").invoke(null);
+			if (items != null) {
+				for (int i = 0; i < items.length; i++) {
+					String constant = enumerationConstant(items[i]);
+					if (constant == null) {
+						continue;
+					}
+					if (value.equalsIgnoreCase(constant)) {
+						return constant;
+					}
+					try {
+						String name = getEnumerationCriterionValueString(enumName, constant, getNameMethodName);
+						if (value.equalsIgnoreCase(name)) {
+							return constant;
+						}
+					} catch (ServiceException ignored) {
+					}
+				}
+			}
+		} catch (Exception ignored) {
+		}
+		return null;
+	}
+
+	private static String enumerationConstant(Object item) {
+		if (item == null) {
+			return null;
+		}
+		try {
+			return (String) item.getClass().getMethod("toString").invoke(item);
+		} catch (Exception ignored) {
+		}
+		return item.toString();
+	}
+
+	private Object daoForPicker(DBModule pickerModule) {
+		if (pickerModule == null) {
+			return null;
+		}
+		switch (pickerModule) {
+			case INVENTORY_DB:
+				return inventoryDao;
+			case STAFF_DB:
+				return staffDao;
+			case COURSE_DB:
+				return courseDao;
+			case TRIAL_DB:
+				return trialDao;
+			case PROBAND_DB:
+				return probandDao;
+			case INPUT_FIELD_DB:
+				return inputFieldDao;
+			case MASS_MAIL_DB:
+				return massMailDao;
+			case USER_DB:
+				return userDao;
+			default:
+				return null;
+		}
+	}
+
+	private static Collection loadAll(Object dao) {
+		if (dao == null) {
+			return null;
+		}
+		try {
+			return (Collection) dao.getClass().getMethod("loadAllSorted", int.class, int.class).invoke(dao, 0, 0);
+		} catch (Exception ignored) {
+		}
+		try {
+			return (Collection) dao.getClass().getMethod("loadAll").invoke(dao);
+		} catch (Exception ignored) {
+		}
+		return null;
+	}
+
+	private static Long entityId(Object entity) {
+		if (entity == null) {
+			return null;
+		}
+		try {
+			return (Long) entity.getClass().getMethod("getId").invoke(entity);
+		} catch (Exception ignored) {
+		}
+		return null;
 	}
 
 	protected int getPositionDigits(ArrayList<CriterionInstantVO> tokens) {
@@ -743,31 +958,15 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 				String criterionValue;
 				if (obfuscateCriterions && OmittedFields.isOmitted(property.getProperty())) {
 					criterionValue = CoreUtil.OBFUSCATED_STRING;
-				} else {
-					if (resolveCriterionValues) {
-						try {
-							if (property.getPicker() != null) {
-								criterionValue = getPickerCriterionValueString(property.getPicker(), token.getLongValue(), obfuscateCriterions);
-							} else if (!CommonUtil.isEmptyString(property.getEntityName())) {
-								String getNameMethodName = property.getGetNameMethodName();
-								if (CommonUtil.isEmptyString(getNameMethodName) && !CommonUtil.isEmptyString(property.getEntityName())) {
-									getNameMethodName = DEFAULT_GET_NAME_METHOD_NAME;
-								}
-								if (CoreUtil.isEnumerationClass(property.getEntityName())) {
-									criterionValue = getEnumerationCriterionValueString(property.getEntityName(), token.getStringValue(), getNameMethodName);
-								} else {
-									criterionValue = getValueObjectCriterionValueString(property.getEntityName(), token.getLongValue(), getNameMethodName);
-								}
-							} else {
-								criterionValue = getCriterionValueString(token, property);
-							}
-						} catch (ServiceException e) {
-							e.setData(token.getPosition());
-							throw e;
-						}
-					} else {
-						criterionValue = getCriterionValueString(token, property);
+				} else if (resolveCriterionValues) {
+					try {
+						criterionValue = getResolvedCriterionValueString(token, property, obfuscateCriterions);
+					} catch (ServiceException e) {
+						e.setData(token.getPosition());
+						throw e;
 					}
+				} else {
+					criterionValue = getCriterionValueString(token, property);
 				}
 				result.append(criterionValue);
 			}
