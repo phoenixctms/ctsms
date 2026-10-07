@@ -132,17 +132,47 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	width: 100%;
 }
 
-.ctsms-query-text-hint {
-	display: block;
+.ctsms-query-text-panel {
+	max-height: calc(100vh - 220px);
+	overflow: auto;
+}
+
+.ctsms-query-text-toolbar {
+	width: 100%;
+}
+
+.ctsms-query-text-desc-column {
+	width: 100%;
+	vertical-align: middle;
 	white-space: normal;
-	padding: 4px 0 8px 0;
-	max-width: 920px;
+	padding: 4px 8px 8px 0;
+}
+
+.ctsms-query-text-format-column {
+	white-space: nowrap;
+	text-align: right;
+	vertical-align: middle;
+	padding-bottom: 8px;
+}
+
+.ctsms-query-text-format-column label {
+	margin-right: 4px;
+}
+
+.ctsms-query-text-apply {
+	text-align: right;
+	padding-top: 4px;
 }
 
 .ctsms-query-text-panel .CodeMirror {
-	height: 360px;
+	height: min(360px, calc(100vh - 340px));
+	min-height: 180px;
 	border: 1px solid #bdbdbd;
 	font-size: 13px;
+}
+
+.ctsms-query-text-panel .CodeMirror-scroll {
+	height: 100% !important;
 }
 
 .ctsms-intermediatesets-chart {
