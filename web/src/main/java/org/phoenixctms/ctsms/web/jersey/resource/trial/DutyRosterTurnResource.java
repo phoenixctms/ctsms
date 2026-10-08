@@ -68,8 +68,11 @@ public class DutyRosterTurnResource {
 			@QueryParam("from") String from,
 			@QueryParam("to") String to,
 			@QueryParam("sort") Boolean sort) throws Exception {
+		if (!WebUtil.isDutyRosterIcsRailEnabled()) {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
 		Collection<DutyRosterTurnOutVO> dutyRosterTurns = loadDutyRosterInterval(departmentId, statusId, staffId, unassigned, trialId, calendar, from, to, sort, true);
-		String ics = DutyRosterTurnIcsWriter.toIcalendar(dutyRosterTurns, WebUtil.getHttpHost());
+		String ics = DutyRosterTurnIcsWriter.toIcalendar(dutyRosterTurns, WebUtil.getHttpHost(), DutyRosterTurnIcsWriter.calendarName(auth));
 		ResponseBuilder response = Response.ok(ics, TEXT_CALENDAR + ";charset=UTF-8");
 		response.header("Content-Disposition", "inline; filename=\"" + ICS_FILENAME + "\"");
 		return response.build();

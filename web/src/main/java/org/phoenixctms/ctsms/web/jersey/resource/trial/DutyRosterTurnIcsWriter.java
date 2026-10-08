@@ -4,13 +4,21 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.TimeZone;
 
+import org.phoenixctms.ctsms.domain.Staff;
+import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
+import org.phoenixctms.ctsms.web.util.MessageCodes;
+import org.phoenixctms.ctsms.web.util.Messages;
+import org.phoenixctms.ctsms.web.util.WebUtil;
 
 final class DutyRosterTurnIcsWriter {
 
@@ -18,7 +26,15 @@ final class DutyRosterTurnIcsWriter {
 	private static final String TITLE_SEPARATOR = " - ";
 	private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
-	static String toIcalendar(Collection<DutyRosterTurnOutVO> dutyRosterTurns, String host) {
+	static String calendarName(AuthenticationVO auth) {
+		StringBuilder sb = new StringBuilder();
+		appendPart(sb, org.phoenixctms.ctsms.util.Settings.getInstanceName());
+		appendPart(sb, dutyRosterLabel());
+		appendPart(sb, identityName(auth));
+		return sb.toString();
+	}
+
+	static String toIcalendar(Collection<DutyRosterTurnOutVO> dutyRosterTurns, String host, String calendarName) {
 		StringBuilder sb = new StringBuilder();
 		SimpleDateFormat utc = newUtcFormat();
 		Date now = new Date();
@@ -27,7 +43,7 @@ final class DutyRosterTurnIcsWriter {
 		sb.append("PRODID:-//Phoenix CTMS//Duty Roster//EN").append(CRLF);
 		sb.append("CALSCALE:GREGORIAN").append(CRLF);
 		sb.append("METHOD:PUBLISH").append(CRLF);
-		sb.append("X-WR-CALNAME:Phoenix Duty Roster").append(CRLF);
+		appendTextLine(sb, "X-WR-CALNAME", calendarName);
 		if (dutyRosterTurns != null) {
 			Iterator<DutyRosterTurnOutVO> it = dutyRosterTurns.iterator();
 			while (it.hasNext()) {
@@ -73,16 +89,15 @@ final class DutyRosterTurnIcsWriter {
 		if (!CommonUtil.isEmptyString(turn.getTitle())) {
 			appendSeparated(sb, turn.getTitle());
 		}
-		StaffOutVO staff = turn.getStaff();
-		if (staff != null) {
-			appendSeparated(sb, CommonUtil.staffOutVOToString(staff));
+		if (sb.length() == 0) {
+			return turn.getCalendar();
 		}
 		return sb.toString();
 	}
 
 	private static String getDescription(DutyRosterTurnOutVO turn) {
 		StringBuilder sb = new StringBuilder();
-		if (!CommonUtil.isEmptyString(turn.getCalendar())) {
+		if (hasEventTitle(turn) && !CommonUtil.isEmptyString(turn.getCalendar())) {
 			sb.append(turn.getCalendar());
 		}
 		if (!CommonUtil.isEmptyString(turn.getComment())) {
@@ -92,6 +107,58 @@ final class DutyRosterTurnIcsWriter {
 			sb.append(turn.getComment());
 		}
 		return sb.toString();
+	}
+
+	private static boolean hasEventTitle(DutyRosterTurnOutVO turn) {
+		if (turn.getTrial() != null) {
+			return true;
+		}
+		VisitScheduleItemOutVO visitScheduleItem = turn.getVisitScheduleItem();
+		if (visitScheduleItem != null && !CommonUtil.isEmptyString(visitScheduleItem.getName())) {
+			return true;
+		}
+		return !CommonUtil.isEmptyString(turn.getTitle());
+	}
+
+	private static void appendPart(StringBuilder sb, String value) {
+		if (CommonUtil.isEmptyString(value)) {
+			return;
+		}
+		if (sb.length() > 0) {
+			sb.append(' ');
+		}
+		sb.append(value.trim());
+	}
+
+	private static String dutyRosterLabel() {
+		Locale locale = null;
+		try {
+			locale = CoreUtil.getUserContext().getLocale();
+		} catch (Exception e) {
+		}
+		try {
+			return CommonUtil.getString(MessageCodes.DUTY_ROSTER_SCHEDULE_MENU_ITEM_LABEL, CommonUtil.getBundle(Messages.MESSAGE_BUNDLE_DEFAULT, locale), "Duty Roster");
+		} catch (Exception e) {
+			return "Duty Roster";
+		}
+	}
+
+	private static String identityName(AuthenticationVO auth) {
+		if (auth == null) {
+			return "";
+		}
+		User user = CoreUtil.getUser();
+		Staff identity = user == null ? null : user.getIdentity();
+		if (identity == null) {
+			return "";
+		}
+		try {
+			StaffOutVO staff = WebUtil.getServiceLocator().getStaffService().getStaff(auth, identity.getId(), null, null, null);
+			String name = CommonUtil.staffOutVOToString(staff);
+			return name == null ? "" : name;
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	private static void appendSeparated(StringBuilder sb, String value) {
