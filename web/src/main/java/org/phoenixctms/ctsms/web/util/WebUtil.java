@@ -4313,8 +4313,12 @@ public final class WebUtil {
 		return null;
 	}
 
+	public static boolean isDutyRosterIcsRailEnabled() {
+		return !CommonUtil.isEmptyString(getDutyRosterGoogleCalendarIcsBaseUrl());
+	}
+
 	public static boolean isShowDutyRosterGoogleCalendarUrl() {
-		return getUserIdentity() != null && !CommonUtil.isEmptyString(getDutyRosterGoogleCalendarIcsBaseUrl());
+		return getUserIdentity() != null && isDutyRosterIcsRailEnabled();
 	}
 
 	public static String getDutyRosterGoogleCalendarIcsUrl() {
