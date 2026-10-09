@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:head>
 	<title>search input</title>
 </h:head>
@@ -30,6 +31,11 @@
 			actionListener="#{searchBean.dropCriterion()}"
 			oncomplete="handleCriterionDropped(xhr, status, args)"
 			update=":search_form:tabView:criterions" />
+		<p:remoteCommand name="loadQueryText"
+			process="@this,:search_form:tabView:criteria_input"
+			actionListener="#{searchBean.loadQueryText}"
+			update=":search_form:tabView:query_text_panel"
+			oncomplete="refreshQueryTextEditor()" />
 		<h:panelGrid columns="2" cellpadding="0"
 			styleClass="ctsms-search-content-panelgrid ctsms-content-panelgrid-maxheight"
 			columnClasses="ctsms-criteria-list-column,ctsms-criteria-input-column">
@@ -195,6 +201,54 @@
 									</p:tooltip>
 								</h:panelGroup>
 							</h:panelGrid>
+						</h:panelGrid>
+					</p:panel>
+				</p:tab>
+				<p:tab id="searchQueryText" disabled="false"
+					titleStyleClass="ctsms-tabtitle"
+					title="#{labels.search_query_text_tab_label}">
+					<p:panel id="query_text_panel" styleClass="ctsms-query-text-panel">
+						<f:facet name="header">
+							<h:outputText value="#{searchBean.title}" />
+						</f:facet>
+						<h:panelGrid columns="1" cellpadding="0"
+							styleClass="ctsms-criteria-input-panelgrid">
+							<h:panelGrid columns="2" cellpadding="0"
+								styleClass="ctsms-query-text-toolbar"
+								columnClasses="ctsms-query-text-desc-column,ctsms-query-text-format-column">
+								<h:outputText value="#{labels.search_query_text_hint}" />
+								<h:panelGroup>
+									<h:outputLabel for="query_text_format"
+										value="#{labels.search_query_text_format_label}" />
+									<p:selectOneMenu id="query_text_format"
+										value="#{searchBean.queryTextFormat}">
+										<f:selectItem itemValue="EXPRESSION"
+											itemLabel="#{labels.search_query_text_format_expression}" />
+										<f:selectItem itemValue="JSON"
+											itemLabel="#{labels.search_query_text_format_json}" />
+										<p:ajax process="@this,:search_form:tabView:criteria_input"
+											listener="#{searchBean.loadQueryText}"
+											update=":search_form:tabView:query_text"
+											oncomplete="refreshQueryTextEditor()" />
+									</p:selectOneMenu>
+								</h:panelGroup>
+							</h:panelGrid>
+							<pe:codeMirror id="query_text" widgetVar="queryTextEditor"
+								mode="#{searchBean.queryTextCodeMirrorMode}" theme="eclipse"
+								value="#{searchBean.queryText}"
+								label="#{labels.search_query_text_tab_label}"
+								required="false" lineWrapping="true" lineNumbers="true"
+								style="width:100%;"
+								styleClass="ctsms-query-text-editor" />
+							<h:panelGroup layout="block" styleClass="ctsms-query-text-apply">
+								<p:commandButton id="apply_query_text"
+									value="#{labels.search_query_text_apply_button_label}"
+									process="@this,:search_form:tabView:query_text"
+									actionListener="#{searchBean.applyQueryText}"
+									update=":search_form:tabView:criteria_input,:search_form:tabView:query_text_panel,:search_form:messages"
+									onclick="syncQueryTextEditor()"
+									oncomplete="refreshQueryTextEditor()" />
+							</h:panelGroup>
 						</h:panelGrid>
 					</p:panel>
 				</p:tab>

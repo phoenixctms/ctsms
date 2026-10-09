@@ -1,5 +1,22 @@
 var oldSearchTabIndex = 0;
 
+function syncQueryTextEditor() {
+	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+		queryTextEditor.instance.save();
+	}
+}
+
+function refreshQueryTextEditor() {
+	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+		queryTextEditor.instance.refresh();
+		window.setTimeout(function() {
+			if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+				queryTextEditor.instance.refresh();
+			}
+		}, 50);
+	}
+}
+
 function handleSearchTabChange(index) {
 
 	_deleteIntermediateSetsChartTooltip();
@@ -22,14 +39,18 @@ function handleSearchTabChange(index) {
 		break;
 
 	case 1:
-		changeIntermediateSets();
+		loadQueryText();
 		break;
 
 	case 2:
+		changeIntermediateSets();
+		break;
+
+	case 3:
 		changeCriteriaJob();
 		break;
 		
-	case 3:
+	case 4:
 		changeCriteriaJournalEntry();
 		break;		
 
@@ -79,7 +100,7 @@ function handleCriteriaChanged(xhr, status, args) {
 		if (!args[AJAX_ROOT_ENTITY_CREATED]) {
 			searchTabView.select(0);
 		}
-		enableTabs(searchTabView, 2, args[AJAX_ROOT_ENTITY_CREATED]);
+		enableTabs(searchTabView, 3, args[AJAX_ROOT_ENTITY_CREATED]);
 		handleUpdateCriteriaTabTitles(xhr, status, args);
 		if (!_testFlag(args, AJAX_PICKER)) {
 			document.title = decodeBase64(args[AJAX_WINDOW_TITLE_BASE64]);
@@ -95,12 +116,12 @@ function handleUpdateCriteriaTabTitles(xhr, status, args) {
 	}
 
 	if (_testPropertyExists(args, AJAX_CRITERIA_JOB_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_CRITERIA_JOB_COUNT)) {
-		searchTabView.setTabTitle(2, decodeBase64(args[AJAX_CRITERIA_JOB_TAB_TITLE_BASE64]));
-		searchTabView.emphasizeTab(2, args[AJAX_CRITERIA_JOB_COUNT] == 0);
+		searchTabView.setTabTitle(3, decodeBase64(args[AJAX_CRITERIA_JOB_TAB_TITLE_BASE64]));
+		searchTabView.emphasizeTab(3, args[AJAX_CRITERIA_JOB_COUNT] == 0);
 	}
 	if (_testPropertyExists(args, AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64) && _testPropertyExists(args, AJAX_CRITERIA_JOURNAL_ENTRY_COUNT)) {
-		searchTabView.setTabTitle(3, decodeBase64(args[AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64]));
-		searchTabView.emphasizeTab(3, args[AJAX_CRITERIA_JOURNAL_ENTRY_COUNT] == 0);
+		searchTabView.setTabTitle(4, decodeBase64(args[AJAX_CRITERIA_JOURNAL_TAB_TITLE_BASE64]));
+		searchTabView.emphasizeTab(4, args[AJAX_CRITERIA_JOURNAL_ENTRY_COUNT] == 0);
 	}
 
 }

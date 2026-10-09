@@ -41,6 +41,7 @@ import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetDetailVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
+import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.conversion.IDVOConverter;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
@@ -173,6 +174,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private int selectionItemsNameClipMaxLength;
 	private String[] criterionIndexes;
 	private String deferredDeleteReason;
+	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
+	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
+	private String queryText;
+	private String queryTextFormat;
 
 	protected SearchBeanBase() {
 		super();
@@ -185,6 +190,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		for (int i = 0; i < maxCriterions; i++) {
 			criterionIndexes[i] = Integer.toString(i);
 		}
+		queryText = "";
+		queryTextFormat = QUERY_TEXT_FORMAT_EXPRESSION;
 	}
 
 	@Override
@@ -684,6 +691,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public void handleCategoryChange() {
 		criteriaModel.updateRowCount();
+		DataTable dataTable = (DataTable) WebUtil.findComponentById("criteria_list");
+		if (dataTable != null) {
+			dataTable.setFirst(0);
+		}
 	}
 
 	public void handlePropertyChange(int criterionIndex) {
@@ -895,6 +906,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
+		refreshQueryText();
 	}
 
 	protected abstract void initSpecificSets();
@@ -1210,5 +1222,73 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			requestContext.addCallbackParam(JSValues.AJAX_CRITERION_ROW_COLORS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(getCriterionRowColor()), false));
 			requestContext.addCallbackParam(JSValues.AJAX_INTERMEDIATE_SETS_BASE64.toString(), JsUtil.encodeBase64(JsUtil.voToJson(intermediateSets), false));
 		}
+	}
+
+	public void applyQueryText() {
+		try {
+			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText);
+			criterionsIn.clear();
+			if (parsed != null) {
+				criterionsIn.addAll(parsed);
+			}
+			if (criterionsIn.isEmpty()) {
+				CriterionInVO criterionIn = new CriterionInVO();
+				initCriterionDefaultValues(criterionIn);
+				criterionsIn.add(criterionIn);
+			}
+			normalizeCriterionPositions(criterionsIn);
+			for (int i = 0; i < criterionsIn.size(); i++) {
+				sanitizeCriterionVals(criterionsIn.get(i), i);
+			}
+			updateInstantCriteria(true);
+			refreshQueryText();
+		} catch (ServiceException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+
+	public String getQueryText() {
+		return queryText;
+	}
+
+	public String getQueryTextCodeMirrorMode() {
+		return QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat) ? "{name: 'javascript', json: true}" : "javascript";
+	}
+
+	public String getQueryTextFormat() {
+		return queryTextFormat;
+	}
+
+	public void loadQueryText() {
+		refreshQueryText();
+	}
+
+	private void refreshQueryText() {
+		if (!QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)) {
+			queryTextFormat = QUERY_TEXT_FORMAT_EXPRESSION;
+		}
+		try {
+			String text = WebUtil.getServiceLocator().getSearchService().formatCriterionText(WebUtil.getAuthentication(), getDBModule(), getNewCriterions(),
+					QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat));
+			queryText = text == null ? "" : text;
+		} catch (ServiceException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+
+	public void setQueryText(String queryText) {
+		this.queryText = queryText;
+	}
+
+	public void setQueryTextFormat(String queryTextFormat) {
+		this.queryTextFormat = queryTextFormat;
 	}
 }

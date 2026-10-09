@@ -132,6 +132,64 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	width: 100%;
 }
 
+.ctsms-query-text-panel {
+	max-height: calc(100vh - 220px);
+	overflow: auto;
+}
+
+.ctsms-query-text-toolbar {
+	width: 100%;
+}
+
+.ctsms-query-text-desc-column {
+	width: 100%;
+	vertical-align: middle;
+	white-space: normal;
+	padding: 4px 8px 8px 0;
+}
+
+.ctsms-query-text-format-column {
+	width: 1%;
+	white-space: nowrap;
+	text-align: right;
+	vertical-align: middle;
+	padding-bottom: 8px;
+}
+
+.ctsms-query-text-format-column label {
+	margin-right: 4px;
+	vertical-align: middle;
+}
+
+.ctsms-query-text-format-column .ui-selectonemenu {
+	display: inline-block;
+	width: auto !important;
+	min-width: 8.5em;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.ctsms-query-text-format-column .ui-selectonemenu-label {
+	width: auto !important;
+	padding-right: 1.6em;
+}
+
+.ctsms-query-text-apply {
+	text-align: right;
+	padding-top: 4px;
+}
+
+.ctsms-query-text-panel .CodeMirror {
+	height: min(360px, calc(100vh - 340px));
+	min-height: 180px;
+	border: 1px solid #bdbdbd;
+	font-size: 13px;
+}
+
+.ctsms-query-text-panel .CodeMirror-scroll {
+	height: 100% !important;
+}
+
 .ctsms-intermediatesets-chart {
 	width: 100%;
 	height: 100%;
