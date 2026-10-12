@@ -20,13 +20,9 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
-import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.ServiceExceptionCodes;
-import org.phoenixctms.ctsms.util.SettingCodes;
-import org.phoenixctms.ctsms.util.Settings;
-import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionInstantVO;
 
@@ -82,10 +78,10 @@ final class CriterionText {
 		private final List<NamedId> restrictionNames;
 		private final String userDateFormat;
 		private final String userDecimalSeparator;
-		private final int maxCriterions;
+		private final Integer maxCriterions;
 		private final DBModule module;
 
-		private Catalog(CriterionParser parser, DBModule module) {
+		private Catalog(CriterionParser parser, DBModule module, Integer maxCriterions) {
 			this.parser = parser;
 			this.module = module;
 			this.properties = parser.getPropertyMap(module);
@@ -93,7 +89,7 @@ final class CriterionText {
 			this.restrictions = parser.getRestrictionMap();
 			this.userDateFormat = CoreUtil.getUserContext().getDateFormat();
 			this.userDecimalSeparator = CoreUtil.getUserContext().getDecimalSeparator();
-			this.maxCriterions = Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS);
+			this.maxCriterions = maxCriterions;
 			this.tieIds = new HashMap<CriterionTie, Long>();
 			this.propertyNames = new ArrayList<NamedId>();
 			this.tieNames = new ArrayList<NamedId>();
@@ -145,7 +141,7 @@ final class CriterionText {
 	}
 
 	static String toJson(CriterionParser parser, ArrayList<CriterionInstantVO> criterions) {
-		Catalog catalog = new Catalog(parser, null);
+		Catalog catalog = new Catalog(parser, null, null);
 		JsonArray array = new JsonArray();
 		if (criterions != null) {
 			for (int i = 0; i < criterions.size(); i++) {
@@ -180,8 +176,8 @@ final class CriterionText {
 		return JSON.toJson(array);
 	}
 
-	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text) throws ServiceException {
-		Catalog catalog = new Catalog(parser, module);
+	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text, Integer maxCriterions) throws ServiceException {
+		Catalog catalog = new Catalog(parser, module, maxCriterions);
 		String source = text == null ? "" : text;
 		int content = indexOfContent(source);
 		if (content >= source.length()) {
@@ -277,7 +273,10 @@ final class CriterionText {
 	}
 
 	private static void checkSize(ArrayList<CriterionInVO> criterions, Catalog catalog) throws ServiceException {
-		if (criterions.size() >= catalog.maxCriterions) {
+		if (catalog.maxCriterions == null) {
+			return;
+		}
+		if (criterions.size() >= catalog.maxCriterions.intValue()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_TOO_MANY, Integer.toString(catalog.maxCriterions));
 		}
 	}

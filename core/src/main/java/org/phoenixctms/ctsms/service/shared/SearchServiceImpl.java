@@ -937,8 +937,8 @@ public class SearchServiceImpl
 	}
 
 	@Override
-	protected Collection<CriterionInVO> handleParseCriterionText(AuthenticationVO auth, DBModule module, String text) throws Exception {
-		return criterionSyntaxParser.parseCriterionText(module, text);
+	protected Collection<CriterionInVO> handleParseCriterionText(AuthenticationVO auth, DBModule module, String text, Integer maxCriterions) throws Exception {
+		return criterionSyntaxParser.parseCriterionText(module, text, maxCriterions);
 	}
 
 	@Override

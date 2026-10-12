@@ -84,7 +84,7 @@ public class CriterionSyntaxParser extends CriterionParser {
 		return getInfixStyleExpressionPrettyString(tokens, getPositionDigits(tokens), true, false);
 	}
 
-	public ArrayList<CriterionInVO> parseCriterionText(DBModule module, String text) throws ServiceException {
-		return CriterionText.parse(this, module, text);
+	public ArrayList<CriterionInVO> parseCriterionText(DBModule module, String text, Integer maxCriterions) throws ServiceException {
+		return CriterionText.parse(this, module, text, maxCriterions);
 	}
 }
