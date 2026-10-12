@@ -1226,7 +1226,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public void applyQueryText() {
 		try {
-			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText);
+			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
+					Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
 			criterionsIn.clear();
 			if (parsed != null) {
 				criterionsIn.addAll(parsed);
