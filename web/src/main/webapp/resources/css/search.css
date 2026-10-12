@@ -137,6 +137,15 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	overflow: auto;
 }
 
+.ctsms-query-text-panel .ctsms-criteria-input-panelgrid {
+	border-spacing: 0;
+}
+
+.ctsms-query-text-panel .ctsms-criteria-input-panelgrid > tbody > tr > td {
+	vertical-align: top;
+	padding: 0;
+}
+
 .ctsms-query-text-toolbar {
 	width: 100%;
 }
@@ -145,7 +154,7 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	width: 100%;
 	vertical-align: middle;
 	white-space: normal;
-	padding: 4px 8px 8px 0;
+	padding: 0 8px 0 0;
 }
 
 .ctsms-query-text-format-column {
@@ -153,7 +162,7 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	white-space: nowrap;
 	text-align: right;
 	vertical-align: middle;
-	padding-bottom: 8px;
+	padding: 0;
 }
 
 .ctsms-query-text-format-column label {
@@ -163,14 +172,14 @@ table.ctsms-criterion-position tr:nth-child(2) {
 
 .ctsms-query-text-format-column .ui-selectonemenu {
 	display: inline-block;
-	width: auto !important;
-	min-width: 8.5em;
+	width: 12em !important;
 	vertical-align: middle;
 	text-align: left;
 }
 
 .ctsms-query-text-format-column .ui-selectonemenu-label {
-	width: auto !important;
+	width: 100% !important;
+	box-sizing: border-box;
 	padding-right: 1.6em;
 }
 
@@ -179,9 +188,14 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	padding-top: 4px;
 }
 
+.ctsms-query-text-panel textarea.ctsms-query-text-editor {
+	display: none;
+}
+
 .ctsms-query-text-panel .CodeMirror {
 	height: min(360px, calc(100vh - 340px));
 	min-height: 180px;
+	margin-top: 4px;
 	border: 1px solid #bdbdbd;
 	font-size: 13px;
 }
