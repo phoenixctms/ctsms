@@ -71,11 +71,13 @@ final class CriterionText {
 		private final HashMap<Long, CriterionProperty> properties;
 		private final HashMap<Long, CriterionTie> ties;
 		private final HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictions;
-		private final HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionLabels;
 		private final HashMap<CriterionTie, Long> tieIds;
 		private final List<NamedId> propertyNames;
 		private final List<NamedId> tieNames;
 		private final List<NamedId> restrictionNames;
+		private final List<NamedId> propertyKeys;
+		private final List<NamedId> tieKeys;
+		private final List<NamedId> restrictionKeys;
 		private final String userDateFormat;
 		private final String userDecimalSeparator;
 		private final Integer maxCriterions;
@@ -94,6 +96,9 @@ final class CriterionText {
 			this.propertyNames = new ArrayList<NamedId>();
 			this.tieNames = new ArrayList<NamedId>();
 			this.restrictionNames = new ArrayList<NamedId>();
+			this.propertyKeys = new ArrayList<NamedId>();
+			this.tieKeys = new ArrayList<NamedId>();
+			this.restrictionKeys = new ArrayList<NamedId>();
 			HashMap<CriterionTie, String> tieNamesByEnum = parser.getTieNameMap();
 			if (ties != null) {
 				Iterator<Map.Entry<Long, CriterionTie>> tieIt = ties.entrySet().iterator();
@@ -103,6 +108,7 @@ final class CriterionText {
 						continue;
 					}
 					tieIds.put(entry.getValue(), entry.getKey());
+					addName(tieKeys, entry.getValue().name(), entry.getKey());
 					addName(tieNames, entry.getValue().name(), entry.getKey());
 					addName(tieNames, tieNamesByEnum.get(entry.getValue()), entry.getKey());
 				}
@@ -114,12 +120,12 @@ final class CriterionText {
 					if (property == null || property.getId() == null) {
 						continue;
 					}
+					addName(propertyKeys, property.getProperty(), property.getId());
 					addName(propertyNames, property.getProperty(), property.getId());
 					addName(propertyNames, L10nUtil.getCriterionPropertyName(Locales.USER, property.getNameL10nKey()), property.getId());
 				}
 			}
-			this.restrictionLabels = parser.getRestrictionNameMap();
-			HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionNamesByEnum = this.restrictionLabels;
+			HashMap<org.phoenixctms.ctsms.enumeration.CriterionRestriction, String> restrictionNamesByEnum = parser.getRestrictionNameMap();
 			if (restrictions != null) {
 				Iterator<Map.Entry<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction>> restrictionIt = restrictions.entrySet().iterator();
 				while (restrictionIt.hasNext()) {
@@ -127,6 +133,7 @@ final class CriterionText {
 					if (entry.getKey() == null || entry.getValue() == null) {
 						continue;
 					}
+					addName(restrictionKeys, entry.getValue().name(), entry.getKey());
 					addName(restrictionNames, entry.getValue().name(), entry.getKey());
 					addName(restrictionNames, restrictionNamesByEnum.get(entry.getValue()), entry.getKey());
 				}
@@ -163,10 +170,9 @@ final class CriterionText {
 					object.addProperty("tie", tie.name());
 				}
 				if (property != null) {
-					object.addProperty("property", propertyLabel(property));
+					object.addProperty("property", property.getProperty());
 					if (restriction != null) {
-						String restrictionLabel = catalog.restrictionLabels == null ? null : catalog.restrictionLabels.get(restriction);
-						object.addProperty("restriction", CommonUtil.isEmptyString(restrictionLabel) ? restriction.name() : restrictionLabel);
+						object.addProperty("restriction", restriction.name());
 					}
 					appendJsonValue(object, criterion, property, restriction, catalog);
 				}
@@ -209,15 +215,6 @@ final class CriterionText {
 	private static void appendJsonValue(JsonObject object, CriterionInstantVO criterion, CriterionProperty property,
 			org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction, Catalog catalog) {
 		if (!hasValue(property, restriction)) {
-			return;
-		}
-		String named = null;
-		try {
-			named = catalog.parser.getResolvedCriterionValueString(criterion, property, false);
-		} catch (ServiceException ignored) {
-		}
-		if (!CommonUtil.isEmptyString(named) && isNamedValueProperty(property)) {
-			object.addProperty(valueField(property.getValueType()), named);
 			return;
 		}
 		String value = CommonUtil.getCriterionValueAsString(criterion, property.getValueType(), catalog.userDateFormat, catalog.userDecimalSeparator);
@@ -519,17 +516,17 @@ final class CriterionText {
 		}
 		if (object.has("tieId") || object.has("tie")) {
 			JsonElement tieElement = object.has("tie") ? object.get("tie") : object.get("tieId");
-			criterion.setTieId(resolveRef(tieElement, catalog.tieNames, catalog.ties.keySet(), ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_TIE, "tie", "name"));
+			criterion.setTieId(resolveRef(tieElement, catalog.tieKeys, catalog.ties.keySet(), ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_TIE, "tie", "name"));
 		}
 		if (object.has("propertyId") || object.has("property")) {
 			JsonElement propertyElement = object.has("property") ? object.get("property") : object.get("propertyId");
-			criterion.setPropertyId(resolveRef(propertyElement, catalog.propertyNames, catalog.properties.keySet(), ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_PROPERTY,
+			criterion.setPropertyId(resolveRef(propertyElement, catalog.propertyKeys, catalog.properties.keySet(), ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_PROPERTY,
 					"property", "name"));
 		}
 		if (object.has("restrictionId") || object.has("restriction")) {
 			JsonElement restrictionElement = object.has("restriction") ? object.get("restriction") : object.get("restrictionId");
 			Set<Long> allowed = validRestrictionIds(propertyOf(criterion, catalog.properties));
-			criterion.setRestrictionId(resolveRef(restrictionElement, catalog.restrictionNames, allowed != null ? allowed : catalog.restrictions.keySet(),
+			criterion.setRestrictionId(resolveRef(restrictionElement, catalog.restrictionKeys, allowed != null ? allowed : catalog.restrictions.keySet(),
 					ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_RESTRICTION, "restriction", "name"));
 		}
 		CriterionProperty property = propertyOf(criterion, catalog.properties);
@@ -697,7 +694,7 @@ final class CriterionText {
 		String field = valueField(type);
 		if (!object.has(field) || object.get(field).isJsonNull()) {
 			if (object.has("value") && !object.get("value").isJsonNull()) {
-				setStringValue(criterion, property, jsonString(object.get("value")), catalog);
+				setRawValue(criterion, property, jsonString(object.get("value")), catalog);
 			}
 			return;
 		}
@@ -709,7 +706,7 @@ final class CriterionText {
 					if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isBoolean()) {
 						criterion.setBooleanValue(element.getAsBoolean());
 					} else {
-						setStringValue(criterion, property, jsonString(element), catalog);
+						setRawValue(criterion, property, jsonString(element), catalog);
 					}
 					break;
 				case LONG:
@@ -717,7 +714,7 @@ final class CriterionText {
 					if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isNumber()) {
 						criterion.setLongValue(element.getAsLong());
 					} else {
-						setStringValue(criterion, property, jsonString(element), catalog);
+						setRawValue(criterion, property, jsonString(element), catalog);
 					}
 					break;
 				case FLOAT:
@@ -725,11 +722,11 @@ final class CriterionText {
 					if (element.isJsonPrimitive() && element.getAsJsonPrimitive().isNumber()) {
 						criterion.setFloatValue(element.getAsFloat());
 					} else {
-						setStringValue(criterion, property, jsonString(element), catalog);
+						setRawValue(criterion, property, jsonString(element), catalog);
 					}
 					break;
 				default:
-					setStringValue(criterion, property, jsonString(element), catalog);
+					setRawValue(criterion, property, jsonString(element), catalog);
 					break;
 			}
 		} catch (ServiceException e) {
@@ -746,6 +743,23 @@ final class CriterionText {
 		String trimmed = value.trim();
 		if (isNamedValueProperty(property)) {
 			if (!catalog.parser.applyNamedCriterionValue(criterion, property, trimmed)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), trimmed);
+			}
+			return;
+		}
+		setRawValue(criterion, property, trimmed, catalog);
+	}
+
+	private static void setRawValue(CriterionInVO criterion, CriterionProperty property, String value, Catalog catalog) throws ServiceException {
+		if (CommonUtil.isEmptyString(value)) {
+			return;
+		}
+		String trimmed = value.trim();
+		if (!CommonUtil.isEmptyString(property.getEntityName()) && CoreUtil.isEnumerationClass(property.getEntityName())) {
+			try {
+				Object item = CoreUtil.getEnumerationItem(property.getEntityName(), trimmed);
+				criterion.setStringValue(item == null ? trimmed : item.toString());
+			} catch (Exception e) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_INVALID_VALUE, propertyLabel(property), trimmed);
 			}
 			return;
