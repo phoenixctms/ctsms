@@ -231,6 +231,19 @@
 											update=":search_form:tabView:query_text"
 											oncomplete="refreshQueryTextEditor()" />
 									</p:selectOneMenu>
+									<p:commandButton id="copy_query_text_prompt"
+										value="#{labels.search_query_text_prompt_button_label}"
+										process="@this"
+										actionListener="#{searchBean.copyQueryTextPrompt}"
+										update="@this"
+										oncomplete="copyQueryTextPrompt()" />
+									<p:commandButton id="generate_query_text"
+										value="#{labels.search_query_text_generate_button_label}"
+										process="@this,:search_form:tabView:query_text"
+										actionListener="#{searchBean.generateQueryText}"
+										update=":search_form:tabView:query_text,:search_form:messages"
+										onclick="syncQueryTextEditor()"
+										oncomplete="refreshQueryTextEditor()" />
 								</h:panelGroup>
 							</h:panelGrid>
 							<pe:codeMirror id="query_text" widgetVar="queryTextEditor"

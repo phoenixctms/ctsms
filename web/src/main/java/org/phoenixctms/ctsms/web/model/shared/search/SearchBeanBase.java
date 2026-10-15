@@ -1,6 +1,13 @@
 package org.phoenixctms.ctsms.web.model.shared.search;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +37,7 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
+import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
@@ -54,6 +62,12 @@ import org.phoenixctms.ctsms.web.util.SettingCodes;
 import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
+import org.phoenixctms.ctsms.web.bundle.Labels;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import org.primefaces.context.RequestContext;
 
 public abstract class SearchBeanBase extends PickerBeanBase {
@@ -165,6 +179,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private HashMap<Long, org.phoenixctms.ctsms.enumeration.CriterionRestriction> restrictionVOsMap;
 	private HashMap<Long, ArrayList<SelectItem>> restrictionsMap;
 	private HashMap<Long, ArrayList<SelectItem>> selectionItemsMap;
+	private HashMap<Long, ArrayList<String[]>> promptOptionMap;
 	private HashMap<Long, Converter> converterMap;
 	private CriteriaInstantVO instantCriteria;
 	private boolean parsed;
@@ -807,7 +822,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (booleans == null) {
 			booleans = WebUtil.getBooleans(false, false);
 		}
-		if (properties == null || propertyVOsMap == null || restrictionsMap == null || selectionItemsMap == null || converterMap == null) {
+		if (properties == null || propertyVOsMap == null || restrictionsMap == null || selectionItemsMap == null || converterMap == null || promptOptionMap == null) {
 			Collection<CriterionPropertyVO> propertyVOs = null;
 			try {
 				propertyVOs = WebUtil.getServiceLocator().getSelectionSetService().getCriterionProperties(WebUtil.getAuthentication(), this.getDBModule());
@@ -820,6 +835,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				propertyVOsMap = new HashMap<Long, CriterionPropertyVO>(propertyVOs.size());
 				restrictionsMap = new HashMap<Long, ArrayList<SelectItem>>(propertyVOs.size());
 				selectionItemsMap = new HashMap<Long, ArrayList<SelectItem>>(propertyVOs.size());
+				promptOptionMap = new HashMap<Long, ArrayList<String[]>>(propertyVOs.size());
 				converterMap = new HashMap<Long, Converter>(propertyVOs.size());
 				Iterator<CriterionPropertyVO> propertyIt = propertyVOs.iterator();
 				while (propertyIt.hasNext()) {
@@ -834,6 +850,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 					}
 					restrictionsMap.put(propertyVO.getId(), restrictions);
 					ArrayList<SelectItem> selectionItems = new ArrayList<SelectItem>();
+					ArrayList<String[]> promptOptions = new ArrayList<String[]>();
 					if (WebUtil.testSelectionSetServiceMethodName(propertyVO)) {
 						Collection selectionSetServiceMethodResult = null;
 						try {
@@ -870,6 +887,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 										value = CommonUtil.NO_SELECTION_VALUE;
 									}
 									if (value != null) {
+										promptOptions.add(new String[] { name, value });
 										selectionItems.add(new SelectItem(value, CommonUtil.clipString(name, selectionItemsNameClipMaxLength, CommonUtil.DEFAULT_ELLIPSIS,
 												EllipsisPlacement.MID)));
 									}
@@ -889,7 +907,20 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 							selectionItems = (ArrayList<SelectItem>) AssociationPath.invoke(propertyVO.getFilterItemsMethodName(), WebUtil.getSessionScopeBean(), false);
 						} catch (Exception e) {
 						}
+						if (selectionItems != null) {
+							Iterator<SelectItem> optionIt = selectionItems.iterator();
+							while (optionIt.hasNext()) {
+								SelectItem option = optionIt.next();
+								if (option != null && option.getLabel() != null && option.getValue() != null) {
+									promptOptions.add(new String[] { option.getLabel(), option.getValue().toString() });
+								}
+							}
+						}
 					}
+					if (selectionItems == null) {
+						selectionItems = new ArrayList<SelectItem>();
+					}
+					promptOptionMap.put(propertyVO.getId(), promptOptions);
 					selectionItemsMap.put(propertyVO.getId(), selectionItems);
 				}
 			} else {
@@ -897,6 +928,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				propertyVOsMap = new HashMap<Long, CriterionPropertyVO>();
 				restrictionsMap = new HashMap<Long, ArrayList<SelectItem>>();
 				selectionItemsMap = new HashMap<Long, ArrayList<SelectItem>>();
+				promptOptionMap = new HashMap<Long, ArrayList<String[]>>();
 				converterMap = new HashMap<Long, Converter>();
 			}
 		}
@@ -1291,5 +1323,331 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 
 	public void setQueryTextFormat(String queryTextFormat) {
 		this.queryTextFormat = queryTextFormat;
+	}
+
+	public void copyQueryTextPrompt() {
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		if (requestContext != null) {
+			requestContext.addCallbackParam(JSValues.AJAX_QUERY_TEXT_PROMPT_BASE64.toString(), JsUtil.encodeBase64(buildQueryTextPrompt(false), false));
+		}
+	}
+
+	public void generateQueryText() {
+		String url = Settings.getString(SettingCodes.QUERY_TEXT_LLM_URL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_URL);
+		if (CommonUtil.isEmptyString(url)) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_not_configured"));
+			return;
+		}
+		try {
+			String result = stripQueryTextFence(requestQueryText(url, buildQueryTextPrompt(true)));
+			if (CommonUtil.isEmptyString(result)) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
+				return;
+			}
+			queryText = result;
+		} catch (Exception e) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_failed"));
+		}
+	}
+
+	private String buildQueryTextPrompt(boolean includeCurrentQuery) {
+		String template = Settings.getString(SettingCodes.QUERY_TEXT_LLM_PROMPT_TEMPLATE, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_PROMPT_TEMPLATE);
+		if (CommonUtil.isEmptyString(template)) {
+			template = Labels.getStringLocalized("search_query_text_prompt_template");
+		}
+		boolean json = QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat);
+		String prompt = template.replace("{format}", json ? "json" : "expression");
+		prompt = prompt.replace("{comment}", json ? "//" : "#");
+		prompt = prompt.replace("{ties}", queryTextTieSection(json));
+		prompt = prompt.replace("{properties}", queryTextPropertySection(json));
+		prompt = prompt.replace("{currentQuery}", includeCurrentQuery && queryText != null ? queryText : "");
+		return prompt;
+	}
+
+	private String queryTextTieSection(boolean json) {
+		StringBuilder section = new StringBuilder();
+		if (ties == null || tieVOsMap == null) {
+			return "";
+		}
+		Iterator<SelectItem> it = ties.iterator();
+		while (it.hasNext()) {
+			SelectItem item = it.next();
+			CriterionTieVO tieVO = tieVOsMap.get(Long.valueOf(item.getValue().toString()));
+			if (tieVO == null) {
+				continue;
+			}
+			if (section.length() > 0) {
+				section.append('\n');
+			}
+			if (json && tieVO.getTie() != null) {
+				section.append(tieVO.getTie().name());
+			} else if (!CommonUtil.isEmptyString(tieVO.getName())) {
+				section.append(tieVO.getName());
+			} else if (tieVO.getTie() != null) {
+				section.append(tieVO.getTie().name());
+			}
+		}
+		return section.toString();
+	}
+
+	private String queryTextPropertySection(boolean json) {
+		StringBuilder section = new StringBuilder();
+		if (properties == null || propertyVOsMap == null) {
+			return "";
+		}
+		Iterator<SelectItem> it = properties.iterator();
+		while (it.hasNext()) {
+			SelectItem item = it.next();
+			Long id = Long.valueOf(item.getValue().toString());
+			CriterionPropertyVO propertyVO = propertyVOsMap.get(id);
+			if (propertyVO == null) {
+				continue;
+			}
+			if (section.length() > 0) {
+				section.append('\n');
+			}
+			section.append(queryTextPropertyLine(propertyVO, json));
+		}
+		return section.toString();
+	}
+
+	private String queryTextPropertyLine(CriterionPropertyVO propertyVO, boolean json) {
+		String name = json || CommonUtil.isEmptyString(propertyVO.getName()) ? propertyVO.getProperty() : propertyVO.getName();
+		ArrayList<SelectItem> restrictions = restrictionsMap == null ? null : restrictionsMap.get(propertyVO.getId());
+		ArrayList<String> operators = new ArrayList<String>();
+		HashSet<String> seen = new HashSet<String>();
+		boolean needsValue = false;
+		if (restrictions != null) {
+			Iterator<SelectItem> it = restrictions.iterator();
+			while (it.hasNext()) {
+				SelectItem item = it.next();
+				Long restrictionId = Long.valueOf(item.getValue().toString());
+				org.phoenixctms.ctsms.enumeration.CriterionRestriction restriction = restrictionVOsMap == null ? null : restrictionVOsMap.get(restrictionId);
+				boolean unary = restriction != null && CommonUtil.isUnaryCriterionRestriction(restriction);
+				if (!unary) {
+					needsValue = true;
+				}
+				String token = json && restriction != null ? restriction.name() : item.getLabel();
+				if (unary) {
+					token = token + " (" + Labels.getStringLocalized("search_query_text_prompt_value_none") + ")";
+				}
+				if (!json && !seen.add(token)) {
+					continue;
+				}
+				operators.add(token);
+			}
+		}
+		StringBuilder line = new StringBuilder();
+		line.append(name);
+		line.append(" | ");
+		line.append(joinQueryTextTokens(operators));
+		line.append(" | ");
+		line.append(queryTextValueDescription(propertyVO, json, needsValue));
+		return line.toString();
+	}
+
+	private String queryTextValueDescription(CriterionPropertyVO propertyVO, boolean json, boolean needsValue) {
+		if (!needsValue || CriterionValueType.NONE.equals(propertyVO.getValueType())) {
+			return Labels.getStringLocalized("search_query_text_prompt_value_none");
+		}
+		ArrayList<String[]> options = promptOptionMap == null ? null : promptOptionMap.get(propertyVO.getId());
+		boolean namedEntity = WebUtil.testPicker(propertyVO)
+				|| (!CommonUtil.isEmptyString(propertyVO.getEntityName()) && !CoreUtil.isEnumerationClass(propertyVO.getEntityName()));
+		if ((options == null || options.isEmpty()) && namedEntity) {
+			return (json ? queryTextValueField(propertyVO.getValueType()) + " " : "")
+					+ Labels.getStringLocalized(json ? "search_query_text_prompt_value_id" : "search_query_text_prompt_value_name");
+		}
+		if (options != null && !options.isEmpty()) {
+			ArrayList<String> tokens = new ArrayList<String>(options.size());
+			for (int i = 0; i < options.size(); i++) {
+				String[] option = options.get(i);
+				tokens.add(json ? option[1] : option[0]);
+			}
+			String listed = joinQueryTextTokens(tokens);
+			if (json) {
+				return queryTextValueField(propertyVO.getValueType()) + " " + listed;
+			}
+			return listed;
+		}
+		String hint = queryTextScalarHint(propertyVO.getValueType());
+		if (json) {
+			return queryTextValueField(propertyVO.getValueType()) + " " + hint;
+		}
+		return hint;
+	}
+
+	private String queryTextScalarHint(CriterionValueType type) {
+		if (type == null) {
+			return Labels.getStringLocalized("search_query_text_prompt_value_text");
+		}
+		switch (type) {
+			case BOOLEAN:
+			case BOOLEAN_HASH:
+				return Labels.getStringLocalized("search_query_text_prompt_value_boolean");
+			case LONG:
+			case LONG_HASH:
+				return Labels.getStringLocalized("search_query_text_prompt_value_number");
+			case FLOAT:
+			case FLOAT_HASH:
+				return Labels.getStringLocalized("search_query_text_prompt_value_decimal");
+			case DATE:
+			case DATE_HASH:
+				return Labels.getMessageLocalized("search_query_text_prompt_value_date", WebUtil.getDateFormat());
+			case TIME:
+			case TIME_HASH:
+				return Labels.getMessageLocalized("search_query_text_prompt_value_time", WebUtil.getDateFormat());
+			case TIMESTAMP:
+			case TIMESTAMP_HASH:
+				return Labels.getMessageLocalized("search_query_text_prompt_value_timestamp", WebUtil.getDateFormat());
+			default:
+				return Labels.getStringLocalized("search_query_text_prompt_value_text");
+		}
+	}
+
+	private static String queryTextValueField(CriterionValueType type) {
+		if (type == null) {
+			return "stringValue";
+		}
+		switch (type) {
+			case BOOLEAN:
+			case BOOLEAN_HASH:
+				return "booleanValue";
+			case LONG:
+			case LONG_HASH:
+				return "longValue";
+			case FLOAT:
+			case FLOAT_HASH:
+				return "floatValue";
+			case DATE:
+			case DATE_HASH:
+				return "dateValue";
+			case TIME:
+			case TIME_HASH:
+				return "timeValue";
+			case TIMESTAMP:
+			case TIMESTAMP_HASH:
+				return "timestampValue";
+			default:
+				return "stringValue";
+		}
+	}
+
+	private static String joinQueryTextTokens(List<String> tokens) {
+		StringBuilder joined = new StringBuilder();
+		if (tokens == null) {
+			return "";
+		}
+		for (int i = 0; i < tokens.size(); i++) {
+			if (i > 0) {
+				joined.append(", ");
+			}
+			joined.append(tokens.get(i));
+		}
+		return joined.toString();
+	}
+
+	private String requestQueryText(String url, String prompt) throws IOException {
+		int timeout = Settings.getInt(SettingCodes.QUERY_TEXT_LLM_TIMEOUT_MS, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_TIMEOUT_MS);
+		if (timeout <= 0) {
+			timeout = DefaultSettings.QUERY_TEXT_LLM_TIMEOUT_MS;
+		}
+		String model = Settings.getString(SettingCodes.QUERY_TEXT_LLM_MODEL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_MODEL);
+		String key = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY);
+		String header = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY_HEADER, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY_HEADER);
+		String prefix = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY_PREFIX, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY_PREFIX);
+		JsonObject body = new JsonObject();
+		if (!CommonUtil.isEmptyString(model)) {
+			body.addProperty("model", model);
+		}
+		JsonArray messages = new JsonArray();
+		JsonObject message = new JsonObject();
+		message.addProperty("role", "user");
+		message.addProperty("content", prompt);
+		messages.add(message);
+		body.add("messages", messages);
+		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+		try {
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true);
+			connection.setConnectTimeout(timeout);
+			connection.setReadTimeout(timeout);
+			connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			connection.setRequestProperty("Accept", "application/json");
+			if (!CommonUtil.isEmptyString(key)) {
+				connection.setRequestProperty(CommonUtil.isEmptyString(header) ? DefaultSettings.QUERY_TEXT_LLM_API_KEY_HEADER : header,
+						(prefix == null ? "" : prefix) + key);
+			}
+			byte[] bytes = body.toString().getBytes("UTF-8");
+			OutputStream output = connection.getOutputStream();
+			try {
+				output.write(bytes);
+			} finally {
+				output.close();
+			}
+			int status = connection.getResponseCode();
+			InputStream input = status >= 400 ? connection.getErrorStream() : connection.getInputStream();
+			String response = readQueryTextResponse(input);
+			if (status >= 400) {
+				throw new IOException("HTTP " + status);
+			}
+			JsonElement parsed = WebUtil.parseJson(response);
+			if (parsed == null || !parsed.isJsonObject()) {
+				return "";
+			}
+			JsonElement choicesElement = parsed.getAsJsonObject().get("choices");
+			if (choicesElement == null || !choicesElement.isJsonArray() || choicesElement.getAsJsonArray().size() == 0) {
+				return "";
+			}
+			JsonElement choiceElement = choicesElement.getAsJsonArray().get(0);
+			if (choiceElement == null || !choiceElement.isJsonObject()) {
+				return "";
+			}
+			JsonElement messageElement = choiceElement.getAsJsonObject().get("message");
+			if (messageElement == null || !messageElement.isJsonObject()) {
+				return "";
+			}
+			JsonElement contentElement = messageElement.getAsJsonObject().get("content");
+			if (contentElement == null || contentElement.isJsonNull() || !contentElement.isJsonPrimitive()) {
+				return "";
+			}
+			return contentElement.getAsString();
+		} finally {
+			connection.disconnect();
+		}
+	}
+
+	private static String readQueryTextResponse(InputStream input) throws IOException {
+		if (input == null) {
+			return "";
+		}
+		BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		try {
+			StringBuilder response = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
+			return response.toString();
+		} finally {
+			reader.close();
+		}
+	}
+
+	private static String stripQueryTextFence(String text) {
+		if (text == null) {
+			return "";
+		}
+		String trimmed = text.trim();
+		if (trimmed.startsWith("```")) {
+			int newline = trimmed.indexOf('\n');
+			if (newline >= 0) {
+				trimmed = trimmed.substring(newline + 1);
+			}
+			if (trimmed.endsWith("```")) {
+				trimmed = trimmed.substring(0, trimmed.length() - 3);
+			}
+			trimmed = trimmed.trim();
+		}
+		return trimmed;
 	}
 }

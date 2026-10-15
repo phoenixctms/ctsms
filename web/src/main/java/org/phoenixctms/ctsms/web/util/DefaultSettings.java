@@ -28,6 +28,13 @@ public final class DefaultSettings {
 	public final static ArrayList<String> DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS = new ArrayList<String>();
 	public final static ArrayList<String> DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS = new ArrayList<String>();
 	public final static int MAX_CRITERIONS = 30;
+	public final static String QUERY_TEXT_LLM_URL = "";
+	public final static String QUERY_TEXT_LLM_API_KEY = "";
+	public final static String QUERY_TEXT_LLM_API_KEY_HEADER = "Authorization";
+	public final static String QUERY_TEXT_LLM_API_KEY_PREFIX = "Bearer ";
+	public final static String QUERY_TEXT_LLM_MODEL = "";
+	public final static int QUERY_TEXT_LLM_TIMEOUT_MS = 60000;
+	public final static String QUERY_TEXT_LLM_PROMPT_TEMPLATE = "";
 	public final static String CALENDAR_YEAR_RANGE = "1900:" + ((new GregorianCalendar()).get(GregorianCalendar.YEAR) + 10);
 	public final static String IBAN_MASK = "";
 	public static final boolean HIDE_DETAILED_AUTHENTICATION_ERROR = true;

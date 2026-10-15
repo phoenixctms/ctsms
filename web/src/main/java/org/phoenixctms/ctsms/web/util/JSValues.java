@@ -80,6 +80,7 @@ public enum JSValues {
 	AJAX_CRITERION_TIE_MAP_BASE64("criterionTieMapBase64"),
 	AJAX_INTERMEDIATE_SETS_BASE64("intermediateSetsBase64"),
 	AJAX_CRITERIA_RESULT_ITEM_LABEL_BASE64("criteriaResultItemLabelBase64"),
+	AJAX_QUERY_TEXT_PROMPT_BASE64("queryTextPromptBase64"),
 	LIST_INITIAL_POSITION(""),
 	AJAX_DIALOG_TITLE_BASE64("dialogTitleBase64"),
 	AJAX_PROBAND_LIST_TAB_TITLE_BASE64("probandListTabTitleBase64"),
