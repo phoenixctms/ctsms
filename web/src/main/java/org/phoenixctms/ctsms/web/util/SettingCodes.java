@@ -7,6 +7,13 @@ public interface SettingCodes {
 	public final static String DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS = "default_duty_roster_calendar_filters";
 	public final static String DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS = "default_inventory_booking_calendar_filters";
 	public final static String MAX_CRITERIONS = "max_criterions";
+	public final static String QUERY_TEXT_LLM_URL = "query_text_llm_url";
+	public final static String QUERY_TEXT_LLM_API_KEY = "query_text_llm_api_key";
+	public final static String QUERY_TEXT_LLM_API_KEY_HEADER = "query_text_llm_api_key_header";
+	public final static String QUERY_TEXT_LLM_API_KEY_PREFIX = "query_text_llm_api_key_prefix";
+	public final static String QUERY_TEXT_LLM_MODEL = "query_text_llm_model";
+	public final static String QUERY_TEXT_LLM_TIMEOUT_MS = "query_text_llm_timeout_ms";
+	public final static String QUERY_TEXT_LLM_PROMPT_TEMPLATE = "query_text_llm_prompt_template";
 	public final static String IBAN_MASK = "iban_mask";
 	public final static String CALENDAR_YEAR_RANGE = "calendar_year_range";
 	public final static String HIDE_DETAILED_AUTHENTICATION_ERROR = "hide_detailed_authentication_error";

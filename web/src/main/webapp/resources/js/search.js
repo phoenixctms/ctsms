@@ -17,6 +17,22 @@ function refreshQueryTextEditor() {
 	}
 }
 
+function copyQueryTextPrompt() {
+	if (typeof args === "undefined" || args == null || !_testPropertyExists(args, AJAX_QUERY_TEXT_PROMPT_BASE64)) {
+		return;
+	}
+	var text = decodeBase64(args[AJAX_QUERY_TEXT_PROMPT_BASE64]);
+	var area = document.createElement("textarea");
+	area.value = text;
+	document.body.appendChild(area);
+	area.select();
+	try {
+		document.execCommand("copy");
+	} catch (ignored) {
+	}
+	document.body.removeChild(area);
+}
+
 function handleSearchTabChange(index) {
 
 	_deleteIntermediateSetsChartTooltip();
