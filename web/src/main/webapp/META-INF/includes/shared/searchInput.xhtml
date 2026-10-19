@@ -228,15 +228,14 @@
 											itemLabel="#{labels.search_query_text_format_json}" />
 										<p:ajax process="@this,:search_form:tabView:criteria_input"
 											listener="#{searchBean.loadQueryText}"
-											update=":search_form:tabView:query_text"
+											update=":search_form:tabView:query_text,:search_form:tabView:query_text_prompt"
 											oncomplete="refreshQueryTextEditor()" />
 									</p:selectOneMenu>
-									<p:commandButton id="copy_query_text_prompt"
+									<h:inputTextarea id="query_text_prompt" value="#{searchBean.queryTextPrompt}"
+										readonly="true" styleClass="ctsms-query-text-prompt-source" />
+									<p:commandButton id="copy_query_text_prompt" type="button"
 										value="#{labels.search_query_text_prompt_button_label}"
-										process="@this"
-										actionListener="#{searchBean.copyQueryTextPrompt}"
-										update="@this"
-										oncomplete="copyQueryTextPrompt()" />
+										onclick="var fields=document.getElementsByClassName('ctsms-query-text-prompt-source');if(fields.length){fields[0].focus();fields[0].select();try{document.execCommand('copy');}catch(e){}}return false;" />
 									<p:commandButton id="generate_query_text"
 										value="#{labels.search_query_text_generate_button_label}"
 										process="@this,:search_form:tabView:query_text"
