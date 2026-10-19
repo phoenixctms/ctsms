@@ -1325,11 +1325,11 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		this.queryTextFormat = queryTextFormat;
 	}
 
-	public void copyQueryTextPrompt() {
-		RequestContext requestContext = RequestContext.getCurrentInstance();
-		if (requestContext != null) {
-			requestContext.addCallbackParam(JSValues.AJAX_QUERY_TEXT_PROMPT_BASE64.toString(), JsUtil.encodeBase64(buildQueryTextPrompt(false), false));
-		}
+	public String getQueryTextPrompt() {
+		return buildQueryTextPrompt(false);
+	}
+
+	public void setQueryTextPrompt(String queryTextPrompt) {
 	}
 
 	public void generateQueryText() {
