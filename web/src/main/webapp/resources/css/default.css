@@ -1086,6 +1086,20 @@ div.timeline-event-content {
 	box-sizing: border-box;
 }
 
+/* p:autoComplete puts ctsms-control-larger on an inline span, so width and
+   max-width do not apply and the input inherits 100% of the table cell. */
+.ctsms-values-datagrid .ui-autocomplete.ctsms-control-larger {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.ctsms-values-datagrid .ui-autocomplete.ctsms-control-larger .ui-inputfield,
+.ctsms-values-datagrid .ui-autocomplete.ctsms-control-larger .highlightTextarea {
+	width: 100% !important;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
 .ctsms-values-datagrid .ctsms-input-column,
 .ctsms-values-datagrid .ctsms-fieldrow-input-column,
 .ctsms-values-datagrid .ctsms-fieldrow-input-top-column {
