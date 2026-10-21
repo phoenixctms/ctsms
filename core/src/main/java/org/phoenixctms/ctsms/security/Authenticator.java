@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.crypto.SecretKey;
@@ -17,6 +18,8 @@ import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.service.shared.InputFieldService;
+import org.phoenixctms.ctsms.service.shared.SearchService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
@@ -58,6 +61,14 @@ public class Authenticator {
 	private LdapService ldapService2;
 	private final static String JWT_PWD_HEADER_KEY = "pwd";
 	private final static String JWT_USERNAME_CLAIM = "username";
+	private final static HashSet<String> QUERY_TEXT_METHODS = new HashSet<String>();
+	static {
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getInquiryList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getProbandListEntryTagList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getEcrfFieldList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(InputFieldService.class, "getInputFieldList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(SearchService.class, "parseCriterionText"));
+	}
 
 	public String issueJwt(AuthenticationVO auth, Long validityPeriodSecs) throws Exception {
 		return buildJwtFromUserContext(validityPeriodSecs);
@@ -87,8 +98,9 @@ public class Authenticator {
 		}
 		//prevent using JWT across instances:
 		jwtBuilder.setIssuer(Settings.getInstanceName());
-		if (CommonUtil.DUTYROSTER_ICS_REALM.equals(userContext.getRealm())) {
-			jwtBuilder.setAudience(CommonUtil.DUTYROSTER_ICS_REALM);
+		if (CommonUtil.DUTYROSTER_ICS_REALM.equals(userContext.getRealm())
+				|| CommonUtil.QUERY_TEXT_REALM.equals(userContext.getRealm())) {
+			jwtBuilder.setAudience(userContext.getRealm());
 		}
 		//encrypt the user password with the user's private key, and add it to payload:
 		jwtBuilder.setHeaderParam(JWT_PWD_HEADER_KEY,
@@ -168,6 +180,10 @@ public class Authenticator {
 			String jwtAudience = resolveCredentialsFromJwt(auth);
 			if (CommonUtil.DUTYROSTER_ICS_REALM.equals(jwtAudience)
 					&& !CoreUtil.getServiceMethodName(TrialService.class, "getDutyRosterInterval").equals(methodName)) {
+				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_JWT, auth.getJwt());
+			}
+			if (CommonUtil.QUERY_TEXT_REALM.equals(jwtAudience)
+					&& (methodName == null || !QUERY_TEXT_METHODS.contains(methodName))) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_JWT, auth.getJwt());
 			}
 			User user = null;

@@ -14,6 +14,7 @@ public interface SettingCodes {
 	public final static String QUERY_TEXT_LLM_MODEL = "query_text_llm_model";
 	public final static String QUERY_TEXT_LLM_TIMEOUT_MS = "query_text_llm_timeout_ms";
 	public final static String QUERY_TEXT_LLM_PROMPT_TEMPLATE = "query_text_llm_prompt_template";
+	public final static String QUERY_TEXT_JWT_VALIDITY_SECS = "query_text_jwt_validity_secs";
 	public final static String IBAN_MASK = "iban_mask";
 	public final static String CALENDAR_YEAR_RANGE = "calendar_year_range";
 	public final static String HIDE_DETAILED_AUTHENTICATION_ERROR = "hide_detailed_authentication_error";

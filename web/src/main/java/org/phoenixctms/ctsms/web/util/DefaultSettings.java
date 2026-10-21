@@ -35,6 +35,7 @@ public final class DefaultSettings {
 	public final static String QUERY_TEXT_LLM_MODEL = "";
 	public final static int QUERY_TEXT_LLM_TIMEOUT_MS = 60000;
 	public final static String QUERY_TEXT_LLM_PROMPT_TEMPLATE = "";
+	public final static long QUERY_TEXT_JWT_VALIDITY_SECS = 3600L;
 	public final static String CALENDAR_YEAR_RANGE = "1900:" + ((new GregorianCalendar()).get(GregorianCalendar.YEAR) + 10);
 	public final static String IBAN_MASK = "";
 	public static final boolean HIDE_DETAILED_AUTHENTICATION_ERROR = true;

@@ -18,6 +18,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import com.sun.jersey.api.NotFoundException;
+
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -328,6 +330,51 @@ public final class SearchResource {
 		Collection result = WebUtil.getServiceLocator().getSearchService().searchUserByCriteria(auth, id, ResourceUtils.LIST_GRAPH_MAX_USER_INSTANCES, psf);
 		NoShortcutSerializationWrapper.transformVoCollection(result);
 		return new Page<NoShortcutSerializationWrapper<UserOutVO>>(result, psf);
+	}
+
+	@POST
+	@Consumes({ MediaType.TEXT_PLAIN })
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("{module}/criteriontext")
+	public Collection<CriterionInVO> parseCriterionText(@PathParam("module") String module, String text)
+			throws AuthenticationException, AuthorisationException, ServiceException {
+		DBModule dbModule = queryTextModule(module);
+		if (dbModule == null) {
+			throw new NotFoundException();
+		}
+		return WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, dbModule, text == null ? "" : text,
+				Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
+	}
+
+	private static DBModule queryTextModule(String module) {
+		if (module == null) {
+			return null;
+		}
+		if ("inventory".equals(module)) {
+			return DBModule.INVENTORY_DB;
+		}
+		if ("staff".equals(module)) {
+			return DBModule.STAFF_DB;
+		}
+		if ("course".equals(module)) {
+			return DBModule.COURSE_DB;
+		}
+		if ("user".equals(module)) {
+			return DBModule.USER_DB;
+		}
+		if ("trial".equals(module)) {
+			return DBModule.TRIAL_DB;
+		}
+		if ("proband".equals(module)) {
+			return DBModule.PROBAND_DB;
+		}
+		if ("inputfield".equals(module)) {
+			return DBModule.INPUT_FIELD_DB;
+		}
+		if ("massmail".equals(module)) {
+			return DBModule.MASS_MAIL_DB;
+		}
+		return null;
 	}
 
 	@PUT
