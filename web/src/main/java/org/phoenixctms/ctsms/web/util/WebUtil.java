@@ -4338,6 +4338,30 @@ public final class WebUtil {
 		return baseUrl == null ? "" : baseUrl.trim();
 	}
 
+	public static String issueQueryTextJwt() {
+		AuthenticationVO sessionAuth = getAuthentication();
+		if (sessionAuth == null) {
+			return "";
+		}
+		AuthenticationVO queryAuth = new AuthenticationVO();
+		queryAuth.copy(sessionAuth);
+		queryAuth.setRealm(CommonUtil.QUERY_TEXT_REALM);
+		long validitySecs = Settings.getLong(SettingCodes.QUERY_TEXT_JWT_VALIDITY_SECS, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_JWT_VALIDITY_SECS);
+		if (validitySecs <= 0L) {
+			validitySecs = DefaultSettings.QUERY_TEXT_JWT_VALIDITY_SECS;
+		}
+		try {
+			String jwt = getServiceLocator().getToolsService().issueJwt(queryAuth, Long.valueOf(validitySecs));
+			if (!CommonUtil.isEmptyString(jwt)) {
+				return jwt;
+			}
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+		} catch (AuthenticationException e) {
+			publishException(e);
+		}
+		return "";
+	}
+
 	private static String issueDutyRosterIcsJwt() {
 		AuthenticationVO sessionAuth = getAuthentication();
 		if (sessionAuth == null) {

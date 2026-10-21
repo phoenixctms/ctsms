@@ -24,6 +24,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import org.phoenixctms.ctsms.compare.VOPositionComparator;
 import org.phoenixctms.ctsms.enumeration.CriterionValueType;
@@ -191,6 +192,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private String deferredDeleteReason;
 	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
 	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
+	private static final String QUERY_TEXT_INQUIRY_PROPERTY = "proband.inquiryValues.inquiry.id";
+	private static final String QUERY_TEXT_TAG_PROPERTY = "proband.trialParticipations.tagValues.tag.id";
+	private static final String QUERY_TEXT_ECRF_FIELD_PROPERTY = "proband.trialParticipations.ecrfValues.ecrfField.id";
 	private String queryText;
 	private String queryTextFormat;
 
@@ -1356,12 +1360,110 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			template = Labels.getStringLocalized("search_query_text_prompt_template");
 		}
 		boolean json = QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat);
+		String apiBase = queryTextApiBase();
 		String prompt = template.replace("{format}", json ? "json" : "expression");
 		prompt = prompt.replace("{comment}", json ? "//" : "#");
 		prompt = prompt.replace("{ties}", queryTextTieSection(json));
 		prompt = prompt.replace("{properties}", queryTextPropertySection(json));
+		prompt = prompt.replace("{fieldLists}", queryTextFieldListSection(json, apiBase));
+		prompt = prompt.replace("{parseUrl}", queryTextParseUrl(apiBase));
+		prompt = prompt.replace("{jwt}", includeCurrentQuery ? "" : queryTextJwt());
 		prompt = prompt.replace("{currentQuery}", includeCurrentQuery && queryText != null ? queryText : "");
 		return prompt;
+	}
+
+	private String queryTextFieldListSection(boolean json, String apiBase) {
+		CriterionPropertyVO inquiry = findQueryTextProperty(QUERY_TEXT_INQUIRY_PROPERTY);
+		CriterionPropertyVO tag = findQueryTextProperty(QUERY_TEXT_TAG_PROPERTY);
+		CriterionPropertyVO ecrfField = findQueryTextProperty(QUERY_TEXT_ECRF_FIELD_PROPERTY);
+		if (inquiry == null && tag == null && ecrfField == null) {
+			return "";
+		}
+		StringBuilder section = new StringBuilder();
+		section.append(Labels.getMessageLocalized("search_query_text_prompt_field_lists_intro",
+				Labels.getStringLocalized("search_query_text_prompt_value_name"),
+				Labels.getStringLocalized("search_query_text_prompt_value_id")));
+		appendQueryTextFieldListLine(section, inquiry, json, apiBase + "/trial/{trialId}/list/inquiry");
+		appendQueryTextFieldListLine(section, tag, json, apiBase + "/trial/{trialId}/list/probandlistentrytag");
+		appendQueryTextFieldListLine(section, ecrfField, json, apiBase + "/trial/{trialId}/list/ecrffield");
+		section.append('\n');
+		section.append(Labels.getStringLocalized("search_query_text_prompt_input_fields"));
+		section.append(": ");
+		section.append(apiBase);
+		section.append("/inputfield");
+		section.append('\n');
+		return section.toString();
+	}
+
+	private void appendQueryTextFieldListLine(StringBuilder section, CriterionPropertyVO propertyVO, boolean json, String url) {
+		if (propertyVO == null) {
+			return;
+		}
+		String name = json || CommonUtil.isEmptyString(propertyVO.getName()) ? propertyVO.getProperty() : propertyVO.getName();
+		section.append('\n');
+		section.append(name);
+		section.append(": ");
+		section.append(url);
+	}
+
+	private CriterionPropertyVO findQueryTextProperty(String property) {
+		if (propertyVOsMap == null || property == null) {
+			return null;
+		}
+		Iterator<CriterionPropertyVO> it = propertyVOsMap.values().iterator();
+		while (it.hasNext()) {
+			CriterionPropertyVO propertyVO = it.next();
+			if (propertyVO != null && property.equals(propertyVO.getProperty())) {
+				return propertyVO;
+			}
+		}
+		return null;
+	}
+
+	private String queryTextParseUrl(String apiBase) {
+		String module = queryTextModulePath(getDBModule());
+		if (CommonUtil.isEmptyString(apiBase) || CommonUtil.isEmptyString(module)) {
+			return "";
+		}
+		return apiBase + "/search/" + module + "/criteriontext";
+	}
+
+	private static String queryTextModulePath(DBModule module) {
+		if (module == null) {
+			return "";
+		}
+		String name = module.name();
+		if (name.endsWith("_DB")) {
+			name = name.substring(0, name.length() - 3);
+		}
+		return name.toLowerCase().replace("_", "");
+	}
+
+	private static String queryTextApiBase() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context == null || context.getExternalContext() == null) {
+			return "";
+		}
+		Object requestObject = context.getExternalContext().getRequest();
+		if (!(requestObject instanceof HttpServletRequest)) {
+			return "";
+		}
+		HttpServletRequest request = (HttpServletRequest) requestObject;
+		StringBuffer url = request.getRequestURL();
+		String uri = request.getRequestURI();
+		if (url == null || uri == null || url.length() < uri.length()) {
+			return "";
+		}
+		String contextPath = request.getContextPath();
+		if (contextPath == null) {
+			contextPath = "";
+		}
+		return url.substring(0, url.length() - uri.length()) + contextPath + "/" + WebUtil.REST_API_PATH;
+	}
+
+	private static String queryTextJwt() {
+		String jwt = WebUtil.issueQueryTextJwt();
+		return jwt == null ? "" : jwt;
 	}
 
 	private String queryTextTieSection(boolean json) {
