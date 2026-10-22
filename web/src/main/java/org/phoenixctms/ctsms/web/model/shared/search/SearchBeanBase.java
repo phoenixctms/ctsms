@@ -48,6 +48,7 @@ import org.phoenixctms.ctsms.vo.CriterionOutVO;
 import org.phoenixctms.ctsms.vo.CriterionPropertyVO;
 import org.phoenixctms.ctsms.vo.CriterionRestrictionVO;
 import org.phoenixctms.ctsms.vo.CriterionTieVO;
+import org.phoenixctms.ctsms.vo.DBModuleVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetDetailVO;
 import org.phoenixctms.ctsms.vo.IntermediateSetSummaryVO;
 import org.phoenixctms.ctsms.web.component.datatable.DataTable;
@@ -1365,6 +1366,14 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 	*/
 
+	private String queryTextRootName() {
+		DBModuleVO module = WebUtil.getDBModuleVO(getDBModule());
+		if (module != null && !CommonUtil.isEmptyString(module.getName())) {
+			return module.getName();
+		}
+		return queryTextModulePath(getDBModule());
+	}
+
 	private String buildQueryTextPrompt(boolean includeCurrentQuery) {
 		String template = Settings.getString(SettingCodes.QUERY_TEXT_LLM_PROMPT_TEMPLATE, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_PROMPT_TEMPLATE);
 		if (CommonUtil.isEmptyString(template)) {
@@ -1373,6 +1382,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		boolean json = QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat);
 		String apiBase = queryTextApiBase();
 		String prompt = template.replace("{format}", json ? "json" : "expression");
+		prompt = prompt.replace("{root}", queryTextRootName());
 		prompt = prompt.replace("{article}", json ? "a" : "an");
 		prompt = prompt.replace("{comment}", json ? "//" : "#");
 		prompt = prompt.replace("{commentHint}",
