@@ -54,6 +54,7 @@ import org.phoenixctms.ctsms.web.component.datatable.DataTable;
 import org.phoenixctms.ctsms.web.conversion.IDVOConverter;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
+import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -1261,6 +1262,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 
 	public void applyQueryText() {
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		if (sessionScopeBean == null || !sessionScopeBean.isExperimentalUser()) {
+			return;
+		}
 		try {
 			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
 					Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
