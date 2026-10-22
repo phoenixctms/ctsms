@@ -6,6 +6,51 @@ function syncQueryTextEditor() {
 	}
 }
 
+function queryTextEditorValue() {
+	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+		return queryTextEditor.instance.getValue() || "";
+	}
+	return "";
+}
+
+function updateQueryTextActionButtons() {
+	var empty = queryTextEditorValue().replace(/^\s+|\s+$/g, "").length === 0;
+	var buttons = document.getElementsByClassName("ctsms-query-text-requires-content");
+	for (var i = 0; i < buttons.length; i++) {
+		buttons[i].disabled = empty;
+		var className = buttons[i].className;
+		if (empty) {
+			if (className.indexOf("ui-state-disabled") < 0) {
+				buttons[i].className = className + " ui-state-disabled";
+			}
+		} else {
+			buttons[i].className = className.replace(/(^|\s)ui-state-disabled(\s|$)/g, " ");
+		}
+	}
+}
+
+function bindQueryTextActionButtons() {
+	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
+		return;
+	}
+	var cm = queryTextEditor.instance;
+	if (!cm.ctsmsQueryTextButtonsBound) {
+		cm.ctsmsQueryTextButtonsBound = true;
+		if (typeof cm.on === "function") {
+			cm.on("change", updateQueryTextActionButtons);
+		} else if (typeof cm.setOption === "function") {
+			var previous = typeof cm.getOption === "function" ? cm.getOption("onChange") : null;
+			cm.setOption("onChange", function(editor, change) {
+				if (typeof previous === "function") {
+					previous(editor, change);
+				}
+				updateQueryTextActionButtons();
+			});
+		}
+	}
+	updateQueryTextActionButtons();
+}
+
 function refreshQueryTextEditor() {
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.refresh();
@@ -13,8 +58,10 @@ function refreshQueryTextEditor() {
 			if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 				queryTextEditor.instance.refresh();
 			}
+			bindQueryTextActionButtons();
 		}, 50);
 	}
+	bindQueryTextActionButtons();
 }
 
 function handleSearchTabChange(index) {
