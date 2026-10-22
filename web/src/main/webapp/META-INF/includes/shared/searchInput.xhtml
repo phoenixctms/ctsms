@@ -235,9 +235,11 @@
 										readonly="true" styleClass="ctsms-query-text-prompt-source" />
 									<p:commandButton id="copy_query_text_prompt" type="button"
 										value="#{labels.search_query_text_prompt_button_label}"
+										title="#{labels.search_query_text_prompt_button_title}"
 										styleClass="ctsms-query-text-requires-content"
 										disabled="#{searchBean.queryTextBlank}"
 										onclick="var fields=document.getElementsByClassName('ctsms-query-text-prompt-source');if(fields.length){var src=fields[0];var marker='{{CTSMS_CURRENT_QUERY}}';var query='';if(typeof queryTextEditor!=='undefined'&amp;&amp;queryTextEditor&amp;&amp;queryTextEditor.instance){query=queryTextEditor.instance.getValue()||'';}var parts=query.split(/\r\n|\n|\r/);var indented='';if(query.length){for(var i=0;i&lt;parts.length;i++){if(i&gt;0){indented+='\n';}indented+='  '+parts[i];}}var base=src.value;src.value=base.split(marker).join(indented);src.focus();src.select();try{document.execCommand('copy');}catch(e){}src.value=base;}return false;" />
+									<!--
 									<p:commandButton id="generate_query_text"
 										value="#{labels.search_query_text_generate_button_label}"
 										styleClass="ctsms-query-text-requires-content"
@@ -247,6 +249,7 @@
 										update=":search_form:tabView:query_text,:search_form:messages"
 										onclick="syncQueryTextEditor()"
 										oncomplete="refreshQueryTextEditor()" />
+									-->
 								</h:panelGroup>
 							</h:panelGrid>
 							<pe:codeMirror id="query_text" widgetVar="queryTextEditor"
