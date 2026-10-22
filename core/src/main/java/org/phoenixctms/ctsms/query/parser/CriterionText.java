@@ -185,7 +185,7 @@ final class CriterionText {
 	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text, Integer maxCriterions) throws ServiceException {
 		Catalog catalog = new Catalog(parser, module, maxCriterions);
 		String source = text == null ? "" : text;
-		int content = indexOfContent(source);
+		int content = indexOfContent(source, catalog.propertyNames);
 		if (content >= source.length()) {
 			return new ArrayList<CriterionInVO>();
 		}
@@ -373,7 +373,7 @@ final class CriterionText {
 		int i = 0;
 		int n = text.length();
 		while (i < n) {
-			i = skipSeparators(text, i);
+			i = skipSeparators(text, i, catalog.propertyNames);
 			if (i >= n) {
 				break;
 			}
@@ -538,7 +538,7 @@ final class CriterionText {
 	}
 
 	private static TermResult parseTerm(String text, int offset, Catalog catalog, boolean bracket) throws ServiceException {
-		int start = skipSeparators(text, offset);
+		int start = skipSeparators(text, offset, catalog.propertyNames);
 		NamedId property = matchLongest(text, start, catalog.propertyNames);
 		if (property == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_PROPERTY, snippet(text, start));
@@ -836,7 +836,7 @@ final class CriterionText {
 				|| object.has("stringValue") || object.has("longValue") || object.has("booleanValue") || object.has("floatValue");
 	}
 
-	private static int indexOfContent(String text) {
+	private static int indexOfContent(String text, List<NamedId> propertyNames) {
 		int i = 0;
 		int n = text.length();
 		while (i < n) {
@@ -844,6 +844,9 @@ final class CriterionText {
 			if (Character.isWhitespace(c)) {
 				i++;
 				continue;
+			}
+			if (c == '#' && matchLongest(text, i, propertyNames) != null) {
+				break;
 			}
 			if (c == '#' || (c == '/' && i + 1 < n && text.charAt(i + 1) == '/')) {
 				i = skipLine(text, i);
@@ -868,7 +871,7 @@ final class CriterionText {
 		return i;
 	}
 
-	private static int skipSeparators(String text, int i) {
+	private static int skipSeparators(String text, int i, List<NamedId> propertyNames) {
 		int n = text.length();
 		while (i < n) {
 			if (Character.isWhitespace(text.charAt(i))) {
@@ -876,6 +879,9 @@ final class CriterionText {
 				continue;
 			}
 			if (text.charAt(i) == '#') {
+				if (matchLongest(text, i, propertyNames) != null) {
+					break;
+				}
 				i = skipLine(text, i);
 				continue;
 			}

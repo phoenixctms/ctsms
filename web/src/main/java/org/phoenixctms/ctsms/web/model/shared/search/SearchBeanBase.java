@@ -1329,6 +1329,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		this.queryTextFormat = queryTextFormat;
 	}
 
+	public boolean isQueryTextBlank() {
+		return CommonUtil.isEmptyString(queryText);
+	}
+
 	public String getQueryTextPrompt() {
 		return buildQueryTextPrompt(false);
 	}
@@ -1362,14 +1366,47 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		boolean json = QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat);
 		String apiBase = queryTextApiBase();
 		String prompt = template.replace("{format}", json ? "json" : "expression");
+		prompt = prompt.replace("{article}", json ? "a" : "an");
 		prompt = prompt.replace("{comment}", json ? "//" : "#");
-		prompt = prompt.replace("{ties}", queryTextTieSection(json));
-		prompt = prompt.replace("{properties}", queryTextPropertySection(json));
-		prompt = prompt.replace("{fieldLists}", queryTextFieldListSection(json, apiBase));
+		prompt = prompt.replace("{commentHint}",
+				Labels.getStringLocalized(json ? "search_query_text_prompt_comment_json" : "search_query_text_prompt_comment_expression"));
+		prompt = prompt.replace("{ties}", indentQueryTextLines(queryTextTieSection(json)));
+		prompt = prompt.replace("{properties}", indentQueryTextLines(queryTextPropertySection(json)));
+		prompt = prompt.replace("{fieldLists}", indentQueryTextLines(queryTextFieldListSection(json, apiBase)));
 		prompt = prompt.replace("{parseUrl}", queryTextParseUrl(apiBase));
 		prompt = prompt.replace("{jwt}", includeCurrentQuery ? "" : queryTextJwt());
-		prompt = prompt.replace("{currentQuery}", includeCurrentQuery && queryText != null ? queryText : "");
+		prompt = prompt.replace("{currentQuery}", includeCurrentQuery
+				? indentQueryTextLines(queryText != null ? queryText : "")
+				: "{{CTSMS_CURRENT_QUERY}}");
 		return prompt;
+	}
+
+	private static String indentQueryTextLines(String text) {
+		if (CommonUtil.isEmptyString(text)) {
+			return "";
+		}
+		String[] lines = text.split("\n", -1);
+		boolean trailingBreak = text.endsWith("\n");
+		int last = lines.length;
+		if (last > 0 && lines[last - 1].length() == 0) {
+			last--;
+		}
+		StringBuilder indented = new StringBuilder();
+		for (int i = 0; i < last; i++) {
+			if (i > 0) {
+				indented.append('\n');
+			}
+			indented.append("  ");
+			String line = lines[i];
+			if (line.endsWith("\r")) {
+				line = line.substring(0, line.length() - 1);
+			}
+			indented.append(line);
+		}
+		if (trailingBreak && indented.length() > 0) {
+			indented.append('\n');
+		}
+		return indented.toString();
 	}
 
 	private String queryTextFieldListSection(boolean json, String apiBase) {
@@ -1594,16 +1631,25 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				return Labels.getStringLocalized("search_query_text_prompt_value_decimal");
 			case DATE:
 			case DATE_HASH:
-				return Labels.getMessageLocalized("search_query_text_prompt_value_date", WebUtil.getDateFormat());
+				return queryTextPatternHint("search_query_text_prompt_value_date");
 			case TIME:
 			case TIME_HASH:
-				return Labels.getMessageLocalized("search_query_text_prompt_value_time", WebUtil.getDateFormat());
+				return queryTextPatternHint("search_query_text_prompt_value_time");
 			case TIMESTAMP:
 			case TIMESTAMP_HASH:
-				return Labels.getMessageLocalized("search_query_text_prompt_value_timestamp", WebUtil.getDateFormat());
+				return queryTextPatternHint("search_query_text_prompt_value_timestamp");
 			default:
 				return Labels.getStringLocalized("search_query_text_prompt_value_text");
 		}
+	}
+
+	private static String queryTextPatternHint(String labelKey) {
+		String hint = Labels.getStringLocalized(labelKey);
+		String pattern = WebUtil.getDateFormat();
+		if (CommonUtil.isEmptyString(pattern)) {
+			return hint;
+		}
+		return hint + " (" + pattern + ")";
 	}
 
 	private static String queryTextValueField(CriterionValueType type) {
@@ -1640,10 +1686,14 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			return "";
 		}
 		for (int i = 0; i < tokens.size(); i++) {
-			if (i > 0) {
+			String token = tokens.get(i);
+			if (token == null || token.trim().length() == 0) {
+				continue;
+			}
+			if (joined.length() > 0) {
 				joined.append(", ");
 			}
-			joined.append(tokens.get(i));
+			joined.append(token.trim());
 		}
 		return joined.toString();
 	}
