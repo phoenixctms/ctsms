@@ -1,13 +1,13 @@
 package org.phoenixctms.ctsms.web.model.shared.search;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+// import java.io.BufferedReader;
+// import java.io.IOException;
+// import java.io.InputStream;
+// import java.io.InputStreamReader;
+// import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+// import java.net.HttpURLConnection;
+// import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,9 +65,9 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.phoenixctms.ctsms.web.bundle.Labels;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+// import com.google.gson.JsonArray;
+// import com.google.gson.JsonElement;
+// import com.google.gson.JsonObject;
 
 import org.primefaces.context.RequestContext;
 
@@ -1340,6 +1340,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	public void setQueryTextPrompt(String queryTextPrompt) {
 	}
 
+	/*
 	public void generateQueryText() {
 		String url = Settings.getString(SettingCodes.QUERY_TEXT_LLM_URL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_URL);
 		if (CommonUtil.isEmptyString(url)) {
@@ -1357,6 +1358,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_failed"));
 		}
 	}
+	*/
 
 	private String buildQueryTextPrompt(boolean includeCurrentQuery) {
 		String template = Settings.getString(SettingCodes.QUERY_TEXT_LLM_PROMPT_TEMPLATE, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_PROMPT_TEMPLATE);
@@ -1698,6 +1700,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return joined.toString();
 	}
 
+	/*
 	private String requestQueryText(String url, String prompt) throws IOException {
 		int timeout = Settings.getInt(SettingCodes.QUERY_TEXT_LLM_TIMEOUT_MS, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_TIMEOUT_MS);
 		if (timeout <= 0) {
@@ -1802,4 +1805,5 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		}
 		return trimmed;
 	}
+	*/
 }
