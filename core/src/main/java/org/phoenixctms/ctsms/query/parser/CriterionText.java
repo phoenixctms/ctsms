@@ -42,6 +42,11 @@ import com.google.gson.JsonSyntaxException;
 final class CriterionText {
 
 	private static final Gson JSON = new GsonBuilder().serializeNulls().setPrettyPrinting().disableHtmlEscaping().create();
+	private static final String JSON_DATE_PATTERN = "yyyy-MM-dd";
+	private static final String JSON_TIME_PATTERN = "HH:mm:ss";
+	private static final String JSON_TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss";
+	private static final String JSON_TIMESTAMP_T_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+	private static final String JSON_TIME_SHORT_PATTERN = "HH:mm";
 
 	private static final class TermResult {
 
@@ -217,6 +222,9 @@ final class CriterionText {
 		if (!hasValue(property, restriction)) {
 			return;
 		}
+		if (appendJsonTemporal(object, criterion, property.getValueType())) {
+			return;
+		}
 		String value = CommonUtil.getCriterionValueAsString(criterion, property.getValueType(), catalog.userDateFormat, catalog.userDecimalSeparator);
 		if (CommonUtil.isEmptyString(value)) {
 			return;
@@ -234,12 +242,6 @@ final class CriterionText {
 			case FLOAT_HASH:
 				object.addProperty("floatValue", criterion.getFloatValue());
 				break;
-			case DATE:
-			case DATE_HASH:
-			case TIME:
-			case TIME_HASH:
-			case TIMESTAMP:
-			case TIMESTAMP_HASH:
 			case STRING:
 			case STRING_HASH:
 				object.addProperty(valueField(property.getValueType()), value);
@@ -765,6 +767,9 @@ final class CriterionText {
 			return;
 		}
 		CriterionValueType type = property.getValueType();
+		if (setIsoDateValue(criterion, type, trimmed)) {
+			return;
+		}
 		try {
 			CommonUtil.setCriterionValueFromString(criterion, type, trimmed, catalog.userDateFormat, catalog.userDecimalSeparator);
 		} catch (RuntimeException first) {
@@ -782,49 +787,103 @@ final class CriterionText {
 		}
 	}
 
-	private static boolean setAlternateValue(CriterionInVO criterion, CriterionValueType type, String value) {
-		String[] patterns;
+	private static boolean appendJsonTemporal(JsonObject object, CriterionInstantVO criterion, CriterionValueType type) {
+		Date date;
+		String pattern;
 		switch (type) {
 			case DATE:
 			case DATE_HASH:
-				patterns = new String[] { "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss" };
+				date = criterion.getDateValue();
+				pattern = JSON_DATE_PATTERN;
 				break;
 			case TIME:
 			case TIME_HASH:
-				patterns = new String[] { "HH:mm:ss", "HH:mm", "yyyy-MM-dd HH:mm:ss" };
+				date = criterion.getTimeValue();
+				pattern = JSON_TIME_PATTERN;
 				break;
 			case TIMESTAMP:
 			case TIMESTAMP_HASH:
-				patterns = new String[] { "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd" };
+				date = criterion.getTimestampValue();
+				pattern = JSON_TIMESTAMP_PATTERN;
 				break;
-			case FLOAT:
-			case FLOAT_HASH:
+			default:
+				return false;
+		}
+		if (date != null) {
+			object.addProperty(valueField(type), CommonUtil.formatDate(date, pattern));
+		}
+		return true;
+	}
+
+	private static String[] isoPatterns(CriterionValueType type) {
+		switch (type) {
+			case DATE:
+			case DATE_HASH:
+				return new String[] { JSON_DATE_PATTERN, JSON_TIMESTAMP_PATTERN, JSON_TIMESTAMP_T_PATTERN };
+			case TIME:
+			case TIME_HASH:
+				return new String[] { JSON_TIME_PATTERN, JSON_TIME_SHORT_PATTERN, JSON_TIMESTAMP_PATTERN };
+			case TIMESTAMP:
+			case TIMESTAMP_HASH:
+				return new String[] { JSON_TIMESTAMP_PATTERN, JSON_TIMESTAMP_T_PATTERN, JSON_DATE_PATTERN };
+			default:
+				return null;
+		}
+	}
+
+	private static boolean setIsoDateValue(CriterionInVO criterion, CriterionValueType type, String value) {
+		String[] patterns = isoPatterns(type);
+		if (patterns == null) {
+			return false;
+		}
+		for (int i = 0; i < patterns.length; i++) {
+			try {
+				Date date = CommonUtil.parseDate(value, patterns[i]);
+				if (!value.equals(CommonUtil.formatDate(date, patterns[i]))) {
+					continue;
+				}
+				return applyParsedDate(criterion, type, date);
+			} catch (RuntimeException ignored) {
+			}
+		}
+		return false;
+	}
+
+	private static boolean applyParsedDate(CriterionInVO criterion, CriterionValueType type, Date date) {
+		switch (type) {
+			case DATE:
+			case DATE_HASH:
+				criterion.setDateValue(date);
+				return true;
+			case TIME:
+			case TIME_HASH:
+				criterion.setTimeValue(date);
+				return true;
+			case TIMESTAMP:
+			case TIMESTAMP_HASH:
+				criterion.setTimestampValue(date);
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private static boolean setAlternateValue(CriterionInVO criterion, CriterionValueType type, String value) {
+		String[] patterns = isoPatterns(type);
+		if (patterns == null) {
+			if (CriterionValueType.FLOAT.equals(type) || CriterionValueType.FLOAT_HASH.equals(type)) {
 				Float dotted = CommonUtil.parseFloat(value, ".");
 				if (dotted == null) {
 					return false;
 				}
 				criterion.setFloatValue(dotted);
 				return true;
-			default:
-				return false;
+			}
+			return false;
 		}
 		for (int i = 0; i < patterns.length; i++) {
 			try {
-				Date date = CommonUtil.parseDate(value, patterns[i]);
-				switch (type) {
-					case DATE:
-					case DATE_HASH:
-						criterion.setDateValue(date);
-						break;
-					case TIME:
-					case TIME_HASH:
-						criterion.setTimeValue(date);
-						break;
-					default:
-						criterion.setTimestampValue(date);
-						break;
-				}
-				return true;
+				return applyParsedDate(criterion, type, CommonUtil.parseDate(value, patterns[i]));
 			} catch (RuntimeException ignored) {
 			}
 		}
