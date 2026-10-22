@@ -28,6 +28,7 @@ public final class DefaultSettings {
 	public final static ArrayList<String> DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS = new ArrayList<String>();
 	public final static ArrayList<String> DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS = new ArrayList<String>();
 	public final static int MAX_CRITERIONS = 30;
+	public final static ArrayList<String> EXPERIMENTAL_USERS = new ArrayList<String>();
 	// public final static String QUERY_TEXT_LLM_URL = "";
 	// public final static String QUERY_TEXT_LLM_API_KEY = "";
 	// public final static String QUERY_TEXT_LLM_API_KEY_HEADER = "Authorization";

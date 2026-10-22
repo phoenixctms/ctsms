@@ -7,6 +7,7 @@ public interface SettingCodes {
 	public final static String DEFAULT_DUTY_ROSTER_CALENDAR_FILTERS = "default_duty_roster_calendar_filters";
 	public final static String DEFAULT_INVENTORY_BOOKING_CALENDAR_FILTERS = "default_inventory_booking_calendar_filters";
 	public final static String MAX_CRITERIONS = "max_criterions";
+	public final static String EXPERIMENTAL_USERS = "experimental_users";
 	// public final static String QUERY_TEXT_LLM_URL = "query_text_llm_url";
 	// public final static String QUERY_TEXT_LLM_API_KEY = "query_text_llm_api_key";
 	// public final static String QUERY_TEXT_LLM_API_KEY_HEADER = "query_text_llm_api_key_header";

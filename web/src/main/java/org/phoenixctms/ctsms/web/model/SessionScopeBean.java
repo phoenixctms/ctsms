@@ -1035,6 +1035,23 @@ public class SessionScopeBean implements FilterItemsStore {
 		return auth.getUsername();
 	}
 
+	public synchronized boolean isExperimentalUser() {
+		String username = getUsername();
+		if (CommonUtil.isEmptyString(username)) {
+			return false;
+		}
+		ArrayList<String> users = Settings.getStringList(SettingCodes.EXPERIMENTAL_USERS, Bundle.SETTINGS, DefaultSettings.EXPERIMENTAL_USERS);
+		if (users == null) {
+			return false;
+		}
+		for (int i = 0; i < users.size(); i++) {
+			if (username.equals(users.get(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@PostConstruct
 	private void init() {
 		initSets();
