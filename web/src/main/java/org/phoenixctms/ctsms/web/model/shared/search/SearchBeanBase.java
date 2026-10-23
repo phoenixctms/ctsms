@@ -1487,14 +1487,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 
 	private static String queryTextModulePath(DBModule module) {
-		if (module == null) {
+		if (module == null || module.getValue() == null) {
 			return "";
 		}
-		String name = module.name();
-		if (name.endsWith("_DB")) {
-			name = name.substring(0, name.length() - 3);
-		}
-		return name.toLowerCase().replace("_", "");
+		return module.getValue().replace("_", "");
 	}
 
 	private static String queryTextApiBase() {

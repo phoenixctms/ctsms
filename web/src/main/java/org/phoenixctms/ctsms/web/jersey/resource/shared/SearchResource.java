@@ -350,29 +350,12 @@ public final class SearchResource {
 		if (module == null) {
 			return null;
 		}
-		if ("inventory".equals(module)) {
-			return DBModule.INVENTORY_DB;
-		}
-		if ("staff".equals(module)) {
-			return DBModule.STAFF_DB;
-		}
-		if ("course".equals(module)) {
-			return DBModule.COURSE_DB;
-		}
-		if ("user".equals(module)) {
-			return DBModule.USER_DB;
-		}
-		if ("trial".equals(module)) {
-			return DBModule.TRIAL_DB;
-		}
-		if ("proband".equals(module)) {
-			return DBModule.PROBAND_DB;
-		}
-		if ("inputfield".equals(module)) {
-			return DBModule.INPUT_FIELD_DB;
-		}
-		if ("massmail".equals(module)) {
-			return DBModule.MASS_MAIL_DB;
+		DBModule[] modules = DBModule.values();
+		for (int i = 0; i < modules.length; i++) {
+			String value = modules[i].getValue();
+			if (value != null && module.equals(value.replace("_", ""))) {
+				return modules[i];
+			}
 		}
 		return null;
 	}
