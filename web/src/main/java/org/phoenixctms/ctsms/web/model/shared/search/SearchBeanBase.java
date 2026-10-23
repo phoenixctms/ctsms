@@ -944,7 +944,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (out != null && out.isDeferredDelete()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_WARN, MessageCodes.MARKED_FOR_DELETION, deferredDeleteReason);
 		}
-		refreshQueryText();
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		if (sessionScopeBean != null && sessionScopeBean.isExperimentalUser()) {
+			refreshQueryText();
+		}
 	}
 
 	protected abstract void initSpecificSets();
