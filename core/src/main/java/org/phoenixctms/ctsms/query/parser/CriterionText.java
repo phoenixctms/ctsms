@@ -542,7 +542,7 @@ final class CriterionText {
 	private static int scanValueEnd(String text, int start) {
 		int end = start;
 		int depth = 0;
-		while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r' && text.charAt(end) != '#') {
+		while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r') {
 			char c = text.charAt(end);
 			if (c == '(') {
 				depth++;
@@ -561,7 +561,7 @@ final class CriterionText {
 		while (k < text.length() && (text.charAt(k) == ')' || text.charAt(k) == ' ' || text.charAt(k) == '\t')) {
 			k++;
 		}
-		return k >= text.length() || text.charAt(k) == '\n' || text.charAt(k) == '\r' || text.charAt(k) == '#';
+		return k >= text.length() || text.charAt(k) == '\n' || text.charAt(k) == '\r';
 	}
 
 	private static TermResult parseTerm(String text, int offset, Catalog catalog, boolean bracket) throws ServiceException {
