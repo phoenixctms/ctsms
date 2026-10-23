@@ -539,6 +539,31 @@ final class CriterionText {
 		return criterion;
 	}
 
+	private static int scanValueEnd(String text, int start) {
+		int end = start;
+		int depth = 0;
+		while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r' && text.charAt(end) != '#') {
+			char c = text.charAt(end);
+			if (c == '(') {
+				depth++;
+			} else if (c == ')' && depth > 0) {
+				depth--;
+			} else if (c == ')' && end > start && Character.isWhitespace(text.charAt(end - 1)) && closesValueAtEndOfLine(text, end)) {
+				break;
+			}
+			end++;
+		}
+		return end;
+	}
+
+	private static boolean closesValueAtEndOfLine(String text, int parenthesis) {
+		int k = parenthesis + 1;
+		while (k < text.length() && (text.charAt(k) == ')' || text.charAt(k) == ' ' || text.charAt(k) == '\t')) {
+			k++;
+		}
+		return k >= text.length() || text.charAt(k) == '\n' || text.charAt(k) == '\r' || text.charAt(k) == '#';
+	}
+
 	private static TermResult parseTerm(String text, int offset, Catalog catalog, boolean bracket) throws ServiceException {
 		int start = skipSeparators(text, offset, catalog.propertyNames);
 		NamedId property = matchLongest(text, start, catalog.propertyNames);
@@ -565,13 +590,7 @@ final class CriterionText {
 			value = text.substring(i).trim();
 			next = text.length();
 		} else {
-			int end = i;
-			while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r' && text.charAt(end) != '#') {
-				if (text.charAt(end) == ')' && (end == i || Character.isWhitespace(text.charAt(end - 1)))) {
-					break;
-				}
-				end++;
-			}
+			int end = scanValueEnd(text, i);
 			value = text.substring(i, end).trim();
 			next = end;
 			if (next < text.length() && (text.charAt(next) == '\n' || text.charAt(next) == '\r')) {
