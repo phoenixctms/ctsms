@@ -36,6 +36,11 @@
 			actionListener="#{searchBean.loadQueryText}"
 			update=":search_form:tabView:query_text_panel"
 			oncomplete="refreshQueryTextEditor()" />
+		<script type="text/javascript">
+		//<![CDATA[
+		searchQueryTextTabVisible = #{sessionScopeBean.experimentalUser};
+		//]]>
+		</script>
 		<h:panelGrid columns="2" cellpadding="0"
 			styleClass="ctsms-search-content-panelgrid ctsms-content-panelgrid-maxheight"
 			columnClasses="ctsms-criteria-list-column,ctsms-criteria-input-column">
@@ -205,6 +210,7 @@
 					</p:panel>
 				</p:tab>
 				<p:tab id="searchQueryText" disabled="false"
+					rendered="#{sessionScopeBean.experimentalUser}"
 					titleStyleClass="ctsms-tabtitle"
 					title="#{labels.search_query_text_tab_label}">
 					<p:panel id="query_text_panel" styleClass="ctsms-query-text-panel">
@@ -262,7 +268,6 @@
 							<h:panelGroup layout="block" styleClass="ctsms-query-text-apply">
 								<p:commandButton id="apply_query_text"
 									value="#{labels.search_query_text_apply_button_label}"
-									disabled="#{!sessionScopeBean.experimentalUser}"
 									process="@this,:search_form:tabView:query_text"
 									actionListener="#{searchBean.applyQueryText}"
 									update=":search_form:tabView:criteria_input,:search_form:tabView:query_text_panel,:search_form:messages"
