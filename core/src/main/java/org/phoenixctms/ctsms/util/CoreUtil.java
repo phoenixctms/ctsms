@@ -1024,6 +1024,7 @@ public final class CoreUtil implements ApplicationContextAware {
 	// Runtime.exec attaches stdout and stderr to pipes. Background jobs return after one second
 	// without a reader, so the child blocks in write() once a pipe buffer fills (~64KB).
 	private static final int PROCESS_STDERR_CAPTURE_LIMIT = 64 * 1024;
+	private static final long PROCESS_DRAIN_JOIN_MILLISECONDS = 5000L;
 
 	private static String[] splitCommand(String command) {
 		StringTokenizer st = new StringTokenizer(command);
@@ -1035,7 +1036,7 @@ public final class CoreUtil implements ApplicationContextAware {
 	}
 
 	// Keep the newest stderr, capped at captureLimit, so a late failure is what runProcess throws.
-	private static void appendTail(StringBuilder sink, char[] buf, int n, int captureLimit) {
+	private static void appendTail(StringBuffer sink, char[] buf, int n, int captureLimit) {
 		if (sink == null || n <= 0 || captureLimit <= 0) {
 			return;
 		}
@@ -1051,7 +1052,7 @@ public final class CoreUtil implements ApplicationContextAware {
 		sink.append(buf, 0, n);
 	}
 
-	private static Thread drainProcessStream(final InputStream in, final StringBuilder sink, final int captureLimit) {
+	private static Thread drainProcessStream(final InputStream in, final StringBuffer sink, final int captureLimit) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -1076,7 +1077,7 @@ public final class CoreUtil implements ApplicationContextAware {
 			throw new IllegalArgumentException("Empty command");
 		}
 		Process process = new ProcessBuilder(command).start();
-		StringBuilder stderr = new StringBuilder();
+		StringBuffer stderr = new StringBuffer();
 		Thread stdoutDrain = drainProcessStream(process.getInputStream(), null, 0);
 		Thread stderrDrain = drainProcessStream(process.getErrorStream(), stderr, PROCESS_STDERR_CAPTURE_LIMIT);
 		boolean finished;
@@ -1087,8 +1088,8 @@ public final class CoreUtil implements ApplicationContextAware {
 			finished = process.waitFor(JOB_EXIST_VALUE_WAIT_MILLISECONDS, TimeUnit.MILLISECONDS);
 		}
 		if (finished) {
-			stdoutDrain.join();
-			stderrDrain.join();
+			stdoutDrain.join(PROCESS_DRAIN_JOIN_MILLISECONDS);
+			stderrDrain.join(PROCESS_DRAIN_JOIN_MILLISECONDS);
 			if (process.exitValue() != 0) {
 				throw new Exception(stderr.toString());
 			}
