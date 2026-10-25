@@ -1034,20 +1034,32 @@ public final class CoreUtil implements ApplicationContextAware {
 		return cmd;
 	}
 
+	// Keep the newest stderr, capped at captureLimit, so a late failure is what runProcess throws.
+	private static void appendTail(StringBuilder sink, char[] buf, int n, int captureLimit) {
+		if (sink == null || n <= 0 || captureLimit <= 0) {
+			return;
+		}
+		if (n >= captureLimit) {
+			sink.setLength(0);
+			sink.append(buf, n - captureLimit, captureLimit);
+			return;
+		}
+		int overflow = sink.length() + n - captureLimit;
+		if (overflow > 0) {
+			sink.delete(0, overflow);
+		}
+		sink.append(buf, 0, n);
+	}
+
 	private static Thread drainProcessStream(final InputStream in, final StringBuilder sink, final int captureLimit) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				char[] buf = new char[4096];
-				int kept = 0;
 				try (InputStreamReader reader = new InputStreamReader(in)) {
 					int n;
 					while ((n = reader.read(buf)) >= 0) {
-						if (sink != null && n > 0 && kept < captureLimit) {
-							int take = Math.min(n, captureLimit - kept);
-							sink.append(buf, 0, take);
-							kept += take;
-						}
+						appendTail(sink, buf, n, captureLimit);
 					}
 				} catch (IOException e) {
 					// The child closed the pipe, or the process was destroyed.
