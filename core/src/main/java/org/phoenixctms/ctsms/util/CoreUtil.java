@@ -1,12 +1,12 @@
 package org.phoenixctms.ctsms.util;
 
 import java.awt.Dimension;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,6 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
@@ -1020,46 +1021,78 @@ public final class CoreUtil implements ApplicationContextAware {
 		}
 	}
 
-	private static Process runProcess(Process process, boolean blocking) throws Exception {
+	// Runtime.exec attaches stdout and stderr to pipes. Background jobs return after one second
+	// without a reader, so the child blocks in write() once a pipe buffer fills (~64KB).
+	private static final int PROCESS_STDERR_CAPTURE_LIMIT = 64 * 1024;
+
+	private static String[] splitCommand(String command) {
+		StringTokenizer st = new StringTokenizer(command);
+		String[] cmd = new String[st.countTokens()];
+		for (int i = 0; st.hasMoreTokens(); i++) {
+			cmd[i] = st.nextToken();
+		}
+		return cmd;
+	}
+
+	private static Thread drainProcessStream(final InputStream in, final StringBuilder sink, final int captureLimit) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				char[] buf = new char[4096];
+				int kept = 0;
+				try (InputStreamReader reader = new InputStreamReader(in)) {
+					int n;
+					while ((n = reader.read(buf)) >= 0) {
+						if (sink != null && n > 0 && kept < captureLimit) {
+							int take = Math.min(n, captureLimit - kept);
+							sink.append(buf, 0, take);
+							kept += take;
+						}
+					}
+				} catch (IOException e) {
+					// The child closed the pipe, or the process was destroyed.
+				}
+			}
+		}, sink == null ? "process-stdout-drain" : "process-stderr-drain");
+		thread.setDaemon(true);
+		thread.start();
+		return thread;
+	}
+
+	private static Process runProcess(String[] command, boolean blocking) throws Exception {
+		if (command == null || command.length == 0) {
+			throw new IllegalArgumentException("Empty command");
+		}
+		Process process = new ProcessBuilder(command).start();
+		StringBuilder stderr = new StringBuilder();
+		Thread stdoutDrain = drainProcessStream(process.getInputStream(), null, 0);
+		Thread stderrDrain = drainProcessStream(process.getErrorStream(), stderr, PROCESS_STDERR_CAPTURE_LIMIT);
+		boolean finished;
 		if (blocking) {
 			process.waitFor();
+			finished = true;
 		} else {
-			process.waitFor(JOB_EXIST_VALUE_WAIT_MILLISECONDS, TimeUnit.MILLISECONDS);
+			finished = process.waitFor(JOB_EXIST_VALUE_WAIT_MILLISECONDS, TimeUnit.MILLISECONDS);
 		}
-		try {
+		if (finished) {
+			stdoutDrain.join();
+			stderrDrain.join();
 			if (process.exitValue() != 0) {
-				// failed
-				try (final BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-					String line;
-					StringBuilder sb = new StringBuilder();
-					while ((line = errorReader.readLine()) != null) {
-						if (sb.length() > 0) {
-							sb.append("\n");
-						}
-						sb.append(line);
-					}
-					throw new Exception(sb.toString());
-					//if ((line = errorReader.readLine()) != null) {
-					//	throw new Exception(line);
-					//}
-				} catch (final IOException e) {
-					throw e;
-				}
-				//} else {
-				// ok
+				throw new Exception(stderr.toString());
 			}
-		} catch (IllegalThreadStateException e) {
-			// still running
 		}
 		return process;
 	}
 
 	public static Process runProcess(String command, boolean blocking) throws Exception {
-		return runProcess(Runtime.getRuntime().exec(command), blocking);
+		if (command.length() == 0) {
+			throw new IllegalArgumentException("Empty command");
+		}
+		return runProcess(splitCommand(command), blocking);
 	}
 
 	public static Process runProcess(boolean blocking, String... command) throws Exception {
-		return runProcess(Runtime.getRuntime().exec(command), blocking);
+		return runProcess(command, blocking);
 	}
 
 	private CoreUtil() {
