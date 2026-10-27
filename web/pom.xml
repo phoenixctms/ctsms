@@ -147,7 +147,18 @@
 		<dependency>
 			<groupId>io.swagger</groupId>
 			<artifactId>swagger-jersey-jaxrs</artifactId>
-			<version>1.5.22</version>
+			<version>1.6.16</version>
+			<exclusions>
+				<!-- jaxb-api and activation are already provided above -->
+				<exclusion>
+					<groupId>jakarta.xml.bind</groupId>
+					<artifactId>jakarta.xml.bind-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>jakarta.activation</groupId>
+					<artifactId>jakarta.activation-api</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
