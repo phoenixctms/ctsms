@@ -14,8 +14,21 @@
 	<properties>
 		<theme.version>1.0.6</theme.version>
 		<jersey.version>1.20-SNAPSHOT</jersey.version>
+		<langchain4j.version>1.22.0</langchain4j.version>
+		<jackson.version>2.22.1</jackson.version>
 		<sonar.projectKey>phoenixctms_ctsms_web</sonar.projectKey>
 	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.fasterxml.jackson</groupId>
+				<artifactId>jackson-bom</artifactId>
+				<version>${jackson.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -144,6 +157,16 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>dev.langchain4j</groupId>
+			<artifactId>langchain4j</artifactId>
+			<version>${langchain4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>dev.langchain4j</groupId>
+			<artifactId>langchain4j-open-ai</artifactId>
+			<version>${langchain4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.extensions</groupId>

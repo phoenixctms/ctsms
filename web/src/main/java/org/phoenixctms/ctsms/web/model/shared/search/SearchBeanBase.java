@@ -1,13 +1,6 @@
 package org.phoenixctms.ctsms.web.model.shared.search;
 
-// import java.io.BufferedReader;
-// import java.io.IOException;
-// import java.io.InputStream;
-// import java.io.InputStreamReader;
-// import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-// import java.net.HttpURLConnection;
-// import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,6 +49,8 @@ import org.phoenixctms.ctsms.web.conversion.IDVOConverter;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
+import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextAgent;
+import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextTools;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -66,11 +61,6 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.phoenixctms.ctsms.web.bundle.Labels;
-
-// import com.google.gson.JsonArray;
-// import com.google.gson.JsonElement;
-// import com.google.gson.JsonObject;
-
 import org.primefaces.context.RequestContext;
 
 public abstract class SearchBeanBase extends PickerBeanBase {
@@ -1349,25 +1339,48 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	public void setQueryTextPrompt(String queryTextPrompt) {
 	}
 
-	/*
+	public boolean isQueryTextGenerateEnabled() {
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		return sessionScopeBean != null && sessionScopeBean.isExperimentalUser() && QueryTextAgent.isConfigured();
+	}
+
 	public void generateQueryText() {
-		String url = Settings.getString(SettingCodes.QUERY_TEXT_LLM_URL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_URL);
-		if (CommonUtil.isEmptyString(url)) {
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		if (sessionScopeBean == null || !sessionScopeBean.isExperimentalUser()) {
+			return;
+		}
+		if (!QueryTextAgent.isConfigured()) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_not_configured"));
 			return;
 		}
+		if (CommonUtil.isEmptyString(queryText)) {
+			return;
+		}
+		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
+		String result;
 		try {
-			String result = stripQueryTextFence(requestQueryText(url, buildQueryTextPrompt(true)));
-			if (CommonUtil.isEmptyString(result)) {
-				Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
-				return;
-			}
-			queryText = result;
+			result = stripQueryTextFence(QueryTextAgent.generate(buildQueryTextPrompt(true), queryText,
+					new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions)));
 		} catch (Exception e) {
-			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_failed"));
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed",
+					e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
+			return;
+		}
+		if (CommonUtil.isEmptyString(result)) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
+			return;
+		}
+		queryText = result;
+		try {
+			WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, maxCriterions);
+		} catch (ServiceException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_WARN, Labels.getMessageLocalized("search_query_text_llm_invalid", e.getMessage()));
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
+			Messages.addMessage(FacesMessage.SEVERITY_WARN, Labels.getMessageLocalized("search_query_text_llm_invalid", e.getMessage()));
 		}
 	}
-	*/
 
 	private String queryTextRootName() {
 		DBModuleVO module = WebUtil.getDBModuleVO(getDBModule());
@@ -1377,13 +1390,17 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return queryTextModulePath(getDBModule());
 	}
 
-	private String buildQueryTextPrompt(boolean includeCurrentQuery) {
-		String template = Settings.getString(SettingCodes.QUERY_TEXT_LLM_PROMPT_TEMPLATE, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_PROMPT_TEMPLATE);
-		if (CommonUtil.isEmptyString(template)) {
-			template = Labels.getStringLocalized("search_query_text_prompt_template");
+	private String buildQueryTextPrompt(boolean agent) {
+		String template;
+		if (agent) {
+			template = Labels.getStringLocalized("search_query_text_agent_prompt_template");
+		} else {
+			template = Settings.getString(SettingCodes.QUERY_TEXT_LLM_PROMPT_TEMPLATE, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_PROMPT_TEMPLATE);
+			if (CommonUtil.isEmptyString(template)) {
+				template = Labels.getStringLocalized("search_query_text_prompt_template");
+			}
 		}
 		boolean json = QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat);
-		String apiBase = queryTextApiBase();
 		String prompt = template.replace("{format}", json ? "json" : "expression");
 		prompt = prompt.replace("{root}", queryTextRootName());
 		prompt = prompt.replace("{article}", json ? "a" : "an");
@@ -1392,12 +1409,15 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 				Labels.getStringLocalized(json ? "search_query_text_prompt_comment_json" : "search_query_text_prompt_comment_expression"));
 		prompt = prompt.replace("{ties}", indentQueryTextLines(queryTextTieSection(json)));
 		prompt = prompt.replace("{properties}", indentQueryTextLines(queryTextPropertySection(json)));
-		prompt = prompt.replace("{fieldLists}", indentQueryTextLines(queryTextFieldListSection(json, apiBase)));
-		prompt = prompt.replace("{parseUrl}", queryTextParseUrl(apiBase));
-		prompt = prompt.replace("{jwt}", includeCurrentQuery ? "" : queryTextJwt());
-		prompt = prompt.replace("{currentQuery}", includeCurrentQuery
-				? indentQueryTextLines(queryText != null ? queryText : "")
-				: "{{CTSMS_CURRENT_QUERY}}");
+		if (agent) {
+			prompt = prompt.replace("{fieldLists}", indentQueryTextLines(queryTextAgentFieldListSection(json)));
+		} else {
+			String apiBase = queryTextApiBase();
+			prompt = prompt.replace("{fieldLists}", indentQueryTextLines(queryTextFieldListSection(json, apiBase)));
+			prompt = prompt.replace("{parseUrl}", queryTextParseUrl(apiBase));
+			prompt = prompt.replace("{jwt}", queryTextJwt());
+			prompt = prompt.replace("{currentQuery}", "{{CTSMS_CURRENT_QUERY}}");
+		}
 		return prompt;
 	}
 
@@ -1456,7 +1476,27 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return section.toString();
 	}
 
-	private void appendQueryTextFieldListLine(StringBuilder section, CriterionPropertyVO propertyVO, boolean json, String url) {
+	private String queryTextAgentFieldListSection(boolean json) {
+		CriterionPropertyVO inquiry = findQueryTextProperty(QUERY_TEXT_INQUIRY_PROPERTY);
+		CriterionPropertyVO tag = findQueryTextProperty(QUERY_TEXT_TAG_PROPERTY);
+		CriterionPropertyVO ecrfField = findQueryTextProperty(QUERY_TEXT_ECRF_FIELD_PROPERTY);
+		if (inquiry == null && tag == null && ecrfField == null) {
+			return "";
+		}
+		StringBuilder section = new StringBuilder();
+		section.append(Labels.getMessageLocalized("search_query_text_prompt_field_lists_intro",
+				Labels.getStringLocalized("search_query_text_prompt_value_name"),
+				Labels.getStringLocalized("search_query_text_prompt_value_id")));
+		appendQueryTextFieldListLine(section, inquiry, json, QueryTextTools.SEARCH_TRIAL_INQUIRIES);
+		appendQueryTextFieldListLine(section, tag, json, QueryTextTools.SEARCH_TRIAL_PROBAND_LIST_ATTRIBUTES);
+		appendQueryTextFieldListLine(section, ecrfField, json, QueryTextTools.SEARCH_TRIAL_ECRF_FIELDS);
+		section.append('\n');
+		section.append(Labels.getStringLocalized("search_query_text_agent_prompt_trial_id"));
+		section.append('\n');
+		return section.toString();
+	}
+
+	private void appendQueryTextFieldListLine(StringBuilder section, CriterionPropertyVO propertyVO, boolean json, String source) {
 		if (propertyVO == null) {
 			return;
 		}
@@ -1464,7 +1504,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		section.append('\n');
 		section.append(name);
 		section.append(": ");
-		section.append(url);
+		section.append(source);
 	}
 
 	private CriterionPropertyVO findQueryTextProperty(String property) {
@@ -1718,110 +1758,27 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		return joined.toString();
 	}
 
-	/*
-	private String requestQueryText(String url, String prompt) throws IOException {
-		int timeout = Settings.getInt(SettingCodes.QUERY_TEXT_LLM_TIMEOUT_MS, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_TIMEOUT_MS);
-		if (timeout <= 0) {
-			timeout = DefaultSettings.QUERY_TEXT_LLM_TIMEOUT_MS;
-		}
-		String model = Settings.getString(SettingCodes.QUERY_TEXT_LLM_MODEL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_MODEL);
-		String key = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY);
-		String header = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY_HEADER, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY_HEADER);
-		String prefix = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY_PREFIX, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY_PREFIX);
-		JsonObject body = new JsonObject();
-		if (!CommonUtil.isEmptyString(model)) {
-			body.addProperty("model", model);
-		}
-		JsonArray messages = new JsonArray();
-		JsonObject message = new JsonObject();
-		message.addProperty("role", "user");
-		message.addProperty("content", prompt);
-		messages.add(message);
-		body.add("messages", messages);
-		HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-		try {
-			connection.setRequestMethod("POST");
-			connection.setDoOutput(true);
-			connection.setConnectTimeout(timeout);
-			connection.setReadTimeout(timeout);
-			connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-			connection.setRequestProperty("Accept", "application/json");
-			if (!CommonUtil.isEmptyString(key)) {
-				connection.setRequestProperty(CommonUtil.isEmptyString(header) ? DefaultSettings.QUERY_TEXT_LLM_API_KEY_HEADER : header,
-						(prefix == null ? "" : prefix) + key);
-			}
-			byte[] bytes = body.toString().getBytes("UTF-8");
-			OutputStream output = connection.getOutputStream();
-			try {
-				output.write(bytes);
-			} finally {
-				output.close();
-			}
-			int status = connection.getResponseCode();
-			InputStream input = status >= 400 ? connection.getErrorStream() : connection.getInputStream();
-			String response = readQueryTextResponse(input);
-			if (status >= 400) {
-				throw new IOException("HTTP " + status);
-			}
-			JsonElement parsed = WebUtil.parseJson(response);
-			if (parsed == null || !parsed.isJsonObject()) {
-				return "";
-			}
-			JsonElement choicesElement = parsed.getAsJsonObject().get("choices");
-			if (choicesElement == null || !choicesElement.isJsonArray() || choicesElement.getAsJsonArray().size() == 0) {
-				return "";
-			}
-			JsonElement choiceElement = choicesElement.getAsJsonArray().get(0);
-			if (choiceElement == null || !choiceElement.isJsonObject()) {
-				return "";
-			}
-			JsonElement messageElement = choiceElement.getAsJsonObject().get("message");
-			if (messageElement == null || !messageElement.isJsonObject()) {
-				return "";
-			}
-			JsonElement contentElement = messageElement.getAsJsonObject().get("content");
-			if (contentElement == null || contentElement.isJsonNull() || !contentElement.isJsonPrimitive()) {
-				return "";
-			}
-			return contentElement.getAsString();
-		} finally {
-			connection.disconnect();
-		}
-	}
-
-	private static String readQueryTextResponse(InputStream input) throws IOException {
-		if (input == null) {
-			return "";
-		}
-		BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-		try {
-			StringBuilder response = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null) {
-				response.append(line);
-			}
-			return response.toString();
-		} finally {
-			reader.close();
-		}
-	}
-
 	private static String stripQueryTextFence(String text) {
 		if (text == null) {
 			return "";
 		}
 		String trimmed = text.trim();
-		if (trimmed.startsWith("```")) {
-			int newline = trimmed.indexOf('\n');
+		// reasoning models may put their thinking before the answer
+		int think = trimmed.lastIndexOf("</think>");
+		if (think >= 0) {
+			trimmed = trimmed.substring(think + "</think>".length()).trim();
+		}
+		// take the last fenced block, models tend to wrap the query in prose
+		int end = trimmed.lastIndexOf("```");
+		int start = end > 0 ? trimmed.lastIndexOf("```", end - 1) : -1;
+		if (start >= 0) {
+			String block = trimmed.substring(start + 3, end);
+			int newline = block.indexOf('\n');
 			if (newline >= 0) {
-				trimmed = trimmed.substring(newline + 1);
+				block = block.substring(newline + 1);
 			}
-			if (trimmed.endsWith("```")) {
-				trimmed = trimmed.substring(0, trimmed.length() - 3);
-			}
-			trimmed = trimmed.trim();
+			trimmed = block.trim();
 		}
 		return trimmed;
 	}
-	*/
 }
