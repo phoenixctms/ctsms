@@ -29,6 +29,23 @@ function updateQueryTextActionButtons() {
 	}
 }
 
+function setQueryTextBusy(busy) {
+	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+		queryTextEditor.instance.setOption("readOnly", busy);
+	}
+	if (!busy) {
+		updateQueryTextActionButtons();
+		return;
+	}
+	var buttons = document.getElementsByClassName("ctsms-query-text-requires-content");
+	for (var i = 0; i < buttons.length; i++) {
+		buttons[i].disabled = true;
+		if (buttons[i].className.indexOf("ui-state-disabled") < 0) {
+			buttons[i].className = buttons[i].className + " ui-state-disabled";
+		}
+	}
+}
+
 function bindQueryTextActionButtons() {
 	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
 		return;
