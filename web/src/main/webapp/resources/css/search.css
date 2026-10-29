@@ -157,9 +157,11 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	width: 100%;
 }
 
+/* sizeQueryTextEditor() switches overflow-y to auto only when the content really overflows, so no scrollbar flashes before it runs */
 .ctsms-query-text-panel {
 	max-height: calc(100vh - 220px);
-	overflow: auto;
+	overflow-x: auto;
+	overflow-y: hidden;
 }
 
 .ctsms-query-text-panel .ctsms-criteria-input-panelgrid {

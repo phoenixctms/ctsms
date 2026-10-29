@@ -94,16 +94,28 @@ function sizeQueryTextEditor() {
 		// the tab is hidden, nothing to measure
 		return;
 	}
-	var maxHeight = parseFloat(window.getComputedStyle(panels[0]).maxHeight);
-	if (isNaN(maxHeight)) {
-		return;
+	var panel = panels[0];
+	var style = window.getComputedStyle(panel);
+	var maxHeight = parseFloat(style.maxHeight);
+	if (!isNaN(maxHeight)) {
+		// max-height covers the content box unless the panel is border-box, scrollHeight includes the padding
+		var padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+		var available = style.boxSizing === "border-box" ? maxHeight - padding - parseFloat(style.borderTopWidth) - parseFloat(style.borderBottomWidth) : maxHeight;
+		var others = panel.scrollHeight - padding - wrapper.offsetHeight;
+		setQueryTextEditorHeight(wrapper, available - others - 2);
 	}
-	var others = panels[0].scrollHeight - wrapper.offsetHeight;
-	var height = Math.max(QUERY_TEXT_EDITOR_MIN_HEIGHT, Math.min(QUERY_TEXT_EDITOR_MAX_HEIGHT, Math.floor(maxHeight - others - 2)));
+	// with display scaling, fractional pixels can leave a pixel of overflow, which must not show a scrollbar
+	panel.style.overflowY = panel.scrollHeight - panel.clientHeight > 2 ? "auto" : "hidden";
+}
+
+function setQueryTextEditorHeight(wrapper, height) {
+	height = Math.max(QUERY_TEXT_EDITOR_MIN_HEIGHT, Math.min(QUERY_TEXT_EDITOR_MAX_HEIGHT, Math.floor(height)));
 	if (height !== wrapper.offsetHeight) {
-		wrapper.style.height = height + "px";
+		// height is the outer height, the style height excludes the border of the editor
+		wrapper.style.height = (height - (wrapper.offsetHeight - wrapper.clientHeight)) + "px";
 		queryTextEditor.instance.refresh();
 	}
+	return height;
 }
 
 var queryTextEditorResizeBound = false;
@@ -114,7 +126,57 @@ function bindQueryTextEditorResize() {
 	}
 }
 
+var QUERY_TEXT_EXPRESSION_MODE = "ctsmsquerytext";
+
+// the javascript mode marks # as an error. In a query expression, # followed by a blank starts a comment, and #Diagnoses is a property name.
+function defineQueryTextExpressionMode() {
+	if (typeof CodeMirror === "undefined" || typeof CodeMirror.defineMode !== "function" || CodeMirror.modes == null) {
+		return false;
+	}
+	if (!CodeMirror.modes[QUERY_TEXT_EXPRESSION_MODE]) {
+		CodeMirror.defineMode(QUERY_TEXT_EXPRESSION_MODE, function(config) {
+			var base = CodeMirror.getMode(config, "javascript");
+			return {
+				startState : function(indentation) {
+					return base.startState(indentation);
+				},
+				copyState : function(state) {
+					return CodeMirror.copyState(base, state);
+				},
+				token : function(stream, state) {
+					if (stream.peek() === "#") {
+						if (stream.match(/^#(\s|$)/, false)) {
+							stream.skipToEnd();
+							return "comment";
+						}
+						stream.next();
+						return "variable";
+					}
+					return base.token(stream, state);
+				},
+				indent : function(state, textAfter) {
+					return typeof base.indent === "function" ? base.indent(state, textAfter) : 0;
+				},
+				electricChars : base.electricChars
+			};
+		});
+	}
+	return true;
+}
+
+function useQueryTextExpressionMode() {
+	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
+		return;
+	}
+	var cm = queryTextEditor.instance;
+	// the JSON format has an object as mode and keeps the javascript mode, where // comments already work
+	if (cm.getOption("mode") === "javascript" && defineQueryTextExpressionMode()) {
+		cm.setOption("mode", QUERY_TEXT_EXPRESSION_MODE);
+	}
+}
+
 function refreshQueryTextEditor() {
+	useQueryTextExpressionMode();
 	bindQueryTextEditorResize();
 	sizeQueryTextEditor();
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
