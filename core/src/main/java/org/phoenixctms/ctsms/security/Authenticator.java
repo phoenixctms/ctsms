@@ -67,6 +67,11 @@ public class Authenticator {
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getProbandListEntryTagList"));
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getEcrfFieldList"));
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(InputFieldService.class, "getInputFieldList"));
+		// which inquiries, eCRF fields and proband list attributes use an input field, and the trials to look them up in
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(InputFieldService.class, "getInquiryList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(InputFieldService.class, "getEcrfFieldList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(InputFieldService.class, "getProbandListEntryTagList"));
+		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getTrialList"));
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(SearchService.class, "parseCriterionText"));
 	}
 

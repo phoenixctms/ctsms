@@ -938,7 +938,18 @@ public class SearchServiceImpl
 
 	@Override
 	protected Collection<CriterionInVO> handleParseCriterionText(AuthenticationVO auth, DBModule module, String text, Integer maxCriterions) throws Exception {
-		return criterionSyntaxParser.parseCriterionText(module, text, maxCriterions);
+		ArrayList<CriterionInVO> criterions = criterionSyntaxParser.parseCriterionText(module, text, maxCriterions);
+		if (criterions != null && !criterions.isEmpty()) {
+			// the text parser accepts criterions without a tie in between, so also run the syntax check of the query builder
+			CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
+			long position = CommonUtil.LIST_INITIAL_POSITION;
+			Iterator<CriterionInstantVO> it = instantCriteria.getCriterions().iterator();
+			while (it.hasNext()) {
+				it.next().setPosition(position++);
+			}
+			parseCriterions(instantCriteria, false, false, false);
+		}
+		return criterions;
 	}
 
 	@Override

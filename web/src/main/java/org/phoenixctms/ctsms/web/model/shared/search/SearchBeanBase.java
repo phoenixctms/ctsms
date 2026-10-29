@@ -1553,12 +1553,16 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		section.append('\n');
 		section.append(Labels.getStringLocalized("search_query_text_prompt_trial_id"));
 		section.append('\n');
+		section.append(Labels.getMessageLocalized("search_query_text_prompt_trial_search", apiBase + "/trial"));
+		section.append('\n');
 		section.append(Labels.getStringLocalized("search_query_text_prompt_field_list_filter"));
 		section.append('\n');
 		section.append(Labels.getStringLocalized("search_query_text_prompt_input_fields"));
 		section.append(": ");
 		section.append(apiBase);
 		section.append("/inputfield");
+		section.append('\n');
+		section.append(Labels.getMessageLocalized("search_query_text_prompt_input_field_usage", apiBase + "/inputfield/{fieldId}/list"));
 		section.append('\n');
 		return section.toString();
 	}
