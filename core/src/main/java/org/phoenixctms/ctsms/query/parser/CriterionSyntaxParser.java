@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.query.parser;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.phoenixctms.ctsms.compare.VOPositionComparator;
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -86,5 +87,12 @@ public class CriterionSyntaxParser extends CriterionParser {
 
 	public ArrayList<CriterionInVO> parseCriterionText(DBModule module, String text, Integer maxCriterions) throws ServiceException {
 		return CriterionText.parse(this, module, text, maxCriterions);
+	}
+
+	/**
+	 * @param lines receives the line each criterion of an expression starts on. Stays empty for JSON.
+	 */
+	public ArrayList<CriterionInVO> parseCriterionText(DBModule module, String text, Integer maxCriterions, List<Integer> lines) throws ServiceException {
+		return CriterionText.parse(this, module, text, maxCriterions, lines);
 	}
 }

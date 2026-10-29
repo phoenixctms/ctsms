@@ -342,7 +342,7 @@ public final class SearchResource {
 		if (dbModule == null) {
 			throw new NotFoundException();
 		}
-		return WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, dbModule, text == null ? "" : text,
+		return WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, dbModule, text == null ? "" : text, true,
 				Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
 	}
 

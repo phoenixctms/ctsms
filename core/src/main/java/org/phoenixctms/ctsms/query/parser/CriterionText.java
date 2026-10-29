@@ -188,6 +188,13 @@ final class CriterionText {
 	}
 
 	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text, Integer maxCriterions) throws ServiceException {
+		return parse(parser, module, text, maxCriterions, null);
+	}
+
+	/**
+	 * @param lines receives the line each criterion of an expression starts on, so errors can point there. Stays empty for JSON.
+	 */
+	static ArrayList<CriterionInVO> parse(CriterionParser parser, DBModule module, String text, Integer maxCriterions, List<Integer> lines) throws ServiceException {
 		Catalog catalog = new Catalog(parser, module, maxCriterions);
 		String source = text == null ? "" : text;
 		int content = indexOfContent(source, catalog.propertyNames);
@@ -198,7 +205,53 @@ final class CriterionText {
 		if (first == '{' || first == '[') {
 			return parseJson(stripSlashComments(source.substring(content)), catalog);
 		}
-		return parseExpression(source.substring(content), catalog);
+		LineCounter lineCounter = null;
+		if (lines != null) {
+			// the skipped comment lines count too
+			lineCounter = new LineCounter(source.substring(content), new LineCounter(source, 0, null).lineAt(content) - 1, lines);
+		}
+		return parseExpression(source.substring(content), catalog, lineCounter);
+	}
+
+	/**
+	 * Records the line of each criterion added while the expression is read front to back.
+	 */
+	private static final class LineCounter {
+
+		private final String text;
+		private final List<Integer> lines;
+		private int scanned;
+		private int line;
+
+		private LineCounter(String text, int linesBefore, List<Integer> lines) {
+			this.text = text;
+			this.lines = lines;
+			this.line = linesBefore + 1;
+		}
+
+		private int lineAt(int offset) {
+			int end = Math.min(offset, text.length());
+			while (scanned < end) {
+				if (text.charAt(scanned) == '\n') {
+					line++;
+				}
+				scanned++;
+			}
+			return line;
+		}
+
+		private void added(int offset) {
+			if (lines != null) {
+				lines.add(lineAt(offset));
+			}
+		}
+	}
+
+	private static void addCriterion(ArrayList<CriterionInVO> criterions, CriterionInVO criterion, LineCounter lineCounter, int offset) {
+		criterions.add(criterion);
+		if (lineCounter != null) {
+			lineCounter.added(offset);
+		}
 	}
 
 	private static void addName(List<NamedId> names, String name, Long id) {
@@ -369,7 +422,7 @@ final class CriterionText {
 		return ids.isEmpty() ? null : ids;
 	}
 
-	private static ArrayList<CriterionInVO> parseExpression(String text, Catalog catalog) throws ServiceException {
+	private static ArrayList<CriterionInVO> parseExpression(String text, Catalog catalog, LineCounter lineCounter) throws ServiceException {
 		ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>();
 		Long pendingTieId = null;
 		int i = 0;
@@ -384,7 +437,7 @@ final class CriterionText {
 					checkSize(criterions, catalog);
 					CriterionInVO pending = blankCriterion();
 					pending.setTieId(pendingTieId);
-					criterions.add(pending);
+					addCriterion(criterions, pending, lineCounter, i);
 					pendingTieId = null;
 				}
 				CriterionTie parenthesis = text.charAt(i) == '(' ? CriterionTie.LEFT_PARENTHESIS : CriterionTie.RIGHT_PARENTHESIS;
@@ -395,7 +448,7 @@ final class CriterionText {
 				checkSize(criterions, catalog);
 				CriterionInVO criterion = blankCriterion();
 				criterion.setTieId(tieId);
-				criterions.add(criterion);
+				addCriterion(criterions, criterion, lineCounter, i);
 				i++;
 				continue;
 			}
@@ -410,7 +463,7 @@ final class CriterionText {
 					pendingTieId = null;
 				}
 				checkSize(criterions, catalog);
-				criterions.add(term.criterion);
+				addCriterion(criterions, term.criterion, lineCounter, i);
 				i = end + 1;
 				continue;
 			}
@@ -423,7 +476,7 @@ final class CriterionText {
 					pendingTieId = null;
 				}
 				checkSize(criterions, catalog);
-				criterions.add(term.criterion);
+				addCriterion(criterions, term.criterion, lineCounter, i);
 				i = term.next;
 				continue;
 			}
@@ -442,13 +495,13 @@ final class CriterionText {
 					checkSize(criterions, catalog);
 					CriterionInVO pending = blankCriterion();
 					pending.setTieId(pendingTieId);
-					criterions.add(pending);
+					addCriterion(criterions, pending, lineCounter, i);
 					pendingTieId = null;
 				}
 				checkSize(criterions, catalog);
 				CriterionInVO criterion = blankCriterion();
 				criterion.setTieId(tie.id);
-				criterions.add(criterion);
+				addCriterion(criterions, criterion, lineCounter, i);
 				i += tie.name.length();
 				continue;
 			}

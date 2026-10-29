@@ -32,6 +32,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.util.CriterionTextSyntaxError;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
@@ -1266,8 +1267,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			return;
 		}
 		try {
+			// without the syntax check, so a query with e.g. a missing tie still loads and the query builder marks the faulty row
 			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
-					Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
+					false, Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
 			criterionsIn.clear();
 			if (parsed != null) {
 				criterionsIn.addAll(parsed);
@@ -1283,12 +1285,33 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			}
 			updateInstantCriteria(true);
 			refreshQueryText();
+			markQueryTextErrorLine();
 		} catch (ServiceException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {
 			WebUtil.publishException(e);
 		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+		}
+	}
+
+	/**
+	 * Hands the line where the editor text fails the syntax check to the page, which highlights it.
+	 */
+	private void markQueryTextErrorLine() {
+		if (CommonUtil.isEmptyString(queryText)) {
+			return;
+		}
+		try {
+			WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, true,
+					Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS)));
+		} catch (ServiceException e) {
+			if (e.getData() instanceof CriterionTextSyntaxError && ((CriterionTextSyntaxError) e.getData()).getLine() != null) {
+				RequestContext.getCurrentInstance().addCallbackParam(JSValues.AJAX_QUERY_TEXT_ERROR_LINE.toString(), ((CriterionTextSyntaxError) e.getData()).getLine());
+			}
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+		} catch (AuthorisationException | IllegalArgumentException e) {
 		}
 	}
 
@@ -1369,7 +1392,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		// text that does not parse is a request in natural language, which goes on top of the generated query as a comment
 		String naturalLanguageRequest = null;
 		try {
-			WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, maxCriterions);
+			// a query with a syntax error is still a query to improve
+			WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, false, maxCriterions);
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			naturalLanguageRequest = queryText;
 		} catch (AuthenticationException e) {
@@ -1459,7 +1483,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		queryText = result;
 		try {
 			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
-					maxCriterions);
+					true, maxCriterions);
 			if (parsed != null && !parsed.isEmpty()) {
 				// print it like a query loaded from the builder, in the selected format
 				ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>(parsed);
@@ -1480,6 +1504,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (!CommonUtil.isEmptyString(run.getNaturalLanguageRequest())) {
 			queryText = commentQueryText(run.getNaturalLanguageRequest(), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)) + queryText;
 		}
+		// after the comment lines are on top, so the line matches the editor
+		markQueryTextErrorLine();
 	}
 
 	/**

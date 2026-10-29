@@ -108,6 +108,7 @@ import org.phoenixctms.ctsms.query.parser.SyntaxException;
 import org.phoenixctms.ctsms.query.parser.SyntaxException.SyntaxErrors;
 import org.phoenixctms.ctsms.util.CheckIDUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.CriterionTextSyntaxError;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.DefaultMessages;
 import org.phoenixctms.ctsms.util.DefaultSettings;
@@ -937,9 +938,11 @@ public class SearchServiceImpl
 	}
 
 	@Override
-	protected Collection<CriterionInVO> handleParseCriterionText(AuthenticationVO auth, DBModule module, String text, Integer maxCriterions) throws Exception {
-		ArrayList<CriterionInVO> criterions = criterionSyntaxParser.parseCriterionText(module, text, maxCriterions);
-		if (criterions != null && !criterions.isEmpty()) {
+	protected Collection<CriterionInVO> handleParseCriterionText(AuthenticationVO auth, DBModule module, String text, boolean checkSyntax, Integer maxCriterions)
+			throws Exception {
+		ArrayList<Integer> lines = new ArrayList<Integer>();
+		ArrayList<CriterionInVO> criterions = criterionSyntaxParser.parseCriterionText(module, text, maxCriterions, lines);
+		if (checkSyntax && criterions != null && !criterions.isEmpty()) {
 			// the text parser accepts criterions without a tie in between, so also run the syntax check of the query builder
 			CriteriaInstantVO instantCriteria = ServiceUtil.toInstant(criterions, this.getCriterionDao());
 			long position = CommonUtil.LIST_INITIAL_POSITION;
@@ -947,9 +950,31 @@ public class SearchServiceImpl
 			while (it.hasNext()) {
 				it.next().setPosition(position++);
 			}
-			parseCriterions(instantCriteria, false, false, false);
+			try {
+				parseCriterions(instantCriteria, false, false, false);
+			} catch (ServiceException e) {
+				throw locateCriterionTextSyntaxError(e, lines);
+			}
 		}
 		return criterions;
+	}
+
+	/**
+	 * Says where in the query text the syntax check failed: the line for an expression, the criterion number for JSON.
+	 */
+	private static ServiceException locateCriterionTextSyntaxError(ServiceException e, ArrayList<Integer> lines) {
+		if (!(e.getData() instanceof Long)) {
+			return e;
+		}
+		Long position = (Long) e.getData();
+		int index = (int) (position.longValue() - CommonUtil.LIST_INITIAL_POSITION);
+		Integer line = index >= 0 && index < lines.size() ? lines.get(index) : null;
+		ServiceException located = line != null
+				? L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_SYNTAX_ERROR_AT_LINE, line.toString(), e.getMessage())
+				: L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_SYNTAX_ERROR_AT_CRITERION, position.toString(), e.getMessage());
+		located.setData(new CriterionTextSyntaxError(position, line));
+		located.setLogError(false);
+		return located;
 	}
 
 	@Override

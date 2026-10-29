@@ -872,4 +872,6 @@ public interface ServiceExceptionCodes {
 	public static final String CRITERION_TEXT_INVALID_VALUE = "criterion_text_invalid_value";
 	public static final String CRITERION_TEXT_TOO_MANY = "criterion_text_too_many";
 	public static final String CRITERION_TEXT_MODULE_MISMATCH = "criterion_text_module_mismatch";
+	public static final String CRITERION_TEXT_SYNTAX_ERROR_AT_LINE = "criterion_text_syntax_error_at_line";
+	public static final String CRITERION_TEXT_SYNTAX_ERROR_AT_CRITERION = "criterion_text_syntax_error_at_criterion";
 }
