@@ -72,6 +72,8 @@ public enum JSValues {
 			.toString()),
 	PICK_CURRENT_PAGE_IDS("PICK_CURRENT_PAGE_IDS"),
 	AJAX_OPERATION_SUCCESS("operationSuccess"),
+	AJAX_QUERY_TEXT_RUNNING("queryTextRunning"),
+	AJAX_QUERY_TEXT_DONE("queryTextDone"),
 	AJAX_WINDOW_TITLE_BASE64("windowTitleBase64"),
 	AJAX_WINDOW_NAME("windowName"),
 	AJAX_PICKER("picker"),

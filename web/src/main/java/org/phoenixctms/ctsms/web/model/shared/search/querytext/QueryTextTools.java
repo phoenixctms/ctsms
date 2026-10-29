@@ -2,6 +2,7 @@ package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -41,11 +42,19 @@ public class QueryTextTools {
 	private final AuthenticationVO auth;
 	private final DBModule module;
 	private final Integer maxCriterions;
+	private String lastValidText;
 
 	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions) {
 		this.auth = auth;
 		this.module = module;
 		this.maxCriterions = maxCriterions;
+	}
+
+	/**
+	 * The last query text parseQuery accepted. Models tend to retype the validated query in their answer and lose operators or parentheses on the way.
+	 */
+	public String getLastValidText() {
+		return lastValidText;
 	}
 
 	private static PSFVO createPsf(String filterField, String namePart) {
@@ -164,6 +173,19 @@ public class QueryTextTools {
 	public String parseQuery(@P(name = "text", value = "the complete query text") String text) {
 		try {
 			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text == null ? "" : text, maxCriterions);
+			if (criterions != null && !criterions.isEmpty()) {
+				// the text parser accepts criterions without a tie in between, the syntax check of the query builder does not
+				HashSet<CriterionInVO> positioned = new HashSet<CriterionInVO>(criterions.size());
+				long position = CommonUtil.LIST_INITIAL_POSITION;
+				Iterator<CriterionInVO> it = criterions.iterator();
+				while (it.hasNext()) {
+					CriterionInVO criterion = it.next();
+					criterion.setPosition(position++);
+					positioned.add(criterion);
+				}
+				WebUtil.getServiceLocator().getSearchService().parseCriteria(auth, module, positioned, false);
+			}
+			lastValidText = text;
 			return "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria";
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);

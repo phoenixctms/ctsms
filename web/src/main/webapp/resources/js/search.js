@@ -33,6 +33,16 @@ function setQueryTextBusy(busy) {
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.setOption("readOnly", busy);
 	}
+	// the stop button is only usable while a generation runs
+	var cancelButtons = document.getElementsByClassName("ctsms-query-text-cancel");
+	for (var j = 0; j < cancelButtons.length; j++) {
+		cancelButtons[j].disabled = !busy;
+		if (busy) {
+			cancelButtons[j].className = cancelButtons[j].className.replace(/\s*ui-state-disabled/g, "");
+		} else if (cancelButtons[j].className.indexOf("ui-state-disabled") < 0) {
+			cancelButtons[j].className = cancelButtons[j].className + " ui-state-disabled";
+		}
+	}
 	if (!busy) {
 		updateQueryTextActionButtons();
 		return;
@@ -79,6 +89,34 @@ function refreshQueryTextEditor() {
 		}, 50);
 	}
 	bindQueryTextActionButtons();
+}
+
+function scrollQueryTextProgress() {
+	var steps = document.getElementsByClassName("ctsms-query-text-progress-steps");
+	for (var i = 0; i < steps.length; i++) {
+		steps[i].scrollTop = steps[i].scrollHeight;
+	}
+}
+
+function handleQueryTextGenerateStarted(xhr, status, args) {
+	if (args && args.queryTextRunning && typeof queryTextPoll !== "undefined" && queryTextPoll) {
+		// stays busy until the poll sees the run finish
+		queryTextPoll.start();
+		return;
+	}
+	setQueryTextBusy(false);
+	refreshQueryTextEditor();
+}
+
+function handleQueryTextPollComplete(xhr, status, args) {
+	scrollQueryTextProgress();
+	if (args && args.queryTextDone) {
+		if (typeof queryTextPoll !== "undefined" && queryTextPoll) {
+			queryTextPoll.stop();
+		}
+		setQueryTextBusy(false);
+		refreshQueryTextEditor();
+	}
 }
 
 function searchTabLogicalIndex(index) {

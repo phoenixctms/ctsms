@@ -32,6 +32,7 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.CoreUtil;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
@@ -50,6 +51,7 @@ import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.PickerBeanBase;
 import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextAgent;
+import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextRun;
 import org.phoenixctms.ctsms.web.model.shared.search.querytext.QueryTextTools;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
@@ -184,11 +186,14 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	private String deferredDeleteReason;
 	private static final String QUERY_TEXT_FORMAT_EXPRESSION = "EXPRESSION";
 	private static final String QUERY_TEXT_FORMAT_JSON = "JSON";
+	private static final String QUERY_TEXT_EDITOR_CLIENT_ID = "search_form:tabView:query_text";
 	private static final String QUERY_TEXT_INQUIRY_PROPERTY = "proband.inquiryValues.inquiry.id";
 	private static final String QUERY_TEXT_TAG_PROPERTY = "proband.trialParticipations.tagValues.tag.id";
 	private static final String QUERY_TEXT_ECRF_FIELD_PROPERTY = "proband.trialParticipations.ecrfValues.ecrfField.id";
 	private String queryText;
 	private String queryTextFormat;
+	// holds the worker thread, so it is not serialized with the view
+	private transient QueryTextRun queryTextRun;
 
 	protected SearchBeanBase() {
 		super();
@@ -1354,25 +1359,107 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			return;
 		}
 		if (CommonUtil.isEmptyString(queryText)) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_blank"));
+			return;
+		}
+		if (isQueryTextRunning()) {
 			return;
 		}
 		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
-		String result;
+		QueryTextRun run = new QueryTextRun();
 		try {
-			result = stripQueryTextFence(QueryTextAgent.generate(buildQueryTextPrompt(true), queryText,
-					new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions)));
+			// the prompt needs the faces context, so it is built here and not in the worker thread.
+			// the worker gets its own copy of the session auth: service calls write the credentials resolved from the jwt into it,
+			// and the session renews the jwt while the poll requests use it at the same time
+			AuthenticationVO auth = new AuthenticationVO(WebUtil.getAuthentication());
+			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, new QueryTextTools(auth, getDBModule(), maxCriterions), run);
 		} catch (Exception e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed",
 					e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
 			return;
 		}
+		queryTextRun = run;
+		RequestContext.getCurrentInstance().addCallbackParam(JSValues.AJAX_QUERY_TEXT_RUNNING.toString(), true);
+	}
+
+	public void pollQueryText() {
+		QueryTextRun run = queryTextRun;
+		if (run != null && run.isRunning()) {
+			return;
+		}
+		// also stops the poll when the run is gone, e.g. the view was rebuilt
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		requestContext.addCallbackParam(JSValues.AJAX_QUERY_TEXT_DONE.toString(), true);
+		if (run == null || !run.markApplied()) {
+			return;
+		}
+		if (run.getStatus() == QueryTextRun.Status.FAILED) {
+			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed", run.getError()));
+		} else if (run.getStatus() == QueryTextRun.Status.DONE) {
+			applyGeneratedQueryText(run);
+			requestContext.update(QUERY_TEXT_EDITOR_CLIENT_ID);
+		}
+	}
+
+	public void cancelQueryText() {
+		QueryTextRun run = queryTextRun;
+		if (run != null) {
+			run.cancel();
+		}
+	}
+
+	public boolean isQueryTextRunning() {
+		return queryTextRun != null && queryTextRun.isRunning();
+	}
+
+	public boolean isQueryTextRunShown() {
+		return queryTextRun != null;
+	}
+
+	public List<String> getQueryTextRunSteps() {
+		return queryTextRun != null ? queryTextRun.getSteps() : new ArrayList<String>();
+	}
+
+	public String getQueryTextRunStatus() {
+		if (queryTextRun == null) {
+			return "";
+		}
+		long seconds = queryTextRun.getElapsedMillis() / 1000l;
+		String elapsed = String.format("%d:%02d", seconds / 60l, seconds % 60l);
+		switch (queryTextRun.getStatus()) {
+			case RUNNING:
+				return Labels.getMessageLocalized("search_query_text_generate_running", elapsed);
+			case DONE:
+				return Labels.getMessageLocalized("search_query_text_generate_done", elapsed);
+			case CANCELLED:
+				return Labels.getMessageLocalized("search_query_text_generate_cancelled", elapsed);
+			default:
+				return Labels.getMessageLocalized("search_query_text_generate_failed", elapsed);
+		}
+	}
+
+	private void applyGeneratedQueryText(QueryTextRun run) {
+		// the prompt makes the model validate its final query, so the last accepted text is the answer
+		String result = !CommonUtil.isEmptyString(run.getLastValidText()) ? run.getLastValidText() : stripQueryTextFence(run.getAnswer());
 		if (CommonUtil.isEmptyString(result)) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
 			return;
 		}
+		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
 		queryText = result;
 		try {
-			WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, maxCriterions);
+			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
+					maxCriterions);
+			if (parsed != null && !parsed.isEmpty()) {
+				// print it like a query loaded from the builder, in the selected format
+				ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>(parsed);
+				normalizeCriterionPositions(criterions);
+				String formatted = WebUtil.getServiceLocator().getSearchService().formatCriterionText(WebUtil.getAuthentication(), getDBModule(),
+						new HashSet<CriterionInVO>(criterions), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat));
+				if (!CommonUtil.isEmptyString(formatted)) {
+					queryText = formatted;
+				}
+			}
 		} catch (ServiceException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_WARN, Labels.getMessageLocalized("search_query_text_llm_invalid", e.getMessage()));
 		} catch (AuthenticationException e) {
