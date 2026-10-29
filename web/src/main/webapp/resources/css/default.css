@@ -562,6 +562,16 @@ td .ui-selectonemenu {
 	height: 95%;
 }
 
+/* the former fixed height, as a minimum, so error messages make the dialog grow instead of scroll */
+.ctsms-login-dialog .ui-dialog-content {
+	min-height: 340px;
+}
+
+/* 95% of the minimum, which a percentage of an auto height cannot express. A table height only sets a minimum, so it still grows */
+.ctsms-login-dialog .ctsms-login-panelgrid {
+	height: 323px;
+}
+
 .ctsms-label-for-column {
 	white-space: nowrap;
 	border: none !important;

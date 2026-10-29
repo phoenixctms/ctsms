@@ -38,7 +38,7 @@
 			<h:form id="login_form">
 				<p:dialog closable="false" visible="true"
 					header="#{sessionScopeBean.loggedIn ? labels.login_successful_title : applicationScopeBean.loginPromptTitle}"
-					width="620" height="340" showEffect="#{effect}"
+					width="620" styleClass="ctsms-login-dialog" showEffect="#{effect}"
 					hideEffect="#{effect}">
 					<h:panelGrid rendered="#{!sessionScopeBean.loggedIn}" columns="1"
 						cellpadding="0" styleClass="ctsms-login-panelgrid"
