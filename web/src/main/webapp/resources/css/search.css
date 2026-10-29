@@ -224,14 +224,13 @@ table.ctsms-criterion-position tr:nth-child(2) {
 .ctsms-query-text-actions {
 	margin-top: 4px;
 }
-
 .ctsms-query-text-panel textarea.ctsms-query-text-editor {
 	display: none;
 }
 
+/* sizeQueryTextEditor() fits the height to the panel, this is the start value */
 .ctsms-query-text-panel .CodeMirror {
-	height: min(360px, calc(100vh - 340px));
-	min-height: 180px;
+	height: min(360px, calc(100vh - 390px));
 	margin-top: 4px;
 	border: 1px solid #bdbdbd;
 	font-size: 13px;

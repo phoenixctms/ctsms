@@ -2,8 +2,8 @@ package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
@@ -69,6 +69,40 @@ public class QueryTextTools {
 		return psf;
 	}
 
+	private static PSFVO createCountPsf() {
+		PSFVO psf = new PSFVO();
+		psf.setFirst(0);
+		psf.setPageSize(1);
+		psf.setUpdateRowCount(true);
+		return psf;
+	}
+
+	private static long rowCount(Collection<?> rows, PSFVO psf) {
+		return psf.getRowCount() != null ? psf.getRowCount() : (rows == null ? 0 : rows.size());
+	}
+
+	private static void addInputFields(LinkedHashMap<Long, InputFieldOutVO> fields, Collection<InputFieldOutVO> found) {
+		if (found != null) {
+			Iterator<InputFieldOutVO> it = found.iterator();
+			while (it.hasNext()) {
+				InputFieldOutVO field = it.next();
+				if (!fields.containsKey(field.getId())) {
+					fields.put(field.getId(), field);
+				}
+			}
+		}
+	}
+
+	private String inputFieldUsage(long fieldId) throws AuthenticationException, AuthorisationException, ServiceException {
+		PSFVO inquiryPsf = createCountPsf();
+		long inquiries = rowCount(WebUtil.getServiceLocator().getInputFieldService().getInquiryList(auth, fieldId, inquiryPsf), inquiryPsf);
+		PSFVO ecrfFieldPsf = createCountPsf();
+		long ecrfFields = rowCount(WebUtil.getServiceLocator().getInputFieldService().getEcrfFieldList(auth, fieldId, ecrfFieldPsf), ecrfFieldPsf);
+		PSFVO tagPsf = createCountPsf();
+		long tags = rowCount(WebUtil.getServiceLocator().getInputFieldService().getProbandListEntryTagList(auth, fieldId, tagPsf), tagPsf);
+		return "used by " + inquiries + " inquiries, " + ecrfFields + " eCRF fields, " + tags + " proband list attributes";
+	}
+
 	private static String errorText(Exception e) {
 		return "error: " + e.getMessage();
 	}
@@ -91,19 +125,21 @@ public class QueryTextTools {
 		}
 	}
 
-	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name contains the given text. Returns one line per field: id | name | title | type, "
-			+ "followed by the selectable option texts for selection fields.")
-	public String searchInputFields(@P(name = "namePart", value = "part of the input field name, case-insensitive") String namePart) {
+	@Tool(name = SEARCH_INPUT_FIELDS, value = "Search input fields whose name or title contains the given text. Returns one line per field: "
+			+ "id | name | title | type | how many inquiries, eCRF fields and proband list attributes use it, followed by the selectable option texts for selection fields. "
+			+ "A field has data only in the collections that use it. Search again with other terms, such as an abbreviation or the full name in another language, to find all fitting fields.")
+	public String searchInputFields(@P(name = "namePart", value = "part of the input field name or title, case-insensitive") String namePart) {
 		try {
-			Collection<InputFieldOutVO> fields = WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("nameL10nKey", namePart));
+			// fields name the same measure differently, so the title is searched too
+			LinkedHashMap<Long, InputFieldOutVO> fields = new LinkedHashMap<Long, InputFieldOutVO>();
+			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("nameL10nKey", namePart)));
+			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("titleL10nKey", namePart)));
 			StringBuilder result = new StringBuilder();
-			if (fields != null) {
-				Iterator<InputFieldOutVO> it = fields.iterator();
-				while (it.hasNext()) {
-					InputFieldOutVO field = it.next();
-					appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field));
-					appendSelectionValues(result, field);
-				}
+			Iterator<InputFieldOutVO> it = fields.values().iterator();
+			while (it.hasNext()) {
+				InputFieldOutVO field = it.next();
+				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field) + " | " + inputFieldUsage(field.getId()));
+				appendSelectionValues(result, field);
 			}
 			return result.length() > 0 ? result.toString() : NO_MATCHES;
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
@@ -173,18 +209,6 @@ public class QueryTextTools {
 	public String parseQuery(@P(name = "text", value = "the complete query text") String text) {
 		try {
 			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text == null ? "" : text, maxCriterions);
-			if (criterions != null && !criterions.isEmpty()) {
-				// the text parser accepts criterions without a tie in between, the syntax check of the query builder does not
-				HashSet<CriterionInVO> positioned = new HashSet<CriterionInVO>(criterions.size());
-				long position = CommonUtil.LIST_INITIAL_POSITION;
-				Iterator<CriterionInVO> it = criterions.iterator();
-				while (it.hasNext()) {
-					CriterionInVO criterion = it.next();
-					criterion.setPosition(position++);
-					positioned.add(criterion);
-				}
-				WebUtil.getServiceLocator().getSearchService().parseCriteria(auth, module, positioned, false);
-			}
 			lastValidText = text;
 			return "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria";
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {

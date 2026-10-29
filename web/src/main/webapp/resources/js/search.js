@@ -78,11 +78,48 @@ function bindQueryTextActionButtons() {
 	updateQueryTextActionButtons();
 }
 
+var QUERY_TEXT_EDITOR_MIN_HEIGHT = 120;
+var QUERY_TEXT_EDITOR_MAX_HEIGHT = 360;
+
+// gives the editor the height the format row, the step log and the toolbar leave in the panel, so the panel does not scroll
+function sizeQueryTextEditor() {
+	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
+		return;
+	}
+	var wrapper = queryTextEditor.instance.getWrapperElement();
+	var panels = document.getElementsByClassName("ctsms-query-text-panel");
+	if (!wrapper || panels.length === 0 || wrapper.offsetParent === null) {
+		// the tab is hidden, nothing to measure
+		return;
+	}
+	var maxHeight = parseFloat(window.getComputedStyle(panels[0]).maxHeight);
+	if (isNaN(maxHeight)) {
+		return;
+	}
+	var others = panels[0].scrollHeight - wrapper.offsetHeight;
+	var height = Math.max(QUERY_TEXT_EDITOR_MIN_HEIGHT, Math.min(QUERY_TEXT_EDITOR_MAX_HEIGHT, Math.floor(maxHeight - others - 2)));
+	if (height !== wrapper.offsetHeight) {
+		wrapper.style.height = height + "px";
+		queryTextEditor.instance.refresh();
+	}
+}
+
+var queryTextEditorResizeBound = false;
+function bindQueryTextEditorResize() {
+	if (!queryTextEditorResizeBound) {
+		queryTextEditorResizeBound = true;
+		jQuery(window).on("resize", sizeQueryTextEditor);
+	}
+}
+
 function refreshQueryTextEditor() {
+	bindQueryTextEditorResize();
+	sizeQueryTextEditor();
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.refresh();
 		window.setTimeout(function() {
 			if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
+				sizeQueryTextEditor();
 				queryTextEditor.instance.refresh();
 			}
 			bindQueryTextActionButtons();
@@ -102,6 +139,8 @@ function handleQueryTextGenerateStarted(xhr, status, args) {
 	if (args && args.queryTextRunning && typeof queryTextPoll !== "undefined" && queryTextPoll) {
 		// stays busy until the poll sees the run finish
 		queryTextPoll.start();
+		// the step log may just have appeared, which leaves less room for the editor
+		sizeQueryTextEditor();
 		return;
 	}
 	setQueryTextBusy(false);
