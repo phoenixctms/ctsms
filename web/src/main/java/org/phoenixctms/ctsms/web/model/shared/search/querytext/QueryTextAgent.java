@@ -52,7 +52,7 @@ public final class QueryTextAgent {
 			if (text == null) {
 				return "";
 			}
-			String flat = text.replaceAll("\s+", " ").trim();
+			String flat = text.replaceAll("\\s+", " ").trim();
 			return flat.length() > STEP_TEXT_LENGTH ? flat.substring(0, STEP_TEXT_LENGTH) + "..." : flat;
 		}
 

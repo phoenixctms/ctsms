@@ -37,6 +37,8 @@ public class QueryTextTools {
 	public static final String SEARCH_TRIAL_ECRF_FIELDS = "searchTrialEcrfFields";
 	public static final String PARSE_QUERY = "parseQuery";
 	private static final int PAGE_SIZE = 100;
+	// each listed input field costs three usage count queries
+	private static final int MAX_INPUT_FIELDS = 30;
 	private static final int MAX_SELECTION_VALUES = 50;
 	private static final String NO_MATCHES = "no matches";
 	private final AuthenticationVO auth;
@@ -136,7 +138,12 @@ public class QueryTextTools {
 			addInputFields(fields, WebUtil.getServiceLocator().getInputFieldService().getInputFieldList(auth, null, createPsf("titleL10nKey", namePart)));
 			StringBuilder result = new StringBuilder();
 			Iterator<InputFieldOutVO> it = fields.values().iterator();
+			int count = 0;
 			while (it.hasNext()) {
+				if (count++ >= MAX_INPUT_FIELDS) {
+					appendLine(result, "more than " + MAX_INPUT_FIELDS + " fields match, search again with a more specific text");
+					break;
+				}
 				InputFieldOutVO field = it.next();
 				appendLine(result, field.getId() + " | " + field.getName() + " | " + field.getTitle() + " | " + fieldType(field) + " | " + inputFieldUsage(field.getId()));
 				appendSelectionValues(result, field);
