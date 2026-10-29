@@ -224,6 +224,11 @@ table.ctsms-criterion-position tr:nth-child(2) {
 .ctsms-query-text-actions {
 	margin-top: 4px;
 }
+
+/* the line where the query failed the syntax check, see markQueryTextErrorLine() */
+.ctsms-query-text-panel .ctsms-query-text-error-line {
+	background-color: #FF8F8F;
+}
 .ctsms-query-text-panel textarea.ctsms-query-text-editor {
 	display: none;
 }

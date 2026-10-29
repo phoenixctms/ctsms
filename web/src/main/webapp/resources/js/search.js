@@ -65,6 +65,7 @@ function bindQueryTextActionButtons() {
 		cm.ctsmsQueryTextButtonsBound = true;
 		if (typeof cm.on === "function") {
 			cm.on("change", updateQueryTextActionButtons);
+			cm.on("change", clearQueryTextErrorLine);
 		} else if (typeof cm.setOption === "function") {
 			var previous = typeof cm.getOption === "function" ? cm.getOption("onChange") : null;
 			cm.setOption("onChange", function(editor, change) {
@@ -72,6 +73,7 @@ function bindQueryTextActionButtons() {
 					previous(editor, change);
 				}
 				updateQueryTextActionButtons();
+				clearQueryTextErrorLine();
 			});
 		}
 	}
@@ -128,6 +130,54 @@ function refreshQueryTextEditor() {
 	bindQueryTextActionButtons();
 }
 
+var QUERY_TEXT_ERROR_LINE_CLASS = "ctsms-query-text-error-line";
+
+// highlights the 1-based line where the query failed the syntax check, until the text is edited
+function markQueryTextErrorLine(line) {
+	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
+		return;
+	}
+	var cm = queryTextEditor.instance;
+	clearQueryTextErrorLine();
+	var index = parseInt(line, 10) - 1;
+	if (isNaN(index) || index < 0 || index >= cm.lineCount()) {
+		return;
+	}
+	if (typeof cm.addLineClass === "function") {
+		cm.ctsmsErrorLine = cm.addLineClass(index, "background", QUERY_TEXT_ERROR_LINE_CLASS);
+	} else if (typeof cm.setLineClass === "function") {
+		cm.ctsmsErrorLine = cm.setLineClass(index, null, QUERY_TEXT_ERROR_LINE_CLASS);
+	}
+	cm.setCursor({
+		line : index,
+		ch : 0
+	});
+}
+
+function clearQueryTextErrorLine() {
+	if (typeof queryTextEditor === "undefined" || !queryTextEditor || !queryTextEditor.instance) {
+		return;
+	}
+	var cm = queryTextEditor.instance;
+	var handle = cm.ctsmsErrorLine;
+	if (handle == null) {
+		return;
+	}
+	cm.ctsmsErrorLine = null;
+	if (typeof cm.removeLineClass === "function") {
+		cm.removeLineClass(handle, "background", QUERY_TEXT_ERROR_LINE_CLASS);
+	} else if (typeof cm.setLineClass === "function") {
+		cm.setLineClass(handle, null, null);
+	}
+}
+
+function handleQueryTextApplied(xhr, status, args) {
+	refreshQueryTextEditor();
+	if (args && args.queryTextErrorLine) {
+		markQueryTextErrorLine(args.queryTextErrorLine);
+	}
+}
+
 function scrollQueryTextProgress() {
 	var steps = document.getElementsByClassName("ctsms-query-text-progress-steps");
 	for (var i = 0; i < steps.length; i++) {
@@ -155,6 +205,9 @@ function handleQueryTextPollComplete(xhr, status, args) {
 		}
 		setQueryTextBusy(false);
 		refreshQueryTextEditor();
+		if (args.queryTextErrorLine) {
+			markQueryTextErrorLine(args.queryTextErrorLine);
+		}
 	}
 }
 

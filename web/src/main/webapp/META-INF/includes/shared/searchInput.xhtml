@@ -276,7 +276,7 @@
 										actionListener="#{searchBean.applyQueryText}"
 										update=":search_form:tabView:criteria_input,:search_form:tabView:query_text_panel,:search_form:messages"
 										onclick="syncQueryTextEditor()"
-										oncomplete="refreshQueryTextEditor()" />
+										oncomplete="handleQueryTextApplied(xhr, status, args)" />
 								</p:toolbarGroup>
 								<p:toolbarGroup align="right">
 									<p:commandButton id="copy_query_text_prompt" type="button"

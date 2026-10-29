@@ -208,7 +208,7 @@ public class QueryTextTools {
 	@Tool(name = PARSE_QUERY, value = "Parse a query. Returns ok and the number of criteria, or the parse error to fix.")
 	public String parseQuery(@P(name = "text", value = "the complete query text") String text) {
 		try {
-			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text == null ? "" : text, maxCriterions);
+			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text == null ? "" : text, true, maxCriterions);
 			lastValidText = text;
 			return "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria";
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
