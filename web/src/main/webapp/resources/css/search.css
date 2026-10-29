@@ -221,9 +221,8 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	height: 1px;
 }
 
-.ctsms-query-text-apply {
-	text-align: right;
-	padding-top: 4px;
+.ctsms-query-text-actions {
+	margin-top: 4px;
 }
 
 .ctsms-query-text-panel textarea.ctsms-query-text-editor {
@@ -240,6 +239,30 @@ table.ctsms-criterion-position tr:nth-child(2) {
 
 .ctsms-query-text-panel .CodeMirror-scroll {
 	height: 100% !important;
+}
+
+.ctsms-query-text-progress {
+	margin-top: 4px;
+	border: 1px solid #bdbdbd;
+}
+
+.ctsms-query-text-progress-header {
+	padding: 2px 4px;
+	background-color: #eeeeee;
+	font-weight: bold;
+}
+
+.ctsms-query-text-progress-steps {
+	height: 160px;
+	overflow-y: auto;
+	padding: 2px 4px;
+	font-family: monospace;
+	font-size: 12px;
+}
+
+.ctsms-query-text-progress-step {
+	white-space: pre-wrap;
+	word-break: break-all;
 }
 
 .ctsms-intermediatesets-chart {

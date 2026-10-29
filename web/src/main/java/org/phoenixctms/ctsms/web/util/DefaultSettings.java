@@ -32,7 +32,7 @@ public final class DefaultSettings {
 	public final static String QUERY_TEXT_LLM_URL = "";
 	public final static String QUERY_TEXT_LLM_API_KEY = "";
 	public final static String QUERY_TEXT_LLM_MODEL = "";
-	public final static int QUERY_TEXT_LLM_TIMEOUT_MS = 120000;
+	public final static int QUERY_TEXT_LLM_TIMEOUT_MS = 600000;
 	public final static double QUERY_TEXT_LLM_TEMPERATURE = 0.0d;
 	public final static int QUERY_TEXT_LLM_MAX_TOOL_CALLS = 20;
 	public final static String QUERY_TEXT_LLM_PROMPT_TEMPLATE = "";
