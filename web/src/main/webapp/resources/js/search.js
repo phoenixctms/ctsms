@@ -292,11 +292,36 @@ function searchTabVisibleIndex(index) {
 	return index;
 }
 
+// SelectOneMenu pins the width it measured. On a hidden query tab that width is ~0.
+// Returns true when the menus are still hidden, so the caller can try once more after the tab is shown.
+function restoreCriterionMenuWidths() {
+	var menus = document.querySelectorAll(".ctsms-criterion-tie, .ctsms-criterion-property, .ctsms-criterion-restriction");
+	var hidden = false;
+	for (var i = 0; i < menus.length; i++) {
+		if (!menus[i].offsetParent) {
+			hidden = true;
+			continue;
+		}
+		menus[i].style.width = "";
+		var label = menus[i].querySelector(".ui-selectonemenu-label");
+		if (label) {
+			label.style.width = "";
+		}
+	}
+	return hidden && menus.length > 0;
+}
+
 function handleSearchTabChange(index) {
 
 	_deleteIntermediateSetsChartTooltip();
 	switch (searchTabLogicalIndex(index)) {
 	case 0:
+		// onTabChange runs before the panel is shown, so drop the collapsed widths once it is visible
+		window.setTimeout(function() {
+			if (restoreCriterionMenuWidths()) {
+				window.setTimeout(restoreCriterionMenuWidths, 50);
+			}
+		}, 0);
 
 		switch (oldSearchTabIndex) {
 		case 0:
