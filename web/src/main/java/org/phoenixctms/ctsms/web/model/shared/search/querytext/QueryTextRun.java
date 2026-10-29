@@ -14,6 +14,8 @@ public class QueryTextRun {
 
 	private final long startMillis = System.currentTimeMillis();
 	private final List<String> steps = new ArrayList<String>();
+	// the user's request in natural language, null if a query was given to improve
+	private final String naturalLanguageRequest;
 	private volatile Status status = Status.RUNNING;
 	private volatile long endMillis;
 	private volatile String answer;
@@ -21,6 +23,14 @@ public class QueryTextRun {
 	private volatile String error;
 	private volatile boolean applied;
 	private volatile Thread thread;
+
+	public QueryTextRun(String naturalLanguageRequest) {
+		this.naturalLanguageRequest = naturalLanguageRequest;
+	}
+
+	public String getNaturalLanguageRequest() {
+		return naturalLanguageRequest;
+	}
 
 	public void addStep(String step) {
 		synchronized (steps) {
