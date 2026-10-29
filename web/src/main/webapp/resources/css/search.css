@@ -104,35 +104,35 @@ table.ctsms-criterion-position tr:nth-child(2) {
 }
 
 /* td .ui-selectonemenu is display:block, and a hidden tab measures these menus at 0.
-   An inline width from that measurement then beats the class width when the tab is shown again. */
+   An inline width from that measurement then beats the class width when the tab is shown again.
+   Tie and operator keep their original fixed widths; the property sizes to its label, up to 300px. */
 .ctsms-criterion-tie,
 .ctsms-criterion-property,
 .ctsms-criterion-restriction {
 	display: inline-block !important;
-	width: auto !important;
 	box-sizing: border-box;
 	vertical-align: middle;
 }
 
 .ctsms-criterion-tie {
+	width: 40px !important;
 	min-width: 40px !important;
 }
 
 .ctsms-criterion-property {
-	min-width: 8em !important;
+	width: auto !important;
 	max-width: 300px;
 }
 
 .ctsms-criterion-restriction {
+	width: 50px !important;
 	min-width: 50px !important;
-	max-width: 300px;
 }
 
-.ctsms-criterion-tie .ui-selectonemenu-label,
-.ctsms-criterion-property .ui-selectonemenu-label,
-.ctsms-criterion-restriction .ui-selectonemenu-label {
-	display: inline-block !important;
-	width: auto !important;
+/* the closed label is the textbox; 100% fills the menu up to the arrow */
+.ctsms-criterion-row-drag .ui-selectonemenu-label {
+	display: block !important;
+	width: 100% !important;
 	box-sizing: border-box;
 	padding-right: 1.6em;
 	overflow: hidden;
@@ -140,8 +140,9 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	vertical-align: middle;
 }
 
-.ctsms-criterion-property .ui-selectonemenu-label,
-.ctsms-criterion-restriction .ui-selectonemenu-label {
+/* property width follows this label, so it must stay shrink-wrapped rather than 100% of an indefinite parent */
+.ctsms-criterion-property .ui-selectonemenu-label {
+	width: auto !important;
 	max-width: 300px;
 }
 
