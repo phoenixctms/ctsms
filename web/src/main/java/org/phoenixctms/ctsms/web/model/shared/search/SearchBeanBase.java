@@ -1366,7 +1366,17 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 			return;
 		}
 		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
-		QueryTextRun run = new QueryTextRun();
+		// text that does not parse is a request in natural language, which goes on top of the generated query as a comment
+		String naturalLanguageRequest = null;
+		try {
+			WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, maxCriterions);
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			naturalLanguageRequest = queryText;
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			return;
+		}
+		QueryTextRun run = new QueryTextRun(naturalLanguageRequest);
 		try {
 			// the prompt needs the faces context, so it is built here and not in the worker thread.
 			// the worker gets its own copy of the session auth: service calls write the credentials resolved from the jwt into it,
@@ -1467,6 +1477,29 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		} catch (AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_WARN, Labels.getMessageLocalized("search_query_text_llm_invalid", e.getMessage()));
 		}
+		if (!CommonUtil.isEmptyString(run.getNaturalLanguageRequest())) {
+			queryText = commentQueryText(run.getNaturalLanguageRequest(), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)) + queryText;
+		}
+	}
+
+	/**
+	 * Turns each line of the text into a comment of the query format: # for expressions, // for JSON. The parser skips both at the top.
+	 */
+	private static String commentQueryText(String text, boolean json) {
+		String prefix = json ? "//" : "#";
+		StringBuilder comment = new StringBuilder();
+		String[] lines = text.trim().split("\r\n|\n|\r");
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i].replaceAll("\\s+$", "");
+			comment.append(prefix);
+			if (line.length() > 0) {
+				// the blank keeps a line such as #Diagnoses from reading as a property name
+				comment.append(' ');
+				comment.append(line);
+			}
+			comment.append('\n');
+		}
+		return comment.toString();
 	}
 
 	private String queryTextRootName() {

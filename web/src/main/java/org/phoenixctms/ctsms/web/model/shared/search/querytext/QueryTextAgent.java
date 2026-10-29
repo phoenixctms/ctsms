@@ -123,8 +123,17 @@ public final class QueryTextAgent {
 	private QueryTextAgent() {
 	}
 
+	// the generate and stop buttons are not rendered unless both the endpoint and the model are set
 	public static boolean isConfigured() {
-		return !CommonUtil.isEmptyString(getUrl());
+		return !isBlank(getUrl()) && !isBlank(getModel());
+	}
+
+	private static boolean isBlank(String value) {
+		return value == null || value.trim().length() == 0;
+	}
+
+	private static String getModel() {
+		return Settings.getString(SettingCodes.QUERY_TEXT_LLM_MODEL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_MODEL);
 	}
 
 	private static String getUrl() {
@@ -137,19 +146,16 @@ public final class QueryTextAgent {
 			timeout = DefaultSettings.QUERY_TEXT_LLM_TIMEOUT_MS;
 		}
 		String apiKey = Settings.getString(SettingCodes.QUERY_TEXT_LLM_API_KEY, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_API_KEY);
-		String model = Settings.getString(SettingCodes.QUERY_TEXT_LLM_MODEL, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_MODEL);
 		OpenAiChatModelBuilder builder = OpenAiChatModel.builder()
 				.baseUrl(getUrl().trim())
 				.apiKey(CommonUtil.isEmptyString(apiKey) ? NO_API_KEY : apiKey.trim())
+				.modelName(getModel().trim())
 				.timeout(Duration.ofMillis(timeout))
 				.temperature(Settings.getDouble(SettingCodes.QUERY_TEXT_LLM_TEMPERATURE, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_TEMPERATURE))
 				.maxRetries(0)
 				// only read for the step log, it is not sent back to the model
 				.returnThinking(true)
 				.listeners(Collections.singletonList(new RoundListener(run)));
-		if (!CommonUtil.isEmptyString(model)) {
-			builder.modelName(model.trim());
-		}
 		return builder.build();
 	}
 
