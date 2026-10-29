@@ -1051,6 +1051,25 @@ PrimeFaces.widget.SelectOneMenu.prototype.bindKeyEvents = function() {
   });
 }
 
+// A query-builder menu created while its tab is display:none is measured at ~0
+// and keeps that inline width after the tab is shown.
+if (PrimeFaces.widget.SelectOneMenu && !PrimeFaces.widget.SelectOneMenu.prototype.ctsmsHiddenWidthGuard) {
+  var ctsmsSelectOneMenuInit = PrimeFaces.widget.SelectOneMenu.prototype.init;
+  PrimeFaces.widget.SelectOneMenu.prototype.ctsmsHiddenWidthGuard = true;
+  PrimeFaces.widget.SelectOneMenu.prototype.init = function(cfg) {
+    ctsmsSelectOneMenuInit.apply(this, arguments);
+    if (!this.jq || !this.jq.is(".ctsms-criterion-tie, .ctsms-criterion-property, .ctsms-criterion-restriction")) {
+      return;
+    }
+    if (!this.jq.is(":visible") || this.jq.width() < 8) {
+      this.jq.css("width", "");
+      if (this.label) {
+        this.label.css("width", "");
+      }
+    }
+  };
+}
+
 PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
         .extend({
 

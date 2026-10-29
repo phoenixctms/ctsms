@@ -103,20 +103,51 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	text-align: right;
 }
 
+/* td .ui-selectonemenu is display:block, and a hidden tab measures these menus at 0.
+   An inline width from that measurement then beats the class width when the tab is shown again. */
+.ctsms-criterion-tie,
+.ctsms-criterion-property,
+.ctsms-criterion-restriction {
+	display: inline-block !important;
+	width: auto !important;
+	box-sizing: border-box;
+	vertical-align: middle;
+}
+
 .ctsms-criterion-tie {
-	width: 40px;
+	min-width: 40px !important;
 }
 
 .ctsms-criterion-property {
+	min-width: 8em !important;
 	max-width: 300px;
 }
 
 .ctsms-criterion-restriction {
-	width: 50px;
+	min-width: 50px !important;
+	max-width: 300px;
+}
+
+.ctsms-criterion-tie .ui-selectonemenu-label,
+.ctsms-criterion-property .ui-selectonemenu-label,
+.ctsms-criterion-restriction .ui-selectonemenu-label {
+	display: inline-block !important;
+	width: auto !important;
+	box-sizing: border-box;
+	padding-right: 1.6em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+}
+
+.ctsms-criterion-property .ui-selectonemenu-label,
+.ctsms-criterion-restriction .ui-selectonemenu-label {
+	max-width: 300px;
 }
 
 .ctsms-criterions-panelgrid {
-
+	width: max-content;
+	min-width: max-content;
 }
 
 .ctsms-criterion-itemtip-panelgrid {
@@ -151,6 +182,24 @@ table.ctsms-criterion-position tr:nth-child(2) {
 
 .ctsms-criterion-row-drag {
 	cursor: move;
+	width: max-content;
+	min-width: max-content;
+}
+
+.ctsms-criterion-row-drag > tbody > tr > td {
+	white-space: nowrap;
+}
+
+/* icon buttons are the table's most compressible cells once a hidden tab is shown again */
+.ctsms-criterion-row-drag > tbody > tr > td > .ui-button {
+	min-width: 2.2em;
+	box-sizing: border-box;
+}
+
+.ctsms-criterion-selects {
+	width: max-content;
+	min-width: max-content;
+	height: auto;
 }
 
 .ctsms-search-input-row {
