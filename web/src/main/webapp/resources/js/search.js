@@ -29,20 +29,25 @@ function updateQueryTextActionButtons() {
 	}
 }
 
+function enableQueryTextButtons(styleClass, enabled) {
+	var buttons = document.getElementsByClassName(styleClass);
+	for (var i = 0; i < buttons.length; i++) {
+		buttons[i].disabled = !enabled;
+		if (enabled) {
+			buttons[i].className = buttons[i].className.replace(/\s*ui-state-disabled/g, "");
+		} else if (buttons[i].className.indexOf("ui-state-disabled") < 0) {
+			buttons[i].className = buttons[i].className + " ui-state-disabled";
+		}
+	}
+}
+
 function setQueryTextBusy(busy) {
 	if (typeof queryTextEditor !== "undefined" && queryTextEditor && queryTextEditor.instance) {
 		queryTextEditor.instance.setOption("readOnly", busy);
 	}
-	// the stop button is only usable while a generation runs
-	var cancelButtons = document.getElementsByClassName("ctsms-query-text-cancel");
-	for (var j = 0; j < cancelButtons.length; j++) {
-		cancelButtons[j].disabled = !busy;
-		if (busy) {
-			cancelButtons[j].className = cancelButtons[j].className.replace(/\s*ui-state-disabled/g, "");
-		} else if (cancelButtons[j].className.indexOf("ui-state-disabled") < 0) {
-			cancelButtons[j].className = cancelButtons[j].className + " ui-state-disabled";
-		}
-	}
+	// the stop button is only usable while a generation runs, apply only while none does
+	enableQueryTextButtons("ctsms-query-text-cancel", busy);
+	enableQueryTextButtons("ctsms-query-text-apply", !busy);
 	if (!busy) {
 		updateQueryTextActionButtons();
 		return;

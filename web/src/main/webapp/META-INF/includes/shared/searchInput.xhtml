@@ -272,6 +272,7 @@
 									<p:commandButton id="apply_query_text"
 										value="#{labels.search_query_text_apply_button_label}"
 										icon="ui-icon-arrowthick-1-w"
+										styleClass="ctsms-query-text-apply"
 										process="@this,:search_form:tabView:query_text"
 										actionListener="#{searchBean.applyQueryText}"
 										update=":search_form:tabView:criteria_input,:search_form:tabView:query_text_panel,:search_form:messages"

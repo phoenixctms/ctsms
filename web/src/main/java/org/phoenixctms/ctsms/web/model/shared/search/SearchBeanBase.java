@@ -1266,6 +1266,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (sessionScopeBean == null || !sessionScopeBean.isExperimentalUser()) {
 			return;
 		}
+		// the generated query replaces the editor text when the run ends
+		if (isQueryTextRunning()) {
+			return;
+		}
 		try {
 			// without the syntax check, so a query with e.g. a missing tie still loads and the query builder marks the faulty row
 			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
