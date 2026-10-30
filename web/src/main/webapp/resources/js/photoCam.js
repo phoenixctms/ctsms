@@ -7,6 +7,7 @@
 	var STATUS_TIMEOUT = 3000;
 	var START_RETRIES = 3;
 	var START_RETRY_DELAY = 1000;
+	var JPEG_QUALITY = 0.92;
 	var activeStreams = {};
 
 	function stopStream(stream) {
@@ -58,6 +59,11 @@
 			this.statusTimer = null;
 
 			var _self = this;
+			$(this.video).off('loadedmetadata resize').on('loadedmetadata resize', function() {
+				if (this.videoWidth && this.videoHeight) {
+					this.parentNode.style.aspectRatio = this.videoWidth + ' / ' + this.videoHeight;
+				}
+			});
 			this.devices.change(function() {
 				var deviceId = $(this).val();
 				storeDeviceId(deviceId);
@@ -245,23 +251,10 @@
 				}
 				return;
 			}
-			var width = this.cfg.width;
-			var height = this.cfg.height;
-			var sourceWidth = video.videoWidth;
-			var sourceHeight = video.videoHeight;
-			var targetRatio = width / height;
-			var sx = 0, sy = 0, sw = sourceWidth, sh = sourceHeight;
-			if (sourceWidth / sourceHeight > targetRatio) {
-				sw = sourceHeight * targetRatio;
-				sx = (sourceWidth - sw) / 2;
-			} else {
-				sh = sourceWidth / targetRatio;
-				sy = (sourceHeight - sh) / 2;
-			}
 			var canvas = document.createElement('canvas');
-			canvas.width = width;
-			canvas.height = height;
-			canvas.getContext('2d').drawImage(video, sx, sy, sw, sh, 0, 0, width, height);
+			canvas.width = video.videoWidth;
+			canvas.height = video.videoHeight;
+			canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 			PrimeFaces.ajax.AjaxRequest({
 				source : this.id,
 				formId : this.form.attr('id'),
@@ -269,7 +262,7 @@
 				update : this.cfg.update,
 				params : [ {
 					name : this.cfg.dataParam,
-					value : canvas.toDataURL('image/png')
+					value : canvas.toDataURL('image/jpeg', JPEG_QUALITY)
 				} ]
 			});
 		}

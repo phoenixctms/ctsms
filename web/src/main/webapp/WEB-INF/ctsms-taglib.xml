@@ -79,19 +79,19 @@
 			<type>javax.el.MethodExpression</type>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Width in pixels of the captured image. Default is 640.]]></description>
+			<description><![CDATA[Ideal width in pixels requested from the camera. The image is captured at the resolution the camera actually delivers. Default is 1920.]]></description>
 			<name>width</name>
 			<required>false</required>
 			<type>java.lang.Integer</type>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Height in pixels of the captured image. Default is 480.]]></description>
+			<description><![CDATA[Ideal height in pixels requested from the camera. Default is 1080.]]></description>
 			<name>height</name>
 			<required>false</required>
 			<type>java.lang.Integer</type>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Width in pixels of the live view on the page, the height follows the width/height aspect ratio. Default is the capture width.]]></description>
+			<description><![CDATA[Maximum width in pixels of the live view on the page, which otherwise fills the available width. The height follows the aspect ratio of the camera. Default is 640.]]></description>
 			<name>displayWidth</name>
 			<required>false</required>
 			<type>java.lang.Integer</type>

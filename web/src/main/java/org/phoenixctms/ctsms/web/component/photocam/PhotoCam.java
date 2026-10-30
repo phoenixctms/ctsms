@@ -34,8 +34,9 @@ public class PhotoCam extends UIInput implements org.primefaces.component.api.Wi
 	public static final String COMPONENT_TYPE = "ctsms.PhotoCam";
 	private static final String DEFAULT_RENDERER = "ctsms.PhotoCam";
 	public final static String CONTAINER_CLASS = "ctsms-photocam";
-	public final static int DEFAULT_WIDTH = 640;
-	public final static int DEFAULT_HEIGHT = 480;
+	public final static int DEFAULT_WIDTH = 1920;
+	public final static int DEFAULT_HEIGHT = 1080;
+	public final static int DEFAULT_DISPLAY_WIDTH = 640;
 
 	public PhotoCam() {
 		setRendererType(DEFAULT_RENDERER);
@@ -62,7 +63,7 @@ public class PhotoCam extends UIInput implements org.primefaces.component.api.Wi
 	}
 
 	public int getDisplayWidth() {
-		return (java.lang.Integer) getStateHelper().eval(PropertyKeys.displayWidth, getWidth());
+		return (java.lang.Integer) getStateHelper().eval(PropertyKeys.displayWidth, DEFAULT_DISPLAY_WIDTH);
 	}
 
 	public int getHeight() {

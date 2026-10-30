@@ -22,13 +22,13 @@ import org.primefaces.model.UploadedFile;
 
 public abstract class PhotoBeanBase extends ManagedBeanBase {
 
-	private final static String CAPTURE_MIME_TYPE = "image/png";
-	private final static String CAPTURE_FILE_NAME_EXTENSION = "png";
+	private final static String CAPTURE_MIME_TYPE = "image/jpeg";
+	private final static String CAPTURE_FILE_NAME_EXTENSION = "jpg";
 	private final static String PREVIEW_FORMAT = "png";
 	private final static String PREVIEW_MIME_TYPE = "image/png";
 	private final static org.phoenixctms.ctsms.enumeration.Color PREVIEW_BG_COLOR = org.phoenixctms.ctsms.enumeration.Color.WHITE;
-	private final static int CAPTURE_WIDTH = 320;
-	private final static int CAPTURE_HEIGHT = 240;
+	private final static int CAPTURE_WIDTH = 640;
+	private final static int CAPTURE_HEIGHT = 480;
 
 	private static byte[] scale(byte[] imageData) {
 		if (imageData == null || imageData.length == 0) {
