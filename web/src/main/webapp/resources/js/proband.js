@@ -4,6 +4,10 @@ var oldProbandTabIndex = 0;
 
 function handleProbandTabChange(index) {
 
+	if (oldProbandTabIndex == 1 && index != 1 && typeof photocam !== 'undefined') {
+		photocam.stop();
+	}
+
 	FieldCalculation.resetInputFieldVariables();
 	switch (index) {
 	case 0:

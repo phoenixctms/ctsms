@@ -73,6 +73,19 @@
 			$(window).off('pagehide' + eventNamespace).on('pagehide' + eventNamespace, function() {
 				_self.stop();
 			});
+			$(document).off('visibilitychange' + eventNamespace).on('visibilitychange' + eventNamespace, function() {
+				if (document.hidden) {
+					if (_self.stream || _self.pending) {
+						_self.resume = true;
+						_self.stop();
+					}
+				} else if (_self.resume) {
+					_self.resume = false;
+					if ($.contains(document.documentElement, _self.video)) {
+						_self.start(loadDeviceId());
+					}
+				}
+			});
 
 			if (window.isSecureContext === false) {
 				this.showStatus(this.msgs.insecureContext);
@@ -161,6 +174,8 @@
 		},
 
 		stop : function() {
+			this.requestCount = (this.requestCount || 0) + 1;
+			this.pending = false;
 			if (this.stream) {
 				stopStream(this.stream);
 				if (activeStreams[this.id] === this.stream) {
