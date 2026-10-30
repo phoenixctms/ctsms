@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ctsms="http://phoenixctms.org/ctsms-taglib">
 <h:head>
 	<title>photo capture and upload</title>
 </h:head>
@@ -23,8 +24,11 @@
 					<f:facet name="header">
 						<h:outputText value="#{labels.photo_cam_label}" />
 					</f:facet>
-					<p:photoCam
+					<ctsms:photoCam
 						widgetVar="photocam"
+						width="640"
+						height="480"
+						displayWidth="320"
 						listener="#{photoBean.onCapture}"
 						update="photo,photo_input" />
 				</p:panel>

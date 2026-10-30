@@ -1,0 +1,38 @@
+.ctsms-photocam {
+	display: block;
+	max-width: 100%;
+	text-align: center;
+}
+
+.ctsms-photocam-devices {
+	display: block;
+	max-width: 100%;
+	margin: 0 auto 4px auto;
+}
+
+.ctsms-photocam-viewport {
+	position: relative;
+	max-width: 100%;
+	margin: 0 auto;
+	background-color: #000000;
+	overflow: hidden;
+}
+
+.ctsms-photocam-video {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.ctsms-photocam-status {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 8px;
+	color: #ffffff;
+	background-color: rgba(0, 0, 0, 0.6);
+	white-space: normal;
+}

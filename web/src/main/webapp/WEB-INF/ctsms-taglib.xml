@@ -15,6 +15,89 @@
 		</component>
 	</tag>
 	<tag>
+		<tag-name>photoCam</tag-name>
+		<component>
+			<description><![CDATA[PhotoCam is used to take photos with webcam and send them to the JSF backend model (HTML5 getUserMedia).]]></description>
+			<component-type>ctsms.PhotoCam</component-type>
+			<renderer-type>ctsms.PhotoCam</renderer-type>
+			<handler-class>
+				org.phoenixctms.ctsms.web.component.photocam.PhotoCamTagHandler
+			</handler-class>
+		</component>
+		<attribute>
+			<description><![CDATA[Unique identifier of the component in a namingContainer.]]></description>
+			<name>id</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Boolean value to specify the rendering of the component, when set to false component will not be rendered.]]></description>
+			<name>rendered</name>
+			<required>false</required>
+			<type>java.lang.Boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[An el expression referring to a server side UIComponent instance in a backing bean.]]></description>
+			<name>binding</name>
+			<required>false</required>
+			<type>javax.faces.component.UIComponent</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name of the client side widget.]]></description>
+			<name>widgetVar</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Inline style of the component.]]></description>
+			<name>style</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Style class of the component.]]></description>
+			<name>styleClass</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Identifiers of components to process during capture.]]></description>
+			<name>process</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Identifiers of components to update during capture.]]></description>
+			<name>update</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Method expression to listen to capture events (org.primefaces.event.CaptureEvent).]]></description>
+			<name>listener</name>
+			<required>false</required>
+			<type>javax.el.MethodExpression</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Width in pixels of the captured image. Default is 640.]]></description>
+			<name>width</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Height in pixels of the captured image. Default is 480.]]></description>
+			<name>height</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Width in pixels of the live view on the page, the height follows the width/height aspect ratio. Default is the capture width.]]></description>
+			<name>displayWidth</name>
+			<required>false</required>
+			<type>java.lang.Integer</type>
+		</attribute>
+	</tag>
+	<tag>
 		<tag-name>tagCloud</tag-name>
 		<component>
 			<description><![CDATA[]]></description>

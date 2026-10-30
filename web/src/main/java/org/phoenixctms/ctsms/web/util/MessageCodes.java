@@ -712,6 +712,14 @@ public interface MessageCodes {
 	public static final String SKETCH_PEN_OPACITY_0_TOOLTIP = "sketch_pen_opacity_0_tooltip";
 	public static final String SKETCH_PEN_OPACITY_1_TOOLTIP = "sketch_pen_opacity_1_tooltip";
 	public static final String SKETCH_PEN_OPACITY_2_TOOLTIP = "sketch_pen_opacity_2_tooltip";
+	public static final String PHOTO_CAM_NOT_SUPPORTED = "photo_cam_not_supported";
+	public static final String PHOTO_CAM_INSECURE_CONTEXT = "photo_cam_insecure_context";
+	public static final String PHOTO_CAM_PERMISSION_DENIED = "photo_cam_permission_denied";
+	public static final String PHOTO_CAM_NO_DEVICE = "photo_cam_no_device";
+	public static final String PHOTO_CAM_NOT_READABLE = "photo_cam_not_readable";
+	public static final String PHOTO_CAM_NOT_READY = "photo_cam_not_ready";
+	public static final String PHOTO_CAM_ERROR = "photo_cam_error";
+	public static final String PHOTO_CAM_DEVICE_LABEL = "photo_cam_device_label";
 	public static final String PRIVACY_CONSENT_STATUS_AUTODELETE_DISABLED_MESSAGE = "privacy_consent_status_autodelete_disabled_message";
 	public static final String PRIVACY_CONSENT_STATUS_AUTODELETE_ACTIVE_MESSAGE = "privacy_consent_status_autodelete_active_message";
 	public static final String PRIVACY_CONSENT_STATUS_AUTODELETE_DUE_MESSAGE = "privacy_consent_status_autodelete_due_message";
