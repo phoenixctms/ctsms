@@ -41,7 +41,7 @@ public class ResourceHandlerWrapper extends PrimeResourceHandler {
 				if (!ALLOWED_EXPRESSIONS.contains(dynamicContentEL)) {
 					throw new Exception("prevented EL " + dynamicContentEL);
 				}
-				System.out.println(dynamicContentEL);
+				//System.out.println(dynamicContentEL);
 				ELContext elContext = context.getELContext();
 				ValueExpression ve = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), dynamicContentEL, StreamedContent.class);
 				StreamedContent content = (StreamedContent) ve.getValue(elContext);
