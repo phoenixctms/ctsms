@@ -3,6 +3,10 @@ var oldStaffTabIndex = 0;
 
 function handleStaffTabChange(index) {
 
+	if (oldStaffTabIndex == 1 && index != 1 && typeof photocam !== 'undefined') {
+		photocam.stop();
+	}
+
 	switch (index) {
 	case 0:
 
