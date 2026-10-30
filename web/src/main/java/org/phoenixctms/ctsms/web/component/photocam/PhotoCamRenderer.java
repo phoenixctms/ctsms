@@ -29,7 +29,7 @@ import org.primefaces.util.ComponentUtils;
 @FacesRenderer(componentFamily = "javax.faces.Input", rendererType = "ctsms.PhotoCam")
 public class PhotoCamRenderer extends CoreRenderer {
 
-	private final static String DATA_URL_PREFIX = "data:image/png;base64,";
+	private final static String DATA_URL_PREFIX = "data:image/jpeg;base64,";
 
 	private static String getDataParameterName(PhotoCam cam, FacesContext context) {
 		return cam.getClientId(context) + "_data";
@@ -85,15 +85,13 @@ public class PhotoCamRenderer extends CoreRenderer {
 		writer.endElement("select");
 		writer.startElement("div", null);
 		writer.writeAttribute("class", "ctsms-photocam-viewport", null);
-		writer.writeAttribute("style", "width:" + cam.getDisplayWidth() + "px;aspect-ratio:" + cam.getWidth() + " / " + cam.getHeight() + ";", null);
+		writer.writeAttribute("style", "max-width:" + cam.getDisplayWidth() + "px;aspect-ratio:" + cam.getWidth() + " / " + cam.getHeight() + ";", null);
 		writer.startElement("video", null);
 		writer.writeAttribute("id", clientId + "_video", null);
 		writer.writeAttribute("class", "ctsms-photocam-video", null);
 		writer.writeAttribute("autoplay", "autoplay", null);
 		writer.writeAttribute("playsinline", "playsinline", null);
 		writer.writeAttribute("muted", "muted", null);
-		writer.writeAttribute("width", cam.getWidth(), null);
-		writer.writeAttribute("height", cam.getHeight(), null);
 		writer.endElement("video");
 		writer.startElement("span", null);
 		writer.writeAttribute("id", clientId + "_status", null);
