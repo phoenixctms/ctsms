@@ -5,6 +5,8 @@
 
 	var DEVICE_ID_STORAGE_KEY = 'ctsms.photoCam.deviceId';
 	var STATUS_TIMEOUT = 3000;
+	var START_RETRIES = 3;
+	var START_RETRY_DELAY = 1000;
 	var activeStreams = {};
 
 	function stopStream(stream) {
@@ -52,13 +54,8 @@
 			this.video = $(this.jqId + '_video')[0];
 			this.devices = $(this.jqId + '_devices');
 			this.status = $(this.jqId + '_status');
-			this.requestCount = (this.requestCount || 0) + 1;
+			this.requestCount = this.requestCount || 0;
 			this.statusTimer = null;
-
-			stopStream(this.stream);
-			this.stream = null;
-			stopStream(activeStreams[this.id]);
-			delete activeStreams[this.id];
 
 			var _self = this;
 			this.devices.change(function() {
@@ -76,13 +73,33 @@
 			} else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
 				this.showStatus(this.msgs.notSupported);
 			} else {
-				this.start(loadDeviceId());
+				var stream = activeStreams[this.id];
+				if (stream && stream.active) {
+					this.attach(stream, null);
+				} else if (!this.pending) {
+					this.start(loadDeviceId());
+				}
 			}
 		},
 
-		start : function(deviceId) {
+		attach : function(stream, deviceId) {
+			this.stream = stream;
+			activeStreams[this.id] = stream;
+			this.video.srcObject = stream;
+			var playing = this.video.play();
+			if (playing && playing.then) {
+				playing.then(null, function() {
+				});
+			}
+			this.listDevices(getStreamDeviceId(stream) || deviceId);
+		},
+
+		start : function(deviceId, retries) {
 			this.stop();
 			this.showStatus(null);
+			if (retries === undefined) {
+				retries = START_RETRIES;
+			}
 			var constraints = {
 				width : {
 					ideal : this.cfg.width
@@ -98,28 +115,34 @@
 			}
 			var _self = this;
 			var request = ++this.requestCount;
+			this.pending = true;
 			navigator.mediaDevices.getUserMedia({
 				video : constraints,
 				audio : false
 			}).then(function(stream) {
-				if (request !== _self.requestCount || !$.contains(document.documentElement, _self.video)) {
+				if (request !== _self.requestCount) {
 					stopStream(stream);
 					return;
 				}
-				_self.stream = stream;
-				activeStreams[_self.id] = stream;
-				_self.video.srcObject = stream;
-				var playing = _self.video.play();
-				if (playing && playing.then) {
-					playing.then(null, function() {
-					});
+				_self.pending = false;
+				if (!$.contains(document.documentElement, _self.video)) {
+					stopStream(stream);
+					return;
 				}
-				_self.listDevices(getStreamDeviceId(stream) || deviceId);
+				_self.attach(stream, deviceId);
 			}, function(error) {
 				if (request !== _self.requestCount) {
 					return;
 				}
-				if (deviceId && error && (error.name === 'OverconstrainedError' || error.name === 'NotFoundError')) {
+				_self.pending = false;
+				if (retries > 0 && error && (error.name === 'NotReadableError' || error.name === 'TrackStartError' || error.name === 'AbortError')) {
+					_self.pending = true;
+					window.setTimeout(function() {
+						if (request === _self.requestCount) {
+							_self.start(deviceId, retries - 1);
+						}
+					}, START_RETRY_DELAY);
+				} else if (deviceId && error && (error.name === 'OverconstrainedError' || error.name === 'NotFoundError')) {
 					storeDeviceId(null);
 					_self.start(null);
 				} else {
