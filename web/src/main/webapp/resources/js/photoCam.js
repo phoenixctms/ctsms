@@ -135,13 +135,16 @@
 					return;
 				}
 				_self.pending = false;
-				if (retries > 0 && error && (error.name === 'NotReadableError' || error.name === 'TrackStartError' || error.name === 'AbortError')) {
+				var retrying = retries < START_RETRIES;
+				if (retries > 0 && error && (error.name === 'NotReadableError' || error.name === 'TrackStartError' || error.name === 'AbortError' || (retrying && error.name === 'NotFoundError'))) {
 					_self.pending = true;
 					window.setTimeout(function() {
 						if (request === _self.requestCount) {
 							_self.start(deviceId, retries - 1);
 						}
 					}, START_RETRY_DELAY);
+				} else if (retrying && error && error.name === 'NotFoundError') {
+					_self.showStatus(_self.msgs.notReadable);
 				} else if (deviceId && error && (error.name === 'OverconstrainedError' || error.name === 'NotFoundError')) {
 					storeDeviceId(null);
 					_self.start(null);
