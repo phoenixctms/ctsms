@@ -9,6 +9,9 @@ on:
       - 'l10n_master'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   zap:
     name: OWASP ZAP baseline
@@ -17,6 +20,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up JDK
         run: |
           sudo apt-get update
