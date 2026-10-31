@@ -29,10 +29,14 @@ jobs:
 #        uses: actions/setup-java@v1
 #        with:
 #          java-version: 11
+      # repo.maven.apache.org returns 403 to GitHub-hosted runners for this tarball.
       - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: 3.8.7
+        run: |
+          MAVEN_VERSION=3.8.7
+          curl -fsSL -o "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+            "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          tar -xzf "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
       - name: Cache Maven packages
         uses: actions/cache@v6
         with:
