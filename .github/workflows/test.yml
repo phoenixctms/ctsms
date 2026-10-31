@@ -9,6 +9,9 @@ on:
       - 'l10n_master'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build and Test
@@ -17,6 +20,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          persist-credentials: false
       - name: Set up JDK
         run: |
           sudo apt-get update
