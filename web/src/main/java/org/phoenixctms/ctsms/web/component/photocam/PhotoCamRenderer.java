@@ -78,11 +78,6 @@ public class PhotoCamRenderer extends CoreRenderer {
 		if (cam.getStyle() != null) {
 			writer.writeAttribute("style", cam.getStyle(), "style");
 		}
-		writer.startElement("select", null);
-		writer.writeAttribute("id", clientId + "_devices", null);
-		writer.writeAttribute("class", "ctsms-photocam-devices", null);
-		writer.writeAttribute("style", "display:none", null);
-		writer.endElement("select");
 		writer.startElement("div", null);
 		writer.writeAttribute("class", "ctsms-photocam-viewport", null);
 		writer.writeAttribute("style", "max-width:" + cam.getDisplayWidth() + "px;aspect-ratio:" + cam.getWidth() + " / " + cam.getHeight() + ";", null);
@@ -99,6 +94,11 @@ public class PhotoCamRenderer extends CoreRenderer {
 		writer.writeAttribute("style", "display:none", null);
 		writer.endElement("span");
 		writer.endElement("div");
+		writer.startElement("select", null);
+		writer.writeAttribute("id", clientId + "_devices", null);
+		writer.writeAttribute("class", "ctsms-photocam-devices", null);
+		writer.writeAttribute("style", "display:none", null);
+		writer.endElement("select");
 		writer.endElement("div");
 	}
 
