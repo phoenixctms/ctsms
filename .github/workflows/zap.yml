@@ -9,24 +9,32 @@ on:
       - 'l10n_master'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   zap:
     name: OWASP ZAP baseline
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up JDK
         run: |
           sudo apt-get update
           sudo apt-get -q -y install default-jdk
+      # repo.maven.apache.org returns 403 to GitHub-hosted runners for this tarball.
       - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: 3.8.7
+        run: |
+          MAVEN_VERSION=3.8.7
+          curl -fsSL -o "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+            "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          tar -xzf "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
       - name: Cache Maven packages
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
@@ -126,7 +134,7 @@ jobs:
         run: sudo chmod -R a+rX zap-wrk || true
       - name: Upload ZAP report artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: zap-baseline-report
           path: zap-wrk/zap-report.html

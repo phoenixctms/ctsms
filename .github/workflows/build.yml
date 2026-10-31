@@ -7,14 +7,17 @@ on:
     types: [opened, synchronize, reopened]
     branches-ignore:
       - 'l10n_master'
+permissions:
+  contents: read
 jobs:
   build:
     name: Build and Analyze
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          persist-credentials: false
       - name: Set up JDK 11
         run: |
           sudo apt-get update
@@ -23,18 +26,20 @@ jobs:
 #        uses: actions/setup-java@v1
 #        with:
 #          java-version: 11
+      # repo.maven.apache.org returns 403 to GitHub-hosted runners for this tarball.
       - name: Set up Maven
-        uses: stCarolas/setup-maven@v4.5
-        with:
-          maven-version: 3.8.7
+        run: |
+          MAVEN_VERSION=3.8.7
+          curl -fsSL -o "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+            "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          tar -xzf "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
       - name: Cache Maven packages
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         # sonar-maven-plugin is bound to verify in pom.xml; skip analysis in CI (no SONAR_TOKEN).
         run: mvn verify -DskipTests -Dsonar.skip=true --no-transfer-progress -c
