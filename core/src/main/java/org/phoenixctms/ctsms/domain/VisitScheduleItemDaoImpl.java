@@ -24,8 +24,6 @@ import java.util.regex.Pattern;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
@@ -42,6 +40,7 @@ import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CategoryCriterion.EmptyPrefixModes;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SQLProjection;
+import org.phoenixctms.ctsms.query.SqlOrder;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
@@ -105,21 +104,6 @@ public class VisitScheduleItemDaoImpl
 			return compareExpandedProbandRow(a, b, VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_DESC, true);
 		}
 	};
-
-	private static final class SqlOrder extends Order {
-
-		private final String sql;
-
-		private SqlOrder(String sql) {
-			super(sql, true);
-			this.sql = sql;
-		}
-
-		@Override
-		public String toSqlString(Criteria criteria, CriteriaQuery criteriaQuery) throws HibernateException {
-			return sql;
-		}
-	}
 
 	// Same item and timestamp can be expanded once per proband. Page selection needs that key too.
 	private static int compareExpandedProbandRow(Object[] a, Object[] b, VisitScheduleItemComparator itemComparator, boolean desc) {
@@ -349,13 +333,6 @@ public class VisitScheduleItemDaoImpl
 		}
 		if (psf.getPageSize() != null) {
 			criteria.setMaxResults(psf.getPageSize());
-		}
-	}
-
-	// Same start/stop must not reshuffle when the page is smaller than the full result.
-	private static void addIntervalIdTieBreak(org.hibernate.Criteria criteria, PSFVO psf) {
-		if (isComputedIntervalSort(psf)) {
-			criteria.addOrder(Order.asc("id"));
 		}
 	}
 
@@ -671,7 +648,9 @@ public class VisitScheduleItemDaoImpl
 			return listExpandDateMode(visitScheduleItemCriteria, probandId, null, criteriaMap, psf, false);
 		} else {
 			CriteriaUtil.applyPSFVO(criteriaMap, psf);
-			addIntervalIdTieBreak(visitScheduleItemCriteria, psf);
+			if (isComputedIntervalSort(psf)) {
+				visitScheduleItemCriteria.addOrder(Order.asc("id"));
+			}
 			return visitScheduleItemCriteria.list();
 			//if (probandId == null) {
 			//CriteriaUtil.applyPSFVO(criteriaMap, psf); // proband has only one probandlistentry, and listentry has only one group, but left joins
