@@ -649,7 +649,7 @@ public class VisitScheduleItemDaoImpl
 		} else {
 			CriteriaUtil.applyPSFVO(criteriaMap, psf);
 			if (isComputedIntervalSort(psf)) {
-				visitScheduleItemCriteria.addOrder(Order.asc("id"));
+				visitScheduleItemCriteria.addOrder(psf.getSortOrder() ? Order.asc("id") : Order.desc("id"));
 			}
 			return visitScheduleItemCriteria.list();
 			//if (probandId == null) {
