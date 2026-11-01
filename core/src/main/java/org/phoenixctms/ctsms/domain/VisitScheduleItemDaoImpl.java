@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.MatchMode;
@@ -79,38 +81,73 @@ public class VisitScheduleItemDaoImpl
 
 		@Override
 		public int compare(Object[] a, Object[] b) {
-			return VISIT_SCHEDULE_ITEM_COMPARATOR_START_ASC.compare(
-					a != null && a.length > 0 ? (VisitScheduleItem) a[0] : null,
-					b != null && b.length > 0 ? (VisitScheduleItem) b[0] : null);
+			return compareExpandedProbandRow(a, b, VISIT_SCHEDULE_ITEM_COMPARATOR_START_ASC, false);
 		}
 	};
 	private final static Comparator<Object[]> VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_START_DESC = new Comparator<Object[]>() {
 
 		@Override
 		public int compare(Object[] a, Object[] b) {
-			return VISIT_SCHEDULE_ITEM_COMPARATOR_START_DESC.compare(
-					a != null && a.length > 0 ? (VisitScheduleItem) a[0] : null,
-					b != null && b.length > 0 ? (VisitScheduleItem) b[0] : null);
+			return compareExpandedProbandRow(a, b, VISIT_SCHEDULE_ITEM_COMPARATOR_START_DESC, true);
 		}
 	};
 	private final static Comparator<Object[]> VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_ASC = new Comparator<Object[]>() {
 
 		@Override
 		public int compare(Object[] a, Object[] b) {
-			return VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_ASC.compare(
-					a != null && a.length > 0 ? (VisitScheduleItem) a[0] : null,
-					b != null && b.length > 0 ? (VisitScheduleItem) b[0] : null);
+			return compareExpandedProbandRow(a, b, VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_ASC, false);
 		}
 	};
 	private final static Comparator<Object[]> VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_DESC = new Comparator<Object[]>() {
 
 		@Override
 		public int compare(Object[] a, Object[] b) {
-			return VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_DESC.compare(
-					a != null && a.length > 0 ? (VisitScheduleItem) a[0] : null,
-					b != null && b.length > 0 ? (VisitScheduleItem) b[0] : null);
+			return compareExpandedProbandRow(a, b, VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_DESC, true);
 		}
 	};
+
+	private static final class SqlOrder extends Order {
+
+		private final String sql;
+
+		private SqlOrder(String sql) {
+			super(sql, true);
+			this.sql = sql;
+		}
+
+		@Override
+		public String toSqlString(Criteria criteria, CriteriaQuery criteriaQuery) throws HibernateException {
+			return sql;
+		}
+	}
+
+	// Same item and timestamp can be expanded once per proband. Page selection needs that key too.
+	private static int compareExpandedProbandRow(Object[] a, Object[] b, VisitScheduleItemComparator itemComparator, boolean desc) {
+		int itemComparison = itemComparator.compare(
+				a != null && a.length > 0 ? (VisitScheduleItem) a[0] : null,
+				b != null && b.length > 0 ? (VisitScheduleItem) b[0] : null);
+		if (itemComparison != 0) {
+			return itemComparison;
+		}
+		Long probandIdA = expandedProbandId(a);
+		Long probandIdB = expandedProbandId(b);
+		int sign = desc ? -1 : 1;
+		if (probandIdA != null && probandIdB != null) {
+			return sign * probandIdA.compareTo(probandIdB);
+		} else if (probandIdA == null && probandIdB != null) {
+			return sign;
+		} else if (probandIdA != null && probandIdB == null) {
+			return -sign;
+		}
+		return 0;
+	}
+
+	private static Long expandedProbandId(Object[] row) {
+		if (row != null && row.length > 1 && row[1] instanceof Proband) {
+			return ((Proband) row[1]).getId();
+		}
+		return null;
+	}
 
 	private static final void applyTrialGroupVisitCriterions(org.hibernate.Criteria visitScheduleItemCriteria, Long trialId, Long groupId, Long visitId) {
 		if (trialId != null) {
@@ -267,16 +304,52 @@ public class VisitScheduleItemDaoImpl
 		return "start".equals(sortProperty) || "stop".equals(sortProperty);
 	}
 
-	// Expanded start/stop are calculated (tag offset / duration), not the persisted columns.
-	// Paging must happen after that sort; a SQL limit would order and cut the raw columns first.
+	// Filters and row count only. Computed start/stop are ordered in SQL below, not by the stored columns.
 	private static PSFVO filtersOnly(PSFVO psf) {
 		PSFVO filter = new PSFVO();
 		if (psf != null) {
 			filter.setFilters(psf.getFilters());
 			filter.setFilterTimeZone(psf.getFilterTimeZone());
+			filter.setUpdateRowCount(psf.getUpdateRowCount());
 		}
-		filter.setUpdateRowCount(false);
 		return filter;
+	}
+
+	private static void addEffectiveIntervalOrder(org.hibernate.Criteria criteria, LinkedHashMap<String, Projection> sqlColumns, PSFVO psf) {
+		CriteriaQueryTranslator translator = CriteriaUtil.getCriteriaQueryTranslator(criteria);
+		String modeSql = translator.getColumn(criteria, "mode");
+		String persistedStartSql = translator.getColumn(criteria, "start");
+		String persistedStopSql = translator.getColumn(criteria, "stop");
+		String idSql = translator.getColumn(criteria, "id");
+		String tagStartSql = ((SQLProjection) sqlColumns.get("tagStart")).getSql();
+		String tagStopSql = ((SQLProjection) sqlColumns.get("tagStop")).getSql();
+		String durationStopSql = ((SQLProjection) sqlColumns.get("durationStop")).getSql();
+		String probandIdSql = ((SQLProjection) sqlColumns.get("probandId")).getSql();
+		boolean sortByStart = "start".equals(new AssociationPath(psf.getSortField()).getPropertyName());
+		String effectiveSql = sortByStart
+				? "(case " + modeSql
+						+ " when '" + VisitScheduleDateMode.TAGS.name() + "' then (" + tagStartSql + ")"
+						+ " when '" + VisitScheduleDateMode.TAG_DURATION.name() + "' then (" + tagStartSql + ")"
+						+ " else (" + persistedStartSql + ") end)"
+				: "(case " + modeSql
+						+ " when '" + VisitScheduleDateMode.TAGS.name() + "' then (" + tagStopSql + ")"
+						+ " when '" + VisitScheduleDateMode.TAG_DURATION.name() + "' then (" + durationStopSql + ")"
+						+ " else (" + persistedStopSql + ") end)";
+		String direction = psf.getSortOrder() ? " asc" : " desc";
+		criteria.addOrder(new SqlOrder(effectiveSql + direction + ", " + idSql + direction + ", (" + probandIdSql + ")" + direction));
+	}
+
+	private static void applyDatabaseIntervalPage(org.hibernate.Criteria criteria, LinkedHashMap<String, Projection> sqlColumns, PSFVO psf, PSFVO filterPsf) {
+		if (psf.getUpdateRowCount()) {
+			psf.setRowCount(filterPsf.getRowCount());
+		}
+		addEffectiveIntervalOrder(criteria, sqlColumns, psf);
+		if (psf.getFirst() != null) {
+			criteria.setFirstResult(psf.getFirst());
+		}
+		if (psf.getPageSize() != null) {
+			criteria.setMaxResults(psf.getPageSize());
+		}
 	}
 
 	// Same start/stop must not reshuffle when the page is smaller than the full result.
@@ -290,15 +363,20 @@ public class VisitScheduleItemDaoImpl
 			Timestamp to,
 			org.hibernate.criterion.Criterion or, SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct) throws Exception {
 		// projection to avoid multiplebagexception and get calculated dates	
+		LinkedHashMap<String, Projection> sqlColumns = applyExpandDateModeCriterions(visitScheduleItemCriteria, probandId, probandDepartmentId, from, to, or);
 		ProjectionList proj = Projections.projectionList();
 		proj.add(Projections.id());
-		Iterator<Projection> sqlColumnsIt = applyExpandDateModeCriterions(visitScheduleItemCriteria, probandId, probandDepartmentId, from, to, or).values().iterator();
+		Iterator<Projection> sqlColumnsIt = sqlColumns.values().iterator();
 		while (sqlColumnsIt.hasNext()) {
 			proj.add(sqlColumnsIt.next());
 		}
 		// populate result collection
-		boolean pageAfterIntervalSort = criteriaMap != null && isComputedIntervalSort(psf);
-		CriteriaUtil.applyPSFVO(criteriaMap, pageAfterIntervalSort ? filtersOnly(psf) : psf); //apply filter, populate rowcount
+		boolean databaseIntervalPage = criteriaMap != null && isComputedIntervalSort(psf);
+		PSFVO filterPsf = databaseIntervalPage ? filtersOnly(psf) : null;
+		CriteriaUtil.applyPSFVO(criteriaMap, databaseIntervalPage ? filterPsf : psf); //apply filter, populate rowcount
+		if (databaseIntervalPage) {
+			applyDatabaseIntervalPage(visitScheduleItemCriteria, sqlColumns, psf, filterPsf);
+		}
 		visitScheduleItemCriteria.setProjection(proj); //set projection for final .list()
 		HashSet<Long> dupeCheck = new HashSet<Long>();
 		ArrayList<VisitScheduleItem> result = new ArrayList<VisitScheduleItem>();
@@ -309,18 +387,17 @@ public class VisitScheduleItemDaoImpl
 				result.add(getVisitScheduleItemFromRow(row));
 			}
 		}
-		// support sorting by start/stop
-		AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
-		if (sortFieldAssociationPath.isValid()) {
-			String sortProperty = sortFieldAssociationPath.getPropertyName();
-			if ("start".equals(sortProperty)) {
-				Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_COMPARATOR_START_ASC : VISIT_SCHEDULE_ITEM_COMPARATOR_START_DESC);
-			} else if ("stop".equals(sortProperty)) {
-				Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_ASC : VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_DESC);
+		// support sorting by start/stop when the query itself is not paged
+		if (!databaseIntervalPage) {
+			AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
+			if (sortFieldAssociationPath.isValid()) {
+				String sortProperty = sortFieldAssociationPath.getPropertyName();
+				if ("start".equals(sortProperty)) {
+					Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_COMPARATOR_START_ASC : VISIT_SCHEDULE_ITEM_COMPARATOR_START_DESC);
+				} else if ("stop".equals(sortProperty)) {
+					Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_ASC : VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_DESC);
+				}
 			}
-		}
-		if (pageAfterIntervalSort) {
-			result = new ArrayList<VisitScheduleItem>(CriteriaUtil.applyPVO(result, psf, false));
 		}
 		// prevent vo caching to substitute unintentionally because of nonunique id's
 		CoreUtil.getUserContext().voMapRegisterIgnores(VisitScheduleItem.class);
@@ -359,14 +436,19 @@ public class VisitScheduleItemDaoImpl
 	private ArrayList<Object[]> listExpandDateModeProband(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, Long probandDepartmentId, Timestamp from, Timestamp to,
 			SubCriteriaMap criteriaMap, PSFVO psf)
 			throws Exception {
+		LinkedHashMap<String, Projection> sqlColumns = applyExpandDateModeCriterions(visitScheduleItemCriteria, probandId, probandDepartmentId, from, to, null);
 		ProjectionList proj = Projections.projectionList();
 		proj.add(Projections.id());
-		Iterator<Projection> sqlColumnsIt = applyExpandDateModeCriterions(visitScheduleItemCriteria, probandId, probandDepartmentId, from, to, null).values().iterator();
+		Iterator<Projection> sqlColumnsIt = sqlColumns.values().iterator();
 		while (sqlColumnsIt.hasNext()) {
 			proj.add(sqlColumnsIt.next());
 		}
-		boolean pageAfterIntervalSort = criteriaMap != null && isComputedIntervalSort(psf);
-		CriteriaUtil.applyPSFVO(criteriaMap, pageAfterIntervalSort ? filtersOnly(psf) : psf);
+		boolean databaseIntervalPage = criteriaMap != null && isComputedIntervalSort(psf);
+		PSFVO filterPsf = databaseIntervalPage ? filtersOnly(psf) : null;
+		CriteriaUtil.applyPSFVO(criteriaMap, databaseIntervalPage ? filterPsf : psf);
+		if (databaseIntervalPage) {
+			applyDatabaseIntervalPage(visitScheduleItemCriteria, sqlColumns, psf, filterPsf);
+		}
 		visitScheduleItemCriteria.setProjection(proj);
 		ArrayList<Object[]> result = new ArrayList<Object[]>();
 		Iterator it = visitScheduleItemCriteria.list().iterator();
@@ -378,17 +460,16 @@ public class VisitScheduleItemDaoImpl
 					probandId != null ? this.getProbandDao().load(probandId) : null
 			});
 		}
-		AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
-		if (sortFieldAssociationPath.isValid()) {
-			String sortProperty = sortFieldAssociationPath.getPropertyName();
-			if ("start".equals(sortProperty)) {
-				Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_START_ASC : VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_START_DESC);
-			} else if ("stop".equals(sortProperty)) {
-				Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_ASC : VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_DESC);
+		if (!databaseIntervalPage) {
+			AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
+			if (sortFieldAssociationPath.isValid()) {
+				String sortProperty = sortFieldAssociationPath.getPropertyName();
+				if ("start".equals(sortProperty)) {
+					Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_START_ASC : VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_START_DESC);
+				} else if ("stop".equals(sortProperty)) {
+					Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_ASC : VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_DESC);
+				}
 			}
-		}
-		if (pageAfterIntervalSort) {
-			result = new ArrayList<Object[]>(CriteriaUtil.applyPVO(result, psf, false));
 		}
 		CoreUtil.getUserContext().voMapRegisterIgnores(VisitScheduleItem.class);
 		return result;
