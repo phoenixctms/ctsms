@@ -27,6 +27,8 @@ public interface MessageCodes {
 	public static final String HOURS_LABEL_SINGULAR = "hours_label_singular";
 	public static final String DAYS_LABEL_PLURAL = "days_label_plural";
 	public static final String DAYS_LABEL_SINGULAR = "days_label_singular";
+	public static final String WEEKS_LABEL_PLURAL = "weeks_label_plural";
+	public static final String WEEKS_LABEL_SINGULAR = "weeks_label_singular";
 	public static final String MONTHS_LABEL_PLURAL = "months_label_plural";
 	public static final String MONTHS_LABEL_SINGULAR = "months_label_singular";
 	public static final String YEARS_LABEL_PLURAL = "years_label_plural";

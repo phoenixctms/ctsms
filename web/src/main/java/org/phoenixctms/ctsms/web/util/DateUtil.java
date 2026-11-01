@@ -44,7 +44,7 @@ public final class DateUtil {
 	}
 
 	public enum DurationUnitOfTime {
-		SECONDS, MINUTES, HOURS, DAYS, MONTHS, YEARS
+		SECONDS, MINUTES, HOURS, DAYS, WEEKS, MONTHS, YEARS
 	}
 
 	public final static String JQPLOT_DATE_PATTERN = "%d.%m.%Y";
@@ -89,6 +89,11 @@ public final class DateUtil {
 				sb.append("|");
 				sb.append(Pattern.quote(Messages.getString(MessageCodes.DAYS_LABEL_SINGULAR)));
 				break;
+			case WEEKS:
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.WEEKS_LABEL_PLURAL)));
+				sb.append("|");
+				sb.append(Pattern.quote(Messages.getString(MessageCodes.WEEKS_LABEL_SINGULAR)));
+				break;
 			case MONTHS:
 				sb.append(Pattern.quote(Messages.getString(MessageCodes.MONTHS_LABEL_PLURAL)));
 				sb.append("|");
@@ -123,6 +128,8 @@ public final class DateUtil {
 				seconds = 60 * 60;
 			} else if (DurationUnitOfTime.DAYS.equals(durationUnitsOfTime[j])) {
 				seconds = 60 * 60 * 24;
+			} else if (DurationUnitOfTime.WEEKS.equals(durationUnitsOfTime[j])) {
+				seconds = 60 * 60 * 24 * 7;
 			} else if (DurationUnitOfTime.MONTHS.equals(durationUnitsOfTime[j])) {
 				seconds = 60 * 60 * 24 * 30;
 			} else if (DurationUnitOfTime.YEARS.equals(durationUnitsOfTime[j])) {
@@ -175,6 +182,10 @@ public final class DateUtil {
 			case DAYS:
 				unitLabelPlural = " " + Messages.getString(MessageCodes.DAYS_LABEL_PLURAL);
 				unitLabelSingular = " " + Messages.getString(MessageCodes.DAYS_LABEL_SINGULAR);
+				break;
+			case WEEKS:
+				unitLabelPlural = " " + Messages.getString(MessageCodes.WEEKS_LABEL_PLURAL);
+				unitLabelSingular = " " + Messages.getString(MessageCodes.WEEKS_LABEL_SINGULAR);
 				break;
 			case MONTHS:
 				unitLabelPlural = " " + Messages.getString(MessageCodes.MONTHS_LABEL_PLURAL);
@@ -326,6 +337,7 @@ public final class DateUtil {
 		double minutes;
 		double hours;
 		double days;
+		double weeks = 0.0;
 		double months;
 		double years;
 		if (!DurationUnitOfTime.SECONDS.equals(leastSignificant)) {
@@ -381,6 +393,15 @@ public final class DateUtil {
 						years = 0.0;
 						if (DurationUnitOfTime.DAYS.equals(mostSignificant)) {
 							days = delta;
+						} else if (DurationUnitOfTime.WEEKS.equals(mostSignificant)) {
+							long absSeconds = Math.abs(duration);
+							long weekSeconds = 7L * 24L * 60L * 60L;
+							if (absSeconds > 0L && absSeconds % weekSeconds == 0L) {
+								weeks = absSeconds / weekSeconds;
+								days = 0.0;
+							} else {
+								days = delta;
+							}
 						} else {
 							days = (delta >= 30) ? delta % 30 : delta;
 							delta = (delta - days) / 30;
@@ -510,7 +531,7 @@ public final class DateUtil {
 			}
 		}
 		if (years > 0) {
-			if (months > 0 || days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
+			if (months > 0 || weeks > 0 || days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
 				sb.append(durationUnitOfTimeValueToStringBuilder(years, 0, DurationUnitOfTime.YEARS));
 			} else {
 				sb.append(durationUnitOfTimeValueToStringBuilder(years, leastSignificantDecimals, DurationUnitOfTime.YEARS));
@@ -520,14 +541,24 @@ public final class DateUtil {
 			if (years > 0) {
 				sb.append(", ");
 			}
-			if (days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
+			if (weeks > 0 || days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
 				sb.append(durationUnitOfTimeValueToStringBuilder(months, 0, DurationUnitOfTime.MONTHS));
 			} else {
 				sb.append(durationUnitOfTimeValueToStringBuilder(months, leastSignificantDecimals, DurationUnitOfTime.MONTHS));
 			}
 		}
-		if (days > 0) {
+		if (weeks > 0) {
 			if (years > 0 || months > 0) {
+				sb.append(", ");
+			}
+			if (days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
+				sb.append(durationUnitOfTimeValueToStringBuilder(weeks, 0, DurationUnitOfTime.WEEKS));
+			} else {
+				sb.append(durationUnitOfTimeValueToStringBuilder(weeks, leastSignificantDecimals, DurationUnitOfTime.WEEKS));
+			}
+		}
+		if (days > 0) {
+			if (years > 0 || months > 0 || weeks > 0) {
 				sb.append(", ");
 			}
 			if (hours > 0 || minutes > 0 || seconds > 0) {
@@ -537,7 +568,7 @@ public final class DateUtil {
 			}
 		}
 		if (hours > 0) {
-			if (years > 0 || months > 0 || days > 0) {
+			if (years > 0 || months > 0 || weeks > 0 || days > 0) {
 				sb.append(", ");
 			}
 			if (minutes > 0 || seconds > 0) {
@@ -547,7 +578,7 @@ public final class DateUtil {
 			}
 		}
 		if (minutes > 0) {
-			if (years > 0 || months > 0 || days > 0 || hours > 0) {
+			if (years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0) {
 				sb.append(", ");
 			}
 			if (seconds > 0) {
@@ -557,7 +588,7 @@ public final class DateUtil {
 			}
 		}
 		if (seconds > 0) {
-			if (years > 0 || months > 0 || days > 0 || hours > 0 || minutes > 0) {
+			if (years > 0 || months > 0 || weeks > 0 || days > 0 || hours > 0 || minutes > 0) {
 				sb.append(", ");
 			}
 			sb.append(durationUnitOfTimeValueToStringBuilder(seconds, leastSignificantDecimals, DurationUnitOfTime.SECONDS));
