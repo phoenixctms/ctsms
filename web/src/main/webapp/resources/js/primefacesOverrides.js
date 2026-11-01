@@ -751,6 +751,37 @@ PrimeFaces.widget.Tooltip.prototype.refresh = function(cfg) {
   return this.init(cfg);
 }
 
+var ctsmsTooltipInit = PrimeFaces.widget.Tooltip.prototype.init;
+PrimeFaces.widget.Tooltip.prototype.init = function(cfg) {
+  ctsmsTooltipInit.apply(this, arguments);
+  this.jq.data('ctsmsTooltip', this);
+}
+
+// An ajax update can replace or drop a tooltip target while its tip is shown
+// (mouseout never fires) and the tip in document.body is left over.
+jQuery(document).ajaxComplete(function() {
+  $(document.body).children('.ui-tooltip').each(function() {
+    var tip = $(this);
+    var widget = tip.data('ctsmsTooltip');
+    if (!widget) {
+      return;
+    }
+    var target = widget.target;
+    var detached = !target || target.length == 0 || !$.contains(document.documentElement, target[0]);
+    if (detached || !target.is(':visible')) {
+      if (widget.timeout) {
+        clearTimeout(widget.timeout);
+      }
+      tip.stop(true, true);
+      if (detached) {
+        tip.remove();
+      } else {
+        tip.hide();
+      }
+    }
+  });
+});
+
 PrimeFaces.widget.SelectManyCheckbox.prototype.getValue = function() {
 
   var result = [];

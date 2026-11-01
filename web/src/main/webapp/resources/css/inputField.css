@@ -27,10 +27,13 @@
 	margin-top: 0;
 }
 
-/* the checkbox/radio box is floated, so contain it to give the wrapper a height */
+/* the checkbox/radio box is floated, so contain it to give the wrapper a height;
+   keep the wrapper as narrow as the box, clicks on the wrapper's center must hit the box */
 .ctsms-inputfieldrow .ui-chkbox,
 .ctsms-inputfieldrow .ui-selectoneradio .ui-radiobutton {
 	display: flow-root;
+	width: -moz-fit-content;
+	width: fit-content;
 	margin: 0;
 }
 
