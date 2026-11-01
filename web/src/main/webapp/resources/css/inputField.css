@@ -1,4 +1,44 @@
 
+/* 176px + 2x2px panelGrid cellpadding = 180px, the indent of long-title rows */
+.ctsms-inputfieldrow .ctsms-label-for-column,
+.ctsms-inputfieldrow .ctsms-fieldrow-label-for-column,
+.ctsms-inputfieldrow .ctsms-fieldrow-label-for-top-column,
+.ctsms-inputfieldrow .ctsms-fieldrow-label-for-top-radio-column {
+	width: 176px;
+	min-width: 176px;
+}
+
+.ctsms-inputfieldrow .ctsms-fieldrow-label-for-top-column,
+.ctsms-inputfieldrow .ctsms-fieldrow-label-for-top-radio-column {
+	padding-top: 0.7333em;
+}
+
+.ctsms-inputfieldrow .ctsms-fieldrow-label-for-column {
+	padding-top: 0.2em;
+}
+
+.ctsms-inputfieldrow .ui-selectmanycheckbox td,
+.ctsms-inputfieldrow .ui-selectoneradio td {
+	vertical-align: middle;
+}
+
+.ctsms-inputfieldrow .ui-selectmanycheckbox label,
+.ctsms-inputfieldrow .ui-selectoneradio label {
+	margin-top: 0;
+}
+
+/* the checkbox/radio box is floated, so contain it to give the wrapper a height */
+.ctsms-inputfieldrow .ui-chkbox,
+.ctsms-inputfieldrow .ui-selectoneradio .ui-radiobutton {
+	display: flow-root;
+	margin: 0;
+}
+
+.ctsms-inputfieldrow .ctsms-label-for-column,
+.ctsms-inputfieldrow .ctsms-input-column {
+	vertical-align: middle;
+}
+
 .ctsms-inputfield-comment-row {
 	font-style: italic;
 }
