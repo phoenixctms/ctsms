@@ -113,7 +113,12 @@ public final class DateUtil {
 
 	public static Long getDurationFromString(String durationString) {
 		Long duration = null;
-		String[] parts = Pattern.compile("(?<=[a-z])\\s*,\\s*", Pattern.CASE_INSENSITIVE).split(durationString, -1);
+		String trimmed = durationString.trim();
+		boolean negative = trimmed.startsWith("-");
+		if (negative || trimmed.startsWith("+")) {
+			trimmed = trimmed.substring(1).trim();
+		}
+		String[] parts = Pattern.compile("(?<=[a-z])\\s*,\\s*", Pattern.CASE_INSENSITIVE).split(trimmed, -1);
 		DurationUnitOfTime[] durationUnitsOfTime = DurationUnitOfTime.values();
 		String decimalSeparator = WebUtil.getDecimalSeparator();
 		for (int j = 0; j < durationUnitsOfTime.length; j++) {
@@ -158,6 +163,9 @@ public final class DateUtil {
 				}
 				duration += (long) (double) sum;
 			}
+		}
+		if (duration != null && negative) {
+			duration = -duration;
 		}
 		return duration;
 	}
