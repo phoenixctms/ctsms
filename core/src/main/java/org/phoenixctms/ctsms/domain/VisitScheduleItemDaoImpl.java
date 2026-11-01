@@ -258,6 +258,34 @@ public class VisitScheduleItemDaoImpl
 		return listExpandDateMode(visitScheduleItemCriteria, probandId, probandDepartmentId, null, null, null, criteriaMap, psf, distinct);
 	}
 
+	private static boolean isComputedIntervalSort(PSFVO psf) {
+		AssociationPath sortFieldAssociationPath = new AssociationPath(psf != null ? psf.getSortField() : null);
+		if (!sortFieldAssociationPath.isValid()) {
+			return false;
+		}
+		String sortProperty = sortFieldAssociationPath.getPropertyName();
+		return "start".equals(sortProperty) || "stop".equals(sortProperty);
+	}
+
+	// Expanded start/stop are calculated (tag offset / duration), not the persisted columns.
+	// Paging must happen after that sort; a SQL limit would order and cut the raw columns first.
+	private static PSFVO filtersOnly(PSFVO psf) {
+		PSFVO filter = new PSFVO();
+		if (psf != null) {
+			filter.setFilters(psf.getFilters());
+			filter.setFilterTimeZone(psf.getFilterTimeZone());
+		}
+		filter.setUpdateRowCount(false);
+		return filter;
+	}
+
+	// Same start/stop must not reshuffle when the page is smaller than the full result.
+	private static void addIntervalIdTieBreak(org.hibernate.Criteria criteria, PSFVO psf) {
+		if (isComputedIntervalSort(psf)) {
+			criteria.addOrder(Order.asc("id"));
+		}
+	}
+
 	private ArrayList<VisitScheduleItem> listExpandDateMode(org.hibernate.Criteria visitScheduleItemCriteria, Long probandId, Long probandDepartmentId, Timestamp from,
 			Timestamp to,
 			org.hibernate.criterion.Criterion or, SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct) throws Exception {
@@ -269,7 +297,8 @@ public class VisitScheduleItemDaoImpl
 			proj.add(sqlColumnsIt.next());
 		}
 		// populate result collection
-		CriteriaUtil.applyPSFVO(criteriaMap, psf); //apply filter, populate rowcount
+		boolean pageAfterIntervalSort = criteriaMap != null && isComputedIntervalSort(psf);
+		CriteriaUtil.applyPSFVO(criteriaMap, pageAfterIntervalSort ? filtersOnly(psf) : psf); //apply filter, populate rowcount
 		visitScheduleItemCriteria.setProjection(proj); //set projection for final .list()
 		HashSet<Long> dupeCheck = new HashSet<Long>();
 		ArrayList<VisitScheduleItem> result = new ArrayList<VisitScheduleItem>();
@@ -289,6 +318,9 @@ public class VisitScheduleItemDaoImpl
 			} else if ("stop".equals(sortProperty)) {
 				Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_ASC : VISIT_SCHEDULE_ITEM_COMPARATOR_STOP_DESC);
 			}
+		}
+		if (pageAfterIntervalSort) {
+			result = new ArrayList<VisitScheduleItem>(CriteriaUtil.applyPVO(result, psf, false));
 		}
 		// prevent vo caching to substitute unintentionally because of nonunique id's
 		CoreUtil.getUserContext().voMapRegisterIgnores(VisitScheduleItem.class);
@@ -333,7 +365,8 @@ public class VisitScheduleItemDaoImpl
 		while (sqlColumnsIt.hasNext()) {
 			proj.add(sqlColumnsIt.next());
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		boolean pageAfterIntervalSort = criteriaMap != null && isComputedIntervalSort(psf);
+		CriteriaUtil.applyPSFVO(criteriaMap, pageAfterIntervalSort ? filtersOnly(psf) : psf);
 		visitScheduleItemCriteria.setProjection(proj);
 		ArrayList<Object[]> result = new ArrayList<Object[]>();
 		Iterator it = visitScheduleItemCriteria.list().iterator();
@@ -353,6 +386,9 @@ public class VisitScheduleItemDaoImpl
 			} else if ("stop".equals(sortProperty)) {
 				Collections.sort(result, psf.getSortOrder() ? VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_ASC : VISIT_SCHEDULE_ITEM_PROBAND_COMPARATOR_STOP_DESC);
 			}
+		}
+		if (pageAfterIntervalSort) {
+			result = new ArrayList<Object[]>(CriteriaUtil.applyPVO(result, psf, false));
 		}
 		CoreUtil.getUserContext().voMapRegisterIgnores(VisitScheduleItem.class);
 		return result;
@@ -554,6 +590,7 @@ public class VisitScheduleItemDaoImpl
 			return listExpandDateMode(visitScheduleItemCriteria, probandId, null, criteriaMap, psf, false);
 		} else {
 			CriteriaUtil.applyPSFVO(criteriaMap, psf);
+			addIntervalIdTieBreak(visitScheduleItemCriteria, psf);
 			return visitScheduleItemCriteria.list();
 			//if (probandId == null) {
 			//CriteriaUtil.applyPSFVO(criteriaMap, psf); // proband has only one probandlistentry, and listentry has only one group, but left joins
