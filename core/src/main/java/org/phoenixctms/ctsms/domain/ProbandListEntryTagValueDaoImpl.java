@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.SettingCodes;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueJsonVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -264,6 +265,12 @@ public class ProbandListEntryTagValueDaoImpl
 		if ((selectionValueIds = source.getSelectionValueIds()).size() > 0 || copyIfNull) {
 			value.setSelectionValues(toInputFieldSelectionSetValueSet(selectionValueIds));
 		}
+		Long fileValueId = source.getFileValueId();
+		if (fileValueId != null) {
+			value.setFileValue(this.getFileDao().load(fileValueId));
+		} else if (copyIfNull) {
+			value.setFileValue(null);
+		}
 	}
 
 	/**
@@ -373,6 +380,12 @@ public class ProbandListEntryTagValueDaoImpl
 		} else if (copyIfNull) {
 			value.getSelectionValues().clear();
 		}
+		FileOutVO fileValueVO = source.getFileValue();
+		if (fileValueVO != null) {
+			value.setFileValue(this.getFileDao().load(fileValueVO.getId()));
+		} else if (copyIfNull) {
+			value.setFileValue(null);
+		}
 	}
 
 	private ArrayList<InputFieldSelectionSetValueJsonVO> toInputFieldSelectionSetValueJsonVOCollection(Collection<InputFieldSelectionSetValue> selectionValues) { // lazyload
@@ -444,6 +457,8 @@ public class ProbandListEntryTagValueDaoImpl
 			target.setTimeValue(CoreUtil.forceDate(value.getTimeValue()));
 			target.setInkValues(value.getInkValue());
 			target.setSelectionValueIds(ServiceUtil.toInputFieldSelectionSetValueIdCollection(value.getSelectionValues()));
+			File fileValue = value.getFileValue();
+			target.setFileValueId(fileValue != null ? fileValue.getId() : null);
 		}
 	}
 
@@ -500,6 +515,11 @@ public class ProbandListEntryTagValueDaoImpl
 			} else {
 				target.setInkValues(null);
 			}
+			if (InputFieldType.FILE.equals(target.getInputFieldType()) && value.getFileValue() != null) {
+				target.setFileValue(this.getFileDao().toFileJsonVO(value.getFileValue()));
+			} else {
+				target.setFileValue(null);
+			}
 			target.setSelectionValueIds(ServiceUtil.toInputFieldSelectionSetValueIdCollection(value.getSelectionValues()));
 		}
 	}
@@ -545,6 +565,11 @@ public class ProbandListEntryTagValueDaoImpl
 				target.setInkValues(value.getInkValue());
 			} else {
 				target.setInkValues(null);
+			}
+			if (ServiceUtil.isInputFieldType(target.getTag(), InputFieldType.FILE) && value.getFileValue() != null) {
+				target.setFileValue(this.getFileDao().toFileOutVO(value.getFileValue()));
+			} else {
+				target.setFileValue(null);
 			}
 			target.setSelectionValues(toInputFieldSelectionSetValueOutVOCollection(value.getSelectionValues()));
 		}

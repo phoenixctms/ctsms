@@ -14,6 +14,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.phoenixctms.ctsms.enumeration.Color;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFBlock.BlockType;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -21,6 +22,7 @@ import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
@@ -42,6 +44,7 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected Collection<ProbandListEntryOutVO> listEntryVOs;
 	protected HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap;
 	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
+	protected HashMap<Long, byte[]> fileValueImageDataMap;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -270,7 +273,8 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 				PDFUtil.loadImage(Settings.getImageFilename(InquiriesPDFSettingCodes.SELECTBOX_UNCHECKED_IMAGE_FILE_NAME, Bundle.INQUIRIES_PDF, null)),
 				selectionItemImageWidth, selectionItemImageHeight, quality, dpi, bgColor);
 		if (valueVOMap != null && inputFieldImageVOMap != null
-				&& Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
+				&& (Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_SKETCH_IMAGES)
+				|| Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_FILE_IMAGES))) {
 			Iterator<HashMap<Long, Collection<InquiryValueOutVO>>> probandMapIt = valueVOMap.values().iterator();
 			while (probandMapIt.hasNext()) {
 				Iterator<Collection<InquiryValueOutVO>> trialMapIt = probandMapIt.next().values().iterator();
@@ -354,8 +358,39 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
+	protected boolean putFileImage(InputFieldOutVO field, Long valueId, FileOutVO fileValue, PDDocument doc) throws Exception {
+		if (!blank && fileValue != null && fileValueImageDataMap != null && fileValueImageDataMap.containsKey(fileValue.getId())
+				&& Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_FILE_IMAGES)) {
+			HashMap<Long, PDFJpeg> fileImages;
+			if (inputFieldSketchImages.containsKey(field.getId())) {
+				fileImages = inputFieldSketchImages.get(field.getId());
+			} else {
+				fileImages = new HashMap<Long, PDFJpeg>();
+				inputFieldSketchImages.put(field.getId(), fileImages);
+			}
+			if (!fileImages.containsKey(valueId)) {
+				int quality = Settings.getInt(InquiriesPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
+				int dpi = Settings.getInt(InquiriesPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_DPI);
+				Color bgColor = Settings.getColor(InquiriesPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageDataMap.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+						Settings.getFloat(InquiriesPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
+				if (fileImage != null) {
+					fileImages.put(valueId, fileImage);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	protected boolean putSketchImage(InquiryValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getInquiry().getField();
+		if (InputFieldType.FILE.equals(field.getFieldType().getType())) {
+			return putFileImage(field, value.getId(), value.getFileValue(), doc);
+		}
+		if (!Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
+			return false;
+		}
 		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
@@ -457,6 +492,10 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	public void setInputFieldImageVOMap(HashMap<Long, InputFieldImageVO> inputFieldImageVOMap) {
 		this.inputFieldImageVOMap = inputFieldImageVOMap;
+	}
+
+	public void setFileValueImageDataMap(HashMap<Long, byte[]> fileValueImageDataMap) {
+		this.fileValueImageDataMap = fileValueImageDataMap;
 	}
 
 	@Override

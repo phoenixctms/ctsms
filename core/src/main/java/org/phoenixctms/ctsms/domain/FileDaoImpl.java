@@ -42,6 +42,7 @@ import org.phoenixctms.ctsms.vo.CourseOutVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.FileInVO;
+import org.phoenixctms.ctsms.vo.FileJsonVO;
 import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.InventoryOutVO;
@@ -396,6 +397,19 @@ public class FileDaoImpl
 			target.setEncryptedFileName(null);
 			target.setFileNameHash(null);
 		}
+	}
+
+	@Override
+	public File fileJsonVOToEntity(FileJsonVO fileJsonVO) {
+		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.fileJsonVOToEntity(FileJsonVO) not supported.");
+	}
+
+	@Override
+	public void fileJsonVOToEntity(
+			FileJsonVO source,
+			File target,
+			boolean copyIfNull) {
+		throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.fileJsonVOToEntity(FileJsonVO, File, boolean) not supported.");
 	}
 
 	/**
@@ -1014,6 +1028,33 @@ public class FileDaoImpl
 				}
 			}
 			target.setDecrypted(true);
+		}
+	}
+
+	@Override
+	public FileJsonVO toFileJsonVO(final File entity) {
+		return super.toFileJsonVO(entity);
+	}
+
+	@Override
+	public void toFileJsonVO(
+			File source,
+			FileJsonVO target) {
+		super.toFileJsonVO(source, target);
+		MimeType contentType = source.getContentType();
+		if (contentType != null) {
+			target.setMimeType(contentType.getMimeType());
+			target.setImage(contentType.isImage());
+		}
+		if (CommonUtil.getUseFileEncryption(source.getModule())) {
+			try {
+				if (!CoreUtil.isPassDecryption()) {
+					throw new Exception();
+				}
+				target.setFileName((String) CryptoUtil.decryptValue(source.getFileNameIv(), source.getEncryptedFileName()));
+			} catch (Exception e) {
+				target.setFileName(null);
+			}
 		}
 	}
 

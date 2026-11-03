@@ -10,6 +10,8 @@ package org.phoenixctms.ctsms.service.shared;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -77,6 +79,7 @@ import org.phoenixctms.ctsms.domain.MassMailStatusType;
 import org.phoenixctms.ctsms.domain.MassMailStatusTypeDao;
 import org.phoenixctms.ctsms.domain.MassMailType;
 import org.phoenixctms.ctsms.domain.MassMailTypeDao;
+import org.phoenixctms.ctsms.domain.MimeTypeDao;
 import org.phoenixctms.ctsms.domain.NotificationType;
 import org.phoenixctms.ctsms.domain.NotificationTypeDao;
 import org.phoenixctms.ctsms.domain.OpsCode;
@@ -122,6 +125,7 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobModule;
@@ -186,6 +190,7 @@ import org.phoenixctms.ctsms.vo.LocaleVO;
 import org.phoenixctms.ctsms.vo.MaintenanceTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailStatusTypeVO;
 import org.phoenixctms.ctsms.vo.MassMailTypeVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.phoenixctms.ctsms.vo.NotificationTypeVO;
 import org.phoenixctms.ctsms.vo.OTPAuthenticatorTypeVO;
 import org.phoenixctms.ctsms.vo.OpsCodeVO;
@@ -277,6 +282,23 @@ public class SelectionSetServiceImpl
 		Collection addressTypes = addressTypeDao.loadAllSorted(0, 0);
 		addressTypeDao.toAddressTypeVOCollection(addressTypes);
 		return addressTypes;
+	}
+
+	@Override
+	protected Collection<MimeTypeVO> handleGetMimeTypes(AuthenticationVO auth, FileModule module)
+			throws Exception {
+		MimeTypeDao mimeTypeDao = this.getMimeTypeDao();
+		Collection mimeTypeVOs = mimeTypeDao.findByMimeTypeModule(null, module);
+		mimeTypeDao.toMimeTypeVOCollection(mimeTypeVOs);
+		ArrayList<MimeTypeVO> mimeTypes = new ArrayList<MimeTypeVO>(mimeTypeVOs);
+		Collections.sort(mimeTypes, new Comparator<MimeTypeVO>() {
+
+			@Override
+			public int compare(MimeTypeVO a, MimeTypeVO b) {
+				return a.getMimeType().compareTo(b.getMimeType());
+			}
+		});
+		return mimeTypes;
 	}
 
 	@Override

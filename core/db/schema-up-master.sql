@@ -437,5 +437,37 @@ if get_database_version() < '010901011' then
 
 end if;
 
+if get_database_version() < '010901012' then
+
+  ALTER TABLE INPUT_FIELD ADD COLUMN PHOTO BOOLEAN;
+
+  ALTER TABLE INPUT_FIELD_VALUE ADD COLUMN FILE_VALUE_FK BIGINT;
+
+  alter table INPUT_FIELD_VALUE
+    add constraint INPUT_FIELD_VALUE_FILE_VALUE_FKC
+    foreign key (FILE_VALUE_FK)
+    references FILE;
+
+  create index input_field_value_file_value_fk on INPUT_FIELD_VALUE (FILE_VALUE_FK);
+
+  create table input_field_allowed_mime_type (
+    INPUT_FIELDS_FK BIGINT not null,
+    ALLOWED_MIME_TYPES_FK BIGINT not null
+  );
+
+  alter table input_field_allowed_mime_type
+    add constraint INPUT_FIELD_ALLOWED_MIME_TYPES_FKC
+    foreign key (ALLOWED_MIME_TYPES_FK)
+    references MIME_TYPE;
+
+  alter table input_field_allowed_mime_type
+    add constraint MIME_TYPE_INPUT_FIELDS_FKC
+    foreign key (INPUT_FIELDS_FK)
+    references INPUT_FIELD;
+
+  perform set_database_version('010901012');
+
+end if;
+
 end
 $$;

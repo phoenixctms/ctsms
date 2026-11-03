@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -88,6 +89,12 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setVersion(out.getVersion());
 			in.setLearn(out.getLearn());
 			in.setStrict(out.getStrict());
+			in.setPhoto(out.getPhoto());
+			in.getAllowedMimeTypeIds().clear();
+			Iterator<MimeTypeVO> allowedMimeTypesIt = out.getAllowedMimeTypes().iterator();
+			while (allowedMimeTypesIt.hasNext()) {
+				in.getAllowedMimeTypeIds().add(allowedMimeTypesIt.next().getId());
+			}
 			in.setWidth(out.getWidth());
 			in.setHeight(out.getHeight());
 			in.setFileName(null);
@@ -133,6 +140,8 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setValidationErrorMsg(Messages.getString(MessageCodes.INPUT_FIELD_VALIDATION_ERROR_MSG_PRESET));
 			in.setLearn(Settings.getBoolean(SettingCodes.INPUT_FIELD_LEARN_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_LEARN_PRESET));
 			in.setStrict(Settings.getBoolean(SettingCodes.INPUT_FIELD_STRICT_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_STRICT_PRESET));
+			in.setPhoto(false);
+			in.getAllowedMimeTypeIds().clear();
 			in.setVersion(null);
 			in.setWidth(Settings.getLong(SettingCodes.INPUT_FIELD_SKETCH_WIDTH_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_SKETCH_WIDTH_PRESET));
 			in.setHeight(Settings.getLong(SettingCodes.INPUT_FIELD_SKETCH_HEIGHT_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_SKETCH_HEIGHT_PRESET));
@@ -149,6 +158,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	private InputFieldInVOConfig config;
 	private InputFieldOutVO out;
 	private ArrayList<SelectItem> booleans;
+	private ArrayList<SelectItem> allowedMimeTypes;
 	private InputFieldTypeSelector fieldType;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -314,6 +324,12 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setMimeType(null);
 			in.setDatas(null);
 		}
+		if (!(InputFieldType.FILE.equals(fieldType))) {
+			in.setPhoto(false);
+			in.getAllowedMimeTypeIds().clear();
+		} else {
+			in.setValidationErrorMsg(null);
+		}
 	}
 
 	public List<String> completeCategory(String query) {
@@ -363,6 +379,32 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 
 	public String getAllowTypes() {
 		return allowTypes;
+	}
+
+	public ArrayList<SelectItem> getAllowedMimeTypes() {
+		return allowedMimeTypes;
+	}
+
+	public List<String> getAllowedMimeTypeIds() {
+		ArrayList<String> result = new ArrayList<String>(in.getAllowedMimeTypeIds().size());
+		Iterator<Long> it = in.getAllowedMimeTypeIds().iterator();
+		while (it.hasNext()) {
+			result.add(it.next().toString());
+		}
+		return result;
+	}
+
+	public void setAllowedMimeTypeIds(List<String> allowedMimeTypeIds) {
+		in.getAllowedMimeTypeIds().clear();
+		if (allowedMimeTypeIds != null) {
+			Iterator<String> it = allowedMimeTypeIds.iterator();
+			while (it.hasNext()) {
+				Long id = WebUtil.stringToLong(it.next());
+				if (id != null) {
+					in.getAllowedMimeTypeIds().add(id);
+				}
+			}
+		}
 	}
 
 	public ArrayList<SelectItem> getBooleans() {
@@ -549,6 +591,9 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		config.setInputField(in);
 		if (booleans == null) {
 			booleans = WebUtil.getBooleans(false, false);
+		}
+		if (allowedMimeTypes == null) {
+			allowedMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {

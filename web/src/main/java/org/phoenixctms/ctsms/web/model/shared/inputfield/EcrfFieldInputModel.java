@@ -22,6 +22,9 @@ import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValuesOutVO;
+import org.phoenixctms.ctsms.vo.FileContentInVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.web.adapt.EcrfFieldValueInVOStringAdapter;
 import org.phoenixctms.ctsms.web.model.shared.EcrfFieldValueBean;
@@ -62,6 +65,8 @@ public class EcrfFieldInputModel extends InputModel {
 			ecrfFieldValue.setLongValue(inputField.getLongPreset());
 			ecrfFieldValue.setTimestampValue(inputField.getTimestampPreset());
 			ecrfFieldValue.setInkValues(null);
+			ecrfFieldValue.setFileValueId(null);
+			ecrfFieldValue.setFileValue(null);
 			ecrfFieldValue.setReasonForChange(ecrfFieldValue.getId() == null || !ecrfField.getAuditTrail() ? null
 					: Messages
 							.getString(MessageCodes.ECRF_FIELD_VALUE_REASON_FOR_CHANGE_PRESET));
@@ -123,6 +128,46 @@ public class EcrfFieldInputModel extends InputModel {
 	@Override
 	public Float getFloatValue() {
 		return ecrfFieldValue == null ? null : ecrfFieldValue.getFloatValue();
+	}
+
+	@Override
+	protected FileContentInVO getFileValue() {
+		return ecrfFieldValue == null ? null : ecrfFieldValue.getFileValue();
+	}
+
+	@Override
+	protected void setFileValue(FileContentInVO value) {
+		if (ecrfFieldValue != null) {
+			ecrfFieldValue.setFileValue(value);
+		}
+	}
+
+	@Override
+	protected Long getFileValueId() {
+		return ecrfFieldValue == null ? null : ecrfFieldValue.getFileValueId();
+	}
+
+	@Override
+	protected void setFileValueId(Long value) {
+		if (ecrfFieldValue != null) {
+			ecrfFieldValue.setFileValueId(value);
+		}
+	}
+
+	@Override
+	protected FileOutVO loadFileValueVO() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (ecrfFieldValue != null && ecrfFieldValue.getId() != null) {
+			return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueById(WebUtil.getAuthentication(), ecrfFieldValue.getId()).getFileValue();
+		}
+		return null;
+	}
+
+	@Override
+	protected FileContentOutVO loadFileValueContent() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (ecrfFieldValue != null && ecrfFieldValue.getId() != null) {
+			return WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueFileContent(WebUtil.getAuthentication(), ecrfFieldValue.getId());
+		}
+		return null;
 	}
 
 	@Override

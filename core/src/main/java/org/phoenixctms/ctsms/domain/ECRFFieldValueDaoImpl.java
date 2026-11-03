@@ -39,6 +39,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueJsonVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
@@ -315,6 +316,12 @@ public class ECRFFieldValueDaoImpl
 		if ((selectionValueIds = source.getSelectionValueIds()).size() > 0 || copyIfNull) {
 			value.setSelectionValues(toInputFieldSelectionSetValueSet(selectionValueIds));
 		}
+		Long fileValueId = source.getFileValueId();
+		if (fileValueId != null) {
+			value.setFileValue(this.getFileDao().load(fileValueId));
+		} else if (copyIfNull) {
+			value.setFileValue(null);
+		}
 	}
 
 	@Override
@@ -426,6 +433,12 @@ public class ECRFFieldValueDaoImpl
 			value.setSelectionValues(selectionValues); // hashset-exception!!!
 		} else if (copyIfNull) {
 			value.getSelectionValues().clear();
+		}
+		FileOutVO fileValueVO = source.getFileValue();
+		if (fileValueVO != null) {
+			value.setFileValue(this.getFileDao().load(fileValueVO.getId()));
+		} else if (copyIfNull) {
+			value.setFileValue(null);
 		}
 	}
 
@@ -974,6 +987,8 @@ public class ECRFFieldValueDaoImpl
 			target.setTimeValue(CoreUtil.forceDate(value.getTimeValue()));
 			target.setInkValues(value.getInkValue());
 			target.setSelectionValueIds(ServiceUtil.toInputFieldSelectionSetValueIdCollection(value.getSelectionValues()));
+			File fileValue = value.getFileValue();
+			target.setFileValueId(fileValue != null ? fileValue.getId() : null);
 		}
 	}
 
@@ -1055,6 +1070,11 @@ public class ECRFFieldValueDaoImpl
 			} else {
 				target.setInkValues(null);
 			}
+			if (InputFieldType.FILE.equals(target.getInputFieldType()) && value.getFileValue() != null) {
+				target.setFileValue(this.getFileDao().toFileJsonVO(value.getFileValue()));
+			} else {
+				target.setFileValue(null);
+			}
 			target.setSelectionValueIds(ServiceUtil.toInputFieldSelectionSetValueIdCollection(value.getSelectionValues()));
 		}
 	}
@@ -1098,6 +1118,11 @@ public class ECRFFieldValueDaoImpl
 				target.setInkValues(value.getInkValue());
 			} else {
 				target.setInkValues(null);
+			}
+			if (ServiceUtil.isInputFieldType(target.getEcrfField(), InputFieldType.FILE) && value.getFileValue() != null) {
+				target.setFileValue(this.getFileDao().toFileOutVO(value.getFileValue()));
+			} else {
+				target.setFileValue(null);
 			}
 			target.setSelectionValues(toInputFieldSelectionSetValueOutVOCollection(value.getSelectionValues()));
 		}

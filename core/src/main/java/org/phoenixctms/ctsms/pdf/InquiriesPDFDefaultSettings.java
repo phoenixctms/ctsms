@@ -66,6 +66,8 @@ public final class InquiriesPDFDefaultSettings {
 	public static final int SKETCH_IMAGE_DPI = 144;
 	public static final Color SKETCH_IMAGE_BG_COLOR = null;
 	public static final boolean RENDER_SKETCH_IMAGES = true;
+	public static final boolean RENDER_FILE_IMAGES = true;
+	public static final float FILE_IMAGE_MAX_HEIGHT = 300.0f;
 	public static final boolean SHOW_SKETCH_REGIONS = false;
 	public static final int LONG_TITLE_LENGTH = 36;
 	public static final boolean SHOW_MODIFIED_LABEL = false;

@@ -550,6 +550,7 @@
         STRICT BOOLEAN,
         LEARN BOOLEAN,
         WIDTH BIGINT,
+        PHOTO BOOLEAN,
         HEIGHT BIGINT,
         FILE_NAME CHARACTER VARYING(1024),
         FILE_SIZE BIGINT,
@@ -589,6 +590,7 @@
         TIMESTAMP_VALUE TIMESTAMP WITHOUT TIME ZONE,
         TIME_VALUE TIME WITHOUT TIME ZONE,
         INK_VALUE BYTEA,
+        FILE_VALUE_FK BIGINT,
         primary key (ID)
     );
 
@@ -2172,6 +2174,11 @@
         DEPARTMENTS_FK BIGINT not null
     );
 
+    create table input_field_allowed_mime_type (
+        INPUT_FIELDS_FK BIGINT not null,
+        ALLOWED_MIME_TYPES_FK BIGINT not null
+    );
+
     create table input_field_value_selection (
         INPUT_FIELD_VALUES_FK BIGINT not null,
         SELECTION_VALUES_FK BIGINT not null
@@ -2572,6 +2579,11 @@
         add constraint INPUT_FIELD_SELECTION_SET_VALUE_FIELD_FKC 
         foreign key (FIELD_FK) 
         references INPUT_FIELD;
+
+    alter table INPUT_FIELD_VALUE 
+        add constraint INPUT_FIELD_VALUE_FILE_VALUE_FKC 
+        foreign key (FILE_VALUE_FK) 
+        references FILE;
 
     alter table INQUIRY 
         add constraint INQUIRY_MODIFIED_USER_FKC 
@@ -3812,6 +3824,16 @@
         add constraint HYPERLINK_DEPARTMENTS_FKC 
         foreign key (DEPARTMENTS_FK) 
         references DEPARTMENT;
+
+    alter table input_field_allowed_mime_type 
+        add constraint MIME_TYPE_INPUT_FIELDS_FKC 
+        foreign key (INPUT_FIELDS_FK) 
+        references INPUT_FIELD;
+
+    alter table input_field_allowed_mime_type 
+        add constraint INPUT_FIELD_ALLOWED_MIME_TYPES_FKC 
+        foreign key (ALLOWED_MIME_TYPES_FK) 
+        references MIME_TYPE;
 
     alter table input_field_value_selection 
         add constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC 

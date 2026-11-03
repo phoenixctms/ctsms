@@ -57,4 +57,25 @@ public class InputFieldValueDaoImpl
 		}
 		return (Long) inputFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
+
+	@Override
+	public void remove(InputFieldValue inputFieldValue) {
+		File fileValue = inputFieldValue.getFileValue();
+		inputFieldValue.setFileValue(null);
+		super.remove(inputFieldValue);
+		if (fileValue != null && handleGetFileValueCount(fileValue.getId()) == 0l) {
+			this.getSession().delete(fileValue);
+		}
+	}
+
+	@Override
+	protected long handleGetFileValueCount(Long fileId) {
+		org.hibernate.Criteria inputFieldValueCriteria = createInputFieldValueCriteria();
+		if (fileId != null) {
+			inputFieldValueCriteria.add(Restrictions.eq("fileValue.id", fileId.longValue()));
+		} else {
+			inputFieldValueCriteria.add(Restrictions.isNotNull("fileValue"));
+		}
+		return (Long) inputFieldValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
 }

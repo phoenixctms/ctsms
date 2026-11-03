@@ -29,6 +29,10 @@ public abstract class InputFieldConfig {
 		return isInputFieldType(InputFieldType.DATE);
 	}
 
+	public final boolean isFile() {
+		return isInputFieldType(InputFieldType.FILE);
+	}
+
 	public final boolean isFloat() {
 		return isInputFieldType(InputFieldType.FLOAT);
 	}

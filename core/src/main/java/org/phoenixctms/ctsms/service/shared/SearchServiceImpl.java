@@ -1742,6 +1742,9 @@ public class SearchServiceImpl
 								case SKETCH:
 									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
+								case FILE:
+									fieldValue = ExcelUtil.fileValueToString(inquiryValueVO.getFileValue());
+									break;
 								default:
 							}
 						}

@@ -24,6 +24,16 @@ public class ProbandListEntryTagValueOutVOStringAdapter extends InputFieldValueS
 	}
 
 	@Override
+	protected String getFileName(ProbandListEntryTagValueOutVO value) {
+		return value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+	}
+
+	@Override
+	protected Long getFileSize(ProbandListEntryTagValueOutVO value) {
+		return value.getFileValue() != null ? value.getFileValue().getSize() : null;
+	}
+
+	@Override
 	protected Float getFloatValue(ProbandListEntryTagValueOutVO value) {
 		return value.getFloatValue();
 	}

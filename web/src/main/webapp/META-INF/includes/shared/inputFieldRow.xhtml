@@ -37,7 +37,7 @@
 					<ui:param name="escapeHtml" value="true" />
 				</ui:include>
 				<h:panelGrid
-					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch)}"
+					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch or fieldInput.file)}"
 					columns="#{fieldInput.longTitle ? 1 : 4}"
 					cellpadding="#{fieldInput.longTitle ? 0 : 2}"
 					styleClass="#{fieldInput.longTitle ? 'ctsms-input-panelgrid' : ''}"
@@ -426,6 +426,49 @@
 							value="sketchpad#{index}_error_msg" />
 					</ui:include>
 					<p:message for="sketchpad#{index}" />
+				</h:panelGrid>
+				<h:panelGrid id="file#{index}" rendered="#{fieldInput.file}" columns="1"
+					cellpadding="0" styleClass="ctsms-input-panelgrid">
+					<h:outputLabel for="filedownload#{index}"
+						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-field-icon ctsms-icon-encryption"
+						value="#{fieldInput.title}" />
+					<h:panelGroup>
+						<p:commandLink immediate="true" id="filedownload#{index}"
+							ajax="false" disabled="#{!fieldInput.hasFile}"
+							title="#{labels.file_download_tooltip} #{fieldInput.fileDownloadLinkLabel}">
+							<h:outputText value="#{fieldInput.fileDownloadLinkLabel}" />
+							<p:fileDownload value="#{fieldInput.fileStreamedContent}" />
+						</p:commandLink>
+						<p:commandButton process="@this" value="#{labels.clear_file_label}"
+							actionListener="#{fieldInput.clearFile}"
+							icon="ui-icon ui-icon-close" ajax="true"
+							rendered="#{enabled and !fieldInput.disabled}"
+							disabled="#{!fieldInput.hasFile}" update="file#{index}" />
+					</h:panelGroup>
+					<p:fileUpload id="fileupload#{index}"
+						rendered="#{enabled and !fieldInput.disabled}"
+						fileUploadListener="#{fieldInput.handleFileUpload}"
+						mode="advanced" update="file#{index}" multiple="false"
+						auto="true" label="#{labels.choose_file_button_label}"
+						styleClass="ctsms-upload-control"
+						sizeLimit="#{fieldInput.uploadSizeLimit}"
+						allowTypes="#{fieldInput.allowTypes}" />
+					<h:panelGroup
+						rendered="#{enabled and !fieldInput.disabled and fieldInput.photo}">
+						<ctsms:photoCam widgetVar="#{fieldInput.widgetVar}_photocam"
+							width="1920" height="1080" displayWidth="640"
+							listener="#{fieldInput.onCapture}" update="file#{index}" />
+						<p:commandButton type="button" icon="ui-icon ui-icon-video"
+							value="#{labels.capture_photo_label}"
+							onclick="#{fieldInput.widgetVar}_photocam.capture()" />
+					</h:panelGroup>
+					<ui:include src="errorMessage.xhtml">
+						<ui:param name="rendered" value="#{fieldInput.error}" />
+						<ui:param name="value" value="#{fieldInput.errorMessage}" />
+						<ui:param name="error_message_id"
+							value="file#{index}_error_msg" />
+					</ui:include>
+					<p:message for="fileupload#{index}" />
 				</h:panelGrid>
 				<h:panelGroup rendered="#{fieldInput.hasOutput}">
 					<div

@@ -82,6 +82,8 @@ public interface EcrfPDFSettingCodes {
 	public static final String SKETCH_IMAGE_DPI = "sketch_image_dpi";
 	public static final String SKETCH_IMAGE_BG_COLOR = "sketch_image_bg_color";
 	public static final String RENDER_SKETCH_IMAGES = "render_sketch_images";
+	public static final String RENDER_FILE_IMAGES = "render_file_images";
+	public static final String FILE_IMAGE_MAX_HEIGHT = "file_image_max_height";
 	public final static String SHOW_SKETCH_REGIONS = "show_sketch_regions";
 	public static final String LONG_TITLE_LENGTH = "long_title_length";
 	public static final String SHOW_MODIFIED_LABEL = "show_modified_label";

@@ -130,6 +130,7 @@ public interface MessageCodes {
 	public final static String FILE_TITLE_PRESET = "file_title_preset";
 	public final static String FILE_COMMENT_PRESET = "file_comment_preset";
 	public final static String NO_FILE_LINK_LABEL = "no_file_link_label";
+	public final static String INPUT_FIELD_FILE_LINK_LABEL = "input_field_file_link_label";
 	public final static String NO_FILE_FILTERS = "no_file_filters";
 	public final static String WEBCAM_FILE_NAME = "webcam_file_name";
 	public final static String UPLOAD_OPERATION_SUCCESSFUL = "upload_operation_successfull";

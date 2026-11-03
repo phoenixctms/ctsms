@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.phoenixctms.ctsms.enumeration.Color;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.pdf.EcrfPDFBlock.BlockType;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
@@ -26,6 +27,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
@@ -50,6 +52,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap;
 	protected HashMap<Long, SignatureVO> signatureVOMap;
 	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
+	protected HashMap<Long, byte[]> fileValueImageDataMap;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -376,7 +379,8 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		signatureAvailableImage = PDFJpeg.prepareScaledImage(doc,
 				PDFUtil.loadImage(Settings.getImageFilename(EcrfPDFSettingCodes.SIGNATURE_AVAILABLE_IMAGE_FILE_NAME, Bundle.ECRF_PDF, null)),
 				signatureImageWidth, signatureImageHeight, quality, dpi, bgColor);
-		if (inputFieldImageVOMap != null && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
+		if (inputFieldImageVOMap != null && (Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)
+				|| Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES))) {
 			if (valueVOMap != null) {
 				Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
 				while (listEntryEcrfVisitValuesIt.hasNext()) {
@@ -516,8 +520,39 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		}
 	}
 
+	protected boolean putFileImage(InputFieldOutVO field, Long valueId, FileOutVO fileValue, PDDocument doc) throws Exception {
+		if (!blank && fileValue != null && fileValueImageDataMap != null && fileValueImageDataMap.containsKey(fileValue.getId())
+				&& Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES)) {
+			HashMap<Long, PDFJpeg> fileImages;
+			if (inputFieldSketchImages.containsKey(field.getId())) {
+				fileImages = inputFieldSketchImages.get(field.getId());
+			} else {
+				fileImages = new HashMap<Long, PDFJpeg>();
+				inputFieldSketchImages.put(field.getId(), fileImages);
+			}
+			if (!fileImages.containsKey(valueId)) {
+				int quality = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
+				int dpi = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_DPI);
+				Color bgColor = Settings.getColor(EcrfPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageDataMap.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+						Settings.getFloat(EcrfPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
+				if (fileImage != null) {
+					fileImages.put(valueId, fileImage);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	protected boolean putSketchImage(ECRFFieldValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getEcrfField().getField();
+		if (InputFieldType.FILE.equals(field.getFieldType().getType())) {
+			return putFileImage(field, value.getId(), value.getFileValue(), doc);
+		}
+		if (!Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
+			return false;
+		}
 		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
@@ -549,6 +584,12 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	protected boolean putSketchImage(ProbandListEntryTagValueOutVO value, PDDocument doc) throws Exception {
 		InputFieldOutVO field = value.getTag().getField();
+		if (InputFieldType.FILE.equals(field.getFieldType().getType())) {
+			return putFileImage(field, value.getId(), value.getFileValue(), doc);
+		}
+		if (!Settings.getBoolean(EcrfPDFSettingCodes.RENDER_SKETCH_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_SKETCH_IMAGES)) {
+			return false;
+		}
 		InputFieldImageVO inputFieldImage = inputFieldImageVOMap.get(field.getId());
 		if (inputFieldImage != null) {
 			HashMap<Long, PDFJpeg> sketchImages;
@@ -633,6 +674,10 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 
 	public void setInputFieldImageVOMap(HashMap<Long, InputFieldImageVO> inputFieldImageVOMap) {
 		this.inputFieldImageVOMap = inputFieldImageVOMap;
+	}
+
+	public void setFileValueImageDataMap(HashMap<Long, byte[]> fileValueImageDataMap) {
+		this.fileValueImageDataMap = fileValueImageDataMap;
 	}
 
 	public void setListEntryTagValuesVOMap(HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap) {

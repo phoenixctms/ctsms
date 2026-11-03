@@ -167,6 +167,9 @@
     alter table INPUT_FIELD_SELECTION_SET_VALUE 
         drop constraint INPUT_FIELD_SELECTION_SET_VALUE_FIELD_FKC;
 
+    alter table INPUT_FIELD_VALUE 
+        drop constraint INPUT_FIELD_VALUE_FILE_VALUE_FKC;
+
     alter table INQUIRY 
         drop constraint INQUIRY_MODIFIED_USER_FKC;
 
@@ -911,6 +914,12 @@
     alter table hyperlink_department 
         drop constraint HYPERLINK_DEPARTMENTS_FKC;
 
+    alter table input_field_allowed_mime_type 
+        drop constraint MIME_TYPE_INPUT_FIELDS_FKC;
+
+    alter table input_field_allowed_mime_type 
+        drop constraint INPUT_FIELD_ALLOWED_MIME_TYPES_FKC;
+
     alter table input_field_value_selection 
         drop constraint INPUT_FIELD_VALUE_SELECTION_VALUES_FKC;
 
@@ -1313,6 +1322,8 @@
     drop table file_department cascade;
 
     drop table hyperlink_department cascade;
+
+    drop table input_field_allowed_mime_type cascade;
 
     drop table input_field_value_selection cascade;
 

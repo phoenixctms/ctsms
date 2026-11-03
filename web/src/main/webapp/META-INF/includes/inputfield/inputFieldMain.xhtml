@@ -394,6 +394,49 @@
 								for="strict"
 								rendered="#{inputFieldBean.config.autocomplete}" />
 							<h:outputLabel
+								for="photo"
+								rendered="#{inputFieldBean.config.file}"
+								value="#{inputfieldlabels.input_field_photo_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.file}">
+								<p:selectBooleanCheckbox
+									id="photo"
+									value="#{inputFieldBean.in.photo}" />
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="photo">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_photo_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="photo"
+								rendered="#{inputFieldBean.config.file}" />
+							<h:outputLabel
+								for="allowedMimeTypes"
+								rendered="#{inputFieldBean.config.file}"
+								value="#{inputfieldlabels.input_field_allowed_mime_types_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.file}">
+								<p:selectManyMenu
+									id="allowedMimeTypes"
+									value="#{inputFieldBean.allowedMimeTypeIds}"
+									required="false"
+									style="height:150px;"
+									label="#{inputfieldlabels.input_field_allowed_mime_types}">
+									<f:selectItems value="#{inputFieldBean.allowedMimeTypes}" />
+								</p:selectManyMenu>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="allowedMimeTypes">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_allowed_mime_types_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="allowedMimeTypes"
+								rendered="#{inputFieldBean.config.file}" />
+							<h:outputLabel
 								for="booleanPreset"
 								rendered="#{inputFieldBean.config.checkBox}"
 								value="#{inputfieldlabels.input_field_boolean_preset_label}" />

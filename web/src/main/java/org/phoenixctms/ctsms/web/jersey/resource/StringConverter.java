@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 
 public abstract class StringConverter<T> {
 
@@ -68,6 +69,8 @@ public abstract class StringConverter<T> {
 			return getEcrfFieldStatusQueueConverter();
 		} else if (DBModule.class.equals(type)) {
 			return getDBModuleConverter();
+		} else if (FileModule.class.equals(type)) {
+			return getFileModuleConverter();
 		}
 		throw new IllegalArgumentException(MessageFormat.format(UNSUPPORTED_RESULT_TYPE, type));
 	}
@@ -109,6 +112,16 @@ public abstract class StringConverter<T> {
 			@Override
 			public ECRFFieldStatusQueue convert(String s) throws Exception {
 				return ECRFFieldStatusQueue.valueOf(s);
+			}
+		};
+	}
+
+	private static StringConverter<FileModule> getFileModuleConverter() {
+		return new StringConverter<FileModule>() {
+
+			@Override
+			public FileModule convert(String s) throws Exception {
+				return FileModule.valueOf(s);
 			}
 		};
 	}

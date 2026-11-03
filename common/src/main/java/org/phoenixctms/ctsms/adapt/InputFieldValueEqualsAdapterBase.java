@@ -27,6 +27,10 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 
 	protected abstract Date getATimestamp(A a);
 
+	protected abstract Long getAFileId(A a);
+
+	protected abstract boolean isANewFile(A a);
+
 	protected abstract Boolean getBBoolean(B b);
 
 	protected abstract Date getBDate(B b);
@@ -44,6 +48,8 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 	protected abstract Date getBTime(B b);
 
 	protected abstract Date getBTimestamp(B b);
+
+	protected abstract Long getBFileId(B b);
 
 	protected boolean selectionSetValueEquals(Object a, Object b) {
 		return a.equals(b);
@@ -99,6 +105,17 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 		if (fieldType == null ||
 				InputFieldType.SKETCH.equals(fieldType)) {
 			eb.append(getAInk(a), getBInk(b)); // deep
+		}
+		if (!eb.isEquals()) {
+			return false;
+		}
+		eb.reset();
+		if (fieldType == null ||
+				InputFieldType.FILE.equals(fieldType)) {
+			if (isANewFile(a)) {
+				return false;
+			}
+			eb.append(getAFileId(a), getBFileId(b));
 		}
 		if (!eb.isEquals()) {
 			return false;

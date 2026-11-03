@@ -37,6 +37,14 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 
 	protected abstract String getDecimalSeparator();
 
+	protected String getFileName(VALUEVO value) {
+		return null;
+	}
+
+	protected Long getFileSize(VALUEVO value) {
+		return null;
+	}
+
 	protected abstract Float getFloatValue(VALUEVO value);
 
 	protected InputFieldOutVO getInputField(VALUEVO value) {
@@ -157,6 +165,16 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 							return textClipMaxLength != null ? CommonUtil.clipString(selectionSetValuesToString(getSelectionSetValues(value)), textClipMaxLength,
 									CommonUtil.DEFAULT_ELLIPSIS,
 									EllipsisPlacement.MID) : selectionSetValuesToString(getSelectionSetValues(value));
+						case FILE:
+							String fileName = getFileName(value);
+							if (fileName != null) {
+								Long fileSize = getFileSize(value);
+								if (fileSize != null) {
+									return fileName + " (" + CommonUtil.humanReadableByteCount(fileSize, getDecimalSeparator()) + ")";
+								}
+								return fileName;
+							}
+							break;
 						default:
 					}
 				}

@@ -49,6 +49,7 @@ import org.phoenixctms.ctsms.domain.JobDao;
 import org.phoenixctms.ctsms.domain.JournalEntry;
 import org.phoenixctms.ctsms.domain.JournalEntryDao;
 import org.phoenixctms.ctsms.domain.MimeType;
+import org.phoenixctms.ctsms.domain.MimeTypeDao;
 import org.phoenixctms.ctsms.domain.NotificationDao;
 import org.phoenixctms.ctsms.domain.NotificationRecipientDao;
 import org.phoenixctms.ctsms.domain.Proband;
@@ -152,6 +153,8 @@ public class InputFieldServiceImpl
 				InputFieldType.SKETCH,
 				InputFieldType.SELECT_MANY_H,
 				InputFieldType.SELECT_MANY_V)));
+		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.FILE, new HashSet<InputFieldType>(Arrays.asList(
+				InputFieldType.FILE)));
 	}
 
 	private static JournalEntry logSystemMessage(Proband proband, InputFieldOutVO inputFieldVO, Timestamp now, User modified, String systemMessageCode, Object result,
@@ -189,6 +192,31 @@ public class InputFieldServiceImpl
 	private void checkAddSelectionSetValueInput(InputFieldSelectionSetValueInVO selectionSetValueIn, boolean checkDeferredConstraints) throws ServiceException {
 		InputField inputField = CheckIDUtil.checkInputFieldId(selectionSetValueIn.getFieldId(), this.getInputFieldDao());
 		checkSelectionSetValueInput(inputField, selectionSetValueIn, checkDeferredConstraints);
+	}
+
+	private void checkAllowedMimeTypes(InputFieldInVO inputFieldIn) throws ServiceException {
+		Collection<Long> allowedMimeTypeIds = inputFieldIn.getAllowedMimeTypeIds();
+		if (allowedMimeTypeIds != null && allowedMimeTypeIds.size() > 0) {
+			MimeTypeDao mimeTypeDao = this.getMimeTypeDao();
+			HashSet<Long> dupeCheck = new HashSet<Long>(allowedMimeTypeIds.size());
+			Iterator<Long> it = allowedMimeTypeIds.iterator();
+			while (it.hasNext()) {
+				Long id = it.next();
+				if (id == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_ALLOWED_MIME_TYPE_ID_IS_NULL);
+				}
+				MimeType mimeType = mimeTypeDao.load(id);
+				if (mimeType == null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_INVALID_ALLOWED_MIME_TYPE_ID, id.toString());
+				}
+				if (!FileModule.INPUT_FIELD_VALUE_FILE.equals(mimeType.getModule())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_ALLOWED_MIME_TYPE_WRONG_MODULE, mimeType.getMimeType());
+				}
+				if (!dupeCheck.add(mimeType.getId())) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_DUPLICATE_ALLOWED_MIME_TYPE, mimeType.getMimeType());
+				}
+			}
+		}
 	}
 
 	private void checkDateLimits(InputFieldInVO inputFieldIn) throws ServiceException {
@@ -261,6 +289,10 @@ public class InputFieldServiceImpl
 				checkSelectionLimits(inputFieldIn);
 				checkSketchParameters(inputFieldIn);
 				break;
+			case FILE:
+				checkValidationErrorMsg(false, inputFieldIn.getValidationErrorMsg());
+				checkAllowedMimeTypes(inputFieldIn);
+				break;
 			default:
 				throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.UNSUPPORTED_INPUT_FIELD_TYPE, DefaultMessages.UNSUPPORTED_INPUT_FIELD_TYPE,
 						new Object[] { fieldType.toString() }));
@@ -311,6 +343,14 @@ public class InputFieldServiceImpl
 				inputFieldIn.getFileName() != null ||
 				inputFieldIn.getDatas() != null)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SKETCH_PARAMETERS_NOT_NULL);
+		}
+		if (!(InputFieldType.FILE.equals(fieldType))) {
+			if (inputFieldIn.isPhoto()) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_PHOTO_NOT_FALSE);
+			}
+			if (inputFieldIn.getAllowedMimeTypeIds() != null && inputFieldIn.getAllowedMimeTypeIds().size() > 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_ALLOWED_MIME_TYPES_NOT_EMPTY);
+			}
 		}
 		// preset values remain unchecked for now...
 	}

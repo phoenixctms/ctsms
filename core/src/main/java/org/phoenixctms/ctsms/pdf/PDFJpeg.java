@@ -138,6 +138,23 @@ public class PDFJpeg extends PDJpeg {
 		return prepareImage(doc, image, compressionQualityPercent, dpi);
 	}
 
+	public static PDFJpeg prepareFileImage(PDDocument doc, byte[] data, float maxWidth, float maxHeight, int compressionQualityPercent, int dpi,
+			org.phoenixctms.ctsms.enumeration.Color bgColor) {
+		Image image = createImage(data, bgColor);
+		if (image != null && image.getImage() != null) {
+			float width = pixelToPoints(image.getImage().getWidth(), dpi);
+			float height = pixelToPoints(image.getImage().getHeight(), dpi);
+			if (width > 0.0f && height > 0.0f) {
+				float factor = Math.min(maxWidth > 0.0f ? maxWidth / width : 1.0f, maxHeight > 0.0f ? maxHeight / height : 1.0f);
+				if (factor < 1.0f) {
+					scaleImage(image, width * factor, height * factor, dpi);
+				}
+			}
+			return prepareImage(doc, image, compressionQualityPercent, dpi);
+		}
+		return null;
+	}
+
 	public static Image scaleImage(Image image, float width, float height, int dpi) {
 		if (image != null) {
 			try {

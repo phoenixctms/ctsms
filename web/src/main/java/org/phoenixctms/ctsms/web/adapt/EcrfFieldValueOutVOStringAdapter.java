@@ -28,6 +28,16 @@ public class EcrfFieldValueOutVOStringAdapter extends InputFieldValueStringAdapt
 	}
 
 	@Override
+	protected String getFileName(ECRFFieldValueOutVO value) {
+		return value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+	}
+
+	@Override
+	protected Long getFileSize(ECRFFieldValueOutVO value) {
+		return value.getFileValue() != null ? value.getFileValue().getSize() : null;
+	}
+
+	@Override
 	protected Float getFloatValue(ECRFFieldValueOutVO value) {
 		return value.getFloatValue();
 	}

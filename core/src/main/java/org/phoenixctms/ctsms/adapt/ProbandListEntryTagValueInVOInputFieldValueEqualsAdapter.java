@@ -58,6 +58,21 @@ public class ProbandListEntryTagValueInVOInputFieldValueEqualsAdapter extends In
 	}
 
 	@Override
+	protected Long getAFileId(ProbandListEntryTagValueInVO a) {
+		return a.getFileValueId();
+	}
+
+	@Override
+	protected boolean isANewFile(ProbandListEntryTagValueInVO a) {
+		return a.getFileValue() != null;
+	}
+
+	@Override
+	protected Long getBFileId(InputFieldValue b) {
+		return b.getFileValue() != null ? b.getFileValue().getId() : null;
+	}
+
+	@Override
 	protected Boolean getBBoolean(InputFieldValue b) {
 		return b.getBooleanValue();
 	}

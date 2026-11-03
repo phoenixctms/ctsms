@@ -76,6 +76,16 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 		}
 
 		@Override
+		protected String getFileName(ECRFFieldValueOutVO value) {
+			return value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+		}
+
+		@Override
+		protected Long getFileSize(ECRFFieldValueOutVO value) {
+			return value.getFileValue() != null ? value.getFileValue().getSize() : null;
+		}
+
+		@Override
 		protected Float getFloatValue(ECRFFieldValueOutVO value) {
 			return value.getFloatValue();
 		}
@@ -257,6 +267,16 @@ public class EcrfPDFBlock extends InputFieldPDFBlock {
 	@Override
 	protected float getFieldFrameLineWidth() {
 		return Settings.getFloat(EcrfPDFSettingCodes.FIELD_FRAME_LINE_WIDTH, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.FIELD_FRAME_LINE_WIDTH);
+	}
+
+	@Override
+	protected String getFileName() {
+		return value != null && value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+	}
+
+	@Override
+	protected Long getFileSize() {
+		return value != null && value.getFileValue() != null ? value.getFileValue().getSize() : null;
 	}
 
 	@Override
