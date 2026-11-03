@@ -147,6 +147,24 @@ final class CriterionText {
 			sortByLength(tieNames);
 			sortByLength(restrictionNames);
 		}
+
+		private Catalog(HashMap<Long, CriterionTie> ties, List<NamedId> tieNames) {
+			this.parser = null;
+			this.properties = null;
+			this.ties = ties;
+			this.restrictions = null;
+			this.tieIds = null;
+			this.propertyNames = null;
+			this.tieNames = tieNames;
+			this.restrictionNames = null;
+			this.propertyKeys = null;
+			this.tieKeys = null;
+			this.restrictionKeys = null;
+			this.userDateFormat = null;
+			this.userDecimalSeparator = null;
+			this.maxCriterions = null;
+			this.module = null;
+		}
 	}
 
 	private CriterionText() {
@@ -612,8 +630,25 @@ final class CriterionText {
 		return end;
 	}
 
+	static int scanValueEnd(String text, int start, String[] tieNames, CriterionTie[] ties) {
+		HashMap<Long, CriterionTie> tieMap = new HashMap<Long, CriterionTie>();
+		ArrayList<NamedId> names = new ArrayList<NamedId>();
+		if (tieNames != null) {
+			for (int i = 0; i < tieNames.length; i++) {
+				Long id = Long.valueOf(i + 1);
+				tieMap.put(id, ties[i]);
+				names.add(new NamedId(tieNames[i], id));
+			}
+		}
+		sortByLength(names);
+		return scanValueEnd(text, start, new Catalog(tieMap, names));
+	}
+
 	private static boolean startsNonParenthesisTie(String text, int offset, Catalog catalog) {
 		if (catalog == null || catalog.ties == null) {
+			return false;
+		}
+		if (offset > 0 && !isBoundary(text, offset - 1)) {
 			return false;
 		}
 		NamedId tie = matchLongest(text, offset, catalog.tieNames);
