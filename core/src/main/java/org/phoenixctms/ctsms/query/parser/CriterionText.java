@@ -592,21 +592,36 @@ final class CriterionText {
 		return criterion;
 	}
 
-	private static int scanValueEnd(String text, int start) {
+	private static int scanValueEnd(String text, int start, Catalog catalog) {
 		int end = start;
 		int depth = 0;
 		while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r') {
+			if (depth == 0 && startsNonParenthesisTie(text, end, catalog)) {
+				break;
+			}
 			char c = text.charAt(end);
 			if (c == '(') {
 				depth++;
 			} else if (c == ')' && depth > 0) {
 				depth--;
-			} else if (c == ')' && end > start && Character.isWhitespace(text.charAt(end - 1)) && closesValueAtEndOfLine(text, end)) {
+			} else if (c == ')' && end > start && closesValueAtEndOfLine(text, end)) {
 				break;
 			}
 			end++;
 		}
 		return end;
+	}
+
+	private static boolean startsNonParenthesisTie(String text, int offset, Catalog catalog) {
+		if (catalog == null || catalog.ties == null) {
+			return false;
+		}
+		NamedId tie = matchLongest(text, offset, catalog.tieNames);
+		if (tie == null) {
+			return false;
+		}
+		CriterionTie tieEnum = catalog.ties.get(tie.id);
+		return tieEnum != null && !CriterionTie.LEFT_PARENTHESIS.equals(tieEnum) && !CriterionTie.RIGHT_PARENTHESIS.equals(tieEnum);
 	}
 
 	private static boolean closesValueAtEndOfLine(String text, int parenthesis) {
@@ -643,7 +658,7 @@ final class CriterionText {
 			value = text.substring(i).trim();
 			next = text.length();
 		} else {
-			int end = scanValueEnd(text, i);
+			int end = scanValueEnd(text, i, catalog);
 			value = text.substring(i, end).trim();
 			next = end;
 			if (next < text.length() && (text.charAt(next) == '\n' || text.charAt(next) == '\r')) {
