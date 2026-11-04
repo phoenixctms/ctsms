@@ -867,6 +867,10 @@ public final class ServiceUtil {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_EMPTY,
 									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
 						}
+						if (CommonUtil.isEmptyString(fileValue.getFileName())) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_NAME_REQUIRED,
+									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
+						}
 						if (mimeTypeDao.getCount(fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE) == 0) {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_MIME_TYPE, fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE);
 						}

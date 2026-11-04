@@ -198,6 +198,7 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_FILE_VALUE_NOT_NULL = "input_field_file_value_not_null";
 	public static final String INPUT_FIELD_FILE_VALUE_ID_INVALID = "input_field_file_value_id_invalid";
 	public static final String INPUT_FIELD_FILE_VALUE_EMPTY = "input_field_file_value_empty";
+	public static final String INPUT_FIELD_FILE_VALUE_NAME_REQUIRED = "input_field_file_value_name_required";
 	public static final String INPUT_FIELD_FILE_VALUE_MIME_TYPE_NOT_ALLOWED = "input_field_file_value_mime_type_not_allowed";
 	public static final String INPUT_FIELD_VALUE_NO_FILE = "input_field_value_no_file";
 	public static final String INPUT_FIELD_PHOTO_NOT_FALSE = "input_field_photo_not_false";
