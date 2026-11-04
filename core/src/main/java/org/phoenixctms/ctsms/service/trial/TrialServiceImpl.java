@@ -8215,6 +8215,7 @@ public class TrialServiceImpl
 		painter.setSignatureVOMap(signatureVOMap);
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
+		ServiceUtil.setEcrfPDFFileValueImageDataMap(painter, valueVOMap, listEntryTagValuesVOMap, blank, this.getFileDao());
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();

@@ -956,6 +956,35 @@ public final class ServiceUtil {
 		}
 	}
 
+	public static void setEcrfPDFFileValueImageDataMap(EcrfPDFPainter painter,
+			HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap,
+			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap, boolean blank, FileDao fileDao) throws Exception {
+		if (!blank && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES)) {
+			HashMap<Long, byte[]> fileValueImageDataMap = new HashMap<Long, byte[]>();
+			Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
+			while (listEntryEcrfVisitValuesIt.hasNext()) {
+				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfVisitValuesIt = listEntryEcrfVisitValuesIt.next().values().iterator();
+				while (ecrfVisitValuesIt.hasNext()) {
+					Iterator<Collection<ECRFFieldValueOutVO>> visitValuesIt = ecrfVisitValuesIt.next().values().iterator();
+					while (visitValuesIt.hasNext()) {
+						Iterator<ECRFFieldValueOutVO> valuesIt = visitValuesIt.next().iterator();
+						while (valuesIt.hasNext()) {
+							putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
+						}
+					}
+				}
+			}
+			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesIt = listEntryTagValuesVOMap.values().iterator();
+			while (listEntryTagValuesIt.hasNext()) {
+				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryTagValuesIt.next().iterator();
+				while (valuesIt.hasNext()) {
+					putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
+				}
+			}
+			painter.setFileValueImageDataMap(fileValueImageDataMap);
+		}
+	}
+
 	private static void putInputFieldValueFileImageData(FileOutVO fileValue, HashMap<Long, byte[]> fileValueImageDataMap, FileDao fileDao) throws Exception {
 		if (fileValue != null && fileValue.getContentType() != null && fileValue.getContentType().getImage() && !fileValueImageDataMap.containsKey(fileValue.getId())) {
 			FileContentOutVO content = fileDao.toFileContentOutVO(fileDao.load(fileValue.getId()));
@@ -6321,30 +6350,7 @@ public final class ServiceUtil {
 		painter.setSignatureVOMap(signatureVOMap);
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
-		if (!blank && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES)) {
-			HashMap<Long, byte[]> fileValueImageDataMap = new HashMap<Long, byte[]>();
-			Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
-			while (listEntryEcrfVisitValuesIt.hasNext()) {
-				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfVisitValuesIt = listEntryEcrfVisitValuesIt.next().values().iterator();
-				while (ecrfVisitValuesIt.hasNext()) {
-					Iterator<Collection<ECRFFieldValueOutVO>> visitValuesIt = ecrfVisitValuesIt.next().values().iterator();
-					while (visitValuesIt.hasNext()) {
-						Iterator<ECRFFieldValueOutVO> valuesIt = visitValuesIt.next().iterator();
-						while (valuesIt.hasNext()) {
-							putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
-						}
-					}
-				}
-			}
-			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesIt = listEntryTagValuesVOMap.values().iterator();
-			while (listEntryTagValuesIt.hasNext()) {
-				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryTagValuesIt.next().iterator();
-				while (valuesIt.hasNext()) {
-					putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
-				}
-			}
-			painter.setFileValueImageDataMap(fileValueImageDataMap);
-		}
+		setEcrfPDFFileValueImageDataMap(painter, valueVOMap, listEntryTagValuesVOMap, blank, fileDao);
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
