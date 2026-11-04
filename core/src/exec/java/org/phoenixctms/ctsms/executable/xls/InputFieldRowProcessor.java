@@ -1,14 +1,19 @@
 package org.phoenixctms.ctsms.executable.xls;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.service.shared.FileService;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
+import org.phoenixctms.ctsms.service.shared.SelectionSetService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecDefaultSettings;
 import org.phoenixctms.ctsms.util.ExecSettingCodes;
@@ -17,6 +22,7 @@ import org.phoenixctms.ctsms.util.FilePathSplitter;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldInVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class InputFieldRowProcessor extends RowProcessor {
@@ -47,6 +53,9 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int REGEXP_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int PHOTO_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int ALLOWED_MIME_TYPES_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static String ALLOWED_MIME_TYPES_SEPARATOR = ",";
 	private final static int MIN_SELECTIONS_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int MAX_SELECTIONS_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
 	private final static int LONG_LOWER_LIMIT_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
@@ -82,6 +91,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private int regExpColumnIndex;
 	private int learnColumnIndex;
 	private int strictColumnIndex;
+	private int photoColumnIndex;
+	private int allowedMimeTypesColumnIndex;
 	private int minSelectionsColumnIndex;
 	private int maxSelectionsColumnIndex;
 	private int longLowerLimitColumnIndex;
@@ -102,12 +113,15 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private String datePattern;
 	private String timePattern;
 	private FilePathSplitter filePath;
+	private HashMap<String, Long> mimeTypeIdMap;
 	@Autowired
 	protected InputFieldDao inputFieldDao;
 	@Autowired
 	protected InputFieldService inputFieldService;
 	@Autowired
 	private FileService fileService;
+	@Autowired
+	private SelectionSetService selectionSetService;
 
 	public InputFieldRowProcessor() {
 		super();
@@ -232,6 +246,14 @@ public class InputFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, strictColumnIndex);
 	}
 
+	private String getPhoto(String[] values) {
+		return getColumnValue(values, photoColumnIndex);
+	}
+
+	private String getAllowedMimeTypes(String[] values) {
+		return getColumnValue(values, allowedMimeTypesColumnIndex);
+	}
+
 	private String getTextPreset(String[] values) {
 		return getColumnValue(values, textPresetColumnIndex);
 	}
@@ -282,6 +304,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 		regExpColumnIndex = REGEXP_COLUMN_INDEX;
 		learnColumnIndex = LEARN_COLUMN_INDEX;
 		strictColumnIndex = STRICT_COLUMN_INDEX;
+		photoColumnIndex = PHOTO_COLUMN_INDEX;
+		allowedMimeTypesColumnIndex = ALLOWED_MIME_TYPES_COLUMN_INDEX;
 		minSelectionsColumnIndex = MIN_SELECTIONS_COLUMN_INDEX;
 		maxSelectionsColumnIndex = MAX_SELECTIONS_COLUMN_INDEX;
 		longLowerLimitColumnIndex = LONG_LOWER_LIMIT_COLUMN_INDEX;
@@ -302,6 +326,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 		datePattern = ExecSettings.getString(ExecSettingCodes.DATE_PATTERN, ExecDefaultSettings.DATE_PATTERN);
 		timePattern = ExecSettings.getString(ExecSettingCodes.TIME_PATTERN, ExecDefaultSettings.TIME_PATTERN);
 		filePath = new FilePathSplitter(context.getFileName());
+		mimeTypeIdMap = null;
 		((XlsImporter) context.getImporter()).loadSelectionSetValues(context);
 	}
 
@@ -327,6 +352,8 @@ public class InputFieldRowProcessor extends RowProcessor {
 				.append(getRegExp(values))
 				.append(getLearn(values))
 				.append(getStrict(values))
+				.append(getPhoto(values))
+				.append(getAllowedMimeTypes(values))
 				.append(getMinSelections(values))
 				.append(getMaxSelections(values))
 				.append(getLongLowerLimit(values))
@@ -343,6 +370,31 @@ public class InputFieldRowProcessor extends RowProcessor {
 				.append(getHeight(values))
 				.append(getFileName(values))
 				.toHashCode();
+	}
+
+	private ArrayList<Long> getAllowedMimeTypeIds(String allowedMimeTypes) throws Throwable {
+		ArrayList<Long> allowedMimeTypeIds = new ArrayList<Long>();
+		if (!CommonUtil.isEmptyString(allowedMimeTypes)) {
+			if (mimeTypeIdMap == null) {
+				mimeTypeIdMap = new HashMap<String, Long>();
+				Iterator<MimeTypeVO> it = selectionSetService.getMimeTypes(context.getAuth(), FileModule.INPUT_FIELD_VALUE_FILE).iterator();
+				while (it.hasNext()) {
+					MimeTypeVO mimeType = it.next();
+					mimeTypeIdMap.put(mimeType.getMimeType(), mimeType.getId());
+				}
+			}
+			String[] mimeTypes = allowedMimeTypes.split(ALLOWED_MIME_TYPES_SEPARATOR, -1);
+			for (int i = 0; i < mimeTypes.length; i++) {
+				String mimeType = mimeTypes[i].trim();
+				if (mimeType.length() > 0) {
+					if (!mimeTypeIdMap.containsKey(mimeType)) {
+						throw new IllegalArgumentException("unknown input field value file mime type '" + mimeType + "'");
+					}
+					allowedMimeTypeIds.add(mimeTypeIdMap.get(mimeType));
+				}
+			}
+		}
+		return allowedMimeTypeIds;
 	}
 
 	private void loadFile(InputFieldInVO inputFieldIn, String fileName) throws Throwable {
@@ -420,6 +472,10 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setMinTimestamp(CommonUtil.isEmptyString(getMinTimestamp(values)) ? null : CommonUtil.parseDate(getMinTimestamp(values), dateTimePattern));
 				inputFieldIn.setMaxTimestamp(CommonUtil.isEmptyString(getMaxTimestamp(values)) ? null : CommonUtil.parseDate(getMaxTimestamp(values), dateTimePattern));
 				inputFieldIn.setUserTimeZone(Boolean.parseBoolean(getUserTimeZone(values)));
+				break;
+			case FILE:
+				inputFieldIn.setPhoto(Boolean.parseBoolean(getPhoto(values)));
+				inputFieldIn.setAllowedMimeTypeIds(getAllowedMimeTypeIds(getAllowedMimeTypes(values)));
 				break;
 			case SKETCH:
 				inputFieldIn.setWidth(CommonUtil.isEmptyString(getWidth(values)) ? null : Long.parseLong(getWidth(values)));
