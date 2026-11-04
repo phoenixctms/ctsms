@@ -448,7 +448,7 @@ if get_database_version() < '010901012' then
     foreign key (FILE_VALUE_FK)
     references FILE;
 
-  create index input_field_value_file_value_fk on INPUT_FIELD_VALUE (FILE_VALUE_FK);
+  CREATE INDEX input_field_value_file_value_fk ON input_field_value (file_value_fk);
 
   create table input_field_allowed_mime_type (
     INPUT_FIELDS_FK BIGINT not null,
