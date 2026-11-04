@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.jersey.resource.trial;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -12,10 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -29,6 +28,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValuesOutVO;
 import org.phoenixctms.ctsms.web.jersey.resource.InputFieldValueFileParts;
+import org.phoenixctms.ctsms.web.jersey.resource.ResourceUtils;
 import org.phoenixctms.ctsms.web.jersey.wrapper.JsValuesOutVOPage;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 
@@ -77,11 +77,9 @@ public class EcrfFieldValuesResource {
 
 	@GET
 	@Path("{id}/file")
-	public Response getFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
+	public Response getFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException, UnsupportedEncodingException {
 		FileStreamOutVO stream = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueFileStream(auth, id);
-		ResponseBuilder response = javax.ws.rs.core.Response.ok(stream.getStream(), stream.getContentType().getMimeType());
-		response.header(HttpHeaders.CONTENT_LENGTH, stream.getSize());
-		return response.build();
+		return ResourceUtils.getAttachmentFileStreamResponse(stream);
 	}
 
 	@PUT
