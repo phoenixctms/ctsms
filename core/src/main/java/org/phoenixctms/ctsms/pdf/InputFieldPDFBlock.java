@@ -588,7 +588,7 @@ public abstract class InputFieldPDFBlock {
 			case FILE:
 				string = blank ? null : getFileValueString();
 				isPresetColor = false;
-				width = PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM);
+				width = PDFUtil.getStringWidth(string != null ? string : "", cursor.getFontD(), PDFUtil.FontSize.MEDIUM);
 				break;
 			default:
 				return 0.0f;
