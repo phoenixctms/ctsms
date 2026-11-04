@@ -45,9 +45,12 @@ CREATE INDEX inquiry_value_proband_fk_inquiry_fk ON inquiry_value (proband_fk,in
 CREATE INDEX ecrf_status_entry_list_entry_fk_ecrf_fk_visit_fk ON ecrf_status_entry (list_entry_fk,ecrf_fk,visit_fk);
 CREATE INDEX ecrf_field_value_list_entry_fk_visit_fk_ecrf_field_fk_index_version ON ecrf_field_value (list_entry_fk,visit_fk,ecrf_field_fk,index,version);
 CREATE INDEX ecrf_field_status_entry_list_entry_fk_ecrf_field_fk_index_status_fk_queue ON ecrf_field_status_entry (list_entry_fk,visit_fk,ecrf_field_fk,index,status_fk,queue);
+CREATE INDEX ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version ON ecrf_field_value (ecrf_field_fk,list_entry_fk,index,version);
+CREATE INDEX ecrf_field_status_entry_ecrf_field_fk_list_entry_fk_index_queue_status_fk ON ecrf_field_status_entry (ecrf_field_fk,list_entry_fk,index,queue,status_fk);
 
 -- categories:
 CREATE INDEX inquiry_category ON inquiry (category);
+CREATE INDEX inquiry_trial_fk_category ON inquiry (trial_fk,category);
 CREATE INDEX input_field_category ON input_field (category);
 CREATE INDEX criteria_category ON criteria (category);
 CREATE INDEX duty_roster_turn_calendar ON duty_roster_turn (calendar);

@@ -455,7 +455,9 @@ if get_database_version() < '010901012' then
       ('journal_entry', 'journal_entry_criteria_system_message_code', 'journal_entry_criteria_fk_system_message_code'),
       ('ecrf_field', 'ecrf_field_ecrf_section', 'ecrf_field_ecrf_fk_section'),
       ('ecrf_field', 'ecrf_field_trial_ecrf_section', 'ecrf_field_trial_fk_ecrf_fk_section'),
-      ('permission', 'service_method', 'permission_service_method')
+      ('permission', 'service_method', 'permission_service_method'),
+      ('ecrf_field_value', 'ecrf_field_value_ecrf_field_list_entry_index_version', 'ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version'),
+      ('inquiry', 'ecrf_field_trial_fk_category', 'inquiry_trial_fk_category')
     ) as t(table_name, old_name, new_name) loop
     if exists (select 1 from pg_index where indexrelid = to_regclass(r.old_name) and indrelid = to_regclass(r.table_name)) then
       if to_regclass(r.new_name) is null then
@@ -509,7 +511,10 @@ if get_database_version() < '010901012' then
   CREATE INDEX IF NOT EXISTS ecrf_status_entry_list_entry_fk_ecrf_fk_visit_fk ON ecrf_status_entry (list_entry_fk,ecrf_fk,visit_fk);
   CREATE INDEX IF NOT EXISTS ecrf_field_value_list_entry_fk_visit_fk_ecrf_field_fk_index_version ON ecrf_field_value (list_entry_fk,visit_fk,ecrf_field_fk,index,version);
   CREATE INDEX IF NOT EXISTS ecrf_field_status_entry_list_entry_fk_ecrf_field_fk_index_status_fk_queue ON ecrf_field_status_entry (list_entry_fk,visit_fk,ecrf_field_fk,index,status_fk,queue);
+  CREATE INDEX IF NOT EXISTS ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version ON ecrf_field_value (ecrf_field_fk,list_entry_fk,index,version);
+  CREATE INDEX IF NOT EXISTS ecrf_field_status_entry_ecrf_field_fk_list_entry_fk_index_queue_status_fk ON ecrf_field_status_entry (ecrf_field_fk,list_entry_fk,index,queue,status_fk);
   CREATE INDEX IF NOT EXISTS inquiry_category ON inquiry (category);
+  CREATE INDEX IF NOT EXISTS inquiry_trial_fk_category ON inquiry (trial_fk,category);
   CREATE INDEX IF NOT EXISTS input_field_category ON input_field (category);
   CREATE INDEX IF NOT EXISTS criteria_category ON criteria (category);
   CREATE INDEX IF NOT EXISTS duty_roster_turn_calendar ON duty_roster_turn (calendar);
