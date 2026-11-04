@@ -1069,6 +1069,8 @@ public class InputFieldServiceImpl
 		newInputField.setContentType(originalInputField.getContentType());
 		newInputField.setData(originalInputField.getData());
 		newInputField.setFileSize(originalInputField.getFileSize());
+		newInputField.setPhoto(originalInputField.getPhoto());
+		newInputField.setAllowedMimeTypes(new ArrayList<MimeType>(originalInputField.getAllowedMimeTypes()));
 		CoreUtil.modifyVersion(newInputField, now, user);
 		newInputField = inputFieldDao.create(newInputField);
 		InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao = this.getInputFieldSelectionSetValueDao();
