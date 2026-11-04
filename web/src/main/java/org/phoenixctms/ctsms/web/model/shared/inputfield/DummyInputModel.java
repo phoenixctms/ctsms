@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.FileContentInVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldValueVO;
@@ -46,6 +47,8 @@ public final class DummyInputModel extends InputModel {
 			inputFieldValue.setLongValue(inputField.getLongPreset());
 			inputFieldValue.setTimestampValue(inputField.getTimestampPreset());
 			inputFieldValue.setInkValues(null);
+			inputFieldValue.setFileValueId(null);
+			inputFieldValue.setFileValue(null);
 			inputFieldValue.getSelectionValueIds().clear();
 			inputFieldValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
@@ -86,6 +89,30 @@ public final class DummyInputModel extends InputModel {
 	@Override
 	public Float getFloatValue() {
 		return inputFieldValue == null ? null : inputFieldValue.getFloatValue();
+	}
+
+	@Override
+	protected FileContentInVO getFileValue() {
+		return inputFieldValue == null ? null : inputFieldValue.getFileValue();
+	}
+
+	@Override
+	protected void setFileValue(FileContentInVO value) {
+		if (inputFieldValue != null) {
+			inputFieldValue.setFileValue(value);
+		}
+	}
+
+	@Override
+	protected Long getFileValueId() {
+		return inputFieldValue == null ? null : inputFieldValue.getFileValueId();
+	}
+
+	@Override
+	protected void setFileValueId(Long value) {
+		if (inputFieldValue != null) {
+			inputFieldValue.setFileValueId(value);
+		}
 	}
 
 	@Override

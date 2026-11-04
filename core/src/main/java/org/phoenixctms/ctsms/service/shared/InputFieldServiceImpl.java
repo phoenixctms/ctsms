@@ -1021,6 +1021,8 @@ public class InputFieldServiceImpl
 		ServiceUtil.checkInputFieldTimeValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getTimeValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldTimestampValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getTimestampValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldInkValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getInkValues(), inputFieldDao);
+		ServiceUtil.checkInputFieldFileValue(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getFileValueId(), dummyInputFieldValue.getFileValue(), null,
+				inputFieldDao, this.getMimeTypeDao());
 		ServiceUtil.checkInputFieldSelectionSetValues(inputField, dummyInputFieldValue.isOptional(), dummyInputFieldValue.getSelectionValueIds(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 	}
