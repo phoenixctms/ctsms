@@ -1,5 +1,7 @@
 do
 $$
+declare
+  r record;
 begin
 
 if get_database_version() < '010901002' then
@@ -439,6 +441,168 @@ end if;
 
 if get_database_version() < '010901012' then
 
+  -- align table indexes with index-create.sql:
+
+  -- rename indexes created under earlier names (drop them if the current name exists as well):
+  for r in select * from (values
+      ('journal_entry', 'journal_entry_inventory_system_message_code', 'journal_entry_inventory_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_staff_system_message_code', 'journal_entry_staff_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_course_system_message_code', 'journal_entry_course_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_trial_system_message_code', 'journal_entry_trial_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_proband_system_message_code', 'journal_entry_proband_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_inputfield_system_message_code', 'journal_entry_inputfield_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_user_system_message_code', 'journal_entry_user_fk_system_message_code'),
+      ('journal_entry', 'journal_entry_criteria_system_message_code', 'journal_entry_criteria_fk_system_message_code'),
+      ('ecrf_field', 'ecrf_field_ecrf_section', 'ecrf_field_ecrf_fk_section'),
+      ('ecrf_field', 'ecrf_field_trial_ecrf_section', 'ecrf_field_trial_fk_ecrf_fk_section'),
+      ('permission', 'service_method', 'permission_service_method'),
+      ('ecrf_field_value', 'ecrf_field_value_ecrf_field_list_entry_index_version', 'ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version'),
+      ('inquiry', 'ecrf_field_trial_fk_category', 'inquiry_trial_fk_category')
+    ) as t(table_name, old_name, new_name) loop
+    if exists (select 1 from pg_index where indexrelid = to_regclass(r.old_name) and indrelid = to_regclass(r.table_name)) then
+      if to_regclass(r.new_name) is null then
+        execute format('ALTER INDEX %I RENAME TO %I', r.old_name, r.new_name);
+      else
+        execute format('DROP INDEX %I', r.old_name);
+      end if;
+    end if;
+  end loop;
+
+  -- inventory_booking_calendar was created on duty_roster_turn (duplicate of duty_roster_turn_calendar):
+  if exists (select 1 from pg_index where indexrelid = to_regclass('inventory_booking_calendar') and indrelid = to_regclass('duty_roster_turn')) then
+    DROP INDEX inventory_booking_calendar;
+  end if;
+
+  -- duplicates of trial_duty_self_allocation_locked_until_from and trial_duty_self_allocation_locked_from_until:
+  DROP INDEX IF EXISTS trial_duty_self_allocation_until_from;
+  DROP INDEX IF EXISTS trial_duty_self_allocation_from_until;
+
+  -- duplicates of the unique constraint indexes:
+  DROP INDEX IF EXISTS password_password_hash;
+  DROP INDEX IF EXISTS department_department_password_hash;
+
+  -- replaced by the visit_schedule_item mode indexes:
+  DROP INDEX IF EXISTS visit_schedule_item_start_stop;
+  DROP INDEX IF EXISTS visit_schedule_item_stop_start;
+  DROP INDEX IF EXISTS visit_schedule_item_trial_fk_start_stop;
+  DROP INDEX IF EXISTS visit_schedule_item_trial_fk_stop_start;
+
+  -- create missing indexes (including the new foreign key indexes):
+  CREATE INDEX IF NOT EXISTS permission_service_method ON permission (service_method);
+  CREATE INDEX IF NOT EXISTS profile_permission_permission_fk_profile_active ON profile_permission (permission_fk,profile,active);
+  CREATE INDEX IF NOT EXISTS user_permission_profile_user_fk_active_profile ON user_permission_profile (user_fk,active,profile);
+  CREATE INDEX IF NOT EXISTS criterion_property_module_property ON criterion_property (module,property);
+  CREATE INDEX IF NOT EXISTS file_logical_path ON file (logical_path);
+  CREATE INDEX IF NOT EXISTS file_file_name ON file (file_name);
+  CREATE INDEX IF NOT EXISTS file_title ON file (title);
+  CREATE INDEX IF NOT EXISTS file_folder_preset_logical_path ON file_folder_preset (logical_path);
+  CREATE INDEX IF NOT EXISTS street_country_name_zip_code_street_name ON street (country_name,zip_code,street_name);
+  CREATE INDEX IF NOT EXISTS street_country_name_city_name_street_name ON street (country_name,city_name,street_name);
+  CREATE INDEX IF NOT EXISTS street_country_name_province_zip_code_street_name ON street (country_name,province,zip_code,street_name);
+  CREATE INDEX IF NOT EXISTS street_country_name_province_city_name_street_name ON street (country_name,province,city_name,street_name);
+  CREATE INDEX IF NOT EXISTS zip_country_name_city_name ON zip (country_name,city_name);
+  CREATE INDEX IF NOT EXISTS zip_country_name_zip_code ON zip (country_name,zip_code);
+  CREATE INDEX IF NOT EXISTS zip_country_name_province_city_name ON zip (country_name,province,city_name);
+  CREATE INDEX IF NOT EXISTS zip_country_name_province_zip_code ON zip (country_name,province,zip_code);
+  CREATE INDEX IF NOT EXISTS bank_identification_bank_code_number ON bank_identification (bank_code_number);
+  CREATE INDEX IF NOT EXISTS bank_identification_bank_name ON bank_identification (bank_name);
+  CREATE INDEX IF NOT EXISTS proband_list_entry_tag_value_list_entry_fk_tag_fk ON proband_list_entry_tag_value (list_entry_fk,tag_fk);
+  CREATE INDEX IF NOT EXISTS inquiry_value_proband_fk_inquiry_fk ON inquiry_value (proband_fk,inquiry_fk);
+  CREATE INDEX IF NOT EXISTS ecrf_status_entry_list_entry_fk_ecrf_fk_visit_fk ON ecrf_status_entry (list_entry_fk,ecrf_fk,visit_fk);
+  CREATE INDEX IF NOT EXISTS ecrf_field_value_list_entry_fk_visit_fk_ecrf_field_fk_index_version ON ecrf_field_value (list_entry_fk,visit_fk,ecrf_field_fk,index,version);
+  CREATE INDEX IF NOT EXISTS ecrf_field_status_entry_list_entry_fk_ecrf_field_fk_index_status_fk_queue ON ecrf_field_status_entry (list_entry_fk,visit_fk,ecrf_field_fk,index,status_fk,queue);
+  CREATE INDEX IF NOT EXISTS ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version ON ecrf_field_value (ecrf_field_fk,list_entry_fk,index,version);
+  CREATE INDEX IF NOT EXISTS ecrf_field_status_entry_ecrf_field_fk_list_entry_fk_index_queue_status_fk ON ecrf_field_status_entry (ecrf_field_fk,list_entry_fk,index,queue,status_fk);
+  CREATE INDEX IF NOT EXISTS inquiry_category ON inquiry (category);
+  CREATE INDEX IF NOT EXISTS inquiry_trial_fk_category ON inquiry (trial_fk,category);
+  CREATE INDEX IF NOT EXISTS input_field_category ON input_field (category);
+  CREATE INDEX IF NOT EXISTS criteria_category ON criteria (category);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_calendar ON duty_roster_turn (calendar);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_title ON duty_roster_turn (title);
+  CREATE INDEX IF NOT EXISTS ecrf_field_ecrf_fk_section ON ecrf_field (ecrf_fk,section);
+  CREATE INDEX IF NOT EXISTS ecrf_field_trial_fk_ecrf_fk_section ON ecrf_field (trial_fk,ecrf_fk,section);
+  CREATE INDEX IF NOT EXISTS inventory_booking_calendar ON inventory_booking (calendar);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_start_stop ON duty_roster_turn (start,stop);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_stop_start ON duty_roster_turn (stop,start);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_staff_fk_start_stop ON duty_roster_turn (staff_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_staff_fk_stop_start ON duty_roster_turn (staff_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_trial_fk_start_stop ON duty_roster_turn (trial_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS duty_roster_turn_trial_fk_stop_start ON duty_roster_turn (trial_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS trial_duty_self_allocation_locked_until_from ON trial (duty_self_allocation_locked,duty_self_allocation_locked_until,duty_self_allocation_locked_from);
+  CREATE INDEX IF NOT EXISTS trial_duty_self_allocation_locked_from_until ON trial (duty_self_allocation_locked,duty_self_allocation_locked_from,duty_self_allocation_locked_until);
+  CREATE INDEX IF NOT EXISTS inventory_booking_start_stop ON inventory_booking (start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_booking_stop_start ON inventory_booking (stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_booking_inventory_fk_start_stop ON inventory_booking (inventory_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_booking_inventory_fk_stop_start ON inventory_booking (inventory_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_booking_trial_fk_start_stop ON inventory_booking (trial_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_booking_trial_fk_stop_start ON inventory_booking (trial_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_booking_course_fk_start_stop ON inventory_booking (course_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_booking_course_fk_stop_start ON inventory_booking (course_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_booking_proband_fk_start_stop ON inventory_booking (proband_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_booking_proband_fk_stop_start ON inventory_booking (proband_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_status_entry_inventory_fk_start_stop ON inventory_status_entry (inventory_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_status_entry_inventory_fk_stop_start ON inventory_status_entry (inventory_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_status_entry_start_stop ON inventory_status_entry (start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_status_entry_stop_start ON inventory_status_entry (stop,start);
+  CREATE INDEX IF NOT EXISTS inventory_status_type_fk_entry_start_stop ON inventory_status_entry (type_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS inventory_status_type_fk_entry_stop_start ON inventory_status_entry (type_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS staff_status_entry_staff_fk_start_stop ON staff_status_entry (staff_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS staff_status_entry_staff_fk_stop_start ON staff_status_entry (staff_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS staff_status_entry_type_fk_start_stop ON staff_status_entry (type_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS staff_status_entry_type_fk_stop_start ON staff_status_entry (type_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS staff_status_entry_start_stop ON staff_status_entry (start,stop);
+  CREATE INDEX IF NOT EXISTS staff_status_entry_stop_start ON staff_status_entry (stop,start);
+  CREATE INDEX IF NOT EXISTS proband_status_entry_proband_fk_start_stop ON proband_status_entry (proband_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS proband_status_entry_proband_fk_stop_start ON proband_status_entry (proband_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS proband_status_entry_start_stop ON proband_status_entry (start,stop);
+  CREATE INDEX IF NOT EXISTS proband_status_entry_stop_start ON proband_status_entry (stop,start);
+  CREATE INDEX IF NOT EXISTS proband_status_type_fk_entry_start_stop ON proband_status_entry (type_fk,start,stop);
+  CREATE INDEX IF NOT EXISTS proband_status_type_fk_entry_stop_start ON proband_status_entry (type_fk,stop,start);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_mode_start_stop ON visit_schedule_item (mode,start,stop);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_mode_stop_start ON visit_schedule_item (mode,stop,start);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_trial_fk_mode_start_stop ON visit_schedule_item (trial_fk,mode,start,stop);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_trial_fk_mode_stop_start ON visit_schedule_item (trial_fk,mode,stop,start);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_mode_start_tag_fk_stop_tag_fk ON visit_schedule_item (mode,start_tag_fk,stop_tag_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_mode_stop_tag_fk_start_tag_fk ON visit_schedule_item (mode,stop_tag_fk,start_tag_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_trial_fk_mode_start_tag_fk_stop_tag_fk ON visit_schedule_item (trial_fk,mode,start_tag_fk,stop_tag_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_trial_fk_mode_stop_tag_fk_start_tag_fk ON visit_schedule_item (trial_fk,mode,stop_tag_fk,start_tag_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_visit_fk_group_fk ON visit_schedule_item (visit_fk,group_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_group_fk_visit_fk ON visit_schedule_item (group_fk,visit_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_trial_fk_visit_fk_group_fk ON visit_schedule_item (trial_fk,visit_fk,group_fk);
+  CREATE INDEX IF NOT EXISTS visit_schedule_item_trial_fk_group_fk_visit_fk ON visit_schedule_item (trial_fk,group_fk,visit_fk);
+  CREATE INDEX IF NOT EXISTS input_field_timestmap_value ON input_field_value (timestamp_value);
+  CREATE INDEX IF NOT EXISTS input_field_date_value ON input_field_value (date_value);
+  CREATE INDEX IF NOT EXISTS journal_entry_modified_timestamp ON journal_entry (modified_timestamp);
+  CREATE INDEX IF NOT EXISTS journal_entry_inventory_fk_system_message_code ON journal_entry (inventory_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_staff_fk_system_message_code ON journal_entry (staff_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_course_fk_system_message_code ON journal_entry (course_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_trial_fk_system_message_code ON journal_entry (trial_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_proband_fk_system_message_code ON journal_entry (proband_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_inputfield_fk_system_message_code ON journal_entry (input_field_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_user_fk_system_message_code ON journal_entry (user_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_massmail_fk_system_message_code ON journal_entry (mass_mail_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_criteria_fk_system_message_code ON journal_entry (criteria_fk,system_message_code);
+  CREATE INDEX IF NOT EXISTS journal_entry_category_fk ON journal_entry (category_fk);
+  CREATE INDEX IF NOT EXISTS notification_proband_fk ON notification (proband_fk);
+  CREATE INDEX IF NOT EXISTS notification_visit_schedule_item_fk_proband_fk ON notification (visit_schedule_item_fk,proband_fk);
+  CREATE INDEX IF NOT EXISTS notification_ecrf_status_entry_fk ON notification (ecrf_status_entry_fk);
+  CREATE INDEX IF NOT EXISTS notification_ecrf_field_status_entry_fk ON notification (ecrf_field_status_entry_fk);
+  CREATE INDEX IF NOT EXISTS notification_proband_status_entry_fk ON notification (proband_status_entry_fk);
+  CREATE INDEX IF NOT EXISTS notification_recipient_notification_fk ON notification_recipient (notification_fk);
+  CREATE INDEX IF NOT EXISTS notification_recipient_staff_fk ON notification_recipient (staff_fk);
+  CREATE INDEX IF NOT EXISTS proband_contact_particulars_date_of_birth_hash ON proband_contact_particulars (date_of_birth_hash);
+  CREATE INDEX IF NOT EXISTS proband_contact_particulars_alias_normalized ON proband_contact_particulars (alias_normalized);
+  CREATE INDEX IF NOT EXISTS person_contact_particulars_first_name_normalized ON person_contact_particulars (first_name_normalized);
+  CREATE INDEX IF NOT EXISTS person_contact_particulars_last_name_normalized ON person_contact_particulars (last_name_normalized);
+  CREATE INDEX IF NOT EXISTS organisation_contact_particulars_organisation_name_normalized ON organisation_contact_particulars (organisation_name_normalized);
+  CREATE INDEX IF NOT EXISTS data_table_column_user_fk_table_name_column_name ON data_table_column (user_fk,table_name,column_name);
+
+  perform set_database_version('010901012');
+
+end if;
+
+if get_database_version() < '010901013' then
+
   ALTER TABLE INPUT_FIELD ADD COLUMN PHOTO BOOLEAN;
 
   ALTER TABLE INPUT_FIELD_VALUE ADD COLUMN FILE_VALUE_FK BIGINT;
@@ -465,7 +629,7 @@ if get_database_version() < '010901012' then
     foreign key (INPUT_FIELDS_FK)
     references INPUT_FIELD;
 
-  perform set_database_version('010901012');
+  perform set_database_version('010901013');
 
 end if;
 

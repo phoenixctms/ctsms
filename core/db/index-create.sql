@@ -45,16 +45,19 @@ CREATE INDEX inquiry_value_proband_fk_inquiry_fk ON inquiry_value (proband_fk,in
 CREATE INDEX ecrf_status_entry_list_entry_fk_ecrf_fk_visit_fk ON ecrf_status_entry (list_entry_fk,ecrf_fk,visit_fk);
 CREATE INDEX ecrf_field_value_list_entry_fk_visit_fk_ecrf_field_fk_index_version ON ecrf_field_value (list_entry_fk,visit_fk,ecrf_field_fk,index,version);
 CREATE INDEX ecrf_field_status_entry_list_entry_fk_ecrf_field_fk_index_status_fk_queue ON ecrf_field_status_entry (list_entry_fk,visit_fk,ecrf_field_fk,index,status_fk,queue);
+CREATE INDEX ecrf_field_value_ecrf_field_fk_list_entry_fk_index_version ON ecrf_field_value (ecrf_field_fk,list_entry_fk,index,version);
+CREATE INDEX ecrf_field_status_entry_ecrf_field_fk_list_entry_fk_index_queue_status_fk ON ecrf_field_status_entry (ecrf_field_fk,list_entry_fk,index,queue,status_fk);
 
 -- categories:
 CREATE INDEX inquiry_category ON inquiry (category);
+CREATE INDEX inquiry_trial_fk_category ON inquiry (trial_fk,category);
 CREATE INDEX input_field_category ON input_field (category);
 CREATE INDEX criteria_category ON criteria (category);
 CREATE INDEX duty_roster_turn_calendar ON duty_roster_turn (calendar);
 CREATE INDEX duty_roster_turn_title ON duty_roster_turn (title);
 CREATE INDEX ecrf_field_ecrf_fk_section ON ecrf_field (ecrf_fk,section);
 CREATE INDEX ecrf_field_trial_fk_ecrf_fk_section ON ecrf_field (trial_fk,ecrf_fk,section);
-CREATE INDEX inventory_booking_calendar ON duty_roster_turn (calendar);
+CREATE INDEX inventory_booking_calendar ON inventory_booking (calendar);
 
 -- duty roster:
 CREATE INDEX duty_roster_turn_start_stop ON duty_roster_turn (start,stop);
@@ -65,8 +68,6 @@ CREATE INDEX duty_roster_turn_trial_fk_start_stop ON duty_roster_turn (trial_fk,
 CREATE INDEX duty_roster_turn_trial_fk_stop_start ON duty_roster_turn (trial_fk,stop,start);
 create index trial_duty_self_allocation_locked_until_from on trial (duty_self_allocation_locked,duty_self_allocation_locked_until,duty_self_allocation_locked_from);
 create index trial_duty_self_allocation_locked_from_until on trial (duty_self_allocation_locked,duty_self_allocation_locked_from,duty_self_allocation_locked_until);
-create index trial_duty_self_allocation_until_from on trial (duty_self_allocation_locked,duty_self_allocation_locked_until,duty_self_allocation_locked_from);
-create index trial_duty_self_allocation_from_until on trial (duty_self_allocation_locked,duty_self_allocation_locked_from,duty_self_allocation_locked_until);
 
 -- inventory bookings:
 CREATE INDEX inventory_booking_start_stop ON inventory_booking (start,stop);
@@ -133,6 +134,16 @@ create index journal_entry_inputfield_fk_system_message_code ON JOURNAL_ENTRY (I
 create index journal_entry_user_fk_system_message_code ON JOURNAL_ENTRY (USER_FK,SYSTEM_MESSAGE_CODE);
 create index journal_entry_massmail_fk_system_message_code ON JOURNAL_ENTRY (MASS_MAIL_FK,SYSTEM_MESSAGE_CODE);
 create index journal_entry_criteria_fk_system_message_code ON JOURNAL_ENTRY (CRITERIA_FK,SYSTEM_MESSAGE_CODE);
+CREATE INDEX journal_entry_category_fk ON journal_entry (category_fk);
+
+-- notifications:
+CREATE INDEX notification_proband_fk ON notification (proband_fk);
+CREATE INDEX notification_visit_schedule_item_fk_proband_fk ON notification (visit_schedule_item_fk,proband_fk);
+CREATE INDEX notification_ecrf_status_entry_fk ON notification (ecrf_status_entry_fk);
+CREATE INDEX notification_ecrf_field_status_entry_fk ON notification (ecrf_field_status_entry_fk);
+CREATE INDEX notification_proband_status_entry_fk ON notification (proband_status_entry_fk);
+CREATE INDEX notification_recipient_notification_fk ON notification_recipient (notification_fk);
+CREATE INDEX notification_recipient_staff_fk ON notification_recipient (staff_fk);
 
 -- string hash columns: not indexed when using substring search hashes (variable length; LIKE '%hash%' is not btree-friendly).
 -- Uncomment when hash_for_search_word_substring_min_length=null (full-string hash only, fixed 16-byte blocks).
@@ -180,8 +191,6 @@ create index journal_entry_criteria_fk_system_message_code ON JOURNAL_ENTRY (CRI
 --CREATE INDEX bank_account_account_holder_name_hash ON bank_account (account_holder_name_hash);
 
 CREATE INDEX proband_contact_particulars_date_of_birth_hash ON proband_contact_particulars (date_of_birth_hash);
-CREATE INDEX password_password_hash ON password (password_hash);
-CREATE INDEX department_department_password_hash ON department (department_password_hash);
 
 CREATE INDEX proband_contact_particulars_alias_normalized ON proband_contact_particulars (alias_normalized);
 CREATE INDEX person_contact_particulars_first_name_normalized ON person_contact_particulars (first_name_normalized);

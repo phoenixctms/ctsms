@@ -147,6 +147,24 @@ final class CriterionText {
 			sortByLength(tieNames);
 			sortByLength(restrictionNames);
 		}
+
+		private Catalog(HashMap<Long, CriterionTie> ties, List<NamedId> tieNames) {
+			this.parser = null;
+			this.properties = null;
+			this.ties = ties;
+			this.restrictions = null;
+			this.tieIds = null;
+			this.propertyNames = null;
+			this.tieNames = tieNames;
+			this.restrictionNames = null;
+			this.propertyKeys = null;
+			this.tieKeys = null;
+			this.restrictionKeys = null;
+			this.userDateFormat = null;
+			this.userDecimalSeparator = null;
+			this.maxCriterions = null;
+			this.module = null;
+		}
 	}
 
 	private CriterionText() {
@@ -592,21 +610,53 @@ final class CriterionText {
 		return criterion;
 	}
 
-	private static int scanValueEnd(String text, int start) {
+	private static int scanValueEnd(String text, int start, Catalog catalog) {
 		int end = start;
 		int depth = 0;
 		while (end < text.length() && text.charAt(end) != '\n' && text.charAt(end) != '\r') {
+			if (depth == 0 && startsNonParenthesisTie(text, end, catalog)) {
+				break;
+			}
 			char c = text.charAt(end);
 			if (c == '(') {
 				depth++;
 			} else if (c == ')' && depth > 0) {
 				depth--;
-			} else if (c == ')' && end > start && Character.isWhitespace(text.charAt(end - 1)) && closesValueAtEndOfLine(text, end)) {
+			} else if (c == ')' && end > start && closesValueAtEndOfLine(text, end)) {
 				break;
 			}
 			end++;
 		}
 		return end;
+	}
+
+	static int scanValueEnd(String text, int start, String[] tieNames, CriterionTie[] ties) {
+		HashMap<Long, CriterionTie> tieMap = new HashMap<Long, CriterionTie>();
+		ArrayList<NamedId> names = new ArrayList<NamedId>();
+		if (tieNames != null) {
+			for (int i = 0; i < tieNames.length; i++) {
+				Long id = Long.valueOf(i + 1);
+				tieMap.put(id, ties[i]);
+				names.add(new NamedId(tieNames[i], id));
+			}
+		}
+		sortByLength(names);
+		return scanValueEnd(text, start, new Catalog(tieMap, names));
+	}
+
+	private static boolean startsNonParenthesisTie(String text, int offset, Catalog catalog) {
+		if (catalog == null || catalog.ties == null) {
+			return false;
+		}
+		if (offset > 0 && !isBoundary(text, offset - 1)) {
+			return false;
+		}
+		NamedId tie = matchLongest(text, offset, catalog.tieNames);
+		if (tie == null) {
+			return false;
+		}
+		CriterionTie tieEnum = catalog.ties.get(tie.id);
+		return tieEnum != null && !CriterionTie.LEFT_PARENTHESIS.equals(tieEnum) && !CriterionTie.RIGHT_PARENTHESIS.equals(tieEnum);
 	}
 
 	private static boolean closesValueAtEndOfLine(String text, int parenthesis) {
@@ -643,7 +693,7 @@ final class CriterionText {
 			value = text.substring(i).trim();
 			next = text.length();
 		} else {
-			int end = scanValueEnd(text, i);
+			int end = scanValueEnd(text, i, catalog);
 			value = text.substring(i, end).trim();
 			next = end;
 			if (next < text.length() && (text.charAt(next) == '\n' || text.charAt(next) == '\r')) {
