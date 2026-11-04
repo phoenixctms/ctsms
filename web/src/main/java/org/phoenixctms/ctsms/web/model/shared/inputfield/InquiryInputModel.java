@@ -77,7 +77,12 @@ public class InquiryInputModel extends InputModel {
 			try {
 				InquiryValuesOutVO values = WebUtil.getServiceLocator().getTrialService().checkInquiryValues(WebUtil.getAuthentication(), inquiryValues);
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
+				// the check result carries no file data, so keep the selected file:
+				Long fileValueId = inquiryValue.getFileValueId();
+				FileContentInVO fileValue = inquiryValue.getFileValue();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
+				inquiryValue.setFileValueId(fileValueId);
+				inquiryValue.setFileValue(fileValue);
 				setModifiedAnnotation(out);
 				return values.getJsValues();
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {

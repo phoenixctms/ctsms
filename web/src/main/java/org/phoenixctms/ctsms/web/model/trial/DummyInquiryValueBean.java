@@ -2,7 +2,9 @@ package org.phoenixctms.ctsms.web.model.trial;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -60,7 +62,23 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 	public String checkInputAction() {
 		try {
 			portionInquiryValues(WebUtil.getServiceLocator().getTrialService().checkInquiryValues(WebUtil.getAuthentication(), new HashSet<InquiryValueInVO>(inquiryValuesIn)));
+			// the check results carry no file data, so keep the selected files:
+			HashMap<Long, InquiryValueInVO> checkedValuesIn = new HashMap<Long, InquiryValueInVO>(inquiryValuesIn.size());
+			Iterator<InquiryValueInVO> it = inquiryValuesIn.iterator();
+			while (it.hasNext()) {
+				InquiryValueInVO in = it.next();
+				checkedValuesIn.put(in.getInquiryId(), in);
+			}
 			initIn(false, false);
+			it = inquiryValuesIn.iterator();
+			while (it.hasNext()) {
+				InquiryValueInVO in = it.next();
+				InquiryValueInVO checkedIn = checkedValuesIn.get(in.getInquiryId());
+				if (checkedIn != null) {
+					in.setFileValueId(checkedIn.getFileValueId());
+					in.setFileValue(checkedIn.getFileValue());
+				}
+			}
 			initSets();
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.DUMMY_INQUIRY_VALUE_INPUT_VALID);
 			return VALID_OUTCOME;
