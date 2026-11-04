@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -41,6 +42,7 @@ public final class InputFieldValueFileParts {
 	private static final String UNKNOWN_PART = "unknown multipart part ''{0}'' (expected ''{1}'' or ''data_<n>'')";
 	private static final String DATA_PART_MULTIPLE = "multipart part ''{0}'' must occur only once";
 	private static final String DATA_PART_INDEX_OUT_OF_RANGE = "multipart part ''{0}'' does not refer to an element of the json array (size {1})";
+	private static final String DATA_PART_INDEX_DUPLICATE = "multipart part ''{0}'' refers to the same json array element as part ''{1}''";
 	private static final String JSON_FILE_VALUE_NOT_ALLOWED = "json array element {0} must not contain fileValue in multipart mode (use part ''data_{0}'')";
 	private static final String DATA_PART_EMPTY = "multipart part ''{0}'' is empty";
 
@@ -60,6 +62,7 @@ public final class InputFieldValueFileParts {
 				throw new IllegalArgumentException(MessageFormat.format(JSON_FILE_VALUE_NOT_ALLOWED, Integer.toString(i)));
 			}
 		}
+		HashMap<Integer, String> dataPartNames = new HashMap<Integer, String>();
 		Iterator<Entry<String, List<FormDataBodyPart>>> it = multiPart.getFields().entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<String, List<FormDataBodyPart>> field = it.next();
@@ -83,6 +86,10 @@ public final class InputFieldValueFileParts {
 			if (index < 0 || index >= values.size() || values.get(index) == null) {
 				throw new IllegalArgumentException(MessageFormat.format(DATA_PART_INDEX_OUT_OF_RANGE, name, Integer.toString(values.size())));
 			}
+			if (dataPartNames.containsKey(index)) {
+				throw new IllegalArgumentException(MessageFormat.format(DATA_PART_INDEX_DUPLICATE, name, dataPartNames.get(index)));
+			}
+			dataPartNames.put(index, name);
 			FormDataBodyPart data = field.getValue().get(0);
 			byte[] datas = CommonUtil.inputStreamToByteArray(data.getValueAs(InputStream.class));
 			if (datas == null || datas.length == 0) {
