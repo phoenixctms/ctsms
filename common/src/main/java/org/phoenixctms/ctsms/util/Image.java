@@ -24,6 +24,9 @@ public class Image {
 
 	public Image(byte[] imageData, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
 		this.image = ImageIO.read(new ByteArrayInputStream(imageData));
+		if (this.image == null) {
+			throw new IllegalArgumentException("cannot decode image data");
+		}
 		this.bgColor = CommonUtil.convertColor(bgColor == null ? DEFAULT_BG_COLOR : bgColor);
 		drawn = false;
 	}
