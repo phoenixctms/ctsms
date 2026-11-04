@@ -172,6 +172,7 @@ public final class CommonUtil {
 	public final static String NO_SELECTION_VALUE = "";
 	public final static String LOGICAL_PATH_SEPARATOR = "/"; // should not interfere with regexp replace strings
 	public final static String DEFAULT_ELLIPSIS = "...";
+	public final static String INPUT_FIELD_PHOTO_MIME_TYPE = "image/jpeg";
 	private final static String PROPERTIES_STRING_LIST_DEFAULT_SEPARATOR = ",";
 	private final static Pattern PROPERTIES_STRING_LIST_REGEXP = Pattern.compile(Pattern.quote(PROPERTIES_STRING_LIST_DEFAULT_SEPARATOR));
 	private final static String PROPERTIES_NULL_LITERAL = "null";

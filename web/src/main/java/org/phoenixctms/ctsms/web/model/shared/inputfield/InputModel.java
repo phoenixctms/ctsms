@@ -51,7 +51,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	private final static String INPUT_FIELD_CREATED_COLOR_STYLECLASS_PREFIX = "ctsms-inputfield-created-color-";
 	private final static long MAX_INPUT_FIELD_CREATED_COLORS = 3l; // 16l;
-	private final static String CAPTURE_MIME_TYPE = "image/jpeg";
+	private final static String CAPTURE_MIME_TYPE = CommonUtil.INPUT_FIELD_PHOTO_MIME_TYPE;
 	private final static String CAPTURE_FILE_NAME_EXTENSION = "jpg";
 	private int rowIndex;
 	private String errorMessage;
