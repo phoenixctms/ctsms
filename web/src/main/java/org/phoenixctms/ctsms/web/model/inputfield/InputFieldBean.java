@@ -399,6 +399,14 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 
 	public void setAllowedMimeTypes(List<IDVO> allowedMimeTypes) {
 		LinkedHashSet<Long> ids = new LinkedHashSet<Long>(); //force unique items to prevent confusion when unselecting a duplicate item
+		// keep stored ids that could not be resolved (and therefore were not shown), instead of dropping them on submit:
+		Iterator<Long> storedIdsIt = in.getAllowedMimeTypeIds().iterator();
+		while (storedIdsIt.hasNext()) {
+			Long id = storedIdsIt.next();
+			if (getFileMimeType(id) == null) {
+				ids.add(id);
+			}
+		}
 		if (allowedMimeTypes != null) {
 			Iterator<IDVO> it = allowedMimeTypes.iterator();
 			while (it.hasNext()) {
@@ -454,7 +462,8 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	}
 
 	private ArrayList<MimeTypeVO> getFileMimeTypes() {
-		if (fileMimeTypes == null) {
+		if (fileMimeTypes == null || fileMimeTypes.size() == 0) {
+			// an empty list means the lookup failed, so try again next time:
 			fileMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
 		}
 		return fileMimeTypes;
