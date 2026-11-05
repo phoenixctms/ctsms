@@ -56,6 +56,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private final static String CAPTURE_MIME_TYPE = CommonUtil.INPUT_FIELD_PHOTO_MIME_TYPE;
 	private final static String CAPTURE_FILE_NAME_EXTENSION = "jpg";
 	private final static String IMAGE_MIME_TYPE_PREFIX = "image/";
+	private final static String FILE_ICON_STYLECLASS = "ctsms-field-icon ctsms-mimetype-unknown";
 	private final static int FILE_IMAGE_PREVIEW_WIDTH = 320;
 	private final static int FILE_IMAGE_PREVIEW_HEIGHT = 240;
 	private final static long FILE_IMAGE_PREVIEW_MAX_PIXELS = 4096L * 4096L;
@@ -69,6 +70,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private String allowTypes;
 	private Integer uploadSizeLimit;
 	private boolean uploadSizeLimitLoaded;
+	private ArrayList<MimeTypeVO> fileValueMimeTypes;
 	private Object fileImagePreviewKey;
 	private String fileImagePreview;
 
@@ -266,6 +268,40 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			}
 		}
 		return fileImagePreview;
+	}
+
+	// the file type icon of the file value, like the file link on the job page:
+	public String getFileIconStyleClass() {
+		String nodeStyleClass = null;
+		FileContentInVO fileValue = getFileValue();
+		if (fileValue != null) {
+			if (fileValueMimeTypes == null) {
+				fileValueMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
+			}
+			Iterator<MimeTypeVO> it = fileValueMimeTypes.iterator();
+			while (it.hasNext()) {
+				MimeTypeVO mimeType = it.next();
+				if (mimeType.getMimeType().equals(fileValue.getMimeType())) {
+					nodeStyleClass = mimeType.getNodeStyleClass();
+					break;
+				}
+			}
+		} else if (getFileValueId() != null) {
+			FileOutVO fileValueVO = getFileValueVO();
+			if (fileValueVO != null && fileValueVO.getContentType() != null) {
+				nodeStyleClass = fileValueVO.getContentType().getNodeStyleClass();
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(FILE_ICON_STYLECLASS);
+		if (!CommonUtil.isEmptyString(nodeStyleClass)) {
+			sb.append(' ');
+			sb.append(nodeStyleClass);
+		}
+		return sb.toString();
 	}
 
 	public boolean isHasFile() {

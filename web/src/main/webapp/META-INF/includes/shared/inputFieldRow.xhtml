@@ -435,7 +435,7 @@
 							value="#{fieldInput.title}" />
 						<p:commandLink immediate="true" id="filedownload#{index}"
 							ajax="false" disabled="#{!fieldInput.hasFile}"
-							styleClass="ctsms-input-file-link"
+							styleClass="ctsms-input-file-link #{fieldInput.fileIconStyleClass}"
 							title="#{labels.file_download_tooltip} #{fieldInput.fileDownloadLinkLabel}">
 							<h:outputText value="#{fieldInput.fileDownloadLinkLabel}" />
 							<p:fileDownload value="#{fieldInput.fileStreamedContent}" />
