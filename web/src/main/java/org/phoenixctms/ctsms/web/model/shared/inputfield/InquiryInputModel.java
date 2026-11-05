@@ -77,10 +77,13 @@ public class InquiryInputModel extends InputModel {
 			try {
 				InquiryValuesOutVO values = WebUtil.getServiceLocator().getTrialService().checkInquiryValues(WebUtil.getAuthentication(), inquiryValues);
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
-				// the check result carries no file data, so keep the selected file:
+				// the check result carries no proband and no file data, so keep the proband the value belongs to (checked
+				// along with the value id next time) and the selected file:
+				Long probandId = inquiryValue.getProbandId();
 				Long fileValueId = inquiryValue.getFileValueId();
 				FileContentInVO fileValue = inquiryValue.getFileValue();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
+				inquiryValue.setProbandId(probandId);
 				inquiryValue.setFileValueId(fileValueId);
 				inquiryValue.setFileValue(fileValue);
 				setModifiedAnnotation(out);
