@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Image;
 import org.phoenixctms.ctsms.util.JavaScriptCompressor;
 import org.phoenixctms.ctsms.vo.FileContentInVO;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
@@ -53,6 +55,13 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private final static long MAX_INPUT_FIELD_CREATED_COLORS = 3l; // 16l;
 	private final static String CAPTURE_MIME_TYPE = CommonUtil.INPUT_FIELD_PHOTO_MIME_TYPE;
 	private final static String CAPTURE_FILE_NAME_EXTENSION = "jpg";
+	private final static String IMAGE_MIME_TYPE_PREFIX = "image/";
+	private final static int FILE_IMAGE_PREVIEW_WIDTH = 320;
+	private final static int FILE_IMAGE_PREVIEW_HEIGHT = 240;
+	private final static long FILE_IMAGE_PREVIEW_MAX_PIXELS = 4096L * 4096L;
+	private final static Color FILE_IMAGE_PREVIEW_BG_COLOR = Color.WHITE;
+	private final static String FILE_IMAGE_PREVIEW_FORMAT = "jpg";
+	private final static String FILE_IMAGE_PREVIEW_DATA_URL_PREFIX = "data:image/jpeg;base64,";
 	private int rowIndex;
 	private String errorMessage;
 	protected InputFieldOutVO inputField;
@@ -60,6 +69,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private String allowTypes;
 	private Integer uploadSizeLimit;
 	private boolean uploadSizeLimitLoaded;
+	private Object fileImagePreviewKey;
+	private String fileImagePreview;
 
 	protected InputModel() {
 		errorMessage = null;
@@ -212,6 +223,49 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			}
 		}
 		return fileValueVO;
+	}
+
+	// a small jpeg data url of an image file value. decoded with bounds, and converted so that no svg or other markup reaches the page:
+	public String getFileImagePreview() {
+		FileContentInVO fileValue = getFileValue();
+		Object key = fileValue != null ? fileValue : getFileValueId();
+		if (key == null) {
+			fileImagePreviewKey = null;
+			fileImagePreview = null;
+		} else if (key != fileImagePreviewKey && !key.equals(fileImagePreviewKey)) {
+			fileImagePreviewKey = key;
+			fileImagePreview = null;
+			byte[] data = null;
+			try {
+				if (fileValue != null) {
+					if (fileValue.getMimeType() != null && fileValue.getMimeType().startsWith(IMAGE_MIME_TYPE_PREFIX)) {
+						data = fileValue.getDatas();
+					}
+				} else {
+					FileOutVO fileValueVO = getFileValueVO();
+					if (fileValueVO != null && fileValueVO.getContentType() != null && fileValueVO.getContentType().getImage()) {
+						FileContentOutVO content = loadFileValueContent();
+						data = content != null ? content.getDatas() : null;
+					}
+				}
+				if (data != null && data.length > 0) {
+					Image image = new Image(data, FILE_IMAGE_PREVIEW_WIDTH, FILE_IMAGE_PREVIEW_HEIGHT, FILE_IMAGE_PREVIEW_MAX_PIXELS, FILE_IMAGE_PREVIEW_BG_COLOR);
+					int width = image.getImage().getWidth();
+					int height = image.getImage().getHeight();
+					float factor = Math.min(1.0f, Math.min((float) FILE_IMAGE_PREVIEW_WIDTH / width, (float) FILE_IMAGE_PREVIEW_HEIGHT / height));
+					if (factor < 1.0f) {
+						image.scale(Math.max(1, Math.round(width * factor)), Math.max(1, Math.round(height * factor)));
+					}
+					fileImagePreview = new StringBuilder(FILE_IMAGE_PREVIEW_DATA_URL_PREFIX)
+							.append(Base64.getEncoder().encodeToString(image.convert(FILE_IMAGE_PREVIEW_FORMAT))).toString();
+				}
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (Exception e) {
+				// no preview for images that cannot be decoded
+			}
+		}
+		return fileImagePreview;
 	}
 
 	public boolean isHasFile() {

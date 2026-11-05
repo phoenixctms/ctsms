@@ -445,6 +445,10 @@
 							rendered="#{enabled and !fieldInput.disabled}"
 							disabled="#{!fieldInput.hasFile}" update="file#{index}" />
 					</h:panelGroup>
+					<h:panelGroup layout="block" rendered="#{not empty fieldInput.fileImagePreview}">
+						<img src="#{fieldInput.fileImagePreview}" alt="#{fieldInput.fileDownloadLinkLabel}"
+							class="ctsms-input-file-image-preview" />
+					</h:panelGroup>
 					<p:fileUpload id="fileupload#{index}"
 						rendered="#{enabled and !fieldInput.disabled}"
 						fileUploadListener="#{fieldInput.handleFileUpload}"
