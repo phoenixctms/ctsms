@@ -249,7 +249,6 @@ public final class CommonUtil {
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.FileModule> ENCRYPTED_FILE_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.FileModule>();
 	static {
 		ENCRYPTED_FILE_MODULE.add(org.phoenixctms.ctsms.enumeration.FileModule.PROBAND_DOCUMENT);
-		ENCRYPTED_FILE_MODULE.add(org.phoenixctms.ctsms.enumeration.FileModule.INPUT_FIELD_VALUE_FILE);
 		// ENCRYPTED_FILE_MODULE.add(org.phoenixctms.ctsms.enumeration.FileModule.TRIAL_DOCUMENT); //enable encryption by adding module here
 	}
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.JournalModule> ENCRYPTED_JOURNAL_MODULE = new HashSet<org.phoenixctms.ctsms.enumeration.JournalModule>();
