@@ -301,6 +301,68 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<!-- hibernate only honours <property lazy="true"> for instrumented entity classes (see LazyPropertyInstrumenter).
+					the instrumenter needs a javassist that rebuilds stack maps first on its classpath -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>lazy-property-instrumenter-javassist</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.javassist</groupId>
+									<artifactId>javassist</artifactId>
+									<version>3.28.0-GA</version>
+									<destFileName>javassist.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/lazy-property-instrumenter</outputDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>lazy-property-instrumenter-classpath</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>build-classpath</goal>
+						</goals>
+						<configuration>
+							<includeScope>runtime</includeScope>
+							<outputProperty>lazy.property.instrumenter.classpath</outputProperty>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>lazy-property-instrumenter</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>${java.home}/bin/java</executable>
+							<arguments>
+								<argument>-cp</argument>
+								<argument>${project.build.directory}/lazy-property-instrumenter/javassist.jar${path.separator}${project.build.outputDirectory}${path.separator}${lazy.property.instrumenter.classpath}</argument>
+								<argument>org.phoenixctms.ctsms.executable.LazyPropertyInstrumenter</argument>
+								<argument>${project.build.outputDirectory}</argument>
+								<argument>org.phoenixctms.ctsms.domain</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.andromda.maven.plugins</groupId>
 				<artifactId>andromdapp-maven-plugin</artifactId>
 				<executions>
