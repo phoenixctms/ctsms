@@ -709,8 +709,17 @@ final class CriterionText {
 		CriterionInVO criterion = blankCriterion();
 		criterion.setPropertyId(property.id);
 		criterion.setRestrictionId(restriction.id);
-		if (hasValue(propertyEntity, restrictionEnum) && !CommonUtil.isEmptyString(value)) {
-			setStringValue(criterion, propertyEntity, value, catalog);
+		if (hasValue(propertyEntity, restrictionEnum)) {
+			if (!CommonUtil.isEmptyString(value)) {
+				setStringValue(criterion, propertyEntity, value, catalog);
+			}
+		} else if (!CommonUtil.isEmptyString(value) && catalog.tieKeys != null) {
+			// a restriction without a value, such as IS_NULL, ignores the rest of its line. A tie key such as AND is no tie in an expression,
+			// so the criterion after it would be lost without a word
+			NamedId tieKey = matchLongest(value, 0, catalog.tieKeys);
+			if (tieKey != null) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.CRITERION_TEXT_UNKNOWN_TIE, tieKey.name);
+			}
 		}
 		return new TermResult(criterion, next);
 	}
