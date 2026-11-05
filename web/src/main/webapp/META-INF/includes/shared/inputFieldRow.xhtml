@@ -473,12 +473,14 @@
 							$(function() {
 								moveIntoFileUploadButtonBar('.#{fieldInput.widgetVar}_fileupload', '.#{fieldInput.widgetVar}_filebuttons');
 								if (#{fieldInput.photo}) {
+									PrimeFaces.widget.PhotoCam.embedInFileUpload('.#{fieldInput.widgetVar}_photocam', '.#{fieldInput.widgetVar}_fileupload');
 									PrimeFaces.widget.PhotoCam.bindCaptureButton('#{fieldInput.widgetVar}_photocam', '.#{fieldInput.widgetVar}_capture');
 								}
 							});
 						</script>
 					</h:panelGroup>
 					<ctsms:photoCam widgetVar="#{fieldInput.widgetVar}_photocam"
+						styleClass="#{fieldInput.widgetVar}_photocam"
 						rendered="#{enabled and !fieldInput.disabled and fieldInput.photo}"
 						width="1920" height="1080" displayWidth="640" autoStart="false"
 						listener="#{fieldInput.onCapture}" update="file#{index}" />

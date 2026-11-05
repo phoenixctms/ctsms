@@ -83,6 +83,17 @@ td .ui-selectonemenu {
 	min-height: 48px;
 }
 
+/* camera live view shown in the content area of an upload control (see PhotoCam.embedInFileUpload) */
+.ctsms-upload-control .fileupload-content .ctsms-photocam {
+	width: 640px;
+	max-width: 100%;
+	margin: 0.2em auto;
+}
+
+.ctsms-upload-control-camera .fileupload-content {
+	background-image: none !important;
+}
+
 .ctsms-upload-control-encryption .fileupload-content {
 	border-top-width: 0;
 	height: 100%;

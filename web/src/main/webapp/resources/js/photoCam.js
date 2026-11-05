@@ -8,6 +8,7 @@
 	var START_RETRIES = 3;
 	var START_RETRY_DELAY = 1000;
 	var JPEG_QUALITY = 0.92;
+	var FILE_UPLOAD_CAMERA_OPEN_CLASS = 'ctsms-upload-control-camera';
 	var activeStreams = {};
 
 	function stopStream(stream) {
@@ -108,7 +109,7 @@
 				if (this.cfg.autoStart === false) {
 					// keep the live view open if it was open before being re-rendered (e.g. after a capture):
 					if (stream && stream.active) {
-						this.jq.show();
+						this.setOpen(true);
 						this.attach(stream, null);
 					}
 				} else if (stream && stream.active) {
@@ -120,11 +121,21 @@
 		},
 
 		isOpen : function() {
-			return this.jq.is(':visible');
+			return this.jq.css('display') !== 'none';
+		},
+
+		// shows or hides the live view and triggers 'photocamopen' with true or false:
+		setOpen : function(open) {
+			if (open) {
+				this.jq.show();
+			} else {
+				this.jq.hide();
+			}
+			this.jq.trigger('photocamopen', [ open ]);
 		},
 
 		open : function() {
-			this.jq.show();
+			this.setOpen(true);
 			if (this.supported && !this.stream && !this.pending) {
 				this.start(loadDeviceId());
 			}
@@ -132,7 +143,7 @@
 
 		close : function() {
 			this.stop();
-			this.jq.hide();
+			this.setOpen(false);
 		},
 
 		toggle : function() {
@@ -349,6 +360,18 @@
 			if (cam && cam.jq && cam.jq[0] === event.target) {
 				setButtonEnabled(selector, live);
 			}
+		});
+	};
+
+	// places the live view of a camera (autoStart false) in the content area of a p:fileUpload, and marks the upload control
+	// while the camera is open. call it whenever both are rendered:
+	PrimeFaces.widget.PhotoCam.embedInFileUpload = function(camSelector, fileUploadSelector) {
+		var cam = $(camSelector);
+		cam.appendTo($(fileUploadSelector).find('.fileupload-content'));
+		$(fileUploadSelector).toggleClass(FILE_UPLOAD_CAMERA_OPEN_CLASS, cam.length > 0 && cam.css('display') !== 'none');
+		var eventNamespace = '.photocamupload_' + camSelector.replace(/[^A-Za-z0-9_]/g, '_');
+		$(document).off('photocamopen' + eventNamespace).on('photocamopen' + eventNamespace, camSelector, function(event, open) {
+			$(fileUploadSelector).toggleClass(FILE_UPLOAD_CAMERA_OPEN_CLASS, open);
 		});
 	};
 
