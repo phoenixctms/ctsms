@@ -46,6 +46,10 @@
 		}
 	}
 
+	function setButtonEnabled(selector, enabled) {
+		$(selector).prop('disabled', !enabled).toggleClass('ui-state-disabled', !enabled);
+	}
+
 	PrimeFaces.widget.PhotoCam = PrimeFaces.widget.BaseWidget.extend({
 
 		init : function(cfg) {
@@ -334,5 +338,18 @@
 		}
 
 	});
+
+	// enables the capture button(s) matching the selector only while the camera of the widget is live. call it whenever the
+	// button is rendered, since a re-rendered button starts disabled while the camera may already be live:
+	PrimeFaces.widget.PhotoCam.bindCaptureButton = function(widgetVar, selector) {
+		var cam = window[widgetVar];
+		setButtonEnabled(selector, !!(cam && cam.live));
+		$(document).off('photocamlive.' + widgetVar).on('photocamlive.' + widgetVar, function(event, live) {
+			var cam = window[widgetVar];
+			if (cam && cam.jq && cam.jq[0] === event.target) {
+				setButtonEnabled(selector, live);
+			}
+		});
+	};
 
 })(window, jQuery);

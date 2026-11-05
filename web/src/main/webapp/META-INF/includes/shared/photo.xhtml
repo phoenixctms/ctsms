@@ -101,7 +101,15 @@
 							type="button"
 							icon="ui-icon ui-icon-video"
 							value="#{labels.capture_photo_label}"
+							disabled="true"
+							styleClass="ctsms-photocam-capture"
 							onclick="photocam.capture()" />
+						<script type="text/javascript">
+							// enable capture only while the camera is live:
+							$(function() {
+								PrimeFaces.widget.PhotoCam.bindCaptureButton('photocam', '.ctsms-photocam-capture');
+							});
+						</script>
 						<p:commandButton
 							process="@this"
 							value="#{labels.clear_photo_label}"
