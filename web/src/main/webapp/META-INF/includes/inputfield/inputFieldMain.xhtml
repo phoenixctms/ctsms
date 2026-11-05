@@ -412,10 +412,15 @@
 							<p:message
 								for="photo"
 								rendered="#{inputFieldBean.config.file}" />
-							<h:outputLabel
-								for="allowedMimeTypes"
+							<h:panelGroup
+								layout="block"
 								rendered="#{inputFieldBean.config.file}"
-								value="#{inputfieldlabels.input_field_allowed_mime_types_label}" />
+								styleClass="ctsms-label-for-top"
+								style="height:150px;">
+								<h:outputLabel
+									for="allowedMimeTypes"
+									value="#{inputfieldlabels.input_field_allowed_mime_types_label}" />
+							</h:panelGroup>
 							<h:panelGroup rendered="#{inputFieldBean.config.file}">
 								<p:selectManyMenu
 									id="allowedMimeTypes"
