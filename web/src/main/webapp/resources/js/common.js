@@ -26,6 +26,11 @@ function moveIntoFileUploadButtonBar(fileUploadSelector, buttonsSelector) {
 	$(buttonsSelector).appendTo($(fileUploadSelector).find('.fileupload-buttonbar')).css('display', '');
 }
 
+// moves (initially hidden) elements to the top of the content area of a p:fileUpload. call it whenever both are rendered:
+function moveIntoFileUploadContent(fileUploadSelector, elementsSelector) {
+	$(elementsSelector).prependTo($(fileUploadSelector).find('.fileupload-content')).css('display', '');
+}
+
 function noop() {
 
 }

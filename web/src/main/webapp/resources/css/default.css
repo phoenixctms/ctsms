@@ -90,8 +90,13 @@ td .ui-selectonemenu {
 	margin: 0.2em auto;
 }
 
-.ctsms-upload-control-camera .fileupload-content {
+.ctsms-upload-control-camera .fileupload-content,
+.ctsms-upload-control-file .fileupload-content {
 	background-image: none !important;
+}
+
+.ctsms-upload-control .fileupload-content .ctsms-input-file-current {
+	padding: 0.2em 0;
 }
 
 .ctsms-upload-control-encryption .fileupload-content {
