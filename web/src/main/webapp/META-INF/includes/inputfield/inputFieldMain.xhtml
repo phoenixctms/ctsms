@@ -430,7 +430,7 @@
 									scrollHeight="#{autoCompleteScrollHeightMimeType}"
 									completeMethod="#{inputFieldBean.completeAllowedMimeType}" multiple="true"
 									var="mimeType" itemValue="#{mimeType}"
-									itemLabel="#{mimeType.vo.mimeType}" converter="ctsms.InputFieldValueFileMimeType">
+									itemLabel="#{inputFieldBean.getMimeTypeLabel(mimeType.vo)}" converter="ctsms.InputFieldValueFileMimeType">
 									<p:ajax process="@this" event="itemSelect"
 										listener="#{inputFieldBean.handleAllowedMimeTypeSelect}" />
 									<p:ajax process="@this" event="itemUnselect"
@@ -439,7 +439,7 @@
 										<h:outputText value="#{mimeType.vo.mimeType}" />
 									</p:column>
 									<p:column>
-										<h:outputText value="#{mimeType.vo.fileNameExtensions}" />
+										<h:outputText value="#{inputFieldBean.getMimeTypeFileNameExtensions(mimeType.vo)}" />
 									</p:column>
 								</p:autoComplete>
 								<p:tooltip

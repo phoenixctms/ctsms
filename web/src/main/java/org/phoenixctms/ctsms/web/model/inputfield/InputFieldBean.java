@@ -428,6 +428,21 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		return (List) result;
 	}
 
+	public String getMimeTypeFileNameExtensions(MimeTypeVO mimeType) {
+		if (mimeType != null && !CommonUtil.isEmptyString(mimeType.getFileNameExtensions())) {
+			return mimeType.getFileNameExtensions().replace("|", ", ");
+		}
+		return "";
+	}
+
+	public String getMimeTypeLabel(MimeTypeVO mimeType) {
+		if (mimeType != null) {
+			String fileNameExtensions = getMimeTypeFileNameExtensions(mimeType);
+			return fileNameExtensions.length() > 0 ? mimeType.getMimeType() + " (" + fileNameExtensions + ")" : mimeType.getMimeType();
+		}
+		return "";
+	}
+
 	public void handleAllowedMimeTypeSelect(SelectEvent event) {
 	}
 
