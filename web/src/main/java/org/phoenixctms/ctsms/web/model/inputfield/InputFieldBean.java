@@ -438,7 +438,11 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	public String getMimeTypeLabel(MimeTypeVO mimeType) {
 		if (mimeType != null) {
 			String fileNameExtensions = getMimeTypeFileNameExtensions(mimeType);
-			return fileNameExtensions.length() > 0 ? mimeType.getMimeType() + " (" + fileNameExtensions + ")" : mimeType.getMimeType();
+			if (fileNameExtensions.length() > 0) {
+				// no string concatenation here: javac turns it into invokedynamic, and the jsf 2.1 annotation scanner then fails to find @ManagedBean
+				return new StringBuilder(mimeType.getMimeType()).append(" (").append(fileNameExtensions).append(")").toString();
+			}
+			return mimeType.getMimeType();
 		}
 		return "";
 	}
