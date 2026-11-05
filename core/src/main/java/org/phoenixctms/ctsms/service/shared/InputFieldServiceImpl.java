@@ -199,7 +199,6 @@ public class InputFieldServiceImpl
 		if (allowedMimeTypeIds != null && allowedMimeTypeIds.size() > 0) {
 			MimeTypeDao mimeTypeDao = this.getMimeTypeDao();
 			HashSet<Long> dupeCheck = new HashSet<Long>(allowedMimeTypeIds.size());
-			boolean photoMimeTypeAllowed = false;
 			Iterator<Long> it = allowedMimeTypeIds.iterator();
 			while (it.hasNext()) {
 				Long id = it.next();
@@ -216,12 +215,6 @@ public class InputFieldServiceImpl
 				if (!dupeCheck.add(mimeType.getId())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_DUPLICATE_ALLOWED_MIME_TYPE, mimeType.getMimeType());
 				}
-				if (CommonUtil.INPUT_FIELD_PHOTO_MIME_TYPE.equals(mimeType.getMimeType())) {
-					photoMimeTypeAllowed = true;
-				}
-			}
-			if (inputFieldIn.isPhoto() && !photoMimeTypeAllowed) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_PHOTO_MIME_TYPE_NOT_ALLOWED, CommonUtil.INPUT_FIELD_PHOTO_MIME_TYPE);
 			}
 		}
 	}

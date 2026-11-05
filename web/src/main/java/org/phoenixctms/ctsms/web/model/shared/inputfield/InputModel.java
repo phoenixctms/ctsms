@@ -317,7 +317,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		if (allowTypes == null && inputField != null) {
 			StringBuilder sb = new StringBuilder();
 			HashSet<String> dupeCheck = new HashSet<String>();
-			Iterator<MimeTypeVO> it = inputField.getAllowedMimeTypes().iterator();
+			// the allowed file types are not honoured for photo capture fields:
+			Iterator<MimeTypeVO> it = (inputField.isPhoto() ? new ArrayList<MimeTypeVO>() : inputField.getAllowedMimeTypes()).iterator();
 			while (it.hasNext()) {
 				String fileNameExtensions = it.next().getFileNameExtensions();
 				if (!CommonUtil.isEmptyString(fileNameExtensions) && dupeCheck.add(fileNameExtensions)) {

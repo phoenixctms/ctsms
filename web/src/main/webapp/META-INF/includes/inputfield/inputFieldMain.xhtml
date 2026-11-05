@@ -400,7 +400,11 @@
 							<h:panelGroup rendered="#{inputFieldBean.config.file}">
 								<p:selectBooleanCheckbox
 									id="photo"
-									value="#{inputFieldBean.in.photo}" />
+									value="#{inputFieldBean.in.photo}">
+									<p:ajax
+										process="@this"
+										update="allowedMimeTypes" />
+								</p:selectBooleanCheckbox>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="photo">
@@ -420,6 +424,7 @@
 								<p:autoComplete
 									id="allowedMimeTypes"
 									value="#{inputFieldBean.allowedMimeTypes}"
+									disabled="#{inputFieldBean.in.photo}"
 									required="false"
 									label="#{inputfieldlabels.input_field_allowed_mime_types}"
 									styleClass="ctsms-control-larger"
