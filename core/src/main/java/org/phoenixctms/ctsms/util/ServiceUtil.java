@@ -86,6 +86,7 @@ import org.phoenixctms.ctsms.pdf.CourseParticipantListPDFPainter;
 import org.phoenixctms.ctsms.pdf.EcrfPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
 import org.phoenixctms.ctsms.pdf.EcrfPDFSettingCodes;
+import org.phoenixctms.ctsms.pdf.FileValueImageDataProvider;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFPainter;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFSettingCodes;
@@ -961,7 +962,7 @@ public final class ServiceUtil {
 			HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap,
 			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap, boolean blank, FileDao fileDao) throws Exception {
 		if (!blank && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES)) {
-			HashMap<Long, byte[]> fileValueImageDataMap = new HashMap<Long, byte[]>();
+			FileValueImageDataProvider fileValueImageData = new FileValueImageDataProvider(fileDao);
 			Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
 			while (listEntryEcrfVisitValuesIt.hasNext()) {
 				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfVisitValuesIt = listEntryEcrfVisitValuesIt.next().values().iterator();
@@ -970,7 +971,7 @@ public final class ServiceUtil {
 					while (visitValuesIt.hasNext()) {
 						Iterator<ECRFFieldValueOutVO> valuesIt = visitValuesIt.next().iterator();
 						while (valuesIt.hasNext()) {
-							putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
+							fileValueImageData.add(valuesIt.next().getFileValue());
 						}
 					}
 				}
@@ -979,19 +980,10 @@ public final class ServiceUtil {
 			while (listEntryTagValuesIt.hasNext()) {
 				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryTagValuesIt.next().iterator();
 				while (valuesIt.hasNext()) {
-					putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
+					fileValueImageData.add(valuesIt.next().getFileValue());
 				}
 			}
-			painter.setFileValueImageDataMap(fileValueImageDataMap);
-		}
-	}
-
-	private static void putInputFieldValueFileImageData(FileOutVO fileValue, HashMap<Long, byte[]> fileValueImageDataMap, FileDao fileDao) throws Exception {
-		if (fileValue != null && fileValue.getContentType() != null && fileValue.getContentType().getImage() && !fileValueImageDataMap.containsKey(fileValue.getId())) {
-			FileContentOutVO content = fileDao.toFileContentOutVO(fileDao.load(fileValue.getId()));
-			if (content != null && content.getDatas() != null && content.getDatas().length > 0) {
-				fileValueImageDataMap.put(fileValue.getId(), content.getDatas());
-			}
+			painter.setFileValueImageData(fileValueImageData);
 		}
 	}
 
@@ -6385,18 +6377,18 @@ public final class ServiceUtil {
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
 		if (!blank && Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_FILE_IMAGES)) {
-			HashMap<Long, byte[]> fileValueImageDataMap = new HashMap<Long, byte[]>();
+			FileValueImageDataProvider fileValueImageData = new FileValueImageDataProvider(fileDao);
 			Iterator<HashMap<Long, Collection<InquiryValueOutVO>>> probandValuesIt = valueVOMap.values().iterator();
 			while (probandValuesIt.hasNext()) {
 				Iterator<Collection<InquiryValueOutVO>> trialValuesIt = probandValuesIt.next().values().iterator();
 				while (trialValuesIt.hasNext()) {
 					Iterator<InquiryValueOutVO> valuesIt = trialValuesIt.next().iterator();
 					while (valuesIt.hasNext()) {
-						putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
+						fileValueImageData.add(valuesIt.next().getFileValue());
 					}
 				}
 			}
-			painter.setFileValueImageDataMap(fileValueImageDataMap);
+			painter.setFileValueImageData(fileValueImageData);
 		}
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
@@ -6440,15 +6432,15 @@ public final class ServiceUtil {
 		painter.setBlank(blank);
 		if (!blank && Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
 				ProbandListEntryTagsPDFDefaultSettings.RENDER_FILE_IMAGES)) {
-			HashMap<Long, byte[]> fileValueImageDataMap = new HashMap<Long, byte[]>();
+			FileValueImageDataProvider fileValueImageData = new FileValueImageDataProvider(fileDao);
 			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryValuesIt = valueVOMap.values().iterator();
 			while (listEntryValuesIt.hasNext()) {
 				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryValuesIt.next().iterator();
 				while (valuesIt.hasNext()) {
-					putInputFieldValueFileImageData(valuesIt.next().getFileValue(), fileValueImageDataMap, fileDao);
+					fileValueImageData.add(valuesIt.next().getFileValue());
 				}
 			}
-			painter.setFileValueImageDataMap(fileValueImageDataMap);
+			painter.setFileValueImageData(fileValueImageData);
 		}
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));

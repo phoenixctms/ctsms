@@ -52,7 +52,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	protected HashMap<Long, HashMap<Long, HashMap<Long, ECRFStatusEntryVO>>> statusEntryVOMap;
 	protected HashMap<Long, SignatureVO> signatureVOMap;
 	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
-	protected HashMap<Long, byte[]> fileValueImageDataMap;
+	protected FileValueImageDataProvider fileValueImageData;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -521,7 +521,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 	}
 
 	protected boolean putFileImage(InputFieldOutVO field, Long valueId, FileOutVO fileValue, PDDocument doc) throws Exception {
-		if (!blank && fileValue != null && fileValueImageDataMap != null && fileValueImageDataMap.containsKey(fileValue.getId())
+		if (!blank && fileValue != null && fileValueImageData != null && fileValueImageData.contains(fileValue.getId())
 				&& Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES)) {
 			HashMap<Long, PDFJpeg> fileImages;
 			if (inputFieldSketchImages.containsKey(field.getId())) {
@@ -534,7 +534,7 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				int quality = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
 				int dpi = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_DPI);
 				Color bgColor = Settings.getColor(EcrfPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
-				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageDataMap.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
 						Settings.getFloat(EcrfPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
 				if (fileImage != null) {
 					fileImages.put(valueId, fileImage);
@@ -676,8 +676,8 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 		this.inputFieldImageVOMap = inputFieldImageVOMap;
 	}
 
-	public void setFileValueImageDataMap(HashMap<Long, byte[]> fileValueImageDataMap) {
-		this.fileValueImageDataMap = fileValueImageDataMap;
+	public void setFileValueImageData(FileValueImageDataProvider fileValueImageData) {
+		this.fileValueImageData = fileValueImageData;
 	}
 
 	public void setListEntryTagValuesVOMap(HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap) {

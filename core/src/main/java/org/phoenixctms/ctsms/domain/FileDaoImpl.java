@@ -885,6 +885,14 @@ public class FileDaoImpl
 				DefaultSettings.FILE_DEFAULT_COUNT_LIMIT), fileCriteria);
 	}
 
+	// the data column only, without loading it into a File entity of the session (where it stays until the session ends):
+	@Override
+	protected byte[] handleFindData(Long id) throws Exception {
+		org.hibernate.Criteria fileCriteria = createFileCriteria(null);
+		fileCriteria.add(Restrictions.idEq(id));
+		return (byte[]) fileCriteria.setProjection(Projections.property("data")).uniqueResult();
+	}
+
 	@Override
 	protected long handleGetCount(
 			String externalFileName) throws Exception {

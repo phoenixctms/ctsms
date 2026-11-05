@@ -40,7 +40,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	protected Collection<ProbandListEntryOutVO> listEntryVOs;
 	protected HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> valueVOMap;
 	protected HashMap<Long, InputFieldImageVO> inputFieldImageVOMap;
-	protected HashMap<Long, byte[]> fileValueImageDataMap;
+	protected FileValueImageDataProvider fileValueImageData;
 	protected boolean blank;
 	protected float pageWidth;
 	protected float pageHeight;
@@ -310,7 +310,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 	}
 
 	protected boolean putFileImage(InputFieldOutVO field, Long valueId, FileOutVO fileValue, PDDocument doc) throws Exception {
-		if (!blank && fileValue != null && fileValueImageDataMap != null && fileValueImageDataMap.containsKey(fileValue.getId())
+		if (!blank && fileValue != null && fileValueImageData != null && fileValueImageData.contains(fileValue.getId())
 				&& Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.RENDER_FILE_IMAGES)) {
 			HashMap<Long, PDFJpeg> fileImages;
 			if (inputFieldSketchImages.containsKey(field.getId())) {
@@ -323,7 +323,7 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				int quality = Settings.getInt(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
 				int dpi = Settings.getInt(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.SKETCH_IMAGE_DPI);
 				Color bgColor = Settings.getColor(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
-				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageDataMap.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
 				if (fileImage != null) {
 					fileImages.put(valueId, fileImage);
@@ -427,8 +427,8 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 		this.inputFieldImageVOMap = inputFieldImageVOMap;
 	}
 
-	public void setFileValueImageDataMap(HashMap<Long, byte[]> fileValueImageDataMap) {
-		this.fileValueImageDataMap = fileValueImageDataMap;
+	public void setFileValueImageData(FileValueImageDataProvider fileValueImageData) {
+		this.fileValueImageData = fileValueImageData;
 	}
 
 	public void setListEntryVOs(Collection<ProbandListEntryOutVO> listEntryVOs) {
