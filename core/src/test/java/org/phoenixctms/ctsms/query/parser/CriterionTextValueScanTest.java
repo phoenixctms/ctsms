@@ -13,8 +13,9 @@ import org.testng.annotations.Test;
 public class CriterionTextValueScanTest {
 
 	// the tie names of an expression are the symbols only
-	private static final String[] TIE_NAMES = new String[] { "∧", "(", ")" };
-	private static final CriterionTie[] TIES = new CriterionTie[] { CriterionTie.AND, CriterionTie.LEFT_PARENTHESIS, CriterionTie.RIGHT_PARENTHESIS };
+	private static final String[] TIE_NAMES = new String[] { "∧", "∨", "∪", "∩", "∖", "(", ")" };
+	private static final CriterionTie[] TIES = new CriterionTie[] { CriterionTie.AND, CriterionTie.OR, CriterionTie.UNION, CriterionTie.INTERSECT, CriterionTie.EXCEPT,
+			CriterionTie.LEFT_PARENTHESIS, CriterionTie.RIGHT_PARENTHESIS };
 
 	@Test
 	public void testBrandNewStaysIntact() {
