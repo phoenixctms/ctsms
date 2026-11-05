@@ -189,7 +189,7 @@
 				<p:column
 					sortBy="#{course.vo.trial}"
 					filterBy="#{course.vo.trial.name}">
-					<f:attribute name="visibleDefault" value = "#{!courseSearchBean.picker}" />
+					<f:attribute name="visibleDefault" value="true" />
 					<f:facet name="header">
 						<h:outputText value="#{courselabels.search_course_result_list_trial_column}" />
 					</f:facet>
