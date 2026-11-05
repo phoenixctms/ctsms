@@ -244,7 +244,7 @@ public class ProbandServiceImpl
 				ServiceUtil.logSystemMessage(inquiry.getTrial(), result.getProband(), now, user, SystemMessageCodes.INQUIRY_VALUE_CREATED, result, null, journalEntryDao);
 			}
 		} else {
-			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueId(id, inquiryValueDao);
+			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueId(id, proband.getId(), inquiry.getId(), inquiryValueDao);
 			if (//!inquiry.isDisabled()
 				//	&& 
 			!ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue(), force)) {

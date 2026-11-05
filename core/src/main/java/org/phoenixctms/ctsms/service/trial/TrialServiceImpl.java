@@ -3637,7 +3637,10 @@ public class TrialServiceImpl
 					ServiceUtil.checkInputFieldTimestampValue(inputField, inquiry.isOptional(), inquiryValueIn.getTimestampValue(), inputFieldDao);
 					ServiceUtil.checkInputFieldInkValue(inputField, inquiry.isOptional(), inquiryValueIn.getInkValues(), inputFieldDao);
 					ServiceUtil.checkInputFieldFileValue(inputField, inquiry.isOptional(), inquiryValueIn.getFileValueId(), inquiryValueIn.getFileValue(),
-							inquiryValueIn.getId() != null ? CheckIDUtil.checkInquiryValueId(inquiryValueIn.getId(), this.getInquiryValueDao()).getValue() : null, inputFieldDao,
+							inquiryValueIn.getId() != null
+									? CheckIDUtil.checkInquiryValueId(inquiryValueIn.getId(), inquiryValueIn.getProbandId(), inquiry.getId(), this.getInquiryValueDao()).getValue()
+									: null,
+							inputFieldDao,
 							this.getMimeTypeDao());
 					ServiceUtil.checkInputFieldSelectionSetValues(inputField, inquiry.isOptional(), inquiryValueIn.getSelectionValueIds(), inputFieldDao,
 							inputFieldSelectionSetValueDao);

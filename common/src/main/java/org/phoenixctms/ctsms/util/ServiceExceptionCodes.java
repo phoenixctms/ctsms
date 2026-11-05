@@ -437,6 +437,7 @@ public interface ServiceExceptionCodes {
 	public final static String INQUIRY_VALUES_FOR_DIFFERENT_TRIALS = "inquiry_values_for_different_trials";
 	public final static String INQUIRY_VALUE_ALREADY_EXISTS = "inquiry_value_already_exists";
 	public final static String INVALID_INQUIRY_VALUE_ID = "invalid_inquiry_value_id";
+	public final static String INQUIRY_VALUE_ID_MISMATCH = "inquiry_value_id_mismatch";
 	public final static String INQUIRY_VALUES_FOR_DIFFERENT_PROBANDS = "inquiry_values_for_different_probands";
 	public static final String PROBAND_LETTER_NOT_FOR_ANIMAL_ENTRIES = "proband_letter_not_for_animal_entries";
 	public final static String INVALID_NEW_PRIVACY_CONSENT_STATUS_TYPE = "invalid_new_privacy_consent_status_type";
