@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +29,8 @@ import org.phoenixctms.ctsms.vo.InputFieldInVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
+import org.phoenixctms.ctsms.web.model.IDVO;
+import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.InputFieldTypeSelector;
 import org.phoenixctms.ctsms.web.model.InputFieldTypeSelectorListener;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
@@ -45,6 +48,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -158,7 +162,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	private InputFieldInVOConfig config;
 	private InputFieldOutVO out;
 	private ArrayList<SelectItem> booleans;
-	private ArrayList<SelectItem> allowedMimeTypes;
+	private ArrayList<MimeTypeVO> fileMimeTypes;
 	private InputFieldTypeSelector fieldType;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -381,30 +385,71 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		return allowTypes;
 	}
 
-	public ArrayList<SelectItem> getAllowedMimeTypes() {
-		return allowedMimeTypes;
-	}
-
-	public List<String> getAllowedMimeTypeIds() {
-		ArrayList<String> result = new ArrayList<String>(in.getAllowedMimeTypeIds().size());
+	public List<IDVO> getAllowedMimeTypes() {
+		ArrayList<MimeTypeVO> result = new ArrayList<MimeTypeVO>(in.getAllowedMimeTypeIds().size());
 		Iterator<Long> it = in.getAllowedMimeTypeIds().iterator();
 		while (it.hasNext()) {
-			result.add(it.next().toString());
+			MimeTypeVO mimeType = getFileMimeType(it.next());
+			if (mimeType != null) {
+				result.add(mimeType);
+			}
 		}
-		return result;
+		return new IDVOList(result);
 	}
 
-	public void setAllowedMimeTypeIds(List<String> allowedMimeTypeIds) {
-		in.getAllowedMimeTypeIds().clear();
-		if (allowedMimeTypeIds != null) {
-			Iterator<String> it = allowedMimeTypeIds.iterator();
+	public void setAllowedMimeTypes(List<IDVO> allowedMimeTypes) {
+		LinkedHashSet<Long> ids = new LinkedHashSet<Long>(); //force unique items to prevent confusion when unselecting a duplicate item
+		if (allowedMimeTypes != null) {
+			Iterator<IDVO> it = allowedMimeTypes.iterator();
 			while (it.hasNext()) {
-				Long id = WebUtil.stringToLong(it.next());
-				if (id != null) {
-					in.getAllowedMimeTypeIds().add(id);
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					ids.add(idVo.getId());
 				}
 			}
 		}
+		in.getAllowedMimeTypeIds().clear();
+		in.getAllowedMimeTypeIds().addAll(ids);
+	}
+
+	public List<IDVO> completeAllowedMimeType(String query) {
+		ArrayList<MimeTypeVO> result = new ArrayList<MimeTypeVO>();
+		String lowerCaseQuery = query == null ? "" : query.trim().toLowerCase();
+		Iterator<MimeTypeVO> it = getFileMimeTypes().iterator();
+		while (it.hasNext()) {
+			MimeTypeVO mimeType = it.next();
+			if (!in.getAllowedMimeTypeIds().contains(mimeType.getId())
+					&& (mimeType.getMimeType().toLowerCase().contains(lowerCaseQuery)
+							|| (mimeType.getFileNameExtensions() != null && mimeType.getFileNameExtensions().toLowerCase().contains(lowerCaseQuery)))) {
+				result.add(mimeType);
+			}
+		}
+		IDVO.transformVoCollection(result);
+		return (List) result;
+	}
+
+	public void handleAllowedMimeTypeSelect(SelectEvent event) {
+	}
+
+	public void handleAllowedMimeTypeUnselect(UnselectEvent event) {
+	}
+
+	private ArrayList<MimeTypeVO> getFileMimeTypes() {
+		if (fileMimeTypes == null) {
+			fileMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
+		}
+		return fileMimeTypes;
+	}
+
+	private MimeTypeVO getFileMimeType(Long id) {
+		Iterator<MimeTypeVO> it = getFileMimeTypes().iterator();
+		while (it.hasNext()) {
+			MimeTypeVO mimeType = it.next();
+			if (mimeType.getId().equals(id)) {
+				return mimeType;
+			}
+		}
+		return null;
 	}
 
 	public ArrayList<SelectItem> getBooleans() {
@@ -591,9 +636,6 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 		config.setInputField(in);
 		if (booleans == null) {
 			booleans = WebUtil.getBooleans(false, false);
-		}
-		if (allowedMimeTypes == null) {
-			allowedMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
 		}
 		deferredDeleteReason = (out == null ? null : out.getDeferredDeleteReason());
 		if (out != null && out.isDeferredDelete()) {

@@ -412,24 +412,36 @@
 							<p:message
 								for="photo"
 								rendered="#{inputFieldBean.config.file}" />
-							<h:panelGroup
-								layout="block"
+							<h:outputLabel
+								for="allowedMimeTypes"
 								rendered="#{inputFieldBean.config.file}"
-								styleClass="ctsms-label-for-top"
-								style="height:150px;">
-								<h:outputLabel
-									for="allowedMimeTypes"
-									value="#{inputfieldlabels.input_field_allowed_mime_types_label}" />
-							</h:panelGroup>
+								value="#{inputfieldlabels.input_field_allowed_mime_types_label}" />
 							<h:panelGroup rendered="#{inputFieldBean.config.file}">
-								<p:selectManyMenu
+								<p:autoComplete
 									id="allowedMimeTypes"
-									value="#{inputFieldBean.allowedMimeTypeIds}"
+									value="#{inputFieldBean.allowedMimeTypes}"
 									required="false"
-									style="height:150px;"
-									label="#{inputfieldlabels.input_field_allowed_mime_types}">
-									<f:selectItems value="#{inputFieldBean.allowedMimeTypes}" />
-								</p:selectManyMenu>
+									label="#{inputfieldlabels.input_field_allowed_mime_types}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthMimeType}"
+									maxResults="#{autoCompleteMaxResultsMimeType}"
+									queryDelay="#{autoCompleteQueryDelayMimeType}"
+									global="#{autoCompleteGlobalMimeType}"
+									scrollHeight="#{autoCompleteScrollHeightMimeType}"
+									completeMethod="#{inputFieldBean.completeAllowedMimeType}" multiple="true"
+									var="mimeType" itemValue="#{mimeType}"
+									itemLabel="#{mimeType.vo.mimeType}" converter="ctsms.InputFieldValueFileMimeType">
+									<p:ajax process="@this" event="itemSelect"
+										listener="#{inputFieldBean.handleAllowedMimeTypeSelect}" />
+									<p:ajax process="@this" event="itemUnselect"
+										listener="#{inputFieldBean.handleAllowedMimeTypeUnselect}" />
+									<p:column>
+										<h:outputText value="#{mimeType.vo.mimeType}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{mimeType.vo.fileNameExtensions}" />
+									</p:column>
+								</p:autoComplete>
 								<p:tooltip
 									rendered="#{enableTooltips}"
 									for="allowedMimeTypes">

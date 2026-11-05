@@ -968,8 +968,7 @@ public final class WebUtil {
 		return allowTypes;
 	}
 
-	public static ArrayList<SelectItem> getMimeTypes(FileModule module) {
-		ArrayList<SelectItem> mimeTypes;
+	public static ArrayList<MimeTypeVO> getMimeTypes(FileModule module) {
 		Collection<MimeTypeVO> mimeTypeVOs = null;
 		try {
 			mimeTypeVOs = getServiceLocator().getSelectionSetService().getMimeTypes(getAuthentication(), module);
@@ -977,17 +976,20 @@ public final class WebUtil {
 		} catch (AuthenticationException e) {
 			publishException(e);
 		}
-		if (mimeTypeVOs != null) {
-			mimeTypes = new ArrayList<SelectItem>(mimeTypeVOs.size());
-			Iterator<MimeTypeVO> it = mimeTypeVOs.iterator();
+		return mimeTypeVOs != null ? new ArrayList<MimeTypeVO>(mimeTypeVOs) : new ArrayList<MimeTypeVO>();
+	}
+
+	public static MimeTypeVO getMimeType(FileModule module, Long mimeTypeId) {
+		if (mimeTypeId != null) {
+			Iterator<MimeTypeVO> it = getMimeTypes(module).iterator();
 			while (it.hasNext()) {
 				MimeTypeVO mimeTypeVO = it.next();
-				mimeTypes.add(new SelectItem(mimeTypeVO.getId().toString(), mimeTypeVO.getMimeType()));
+				if (mimeTypeId.equals(mimeTypeVO.getId())) {
+					return mimeTypeVO;
+				}
 			}
-		} else {
-			mimeTypes = new ArrayList<SelectItem>();
 		}
-		return mimeTypes;
+		return null;
 	}
 
 	public static ArrayList<SelectItem> getAllPrivacyConsentStatusTypes() {
