@@ -431,6 +431,29 @@
 				<version>3.2.2</version>
 			</plugin>
 			<plugin>
+				<!-- fails the build if the JSF 2.1 annotation scanner misses an annotated class (runs with -DskipTests too) -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>jsf-annotation-scan-check</id>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>org.phoenixctms.ctsms.web.JsfAnnotationScanCheck</mainClass>
+							<classpathScope>test</classpathScope>
+							<arguments>
+								<argument>${project.build.outputDirectory}</argument>
+								<argument>${basedir}/src/main/webapp/WEB-INF/faces-config.xml</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.andromda.maven.plugins</groupId>
 				<artifactId>andromdapp-maven-plugin</artifactId>
 				<executions>
