@@ -350,6 +350,17 @@
 
 	});
 
+	// stops the stream of a camera whose live view was removed by an ajax update without being rendered again. a re-rendered camera
+	// re-attaches its stream while the update is applied, so it is still found here and keeps running:
+	$(document).off('ajaxComplete.photocam').on('ajaxComplete.photocam', function() {
+		for ( var id in activeStreams) {
+			if (activeStreams.hasOwnProperty(id) && !document.getElementById(id)) {
+				stopStream(activeStreams[id]);
+				delete activeStreams[id];
+			}
+		}
+	});
+
 	// enables the capture button(s) matching the selector only while the camera of the widget is live. call it whenever the
 	// button is rendered, since a re-rendered button starts disabled while the camera may already be live:
 	PrimeFaces.widget.PhotoCam.bindCaptureButton = function(widgetVar, selector) {
