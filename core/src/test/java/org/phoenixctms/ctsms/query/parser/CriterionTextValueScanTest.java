@@ -12,7 +12,8 @@ import org.testng.annotations.Test;
  */
 public class CriterionTextValueScanTest {
 
-	private static final String[] TIE_NAMES = new String[] { "and", "(", ")" };
+	// the tie names of an expression are the symbols only
+	private static final String[] TIE_NAMES = new String[] { "∧", "(", ")" };
 	private static final CriterionTie[] TIES = new CriterionTie[] { CriterionTie.AND, CriterionTie.LEFT_PARENTHESIS, CriterionTie.RIGHT_PARENTHESIS };
 
 	@Test
@@ -28,7 +29,13 @@ public class CriterionTextValueScanTest {
 	}
 
 	@Test
-	public void testTieAfterBoundaryStillEndsValue() {
-		Assert.assertEquals(CriterionText.scanValueEnd("status and next", 0, TIE_NAMES, TIES), "status ".length());
+	public void testTieSymbolEndsValue() {
+		Assert.assertEquals(CriterionText.scanValueEnd("status ∧ next", 0, TIE_NAMES, TIES), "status ".length());
+	}
+
+	@Test
+	public void testTieWordStaysInsideValue() {
+		String value = "NN1679-8505 SDF training visit 3 and postponed clamp Version 2";
+		Assert.assertEquals(CriterionText.scanValueEnd(value, 0, TIE_NAMES, TIES), value.length());
 	}
 }

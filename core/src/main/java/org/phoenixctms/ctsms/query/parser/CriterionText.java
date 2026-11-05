@@ -113,8 +113,9 @@ final class CriterionText {
 						continue;
 					}
 					tieIds.put(entry.getValue(), entry.getKey());
+					// JSON names a tie by its key such as AND. An expression only by its symbol such as ∧,
+					// because words such as and, or, except are common in values like course names
 					addName(tieKeys, entry.getValue().name(), entry.getKey());
-					addName(tieNames, entry.getValue().name(), entry.getKey());
 					addName(tieNames, tieNamesByEnum.get(entry.getValue()), entry.getKey());
 				}
 			}
