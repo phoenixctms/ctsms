@@ -429,7 +429,7 @@
 				</h:panelGrid>
 				<h:panelGrid id="file#{index}" rendered="#{fieldInput.file}" columns="1"
 					cellpadding="0" styleClass="ctsms-input-panelgrid">
-					<h:panelGroup>
+					<h:panelGroup layout="block" styleClass="ctsms-input-file-label">
 						<h:outputLabel for="filedownload#{index}"
 							styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-field-icon ctsms-icon-noencryption"
 							value="#{fieldInput.title}" />
