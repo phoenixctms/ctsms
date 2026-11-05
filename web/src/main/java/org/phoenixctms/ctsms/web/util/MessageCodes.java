@@ -132,6 +132,7 @@ public interface MessageCodes {
 	public final static String NO_FILE_LINK_LABEL = "no_file_link_label";
 	public final static String INPUT_FIELD_FILE_LINK_LABEL = "input_field_file_link_label";
 	public final static String INPUT_FIELD_FILE_SIZE_LIMIT_EXCEEDED = "input_field_file_size_limit_exceeded";
+	public final static String INPUT_FIELD_FILE_SIZE_LIMIT_UNKNOWN = "input_field_file_size_limit_unknown";
 	public final static String NO_FILE_FILTERS = "no_file_filters";
 	public final static String WEBCAM_FILE_NAME = "webcam_file_name";
 	public final static String UPLOAD_OPERATION_SUCCESSFUL = "upload_operation_successfull";

@@ -344,6 +344,11 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile uploadedFile = event.getFile();
 		Integer uploadSizeLimit = getUploadSizeLimit();
+		if (!uploadSizeLimitLoaded) {
+			// the limit could not be determined, so do not load the contents into memory:
+			setErrorMessage(Messages.getString(MessageCodes.INPUT_FIELD_FILE_SIZE_LIMIT_UNKNOWN));
+			return;
+		}
 		if (uploadSizeLimit != null && uploadedFile.getSize() > uploadSizeLimit) {
 			// reject before the contents are loaded into memory:
 			setErrorMessage(Messages.getMessage(MessageCodes.INPUT_FIELD_FILE_SIZE_LIMIT_EXCEEDED,
