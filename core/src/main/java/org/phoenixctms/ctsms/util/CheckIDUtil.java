@@ -317,8 +317,10 @@ public final class CheckIDUtil {
 		return inquiryValue;
 	}
 
-	// the authorisation interceptor checks the proband ID of the inquiry value input, so a referenced inquiry value has to belong to it:
-	public static InquiryValue checkInquiryValueId(Long inquiryValueId, Long probandId, Long inquiryId, InquiryValueDao inquiryValueDao) throws ServiceException {
+	// the authorisation interceptor checks the proband ID of the inquiry value input, so a referenced inquiry value has to belong to it.
+	// not named check...Id, since checkEntityId looks up the two argument methods by name:
+	public static InquiryValue checkInquiryValueOfProbandAndInquiry(Long inquiryValueId, Long probandId, Long inquiryId, InquiryValueDao inquiryValueDao)
+			throws ServiceException {
 		InquiryValue inquiryValue = checkInquiryValueId(inquiryValueId, inquiryValueDao);
 		if (!inquiryValue.getProband().getId().equals(probandId) || !inquiryValue.getInquiry().getId().equals(inquiryId)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_ID_MISMATCH, inquiryValueId.toString());

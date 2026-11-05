@@ -3638,7 +3638,7 @@ public class TrialServiceImpl
 					ServiceUtil.checkInputFieldInkValue(inputField, inquiry.isOptional(), inquiryValueIn.getInkValues(), inputFieldDao);
 					ServiceUtil.checkInputFieldFileValue(inputField, inquiry.isOptional(), inquiryValueIn.getFileValueId(), inquiryValueIn.getFileValue(),
 							inquiryValueIn.getId() != null
-									? CheckIDUtil.checkInquiryValueId(inquiryValueIn.getId(), inquiryValueIn.getProbandId(), inquiry.getId(), this.getInquiryValueDao()).getValue()
+									? CheckIDUtil.checkInquiryValueOfProbandAndInquiry(inquiryValueIn.getId(), inquiryValueIn.getProbandId(), inquiry.getId(), this.getInquiryValueDao()).getValue()
 									: null,
 							inputFieldDao,
 							this.getMimeTypeDao());
