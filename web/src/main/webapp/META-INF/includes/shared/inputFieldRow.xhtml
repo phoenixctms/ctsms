@@ -439,11 +439,6 @@
 							<h:outputText value="#{fieldInput.fileDownloadLinkLabel}" />
 							<p:fileDownload value="#{fieldInput.fileStreamedContent}" />
 						</p:commandLink>
-						<p:commandButton process="@this" value="#{labels.clear_file_label}"
-							actionListener="#{fieldInput.clearFile}"
-							icon="ui-icon ui-icon-close" ajax="true"
-							rendered="#{enabled and !fieldInput.disabled}"
-							disabled="#{!fieldInput.hasFile}" update="file#{index}" />
 					</h:panelGroup>
 					<h:panelGroup layout="block" rendered="#{not empty fieldInput.fileImagePreview}">
 						<img src="#{fieldInput.fileImagePreview}" alt="#{fieldInput.fileDownloadLinkLabel}"
@@ -457,21 +452,29 @@
 						styleClass="ctsms-upload-control #{fieldInput.widgetVar}_fileupload"
 						sizeLimit="#{fieldInput.uploadSizeLimit}"
 						allowTypes="#{fieldInput.allowTypes}" />
-					<h:panelGroup rendered="#{enabled and !fieldInput.disabled and fieldInput.photo}"
-						styleClass="#{fieldInput.widgetVar}_photobuttons" style="display:none;">
+					<h:panelGroup rendered="#{enabled and !fieldInput.disabled}"
+						styleClass="#{fieldInput.widgetVar}_filebuttons" style="display:none;">
 						<p:commandButton type="button" icon="ui-icon ui-icon-video"
+							rendered="#{fieldInput.photo}"
 							value="#{labels.photo_camera_label}"
 							onclick="#{fieldInput.widgetVar}_photocam.toggle()" />
 						<p:commandButton type="button" icon="ui-icon ui-icon-image"
+							rendered="#{fieldInput.photo}"
 							value="#{labels.capture_photo_label}" disabled="true"
 							styleClass="#{fieldInput.widgetVar}_capture"
 							onclick="#{fieldInput.widgetVar}_photocam.capture()" />
+						<p:commandButton process="@this" value="#{labels.clear_file_label}"
+							actionListener="#{fieldInput.clearFile}"
+							icon="ui-icon ui-icon-close" ajax="true"
+							disabled="#{!fieldInput.hasFile}" update="file#{index}" />
 						<script type="text/javascript">
-							// show the camera buttons in the button bar of the upload control, next to "choose file",
+							// show the buttons in the button bar of the upload control, next to "choose file",
 							// and enable capture only while the camera is live:
 							$(function() {
-								$('.#{fieldInput.widgetVar}_photobuttons').appendTo($('.#{fieldInput.widgetVar}_fileupload .fileupload-buttonbar')).css('display', '');
-								PrimeFaces.widget.PhotoCam.bindCaptureButton('#{fieldInput.widgetVar}_photocam', '.#{fieldInput.widgetVar}_capture');
+								moveIntoFileUploadButtonBar('.#{fieldInput.widgetVar}_fileupload', '.#{fieldInput.widgetVar}_filebuttons');
+								if (#{fieldInput.photo}) {
+									PrimeFaces.widget.PhotoCam.bindCaptureButton('#{fieldInput.widgetVar}_photocam', '.#{fieldInput.widgetVar}_capture');
+								}
 							});
 						</script>
 					</h:panelGroup>

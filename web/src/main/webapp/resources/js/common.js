@@ -21,6 +21,11 @@ var onKeyUpDelay = (function() {
     };
 })();
 
+// moves (initially hidden) buttons into the button bar of a p:fileUpload, next to its "choose" button. call it whenever both are rendered:
+function moveIntoFileUploadButtonBar(fileUploadSelector, buttonsSelector) {
+	$(buttonsSelector).appendTo($(fileUploadSelector).find('.fileupload-buttonbar')).css('display', '');
+}
+
 function noop() {
 
 }
