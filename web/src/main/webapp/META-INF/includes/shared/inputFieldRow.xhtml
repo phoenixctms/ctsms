@@ -445,23 +445,30 @@
 							rendered="#{enabled and !fieldInput.disabled}"
 							disabled="#{!fieldInput.hasFile}" update="file#{index}" />
 					</h:panelGroup>
-					<p:fileUpload id="fileupload#{index}"
-						rendered="#{enabled and !fieldInput.disabled}"
-						fileUploadListener="#{fieldInput.handleFileUpload}"
-						mode="advanced" update="file#{index}" multiple="false"
-						auto="true" label="#{labels.choose_file_button_label}"
-						styleClass="ctsms-upload-control"
-						sizeLimit="#{fieldInput.uploadSizeLimit}"
-						allowTypes="#{fieldInput.allowTypes}" />
-					<h:panelGroup
-						rendered="#{enabled and !fieldInput.disabled and fieldInput.photo}">
-						<ctsms:photoCam widgetVar="#{fieldInput.widgetVar}_photocam"
-							width="1920" height="1080" displayWidth="640"
-							listener="#{fieldInput.onCapture}" update="file#{index}" />
+					<h:panelGrid rendered="#{enabled and !fieldInput.disabled}"
+						columns="#{fieldInput.photo ? 3 : 1}" cellpadding="0"
+						styleClass="ctsms-input-panelgrid"
+						columnClasses="ctsms-input-top-column,ctsms-input-top-column,ctsms-input-top-column">
+						<p:fileUpload id="fileupload#{index}"
+							fileUploadListener="#{fieldInput.handleFileUpload}"
+							mode="advanced" update="file#{index}" multiple="false"
+							auto="true" label="#{labels.choose_file_button_label}"
+							styleClass="ctsms-upload-control"
+							sizeLimit="#{fieldInput.uploadSizeLimit}"
+							allowTypes="#{fieldInput.allowTypes}" />
 						<p:commandButton type="button" icon="ui-icon ui-icon-video"
+							rendered="#{fieldInput.photo}"
+							value="#{labels.photo_camera_label}"
+							onclick="#{fieldInput.widgetVar}_photocam.toggle()" />
+						<p:commandButton type="button" icon="ui-icon ui-icon-image"
+							rendered="#{fieldInput.photo}"
 							value="#{labels.capture_photo_label}"
 							onclick="#{fieldInput.widgetVar}_photocam.capture()" />
-					</h:panelGroup>
+					</h:panelGrid>
+					<ctsms:photoCam widgetVar="#{fieldInput.widgetVar}_photocam"
+						rendered="#{enabled and !fieldInput.disabled and fieldInput.photo}"
+						width="1920" height="1080" displayWidth="640" autoStart="false"
+						listener="#{fieldInput.onCapture}" update="file#{index}" />
 					<ui:include src="errorMessage.xhtml">
 						<ui:param name="rendered" value="#{fieldInput.error}" />
 						<ui:param name="value" value="#{fieldInput.errorMessage}" />

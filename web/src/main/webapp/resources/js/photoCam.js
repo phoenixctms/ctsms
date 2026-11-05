@@ -87,17 +87,49 @@
 				}
 			});
 
+			this.supported = false;
 			if (window.isSecureContext === false) {
 				this.showStatus(this.msgs.insecureContext);
 			} else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
 				this.showStatus(this.msgs.notSupported);
 			} else {
+				this.supported = true;
 				var stream = activeStreams[this.id];
-				if (stream && stream.active) {
+				if (this.cfg.autoStart === false) {
+					// keep the live view open if it was open before being re-rendered (e.g. after a capture):
+					if (stream && stream.active) {
+						this.jq.show();
+						this.attach(stream, null);
+					}
+				} else if (stream && stream.active) {
 					this.attach(stream, null);
 				} else if (!this.pending) {
 					this.start(loadDeviceId());
 				}
+			}
+		},
+
+		isOpen : function() {
+			return this.jq.is(':visible');
+		},
+
+		open : function() {
+			this.jq.show();
+			if (this.supported && !this.stream && !this.pending) {
+				this.start(loadDeviceId());
+			}
+		},
+
+		close : function() {
+			this.stop();
+			this.jq.hide();
+		},
+
+		toggle : function() {
+			if (this.isOpen()) {
+				this.close();
+			} else {
+				this.open();
 			}
 		},
 
@@ -259,6 +291,10 @@
 		},
 
 		capture : function() {
+			if (this.cfg.autoStart === false && !this.isOpen()) {
+				this.open();
+				return;
+			}
 			var video = this.video;
 			if (!this.stream || !video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) {
 				if (this.stream || !this.status.is(':visible')) {
