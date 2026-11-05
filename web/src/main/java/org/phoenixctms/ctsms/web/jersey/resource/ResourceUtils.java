@@ -27,6 +27,10 @@ public final class ResourceUtils {
 
 	// serve uploaded files for download only, so the browser never renders them (e.g. html, svg) under the application's origin:
 	public static Response getAttachmentFileStreamResponse(FileStreamOutVO stream) throws UnsupportedEncodingException {
+		if (stream.getStream() == null) {
+			// no readable content (e.g. a file without data), so do not announce a body that is never sent:
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
 		ResponseBuilder response = Response.ok(stream.getStream(), stream.getContentType().getMimeType());
 		response.header(HttpHeaders.CONTENT_LENGTH, stream.getSize());
 		String fileName = stream.getFileName();
