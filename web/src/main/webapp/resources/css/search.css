@@ -105,7 +105,8 @@ table.ctsms-criterion-position tr:nth-child(2) {
 
 /* td .ui-selectonemenu is display:block, and a hidden tab measures these menus at 0.
    An inline width from that measurement then beats the class width when the tab is shown again.
-   Tie and operator keep their original fixed widths; the property sizes to its label, up to 300px. */
+   Tie and operator keep their original fixed widths. The property dropdown stays between a
+   minimum and a maximum: long names stay readable, and the row does not grow without limit. */
 .ctsms-criterion-tie,
 .ctsms-criterion-property,
 .ctsms-criterion-restriction {
@@ -120,8 +121,11 @@ table.ctsms-criterion-position tr:nth-child(2) {
 }
 
 .ctsms-criterion-property {
+	display: inline-flex !important;
+	align-items: stretch;
 	width: auto !important;
-	max-width: 300px;
+	min-width: 300px;
+	max-width: 400px;
 }
 
 .ctsms-criterion-restriction {
@@ -140,10 +144,28 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	vertical-align: middle;
 }
 
-/* property width follows this label, so it must stay shrink-wrapped rather than 100% of an indefinite parent */
+/* The outer menu is at least the minimum. This label has to grow into that width;
+   width:auto alone stays on the text and leaves a gap before the arrow. */
 .ctsms-criterion-property .ui-selectonemenu-label {
+	flex: 1 1 auto;
 	width: auto !important;
-	max-width: 300px;
+	max-width: 100%;
+}
+
+.ctsms-criterion-property .ui-selectonemenu-trigger {
+	flex: 0 0 auto;
+}
+
+/* PrimeFaces pins the overlay to the closed control. Size it to the items, inside the same bounds. */
+.ctsms-criterion-property-panel {
+	width: max-content !important;
+	min-width: 300px;
+	max-width: 400px;
+	box-sizing: border-box;
+}
+
+.ctsms-criterion-property-panel .ui-selectonemenu-item {
+	white-space: nowrap;
 }
 
 .ctsms-criterions-panelgrid {

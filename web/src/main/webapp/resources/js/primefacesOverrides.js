@@ -1092,6 +1092,9 @@ if (PrimeFaces.widget.SelectOneMenu && !PrimeFaces.widget.SelectOneMenu.prototyp
     if (!this.jq || !this.jq.is(".ctsms-criterion-tie, .ctsms-criterion-property, .ctsms-criterion-restriction")) {
       return;
     }
+    if (this.jq.is(".ctsms-criterion-property") && this.panel) {
+      this.panel.addClass("ctsms-criterion-property-panel");
+    }
     if (!this.jq.is(":visible") || this.jq.width() < 8) {
       this.jq.css("width", "");
       if (this.label) {
