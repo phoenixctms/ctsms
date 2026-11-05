@@ -58,6 +58,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	protected InputFieldOutVO inputField;
 	private FileOutVO fileValueVO;
 	private String allowTypes;
+	private Integer uploadSizeLimit;
+	private boolean uploadSizeLimitLoaded;
 
 	protected InputModel() {
 		errorMessage = null;
@@ -251,6 +253,13 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile uploadedFile = event.getFile();
+		Integer uploadSizeLimit = getUploadSizeLimit();
+		if (uploadSizeLimit != null && uploadedFile.getSize() > uploadSizeLimit) {
+			// reject before the contents are loaded into memory:
+			setErrorMessage(Messages.getMessage(MessageCodes.INPUT_FIELD_FILE_SIZE_LIMIT_EXCEEDED,
+					CommonUtil.humanReadableByteCount(uploadSizeLimit, WebUtil.getDecimalSeparator())));
+			return;
+		}
 		setFileValue(new FileContentInVO(uploadedFile.getFileName(), uploadedFile.getContentType(), uploadedFile.getContents()));
 		setErrorMessage(null);
 		executeFileOnChange();
@@ -328,13 +337,16 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public Integer getUploadSizeLimit() {
-		try {
-			return WebUtil.getServiceLocator().getToolsService().getUploadSizeLimit();
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
+		if (!uploadSizeLimitLoaded) {
+			try {
+				uploadSizeLimit = WebUtil.getServiceLocator().getToolsService().getInputFieldValueFileUploadSizeLimit();
+				uploadSizeLimitLoaded = true;
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
 		}
-		return null;
+		return uploadSizeLimit;
 	}
 
 	public int getHeight() {
