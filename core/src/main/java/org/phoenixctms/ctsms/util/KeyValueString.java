@@ -46,6 +46,7 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ECRFValidationStatusVO;
 import org.phoenixctms.ctsms.vo.EventImportanceVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.HolidayVO;
 import org.phoenixctms.ctsms.vo.HyperlinkCategoryVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
@@ -102,6 +103,7 @@ import org.phoenixctms.ctsms.vo.VisitTypeVO;
 public class KeyValueString extends GraphEnumerator {
 
 	private final static Comparator VO_COLLECTION_VALUES_COMPARATOR = new VOIDComparator(false);
+	private final static String FILE_NAME_FIELD = "fileName";
 
 	public static ArrayList<KeyValueString> getKeyValuePairs(Class vo, int depth,
 			boolean omitFields,
@@ -135,7 +137,18 @@ public class KeyValueString extends GraphEnumerator {
 	public String getValue(Locales locale, Object vo, ArrayList<Object> indexesKeys, String datetimePattern, String datePattern, String timePattern, boolean enumerateEntities,
 			boolean omitFields)
 			throws Exception {
+		if (omitFields && isEncryptedFileName(vo, indexesKeys)) {
+			return "";
+		}
 		return outVOValueToString(locale, returnType, getValueOf(vo, indexesKeys), datetimePattern, datePattern, timePattern, enumerateEntities, omitFields);
+	}
+
+	private boolean isEncryptedFileName(Object vo, ArrayList<Object> indexesKeys) throws Exception {
+		if (FILE_NAME_FIELD.equalsIgnoreCase(getFieldName())) {
+			Object file = getOwnerOf(vo, indexesKeys);
+			return file instanceof FileOutVO && CommonUtil.getUseFileEncryption(((FileOutVO) file).getModule());
+		}
+		return false;
 	}
 
 	protected String getVOFieldValue(Object vo, String field, boolean omitFields) {
@@ -155,6 +168,9 @@ public class KeyValueString extends GraphEnumerator {
 
 	@Override
 	protected boolean isFieldOmitted(Class graph, String field) {
+		if (FileOutVO.class.isAssignableFrom(graph) && FILE_NAME_FIELD.equalsIgnoreCase(field)) {
+			return false; // the file name is protected only for modules with encrypted files, see getValue
+		}
 		return OmittedFields.isOmitted(graph, field, true); // case-insensitivity since fields can be transformed to lower case
 	}
 
