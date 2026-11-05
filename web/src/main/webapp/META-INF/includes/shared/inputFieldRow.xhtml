@@ -459,16 +459,22 @@
 							value="#{labels.photo_camera_label}"
 							onclick="#{fieldInput.widgetVar}_photocam.toggle()" />
 						<p:commandButton type="button" icon="ui-icon ui-icon-image"
-							value="#{labels.capture_photo_label}"
+							value="#{labels.capture_photo_label}" disabled="true"
+							styleClass="#{fieldInput.widgetVar}_capture"
 							onclick="#{fieldInput.widgetVar}_photocam.capture()" />
 						<script type="text/javascript">
-							// show the camera buttons in the button bar of the upload control, next to "choose file":
+							// show the camera buttons in the button bar of the upload control, next to "choose file",
+							// and enable capture only while the camera is live:
 							$(function() {
 								$('.#{fieldInput.widgetVar}_photobuttons').appendTo($('.#{fieldInput.widgetVar}_fileupload .fileupload-buttonbar')).css('display', '');
+								$(document).off('photocamlive.#{fieldInput.widgetVar}').on('photocamlive.#{fieldInput.widgetVar}', '.#{fieldInput.widgetVar}_photocam', function(event, live) {
+									$('.#{fieldInput.widgetVar}_capture').prop('disabled', !live).toggleClass('ui-state-disabled', !live);
+								});
 							});
 						</script>
 					</h:panelGroup>
 					<ctsms:photoCam widgetVar="#{fieldInput.widgetVar}_photocam"
+						styleClass="#{fieldInput.widgetVar}_photocam"
 						rendered="#{enabled and !fieldInput.disabled and fieldInput.photo}"
 						width="1920" height="1080" displayWidth="640" autoStart="false"
 						listener="#{fieldInput.onCapture}" update="file#{index}" />

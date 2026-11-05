@@ -64,6 +64,12 @@
 					this.parentNode.style.aspectRatio = this.videoWidth + ' / ' + this.videoHeight;
 				}
 			});
+			this.live = false;
+			$(this.video).off('playing').on('playing', function() {
+				if (_self.stream) {
+					_self.setLive(true);
+				}
+			});
 			this.devices.change(function() {
 				var deviceId = $(this).val();
 				storeDeviceId(deviceId);
@@ -205,7 +211,16 @@
 			});
 		},
 
+		// triggers 'photocamlive' with true once the live view plays, and false when it stops, e.g. to enable a capture button:
+		setLive : function(live) {
+			if (this.live !== live) {
+				this.live = live;
+				this.jq.trigger('photocamlive', [ live ]);
+			}
+		},
+
 		stop : function() {
+			this.setLive(false);
 			this.requestCount = (this.requestCount || 0) + 1;
 			this.pending = false;
 			if (this.stream) {
