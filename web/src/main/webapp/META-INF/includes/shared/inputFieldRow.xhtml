@@ -429,30 +429,31 @@
 				</h:panelGrid>
 				<h:panelGrid id="file#{index}" rendered="#{fieldInput.file}" columns="1"
 					cellpadding="0" styleClass="ctsms-input-panelgrid">
-					<h:outputLabel for="#{enabled and !fieldInput.disabled ? 'fileupload' : 'filedownload'}#{index}"
-						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-field-icon ctsms-icon-noencryption"
-						value="#{fieldInput.title}" />
-					<h:panelGroup layout="block"
-						rendered="#{fieldInput.hasFile or !(enabled and !fieldInput.disabled)}"
-						styleClass="ctsms-input-file-current #{fieldInput.widgetVar}_filecurrent"
-						style="#{enabled and !fieldInput.disabled ? 'display:none;' : ''}">
+					<h:panelGroup>
+						<h:outputLabel for="filedownload#{index}"
+							styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''} ctsms-field-icon ctsms-icon-noencryption"
+							value="#{fieldInput.title}" />
 						<p:commandLink immediate="true" id="filedownload#{index}"
 							ajax="false" disabled="#{!fieldInput.hasFile}"
+							styleClass="ctsms-input-file-link"
 							title="#{labels.file_download_tooltip} #{fieldInput.fileDownloadLinkLabel}">
 							<h:outputText value="#{fieldInput.fileDownloadLinkLabel}" />
 							<p:fileDownload value="#{fieldInput.fileStreamedContent}" />
 						</p:commandLink>
-						<h:panelGroup layout="block" rendered="#{not empty fieldInput.fileImagePreview}">
-							<img src="#{fieldInput.fileImagePreview}" alt="#{fieldInput.fileDownloadLinkLabel}"
-								class="ctsms-input-file-image-preview" />
-						</h:panelGroup>
+					</h:panelGroup>
+					<h:panelGroup layout="block"
+						rendered="#{not empty fieldInput.fileImagePreview}"
+						styleClass="ctsms-input-file-current #{fieldInput.widgetVar}_filecurrent"
+						style="#{enabled and !fieldInput.disabled ? 'display:none;' : ''}">
+						<img src="#{fieldInput.fileImagePreview}" alt="#{fieldInput.fileDownloadLinkLabel}"
+							class="ctsms-input-file-image-preview" />
 					</h:panelGroup>
 					<p:fileUpload id="fileupload#{index}"
 						rendered="#{enabled and !fieldInput.disabled}"
 						fileUploadListener="#{fieldInput.handleFileUpload}"
 						mode="advanced" update="file#{index}" multiple="false"
 						auto="true" label="#{labels.choose_file_button_label}"
-						styleClass="ctsms-upload-control #{fieldInput.hasFile ? 'ctsms-upload-control-file' : ''} #{fieldInput.widgetVar}_fileupload"
+						styleClass="ctsms-upload-control #{not empty fieldInput.fileImagePreview ? 'ctsms-upload-control-file' : ''} #{fieldInput.widgetVar}_fileupload"
 						sizeLimit="#{fieldInput.uploadSizeLimit}"
 						allowTypes="#{fieldInput.allowTypes}" />
 					<h:panelGroup rendered="#{enabled and !fieldInput.disabled}"
@@ -471,7 +472,7 @@
 							icon="ui-icon ui-icon-close" ajax="true"
 							disabled="#{!fieldInput.hasFile}" update="file#{index}" />
 						<script type="text/javascript">
-							// show the buttons in the button bar of the upload control, next to "choose file", the current file
+							// show the buttons in the button bar of the upload control, next to "choose file", the image preview
 							// in its content area, and enable capture only while the camera is live:
 							$(function() {
 								moveIntoFileUploadButtonBar('.#{fieldInput.widgetVar}_fileupload', '.#{fieldInput.widgetVar}_filebuttons');
