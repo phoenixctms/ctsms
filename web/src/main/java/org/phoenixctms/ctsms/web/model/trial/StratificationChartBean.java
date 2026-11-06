@@ -143,11 +143,13 @@ public class StratificationChartBean extends ManagedBeanBase {
 		chartModel.clear();
 		seriesColors.clear();
 		Collection<StratificationPermutationVO> permutations = null;
-		try {
-			permutations = WebUtil.getServiceLocator().getTrialService().getStratificationPermutations(WebUtil.getAuthentication(), trialId, null);
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
+		if (trialId != null) {
+			try {
+				permutations = WebUtil.getServiceLocator().getTrialService().getStratificationPermutations(WebUtil.getAuthentication(), trialId, null);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
 		}
 		if (permutations != null && !permutations.isEmpty()) {
 			Iterator<Color> colorIt = CommonUtil.getCircularIterator(selectionValueColors);

@@ -229,11 +229,13 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	protected void loadInquiryValuesCount() {
 		inquiryValuesCount = null;
-		try {
-			inquiryValuesCount = WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), trialId, null, null, probandId);
-		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-		} catch (AuthenticationException e) {
-			WebUtil.publishException(e);
+		if (trialId != null) {
+			try {
+				inquiryValuesCount = WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), trialId, null, null, probandId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
 		}
 	}
 
