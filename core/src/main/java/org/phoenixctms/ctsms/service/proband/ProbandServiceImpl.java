@@ -2823,13 +2823,18 @@ public class ProbandServiceImpl
 		if (departmentId != null) {
 			CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
 		}
-		Collection<Trial> trials = new LinkedHashSet<Trial>();
+		Trial inquiryTrial = null;
 		if (inquiryTrialId != null) {
-			trials.add(CheckIDUtil.checkTrialId(inquiryTrialId, this.getTrialDao()));
+			inquiryTrial = CheckIDUtil.checkTrialId(inquiryTrialId, this.getTrialDao());
 		}
 		Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(proband);
 		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
+		Collection<Trial> trials = new LinkedHashSet<Trial>();
+		// the inquiry trial comes first, but like any other trial only if the proband has values in it
+		if (inquiryTrial != null && inquiryValueDao.getCount(inquiryTrial.getId(), null, activeSignup, proband.getId()) > 0) {
+			trials.add(inquiryTrial);
+		}
 		Iterator<Trial> trialIt = this.getTrialDao().findBySignup(departmentId, true, null).iterator();
 		while (trialIt.hasNext()) {
 			Trial trial = trialIt.next();
