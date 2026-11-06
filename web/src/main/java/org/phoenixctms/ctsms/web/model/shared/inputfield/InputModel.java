@@ -412,7 +412,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 		if (allowTypes == null && inputField != null) {
 			StringBuilder sb = new StringBuilder();
 			HashSet<String> dupeCheck = new HashSet<String>();
-			// the allowed file types are not honoured for photo capture fields:
+			// the allowed file types are not honoured for photo capture fields, which accept any image type instead:
 			Iterator<MimeTypeVO> it = (inputField.isPhoto() ? new ArrayList<MimeTypeVO>() : inputField.getAllowedMimeTypes()).iterator();
 			while (it.hasNext()) {
 				String fileNameExtensions = it.next().getFileNameExtensions();
@@ -426,7 +426,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			if (sb.length() > 0) {
 				allowTypes = CommonUtil.FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)(" + sb.toString() + ")$/i" : sb.toString();
 			} else {
-				allowTypes = WebUtil.getAllowedFileExtensionsPattern(FileModule.INPUT_FIELD_VALUE_FILE, null);
+				allowTypes = WebUtil.getAllowedFileExtensionsPattern(FileModule.INPUT_FIELD_VALUE_FILE, inputField.isPhoto() ? true : null);
 			}
 		}
 		return allowTypes;

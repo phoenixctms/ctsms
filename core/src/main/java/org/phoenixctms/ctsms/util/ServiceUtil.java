@@ -875,8 +875,25 @@ public final class ServiceUtil {
 						if (mimeTypeDao.getCount(fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE) == 0) {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_MIME_TYPE, fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE);
 						}
-						// the allowed file types are kept, but not honoured for photo capture fields:
-						Collection<MimeType> allowedMimeTypes = Boolean.TRUE.equals(inputField.getPhoto()) ? null : inputField.getAllowedMimeTypes();
+						// the allowed file types are kept, but not honoured for photo capture fields, which accept any image type instead:
+						Collection<MimeType> allowedMimeTypes;
+						if (Boolean.TRUE.equals(inputField.getPhoto())) {
+							allowedMimeTypes = null;
+							boolean image = false;
+							Iterator<MimeType> it = mimeTypeDao.findByMimeTypeModule(fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE).iterator();
+							while (it.hasNext()) {
+								if (it.next().isImage()) {
+									image = true;
+									break;
+								}
+							}
+							if (!image) {
+								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_MIME_TYPE_NOT_ALLOWED,
+										CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), fileValue.getMimeType());
+							}
+						} else {
+							allowedMimeTypes = inputField.getAllowedMimeTypes();
+						}
 						if (allowedMimeTypes != null && allowedMimeTypes.size() > 0) {
 							boolean allowed = false;
 							Iterator<MimeType> it = allowedMimeTypes.iterator();
