@@ -448,31 +448,41 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 	}
 
 	/**
-	 * Loads the entities that can have the given name. Where the name is the name column, the database
-	 * filters them, so not every entity has to be converted to compare its name.
+	 * Loads the entities that can have the given name. The database filters them by the name columns,
+	 * so not every entity has to be converted to compare its name.
 	 */
 	private Collection findPickerCandidates(DBModule pickerModule, String value) {
 		switch (pickerModule) {
 			case INVENTORY_DB:
-				return inventoryDao.findByIdDepartment(null, null, createNameFilter(value));
+				return inventoryDao.findByIdDepartment(null, null, createNameFilter("name", value));
+			case STAFF_DB:
+				// a person is named by first and last name, so the last word is part of the last name
+				ArrayList staff = new ArrayList(staffDao.findByIdDepartment(null, null,
+						createNameFilter("personParticulars.lastName", value.substring(value.lastIndexOf(' ') + 1))));
+				staff.addAll(staffDao.findByIdDepartment(null, null, createNameFilter("organisationParticulars.organisationName", value)));
+				return staff;
 			case COURSE_DB:
-				return courseDao.findByIdDepartment(null, null, createNameFilter(value));
+				return courseDao.findByIdDepartment(null, null, createNameFilter("name", value));
 			case TRIAL_DB:
-				return trialDao.findByIdDepartment(null, null, createNameFilter(value));
+				return trialDao.findByIdDepartment(null, null, createNameFilter("name", value));
+			case INPUT_FIELD_DB:
+				return inputFieldDao.findById(null, createNameFilter("nameL10nKey", value));
 			case MASS_MAIL_DB:
-				return massMailDao.findByIdDepartment(null, null, createNameFilter(value));
+				return massMailDao.findByIdDepartment(null, null, createNameFilter("name", value));
+			case USER_DB:
+				return userDao.findByIdDepartment(null, null, createNameFilter("name", value));
 			default:
-				// staff and proband names are encrypted, user and input field names are not the plain name column
+				// proband names are encrypted
 				return loadAll(daoForPicker(pickerModule));
 		}
 	}
 
-	private static PSFVO createNameFilter(String value) {
+	private static PSFVO createNameFilter(String property, String value) {
 		PSFVO psf = new PSFVO();
 		psf.setUpdateRowCount(false);
 		HashMap<String, String> filters = new HashMap<String, String>();
 		// matches case-insensitively anywhere in the name, the exact match is checked by the caller
-		filters.put("name", value);
+		filters.put(property, value);
 		psf.setFilters(filters);
 		return psf;
 	}
