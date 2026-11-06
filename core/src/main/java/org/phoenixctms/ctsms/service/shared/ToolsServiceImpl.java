@@ -906,6 +906,7 @@ public class ToolsServiceImpl
 	@Override
 	protected InputFieldImageVO handleGetInputFieldImage(Long inputFieldId)
 			throws Exception {
+		CoreUtil.getUserContext().voMapClear(); // unauthenticated: no interceptor resets vos cached on this thread by a previous request
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao);
 		return inputFieldDao.toInputFieldImageVO(inputField);
@@ -1004,6 +1005,7 @@ public class ToolsServiceImpl
 	@Override
 	protected FileStreamOutVO handleGetPublicFileStream(Long fileId)
 			throws Exception {
+		CoreUtil.getUserContext().voMapClear(); // unauthenticated: no interceptor resets vos cached on this thread by a previous request
 		FileDao fileDao = this.getFileDao();
 		File file = CheckIDUtil.checkFileId(fileId, fileDao);
 		if (CommonUtil.getUseFileEncryption(file.getModule())) {
@@ -1096,6 +1098,7 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleMarkMassMailRead(String beacon) throws Exception {
+		CoreUtil.getUserContext().voMapClear(); // unauthenticated: no interceptor resets vos cached on this thread by a previous request
 		CommonUtil.parseUUID(beacon);
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
@@ -1342,6 +1345,7 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleUnsubscribeProbandEmail(String beacon) throws Exception {
+		CoreUtil.getUserContext().voMapClear(); // unauthenticated: no interceptor resets vos cached on this thread by a previous request
 		CommonUtil.parseUUID(beacon);
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -1378,6 +1382,7 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleConfirmProbandPrivacyConsent(String beacon) throws Exception {
+		CoreUtil.getUserContext().voMapClear(); // unauthenticated: no interceptor resets vos cached on this thread by a previous request
 		CommonUtil.parseUUID(beacon);
 		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
