@@ -26,6 +26,7 @@ import dev.langchain4j.model.chat.listener.ChatModelResponseContext;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModel.OpenAiChatModelBuilder;
+import dev.langchain4j.model.output.FinishReason;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolArgumentsErrorHandler;
@@ -54,6 +55,11 @@ public final class QueryTextAgent {
 			}
 			String flat = text.replaceAll("\\s+", " ").trim();
 			return flat.length() > STEP_TEXT_LENGTH ? flat.substring(0, STEP_TEXT_LENGTH) + "..." : flat;
+		}
+
+		private static String abbreviateStart(String text) {
+			String flat = text.replaceAll("\\s+", " ").trim();
+			return flat.length() > STEP_TEXT_LENGTH ? "..." + flat.substring(flat.length() - STEP_TEXT_LENGTH) : flat;
 		}
 
 		private static String elapsed(Map<Object, Object> attributes) {
@@ -107,6 +113,10 @@ public final class QueryTextAgent {
 				}
 			} else {
 				line.append(", finish ").append(response.finishReason());
+				if (response.finishReason() == FinishReason.LENGTH && !CommonUtil.isEmptyString(message.thinking())) {
+					// shows where the model went around in circles when it ran out of tokens
+					line.append("\n   thinking end: ").append(abbreviateStart(message.thinking()));
+				}
 				if (!CommonUtil.isEmptyString(message.text())) {
 					line.append("\n   answer: ").append(abbreviate(message.text()));
 				}
