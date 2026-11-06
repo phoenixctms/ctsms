@@ -633,5 +633,15 @@ if get_database_version() < '010901013' then
 
 end if;
 
+if get_database_version() < '010901014' then
+
+  update JOB_TYPE set COMMAND_FORMAT = '{10} --task=cleanup_all --task=export_ecrf_data_vertical --task=export_ecrf_data_horizontal --task=publish_ecrf_data_sqlite --task=publish_ecrf_data_horizontal_csv --task=publish_ecrf_data_xls --task=publish_ecrf_data_files --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --force' where NAME_L10N_KEY = 'export_ecrf_data';
+  update JOB_TYPE set COMMAND_FORMAT = '{10} --task=cleanup_all --task=export_ecrf_data_vertical --task=export_ecrf_data_horizontal --task=publish_ecrf_data_sqlite --task=publish_ecrf_data_horizontal_csv --task=publish_ecrf_data_xls --task=publish_ecrf_data_files --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --signed --force' where NAME_L10N_KEY = 'export_done_ecrf_data';
+  update JOB_TYPE set COMMAND_FORMAT = '{11} --task=cleanup_all --task=export_inquiry_data_vertical --task=export_inquiry_data_horizontal --task=publish_inquiry_data_sqlite --task=publish_inquiry_data_horizontal_csv --task=publish_inquiry_data_xls --task=publish_inquiry_data_files --task=cleanup_all -id={1} -auth={4} -jid={5} -tz={6} --upload --force' where NAME_L10N_KEY = 'export_inquiry_data';
+
+  perform set_database_version('010901014');
+
+end if;
+
 end
 $$;
