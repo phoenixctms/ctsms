@@ -42,6 +42,7 @@ public interface CVPDFSettingCodes {
 	public static final String SHOW_IMAGES = "show_images";
 	public static final String IMAGE_WIDTH = "image_width";
 	public static final String IMAGE_HEIGHT = "image_height";
+	public static final String IMAGE_MAX_WIDTH = "image_max_width";
 	public static final String IMAGE_QUALITY = "image_quality";
 	public static final String IMAGE_DPI = "image_dpi";
 	public static final String SHOW_PAGE_NUMBERS = "show_page_numbers";

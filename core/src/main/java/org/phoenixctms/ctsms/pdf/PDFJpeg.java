@@ -77,7 +77,21 @@ public class PDFJpeg extends PDJpeg {
 
 	public static PDFJpeg prepareScaledImage(PDDocument doc, byte[] data, float width, float height, int compressionQualityPercent, int dpi,
 			org.phoenixctms.ctsms.enumeration.Color bgColor) {
+		return prepareScaledImage(doc, data, width, height, 0.0f, compressionQualityPercent, dpi, bgColor);
+	}
+
+	public static PDFJpeg prepareScaledImage(PDDocument doc, byte[] data, float width, float height, float maxWidth, int compressionQualityPercent, int dpi,
+			org.phoenixctms.ctsms.enumeration.Color bgColor) {
 		Image image = createImage(data, bgColor);
+		if (image != null && image.getImage() != null && maxWidth > 0.0f) {
+			// the width the image would get, and if too wide, scale it down to the max width, keeping the aspect ratio:
+			float scaledWidth = width > 0.0f ? width
+					: (height > 0.0f ? height * image.getImage().getWidth() / image.getImage().getHeight() : pixelToPoints(image.getImage().getWidth(), dpi));
+			if (scaledWidth > maxWidth) {
+				height = width > 0.0f && height > 0.0f ? height * maxWidth / width : 0.0f;
+				width = maxWidth;
+			}
+		}
 		scaleImage(image, width, height, dpi);
 		return prepareImage(doc, image, compressionQualityPercent, dpi);
 	}

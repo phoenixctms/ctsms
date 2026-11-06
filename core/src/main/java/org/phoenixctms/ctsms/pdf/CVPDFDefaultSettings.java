@@ -42,6 +42,7 @@ public final class CVPDFDefaultSettings {
 	public static final boolean SHOW_IMAGES = true;
 	public static final Float IMAGE_WIDTH = null;
 	public static final Float IMAGE_HEIGHT = 180.0f;
+	public static final Float IMAGE_MAX_WIDTH = 180.0f;
 	public static final boolean SHOW_PAGE_NUMBERS = true;
 	public static final int IMAGE_QUALITY = 75;
 	public static final int IMAGE_DPI = 72;
