@@ -374,11 +374,13 @@
 		});
 	};
 
-	// places the live view of a camera (autoStart false) in the content area of a p:fileUpload, and marks the upload control
-	// while the camera is open. call it whenever both are rendered:
+	// places the live view of a camera (autoStart false) in the content area of a p:fileUpload, with the camera selector on
+	// its own below, and marks the upload control while the camera is open. call it whenever both are rendered:
 	PrimeFaces.widget.PhotoCam.embedInFileUpload = function(camSelector, fileUploadSelector) {
 		var cam = $(camSelector);
-		cam.appendTo($(fileUploadSelector).find('.fileupload-content'));
+		var content = $(fileUploadSelector).find('.fileupload-content');
+		cam.appendTo(content);
+		cam.find('.ctsms-photocam-devices').appendTo(content);
 		$(fileUploadSelector).toggleClass(FILE_UPLOAD_CAMERA_OPEN_CLASS, cam.length > 0 && cam.css('display') !== 'none');
 		var eventNamespace = '.photocamupload_' + camSelector.replace(/[^A-Za-z0-9_]/g, '_');
 		$(document).off('photocamopen' + eventNamespace).on('photocamopen' + eventNamespace, camSelector, function(event, open) {
