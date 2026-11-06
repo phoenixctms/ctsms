@@ -22,6 +22,7 @@
 						value="#{stafflabels.staff_image_show_cv_label}" />
 					<h:panelGroup>
 						<p:selectBooleanCheckbox id="showCv"
+							disabled="#{!staffImageBean.hasPhoto}"
 							value="#{staffImageBean.in.showCv}">
 							<p:ajax />
 						</p:selectBooleanCheckbox>
