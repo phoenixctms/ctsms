@@ -130,6 +130,11 @@ td .ui-selectonemenu {
     overflow-x: hidden; /* Prevents awkward horizontal shifting */
 }
 
+/* the clearfix dot overflows its 0 height box and shows a scrollbar */
+.ui-menu.ui-menu-dynamic.ui-helper-clearfix:after {
+	content: "";
+}
+
 .ui-tooltip img {
     opacity: 0.5;
     filter: alpha(opacity=50); /* For IE8 and earlier */
