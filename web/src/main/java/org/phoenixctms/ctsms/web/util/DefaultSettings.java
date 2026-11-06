@@ -35,6 +35,7 @@ public final class DefaultSettings {
 	public final static int QUERY_TEXT_LLM_TIMEOUT_MS = 600000;
 	public final static double QUERY_TEXT_LLM_TEMPERATURE = 0.0d;
 	public final static int QUERY_TEXT_LLM_MAX_TOOL_CALLS = 20;
+	public final static int QUERY_TEXT_LLM_MAX_TOKENS = 4096;
 	public final static String QUERY_TEXT_LLM_PROMPT_TEMPLATE = "";
 	public final static long QUERY_TEXT_JWT_VALIDITY_SECS = 3600L;
 	public final static String CALENDAR_YEAR_RANGE = "1900:" + ((new GregorianCalendar()).get(GregorianCalendar.YEAR) + 10);
