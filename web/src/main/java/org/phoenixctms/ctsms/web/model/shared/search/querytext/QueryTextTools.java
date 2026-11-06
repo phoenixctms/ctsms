@@ -45,6 +45,7 @@ public class QueryTextTools {
 	private final DBModule module;
 	private final Integer maxCriterions;
 	private String lastValidText;
+	private Collection<CriterionInVO> lastValidCriterions;
 
 	public QueryTextTools(AuthenticationVO auth, DBModule module, Integer maxCriterions) {
 		this.auth = auth;
@@ -57,6 +58,13 @@ public class QueryTextTools {
 	 */
 	public String getLastValidText() {
 		return lastValidText;
+	}
+
+	/**
+	 * The criterions parsed from the last valid text, so the view does not have to parse it again.
+	 */
+	public Collection<CriterionInVO> getLastValidCriterions() {
+		return lastValidCriterions;
 	}
 
 	private static PSFVO createPsf(String filterField, String namePart) {
@@ -217,6 +225,7 @@ public class QueryTextTools {
 		try {
 			Collection<CriterionInVO> criterions = WebUtil.getServiceLocator().getSearchService().parseCriterionText(auth, module, text == null ? "" : text, true, maxCriterions);
 			lastValidText = text;
+			lastValidCriterions = criterions;
 			return "ok: " + (criterions == null ? 0 : criterions.size()) + " criteria";
 		} catch (AuthenticationException | AuthorisationException | ServiceException | IllegalArgumentException e) {
 			return errorText(e);

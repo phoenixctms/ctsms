@@ -1477,8 +1477,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 	}
 
 	private void applyGeneratedQueryText(QueryTextRun run) {
-		// the prompt makes the model validate its final query, so the last accepted text is the answer
-		String result = !CommonUtil.isEmptyString(run.getLastValidText()) ? run.getLastValidText() : stripQueryTextFence(run.getAnswer());
+		// the prompt makes the model validate its final query, so the last accepted text is the answer.
+		// it was parsed by the agent already, which can take long when values are looked up by name
+		boolean validated = !CommonUtil.isEmptyString(run.getLastValidText()) && run.getLastValidCriterions() != null;
+		String result = validated ? run.getLastValidText() : stripQueryTextFence(run.getAnswer());
 		if (CommonUtil.isEmptyString(result)) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getStringLocalized("search_query_text_llm_empty"));
 			return;
@@ -1486,8 +1488,9 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		Integer maxCriterions = Integer.valueOf(Settings.getInt(SettingCodes.MAX_CRITERIONS, Bundle.SETTINGS, DefaultSettings.MAX_CRITERIONS));
 		queryText = result;
 		try {
-			Collection<CriterionInVO> parsed = WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText,
-					true, maxCriterions);
+			Collection<CriterionInVO> parsed = validated ? run.getLastValidCriterions()
+					: WebUtil.getServiceLocator().getSearchService().parseCriterionText(WebUtil.getAuthentication(), getDBModule(), queryText, true, maxCriterions);
+			validated = true;
 			if (parsed != null && !parsed.isEmpty()) {
 				// print it like a query loaded from the builder, in the selected format
 				ArrayList<CriterionInVO> criterions = new ArrayList<CriterionInVO>(parsed);
@@ -1508,8 +1511,10 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		if (!CommonUtil.isEmptyString(run.getNaturalLanguageRequest())) {
 			queryText = commentQueryText(run.getNaturalLanguageRequest(), QUERY_TEXT_FORMAT_JSON.equals(queryTextFormat)) + queryText;
 		}
-		// after the comment lines are on top, so the line matches the editor
-		markQueryTextErrorLine();
+		if (!validated) {
+			// after the comment lines are on top, so the line matches the editor
+			markQueryTextErrorLine();
+		}
 	}
 
 	/**
