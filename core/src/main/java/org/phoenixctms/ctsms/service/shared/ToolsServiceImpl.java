@@ -30,7 +30,6 @@ import org.hibernate.Cache;
 import org.hibernate.LockMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.phoenixctms.ctsms.UserContext;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.compare.DepartmentVOComparator;
 import org.phoenixctms.ctsms.compare.EntityIDComparator;
@@ -907,14 +906,9 @@ public class ToolsServiceImpl
 	@Override
 	protected InputFieldImageVO handleGetInputFieldImage(Long inputFieldId)
 			throws Exception {
-		UserContext userContext = CoreUtil.suspendUserContext(); // unauthenticated: use an own user context (vo cache), and do not leave it on the thread
-		try {
-			InputFieldDao inputFieldDao = this.getInputFieldDao();
-			InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao);
-			return inputFieldDao.toInputFieldImageVO(inputField);
-		} finally {
-			CoreUtil.resumeUserContext(userContext);
-		}
+		InputFieldDao inputFieldDao = this.getInputFieldDao();
+		InputField inputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao);
+		return inputFieldDao.toInputFieldImageVO(inputField);
 	}
 
 	@Override
@@ -1010,21 +1004,17 @@ public class ToolsServiceImpl
 	@Override
 	protected FileStreamOutVO handleGetPublicFileStream(Long fileId)
 			throws Exception {
-		UserContext userContext = CoreUtil.suspendUserContext(); // unauthenticated: use an own user context (vo cache), and do not leave it on the thread
-		try {
-			FileDao fileDao = this.getFileDao();
-			File file = CheckIDUtil.checkFileId(fileId, fileDao);
-			if (CommonUtil.getUseFileEncryption(file.getModule())) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENCRYPTED_FILE, fileId.toString());
-			}
-			if (!file.isPublicFile()) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
-			}
-			FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
-			return result;
-		} finally {
-			CoreUtil.resumeUserContext(userContext);
+		FileDao fileDao = this.getFileDao();
+		File file = CheckIDUtil.checkFileId(fileId, fileDao);
+		if (CommonUtil.getUseFileEncryption(file.getModule())) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.ENCRYPTED_FILE, fileId.toString());
 		}
+		if (!file.isPublicFile()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.FILE_NOT_PUBLIC, fileId.toString());
+		}
+		FileStreamOutVO result = fileDao.toFileStreamOutVO(file);
+		CoreUtil.clearUserContext(); // unauthenticated, so no interceptor clears the user context (vo cache) left on the thread
+		return result;
 	}
 
 	@Override
@@ -1107,23 +1097,18 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleMarkMassMailRead(String beacon) throws Exception {
-		UserContext userContext = CoreUtil.suspendUserContext(); // unauthenticated: use an own user context (vo cache), and do not leave it on the thread
-		try {
-			CommonUtil.parseUUID(beacon);
-			MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
-			if (recipient == null) {
-				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
-			}
-			massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
-			Timestamp now = new Timestamp(System.currentTimeMillis());
-			recipient.setRead(recipient.getRead() + 1l);
-			recipient.setReadTimestamp(now);
-			CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
-			massMailRecipientDao.update(recipient);
-		} finally {
-			CoreUtil.resumeUserContext(userContext);
+		CommonUtil.parseUUID(beacon);
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
+		if (recipient == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
 		}
+		massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		recipient.setRead(recipient.getRead() + 1l);
+		recipient.setReadTimestamp(now);
+		CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
+		massMailRecipientDao.update(recipient);
 	}
 
 	@Override
@@ -1358,77 +1343,67 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleUnsubscribeProbandEmail(String beacon) throws Exception {
-		UserContext userContext = CoreUtil.suspendUserContext(); // unauthenticated: use an own user context (vo cache), and do not leave it on the thread
-		try {
-			CommonUtil.parseUUID(beacon);
-			MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-			Timestamp now = new Timestamp(System.currentTimeMillis());
-			Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
-			if (proband == null) {
-				MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
-				if (recipient != null) {
-					massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
-					recipient.setUnsubscribed(recipient.getUnsubscribed() + 1l);
-					recipient.setUnsubscribedTimestamp(now);
-					CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
-					massMailRecipientDao.update(recipient);
-					proband = recipient.getProband();
-				} else {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
+		CommonUtil.parseUUID(beacon);
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
+		if (proband == null) {
+			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
+			if (recipient != null) {
+				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+				recipient.setUnsubscribed(recipient.getUnsubscribed() + 1l);
+				recipient.setUnsubscribedTimestamp(now);
+				CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
+				massMailRecipientDao.update(recipient);
+				proband = recipient.getProband();
+			} else {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
+			}
+		}
+		if (proband != null) {
+			ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
+			this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+			Iterator<ProbandContactDetailValue> contactsIt = proband.getContactDetailValues().iterator();
+			while (contactsIt.hasNext()) {
+				ProbandContactDetailValue contact = contactsIt.next();
+				ContactDetailType contactType;
+				if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
+					contact.setNotify(false);
+					CoreUtil.modifyVersion(contact, contact.getVersion(), now, contact.getModifiedUser());
+					probandContactDetailValueDao.update(contact);
 				}
 			}
-			if (proband != null) {
-				ProbandContactDetailValueDao probandContactDetailValueDao = this.getProbandContactDetailValueDao();
-				this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
-				Iterator<ProbandContactDetailValue> contactsIt = proband.getContactDetailValues().iterator();
-				while (contactsIt.hasNext()) {
-					ProbandContactDetailValue contact = contactsIt.next();
-					ContactDetailType contactType;
-					if (!contact.isNa() && contact.isNotify() && (contactType = contact.getType()).isEmail()) {
-						contact.setNotify(false);
-						CoreUtil.modifyVersion(contact, contact.getVersion(), now, contact.getModifiedUser());
-						probandContactDetailValueDao.update(contact);
-					}
-				}
-				this.getJournalEntryDao().addSystemMessage(proband, now, null, SystemMessageCodes.PROBAND_EMAIL_UNSUBSCRIBED);
-			}
-		} finally {
-			CoreUtil.resumeUserContext(userContext);
+			this.getJournalEntryDao().addSystemMessage(proband, now, null, SystemMessageCodes.PROBAND_EMAIL_UNSUBSCRIBED);
 		}
 	}
 
 	@Override
 	protected void handleConfirmProbandPrivacyConsent(String beacon) throws Exception {
-		UserContext userContext = CoreUtil.suspendUserContext(); // unauthenticated: use an own user context (vo cache), and do not leave it on the thread
-		try {
-			CommonUtil.parseUUID(beacon);
-			MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
-			Timestamp now = new Timestamp(System.currentTimeMillis());
-			Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
-			if (proband == null) {
-				MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
-				if (recipient != null) {
-					massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
-					recipient.setConfirmed(recipient.getConfirmed() + 1l);
-					recipient.setConfirmedTimestamp(now);
-					CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
-					massMailRecipientDao.update(recipient);
-					proband = recipient.getProband();
-				} else {
-					throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
-				}
+		CommonUtil.parseUUID(beacon);
+		MassMailRecipientDao massMailRecipientDao = this.getMassMailRecipientDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		Proband proband = this.getProbandDao().searchUniqueBeacon(beacon);
+		if (proband == null) {
+			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
+			if (recipient != null) {
+				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+				recipient.setConfirmed(recipient.getConfirmed() + 1l);
+				recipient.setConfirmedTimestamp(now);
+				CoreUtil.modifyVersion(recipient, recipient.getVersion(), recipient.getModifiedTimestamp(), recipient.getModifiedUser());
+				massMailRecipientDao.update(recipient);
+				proband = recipient.getProband();
+			} else {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.MASS_MAIL_RECIPIENT_BEACON_NOT_FOUND, beacon);
 			}
-			if (proband != null) {
-				ProbandDao probandDao = this.getProbandDao();
-				probandDao.lock(proband, LockMode.PESSIMISTIC_WRITE);
-				CoreUtil.modifyVersion(proband, proband.getVersion(), now, proband.getModifiedUser());
-				proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findConfirmState());
-				probandDao.update(proband);
-				ServiceUtil.notifyExpiringProbandAutoDelete(proband, now, this.getNotificationDao());
-				this.getJournalEntryDao().addSystemMessage(proband, now, null, SystemMessageCodes.PRIVACY_CONSENT_STATUS_CONFIRMED);
-			}
-		} finally {
-			CoreUtil.resumeUserContext(userContext);
+		}
+		if (proband != null) {
+			ProbandDao probandDao = this.getProbandDao();
+			probandDao.lock(proband, LockMode.PESSIMISTIC_WRITE);
+			CoreUtil.modifyVersion(proband, proband.getVersion(), now, proband.getModifiedUser());
+			proband.setPrivacyConsentStatus(this.getPrivacyConsentStatusTypeDao().findConfirmState());
+			probandDao.update(proband);
+			ServiceUtil.notifyExpiringProbandAutoDelete(proband, now, this.getNotificationDao());
+			this.getJournalEntryDao().addSystemMessage(proband, now, null, SystemMessageCodes.PRIVACY_CONSENT_STATUS_CONFIRMED);
 		}
 	}
 
