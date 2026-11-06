@@ -53,32 +53,44 @@
 				cellpadding="0"
 				styleClass="ctsms-input-panelgrid"
 				rowClasses="ctsms-input-row,ctsms-fileupload-row,ctsms-message-row,ctsms-toolbar-row">
+				<!-- two columns like the camera and photo panels above, so the file name lines up with the photo: -->
 				<h:panelGrid
 					rendered="#{photoBean.inputVisible}"
-					columns="6"
-					cellpadding="2"
-					columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column,ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
-					<h:outputLabel value="#{labels.photo_timestamp_label}" />
-					<h:outputText value="#{photoBean.timestamp}">
-						<f:converter converterId="ctsms.DateTime" />
-						<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
-					</h:outputText>
-					<h:outputLabel />
-					<h:outputLabel
-						styleClass="#{usePhotoEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : ''}"
-						for="filedownload"
-						value="#{labels.photo_filename_label}" />
-					<p:commandLink
-						immediate="true"
-						id="filedownload"
-						ajax="false"
-						disabled="#{!photoBean.hasPhoto}"
-						title="#{labels.file_download_tooltip} #{photoBean.fileDownloadLinkLabel}">
-						<h:outputText value="#{photoBean.fileDownloadLinkLabel}" />
-						<p:fileDownload value="#{photoBean.fileStreamedContent}" />
-					</p:commandLink>
-					<p:message for="filedownload" />
-					<ui:insert name="photoFields"></ui:insert>
+					columns="2"
+					cellpadding="0"
+					styleClass="ctsms-input-panelgrid"
+					columnClasses="ctsms-photo-column,ctsms-photo-column">
+					<h:panelGrid
+						columns="3"
+						cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel value="#{labels.photo_timestamp_label}" />
+						<h:outputText value="#{photoBean.timestamp}">
+							<f:converter converterId="ctsms.DateTime" />
+							<f:attribute name="timeZone" value="#{applicationScopeBean.dateTimeUserTimeZone ? sessionScopeBean.timeZone : applicationScopeBean.defaultTimeZone}" />
+						</h:outputText>
+						<h:outputLabel />
+						<ui:insert name="photoFields"></ui:insert>
+					</h:panelGrid>
+					<h:panelGrid
+						columns="3"
+						cellpadding="2"
+						columnClasses="ctsms-label-for-column,ctsms-input-column,ctsms-message-for-column">
+						<h:outputLabel
+							styleClass="#{usePhotoEncryption ? 'ctsms-field-icon ctsms-icon-encryption' : ''}"
+							for="filedownload"
+							value="#{labels.photo_filename_label}" />
+						<p:commandLink
+							immediate="true"
+							id="filedownload"
+							ajax="false"
+							disabled="#{!photoBean.hasPhoto}"
+							title="#{labels.file_download_tooltip} #{photoBean.fileDownloadLinkLabel}">
+							<h:outputText value="#{photoBean.fileDownloadLinkLabel}" />
+							<p:fileDownload value="#{photoBean.fileStreamedContent}" />
+						</p:commandLink>
+						<p:message for="filedownload" />
+					</h:panelGrid>
 				</h:panelGrid>
 				<p:fileUpload
 					rendered="#{photoBean.inputVisible}"
