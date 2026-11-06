@@ -59,6 +59,7 @@ import org.phoenixctms.ctsms.util.MessageCodes;
 import org.phoenixctms.ctsms.util.OmittedFields;
 import org.phoenixctms.ctsms.vo.CriterionInVO;
 import org.phoenixctms.ctsms.vo.CriterionInstantVO;
+import org.phoenixctms.ctsms.vo.PSFVO;
 
 public abstract class CriterionParser extends ExpressionParser<CriterionInstantVO> {
 
@@ -426,7 +427,7 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			} catch (RuntimeException | ServiceException ignored) {
 			}
 		}
-		Collection entities = loadAll(daoForPicker(pickerModule));
+		Collection entities = findPickerCandidates(pickerModule, value);
 		if (entities != null) {
 			Iterator it = entities.iterator();
 			while (it.hasNext()) {
@@ -444,6 +445,36 @@ public abstract class CriterionParser extends ExpressionParser<CriterionInstantV
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Loads the entities that can have the given name. Where the name is the name column, the database
+	 * filters them, so not every entity has to be converted to compare its name.
+	 */
+	private Collection findPickerCandidates(DBModule pickerModule, String value) {
+		switch (pickerModule) {
+			case INVENTORY_DB:
+				return inventoryDao.findByIdDepartment(null, null, createNameFilter(value));
+			case COURSE_DB:
+				return courseDao.findByIdDepartment(null, null, createNameFilter(value));
+			case TRIAL_DB:
+				return trialDao.findByIdDepartment(null, null, createNameFilter(value));
+			case MASS_MAIL_DB:
+				return massMailDao.findByIdDepartment(null, null, createNameFilter(value));
+			default:
+				// staff and proband names are encrypted, user and input field names are not the plain name column
+				return loadAll(daoForPicker(pickerModule));
+		}
+	}
+
+	private static PSFVO createNameFilter(String value) {
+		PSFVO psf = new PSFVO();
+		psf.setUpdateRowCount(false);
+		HashMap<String, String> filters = new HashMap<String, String>();
+		// matches case-insensitively anywhere in the name, the exact match is checked by the caller
+		filters.put("name", value);
+		psf.setFilters(filters);
+		return psf;
 	}
 
 	private Long findEntityId(String entityName, String value, String getNameMethodName) throws ServiceException {
