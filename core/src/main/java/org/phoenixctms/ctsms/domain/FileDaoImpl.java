@@ -1142,7 +1142,13 @@ public class FileDaoImpl
 	 */
 	@Override
 	public FileStreamOutVO toFileStreamOutVO(final File entity) {
-		return super.toFileStreamOutVO(entity);
+		if (entity == null) {
+			return null;
+		}
+		// never take or put stream vos from/to the vo cache: the stream can be consumed only once
+		FileStreamOutVO target = new FileStreamOutVO();
+		toFileStreamOutVO(entity, target);
+		return target;
 	}
 
 	/**
