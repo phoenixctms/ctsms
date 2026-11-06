@@ -8877,11 +8877,12 @@ public class TrialServiceImpl
 		this.getTrialStatusTypeDao().evict(originalTrialStatusType);
 		trialDao.evict(originalTrial);
 		Trial trial = trialDao.trialInVOToEntity(modifiedTrial);
+		// restart the random number generator of the randomization, if the randomization mode changes:
 		if (modifiedTrial.getRandomization() == null) {
 			trial.setRandom(null);
 		} else if (original.getRandomization() == null) {
 			trial.setRandom(null);
-		} else if (original.getRandomization().getMode().equals(modifiedTrial.getRandomization())) {
+		} else if (!original.getRandomization().getMode().equals(modifiedTrial.getRandomization())) {
 			trial.setRandom(null);
 		}
 		CoreUtil.modifyVersion(originalTrial, trial, now, user);
