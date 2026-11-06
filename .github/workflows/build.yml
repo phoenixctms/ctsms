@@ -30,7 +30,7 @@ jobs:
       - name: Set up Maven
         run: |
           MAVEN_VERSION=3.8.7
-          curl -fsSL -o "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+          curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors -o "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
             "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
           tar -xzf "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
