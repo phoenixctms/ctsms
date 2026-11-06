@@ -116,8 +116,27 @@ public final class QueryTextAgent {
 
 		@Override
 		public void onError(ChatModelErrorContext context) {
-			step("#" + (round + 1) + " " + elapsed(context.attributes()) + ", failed: " + context.error());
+			step("#" + (round + 1) + " " + elapsed(context.attributes()) + ", failed: " + describeError(context.error()));
 		}
+	}
+
+	/**
+	 * The error with its causes, e.g. the http timeout behind a langchain4j exception.
+	 */
+	private static String describeError(Throwable error) {
+		StringBuilder text = new StringBuilder();
+		Throwable cause = error;
+		while (cause != null) {
+			if (text.length() > 0) {
+				text.append(", caused by ");
+			}
+			text.append(cause.getClass().getName());
+			if (!CommonUtil.isEmptyString(cause.getMessage())) {
+				text.append(": ").append(cause.getMessage());
+			}
+			cause = cause.getCause() != cause ? cause.getCause() : null;
+		}
+		return text.toString();
 	}
 
 	private QueryTextAgent() {
@@ -156,6 +175,11 @@ public final class QueryTextAgent {
 				// only read for the step log, it is not sent back to the model
 				.returnThinking(true)
 				.listeners(Collections.singletonList(new RoundListener(run)));
+		// a model that keeps thinking stops with finish reason LENGTH, instead of running into the timeout
+		int maxTokens = Settings.getInt(SettingCodes.QUERY_TEXT_LLM_MAX_TOKENS, Bundle.SETTINGS, DefaultSettings.QUERY_TEXT_LLM_MAX_TOKENS);
+		if (maxTokens > 0) {
+			builder.maxTokens(maxTokens);
+		}
 		return builder.build();
 	}
 
