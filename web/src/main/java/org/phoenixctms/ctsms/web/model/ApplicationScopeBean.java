@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.web.model;
 
+import java.io.ByteArrayInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
@@ -26,6 +27,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import org.phoenixctms.ctsms.exception.AuthenticationException;
+import org.phoenixctms.ctsms.exception.AuthorisationException;
+import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
@@ -39,6 +43,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
@@ -68,6 +73,8 @@ import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.Urls;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(eager = true)
 @ApplicationScoped
@@ -230,6 +237,22 @@ public class ApplicationScopeBean {
 	public String getAuditTrailFieldValueString(ECRFFieldValueOutVO ecrfFieldValue) {
 		return (new EcrfFieldValueOutVOStringAdapter(Settings.getInt(SettingCodes.AUDIT_TRAIL_FIELD_VALUE_TEXT_CLIP_MAX_LENGTH, Bundle.SETTINGS,
 				DefaultSettings.AUDIT_TRAIL_FIELD_VALUE_TEXT_CLIP_MAX_LENGTH))).toString(ecrfFieldValue);
+	}
+
+	// the file of a FILE value in the audit trail, so the files of previous versions can be downloaded too:
+	public StreamedContent getAuditTrailFieldValueFileStreamedContent(ECRFFieldValueOutVO ecrfFieldValue) throws Exception {
+		if (ecrfFieldValue != null && ecrfFieldValue.getFileValue() != null) {
+			try {
+				FileContentOutVO content = WebUtil.getServiceLocator().getTrialService().getEcrfFieldValueFileContent(WebUtil.getAuthentication(), ecrfFieldValue.getId());
+				return new DefaultStreamedContent(new ByteArrayInputStream(content.getDatas()), content.getContentType().getMimeType(), content.getFileName());
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				throw e;
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+				throw e;
+			}
+		}
+		return null;
 	}
 
 	public String getBookingDurationString(Long duration) {
