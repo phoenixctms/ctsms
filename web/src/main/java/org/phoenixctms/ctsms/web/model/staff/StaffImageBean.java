@@ -239,6 +239,10 @@ public class StaffImageBean extends PhotoBeanBase {
 	@Override
 	protected void setData(byte[] data) {
 		in.setDatas(data);
+		if (data == null || data.length == 0) {
+			// "show in CV" is not allowed without a photo, and its checkbox is disabled then:
+			in.setShowCv(false);
+		}
 	}
 
 	@Override
