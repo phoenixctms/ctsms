@@ -1,7 +1,10 @@
 package org.phoenixctms.ctsms.web.model.shared.search.querytext;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import org.phoenixctms.ctsms.vo.CriterionInVO;
 
 /**
  * State of one background query agent run, shared between the worker thread and the polling view.
@@ -20,6 +23,7 @@ public class QueryTextRun {
 	private volatile long endMillis;
 	private volatile String answer;
 	private volatile String lastValidText;
+	private volatile Collection<CriterionInVO> lastValidCriterions;
 	private volatile String error;
 	private volatile boolean applied;
 	private volatile Thread thread;
@@ -50,10 +54,11 @@ public class QueryTextRun {
 		}
 	}
 
-	synchronized void done(String answer, String lastValidText) {
+	synchronized void done(String answer, String lastValidText, Collection<CriterionInVO> lastValidCriterions) {
 		if (status == Status.RUNNING) {
 			this.answer = answer;
 			this.lastValidText = lastValidText;
+			this.lastValidCriterions = lastValidCriterions;
 			status = Status.DONE;
 			endMillis = System.currentTimeMillis();
 		}
@@ -81,6 +86,10 @@ public class QueryTextRun {
 
 	public String getLastValidText() {
 		return lastValidText;
+	}
+
+	public Collection<CriterionInVO> getLastValidCriterions() {
+		return lastValidCriterions;
 	}
 
 	public Status getStatus() {

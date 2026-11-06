@@ -178,7 +178,7 @@ public final class QueryTextAgent {
 				.build();
 		Thread thread = new Thread(() -> {
 			try {
-				run.done(assistant.generate(request), tools.getLastValidText());
+				run.done(assistant.generate(request), tools.getLastValidText(), tools.getLastValidCriterions());
 			} catch (Exception e) {
 				logger.warn("query agent failed", e);
 				run.failed(e.getMessage() != null ? e.getMessage() : e.getClass().getName());
