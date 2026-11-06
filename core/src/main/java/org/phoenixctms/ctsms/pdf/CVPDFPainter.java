@@ -149,6 +149,7 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 		if (imageVOMap != null && Settings.getBoolean(CVPDFSettingCodes.SHOW_IMAGES, Bundle.CV_PDF, CVPDFDefaultSettings.SHOW_IMAGES)) {
 			Float width = Settings.getFloatNullable(CVPDFSettingCodes.IMAGE_WIDTH, Bundle.CV_PDF, CVPDFDefaultSettings.IMAGE_WIDTH);
 			Float height = Settings.getFloatNullable(CVPDFSettingCodes.IMAGE_HEIGHT, Bundle.CV_PDF, CVPDFDefaultSettings.IMAGE_HEIGHT);
+			Float maxWidth = Settings.getFloatNullable(CVPDFSettingCodes.IMAGE_MAX_WIDTH, Bundle.CV_PDF, CVPDFDefaultSettings.IMAGE_MAX_WIDTH);
 			int quality = Settings.getInt(CVPDFSettingCodes.IMAGE_QUALITY, Bundle.CV_PDF, CVPDFDefaultSettings.IMAGE_QUALITY);
 			int dpi = Settings.getInt(CVPDFSettingCodes.IMAGE_DPI, Bundle.CV_PDF, CVPDFDefaultSettings.IMAGE_DPI);
 			Iterator<StaffImageOutVO> it = imageVOMap.values().iterator();
@@ -156,7 +157,8 @@ public class CVPDFPainter extends PDFPainterBase implements PDFOutput {
 				StaffImageOutVO staffImage = it.next();
 				if (staffImage.getHasImage() && staffImage.getShowCv()) {
 					images.put(staffImage.getId(),
-							PDFJpeg.prepareScaledImage(doc, staffImage.getDatas(), width == null ? 0 : width, height == null ? 0 : height, quality, dpi, null));
+							PDFJpeg.prepareScaledImage(doc, staffImage.getDatas(), width == null ? 0 : width, height == null ? 0 : height, maxWidth == null ? 0 : maxWidth,
+									quality, dpi, null));
 				}
 			}
 		}
