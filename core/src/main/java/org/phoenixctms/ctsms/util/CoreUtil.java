@@ -271,6 +271,16 @@ public final class CoreUtil implements ApplicationContextAware {
 		PrincipalStore.set(null);
 	}
 
+	public static UserContext suspendUserContext() {
+		UserContext userContext = (UserContext) PrincipalStore.get();
+		PrincipalStore.set(null);
+		return userContext;
+	}
+
+	public static void resumeUserContext(UserContext userContext) {
+		PrincipalStore.set(userContext);
+	}
+
 	public static Map createEmptyTemplateModel() {
 		return new HashMap<String, Object>();
 	}
