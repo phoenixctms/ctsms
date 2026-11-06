@@ -475,6 +475,8 @@ public class JobServiceImpl extends JobServiceBase {
 	protected JobOutVO handleGetJob(AuthenticationVO auth, Long jobId) throws Exception {
 		JobDao jobDao = this.getJobDao();
 		Job job = CheckIDUtil.checkJobId(jobId, jobDao);
+		// jobs are updated by the job processes, so do not use a cached state (along with a lazy file loaded from the db):
+		jobDao.refresh(job);
 		JobOutVO result = jobDao.toJobOutVO(job);
 		return result;
 	}
@@ -498,6 +500,8 @@ public class JobServiceImpl extends JobServiceBase {
 	protected JobFileVO handleGetJobFile(AuthenticationVO auth, Long jobId) throws Exception {
 		JobDao jobDao = this.getJobDao();
 		Job job = CheckIDUtil.checkJobId(jobId, jobDao);
+		// jobs are updated by the job processes, so do not use a cached state (along with a lazy file loaded from the db):
+		jobDao.refresh(job);
 		JobFileVO result = jobDao.toJobFileVO(job);
 		return result;
 	}
