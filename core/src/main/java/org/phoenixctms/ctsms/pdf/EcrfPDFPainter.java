@@ -534,7 +534,9 @@ public class EcrfPDFPainter extends PDFPainterBase implements PDFOutput {
 				int quality = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
 				int dpi = Settings.getInt(EcrfPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_DPI);
 				Color bgColor = Settings.getColor(EcrfPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
-				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+				// keep a margin to the field frame:
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()),
+						cursor.getBlockIndentedWidth(false) - 2.0f * Settings.getFloat(EcrfPDFSettingCodes.X_FRAME_INDENT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.X_FRAME_INDENT),
 						Settings.getFloat(EcrfPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
 				if (fileImage != null) {
 					fileImages.put(valueId, fileImage);

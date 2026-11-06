@@ -323,7 +323,9 @@ public class ProbandListEntryTagsPDFPainter extends PDFPainterBase implements PD
 				int quality = Settings.getInt(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
 				int dpi = Settings.getInt(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.SKETCH_IMAGE_DPI);
 				Color bgColor = Settings.getColor(ProbandListEntryTagsPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
-				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+				// keep a margin to the field frame:
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()),
+						cursor.getBlockIndentedWidth(false) - 2.0f * Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.X_FRAME_INDENT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.X_FRAME_INDENT),
 						Settings.getFloat(ProbandListEntryTagsPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF, ProbandListEntryTagsPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
 				if (fileImage != null) {
 					fileImages.put(valueId, fileImage);

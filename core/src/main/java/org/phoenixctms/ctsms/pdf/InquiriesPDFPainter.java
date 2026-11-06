@@ -372,7 +372,9 @@ public class InquiriesPDFPainter extends PDFPainterBase implements PDFOutput {
 				int quality = Settings.getInt(InquiriesPDFSettingCodes.SKETCH_IMAGE_QUALITY, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_QUALITY);
 				int dpi = Settings.getInt(InquiriesPDFSettingCodes.SKETCH_IMAGE_DPI, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_DPI);
 				Color bgColor = Settings.getColor(InquiriesPDFSettingCodes.SKETCH_IMAGE_BG_COLOR, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.SKETCH_IMAGE_BG_COLOR);
-				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()), cursor.getBlockIndentedWidth(false),
+				// keep a margin to the field frame:
+				PDFJpeg fileImage = PDFJpeg.prepareFileImage(doc, fileValueImageData.get(fileValue.getId()),
+						cursor.getBlockIndentedWidth(false) - 2.0f * Settings.getFloat(InquiriesPDFSettingCodes.X_FRAME_INDENT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.X_FRAME_INDENT),
 						Settings.getFloat(InquiriesPDFSettingCodes.FILE_IMAGE_MAX_HEIGHT, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.FILE_IMAGE_MAX_HEIGHT), quality, dpi, bgColor);
 				if (fileImage != null) {
 					fileImages.put(valueId, fileImage);
