@@ -1104,6 +1104,28 @@ if (PrimeFaces.widget.SelectOneMenu && !PrimeFaces.widget.SelectOneMenu.prototyp
   };
 }
 
+// A dropdown whose change starts an ajax update (which may re-render it, eg. a form panel or a
+// query builder criterion row) does not reopen before that request completed: the user would
+// work in the old widget. Dropdowns without an ajax change behavior are not affected.
+var ctsmsSelectOneMenuTriggerChange = PrimeFaces.widget.SelectOneMenu.prototype.triggerChange;
+PrimeFaces.widget.SelectOneMenu.prototype.triggerChange = function() {
+  if (this.cfg.behaviors && this.cfg.behaviors.change) {
+    var menu = this;
+    this.ctsmsChangePending = true;
+    $(document).one('ajaxComplete', function() {
+      menu.ctsmsChangePending = false;
+    });
+  }
+  ctsmsSelectOneMenuTriggerChange.apply(this, arguments);
+}
+
+var ctsmsSelectOneMenuShow = PrimeFaces.widget.SelectOneMenu.prototype.show;
+PrimeFaces.widget.SelectOneMenu.prototype.show = function() {
+  if (!this.ctsmsChangePending) {
+    ctsmsSelectOneMenuShow.apply(this, arguments);
+  }
+}
+
 PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
         .extend({
 
