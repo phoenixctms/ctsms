@@ -666,9 +666,12 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	height: 95%;
 }
 
-/* the former fixed height, as a minimum, so error messages make the dialog grow instead of scroll */
+/* the former fixed height, as a minimum, so error messages make the dialog grow instead of scroll.
+   It never needs to scroll: a 1px rounding overflow otherwise adds a vertical scrollbar, which narrows
+   the 100% wide panelgrid below its width and adds a horizontal one */
 .ctsms-login-dialog .ui-dialog-content {
 	min-height: 340px;
+	overflow: visible;
 }
 
 /* 95% of the minimum, which a percentage of an auto height cannot express. A table height only sets a minimum, so it still grows */
