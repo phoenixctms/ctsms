@@ -1106,7 +1106,9 @@ if (PrimeFaces.widget.SelectOneMenu && !PrimeFaces.widget.SelectOneMenu.prototyp
 
 // A dropdown whose change starts an ajax update (which may re-render it, eg. a form panel or a
 // query builder criterion row) does not reopen before that request completed: the user would
-// work in the old widget. Dropdowns without an ajax change behavior are not affected.
+// work in the old widget. Opening it meanwhile is deferred until then, not dropped (a re-render
+// refreshes this same widget object, see PrimeFaces.createWidget). Dropdowns without an ajax
+// change behavior are not affected.
 // Same as PrimeFaces' triggerChange, but the behavior gets an ext oncomplete (PrimeFaces.ab
 // passes its second argument on as cfg.ext), so only this menu's own request releases it.
 var ctsmsSelectOneMenuTriggerChange = PrimeFaces.widget.SelectOneMenu.prototype.triggerChange;
@@ -1124,6 +1126,12 @@ PrimeFaces.widget.SelectOneMenu.prototype.triggerChange = function(edited) {
   changeBehavior.call(input, undefined, {
     oncomplete: function() {
       menu.ctsmsChangePending = false;
+      if (menu.ctsmsShowRequested) {
+        menu.ctsmsShowRequested = false;
+        if (menu.jq.is(':visible')) {
+          menu.show();
+        }
+      }
     }
   });
   if (!edited) {
@@ -1133,7 +1141,9 @@ PrimeFaces.widget.SelectOneMenu.prototype.triggerChange = function(edited) {
 
 var ctsmsSelectOneMenuShow = PrimeFaces.widget.SelectOneMenu.prototype.show;
 PrimeFaces.widget.SelectOneMenu.prototype.show = function() {
-  if (!this.ctsmsChangePending) {
+  if (this.ctsmsChangePending) {
+    this.ctsmsShowRequested = true;
+  } else {
     ctsmsSelectOneMenuShow.apply(this, arguments);
   }
 }
