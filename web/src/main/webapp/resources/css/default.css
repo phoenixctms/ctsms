@@ -753,6 +753,44 @@ table.ctsms-content-panelgrid.ctsms-content-panelgrid-maxheight > tbody > tr {
 	padding: 2px;
 }
 
+/* a cell can stack panels in a one column panelgrid (eg. eCRFs, eCRF fields), whose last row has
+   to fill the rest: it lays out as flexbox too, and the last row's panel grows */
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	height: auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type > tbody {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type > tbody > tr {
+	display: flex;
+	flex: 0 0 auto;
+	height: auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type > tbody > tr:last-child {
+	flex: 1 1 auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type > tbody > tr > td {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	height: auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type > tbody > tr > td > div:last-of-type {
+	flex: 1 1 auto;
+	box-sizing: border-box;
+	height: auto;
+}
+
 .ctsms-input-panelgrid {
 	width: 100%;
 }
