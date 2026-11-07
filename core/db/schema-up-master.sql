@@ -643,5 +643,61 @@ if get_database_version() < '010901014' then
 
 end if;
 
+if get_database_version() < '010901015' then
+
+  -- keep status-triggered mails of non-status-required types working as triggers:
+  -- 'enrollment' is the only type with PROBAND_LIST_STATUS_REQUIRED (also TRIAL_REQUIRED, visit schedule items optional).
+  -- trial-less mails never fired (trigger lookup is per trial) and stay as they are.
+  update MASS_MAIL m set TYPE_FK = (select ID from MASS_MAIL_TYPE where NAME_L10N_KEY = 'enrollment')
+    from MASS_MAIL_TYPE t
+    where m.TYPE_FK = t.ID and not t.PROBAND_LIST_STATUS_REQUIRED and m.PROBAND_LIST_STATUS_FK is not null
+    and m.TRIAL_FK is not null;
+
+  create table mass_mail_proband_list_status (
+    PROBAND_LIST_STATES_FK BIGINT not null,
+    MASS_MAILS_FK BIGINT not null
+  );
+
+  alter table mass_mail_proband_list_status
+    add constraint MASS_MAIL_PROBAND_LIST_STATES_FKC
+    foreign key (PROBAND_LIST_STATES_FK)
+    references PROBAND_LIST_STATUS_TYPE;
+
+  alter table mass_mail_proband_list_status
+    add constraint PROBAND_LIST_STATUS_TYPE_MASS_MAILS_FKC
+    foreign key (MASS_MAILS_FK)
+    references MASS_MAIL;
+
+  insert into mass_mail_proband_list_status (PROBAND_LIST_STATES_FK, MASS_MAILS_FK)
+    select PROBAND_LIST_STATUS_FK, ID from MASS_MAIL where PROBAND_LIST_STATUS_FK is not null;
+
+  alter table MASS_MAIL drop constraint MASS_MAIL_PROBAND_LIST_STATUS_FKC;
+  alter table MASS_MAIL drop column PROBAND_LIST_STATUS_FK;
+
+  create table mass_mail_ecrf_status (
+    ECRF_STATES_FK BIGINT not null,
+    MASS_MAILS_FK BIGINT not null
+  );
+
+  alter table mass_mail_ecrf_status
+    add constraint MASS_MAIL_ECRF_STATES_FKC
+    foreign key (ECRF_STATES_FK)
+    references ecrf_status_type;
+
+  alter table mass_mail_ecrf_status
+    add constraint ecrf_status_type_MASS_MAILS_FKC
+    foreign key (MASS_MAILS_FK)
+    references MASS_MAIL;
+
+  insert into mass_mail_ecrf_status (ECRF_STATES_FK, MASS_MAILS_FK)
+    select ECRF_STATUS_FK, ID from MASS_MAIL where ECRF_STATUS_FK is not null;
+
+  alter table MASS_MAIL drop constraint MASS_MAIL_ECRF_STATUS_FKC;
+  alter table MASS_MAIL drop column ECRF_STATUS_FK;
+
+  perform set_database_version('010901015');
+
+end if;
+
 end
 $$;

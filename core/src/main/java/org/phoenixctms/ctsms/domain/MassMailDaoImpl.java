@@ -48,6 +48,8 @@ public class MassMailDaoImpl
 
 	private final static VOIDComparator VISIT_SCHEDULE_ITEM_ID_COMPARATOR = new VOIDComparator<VisitScheduleItemOutVO>(false);
 	private final static VOIDComparator ECRF_ID_COMPARATOR = new VOIDComparator<ECRFOutVO>(false);
+	private final static VOIDComparator PROBAND_LIST_STATUS_TYPE_ID_COMPARATOR = new VOIDComparator<ProbandListStatusTypeVO>(false);
+	private final static VOIDComparator ECRF_STATUS_TYPE_ID_COMPARATOR = new VOIDComparator<ECRFStatusTypeVO>(false);
 
 	private org.hibernate.Criteria createMassMailCriteria(String alias) {
 		org.hibernate.Criteria massMailCriteria;
@@ -92,7 +94,8 @@ public class MassMailDaoImpl
 			massMailCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (probandListStatusTypeId != null) {
-			massMailCriteria.add(Restrictions.eq("probandListStatus.id", probandListStatusTypeId.longValue()));
+			criteriaMap.createCriteria("type").add(Restrictions.eq("probandListStatusRequired", true)); // other types use the states as visit reminder filter
+			criteriaMap.createCriteria("probandListStates", CriteriaSpecification.INNER_JOIN).add(Restrictions.idEq(probandListStatusTypeId.longValue()));
 		}
 		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
 			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", visitScheduleItemIds));
@@ -128,7 +131,8 @@ public class MassMailDaoImpl
 			massMailCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
 		}
 		if (probandListStatusTypeId != null) {
-			massMailCriteria.add(Restrictions.eq("probandListStatus.id", probandListStatusTypeId.longValue()));
+			massMailCriteria.createCriteria("type").add(Restrictions.eq("probandListStatusRequired", true)); // other types use the states as visit reminder filter
+			massMailCriteria.createCriteria("probandListStates", CriteriaSpecification.INNER_JOIN).add(Restrictions.idEq(probandListStatusTypeId.longValue()));
 		}
 		if (visitScheduleItemIds != null && visitScheduleItemIds.size() > 0) {
 			massMailCriteria.createCriteria("visitScheduleItems", CriteriaSpecification.INNER_JOIN).add(Restrictions.in("id", visitScheduleItemIds));
@@ -197,8 +201,6 @@ public class MassMailDaoImpl
 		Long departmentId = source.getDepartmentId();
 		Long statusId = source.getStatusId();
 		Long typeId = source.getTypeId();
-		Long probandListStatusId = source.getProbandListStatusId();
-		Long ecrfStatusId = source.getEcrfStatusId();
 		Long trialId = source.getTrialId();
 		if (departmentId != null) {
 			target.setDepartment(this.getDepartmentDao().load(departmentId));
@@ -215,20 +217,18 @@ public class MassMailDaoImpl
 		} else if (copyIfNull) {
 			target.setType(null);
 		}
-		if (probandListStatusId != null) {
-			target.setProbandListStatus(this.getProbandListStatusTypeDao().load(probandListStatusId));
-		} else if (copyIfNull) {
-			target.setProbandListStatus(null);
-		}
-		if (ecrfStatusId != null) {
-			target.setEcrfStatus(this.getECRFStatusTypeDao().load(ecrfStatusId));
-		} else if (copyIfNull) {
-			target.setEcrfStatus(null);
-		}
 		if (trialId != null) {
 			target.setTrial(this.getTrialDao().load(trialId));
 		} else if (copyIfNull) {
 			target.setTrial(null);
+		}
+		Collection probandListStatusIds;
+		if ((probandListStatusIds = source.getProbandListStatusIds()).size() > 0 || copyIfNull) {
+			target.setProbandListStates(toProbandListStatusTypeSet(probandListStatusIds));
+		}
+		Collection ecrfStatusIds;
+		if ((ecrfStatusIds = source.getEcrfStatusIds()).size() > 0 || copyIfNull) {
+			target.setEcrfStates(toEcrfStatusTypeSet(ecrfStatusIds));
 		}
 		Collection visitScheduleItemIds;
 		if ((visitScheduleItemIds = source.getVisitScheduleItemIds()).size() > 0 || copyIfNull) {
@@ -260,6 +260,26 @@ public class MassMailDaoImpl
 		return result;
 	}
 
+	private HashSet<ProbandListStatusType> toProbandListStatusTypeSet(Collection<Long> probandListStatusIds) { // lazyload persistentset prevention
+		ProbandListStatusTypeDao probandListStatusTypeDao = this.getProbandListStatusTypeDao();
+		HashSet<ProbandListStatusType> result = new HashSet<ProbandListStatusType>(probandListStatusIds.size());
+		Iterator<Long> it = probandListStatusIds.iterator();
+		while (it.hasNext()) {
+			result.add(probandListStatusTypeDao.load(it.next()));
+		}
+		return result;
+	}
+
+	private HashSet<ECRFStatusType> toEcrfStatusTypeSet(Collection<Long> ecrfStatusIds) { // lazyload persistentset prevention
+		ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
+		HashSet<ECRFStatusType> result = new HashSet<ECRFStatusType>(ecrfStatusIds.size());
+		Iterator<Long> it = ecrfStatusIds.iterator();
+		while (it.hasNext()) {
+			result.add(ecrfStatusTypeDao.load(it.next()));
+		}
+		return result;
+	}
+
 	private ArrayList<VisitScheduleItemOutVO> toVisitScheduleItemOutVOCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
 		// related to http://forum.andromda.org/viewtopic.php?t=4288
 		VisitScheduleItemDao visitScheduleItemDao = this.getVisitScheduleItemDao();
@@ -284,6 +304,30 @@ public class MassMailDaoImpl
 		return result;
 	}
 
+	private ArrayList<ProbandListStatusTypeVO> toProbandListStatusTypeVOCollection(Collection<ProbandListStatusType> probandListStates) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		ProbandListStatusTypeDao probandListStatusTypeDao = this.getProbandListStatusTypeDao();
+		ArrayList<ProbandListStatusTypeVO> result = new ArrayList<ProbandListStatusTypeVO>(probandListStates.size());
+		Iterator<ProbandListStatusType> it = probandListStates.iterator();
+		while (it.hasNext()) {
+			result.add(probandListStatusTypeDao.toProbandListStatusTypeVO(it.next()));
+		}
+		Collections.sort(result, PROBAND_LIST_STATUS_TYPE_ID_COMPARATOR);
+		return result;
+	}
+
+	private ArrayList<ECRFStatusTypeVO> toEcrfStatusTypeVOCollection(Collection<ECRFStatusType> ecrfStates) { // lazyload persistentset prevention
+		// related to http://forum.andromda.org/viewtopic.php?t=4288
+		ECRFStatusTypeDao ecrfStatusTypeDao = this.getECRFStatusTypeDao();
+		ArrayList<ECRFStatusTypeVO> result = new ArrayList<ECRFStatusTypeVO>(ecrfStates.size());
+		Iterator<ECRFStatusType> it = ecrfStates.iterator();
+		while (it.hasNext()) {
+			result.add(ecrfStatusTypeDao.toECRFStatusTypeVO(it.next()));
+		}
+		Collections.sort(result, ECRF_STATUS_TYPE_ID_COMPARATOR);
+		return result;
+	}
+
 	@Override
 	public MassMail massMailOutVOToEntity(MassMailOutVO massMailOutVO) {
 		MassMail entity = this.loadMassMailFromMassMailOutVO(massMailOutVO);
@@ -301,8 +345,6 @@ public class MassMailDaoImpl
 		DepartmentVO departmentVO = source.getDepartment();
 		UserOutVO modifiedUserVO = source.getModifiedUser();
 		MassMailTypeVO typeVO = source.getType();
-		ProbandListStatusTypeVO probandListStatusVO = source.getProbandListStatus();
-		ECRFStatusTypeVO ecrfStatusVO = source.getEcrfStatus();
 		TrialOutVO trialVO = source.getTrial();
 		if (statusVO != null) {
 			target.setStatus(this.getMassMailStatusTypeDao().massMailStatusTypeVOToEntity(statusVO));
@@ -323,16 +365,6 @@ public class MassMailDaoImpl
 			target.setType(this.getMassMailTypeDao().massMailTypeVOToEntity(typeVO));
 		} else if (copyIfNull) {
 			target.setType(null);
-		}
-		if (probandListStatusVO != null) {
-			target.setProbandListStatus(this.getProbandListStatusTypeDao().probandListStatusTypeVOToEntity(probandListStatusVO));
-		} else if (copyIfNull) {
-			target.setProbandListStatus(null);
-		}
-		if (ecrfStatusVO != null) {
-			target.setEcrfStatus(this.getECRFStatusTypeDao().eCRFStatusTypeVOToEntity(ecrfStatusVO));
-		} else if (copyIfNull) {
-			target.setEcrfStatus(null);
 		}
 		if (trialVO != null) {
 			target.setTrial(this.getTrialDao().trialOutVOToEntity(trialVO));
@@ -355,6 +387,22 @@ public class MassMailDaoImpl
 		} else if (copyIfNull) {
 			target.getEcrfs().clear();
 		}
+		Collection probandListStates = source.getProbandListStates();
+		if (probandListStates.size() > 0) {
+			probandListStates = new ArrayList(probandListStates); //prevent changing VO
+			this.getProbandListStatusTypeDao().probandListStatusTypeVOToEntityCollection(probandListStates);
+			target.setProbandListStates(probandListStates); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getProbandListStates().clear();
+		}
+		Collection ecrfStates = source.getEcrfStates();
+		if (ecrfStates.size() > 0) {
+			ecrfStates = new ArrayList(ecrfStates); //prevent changing VO
+			this.getECRFStatusTypeDao().eCRFStatusTypeVOToEntityCollection(ecrfStates);
+			target.setEcrfStates(ecrfStates); // hashset-exception!!!
+		} else if (copyIfNull) {
+			target.getEcrfStates().clear();
+		}
 	}
 
 	@Override
@@ -370,8 +418,6 @@ public class MassMailDaoImpl
 		Department department = source.getDepartment();
 		MassMailStatusType status = source.getStatus();
 		MassMailType type = source.getType();
-		ProbandListStatusType probandListStatus = source.getProbandListStatus();
-		ECRFStatusType ecrfStatus = source.getEcrfStatus();
 		Trial trial = source.getTrial();
 		if (department != null) {
 			target.setDepartmentId(department.getId());
@@ -382,17 +428,33 @@ public class MassMailDaoImpl
 		if (type != null) {
 			target.setTypeId(type.getId());
 		}
-		if (probandListStatus != null) {
-			target.setProbandListStatusId(probandListStatus.getId());
-		}
-		if (ecrfStatus != null) {
-			target.setEcrfStatusId(ecrfStatus.getId());
-		}
 		if (trial != null) {
 			target.setTrialId(trial.getId());
 		}
 		target.setVisitScheduleItemIds(toVisitScheduleItemIdCollection(source.getVisitScheduleItems()));
 		target.setEcrfIds(toEcrfIdCollection(source.getEcrfs()));
+		target.setProbandListStatusIds(toProbandListStatusTypeIdCollection(source.getProbandListStates()));
+		target.setEcrfStatusIds(toEcrfStatusTypeIdCollection(source.getEcrfStates()));
+	}
+
+	private static ArrayList<Long> toProbandListStatusTypeIdCollection(Collection<ProbandListStatusType> probandListStates) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(probandListStates.size());
+		Iterator<ProbandListStatusType> it = probandListStates.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
+	}
+
+	private static ArrayList<Long> toEcrfStatusTypeIdCollection(Collection<ECRFStatusType> ecrfStates) { // lazyload persistentset prevention
+		ArrayList<Long> result = new ArrayList<Long>(ecrfStates.size());
+		Iterator<ECRFStatusType> it = ecrfStates.iterator();
+		while (it.hasNext()) {
+			result.add(it.next().getId());
+		}
+		Collections.sort(result); // InVO ID sorting
+		return result;
 	}
 
 	private static ArrayList<Long> toVisitScheduleItemIdCollection(Collection<VisitScheduleItem> visitScheduleItems) { // lazyload persistentset prevention
@@ -429,8 +491,6 @@ public class MassMailDaoImpl
 		Department department = source.getDepartment();
 		User modifiedUser = source.getModifiedUser();
 		MassMailType type = source.getType();
-		ProbandListStatusType probandListStatus = source.getProbandListStatus();
-		ECRFStatusType ecrfStatus = source.getEcrfStatus();
 		Trial trial = source.getTrial();
 		if (status != null) {
 			target.setStatus(this.getMassMailStatusTypeDao().toMassMailStatusTypeVO(status));
@@ -444,16 +504,12 @@ public class MassMailDaoImpl
 		if (type != null) {
 			target.setType(this.getMassMailTypeDao().toMassMailTypeVO(type));
 		}
-		if (probandListStatus != null) {
-			target.setProbandListStatus(this.getProbandListStatusTypeDao().toProbandListStatusTypeVO(probandListStatus));
-		}
-		if (ecrfStatus != null) {
-			target.setEcrfStatus(this.getECRFStatusTypeDao().toECRFStatusTypeVO(ecrfStatus));
-		}
 		if (trial != null) {
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
 		target.setVisitScheduleItems(toVisitScheduleItemOutVOCollection(source.getVisitScheduleItems()));
 		target.setEcrfs(toEcrfOutVOCollection(source.getEcrfs()));
+		target.setProbandListStates(toProbandListStatusTypeVOCollection(source.getProbandListStates()));
+		target.setEcrfStates(toEcrfStatusTypeVOCollection(source.getEcrfStates()));
 	}
 }

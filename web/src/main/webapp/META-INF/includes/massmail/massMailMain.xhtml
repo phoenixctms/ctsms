@@ -211,18 +211,16 @@
 									<h:outputLabel for="probandliststatus"
 										value="#{massmaillabels.mass_mail_proband_list_status_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu id="probandliststatus"
-											value="#{massMailBean.in.probandListStatusId}"
+										<p:selectCheckboxMenu id="probandliststatus"
+											value="#{massMailBean.in.probandListStatusIds}"
 											required="false"
 											label="#{massmaillabels.mass_mail_proband_list_status}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
-											<f:selectItem itemLabel="#{labels.no_selection_label}"
-												itemValue="#{applicationScopeBean.noSelectionValue}" />
 											<f:selectItems value="#{massMailBean.probandListStatusTypes}"
 												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
-										</p:selectOneMenu>
+										</p:selectCheckboxMenu>
 										<p:tooltip rendered="#{enableTooltips}"
 											for="probandliststatus">
 											<h:outputText
@@ -303,17 +301,15 @@
 									<h:outputLabel for="ecrfstatus"
 										value="#{massmaillabels.mass_mail_ecrf_status_label}" />
 									<h:panelGroup>
-										<p:selectOneMenu id="ecrfstatus"
-											value="#{massMailBean.in.ecrfStatusId}" required="false"
+										<p:selectCheckboxMenu id="ecrfstatus"
+											value="#{massMailBean.in.ecrfStatusIds}" required="false"
 											label="#{massmaillabels.mass_mail_ecrf_status}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
-											<f:selectItem itemLabel="#{labels.no_selection_label}"
-												itemValue="#{applicationScopeBean.noSelectionValue}" />
 											<f:selectItems value="#{massMailBean.ecrfStatusTypes}"
 												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
-										</p:selectOneMenu>
+										</p:selectCheckboxMenu>
 										<p:tooltip rendered="#{enableTooltips}" for="ecrfstatus">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_ecrf_status_tooltip}"
