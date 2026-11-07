@@ -113,11 +113,19 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	vertical-align: bottom;
 }
 
+/* the line height of a 16px header icon (ctsms-list-header-icon), so titles with and without an
+   icon share the baseline and the icon is centered on its title */
+.ui-datatable th .ui-dt-c > span {
+	line-height: 16px;
+}
+
+/* the same height for text and dropdown filters (a dropdown is 2px taller by default) */
 .ui-datatable th .ui-column-filter {
 	width: 100%;
 	min-width: 3em;
 	max-width: 100%;
 	box-sizing: border-box;
+	height: 2.1em;
 	margin-top: 4px;
 }
 
