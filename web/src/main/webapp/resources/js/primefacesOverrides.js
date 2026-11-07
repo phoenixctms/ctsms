@@ -2624,4 +2624,22 @@ PrimeFaces.widget.Paginator.prototype.bindEvents = function() {
     select.removeClass('ui-corner-left').addClass('ui-corner-all');
     PrimeFaces.skinInput(select);
   });
+  this.alignSelectHeight();
+}
+
+// A native select is not exactly as high as the page buttons, and the difference depends on the
+// theme font: use the buttons' height. Not visible yet (eg. in a hidden tab), retry on mouseenter.
+PrimeFaces.widget.Paginator.prototype.alignSelectHeight = function() {
+  var paginator = this;
+  var height = this.firstLink.first().outerHeight();
+  if (height > 0) {
+    this.rppSelect.add(this.jtpSelect).css({
+      'box-sizing': 'border-box',
+      'height': height + 'px'
+    });
+  } else {
+    this.jq.one('mouseenter', function() {
+      paginator.alignSelectHeight();
+    });
+  }
 }
