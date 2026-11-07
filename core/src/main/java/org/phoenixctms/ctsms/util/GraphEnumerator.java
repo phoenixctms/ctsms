@@ -197,6 +197,23 @@ public abstract class GraphEnumerator {
 		return getValueOf(rootGraph, getIndexKeyStack(indexesKeys));
 	}
 
+	protected final String getFieldName() {
+		return fieldName;
+	}
+
+	// the object holding the field, i.e. the value of the getter chain without the last getter:
+	protected final Object getOwnerOf(Object rootGraph, ArrayList indexesKeys) throws Exception {
+		Stack indexesKeysStack = getIndexKeyStack(indexesKeys);
+		Object graph = rootGraph;
+		if (getterChain != null) {
+			Iterator<Accessor> it = getterChain.iterator();
+			while (it.hasNext() && graph != null) {
+				graph = getValueOfHelper(graph, it.next(), indexesKeysStack);
+			}
+		}
+		return graph;
+	}
+
 	private final Object getValueOf(Object rootGraph, Stack indexesKeys) throws Exception {
 		Object graph = rootGraph;
 		if (getterChain != null) {

@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.executable.xls;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
@@ -13,6 +14,7 @@ import org.phoenixctms.ctsms.util.ExecSettings;
 import org.phoenixctms.ctsms.util.FilePathSplitter;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.terracotta.agent.repkg.de.schlichtherle.io.FileOutputStream;
 
@@ -44,6 +46,9 @@ public class InputFieldRowWriter extends RowWriter {
 	private final static int REGEXP_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static int PHOTO_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int ALLOWED_MIME_TYPES_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
+	private final static String ALLOWED_MIME_TYPES_SEPARATOR = ",";
 	private final static int MIN_SELECTIONS_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int MAX_SELECTIONS_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
 	private final static int LONG_LOWER_LIMIT_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
@@ -85,6 +90,8 @@ public class InputFieldRowWriter extends RowWriter {
 	private int regExpColumnIndex;
 	private int learnColumnIndex;
 	private int strictColumnIndex;
+	private int photoColumnIndex;
+	private int allowedMimeTypesColumnIndex;
 	private int minSelectionsColumnIndex;
 	private int maxSelectionsColumnIndex;
 	private int longLowerLimitColumnIndex;
@@ -175,6 +182,10 @@ public class InputFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(learnColumnIndex, maxColumnIndex);
 		strictColumnIndex = STRICT_COLUMN_INDEX;
 		maxColumnIndex = Math.max(strictColumnIndex, maxColumnIndex);
+		photoColumnIndex = PHOTO_COLUMN_INDEX;
+		maxColumnIndex = Math.max(photoColumnIndex, maxColumnIndex);
+		allowedMimeTypesColumnIndex = ALLOWED_MIME_TYPES_COLUMN_INDEX;
+		maxColumnIndex = Math.max(allowedMimeTypesColumnIndex, maxColumnIndex);
 		minSelectionsColumnIndex = MIN_SELECTIONS_COLUMN_INDEX;
 		maxColumnIndex = Math.max(minSelectionsColumnIndex, maxColumnIndex);
 		maxSelectionsColumnIndex = MAX_SELECTIONS_COLUMN_INDEX;
@@ -291,6 +302,10 @@ public class InputFieldRowWriter extends RowWriter {
 				values[maxTimestampColumnIndex] = (inputField.getMaxTimestamp() != null ? CommonUtil.formatDate(inputField.getMaxTimestamp(), dateTimePattern) : null);
 				values[userTimeZoneIndex] = Boolean.toString(inputField.getUserTimeZone());
 				break;
+			case FILE:
+				values[photoColumnIndex] = Boolean.toString(inputField.getPhoto());
+				values[allowedMimeTypesColumnIndex] = getAllowedMimeTypes(inputField);
+				break;
 			case SKETCH:
 				values[widthColumnIndex] = (inputField.getWidth() != null ? Long.toString(inputField.getWidth()) : null);
 				values[heightColumnIndex] = (inputField.getHeight() != null ? Long.toString(inputField.getHeight()) : null);
@@ -320,6 +335,18 @@ public class InputFieldRowWriter extends RowWriter {
 		values[bottomCommentColumnIndex] = inputField.getBottomCommentL10nKey();
 		values[validationErrorMsgColumnIndex] = inputField.getValidationErrorMsgL10nKey();
 		printRow(values);
+	}
+
+	private static String getAllowedMimeTypes(InputFieldOutVO inputField) {
+		StringBuilder sb = new StringBuilder();
+		Iterator<MimeTypeVO> it = inputField.getAllowedMimeTypes().iterator();
+		while (it.hasNext()) {
+			if (sb.length() > 0) {
+				sb.append(ALLOWED_MIME_TYPES_SEPARATOR);
+			}
+			sb.append(it.next().getMimeType());
+		}
+		return sb.length() > 0 ? sb.toString() : null;
 	}
 
 	private String writeFile(InputFieldOutVO inputField) throws Throwable {

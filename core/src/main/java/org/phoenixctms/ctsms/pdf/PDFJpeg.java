@@ -26,6 +26,7 @@ public class PDFJpeg extends PDJpeg {
 	private final static int QRCODE_DEFAULT_WIDTH = 100;
 	private final static int QRCODE_DEFAULT_HEIGHT = 100;
 	private final static int QRCODE_DEFAULT_MARGIN = 4;
+	private final static long FILE_IMAGE_MAX_PIXELS = 4096L * 4096L;
 
 	public static Image createImage(byte[] data, org.phoenixctms.ctsms.enumeration.Color bgColor) {
 		if (data != null && data.length > 0) {
@@ -150,6 +151,31 @@ public class PDFJpeg extends PDJpeg {
 			}
 		}
 		return prepareImage(doc, image, compressionQualityPercent, dpi);
+	}
+
+	public static PDFJpeg prepareFileImage(PDDocument doc, byte[] data, float maxWidth, float maxHeight, int compressionQualityPercent, int dpi,
+			org.phoenixctms.ctsms.enumeration.Color bgColor) {
+		Image image = null;
+		if (data != null && data.length > 0) {
+			try {
+				// uploaded images can have any dimensions, so never decode them fully:
+				image = new Image(data, maxWidth > 0.0f ? pointsToPixel(maxWidth, dpi) : 0, maxHeight > 0.0f ? pointsToPixel(maxHeight, dpi) : 0,
+						FILE_IMAGE_MAX_PIXELS, bgColor == null ? IMAGE_BG_COLOR : bgColor);
+			} catch (Exception e) {
+			}
+		}
+		if (image != null && image.getImage() != null) {
+			float width = pixelToPoints(image.getImage().getWidth(), dpi);
+			float height = pixelToPoints(image.getImage().getHeight(), dpi);
+			if (width > 0.0f && height > 0.0f) {
+				float factor = Math.min(maxWidth > 0.0f ? maxWidth / width : 1.0f, maxHeight > 0.0f ? maxHeight / height : 1.0f);
+				if (factor < 1.0f) {
+					scaleImage(image, width * factor, height * factor, dpi);
+				}
+			}
+			return prepareImage(doc, image, compressionQualityPercent, dpi);
+		}
+		return null;
 	}
 
 	public static Image scaleImage(Image image, float width, float height, int dpi) {

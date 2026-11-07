@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.phoenixctms.ctsms.compare.InputFieldSelectionSetValueOutVOComparator;
+import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDaoImpl;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
+import org.phoenixctms.ctsms.domain.MimeType;
+import org.phoenixctms.ctsms.domain.MimeTypeDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.UserDao;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
@@ -18,22 +22,27 @@ import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
 
 public class InputFieldGraph extends GraphCycleNHelper<InputField, InputFieldOutVO, InputFieldSelectionSetValue, InputFieldSelectionSetValueOutVO> {
 
 	private static final boolean LIMIT_A_INSTANCES = true;
 	private static final int MAX_A_INSTANCES = 1;
+	private final static VOIDComparator MIME_TYPE_ID_COMPARATOR = new VOIDComparator<MimeTypeVO>(false);
 	private InputFieldDaoImpl inputFieldDaoImpl;
 	private InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao;
 	private UserDao userDao;
+	private MimeTypeDao mimeTypeDao;
 
 	public InputFieldGraph(
 			InputFieldDaoImpl inputFieldDaoImpl,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
-			UserDao userDao) {
+			UserDao userDao,
+			MimeTypeDao mimeTypeDao) {
 		this.inputFieldDaoImpl = inputFieldDaoImpl;
 		this.inputFieldSelectionSetValueDao = inputFieldSelectionSetValueDao;
 		this.userDao = userDao;
+		this.mimeTypeDao = mimeTypeDao;
 	}
 
 	@Override
@@ -114,6 +123,13 @@ public class InputFieldGraph extends GraphCycleNHelper<InputField, InputFieldOut
 		}
 		target.setFieldType(L10nUtil.createInputFieldTypeVO(Locales.USER, source.getFieldType()));
 		target.setHasImage(source.getFileSize() != null && source.getFileSize() > 0l);
+		ArrayList<MimeTypeVO> allowedMimeTypes = new ArrayList<MimeTypeVO>(source.getAllowedMimeTypes().size());
+		Iterator<MimeType> allowedMimeTypesIt = source.getAllowedMimeTypes().iterator();
+		while (allowedMimeTypesIt.hasNext()) {
+			allowedMimeTypes.add(mimeTypeDao.toMimeTypeVO(allowedMimeTypesIt.next()));
+		}
+		Collections.sort(allowedMimeTypes, MIME_TYPE_ID_COMPARATOR);
+		target.setAllowedMimeTypes(allowedMimeTypes);
 		if (source.isLocalized()) {
 			target.setTextPreset(L10nUtil.getInputFieldTextPreset(Locales.USER, source.getTextPresetL10nKey()));
 			target.setName(L10nUtil.getInputFieldName(Locales.USER, source.getNameL10nKey()));

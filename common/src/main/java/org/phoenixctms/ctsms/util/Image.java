@@ -4,8 +4,12 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Iterator;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
@@ -24,6 +28,54 @@ public class Image {
 
 	public Image(byte[] imageData, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
 		this.image = ImageIO.read(new ByteArrayInputStream(imageData));
+		if (this.image == null) {
+			throw new IllegalArgumentException("cannot decode image data");
+		}
+		this.bgColor = CommonUtil.convertColor(bgColor == null ? DEFAULT_BG_COLOR : bgColor);
+		drawn = false;
+	}
+
+	// decodes with source subsampling, so the image is never fully decoded if its dimensions (from the header) exceed what is needed
+	// for the given size (twice it, as headroom for smooth scaling) or the pixel count limit:
+	public Image(byte[] imageData, int maxWidth, int maxHeight, long maxPixels, org.phoenixctms.ctsms.enumeration.Color bgColor) throws Exception {
+		ImageInputStream input = ImageIO.createImageInputStream(new ByteArrayInputStream(imageData));
+		if (input == null) {
+			throw new IllegalArgumentException("cannot decode image data");
+		}
+		try {
+			Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+			if (!readers.hasNext()) {
+				throw new IllegalArgumentException("cannot decode image data");
+			}
+			ImageReader reader = readers.next();
+			try {
+				reader.setInput(input, true, true);
+				int width = reader.getWidth(0);
+				int height = reader.getHeight(0);
+				int subsampling = 1;
+				if (maxWidth > 0) {
+					subsampling = Math.max(subsampling, width / (2 * maxWidth));
+				}
+				if (maxHeight > 0) {
+					subsampling = Math.max(subsampling, height / (2 * maxHeight));
+				}
+				while (maxPixels > 0 && ((long) ((width + subsampling - 1) / subsampling)) * ((height + subsampling - 1) / subsampling) > maxPixels) {
+					subsampling++;
+				}
+				ImageReadParam param = reader.getDefaultReadParam();
+				if (subsampling > 1) {
+					param.setSourceSubsampling(subsampling, subsampling, 0, 0);
+				}
+				this.image = reader.read(0, param);
+			} finally {
+				reader.dispose();
+			}
+		} finally {
+			input.close();
+		}
+		if (this.image == null) {
+			throw new IllegalArgumentException("cannot decode image data");
+		}
 		this.bgColor = CommonUtil.convertColor(bgColor == null ? DEFAULT_BG_COLOR : bgColor);
 		drawn = false;
 	}

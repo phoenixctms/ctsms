@@ -164,6 +164,8 @@ import org.phoenixctms.ctsms.vo.ECRFProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFSpecificationPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.ECRFVisitVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -649,10 +651,13 @@ public class TrialServiceImpl
 			//			this.getInputFieldSelectionSetValueDao());
 			//}
 			checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, visit, ecrfField);
-			checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
+			checkEcrfFieldValueInput(ecrfFieldValueIn, null, ecrfStatusEntry, ecrfField);
 			ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 					journalEntryDao);
 			ECRFFieldValue ecrfFieldValue = ecrfFieldValueDao.eCRFFieldValueInVOToEntity(ecrfFieldValueIn);
+			if (ecrfFieldValueIn.getFileValue() != null) {
+				ecrfFieldValue.getValue().setFileValue(ServiceUtil.createInputFieldValueFile(ecrfFieldValueIn.getFileValue(), now, user, this.getFileDao(), this.getMimeTypeDao()));
+			}
 			CoreUtil.modifyVersion(ecrfFieldValue, now, user);
 			if (isAuditTrail) {
 				ecrfFieldValue.setChangeComment(CoreUtil.getAuditTrailChangeCommentContent(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue), null, true));
@@ -687,13 +692,14 @@ public class TrialServiceImpl
 			(!CommonUtil.isEmptyString(ecrfFieldValueIn.getReasonForChange())
 					|| !ServiceUtil.ecrfFieldValueEquals(ecrfFieldValueIn, originalEcrfFieldValue.getValue(), force))) {
 				checkEcrfFieldValueInputUnlockedForFieldStatus(ecrfFieldValueIn, ecrfStatusEntry, visit, ecrfField);
-				checkEcrfFieldValueInput(ecrfFieldValueIn, ecrfStatusEntry, ecrfField);
+				checkEcrfFieldValueInput(ecrfFieldValueIn, originalEcrfFieldValue.getValue(), ecrfStatusEntry, ecrfField);
 				ServiceUtil.addAutocompleteSelectionSetValue(ecrfField.getField(), ecrfFieldValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);
 				ECRFFieldValueOutVO original = null;
 				if (isAuditTrail || logProband || logTrial) {
 					original = ecrfFieldValueDao.toECRFFieldValueOutVO(originalEcrfFieldValue);
 				}
+				File originalFileValue = originalEcrfFieldValue.getValue().getFileValue();
 				ecrfFieldValueDao.evict(originalEcrfFieldValue);
 				ECRFFieldValue ecrfFieldValue;
 				if (isAuditTrail) {
@@ -701,6 +707,9 @@ public class TrialServiceImpl
 					ecrfFieldValueIn.setId(null); // arg must not be manipulated
 				}
 				ecrfFieldValue = ecrfFieldValueDao.eCRFFieldValueInVOToEntity(ecrfFieldValueIn);
+				if (ecrfFieldValueIn.getFileValue() != null) {
+					ecrfFieldValue.getValue().setFileValue(ServiceUtil.createInputFieldValueFile(ecrfFieldValueIn.getFileValue(), now, user, this.getFileDao(), this.getMimeTypeDao()));
+				}
 				CoreUtil.modifyVersion(originalEcrfFieldValue, ecrfFieldValue, now, user); // modified check when record was updated meanwhile
 				if (isAuditTrail) {
 					ecrfFieldValue.setChangeComment(CoreUtil.getAuditTrailChangeCommentContent(ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue), original, true));
@@ -710,6 +719,9 @@ public class TrialServiceImpl
 				} else {
 					ecrfFieldValue.setChangeComment(null);
 					ecrfFieldValueDao.update(ecrfFieldValue);
+					if (originalFileValue != null) {
+						ServiceUtil.removeOrphanInputFieldValueFile(this.getFileDao().load(originalFileValue.getId()), this.getInputFieldValueDao(), this.getFileDao());
+					}
 				}
 				if (outEcrfFieldValues != null || logProband || logTrial) {
 					result = ecrfFieldValueDao.toECRFFieldValueOutVO(ecrfFieldValue);
@@ -764,10 +776,14 @@ public class TrialServiceImpl
 			//if (listEntryTag.isDisabled()) {
 			//	probandListEntryTagValueIn = ServiceUtil.createPresetProbandListEntryTagInValue(listEntryTag, listEntry.getId(), this.getInputFieldSelectionSetValueDao());
 			//}
-			checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag);
+			checkProbandListEntryTagValueInput(probandListEntryTagValueIn, null, listEntry, listEntryTag);
 			ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 					journalEntryDao);
 			ProbandListEntryTagValue listEntryTagValue = probandListEntryTagValueDao.probandListEntryTagValueInVOToEntity(probandListEntryTagValueIn);
+			if (probandListEntryTagValueIn.getFileValue() != null) {
+				listEntryTagValue.getValue().setFileValue(
+						ServiceUtil.createInputFieldValueFile(probandListEntryTagValueIn.getFileValue(), now, user, this.getFileDao(), this.getMimeTypeDao()));
+			}
 			CoreUtil.modifyVersion(listEntryTagValue, now, user);
 			InputFieldValue inputFieldValue = listEntryTagValue.getValue();
 			this.getInputFieldValueDao().create(inputFieldValue);
@@ -794,7 +810,7 @@ public class TrialServiceImpl
 				//	&& 
 			!ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), force)) {
 				boolean isEqual = ServiceUtil.probandListEntryTagValueEquals(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), false);
-				checkProbandListEntryTagValueInput(probandListEntryTagValueIn, listEntry, listEntryTag); // access original associations before evict
+				checkProbandListEntryTagValueInput(probandListEntryTagValueIn, originalListEntryTagValue.getValue(), listEntry, listEntryTag); // access original associations before evict
 				ServiceUtil.addAutocompleteSelectionSetValue(listEntryTag.getField(), probandListEntryTagValueIn.getTextValue(), now, user,
 						this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);
@@ -802,10 +818,18 @@ public class TrialServiceImpl
 				if (logProband || logTrial) {
 					original = probandListEntryTagValueDao.toProbandListEntryTagValueOutVO(originalListEntryTagValue);
 				}
+				File originalFileValue = originalListEntryTagValue.getValue().getFileValue();
 				probandListEntryTagValueDao.evict(originalListEntryTagValue);
 				ProbandListEntryTagValue listEntryTagValue = probandListEntryTagValueDao.probandListEntryTagValueInVOToEntity(probandListEntryTagValueIn);
+				if (probandListEntryTagValueIn.getFileValue() != null) {
+					listEntryTagValue.getValue().setFileValue(
+							ServiceUtil.createInputFieldValueFile(probandListEntryTagValueIn.getFileValue(), now, user, this.getFileDao(), this.getMimeTypeDao()));
+				}
 				CoreUtil.modifyVersion(originalListEntryTagValue, listEntryTagValue, now, user);
 				probandListEntryTagValueDao.update(listEntryTagValue);
+				if (originalFileValue != null) {
+					ServiceUtil.removeOrphanInputFieldValueFile(this.getFileDao().load(originalFileValue.getId()), this.getInputFieldValueDao(), this.getFileDao());
+				}
 				if (!isEqual) {
 					notifyVisitScheduleItemReminder(listEntry, listEntryTag, now);
 				}
@@ -1290,6 +1314,9 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_FIELD_SECTION, ecrfFieldIn.getSection());
 		}
 		boolean hasJsValueExpression = !JavaScriptCompressor.isEffectivelyEmpty(ecrfFieldIn.getJsValueExpression());
+		if (hasJsValueExpression && ServiceUtil.isInputFieldType(this.getInputFieldDao().load(ecrfFieldIn.getFieldId()), InputFieldType.FILE)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_JS_VALUE_EXPRESSION_NOT_ALLOWED);
+		}
 		boolean hasJsOutputExpression = !JavaScriptCompressor.isEffectivelyEmpty(ecrfFieldIn.getJsOutputExpression());
 		if (CommonUtil.isEmptyString(ecrfFieldIn.getJsVariableName())) {
 			if (hasJsValueExpression || hasJsOutputExpression) {
@@ -1393,7 +1420,8 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkEcrfFieldValueInput(ECRFFieldValueInVO ecrfFieldValueIn, ECRFStatusEntry ecrfStatusEntry, ECRFField ecrfField) throws ServiceException {
+	private void checkEcrfFieldValueInput(ECRFFieldValueInVO ecrfFieldValueIn, InputFieldValue originalValue, ECRFStatusEntry ecrfStatusEntry, ECRFField ecrfField)
+			throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = ecrfField.getField();
 		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
@@ -1405,6 +1433,8 @@ public class TrialServiceImpl
 		ServiceUtil.checkInputFieldTimeValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getTimeValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldTimestampValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getTimestampValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldInkValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getInkValues(), inputFieldDao);
+		ServiceUtil.checkInputFieldFileValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getFileValueId(), ecrfFieldValueIn.getFileValue(), originalValue, inputFieldDao,
+				this.getMimeTypeDao());
 		ServiceUtil.checkInputFieldSelectionSetValues(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getSelectionValueIds(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 		if (ecrfFieldValueIn.getId() == null) {
@@ -1538,6 +1568,10 @@ public class TrialServiceImpl
 	}
 
 	private void checkInquiryInput(InquiryInVO inquiryIn) throws ServiceException {
+		if (!JavaScriptCompressor.isEffectivelyEmpty(inquiryIn.getJsValueExpression())
+				&& ServiceUtil.isInputFieldType(this.getInputFieldDao().load(inquiryIn.getFieldId()), InputFieldType.FILE)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_JS_VALUE_EXPRESSION_NOT_ALLOWED);
+		}
 		if (CommonUtil.isEmptyString(inquiryIn.getJsVariableName())) {
 			if (!JavaScriptCompressor.isEffectivelyEmpty(inquiryIn.getJsValueExpression())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_REQUIRED);
@@ -1621,6 +1655,8 @@ public class TrialServiceImpl
 						ServiceUtil.checkInputFieldTimeValue(inputField, ecrfField.isOptional(), value.getTimeValue(), inputFieldDao);
 						ServiceUtil.checkInputFieldTimestampValue(inputField, ecrfField.isOptional(), value.getTimestampValue(), inputFieldDao);
 						ServiceUtil.checkInputFieldInkValue(inputField, ecrfField.isOptional(), value.getInkValue(), inputFieldDao);
+						ServiceUtil.checkInputFieldFileValue(inputField, ecrfField.isOptional(), value.getFileValue() != null ? value.getFileValue().getId() : null, null,
+								value, inputFieldDao, this.getMimeTypeDao());
 						ServiceUtil.checkInputFieldSelectionSetValues(inputField, ecrfField.isOptional(),
 								ServiceUtil.toInputFieldSelectionSetValueIdCollection(value.getSelectionValues()), inputFieldDao,
 								this.getInputFieldSelectionSetValueDao());
@@ -1723,6 +1759,9 @@ public class TrialServiceImpl
 	}
 
 	private void checkProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn, Trial trial, InputField field) throws ServiceException {
+		if (!JavaScriptCompressor.isEffectivelyEmpty(listTagIn.getJsValueExpression()) && ServiceUtil.isInputFieldType(field, InputFieldType.FILE)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_JS_VALUE_EXPRESSION_NOT_ALLOWED);
+		}
 		if (CommonUtil.isEmptyString(listTagIn.getJsVariableName())) {
 			if (!JavaScriptCompressor.isEffectivelyEmpty(listTagIn.getJsValueExpression())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_REQUIRED);
@@ -1746,7 +1785,8 @@ public class TrialServiceImpl
 				this.getRandomizationListCodeDao());
 	}
 
-	private void checkProbandListEntryTagValueInput(ProbandListEntryTagValueInVO probandListEntryTagValueIn, ProbandListEntry listEntry, ProbandListEntryTag listEntryTag)
+	private void checkProbandListEntryTagValueInput(ProbandListEntryTagValueInVO probandListEntryTagValueIn, InputFieldValue originalValue, ProbandListEntry listEntry,
+			ProbandListEntryTag listEntryTag)
 			throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = listEntryTag.getField();
@@ -1760,6 +1800,8 @@ public class TrialServiceImpl
 		ServiceUtil.checkInputFieldTimeValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getTimeValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldTimestampValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getTimestampValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldInkValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getInkValues(), inputFieldDao);
+		ServiceUtil.checkInputFieldFileValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getFileValueId(), probandListEntryTagValueIn.getFileValue(),
+				originalValue, inputFieldDao, this.getMimeTypeDao());
 		ServiceUtil.checkInputFieldSelectionSetValues(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getSelectionValueIds(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 		if ((new ProbandListEntryTagValueCollisionFinder(this.getProbandListEntryDao(), this.getProbandListEntryTagValueDao())).collides(probandListEntryTagValueIn)) {
@@ -3594,6 +3636,12 @@ public class TrialServiceImpl
 					ServiceUtil.checkInputFieldTimeValue(inputField, inquiry.isOptional(), inquiryValueIn.getTimeValue(), inputFieldDao);
 					ServiceUtil.checkInputFieldTimestampValue(inputField, inquiry.isOptional(), inquiryValueIn.getTimestampValue(), inputFieldDao);
 					ServiceUtil.checkInputFieldInkValue(inputField, inquiry.isOptional(), inquiryValueIn.getInkValues(), inputFieldDao);
+					ServiceUtil.checkInputFieldFileValue(inputField, inquiry.isOptional(), inquiryValueIn.getFileValueId(), inquiryValueIn.getFileValue(),
+							inquiryValueIn.getId() != null
+									? CheckIDUtil.checkInquiryValueOfProbandAndInquiry(inquiryValueIn.getId(), inquiryValueIn.getProbandId(), inquiry.getId(), this.getInquiryValueDao()).getValue()
+									: null,
+							inputFieldDao,
+							this.getMimeTypeDao());
 					ServiceUtil.checkInputFieldSelectionSetValues(inputField, inquiry.isOptional(), inquiryValueIn.getSelectionValueIds(), inputFieldDao,
 							inputFieldSelectionSetValueDao);
 					InquiryOutVO inquiryVO = inquiryDao.toInquiryOutVO(inquiry);
@@ -3603,6 +3651,10 @@ public class TrialServiceImpl
 					if (jsInquiryValues != null && !CommonUtil.isEmptyString(inquiryVO.getJsVariableName())) {
 						InquiryValueJsonVO inquiryValueJsonVO = new InquiryValueJsonVO();
 						CommonUtil.copyInquiryValueInToJson(inquiryValueJsonVO, inquiryValueIn, inquiryVO);
+						if (inquiryValueJsonVO.getFileValue() == null && inquiryValueIn.getFileValueId() != null) {
+							File file = this.getFileDao().load(inquiryValueIn.getFileValueId());
+							inquiryValueJsonVO.setFileValue(file != null ? this.getFileDao().toFileJsonVO(file) : null);
+						}
 						jsInquiryValues.add(inquiryValueJsonVO);
 					}
 				} catch (ServiceException e) {
@@ -5449,6 +5501,9 @@ public class TrialServiceImpl
 								case SKETCH:
 									fieldValue = ExcelUtil.selectionSetValuesToString(listEntryTagValueVO.getSelectionValues());
 									break;
+								case FILE:
+									fieldValue = ExcelUtil.fileValueToString(listEntryTagValueVO.getFileValue());
+									break;
 								default:
 							}
 						}
@@ -5591,6 +5646,9 @@ public class TrialServiceImpl
 									break;
 								case SKETCH:
 									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
+									break;
+								case FILE:
+									fieldValue = ExcelUtil.fileValueToString(inquiryValueVO.getFileValue());
 									break;
 								default:
 							}
@@ -6575,6 +6633,30 @@ public class TrialServiceImpl
 	protected ECRFFieldValueOutVO handleGetEcrfFieldValueById(AuthenticationVO auth, Long ecrfFieldValueId) throws Exception {
 		ECRFFieldValueDao ecrfFieldValueDao = this.getECRFFieldValueDao();
 		return ecrfFieldValueDao.toECRFFieldValueOutVO(CheckIDUtil.checkEcrfFieldValueId(ecrfFieldValueId, ecrfFieldValueDao));
+	}
+
+	@Override
+	protected FileContentOutVO handleGetEcrfFieldValueFileContent(AuthenticationVO auth, Long ecrfFieldValueId) throws Exception {
+		ECRFFieldValue ecrfFieldValue = CheckIDUtil.checkEcrfFieldValueId(ecrfFieldValueId, this.getECRFFieldValueDao());
+		return this.getFileDao().toFileContentOutVO(ServiceUtil.getInputFieldValueFile(ecrfFieldValue.getValue()));
+	}
+
+	@Override
+	protected FileStreamOutVO handleGetEcrfFieldValueFileStream(AuthenticationVO auth, Long ecrfFieldValueId) throws Exception {
+		ECRFFieldValue ecrfFieldValue = CheckIDUtil.checkEcrfFieldValueId(ecrfFieldValueId, this.getECRFFieldValueDao());
+		return this.getFileDao().toFileStreamOutVO(ServiceUtil.getInputFieldValueFile(ecrfFieldValue.getValue()));
+	}
+
+	@Override
+	protected FileContentOutVO handleGetProbandListEntryTagValueFileContent(AuthenticationVO auth, Long probandListEntryTagValueId) throws Exception {
+		ProbandListEntryTagValue tagValue = CheckIDUtil.checkProbandListEntryTagValueId(probandListEntryTagValueId, this.getProbandListEntryTagValueDao());
+		return this.getFileDao().toFileContentOutVO(ServiceUtil.getInputFieldValueFile(tagValue.getValue()));
+	}
+
+	@Override
+	protected FileStreamOutVO handleGetProbandListEntryTagValueFileStream(AuthenticationVO auth, Long probandListEntryTagValueId) throws Exception {
+		ProbandListEntryTagValue tagValue = CheckIDUtil.checkProbandListEntryTagValueId(probandListEntryTagValueId, this.getProbandListEntryTagValueDao());
+		return this.getFileDao().toFileStreamOutVO(ServiceUtil.getInputFieldValueFile(tagValue.getValue()));
 	}
 
 	@Override
@@ -8136,6 +8218,7 @@ public class TrialServiceImpl
 		painter.setSignatureVOMap(signatureVOMap);
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
+		ServiceUtil.setEcrfPDFFileValueImageDataMap(painter, valueVOMap, listEntryTagValuesVOMap, blank, this.getFileDao());
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(this.getUserDao().toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
@@ -8185,7 +8268,7 @@ public class TrialServiceImpl
 		ECRFPDFVO result = ServiceUtil.renderEcrfs(listEntry, trial, ecrf, visit, ecrfStatusTypeId, valueLockdown, done, validated, review, verified, blank, listEntryVOs,
 				this.getProbandListEntryDao(), this.getECRFDao(), this.getVisitDao(), this.getECRFFieldDao(), this.getECRFFieldValueDao(), this.getInputFieldDao(),
 				this.getInputFieldSelectionSetValueDao(), this.getECRFStatusEntryDao(), this.getECRFFieldStatusEntryDao(), this.getECRFFieldStatusTypeDao(),
-				this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(), this.getSignatureDao(), this.getUserDao());
+				this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(), this.getSignatureDao(), this.getUserDao(), this.getFileDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		if (listEntry != null) {
 			listEntryVO = probandListEntryDao.toProbandListEntryOutVO(listEntry);
@@ -8229,7 +8312,7 @@ public class TrialServiceImpl
 		}
 		ProbandListEntryTagsPDFVO result = ServiceUtil.renderProbandListEntryTags(proband, trial, blank,
 				this.getProbandListEntryDao(), this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(),
-				this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(), this.getUserDao());
+				this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao(), this.getUserDao(), this.getFileDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		if (trial != null) {
 			ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),

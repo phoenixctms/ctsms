@@ -919,6 +919,11 @@ public class ToolsServiceImpl
 	}
 
 	@Override
+	protected Integer handleGetInputFieldValueFileUploadSizeLimit() throws Exception {
+		return Settings.getIntNullable(SettingCodes.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT);
+	}
+
+	@Override
 	protected String handleGetInstanceName() throws Exception {
 		return Settings.getInstanceName();
 	}

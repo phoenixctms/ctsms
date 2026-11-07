@@ -14,6 +14,9 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.FileContentInVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
@@ -55,6 +58,8 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 			tagValue.setLongValue(inputField.getLongPreset());
 			tagValue.setTimestampValue(inputField.getTimestampPreset());
 			tagValue.setInkValues(null);
+			tagValue.setFileValueId(null);
+			tagValue.setFileValue(null);
 			tagValue.getSelectionValueIds().clear();
 			tagValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
@@ -93,6 +98,46 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 	@Override
 	public Float getFloatValue() {
 		return tagValue == null ? null : tagValue.getFloatValue();
+	}
+
+	@Override
+	protected FileContentInVO getFileValue() {
+		return tagValue == null ? null : tagValue.getFileValue();
+	}
+
+	@Override
+	protected void setFileValue(FileContentInVO value) {
+		if (tagValue != null) {
+			tagValue.setFileValue(value);
+		}
+	}
+
+	@Override
+	protected Long getFileValueId() {
+		return tagValue == null ? null : tagValue.getFileValueId();
+	}
+
+	@Override
+	protected void setFileValueId(Long value) {
+		if (tagValue != null) {
+			tagValue.setFileValueId(value);
+		}
+	}
+
+	@Override
+	protected FileOutVO loadFileValueVO() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (tagValue != null && tagValue.getId() != null) {
+			return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValueById(WebUtil.getAuthentication(), tagValue.getId()).getFileValue();
+		}
+		return null;
+	}
+
+	@Override
+	protected FileContentOutVO loadFileValueContent() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (tagValue != null && tagValue.getId() != null) {
+			return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValueFileContent(WebUtil.getAuthentication(), tagValue.getId());
+		}
+		return null;
 	}
 
 	@Override

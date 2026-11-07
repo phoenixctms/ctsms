@@ -147,6 +147,8 @@ import org.phoenixctms.ctsms.vo.BankAccountInVO;
 import org.phoenixctms.ctsms.vo.BankAccountOutVO;
 import org.phoenixctms.ctsms.vo.DiagnosisInVO;
 import org.phoenixctms.ctsms.vo.DiagnosisOutVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
+import org.phoenixctms.ctsms.vo.FileStreamOutVO;
 import org.phoenixctms.ctsms.vo.InquiriesPDFVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
@@ -218,9 +220,13 @@ public class ProbandServiceImpl
 			//if (inquiry.isDisabled()) {
 			//	inquiryValueIn = ServiceUtil.createPresetInquiryInValue(inquiry, proband.getId(), this.getInputFieldSelectionSetValueDao());
 			//}
-			checkInquiryValueInput(inquiryValueIn, proband, inquiry);
+			checkInquiryValueInput(inquiryValueIn, null, proband, inquiry);
 			ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(), journalEntryDao);
 			InquiryValue inquiryValue = inquiryValueDao.inquiryValueInVOToEntity(inquiryValueIn);
+			if (inquiryValueIn.getFileValue() != null) {
+				inquiryValue.getValue().setFileValue(
+						ServiceUtil.createInputFieldValueFile(inquiryValueIn.getFileValue(), now, user, this.getFileDao(), this.getMimeTypeDao()));
+			}
 			CoreUtil.modifyVersion(inquiryValue, now, user);
 			InputFieldValue inputFieldValue = inquiryValue.getValue();
 			this.getInputFieldValueDao().create(inputFieldValue);
@@ -238,21 +244,29 @@ public class ProbandServiceImpl
 				ServiceUtil.logSystemMessage(inquiry.getTrial(), result.getProband(), now, user, SystemMessageCodes.INQUIRY_VALUE_CREATED, result, null, journalEntryDao);
 			}
 		} else {
-			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueId(id, inquiryValueDao);
+			InquiryValue originalInquiryValue = CheckIDUtil.checkInquiryValueOfProbandAndInquiry(id, proband.getId(), inquiry.getId(), inquiryValueDao);
 			if (//!inquiry.isDisabled()
 				//	&& 
 			!ServiceUtil.inquiryValueEquals(inquiryValueIn, originalInquiryValue.getValue(), force)) {
-				checkInquiryValueInput(inquiryValueIn, proband, inquiry);
+				checkInquiryValueInput(inquiryValueIn, originalInquiryValue.getValue(), proband, inquiry);
 				ServiceUtil.addAutocompleteSelectionSetValue(inquiry.getField(), inquiryValueIn.getTextValue(), now, user, this.getInputFieldSelectionSetValueDao(),
 						journalEntryDao);
 				InquiryValueOutVO original = null;
 				if (logProband || logTrial) {
 					original = inquiryValueDao.toInquiryValueOutVO(originalInquiryValue);
 				}
+				File originalFileValue = originalInquiryValue.getValue().getFileValue();
 				inquiryValueDao.evict(originalInquiryValue);
 				InquiryValue inquiryValue = inquiryValueDao.inquiryValueInVOToEntity(inquiryValueIn);
+				if (inquiryValueIn.getFileValue() != null) {
+					inquiryValue.getValue().setFileValue(
+							ServiceUtil.createInputFieldValueFile(inquiryValueIn.getFileValue(), now, user, this.getFileDao(), this.getMimeTypeDao()));
+				}
 				CoreUtil.modifyVersion(originalInquiryValue, inquiryValue, now, user);
 				inquiryValueDao.update(inquiryValue);
+				if (originalFileValue != null) {
+					ServiceUtil.removeOrphanInputFieldValueFile(this.getFileDao().load(originalFileValue.getId()), this.getInputFieldValueDao(), this.getFileDao());
+				}
 				if (outInquiryValues != null || logTrial || logProband) {
 					result = inquiryValueDao.toInquiryValueOutVO(inquiryValue);
 				}
@@ -361,7 +375,7 @@ public class ProbandServiceImpl
 		}
 	}
 
-	private void checkInquiryValueInput(InquiryValueInVO inquiryValueIn, Proband proband, Inquiry inquiry) throws ServiceException {
+	private void checkInquiryValueInput(InquiryValueInVO inquiryValueIn, InputFieldValue originalValue, Proband proband, Inquiry inquiry) throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = inquiry.getField();
 		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
@@ -373,6 +387,8 @@ public class ProbandServiceImpl
 		ServiceUtil.checkInputFieldTimeValue(inputField, inquiry.isOptional(), inquiryValueIn.getTimeValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldTimestampValue(inputField, inquiry.isOptional(), inquiryValueIn.getTimestampValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldInkValue(inputField, inquiry.isOptional(), inquiryValueIn.getInkValues(), inputFieldDao);
+		ServiceUtil.checkInputFieldFileValue(inputField, inquiry.isOptional(), inquiryValueIn.getFileValueId(), inquiryValueIn.getFileValue(), originalValue, inputFieldDao,
+				this.getMimeTypeDao());
 		ServiceUtil.checkInputFieldSelectionSetValues(inputField, inquiry.isOptional(), inquiryValueIn.getSelectionValueIds(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 		if ((new InquiryValueCollisionFinder(this.getProbandDao(), this.getInquiryValueDao())).collides(inquiryValueIn)) {
@@ -2305,6 +2321,18 @@ public class ProbandServiceImpl
 	}
 
 	@Override
+	protected FileContentOutVO handleGetInquiryValueFileContent(AuthenticationVO auth, Long inquiryValueId) throws Exception {
+		InquiryValue inquiryValue = CheckIDUtil.checkInquiryValueId(inquiryValueId, this.getInquiryValueDao());
+		return this.getFileDao().toFileContentOutVO(ServiceUtil.getInputFieldValueFile(inquiryValue.getValue()));
+	}
+
+	@Override
+	protected FileStreamOutVO handleGetInquiryValueFileStream(AuthenticationVO auth, Long inquiryValueId) throws Exception {
+		InquiryValue inquiryValue = CheckIDUtil.checkInquiryValueId(inquiryValueId, this.getInquiryValueDao());
+		return this.getFileDao().toFileStreamOutVO(ServiceUtil.getInputFieldValueFile(inquiryValue.getValue()));
+	}
+
+	@Override
 	protected long handleGetInquiryValueCount(AuthenticationVO auth, Long trialId, Boolean active, Boolean activeSignup,
 			Long probandId) throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
@@ -2803,7 +2831,7 @@ public class ProbandServiceImpl
 				trials, active,
 				activeSignup, blank, this.getTrialDao(), this.getProbandListEntryDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(),
 				this.getInputFieldSelectionSetValueDao(),
-				this.getUserDao());
+				this.getUserDao(), this.getFileDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		if (trial != null) {
 			ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
@@ -2846,7 +2874,7 @@ public class ProbandServiceImpl
 				trials,
 				null, activeSignup, false, this.getTrialDao(), this.getProbandListEntryDao(), this.getInquiryDao(), inquiryValueDao, this.getInputFieldDao(),
 				this.getInputFieldSelectionSetValueDao(),
-				this.getUserDao());
+				this.getUserDao(), this.getFileDao());
 		ServiceUtil.logSystemMessage(proband, (TrialOutVO) null, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(),
 				SystemMessageCodes.INQUIRIES_SIGNUP_PDF_RENDERED,
 				result, null,
@@ -2869,7 +2897,7 @@ public class ProbandServiceImpl
 				trials, active,
 				activeSignup, blank, this.getTrialDao(), this.getProbandListEntryDao(), this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldDao(),
 				this.getInputFieldSelectionSetValueDao(),
-				this.getUserDao());
+				this.getUserDao(), this.getFileDao());
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		ServiceUtil.logSystemMessage(trial, probandVO, CommonUtil.dateToTimestamp(result.getContentTimestamp()), CoreUtil.getUser(), SystemMessageCodes.INQUIRY_PDF_RENDERED,
 				result, null, journalEntryDao);

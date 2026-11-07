@@ -198,3 +198,4 @@ CREATE INDEX person_contact_particulars_last_name_normalized ON person_contact_p
 CREATE INDEX organisation_contact_particulars_organisation_name_normalized ON organisation_contact_particulars (organisation_name_normalized);
 
 CREATE INDEX data_table_column_user_fk_table_name_column_name ON data_table_column (user_fk, table_name, column_name);
+CREATE INDEX input_field_value_file_value_fk ON input_field_value (file_value_fk);

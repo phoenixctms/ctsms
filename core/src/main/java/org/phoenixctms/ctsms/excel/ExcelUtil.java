@@ -24,6 +24,8 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.date.DateCalc;
+import org.phoenixctms.ctsms.domain.User;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 
 import jxl.Cell;
@@ -626,6 +628,14 @@ public final class ExcelUtil {
 			}
 		}
 		return sb.toString();
+	}
+
+	public static String fileValueToString(FileOutVO fileValue) {
+		if (fileValue != null) {
+			User user = CoreUtil.getUser();
+			return fileValue.getFileName() + " (" + CommonUtil.humanReadableByteCount(fileValue.getSize(), user != null ? user.getDecimalSeparator() : null) + ")";
+		}
+		return null;
 	}
 
 	private static void setBgColor(WritableCellFormat cellFormat, Color bgColor) {

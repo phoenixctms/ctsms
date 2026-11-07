@@ -16,6 +16,7 @@ import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.FileJsonVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -70,12 +71,14 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 			in.setTextValue(out.getTextValue());
 			in.setTimestampValue(out.getTimestampValue());
 			in.setInkValues(out.getInkValues());
+			in.setFileValueId(out.getFileValue() != null ? out.getFileValue().getId() : null);
+			in.setFileValue(null);
 			in.setVersion(out.getVersion());
 		}
 	}
 
 	public static void copyProbandListEntryTagValuesInToJson(ArrayList<ProbandListEntryTagValueJsonVO> tagValuesOut, ArrayList<ProbandListEntryTagValueInVO> tagValuesIn,
-			HashMap<Long, ProbandListEntryTagOutVO> tagVOsMap) {
+			HashMap<Long, ProbandListEntryTagOutVO> tagVOsMap, HashMap<Long, FileJsonVO> fileValueMap) {
 		if (tagValuesOut != null) {
 			tagValuesOut.clear();
 			if (tagValuesIn != null && tagVOsMap != null) {
@@ -86,6 +89,9 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 					if (tagVOsMap.containsKey(in.getTagId())) {
 						ProbandListEntryTagValueJsonVO out = new ProbandListEntryTagValueJsonVO();
 						CommonUtil.copyProbandListEntryTagValueInToJson(out, in, tagVOsMap.get(in.getTagId()));
+						if (out.getFileValue() == null && in.getFileValueId() != null && fileValueMap != null) {
+							out.setFileValue(fileValueMap.get(in.getFileValueId()));
+						}
 						tagValuesOut.add(out);
 					}
 				}
@@ -201,16 +207,20 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				Collection<InquiryValueJsonVO> inquiryValues = null;
 				ArrayList<ProbandListEntryTagValueJsonVO> out = new ArrayList<ProbandListEntryTagValueJsonVO>(jsTagValuesOut.size());
 				HashMap<Long, ProbandListEntryTagOutVO> tagVOsMap = new HashMap<Long, ProbandListEntryTagOutVO>(tagValuesOut.size());
+				HashMap<Long, FileJsonVO> fileValueMap = new HashMap<Long, FileJsonVO>();
 				Iterator<ProbandListEntryTagValueOutVO> tagIt = tagValuesOut.iterator();
 				while (tagIt.hasNext()) {
 					ProbandListEntryTagValueOutVO tagValueVO = tagIt.next();
+					if (tagValueVO.getFileValue() != null) {
+						fileValueMap.put(tagValueVO.getFileValue().getId(), CommonUtil.fileOutVOToFileJsonVO(tagValueVO.getFileValue()));
+					}
 					listEntry = tagValueVO.getListEntry(); //get the listentry from the tag values
 					ProbandListEntryTagOutVO tagVO = tagValueVO.getTag();
 					if (!CommonUtil.isEmptyString(tagVO.getJsVariableName())) {
 						tagVOsMap.put(tagVO.getId(), tagVO);
 					}
 				}
-				copyProbandListEntryTagValuesInToJson(out, tagValuesIn, tagVOsMap);
+				copyProbandListEntryTagValuesInToJson(out, tagValuesIn, tagVOsMap, fileValueMap);
 				Iterator<ProbandListEntryTagValueJsonVO> jsTagValueIt = jsTagValuesOut.iterator();
 				while (jsTagValueIt.hasNext()) {
 					ProbandListEntryTagValueJsonVO jsTagValue = jsTagValueIt.next();

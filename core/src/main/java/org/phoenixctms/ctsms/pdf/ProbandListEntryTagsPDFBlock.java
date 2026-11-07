@@ -110,6 +110,16 @@ public class ProbandListEntryTagsPDFBlock extends InputFieldPDFBlock {
 	}
 
 	@Override
+	protected String getFileName() {
+		return value != null && value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+	}
+
+	@Override
+	protected Long getFileSize() {
+		return value != null && value.getFileValue() != null ? value.getFileValue().getSize() : null;
+	}
+
+	@Override
 	protected Float getFloatValue() {
 		return value.getFloatValue();
 	}

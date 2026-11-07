@@ -79,8 +79,17 @@
 					<f:facet name="header">
 						<h:outputText value="#{labels.audit_trail_list_value_column}" />
 					</f:facet>
-					<h:outputText
+					<h:outputText rendered="#{empty ecrfFieldValue.vo.fileValue}"
 						value="#{applicationScopeBean.getAuditTrailFieldValueString(ecrfFieldValue.vo)}" />
+					<p:commandLink immediate="true" ajax="false"
+						rendered="#{not empty ecrfFieldValue.vo.fileValue}"
+						styleClass="ctsms-field-icon ctsms-mimetype-unknown #{ecrfFieldValue.vo.fileValue.contentType.nodeStyleClass}"
+						title="#{labels.file_download_tooltip} #{ecrfFieldValue.vo.fileValue.fileName}">
+						<h:outputText
+							value="#{applicationScopeBean.getAuditTrailFieldValueString(ecrfFieldValue.vo)}" />
+						<p:fileDownload
+							value="#{applicationScopeBean.getAuditTrailFieldValueFileStreamedContent(ecrfFieldValue.vo)}" />
+					</p:commandLink>
 				</p:column>
 
 				<p:column sortBy="#{ecrfFieldValue.vo.modifiedUser.name}">

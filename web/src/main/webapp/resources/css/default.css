@@ -83,6 +83,70 @@ td .ui-selectonemenu {
 	min-height: 48px;
 }
 
+/* camera live view shown in the content area of an upload control (see PhotoCam.embedInFileUpload), next to the
+   current image and as wide as its preview (InputModel.FILE_IMAGE_PREVIEW_WIDTH), with the camera selector and the
+   rest of the content area below: */
+.ctsms-upload-control-camera .fileupload-content {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	column-gap: 8px;
+}
+
+.ctsms-upload-control-camera .fileupload-content > * {
+	flex: 0 0 100%;
+	order: 3;
+}
+
+.ctsms-upload-control-camera .fileupload-content > .ctsms-input-file-current {
+	flex: 0 0 auto;
+	order: 1;
+}
+
+.ctsms-upload-control .fileupload-content .ctsms-photocam {
+	width: 322px;
+	max-width: 100%;
+	margin: 0.2em 0;
+}
+
+.ctsms-upload-control-camera .fileupload-content > .ctsms-photocam {
+	flex: 0 0 auto;
+	order: 2;
+}
+
+.ctsms-upload-control .fileupload-content .ctsms-photocam-viewport {
+	box-sizing: border-box;
+	margin: 4px 0;
+	border: 1px solid #cccccc;
+}
+
+.ctsms-upload-control-camera .fileupload-content > .ctsms-photocam-devices {
+	flex: 0 0 auto;
+	margin: 0 0 0.2em 0;
+}
+
+.ctsms-upload-control:not(.ctsms-upload-control-camera) .fileupload-content > .ctsms-photocam-devices {
+	display: none !important;
+}
+
+.ctsms-upload-control-camera .fileupload-content,
+.ctsms-upload-control-file .fileupload-content {
+	background-image: none !important;
+}
+
+.ctsms-upload-control .fileupload-content .ctsms-input-file-current {
+	padding: 0.2em 0;
+}
+
+/* spacing like the file label rows above the upload control on the job and other file pages */
+.ctsms-input-file-label {
+	padding: 2px 0 4px 0;
+}
+
+.ctsms-input-file-link {
+	margin-left: 0.5em;
+}
+
 .ctsms-upload-control-encryption .fileupload-content {
 	border-top-width: 0;
 	height: 100%;
@@ -1636,6 +1700,7 @@ overflow-y:scroll;
 
 .ctsms-audittrail-right-column {
 	vertical-align: top;
+	border-style: hidden !important;
 	padding: 2px !important;
 	text-align: right;
 }
@@ -2328,6 +2393,17 @@ overflow-y:scroll;
 
 .ctsms-inputfieldtype-sketch {
 	background-image: url(../resources/images/inputfieldtypes/pencil.png) !important;
+}
+
+.ctsms-input-file-image-preview {
+	display: block;
+	max-width: 100%;
+	margin: 4px 0;
+	border: 1px solid #cccccc;
+}
+
+.ctsms-inputfieldtype-file {
+	background-image: url(../resources/images/inputfieldtypes/file.png) !important;
 }
 
 .ctsms-probandcategory-unknown {

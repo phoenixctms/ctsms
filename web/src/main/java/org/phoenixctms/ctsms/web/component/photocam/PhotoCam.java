@@ -14,7 +14,7 @@ import org.primefaces.event.CaptureEvent;
 public class PhotoCam extends UIInput implements org.primefaces.component.api.Widget {
 
 	protected enum PropertyKeys {
-		widgetVar, style, styleClass, process, update, listener, width, height, displayWidth;
+		widgetVar, style, styleClass, process, update, listener, width, height, displayWidth, autoStart;
 
 		String toString;
 
@@ -138,6 +138,14 @@ public class PhotoCam extends UIInput implements org.primefaces.component.api.Wi
 
 	public void setWidgetVar(java.lang.String _widgetVar) {
 		getStateHelper().put(PropertyKeys.widgetVar, _widgetVar);
+	}
+
+	public boolean isAutoStart() {
+		return (java.lang.Boolean) getStateHelper().eval(PropertyKeys.autoStart, true);
+	}
+
+	public void setAutoStart(boolean _autoStart) {
+		getStateHelper().put(PropertyKeys.autoStart, _autoStart);
 	}
 
 	public void setWidth(int _width) {

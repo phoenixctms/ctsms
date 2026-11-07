@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.FileJsonVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
@@ -57,12 +58,14 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 			in.setTextValue(out.getTextValue());
 			in.setTimestampValue(out.getTimestampValue());
 			in.setInkValues(out.getInkValues());
+			in.setFileValueId(out.getFileValue() != null ? out.getFileValue().getId() : null);
+			in.setFileValue(null);
 			in.setVersion(out.getVersion());
 		}
 	}
 
 	public static void copyInquiryValuesInToJson(ArrayList<InquiryValueJsonVO> inquiryValuesOut, ArrayList<InquiryValueInVO> inquiryValuesIn,
-			HashMap<Long, InquiryOutVO> inquiryVOsMap) {
+			HashMap<Long, InquiryOutVO> inquiryVOsMap, HashMap<Long, FileJsonVO> fileValueMap) {
 		if (inquiryValuesOut != null) {
 			inquiryValuesOut.clear();
 			if (inquiryValuesIn != null && inquiryVOsMap != null) {
@@ -73,6 +76,9 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 					if (inquiryVOsMap.containsKey(in.getInquiryId())) {
 						InquiryValueJsonVO out = new InquiryValueJsonVO();
 						CommonUtil.copyInquiryValueInToJson(out, in, inquiryVOsMap.get(in.getInquiryId()));
+						if (out.getFileValue() == null && in.getFileValueId() != null && fileValueMap != null) {
+							out.setFileValue(fileValueMap.get(in.getFileValueId()));
+						}
 						inquiryValuesOut.add(out);
 					}
 				}
@@ -184,15 +190,19 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 				ProbandOutVO proband = getProband();
 				ArrayList<InquiryValueJsonVO> out = new ArrayList<InquiryValueJsonVO>(jsInquiryValuesOut.size());
 				HashMap<Long, InquiryOutVO> inquiryVOsMap = new HashMap<Long, InquiryOutVO>(inquiryValuesOut.size());
+				HashMap<Long, FileJsonVO> fileValueMap = new HashMap<Long, FileJsonVO>();
 				Iterator<InquiryValueOutVO> inquiryIt = inquiryValuesOut.iterator();
 				while (inquiryIt.hasNext()) {
 					InquiryValueOutVO inquiryValueVO = inquiryIt.next();
+					if (inquiryValueVO.getFileValue() != null) {
+						fileValueMap.put(inquiryValueVO.getFileValue().getId(), CommonUtil.fileOutVOToFileJsonVO(inquiryValueVO.getFileValue()));
+					}
 					InquiryOutVO inquiryVO = inquiryValueVO.getInquiry();
 					if (!CommonUtil.isEmptyString(inquiryVO.getJsVariableName())) {
 						inquiryVOsMap.put(inquiryVO.getId(), inquiryVO);
 					}
 				}
-				copyInquiryValuesInToJson(out, inquiryValuesIn, inquiryVOsMap);
+				copyInquiryValuesInToJson(out, inquiryValuesIn, inquiryVOsMap, fileValueMap);
 				Iterator<InquiryValueJsonVO> jsInquiryValueIt = jsInquiryValuesOut.iterator();
 				while (jsInquiryValueIt.hasNext()) {
 					InquiryValueJsonVO jsInquiryValue = jsInquiryValueIt.next();

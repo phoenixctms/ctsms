@@ -1,11 +1,14 @@
 package org.phoenixctms.ctsms.web.model.shared.inputfield;
 
+import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,14 +16,22 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.Color;
+import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Image;
 import org.phoenixctms.ctsms.util.JavaScriptCompressor;
+import org.phoenixctms.ctsms.vo.FileContentInVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
+import org.phoenixctms.ctsms.vo.FileJsonVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
+import org.phoenixctms.ctsms.vo.MimeTypeVO;
+import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
@@ -30,20 +41,44 @@ import org.phoenixctms.ctsms.web.util.Settings;
 import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CaptureEvent;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
 public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	private final static String INPUT_FIELD_CREATED_COLOR_STYLECLASS_PREFIX = "ctsms-inputfield-created-color-";
 	private final static long MAX_INPUT_FIELD_CREATED_COLORS = 3l; // 16l;
+	private final static String CAPTURE_MIME_TYPE = CommonUtil.INPUT_FIELD_PHOTO_MIME_TYPE;
+	private final static String CAPTURE_FILE_NAME_EXTENSION = "jpg";
+	private final static String IMAGE_MIME_TYPE_PREFIX = "image/";
+	private final static String FILE_ICON_STYLECLASS = "ctsms-field-icon ctsms-mimetype-unknown";
+	private final static int FILE_IMAGE_PREVIEW_WIDTH = 320;
+	private final static int FILE_IMAGE_PREVIEW_HEIGHT = 240;
+	private final static long FILE_IMAGE_PREVIEW_MAX_PIXELS = 4096L * 4096L;
+	private final static Color FILE_IMAGE_PREVIEW_BG_COLOR = Color.WHITE;
+	private final static String FILE_IMAGE_PREVIEW_FORMAT = "jpg";
+	private final static String FILE_IMAGE_PREVIEW_DATA_URL_PREFIX = "data:image/jpeg;base64,";
 	private int rowIndex;
 	private String errorMessage;
 	protected InputFieldOutVO inputField;
+	private FileOutVO fileValueVO;
+	private String allowTypes;
+	private Integer uploadSizeLimit;
+	private boolean uploadSizeLimitLoaded;
+	private ArrayList<MimeTypeVO> fileValueMimeTypes;
+	private Object fileImagePreviewKey;
+	private String fileImagePreview;
 
 	protected InputModel() {
 		errorMessage = null;
 		inputField = null;
+		fileValueVO = null;
+		allowTypes = null;
 	}
 
 	protected void actionPostProcess(Object out) {
@@ -153,6 +188,262 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	}
 
 	public abstract Float getFloatValue();
+
+	protected FileContentInVO getFileValue() {
+		return null;
+	}
+
+	protected void setFileValue(FileContentInVO value) {
+	}
+
+	protected Long getFileValueId() {
+		return null;
+	}
+
+	protected void setFileValueId(Long value) {
+	}
+
+	protected FileOutVO loadFileValueVO() throws AuthenticationException, AuthorisationException, ServiceException {
+		return null;
+	}
+
+	protected FileContentOutVO loadFileValueContent() throws AuthenticationException, AuthorisationException, ServiceException {
+		return null;
+	}
+
+	private FileOutVO getFileValueVO() {
+		Long fileValueId = getFileValueId();
+		if (fileValueId == null) {
+			fileValueVO = null;
+		} else if (fileValueVO == null || fileValueVO.getId() != fileValueId.longValue()) {
+			fileValueVO = null;
+			try {
+				fileValueVO = loadFileValueVO();
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return fileValueVO;
+	}
+
+	// a small jpeg data url of an image file value. decoded with bounds, and converted so that no svg or other markup reaches the page:
+	public String getFileImagePreview() {
+		FileContentInVO fileValue = getFileValue();
+		Object key = fileValue != null ? fileValue : getFileValueId();
+		if (key == null) {
+			fileImagePreviewKey = null;
+			fileImagePreview = null;
+		} else if (key != fileImagePreviewKey && !key.equals(fileImagePreviewKey)) {
+			fileImagePreviewKey = key;
+			fileImagePreview = null;
+			byte[] data = null;
+			try {
+				if (fileValue != null) {
+					if (fileValue.getMimeType() != null && fileValue.getMimeType().startsWith(IMAGE_MIME_TYPE_PREFIX)) {
+						data = fileValue.getDatas();
+					}
+				} else {
+					FileOutVO fileValueVO = getFileValueVO();
+					if (fileValueVO != null && fileValueVO.getContentType() != null && fileValueVO.getContentType().getImage()) {
+						FileContentOutVO content = loadFileValueContent();
+						data = content != null ? content.getDatas() : null;
+					}
+				}
+				if (data != null && data.length > 0) {
+					Image image = new Image(data, FILE_IMAGE_PREVIEW_WIDTH, FILE_IMAGE_PREVIEW_HEIGHT, FILE_IMAGE_PREVIEW_MAX_PIXELS, FILE_IMAGE_PREVIEW_BG_COLOR);
+					int width = image.getImage().getWidth();
+					int height = image.getImage().getHeight();
+					float factor = Math.min(1.0f, Math.min((float) FILE_IMAGE_PREVIEW_WIDTH / width, (float) FILE_IMAGE_PREVIEW_HEIGHT / height));
+					if (factor < 1.0f) {
+						image.scale(Math.max(1, Math.round(width * factor)), Math.max(1, Math.round(height * factor)));
+					}
+					fileImagePreview = new StringBuilder(FILE_IMAGE_PREVIEW_DATA_URL_PREFIX)
+							.append(Base64.getEncoder().encodeToString(image.convert(FILE_IMAGE_PREVIEW_FORMAT))).toString();
+				}
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			} catch (Exception e) {
+				// no preview for images that cannot be decoded
+			}
+		}
+		return fileImagePreview;
+	}
+
+	// the file type icon of the file value, like the file link on the job page:
+	public String getFileIconStyleClass() {
+		String nodeStyleClass = null;
+		FileContentInVO fileValue = getFileValue();
+		if (fileValue != null) {
+			if (fileValueMimeTypes == null) {
+				fileValueMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
+			}
+			Iterator<MimeTypeVO> it = fileValueMimeTypes.iterator();
+			while (it.hasNext()) {
+				MimeTypeVO mimeType = it.next();
+				if (mimeType.getMimeType().equals(fileValue.getMimeType())) {
+					nodeStyleClass = mimeType.getNodeStyleClass();
+					break;
+				}
+			}
+		} else if (getFileValueId() != null) {
+			FileOutVO fileValueVO = getFileValueVO();
+			if (fileValueVO != null && fileValueVO.getContentType() != null) {
+				nodeStyleClass = fileValueVO.getContentType().getNodeStyleClass();
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
+		StringBuilder sb = new StringBuilder(FILE_ICON_STYLECLASS);
+		if (!CommonUtil.isEmptyString(nodeStyleClass)) {
+			sb.append(' ');
+			sb.append(nodeStyleClass);
+		}
+		return sb.toString();
+	}
+
+	public boolean isHasFile() {
+		return getFileValue() != null || getFileValueId() != null;
+	}
+
+	public String getFileDownloadLinkLabel() {
+		FileContentInVO fileValue = getFileValue();
+		String fileName = null;
+		long fileSize = 0l;
+		if (fileValue != null) {
+			fileName = fileValue.getFileName();
+			fileSize = fileValue.getDatas() != null ? fileValue.getDatas().length : 0l;
+		} else {
+			FileOutVO fileValueVO = getFileValueVO();
+			if (fileValueVO != null) {
+				fileName = fileValueVO.getFileName();
+				fileSize = fileValueVO.getSize();
+			}
+		}
+		if (fileName != null) {
+			return Messages.getMessage(MessageCodes.INPUT_FIELD_FILE_LINK_LABEL, fileName, CommonUtil.humanReadableByteCount(fileSize, WebUtil.getDecimalSeparator()));
+		}
+		return Messages.getString(MessageCodes.NO_FILE_LINK_LABEL);
+	}
+
+	public StreamedContent getFileStreamedContent() throws Exception {
+		FileContentInVO fileValue = getFileValue();
+		if (fileValue != null) {
+			return new DefaultStreamedContent(new ByteArrayInputStream(fileValue.getDatas()), fileValue.getMimeType(), fileValue.getFileName());
+		} else if (getFileValueId() != null) {
+			FileContentOutVO content = loadFileValueContent();
+			if (content != null) {
+				return new DefaultStreamedContent(new ByteArrayInputStream(content.getDatas()), content.getContentType().getMimeType(), content.getFileName());
+			}
+		}
+		return null;
+	}
+
+	public void handleFileUpload(FileUploadEvent event) {
+		UploadedFile uploadedFile = event.getFile();
+		Integer uploadSizeLimit = getUploadSizeLimit();
+		if (!uploadSizeLimitLoaded) {
+			// the limit could not be determined, so do not load the contents into memory:
+			setErrorMessage(Messages.getString(MessageCodes.INPUT_FIELD_FILE_SIZE_LIMIT_UNKNOWN));
+			return;
+		}
+		if (uploadSizeLimit != null && uploadedFile.getSize() > uploadSizeLimit) {
+			// reject before the contents are loaded into memory:
+			setErrorMessage(Messages.getMessage(MessageCodes.INPUT_FIELD_FILE_SIZE_LIMIT_EXCEEDED,
+					CommonUtil.humanReadableByteCount(uploadSizeLimit, WebUtil.getDecimalSeparator())));
+			return;
+		}
+		setFileValue(new FileContentInVO(uploadedFile.getFileName(), uploadedFile.getContentType(), uploadedFile.getContents()));
+		setErrorMessage(null);
+		executeFileOnChange();
+	}
+
+	public void onCapture(CaptureEvent captureEvent) {
+		setFileValue(new FileContentInVO(Messages.getMessage(MessageCodes.WEBCAM_FILE_NAME, DateUtil.getDigitsOnlyDateTimeFormat().format(new Date()),
+				CAPTURE_FILE_NAME_EXTENSION), CAPTURE_MIME_TYPE, captureEvent.getData()));
+		setErrorMessage(null);
+		executeFileOnChange();
+	}
+
+	public void clearFile(ActionEvent actionEvent) {
+		setFileValue(null);
+		setFileValueId(null);
+		executeFileOnChange();
+	}
+
+	private void executeFileOnChange() {
+		if (isJsVariable()) {
+			RequestContext requestContext = RequestContext.getCurrentInstance();
+			if (requestContext != null) {
+				StringBuilder sb = new StringBuilder("FieldCalculation.fileOnChange('");
+				sb.append(getJsVariableName());
+				sb.append("',");
+				sb.append(getSeriesIndex());
+				sb.append(',');
+				sb.append(getFileJsonValue());
+				sb.append(");");
+				requestContext.execute(sb.toString());
+			}
+		}
+	}
+
+	// FileJsonVO as JSON (id 0 and image by "image/" prefix for not yet saved uploads)
+	private String getFileJsonValue() {
+		FileJsonVO fileJsonValue;
+		FileContentInVO fileValue = getFileValue();
+		if (fileValue != null) {
+			fileJsonValue = CommonUtil.fileContentInVOToFileJsonVO(fileValue);
+		} else {
+			fileJsonValue = CommonUtil.fileOutVOToFileJsonVO(getFileValueVO());
+		}
+		return fileJsonValue != null ? JsUtil.inputFieldVariableValueToJson(fileJsonValue) : "null";
+	}
+
+	public boolean isPhoto() {
+		if (inputField != null) {
+			return inputField.getPhoto();
+		}
+		return false;
+	}
+
+	public String getAllowTypes() {
+		if (allowTypes == null && inputField != null) {
+			StringBuilder sb = new StringBuilder();
+			HashSet<String> dupeCheck = new HashSet<String>();
+			// the allowed file types are not honoured for photo capture fields, which accept any image type instead:
+			Iterator<MimeTypeVO> it = (inputField.isPhoto() ? new ArrayList<MimeTypeVO>() : inputField.getAllowedMimeTypes()).iterator();
+			while (it.hasNext()) {
+				String fileNameExtensions = it.next().getFileNameExtensions();
+				if (!CommonUtil.isEmptyString(fileNameExtensions) && dupeCheck.add(fileNameExtensions)) {
+					if (sb.length() > 0) {
+						sb.append(CommonUtil.FILE_EXTENSION_REGEXP_MODE ? "|" : ";");
+					}
+					sb.append(CommonUtil.FILE_EXTENSION_REGEXP_MODE ? "(" + fileNameExtensions + ")" : fileNameExtensions);
+				}
+			}
+			if (sb.length() > 0) {
+				allowTypes = CommonUtil.FILE_EXTENSION_REGEXP_MODE ? "/(\\.|\\/)(" + sb.toString() + ")$/i" : sb.toString();
+			} else {
+				allowTypes = WebUtil.getAllowedFileExtensionsPattern(FileModule.INPUT_FIELD_VALUE_FILE, inputField.isPhoto() ? true : null);
+			}
+		}
+		return allowTypes;
+	}
+
+	public Integer getUploadSizeLimit() {
+		if (!uploadSizeLimitLoaded) {
+			try {
+				uploadSizeLimit = WebUtil.getServiceLocator().getToolsService().getInputFieldValueFileUploadSizeLimit();
+				uploadSizeLimitLoaded = true;
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return uploadSizeLimit;
+	}
 
 	public int getHeight() {
 		if (inputField != null) {
@@ -479,6 +770,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	protected void setField(InputFieldOutVO inputField) {
 		this.inputField = inputField;
+		allowTypes = null;
 	}
 
 	public abstract void setFloatValue(Float value);

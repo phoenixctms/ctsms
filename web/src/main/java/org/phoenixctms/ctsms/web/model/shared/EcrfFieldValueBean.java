@@ -28,6 +28,7 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFPDFVO;
 import org.phoenixctms.ctsms.vo.ECRFSectionProgressVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
+import org.phoenixctms.ctsms.vo.FileJsonVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
@@ -84,12 +85,14 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			in.setTextValue(out.getTextValue());
 			in.setTimestampValue(out.getTimestampValue());
 			in.setInkValues(out.getInkValues());
+			in.setFileValueId(out.getFileValue() != null ? out.getFileValue().getId() : null);
+			in.setFileValue(null);
 			in.setVersion(out.getVersion());
 		}
 	}
 
 	public static void copyEcrfFieldValuesInToJson(ArrayList<ECRFFieldValueJsonVO> ecrfFieldValuesOut, ArrayList<ECRFFieldValueInVO> ecrfFieldValuesIn,
-			HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap, Long visitId) {
+			HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap, Long visitId, HashMap<Long, FileJsonVO> fileValueMap) {
 		if (ecrfFieldValuesOut != null) {
 			ecrfFieldValuesOut.clear();
 			if (ecrfFieldValuesIn != null && ecrfFieldVOsMap != null) {
@@ -100,6 +103,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 					if (ecrfFieldVOsMap.containsKey(in.getEcrfFieldId())) {
 						ECRFFieldValueJsonVO out = new ECRFFieldValueJsonVO();
 						CommonUtil.copyEcrfFieldValueInToJson(out, in, ecrfFieldVOsMap.get(in.getEcrfFieldId()), visitId);
+						if (out.getFileValue() == null && in.getFileValueId() != null && fileValueMap != null) {
+							out.setFileValue(fileValueMap.get(in.getFileValueId()));
+						}
 						ecrfFieldValuesOut.add(out);
 					}
 				}
@@ -310,9 +316,13 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				ArrayList<ECRFFieldValueJsonVO> out = new ArrayList<ECRFFieldValueJsonVO>(jsEcrfFieldValuesOut.size());
 				HashMap<Long, ECRFFieldOutVO> ecrfFieldVOsMap = new HashMap<Long, ECRFFieldOutVO>(ecrfFieldValuesOut.size());
 				HashMap<Long, HashSet<Long>> visibleIndexMap = new HashMap<Long, HashSet<Long>>(ecrfFieldValuesOut.size());
+				HashMap<Long, FileJsonVO> fileValueMap = new HashMap<Long, FileJsonVO>();
 				Iterator<ECRFFieldValueOutVO> ecrfFieldIt = ecrfFieldValuesOut.iterator();
 				while (ecrfFieldIt.hasNext()) {
 					ECRFFieldValueOutVO ecrfFieldValueVO = ecrfFieldIt.next();
+					if (ecrfFieldValueVO.getFileValue() != null) {
+						fileValueMap.put(ecrfFieldValueVO.getFileValue().getId(), CommonUtil.fileOutVOToFileJsonVO(ecrfFieldValueVO.getFileValue()));
+					}
 					listEntry = ecrfFieldValueVO.getListEntry();
 					ecrfVisit = ecrfFieldValueVO.getVisit();
 					ECRFFieldOutVO ecrfFieldVO = ecrfFieldValueVO.getEcrfField();
@@ -327,7 +337,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 						}
 					}
 				}
-				copyEcrfFieldValuesInToJson(out, ecrfFieldValuesIn, ecrfFieldVOsMap, ecrfVisit != null ? ecrfVisit.getId() : null);
+				copyEcrfFieldValuesInToJson(out, ecrfFieldValuesIn, ecrfFieldVOsMap, ecrfVisit != null ? ecrfVisit.getId() : null, fileValueMap);
 				// add non visible values from jsEcrfFieldValuesOut:
 				Iterator<ECRFFieldValueJsonVO> jsEcrfFieldValueIt = jsEcrfFieldValuesOut.iterator();
 				while (jsEcrfFieldValueIt.hasNext()) {

@@ -58,6 +58,21 @@ public class InquiryValueInVOInputFieldValueEqualsAdapter extends InputFieldValu
 	}
 
 	@Override
+	protected Long getAFileId(InquiryValueInVO a) {
+		return a.getFileValueId();
+	}
+
+	@Override
+	protected boolean isANewFile(InquiryValueInVO a) {
+		return a.getFileValue() != null;
+	}
+
+	@Override
+	protected Long getBFileId(InputFieldValue b) {
+		return b.getFileValue() != null ? b.getFileValue().getId() : null;
+	}
+
+	@Override
 	protected Boolean getBBoolean(InputFieldValue b) {
 		return b.getBooleanValue();
 	}

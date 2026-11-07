@@ -1290,7 +1290,7 @@ public class InventoryServiceImpl
 	}
 
 	@Override
-	protected MaintenanceScheduleItemOutVO handleSetMaintenaceScheduleItemDismissed(
+	protected MaintenanceScheduleItemOutVO handleSetMaintenanceScheduleItemDismissed(
 			AuthenticationVO auth, Long maintenanceScheduleItemId, Long version, boolean dismissed) throws Exception {
 		MaintenanceScheduleItemDao maintenanceScheduleItemDao = this.getMaintenanceScheduleItemDao();
 		MaintenanceScheduleItem maintenanceScheduleItem = CheckIDUtil.checkMaintenanceScheduleItemId(maintenanceScheduleItemId, maintenanceScheduleItemDao);

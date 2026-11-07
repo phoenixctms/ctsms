@@ -67,6 +67,7 @@ public final class DBToolOptions {
 	public static final String IMPORT_MIME_PROBAND_OPT = "imp";
 	public static final String IMPORT_MIME_MASS_MAIL_OPT = "immm";
 	public static final String IMPORT_MIME_INPUT_FIELD_IMAGE_OPT = "imifi";
+	public static final String IMPORT_MIME_INPUT_FIELD_VALUE_FILE_OPT = "imifv";
 	public static final String IMPORT_MIME_STAFF_IMAGE_OPT = "imsi";
 	public static final String IMPORT_MIME_PROBAND_IMAGE_OPT = "impi";
 	public static final String IMPORT_MIME_JOB_FILE_OPT = "imjf";
@@ -217,6 +218,8 @@ public final class DBToolOptions {
 		tasks.addOption(registerTaskOption(IMPORT_MIME_PROBAND_OPT, "import_mime_proband", "import proband file mime types from csv/text file", 1, LockId.DEFAULT_LOCK_ID));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_MASS_MAIL_OPT, "import_mime_mass_mail", "import mass mail file mime types from csv/text file", 1, LockId.DEFAULT_LOCK_ID));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_INPUT_FIELD_IMAGE_OPT, "import_mime_input_field_image", "import input field image file mime types from csv/text file", 1,
+				LockId.DEFAULT_LOCK_ID));
+		tasks.addOption(registerTaskOption(IMPORT_MIME_INPUT_FIELD_VALUE_FILE_OPT, "import_mime_input_field_value_file", "import input field value file mime types from csv/text file", 1,
 				LockId.DEFAULT_LOCK_ID));
 		tasks.addOption(registerTaskOption(IMPORT_MIME_STAFF_IMAGE_OPT, "import_mime_staff_image", "import input staff image file mime types from csv/text file", 1,
 				LockId.DEFAULT_LOCK_ID));

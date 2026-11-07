@@ -87,6 +87,26 @@ public abstract class InputFieldPDFBlock {
 
 	protected abstract float getFieldFrameLineWidth();
 
+	protected String getFileName() {
+		return null;
+	}
+
+	protected Long getFileSize() {
+		return null;
+	}
+
+	private String getFileValueString() {
+		String fileName = getFileName();
+		if (fileName != null) {
+			Long fileSize = getFileSize();
+			if (fileSize != null) {
+				return fileName + " (" + CommonUtil.humanReadableByteCount(fileSize, getDecimalSeparator()) + ")";
+			}
+			return fileName;
+		}
+		return null;
+	}
+
 	protected abstract Float getFloatValue();
 
 	private Float getFloatValue(boolean preset) {
@@ -565,6 +585,11 @@ public abstract class InputFieldPDFBlock {
 				width = Math.max(PDFUtil.getStringWidth(string, cursor.getFontD(), PDFUtil.FontSize.MEDIUM),
 						PDFUtil.getStringWidth(getTimeValueFormatPattern(), cursor.getFontD(), PDFUtil.FontSize.MEDIUM));
 				break;
+			case FILE:
+				string = blank ? null : getFileValueString();
+				isPresetColor = false;
+				width = PDFUtil.getStringWidth(string != null ? string : "", cursor.getFontD(), PDFUtil.FontSize.MEDIUM);
+				break;
 			default:
 				return 0.0f;
 		}
@@ -698,6 +723,27 @@ public abstract class InputFieldPDFBlock {
 					y = Math.min(y1, y2) - getYFrameIndent();
 				}
 				if (getRenderSketchImages()) {
+					y -= renderSketchImage(cursor.getBlockIndentedCenterX(), y, contentStream, cursor) + getYFrameIndent();
+				}
+				y -= renderComments(x, y, contentStream, cursor);
+				height = cursor.getBlockY() - y;
+				renderFrame(height, contentStream, cursor);
+				break;
+			case FILE:
+				x = cursor.getBlockIndentedX();
+				y = cursor.getBlockY() - getYFrameIndent();
+				y -= renderTopComment(x, y, contentStream, cursor);
+				if (isInputFieldLongTitle()) {
+					y -= renderTitle(x, y, contentStream, cursor) + getYFrameIndent();
+					y -= renderFormattedValue(x + getXFieldColumnIndent() + getXFrameIndent(), y, fieldType, contentStream, cursor) + getYFrameIndent();
+				} else {
+					y1 = y;
+					y2 = y;
+					y1 -= renderTitle(x, y1, contentStream, cursor);
+					y2 -= renderFormattedValue(x + getXFieldColumnIndent() + getXFrameIndent(), y2, fieldType, contentStream, cursor);
+					y = Math.min(y1, y2) - getYFrameIndent();
+				}
+				if (ximage != null && !blank) {
 					y -= renderSketchImage(cursor.getBlockIndentedCenterX(), y, contentStream, cursor) + getYFrameIndent();
 				}
 				y -= renderComments(x, y, contentStream, cursor);

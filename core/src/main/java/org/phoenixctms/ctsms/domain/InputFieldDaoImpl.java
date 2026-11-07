@@ -7,8 +7,11 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.awt.Dimension;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -312,6 +315,16 @@ public class InputFieldDaoImpl
 			target.setFileSize(0l);
 			target.setContentType(null);
 		}
+		Collection<Long> allowedMimeTypeIds;
+		if ((allowedMimeTypeIds = source.getAllowedMimeTypeIds()).size() > 0 || copyIfNull) {
+			MimeTypeDao mimeTypeDao = this.getMimeTypeDao();
+			ArrayList<MimeType> allowedMimeTypes = new ArrayList<MimeType>(allowedMimeTypeIds.size());
+			Iterator<Long> it = allowedMimeTypeIds.iterator();
+			while (it.hasNext()) {
+				allowedMimeTypes.add(mimeTypeDao.load(it.next()));
+			}
+			target.setAllowedMimeTypes(allowedMimeTypes);
+		}
 	}
 
 	/**
@@ -429,6 +442,13 @@ public class InputFieldDaoImpl
 		if (contentType != null) {
 			target.setMimeType(contentType.getMimeType());
 		}
+		ArrayList<Long> allowedMimeTypeIds = new ArrayList<Long>(source.getAllowedMimeTypes().size());
+		Iterator<MimeType> it = source.getAllowedMimeTypes().iterator();
+		while (it.hasNext()) {
+			allowedMimeTypeIds.add(it.next().getId());
+		}
+		Collections.sort(allowedMimeTypeIds);
+		target.setAllowedMimeTypeIds(allowedMimeTypeIds);
 	}
 
 	/**
@@ -446,13 +466,14 @@ public class InputFieldDaoImpl
 	public void toInputFieldOutVO(
 			InputField source,
 			InputFieldOutVO target) {
-		(new InputFieldGraph(this, this.getInputFieldSelectionSetValueDao(), this.getUserDao())).toVOHelper(source, target, new HashMap<Class, HashMap<Long, Object>>());
+		(new InputFieldGraph(this, this.getInputFieldSelectionSetValueDao(), this.getUserDao(), this.getMimeTypeDao())).toVOHelper(source, target,
+				new HashMap<Class, HashMap<Long, Object>>());
 	}
 
 	@Override
 	public void toInputFieldOutVO(
 			InputField source,
 			InputFieldOutVO target, HashMap<Class, HashMap<Long, Object>> voMap) {
-		(new InputFieldGraph(this, this.getInputFieldSelectionSetValueDao(), this.getUserDao())).toVOHelper(source, target, voMap);
+		(new InputFieldGraph(this, this.getInputFieldSelectionSetValueDao(), this.getUserDao(), this.getMimeTypeDao())).toVOHelper(source, target, voMap);
 	}
 }

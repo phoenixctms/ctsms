@@ -16,6 +16,7 @@
 /ctsms/dbtool.sh -imp /ctsms/master_data/mime.types -e ISO-8859-1
 /ctsms/dbtool.sh -immm /ctsms/master_data/mime.types -e ISO-8859-1
 /ctsms/dbtool.sh -imifi /ctsms/master_data/mime.types -e ISO-8859-1
+/ctsms/dbtool.sh -imifv /ctsms/master_data/mime.types -e ISO-8859-1
 /ctsms/dbtool.sh -imsi /ctsms/master_data/mime.types -e ISO-8859-1
 /ctsms/dbtool.sh -impi /ctsms/master_data/mime.types -e ISO-8859-1
 /ctsms/dbtool.sh -imjf /ctsms/master_data/mime.types -e ISO-8859-1

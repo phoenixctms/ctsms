@@ -13,6 +13,9 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.FileContentInVO;
+import org.phoenixctms.ctsms.vo.FileContentOutVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
@@ -51,6 +54,8 @@ public class InquiryInputModel extends InputModel {
 			inquiryValue.setLongValue(inputField.getLongPreset());
 			inquiryValue.setTimestampValue(inputField.getTimestampPreset());
 			inquiryValue.setInkValues(null);
+			inquiryValue.setFileValueId(null);
+			inquiryValue.setFileValue(null);
 			inquiryValue.getSelectionValueIds().clear();
 			inquiryValue.setTextValue(inputField.getTextPreset());
 			Iterator<InputFieldSelectionSetValueOutVO> it = inputField.getSelectionSetValues().iterator();
@@ -72,7 +77,15 @@ public class InquiryInputModel extends InputModel {
 			try {
 				InquiryValuesOutVO values = WebUtil.getServiceLocator().getTrialService().checkInquiryValues(WebUtil.getAuthentication(), inquiryValues);
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
+				// the check result carries no proband and no file data, so keep the proband the value belongs to (checked
+				// along with the value id next time) and the selected file:
+				Long probandId = inquiryValue.getProbandId();
+				Long fileValueId = inquiryValue.getFileValueId();
+				FileContentInVO fileValue = inquiryValue.getFileValue();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
+				inquiryValue.setProbandId(probandId);
+				inquiryValue.setFileValueId(fileValueId);
+				inquiryValue.setFileValue(fileValue);
 				setModifiedAnnotation(out);
 				return values.getJsValues();
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {
@@ -108,6 +121,46 @@ public class InquiryInputModel extends InputModel {
 	@Override
 	public Float getFloatValue() {
 		return inquiryValue == null ? null : inquiryValue.getFloatValue();
+	}
+
+	@Override
+	protected FileContentInVO getFileValue() {
+		return inquiryValue == null ? null : inquiryValue.getFileValue();
+	}
+
+	@Override
+	protected void setFileValue(FileContentInVO value) {
+		if (inquiryValue != null) {
+			inquiryValue.setFileValue(value);
+		}
+	}
+
+	@Override
+	protected Long getFileValueId() {
+		return inquiryValue == null ? null : inquiryValue.getFileValueId();
+	}
+
+	@Override
+	protected void setFileValueId(Long value) {
+		if (inquiryValue != null) {
+			inquiryValue.setFileValueId(value);
+		}
+	}
+
+	@Override
+	protected FileOutVO loadFileValueVO() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (inquiryValue != null && inquiryValue.getId() != null) {
+			return WebUtil.getServiceLocator().getProbandService().getInquiryValueById(WebUtil.getAuthentication(), inquiryValue.getId()).getFileValue();
+		}
+		return null;
+	}
+
+	@Override
+	protected FileContentOutVO loadFileValueContent() throws AuthenticationException, AuthorisationException, ServiceException {
+		if (inquiryValue != null && inquiryValue.getId() != null) {
+			return WebUtil.getServiceLocator().getProbandService().getInquiryValueFileContent(WebUtil.getAuthentication(), inquiryValue.getId());
+		}
+		return null;
 	}
 
 	@Override

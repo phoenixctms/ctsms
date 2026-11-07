@@ -171,6 +171,13 @@ public final class ToolsResource {
 	}
 
 	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Path("inputfieldvaluefileuploadsizelimit")
+	public Integer getInputFieldValueFileUploadSizeLimit() throws AuthorisationException, ServiceException, AuthenticationException {
+		return WebUtil.getServiceLocator().getToolsService().getInputFieldValueFileUploadSizeLimit();
+	}
+
+	@GET
 	@Path("file/{id}")
 	public Response getPublicFileStream(@PathParam("id") Long id) throws AuthenticationException, AuthorisationException, ServiceException {
 		FileStreamOutVO stream = WebUtil.getServiceLocator().getToolsService().getPublicFileStream(id);

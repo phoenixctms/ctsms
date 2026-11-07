@@ -8,6 +8,7 @@
 	var START_RETRIES = 3;
 	var START_RETRY_DELAY = 1000;
 	var JPEG_QUALITY = 0.92;
+	var FILE_UPLOAD_CAMERA_OPEN_CLASS = 'ctsms-upload-control-camera';
 	var activeStreams = {};
 
 	function stopStream(stream) {
@@ -46,6 +47,10 @@
 		}
 	}
 
+	function setButtonEnabled(selector, enabled) {
+		$(selector).prop('disabled', !enabled).toggleClass('ui-state-disabled', !enabled);
+	}
+
 	PrimeFaces.widget.PhotoCam = PrimeFaces.widget.BaseWidget.extend({
 
 		init : function(cfg) {
@@ -62,6 +67,12 @@
 			$(this.video).off('loadedmetadata resize').on('loadedmetadata resize', function() {
 				if (this.videoWidth && this.videoHeight) {
 					this.parentNode.style.aspectRatio = this.videoWidth + ' / ' + this.videoHeight;
+				}
+			});
+			this.live = false;
+			$(this.video).off('playing').on('playing', function() {
+				if (_self.stream) {
+					_self.setLive(true);
 				}
 			});
 			this.devices.change(function() {
@@ -87,17 +98,59 @@
 				}
 			});
 
+			this.supported = false;
 			if (window.isSecureContext === false) {
 				this.showStatus(this.msgs.insecureContext);
 			} else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
 				this.showStatus(this.msgs.notSupported);
 			} else {
+				this.supported = true;
 				var stream = activeStreams[this.id];
-				if (stream && stream.active) {
+				if (this.cfg.autoStart === false) {
+					// keep the live view open if it was open before being re-rendered (e.g. after a capture):
+					if (stream && stream.active) {
+						this.setOpen(true);
+						this.attach(stream, null);
+					}
+				} else if (stream && stream.active) {
 					this.attach(stream, null);
 				} else if (!this.pending) {
 					this.start(loadDeviceId());
 				}
+			}
+		},
+
+		isOpen : function() {
+			return this.jq.css('display') !== 'none';
+		},
+
+		// shows or hides the live view and triggers 'photocamopen' with true or false:
+		setOpen : function(open) {
+			if (open) {
+				this.jq.show();
+			} else {
+				this.jq.hide();
+			}
+			this.jq.trigger('photocamopen', [ open ]);
+		},
+
+		open : function() {
+			this.setOpen(true);
+			if (this.supported && !this.stream && !this.pending) {
+				this.start(loadDeviceId());
+			}
+		},
+
+		close : function() {
+			this.stop();
+			this.setOpen(false);
+		},
+
+		toggle : function() {
+			if (this.isOpen()) {
+				this.close();
+			} else {
+				this.open();
 			}
 		},
 
@@ -173,7 +226,16 @@
 			});
 		},
 
+		// triggers 'photocamlive' with true once the live view plays, and false when it stops, e.g. to enable a capture button:
+		setLive : function(live) {
+			if (this.live !== live) {
+				this.live = live;
+				this.jq.trigger('photocamlive', [ live ]);
+			}
+		},
+
 		stop : function() {
+			this.setLive(false);
 			this.requestCount = (this.requestCount || 0) + 1;
 			this.pending = false;
 			if (this.stream) {
@@ -259,6 +321,10 @@
 		},
 
 		capture : function() {
+			if (this.cfg.autoStart === false && !this.isOpen()) {
+				this.open();
+				return;
+			}
 			var video = this.video;
 			if (!this.stream || !video || video.readyState < 2 || !video.videoWidth || !video.videoHeight) {
 				if (this.stream || !this.status.is(':visible')) {
@@ -283,5 +349,43 @@
 		}
 
 	});
+
+	// stops the stream of a camera whose live view was removed by an ajax update without being rendered again. a re-rendered camera
+	// re-attaches its stream while the update is applied, so it is still found here and keeps running:
+	$(document).off('ajaxComplete.photocam').on('ajaxComplete.photocam', function() {
+		for ( var id in activeStreams) {
+			if (activeStreams.hasOwnProperty(id) && !document.getElementById(id)) {
+				stopStream(activeStreams[id]);
+				delete activeStreams[id];
+			}
+		}
+	});
+
+	// enables the capture button(s) matching the selector only while the camera of the widget is live. call it whenever the
+	// button is rendered, since a re-rendered button starts disabled while the camera may already be live:
+	PrimeFaces.widget.PhotoCam.bindCaptureButton = function(widgetVar, selector) {
+		var cam = window[widgetVar];
+		setButtonEnabled(selector, !!(cam && cam.live));
+		$(document).off('photocamlive.' + widgetVar).on('photocamlive.' + widgetVar, function(event, live) {
+			var cam = window[widgetVar];
+			if (cam && cam.jq && cam.jq[0] === event.target) {
+				setButtonEnabled(selector, live);
+			}
+		});
+	};
+
+	// places the live view of a camera (autoStart false) in the content area of a p:fileUpload, with the camera selector on
+	// its own below, and marks the upload control while the camera is open. call it whenever both are rendered:
+	PrimeFaces.widget.PhotoCam.embedInFileUpload = function(camSelector, fileUploadSelector) {
+		var cam = $(camSelector);
+		var content = $(fileUploadSelector).find('.fileupload-content');
+		cam.appendTo(content);
+		cam.find('.ctsms-photocam-devices').appendTo(content);
+		$(fileUploadSelector).toggleClass(FILE_UPLOAD_CAMERA_OPEN_CLASS, cam.length > 0 && cam.css('display') !== 'none');
+		var eventNamespace = '.photocamupload_' + camSelector.replace(/[^A-Za-z0-9_]/g, '_');
+		$(document).off('photocamopen' + eventNamespace).on('photocamopen' + eventNamespace, camSelector, function(event, open) {
+			$(fileUploadSelector).toggleClass(FILE_UPLOAD_CAMERA_OPEN_CLASS, open);
+		});
+	};
 
 })(window, jQuery);

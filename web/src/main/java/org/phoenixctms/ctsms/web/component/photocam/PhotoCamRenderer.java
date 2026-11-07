@@ -75,8 +75,9 @@ public class PhotoCamRenderer extends CoreRenderer {
 		writer.startElement("div", cam);
 		writer.writeAttribute("id", clientId, "id");
 		writer.writeAttribute("class", styleClass, "styleClass");
-		if (cam.getStyle() != null) {
-			writer.writeAttribute("style", cam.getStyle(), "style");
+		String style = cam.isAutoStart() ? cam.getStyle() : "display:none;" + (cam.getStyle() != null ? cam.getStyle() : "");
+		if (style != null) {
+			writer.writeAttribute("style", style, "style");
 		}
 		writer.startElement("div", null);
 		writer.writeAttribute("class", "ctsms-photocam-viewport", null);
@@ -112,6 +113,7 @@ public class PhotoCamRenderer extends CoreRenderer {
 		writer.write(",dataParam:'" + getDataParameterName(cam, context) + "'");
 		writer.write(",width:" + cam.getWidth());
 		writer.write(",height:" + cam.getHeight());
+		writer.write(",autoStart:" + cam.isAutoStart());
 		if (cam.getUpdate() != null) {
 			writer.write(",update:'" + ComponentUtils.findClientIds(context, cam, cam.getUpdate()) + "'");
 		}

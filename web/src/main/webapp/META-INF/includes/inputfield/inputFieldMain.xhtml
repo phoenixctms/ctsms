@@ -394,6 +394,71 @@
 								for="strict"
 								rendered="#{inputFieldBean.config.autocomplete}" />
 							<h:outputLabel
+								for="photo"
+								rendered="#{inputFieldBean.config.file}"
+								value="#{inputfieldlabels.input_field_photo_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.file}">
+								<p:selectBooleanCheckbox
+									id="photo"
+									value="#{inputFieldBean.in.photo}">
+									<p:ajax
+										process="@this"
+										update="allowedMimeTypes" />
+								</p:selectBooleanCheckbox>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="photo">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_photo_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="photo"
+								rendered="#{inputFieldBean.config.file}" />
+							<h:outputLabel
+								for="allowedMimeTypes"
+								rendered="#{inputFieldBean.config.file}"
+								value="#{inputfieldlabels.input_field_allowed_mime_types_label}" />
+							<h:panelGroup rendered="#{inputFieldBean.config.file}">
+								<p:autoComplete
+									id="allowedMimeTypes"
+									value="#{inputFieldBean.allowedMimeTypes}"
+									disabled="#{inputFieldBean.in.photo}"
+									required="false"
+									label="#{inputfieldlabels.input_field_allowed_mime_types}"
+									styleClass="ctsms-control-larger"
+									minQueryLength="#{autoCompleteMinQueryLengthMimeType}"
+									maxResults="#{autoCompleteMaxResultsMimeType}"
+									queryDelay="#{autoCompleteQueryDelayMimeType}"
+									global="#{autoCompleteGlobalMimeType}"
+									scrollHeight="#{autoCompleteScrollHeightMimeType}"
+									completeMethod="#{inputFieldBean.completeAllowedMimeType}" multiple="true"
+									var="mimeType" itemValue="#{mimeType}"
+									itemLabel="#{inputFieldBean.getMimeTypeLabel(mimeType.vo)}" converter="ctsms.InputFieldValueFileMimeType">
+									<p:ajax process="@this" event="itemSelect"
+										listener="#{inputFieldBean.handleAllowedMimeTypeSelect}" />
+									<p:ajax process="@this" event="itemUnselect"
+										listener="#{inputFieldBean.handleAllowedMimeTypeUnselect}" />
+									<p:column>
+										<h:outputText value="#{mimeType.vo.mimeType}" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{inputFieldBean.getMimeTypeFileNameExtensions(mimeType.vo)}" />
+									</p:column>
+								</p:autoComplete>
+								<p:tooltip
+									rendered="#{enableTooltips}"
+									for="allowedMimeTypes">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_allowed_mime_types_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message
+								for="allowedMimeTypes"
+								rendered="#{inputFieldBean.config.file}" />
+							<h:outputLabel
 								for="booleanPreset"
 								rendered="#{inputFieldBean.config.checkBox}"
 								value="#{inputfieldlabels.input_field_boolean_preset_label}" />

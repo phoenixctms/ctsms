@@ -1,7 +1,10 @@
 package org.phoenixctms.ctsms.selenium.trial;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.security.MessageDigest;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,15 +12,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
 import org.phoenixctms.ctsms.selenium.SeleniumTestBase;
@@ -50,7 +61,12 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 	private XlsImporter xlsImporter;
 	private final static Pattern FILE_NAME_ID_REGEXP = Pattern.compile("'([0-9a-z._-]+)' \\(file ID (\\d+)\\)");
 	private final static long FILE_DOWNLOAD_TIMEOUT_MS = 60_000L;
+	private final static String EXPORT_FILES_FILE_NAME_PREFIX = "ecrf_files_";
+	// exported FILE values are "<zip entry path> (<md5>)", the entry path being "<proband id>/<column name>/<file name>":
+	private final static Pattern EXPORTED_FILE_VALUE_REGEXP = Pattern.compile("^(.+) \\(([0-9a-fA-F]{32})\\)$");
 	private String exportFile;
+	private String exportFilesFile;
+	private HashMap<String, String> exportedFileMd5s = new LinkedHashMap<String, String>();
 	private Connection connection;
 
 	private XlsImporter getXlsImporter() {
@@ -181,6 +197,8 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 					info(fileName + " saved");
 					if (CommonUtil.getMimeType(file).equals("application/x-sqlite3")) {
 						exportFile = file.getCanonicalPath();
+					} else if (fileName.startsWith(EXPORT_FILES_FILE_NAME_PREFIX) && fileName.endsWith(".zip")) {
+						exportFilesFile = file.getCanonicalPath();
 					}
 					info("file " + file.getCanonicalPath() + " saved");
 				}
@@ -195,7 +213,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 
 	private static boolean isExportedEcrfFile(String fileName) {
 		String lower = fileName.toLowerCase();
-		return lower.endsWith(".db") || lower.endsWith(".csv") || lower.endsWith(".xlsx") || lower.endsWith(".xls");
+		return lower.endsWith(".db") || lower.endsWith(".csv") || lower.endsWith(".xlsx") || lower.endsWith(".xls") || lower.endsWith(".zip");
 	}
 
 	private void waitForDownloadedFile(File file) throws InterruptedException {
@@ -243,7 +261,61 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		}
 	}
 
-	private void checkExportedValue(EcrfValidationTestVector vector) throws SQLException {
+	@Test(description = "Verify the files of the exported FILE values in the zip file uploaded by the eCRF data export, with the file names and MD5s found in the SQLite database.")
+	public void test_08_verify_exported_ecrf_files() throws Throwable {
+		setSkipScreenshot(true);
+		if (exportedFileMd5s.size() > 0) {
+			if (CommonUtil.isEmptyString(exportFilesFile)) {
+				testFailed("eCRF files zip not downloaded");
+				return;
+			}
+			HashMap<String, String> entryMd5s = new HashMap<String, String>();
+			ZipInputStream zip = new ZipInputStream(new FileInputStream(exportFilesFile));
+			try {
+				ZipEntry entry;
+				while ((entry = zip.getNextEntry()) != null) {
+					if (!entry.isDirectory()) {
+						entryMd5s.put(entry.getName(), getMd5(zip.readAllBytes()));
+					}
+				}
+			} finally {
+				zip.close();
+			}
+			Iterator<String> it = exportedFileMd5s.keySet().iterator();
+			while (it.hasNext()) {
+				String entryPath = it.next();
+				Assert.assertTrue(entryMd5s.containsKey(entryPath), "zip entry " + entryPath + " exists:");
+				Assert.assertEquals(entryMd5s.get(entryPath), exportedFileMd5s.get(entryPath), "zip entry " + entryPath + " MD5:");
+				info("zip entry " + entryPath + " OK");
+			}
+			Assert.assertEquals(entryMd5s.size(), exportedFileMd5s.size(), "zip entry count:");
+		} else {
+			info("no exported files");
+		}
+	}
+
+	private static String getMd5(byte[] data) throws Exception {
+		return CommonUtil.getHex(MessageDigest.getInstance("MD5").digest(data)).toLowerCase();
+	}
+
+	private static boolean isFile(EcrfValidationTestVector vector) {
+		return InputFieldType.FILE.equals(vector.getEcrfField().getField().getFieldType().getType());
+	}
+
+	// the validation sheet holds the uploaded test resource file as input value, and its name as exported value:
+	private void checkExportedFileValue(EcrfValidationTestVector vector, String value) throws Exception {
+		String label = vector.toString();
+		Matcher matcher = EXPORTED_FILE_VALUE_REGEXP.matcher(value != null ? value : "");
+		Assert.assertTrue(matcher.find(), label + " exported value '" + value + "' format:");
+		String entryPath = matcher.group(1);
+		String md5 = matcher.group(2).toLowerCase();
+		Assert.assertTrue(entryPath.startsWith(probandId.toString() + "/"), label + " exported file path '" + entryPath + "' proband ID:");
+		Assert.assertEquals(entryPath.substring(entryPath.lastIndexOf('/') + 1), vector.getExportedValue(), label + " exported file name:");
+		Assert.assertEquals(md5, getMd5(Files.readAllBytes(new File(getResourceFilePath(vector.getInputValue())).toPath())), label + " exported file MD5:");
+		exportedFileMd5s.put(entryPath, md5);
+	}
+
+	private void checkExportedValue(EcrfValidationTestVector vector) throws Exception {
 		String label = vector.toString();
 		String selectSql = "select value from ecrf_data_vertical where ecrf_field_id = ?";
 		String deleteSql = "delete from ecrf_data_vertical where ecrf_field_id = ?";
@@ -262,7 +334,11 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		ResultSet rs = selectPs.executeQuery();
 		int count = 0;
 		while (rs.next()) {
-			Assert.assertEquals(rs.getString("value"), vector.getExportedValue(), label + " exported value:");
+			if (isFile(vector)) {
+				checkExportedFileValue(vector, rs.getString("value"));
+			} else {
+				Assert.assertEquals(rs.getString("value"), vector.getExportedValue(), label + " exported value:");
+			}
 			count++;
 		}
 		Assert.assertEquals(count, 1, label + " exported value count:");
@@ -297,7 +373,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 				vector.getIndex());
 	}
 
-	private void enterValue(EcrfValidationTestVector vector) {
+	private void enterValue(EcrfValidationTestVector vector) throws IOException {
 		switch (vector.getEcrfField().getField().getFieldType().getType()) {
 			case SINGLE_LINE_TEXT:
 			case MULTI_LINE_TEXT:
@@ -348,6 +424,23 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 				break;
 			//case SKETCH:
 			//break;
+			case FILE:
+				// the input value is the name of a test resource file to upload:
+				final String filePath = getResourceFilePath(vector.getInputValue());
+				new TrialEcrfFieldEntry() {
+
+					@Override
+					protected void entry() {
+						String fieldId = getFieldId(vector);
+						// the label is for the download link of the field, its upload control is next to it:
+						uploadFile(fieldId.replace("filedownload", "fileupload"), filePath);
+						// wait until the link shows the uploaded file:
+						new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
+								.until(ExpectedConditions.textToBePresentInElementLocated(By.id(fieldId), new File(filePath).getName()));
+						saveSeriesSection(fieldId, vector.hasIndex());
+					}
+				}.enter();
+				break;
 			case SELECT_MANY_H:
 			case SELECT_MANY_V:
 				new TrialEcrfFieldEntry() {

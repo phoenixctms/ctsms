@@ -24,6 +24,16 @@ public class InquiryValueOutVOStringAdapter extends InputFieldValueStringAdapter
 	}
 
 	@Override
+	protected String getFileName(InquiryValueOutVO value) {
+		return value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+	}
+
+	@Override
+	protected Long getFileSize(InquiryValueOutVO value) {
+		return value.getFileValue() != null ? value.getFileValue().getSize() : null;
+	}
+
+	@Override
 	protected Float getFloatValue(InquiryValueOutVO value) {
 		return value.getFloatValue();
 	}

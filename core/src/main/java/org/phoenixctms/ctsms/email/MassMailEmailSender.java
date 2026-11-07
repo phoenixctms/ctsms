@@ -211,7 +211,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				InquiriesPDFVO inquiriesPDF = ServiceUtil.renderInquiries(recipient.getProband(), recipientVO.getProband(),
 						trials, INQUIRIES_ACTIVE,
 						INQUIRIES_ACTIVE_SIGNUP, INQUIRIES_BLANK, trialDao, probandListEntryDao, inquiryDao, inquiryValueDao, inputFieldDao, inputFieldSelectionSetValueDao,
-						userDao);
+						userDao, fileDao);
 				if (inquiriesPDF.getTrials().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(inquiriesPDF.getDocumentDatas());
@@ -227,7 +227,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 				ProbandListEntryTagsPDFVO probandListEntryTagsPDF = ServiceUtil.renderProbandListEntryTags(recipient.getProband(), massMail.getTrial(),
 						PROBAND_LIST_ENTRY_TAGS_BLANK,
 						probandListEntryDao, probandListEntryTagDao, probandListEntryTagValueDao,
-						inputFieldDao, inputFieldSelectionSetValueDao, userDao);
+						inputFieldDao, inputFieldSelectionSetValueDao, userDao, fileDao);
 				if (probandListEntryTagsPDF.getListEntries().size() > 0) {
 					EmailAttachmentVO attachment = new EmailAttachmentVO();
 					attachment.setDatas(probandListEntryTagsPDF.getDocumentDatas());
@@ -291,7 +291,7 @@ public class MassMailEmailSender extends EmailSender<MassMail, MassMailRecipient
 					ECRFPDFVO ecrfsPDF = ServiceUtil.renderEcrfs(listEntry, trial, null, null, null, null, ECRFS_DONE, null, null, null, ECRFS_BLANK, null,
 							probandListEntryDao, eCRFDao, visitDao, eCRFFieldDao, eCRFFieldValueDao,
 							inputFieldDao, inputFieldSelectionSetValueDao, eCRFStatusEntryDao, eCRFFieldStatusEntryDao, eCRFFieldStatusTypeDao,
-							probandListEntryTagDao, probandListEntryTagValueDao, signatureDao, userDao);
+							probandListEntryTagDao, probandListEntryTagValueDao, signatureDao, userDao, fileDao);
 					if (ecrfsPDF.getStatusEntries().size() > 0) {
 						EmailAttachmentVO attachment = new EmailAttachmentVO();
 						attachment.setDatas(ecrfsPDF.getDocumentDatas());

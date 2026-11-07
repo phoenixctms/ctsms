@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +29,8 @@ import org.phoenixctms.ctsms.vo.InputFieldInVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldTypeVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
+import org.phoenixctms.ctsms.web.model.IDVO;
+import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.InputFieldTypeSelector;
 import org.phoenixctms.ctsms.web.model.InputFieldTypeSelectorListener;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
@@ -44,6 +48,7 @@ import org.phoenixctms.ctsms.web.util.WebUtil;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -88,6 +93,12 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setVersion(out.getVersion());
 			in.setLearn(out.getLearn());
 			in.setStrict(out.getStrict());
+			in.setPhoto(out.getPhoto());
+			in.getAllowedMimeTypeIds().clear();
+			Iterator<MimeTypeVO> allowedMimeTypesIt = out.getAllowedMimeTypes().iterator();
+			while (allowedMimeTypesIt.hasNext()) {
+				in.getAllowedMimeTypeIds().add(allowedMimeTypesIt.next().getId());
+			}
 			in.setWidth(out.getWidth());
 			in.setHeight(out.getHeight());
 			in.setFileName(null);
@@ -133,6 +144,8 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setValidationErrorMsg(Messages.getString(MessageCodes.INPUT_FIELD_VALIDATION_ERROR_MSG_PRESET));
 			in.setLearn(Settings.getBoolean(SettingCodes.INPUT_FIELD_LEARN_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_LEARN_PRESET));
 			in.setStrict(Settings.getBoolean(SettingCodes.INPUT_FIELD_STRICT_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_STRICT_PRESET));
+			in.setPhoto(false);
+			in.getAllowedMimeTypeIds().clear();
 			in.setVersion(null);
 			in.setWidth(Settings.getLong(SettingCodes.INPUT_FIELD_SKETCH_WIDTH_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_SKETCH_WIDTH_PRESET));
 			in.setHeight(Settings.getLong(SettingCodes.INPUT_FIELD_SKETCH_HEIGHT_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_SKETCH_HEIGHT_PRESET));
@@ -149,6 +162,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 	private InputFieldInVOConfig config;
 	private InputFieldOutVO out;
 	private ArrayList<SelectItem> booleans;
+	private ArrayList<MimeTypeVO> fileMimeTypes;
 	private InputFieldTypeSelector fieldType;
 	private HashMap<String, Object> tabCountMap;
 	private HashMap<String, String> tabTitleMap;
@@ -314,6 +328,12 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setMimeType(null);
 			in.setDatas(null);
 		}
+		if (!(InputFieldType.FILE.equals(fieldType))) {
+			in.setPhoto(false);
+			in.getAllowedMimeTypeIds().clear();
+		} else {
+			in.setValidationErrorMsg(null);
+		}
 	}
 
 	public List<String> completeCategory(String query) {
@@ -363,6 +383,101 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 
 	public String getAllowTypes() {
 		return allowTypes;
+	}
+
+	public List<IDVO> getAllowedMimeTypes() {
+		ArrayList<MimeTypeVO> result = new ArrayList<MimeTypeVO>(in.getAllowedMimeTypeIds().size());
+		Iterator<Long> it = in.getAllowedMimeTypeIds().iterator();
+		while (it.hasNext()) {
+			MimeTypeVO mimeType = getFileMimeType(it.next());
+			if (mimeType != null) {
+				result.add(mimeType);
+			}
+		}
+		return new IDVOList(result);
+	}
+
+	public void setAllowedMimeTypes(List<IDVO> allowedMimeTypes) {
+		LinkedHashSet<Long> ids = new LinkedHashSet<Long>(); //force unique items to prevent confusion when unselecting a duplicate item
+		// keep stored ids that could not be resolved (and therefore were not shown), instead of dropping them on submit:
+		Iterator<Long> storedIdsIt = in.getAllowedMimeTypeIds().iterator();
+		while (storedIdsIt.hasNext()) {
+			Long id = storedIdsIt.next();
+			if (getFileMimeType(id) == null) {
+				ids.add(id);
+			}
+		}
+		if (allowedMimeTypes != null) {
+			Iterator<IDVO> it = allowedMimeTypes.iterator();
+			while (it.hasNext()) {
+				IDVO idVo = it.next();
+				if (idVo != null) {
+					ids.add(idVo.getId());
+				}
+			}
+		}
+		in.getAllowedMimeTypeIds().clear();
+		in.getAllowedMimeTypeIds().addAll(ids);
+	}
+
+	public List<IDVO> completeAllowedMimeType(String query) {
+		ArrayList<MimeTypeVO> result = new ArrayList<MimeTypeVO>();
+		String lowerCaseQuery = query == null ? "" : query.trim().toLowerCase();
+		Iterator<MimeTypeVO> it = getFileMimeTypes().iterator();
+		while (it.hasNext()) {
+			MimeTypeVO mimeType = it.next();
+			if (!in.getAllowedMimeTypeIds().contains(mimeType.getId())
+					&& (mimeType.getMimeType().toLowerCase().contains(lowerCaseQuery)
+							|| (mimeType.getFileNameExtensions() != null && mimeType.getFileNameExtensions().toLowerCase().contains(lowerCaseQuery)))) {
+				result.add(mimeType);
+			}
+		}
+		IDVO.transformVoCollection(result);
+		return (List) result;
+	}
+
+	public String getMimeTypeFileNameExtensions(MimeTypeVO mimeType) {
+		if (mimeType != null && !CommonUtil.isEmptyString(mimeType.getFileNameExtensions())) {
+			return mimeType.getFileNameExtensions().replace("|", ", ");
+		}
+		return "";
+	}
+
+	public String getMimeTypeLabel(MimeTypeVO mimeType) {
+		if (mimeType != null) {
+			String fileNameExtensions = getMimeTypeFileNameExtensions(mimeType);
+			if (fileNameExtensions.length() > 0) {
+				// no string concatenation here: javac turns it into invokedynamic, and the jsf 2.1 annotation scanner then fails to find @ManagedBean
+				return new StringBuilder(mimeType.getMimeType()).append(" (").append(fileNameExtensions).append(")").toString();
+			}
+			return mimeType.getMimeType();
+		}
+		return "";
+	}
+
+	public void handleAllowedMimeTypeSelect(SelectEvent event) {
+	}
+
+	public void handleAllowedMimeTypeUnselect(UnselectEvent event) {
+	}
+
+	private ArrayList<MimeTypeVO> getFileMimeTypes() {
+		if (fileMimeTypes == null || fileMimeTypes.size() == 0) {
+			// an empty list means the lookup failed, so try again next time:
+			fileMimeTypes = WebUtil.getMimeTypes(FileModule.INPUT_FIELD_VALUE_FILE);
+		}
+		return fileMimeTypes;
+	}
+
+	private MimeTypeVO getFileMimeType(Long id) {
+		Iterator<MimeTypeVO> it = getFileMimeTypes().iterator();
+		while (it.hasNext()) {
+			MimeTypeVO mimeType = it.next();
+			if (mimeType.getId().equals(id)) {
+				return mimeType;
+			}
+		}
+		return null;
 	}
 
 	public ArrayList<SelectItem> getBooleans() {

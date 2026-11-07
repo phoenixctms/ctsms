@@ -119,6 +119,7 @@ public final class DefaultSettings {
 	public static final int ECRF_SIGNATURE_ENTITY_DEPTH = 3;
 	public static final Integer MAX_MISSING_ECRF_FIELD_VALUES = 100;
 	public static final Integer INPUT_FIELD_IMAGE_SIZE_LIMIT = 5 * 1024 * 1024;
+	public static final Integer INPUT_FIELD_FILE_VALUE_SIZE_LIMIT = 5 * 1024 * 1024;
 	public static final Integer INPUT_FIELD_TRUNCATED_STRING_VALUE_MAX_LENGTH = 1024;
 	public static final Integer JOURNAL_ENTRY_DEFAULT_COUNT_LIMIT = 1000;
 	public static final Integer FILE_DEFAULT_COUNT_LIMIT = 1000;

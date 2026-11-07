@@ -328,6 +328,11 @@ public class DBTool {
 					dbTool.getJobOutput().printPrelude(job);
 					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_INPUT_FIELD_IMAGE_OPT),
 							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.INPUT_FIELD_IMAGE, false) > 0l;
+				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_INPUT_FIELD_VALUE_FILE_OPT)) {
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_INPUT_FIELD_VALUE_FILE_OPT, line);
+					dbTool.getJobOutput().printPrelude(job);
+					sendEmail = dbTool.getCsvImporter().loadMimeTypes(line.getOptionValue(DBToolOptions.IMPORT_MIME_INPUT_FIELD_VALUE_FILE_OPT),
+							line.getOptionValue(DBToolOptions.ENCODING_OPT), FileModule.INPUT_FIELD_VALUE_FILE, false) > 0l;
 				} else if (line.hasOption(DBToolOptions.IMPORT_MIME_STAFF_IMAGE_OPT)) {
 					job = getTaskAndLockProcess(DBToolOptions.IMPORT_MIME_STAFF_IMAGE_OPT, line);
 					dbTool.getJobOutput().printPrelude(job);

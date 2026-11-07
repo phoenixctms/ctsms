@@ -48,7 +48,8 @@ public class ProbandImageInitializer extends EncryptedFieldInitializer {
 					jobOutput.println("row not decrypted");
 				}
 				if (decrypted) {
-					if (particulars.getEncryptedData() == null) {
+					// the lazy encryptedData cannot be read here, since the session that loaded the page is closed. its iv is set along with it:
+					if (particulars.getDataIv() == null) {
 						CipherText cipherText = CryptoUtil.encryptValue(null);
 						particulars.setFileNameIv(cipherText.getIv());
 						particulars.setEncryptedFileName(cipherText.getCipherText());

@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.security.MessageDigest;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -85,15 +86,21 @@ import org.phoenixctms.ctsms.pdf.CourseParticipantListPDFPainter;
 import org.phoenixctms.ctsms.pdf.EcrfPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.EcrfPDFPainter;
 import org.phoenixctms.ctsms.pdf.EcrfPDFSettingCodes;
+import org.phoenixctms.ctsms.pdf.FileValueImageDataProvider;
+import org.phoenixctms.ctsms.pdf.InquiriesPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.InquiriesPDFPainter;
+import org.phoenixctms.ctsms.pdf.InquiriesPDFSettingCodes;
 import org.phoenixctms.ctsms.pdf.PDFImprinter;
 import org.phoenixctms.ctsms.pdf.PDFPainterFactory;
 import org.phoenixctms.ctsms.pdf.ProbandLetterPDFPainter;
+import org.phoenixctms.ctsms.pdf.ProbandListEntryTagsPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.ProbandListEntryTagsPDFPainter;
+import org.phoenixctms.ctsms.pdf.ProbandListEntryTagsPDFSettingCodes;
 import org.phoenixctms.ctsms.pdf.ReimbursementsPDFPainter;
 import org.phoenixctms.ctsms.pdf.TrainingRecordPDFDefaultSettings;
 import org.phoenixctms.ctsms.pdf.TrainingRecordPDFPainter;
 import org.phoenixctms.ctsms.pdf.TrainingRecordPDFSettingCodes;
+import org.phoenixctms.ctsms.security.CipherText;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.EcrfSignature;
 import org.phoenixctms.ctsms.security.EntitySignature;
@@ -847,6 +854,153 @@ public final class ServiceUtil {
 							CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
 				}
 			}
+		}
+	}
+
+	public static void checkInputFieldFileValue(InputField inputField, boolean optional, Long fileValueId, FileContentInVO fileValue, InputFieldValue originalValue,
+			InputFieldDao inputFieldDao, MimeTypeDao mimeTypeDao) throws ServiceException {
+		if (inputField != null) {
+			InputFieldType fieldType = inputField.getFieldType();
+			if (fieldType != null) {
+				if (InputFieldType.FILE.equals(fieldType)) {
+					if (fileValue != null) {
+						if (fileValue.getDatas() == null || fileValue.getDatas().length == 0) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_EMPTY,
+									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
+						}
+						if (CommonUtil.isEmptyString(fileValue.getFileName())) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_NAME_REQUIRED,
+									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
+						}
+						if (mimeTypeDao.getCount(fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE) == 0) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.UNKNOWN_MIME_TYPE, fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE);
+						}
+						// the allowed file types are kept, but not honoured for photo capture fields, which accept any image type instead:
+						Collection<MimeType> allowedMimeTypes;
+						if (Boolean.TRUE.equals(inputField.getPhoto())) {
+							allowedMimeTypes = null;
+							boolean image = false;
+							Iterator<MimeType> it = mimeTypeDao.findByMimeTypeModule(fileValue.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE).iterator();
+							while (it.hasNext()) {
+								if (it.next().isImage()) {
+									image = true;
+									break;
+								}
+							}
+							if (!image) {
+								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_MIME_TYPE_NOT_ALLOWED,
+										CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), fileValue.getMimeType());
+							}
+						} else {
+							allowedMimeTypes = inputField.getAllowedMimeTypes();
+						}
+						if (allowedMimeTypes != null && allowedMimeTypes.size() > 0) {
+							boolean allowed = false;
+							Iterator<MimeType> it = allowedMimeTypes.iterator();
+							while (it.hasNext()) {
+								if (it.next().getMimeType().equals(fileValue.getMimeType())) {
+									allowed = true;
+									break;
+								}
+							}
+							if (!allowed) {
+								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_MIME_TYPE_NOT_ALLOWED,
+										CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), fileValue.getMimeType());
+							}
+						}
+						Integer fileSizeLimit = Settings.getIntNullable(SettingCodes.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT, Bundle.SETTINGS,
+								DefaultSettings.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT);
+						if (fileSizeLimit != null && fileValue.getDatas().length > fileSizeLimit) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT_EXCEEDED,
+									CommonUtil.humanReadableByteCount(fileSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
+						}
+					} else if (fileValueId != null) {
+						File originalFile = originalValue != null ? originalValue.getFileValue() : null;
+						if (originalFile == null || !originalFile.getId().equals(fileValueId)) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_ID_INVALID,
+									CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), fileValueId.toString());
+						}
+					} else if (!optional) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_VALUE_REQUIRED,
+								CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
+					}
+				} else if (fileValue != null || fileValueId != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_NOT_NULL,
+							CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
+				}
+			}
+		}
+	}
+
+	public static File createInputFieldValueFile(FileContentInVO fileContent, Timestamp now, User user, FileDao fileDao, MimeTypeDao mimeTypeDao) throws Exception {
+		FileInVO fileIn = new FileInVO();
+		fileIn.setModule(FileModule.INPUT_FIELD_VALUE_FILE);
+		fileIn.setLogicalPath(CommonUtil.LOGICAL_PATH_SEPARATOR);
+		fileIn.setActive(true);
+		fileIn.setPublicFile(false);
+		File file = fileDao.fileInVOToEntity(fileIn);
+		CoreUtil.modifyVersion(file, now, user);
+		file.setContentType(mimeTypeDao.findByMimeTypeModule(fileContent.getMimeType(), FileModule.INPUT_FIELD_VALUE_FILE).iterator().next());
+		file.setExternalFile(false);
+		file.setExternalFileName(null);
+		if (CommonUtil.getUseFileEncryption(FileModule.INPUT_FIELD_VALUE_FILE)) {
+			CipherText cipherText = CryptoUtil.encrypt(fileContent.getDatas());
+			file.setDataIv(cipherText.getIv());
+			file.setData(cipherText.getCipherText());
+			cipherText = CryptoUtil.encryptValue(fileContent.getFileName());
+			file.setFileNameIv(cipherText.getIv());
+			file.setEncryptedFileName(cipherText.getCipherText());
+			file.setFileNameHash(CryptoUtil.hashForSearch(fileContent.getFileName()));
+			file.setFileName(null);
+		} else {
+			file.setFileName(fileContent.getFileName());
+			file.setData(fileContent.getDatas());
+		}
+		file.setMd5(CommonUtil.getHex(MessageDigest.getInstance("MD5").digest(fileContent.getDatas())));
+		file.setSize(fileContent.getDatas().length);
+		return fileDao.create(file);
+	}
+
+	public static File getInputFieldValueFile(InputFieldValue value) throws ServiceException {
+		File file = value != null ? value.getFileValue() : null;
+		if (file == null) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_VALUE_NO_FILE);
+		}
+		return file;
+	}
+
+	public static void removeOrphanInputFieldValueFile(File file, InputFieldValueDao inputFieldValueDao, FileDao fileDao) throws Exception {
+		if (file != null && inputFieldValueDao.getFileValueCount(file.getId()) == 0l) {
+			fileDao.remove(file);
+		}
+	}
+
+	public static void setEcrfPDFFileValueImageDataMap(EcrfPDFPainter painter,
+			HashMap<Long, HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> valueVOMap,
+			HashMap<Long, Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesVOMap, boolean blank, FileDao fileDao) throws Exception {
+		if (!blank && Settings.getBoolean(EcrfPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.ECRF_PDF, EcrfPDFDefaultSettings.RENDER_FILE_IMAGES)) {
+			FileValueImageDataProvider fileValueImageData = new FileValueImageDataProvider(fileDao);
+			Iterator<HashMap<Long, HashMap<Long, Collection<ECRFFieldValueOutVO>>>> listEntryEcrfVisitValuesIt = valueVOMap.values().iterator();
+			while (listEntryEcrfVisitValuesIt.hasNext()) {
+				Iterator<HashMap<Long, Collection<ECRFFieldValueOutVO>>> ecrfVisitValuesIt = listEntryEcrfVisitValuesIt.next().values().iterator();
+				while (ecrfVisitValuesIt.hasNext()) {
+					Iterator<Collection<ECRFFieldValueOutVO>> visitValuesIt = ecrfVisitValuesIt.next().values().iterator();
+					while (visitValuesIt.hasNext()) {
+						Iterator<ECRFFieldValueOutVO> valuesIt = visitValuesIt.next().iterator();
+						while (valuesIt.hasNext()) {
+							fileValueImageData.add(valuesIt.next().getFileValue());
+						}
+					}
+				}
+			}
+			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryTagValuesIt = listEntryTagValuesVOMap.values().iterator();
+			while (listEntryTagValuesIt.hasNext()) {
+				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryTagValuesIt.next().iterator();
+				while (valuesIt.hasNext()) {
+					fileValueImageData.add(valuesIt.next().getFileValue());
+				}
+			}
+			painter.setFileValueImageData(fileValueImageData);
 		}
 	}
 
@@ -1616,6 +1770,16 @@ public final class ServiceUtil {
 			@Override
 			protected String getDecimalSeparator() {
 				return Settings.getString(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_DECIMAL_SEPARATOR);
+			}
+
+			@Override
+			protected String getFileName(ProbandListEntryTagValueOutVO value) {
+				return value.getFileValue() != null ? value.getFileValue().getFileName() : null;
+			}
+
+			@Override
+			protected Long getFileSize(ProbandListEntryTagValueOutVO value) {
+				return value.getFileValue() != null ? value.getFileValue().getSize() : null;
 			}
 
 			@Override
@@ -6066,7 +6230,7 @@ public final class ServiceUtil {
 			ProbandListEntryTagDao probandListEntryTagDao,
 			ProbandListEntryTagValueDao probandListEntryTagValueDao,
 			SignatureDao signatureDao,
-			UserDao userDao) throws Exception {
+			UserDao userDao, FileDao fileDao) throws Exception {
 		ProbandListEntryOutVO listEntryVO;
 		ECRFOutVO ecrfVO = null;
 		VisitOutVO visitVO = null;
@@ -6196,6 +6360,7 @@ public final class ServiceUtil {
 		painter.setSignatureVOMap(signatureVOMap);
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
+		setEcrfPDFFileValueImageDataMap(painter, valueVOMap, listEntryTagValuesVOMap, blank, fileDao);
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
@@ -6205,7 +6370,7 @@ public final class ServiceUtil {
 	public static InquiriesPDFVO renderInquiries(Proband proband, ProbandOutVO probandVO, Collection<Trial> trials, Boolean active, Boolean activeSignup, boolean blank,
 			TrialDao trialDao, ProbandListEntryDao listEntrydao, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldDao inputFieldDao,
 			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao,
-			UserDao userDao) throws Exception {
+			UserDao userDao, FileDao fileDao) throws Exception {
 		ArrayList<ProbandOutVO> probandVOs = new ArrayList<ProbandOutVO>();
 		HashMap<Long, Collection<TrialOutVO>> trialVOMap = new HashMap<Long, Collection<TrialOutVO>>();
 		HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>> valueVOMap = new HashMap<Long, HashMap<Long, Collection<InquiryValueOutVO>>>();
@@ -6228,6 +6393,20 @@ public final class ServiceUtil {
 		painter.setValueVOMap(valueVOMap);
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
+		if (!blank && Settings.getBoolean(InquiriesPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.INQUIRIES_PDF, InquiriesPDFDefaultSettings.RENDER_FILE_IMAGES)) {
+			FileValueImageDataProvider fileValueImageData = new FileValueImageDataProvider(fileDao);
+			Iterator<HashMap<Long, Collection<InquiryValueOutVO>>> probandValuesIt = valueVOMap.values().iterator();
+			while (probandValuesIt.hasNext()) {
+				Iterator<Collection<InquiryValueOutVO>> trialValuesIt = probandValuesIt.next().values().iterator();
+				while (trialValuesIt.hasNext()) {
+					Iterator<InquiryValueOutVO> valuesIt = trialValuesIt.next().iterator();
+					while (valuesIt.hasNext()) {
+						fileValueImageData.add(valuesIt.next().getFileValue());
+					}
+				}
+			}
+			painter.setFileValueImageData(fileValueImageData);
+		}
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();
@@ -6237,7 +6416,7 @@ public final class ServiceUtil {
 	public static ProbandListEntryTagsPDFVO renderProbandListEntryTags(Proband proband, Trial trial, boolean blank,
 			ProbandListEntryDao probandListEntryDao, ProbandListEntryTagDao probandListEntryTagDao,
 			ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldDao inputFieldDao,
-			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, UserDao userDao) throws Exception {
+			InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao, UserDao userDao, FileDao fileDao) throws Exception {
 		ProbandListEntry listEntry;
 		ProbandListEntryOutVO listEntryVO;
 		ArrayList<ProbandListEntryOutVO> listEntryVOs = new ArrayList<ProbandListEntryOutVO>();
@@ -6268,6 +6447,18 @@ public final class ServiceUtil {
 		painter.setValueVOMap(valueVOMap);
 		painter.setInputFieldImageVOMap(inputFieldImageVOMap);
 		painter.setBlank(blank);
+		if (!blank && Settings.getBoolean(ProbandListEntryTagsPDFSettingCodes.RENDER_FILE_IMAGES, Bundle.PROBAND_LIST_ENTRY_TAGS_PDF,
+				ProbandListEntryTagsPDFDefaultSettings.RENDER_FILE_IMAGES)) {
+			FileValueImageDataProvider fileValueImageData = new FileValueImageDataProvider(fileDao);
+			Iterator<Collection<ProbandListEntryTagValueOutVO>> listEntryValuesIt = valueVOMap.values().iterator();
+			while (listEntryValuesIt.hasNext()) {
+				Iterator<ProbandListEntryTagValueOutVO> valuesIt = listEntryValuesIt.next().iterator();
+				while (valuesIt.hasNext()) {
+					fileValueImageData.add(valuesIt.next().getFileValue());
+				}
+			}
+			painter.setFileValueImageData(fileValueImageData);
+		}
 		User user = CoreUtil.getUser();
 		painter.getPdfVO().setRequestingUser(userDao.toUserOutVO(user));
 		(new PDFImprinter(painter, painter)).render();

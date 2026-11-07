@@ -13,6 +13,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -76,6 +78,9 @@ import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueJsonVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.FileContentInVO;
+import org.phoenixctms.ctsms.vo.FileJsonVO;
+import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueJsonVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
@@ -167,6 +172,7 @@ public final class CommonUtil {
 	public final static String NO_SELECTION_VALUE = "";
 	public final static String LOGICAL_PATH_SEPARATOR = "/"; // should not interfere with regexp replace strings
 	public final static String DEFAULT_ELLIPSIS = "...";
+	public final static String INPUT_FIELD_PHOTO_MIME_TYPE = "image/jpeg";
 	private final static String PROPERTIES_STRING_LIST_DEFAULT_SEPARATOR = ",";
 	private final static Pattern PROPERTIES_STRING_LIST_REGEXP = Pattern.compile(Pattern.quote(PROPERTIES_STRING_LIST_DEFAULT_SEPARATOR));
 	private final static String PROPERTIES_NULL_LITERAL = "null";
@@ -690,6 +696,40 @@ public final class CommonUtil {
 		}
 	}
 
+	public static FileJsonVO fileOutVOToFileJsonVO(FileOutVO file) {
+		if (file != null) {
+			FileJsonVO result = new FileJsonVO();
+			result.setId(file.getId());
+			result.setFileName(file.getFileName());
+			result.setSize(file.getSize());
+			result.setMd5(file.getMd5());
+			if (file.getContentType() != null) {
+				result.setMimeType(file.getContentType().getMimeType());
+				result.setImage(file.getContentType().getImage());
+			}
+			return result;
+		}
+		return null;
+	}
+
+	public static FileJsonVO fileContentInVOToFileJsonVO(FileContentInVO fileContent) {
+		if (fileContent != null) {
+			FileJsonVO result = new FileJsonVO();
+			result.setFileName(fileContent.getFileName());
+			result.setMimeType(fileContent.getMimeType());
+			result.setImage(fileContent.getMimeType() != null && fileContent.getMimeType().toLowerCase().startsWith("image/"));
+			if (fileContent.getDatas() != null) {
+				result.setSize(fileContent.getDatas().length);
+				try {
+					result.setMd5(getHex(MessageDigest.getInstance("MD5").digest(fileContent.getDatas())));
+				} catch (NoSuchAlgorithmException e) {
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+
 	public static void copyEcrfFieldValueInToJson(ECRFFieldValueJsonVO out, ECRFFieldValueInVO in, ECRFFieldOutVO ecrfFieldVO, Long visitId) {
 		if (in != null && out != null) {
 			out.setId(in.getId());
@@ -702,6 +742,7 @@ public final class CommonUtil {
 			out.setTimestampValue(in.getTimestampValue());
 			out.setLongValue(in.getLongValue());
 			out.setInkValues(in.getInkValues());
+			out.setFileValue(fileContentInVOToFileJsonVO(in.getFileValue()));
 			out.setSelectionValueIds(in.getSelectionValueIds());
 			if (ecrfFieldVO != null) {
 				out.setEcrfFieldId(ecrfFieldVO.getId());
@@ -755,6 +796,7 @@ public final class CommonUtil {
 			out.setTimestampValue(in.getTimestampValue());
 			out.setLongValue(in.getLongValue());
 			out.setInkValues(in.getInkValues());
+			out.setFileValue(fileContentInVOToFileJsonVO(in.getFileValue()));
 			out.setSelectionValueIds(in.getSelectionValueIds());
 			if (inquiryVO != null) {
 				out.setInquiryId(inquiryVO.getId());
@@ -787,6 +829,7 @@ public final class CommonUtil {
 			out.setTimestampValue(in.getTimestampValue());
 			out.setLongValue(in.getLongValue());
 			out.setInkValues(in.getInkValues());
+			out.setFileValue(fileContentInVOToFileJsonVO(in.getFileValue()));
 			out.setSelectionValueIds(in.getSelectionValueIds());
 			if (tagVO != null) {
 				out.setTagId(tagVO.getId());
