@@ -84,12 +84,14 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 
 /* a selected datatable row keeps its background (row colours from colors.css are !important)
    and is framed in its text colour instead of the theme highlight, without the highlight's text
-   shadow (meant for its own text colour, eg. aristo) or glow (eg. afterdark) */
+   shadow (meant for its own text colour, eg. aristo), glow (eg. afterdark) or border colour
+   (eg. aristo's dark one around a selected row expansion) */
 .ui-datatable .ui-datatable-data > tr.ui-state-highlight {
 	background: none;
 	color: inherit;
 	text-shadow: none;
 	box-shadow: none;
+	border-color: inherit;
 }
 
 .ui-datatable .ui-datatable-data > tr.ui-state-highlight:not(.ui-expanded-row-content) > td {
