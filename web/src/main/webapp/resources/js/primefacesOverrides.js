@@ -1127,7 +1127,7 @@ PrimeFaces.widget.SelectOneMenu.prototype.triggerChange = function(edited) {
     oncomplete: function() {
       menu.ctsmsChangePending = false;
       if (menu.ctsmsShowRequested) {
-        menu.ctsmsShowRequested = false;
+        menu.ctsmsCancelDeferredShow();
         if (menu.jq.is(':visible')) {
           menu.show();
         }
@@ -1141,11 +1141,31 @@ PrimeFaces.widget.SelectOneMenu.prototype.triggerChange = function(edited) {
 
 var ctsmsSelectOneMenuShow = PrimeFaces.widget.SelectOneMenu.prototype.show;
 PrimeFaces.widget.SelectOneMenu.prototype.show = function() {
-  if (this.ctsmsChangePending) {
-    this.ctsmsShowRequested = true;
-  } else {
+  if (!this.ctsmsChangePending) {
     ctsmsSelectOneMenuShow.apply(this, arguments);
+  } else if (this.ctsmsShowRequested) {
+    // the panel is still hidden, so PrimeFaces calls show() again: a second click closes
+    this.ctsmsCancelDeferredShow();
+  } else {
+    // dismissed meanwhile by a click outside the menu or by escape (the hidden panel does not
+    // get PrimeFaces' own handlers for that): not opened later on
+    var menu = this, ns = '.ctsmsDeferredShow' + this.id.replace(/\W/g, '_');
+    this.ctsmsShowRequested = true;
+    $(document).bind('mousedown' + ns, function(e) {
+      if (!menu.jq.is(e.target) && menu.jq.has(e.target).length == 0) {
+        menu.ctsmsCancelDeferredShow();
+      }
+    }).bind('keydown' + ns, function(e) {
+      if (e.which == $.ui.keyCode.ESCAPE) {
+        menu.ctsmsCancelDeferredShow();
+      }
+    });
   }
+}
+
+PrimeFaces.widget.SelectOneMenu.prototype.ctsmsCancelDeferredShow = function() {
+  this.ctsmsShowRequested = false;
+  $(document).unbind('.ctsmsDeferredShow' + this.id.replace(/\W/g, '_'));
 }
 
 PrimeFaces.widget.AutoComplete = PrimeFaces.widget.BaseWidget
