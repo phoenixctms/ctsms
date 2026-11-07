@@ -106,9 +106,11 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 }
 
 /* datatable columns may get narrower than their header and filter: headers wrap, and the filters
-   (100px wide by default, dropdowns as wide as their longest option) follow the column width */
+   (100px wide by default, dropdowns as wide as their longest option) follow the column width.
+   Headers align at the bottom, so filters line up even if labels wrap or carry an icon */
 .ui-datatable th {
 	white-space: normal;
+	vertical-align: bottom;
 }
 
 .ui-datatable th .ui-column-filter {
