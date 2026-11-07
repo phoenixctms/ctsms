@@ -2570,3 +2570,34 @@ PrimeFaces.widget.Paginator.prototype.setTotalRecords = function(value) {
     //this.cfg.page = 0; causes jumping back to 1st page after updating a datatable..
     this.updateUI();
 };
+
+// The checkbox menu label is static; show the checked items instead
+// (the label configured on the component when none is checked).
+var ctsmsSelectCheckboxMenuInit = PrimeFaces.widget.SelectCheckboxMenu.prototype.init;
+PrimeFaces.widget.SelectCheckboxMenu.prototype.init = function(cfg) {
+  ctsmsSelectCheckboxMenuInit.apply(this, arguments);
+  this.defaultLabel = this.label.text();
+  this.updateLabel();
+}
+
+var ctsmsSelectCheckboxMenuCheck = PrimeFaces.widget.SelectCheckboxMenu.prototype.check;
+PrimeFaces.widget.SelectCheckboxMenu.prototype.check = function(checkbox) {
+  ctsmsSelectCheckboxMenuCheck.apply(this, arguments);
+  this.updateLabel();
+}
+
+var ctsmsSelectCheckboxMenuUncheck = PrimeFaces.widget.SelectCheckboxMenu.prototype.uncheck;
+PrimeFaces.widget.SelectCheckboxMenu.prototype.uncheck = function(checkbox) {
+  ctsmsSelectCheckboxMenuUncheck.apply(this, arguments);
+  this.updateLabel();
+}
+
+PrimeFaces.widget.SelectCheckboxMenu.prototype.updateLabel = function() {
+  var names = [];
+  this.inputs.filter(':checked').each(function() {
+    names.push($(this).next().text());
+  });
+  var text = names.length > 0 ? names.join(', ') : this.defaultLabel;
+  this.label.text(text);
+  this.label.attr('title', names.length > 0 ? text : '');
+}

@@ -10,8 +10,17 @@ body {
 }
 
 /* http://stackoverflow.com/questions/8856704/ie8-and-primefaces-pselectonemenu-misbehave-when-having-a-lots-of-pselectoneme */
-td .ui-selectonemenu {
+td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	display: block;
+}
+
+/* same height as text inputs (padding 4px); the label lists the selected items */
+.ui-selectcheckboxmenu .ui-selectcheckboxmenu-label {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .outputLinkAsText {
