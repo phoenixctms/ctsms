@@ -118,6 +118,15 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	box-sizing: border-box;
 }
 
+/* half of the default 10px horizontal cell padding */
+.ui-datatable th div.ui-dt-c,
+.ui-datatable .ui-datatable-data td div.ui-dt-c,
+.ui-datatable .ui-datatable-data-empty td div.ui-dt-c,
+.ui-datatable tfoot td div.ui-dt-c {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
 .ctsms-upload-control .fileupload-content {
 	border-top-width: 0;
 	height: 100%;
