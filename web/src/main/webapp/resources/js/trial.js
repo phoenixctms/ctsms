@@ -179,6 +179,7 @@ function handleTrialTabChange(index) {
 		break;
 	}
 	oldTrialTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }

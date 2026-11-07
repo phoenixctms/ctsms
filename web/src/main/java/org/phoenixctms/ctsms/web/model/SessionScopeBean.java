@@ -106,7 +106,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		HttpServletRequest request = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
 		StringBuilder viewId;
 		if (success) {
-			if (WebUtil.isTrustedReferer(referer, request)) {
+			if (WebUtil.isTrustedReferer(referer, request) && !WebUtil.isLoginUrl(referer, request)) {
 				try {
 					viewId = new StringBuilder((new URL(referer)).getFile().substring(request.getContextPath().length()));
 					if (viewId.toString().contains("?")) {
@@ -1514,10 +1514,12 @@ public class SessionScopeBean implements FilterItemsStore {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
-		url.append("?");
-		url.append(GetParamNames.REFERER);
-		url.append("=");
-		url.append(redirectUrlBase64);
+		if (!CommonUtil.isEmptyString(redirectUrlBase64)) {
+			url.append("?");
+			url.append(GetParamNames.REFERER);
+			url.append("=");
+			url.append(redirectUrlBase64);
+		}
 		externalContext.invalidateSession();
 		try {
 			externalContext.redirect(url.toString());

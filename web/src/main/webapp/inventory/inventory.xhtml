@@ -20,6 +20,7 @@
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.inventoryTabTitles)}" />
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.inventoryVisibleTabSet}" />
+				<ui:param name="tabViewWidgetVar" value="inventoryTabView" />
 			</ui:include>		
 			<h:panelGrid
 				columns="1"

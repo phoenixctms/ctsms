@@ -1310,18 +1310,25 @@ function openAutoDeletionProbandOverview() {
 
 }
 
-function _isTrustedReferrer(url) {
+function _parseReferrer(url) {
 	if (!url) {
-		return false;
+		return null;
 	} else {
 		var referer = document.createElement('a');
 		referer.href = url;
-
-		if (referer && jQuery.inArray(referer.hostname, TRUSTED_REFERER_HOSTS) >= 0 && _prependSlash(referer.pathname).indexOf(CONTEXT_PATH) == 0) {
-			return true;
+		if (referer && (referer.protocol == 'http:' || referer.protocol == 'https:') && jQuery.inArray(referer.hostname, TRUSTED_REFERER_HOSTS) >= 0) {
+			var pathname = _prependSlash(referer.pathname);
+			// stay inside the context, and never end up with a protocol-relative "//host/..." url:
+			if (pathname == CONTEXT_PATH || (pathname.indexOf(CONTEXT_PATH + '/') == 0 && pathname.indexOf(CONTEXT_PATH + '//') != 0)) {
+				return referer;
+			}
 		}
-		return false;
+		return null;
 	}
+}
+
+function _isTrustedReferrer(url) {
+	return _parseReferrer(url) != null;
 }
 
 function _prependSlash(pathname) { // IE ...
@@ -1345,12 +1352,48 @@ function openReferer(open, windowMessage, popupMessage) {
 			if (windowMessage != null && windowMessage.length > 0) {
 				alert(windowMessage);
 			}
-			var url = decodeBase64(REFERER_URL_BASE64);
-			if (_isTrustedReferrer(url)) {
-				_redirect(url);
+			var referer = _parseReferrer(decodeBase64(REFERER_URL_BASE64));
+			if (referer != null && _prependSlash(referer.pathname) != LOGIN_URL) {
+				// same origin, only the path and query of the referer are taken:
+				_redirect(_prependSlash(referer.pathname) + referer.search);
 			} else {
 				_redirect(PORTAL_URL);
 			}
+		}
+	}
+}
+
+function _setSearchParam(search, name, value) {
+	var params = (search.indexOf('?') == 0 ? search.substring(1) : search).split('&');
+	var result = [];
+	for (var i = 0; i < params.length; i++) {
+		if (params[i].length > 0 && params[i].split('=')[0] != name) {
+			result.push(params[i]);
+		}
+	}
+	if (value != null) {
+		result.push(name + '=' + encodeURIComponent(value));
+	}
+	return result.length > 0 ? '?' + result.join('&') : '';
+}
+
+function storeTabIndexParam(index) {
+	// keep the shown tab in the url, so reloading or restoring the page after re-login opens it again:
+	if (window.history && window.history.replaceState) {
+		try {
+			window.history.replaceState(window.history.state, '', location.pathname + _setSearchParam(location.search, TAB, index > 0 ? index : null) + location.hash);
+		} catch (e) {
+
+		}
+	}
+}
+
+function restoreTabIndexParam(tabView) {
+	var match = new RegExp('[?&]' + TAB + '=(\\d+)(&|$)').exec(location.search);
+	if (match && tabView) {
+		var index = reverseTabIndex(parseInt(match[1], 10));
+		if (index != null && index > 0 && index < tabView.getLength() && !tabView.navContainer.children().eq(index).hasClass('ui-state-disabled')) {
+			tabView.select(index);
 		}
 	}
 }

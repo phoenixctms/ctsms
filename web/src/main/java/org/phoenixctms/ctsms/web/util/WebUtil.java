@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -111,6 +112,7 @@ public final class WebUtil {
 	public final static Pattern TAB_ID_SEPARATOR_REGEXP = Pattern.compile(Pattern.quote(TAB_ID_SEPARATOR_STRING));
 	public final static int FACES_INITIAL_ROW_INDEX = 0;
 	private final static String REFERER_HEADER_NAME = "Referer";
+	private final static String HTTP_GET_METHOD = "GET";
 	public final static String EVENT_CONTEXT_VIEW_ID = "viewId";
 	public final static String FILE_TITLE_PSF_PROPERTY_NAME = "title";
 	public final static String FILE_ID_PSF_PROPERTY_NAME = "id";
@@ -155,12 +157,15 @@ public final class WebUtil {
 
 	public static void appendRefererParameter(StringBuilder url, HttpServletRequest request, String separator) {
 		if (url != null && request != null) {
-			if (separator != null && separator.length() > 0) {
-				url.append(separator);
+			String refererBase64 = getRefererBase64(request);
+			if (refererBase64.length() > 0) {
+				if (separator != null && separator.length() > 0) {
+					url.append(separator);
+				}
+				url.append(GetParamNames.REFERER);
+				url.append("=");
+				url.append(refererBase64);
 			}
-			url.append(GetParamNames.REFERER);
-			url.append("=");
-			url.append(getRefererBase64(request));
 		}
 	}
 
@@ -3628,14 +3633,62 @@ public final class WebUtil {
 
 	public static String getRefererBase64(HttpServletRequest request) {
 		if (request != null) {
-			String headerValue = request.getHeader(REFERER_HEADER_NAME);
-			StringBuffer url = request.getRequestURL();
-			if (!CommonUtil.isEmptyString(request.getQueryString())) {
-				url.append('?').append(request.getQueryString());
+			// a GET names the page to restore itself, its Referer header is the page navigated away from:
+			String url = null;
+			if (!HTTP_GET_METHOD.equals(request.getMethod())) {
+				String headerValue = request.getHeader(REFERER_HEADER_NAME);
+				if (isTrustedReferer(headerValue, request)) {
+					url = headerValue;
+				}
 			}
-			return JsUtil.encodeBase64(isTrustedReferer(headerValue, request) ? headerValue : url.toString(), true);
+			if (url == null) {
+				StringBuffer requestUrl = request.getRequestURL();
+				if (!CommonUtil.isEmptyString(request.getQueryString())) {
+					requestUrl.append('?').append(request.getQueryString());
+				}
+				url = requestUrl.toString();
+			}
+			// never restore the login page, but the page it would restore:
+			if (isLoginUrl(url, request)) {
+				url = getLoginUrlReferer(url, request);
+			}
+			return JsUtil.encodeBase64(url, true);
 		}
 		return "";
+	}
+
+	public static boolean isLoginUrl(String url, HttpServletRequest request) {
+		try {
+			return (request.getContextPath() + Urls.LOGIN.value()).equals((new URL(url)).getPath());
+		} catch (MalformedURLException e) {
+			return false;
+		}
+	}
+
+	private static String getLoginUrlReferer(String loginUrl, HttpServletRequest request) {
+		String query;
+		try {
+			query = (new URL(loginUrl)).getQuery();
+		} catch (MalformedURLException e) {
+			query = null;
+		}
+		if (query != null) {
+			String prefix = GetParamNames.REFERER.toString() + "=";
+			String[] params = query.split("&");
+			for (int i = 0; i < params.length; i++) {
+				if (params[i].startsWith(prefix)) {
+					try {
+						String referer = JsUtil.decodeBase64(URLDecoder.decode(params[i].substring(prefix.length()), "UTF-8"));
+						if (isTrustedReferer(referer, request) && !isLoginUrl(referer, request)) {
+							return referer;
+						}
+					} catch (UnsupportedEncodingException | IllegalArgumentException e) {
+					}
+					break;
+				}
+			}
+		}
+		return null;
 	}
 
 	public static ArrayList<SelectItem> getReimbursementTrials(Long probandId, String costType, PaymentMethod method, Boolean paid) {
@@ -5002,8 +5055,15 @@ public final class WebUtil {
 		} catch (MalformedURLException e) {
 			refererUrl = null;
 		}
-		if (refererUrl != null && Settings.getTrustetRefererHosts(request).contains(refererUrl.getHost()) && refererUrl.getPath().startsWith(request.getContextPath())) {
-			return true;
+		if (refererUrl != null
+				&& ("http".equalsIgnoreCase(refererUrl.getProtocol()) || "https".equalsIgnoreCase(refererUrl.getProtocol()))
+				&& Settings.getTrustetRefererHosts(request).contains(refererUrl.getHost())) {
+			String contextPath = request.getContextPath();
+			String path = refererUrl.getPath();
+			// the path has to stay inside the context, and must not start a protocol-relative url "//host/..." once the context path is cut off:
+			if (path.equals(contextPath) || (path.startsWith(contextPath + "/") && !path.startsWith(contextPath + "//"))) {
+				return true;
+			}
 		}
 		return false;
 	}

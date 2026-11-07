@@ -101,6 +101,7 @@ function handleStaffTabChange(index) {
 		break;
 	}
 	oldStaffTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }
