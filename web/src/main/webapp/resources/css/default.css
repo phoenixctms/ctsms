@@ -686,6 +686,45 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	height: 100%;
 }
 
+/* The panels of a two column content panelgrid stretch to the same height. A 100% height in a table
+   cell (ctsms-panel-maxheight) works in Firefox only, so the panelgrid lays out as flexbox instead.
+   The first column keeps its narrowest width like in the table layout (except the 50% photo columns),
+   and in every cell the last div (the panel or tabview, followed by its widget script) grows */
+table.ctsms-content-panelgrid-maxheight {
+	display: flex;
+	height: auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody,
+table.ctsms-content-panelgrid-maxheight > tbody > tr {
+	display: flex;
+	flex: 1 1 auto;
+	align-items: stretch;
+	width: 100%;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td {
+	display: flex;
+	flex-direction: column;
+	height: auto;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td:first-child:not(.ctsms-photo-column) {
+	flex: 0 0 auto;
+	width: min-content;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td:last-child {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+table.ctsms-content-panelgrid-maxheight > tbody > tr > td > div:last-of-type {
+	flex: 1 1 auto;
+	box-sizing: border-box;
+	height: auto;
+}
+
 .ctsms-input-panelgrid {
 	width: 100%;
 }
