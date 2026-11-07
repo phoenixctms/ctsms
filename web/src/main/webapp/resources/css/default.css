@@ -1300,10 +1300,26 @@ div.timeline-event-content {
 	box-sizing: border-box;
 }
 
+/* the dropdown button of p:autoComplete gets the height of the input, instead of a height from its
+   own text padding (taller than the input, by an amount depending on the theme) */
+.ui-autocomplete:has(> button.ui-button-icon-only) {
+	display: inline-flex;
+	align-items: stretch;
+}
+
+.ui-autocomplete:has(> button.ui-button-icon-only) > button.ui-button-icon-only {
+	flex: 0 0 auto;
+}
+
+.ui-autocomplete:has(> button.ui-button-icon-only) > button.ui-button-icon-only .ui-button-text {
+	padding: 0;
+}
+
 /* p:autoComplete puts ctsms-control-larger on an inline span, so width and
-   max-width do not apply and the input inherits 100% of the table cell. */
+   max-width do not apply and the input inherits 100% of the table cell.
+   inline-flex, not inline-block, to keep the dropdown button as high as the input */
 .ctsms-values-datagrid .ui-autocomplete.ctsms-control-larger {
-	display: inline-block;
+	display: inline-flex;
 	vertical-align: middle;
 }
 
