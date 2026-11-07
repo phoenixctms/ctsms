@@ -129,6 +129,15 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	margin-top: 4px;
 }
 
+/* in a table with filters, a column without one keeps the filter's room below its title,
+   so its title lines up with the others instead of with the filters */
+.ui-datatable thead:has(th.ui-filter-column) th:not(.ui-filter-column) div.ui-dt-c::after {
+	content: "";
+	display: block;
+	height: 2.1em;
+	margin-top: 4px;
+}
+
 /* half of the default 10px horizontal cell padding */
 .ui-datatable th div.ui-dt-c,
 .ui-datatable .ui-datatable-data td div.ui-dt-c,
