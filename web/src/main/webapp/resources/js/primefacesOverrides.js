@@ -2613,3 +2613,15 @@ PrimeFaces.widget.DataTable.prototype.setupFiltering = function() {
     PrimeFaces.skinInput(select);
   });
 }
+
+// The paginator's dropdowns (rows per page, jump to page) are plain selects: style them like the
+// page buttons next to them.
+var ctsmsPaginatorBindEvents = PrimeFaces.widget.Paginator.prototype.bindEvents;
+PrimeFaces.widget.Paginator.prototype.bindEvents = function() {
+  ctsmsPaginatorBindEvents.apply(this, arguments);
+  this.rppSelect.add(this.jtpSelect).each(function() {
+    var select = $(this);
+    select.removeClass('ui-corner-left').addClass('ui-corner-all');
+    PrimeFaces.skinInput(select);
+  });
+}
