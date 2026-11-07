@@ -2628,14 +2628,16 @@ PrimeFaces.widget.Paginator.prototype.bindEvents = function() {
 }
 
 // A native select is not exactly as high as the page buttons, and the difference depends on the
-// theme font: use the buttons' height. Not visible yet (eg. in a hidden tab), retry on mouseenter.
+// theme font: use the buttons' height. Not visible yet (eg. in a hidden tab, or a row expansion,
+// which is inserted hidden and faded in), retry on mouseenter: outerHeight() of a hidden element
+// gives just its padding and border.
 PrimeFaces.widget.Paginator.prototype.alignSelectHeight = function() {
   var paginator = this;
-  var height = this.firstLink.first().outerHeight();
-  if (height > 0) {
+  var link = this.firstLink.first();
+  if (link.is(':visible')) {
     this.rppSelect.add(this.jtpSelect).css({
       'box-sizing': 'border-box',
-      'height': height + 'px'
+      'height': link.outerHeight() + 'px'
     });
   } else {
     this.jq.one('mouseenter', function() {
