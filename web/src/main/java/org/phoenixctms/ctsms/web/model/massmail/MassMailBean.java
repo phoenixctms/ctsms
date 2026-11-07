@@ -37,6 +37,7 @@ import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.model.IDVO;
 import org.phoenixctms.ctsms.web.model.IDVOList;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
+import org.phoenixctms.ctsms.web.model.SessionScopeBean;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.GetParamNames;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -435,6 +436,58 @@ public class MassMailBean extends ManagedBeanBase {
 
 	public ArrayList<SelectItem> getEcrfStatusTypes() {
 		return ecrfStatusTypes;
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES: selecting several enrollment/eCRF states is limited to experimental users.
+	// Other users get a single selection, or the disabled multiple selection if the mass mail already has
+	// several states. To drop the limit, remove everything marked EXPERIMENTAL_MULTIPLE_STATES here and in
+	// massMailMain.xhtml (the selectOneMenus and the rendered/disabled attributes of the selectCheckboxMenus).
+	public boolean isMultipleStatesEditable() {
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		return sessionScopeBean != null && sessionScopeBean.isExperimentalUser();
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	public boolean isProbandListStatesMultiple() {
+		return isMultipleStatesEditable() || in.getProbandListStatusIds().size() > 1;
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	public boolean isEcrfStatesMultiple() {
+		return isMultipleStatesEditable() || in.getEcrfStatusIds().size() > 1;
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	private static Long getSingleId(Collection<Long> ids) {
+		return ids != null && ids.size() > 0 ? ids.iterator().next() : null;
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	private static void setSingleId(Collection<Long> ids, Long id) {
+		ids.clear();
+		if (id != null) {
+			ids.add(id);
+		}
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	public Long getProbandListStatusId() {
+		return getSingleId(in.getProbandListStatusIds());
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	public void setProbandListStatusId(Long probandListStatusId) {
+		setSingleId(in.getProbandListStatusIds(), probandListStatusId);
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	public Long getEcrfStatusId() {
+		return getSingleId(in.getEcrfStatusIds());
+	}
+
+	// EXPERIMENTAL_MULTIPLE_STATES
+	public void setEcrfStatusId(Long ecrfStatusId) {
+		setSingleId(in.getEcrfStatusIds(), ecrfStatusId);
 	}
 
 	public boolean getShowTerminalStateMessage() {

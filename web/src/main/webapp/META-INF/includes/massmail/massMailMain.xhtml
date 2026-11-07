@@ -208,12 +208,28 @@
 									<h:outputText value="" />
 									<h:outputLabel />
 
-									<h:outputLabel for="probandliststatus"
+									<!-- EXPERIMENTAL_MULTIPLE_STATES: selectOneMenu, rendered/disabled and the conditional for= ids (see MassMailBean) -->
+									<h:outputLabel for="#{massMailBean.probandListStatesMultiple ? 'probandliststates' : 'probandliststatus'}"
 										value="#{massmaillabels.mass_mail_proband_list_status_label}" />
 									<h:panelGroup>
-										<p:selectCheckboxMenu id="probandliststatus"
+										<p:selectOneMenu id="probandliststatus"
+											value="#{massMailBean.probandListStatusId}"
+											required="false"
+											rendered="#{not massMailBean.probandListStatesMultiple}"
+											label="#{massmaillabels.mass_mail_proband_list_status}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems value="#{massMailBean.probandListStatusTypes}"
+												var="selectItem" itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+										</p:selectOneMenu>
+										<p:selectCheckboxMenu id="probandliststates"
 											value="#{massMailBean.in.probandListStatusIds}"
 											required="false"
+											rendered="#{massMailBean.probandListStatesMultiple}"
+											disabled="#{not massMailBean.multipleStatesEditable}"
 											label="#{massmaillabels.mass_mail_proband_list_status}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
@@ -222,13 +238,13 @@
 												itemValue="#{selectItem.value}" />
 										</p:selectCheckboxMenu>
 										<p:tooltip rendered="#{enableTooltips}"
-											for="probandliststatus">
+											for="#{massMailBean.probandListStatesMultiple ? 'probandliststates' : 'probandliststatus'}">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_proband_list_status_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="probandliststatus" />
+									<p:message for="#{massMailBean.probandListStatesMultiple ? 'probandliststates' : 'probandliststatus'}" />
 
 									<h:outputLabel for="visitscheduleitems"
 										value="#{massmaillabels.mass_mail_visit_schedule_items_label}" />
@@ -298,11 +314,26 @@
 									</h:panelGroup>
 									<p:message for="probandliststatusresend" />
 
-									<h:outputLabel for="ecrfstatus"
+									<!-- EXPERIMENTAL_MULTIPLE_STATES: selectOneMenu, rendered/disabled and the conditional for= ids (see MassMailBean) -->
+									<h:outputLabel for="#{massMailBean.ecrfStatesMultiple ? 'ecrfstates' : 'ecrfstatus'}"
 										value="#{massmaillabels.mass_mail_ecrf_status_label}" />
 									<h:panelGroup>
-										<p:selectCheckboxMenu id="ecrfstatus"
+										<p:selectOneMenu id="ecrfstatus"
+											value="#{massMailBean.ecrfStatusId}" required="false"
+											rendered="#{not massMailBean.ecrfStatesMultiple}"
+											label="#{massmaillabels.mass_mail_ecrf_status}"
+											styleClass="ctsms-control">
+											<f:converter converterId="ctsms.ID" />
+											<f:selectItem itemLabel="#{labels.no_selection_label}"
+												itemValue="#{applicationScopeBean.noSelectionValue}" />
+											<f:selectItems value="#{massMailBean.ecrfStatusTypes}"
+												var="selectItem" itemLabel="#{selectItem.label}"
+												itemValue="#{selectItem.value}" />
+										</p:selectOneMenu>
+										<p:selectCheckboxMenu id="ecrfstates"
 											value="#{massMailBean.in.ecrfStatusIds}" required="false"
+											rendered="#{massMailBean.ecrfStatesMultiple}"
+											disabled="#{not massMailBean.multipleStatesEditable}"
 											label="#{massmaillabels.mass_mail_ecrf_status}"
 											styleClass="ctsms-control">
 											<f:converter converterId="ctsms.ID" />
@@ -310,13 +341,13 @@
 												var="selectItem" itemLabel="#{selectItem.label}"
 												itemValue="#{selectItem.value}" />
 										</p:selectCheckboxMenu>
-										<p:tooltip rendered="#{enableTooltips}" for="ecrfstatus">
+										<p:tooltip rendered="#{enableTooltips}" for="#{massMailBean.ecrfStatesMultiple ? 'ecrfstates' : 'ecrfstatus'}">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_ecrf_status_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="ecrfstatus" />
+									<p:message for="#{massMailBean.ecrfStatesMultiple ? 'ecrfstates' : 'ecrfstatus'}" />
 
 									<h:outputLabel for="ecrfs"
 										value="#{massmaillabels.mass_mail_ecrfs_label}" />
