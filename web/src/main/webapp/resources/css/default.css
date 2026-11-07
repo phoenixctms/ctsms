@@ -734,6 +734,13 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > div:last-of-type {
 	height: auto;
 }
 
+/* the tree and photo layouts relied on the 2px default table border spacing, which a flex row lacks */
+table.ctsms-content-panelgrid.ctsms-content-panelgrid-maxheight > tbody > tr {
+	box-sizing: border-box;
+	gap: 2px;
+	padding: 2px;
+}
+
 .ctsms-input-panelgrid {
 	width: 100%;
 }
