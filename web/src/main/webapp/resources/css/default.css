@@ -105,6 +105,19 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	box-shadow: inset 2px 0 0 currentColor, inset -2px 0 0 currentColor, inset 0 2px 0 currentColor, inset 0 -2px 0 currentColor;
 }
 
+/* datatable columns may get narrower than their header and filter: headers wrap, and the filters
+   (100px wide by default, dropdowns as wide as their longest option) follow the column width */
+.ui-datatable th {
+	white-space: normal;
+}
+
+.ui-datatable th .ui-column-filter {
+	width: 100%;
+	min-width: 3em;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
 .ctsms-upload-control .fileupload-content {
 	border-top-width: 0;
 	height: 100%;
