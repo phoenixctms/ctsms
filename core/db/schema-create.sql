@@ -930,10 +930,8 @@
         DEPARTMENT_FK BIGINT not null,
         STATUS_FK BIGINT not null,
         TYPE_FK BIGINT not null,
-        PROBAND_LIST_STATUS_FK BIGINT,
         TRIAL_FK BIGINT,
         MODIFIED_USER_FK BIGINT not null,
-        ECRF_STATUS_FK BIGINT,
         primary key (ID)
     );
 
@@ -2189,6 +2187,16 @@
         MASS_MAILS_FK BIGINT not null
     );
 
+    create table mass_mail_ecrf_status (
+        MASS_MAILS_FK BIGINT not null,
+        ECRF_STATES_FK BIGINT not null
+    );
+
+    create table mass_mail_proband_list_status (
+        MASS_MAILS_FK BIGINT not null,
+        PROBAND_LIST_STATES_FK BIGINT not null
+    );
+
     create table mass_mail_status_transition (
         MASS_MAIL_STATUS_TYPES_FK BIGINT not null,
         TRANSITIONS_FK BIGINT not null
@@ -2864,16 +2872,6 @@
         add constraint MASS_MAIL_MODIFIED_USER_FKC 
         foreign key (MODIFIED_USER_FK) 
         references users;
-
-    alter table MASS_MAIL 
-        add constraint MASS_MAIL_PROBAND_LIST_STATUS_FKC 
-        foreign key (PROBAND_LIST_STATUS_FK) 
-        references PROBAND_LIST_STATUS_TYPE;
-
-    alter table MASS_MAIL 
-        add constraint MASS_MAIL_ECRF_STATUS_FKC 
-        foreign key (ECRF_STATUS_FK) 
-        references ecrf_status_type;
 
     alter table MASS_MAIL 
         add constraint MASS_MAIL_STATUS_FKC 
@@ -3852,6 +3850,26 @@
 
     alter table mass_mail_ecrf 
         add constraint ecrf_MASS_MAILS_FKC 
+        foreign key (MASS_MAILS_FK) 
+        references MASS_MAIL;
+
+    alter table mass_mail_ecrf_status 
+        add constraint MASS_MAIL_ECRF_STATES_FKC 
+        foreign key (ECRF_STATES_FK) 
+        references ecrf_status_type;
+
+    alter table mass_mail_ecrf_status 
+        add constraint ecrf_status_type_MASS_MAILS_FKC 
+        foreign key (MASS_MAILS_FK) 
+        references MASS_MAIL;
+
+    alter table mass_mail_proband_list_status 
+        add constraint MASS_MAIL_PROBAND_LIST_STATES_FKC 
+        foreign key (PROBAND_LIST_STATES_FK) 
+        references PROBAND_LIST_STATUS_TYPE;
+
+    alter table mass_mail_proband_list_status 
+        add constraint PROBAND_LIST_STATUS_TYPE_MASS_MAILS_FKC 
         foreign key (MASS_MAILS_FK) 
         references MASS_MAIL;
 

@@ -160,8 +160,7 @@
 					</ui:include>
 				</p:column>
 
-				<p:column sortBy="#{massMail.vo.probandListStatus}"
-					filterBy="#{massMail.vo.probandListStatus.id}"
+				<p:column filterBy="#{massMail.vo.probandListStates.id}"
 					filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
 					<f:attribute name="visibleDefault"
 						value="#{!massMailSearchBean.picker}" />
@@ -169,7 +168,7 @@
 						<h:outputText
 							value="#{massmaillabels.search_mass_mail_result_list_proband_list_status_column}" />
 					</f:facet>
-					<h:outputText value="#{massMail.vo.probandListStatus.name}" />
+					<h:outputText value="#{applicationScopeBean.clipStringMid(applicationScopeBean.probandListStatusTypesToString(massMail.vo.probandListStates))}" />
 				</p:column>
 				
 				<p:column>

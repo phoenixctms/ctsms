@@ -102,8 +102,7 @@
 					</p:column>
 
 					<p:column
-						sortBy="#{massMailRecipient.vo.massMail.probandListStatus}"
-						filterBy="#{massMailRecipient.vo.massMail.probandListStatus.id}"
+						filterBy="#{massMailRecipient.vo.massMail.probandListStates.id}"
 						filterOptions="#{sessionScopeBean.filterProbandListStatusTypes}">
 						<f:attribute name="visibleDefault" value="false" />
 						<f:facet name="header">
@@ -111,7 +110,7 @@
 								value="#{probandlabels.mass_mail_recipient_probandrecipient_list_proband_list_status_column}" />
 						</f:facet>
 						<h:outputText
-							value="#{massMailRecipient.vo.massMail.probandListStatus.name}" />
+							value="#{applicationScopeBean.clipStringMid(applicationScopeBean.probandListStatusTypesToString(massMailRecipient.vo.massMail.probandListStates))}" />
 					</p:column>
 					
 					<p:column>

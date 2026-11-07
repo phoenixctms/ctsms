@@ -339,12 +339,6 @@
         drop constraint MASS_MAIL_MODIFIED_USER_FKC;
 
     alter table MASS_MAIL 
-        drop constraint MASS_MAIL_PROBAND_LIST_STATUS_FKC;
-
-    alter table MASS_MAIL 
-        drop constraint MASS_MAIL_ECRF_STATUS_FKC;
-
-    alter table MASS_MAIL 
         drop constraint MASS_MAIL_STATUS_FKC;
 
     alter table MASS_MAIL 
@@ -932,6 +926,18 @@
     alter table mass_mail_ecrf 
         drop constraint ecrf_MASS_MAILS_FKC;
 
+    alter table mass_mail_ecrf_status 
+        drop constraint MASS_MAIL_ECRF_STATES_FKC;
+
+    alter table mass_mail_ecrf_status 
+        drop constraint ecrf_status_type_MASS_MAILS_FKC;
+
+    alter table mass_mail_proband_list_status 
+        drop constraint MASS_MAIL_PROBAND_LIST_STATES_FKC;
+
+    alter table mass_mail_proband_list_status 
+        drop constraint PROBAND_LIST_STATUS_TYPE_MASS_MAILS_FKC;
+
     alter table mass_mail_status_transition 
         drop constraint MASS_MAIL_STATUS_TYPE_MASS_MAIL_STATUS_TYPES_FKC;
 
@@ -1328,6 +1334,10 @@
     drop table input_field_value_selection cascade;
 
     drop table mass_mail_ecrf cascade;
+
+    drop table mass_mail_ecrf_status cascade;
+
+    drop table mass_mail_proband_list_status cascade;
 
     drop table mass_mail_status_transition cascade;
 

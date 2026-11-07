@@ -397,8 +397,7 @@ public final class ServiceUtil {
 		while (massMailsIt.hasNext()) {
 			MassMail massMail = massMailsIt.next();
 			if (massMail.getStatus() != null && !massMail.getStatus().isLocked()) {
-				if (massMail.getEcrfStatus() != null && statusEntry.getStatus() != null
-						&& massMail.getEcrfStatus().getId().equals(statusEntry.getStatus().getId())) {
+				if (statusEntry.getStatus() != null && massMail.getEcrfStates().contains(statusEntry.getStatus())) {
 					addResetMassMailRecipient(massMail, proband, token, massMail.isEcrfStatusResend(), now, user, massMailDao, probandDao, trialDao, massMailRecipientDao,
 							journalEntryDao);
 				}
@@ -2230,7 +2229,7 @@ public final class ServiceUtil {
 		if (massMail != null) {
 			model.put(MassMailMessageTemplateParameters.SUBJECT,
 					getMassMailSubject(massMail.getSubjectFormat(), locale, massMail.getMaleSalutation(), massMail.getFemaleSalutation(), proband, massMail.getTrial(),
-							massMail.getProbandListStatus(), massMail.getEcrfStatus(), token));
+							massMail.getProbandListStates(), massMail.getEcrfStates(), token));
 			model.put(MassMailMessageTemplateParameters.PROBAND_SALUTATION,
 					CommonUtil.getGenderSpecificSalutation(proband, massMail.getMaleSalutation(), massMail.getFemaleSalutation()));
 			if (proband != null) {
@@ -3726,7 +3725,7 @@ public final class ServiceUtil {
 	}
 
 	public static String getMassMailSubject(String format, Locales locale, String maleSalutation, String femaleSalutation, ProbandOutVO proband, TrialOutVO trial,
-			ProbandListStatusTypeVO probandListStatusType, ECRFStatusTypeVO ecrfStatusType, String token) throws ServiceException {
+			Collection<ProbandListStatusTypeVO> probandListStates, Collection<ECRFStatusTypeVO> ecrfStates, String token) throws ServiceException {
 		if (format != null) {
 			Object[] args = new String[12];
 			args[0] = CommonUtil.getGenderSpecificSalutation(proband, maleSalutation, femaleSalutation);
@@ -3762,16 +3761,28 @@ public final class ServiceUtil {
 			} else {
 				args[8] = "";
 			}
-			if (probandListStatusType != null) {
-				args[9] = L10nUtil.getProbandListStatusTypeName(locale, probandListStatusType.getNameL10nKey());
-			} else {
-				args[9] = "";
+			StringBuilder statusNames = new StringBuilder();
+			if (probandListStates != null) {
+				Iterator<ProbandListStatusTypeVO> it = probandListStates.iterator();
+				while (it.hasNext()) {
+					if (statusNames.length() > 0) {
+						statusNames.append(", ");
+					}
+					statusNames.append(L10nUtil.getProbandListStatusTypeName(locale, it.next().getNameL10nKey()));
+				}
 			}
-			if (ecrfStatusType != null) {
-				args[10] = L10nUtil.getEcrfStatusTypeName(locale, ecrfStatusType.getNameL10nKey());
-			} else {
-				args[10] = "";
+			args[9] = statusNames.toString();
+			statusNames = new StringBuilder();
+			if (ecrfStates != null) {
+				Iterator<ECRFStatusTypeVO> it = ecrfStates.iterator();
+				while (it.hasNext()) {
+					if (statusNames.length() > 0) {
+						statusNames.append(", ");
+					}
+					statusNames.append(L10nUtil.getEcrfStatusTypeName(locale, it.next().getNameL10nKey()));
+				}
 			}
+			args[10] = statusNames.toString();
 			args[11] = token != null ? token : "";
 			try {
 				return MessageFormat.format(format, args);

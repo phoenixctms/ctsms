@@ -53,6 +53,7 @@ import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TimelineEventOutVO;
@@ -777,6 +778,7 @@ public class ApplicationScopeBean {
 	private final static String VISIT_SEPARATOR = "; ";
 	private final static String DEPARTMENT_SEPARATOR = "; ";
 	private final static String VISIT_SCHEDULE_ITEM_SEPARATOR = "; ";
+	private final static String STATUS_TYPE_SEPARATOR = ", ";
 	private final static String EMTPY_VISIT_SCHEDULE_ITEM_NAME = "<>";
 
 	public String timelineEventsToString(Collection<TimelineEventOutVO> events) {
@@ -864,6 +866,21 @@ public class ApplicationScopeBean {
 			while (it.hasNext()) {
 				if (sb.length() > 0) {
 					sb.append(DEPARTMENT_SEPARATOR);
+				}
+				sb.append(it.next().getName());
+			}
+			return sb.toString();
+		}
+		return "";
+	}
+
+	public String probandListStatusTypesToString(Collection<ProbandListStatusTypeVO> probandListStates) {
+		if (probandListStates != null) {
+			Iterator<ProbandListStatusTypeVO> it = probandListStates.iterator();
+			StringBuilder sb = new StringBuilder();
+			while (it.hasNext()) {
+				if (sb.length() > 0) {
+					sb.append(STATUS_TYPE_SEPARATOR);
 				}
 				sb.append(it.next().getName());
 			}
