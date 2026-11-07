@@ -1432,11 +1432,14 @@ div.timeline-event-content {
 	height: 100%;
 }
 
+/* border-box, so padding (4px) and border (1px) are inside the 100% width instead of overhanging;
+   the heights include them now, so the textarea keeps its previous size */
 .ctsms-textarea {
+	box-sizing: border-box;
 	width: 100%;
 	max-width: 100%;
-	height: 48px;
-	min-height: 48px;
+	height: 58px;
+	min-height: 58px;
 }
 
 .ctsms-editor {
