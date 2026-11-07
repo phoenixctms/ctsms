@@ -1431,6 +1431,44 @@ div.timeline-event-content {
 	height: 100%;
 }
 
+/* The tree table panel and the input column stretch to the same height. A 100% height in a table
+   cell works in Firefox only, so the panelgrid lays out as flexbox instead, like the two column
+   content panelgrids (here the first column grows and the input column keeps its width) */
+table.ctsms-file-content-panelgrid {
+	display: flex;
+	height: auto;
+}
+
+table.ctsms-file-content-panelgrid > tbody,
+table.ctsms-file-content-panelgrid > tbody > tr {
+	display: flex;
+	flex: 1 1 auto;
+	align-items: stretch;
+	width: 100%;
+}
+
+table.ctsms-file-content-panelgrid > tbody > tr > td {
+	display: flex;
+	flex-direction: column;
+	height: auto;
+}
+
+table.ctsms-file-content-panelgrid > tbody > tr > td.ctsms-file-treetable-column {
+	flex: 1 1 auto;
+	min-width: 0;
+	width: auto;
+}
+
+table.ctsms-file-content-panelgrid > tbody > tr > td.ctsms-file-input-column {
+	flex: 0 0 auto;
+}
+
+table.ctsms-file-content-panelgrid > tbody > tr > td > .ctsms-file-treetable-panel-maxheight,
+table.ctsms-file-content-panelgrid > tbody > tr > td > .ctsms-file-input-panelgrid {
+	flex: 1 1 auto;
+	height: auto;
+}
+
 .ctsms-fileupload-row {
 	vertical-align: top;
 	height: 100%;
