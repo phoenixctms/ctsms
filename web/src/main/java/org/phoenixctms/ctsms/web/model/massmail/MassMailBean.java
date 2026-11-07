@@ -59,8 +59,6 @@ public class MassMailBean extends ManagedBeanBase {
 			DepartmentVO departmentVO = out.getDepartment();
 			MassMailStatusTypeVO statusVO = out.getStatus();
 			MassMailTypeVO typeVO = out.getType();
-			ProbandListStatusTypeVO probandListStatus = out.getProbandListStatus();
-			ECRFStatusTypeVO ecrfStatus = out.getEcrfStatus();
 			TrialOutVO trial = out.getTrial();
 			in.getVisitScheduleItemIds().clear();
 			Iterator it = out.getVisitScheduleItems().iterator();
@@ -72,6 +70,16 @@ public class MassMailBean extends ManagedBeanBase {
 			while (it.hasNext()) {
 				in.getEcrfIds().add(((ECRFOutVO) it.next()).getId());
 			}
+			in.getProbandListStatusIds().clear();
+			it = out.getProbandListStates().iterator();
+			while (it.hasNext()) {
+				in.getProbandListStatusIds().add(((ProbandListStatusTypeVO) it.next()).getId());
+			}
+			in.getEcrfStatusIds().clear();
+			it = out.getEcrfStates().iterator();
+			while (it.hasNext()) {
+				in.getEcrfStatusIds().add(((ECRFStatusTypeVO) it.next()).getId());
+			}
 			in.setId(out.getId());
 			in.setName(out.getName());
 			in.setDescription(out.getDescription());
@@ -81,9 +89,7 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setLockAfterSending(out.getLockAfterSending());
 			in.setStoreMessages(out.getStoreMessages());
 			in.setTypeId(typeVO == null ? null : typeVO.getId());
-			in.setProbandListStatusId(probandListStatus == null ? null : probandListStatus.getId());
 			in.setProbandListStatusResend(out.getProbandListStatusResend());
-			in.setEcrfStatusId(ecrfStatus == null ? null : ecrfStatus.getId());
 			in.setEcrfStatusResend(out.getEcrfStatusResend());
 			in.setTrialId(trial == null ? null : trial.getId());
 			in.setFromAddress(out.getFromAddress());
@@ -140,12 +146,12 @@ public class MassMailBean extends ManagedBeanBase {
 			in.setLockAfterSending(Settings.getBoolean(SettingCodes.MASS_MAIL_LOCK_AFTER_SENDING_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_LOCK_AFTER_SENDING_PRESET));
 			in.setStoreMessages(Settings.getBoolean(SettingCodes.MASS_MAIL_STORE_MESSAGES_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_STORE_MESSAGES_PRESET));
 			in.setTypeId(null);
-			in.setProbandListStatusId(null);
+			in.getProbandListStatusIds().clear();
 			in.getVisitScheduleItemIds().clear();
 			in.getEcrfIds().clear();
 			in.setProbandListStatusResend(
 					Settings.getBoolean(SettingCodes.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_PROBAND_LIST_STATUS_RESEND_PRESET));
-			in.setEcrfStatusId(null);
+			in.getEcrfStatusIds().clear();
 			in.setEcrfStatusResend(false);
 			in.setTrialId(null);
 			in.setFromAddress(Settings.getString(SettingCodes.MASS_MAIL_FROM_ADDRESS_PRESET, Bundle.SETTINGS, DefaultSettings.MASS_MAIL_FROM_ADDRESS_PRESET));
