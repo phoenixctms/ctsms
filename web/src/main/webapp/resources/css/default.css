@@ -252,9 +252,11 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 }
 
 /* primefaces.css loads after the theme, so its transparent menu link border also wins over the
-   theme's hover border: without the theme's glow (eg. aristo), the hovered item keeps crisp edges */
+   theme's hover border: the hovered item gets a border in a darker shade of its own (theme)
+   background instead, and without the theme's glow (eg. aristo) it keeps crisp edges */
 .ui-menu .ui-menuitem-link.ui-state-hover {
 	box-shadow: none;
+	border-color: rgba(0, 0, 0, 0.2);
 }
 
 .ui-menu .ui-menuitem-text {
