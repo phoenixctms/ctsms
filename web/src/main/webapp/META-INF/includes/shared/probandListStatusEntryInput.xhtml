@@ -39,7 +39,7 @@
 			<p:message for="probandStatusType" />
 
 			<h:outputLabel />
-			<h:outputText styleClass="ctsms-text-red"
+			<h:outputText styleClass="ctsms-text-red ctsms-plaintext-top"
 				value="#{probandListBean.probandListStatusEntryBean.showTerminalStateMessage ? triallabels.proband_list_status_entry_input_terminal_state_message : ''} #{probandListBean.probandListStatusEntryBean.getMassMailCount() > 0 ? triallabels.proband_list_status_entry_input_massmail_create_message : ''}"
 				id="probandStatusType_status_message" />
 			<h:outputLabel />
