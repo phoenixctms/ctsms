@@ -82,6 +82,29 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	background: none !important;	
 }
 
+/* a selected datatable row keeps its background (row colours from colors.css are !important)
+   and is framed in its text colour instead of the theme highlight */
+.ui-datatable .ui-datatable-data > tr.ui-state-highlight {
+	background: none;
+	color: inherit;
+}
+
+.ui-datatable .ui-datatable-data > tr.ui-state-highlight:not(.ui-expanded-row-content) > td {
+	box-shadow: inset 0 2px 0 currentColor, inset 0 -2px 0 currentColor;
+}
+
+.ui-datatable .ui-datatable-data > tr.ui-state-highlight:not(.ui-expanded-row-content) > td:first-child {
+	box-shadow: inset 2px 0 0 currentColor, inset 0 2px 0 currentColor, inset 0 -2px 0 currentColor;
+}
+
+.ui-datatable .ui-datatable-data > tr.ui-state-highlight:not(.ui-expanded-row-content) > td:last-child {
+	box-shadow: inset -2px 0 0 currentColor, inset 0 2px 0 currentColor, inset 0 -2px 0 currentColor;
+}
+
+.ui-datatable .ui-datatable-data > tr.ui-state-highlight:not(.ui-expanded-row-content) > td:first-child:last-child {
+	box-shadow: inset 2px 0 0 currentColor, inset -2px 0 0 currentColor, inset 0 2px 0 currentColor, inset 0 -2px 0 currentColor;
+}
+
 .ctsms-upload-control .fileupload-content {
 	border-top-width: 0;
 	height: 100%;
