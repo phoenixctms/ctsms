@@ -919,8 +919,7 @@ public class ToolsServiceImpl
 
 	@Override
 	protected Integer handleGetInputFieldValueFileUploadSizeLimit() throws Exception {
-		// input field value files are always stored in the database, see ServiceUtil.checkInputFieldFileValue:
-		return Settings.getIntNullable(SettingCodes.EXTERNAL_FILE_CONTENT_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.EXTERNAL_FILE_CONTENT_SIZE_LIMIT);
+		return Settings.getIntNullable(SettingCodes.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT);
 	}
 
 	@Override

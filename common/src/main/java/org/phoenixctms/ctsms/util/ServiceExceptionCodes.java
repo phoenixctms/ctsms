@@ -200,6 +200,7 @@ public interface ServiceExceptionCodes {
 	public static final String INPUT_FIELD_FILE_VALUE_EMPTY = "input_field_file_value_empty";
 	public static final String INPUT_FIELD_FILE_VALUE_NAME_REQUIRED = "input_field_file_value_name_required";
 	public static final String INPUT_FIELD_FILE_VALUE_MIME_TYPE_NOT_ALLOWED = "input_field_file_value_mime_type_not_allowed";
+	public static final String INPUT_FIELD_FILE_VALUE_SIZE_LIMIT_EXCEEDED = "input_field_file_value_size_limit_exceeded";
 	public static final String INPUT_FIELD_VALUE_NO_FILE = "input_field_value_no_file";
 	public static final String INPUT_FIELD_PHOTO_NOT_FALSE = "input_field_photo_not_false";
 	public static final String INPUT_FIELD_ALLOWED_MIME_TYPES_NOT_EMPTY = "input_field_allowed_mime_types_not_empty";

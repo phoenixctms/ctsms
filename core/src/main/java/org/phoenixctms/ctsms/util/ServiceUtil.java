@@ -908,10 +908,10 @@ public final class ServiceUtil {
 										CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), fileValue.getMimeType());
 							}
 						}
-						Integer fileSizeLimit = Settings.getIntNullable(SettingCodes.EXTERNAL_FILE_CONTENT_SIZE_LIMIT, Bundle.SETTINGS,
-								DefaultSettings.EXTERNAL_FILE_CONTENT_SIZE_LIMIT);
+						Integer fileSizeLimit = Settings.getIntNullable(SettingCodes.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT, Bundle.SETTINGS,
+								DefaultSettings.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT);
 						if (fileSizeLimit != null && fileValue.getDatas().length > fileSizeLimit) {
-							throw L10nUtil.initServiceException(ServiceExceptionCodes.EXTERNAL_FILE_CONTENT_SIZE_LIMIT_EXCEEDED,
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_VALUE_SIZE_LIMIT_EXCEEDED,
 									CommonUtil.humanReadableByteCount(fileSizeLimit, CoreUtil.getUser().getDecimalSeparator()));
 						}
 					} else if (fileValueId != null) {
