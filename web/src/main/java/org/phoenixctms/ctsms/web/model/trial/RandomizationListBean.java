@@ -12,7 +12,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.RandomizationMode;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -339,7 +338,6 @@ public class RandomizationListBean extends GenerateRandomListBean {
 		out = null;
 		try {
 			out = WebUtil.getServiceLocator().getTrialService().getStratificationRandomizationList(WebUtil.getAuthentication(), id);
-			StratificationRandomizationList LOAD_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		} catch (AuthenticationException e) {

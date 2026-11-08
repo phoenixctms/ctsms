@@ -61,6 +61,12 @@ public class Authenticator {
 	private LdapService ldapService2;
 	private final static String JWT_PWD_HEADER_KEY = "pwd";
 	private final static String JWT_USERNAME_CLAIM = "username";
+	private final static HashSet<String> DUTYROSTER_ICS_METHODS = new HashSet<String>();
+	static {
+		DUTYROSTER_ICS_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getDutyRosterInterval"));
+		// the identity and locale for the calendar name
+		DUTYROSTER_ICS_METHODS.add(CoreUtil.getServiceMethodName(ToolsService.class, "getAuthenticatedUser"));
+	}
 	private final static HashSet<String> QUERY_TEXT_METHODS = new HashSet<String>();
 	static {
 		QUERY_TEXT_METHODS.add(CoreUtil.getServiceMethodName(TrialService.class, "getInquiryList"));
@@ -184,7 +190,7 @@ public class Authenticator {
 		if (auth != null && (auth.getUsername() != null || !CommonUtil.isEmptyString(auth.getJwt()))) {
 			String jwtAudience = resolveCredentialsFromJwt(auth);
 			if (CommonUtil.DUTYROSTER_ICS_REALM.equals(jwtAudience)
-					&& !CoreUtil.getServiceMethodName(TrialService.class, "getDutyRosterInterval").equals(methodName)) {
+					&& (methodName == null || !DUTYROSTER_ICS_METHODS.contains(methodName))) {
 				throw L10nUtil.initAuthenticationException(AuthenticationExceptionCodes.INVALID_JWT, auth.getJwt());
 			}
 			if (CommonUtil.QUERY_TEXT_REALM.equals(jwtAudience)

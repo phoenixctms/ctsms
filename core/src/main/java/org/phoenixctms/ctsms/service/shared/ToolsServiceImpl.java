@@ -852,6 +852,15 @@ public class ToolsServiceImpl
 	}
 
 	@Override
+	protected UserOutVO handleGetAuthenticatedUser(AuthenticationVO auth) throws Exception {
+		User user = authenticator.authenticate(auth, false, CoreUtil.getServiceMethodName(ToolsService.class, "getAuthenticatedUser")).getUser();
+		UserDao userDao = this.getUserDao();
+		UserOutVO result = userDao.toUserOutVO(user);
+		CommonUtil.copyInheritedUserToOut(userDao.toUserInheritedVO(user), result);
+		return result;
+	}
+
+	@Override
 	protected CalendarWeekVO handleGetCalendarWeek(Date date) throws Exception {
 		return DateCalc.getCalendarWeek(date);
 	}

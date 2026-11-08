@@ -884,7 +884,7 @@ public final class CoreUtil implements ApplicationContextAware {
 	}
 
 	public static boolean isEnumerationClass(String name) {
-		return checkClassExists(getEnumerationClassName(name));
+		return CommonUtil.isEnumerationClass(name);
 	}
 
 	public static boolean isPassDecryption() {
