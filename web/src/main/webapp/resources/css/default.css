@@ -737,9 +737,9 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td:first-child:not(.ctsms
 	width: min-content;
 }
 
+/* no min-width: 0, the column does not get narrower than its content, like a table column */
 table.ctsms-content-panelgrid-maxheight > tbody > tr > td:last-child {
 	flex: 1 1 auto;
-	min-width: 0;
 }
 
 table.ctsms-content-panelgrid-maxheight > tbody > tr > td > div:last-of-type {
@@ -1531,9 +1531,10 @@ table.ctsms-file-content-panelgrid > tbody > tr > td {
 	height: auto;
 }
 
+/* no min-width: 0, the tree table column does not get narrower than the tree table (on a narrow
+   window the page scrolls, as with the table layout, instead of the tree overflowing its panel) */
 table.ctsms-file-content-panelgrid > tbody > tr > td.ctsms-file-treetable-column {
 	flex: 1 1 auto;
-	min-width: 0;
 	width: auto;
 }
 

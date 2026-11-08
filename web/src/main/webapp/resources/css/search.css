@@ -16,9 +16,11 @@
 	width: 140px !important;
 }
 
+/* may get narrower than its content (the search page's flex layout always allowed that) */
 .ctsms-criteria-input-column {
 	vertical-align: top;
 	width: 100%;
+	min-width: 0;
 	padding-left: 1px;
 	padding-right: 7px;
 }
