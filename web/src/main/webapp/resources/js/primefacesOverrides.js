@@ -2679,6 +2679,29 @@ PrimeFaces.widget.DataTable.prototype.setupFiltering = function() {
   });
 }
 
+// The row selection handlers are bound with a descendant selector (jqId + ' tbody.ui-datatable-data
+// > tr.ui-widget-content'), which also matches the rows of a datatable in a row expansion and the
+// row expansion itself: a click there selected the nested row and the expansion in this table too
+// (several rows highlighted, a wrong selection). Only handle this table's own data rows.
+PrimeFaces.widget.DataTable.prototype.ctsmsIsOwnDataRow = function(rowElement) {
+  var row = $(rowElement);
+  return !row.hasClass('ui-expanded-row-content') && row.closest('.ui-datatable')[0] === this.jq[0];
+}
+
+var ctsmsDataTableOnRowClick = PrimeFaces.widget.DataTable.prototype.onRowClick;
+PrimeFaces.widget.DataTable.prototype.onRowClick = function(event, rowElement) {
+  if (this.ctsmsIsOwnDataRow(rowElement)) {
+    ctsmsDataTableOnRowClick.apply(this, arguments);
+  }
+}
+
+var ctsmsDataTableOnRowDblclick = PrimeFaces.widget.DataTable.prototype.onRowDblclick;
+PrimeFaces.widget.DataTable.prototype.onRowDblclick = function(event, rowElement) {
+  if (this.ctsmsIsOwnDataRow(rowElement)) {
+    ctsmsDataTableOnRowDblclick.apply(this, arguments);
+  }
+}
+
 // The paginator's dropdowns (rows per page, jump to page) are plain selects: style them like the
 // page buttons next to them.
 var ctsmsPaginatorBindEvents = PrimeFaces.widget.Paginator.prototype.bindEvents;
