@@ -2666,14 +2666,15 @@ PrimeFaces.widget.SelectCheckboxMenu.prototype.updateLabel = function() {
   this.label.attr('title', names.length > 0 ? text : '');
 }
 
-// Dropdown column filters are rendered as plain selects: give them the theme's input look
-// like the text filters next to them.
+// Dropdown column filters are rendered as plain selects (class ui-column-filter only): give them
+// the classes of the text filters next to them (DataTable.COLUMN_INPUT_FILTER_CLASS), so they
+// get the theme's input look, including its border colour from ui-state-default.
 var ctsmsDataTableSetupFiltering = PrimeFaces.widget.DataTable.prototype.setupFiltering;
 PrimeFaces.widget.DataTable.prototype.setupFiltering = function() {
   ctsmsDataTableSetupFiltering.apply(this, arguments);
   $(this.jqId + ' thead:first th.ui-filter-column .ui-dt-c select.ui-column-filter').each(function() {
     var select = $(this);
-    select.removeClass('ui-corner-left').addClass('ui-inputfield ui-inputtext ui-corner-all');
+    select.addClass('ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all');
     PrimeFaces.skinInput(select);
   });
 }
