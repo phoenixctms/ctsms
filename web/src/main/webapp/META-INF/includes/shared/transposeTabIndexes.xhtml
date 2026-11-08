@@ -31,7 +31,10 @@
    }
    function reverseTabIndex(index) {
    	return reverseIndexMap[index];
-   } 
+   }
+   jQuery(window).bind('load', function() {
+   	restoreTabIndexParam(window['#{tabViewWidgetVar}']);
+   });
 </script>
 	</ui:composition>
 </h:body>

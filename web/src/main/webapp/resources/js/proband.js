@@ -147,6 +147,7 @@ function handleProbandTabChange(index) {
 		break;
 	}
 	oldProbandTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }

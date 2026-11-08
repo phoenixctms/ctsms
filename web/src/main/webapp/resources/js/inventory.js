@@ -72,6 +72,7 @@ function handleInventoryTabChange(index) {
 		break;
 	}
 	oldInventoryTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }

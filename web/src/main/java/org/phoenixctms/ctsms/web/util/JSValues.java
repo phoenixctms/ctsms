@@ -392,6 +392,7 @@ public enum JSValues {
 	AUTHENTICATION_FAILED(GetParamNames.AUTHENTICATION_FAILED.toString()),
 	AUTHENTICATION_FAILED_MESSAGE(GetParamNames.AUTHENTICATION_FAILED_MESSAGE.toString()),
 	REFERER(GetParamNames.REFERER.toString()),
+	TAB(GetParamNames.TAB.toString()),
 	AJAX_KEEP_ALIVE_JS_CALLBACK("ajaxKeepAliveJsCallback"),
 	AJAX_KEEP_ALIVE_JS_CALLBACK_ARGS("ajaxKeepAliveJsCallbackArgs"),
 	AJAX_TIMELINE_RANGE_START("timelineRangeStart"),

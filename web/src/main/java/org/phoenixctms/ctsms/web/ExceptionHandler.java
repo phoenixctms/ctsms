@@ -59,19 +59,17 @@ public class ExceptionHandler extends ExceptionHandlerWrapper {
 			}
 		}
 		if (viewExpiredExceptionEventContext != null) {
-			ViewExpiredException viewExpiredException = (ViewExpiredException) viewExpiredExceptionEventContext.getException();
+			// an expired login form is redirected as well, the referer then is the page the login page would restore:
 			try {
-				if (!Urls.LOGIN.value().equals(viewExpiredException.getViewId())) {
-					FacesContext context = FacesContext.getCurrentInstance();
-					HttpServletRequest request = (HttpServletRequest) viewExpiredExceptionEventContext.getContext().getExternalContext().getRequest();
-					StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
-					url.append("?");
-					url.append(GetParamNames.EXPIRED);
-					url.append("=true");
-					WebUtil.appendRefererParameter(url, request, "&");
-					if (!context.getExternalContext().isResponseCommitted()) {
-						context.getExternalContext().redirect(url.toString());
-					}
+				FacesContext context = FacesContext.getCurrentInstance();
+				HttpServletRequest request = (HttpServletRequest) viewExpiredExceptionEventContext.getContext().getExternalContext().getRequest();
+				StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
+				url.append("?");
+				url.append(GetParamNames.EXPIRED);
+				url.append("=true");
+				WebUtil.appendRefererParameter(url, request, "&");
+				if (!context.getExternalContext().isResponseCommitted()) {
+					context.getExternalContext().redirect(url.toString());
 				}
 			} catch (IOException | IllegalStateException e) {
 			}

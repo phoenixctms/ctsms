@@ -16,6 +16,7 @@
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.trialTabTitles)}" />
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.trialVisibleTabSet}" />
+				<ui:param name="tabViewWidgetVar" value="trialTabView" />
 			</ui:include>		
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

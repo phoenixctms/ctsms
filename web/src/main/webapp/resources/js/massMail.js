@@ -39,6 +39,7 @@ function handleMassMailTabChange(index) {
 		break;
 	}
 	oldMassMailTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }

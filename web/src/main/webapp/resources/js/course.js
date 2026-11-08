@@ -55,6 +55,7 @@ function handleCourseTabChange(index) {
 		break;
 	}
 	oldCourseTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }

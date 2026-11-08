@@ -20,6 +20,7 @@
 			<ui:include src="/META-INF/includes/shared/transposeTabIndexes.xhtml" >
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.massMailTabTitles)}" />
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.massMailVisibleTabSet}" />
+				<ui:param name="tabViewWidgetVar" value="massMailTabView" />
 			</ui:include>
 			<h:panelGrid
 				columns="1"

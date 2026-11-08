@@ -47,6 +47,7 @@ function handleUserTabChange(index) {
 		break;
 	}
 	oldUserTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }

@@ -49,6 +49,7 @@ function handleInputFieldTabChange(index) {
 		break;
 	}
 	oldInputFieldTabIndex = index;
+	storeTabIndexParam(index);
 	return true;
 
 }
