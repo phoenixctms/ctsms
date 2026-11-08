@@ -127,6 +127,12 @@
     font-size: smaller;
     display: block;
 }
+/* the top-left cell names the rows and columns (eg. "Visit \ Group"), muted */
+.ctsms-groupvisitmatrix-table td span.ctsms-groupvisitmatrix-corner {
+    white-space: nowrap;
+    font-style: italic;
+    opacity: 0.6;
+}
 
 .ctsms-groupvisitmatrix-item {
     opacity: 0.6;

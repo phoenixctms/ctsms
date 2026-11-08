@@ -18,7 +18,7 @@
 				<table
 					class="ctsms-groupvisitmatrix-table ui-widget-content ui-corner-all">
 					<tr>
-						<td><span></span></td>
+						<td><span class="ctsms-groupvisitmatrix-corner">#{triallabels.matrix_groups_visits_label}</span></td>
 						<ui:repeat value="#{matrixBean.matrix.matrixVisits}" var="visit">
 							<th><span>#{empty visit.token ?
 									triallabels.empty_visit : visit.token}</span></th>
@@ -48,7 +48,7 @@
 				<table
 					class="ctsms-groupvisitmatrix-table ui-widget-content ui-corner-all">
 					<tr>
-						<td><span></span></td>
+						<td><span class="ctsms-groupvisitmatrix-corner">#{triallabels.matrix_visits_groups_label}</span></td>
 						<ui:repeat value="#{matrixBean.matrix.matrixGroups}" var="group">
 							<th><span>#{empty group.token ?
 									triallabels.empty_group : group.token}</span></th>
