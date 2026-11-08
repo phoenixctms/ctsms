@@ -121,6 +121,7 @@ import org.phoenixctms.ctsms.vo.ECRFFieldValueInVO;
 import org.phoenixctms.ctsms.vo.InquiryValueInVO;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueInVO;
+import org.phoenixctms.ctsms.vo.UserPermissionProfileInVO;
 import org.springframework.aop.MethodBeforeAdvice;
 
 public class AuthorisationInterceptor implements MethodBeforeAdvice {
@@ -1521,6 +1522,18 @@ public class AuthorisationInterceptor implements MethodBeforeAdvice {
 					return null;
 				case USER_PERMISSION_PROFILE_ID_TO_USER_ID:
 					return parameterValue == null ? null : CheckIDUtil.checkUserPermissionProfileId((Long) parameterValue, userPermissionProfileDao).getUser().getId();
+				case USER_PERMISSION_PROFILE_IN_TO_USER_ID:
+					return parameterValue == null ? null : ((UserPermissionProfileInVO) parameterValue).getUserId();
+				case USER_PERMISSION_PROFILE_IN_TO_ORIGINAL_USER_ID:
+					if (parameterValue != null) {
+						// an update may move the profile to another user, so the current owner is checked too
+						Long userPermissionProfileId = ((UserPermissionProfileInVO) parameterValue).getId();
+						if (userPermissionProfileId != null) {
+							return CheckIDUtil.checkUserPermissionProfileId(userPermissionProfileId, userPermissionProfileDao).getUser().getId();
+						}
+						return ((UserPermissionProfileInVO) parameterValue).getUserId();
+					}
+					return null;
 				case JOURNAL_ENTRY_ID_TO_INVENTORY_ID:
 					if (parameterValue != null) {
 						Inventory inventory = CheckIDUtil.checkJournalEntryId((Long) parameterValue, journalEntryDao).getInventory();
