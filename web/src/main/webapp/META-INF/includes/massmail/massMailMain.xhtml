@@ -3,6 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:h="http://java.sun.com/jsf/html">
 <h:head>
 	<title>mass mail main</title>
@@ -784,11 +785,21 @@
 										value="#{massmaillabels.mass_mail_texttemplate_label}" />
 									<h:panelGroup rendered="#{massMailBean.in.html}">
 										<p:editor id="texttemplate_html" required="true"
+											widgetVar="massMailTextTemplateHtmlEditor"
 											value="#{massMailBean.in.textTemplate}"
 											controls="font bold italic underline strikethrough color indent outdent bullets numbering image link unlink source"
 											height="280" styleClass="ctsms-editor"
 											label="#{massmaillabels.mass_mail_texttemplate}">
 										</p:editor>
+										<!-- EXPERIMENTAL_TEMPLATE_VARIABLES: the variables suggested in the html editor (see MassMailBean) -->
+										<h:panelGroup rendered="#{massMailBean.templateVariablesEnabled}">
+											<h:outputText id="templatevariables_html" style="display:none;"
+												styleClass="ctsms-mass-mail-template-variables"
+												value="#{massMailBean.templateVariablesJson}" />
+											<script type="text/javascript">
+												initMassMailTextTemplateHtmlEditor();
+											</script>
+										</h:panelGroup>
 										<p:tooltip rendered="#{enableTooltips}"
 											for="texttemplate_html">
 											<h:outputText
@@ -803,22 +814,40 @@
 								<h:panelGrid columns="1" cellpadding="0" id="texttemplate_input"
 									styleClass="ctsms-input-panelgrid"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
-									<h:outputLabel for="texttemplate"
+									<!-- EXPERIMENTAL_TEMPLATE_VARIABLES: inputTextarea or codeMirror, and the conditional for= ids (see MassMailBean) -->
+									<h:outputLabel for="#{massMailBean.templateVariablesEnabled ? 'texttemplate_code' : 'texttemplate'}"
 										rendered="#{not massMailBean.in.html}"
 										value="#{massmaillabels.mass_mail_texttemplate_label}" />
 									<h:panelGroup rendered="#{not massMailBean.in.html}">
 										<p:inputTextarea id="texttemplate" required="true"
+											rendered="#{not massMailBean.templateVariablesEnabled}"
 											value="#{massMailBean.in.textTemplate}" autoResize="false"
 											styleClass="ctsms-textarea"
 											label="#{massmaillabels.mass_mail_texttemplate}">
 										</p:inputTextarea>
-										<p:tooltip rendered="#{enableTooltips}" for="texttemplate">
+										<h:panelGroup layout="block" styleClass="ctsms-mass-mail-texttemplate-code"
+											rendered="#{massMailBean.templateVariablesEnabled}">
+											<pe:codeMirror id="texttemplate_code" required="true"
+												widgetVar="massMailTextTemplateEditor"
+												mode="velocity" theme="eclipse" lineWrapping="true"
+												value="#{massMailBean.in.textTemplate}"
+												label="#{massmaillabels.mass_mail_texttemplate}"
+												extraKeys="{ 'Ctrl-Space': function(cm) { showMassMailTemplateHint(cm); } }" />
+											<h:outputText id="templatevariables" style="display:none;"
+												styleClass="ctsms-mass-mail-template-variables"
+												value="#{massMailBean.templateVariablesJson}" />
+											<script type="text/javascript">
+												initMassMailTextTemplateEditor();
+											</script>
+										</h:panelGroup>
+										<p:tooltip rendered="#{enableTooltips}"
+											for="#{massMailBean.templateVariablesEnabled ? 'texttemplate_code' : 'texttemplate'}">
 											<h:outputText
 												value="#{massmaillabels.mass_mail_texttemplate_tooltip}"
 												escape="false" />
 										</p:tooltip>
 									</h:panelGroup>
-									<p:message for="texttemplate"
+									<p:message for="#{massMailBean.templateVariablesEnabled ? 'texttemplate_code' : 'texttemplate'}"
 										rendered="#{not massMailBean.in.html}" />
 								</h:panelGrid>
 							</h:panelGrid>

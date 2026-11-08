@@ -38,4 +38,6 @@ public interface MassMailMessageTemplateParameters {
 	public static final String MEDICATIONS = PROBAND_PREFIX + "medications";
 	public static final String BANK_ACCOUNTS = PROBAND_PREFIX + "bankaccounts";
 	public static final String PROBAND_CREATED_DATE = PROBAND_PREFIX + "create_date";
+	// joins a collection/map variable and the keys of its items in the getTemplateVariables list, eg. "proband_tagvalues.tag_name"
+	public static final String TEMPLATE_VARIABLE_MEMBER_SEPARATOR = ".";
 }

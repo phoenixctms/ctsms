@@ -2263,7 +2263,80 @@ public final class ServiceUtil {
 		if (messageParameters != null && messageParameters.size() > 0) {
 			model.putAll(messageParameters);
 		}
+		// keep getMassMailTemplateModelVariables in line with the variables put here
 		return model;
+	}
+
+	private static void addMassMailTemplateModelVariables(Collection<String> variables, String prefix, Class vo, boolean enumerateEntities, boolean excludeEncryptedFields)
+			throws Exception {
+		Iterator<KeyValueString> voFieldIt = getMassMailTemplateModelKeyValueIterator(vo, enumerateEntities, excludeEncryptedFields);
+		while (voFieldIt.hasNext()) {
+			KeyValueString keyValuePair = voFieldIt.next();
+			Iterator<ArrayList<Object>> indexesKeysIt = keyValuePair.getIndexesKeys(null).iterator();
+			while (indexesKeysIt.hasNext()) {
+				variables.add(prefix + keyValuePair.getKey(indexesKeysIt.next()));
+			}
+		}
+	}
+
+	private static void addMassMailTemplateModelCollectionVariables(Collection<String> variables, String name, Class itemVo, boolean enumerateEntities,
+			boolean excludeEncryptedFields) throws Exception {
+		variables.add(name);
+		addMassMailTemplateModelVariables(variables, name + MassMailMessageTemplateParameters.TEMPLATE_VARIABLE_MEMBER_SEPARATOR, itemVo, enumerateEntities,
+				excludeEncryptedFields);
+	}
+
+	public static Collection<String> getMassMailTemplateModelVariables() throws Exception {
+		boolean enumerateEntities = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES, Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_ENUMERATE_ENTITIES);
+		boolean excludeEncryptedFields = Settings.getBoolean(SettingCodes.MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS, Bundle.SETTINGS,
+				DefaultSettings.MASS_MAIL_TEMPLATE_MODEL_OMIT_ENCRYPTED_FIELDS);
+		TreeSet<String> variables = new TreeSet<String>();
+		addMassMailTemplateModelVariables(variables, MassMailMessageTemplateParameters.MASS_MAIL_PREFIX, MassMailOutVO.class, enumerateEntities, excludeEncryptedFields);
+		addMassMailTemplateModelVariables(variables, MassMailMessageTemplateParameters.PROBAND_PREFIX, ProbandOutVO.class, enumerateEntities, excludeEncryptedFields);
+		addMassMailTemplateModelVariables(variables, MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_OUT_VO_PREFIX, ProbandListEntryOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		variables.add(MassMailMessageTemplateParameters.PROBAND_CREATED_DATE);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.PROBAND_TAG_VALUES, ProbandTagValueOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.PROBAND_CONTACT_DETAIL_VALUES, ProbandContactDetailValueOutVO.class,
+				enumerateEntities, excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.PROBAND_ADDRESSES, ProbandAddressOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.DIAGNOSES, DiagnosisOutVO.class, enumerateEntities, excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.PROCEDURES, ProcedureOutVO.class, enumerateEntities, excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.MEDICATIONS, MedicationOutVO.class, enumerateEntities, excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.BANK_ACCOUNTS, BankAccountOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.TRIAL_TAG_VALUES, TrialTagValueOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES, ProbandListEntryTagValueOutVO.class,
+				enumerateEntities, excludeEncryptedFields);
+		variables.add(MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES + MassMailMessageTemplateParameters.TEMPLATE_VARIABLE_MEMBER_SEPARATOR
+				+ MassMailMessageTemplateParameters.PROBAND_LIST_ENTRY_TAG_VALUES_VALUE);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEMS, VisitScheduleItemOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.VISIT_SCHEDULE_ITEM, VisitScheduleItemOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.ECRF_STATUS_ENTRY, ECRFStatusEntryVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.TRIAL_INVENTORY_BOOKINGS, InventoryBookingOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		addMassMailTemplateModelCollectionVariables(variables, MassMailMessageTemplateParameters.PROBAND_INVENTORY_BOOKINGS, InventoryBookingOutVO.class, enumerateEntities,
+				excludeEncryptedFields);
+		variables.add(MassMailMessageTemplateParameters.SUBJECT);
+		variables.add(MassMailMessageTemplateParameters.PROBAND_SALUTATION);
+		variables.add(MassMailMessageTemplateParameters.PHYSICIAN_SALUTATION);
+		variables.add(MassMailMessageTemplateParameters.MASS_MAIL_BEACON_UNSUBSCRIBE_URL.toString());
+		variables.add(MassMailMessageTemplateParameters.PROBAND_BEACON_UNSUBSCRIBE_URL.toString());
+		variables.add(MassMailMessageTemplateParameters.MASS_MAIL_BEACON_CONFIRM_URL.toString());
+		variables.add(MassMailMessageTemplateParameters.PROBAND_BEACON_CONFIRM_URL.toString());
+		variables.add(MassMailMessageTemplateParameters.GENERATED_ON);
+		variables.add(MassMailMessageTemplateParameters.INSTANCE_NAME);
+		variables.add(MassMailMessageTemplateParameters.HTTP_BASE_URL);
+		variables.add(MassMailMessageTemplateParameters.HTTP_DOMAIN_NAME);
+		variables.add(MassMailMessageTemplateParameters.STRING_UTILS);
+		return new ArrayList<String>(variables);
 	}
 
 	public static Password createPassword(boolean resetLogons, boolean resetOtpSecret, Password password, User user, Timestamp timestamp,
