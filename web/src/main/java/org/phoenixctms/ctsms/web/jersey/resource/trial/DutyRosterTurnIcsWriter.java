@@ -7,14 +7,12 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import org.phoenixctms.ctsms.domain.Staff;
-import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DutyRosterTurnOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 import org.phoenixctms.ctsms.vo.VisitScheduleItemOutVO;
 import org.phoenixctms.ctsms.web.util.MessageCodes;
 import org.phoenixctms.ctsms.web.util.Messages;
@@ -27,10 +25,15 @@ final class DutyRosterTurnIcsWriter {
 	private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
 	static String calendarName(AuthenticationVO auth) {
+		UserOutVO user = null;
+		try {
+			user = WebUtil.getServiceLocator().getToolsService().getAuthenticatedUser(auth);
+		} catch (Exception e) {
+		}
 		StringBuilder sb = new StringBuilder();
-		appendPart(sb, org.phoenixctms.ctsms.util.Settings.getInstanceName());
-		appendPart(sb, dutyRosterLabel());
-		appendPart(sb, identityName(auth));
+		appendPart(sb, WebUtil.getInstanceName());
+		appendPart(sb, dutyRosterLabel(user));
+		appendPart(sb, identityName(user));
 		return sb.toString();
 	}
 
@@ -130,11 +133,10 @@ final class DutyRosterTurnIcsWriter {
 		sb.append(value.trim());
 	}
 
-	private static String dutyRosterLabel() {
+	private static String dutyRosterLabel(UserOutVO user) {
 		Locale locale = null;
-		try {
-			locale = CoreUtil.getUserContext().getLocale();
-		} catch (Exception e) {
+		if (user != null && !CommonUtil.isEmptyString(user.getLocale())) {
+			locale = CommonUtil.localeFromString(user.getLocale());
 		}
 		try {
 			return CommonUtil.getString(MessageCodes.DUTY_ROSTER_SCHEDULE_MENU_ITEM_LABEL, CommonUtil.getBundle(Messages.MESSAGE_BUNDLE_DEFAULT, locale), "Duty Roster");
@@ -143,22 +145,13 @@ final class DutyRosterTurnIcsWriter {
 		}
 	}
 
-	private static String identityName(AuthenticationVO auth) {
-		if (auth == null) {
-			return "";
-		}
-		User user = CoreUtil.getUser();
-		Staff identity = user == null ? null : user.getIdentity();
+	private static String identityName(UserOutVO user) {
+		StaffOutVO identity = user == null ? null : user.getIdentity();
 		if (identity == null) {
 			return "";
 		}
-		try {
-			StaffOutVO staff = WebUtil.getServiceLocator().getStaffService().getStaff(auth, identity.getId(), null, null, null);
-			String name = CommonUtil.staffOutVOToString(staff);
-			return name == null ? "" : name;
-		} catch (Exception e) {
-			return "";
-		}
+		String name = CommonUtil.staffOutVOToString(identity);
+		return name == null ? "" : name;
 	}
 
 	private static void appendSeparated(StringBuilder sb, String value) {

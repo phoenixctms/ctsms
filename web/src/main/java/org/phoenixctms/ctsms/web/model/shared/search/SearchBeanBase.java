@@ -31,7 +31,6 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
-import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.CriterionTextSyntaxError;
 import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
@@ -1810,7 +1809,7 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		}
 		ArrayList<String[]> options = promptOptionMap == null ? null : promptOptionMap.get(propertyVO.getId());
 		boolean namedEntity = WebUtil.testPicker(propertyVO)
-				|| (!CommonUtil.isEmptyString(propertyVO.getEntityName()) && !CoreUtil.isEnumerationClass(propertyVO.getEntityName()));
+				|| (!CommonUtil.isEmptyString(propertyVO.getEntityName()) && !CommonUtil.isEnumerationClass(propertyVO.getEntityName()));
 		if ((options == null || options.isEmpty()) && namedEntity) {
 			return (json ? queryTextValueField(propertyVO.getValueType()) + " " : "")
 					+ Labels.getStringLocalized(json ? "search_query_text_prompt_value_id" : "search_query_text_prompt_value_name");

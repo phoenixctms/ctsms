@@ -187,6 +187,7 @@ public final class CommonUtil {
 	public static final String INPUT_TYPE_NOT_SUPPORTED = "type {0} not supported";
 	public static final String UNSUPPORTED_CRITERION_VALUE_TYPE = "unsupported criterion value type {0}";
 	private final static String INVALID_MESSAGE_FORMAT_PATTERN = "invalid message format pattern {0}";
+	private final static String ENUMERATIONS_PACKAGE_NAME = "org.phoenixctms.ctsms.enumeration";
 	private final static String INVALID_SQL_LIKE_PATTERN = "invalid sql like pattern {0}";
 	private final static HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction> UNARY_RESTRICTIONS = new HashSet<org.phoenixctms.ctsms.enumeration.CriterionRestriction>();
 	static {
@@ -2285,6 +2286,15 @@ public final class CommonUtil {
 
 	public static boolean isEmptyString(String string) {
 		return !(string != null && string.trim().length() > 0);
+	}
+
+	public static boolean isEnumerationClass(String name) {
+		try {
+			Class.forName(ENUMERATIONS_PACKAGE_NAME + "." + name);
+			return true;
+		} catch (ClassNotFoundException e) {
+		}
+		return false;
 	}
 
 	public static boolean isMultiLineString(String string) {
