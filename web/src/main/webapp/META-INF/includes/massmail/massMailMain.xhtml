@@ -765,7 +765,10 @@
 									<h:panelGroup>
 										<p:selectBooleanCheckbox id="html"
 											value="#{massMailBean.in.html}">
-											<p:ajax process="@this"
+											<!-- keep the text typed in the template field shown so far; the template fields are not
+												required for this request (see their required attribute), so an empty one does not block the switch -->
+											<p:ajax process="@this,texttemplate,texttemplate_code,texttemplate_html"
+												listener="#{massMailBean.handleHtmlChange}"
 												update="texttemplate_input,texttemplate_html_input" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip rendered="#{enableTooltips}" for="html">
@@ -781,10 +784,10 @@
 									styleClass="ctsms-input-panelgrid" id="texttemplate_html_input"
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 									<h:outputLabel for="texttemplate_html"
-										rendered="#{massMailBean.in.html}"
+										rendered="#{massMailBean.htmlTemplateShown}"
 										value="#{massmaillabels.mass_mail_texttemplate_label}" />
-									<h:panelGroup rendered="#{massMailBean.in.html}">
-										<p:editor id="texttemplate_html" required="true"
+									<h:panelGroup rendered="#{massMailBean.htmlTemplateShown}">
+										<p:editor id="texttemplate_html" required="#{param['javax.faces.source'] ne p:component('html')}"
 											widgetVar="massMailTextTemplateHtmlEditor"
 											value="#{massMailBean.in.textTemplate}"
 											controls="font bold italic underline strikethrough color indent outdent bullets numbering image link unlink source"
@@ -808,7 +811,7 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="texttemplate_html"
-										rendered="#{massMailBean.in.html}" />
+										rendered="#{massMailBean.htmlTemplateShown}" />
 								</h:panelGrid>
 
 								<h:panelGrid columns="1" cellpadding="0" id="texttemplate_input"
@@ -816,10 +819,10 @@
 									rowClasses="ctsms-textarea-label-for-row,ctsms-textarea-input-row,ctsms-textarea-message-for-row">
 									<!-- EXPERIMENTAL_TEMPLATE_VARIABLES: inputTextarea or codeMirror, and the conditional for= ids (see MassMailBean) -->
 									<h:outputLabel for="#{massMailBean.templateVariablesEnabled ? 'texttemplate_code' : 'texttemplate'}"
-										rendered="#{not massMailBean.in.html}"
+										rendered="#{not massMailBean.htmlTemplateShown}"
 										value="#{massmaillabels.mass_mail_texttemplate_label}" />
-									<h:panelGroup rendered="#{not massMailBean.in.html}">
-										<p:inputTextarea id="texttemplate" required="true"
+									<h:panelGroup rendered="#{not massMailBean.htmlTemplateShown}">
+										<p:inputTextarea id="texttemplate" required="#{param['javax.faces.source'] ne p:component('html')}"
 											rendered="#{not massMailBean.templateVariablesEnabled}"
 											value="#{massMailBean.in.textTemplate}" autoResize="false"
 											styleClass="ctsms-textarea"
@@ -827,7 +830,7 @@
 										</p:inputTextarea>
 										<h:panelGroup layout="block" styleClass="ctsms-mass-mail-texttemplate-code"
 											rendered="#{massMailBean.templateVariablesEnabled}">
-											<pe:codeMirror id="texttemplate_code" required="true"
+											<pe:codeMirror id="texttemplate_code" required="#{param['javax.faces.source'] ne p:component('html')}"
 												widgetVar="massMailTextTemplateEditor"
 												mode="velocity" theme="eclipse" lineWrapping="true"
 												value="#{massMailBean.in.textTemplate}"
@@ -848,7 +851,7 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="#{massMailBean.templateVariablesEnabled ? 'texttemplate_code' : 'texttemplate'}"
-										rendered="#{not massMailBean.in.html}" />
+										rendered="#{not massMailBean.htmlTemplateShown}" />
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:fieldset>

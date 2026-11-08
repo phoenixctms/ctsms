@@ -234,6 +234,7 @@ public class MassMailBean extends ManagedBeanBase {
 	private String previewSubject;
 	private String previewText;
 	private String deferredDeleteReason;
+	private Boolean htmlTemplateShown;
 	// EXPERIMENTAL_TEMPLATE_VARIABLES
 	private List<String> templateVariables;
 
@@ -647,6 +648,20 @@ public class MassMailBean extends ManagedBeanBase {
 		} else {
 			initMassMailDefaultValues(in, WebUtil.getUser());
 		}
+		htmlTemplateShown = null;
+	}
+
+	// the template editor (html or text) stays the one shown until the html checkbox request processed the text typed
+	// into it. the checkbox comes first and sets in.html, so the editor would otherwise be skipped as not rendered.
+	public boolean isHtmlTemplateShown() {
+		if (htmlTemplateShown == null) {
+			htmlTemplateShown = in.getHtml();
+		}
+		return htmlTemplateShown;
+	}
+
+	public void handleHtmlChange() {
+		htmlTemplateShown = in.getHtml();
 	}
 
 	private void initSets() {
