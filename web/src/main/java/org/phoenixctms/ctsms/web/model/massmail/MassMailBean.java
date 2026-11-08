@@ -234,6 +234,8 @@ public class MassMailBean extends ManagedBeanBase {
 	private String previewSubject;
 	private String previewText;
 	private String deferredDeleteReason;
+	// EXPERIMENTAL_TEMPLATE_VARIABLES
+	private List<String> templateVariables;
 
 	public MassMailBean() {
 		super();
@@ -488,6 +490,36 @@ public class MassMailBean extends ManagedBeanBase {
 	// EXPERIMENTAL_MULTIPLE_STATES
 	public void setEcrfStatusId(Long ecrfStatusId) {
 		setSingleId(in.getEcrfStatusIds(), ecrfStatusId);
+	}
+
+	// EXPERIMENTAL_TEMPLATE_VARIABLES: suggesting the template variables (a code editor for the text template, and
+	// a popup in the html editor) is limited to experimental users. Other users get the plain text area. To drop
+	// the limit, remove everything marked EXPERIMENTAL_TEMPLATE_VARIABLES here and in massMailMain.xhtml (the
+	// p:inputTextarea and the rendered attributes).
+	public boolean isTemplateVariablesEnabled() {
+		SessionScopeBean sessionScopeBean = WebUtil.getSessionScopeBean();
+		return sessionScopeBean != null && sessionScopeBean.isExperimentalUser();
+	}
+
+	// EXPERIMENTAL_TEMPLATE_VARIABLES
+	private List<String> getTemplateVariables() {
+		if (templateVariables == null) {
+			templateVariables = new ArrayList<String>();
+			if (isTemplateVariablesEnabled()) {
+				try {
+					templateVariables.addAll(WebUtil.getServiceLocator().getMassMailService().getTemplateVariables(WebUtil.getAuthentication()));
+				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				}
+			}
+		}
+		return templateVariables;
+	}
+
+	// EXPERIMENTAL_TEMPLATE_VARIABLES
+	public String getTemplateVariablesJson() {
+		return isTemplateVariablesEnabled() ? JsUtil.voToJson(getTemplateVariables()) : null;
 	}
 
 	public boolean getShowTerminalStateMessage() {

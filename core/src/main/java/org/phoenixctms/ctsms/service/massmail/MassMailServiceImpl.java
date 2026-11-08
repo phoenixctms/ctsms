@@ -756,6 +756,11 @@ public class MassMailServiceImpl
 	}
 
 	@Override
+	protected Collection<String> handleGetTemplateVariables(AuthenticationVO auth) throws Exception {
+		return ServiceUtil.getMassMailTemplateModelVariables();
+	}
+
+	@Override
 	protected String handleGetText(AuthenticationVO auth, MassMailInVO massMailIn, Long probandId) throws Exception {
 		return ServiceUtil.getMassMailMessage(velocityEngine, createMassMailOutVO(massMailIn),
 				probandId != null ? this.getProbandDao().toProbandOutVO(this.getProbandDao().load(probandId)) : null, null, null,
