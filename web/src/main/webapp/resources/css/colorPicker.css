@@ -1,3 +1,5 @@
+/* border, background and text colours of the palette and its hex input come from the theme classes sketch.js adds.
+   the swatches and the picker keep their frame, which shows light colours */
 div.colorPicker-picker {
 	height: 24px;
 	width: 24px;
@@ -11,8 +13,6 @@ div.colorPicker-picker {
 div.colorPicker-palette {
 	width: 132px;
 	position: absolute;
-	border: 1px solid #598FEF;
-	background-color: #EFEFEF;
 	padding: 2px;
 	z-index: 9999;
 }
@@ -24,7 +24,6 @@ div.colorPicker_hexWrap {
 
 div.colorPicker_hexWrap label {
 	font-size: 95%;
-	color: #2F2F2F;
 	margin: 5px 2px;
 	width: 25%
 }
@@ -33,7 +32,6 @@ div.colorPicker_hexWrap input {
 	margin: 5px 2px;
 	padding: 0;
 	font-size: 95%;
-	border: 1px solid #000;
 	width: 65%;
 }
 
