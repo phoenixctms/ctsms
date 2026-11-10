@@ -426,6 +426,9 @@ var Sketch = Sketch || {};
 			    transparency : false,
 
 			});
+			// the plugin appends its palette to the body: give it the theme's look (colorPicker.css keeps only the sizes)
+			jQuery(".colorPicker-palette").not(".ui-widget").addClass("ui-widget ui-widget-content ui-corner-all ui-shadow")
+				.find(".colorPicker_hexWrap input").addClass("ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all");
 
 			colorPicker.change(function() {
 				pen.color(colorPicker.val());
