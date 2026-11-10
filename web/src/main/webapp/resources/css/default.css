@@ -319,14 +319,23 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
     padding: 0px 0px;
 }
 
+/* primefaces removes the inner border of left/right tabs with a border-right/left shorthand, which also resets its colour to the text colour.
+   the tab list has no border of its own, so it passes the tab view's (ui-widget-content) border colour on to the tabs */
+.ui-tabs.ui-tabs-left > .ui-tabs-nav,
+.ui-tabs.ui-tabs-right > .ui-tabs-nav {
+	border-color: inherit;
+}
+
 .ui-tabs.ui-tabs-left > .ui-tabs-nav li {
 	border-right-width: 1px;
 	border-right-style: solid;
+	border-right-color: inherit;
 }
 
 .ui-tabs.ui-tabs-right > .ui-tabs-nav li {
 	border-left-width: 1px;
 	border-left-style: solid;
+	border-left-color: inherit;
 }
 
 
