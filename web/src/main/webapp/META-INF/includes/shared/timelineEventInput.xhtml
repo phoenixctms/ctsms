@@ -73,8 +73,8 @@
 				global="#{autoCompleteGlobalTimelineEvent}"
 				scrollHeight="#{autoCompleteScrollHeightTimelineEvent}"
 				completeMethod="#{timelineEventBean.completeParent}"
-				forceSelection="true" var="timelineEvent"
-				itemValue="#{timelineEvent}" itemLabel="#{timelineEvent.vo.title}"
+				forceSelection="true" var="parentTimelineEvent"
+				itemValue="#{parentTimelineEvent}" itemLabel="#{parentTimelineEvent.vo.title}"
 				converter="ctsms.TimelineEvent">
 				<p:ajax process="@this" event="itemSelect"
 					listener="#{timelineEventBean.handleParentSelect}" />
@@ -82,31 +82,31 @@
 					listener="#{timelineEventBean.handleParentUnselect}" />
 				<p:column>
 					<ui:include src="../shared/listIcon.xhtml">
-						<ui:param name="label" value="#{timelineEvent.vo.title}" />
+						<ui:param name="label" value="#{parentTimelineEvent.vo.title}" />
 						<ui:param name="icon"
-							value="#{timelineEvent.vo.type.nodeStyleClass}" />
+							value="#{parentTimelineEvent.vo.type.nodeStyleClass}" />
 						<ui:param name="rendered" value="true" />
 					</ui:include>
 				</p:column>
 				<f:facet name="itemtip">
 					<h:panelGrid columns="1" cellpadding="0"
 						styleClass="ctsms-timelineevent-itemtip-panelgrid">
-						<h:outputText styleClass="ctsms-timelineevent-itemtip-em" value="#{timelineEvent.vo.title}" />
+						<h:outputText styleClass="ctsms-timelineevent-itemtip-em" value="#{parentTimelineEvent.vo.title}" />
 						<h:outputText
-							value="#{applicationScopeBean.timelineEventToStartStopString(timelineEvent.vo)}" />
-						<h:outputText value="#{triallabels.timeline_event_parent_label}" rendered="#{not empty timelineEvent.vo.parent}"/>
-						<h:panelGroup rendered="#{not empty timelineEvent.vo.parent}">
+							value="#{applicationScopeBean.timelineEventToStartStopString(parentTimelineEvent.vo)}" />
+						<h:outputText value="#{triallabels.timeline_event_parent_label}" rendered="#{not empty parentTimelineEvent.vo.parent}"/>
+						<h:panelGroup rendered="#{not empty parentTimelineEvent.vo.parent}">
 							<ul><li><h:outputText styleClass="ctsms-timelineevent-itemtip-em"
-								value="#{timelineEvent.vo.parent.title}" />
+								value="#{parentTimelineEvent.vo.parent.title}" />
 							<br />
 							<h:outputText
-								value="#{applicationScopeBean.timelineEventToStartStopString(timelineEvent.vo.parent)}" />
+								value="#{applicationScopeBean.timelineEventToStartStopString(parentTimelineEvent.vo.parent)}" />
 							</li></ul>
 						</h:panelGroup>
-						<h:outputText value="#{triallabels.timeline_event_children_label}" rendered="#{not empty timelineEvent.vo.children}"/>
-						<h:panelGroup rendered="#{not empty timelineEvent.vo.children}">
+						<h:outputText value="#{triallabels.timeline_event_children_label}" rendered="#{not empty parentTimelineEvent.vo.children}"/>
+						<h:panelGroup rendered="#{not empty parentTimelineEvent.vo.children}">
 							<ul>
-								<ui:repeat value="#{timelineEvent.vo.children}" var="child">
+								<ui:repeat value="#{parentTimelineEvent.vo.children}" var="child">
 									<li><h:outputText styleClass="ctsms-timelineevent-itemtip-em"
 											value="#{child.title}" /><br /> <h:outputText
 											value="#{applicationScopeBean.timelineEventToStartStopString(child)}" /></li>
