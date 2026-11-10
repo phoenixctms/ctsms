@@ -275,11 +275,14 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	display: none;
 }
 
+/* the border comes from the theme (ui-widget-content), the editor keeps its white background for the eclipse code colours */
+.ctsms-query-text-editor-frame {
+	margin-top: 4px;
+}
+
 /* sizeQueryTextEditor() fits the height to the panel, this is the start value */
 .ctsms-query-text-panel .CodeMirror {
 	height: min(360px, calc(100vh - 390px));
-	margin-top: 4px;
-	border: 1px solid #bdbdbd;
 	font-size: 13px;
 }
 
@@ -287,15 +290,15 @@ table.ctsms-criterion-position tr:nth-child(2) {
 	height: 100% !important;
 }
 
+/* border and colours from the theme (ui-widget-content, ui-widget-header) */
 .ctsms-query-text-progress {
 	margin-top: 4px;
-	border: 1px solid #bdbdbd;
 }
 
-.ctsms-query-text-progress-header {
+/* only the line below the header, the box draws the outer border */
+.ctsms-query-text-progress > .ctsms-query-text-progress-header {
 	padding: 2px 4px;
-	background-color: #eeeeee;
-	font-weight: bold;
+	border-width: 0 0 1px 0;
 }
 
 .ctsms-query-text-progress-steps {
