@@ -5,10 +5,6 @@ body {
 	color: #616161;
 }
 
-.ctsms-js-off .ctsms-js-only {
-	display: none;
-}
-
 /* http://stackoverflow.com/questions/8856704/ie8-and-primefaces-pselectonemenu-misbehave-when-having-a-lots-of-pselectoneme */
 td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	display: block;
@@ -340,10 +336,6 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 	cursor: pointer;
 }
 
-.ctsms-tabtitle a {
-
-}
-
 .ctsms-tabtitle-emphasized {
 	cursor: pointer;
 }
@@ -551,10 +543,6 @@ td .ui-selectonemenu,td .ui-selectcheckboxmenu {
 
 .ctsms-picker-multi-header-label-column {
 	width: 100%;
-}
-
-.ctsms-picker-multi-header-btn-column {
-
 }
 
 .ctsms-password {
@@ -899,16 +887,6 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type >
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */	
 }
-.ctsms-multilinetext-large {
-	font-size: 2.0em !important;
-	margin: 0px;
-	
-    white-space: pre-wrap;       /* Since CSS 2.1 */
-    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-    white-space: -pre-wrap;      /* Opera 4-6 */
-    white-space: -o-pre-wrap;    /* Opera 7 */
-    word-wrap: break-word;       /* Internet Explorer 5.5+ */	
-}
 
 .ctsms-text-column {
 	white-space: nowrap;
@@ -1013,10 +991,6 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type >
 	padding-top: 0.5em;
 }
 
-.ctsms-fieldrow-label-for-indent-row {
-
-}
-
 .ctsms-fieldrow-input-indent-row {
 	width: 100%;
 }
@@ -1041,10 +1015,6 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type >
 .ctsms-codemirror-input-row>td {
 	border: thin solid black;
 	width: 50%;
-}
-
-.ctsms-codemirror-message-for-row {
-
 }
 
 .ctsms-sketchpad-label-for-row {
@@ -1081,10 +1051,6 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type >
 	height: 100%;
 }
 
-.ctsms-input-tied-row {
-
-}
-
 .ctsms-textarea-row {
 	vertical-align: top;
 	height: 100%;
@@ -1107,21 +1073,6 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type >
 
 .ctsms-filters-button-column {
 	width: 32px;
-}
-
-.ctsms-schedule-row {
-	vertical-align: top;
-	height: 100%;
-}
-
-.ctsms-chart-row {
-	vertical-align: top;
-	height: 100%;
-}
-
-.ctsms-timeline-row {
-	vertical-align: top;
-	height: 100%;
 }
 
 .ctsms-timeline-group {
@@ -1163,20 +1114,8 @@ div.timeline-event-content {
 	height: 400px !important;
 }
 
-.ctsms-message-row {
-
-}
-
-.ctsms-toolbar-row {
-
-}
-
 .ctsms-ecrf-section-series {
 	border-style: dashed;
-}
-
-.ctsms-ecrf-section {
-
 }
 
 .ctsms-values-datagrid-1>div>table>tbody>tr>td>table>tbody>tr>td {
@@ -1411,20 +1350,12 @@ div.timeline-event-content {
 	width: 100%;
 }
 
-.ctsms-pages-pagesize-column {
-
-}
-
 .ctsms-pages-button-column {
 	white-space: nowrap;
 }
 
 .ctsms-pages-button-column .ui-buttonset {
 	margin-right: 1px;
-}
-
-.ctsms-pages-navbutton-column {
-
 }
 
 .ctsms-login-notification-row {
@@ -1548,11 +1479,6 @@ table.ctsms-file-content-panelgrid > tbody > tr > td > .ctsms-file-input-panelgr
 	height: auto;
 }
 
-.ctsms-fileupload-row {
-	vertical-align: top;
-	height: 100%;
-}
-
 .ctsms-upload-control {
 	height: 100%;
 }
@@ -1673,20 +1599,12 @@ table.ctsms-file-content-panelgrid > tbody > tr > td > .ctsms-file-input-panelgr
 	background-color: rgba(255, 69, 0, 0.25); /* orangered */
 }
 
-.ctsms-rowexpansion-tabview {
-
-}
-
 .ctsms-menubar {
 	width: 100%;
 }
 
 .ctsms-menubar-column {
 	white-space: nowrap;
-}
-
-.ctsms-welcome-column {
-
 }
 
 .ctsms-welcome-panelgrid {
@@ -1740,10 +1658,6 @@ table.ctsms-file-content-panelgrid > tbody > tr > td > .ctsms-file-input-panelgr
 
 .ctsms-signatureicon-column {
 	width: 54px !important;
-}
-
-.ctsms-signaturedescription-column {
-
 }
 
 .ctsms-notificationlist-header-text-column {
@@ -1951,10 +1865,6 @@ overflow-y:scroll;
 	border: none;
 }
 
-.ctsms-recent-notification {
-
-}
-
 .ctsms-obsolete-notification {
 	background: none;
 	background-color: #dcdcdc;
@@ -2132,14 +2042,6 @@ overflow-y:scroll;
 
 .ctsms-icon-loading {
 	background-image: url(../resources/images/css/loading.gif) !important;
-}
-
-.ctsms-ajax-success {
-	background-image: url(../resources/images/css/accept.png) !important;
-}
-
-.ctsms-ajax-error {
-	background-image: url(../resources/images/css/exclamation.gif) !important;
 }
 
 .ctsms-icon-error {
