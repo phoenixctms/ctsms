@@ -247,17 +247,19 @@
 										readonly="true" styleClass="ctsms-query-text-prompt-source" />
 								</h:panelGroup>
 							</h:panelGrid>
-							<pe:codeMirror id="query_text" widgetVar="queryTextEditor"
-								mode="#{searchBean.queryTextCodeMirrorMode}" theme="eclipse"
-								value="#{searchBean.queryText}"
-								label="#{labels.search_query_text_tab_label}"
-								required="false" lineWrapping="true" lineNumbers="true"
-								style="width:100%;"
-								styleClass="ctsms-query-text-editor" />
+							<h:panelGroup layout="block" styleClass="ctsms-query-text-editor-frame ui-widget-content">
+								<pe:codeMirror id="query_text" widgetVar="queryTextEditor"
+									mode="#{searchBean.queryTextCodeMirrorMode}" theme="eclipse"
+									value="#{searchBean.queryText}"
+									label="#{labels.search_query_text_tab_label}"
+									required="false" lineWrapping="true" lineNumbers="true"
+									style="width:100%;"
+									styleClass="ctsms-query-text-editor" />
+							</h:panelGroup>
 							<h:panelGroup id="query_text_progress" layout="block">
-								<h:panelGroup layout="block" styleClass="ctsms-query-text-progress"
+								<h:panelGroup layout="block" styleClass="ctsms-query-text-progress ui-widget-content"
 									rendered="#{searchBean.queryTextRunShown}">
-									<h:panelGroup layout="block" styleClass="ctsms-query-text-progress-header">
+									<h:panelGroup layout="block" styleClass="ctsms-query-text-progress-header ui-widget-header">
 										<h:outputText value="#{searchBean.queryTextRunStatus}" />
 									</h:panelGroup>
 									<h:panelGroup layout="block" styleClass="ctsms-query-text-progress-steps">
