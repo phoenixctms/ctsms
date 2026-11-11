@@ -995,7 +995,7 @@ public final class CoreUtil implements ApplicationContextAware {
 		}
 		try {
 			String username = auth.getUsername() != null ? auth.getUsername().trim() : "";
-			String password = auth.getPassword() != null ? auth.getPassword().trim() : "";
+			String password = escapeCommandLiteral(auth.getPassword() != null ? auth.getPassword().trim() : "");
 			String jwtAuth = getJobJwt(authenticator);
 			String command = MessageFormat.format(job.getType().getCommandFormat(),
 					Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL),
@@ -1026,7 +1026,8 @@ public final class CoreUtil implements ApplicationContextAware {
 	private static final long PROCESS_DRAIN_JOIN_MILLISECONDS = 5000L;
 
 	// Whitespace splits arguments. Text inside double quotes stays in that argument, and the
-	// quote characters are dropped. ProcessBuilder does not run a shell, so quoting is applied here.
+	// quote characters are dropped. A backslash keeps the next character, so a quote inside a
+	// substituted password does not open or close a quoted argument.
 	static String[] splitCommand(String command) {
 		ArrayList<String> args = new ArrayList<String>();
 		StringBuilder token = new StringBuilder();
@@ -1034,6 +1035,11 @@ public final class CoreUtil implements ApplicationContextAware {
 		boolean pending = false;
 		for (int i = 0; i < command.length(); i++) {
 			char c = command.charAt(i);
+			if (c == '\\' && i + 1 < command.length()) {
+				token.append(command.charAt(++i));
+				pending = true;
+				continue;
+			}
 			if (quoted) {
 				if (c == '"') {
 					quoted = false;
@@ -1062,6 +1068,23 @@ public final class CoreUtil implements ApplicationContextAware {
 			args.add(token.toString());
 		}
 		return args.toArray(new String[args.size()]);
+	}
+
+	// Placeholder {3} is the password and is copied into the command string. Escape quotes and
+	// backslashes so splitCommand keeps them as characters of that argument.
+	private static String escapeCommandLiteral(String value) {
+		if (value.indexOf('\\') < 0 && value.indexOf('"') < 0) {
+			return value;
+		}
+		StringBuilder escaped = new StringBuilder(value.length() + 4);
+		for (int i = 0; i < value.length(); i++) {
+			char c = value.charAt(i);
+			if (c == '\\' || c == '"') {
+				escaped.append('\\');
+			}
+			escaped.append(c);
+		}
+		return escaped.toString();
 	}
 
 	// Keep the newest stderr, capped at captureLimit, so a late failure is what runProcess throws.
