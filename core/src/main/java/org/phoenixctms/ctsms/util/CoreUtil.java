@@ -31,7 +31,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
@@ -1026,13 +1025,43 @@ public final class CoreUtil implements ApplicationContextAware {
 	private static final int PROCESS_STDERR_CAPTURE_LIMIT = 64 * 1024;
 	private static final long PROCESS_DRAIN_JOIN_MILLISECONDS = 5000L;
 
-	private static String[] splitCommand(String command) {
-		StringTokenizer st = new StringTokenizer(command);
-		String[] cmd = new String[st.countTokens()];
-		for (int i = 0; st.hasMoreTokens(); i++) {
-			cmd[i] = st.nextToken();
+	// Whitespace splits arguments. Text inside double quotes stays in that argument, and the
+	// quote characters are dropped. ProcessBuilder does not run a shell, so quoting is applied here.
+	static String[] splitCommand(String command) {
+		ArrayList<String> args = new ArrayList<String>();
+		StringBuilder token = new StringBuilder();
+		boolean quoted = false;
+		boolean pending = false;
+		for (int i = 0; i < command.length(); i++) {
+			char c = command.charAt(i);
+			if (quoted) {
+				if (c == '"') {
+					quoted = false;
+				} else {
+					token.append(c);
+				}
+				pending = true;
+			} else if (c == '"') {
+				quoted = true;
+				pending = true;
+			} else if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f') {
+				if (pending) {
+					args.add(token.toString());
+					token.setLength(0);
+					pending = false;
+				}
+			} else {
+				token.append(c);
+				pending = true;
+			}
 		}
-		return cmd;
+		if (quoted) {
+			throw new IllegalArgumentException("Unclosed quote in command");
+		}
+		if (pending) {
+			args.add(token.toString());
+		}
+		return args.toArray(new String[args.size()]);
 	}
 
 	// Keep the newest stderr, capped at captureLimit, so a late failure is what runProcess throws.
