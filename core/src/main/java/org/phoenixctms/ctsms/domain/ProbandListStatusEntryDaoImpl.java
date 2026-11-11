@@ -10,14 +10,17 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.compare.VOIDComparator;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
@@ -29,6 +32,7 @@ import org.phoenixctms.ctsms.security.reencrypt.ReEncrypter;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.PSFVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListStatusChartEntryVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
@@ -129,6 +133,43 @@ public class ProbandListStatusEntryDaoImpl
 		}
 		CriteriaUtil.applyPSFVO(criteriaMap, psf);
 		return statusEntryCriteria.list();
+	}
+
+	@Override
+	protected Collection<ProbandListStatusChartEntryVO> handleFindChartEntriesByTrial(Long trialId, Boolean initial) throws Exception {
+		org.hibernate.Criteria statusEntryCriteria = createStatusEntryCriteria("probandListStatusEntry");
+		Criteria listEntryCriteria = statusEntryCriteria.createCriteria("listEntry", CriteriaSpecification.INNER_JOIN);
+		if (trialId != null) {
+			listEntryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		Criteria probandCriteria = listEntryCriteria.createCriteria("proband", "proband", CriteriaSpecification.INNER_JOIN);
+		probandCriteria.createCriteria("department", "department", CriteriaSpecification.LEFT_JOIN);
+		Criteria statusCriteria = statusEntryCriteria.createCriteria("status", "status", CriteriaSpecification.INNER_JOIN);
+		if (initial != null) {
+			statusCriteria.add(Restrictions.eq("initial", initial.booleanValue()));
+		}
+		statusEntryCriteria.setProjection(Projections.projectionList()
+				.add(Projections.property("id"))
+				.add(Projections.property("realTimestamp"))
+				.add(Projections.property("status.id"))
+				.add(Projections.property("proband.id"))
+				.add(Projections.property("department.id")));
+		statusEntryCriteria.addOrder(Order.asc("realTimestamp"));
+		statusEntryCriteria.addOrder(Order.asc("id"));
+		List rows = statusEntryCriteria.list();
+		ArrayList<ProbandListStatusChartEntryVO> result = new ArrayList<ProbandListStatusChartEntryVO>(rows.size());
+		Iterator it = rows.iterator();
+		while (it.hasNext()) {
+			Object[] row = (Object[]) it.next();
+			ProbandListStatusChartEntryVO entry = new ProbandListStatusChartEntryVO();
+			entry.setId(((Number) row[0]).longValue());
+			entry.setRealTimestamp((Date) row[1]);
+			entry.setStatusId(row[2] == null ? null : Long.valueOf(((Number) row[2]).longValue()));
+			entry.setProbandId(row[3] == null ? null : Long.valueOf(((Number) row[3]).longValue()));
+			entry.setDepartmentId(row[4] == null ? null : Long.valueOf(((Number) row[4]).longValue()));
+			result.add(entry);
+		}
+		return result;
 	}
 
 	@Override

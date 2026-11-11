@@ -195,6 +195,7 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagValuesOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagsPDFVO;
 import org.phoenixctms.ctsms.vo.ProbandListExcelVO;
+import org.phoenixctms.ctsms.vo.ProbandListStatusChartEntryVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryInVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
@@ -7348,6 +7349,14 @@ public class TrialServiceImpl
 		Collection statusEntries = probandListStatusEntryDao.findByTrialProband(trialId, probandId, departmentId, last, initial, psf);
 		probandListStatusEntryDao.toProbandListStatusEntryOutVOCollection(statusEntries);
 		return statusEntries;
+	}
+
+	@Override
+	protected Collection<ProbandListStatusChartEntryVO> handleGetProbandListStatusChartEntries(AuthenticationVO auth, Long trialId, Boolean initial) throws Exception {
+		if (trialId != null) {
+			CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		}
+		return this.getProbandListStatusEntryDao().findChartEntriesByTrial(trialId, initial);
 	}
 
 	@Override

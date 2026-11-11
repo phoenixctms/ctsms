@@ -5,17 +5,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import org.phoenixctms.ctsms.compare.ProbandListStatusEntryOutVOComparator;
 import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
@@ -25,7 +24,7 @@ import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
 import org.phoenixctms.ctsms.vo.ProbandListExcelVO;
-import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListStatusChartEntryVO;
 import org.phoenixctms.ctsms.web.model.CartesianChartModel;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.util.DateUtil;
@@ -41,6 +40,23 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.chart.ChartSeries;
 
 public class DepartmentChartBean extends ManagedBeanBase {
+
+	private static final Comparator<ProbandListStatusChartEntryVO> CHART_ENTRY_COMPARATOR = new Comparator<ProbandListStatusChartEntryVO>() {
+
+		@Override
+		public int compare(ProbandListStatusChartEntryVO a, ProbandListStatusChartEntryVO b) {
+			int dateComparison = a.getRealTimestamp().compareTo(b.getRealTimestamp());
+			if (dateComparison != 0) {
+				return dateComparison;
+			} else if (a.getId() < b.getId()) {
+				return -1;
+			} else if (a.getId() > b.getId()) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+	};
 
 	private Long trialId;
 	//private TrialOutVO trial;
@@ -196,28 +212,26 @@ public class DepartmentChartBean extends ManagedBeanBase {
 		} else {
 			departmentMap = new HashMap<Long, DepartmentVO>();
 		}
-		Collection<ProbandListStatusEntryOutVO> initialProbandListStatus = null;
+		ArrayList<ProbandListStatusChartEntryVO> initialProbandListStatus = new ArrayList<ProbandListStatusChartEntryVO>();
 		if (trialId != null) {
 			try {
-				initialProbandListStatus = WebUtil.getServiceLocator().getTrialService().getProbandListStatus(WebUtil.getAuthentication(), trialId, null, null, false, true, null);
+				Collection<ProbandListStatusChartEntryVO> statusEntries = WebUtil.getServiceLocator().getTrialService()
+						.getProbandListStatusChartEntries(WebUtil.getAuthentication(), trialId, Boolean.TRUE);
+				if (statusEntries != null) {
+					initialProbandListStatus.addAll(statusEntries);
+				}
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
 			}
 		}
-		if (initialProbandListStatus == null) {
-			initialProbandListStatus = new ArrayList<ProbandListStatusEntryOutVO>();
-		} else {
-			initialProbandListStatus = new ArrayList<ProbandListStatusEntryOutVO>(initialProbandListStatus);
-			Collections.sort((ArrayList<ProbandListStatusEntryOutVO>) initialProbandListStatus, new ProbandListStatusEntryOutVOComparator());
-		}
+		Collections.sort(initialProbandListStatus, CHART_ENTRY_COMPARATOR);
 		HashMap<Long, TreeMap<Date, Number>> seriesMap = new HashMap<Long, TreeMap<Date, Number>>();
-		LinkedHashMap<Long, ProbandListStatusEntryOutVO> probandMap = new LinkedHashMap<Long, ProbandListStatusEntryOutVO>();
-		Iterator<ProbandListStatusEntryOutVO> probandListStatusIt = initialProbandListStatus.iterator();
+		LinkedHashMap<Long, ProbandListStatusChartEntryVO> probandMap = new LinkedHashMap<Long, ProbandListStatusChartEntryVO>();
+		Iterator<ProbandListStatusChartEntryVO> probandListStatusIt = initialProbandListStatus.iterator();
 		while (probandListStatusIt.hasNext()) {
-			ProbandListStatusEntryOutVO probandListStatusEntry = probandListStatusIt.next();
-			Long probandId = probandListStatusEntry.getListEntry().getProband().getId();
-			TreeMap<Long, ProbandListStatusEntryOutVO> enrollmentStatusMap;
+			ProbandListStatusChartEntryVO probandListStatusEntry = probandListStatusIt.next();
+			Long probandId = probandListStatusEntry.getProbandId();
 			if (!probandMap.containsKey(probandId)) {
 				probandMap.put(probandId, probandListStatusEntry);
 			}
@@ -226,15 +240,12 @@ public class DepartmentChartBean extends ManagedBeanBase {
 		TreeSet<Date> dates = new TreeSet<Date>();
 		probandListStatusIt = probandMap.values().iterator();
 		while (probandListStatusIt.hasNext()) {
-			ProbandListStatusEntryOutVO probandListStatusEntry = probandListStatusIt.next();
-			Long departmentId = probandListStatusEntry.getListEntry().getProband().getDepartment().getId();
-			//Long statusId = probandListStatusEntry.getStatus().getId();
+			ProbandListStatusChartEntryVO probandListStatusEntry = probandListStatusIt.next();
+			Long departmentId = probandListStatusEntry.getDepartmentId();
 			GregorianCalendar cal = new GregorianCalendar();
 			cal.setTime(probandListStatusEntry.getRealTimestamp());
 			Date date = (new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0)).getTime();
 			dates.add(date);
-			//TreeMap<Long, ProbandListStatusEntryOutVO> enrollmentStatusMap = probandMap.get(probandListStatusEntry.getListEntry().getProband().getId());
-			//Entry<Long, ProbandListStatusEntryOutVO> previousStatus = enrollmentStatusMap.lowerEntry(probandListStatusEntry.getId());
 			TreeMap<Date, Number> series;
 			if (seriesMap.containsKey(departmentId)) {
 				series = seriesMap.get(departmentId);
@@ -251,10 +262,6 @@ public class DepartmentChartBean extends ManagedBeanBase {
 					series.put(date, 1);
 				}
 			}
-			//			if (previousStatus != null) {
-			//				series = seriesMap.get(previousStatus.getValue().getStatus().getId());
-			//				series.put(date, series.lastEntry().getValue().intValue() - 1);
-			//			}
 		}
 		if (dates.size() > 0) {
 			minX = dates.first();
@@ -268,18 +275,16 @@ public class DepartmentChartBean extends ManagedBeanBase {
 			if (department != null && series.size() > 0) {
 				ChartSeries chartLine = new ChartSeries();
 				chartLine.setLabel(department.getName());
+				Number value = Integer.valueOf(0);
 				Iterator<Date> datesIt = dates.iterator();
 				while (datesIt.hasNext()) {
 					Date date = datesIt.next();
 					if (series.containsKey(date)) {
-						chartLine.set(dateToString(date), series.get(date));
-					} else {
-						Entry<Date, Number> previousValue = series.lowerEntry(date);
-						chartLine.set(dateToString(date), previousValue == null ? 0 : previousValue.getValue());
+						value = series.get(date);
 					}
+					chartLine.set(dateToString(date), value);
 				}
 				chartModel.addSeries(chartLine);
-				//seriesColors.add(department.getColor());
 			}
 		}
 	}
