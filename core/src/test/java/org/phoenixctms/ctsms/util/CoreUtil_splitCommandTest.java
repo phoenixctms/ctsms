@@ -30,6 +30,14 @@ public class CoreUtil_splitCommandTest {
 	}
 
 	@Test
+	public void testEscapedQuoteStaysInsideArgument() {
+		Assert.assertEquals(CoreUtil.splitCommand("-p=a\\\"b -next"),
+				new String[] { "-p=a\"b", "-next" });
+		Assert.assertEquals(CoreUtil.splitCommand("--query=\"eligible subjects\" -p=\"a\\\"b\""),
+				new String[] { "--query=eligible subjects", "-p=a\"b" });
+	}
+
+	@Test
 	public void testUnclosedQuoteFails() {
 		try {
 			CoreUtil.splitCommand("--query=\"eligible");
