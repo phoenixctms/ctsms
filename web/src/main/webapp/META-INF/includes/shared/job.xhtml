@@ -25,8 +25,12 @@
 				sortBy="#{job.vo.id}" sortOrder="descending"
 				emptyMessage="#{labels.datatable_permission_empty_message}"
 				var="job" value="#{jobBean.jobModel}" id="job_list"
-				selectionMode="single" selection="#{jobBean.selectedJob}">
-				<p:ajax event="page" listener="#{jobBean.jobModel.handlePageChanged}" />
+				selectionMode="single" selection="#{jobBean.selectedJob}"
+				rowStyleClass="#{jobBean.isRunning(job.vo) ? 'ctsms-job-running' : ''}">
+				<p:ajax event="page" listener="#{jobBean.jobModel.handlePageChanged}"
+					oncomplete="updateJobListPoll()" />
+				<p:ajax event="sort" oncomplete="updateJobListPoll()" />
+				<p:ajax event="filter" oncomplete="updateJobListPoll()" />
 				<p:ajax event="rowSelect" update="#{namingContainer}:job_input" />
 				<f:facet name="header">
 					<h:outputText
@@ -138,6 +142,10 @@
 						value="#{jobBean.getProgressValue(job.vo)}" />
 				</p:column>						
 			</p:dataTable>
+			<p:poll widgetVar="jobListPoll" interval="3" autoStart="false"
+				process="@this" listener="#{jobBean.pollJobs}"
+				update="job_list,filelink,job_output"
+				oncomplete="updateJobListPoll(true)" />
 			<p:panel id="job_input">
 				<f:facet name="header">
 					<h:outputText value="#{jobBean.title}" />
@@ -248,6 +256,7 @@
 
 					</h:panelGrid>
 
+					<h:panelGroup id="job_output">
 					<p:fieldset
 						rendered="#{jobBean.created and not empty jobBean.out.jobOutput}"
 						toggleable="true"
@@ -265,7 +274,7 @@
 
 					<h:outputLabel
 						rendered="#{!jobBean.created or empty jobBean.out.jobOutput}" />
-
+					</h:panelGroup>
 
 
 					<p:messages id="messages" />
@@ -312,6 +321,12 @@
 						</p:toolbarGroup>
 					</p:toolbar>
 				</h:panelGrid>
+				<script type="text/javascript">
+				// runs on page load and whenever the job panel is re-rendered (tab change, start, delete, load)
+				jQuery(function() {
+					updateJobListPoll();
+				});
+				</script>
 			</p:panel>
 		</h:panelGrid>
 	</ui:composition>
