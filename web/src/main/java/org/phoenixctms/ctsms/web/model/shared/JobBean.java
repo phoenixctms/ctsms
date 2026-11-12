@@ -11,6 +11,7 @@ import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.JobModule;
+import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
@@ -492,6 +493,35 @@ public class JobBean extends ManagedBeanBase {
 			//		jobVO.getProgressMax());
 		}
 		return null;
+	}
+
+	public boolean isRunning(JobOutVO jobVO) {
+		if (jobVO != null && jobVO.getStatus() != null && jobVO.getType() != null) {
+			JobTypeVO jobType = jobVO.getType();
+			if (jobType.isDaily() || jobType.isWeekly() || jobType.isMonthly()) {
+				// scheduled jobs stay created until the cron run picks them up
+				return false;
+			}
+			JobStatus status = jobVO.getStatus().getJobStatus();
+			return JobStatus.CREATED.equals(status) || JobStatus.PROCESSING.equals(status);
+		}
+		return false;
+	}
+
+	public void pollJobs() {
+		if (isRunning(out)) {
+			try {
+				out = WebUtil.getServiceLocator().getJobService().getJob(WebUtil.getAuthentication(), out.getId());
+				if (!isRunning(out)) {
+					// the job just finished: pick up its file, but leave the input form alone
+					initSets();
+				}
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+				out = null;
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
 	}
 
 	public int getProgressValue(JobOutVO jobVO) {

@@ -1737,3 +1737,25 @@ jQuery(function() {
 jQuery(document).ajaxComplete(function() {
 	disableBrowserAutofill();
 });
+
+var JOB_LIST_POLL_MAX_COUNT = 600; // 30 min at the 3 s poll interval
+var jobListPollCount = 0;
+
+function updateJobListPoll(polled) {
+	if (typeof jobListPoll === "undefined" || !jobListPoll) {
+		return;
+	}
+	if (polled) {
+		jobListPollCount++;
+	} else {
+		// a user action (start, load, paging, ...) gives a stuck job a fresh time budget
+		jobListPollCount = 0;
+	}
+	if (jQuery(".ctsms-job-running").length > 0 && jobListPollCount < JOB_LIST_POLL_MAX_COUNT) {
+		if (!jobListPoll.active) {
+			jobListPoll.start();
+		}
+	} else {
+		jobListPoll.stop();
+	}
+}
