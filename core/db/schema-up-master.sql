@@ -699,5 +699,14 @@ if get_database_version() < '010901015' then
 
 end if;
 
+if get_database_version() < '010901016' then
+
+  -- activity journal of a user:
+  CREATE INDEX IF NOT EXISTS journal_entry_modified_user_fk_id ON journal_entry (modified_user_fk,id);
+
+  perform set_database_version('010901016');
+
+end if;
+
 end
 $$;
