@@ -755,7 +755,8 @@ public final class CriteriaUtil {
 	/**
 	 * @param countLimit
 	 *            if not null, the row count of a paged, non-distinct result is clipped to this
-	 *            value (it only reads up to countLimit + 1 ids instead of counting all rows).
+	 *            value (it only reads up to countLimit + 1 ids instead of counting all rows),
+	 *            and its pages end at that value.
 	 */
 	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct, ArrayList<Long> idsSorted, Integer countLimit) throws Exception {
 		Criteria criteria;
@@ -829,7 +830,17 @@ public final class CriteriaUtil {
 					criteria.setFirstResult(psf.getFirst());
 				}
 				if (psf.getPageSize() != null) {
-					criteria.setMaxResults(psf.getPageSize());
+					if (!distinct && countLimit != null && countLimit >= 0) {
+						// keep the page within the clipped row count:
+						int first = (psf.getFirst() != null ? psf.getFirst() : 0);
+						if (first >= countLimit) {
+							criteria.add(Restrictions.sqlRestriction("1 <> 1"));
+						} else {
+							criteria.setMaxResults(Math.min(psf.getPageSize(), countLimit - first));
+						}
+					} else {
+						criteria.setMaxResults(psf.getPageSize());
+					}
 				}
 				if (sortFieldAssociationPath.isValid()) {
 					Criteria subCriteria;
