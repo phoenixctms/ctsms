@@ -749,6 +749,15 @@ public final class CriteriaUtil {
 	}
 
 	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct, ArrayList<Long> idsSorted) throws Exception {
+		applyPSFVO(criteriaMap, psf, distinct, idsSorted, null);
+	}
+
+	/**
+	 * @param countLimit
+	 *            if not null, the row count of a paged, non-distinct result is clipped to this
+	 *            value (it only reads up to countLimit + 1 ids instead of counting all rows).
+	 */
+	public static void applyPSFVO(SubCriteriaMap criteriaMap, PSFVO psf, boolean distinct, ArrayList<Long> idsSorted, Integer countLimit) throws Exception {
 		Criteria criteria;
 		if (criteriaMap != null && criteriaMap.getEntity() != null && (criteria = criteriaMap.getCriteria()) != null) {
 			if (distinct) {
@@ -802,6 +811,14 @@ public final class CriteriaUtil {
 					if (distinct) {
 						psf.setRowCount((Long) criteria.setProjection(Projections.countDistinct("id")).uniqueResult());
 						criteria.setProjection(Projections.distinct(Projections.id()));
+					} else if (countLimit != null && countLimit >= 0 && psf.getPageSize() != null) {
+						// first and max results are set for the page below:
+						criteria.setProjection(Projections.id());
+						criteria.setFirstResult(0);
+						criteria.setMaxResults(countLimit + 1);
+						psf.setRowCount((long) Math.min(criteria.list().size(), countLimit));
+						criteria.setProjection(null);
+						criteria.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
 					} else {
 						psf.setRowCount((Long) criteria.setProjection(Projections.rowCount()).uniqueResult());
 						criteria.setProjection(null);

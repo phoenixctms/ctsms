@@ -135,6 +135,7 @@ create index journal_entry_user_fk_system_message_code ON JOURNAL_ENTRY (USER_FK
 create index journal_entry_massmail_fk_system_message_code ON JOURNAL_ENTRY (MASS_MAIL_FK,SYSTEM_MESSAGE_CODE);
 create index journal_entry_criteria_fk_system_message_code ON JOURNAL_ENTRY (CRITERIA_FK,SYSTEM_MESSAGE_CODE);
 CREATE INDEX journal_entry_category_fk ON journal_entry (category_fk);
+CREATE INDEX journal_entry_modified_user_fk_id ON journal_entry (modified_user_fk,id);
 
 -- notifications:
 CREATE INDEX notification_proband_fk ON notification (proband_fk);

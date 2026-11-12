@@ -481,7 +481,8 @@ public class JournalEntryDaoImpl
 				default:
 			}
 		}
-		CriteriaUtil.applyPSFVO(criteriaMap, psf);
+		CriteriaUtil.applyPSFVO(criteriaMap, psf, false, null, Settings.getIntNullable(SettingCodes.JOURNAL_ENTRY_DEFAULT_COUNT_LIMIT, Bundle.SETTINGS,
+				DefaultSettings.JOURNAL_ENTRY_DEFAULT_COUNT_LIMIT));
 		return journalCriteria.list();
 	}
 
