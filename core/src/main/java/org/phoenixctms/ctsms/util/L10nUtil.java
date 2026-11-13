@@ -183,6 +183,8 @@ public final class L10nUtil {
 	private static String teamMemberRolesBundleBasename;
 	private static String probandListStatusTypesBundleBasename;
 	private static String inputFieldSelectionSetValuesBundleBasename;
+	private static String inputFieldSelectionSetValueRowsBundleBasename;
+	private static String inputFieldSelectionSetValueColumnsBundleBasename;
 	private static String inputFieldValidationErrorMsgsBundleBasename;
 	private static String inputFieldTitlesBundleBasename;
 	private static String inputFieldTextPresetsBundleBasename;
@@ -625,6 +627,14 @@ public final class L10nUtil {
 
 	public static String getInputFieldSelectionSetValueName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, inputFieldSelectionSetValuesBundleBasename), DefaultMessages.INPUT_FIELD_SELECTEION_SET_VALUE_NAME);
+	}
+
+	public static String getInputFieldSelectionSetValueRow(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, inputFieldSelectionSetValueRowsBundleBasename), DefaultMessages.INPUT_FIELD_SELECTEION_SET_VALUE_ROW);
+	}
+
+	public static String getInputFieldSelectionSetValueColumn(Locales locale, String l10nKey) {
+		return CommonUtil.getString(l10nKey, getBundle(locale, inputFieldSelectionSetValueColumnsBundleBasename), DefaultMessages.INPUT_FIELD_SELECTEION_SET_VALUE_COLUMN);
 	}
 
 	public static String getInputFieldTextPreset(Locales locale, String l10nKey) {
@@ -1337,6 +1347,20 @@ public final class L10nUtil {
 			String inputFieldSelectionSetValuesBundleBasename) {
 		L10nUtil.inputFieldSelectionSetValuesBundleBasename = inputFieldSelectionSetValuesBundleBasename;
 		getBundle(Locales.DEFAULT, inputFieldSelectionSetValuesBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setInputFieldSelectionSetValueRowsBundleBasename(
+			String inputFieldSelectionSetValueRowsBundleBasename) {
+		L10nUtil.inputFieldSelectionSetValueRowsBundleBasename = inputFieldSelectionSetValueRowsBundleBasename;
+		getBundle(Locales.DEFAULT, inputFieldSelectionSetValueRowsBundleBasename);
+	}
+
+	@Autowired(required = true)
+	public void setInputFieldSelectionSetValueColumnsBundleBasename(
+			String inputFieldSelectionSetValueColumnsBundleBasename) {
+		L10nUtil.inputFieldSelectionSetValueColumnsBundleBasename = inputFieldSelectionSetValueColumnsBundleBasename;
+		getBundle(Locales.DEFAULT, inputFieldSelectionSetValueColumnsBundleBasename);
 	}
 
 	@Autowired(required = true)

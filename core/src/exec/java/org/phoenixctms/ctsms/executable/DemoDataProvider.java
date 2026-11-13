@@ -95,6 +95,7 @@ import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.ExecUtil;
 import org.phoenixctms.ctsms.util.GermanPersonNames;
+import org.phoenixctms.ctsms.util.SelectionMatrix;
 import org.phoenixctms.ctsms.util.JobOutput;
 import org.phoenixctms.ctsms.util.ServiceUtil;
 import org.phoenixctms.ctsms.util.date.DateCalc;
@@ -177,6 +178,7 @@ public class DemoDataProvider {
 		DIABETES_METHOD_OF_TREATMENT("Diabetes Behandlungsmethode"), // Diät sport insulintherapie orale Antidiabetika
 		DIABETES_MEDICATION("Diabetes Medikamente"),
 		CLINICAL_TRIAL_EXPERIENCE_YN("Erfahrung mit klin. Studien J/N"),
+		TRIAL_SITE_SATISFACTION("Zufriedenheit Studienzentrum"),
 		SMOKER_YN("Raucher J/N"),
 		CIGARETTES_PER_DAY("Zigaretten pro Tag"),
 		CHRONIC_DISEASE_YN("Chronische Erkrankung J/N"),
@@ -1750,6 +1752,34 @@ public class DemoDataProvider {
 		return inputField;
 	}
 
+	private InputFieldOutVO createSelectMatrixField(AuthenticationVO auth, String name, String category, String title, String bottomComment,
+			boolean many, boolean transposed, String[] rows, String[] columns) throws Exception {
+		auth = (auth == null ? getRandomAuth() : auth);
+		InputFieldInVO newInputField = new InputFieldInVO();
+		newInputField.setFieldType(many ? InputFieldType.SELECT_MATRIX_MANY : InputFieldType.SELECT_MATRIX_ONE);
+		newInputField.setName(name);
+		newInputField.setTitle(title);
+		newInputField.setCategory(category);
+		newInputField.setBottomComment(bottomComment);
+		newInputField.setMatrixTransposed(transposed);
+		InputFieldOutVO inputField = inputFieldService.addInputField(auth, newInputField);
+		jobOutput.println("select matrix input field created: " + inputField.getName());
+		for (int r = 0; r < rows.length; r++) {
+			for (int c = 0; c < columns.length; c++) {
+				InputFieldSelectionSetValueInVO newSelectionSetValue = new InputFieldSelectionSetValueInVO();
+				newSelectionSetValue.setFieldId(inputField.getId());
+				newSelectionSetValue.setName(rows[r] + ": " + columns[c]);
+				newSelectionSetValue.setValue(Integer.toString(r + 1) + "." + Integer.toString(c + 1));
+				newSelectionSetValue.setRow(rows[r]);
+				newSelectionSetValue.setColumn(columns[c]);
+				newSelectionSetValue.setPreset(false);
+				InputFieldSelectionSetValueOutVO out = inputFieldService.addSelectionSetValue(auth, newSelectionSetValue);
+				jobOutput.println("selection set value created: " + out.getName());
+			}
+		}
+		return inputFieldService.getInputField(auth, inputField.getId());
+	}
+
 	private InputFieldOutVO createSelectOneDropdownField(AuthenticationVO auth, String name, String category, String title, String bottomComment,
 			TreeMap<InputFieldValues, Boolean> selectionSetValues)
 			throws Exception {
@@ -2194,6 +2224,8 @@ public class DemoDataProvider {
 			inquiries
 					.add(createInquiry(auth, InputFields.CIGARETTES_PER_DAY, trial, "01 - Allgemeine information", 6, true, true, true, false, true, true, null, null, null, null,
 							null));
+			inquiries.add(createInquiry(auth, InputFields.TRIAL_SITE_SATISFACTION, trial, "01 - Allgemeine information", 7, true, true, true, false, true, true, null, null, null,
+					null, null));
 			inquiries.add(createInquiry(auth, InputFields.DIABETES_YN, trial, "02 - Diabetes", 1, true, true, false, false, true, true, null, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.DIABETES_TYPE, trial, "02 - Diabetes", 2, true, true, true, false, true, true, null, null, null, null, null));
 			inquiries.add(createInquiry(auth, InputFields.DIABETES_SINCE, trial, "02 - Diabetes", 3, true, true, true, false, true, true, null, null, null, null, null));
@@ -2618,6 +2650,12 @@ public class DemoDataProvider {
 					return createMultiLineTextField(auth, name, inquiryQuestionsCategory, "Medikamente:", null, null, null, null);
 				case CLINICAL_TRIAL_EXPERIENCE_YN:
 					return createCheckBoxField(auth, name, inquiryQuestionsCategory, "Haben Sie Erfahrung mit klinischen Studien?", null, false);
+				case TRIAL_SITE_SATISFACTION:
+					return createSelectMatrixField(auth, name, inquiryQuestionsCategory, "Wie zufrieden waren Sie bei Ihrem letzten Studienbesuch mit ...", null, false,
+							false,
+							new String[] { "der Betreuung durch das Studienteam", "der Wartezeit", "der Organisation des Studienzentrums",
+									"den Informationen zur Studie" },
+							new String[] { "sehr zufrieden", "eher zufrieden", "weder noch", "eher unzufrieden", "sehr unzufrieden" });
 				case SMOKER_YN:
 					return createCheckBoxField(auth, name, inquiryQuestionsCategory, "Raucher:", null, false);
 				case CIGARETTES_PER_DAY:
@@ -3066,6 +3104,35 @@ public class DemoDataProvider {
 		this.jobOutput = jobOutput;
 	}
 
+	private Collection<Long> getRandomSelectionMatrixValueIds(InputFieldOutVO field, boolean presets) {
+		ArrayList<Long> result = new ArrayList<Long>();
+		if (presets) {
+			Iterator<InputFieldSelectionSetValueOutVO> selectionSetValueIt = field.getSelectionSetValues().iterator();
+			while (selectionSetValueIt.hasNext()) {
+				InputFieldSelectionSetValueOutVO selectionSetValue = selectionSetValueIt.next();
+				if (selectionSetValue.isPreset()) {
+					result.add(selectionSetValue.getId());
+				}
+			}
+		} else {
+			SelectionMatrix matrix = new SelectionMatrix(field.getSelectionSetValues());
+			for (int r = 0; r < matrix.getRowCount(); r++) {
+				ArrayList<InputFieldSelectionSetValueOutVO> cells = new ArrayList<InputFieldSelectionSetValueOutVO>();
+				Iterator<InputFieldSelectionSetValueOutVO> cellIt = matrix.getRow(r).iterator();
+				while (cellIt.hasNext()) {
+					InputFieldSelectionSetValueOutVO cell = cellIt.next();
+					if (cell != null) {
+						cells.add(cell);
+					}
+				}
+				if (cells.size() > 0) {
+					result.add(random.getRandomElement(cells).getId());
+				}
+			}
+		}
+		return result;
+	}
+
 	private void setRandomInquiryValue(InquiryOutVO inquiry, InquiryValueInVO inquiryValue) {
 		if (!inquiry.isOptional() || random.getRandomBoolean()) {
 			HashSet<Long> selectionSetValues = new HashSet<Long>();
@@ -3105,6 +3172,11 @@ public class DemoDataProvider {
 							selectionSetValues.add(random.getRandomElement(inquiry.getField().getSelectionSetValues()).getId());
 						}
 					}
+					inquiryValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
+					break;
+				case SELECT_MATRIX_ONE:
+				case SELECT_MATRIX_MANY:
+					selectionSetValues.addAll(getRandomSelectionMatrixValueIds(inquiry.getField(), inquiry.isDisabled()));
 					inquiryValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
 					break;
 				case SINGLE_LINE_TEXT:
@@ -3190,6 +3262,11 @@ public class DemoDataProvider {
 							selectionSetValues.add(random.getRandomElement(probandListEntryTag.getField().getSelectionSetValues()).getId());
 						}
 					}
+					probandListEntryTagValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
+					break;
+				case SELECT_MATRIX_ONE:
+				case SELECT_MATRIX_MANY:
+					selectionSetValues.addAll(getRandomSelectionMatrixValueIds(probandListEntryTag.getField(), probandListEntryTag.isDisabled()));
 					probandListEntryTagValue.setSelectionValueIds(new ArrayList<Long>(selectionSetValues));
 					break;
 				case SINGLE_LINE_TEXT:

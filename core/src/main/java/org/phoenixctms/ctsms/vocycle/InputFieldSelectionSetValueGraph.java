@@ -29,6 +29,22 @@ public class InputFieldSelectionSetValueGraph extends GraphCycle1Helper<InputFie
 		return null;
 	}
 
+	public static String getInputFieldSelectionSetValueRow(InputFieldSelectionSetValue selectionSetValue) {
+		String rowL10nKey = selectionSetValue.getRowL10nKey();
+		if (rowL10nKey != null && selectionSetValue.isLocalized()) {
+			return L10nUtil.getInputFieldSelectionSetValueRow(Locales.USER, rowL10nKey);
+		}
+		return rowL10nKey;
+	}
+
+	public static String getInputFieldSelectionSetValueColumn(InputFieldSelectionSetValue selectionSetValue) {
+		String columnL10nKey = selectionSetValue.getColumnL10nKey();
+		if (columnL10nKey != null && selectionSetValue.isLocalized()) {
+			return L10nUtil.getInputFieldSelectionSetValueColumn(Locales.USER, columnL10nKey);
+		}
+		return columnL10nKey;
+	}
+
 	private InputFieldSelectionSetValueDaoImpl inputFieldSelectionSetValueDaoImpl;
 	private InputFieldDao inputFieldDao;
 	private UserDao userDao;
@@ -107,6 +123,8 @@ public class InputFieldSelectionSetValueGraph extends GraphCycle1Helper<InputFie
 		} else {
 			target.setName(source.getNameL10nKey());
 		}
+		target.setRow(getInputFieldSelectionSetValueRow(source));
+		target.setColumn(getInputFieldSelectionSetValueColumn(source));
 		InputField field = source.getField();
 		target.setUniqueName(getUniqueInputFieldSelectionSetValueName(field, target.getName()));
 		if (ServiceUtil.isInputFieldType(field, InputFieldType.SKETCH)) {

@@ -1716,6 +1716,8 @@ public class SearchServiceImpl
 									break;
 								case SELECT_MANY_H:
 								case SELECT_MANY_V:
+								case SELECT_MATRIX_ONE:
+								case SELECT_MATRIX_MANY:
 									fieldValue = ExcelUtil.selectionSetValuesToString(inquiryValueVO.getSelectionValues());
 									break;
 								case CHECKBOX:

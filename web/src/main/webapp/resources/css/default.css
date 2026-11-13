@@ -2512,6 +2512,114 @@ overflow-y:scroll;
 	background-image: url(../resources/images/inputfieldtypes/checkboxesv.png) !important;
 }
 
+.ctsms-inputfieldtype-selectmatrixone {
+	background-image: url(../resources/images/inputfieldtypes/selectmatrixone.png) !important;
+}
+.ctsms-inputfieldtype-selectmatrixmany {
+	background-image: url(../resources/images/inputfieldtypes/selectmatrixmany.png) !important;
+}
+
+.ctsms-select-matrix-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.ctsms-select-matrix-table th,
+.ctsms-select-matrix-table td {
+	padding: 0;
+	font-weight: normal;
+	vertical-align: middle;
+}
+
+.ctsms-select-matrix-table > thead > tr > th {
+	padding-bottom: 4px;
+	vertical-align: bottom;
+}
+
+.ctsms-select-matrix-table td.ctsms-select-matrix-label,
+.ctsms-select-matrix-table th.ctsms-select-matrix-label {
+	width: 35%;
+	padding: 4px 8px 4px 4px;
+	text-align: left;
+}
+
+.ctsms-select-matrix-table td.ctsms-select-matrix-message,
+.ctsms-select-matrix-table th.ctsms-select-matrix-message {
+	width: 1%;
+	white-space: nowrap;
+}
+
+/* the head labels and the option group items share equal fixed-width cells */
+.ctsms-select-matrix-head,
+.ctsms-select-matrix-cells > table {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.ctsms-select-matrix-head td,
+.ctsms-select-matrix-cells > table td {
+	text-align: center;
+	padding: 2px;
+	overflow-wrap: break-word;
+}
+
+/* item labels are shown in the head or the label column, not next to each radio/checkbox */
+.ctsms-select-matrix-cells > table:not(.ctsms-select-matrix-head) td:nth-child(even) {
+	display: none;
+}
+
+/* placeholders of row/column pairs without a selection set value */
+.ctsms-select-matrix-cells > table:not(.ctsms-select-matrix-head) td:has(input[value=""]) {
+	visibility: hidden;
+}
+
+.ctsms-select-matrix .ui-radiobutton,
+.ctsms-select-matrix .ui-chkbox {
+	float: none;
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: middle;
+}
+
+.ctsms-select-matrix-table > tbody > tr.ctsms-select-matrix-row:nth-child(odd) {
+	background-color: rgba(128, 128, 128, 0.1);
+}
+
+.ctsms-select-matrix-transposed th.ctsms-select-matrix-cells {
+	text-align: center;
+	padding: 2px;
+	overflow-wrap: break-word;
+}
+
+.ctsms-select-matrix-transposed > tbody > tr > td {
+	vertical-align: top;
+}
+
+.ctsms-select-matrix-transposed > tbody > tr > td.ctsms-select-matrix-label {
+	padding: 0;
+}
+
+.ctsms-select-matrix-lines {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.ctsms-select-matrix-lines td {
+	padding: 0 8px 0 4px;
+	text-align: left;
+}
+
+/* line up the label column with the vertical option groups */
+.ctsms-select-matrix-lines tr,
+.ctsms-select-matrix-transposed .ctsms-select-matrix-cells > table tr {
+	height: 2.2em;
+}
+
+.ctsms-select-matrix-lines tr:nth-child(odd) {
+	background-color: rgba(128, 128, 128, 0.1);
+}
+
 .ctsms-inputfieldtype-checkbox {
 	background-image: url(../resources/images/inputfieldtypes/checkbox.png) !important;
 }

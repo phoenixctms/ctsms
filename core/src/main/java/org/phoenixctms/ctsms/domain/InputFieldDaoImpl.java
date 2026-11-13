@@ -53,7 +53,9 @@ public class InputFieldDaoImpl
 			InputFieldType.SELECT_ONE_RADIO_H,
 			InputFieldType.SELECT_ONE_RADIO_V,
 			InputFieldType.SELECT_ONE_DROPDOWN,
-			InputFieldType.SKETCH
+			InputFieldType.SKETCH,
+			InputFieldType.SELECT_MATRIX_ONE,
+			InputFieldType.SELECT_MATRIX_MANY
 	};
 
 	private static void applySortOrders(org.hibernate.Criteria inputFieldCriteria) {

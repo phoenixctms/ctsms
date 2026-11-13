@@ -24,6 +24,7 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.Image;
 import org.phoenixctms.ctsms.util.JavaScriptCompressor;
+import org.phoenixctms.ctsms.util.SelectionMatrix;
 import org.phoenixctms.ctsms.vo.FileContentInVO;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.FileJsonVO;
@@ -66,6 +67,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private int rowIndex;
 	private String errorMessage;
 	protected InputFieldOutVO inputField;
+	private SelectionMatrixModel selectionMatrix;
+	private InputFieldOutVO selectionMatrixInputField;
 	private FileOutVO fileValueVO;
 	private String allowTypes;
 	private Integer uploadSizeLimit;
@@ -562,6 +565,15 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 			return selectionSetValueIdToStrokesIdMap;
 		}
 		return new HashMap<String, String>();
+	}
+
+	public final SelectionMatrixModel getSelectionMatrix() {
+		if (selectionMatrix == null || selectionMatrixInputField != inputField) {
+			selectionMatrixInputField = inputField;
+			selectionMatrix = new SelectionMatrixModel(this, new SelectionMatrix(inputField != null ? inputField.getSelectionSetValues() : null),
+					isSelectMatrixTransposed());
+		}
+		return selectionMatrix;
 	}
 
 	public final ArrayList<SelectItem> getSelectionSetValues() {

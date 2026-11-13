@@ -47,6 +47,7 @@ public class InputFieldRowWriter extends RowWriter {
 	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
 	private final static int PHOTO_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int MATRIX_TRANSPOSED_COLUMN_INDEX = PARAM_3_COLUMN_INDEX;
 	private final static int ALLOWED_MIME_TYPES_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
 	private final static String ALLOWED_MIME_TYPES_SEPARATOR = ",";
 	private final static int MIN_SELECTIONS_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
@@ -91,6 +92,7 @@ public class InputFieldRowWriter extends RowWriter {
 	private int learnColumnIndex;
 	private int strictColumnIndex;
 	private int photoColumnIndex;
+	private int matrixTransposedColumnIndex;
 	private int allowedMimeTypesColumnIndex;
 	private int minSelectionsColumnIndex;
 	private int maxSelectionsColumnIndex;
@@ -184,6 +186,8 @@ public class InputFieldRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(strictColumnIndex, maxColumnIndex);
 		photoColumnIndex = PHOTO_COLUMN_INDEX;
 		maxColumnIndex = Math.max(photoColumnIndex, maxColumnIndex);
+		matrixTransposedColumnIndex = MATRIX_TRANSPOSED_COLUMN_INDEX;
+		maxColumnIndex = Math.max(matrixTransposedColumnIndex, maxColumnIndex);
 		allowedMimeTypesColumnIndex = ALLOWED_MIME_TYPES_COLUMN_INDEX;
 		maxColumnIndex = Math.max(allowedMimeTypesColumnIndex, maxColumnIndex);
 		minSelectionsColumnIndex = MIN_SELECTIONS_COLUMN_INDEX;
@@ -320,8 +324,14 @@ public class InputFieldRowWriter extends RowWriter {
 				// no break
 			case SELECT_MANY_H:
 			case SELECT_MANY_V:
+			case SELECT_MATRIX_MANY:
 				values[minSelectionsColumnIndex] = (inputField.getMinSelections() != null ? Integer.toString(inputField.getMinSelections()) : null);
 				values[maxSelectionsColumnIndex] = (inputField.getMaxSelections() != null ? Integer.toString(inputField.getMaxSelections()) : null);
+				// no break
+			case SELECT_MATRIX_ONE:
+				if (InputFieldType.SELECT_MATRIX_ONE.equals(fieldType) || InputFieldType.SELECT_MATRIX_MANY.equals(fieldType)) {
+					values[matrixTransposedColumnIndex] = Boolean.toString(inputField.getMatrixTransposed());
+				}
 				// no break
 			case SELECT_ONE_DROPDOWN:
 			case SELECT_ONE_RADIO_H:

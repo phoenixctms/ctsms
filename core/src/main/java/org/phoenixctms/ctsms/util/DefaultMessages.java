@@ -165,6 +165,8 @@ public interface DefaultMessages {
 	public static final String MASS_MAIL_STATUS_TYPE_NAME = "<mass mail status type>";
 	public static final String MASS_MAIL_TYPE_NAME = "<mass mail type>";
 	public static final String INPUT_FIELD_SELECTEION_SET_VALUE_NAME = "<input field selection set value name>";
+	public static final String INPUT_FIELD_SELECTEION_SET_VALUE_ROW = "<input field selection set value row>";
+	public static final String INPUT_FIELD_SELECTEION_SET_VALUE_COLUMN = "<input field selection set value column>";
 	public static final String INPUT_FIELD_VALIDATION_ERROR_MSG = "<input field validation error message>";
 	public static final String INPUT_FIELD_TITLE = "<input field title>";
 	public static final String INPUT_FIELD_TEXT_PRESET = "<input field text preset>";

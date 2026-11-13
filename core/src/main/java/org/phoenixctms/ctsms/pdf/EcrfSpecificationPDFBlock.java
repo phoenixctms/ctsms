@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.phoenixctms.ctsms.pdf.PDFUtil.Alignment;
 import org.phoenixctms.ctsms.pdf.PDFUtil.FontSize;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
@@ -140,11 +141,14 @@ public class EcrfSpecificationPDFBlock {
 		if (ecrfField != null) {
 			StringBuilder selectionSetValues = new StringBuilder();
 			if (ecrfField.getField().getSelectionSetValues().size() > 0) {
+				InputFieldType fieldType = ecrfField.getField().getFieldType().getType();
+				boolean matrix = InputFieldType.SELECT_MATRIX_ONE.equals(fieldType) || InputFieldType.SELECT_MATRIX_MANY.equals(fieldType);
 				Iterator<InputFieldSelectionSetValueOutVO> it = ecrfField.getField().getSelectionSetValues().iterator();
 				while (it.hasNext()) {
 					InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
-					selectionSetValues.append(L10nUtil.getEcrfSpecificationPDFLabel(Locales.ECRF_SPECIFICATION_PDF, EcrfSpecificationPDFLabelCodes.SELECTION_SET_VALUE,
-							PDFUtil.DEFAULT_LABEL, selectionSetValue.getName(), selectionSetValue.getValue()));
+					selectionSetValues.append(L10nUtil.getEcrfSpecificationPDFLabel(Locales.ECRF_SPECIFICATION_PDF,
+							matrix ? EcrfSpecificationPDFLabelCodes.SELECTION_MATRIX_SET_VALUE : EcrfSpecificationPDFLabelCodes.SELECTION_SET_VALUE,
+							PDFUtil.DEFAULT_LABEL, selectionSetValue.getName(), selectionSetValue.getValue(), selectionSetValue.getRow(), selectionSetValue.getColumn()));
 					if (it.hasNext()) {
 						selectionSetValues.append(PDFUtil.PDF_LINE_BREAK);
 					}

@@ -38,6 +38,12 @@ public abstract class InputFieldOutVOConfigBase extends InputFieldConfig {
 	}
 
 	@Override
+	protected boolean isMatrixTransposed() {
+		InputFieldOutVO inputField = getInputField();
+		return inputField != null && inputField.getMatrixTransposed();
+	}
+
+	@Override
 	protected boolean isInputFieldType(InputFieldType inputFieldType) {
 		InputFieldOutVO inputField = getInputField();
 		InputFieldTypeVO fieldType = (inputField == null ? null : inputField.getFieldType());

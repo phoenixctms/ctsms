@@ -708,5 +708,17 @@ if get_database_version() < '010901016' then
 
 end if;
 
+if get_database_version() < '010901017' then
+
+  -- select matrix input field types:
+  ALTER TABLE INPUT_FIELD ADD COLUMN MATRIX_TRANSPOSED BOOLEAN;
+
+  ALTER TABLE INPUT_FIELD_SELECTION_SET_VALUE ADD COLUMN ROW_L10N_KEY CHARACTER VARYING(1024);
+  ALTER TABLE INPUT_FIELD_SELECTION_SET_VALUE ADD COLUMN COLUMN_L10N_KEY CHARACTER VARYING(1024);
+
+  perform set_database_version('010901017');
+
+end if;
+
 end
 $$;
