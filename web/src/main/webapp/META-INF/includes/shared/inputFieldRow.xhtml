@@ -434,7 +434,7 @@
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 						value="#{fieldInput.title}" />
 					<h:panelGroup id="selectMatrix#{index}" layout="block"
-						styleClass="ctsms-select-matrix">
+						styleClass="ctsms-select-matrix#{fieldInput.selectionMatrix.verticalHead ? ' ctsms-select-matrix-vertical-head' : ''}">
 						<h:panelGroup rendered="#{!fieldInput.selectMatrixTransposed}">
 							<table class="ctsms-select-matrix-table">
 								<thead>
@@ -444,7 +444,7 @@
 											<table class="ctsms-select-matrix-head">
 												<tr>
 													<ui:repeat value="#{fieldInput.selectionMatrix.headLabels}" var="headLabel">
-														<td><h:outputText value="#{headLabel}" /></td>
+														<td><h:outputText styleClass="ctsms-select-matrix-head-label" value="#{headLabel}" /></td>
 													</ui:repeat>
 												</tr>
 											</table>
@@ -502,7 +502,7 @@
 									<tr>
 										<th class="ctsms-select-matrix-label" />
 										<ui:repeat value="#{fieldInput.selectionMatrix.headLabels}" var="headLabel">
-											<th class="ctsms-select-matrix-cells"><h:outputText value="#{headLabel}" /></th>
+											<th class="ctsms-select-matrix-cells"><h:outputText styleClass="ctsms-select-matrix-head-label" value="#{headLabel}" /></th>
 										</ui:repeat>
 									</tr>
 								</thead>

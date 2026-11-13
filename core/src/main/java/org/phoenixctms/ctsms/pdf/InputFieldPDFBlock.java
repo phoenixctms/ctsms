@@ -19,9 +19,13 @@ import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.pdf.PDFUtil.Alignment;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.DefaultSettings;
 import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.SelectionMatrix;
+import org.phoenixctms.ctsms.util.SettingCodes;
+import org.phoenixctms.ctsms.util.Settings;
+import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.StaffOutVO;
@@ -30,6 +34,7 @@ import org.phoenixctms.ctsms.vo.UserOutVO;
 public abstract class InputFieldPDFBlock {
 
 	private final static float SELECTION_MATRIX_LABEL_WIDTH_RATIO = 0.35f;
+	private final static float SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH = 120.0f; // pt
 	private InputFieldOutVO inputField;
 	protected boolean blank;
 	protected PDFJpeg ximage;
@@ -896,13 +901,36 @@ public abstract class InputFieldPDFBlock {
 		float textWidth = cellWidth - getXSelectionItemIndent();
 		float y1 = y;
 		float headHeight = 0.0f;
-		for (int c = 0; c < headLabels.size(); c++) {
-			headHeight = Math.max(headHeight, PDFUtil.renderMultilineText(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(),
-					headLabels.get(c), 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT, textWidth));
-		}
-		for (int c = 0; c < headLabels.size(); c++) {
-			PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(),
-					headLabels.get(c), x + labelWidth + c * cellWidth, y1, PDFUtil.Alignment.TOP_LEFT, textWidth);
+		boolean verticalHead = headLabels.size() > Settings.getInt(SettingCodes.SELECT_MATRIX_VERTICAL_HEAD_COUNT, Bundle.SETTINGS,
+				DefaultSettings.SELECT_MATRIX_VERTICAL_HEAD_COUNT);
+		if (verticalHead) {
+			// many columns: head labels read bottom-up, long ones wrapped into further (vertical) lines
+			float lineHeight = PDFUtil.renderTextLine(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), "", 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT);
+			ArrayList<ArrayList<String>> wrappedHeadLabels = new ArrayList<ArrayList<String>>(headLabels.size());
+			for (int c = 0; c < headLabels.size(); c++) {
+				ArrayList<String> lines = wrapLine(getSingleLine(headLabels.get(c)), SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH, cursor);
+				wrappedHeadLabels.add(lines);
+				for (int l = 0; l < lines.size(); l++) {
+					headHeight = Math.max(headHeight, PDFUtil.getStringWidth(lines.get(l), cursor.getFontA(), PDFUtil.FontSize.MEDIUM));
+				}
+			}
+			for (int c = 0; c < headLabels.size(); c++) {
+				ArrayList<String> lines = wrappedHeadLabels.get(c);
+				for (int l = 0; l < lines.size(); l++) {
+					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), lines.get(l),
+							x + labelWidth + c * cellWidth + (l + 1) * lineHeight, y1 - headHeight, PDFUtil.Alignment.TOP_LEFT, PDFUtil.TextDecoration.NONE,
+							PDFUtil.Rotation.CCW90);
+				}
+			}
+		} else {
+			for (int c = 0; c < headLabels.size(); c++) {
+				headHeight = Math.max(headHeight, PDFUtil.renderMultilineText(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(),
+						headLabels.get(c), 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT, textWidth));
+			}
+			for (int c = 0; c < headLabels.size(); c++) {
+				PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(),
+						headLabels.get(c), x + labelWidth + c * cellWidth, y1, PDFUtil.Alignment.TOP_LEFT, textWidth);
+			}
 		}
 		y1 -= headHeight + getYSelectionItemIndent();
 		for (int r = 0; r < lineLabels.size(); r++) {
@@ -936,6 +964,28 @@ public abstract class InputFieldPDFBlock {
 			}
 		}
 		return y - y1;
+	}
+
+	private static String getSingleLine(String label) {
+		return label == null ? "" : label.replaceAll("[\\r\\n]+", " ");
+	}
+
+	private static ArrayList<String> wrapLine(String text, float maxWidth, InputFieldPDFBlockCursor cursor) throws Exception {
+		ArrayList<String> lines = new ArrayList<String>();
+		StringBuilder line = new StringBuilder();
+		for (String word : text.trim().split(" +")) {
+			String candidate = line.length() > 0 ? line + " " + word : word;
+			if (line.length() > 0 && PDFUtil.getStringWidth(candidate, cursor.getFontA(), PDFUtil.FontSize.MEDIUM) > maxWidth) {
+				lines.add(line.toString());
+				line.setLength(0);
+				line.append(word);
+			} else {
+				line.setLength(0);
+				line.append(candidate);
+			}
+		}
+		lines.add(line.toString());
+		return lines;
 	}
 
 	private float renderSketchImage(float x, float y, PDPageContentStream contentStream, InputFieldPDFBlockCursor cursor) throws Exception {

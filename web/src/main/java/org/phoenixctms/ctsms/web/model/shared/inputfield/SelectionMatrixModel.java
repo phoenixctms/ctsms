@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.phoenixctms.ctsms.util.SelectionMatrix;
+import org.phoenixctms.ctsms.web.util.DefaultSettings;
+import org.phoenixctms.ctsms.web.util.SettingCodes;
+import org.phoenixctms.ctsms.web.util.Settings;
+import org.phoenixctms.ctsms.web.util.Settings.Bundle;
 
 /**
  * Grid of a select matrix input field for rendering. The rows are always the
@@ -44,5 +48,13 @@ public class SelectionMatrixModel {
 
 	public boolean isTransposed() {
 		return transposed;
+	}
+
+	/**
+	 * With many columns, the head labels are rendered vertically so the columns stay narrow.
+	 */
+	public boolean isVerticalHead() {
+		return getHeadLabels().size() > Settings.getInt(SettingCodes.INPUT_MODEL_SELECT_MATRIX_VERTICAL_HEAD_COUNT, Bundle.SETTINGS,
+				DefaultSettings.INPUT_MODEL_SELECT_MATRIX_VERTICAL_HEAD_COUNT);
 	}
 }
