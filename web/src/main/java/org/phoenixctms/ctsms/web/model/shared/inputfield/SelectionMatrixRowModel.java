@@ -36,7 +36,8 @@ public class SelectionMatrixRowModel {
 			if (cell != null) {
 				String id = Long.toString(cell.getId());
 				rowIds.add(id);
-				items.add(new SelectItem(id, "", cell.getName()));
+				// the (hidden) item label is shown as tooltip of the radio/checkbox
+				items.add(new SelectItem(id, cell.getName()));
 			} else {
 				items.add(new SelectItem(CommonUtil.NO_SELECTION_VALUE, "", null, true));
 			}

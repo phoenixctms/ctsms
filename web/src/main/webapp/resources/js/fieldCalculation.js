@@ -2570,6 +2570,17 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	// registered as <widgetVar>_<row index>. The composite registered as <widgetVar> lets
 	// the select many handlers read and write the selection ids of all rows at once.
 	function registerSelectMatrix(widgetVar, id, rowCount) {
+		// the item labels are hidden; show them as tooltip of their radio/checkbox
+		var container = document.getElementById((id != null && id.startsWith(':')) ? id.substr(1) : id);
+		if (container != null) {
+			$(container).find('.ctsms-select-matrix-cells > table label').each(function() {
+				var label = $(this);
+				var text = label.text();
+				if (text != null && text.length > 0) {
+					label.closest('td').prev('td').attr('title', text);
+				}
+			});
+		}
 		var _rowWidgets = function() {
 			var widgets = [];
 			for (var i = 0; i < rowCount; i++) {

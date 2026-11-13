@@ -261,6 +261,7 @@ public final class DefaultSettings {
 	public static final Color INPUT_MODEL_CREATED_COLOR = null;
 	public static final Color INPUT_MODEL_DUMMY_COLOR = Color.SNOW;
 	public static final int INPUT_MODEL_LONG_TITLE_LENGTH = 36;
+	public static final int INPUT_MODEL_SELECT_MATRIX_VERTICAL_HEAD_COUNT = 6;
 	public static final EventImportance TIMELINE_EVENT_IMPORTANCE_PRESET = EventImportance.NORMAL;
 	public static final boolean TIMELINE_EVENT_NOTIFY_PRESET = true;
 	public static final boolean TIMELINE_EVENT_DISMISSED_PRESET = false;

@@ -2562,6 +2562,21 @@ overflow-y:scroll;
 	text-align: center;
 	padding: 2px;
 	overflow-wrap: break-word;
+	hyphens: auto;
+}
+
+/* many columns: head labels read bottom-up, wrapping into further lines when long */
+.ctsms-select-matrix-vertical-head .ctsms-select-matrix-head td,
+.ctsms-select-matrix-vertical-head th.ctsms-select-matrix-cells {
+	vertical-align: bottom;
+}
+
+.ctsms-select-matrix-vertical-head .ctsms-select-matrix-head-label {
+	display: inline-block;
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	max-height: 12em;
+	text-align: left;
 }
 
 /* item labels are shown in the head or the label column, not next to each radio/checkbox */
@@ -2590,6 +2605,7 @@ overflow-y:scroll;
 	text-align: center;
 	padding: 2px;
 	overflow-wrap: break-word;
+	hyphens: auto;
 }
 
 .ctsms-select-matrix-transposed > tbody > tr > td {
