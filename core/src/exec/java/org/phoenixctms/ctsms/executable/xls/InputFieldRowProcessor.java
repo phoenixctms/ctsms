@@ -485,16 +485,18 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setPhoto(Boolean.parseBoolean(getPhoto(values)));
 				inputFieldIn.setAllowedMimeTypeIds(getAllowedMimeTypeIds(getAllowedMimeTypes(values)));
 				break;
-			case SKETCH:
-				inputFieldIn.setWidth(CommonUtil.isEmptyString(getWidth(values)) ? null : Long.parseLong(getWidth(values)));
-				inputFieldIn.setHeight(CommonUtil.isEmptyString(getHeight(values)) ? null : Long.parseLong(getHeight(values)));
-				loadFile(inputFieldIn, getFileName(values));
-				// no break
 			case SELECT_MATRIX_ONE:
 				inputFieldIn.setMatrixTransposed(Boolean.parseBoolean(getMatrixTransposed(values)));
 				break;
 			case SELECT_MATRIX_MANY:
 				inputFieldIn.setMatrixTransposed(Boolean.parseBoolean(getMatrixTransposed(values)));
+				inputFieldIn.setMinSelections(CommonUtil.isEmptyString(getMinSelections(values)) ? null : Integer.parseInt(getMinSelections(values)));
+				inputFieldIn.setMaxSelections(CommonUtil.isEmptyString(getMaxSelections(values)) ? null : Integer.parseInt(getMaxSelections(values)));
+				break;
+			case SKETCH:
+				inputFieldIn.setWidth(CommonUtil.isEmptyString(getWidth(values)) ? null : Long.parseLong(getWidth(values)));
+				inputFieldIn.setHeight(CommonUtil.isEmptyString(getHeight(values)) ? null : Long.parseLong(getHeight(values)));
+				loadFile(inputFieldIn, getFileName(values));
 				// no break
 			case SELECT_MANY_H:
 			case SELECT_MANY_V:
