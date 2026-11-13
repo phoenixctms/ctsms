@@ -219,6 +219,7 @@ public interface ServiceExceptionCodes {
 	public static final String SELECTION_SET_VALUE_MATRIX_CELL_ALREADY_EXISTS = "selection_set_value_matrix_cell_already_exists";
 	public static final String SELECTION_SET_VALUE_MULTIPLE_ROW_PRESET_VALUES = "selection_set_value_multiple_row_preset_values";
 	public static final String SELECTION_SET_VALUES_ROW_COLUMN_REQUIRED = "selection_set_values_row_column_required";
+	public static final String SELECTION_SET_VALUE_ROW_CHANGED = "selection_set_value_row_changed";
 	public static final String INPUT_FIELD_DUPLICATE_ALLOWED_MIME_TYPE = "input_field_duplicate_allowed_mime_type";
 	public static final String SELECTION_SET_VALUE_FOR_WRONG_INPUT_FIELD = "selection_set_value_for_wrong_input_field";
 	public static final String SELECTION_SET_VALUE_FIELD_ID_NOT_NULL = "selection_set_value_field_id_not_null";
