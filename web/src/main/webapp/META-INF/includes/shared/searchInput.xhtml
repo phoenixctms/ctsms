@@ -36,10 +36,13 @@
 			actionListener="#{searchBean.loadQueryText}"
 			update=":search_form:tabView:query_text_panel"
 			oncomplete="refreshQueryTextEditor()" />
-		<p:poll widgetVar="queryTextPoll" interval="2" autoStart="false"
+		<!-- a remoteCommand that search.js calls again after each completed poll, not a p:poll:
+			its setInterval keeps queueing polls while one is still running, and re-creating an
+			existing poll widget fails in this PrimeFaces version (no refresh()) -->
+		<p:remoteCommand name="pollQueryText"
 			rendered="#{sessionScopeBean.experimentalUser}"
 			process="@this"
-			listener="#{searchBean.pollQueryText}"
+			actionListener="#{searchBean.pollQueryText}"
 			update=":search_form:tabView:query_text_progress,:search_form:messages"
 			oncomplete="handleQueryTextPollComplete(xhr, status, args)" />
 		<script type="text/javascript">
