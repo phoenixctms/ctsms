@@ -995,13 +995,13 @@ public final class CoreUtil implements ApplicationContextAware {
 		}
 		try {
 			String username = auth.getUsername() != null ? auth.getUsername().trim() : "";
-			String password = escapeCommandLiteral(auth.getPassword() != null ? auth.getPassword().trim() : "");
+			String password = auth.getPassword() != null ? auth.getPassword().trim() : "";
 			String jwtAuth = getJobJwt(authenticator);
 			String command = MessageFormat.format(job.getType().getCommandFormat(),
 					Settings.getString(SettingCodes.DB_TOOL, Bundle.SETTINGS, DefaultSettings.DB_TOOL),
 					Long.toString(id),
 					username,
-					password,
+					COMMAND_PASSWORD_PLACEHOLDER,
 					jwtAuth,
 					Long.toString(job.getId()),
 					getUserContext().getTimeZone().getID(),
@@ -1012,7 +1012,7 @@ public final class CoreUtil implements ApplicationContextAware {
 					Settings.getString(SettingCodes.INQUIRY_EXPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_EXPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.ECRF_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.ECRF_IMPORTER_PROCESS_PL),
 					Settings.getString(SettingCodes.INQUIRY_IMPORTER_PROCESS_PL, Bundle.SETTINGS, DefaultSettings.INQUIRY_IMPORTER_PROCESS_PL));
-			return runProcess(command, blocking);
+			return runProcess(splitCommand(command, password), blocking);
 		} catch (Exception e) {
 			//System.out.println(e.getMessage());
 			throw new IllegalArgumentException(L10nUtil.getMessage(MessageCodes.START_JOB_ERROR, DefaultMessages.START_JOB_ERROR,
@@ -1025,9 +1025,14 @@ public final class CoreUtil implements ApplicationContextAware {
 	private static final int PROCESS_STDERR_CAPTURE_LIMIT = 64 * 1024;
 	private static final long PROCESS_DRAIN_JOIN_MILLISECONDS = 5000L;
 
+	// Stands in for the password (placeholder {3}) while the command is split. It has no
+	// whitespace or quote, so it stays inside its argument. The password goes into the split
+	// arguments as is, and a quote or space in it can't change how the command is split.
+	static final String COMMAND_PASSWORD_PLACEHOLDER = "password";
+
 	// Whitespace splits arguments. Text inside double quotes stays in that argument, and the
-	// quote characters are dropped. A backslash keeps the next character, so a quote inside a
-	// substituted password does not open or close a quoted argument.
+	// quote characters are dropped. Backslashes are ordinary characters, so Windows paths
+	// (also quoted or UNC paths) in the db_tool and process.pl settings are kept as they are.
 	static String[] splitCommand(String command) {
 		ArrayList<String> args = new ArrayList<String>();
 		StringBuilder token = new StringBuilder();
@@ -1035,11 +1040,6 @@ public final class CoreUtil implements ApplicationContextAware {
 		boolean pending = false;
 		for (int i = 0; i < command.length(); i++) {
 			char c = command.charAt(i);
-			if (c == '\\' && i + 1 < command.length()) {
-				token.append(command.charAt(++i));
-				pending = true;
-				continue;
-			}
 			if (quoted) {
 				if (c == '"') {
 					quoted = false;
@@ -1070,21 +1070,12 @@ public final class CoreUtil implements ApplicationContextAware {
 		return args.toArray(new String[args.size()]);
 	}
 
-	// Placeholder {3} is the password and is copied into the command string. Escape quotes and
-	// backslashes so splitCommand keeps them as characters of that argument.
-	private static String escapeCommandLiteral(String value) {
-		if (value.indexOf('\\') < 0 && value.indexOf('"') < 0) {
-			return value;
+	static String[] splitCommand(String command, String password) {
+		String[] args = splitCommand(command);
+		for (int i = 0; i < args.length; i++) {
+			args[i] = args[i].replace(COMMAND_PASSWORD_PLACEHOLDER, password);
 		}
-		StringBuilder escaped = new StringBuilder(value.length() + 4);
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
-			if (c == '\\' || c == '"') {
-				escaped.append('\\');
-			}
-			escaped.append(c);
-		}
-		return escaped.toString();
+		return args;
 	}
 
 	// Keep the newest stderr, capped at captureLimit, so a late failure is what runProcess throws.
