@@ -2589,8 +2589,10 @@ overflow-y:scroll;
 	visibility: hidden;
 }
 
-.ctsms-select-matrix .ui-radiobutton,
-.ctsms-select-matrix .ui-chkbox {
+/* center the radios/checkboxes in their columns, like the head labels
+   (more specific than the .ctsms-inputfieldrow rules in inputField.css) */
+.ctsms-inputfieldrow .ctsms-select-matrix .ui-selectoneradio .ui-radiobutton,
+.ctsms-inputfieldrow .ctsms-select-matrix .ui-selectmanycheckbox .ui-chkbox {
 	float: none;
 	margin-left: auto;
 	margin-right: auto;
@@ -2632,8 +2634,11 @@ overflow-y:scroll;
 	height: 2.2em;
 }
 
-.ctsms-select-matrix-lines tr:nth-child(odd) {
-	background-color: rgba(128, 128, 128, 0.1);
+/* transposed: shade the lines across the label column and all vertical option groups
+   (!important beats the "background: none !important" of .ui-selectmanycheckbox tr) */
+.ctsms-select-matrix-lines tr:nth-child(odd),
+.ctsms-select-matrix-transposed .ctsms-select-matrix-cells > table tr:nth-child(odd) {
+	background-color: rgba(128, 128, 128, 0.1) !important;
 }
 
 .ctsms-inputfieldtype-checkbox {
