@@ -909,7 +909,21 @@ public abstract class InputFieldPDFBlock {
 		ArrayList<ArrayList<String>> wrappedHeadLabels = new ArrayList<ArrayList<String>>(headLabels.size());
 		for (int c = 0; c < headLabels.size(); c++) {
 			// vertical: long labels wrapped into further (vertical) lines; horizontal: wrapped to the column width
-			ArrayList<String> lines = wrapLine(getSingleLine(headLabels.get(c)), verticalHead ? SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH : textWidth, cursor);
+			String label = getSingleLine(headLabels.get(c));
+			ArrayList<String> lines;
+			if (verticalHead) {
+				// as many vertical lines as fit side by side in the column: longer lines instead of overlapping the next column
+				int maxLines = Math.max(1, (int) Math.floor(cellWidth / lineStep));
+				float labelLength = PDFUtil.getStringWidth(label, cursor.getFontA(), PDFUtil.FontSize.MEDIUM);
+				float maxLength = SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH;
+				lines = wrapLine(label, maxLength, cursor);
+				while (lines.size() > maxLines && maxLength < labelLength) {
+					maxLength *= 1.25f;
+					lines = wrapLine(label, maxLength, cursor);
+				}
+			} else {
+				lines = wrapLine(label, textWidth, cursor);
+			}
 			wrappedHeadLabels.add(lines);
 			if (verticalHead) {
 				for (int l = 0; l < lines.size(); l++) {
