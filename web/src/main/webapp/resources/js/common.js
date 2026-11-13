@@ -1738,24 +1738,35 @@ jQuery(document).ajaxComplete(function() {
 	disableBrowserAutofill();
 });
 
+var JOB_LIST_POLL_INTERVAL_MS = 3000;
 var JOB_LIST_POLL_MAX_COUNT = 600; // 30 min at the 3 s poll interval
 var jobListPollCount = 0;
+var jobListPollTimer = null;
+var jobListPollPending = false;
 
 function updateJobListPoll(polled) {
-	if (typeof jobListPoll === "undefined" || !jobListPoll) {
+	if (typeof pollJobList !== "function") {
 		return;
 	}
 	if (polled) {
+		jobListPollPending = false;
 		jobListPollCount++;
 	} else {
 		// a user action (start, load, paging, ...) gives a stuck job a fresh time budget
 		jobListPollCount = 0;
 	}
 	if (jQuery(".ctsms-job-running").length > 0 && jobListPollCount < JOB_LIST_POLL_MAX_COUNT) {
-		if (!jobListPoll.active) {
-			jobListPoll.start();
+		// the next poll is scheduled only after the previous one completed,
+		// so polls never pile up in the ajax queue
+		if (jobListPollTimer == null && !jobListPollPending) {
+			jobListPollTimer = setTimeout(function() {
+				jobListPollTimer = null;
+				jobListPollPending = true;
+				pollJobList();
+			}, JOB_LIST_POLL_INTERVAL_MS);
 		}
-	} else {
-		jobListPoll.stop();
+	} else if (jobListPollTimer != null) {
+		clearTimeout(jobListPollTimer);
+		jobListPollTimer = null;
 	}
 }

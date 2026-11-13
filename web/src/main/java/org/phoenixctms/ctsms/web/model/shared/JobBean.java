@@ -508,19 +508,36 @@ public class JobBean extends ManagedBeanBase {
 		return false;
 	}
 
-	public void pollJobs() {
-		if (isRunning(out)) {
-			try {
-				out = WebUtil.getServiceLocator().getJobService().getJob(WebUtil.getAuthentication(), out.getId());
-				if (!isRunning(out)) {
-					// the job just finished: pick up its file, but leave the input form alone
-					initSets();
-				}
-			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-				out = null;
-			} catch (AuthenticationException e) {
-				WebUtil.publishException(e);
+	private static boolean hasJobOutput(JobOutVO jobVO) {
+		return jobVO != null && !CommonUtil.isEmptyString(jobVO.getJobOutput());
+	}
+
+	public void pollJobs(String namingContainer) {
+		if (!isRunning(out)) {
+			return;
+		}
+		boolean hadJobOutput = hasJobOutput(out);
+		try {
+			out = WebUtil.getServiceLocator().getJobService().getJob(WebUtil.getAuthentication(), out.getId());
+			if (!isRunning(out)) {
+				// the job just finished: pick up its file, but leave the input form alone
+				initSets();
 			}
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			// getJob throws a ServiceException only for a job that no longer exists
+			out = null;
+		} catch (AuthenticationException e) {
+			WebUtil.publishException(e);
+			return;
+		}
+		String clientIdPrefix = (namingContainer.startsWith(":") ? namingContainer.substring(1) : namingContainer) + ":";
+		RequestContext requestContext = RequestContext.getCurrentInstance();
+		if (!isRunning(out) || hadJobOutput != hasJobOutput(out)) {
+			// the output fieldset appears, disappears or gets its final collapsed state
+			requestContext.update(clientIdPrefix + "job_output");
+		} else if (hasJobOutput(out)) {
+			// refresh just the text, so a fieldset the user expanded stays open
+			requestContext.update(clientIdPrefix + "job_output_text");
 		}
 	}
 

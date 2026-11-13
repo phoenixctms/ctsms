@@ -142,9 +142,11 @@
 						value="#{jobBean.getProgressValue(job.vo)}" />
 				</p:column>						
 			</p:dataTable>
-			<p:poll widgetVar="jobListPoll" interval="3" autoStart="false"
-				process="@this" listener="#{jobBean.pollJobs}"
-				update="job_list,filelink,job_output"
+			<!-- a remoteCommand, not a p:poll: tabs re-render their content, and re-creating
+				an existing poll widget fails in this PrimeFaces version (no refresh()) -->
+			<p:remoteCommand name="pollJobList" process="@this"
+				actionListener="#{jobBean.pollJobs(namingContainer)}"
+				update="job_list,filelink"
 				oncomplete="updateJobListPoll(true)" />
 			<p:panel id="job_input">
 				<f:facet name="header">
@@ -264,12 +266,14 @@
 						<f:facet name="legend">
 							<h:outputText value="#{labels.job_output_field_set}" />
 						</f:facet>
+						<h:panelGroup id="job_output_text">
 						<ui:include src="multiLineOutputText.xhtml">
 							<ui:param name="multiLineText" value="#{jobBean.out.jobOutput}" />
 							<ui:param name="rendered" value="true" />
 							<ui:param name="multiLineTextClass" value="ctsms-monospaced" />
 							<ui:param name="escapeHtml" value="true" />
 						</ui:include>
+						</h:panelGroup>
 					</p:fieldset>
 
 					<h:outputLabel
