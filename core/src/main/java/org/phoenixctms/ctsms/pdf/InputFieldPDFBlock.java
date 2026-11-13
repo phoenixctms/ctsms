@@ -35,6 +35,7 @@ public abstract class InputFieldPDFBlock {
 
 	private final static float SELECTION_MATRIX_LABEL_WIDTH_RATIO = 0.35f;
 	private final static float SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH = 120.0f; // pt
+	private final static float SELECTION_MATRIX_VERTICAL_HEAD_BASELINE_RATIO = 0.75f;
 	private InputFieldOutVO inputField;
 	protected boolean blank;
 	protected PDFJpeg ximage;
@@ -903,33 +904,35 @@ public abstract class InputFieldPDFBlock {
 		float headHeight = 0.0f;
 		boolean verticalHead = headLabels.size() > Settings.getInt(SettingCodes.SELECT_MATRIX_VERTICAL_HEAD_COUNT, Bundle.SETTINGS,
 				DefaultSettings.SELECT_MATRIX_VERTICAL_HEAD_COUNT);
-		if (verticalHead) {
-			// many columns: head labels read bottom-up, long ones wrapped into further (vertical) lines
-			float lineHeight = PDFUtil.renderTextLine(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), "", 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT);
-			ArrayList<ArrayList<String>> wrappedHeadLabels = new ArrayList<ArrayList<String>>(headLabels.size());
-			for (int c = 0; c < headLabels.size(); c++) {
-				ArrayList<String> lines = wrapLine(getSingleLine(headLabels.get(c)), SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH, cursor);
-				wrappedHeadLabels.add(lines);
+		// height of one text line incl. spacing
+		float lineStep = PDFUtil.renderTextLine(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), "", 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT);
+		ArrayList<ArrayList<String>> wrappedHeadLabels = new ArrayList<ArrayList<String>>(headLabels.size());
+		for (int c = 0; c < headLabels.size(); c++) {
+			// vertical: long labels wrapped into further (vertical) lines; horizontal: wrapped to the column width
+			ArrayList<String> lines = wrapLine(getSingleLine(headLabels.get(c)), verticalHead ? SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH : textWidth, cursor);
+			wrappedHeadLabels.add(lines);
+			if (verticalHead) {
 				for (int l = 0; l < lines.size(); l++) {
 					headHeight = Math.max(headHeight, PDFUtil.getStringWidth(lines.get(l), cursor.getFontA(), PDFUtil.FontSize.MEDIUM));
 				}
+			} else {
+				headHeight = Math.max(headHeight, lines.size() * lineStep);
 			}
-			for (int c = 0; c < headLabels.size(); c++) {
-				ArrayList<String> lines = wrappedHeadLabels.get(c);
-				for (int l = 0; l < lines.size(); l++) {
+		}
+		for (int c = 0; c < headLabels.size(); c++) {
+			ArrayList<String> lines = wrappedHeadLabels.get(c);
+			float cellCenterX = x + labelWidth + (c + 0.5f) * cellWidth;
+			for (int l = 0; l < lines.size(); l++) {
+				if (verticalHead) {
+					// many columns: read bottom-up; the block of lines is centered in the column.
+					// the rotated glyphs extend left of their baseline by about the ascent.
+					float baselineX = cellCenterX - lines.size() * lineStep / 2.0f + (l + SELECTION_MATRIX_VERTICAL_HEAD_BASELINE_RATIO) * lineStep;
 					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), lines.get(l),
-							x + labelWidth + c * cellWidth + (l + 1) * lineHeight, y1 - headHeight, PDFUtil.Alignment.TOP_LEFT, PDFUtil.TextDecoration.NONE,
-							PDFUtil.Rotation.CCW90);
+							baselineX, y1 - headHeight, PDFUtil.Alignment.TOP_LEFT, PDFUtil.TextDecoration.NONE, PDFUtil.Rotation.CCW90);
+				} else {
+					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), lines.get(l),
+							cellCenterX, y1 - l * lineStep, PDFUtil.Alignment.TOP_CENTER);
 				}
-			}
-		} else {
-			for (int c = 0; c < headLabels.size(); c++) {
-				headHeight = Math.max(headHeight, PDFUtil.renderMultilineText(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(),
-						headLabels.get(c), 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT, textWidth));
-			}
-			for (int c = 0; c < headLabels.size(); c++) {
-				PDFUtil.renderMultilineText(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(),
-						headLabels.get(c), x + labelWidth + c * cellWidth, y1, PDFUtil.Alignment.TOP_LEFT, textWidth);
 			}
 		}
 		y1 -= headHeight + getYSelectionItemIndent();
@@ -954,7 +957,7 @@ public abstract class InputFieldPDFBlock {
 							ximage = cursor.getSelectboxUncheckedImage();
 						}
 					}
-					PDFUtil.renderImage(contentStream, ximage, x + labelWidth + c * cellWidth, y1, Alignment.TOP_LEFT);
+					PDFUtil.renderImage(contentStream, ximage, x + labelWidth + (c + 0.5f) * cellWidth, y1, Alignment.TOP_CENTER);
 					lineHeight = Math.max(lineHeight, ximage.getHeightPoints());
 				}
 			}
