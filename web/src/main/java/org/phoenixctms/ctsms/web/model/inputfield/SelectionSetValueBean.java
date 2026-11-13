@@ -334,6 +334,13 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 		return config.isSelectMatrix();
 	}
 
+	/**
+	 * Row and column can also be entered for other select fields, so a field can be prepared for the conversion to a matrix type.
+	 */
+	public boolean isMatrixLabels() {
+		return config.isSelectMatrix() || config.isSelectOneDropdown() || config.isSelectOneRadio() || config.isSelectMany();
+	}
+
 	@Override
 	public String loadAction() {
 		return loadAction(in.getId());
