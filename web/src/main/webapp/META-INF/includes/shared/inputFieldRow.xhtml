@@ -37,7 +37,7 @@
 					<ui:param name="escapeHtml" value="true" />
 				</ui:include>
 				<h:panelGrid
-					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch or fieldInput.file)}"
+					rendered="#{!(fieldInput.multiLineText or fieldInput.sketch or fieldInput.file or fieldInput.selectMatrix)}"
 					columns="#{fieldInput.longTitle ? 1 : 4}"
 					cellpadding="#{fieldInput.longTitle ? 0 : 2}"
 					styleClass="#{fieldInput.longTitle ? 'ctsms-input-panelgrid' : ''}"
@@ -427,6 +427,144 @@
 					</ui:include>
 					<p:message for="sketchpad#{index}" />
 				</h:panelGrid>
+				<h:panelGrid rendered="#{fieldInput.selectMatrix}" columns="1"
+					cellpadding="0" styleClass="ctsms-input-panelgrid"
+					rowClasses="ctsms-select-matrix-label-row,ctsms-select-matrix-input-row,ctsms-select-matrix-message-row">
+					<h:outputText
+						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
+						value="#{fieldInput.title}" />
+					<h:panelGroup id="selectMatrix#{index}" layout="block"
+						styleClass="ctsms-select-matrix">
+						<h:panelGroup rendered="#{!fieldInput.selectMatrixTransposed}">
+							<table class="ctsms-select-matrix-table">
+								<thead>
+									<tr>
+										<th class="ctsms-select-matrix-label" />
+										<th class="ctsms-select-matrix-cells">
+											<table class="ctsms-select-matrix-head">
+												<tr>
+													<ui:repeat value="#{fieldInput.selectionMatrix.headLabels}" var="headLabel">
+														<td><h:outputText value="#{headLabel}" /></td>
+													</ui:repeat>
+												</tr>
+											</table>
+										</th>
+										<th class="ctsms-select-matrix-message" />
+									</tr>
+								</thead>
+								<tbody>
+									<ui:repeat value="#{fieldInput.selectionMatrix.rows}" var="matrixRow">
+										<tr class="ctsms-select-matrix-row">
+											<td class="ctsms-select-matrix-label"><h:outputText value="#{matrixRow.label}" /></td>
+											<td class="ctsms-select-matrix-cells">
+												<p:selectOneRadio id="selectMatrixOne"
+													widgetVar="#{fieldInput.widgetVar}_#{matrixRow.index}"
+													value="#{matrixRow.selectionValueId}"
+													label="#{fieldInput.label}"
+													layout="lineDirection"
+													rendered="#{fieldInput.selectMatrixOne}"
+													required="#{!optional and !fieldInput.optional}"
+													requiredMessage="#{fieldInput.requiredMessage}"
+													disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
+													onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"
+													onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}">
+													<f:converter converterId="ctsms.ID" />
+													<f:selectItems value="#{matrixRow.items}" />
+													<p:ajax />
+												</p:selectOneRadio>
+												<p:selectManyCheckbox id="selectMatrixMany"
+													widgetVar="#{fieldInput.widgetVar}_#{matrixRow.index}"
+													value="#{matrixRow.selectionValueIds}"
+													label="#{fieldInput.label}"
+													layout="lineDirection"
+													rendered="#{fieldInput.selectMatrixMany}"
+													required="#{!optional and !fieldInput.optional}"
+													requiredMessage="#{fieldInput.requiredMessage}"
+													disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
+													onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"
+													onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}">
+													<f:selectItems value="#{matrixRow.items}" />
+													<p:ajax />
+												</p:selectManyCheckbox>
+											</td>
+											<td class="ctsms-select-matrix-message">
+												<p:message for="selectMatrixOne" display="icon" rendered="#{fieldInput.selectMatrixOne}" />
+												<p:message for="selectMatrixMany" display="icon" rendered="#{fieldInput.selectMatrixMany}" />
+											</td>
+										</tr>
+									</ui:repeat>
+								</tbody>
+							</table>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{fieldInput.selectMatrixTransposed}">
+							<table class="ctsms-select-matrix-table ctsms-select-matrix-transposed">
+								<thead>
+									<tr>
+										<th class="ctsms-select-matrix-label" />
+										<ui:repeat value="#{fieldInput.selectionMatrix.headLabels}" var="headLabel">
+											<th class="ctsms-select-matrix-cells"><h:outputText value="#{headLabel}" /></th>
+										</ui:repeat>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="ctsms-select-matrix-label">
+											<table class="ctsms-select-matrix-lines">
+												<ui:repeat value="#{fieldInput.selectionMatrix.columnLabels}" var="columnLabel">
+													<tr><td><h:outputText value="#{columnLabel}" /></td></tr>
+												</ui:repeat>
+											</table>
+										</td>
+										<ui:repeat value="#{fieldInput.selectionMatrix.rows}" var="matrixRow">
+											<td class="ctsms-select-matrix-cells">
+												<p:selectOneRadio id="selectMatrixOne"
+													widgetVar="#{fieldInput.widgetVar}_#{matrixRow.index}"
+													value="#{matrixRow.selectionValueId}"
+													label="#{fieldInput.label}"
+													layout="pageDirection"
+													rendered="#{fieldInput.selectMatrixOne}"
+													required="#{!optional and !fieldInput.optional}"
+													requiredMessage="#{fieldInput.requiredMessage}"
+													disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
+													onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"
+													onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}">
+													<f:converter converterId="ctsms.ID" />
+													<f:selectItems value="#{matrixRow.items}" />
+													<p:ajax />
+												</p:selectOneRadio>
+												<p:selectManyCheckbox id="selectMatrixMany"
+													widgetVar="#{fieldInput.widgetVar}_#{matrixRow.index}"
+													value="#{matrixRow.selectionValueIds}"
+													label="#{fieldInput.label}"
+													layout="pageDirection"
+													rendered="#{fieldInput.selectMatrixMany}"
+													required="#{!optional and !fieldInput.optional}"
+													requiredMessage="#{fieldInput.requiredMessage}"
+													disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
+													onkeyup="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}"
+													onchange="#{fieldInput.getEventJSCall('FieldCalculation.selectManyOnChange')}">
+													<f:selectItems value="#{matrixRow.items}" />
+													<p:ajax />
+												</p:selectManyCheckbox>
+												<p:message for="selectMatrixOne" display="icon" rendered="#{fieldInput.selectMatrixOne}" />
+												<p:message for="selectMatrixMany" display="icon" rendered="#{fieldInput.selectMatrixMany}" />
+											</td>
+										</ui:repeat>
+									</tr>
+								</tbody>
+							</table>
+						</h:panelGroup>
+						<script type="text/javascript">
+							FieldCalculation.registerSelectMatrix('#{fieldInput.widgetVar}', '#{namingContainer}:selectMatrix#{index}', #{fieldInput.selectionMatrix.rowCount});
+						</script>
+					</h:panelGroup>
+					<ui:include src="errorMessage.xhtml">
+						<ui:param name="rendered" value="#{fieldInput.error}" />
+						<ui:param name="value" value="#{fieldInput.errorMessage}" />
+						<ui:param name="error_message_id"
+							value="selectMatrix#{index}_error_msg" />
+					</ui:include>
+				</h:panelGrid>
 				<h:panelGrid id="file#{index}" rendered="#{fieldInput.file}" columns="1"
 					cellpadding="0" styleClass="ctsms-input-panelgrid">
 					<h:panelGroup layout="block" styleClass="ctsms-input-file-label">
@@ -594,6 +732,12 @@
 							title="#{labels.apply_calculated_value_button_title}"
 							icon="ui-icon ui-icon-arrowreturn-1-n"
 							onclick="FieldCalculation.selectManyApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:selectMany#{index}','#{namingContainer}:row#{index}')" />
+						<p:commandButton type="button"
+							rendered="#{fieldInput.selectMatrix and !fieldInput.jsValueExpressionEmpty}"
+							tabindex="-1"
+							title="#{labels.apply_calculated_value_button_title}"
+							icon="ui-icon ui-icon-arrowreturn-1-n"
+							onclick="FieldCalculation.selectManyApplyCalculatedValue('#{fieldInput.jsVariableName}',#{empty fieldInput.seriesIndex ? 'null' : fieldInput.seriesIndex},#{fieldInput.widgetVar},'#{namingContainer}:selectMatrix#{index}','#{namingContainer}:row#{index}')" />
 						<p:commandButton type="button"
 							rendered="#{fieldInput.autocomplete and !fieldInput.jsValueExpressionEmpty}"
 							tabindex="-1"

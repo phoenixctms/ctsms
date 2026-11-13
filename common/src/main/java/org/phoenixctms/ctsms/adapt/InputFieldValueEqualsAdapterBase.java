@@ -126,7 +126,9 @@ public abstract class InputFieldValueEqualsAdapterBase<A, B> {
 				InputFieldType.SELECT_ONE_RADIO_H.equals(fieldType) ||
 				InputFieldType.SELECT_ONE_RADIO_V.equals(fieldType) ||
 				InputFieldType.SELECT_MANY_H.equals(fieldType) ||
-				InputFieldType.SELECT_MANY_V.equals(fieldType)) {
+				InputFieldType.SELECT_MANY_V.equals(fieldType) ||
+				InputFieldType.SELECT_MATRIX_ONE.equals(fieldType) ||
+				InputFieldType.SELECT_MATRIX_MANY.equals(fieldType)) {
 			ArrayList aSelectionSet = getASelectionSetSorted(a);
 			if (aSelectionSet == null) {
 				aSelectionSet = new ArrayList();

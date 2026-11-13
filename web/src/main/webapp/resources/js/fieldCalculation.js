@@ -1477,6 +1477,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
+			case "SELECT_MATRIX_ONE":
+			case "SELECT_MATRIX_MANY":
 				if (!(newValue instanceof Array)) {
 					newValue = (typeof newValue === 'string') ? parseInt(newValue) : newValue;
 					if (isNaN(newValue)) {
@@ -1594,6 +1596,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
+			case "SELECT_MATRIX_ONE":
+			case "SELECT_MATRIX_MANY":
 			    if (inputFieldSelectionSetVals && inputFieldVariableValue.selectionValueIds != null) {
 					var res = [];
 			        for (var j = 0; j < inputFieldVariableValue.selectionValueIds.length; j++) {
@@ -1654,6 +1658,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
+			case "SELECT_MATRIX_ONE":
+			case "SELECT_MATRIX_MANY":
 				return _selectionSetValueIdsEqual(value.selectionValueIds, enteredValue.selectionValueIds);
 			case "CHECKBOX":
 				return value.booleanValue == enteredValue.booleanValue;
@@ -2475,6 +2481,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 						break;
 					case "SELECT_MANY_H":
 					case "SELECT_MANY_V":
+					case "SELECT_MATRIX_ONE":
+					case "SELECT_MATRIX_MANY":
 						selectManyApplyCalculatedValue(variableName,index,widget,sourceId);
 						break;
 					case "CHECKBOX":
@@ -2557,6 +2565,64 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 		}
 		return js;
 	}
+
+	// A select matrix input field renders one radio/checkbox widget per option group (row),
+	// registered as <widgetVar>_<row index>. The composite registered as <widgetVar> lets
+	// the select many handlers read and write the selection ids of all rows at once.
+	function registerSelectMatrix(widgetVar, id, rowCount) {
+		var _rowWidgets = function() {
+			var widgets = [];
+			for (var i = 0; i < rowCount; i++) {
+				var widget = window[widgetVar + '_' + i];
+				if (widget != null) {
+					widgets.push(widget);
+				}
+			}
+			return widgets;
+		};
+		window[widgetVar] = {
+			id: (id != null && id.startsWith(':')) ? id.substr(1) : id,
+			getValue: function() {
+				var result = [];
+				var widgets = _rowWidgets();
+				for (var i = 0; i < widgets.length; i++) {
+					var value = widgets[i].getValue();
+					if (value instanceof Array) {
+						result = result.concat(value);
+					} else if (value != null && value !== '') {
+						result.push(value);
+					}
+				}
+				return result;
+			},
+			setValue: function(value) {
+				if (value == null) {
+					value = [];
+				} else if (!(value instanceof Array)) {
+					value = [ value ];
+				}
+				var widgets = _rowWidgets();
+				for (var i = 0; i < widgets.length; i++) {
+					var rowValue = [];
+					$(widgets[i].inputs).each(function() {
+						var itemValue = $(this).attr('value');
+						if (itemValue != null && itemValue !== '') {
+							for (var j = 0; j < value.length; j++) {
+								// option values are strings; calculated selection ids may be numbers
+								if (value[j] == itemValue) {
+									rowValue.push(itemValue);
+									break;
+								}
+							}
+						}
+					});
+					widgets[i].setValue(rowValue);
+				}
+			}
+		};
+	}
+
+	FieldCalculation.registerSelectMatrix = registerSelectMatrix;
 
 	FieldCalculation.handleInitInputFieldVariables = handleInitInputFieldVariables;
 	FieldCalculation.resetInputFieldVariables = resetInputFieldVariables;

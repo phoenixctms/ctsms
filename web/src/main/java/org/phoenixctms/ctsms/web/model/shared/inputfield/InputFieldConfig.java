@@ -56,7 +56,29 @@ public abstract class InputFieldConfig {
 	}
 
 	public final boolean isSelect() {
-		return isSelectOneDropdown() || isSelectOneRadio() || isSelectMany() || isAutocomplete() || isSketch();
+		return isSelectOneDropdown() || isSelectOneRadio() || isSelectMany() || isAutocomplete() || isSketch() || isSelectMatrix();
+	}
+
+	public final boolean isSelectMatrix() {
+		return isSelectMatrixOne() || isSelectMatrixMany();
+	}
+
+	public final boolean isSelectMatrixOne() {
+		return isInputFieldType(InputFieldType.SELECT_MATRIX_ONE);
+	}
+
+	public final boolean isSelectMatrixMany() {
+		return isInputFieldType(InputFieldType.SELECT_MATRIX_MANY);
+	}
+
+	protected abstract boolean isMatrixTransposed();
+
+	public final boolean isSelectMatrixTransposed() {
+		return isSelectMatrix() && isMatrixTransposed();
+	}
+
+	public final boolean isSelectionLimits() {
+		return isSelectMany() || isSketch() || isSelectMatrixMany();
 	}
 
 	public final boolean isSelectHorizontal() {
@@ -103,6 +125,7 @@ public abstract class InputFieldConfig {
 		return isSingleLineText() ||
 				isMultiLineText() ||
 				isSelectMany() ||
+				isSelectMatrixMany() ||
 				isInteger() ||
 				isFloat() ||
 				isDate() ||

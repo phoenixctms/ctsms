@@ -112,6 +112,7 @@ import org.phoenixctms.ctsms.util.date.DateCalc;
 import org.phoenixctms.ctsms.util.date.DateInterval;
 import org.phoenixctms.ctsms.util.date.ShiftDuration;
 import org.phoenixctms.ctsms.vo.*;
+import org.phoenixctms.ctsms.vocycle.InputFieldSelectionSetValueGraph;
 import org.phoenixctms.ctsms.vocycle.UserReflexionGraph;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -1030,6 +1031,61 @@ public final class ServiceUtil {
 		}
 	}
 
+	private static void checkInputFieldSelectionMatrix(InputField inputField, boolean optional, Collection<Long> selectionSetValueIds,
+			InputFieldDao inputFieldDao, InputFieldSelectionSetValueDao selectionSetValueDao) throws ServiceException {
+		boolean empty = selectionSetValueIds == null || selectionSetValueIds.size() == 0;
+		if (optional && empty) {
+			return;
+		}
+		LinkedHashMap<String, InputFieldSelectionSetValue> rows = new LinkedHashMap<String, InputFieldSelectionSetValue>();
+		HashMap<String, Integer> rowCounts = new HashMap<String, Integer>();
+		Iterator<InputFieldSelectionSetValue> fieldSelectionSetValuesIt = inputField.getSelectionSetValues().iterator();
+		while (fieldSelectionSetValuesIt.hasNext()) {
+			InputFieldSelectionSetValue selectionSetValue = fieldSelectionSetValuesIt.next();
+			if (!rows.containsKey(selectionSetValue.getRowL10nKey())) {
+				rows.put(selectionSetValue.getRowL10nKey(), selectionSetValue);
+				rowCounts.put(selectionSetValue.getRowL10nKey(), 0);
+			}
+		}
+		if (!empty) {
+			Iterator<Long> it = selectionSetValueIds.iterator();
+			while (it.hasNext()) {
+				InputFieldSelectionSetValue selectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(it.next(), selectionSetValueDao);
+				if (!inputField.equals(selectionSetValue.getField())) {
+					InputFieldSelectionSetValueOutVO selectionSetValueVO = selectionSetValueDao.toInputFieldSelectionSetValueOutVO(selectionSetValue);
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_SET_VALUE_WRONG_FIELD,
+							CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)), selectionSetValueVO.getName());
+				}
+				String row = selectionSetValue.getRowL10nKey();
+				rowCounts.put(row, (rowCounts.containsKey(row) ? rowCounts.get(row) : 0) + 1);
+			}
+		}
+		Integer minSelections = inputField.getMinSelections();
+		Integer maxSelections = inputField.getMaxSelections();
+		Iterator<Entry<String, InputFieldSelectionSetValue>> rowsIt = rows.entrySet().iterator();
+		while (rowsIt.hasNext()) {
+			Entry<String, InputFieldSelectionSetValue> row = rowsIt.next();
+			int count = rowCounts.get(row.getKey());
+			if (!optional && count == 0) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_MATRIX_ROW_SELECTION_REQUIRED,
+						CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)),
+						InputFieldSelectionSetValueGraph.getInputFieldSelectionSetValueRow(row.getValue()));
+			}
+			if (InputFieldType.SELECT_MATRIX_ONE.equals(inputField.getFieldType())) {
+				if (count > 1) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_MATRIX_ROW_SINGLE_SELECTION_REQUIRED,
+							CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)),
+							InputFieldSelectionSetValueGraph.getInputFieldSelectionSetValueRow(row.getValue()));
+				}
+			} else {
+				if ((minSelections != null && minSelections.compareTo(count) > 0)
+						|| (maxSelections != null && maxSelections.compareTo(count) < 0)) {
+					throw L10nUtil.initServiceException(getValidationErrorMsg(inputFieldDao.toInputFieldOutVO(inputField)));
+				}
+			}
+		}
+	}
+
 	public static void checkInputFieldSelectionSetValues(InputField inputField, boolean optional, Collection<Long> selectionSetValueIds,
 			InputFieldDao inputFieldDao, InputFieldSelectionSetValueDao selectionSetValueDao) throws ServiceException {
 		if (inputField != null) {
@@ -1049,6 +1105,8 @@ public final class ServiceUtil {
 								throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SINGLE_SELECTION_REQUIRED,
 										CommonUtil.inputFieldOutVOToString(inputFieldDao.toInputFieldOutVO(inputField)));
 							}
+						} else if (isInputFieldTypeSelectMatrix(fieldType)) {
+							// checked per row below
 						} else {
 							Integer minSelections = inputField.getMinSelections();
 							if (minSelections != null && minSelections.compareTo(selectionSetValueIds.size()) > 0) {
@@ -1074,6 +1132,9 @@ public final class ServiceUtil {
 										CommonUtil.inputFieldOutVOToString(selectionSetValueVO.getField()), selectionSetValueVO.getName());
 							}
 						}
+					}
+					if (isInputFieldTypeSelectMatrix(fieldType)) {
+						checkInputFieldSelectionMatrix(inputField, optional, selectionSetValueIds, inputFieldDao, selectionSetValueDao);
 					}
 				} else if (selectionSetValueIds != null && selectionSetValueIds.size() > 0) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_NOT_EMTPY,
@@ -4182,7 +4243,16 @@ public final class ServiceUtil {
 	}
 
 	public static boolean isInputFieldTypeSelect(InputFieldType fieldType) {
-		return isInputFieldTypeSelectOne(fieldType) || isInputFieldTypeSelectMany(fieldType);
+		return isInputFieldTypeSelectOne(fieldType) || isInputFieldTypeSelectMany(fieldType) || isInputFieldTypeSelectMatrix(fieldType);
+	}
+
+	public static boolean isInputFieldTypeSelectMatrix(InputFieldType fieldType) {
+		return InputFieldType.SELECT_MATRIX_ONE.equals(fieldType)
+				|| InputFieldType.SELECT_MATRIX_MANY.equals(fieldType);
+	}
+
+	public static boolean isInputFieldTypeSelectionLimits(InputFieldType fieldType) {
+		return isInputFieldTypeSelectManySketch(fieldType) || InputFieldType.SELECT_MATRIX_MANY.equals(fieldType);
 	}
 
 	public static boolean isInputFieldTypeSelectMany(InputFieldType fieldType) {
@@ -4201,7 +4271,7 @@ public final class ServiceUtil {
 	}
 
 	public static boolean isLoadSelectionSet(InputFieldType fieldType) {
-		return isInputFieldTypeSelectOne(fieldType) || isInputFieldTypeSelectManySketch(fieldType);
+		return isInputFieldTypeSelectOne(fieldType) || isInputFieldTypeSelectManySketch(fieldType) || isInputFieldTypeSelectMatrix(fieldType);
 	}
 
 	public static boolean isMassMailRecipientPending(MassMailRecipient recipient) {

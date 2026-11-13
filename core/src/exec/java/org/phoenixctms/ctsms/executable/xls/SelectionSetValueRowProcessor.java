@@ -25,6 +25,8 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	private final static int PRESET_COLUMN_INDEX = 4;
 	private final static int STROKES_ID_COLUMN_INDEX = 5;
 	private final static int INK_REGIONS_COLUMN_INDEX = 6;
+	private final static int ROW_COLUMN_INDEX = 7;
+	private final static int COLUMN_COLUMN_INDEX = 8;
 	private int fieldNameColumnIndex;
 	private int nameColumnIndex;
 	private int valueColumnIndex;
@@ -32,6 +34,8 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	private int presetColumnIndex;
 	private int strokesIdColumnIndex;
 	private int inkRegionsColumnIndex;
+	private int rowColumnIndex;
+	private int columnColumnIndex;
 	private HashMap<String, InputField> inputFieldMap;
 	private HashMap<String, Set<InputFieldSelectionSetValueInVO>> selectionSetValueMap;
 	@Autowired
@@ -91,6 +95,14 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		return SHEET_NAME;
 	}
 
+	private String getRow(String[] values) {
+		return getColumnValue(values, rowColumnIndex);
+	}
+
+	private String getColumn(String[] values) {
+		return getColumnValue(values, columnColumnIndex);
+	}
+
 	private String getStrokesId(String[] values) {
 		return getColumnValue(values, strokesIdColumnIndex);
 	}
@@ -109,6 +121,8 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		presetColumnIndex = PRESET_COLUMN_INDEX;
 		strokesIdColumnIndex = STROKES_ID_COLUMN_INDEX;
 		inkRegionsColumnIndex = INK_REGIONS_COLUMN_INDEX;
+		rowColumnIndex = ROW_COLUMN_INDEX;
+		columnColumnIndex = COLUMN_COLUMN_INDEX;
 		inputFieldMap.clear();
 		selectionSetValueMap.clear();
 	}
@@ -123,6 +137,8 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 				.append(getPreset(values))
 				.append(getStrokesId(values))
 				.append(getInkRegions(values))
+				.append(getRow(values))
+				.append(getColumn(values))
 				.toHashCode();
 	}
 
@@ -156,6 +172,8 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		selectionSetValueIn.setPreset(Boolean.parseBoolean(getPreset(values)));
 		selectionSetValueIn.setInkRegions(CommonUtil.isEmptyString(getInkRegions(values)) ? null : CommonUtil.stringToInkValue(getInkRegions(values)));
 		selectionSetValueIn.setStrokesId(CommonUtil.isEmptyString(getStrokesId(values)) ? null : getStrokesId(values));
+		selectionSetValueIn.setRow(CommonUtil.isEmptyString(getRow(values)) ? null : getRow(values));
+		selectionSetValueIn.setColumn(CommonUtil.isEmptyString(getColumn(values)) ? null : getColumn(values));
 		Set<InputFieldSelectionSetValueInVO> selectionSetValues;
 		if (selectionSetValueMap.containsKey(fieldName)) {
 			selectionSetValues = selectionSetValueMap.get(fieldName);
