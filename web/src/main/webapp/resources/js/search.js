@@ -252,10 +252,33 @@ function scrollQueryTextProgress() {
 	}
 }
 
+var QUERY_TEXT_POLL_INTERVAL_MS = 2000;
+var queryTextPollTimer = null;
+var queryTextPollPending = false;
+
+// the next poll is scheduled only after the previous one completed, so polls never pile up in the ajax queue
+function scheduleQueryTextPoll() {
+	if (typeof pollQueryText !== "function" || queryTextPollTimer != null || queryTextPollPending) {
+		return;
+	}
+	queryTextPollTimer = setTimeout(function() {
+		queryTextPollTimer = null;
+		queryTextPollPending = true;
+		pollQueryText();
+	}, QUERY_TEXT_POLL_INTERVAL_MS);
+}
+
+function stopQueryTextPoll() {
+	if (queryTextPollTimer != null) {
+		clearTimeout(queryTextPollTimer);
+		queryTextPollTimer = null;
+	}
+}
+
 function handleQueryTextGenerateStarted(xhr, status, args) {
-	if (args && args.queryTextRunning && typeof queryTextPoll !== "undefined" && queryTextPoll) {
+	if (args && args.queryTextRunning && typeof pollQueryText === "function") {
 		// stays busy until the poll sees the run finish
-		queryTextPoll.start();
+		scheduleQueryTextPoll();
 		// the step log may just have appeared, which leaves less room for the editor
 		sizeQueryTextEditor();
 		return;
@@ -265,16 +288,17 @@ function handleQueryTextGenerateStarted(xhr, status, args) {
 }
 
 function handleQueryTextPollComplete(xhr, status, args) {
+	queryTextPollPending = false;
 	scrollQueryTextProgress();
-	if (args && args.queryTextDone) {
-		if (typeof queryTextPoll !== "undefined" && queryTextPoll) {
-			queryTextPoll.stop();
-		}
-		setQueryTextBusy(false);
-		refreshQueryTextEditor();
-		if (args.queryTextErrorLine) {
-			markQueryTextErrorLine(args.queryTextErrorLine);
-		}
+	if (!(args && args.queryTextDone)) {
+		scheduleQueryTextPoll();
+		return;
+	}
+	stopQueryTextPoll();
+	setQueryTextBusy(false);
+	refreshQueryTextEditor();
+	if (args.queryTextErrorLine) {
+		markQueryTextErrorLine(args.queryTextErrorLine);
 	}
 }
 
