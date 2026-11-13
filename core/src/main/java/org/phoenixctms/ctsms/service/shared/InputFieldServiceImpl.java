@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -756,7 +757,15 @@ public class InputFieldServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_INPUT_FIELD_CHANGED);
 		}
 		checkSelectionSetValueInput(inputField, selectionSetValueIn, checkDeferredConstraints);
-		if (!originalSelectionSetValue.getValue().equals(selectionSetValueIn.getValue())) {
+		boolean rowChanged = !Objects.equals(originalSelectionSetValue.getRowL10nKey(), selectionSetValueIn.getRow());
+		boolean columnChanged = !Objects.equals(originalSelectionSetValue.getColumnL10nKey(), selectionSetValueIn.getColumn());
+		// moving a selected value to another option group would break the per-row rules of saved answers
+		if (rowChanged && ServiceUtil.isInputFieldTypeSelectMatrix(inputField.getFieldType())
+				&& this.getInputFieldValueDao().getCount(originalSelectionSetValue.getId()) > 0) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_ROW_CHANGED, originalSelectionSetValue.getRowL10nKey());
+		}
+		// the row and column give a selected matrix cell its meaning, like the value
+		if (!originalSelectionSetValue.getValue().equals(selectionSetValueIn.getValue()) || rowChanged || columnChanged) {
 			if (checkProbandTrialLocked) {
 				Iterator<Inquiry> inquiriesIt = inputField.getInquiries().iterator();
 				while (inquiriesIt.hasNext()) {
