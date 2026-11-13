@@ -283,6 +283,12 @@ public class InputFieldSelectionSetValueDaoImpl
 		}
 		target.setLocalized(false);
 		target.setNameL10nKey(source.getName());
+		if (copyIfNull || source.getRow() != null) {
+			target.setRowL10nKey(source.getRow());
+		}
+		if (copyIfNull || source.getColumn() != null) {
+			target.setColumnL10nKey(source.getColumn());
+		}
 		if (copyIfNull || source.getInkRegions() != null) {
 			target.setInkRegion(source.getInkRegions());
 		}
@@ -414,6 +420,8 @@ public class InputFieldSelectionSetValueDaoImpl
 			target.setFieldId(field.getId());
 		}
 		target.setName(source.getNameL10nKey());
+		target.setRow(source.getRowL10nKey());
+		target.setColumn(source.getColumnL10nKey());
 		target.setInkRegions(source.getInkRegion());
 	}
 
@@ -438,6 +446,8 @@ public class InputFieldSelectionSetValueDaoImpl
 		} else {
 			target.setName(source.getNameL10nKey());
 		}
+		target.setRow(InputFieldSelectionSetValueGraph.getInputFieldSelectionSetValueRow(source));
+		target.setColumn(InputFieldSelectionSetValueGraph.getInputFieldSelectionSetValueColumn(source));
 		if (ServiceUtil.isInputFieldType(source.getField(), InputFieldType.SKETCH)) {
 			target.setInkRegions(source.getInkRegion());
 		} else {

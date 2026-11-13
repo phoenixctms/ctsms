@@ -48,6 +48,8 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 			in.setVersion(out.getVersion());
 			in.setInkRegions(out.getInkRegions());
 			in.setStrokesId(out.getStrokesId());
+			in.setRow(out.getRowL10nKey());
+			in.setColumn(out.getColumnL10nKey());
 		}
 	}
 
@@ -67,6 +69,8 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 			in.setValue(Messages.getString(MessageCodes.INPUT_FIELD_SELECTION_SET_VALUE_VALUE_PRESET));
 			in.setInkRegions(null);
 			in.setStrokesId(getNewStrokesId());
+			in.setRow(null);
+			in.setColumn(null);
 		}
 	}
 
@@ -326,6 +330,17 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 		return config.isSketch();
 	}
 
+	public boolean isSelectMatrix() {
+		return config.isSelectMatrix();
+	}
+
+	/**
+	 * Row and column can also be entered for other select fields, so a field can be prepared for the conversion to a matrix type.
+	 */
+	public boolean isMatrixLabels() {
+		return config.isSelectMatrix() || config.isSelectOneDropdown() || config.isSelectOneRadio() || config.isSelectMany();
+	}
+
 	@Override
 	public String loadAction() {
 		return loadAction(in.getId());
@@ -366,6 +381,12 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 		} else {
 			in.setStrokesId(null);
 			in.setInkRegions(null);
+		}
+		if (CommonUtil.isEmptyString(in.getRow())) {
+			in.setRow(null);
+		}
+		if (CommonUtil.isEmptyString(in.getColumn())) {
+			in.setColumn(null);
 		}
 	}
 

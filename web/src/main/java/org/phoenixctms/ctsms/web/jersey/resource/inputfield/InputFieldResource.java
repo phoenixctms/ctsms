@@ -20,6 +20,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.phoenixctms.ctsms.enumeration.FileModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -215,10 +216,17 @@ public final class InputFieldResource extends ServiceResourceBase {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public InputFieldOutVO updateInputField(InputFieldInVO in) throws AuthenticationException, AuthorisationException, ServiceException {
+		// keep the stored sketch image, as the json body cannot carry it. fields without an image (any type other than sketch) have no content type.
 		InputFieldImageVO out = WebUtil.getServiceLocator().getToolsService().getInputFieldImage(in.getId());
-		in.setDatas(out.getDatas());
-		in.setMimeType(out.getContentType().getMimeType());
-		in.setFileName(out.getFileName());
+		if (InputFieldType.SKETCH.equals(in.getFieldType()) && out != null && out.getContentType() != null && out.getDatas() != null && out.getDatas().length > 0) {
+			in.setDatas(out.getDatas());
+			in.setMimeType(out.getContentType().getMimeType());
+			in.setFileName(out.getFileName());
+		} else {
+			in.setDatas(null);
+			in.setMimeType(null);
+			in.setFileName(null);
+		}
 		return WebUtil.getServiceLocator().getInputFieldService().updateInputField(auth, in);
 	}
 }

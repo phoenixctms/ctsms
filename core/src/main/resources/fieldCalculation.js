@@ -1477,6 +1477,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
+			case "SELECT_MATRIX_ONE":
+			case "SELECT_MATRIX_MANY":
 				if (!(newValue instanceof Array)) {
 					newValue = (typeof newValue === 'string') ? parseInt(newValue) : newValue;
 					if (isNaN(newValue)) {
@@ -1594,6 +1596,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
+			case "SELECT_MATRIX_ONE":
+			case "SELECT_MATRIX_MANY":
 			    if (inputFieldSelectionSetVals && inputFieldVariableValue.selectionValueIds != null) {
 					var res = [];
 			        for (var j = 0; j < inputFieldVariableValue.selectionValueIds.length; j++) {
@@ -1654,6 +1658,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			case "SELECT_ONE_RADIO_V":
 			case "SELECT_MANY_H":
 			case "SELECT_MANY_V":
+			case "SELECT_MATRIX_ONE":
+			case "SELECT_MATRIX_MANY":
 				return _selectionSetValueIdsEqual(value.selectionValueIds, enteredValue.selectionValueIds);
 			case "CHECKBOX":
 				return value.booleanValue == enteredValue.booleanValue;
@@ -2464,6 +2470,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 						break;
 					case "SELECT_MANY_H":
 					case "SELECT_MANY_V":
+					case "SELECT_MATRIX_ONE":
+					case "SELECT_MATRIX_MANY":
 						selectManyApplyCalculatedValue(variableName,index,widget,sourceId);
 						break;
 					case "CHECKBOX":

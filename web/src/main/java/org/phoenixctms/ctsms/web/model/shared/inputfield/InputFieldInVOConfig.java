@@ -49,6 +49,11 @@ public final class InputFieldInVOConfig extends InputFieldConfig {
 	}
 
 	@Override
+	protected boolean isMatrixTransposed() {
+		return inputField != null && inputField.getMatrixTransposed();
+	}
+
+	@Override
 	protected boolean isInputFieldType(InputFieldType inputFieldType) {
 		InputFieldType fieldType = inputField == null ? null : inputField.getFieldType();
 		if (fieldType != null && fieldType.equals(inputFieldType)) {

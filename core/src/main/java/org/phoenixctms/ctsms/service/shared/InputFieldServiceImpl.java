@@ -17,12 +17,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.InputFieldCollisionFinder;
+import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueMatrixCellCollisionFinder;
+import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueMatrixRowPresetCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueNameCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValuePresetCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueStrokesIdCollisionFinder;
@@ -115,17 +118,32 @@ public class InputFieldServiceImpl
 				InputFieldType.SELECT_ONE_RADIO_H,
 				InputFieldType.SELECT_ONE_RADIO_V,
 				InputFieldType.SELECT_MANY_H,
-				InputFieldType.SELECT_MANY_V)));
+				InputFieldType.SELECT_MANY_V,
+				InputFieldType.SELECT_MATRIX_ONE,
+				InputFieldType.SELECT_MATRIX_MANY)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.SELECT_ONE_RADIO_H, new HashSet<InputFieldType>(Arrays.asList(
 				InputFieldType.SELECT_ONE_DROPDOWN,
 				InputFieldType.SELECT_ONE_RADIO_H,
 				InputFieldType.SELECT_ONE_RADIO_V,
 				InputFieldType.SELECT_MANY_H,
-				InputFieldType.SELECT_MANY_V)));
+				InputFieldType.SELECT_MANY_V,
+				InputFieldType.SELECT_MATRIX_ONE,
+				InputFieldType.SELECT_MATRIX_MANY)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.SELECT_ONE_RADIO_V, new HashSet<InputFieldType>(Arrays.asList(
 				InputFieldType.SELECT_ONE_DROPDOWN,
 				InputFieldType.SELECT_ONE_RADIO_H,
 				InputFieldType.SELECT_ONE_RADIO_V,
+				InputFieldType.SELECT_MANY_H,
+				InputFieldType.SELECT_MANY_V,
+				InputFieldType.SELECT_MATRIX_ONE,
+				InputFieldType.SELECT_MATRIX_MANY)));
+		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.SELECT_MATRIX_ONE, new HashSet<InputFieldType>(Arrays.asList(
+				InputFieldType.SELECT_MATRIX_ONE,
+				InputFieldType.SELECT_MATRIX_MANY,
+				InputFieldType.SELECT_MANY_H,
+				InputFieldType.SELECT_MANY_V)));
+		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.SELECT_MATRIX_MANY, new HashSet<InputFieldType>(Arrays.asList(
+				InputFieldType.SELECT_MATRIX_MANY,
 				InputFieldType.SELECT_MANY_H,
 				InputFieldType.SELECT_MANY_V)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.AUTOCOMPLETE, new HashSet<InputFieldType>(Arrays.asList(
@@ -133,10 +151,12 @@ public class InputFieldServiceImpl
 				InputFieldType.SINGLE_LINE_TEXT)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.SELECT_MANY_H, new HashSet<InputFieldType>(Arrays.asList(
 				InputFieldType.SELECT_MANY_H,
-				InputFieldType.SELECT_MANY_V)));
+				InputFieldType.SELECT_MANY_V,
+				InputFieldType.SELECT_MATRIX_MANY)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.SELECT_MANY_V, new HashSet<InputFieldType>(Arrays.asList(
 				InputFieldType.SELECT_MANY_H,
-				InputFieldType.SELECT_MANY_V)));
+				InputFieldType.SELECT_MANY_V,
+				InputFieldType.SELECT_MATRIX_MANY)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.CHECKBOX, new HashSet<InputFieldType>(Arrays.asList(
 				InputFieldType.CHECKBOX)));
 		FIELD_TYPE_TRANSITION_MAP.put(InputFieldType.INTEGER, new HashSet<InputFieldType>(Arrays.asList(
@@ -265,7 +285,11 @@ public class InputFieldServiceImpl
 				break;
 			case SELECT_MANY_H:
 			case SELECT_MANY_V:
+			case SELECT_MATRIX_MANY:
 				checkSelectionLimits(inputFieldIn);
+				break;
+			case SELECT_MATRIX_ONE:
+				checkValidationErrorMsg(false, inputFieldIn.getValidationErrorMsg());
 				break;
 			case CHECKBOX:
 				checkValidationErrorMsg(false, inputFieldIn.getValidationErrorMsg());
@@ -301,7 +325,7 @@ public class InputFieldServiceImpl
 				inputFieldIn.getTextPreset() != null)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_REGEXP_OR_TEXT_PRESET_NOT_NULL);
 		}
-		if (!ServiceUtil.isInputFieldTypeSelectManySketch(fieldType) && (inputFieldIn.getMinSelections() != null ||
+		if (!ServiceUtil.isInputFieldTypeSelectionLimits(fieldType) && (inputFieldIn.getMinSelections() != null ||
 				inputFieldIn.getMaxSelections() != null)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_SELECTION_LIMITS_NOT_NULL);
 		}
@@ -352,10 +376,14 @@ public class InputFieldServiceImpl
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_ALLOWED_MIME_TYPES_NOT_EMPTY);
 			}
 		}
+		if (!ServiceUtil.isInputFieldTypeSelectMatrix(fieldType) && inputFieldIn.isMatrixTransposed()) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_MATRIX_TRANSPOSED_NOT_FALSE);
+		}
 		// preset values remain unchecked for now...
 	}
 
-	private void checkInputFieldInputFieldTypeChanged(Long inputFieldId, InputFieldType oldFieldType, InputFieldType newFieldType) throws ServiceException {
+	private void checkInputFieldInputFieldTypeChanged(Long inputFieldId, InputFieldType oldFieldType, InputFieldType newFieldType, boolean checkSelectionSetValues)
+			throws ServiceException {
 		if (!oldFieldType.equals(newFieldType)) {
 			if (this.getInquiryValueDao().getCountByField(inputFieldId) > 0
 					|| this.getProbandListEntryTagValueDao().getCountByField(inputFieldId) > 0
@@ -379,6 +407,8 @@ public class InputFieldServiceImpl
 						// no break!
 					case SELECT_MANY_H:
 					case SELECT_MANY_V:
+					case SELECT_MATRIX_ONE:
+					case SELECT_MATRIX_MANY:
 						if (InputFieldType.SKETCH.equals(oldFieldType) && this.getInputFieldSelectionSetValueDao().getCount(inputFieldId) > 0) {
 							throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUES_NOT_FOR_SELECT);
 						}
@@ -395,15 +425,51 @@ public class InputFieldServiceImpl
 						break;
 				}
 			}
-			if (ServiceUtil.isInputFieldTypeSelectManySketch(newFieldType)
+			if (checkSelectionSetValues && ServiceUtil.isInputFieldTypeSelectMatrix(newFieldType)) {
+				checkSelectionSetValuesMatrix(inputFieldId, newFieldType);
+			}
+			if ((ServiceUtil.isInputFieldTypeSelectManySketch(newFieldType) || ServiceUtil.isInputFieldTypeSelectMatrix(newFieldType))
 					&& this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, true, null) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TYPE_CHANGED_STRATIFICATION);
 			}
-			if ((ServiceUtil.isInputFieldTypeSelectManySketch(newFieldType) ||
+			if ((ServiceUtil.isInputFieldTypeSelectManySketch(newFieldType) || ServiceUtil.isInputFieldTypeSelectMatrix(newFieldType) ||
 					InputFieldType.MULTI_LINE_TEXT.equals(newFieldType) ||
 					InputFieldType.AUTOCOMPLETE.equals(newFieldType))
 					&& this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, null, true) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_TYPE_CHANGED_RANDOMIZE);
+			}
+		}
+	}
+
+	private void checkSelectionSetValueMatrixDeferredConstraints(InputField inputField, InputFieldSelectionSetValueInVO selectionSetValueIn) throws ServiceException {
+		if ((new InputFieldSelectionSetValueMatrixCellCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao())).collides(selectionSetValueIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_MATRIX_CELL_ALREADY_EXISTS, selectionSetValueIn.getRow(),
+					selectionSetValueIn.getColumn());
+		}
+		if (InputFieldType.SELECT_MATRIX_ONE.equals(inputField.getFieldType()) && selectionSetValueIn.getPreset()
+				&& (new InputFieldSelectionSetValueMatrixRowPresetCollisionFinder(this.getInputFieldDao(), this.getInputFieldSelectionSetValueDao()))
+						.collides(selectionSetValueIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_MULTIPLE_ROW_PRESET_VALUES, selectionSetValueIn.getRow());
+		}
+	}
+
+	private void checkSelectionSetValuesMatrix(Long inputFieldId, InputFieldType fieldType) throws ServiceException {
+		HashSet<String> cells = new HashSet<String>();
+		HashSet<String> presetRows = new HashSet<String>();
+		Iterator<InputFieldSelectionSetValue> it = this.getInputFieldSelectionSetValueDao().findByFieldPreset(inputFieldId, null, null).iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValue selectionSetValue = it.next();
+			String row = selectionSetValue.getRowL10nKey();
+			String column = selectionSetValue.getColumnL10nKey();
+			if (CommonUtil.isEmptyString(row) || CommonUtil.isEmptyString(column)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUES_ROW_COLUMN_REQUIRED,
+						L10nUtil.getInputFieldTypeName(Locales.USER, fieldType.name()));
+			}
+			if (!cells.add(row + "\u0000" + column)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_MATRIX_CELL_ALREADY_EXISTS, row, column);
+			}
+			if (InputFieldType.SELECT_MATRIX_ONE.equals(fieldType) && selectionSetValue.isPreset() && !presetRows.add(row)) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_MULTIPLE_ROW_PRESET_VALUES, row);
 			}
 		}
 	}
@@ -470,7 +536,33 @@ public class InputFieldServiceImpl
 		} else {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_REQUIRED);
 		}
+		String row = selectionSetValueIn.getRow();
+		if (row != null && !row.trim().equals(row)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_ROW, row);
+		}
+		String column = selectionSetValueIn.getColumn();
+		if (column != null && !column.trim().equals(column)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_INPUT_FIELD_SELECTION_SET_VALUE_COLUMN, column);
+		}
 		switch (inputField.getFieldType()) {
+			case SELECT_MATRIX_ONE:
+			case SELECT_MATRIX_MANY:
+				if (CommonUtil.isEmptyString(row)) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_ROW_REQUIRED);
+				}
+				if (CommonUtil.isEmptyString(column)) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_COLUMN_REQUIRED);
+				}
+				if (checkDeferredConstraints) {
+					checkSelectionSetValueMatrixDeferredConstraints(inputField, selectionSetValueIn);
+				}
+				if (selectionSetValueIn.getInkRegions() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_INK_REGION_NOT_NULL);
+				}
+				if (selectionSetValueIn.getStrokesId() != null) {
+					throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_STROKES_ID_NOT_NULL);
+				}
+				break;
 			case AUTOCOMPLETE:
 			case SELECT_ONE_DROPDOWN:
 			case SELECT_ONE_RADIO_H:
@@ -523,6 +615,10 @@ public class InputFieldServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_VALUE_ALREADY_EXISTS, selectionSetValueIn.getValue());
 		}
 		switch (inputField.getFieldType()) {
+			case SELECT_MATRIX_ONE:
+			case SELECT_MATRIX_MANY:
+				checkSelectionSetValueMatrixDeferredConstraints(inputField, selectionSetValueIn);
+				break;
 			case AUTOCOMPLETE:
 			case SELECT_ONE_DROPDOWN:
 			case SELECT_ONE_RADIO_H:
@@ -605,9 +701,9 @@ public class InputFieldServiceImpl
 		checkValidationErrorMsg(minTimestamp != null || maxTimestamp != null, inputFieldIn.getValidationErrorMsg());
 	}
 
-	private void checkUpdateInputFieldInput(InputFieldInVO modifiedInputField, InputField originalInputField) throws ServiceException {
+	private void checkUpdateInputFieldInput(InputFieldInVO modifiedInputField, InputField originalInputField, boolean checkSelectionSetValues) throws ServiceException {
 		checkInputFieldInput(modifiedInputField);
-		checkInputFieldInputFieldTypeChanged(modifiedInputField.getId(), originalInputField.getFieldType(), modifiedInputField.getFieldType());
+		checkInputFieldInputFieldTypeChanged(modifiedInputField.getId(), originalInputField.getFieldType(), modifiedInputField.getFieldType(), checkSelectionSetValues);
 		checkInputFieldUserTimeZoneChanged(modifiedInputField.getId(), originalInputField.isUserTimeZone(), modifiedInputField.getUserTimeZone());
 		if (!originalInputField.getNameL10nKey().equals(modifiedInputField.getName())
 				|| !originalInputField.getTitleL10nKey().equals(modifiedInputField.getTitle())) {
@@ -661,7 +757,15 @@ public class InputFieldServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_INPUT_FIELD_CHANGED);
 		}
 		checkSelectionSetValueInput(inputField, selectionSetValueIn, checkDeferredConstraints);
-		if (!originalSelectionSetValue.getValue().equals(selectionSetValueIn.getValue())) {
+		boolean rowChanged = !Objects.equals(originalSelectionSetValue.getRowL10nKey(), selectionSetValueIn.getRow());
+		boolean columnChanged = !Objects.equals(originalSelectionSetValue.getColumnL10nKey(), selectionSetValueIn.getColumn());
+		// moving a selected value to another option group would break the per-row rules of saved answers
+		if (rowChanged && ServiceUtil.isInputFieldTypeSelectMatrix(inputField.getFieldType())
+				&& this.getInputFieldValueDao().getCount(originalSelectionSetValue.getId()) > 0) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.SELECTION_SET_VALUE_ROW_CHANGED, originalSelectionSetValue.getRowL10nKey());
+		}
+		// the row and column give a selected matrix cell its meaning, like the value
+		if (!originalSelectionSetValue.getValue().equals(selectionSetValueIn.getValue()) || rowChanged || columnChanged) {
 			if (checkProbandTrialLocked) {
 				Iterator<Inquiry> inquiriesIt = inputField.getInquiries().iterator();
 				while (inquiriesIt.hasNext()) {
@@ -880,7 +984,7 @@ public class InputFieldServiceImpl
 		boolean update;
 		if (modifiedInputField.getId() != null) {
 			InputField originalInputField = CheckIDUtil.checkInputFieldId(modifiedInputField.getId(), inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-			checkUpdateInputFieldInput(modifiedInputField, originalInputField);
+			checkUpdateInputFieldInput(modifiedInputField, originalInputField, false); // the replaced selection set values are checked one by one below
 			original = inputFieldDao.toInputFieldOutVO(originalInputField);
 			Collection<InputFieldSelectionSetValue> originalSelectionSetValues = originalInputField.getSelectionSetValues();
 			originalSelectionSetValueIds = new HashSet<Long>(originalSelectionSetValues.size());
@@ -1072,6 +1176,7 @@ public class InputFieldServiceImpl
 		newInputField.setData(originalInputField.getData());
 		newInputField.setFileSize(originalInputField.getFileSize());
 		newInputField.setPhoto(originalInputField.getPhoto());
+		newInputField.setMatrixTransposed(originalInputField.getMatrixTransposed());
 		newInputField.setAllowedMimeTypes(new ArrayList<MimeType>(originalInputField.getAllowedMimeTypes()));
 		CoreUtil.modifyVersion(newInputField, now, user);
 		newInputField = inputFieldDao.create(newInputField);
@@ -1088,6 +1193,8 @@ public class InputFieldServiceImpl
 			newInputFieldSelectionSetValue.setNameL10nKey(originalInputFieldSelectionSetValue.getNameL10nKey());
 			newInputFieldSelectionSetValue.setPreset(originalInputFieldSelectionSetValue.isPreset());
 			newInputFieldSelectionSetValue.setStrokesId(originalInputFieldSelectionSetValue.getStrokesId());
+			newInputFieldSelectionSetValue.setRowL10nKey(originalInputFieldSelectionSetValue.getRowL10nKey());
+			newInputFieldSelectionSetValue.setColumnL10nKey(originalInputFieldSelectionSetValue.getColumnL10nKey());
 			newInputFieldSelectionSetValue.setValue(originalInputFieldSelectionSetValue.getValue());
 			newInputFieldSelectionSetValue.setField(newInputField);
 			newInputField.addSelectionSetValues(newInputFieldSelectionSetValue);
@@ -1393,7 +1500,7 @@ public class InputFieldServiceImpl
 			AuthenticationVO auth, InputFieldInVO modifiedInputField) throws Exception {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField originalInputField = CheckIDUtil.checkInputFieldId(modifiedInputField.getId(), inputFieldDao, LockMode.PESSIMISTIC_WRITE);
-		checkUpdateInputFieldInput(modifiedInputField, originalInputField);
+		checkUpdateInputFieldInput(modifiedInputField, originalInputField, true);
 		InputFieldOutVO original = inputFieldDao.toInputFieldOutVO(originalInputField);
 		inputFieldDao.evict(originalInputField);
 		InputField inputField = inputFieldDao.inputFieldInVOToEntity(modifiedInputField);

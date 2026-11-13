@@ -94,6 +94,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setLearn(out.getLearn());
 			in.setStrict(out.getStrict());
 			in.setPhoto(out.getPhoto());
+			in.setMatrixTransposed(out.getMatrixTransposed());
 			in.getAllowedMimeTypeIds().clear();
 			Iterator<MimeTypeVO> allowedMimeTypesIt = out.getAllowedMimeTypes().iterator();
 			while (allowedMimeTypesIt.hasNext()) {
@@ -145,6 +146,7 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setLearn(Settings.getBoolean(SettingCodes.INPUT_FIELD_LEARN_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_LEARN_PRESET));
 			in.setStrict(Settings.getBoolean(SettingCodes.INPUT_FIELD_STRICT_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_STRICT_PRESET));
 			in.setPhoto(false);
+			in.setMatrixTransposed(false);
 			in.getAllowedMimeTypeIds().clear();
 			in.setVersion(null);
 			in.setWidth(Settings.getLong(SettingCodes.INPUT_FIELD_SKETCH_WIDTH_PRESET, Bundle.SETTINGS, DefaultSettings.INPUT_FIELD_SKETCH_WIDTH_PRESET));
@@ -272,13 +274,18 @@ public class InputFieldBean extends ManagedBeanBase implements InputFieldTypeSel
 			in.setRegExp(null);
 			in.setTextPreset(null);
 		}
-		if (!(InputFieldType.SELECT_MANY_H.equals(fieldType) || InputFieldType.SELECT_MANY_V.equals(fieldType) || InputFieldType.SKETCH.equals(fieldType))) {
+		if (!(InputFieldType.SELECT_MANY_H.equals(fieldType) || InputFieldType.SELECT_MANY_V.equals(fieldType) || InputFieldType.SKETCH.equals(fieldType)
+				|| InputFieldType.SELECT_MATRIX_MANY.equals(fieldType))) {
 			in.setMinSelections(null);
 			in.setMaxSelections(null);
 		}
-		if (!(InputFieldType.SELECT_ONE_DROPDOWN.equals(fieldType) || InputFieldType.SELECT_ONE_RADIO_H.equals(fieldType) || InputFieldType.SELECT_ONE_RADIO_V.equals(fieldType))) {
+		if (!(InputFieldType.SELECT_ONE_DROPDOWN.equals(fieldType) || InputFieldType.SELECT_ONE_RADIO_H.equals(fieldType) || InputFieldType.SELECT_ONE_RADIO_V.equals(fieldType)
+				|| InputFieldType.SELECT_MATRIX_ONE.equals(fieldType))) {
 		} else {
 			in.setValidationErrorMsg(null);
+		}
+		if (!(InputFieldType.SELECT_MATRIX_ONE.equals(fieldType) || InputFieldType.SELECT_MATRIX_MANY.equals(fieldType))) {
+			in.setMatrixTransposed(false);
 		}
 		if (!(InputFieldType.AUTOCOMPLETE.equals(fieldType))) {
 			in.setStrict(false);

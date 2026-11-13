@@ -91,6 +91,7 @@ public interface SettingCodes {
 	public final static String INPUT_MODEL_CREATED_COLOR = "input_model_created_color";
 	public final static String INPUT_MODEL_DUMMY_COLOR = "input_model_dummy_color";
 	public final static String INPUT_MODEL_LONG_TITLE_LENGTH = "input_model_long_title_length";
+	public final static String INPUT_MODEL_SELECT_MATRIX_VERTICAL_HEAD_COUNT = "input_model_select_matrix_vertical_head_count";
 	public final static String DUTY_ROSTER_SELF_ALLOCATABLE_PRESET = "duty_roster_self_allocatable_preset";
 	public final static String FILE_ACTIVE_PRESET = "file_active_preset";
 	public final static String FILE_PUBLIC_PRESET = "file_public_preset";

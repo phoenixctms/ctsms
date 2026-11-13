@@ -19,6 +19,8 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	private final static int PRESET_COLUMN_INDEX = 4;
 	private final static int STROKES_ID_COLUMN_INDEX = 5;
 	private final static int INK_REGIONS_COLUMN_INDEX = 6;
+	private final static int ROW_COLUMN_INDEX = 7;
+	private final static int COLUMN_COLUMN_INDEX = 8;
 	private int fieldNameColumnIndex;
 	private int nameColumnIndex;
 	private int valueColumnIndex;
@@ -26,6 +28,8 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	private int presetColumnIndex;
 	private int strokesIdColumnIndex;
 	private int inkRegionsColumnIndex;
+	private int rowColumnIndex;
+	private int columnColumnIndex;
 	private int maxColumnIndex;
 	@Autowired
 	protected InputFieldService inputFieldService;
@@ -58,6 +62,10 @@ public class SelectionSetValueRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(strokesIdColumnIndex, maxColumnIndex);
 		inkRegionsColumnIndex = INK_REGIONS_COLUMN_INDEX;
 		maxColumnIndex = Math.max(inkRegionsColumnIndex, maxColumnIndex);
+		rowColumnIndex = ROW_COLUMN_INDEX;
+		maxColumnIndex = Math.max(rowColumnIndex, maxColumnIndex);
+		columnColumnIndex = COLUMN_COLUMN_INDEX;
+		maxColumnIndex = Math.max(columnColumnIndex, maxColumnIndex);
 		context.getSpreadSheet(this);
 	}
 
@@ -76,6 +84,8 @@ public class SelectionSetValueRowWriter extends RowWriter {
 		values[presetColumnIndex] = "is preset";
 		values[strokesIdColumnIndex] = "strokes id";
 		values[inkRegionsColumnIndex] = "ink regions";
+		values[rowColumnIndex] = "row";
+		values[columnColumnIndex] = "column";
 		printRow(values, true);
 	}
 
@@ -91,6 +101,8 @@ public class SelectionSetValueRowWriter extends RowWriter {
 			values[presetColumnIndex] = Boolean.toString(selectionSetValue.getPreset());
 			values[strokesIdColumnIndex] = selectionSetValue.getStrokesId();
 			values[inkRegionsColumnIndex] = CommonUtil.inkValueToString(selectionSetValue.getInkRegions());
+			values[rowColumnIndex] = selectionSetValue.getRowL10nKey();
+			values[columnColumnIndex] = selectionSetValue.getColumnL10nKey();
 			printRow(values);
 		}
 	}

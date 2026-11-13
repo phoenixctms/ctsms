@@ -2512,6 +2512,150 @@ overflow-y:scroll;
 	background-image: url(../resources/images/inputfieldtypes/checkboxesv.png) !important;
 }
 
+.ctsms-inputfieldtype-selectmatrixone {
+	background-image: url(../resources/images/inputfieldtypes/selectmatrixone.png) !important;
+}
+.ctsms-inputfieldtype-selectmatrixmany {
+	background-image: url(../resources/images/inputfieldtypes/selectmatrixmany.png) !important;
+}
+
+.ctsms-select-matrix-table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.ctsms-select-matrix-table th,
+.ctsms-select-matrix-table td {
+	padding: 0;
+	font-weight: normal;
+	vertical-align: middle;
+}
+
+.ctsms-select-matrix-table > thead > tr > th {
+	padding-bottom: 4px;
+	vertical-align: bottom;
+}
+
+.ctsms-select-matrix-table td.ctsms-select-matrix-label,
+.ctsms-select-matrix-table th.ctsms-select-matrix-label {
+	width: 35%;
+	padding: 4px 8px 4px 4px;
+	text-align: left;
+}
+
+.ctsms-select-matrix-table td.ctsms-select-matrix-message,
+.ctsms-select-matrix-table th.ctsms-select-matrix-message {
+	width: 1%;
+	white-space: nowrap;
+}
+
+/* the head labels and the option group items share equal fixed-width cells */
+.ctsms-select-matrix-head,
+.ctsms-select-matrix-cells > table {
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+}
+
+.ctsms-select-matrix-head td,
+.ctsms-select-matrix-cells > table td {
+	text-align: center;
+	padding: 2px;
+	overflow-wrap: break-word;
+	hyphens: auto;
+}
+
+/* many columns: head labels read bottom-up, wrapping into further lines when long */
+.ctsms-select-matrix-vertical-head .ctsms-select-matrix-head td,
+.ctsms-select-matrix-vertical-head th.ctsms-select-matrix-cells {
+	vertical-align: bottom;
+}
+
+.ctsms-select-matrix-vertical-head .ctsms-select-matrix-head-label {
+	display: inline-block;
+	writing-mode: vertical-rl;
+	transform: rotate(180deg);
+	max-height: 12em;
+	text-align: left;
+}
+
+/* item labels are shown in the head or the label column, not next to each radio/checkbox */
+.ctsms-select-matrix-cells > table:not(.ctsms-select-matrix-head) td:nth-child(even) {
+	width: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* visually hidden, but still the accessible name of its radio/checkbox */
+.ctsms-select-matrix-cells > table:not(.ctsms-select-matrix-head) td:nth-child(even) label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* placeholders of row/column pairs without a selection set value */
+.ctsms-select-matrix-cells > table:not(.ctsms-select-matrix-head) td:has(input[value=""]) {
+	visibility: hidden;
+}
+
+/* center the radios/checkboxes in their columns, like the head labels
+   (more specific than the .ctsms-inputfieldrow rules in inputField.css) */
+.ctsms-inputfieldrow .ctsms-select-matrix .ui-selectoneradio .ui-radiobutton,
+.ctsms-inputfieldrow .ctsms-select-matrix .ui-selectmanycheckbox .ui-chkbox {
+	float: none;
+	margin-left: auto;
+	margin-right: auto;
+	vertical-align: middle;
+}
+
+.ctsms-select-matrix-table > tbody > tr.ctsms-select-matrix-row:nth-child(odd) {
+	background-color: rgba(128, 128, 128, 0.1);
+}
+
+.ctsms-select-matrix-transposed th.ctsms-select-matrix-cells {
+	text-align: center;
+	padding: 2px;
+	overflow-wrap: break-word;
+	hyphens: auto;
+}
+
+.ctsms-select-matrix-transposed > tbody > tr > td {
+	vertical-align: top;
+}
+
+.ctsms-select-matrix-transposed > tbody > tr > td.ctsms-select-matrix-label {
+	padding: 0;
+}
+
+.ctsms-select-matrix-lines {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.ctsms-select-matrix-lines td {
+	padding: 0 8px 0 4px;
+	text-align: left;
+}
+
+/* line up the label column with the vertical option groups */
+.ctsms-select-matrix-lines tr,
+.ctsms-select-matrix-transposed .ctsms-select-matrix-cells > table tr {
+	height: 2.2em;
+}
+
+/* transposed: shade the lines across the label column and all vertical option groups
+   (!important beats the "background: none !important" of .ui-selectmanycheckbox tr) */
+.ctsms-select-matrix-lines tr:nth-child(odd),
+.ctsms-select-matrix-transposed .ctsms-select-matrix-cells > table tr:nth-child(odd) {
+	background-color: rgba(128, 128, 128, 0.1) !important;
+}
+
 .ctsms-inputfieldtype-checkbox {
 	background-image: url(../resources/images/inputfieldtypes/checkbox.png) !important;
 }

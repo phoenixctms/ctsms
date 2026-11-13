@@ -124,6 +124,8 @@ public abstract class InputFieldValueStringAdapterBase<VALUEVO> {
 									EllipsisPlacement.TRAILING) : getTextValue(value);
 						case SELECT_MANY_H:
 						case SELECT_MANY_V:
+						case SELECT_MATRIX_ONE:
+						case SELECT_MATRIX_MANY:
 							textClipMaxLength = getTextClipMaxLength();
 							return textClipMaxLength != null ? CommonUtil.clipString(selectionSetValuesToString(getSelectionSetValues(value)), textClipMaxLength,
 									CommonUtil.DEFAULT_ELLIPSIS,

@@ -89,6 +89,20 @@
 						</f:facet>
 						<h:outputText value="#{selectionSetValue.vo.value}" />
 					</p:column>
+					<p:column rendered="#{selectionSetValueBean.matrixLabels}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_row_column}" />
+						</f:facet>
+						<h:outputText value="#{selectionSetValue.vo.rowL10nKey}" />
+					</p:column>
+					<p:column rendered="#{selectionSetValueBean.matrixLabels}">
+						<f:facet name="header">
+							<h:outputText
+								value="#{inputfieldlabels.input_field_selection_set_value_selectionsetvalue_list_column_column}" />
+						</f:facet>
+						<h:outputText value="#{selectionSetValue.vo.columnL10nKey}" />
+					</p:column>
 					<p:column rendered="#{selectionSetValueBean.sketch}">
 						<f:facet name="header">
 							<h:outputText
@@ -198,6 +212,41 @@
 							</h:panelGroup>
 							<p:message rendered="#{!selectionSetValueBean.sketch}"
 								for="selectionsetvaluepreset" />
+
+							<h:outputLabel rendered="#{selectionSetValueBean.matrixLabels}"
+								for="selectionsetvaluerow"
+								value="#{selectionSetValueBean.selectMatrix ? inputfieldlabels.input_field_selection_set_value_row_label : inputfieldlabels.input_field_selection_set_value_row_optional_label}" />
+							<h:panelGroup rendered="#{selectionSetValueBean.matrixLabels}">
+								<p:inputText id="selectionsetvaluerow"
+									value="#{selectionSetValueBean.in.row}" required="false"
+									label="#{inputfieldlabels.input_field_selection_set_value_row}"
+									styleClass="ctsms-control-larger" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="selectionsetvaluerow">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_selection_set_value_row_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message rendered="#{selectionSetValueBean.matrixLabels}"
+								for="selectionsetvaluerow" />
+							<h:outputLabel rendered="#{selectionSetValueBean.matrixLabels}"
+								for="selectionsetvaluecolumn"
+								value="#{selectionSetValueBean.selectMatrix ? inputfieldlabels.input_field_selection_set_value_column_label : inputfieldlabels.input_field_selection_set_value_column_optional_label}" />
+							<h:panelGroup rendered="#{selectionSetValueBean.matrixLabels}">
+								<p:inputText id="selectionsetvaluecolumn"
+									value="#{selectionSetValueBean.in.column}" required="false"
+									label="#{inputfieldlabels.input_field_selection_set_value_column}"
+									styleClass="ctsms-control" />
+								<p:tooltip rendered="#{enableTooltips}"
+									for="selectionsetvaluecolumn">
+									<h:outputText
+										value="#{inputfieldlabels.input_field_selection_set_value_column_tooltip}"
+										escape="false" />
+								</p:tooltip>
+							</h:panelGroup>
+							<p:message rendered="#{selectionSetValueBean.matrixLabels}"
+								for="selectionsetvaluecolumn" />
 						</h:panelGrid>
 						<h:panelGrid id="region_input"
 							rendered="#{selectionSetValueBean.inputVisible and selectionSetValueBean.sketch}"

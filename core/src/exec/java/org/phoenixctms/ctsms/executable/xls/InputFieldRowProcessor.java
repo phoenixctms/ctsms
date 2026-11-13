@@ -54,6 +54,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private final static int LEARN_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
 	private final static int STRICT_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
 	private final static int PHOTO_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
+	private final static int MATRIX_TRANSPOSED_COLUMN_INDEX = PARAM_3_COLUMN_INDEX;
 	private final static int ALLOWED_MIME_TYPES_COLUMN_INDEX = PARAM_2_COLUMN_INDEX;
 	private final static String ALLOWED_MIME_TYPES_SEPARATOR = ",";
 	private final static int MIN_SELECTIONS_COLUMN_INDEX = PARAM_1_COLUMN_INDEX;
@@ -92,6 +93,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 	private int learnColumnIndex;
 	private int strictColumnIndex;
 	private int photoColumnIndex;
+	private int matrixTransposedColumnIndex;
 	private int allowedMimeTypesColumnIndex;
 	private int minSelectionsColumnIndex;
 	private int maxSelectionsColumnIndex;
@@ -246,6 +248,10 @@ public class InputFieldRowProcessor extends RowProcessor {
 		return getColumnValue(values, strictColumnIndex);
 	}
 
+	private String getMatrixTransposed(String[] values) {
+		return getColumnValue(values, matrixTransposedColumnIndex);
+	}
+
 	private String getPhoto(String[] values) {
 		return getColumnValue(values, photoColumnIndex);
 	}
@@ -305,6 +311,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 		learnColumnIndex = LEARN_COLUMN_INDEX;
 		strictColumnIndex = STRICT_COLUMN_INDEX;
 		photoColumnIndex = PHOTO_COLUMN_INDEX;
+		matrixTransposedColumnIndex = MATRIX_TRANSPOSED_COLUMN_INDEX;
 		allowedMimeTypesColumnIndex = ALLOWED_MIME_TYPES_COLUMN_INDEX;
 		minSelectionsColumnIndex = MIN_SELECTIONS_COLUMN_INDEX;
 		maxSelectionsColumnIndex = MAX_SELECTIONS_COLUMN_INDEX;
@@ -353,6 +360,7 @@ public class InputFieldRowProcessor extends RowProcessor {
 				.append(getLearn(values))
 				.append(getStrict(values))
 				.append(getPhoto(values))
+				.append(getMatrixTransposed(values))
 				.append(getAllowedMimeTypes(values))
 				.append(getMinSelections(values))
 				.append(getMaxSelections(values))
@@ -476,6 +484,14 @@ public class InputFieldRowProcessor extends RowProcessor {
 			case FILE:
 				inputFieldIn.setPhoto(Boolean.parseBoolean(getPhoto(values)));
 				inputFieldIn.setAllowedMimeTypeIds(getAllowedMimeTypeIds(getAllowedMimeTypes(values)));
+				break;
+			case SELECT_MATRIX_ONE:
+				inputFieldIn.setMatrixTransposed(Boolean.parseBoolean(getMatrixTransposed(values)));
+				break;
+			case SELECT_MATRIX_MANY:
+				inputFieldIn.setMatrixTransposed(Boolean.parseBoolean(getMatrixTransposed(values)));
+				inputFieldIn.setMinSelections(CommonUtil.isEmptyString(getMinSelections(values)) ? null : Integer.parseInt(getMinSelections(values)));
+				inputFieldIn.setMaxSelections(CommonUtil.isEmptyString(getMaxSelections(values)) ? null : Integer.parseInt(getMaxSelections(values)));
 				break;
 			case SKETCH:
 				inputFieldIn.setWidth(CommonUtil.isEmptyString(getWidth(values)) ? null : Long.parseLong(getWidth(values)));

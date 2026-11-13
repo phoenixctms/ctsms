@@ -24,6 +24,7 @@ public interface EcrfSpecificationPDFLabelCodes {
 	public static final String ECRF_VISITS = "ecrf_visits";
 	public static final String ECRF_GROUPS = "ecrf_groups";
 	public static final String SELECTION_SET_VALUE = "selection_set_value";
+	public static final String SELECTION_MATRIX_SET_VALUE = "selection_matrix_set_value";
 	//	public final static String COURSE_VALIDITY = "course_validity";
 	//	public final static String COURSE_INSTITUTION = "course_institution";
 	//	public final static String COURSE_CV_TITLE = "course_cv_title";
