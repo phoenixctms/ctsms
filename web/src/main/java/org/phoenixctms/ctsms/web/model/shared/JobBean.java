@@ -78,6 +78,8 @@ public class JobBean extends ManagedBeanBase {
 	private String allowTypes;
 	private JobFileVO jobFile;
 	private boolean decrypted;
+	// the user uploaded or cleared a file since the selected job's file was loaded
+	private boolean inFileChanged;
 
 	public JobBean() {
 		super();
@@ -288,6 +290,7 @@ public class JobBean extends ManagedBeanBase {
 		in.setMimeType(null);
 		in.setDatas(null);
 		jobFile = null;
+		inFileChanged = true;
 	}
 
 	public JobFileVO getJobFile() {
@@ -318,6 +321,7 @@ public class JobBean extends ManagedBeanBase {
 		in.setFileName(uploadedFile.getFileName());
 		in.setMimeType(uploadedFile.getContentType());
 		in.setDatas(uploadedFile.getContents());
+		inFileChanged = true;
 		addOperationSuccessMessage(MessageCodes.UPLOAD_OPERATION_SUCCESSFUL);
 	}
 
@@ -325,9 +329,10 @@ public class JobBean extends ManagedBeanBase {
 		return decrypted;
 	}
 
-	private void initSets() {
+	private void loadJobFile() {
 		decrypted = true;
 		jobFile = null;
+		inFileChanged = false;
 		if (out != null) {
 			try {
 				jobFile = WebUtil.getServiceLocator().getJobService().getJobFile(WebUtil.getAuthentication(), out.getId());
@@ -343,6 +348,10 @@ public class JobBean extends ManagedBeanBase {
 				decrypted = jobFile.isDecrypted();
 			}
 		}
+	}
+
+	private void initSets() {
+		loadJobFile();
 		allowTypes = WebUtil.getAllowedFileExtensionsPattern(FileModule.JOB_FILE, false);
 		uploadSizeLimit = null;
 		try {
@@ -519,9 +528,10 @@ public class JobBean extends ManagedBeanBase {
 		boolean hadJobOutput = hasJobOutput(out);
 		try {
 			out = WebUtil.getServiceLocator().getJobService().getJob(WebUtil.getAuthentication(), out.getId());
-			if (!isRunning(out)) {
-				// the job just finished: pick up its file, but leave the input form alone
-				initSets();
+			if (!isRunning(out) && !inFileChanged) {
+				// the job just finished: pick up its file, unless the user uploaded or
+				// cleared a file for the next job in the meantime
+				loadJobFile();
 			}
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			// getJob throws a ServiceException only for a job that no longer exists
