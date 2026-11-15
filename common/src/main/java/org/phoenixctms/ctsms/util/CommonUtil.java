@@ -861,6 +861,7 @@ public final class CommonUtil {
 			out.setStrokesId(in.getStrokesId());
 			out.setRow(in.getRow());
 			out.setColumn(in.getColumn());
+			out.setRowL10nKey(in.getRowL10nKey());
 		}
 	}
 

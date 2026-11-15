@@ -1473,7 +1473,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 			for (var j = 0; j < selectionSetVals.length; j++) {
 				// calculated selection ids may be numbers or strings
 				if (selectionSetVals[j].id == selectionValueIds[i]) {
-					var row = '_' + selectionSetVals[j].row;
+					// rows are keyed like the matrix renderers do: by the row's l10n key if set, else by its label
+					var row = '_' + (selectionSetVals[j].rowL10nKey != null ? selectionSetVals[j].rowL10nKey : selectionSetVals[j].row);
 					if (!rowIds.hasOwnProperty(row)) {
 						rowIds[row] = {};
 					}
