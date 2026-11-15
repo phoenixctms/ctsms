@@ -9,6 +9,7 @@ package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
@@ -36,6 +37,7 @@ public class JobTypeDaoImpl
 			typeCriteria.add(Restrictions.or(Restrictions.isNull("trial.id"), Restrictions.eq("trial.id", trialId.longValue())));
 		}
 		CriteriaUtil.applyVisibleIdCriterion("visible", typeCriteria, visible, typeId);
+		typeCriteria.addOrder(Order.asc("id"));
 		return typeCriteria.list();
 	}
 
