@@ -1517,6 +1517,8 @@ public class InputFieldServiceImpl
 	protected InputFieldSelectionSetValueOutVO handleUpdateSelectionSetValue(
 			AuthenticationVO auth, InputFieldSelectionSetValueInVO modifiedSelectionSetValue)
 			throws Exception {
+		// lock the field first, like the answer writes do, so the saved answers checked below cannot change meanwhile
+		CheckIDUtil.checkInputFieldId(modifiedSelectionSetValue.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		InputFieldSelectionSetValueDao selectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		InputFieldSelectionSetValue originalSelectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(modifiedSelectionSetValue.getId(),
 				selectionSetValueDao);
