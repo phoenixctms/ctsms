@@ -250,7 +250,7 @@ public class InputFieldRowWriter extends RowWriter {
 		values[validationErrorMsgColumnIndex] = "validation error message";
 		values[param1ColumnIndex] = "param1 (lower limit/min selections/learn/regexp)";
 		values[param2ColumnIndex] = "param2 (upper limit/max selections/strict)";
-		values[param3ColumnIndex] = "param3 (in user timezone/sketch width)";
+		values[param3ColumnIndex] = "param3 (in user timezone/sketch width/matrix transposed)";
 		values[param4ColumnIndex] = "param4 (sketch height)";
 		values[param5ColumnIndex] = "param5 (sketch bg filename)";
 		printRow(values, true);
@@ -336,7 +336,7 @@ public class InputFieldRowWriter extends RowWriter {
 			case SELECT_ONE_DROPDOWN:
 			case SELECT_ONE_RADIO_H:
 			case SELECT_ONE_RADIO_V:
-				((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().printRows(inputField.getSelectionSetValues());
+				((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().printRows(inputField.getSelectionSetValues(), fieldType);
 				break;
 			default:
 				break;

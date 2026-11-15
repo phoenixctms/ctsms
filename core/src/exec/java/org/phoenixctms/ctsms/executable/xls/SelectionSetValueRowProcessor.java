@@ -1,6 +1,7 @@
 package org.phoenixctms.ctsms.executable.xls;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -10,6 +11,7 @@ import org.phoenixctms.ctsms.domain.InputField;
 import org.phoenixctms.ctsms.domain.InputFieldDao;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValueDao;
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueInVO;
@@ -25,8 +27,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	private final static int PRESET_COLUMN_INDEX = 4;
 	private final static int STROKES_ID_COLUMN_INDEX = 5;
 	private final static int INK_REGIONS_COLUMN_INDEX = 6;
-	private final static int ROW_COLUMN_INDEX = 7;
-	private final static int COLUMN_COLUMN_INDEX = 8;
 	private int fieldNameColumnIndex;
 	private int nameColumnIndex;
 	private int valueColumnIndex;
@@ -34,8 +34,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 	private int presetColumnIndex;
 	private int strokesIdColumnIndex;
 	private int inkRegionsColumnIndex;
-	private int rowColumnIndex;
-	private int columnColumnIndex;
 	private HashMap<String, InputField> inputFieldMap;
 	private HashMap<String, Set<InputFieldSelectionSetValueInVO>> selectionSetValueMap;
 	@Autowired
@@ -86,21 +84,36 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		return getColumnValue(values, presetColumnIndex);
 	}
 
-	public Set<InputFieldSelectionSetValueInVO> getSelectionSetValues(String fieldName) {
-		return selectionSetValueMap.get(fieldName);
+	/**
+	 * The selection set values read for a field, with the shared columns resolved for its type:
+	 * strokes id and ink regions for a sketch field, row and column for other select fields.
+	 */
+	public Set<InputFieldSelectionSetValueInVO> getSelectionSetValues(String fieldName, InputFieldType fieldType) throws Exception {
+		Set<InputFieldSelectionSetValueInVO> selectionSetValues = selectionSetValueMap.get(fieldName);
+		if (selectionSetValues == null) {
+			return null;
+		}
+		LinkedHashSet<InputFieldSelectionSetValueInVO> result = new LinkedHashSet<InputFieldSelectionSetValueInVO>(selectionSetValues.size());
+		Iterator<InputFieldSelectionSetValueInVO> it = selectionSetValues.iterator();
+		while (it.hasNext()) {
+			InputFieldSelectionSetValueInVO selectionSetValueIn = new InputFieldSelectionSetValueInVO(it.next());
+			if (InputFieldType.SKETCH.equals(fieldType)) {
+				String inkRegions = selectionSetValueIn.getColumn();
+				selectionSetValueIn.setInkRegions(CommonUtil.isEmptyString(inkRegions) ? null : CommonUtil.stringToInkValue(inkRegions));
+				selectionSetValueIn.setRow(null);
+				selectionSetValueIn.setColumn(null);
+			} else {
+				selectionSetValueIn.setStrokesId(null);
+				selectionSetValueIn.setInkRegions(null);
+			}
+			result.add(selectionSetValueIn);
+		}
+		return result;
 	}
 
 	@Override
 	public String getSheetName() {
 		return SHEET_NAME;
-	}
-
-	private String getRow(String[] values) {
-		return getColumnValue(values, rowColumnIndex);
-	}
-
-	private String getColumn(String[] values) {
-		return getColumnValue(values, columnColumnIndex);
 	}
 
 	private String getStrokesId(String[] values) {
@@ -121,8 +134,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		presetColumnIndex = PRESET_COLUMN_INDEX;
 		strokesIdColumnIndex = STROKES_ID_COLUMN_INDEX;
 		inkRegionsColumnIndex = INK_REGIONS_COLUMN_INDEX;
-		rowColumnIndex = ROW_COLUMN_INDEX;
-		columnColumnIndex = COLUMN_COLUMN_INDEX;
 		inputFieldMap.clear();
 		selectionSetValueMap.clear();
 	}
@@ -137,8 +148,6 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 				.append(getPreset(values))
 				.append(getStrokesId(values))
 				.append(getInkRegions(values))
-				.append(getRow(values))
-				.append(getColumn(values))
 				.toHashCode();
 	}
 
@@ -170,10 +179,14 @@ public class SelectionSetValueRowProcessor extends RowProcessor {
 		selectionSetValueIn.setLocalized(Boolean.parseBoolean(getLocalized(values)));
 		selectionSetValueIn.setValue(value);
 		selectionSetValueIn.setPreset(Boolean.parseBoolean(getPreset(values)));
-		selectionSetValueIn.setInkRegions(CommonUtil.isEmptyString(getInkRegions(values)) ? null : CommonUtil.stringToInkValue(getInkRegions(values)));
-		selectionSetValueIn.setStrokesId(CommonUtil.isEmptyString(getStrokesId(values)) ? null : getStrokesId(values));
-		selectionSetValueIn.setRow(CommonUtil.isEmptyString(getRow(values)) ? null : getRow(values));
-		selectionSetValueIn.setColumn(CommonUtil.isEmptyString(getColumn(values)) ? null : getColumn(values));
+		// the two columns hold the strokes id and ink regions of a sketch field, or the row and column of other select fields.
+		// the field type is known only when the input field row is processed: keep the raw texts until getSelectionSetValues(fieldName, fieldType).
+		String strokesIdOrRow = CommonUtil.isEmptyString(getStrokesId(values)) ? null : getStrokesId(values);
+		String inkRegionsOrColumn = CommonUtil.isEmptyString(getInkRegions(values)) ? null : getInkRegions(values);
+		selectionSetValueIn.setStrokesId(strokesIdOrRow);
+		selectionSetValueIn.setRow(strokesIdOrRow);
+		selectionSetValueIn.setColumn(inkRegionsOrColumn);
+		selectionSetValueIn.setInkRegions(null);
 		Set<InputFieldSelectionSetValueInVO> selectionSetValues;
 		if (selectionSetValueMap.containsKey(fieldName)) {
 			selectionSetValues = selectionSetValueMap.get(fieldName);

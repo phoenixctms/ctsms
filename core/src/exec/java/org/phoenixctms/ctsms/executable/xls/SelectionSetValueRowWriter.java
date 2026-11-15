@@ -3,9 +3,11 @@ package org.phoenixctms.ctsms.executable.xls;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,8 +21,6 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	private final static int PRESET_COLUMN_INDEX = 4;
 	private final static int STROKES_ID_COLUMN_INDEX = 5;
 	private final static int INK_REGIONS_COLUMN_INDEX = 6;
-	private final static int ROW_COLUMN_INDEX = 7;
-	private final static int COLUMN_COLUMN_INDEX = 8;
 	private int fieldNameColumnIndex;
 	private int nameColumnIndex;
 	private int valueColumnIndex;
@@ -28,8 +28,6 @@ public class SelectionSetValueRowWriter extends RowWriter {
 	private int presetColumnIndex;
 	private int strokesIdColumnIndex;
 	private int inkRegionsColumnIndex;
-	private int rowColumnIndex;
-	private int columnColumnIndex;
 	private int maxColumnIndex;
 	@Autowired
 	protected InputFieldService inputFieldService;
@@ -62,10 +60,6 @@ public class SelectionSetValueRowWriter extends RowWriter {
 		maxColumnIndex = Math.max(strokesIdColumnIndex, maxColumnIndex);
 		inkRegionsColumnIndex = INK_REGIONS_COLUMN_INDEX;
 		maxColumnIndex = Math.max(inkRegionsColumnIndex, maxColumnIndex);
-		rowColumnIndex = ROW_COLUMN_INDEX;
-		maxColumnIndex = Math.max(rowColumnIndex, maxColumnIndex);
-		columnColumnIndex = COLUMN_COLUMN_INDEX;
-		maxColumnIndex = Math.max(columnColumnIndex, maxColumnIndex);
 		context.getSpreadSheet(this);
 	}
 
@@ -82,14 +76,24 @@ public class SelectionSetValueRowWriter extends RowWriter {
 		values[valueColumnIndex] = "value";
 		values[localizedColumnIndex] = "localized";
 		values[presetColumnIndex] = "is preset";
-		values[strokesIdColumnIndex] = "strokes id";
-		values[inkRegionsColumnIndex] = "ink regions";
-		values[rowColumnIndex] = "row";
-		values[columnColumnIndex] = "column";
+		values[strokesIdColumnIndex] = "strokes id / row";
+		values[inkRegionsColumnIndex] = "ink regions / column";
 		printRow(values, true);
 	}
 
+	private static boolean isSketch(InputFieldSelectionSetValueOutVO selectionSetValue, InputFieldType fieldType) {
+		if (fieldType != null) {
+			return InputFieldType.SKETCH.equals(fieldType);
+		}
+		InputFieldOutVO field = selectionSetValue.getField();
+		return field != null && field.getFieldType() != null && InputFieldType.SKETCH.equals(field.getFieldType().getType());
+	}
+
 	public void printRows(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues) throws Throwable {
+		printRows(selectionSetValues, null);
+	}
+
+	public void printRows(Collection<InputFieldSelectionSetValueOutVO> selectionSetValues, InputFieldType fieldType) throws Throwable {
 		Iterator<InputFieldSelectionSetValueOutVO> it = selectionSetValues.iterator();
 		while (it.hasNext()) {
 			InputFieldSelectionSetValueOutVO selectionSetValue = it.next();
@@ -99,10 +103,14 @@ public class SelectionSetValueRowWriter extends RowWriter {
 			values[valueColumnIndex] = selectionSetValue.getValue();
 			values[localizedColumnIndex] = Boolean.toString(selectionSetValue.getLocalized());
 			values[presetColumnIndex] = Boolean.toString(selectionSetValue.getPreset());
-			values[strokesIdColumnIndex] = selectionSetValue.getStrokesId();
-			values[inkRegionsColumnIndex] = CommonUtil.inkValueToString(selectionSetValue.getInkRegions());
-			values[rowColumnIndex] = selectionSetValue.getRowL10nKey();
-			values[columnColumnIndex] = selectionSetValue.getColumnL10nKey();
+			// shared columns: strokes id and ink regions of a sketch field, row and column of other select fields
+			if (isSketch(selectionSetValue, fieldType)) {
+				values[strokesIdColumnIndex] = selectionSetValue.getStrokesId();
+				values[inkRegionsColumnIndex] = CommonUtil.inkValueToString(selectionSetValue.getInkRegions());
+			} else {
+				values[strokesIdColumnIndex] = selectionSetValue.getRowL10nKey();
+				values[inkRegionsColumnIndex] = selectionSetValue.getColumnL10nKey();
+			}
 			printRow(values);
 		}
 	}
