@@ -24,6 +24,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	    'mustBeUnselected'       : " darf nicht gesetzt sein",
 	    'mustBeUnmarked'         : " darf nicht markiert sein",
 	    'selectOneMultipleSelectionIds' : "darf höchstens eine Auswahl-ID liefern (erhalten: %d)",
+	    'nestedSelectionIds' : "darf keine verschachtelten Auswahl-ID-Listen liefern",
+	    'selectMatrixOneMultipleSelectionIds' : "darf höchstens eine Auswahl-ID je Zeile liefern (Zeile \"%s\": %d erhalten)",
 	    'fileValueNotSettable'   : "Dateiwerte können nicht durch Ausdrücke gesetzt werden",
 
 	    'true'                   : "angekreuzt",
@@ -84,6 +86,8 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	    'mustBeUnselected'       : " must not be selected",
 	    'mustBeUnmarked'         : " must not be marked",
 	    'selectOneMultipleSelectionIds' : "must return at most one selection id (got %d)",
+	    'nestedSelectionIds' : "must not return nested selection id arrays",
+	    'selectMatrixOneMultipleSelectionIds' : "must return at most one selection id per row (row \"%s\": got %d)",
 	    'fileValueNotSettable'   : "file values cannot be set by expressions",
 
 	    'true'                   : "checked",
@@ -1458,6 +1462,35 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 		}
 	}
 
+	function _checkSelectMatrixOneValue(inputFieldVariableValue, selectionValueIds) {
+		// the selection set values with the same row form one option group (radio group)
+		var selectionSetVals = inputFieldVariableValue.inputFieldSelectionSetValues;
+		if (selectionSetVals == null) {
+			return;
+		}
+		var rowIds = {};
+		for (var i = 0; i < selectionValueIds.length; i++) {
+			for (var j = 0; j < selectionSetVals.length; j++) {
+				// calculated selection ids may be numbers or strings
+				if (selectionSetVals[j].id == selectionValueIds[i]) {
+					var row = '_' + selectionSetVals[j].row;
+					if (!rowIds.hasOwnProperty(row)) {
+						rowIds[row] = {};
+					}
+					rowIds[row]['_' + selectionSetVals[j].id] = true;
+					var count = Object.keys(rowIds[row]).length;
+					if (count > 1) {
+						var locale = (inputFieldVars.locale != null && (inputFieldVars.locale in localizedMessages)) ? inputFieldVars.locale : defaultLocale;
+						var detail = sprintf(localizedMessages[locale]['selectMatrixOneMultipleSelectionIds'], selectionSetVals[j].row, count);
+						var variableName = inputFieldVariableValue.jsVariableName;
+						throw { msg: (variableName != null && variableName.length > 0) ? ("value expression " + variableName + ": " + detail) : detail };
+					}
+					break;
+				}
+			}
+		}
+	}
+
 	function _setInputFieldVariableValue(inputFieldVariableValue, newValue) {
 		if (inputFieldVariableValue != null) {
 			switch (inputFieldVariableValue.inputFieldType) {
@@ -1494,6 +1527,15 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 						}
 					}
 				}
+				for ( var k = 0; k < newValue.length; k++) {
+					// reject e.g. [[11]] before the value is committed, like the widgets do
+					if (newValue[k] instanceof Array) {
+						var nestedLocale = (inputFieldVars.locale != null && (inputFieldVars.locale in localizedMessages)) ? inputFieldVars.locale : defaultLocale;
+						var nestedDetail = localizedMessages[nestedLocale]['nestedSelectionIds'];
+						var nestedVariableName = inputFieldVariableValue.jsVariableName;
+						throw { msg: (nestedVariableName != null && nestedVariableName.length > 0) ? ("value expression " + nestedVariableName + ": " + nestedDetail) : nestedDetail };
+					}
+				}
 				if ((inputFieldVariableValue.inputFieldType == "SELECT_ONE_DROPDOWN"
 						|| inputFieldVariableValue.inputFieldType == "SELECT_ONE_RADIO_H"
 						|| inputFieldVariableValue.inputFieldType == "SELECT_ONE_RADIO_V")
@@ -1502,6 +1544,10 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 					var detail = sprintf(localizedMessages[locale]['selectOneMultipleSelectionIds'], newValue.length);
 					var variableName = inputFieldVariableValue.jsVariableName;
 					throw { msg: (variableName != null && variableName.length > 0) ? ("value expression " + variableName + ": " + detail) : detail };
+				}
+				if (inputFieldVariableValue.inputFieldType == "SELECT_MATRIX_ONE") {
+					// a select matrix one has one option group per row: at most one selection id of each row
+					_checkSelectMatrixOneValue(inputFieldVariableValue, newValue);
 				}
 				inputFieldVariableValue.selectionValueIds = newValue;
 				break;
@@ -2303,130 +2349,178 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	}
 
 	function singleLineTextApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 
 	function multiLineTextApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 
 	function selectOneDropdownApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function selectOneRadioApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 
 	function selectManyApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function autoCompleteApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function checkBoxApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function integerApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(newValue);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(newValue);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function floatApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setValue(_formatDecimal(newValue));
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setValue(_formatDecimal(newValue));
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function dateApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setDate(newValue != null ? JSJoda.convert(newValue).toDate() : null);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setDate(newValue != null ? JSJoda.convert(newValue).toDate() : null);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function timeApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		widget.setTime(newValue != null ? JSJoda.convert(JSJoda.LocalDateTime.of(1970,1,1,newValue.hour(),newValue.minute())).toDate() : null);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			widget.setTime(newValue != null ? JSJoda.convert(JSJoda.LocalDateTime.of(1970,1,1,newValue.hour(),newValue.minute())).toDate() : null);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
 	}
 	
 	function timestampApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		var timestamp = null;
-		if (newValue != null) {
-			var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
-			if (inputFieldVariable != null && inputFieldVariable.value.userTimeZone) {
-				timestamp = newValue.withZoneSameInstant(JSJoda.ZoneId.of(INPUT_TIMEZONE_ID));
-			} else {
-				timestamp = newValue;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			var timestamp = null;
+			if (newValue != null) {
+				var inputFieldVariable = _getSeriesInputFieldVariable(variableName, index, false);
+				if (inputFieldVariable != null && inputFieldVariable.value.userTimeZone) {
+					timestamp = newValue.withZoneSameInstant(JSJoda.ZoneId.of(INPUT_TIMEZONE_ID));
+				} else {
+					timestamp = newValue;
+				}
+				timestamp = JSJoda.convert(timestamp.toLocalDateTime()).toDate();
 			}
-			timestamp = JSJoda.convert(timestamp.toLocalDateTime()).toDate();
+			widget.setDate(timestamp);
+		} finally {
+			silent = previousSilent;
 		}
-		widget.setDate(timestamp);
-		silent = false;
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
@@ -2434,10 +2528,14 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	
 	
 	function sketchApplyCalculatedValue(variableName, index, widget, sourceId, rowId) {
+		var previousSilent = silent;
 		silent = true;
-		var newValue = _inputFieldApplyCalculatedValue(variableName, index);
-		Sketch.setSketchValue(widget,newValue.ink);
-		silent = false;
+		try {
+			var newValue = _inputFieldApplyCalculatedValue(variableName, index);
+			Sketch.setSketchValue(widget,newValue.ink);
+		} finally {
+			silent = previousSilent;
+		}
 		if (sourceId != null && sourceId.length > 0) {
 			ajaxRequest(sourceId, sourceId, null, null);
 		}
