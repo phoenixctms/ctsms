@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.selenium.trial;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -29,14 +31,32 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.phoenixctms.ctsms.enumeration.AuthenticationType;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
+import org.phoenixctms.ctsms.enumeration.JobModule;
 import org.phoenixctms.ctsms.enumeration.PermissionProfile;
 import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsArchive;
 import org.phoenixctms.ctsms.selenium.SeleniumTestBase;
+import org.phoenixctms.ctsms.service.shared.InputFieldService;
+import org.phoenixctms.ctsms.service.shared.JobService;
+import org.phoenixctms.ctsms.service.shared.ToolsService;
+import org.phoenixctms.ctsms.service.trial.TrialService;
 import org.phoenixctms.ctsms.test.EcrfValidationTestVector;
+import org.phoenixctms.ctsms.test.InkStroke;
+import org.phoenixctms.ctsms.test.InputFieldValuesEnum;
 import org.phoenixctms.ctsms.test.xls.XlsImporter;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Compress;
 import org.phoenixctms.ctsms.util.ServiceUtil;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.DepartmentVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldInVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
+import org.phoenixctms.ctsms.vo.ECRFOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldImageVO;
+import org.phoenixctms.ctsms.vo.InputFieldInVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.JobFileVO;
+import org.phoenixctms.ctsms.vo.JobOutVO;
 import org.phoenixctms.ctsms.vo.PasswordInVO;
 import org.phoenixctms.ctsms.vo.TrialInVO;
 import org.phoenixctms.ctsms.vo.TrialOutVO;
@@ -46,6 +66,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
 
 @Listeners(EcrfDataEntryTest.class)
 public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobOutput {
@@ -68,6 +92,12 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 	private String exportFilesFile;
 	private HashMap<String, String> exportedFileMd5s = new LinkedHashMap<String, String>();
 	private Connection connection;
+	private final static String SKETCH_BACKGROUND_FILE = "sketch_background.png";
+	private final static int INPUT_FIELD_NAME_COLUMN_INDEX = 0;
+	private final static int INPUT_FIELD_SKETCH_BACKGROUND_COLUMN_INDEX = 14;
+	private AuthenticationVO auth;
+	private InputFieldOutVO sketchField;
+	private String exportSetupFile;
 
 	private XlsImporter getXlsImporter() {
 		if (xlsImporter == null) {
@@ -90,7 +120,8 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		userPassword = userName;
 		UserOutVO user = createUser(userName, userPassword, department.getId(), departmentPassword);
 		setProviderAuth(userName, userPassword);
-		getXlsImporter().setAuth(createAuth(userName, userPassword));
+		auth = createAuth(userName, userPassword);
+		getXlsImporter().setAuth(auth);
 	}
 
 	@BeforeClass(description = "Create a test trial.")
@@ -292,6 +323,147 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		} else {
 			info("no exported files");
 		}
+	}
+
+	@Test(description = "Add a sketch field with a background image (sketch_background.png) to the trial's first eCRF.")
+	public void test_09_add_sketch_field() throws Throwable {
+		setSkipScreenshot(true);
+		sketchField = getTestDataProvider().createSketchField("sketch-" + getTestId(), "import test", "sketch with background image", null, SKETCH_BACKGROUND_FILE,
+				new TreeMap<InputFieldValuesEnum, InkStroke>(), null, null, null);
+		TrialService trialService = getApplicationContext().getBean(TrialService.class);
+		ECRFOutVO ecrf = trialService.getEcrfList(auth, trial.getId(), null, true, null).iterator().next();
+		long position = 1l;
+		Iterator<ECRFFieldOutVO> it = trialService.getEcrfFieldList(auth, trial.getId(), ecrf.getId(), false, null).iterator();
+		while (it.hasNext()) {
+			position = Math.max(position, it.next().getPosition() + 1l);
+		}
+		ECRFFieldInVO newEcrfField = new ECRFFieldInVO();
+		newEcrfField.setTrialId(trial.getId());
+		newEcrfField.setEcrfId(ecrf.getId());
+		newEcrfField.setFieldId(sketchField.getId());
+		newEcrfField.setSection("sketch");
+		newEcrfField.setPosition(position);
+		newEcrfField.setRef(CommonUtil.generateShortUUID());
+		newEcrfField.setOptional(true);
+		ECRFFieldOutVO ecrfField = trialService.addEcrfField(auth, newEcrfField);
+		testOK("eCRF field " + ecrfField.getUniqueName() + " with sketch background image added");
+	}
+
+	@Test(description = "Execute trial job for exporting the eCRF setup. With the sketch background image, it has to be a zip archive containing the .xls and the image.")
+	public void test_10_export_ecrf_setup_job() throws Throwable {
+		clickTab("tabView:trialjobs");
+		String job = "export eCRF setup";
+		clickJobTypeSelectOneRadio("tabView:trialjob_form", job);
+		clickButton("tabView:trialjob_form:addJob");
+		if (waitForAddOperationSuccessful("tabView:trialjob_form")) {
+			if (waitForJobSuccessful("tabView:trialjob_form", 60l, 5l)) {
+				JobService jobService = getApplicationContext().getBean(JobService.class);
+				JobOutVO lastJob = null;
+				Iterator<JobOutVO> it = jobService.getJobs(auth, JobModule.TRIAL_JOB, trial.getId(), null).iterator();
+				while (it.hasNext()) {
+					JobOutVO trialJob = it.next();
+					if (lastJob == null || trialJob.getId() > lastJob.getId()) {
+						lastJob = trialJob;
+					}
+				}
+				JobFileVO jobFile = jobService.getJobFile(auth, lastJob.getId());
+				Assert.assertEquals(jobFile.getContentType().getMimeType(), Compress.ZIP_MIMETYPE_STRING, "exported eCRF setup mime type:");
+				Assert.assertTrue(jobFile.getFileName().endsWith(".zip"), "exported eCRF setup file name " + jobFile.getFileName() + " ends with .zip:");
+				XlsArchive archive = XlsArchive.read(jobFile.getDatas());
+				info("exported eCRF setup " + jobFile.getFileName() + " contains " + archive.getXlsFileName() + " and " + archive.getFileCount() + " files");
+				String backgroundPath = getSketchBackgroundPath(archive.getXlsData(), sketchField.getName());
+				Assert.assertNotNull(backgroundPath, "sketch background file name (param5) of input field " + sketchField.getName() + ":");
+				byte[] background = archive.getFile(backgroundPath);
+				Assert.assertNotNull(background, "zip entry " + backgroundPath + " exists:");
+				Assert.assertEquals(getMd5(background), getMd5(Files.readAllBytes(new File(getResourceFilePath(SKETCH_BACKGROUND_FILE)).toPath())),
+						"zip entry " + backgroundPath + " MD5:");
+				File file = new File(getTestDirectory(), jobFile.getFileName());
+				Files.write(file.toPath(), jobFile.getDatas());
+				exportSetupFile = file.getCanonicalPath();
+				testOK("eCRF setup exported to " + exportSetupFile + ", sketch background image " + backgroundPath);
+				return;
+			}
+		}
+		testFailed(job + " failed");
+	}
+
+	private static String getSketchBackgroundPath(byte[] xlsData, String inputFieldName) throws Exception {
+		Workbook workbook = Workbook.getWorkbook(new ByteArrayInputStream(xlsData));
+		try {
+			Sheet sheet = workbook.getSheet("inputfields");
+			for (int i = 1; i < sheet.getRows(); i++) {
+				Cell[] row = sheet.getRow(i);
+				if (row.length > INPUT_FIELD_SKETCH_BACKGROUND_COLUMN_INDEX && inputFieldName.equals(row[INPUT_FIELD_NAME_COLUMN_INDEX].getContents())) {
+					String path = row[INPUT_FIELD_SKETCH_BACKGROUND_COLUMN_INDEX].getContents();
+					return CommonUtil.isEmptyString(path) ? null : path;
+				}
+			}
+			return null;
+		} finally {
+			workbook.close();
+		}
+	}
+
+	@Test(description = "Clear the sketch background image, then execute trial job for importing the exported eCRF setup zip archive into a second trial. It has to restore the image.")
+	public void test_11_import_ecrf_setup_zip_job() throws Throwable {
+		if (CommonUtil.isEmptyString(exportSetupFile)) {
+			testFailed("eCRF setup zip archive not exported");
+			return;
+		}
+		InputFieldService inputFieldService = getApplicationContext().getBean(InputFieldService.class);
+		ToolsService toolsService = getApplicationContext().getBean(ToolsService.class);
+		inputFieldService.updateInputField(auth, getSketchFieldWithoutImage(inputFieldService.getInputField(auth, sketchField.getId())));
+		Assert.assertFalse(toolsService.getInputFieldImage(sketchField.getId()).getHasImage(), "sketch background image cleared:");
+		TrialOutVO trial2 = createTrial("trial2-" + getTestId(), department.getId());
+		load(getUrl("/trial/trial.jsf?trialid=" + trial2.getId()));
+		clickTab("tabView:trialjobs");
+		String job = "import eCRF setup";
+		clickJobTypeSelectOneRadio("tabView:trialjob_form", job);
+		uploadFile("tabView:trialjob_form:jobFileUpload", exportSetupFile);
+		waitForUploadSuccessful("tabView:trialjob_form");
+		clickButton("tabView:trialjob_form:addJob");
+		if (waitForAddOperationSuccessful("tabView:trialjob_form")) {
+			if (waitForJobSuccessful("tabView:trialjob_form", 60l, 5l)) {
+				InputFieldImageVO image = toolsService.getInputFieldImage(sketchField.getId());
+				Assert.assertTrue(image.getHasImage(), "sketch background image restored:");
+				Assert.assertEquals(image.getContentType().getMimeType(), "image/png", "sketch background image mime type:");
+				Assert.assertEquals(image.getFileName(), SKETCH_BACKGROUND_FILE, "sketch background image file name:");
+				Assert.assertEquals(getMd5(image.getDatas()), getMd5(Files.readAllBytes(new File(getResourceFilePath(SKETCH_BACKGROUND_FILE)).toPath())),
+						"sketch background image MD5:");
+				boolean found = false;
+				Iterator<ECRFFieldOutVO> it = getApplicationContext().getBean(TrialService.class).getEcrfFieldList(auth, trial2.getId(), null, false, null).iterator();
+				while (it.hasNext()) {
+					if (it.next().getField().getId() == sketchField.getId()) {
+						found = true;
+					}
+				}
+				Assert.assertTrue(found, "eCRF field of input field " + sketchField.getName() + " imported:");
+				testOK("eCRF setup zip archive imported, sketch background image restored");
+				return;
+			}
+		}
+		testFailed(job + " failed");
+	}
+
+	private static InputFieldInVO getSketchFieldWithoutImage(InputFieldOutVO inputField) {
+		InputFieldInVO result = new InputFieldInVO();
+		result.setId(inputField.getId());
+		result.setVersion(inputField.getVersion());
+		result.setFieldType(InputFieldType.SKETCH);
+		result.setLocalized(inputField.getLocalized());
+		result.setName(inputField.getNameL10nKey());
+		result.setTitle(inputField.getTitleL10nKey());
+		result.setCategory(inputField.getCategory());
+		result.setExternalId(inputField.getExternalId());
+		result.setTopComment(inputField.getTopCommentL10nKey());
+		result.setBottomComment(inputField.getBottomCommentL10nKey());
+		result.setValidationErrorMsg(inputField.getValidationErrorMsgL10nKey());
+		result.setMinSelections(inputField.getMinSelections());
+		result.setMaxSelections(inputField.getMaxSelections());
+		// without an image, width and height are required:
+		result.setWidth(inputField.getWidth());
+		result.setHeight(inputField.getHeight());
+		return result;
 	}
 
 	private static String getMd5(byte[] data) throws Exception {
