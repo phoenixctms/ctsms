@@ -330,7 +330,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		setSkipScreenshot(true);
 		sketchField = getTestDataProvider().createSketchField("sketch-" + getTestId(), "import test", "sketch with background image", null, SKETCH_BACKGROUND_FILE,
 				new TreeMap<InputFieldValuesEnum, InkStroke>(), null, null, null);
-		TrialService trialService = getApplicationContext().getBean(TrialService.class);
+		TrialService trialService = getApplicationContext().getBean("trialService", TrialService.class);
 		ECRFOutVO ecrf = trialService.getEcrfList(auth, trial.getId(), null, true, null).iterator().next();
 		long position = 1l;
 		Iterator<ECRFFieldOutVO> it = trialService.getEcrfFieldList(auth, trial.getId(), ecrf.getId(), false, null).iterator();
@@ -357,7 +357,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		clickButton("tabView:trialjob_form:addJob");
 		if (waitForAddOperationSuccessful("tabView:trialjob_form")) {
 			if (waitForJobSuccessful("tabView:trialjob_form", 60l, 5l)) {
-				JobService jobService = getApplicationContext().getBean(JobService.class);
+				JobService jobService = getApplicationContext().getBean("jobService", JobService.class);
 				JobOutVO lastJob = null;
 				Iterator<JobOutVO> it = jobService.getJobs(auth, JobModule.TRIAL_JOB, trial.getId(), null).iterator();
 				while (it.hasNext()) {
@@ -410,8 +410,8 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 			testFailed("eCRF setup zip archive not exported");
 			return;
 		}
-		InputFieldService inputFieldService = getApplicationContext().getBean(InputFieldService.class);
-		ToolsService toolsService = getApplicationContext().getBean(ToolsService.class);
+		InputFieldService inputFieldService = getApplicationContext().getBean("inputFieldService", InputFieldService.class);
+		ToolsService toolsService = getApplicationContext().getBean("toolsService", ToolsService.class);
 		inputFieldService.updateInputField(auth, getSketchFieldWithoutImage(inputFieldService.getInputField(auth, sketchField.getId())));
 		Assert.assertFalse(toolsService.getInputFieldImage(sketchField.getId()).getHasImage(), "sketch background image cleared:");
 		TrialOutVO trial2 = createTrial("trial2-" + getTestId(), department.getId());
@@ -431,7 +431,7 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 				Assert.assertEquals(getMd5(image.getDatas()), getMd5(Files.readAllBytes(new File(getResourceFilePath(SKETCH_BACKGROUND_FILE)).toPath())),
 						"sketch background image MD5:");
 				boolean found = false;
-				Iterator<ECRFFieldOutVO> it = getApplicationContext().getBean(TrialService.class).getEcrfFieldList(auth, trial2.getId(), null, false, null).iterator();
+				Iterator<ECRFFieldOutVO> it = getApplicationContext().getBean("trialService", TrialService.class).getEcrfFieldList(auth, trial2.getId(), null, false, null).iterator();
 				while (it.hasNext()) {
 					if (it.next().getField().getId() == sketchField.getId()) {
 						found = true;
