@@ -424,6 +424,9 @@ public class EcrfDataEntryTest extends SeleniumTestBase implements ProcessorJobO
 		clickButton("tabView:trialjob_form:addJob");
 		if (waitForAddOperationSuccessful("tabView:trialjob_form")) {
 			if (waitForJobSuccessful("tabView:trialjob_form", 60l, 5l)) {
+				// the job updated the input field in another process, so drop the stale (image cleared) entity of this
+				// process' 2nd level cache:
+				toolsService.clearHibernateCache();
 				InputFieldImageVO image = toolsService.getInputFieldImage(sketchField.getId());
 				Assert.assertTrue(image.getHasImage(), "sketch background image restored:");
 				Assert.assertEquals(image.getContentType().getMimeType(), "image/png", "sketch background image mime type:");
