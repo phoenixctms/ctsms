@@ -319,7 +319,7 @@ public class JobBean extends ManagedBeanBase {
 	public void handleFileUpload(FileUploadEvent event) {
 		UploadedFile uploadedFile = event.getFile();
 		in.setFileName(uploadedFile.getFileName());
-		in.setMimeType(uploadedFile.getContentType());
+		in.setMimeType(WebUtil.getUploadMimeType(uploadedFile.getContentType(), uploadedFile.getFileName()));
 		in.setDatas(uploadedFile.getContents());
 		inFileChanged = true;
 		addOperationSuccessMessage(MessageCodes.UPLOAD_OPERATION_SUCCESSFUL);

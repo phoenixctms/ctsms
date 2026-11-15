@@ -415,6 +415,18 @@ public class InputFieldRowProcessor extends RowProcessor {
 				inputFieldIn.setDatas(file.getDatas());
 				inputFieldIn.setMimeType(file.getContentType().getMimeType());
 			} catch (NumberFormatException e) {
+				if (context.isArchive()) {
+					byte[] datas = context.getArchiveFile(fileName);
+					if (datas == null) {
+						throw new IllegalArgumentException("file " + fileName + " not found in zip archive");
+					}
+					String name = CommonUtil.sanitizeFilePath(fileName.trim());
+					name = name.substring(name.lastIndexOf('/') + 1);
+					inputFieldIn.setFileName(name);
+					inputFieldIn.setDatas(datas);
+					inputFieldIn.setMimeType(CommonUtil.getMimeType(datas, name));
+					return;
+				}
 				java.io.File file = new java.io.File(filePath.getDirectory(), CommonUtil.sanitizeFilePath(fileName));
 				inputFieldIn.setFileName(file.getName());
 				FileInputStream stream = new FileInputStream(file);

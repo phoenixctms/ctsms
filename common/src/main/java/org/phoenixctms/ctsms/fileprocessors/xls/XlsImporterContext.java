@@ -12,6 +12,8 @@ public class XlsImporterContext {
 	private AuthenticationVO auth;
 	private Long entityId;
 	private HashMap<RowProcessor, Boolean> mandatoryMap;
+	private byte[] workbookData;
+	private XlsArchive archive;
 
 	public XlsImporterContext(XlsImporterBase importer, String fileName, String encoding) {
 		this.importer = importer;
@@ -24,6 +26,29 @@ public class XlsImporterContext {
 
 	public AuthenticationVO getAuth() {
 		return auth;
+	}
+
+	/**
+	 * @return the file bundled with the spreadsheet in a zip archive, or null if not found or the input is no zip archive
+	 */
+	public byte[] getArchiveFile(String path) {
+		return archive != null ? archive.getFile(path) : null;
+	}
+
+	public boolean isArchive() {
+		return archive != null;
+	}
+
+	protected void setArchive(XlsArchive archive) {
+		this.archive = archive;
+	}
+
+	protected byte[] getWorkbookData() {
+		return workbookData;
+	}
+
+	protected void setWorkbookData(byte[] workbookData) {
+		this.workbookData = workbookData;
 	}
 
 	public Long getEntityId() {

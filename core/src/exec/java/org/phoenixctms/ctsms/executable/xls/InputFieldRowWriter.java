@@ -1,22 +1,20 @@
 package org.phoenixctms.ctsms.executable.xls;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsArchive;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.service.shared.ToolsService;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.ExecDefaultSettings;
 import org.phoenixctms.ctsms.util.ExecSettingCodes;
 import org.phoenixctms.ctsms.util.ExecSettings;
-import org.phoenixctms.ctsms.util.FilePathSplitter;
 import org.phoenixctms.ctsms.vo.InputFieldImageVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.terracotta.agent.repkg.de.schlichtherle.io.FileOutputStream;
 
 public class InputFieldRowWriter extends RowWriter {
 
@@ -113,7 +111,6 @@ public class InputFieldRowWriter extends RowWriter {
 	private String dateTimePattern;
 	private String datePattern;
 	private String timePattern;
-	private FilePathSplitter filePath;
 	private int maxColumnIndex;
 	@Autowired
 	protected InputFieldService inputFieldService;
@@ -225,7 +222,6 @@ public class InputFieldRowWriter extends RowWriter {
 		dateTimePattern = ExecSettings.getString(ExecSettingCodes.DATETIME_PATTERN, ExecDefaultSettings.DATETIME_PATTERN);
 		datePattern = ExecSettings.getString(ExecSettingCodes.DATE_PATTERN, ExecDefaultSettings.DATE_PATTERN);
 		timePattern = ExecSettings.getString(ExecSettingCodes.TIME_PATTERN, ExecDefaultSettings.TIME_PATTERN);
-		filePath = new FilePathSplitter(context.getFileName());
 		((XlsExporter) context.getExporter()).getSelectionSetValueRowWriter().init();
 		context.getSpreadSheet(this);
 	}
@@ -315,9 +311,9 @@ public class InputFieldRowWriter extends RowWriter {
 				values[heightColumnIndex] = (inputField.getHeight() != null ? Long.toString(inputField.getHeight()) : null);
 				if (inputField.getHasImage()) {
 					try {
-						values[fileNameColumnIndex] = writeFile(inputField);
+						values[fileNameColumnIndex] = addFile(inputField);
 					} catch (Exception e) {
-						jobOutput.println("failed to write file: " + e.getMessage());
+						jobOutput.println("failed to export background image of input field " + inputField.getName() + ": " + e.getMessage());
 						values[fileNameColumnIndex] = null;
 					}
 				}
@@ -359,25 +355,9 @@ public class InputFieldRowWriter extends RowWriter {
 		return sb.length() > 0 ? sb.toString() : null;
 	}
 
-	private String writeFile(InputFieldOutVO inputField) throws Throwable {
+	private String addFile(InputFieldOutVO inputField) throws Throwable {
 		InputFieldImageVO inputFieldImage = toolsService.getInputFieldImage(inputField.getId());
-		java.io.File file = new java.io.File(filePath.getDirectory(), inputFieldImage.getFileName());
-		FileOutputStream stream = null;
-		try {
-			stream = new FileOutputStream(file);
-			stream.write(inputFieldImage.getDatas());
-			stream.flush();
-			stream.close();
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			try {
-				if (stream != null) {
-					stream.close();
-				}
-			} catch (IOException e) {
-			}
-		}
-		return inputFieldImage.getFileName();
+		// the background image goes into the zip archive along with the spreadsheet:
+		return context.addFile(XlsArchive.IMAGES_FOLDER, inputFieldImage.getFileName(), inputFieldImage.getDatas());
 	}
 }

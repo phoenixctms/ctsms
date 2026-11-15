@@ -58,7 +58,7 @@ public final class JobResource {
 		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		JobAddVO in = json.getValueAs(JobAddVO.class);
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
-		in.setMimeType(content.getMediaType().toString());
+		in.setMimeType(WebUtil.getUploadMimeType(content.getMediaType().toString(), contentDisposition.getFileName()));
 		in.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getJobService().addJob(auth, in);
 	}
@@ -230,7 +230,7 @@ public final class JobResource {
 		json.setMediaType(MediaType.APPLICATION_JSON_TYPE);
 		JobUpdateVO in = json.getValueAs(JobUpdateVO.class);
 		in.setDatas(CommonUtil.inputStreamToByteArray(input));
-		in.setMimeType(content.getMediaType().toString());
+		in.setMimeType(WebUtil.getUploadMimeType(content.getMediaType().toString(), contentDisposition.getFileName()));
 		in.setFileName(contentDisposition.getFileName());
 		return WebUtil.getServiceLocator().getJobService().updateJob(auth, in);
 	}

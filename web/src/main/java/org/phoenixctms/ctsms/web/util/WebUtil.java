@@ -57,6 +57,7 @@ import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.AuthenticationExceptionCodes;
 import org.phoenixctms.ctsms.util.AuthorisationExceptionCodes;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.util.Compress;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.vo.*;
 import org.phoenixctms.ctsms.web.model.ApplicationScopeBean;
@@ -953,6 +954,22 @@ public final class WebUtil {
 			notificationTypes = new ArrayList<SelectItem>();
 		}
 		return notificationTypes;
+	}
+
+	/**
+	 * Browsers and clients send a zip archive (e.g. a setup .xls bundled with sketch background images) with different
+	 * mime types, e.g. "application/x-zip-compressed" (Windows), which the mime type master data does not list. Map
+	 * them to "application/zip".
+	 */
+	public static String getUploadMimeType(String mimeType, String fileName) {
+		if (mimeType != null) {
+			String type = mimeType.trim().toLowerCase(Locale.ENGLISH);
+			if ("application/x-zip-compressed".equals(type) || "application/x-zip".equals(type) || "application/zip-compressed".equals(type)
+					|| ("application/octet-stream".equals(type) && fileName != null && fileName.toLowerCase(Locale.ENGLISH).endsWith(".zip"))) {
+				return Compress.ZIP_MIMETYPE_STRING;
+			}
+		}
+		return mimeType;
 	}
 
 	public static String getAllowedFileExtensionsPattern(FileModule module, Boolean image) {

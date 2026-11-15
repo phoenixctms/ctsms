@@ -1,5 +1,6 @@
 package org.phoenixctms.ctsms.fileprocessors.xls;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -22,13 +23,31 @@ public abstract class XlsImporterBase {
 	protected abstract InputStream getInputStream(String fileName, AuthenticationVO auth) throws AuthenticationException,
 			AuthorisationException, ServiceException, FileNotFoundException;
 
+	/**
+	 * Reads the input once per import (the sheets are read one after another from the same input). A zip archive
+	 * (see {@link XlsArchive}) provides the spreadsheet plus the files its rows reference.
+	 */
+	private InputStream getWorkbookInputStream(XlsImporterContext context) throws Exception {
+		if (context.getWorkbookData() == null) {
+			byte[] data = CommonUtil.inputStreamToByteArray(getInputStream(context.getFileName(), context.getAuth()));
+			if (XlsArchive.isZip(data)) {
+				XlsArchive archive = XlsArchive.read(data);
+				jobOutput.println("zip archive: reading " + archive.getXlsFileName() + " (" + archive.getFileCount() + " other files)");
+				context.setArchive(archive);
+				data = archive.getXlsData();
+			}
+			context.setWorkbookData(data);
+		}
+		return new ByteArrayInputStream(context.getWorkbookData());
+	}
+
 	protected long readRows(XlsImporterContext context, String encoding, RowProcessor processor) throws Throwable {
 		processor.init();
 		long rowCount = 0l;
 		long lineNumber = 1l;
 		Workbook workbook = null;
 		try {
-			InputStream inputStream = getInputStream(context.getFileName(), context.getAuth());
+			InputStream inputStream = getWorkbookInputStream(context);
 			WorkbookSettings workbookSettings = processor.getWorkbookSettings(encoding);
 			if (workbookSettings != null) {
 				workbook = Workbook.getWorkbook(inputStream, workbookSettings);
