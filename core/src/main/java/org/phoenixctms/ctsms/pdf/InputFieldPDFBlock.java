@@ -36,6 +36,7 @@ public abstract class InputFieldPDFBlock {
 	private final static float SELECTION_MATRIX_LABEL_WIDTH_RATIO = 0.35f;
 	private final static float SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH = 120.0f; // pt
 	private final static float SELECTION_MATRIX_VERTICAL_HEAD_BASELINE_RATIO = 0.75f;
+	private final static float SELECTION_MATRIX_HEAD_MAX_HEIGHT = 200.0f; // pt, well below the printable height of a page
 	private InputFieldOutVO inputField;
 	protected boolean blank;
 	protected PDFJpeg ximage;
@@ -904,30 +905,43 @@ public abstract class InputFieldPDFBlock {
 		float headHeight = 0.0f;
 		boolean verticalHead = headLabels.size() > Settings.getInt(SettingCodes.SELECT_MATRIX_VERTICAL_HEAD_COUNT, Bundle.SETTINGS,
 				DefaultSettings.SELECT_MATRIX_VERTICAL_HEAD_COUNT);
+		// vertical heads use a smaller font when even one rotated line is wider than a column
+		PDFUtil.FontSize headFontSize = PDFUtil.FontSize.MEDIUM;
+		if (verticalHead) {
+			for (PDFUtil.FontSize fontSize : new PDFUtil.FontSize[] { PDFUtil.FontSize.SMALL, PDFUtil.FontSize.TINY }) {
+				if (getLineStep(headFontSize, cursor) <= cellWidth) {
+					break;
+				}
+				headFontSize = fontSize;
+			}
+		}
 		// height of one text line incl. spacing
-		float lineStep = PDFUtil.renderTextLine(null, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), "", 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT);
+		float lineStep = getLineStep(headFontSize, cursor);
 		ArrayList<ArrayList<String>> wrappedHeadLabels = new ArrayList<ArrayList<String>>(headLabels.size());
 		for (int c = 0; c < headLabels.size(); c++) {
-			// vertical: long labels wrapped into further (vertical) lines; horizontal: wrapped to the column width
 			String label = getSingleLine(headLabels.get(c));
 			ArrayList<String> lines;
 			if (verticalHead) {
-				// as many vertical lines as fit side by side in the column: longer lines instead of overlapping the next column
+				// as many vertical lines as fit side by side in the column: longer lines instead of overlapping the next column,
+				// but never longer than the maximum head height. labels that do not fit are cut with an ellipsis.
 				int maxLines = Math.max(1, (int) Math.floor(cellWidth / lineStep));
-				float labelLength = PDFUtil.getStringWidth(label, cursor.getFontA(), PDFUtil.FontSize.MEDIUM);
-				float maxLength = SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH;
-				lines = wrapLine(label, maxLength, cursor);
-				while (lines.size() > maxLines && maxLength < labelLength) {
-					maxLength *= 1.25f;
-					lines = wrapLine(label, maxLength, cursor);
+				float labelLength = PDFUtil.getStringWidth(label, cursor.getFontA(), headFontSize);
+				float maxLength = Math.min(SELECTION_MATRIX_VERTICAL_HEAD_MAX_LENGTH, SELECTION_MATRIX_HEAD_MAX_HEIGHT);
+				lines = wrapLine(label, maxLength, headFontSize, cursor);
+				while (lines.size() > maxLines && maxLength < Math.min(labelLength, SELECTION_MATRIX_HEAD_MAX_HEIGHT)) {
+					maxLength = Math.min(maxLength * 1.25f, SELECTION_MATRIX_HEAD_MAX_HEIGHT);
+					lines = wrapLine(label, maxLength, headFontSize, cursor);
 				}
+				lines = fitLines(lines, maxLines, maxLength, headFontSize, cursor);
 			} else {
-				lines = wrapLine(label, textWidth, cursor);
+				// wrapped to the column width, at most as many lines as fit the maximum head height
+				lines = fitLines(wrapLine(label, textWidth, headFontSize, cursor), Math.max(1, (int) Math.floor(SELECTION_MATRIX_HEAD_MAX_HEIGHT / lineStep)),
+						textWidth, headFontSize, cursor);
 			}
 			wrappedHeadLabels.add(lines);
 			if (verticalHead) {
 				for (int l = 0; l < lines.size(); l++) {
-					headHeight = Math.max(headHeight, PDFUtil.getStringWidth(lines.get(l), cursor.getFontA(), PDFUtil.FontSize.MEDIUM));
+					headHeight = Math.max(headHeight, PDFUtil.getStringWidth(lines.get(l), cursor.getFontA(), headFontSize));
 				}
 			} else {
 				headHeight = Math.max(headHeight, lines.size() * lineStep);
@@ -941,10 +955,10 @@ public abstract class InputFieldPDFBlock {
 					// many columns: read bottom-up; the block of lines is centered in the column.
 					// the rotated glyphs extend left of their baseline by about the ascent.
 					float baselineX = cellCenterX - lines.size() * lineStep / 2.0f + (l + SELECTION_MATRIX_VERTICAL_HEAD_BASELINE_RATIO) * lineStep;
-					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), lines.get(l),
+					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), headFontSize, getTextColor(), lines.get(l),
 							baselineX, y1 - headHeight, PDFUtil.Alignment.TOP_LEFT, PDFUtil.TextDecoration.NONE, PDFUtil.Rotation.CCW90);
 				} else {
-					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), PDFUtil.FontSize.MEDIUM, getTextColor(), lines.get(l),
+					PDFUtil.renderTextLine(contentStream, cursor.getFontA(), headFontSize, getTextColor(), lines.get(l),
 							cellCenterX, y1 - l * lineStep, PDFUtil.Alignment.TOP_CENTER);
 				}
 			}
@@ -987,12 +1001,36 @@ public abstract class InputFieldPDFBlock {
 		return label == null ? "" : label.replaceAll("[\\r\\n]+", " ");
 	}
 
-	private static ArrayList<String> wrapLine(String text, float maxWidth, InputFieldPDFBlockCursor cursor) throws Exception {
+	private float getLineStep(PDFUtil.FontSize fontSize, InputFieldPDFBlockCursor cursor) throws Exception {
+		return PDFUtil.renderTextLine(null, cursor.getFontA(), fontSize, getTextColor(), "", 0.0f, 0.0f, PDFUtil.Alignment.TOP_LEFT);
+	}
+
+	/**
+	 * Keeps at most maxLines lines of at most maxWidth each. A label cut this way ends with an ellipsis.
+	 */
+	private static ArrayList<String> fitLines(ArrayList<String> lines, int maxLines, float maxWidth, PDFUtil.FontSize fontSize, InputFieldPDFBlockCursor cursor)
+			throws Exception {
+		ArrayList<String> result = new ArrayList<String>(Math.min(lines.size(), maxLines));
+		for (int l = 0; l < lines.size() && l < maxLines; l++) {
+			String line = lines.get(l);
+			boolean cut = (l == maxLines - 1 && lines.size() > maxLines);
+			if (cut || PDFUtil.getStringWidth(line, cursor.getFontA(), fontSize) > maxWidth) {
+				while (line.length() > 0 && PDFUtil.getStringWidth(line + CommonUtil.DEFAULT_ELLIPSIS, cursor.getFontA(), fontSize) > maxWidth) {
+					line = line.substring(0, line.length() - 1);
+				}
+				line = line.trim() + CommonUtil.DEFAULT_ELLIPSIS;
+			}
+			result.add(line);
+		}
+		return result;
+	}
+
+	private static ArrayList<String> wrapLine(String text, float maxWidth, PDFUtil.FontSize fontSize, InputFieldPDFBlockCursor cursor) throws Exception {
 		ArrayList<String> lines = new ArrayList<String>();
 		StringBuilder line = new StringBuilder();
 		for (String word : text.trim().split(" +")) {
 			String candidate = line.length() > 0 ? line + " " + word : word;
-			if (line.length() > 0 && PDFUtil.getStringWidth(candidate, cursor.getFontA(), PDFUtil.FontSize.MEDIUM) > maxWidth) {
+			if (line.length() > 0 && PDFUtil.getStringWidth(candidate, cursor.getFontA(), fontSize) > maxWidth) {
 				lines.add(line.toString());
 				line.setLength(0);
 				line.append(word);

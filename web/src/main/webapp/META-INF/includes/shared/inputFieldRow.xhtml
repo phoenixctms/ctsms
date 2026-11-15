@@ -444,7 +444,7 @@
 											<table class="ctsms-select-matrix-head">
 												<tr>
 													<ui:repeat value="#{fieldInput.selectionMatrix.headLabels}" var="headLabel">
-														<td><h:outputText styleClass="ctsms-select-matrix-head-label" value="#{headLabel}" /></td>
+														<td><h:outputText styleClass="ctsms-select-matrix-head-label" value="#{headLabel}" title="#{headLabel}" /></td>
 													</ui:repeat>
 												</tr>
 											</table>
@@ -502,7 +502,7 @@
 									<tr>
 										<th class="ctsms-select-matrix-label" />
 										<ui:repeat value="#{fieldInput.selectionMatrix.headLabels}" var="headLabel">
-											<th class="ctsms-select-matrix-cells"><h:outputText styleClass="ctsms-select-matrix-head-label" value="#{headLabel}" /></th>
+											<th class="ctsms-select-matrix-cells"><h:outputText styleClass="ctsms-select-matrix-head-label" value="#{headLabel}" title="#{headLabel}" /></th>
 										</ui:repeat>
 									</tr>
 								</thead>
