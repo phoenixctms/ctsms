@@ -12,6 +12,7 @@ import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.fileprocessors.ProcessorJobOutput;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsArchive;
 import org.phoenixctms.ctsms.service.shared.JobService;
 import org.phoenixctms.ctsms.test.JobEmailSenderBase;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
@@ -106,6 +107,14 @@ public class JobOutput extends JobEmailSenderBase implements ProcessorJobOutput 
 
 	public void addEmailXlsAttachment(byte[] data) {
 		addEmailAttachment(data, CoreUtil.EXCEL_MIMETYPE_STRING, getJobFileName(CoreUtil.EXCEL_FILENAME_EXTENSION));
+	}
+
+	public void addEmailZipAttachment(byte[] data) {
+		addEmailAttachment(data, Compress.ZIP_MIMETYPE_STRING, getJobFileName(XlsArchive.ZIP_FILENAME_EXTENSION));
+	}
+
+	public String getJobXlsFileName() {
+		return getJobFileName(CoreUtil.EXCEL_FILENAME_EXTENSION);
 	}
 
 	private String getJobFileName(String extension) {

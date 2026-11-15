@@ -81,6 +81,17 @@ public class XlsExporter extends XlsExporterBase {
 		((JobOutput) jobOutput).addEmailXlsAttachment(data);
 	}
 
+	@Override
+	protected void addEmailZipAttachment(byte[] data) {
+		((JobOutput) jobOutput).addEmailZipAttachment(data);
+	}
+
+	@Override
+	protected String getJobXlsFileName() {
+		String fileName = ((JobOutput) jobOutput).getJobXlsFileName();
+		return fileName != null ? fileName : super.getJobXlsFileName();
+	}
+
 	private void setContext(RowWriter writer, XlsExporterContext context) {
 		writer.setContext(context);
 		writer.setJobOutput(jobOutput);
