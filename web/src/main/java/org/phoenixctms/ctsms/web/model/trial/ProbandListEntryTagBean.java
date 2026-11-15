@@ -52,6 +52,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 			in.setStratification(out.getStratification());
 			in.setRandomize(out.getRandomize());
 			in.setExternalId(out.getExternalId());
+			in.setRef(out.getRef());
 			in.setExcelDate(out.getExcelDate());
 			in.setPosition(out.getPosition());
 			in.setTrialId(trialVO == null ? null : trialVO.getId());
@@ -87,6 +88,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 					Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_RANDOMIZE_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_RANDOMIZE_PRESET));
 			in.setExcelDate(Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET, Bundle.SETTINGS, DefaultSettings.PROBAND_LIST_ENTRY_TAG_EXCEL_PRESET));
 			in.setExternalId(Messages.getString(MessageCodes.PROBAND_LIST_ENTRY_TAG_EXTERNAL_ID_PRESET));
+			in.setRef(Messages.getMessage(MessageCodes.PROBAND_LIST_ENTRY_TAG_REF_PRESET, CommonUtil.generateShortUUID()));
 			in.setPosition(position == null ? CommonUtil.LIST_INITIAL_POSITION : position + 1L);
 			in.setTrialId(trialId);
 			in.setComment(Messages.getString(MessageCodes.PROBAND_LIST_ENTRY_TAG_COMMENT_PRESET));
@@ -267,6 +269,10 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		} else {
 			return Messages.getString(MessageCodes.CREATE_NEW_PROBAND_LIST_ENTRY_TAG);
 		}
+	}
+
+	public void generateRef() {
+		in.setRef(CommonUtil.generateShortUUID());
 	}
 
 	@PostConstruct

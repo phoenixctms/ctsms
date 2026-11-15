@@ -2729,6 +2729,58 @@ public class ProductionDataProvider {
 				false);
 		createJobType(
 				JobModule.TRIAL_JOB,
+				"import_inquiries",
+				"import_inquiries",
+				"{0} -iiq=\"\" -id={1} -auth={4} -jid={5} -f",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_inquiries",
+				"export_inquiries",
+				"{0} -eiq=\"\" -id={1} -auth={4} -jid={5} -f",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"import_proband_list_entry_tags",
+				"import_proband_list_entry_tags",
+				"{0} -iplet=\"\" -id={1} -auth={4} -jid={5} -f",
+				true,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
+				"export_proband_list_entry_tags",
+				"export_proband_list_entry_tags",
+				"{0} -eplet=\"\" -id={1} -auth={4} -jid={5} -f",
+				true,
+				false,
+				false,
+				false,
+				false,
+				true,
+				false,
+				false);
+		createJobType(
+				JobModule.TRIAL_JOB,
 				"perform_inquiry_deferred_delete",
 				"perform_inquiry_deferred_delete",
 				"{0} -pdtdi -id={1} -auth={4} -jid={5} -f",

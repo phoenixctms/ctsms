@@ -45,6 +45,10 @@ public class XlsImporter extends XlsImporterBase {
 	@Autowired
 	protected EcrfRowProcessor ecrfRowProcessor;
 	@Autowired
+	protected InquiryRowProcessor inquiryRowProcessor;
+	@Autowired
+	protected ProbandListEntryTagRowProcessor probandListEntryTagRowProcessor;
+	@Autowired
 	protected AspRowProcessor aspRowProcessor;
 	@Autowired
 	protected RandomizationListCodeRowProcessor randomizationListCodeRowProcessor;
@@ -114,6 +118,24 @@ public class XlsImporter extends XlsImporterBase {
 		context.setAuth(auth);
 		context.setEntityId(trialId);
 		return readRows(context, encoding, ecrfRowProcessor);
+	}
+
+	public long loadInquiries(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
+		XlsImporterContext context = createContext(inquiryRowProcessor, fileName, encoding, true);
+		context.setAuth(auth);
+		context.setEntityId(trialId);
+		long rowCount = readRows(context, encoding, inquiryRowProcessor);
+		inquiryRowProcessor.addUpdateInquiries();
+		return rowCount;
+	}
+
+	public long loadProbandListEntryTags(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
+		XlsImporterContext context = createContext(probandListEntryTagRowProcessor, fileName, encoding, true);
+		context.setAuth(auth);
+		context.setEntityId(trialId);
+		long rowCount = readRows(context, encoding, probandListEntryTagRowProcessor);
+		probandListEntryTagRowProcessor.addUpdateProbandListEntryTags();
+		return rowCount;
 	}
 
 	public long loadInputFields(String fileName, String encoding, AuthenticationVO auth) throws Throwable {

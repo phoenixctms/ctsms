@@ -188,6 +188,15 @@
 							</f:facet>
 							<h:outputText value="#{probandListEntryTag.vo.externalId}" />
 						</p:column>
+						<p:column sortBy="#{probandListEntryTag.vo.ref}"
+							filterBy="#{probandListEntryTag.vo.ref}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.proband_list_entry_tag_probandlistentrytag_list_ref_column}" />
+							</f:facet>
+							<h:outputText value="#{probandListEntryTag.vo.ref}" />
+						</p:column>
 						<p:column sortBy="#{probandListEntryTag.vo.comment}" filterBy="#{probandListEntryTag.vo.comment}">
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
@@ -631,6 +640,27 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="probandListEntryTagExternalId" />
+
+								<h:outputLabel for="probandListEntryTagRef"
+									value="#{triallabels.proband_list_entry_tag_ref_label}" />
+								<h:panelGrid columns="2" cellpadding="0">
+									<h:panelGroup>
+										<p:inputText id="probandListEntryTagRef" value="#{probandListEntryTagBean.in.ref}"
+											required="true" label="#{triallabels.proband_list_entry_tag_ref}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip rendered="#{enableTooltips}" for="probandListEntryTagRef">
+											<h:outputText value="#{triallabels.proband_list_entry_tag_ref_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:commandButton process="@this"
+										title="#{triallabels.generate_ref_button_label}"
+										actionListener="#{probandListEntryTagBean.generateRef}"
+										icon="ui-icon ui-icon-gear" ajax="true"
+										disabled="#{!probandListEntryTagBean.createable and !probandListEntryTagBean.editable}" update="probandListEntryTagRef" />
+								</h:panelGrid>
+								<p:message for="probandListEntryTagRef" />
 
 
 								<h:outputLabel for="probandListEntryTagRandomize"

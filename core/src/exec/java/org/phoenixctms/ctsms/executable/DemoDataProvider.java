@@ -1513,6 +1513,7 @@ public class DemoDataProvider {
 		newInquiry.setFieldId(getInputField(auth, inputField).getId());
 		newInquiry.setTrialId(trial.getId());
 		newInquiry.setPosition(new Long(position));
+		newInquiry.setRef(CommonUtil.generateShortUUID());
 		newInquiry.setComment(comment);
 		newInquiry.setTitle(title);
 		newInquiry.setJsVariableName(jsVariableName);
@@ -1670,6 +1671,7 @@ public class DemoDataProvider {
 		newProbandListEntryTag.setFieldId(getInputField(auth, inputField).getId());
 		newProbandListEntryTag.setTrialId(trial.getId());
 		newProbandListEntryTag.setPosition(new Long(position));
+		newProbandListEntryTag.setRef(CommonUtil.generateShortUUID());
 		newProbandListEntryTag.setComment(comment);
 		newProbandListEntryTag.setTitle(title);
 		newProbandListEntryTag.setJsVariableName(jsVariableName);

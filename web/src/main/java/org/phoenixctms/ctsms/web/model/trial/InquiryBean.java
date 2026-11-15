@@ -64,6 +64,7 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setJsValueExpression(out.getJsValueExpression());
 			in.setJsOutputExpression(out.getJsOutputExpression());
 			in.setExternalId(out.getExternalId());
+			in.setRef(out.getRef());
 		}
 	}
 
@@ -97,6 +98,7 @@ public class InquiryBean extends ManagedBeanBase {
 			in.setJsValueExpression(Messages.getString(MessageCodes.INQUIRY_JS_VALUE_EXPRESSION_PRESET));
 			in.setJsOutputExpression(Messages.getString(MessageCodes.INQUIRY_JS_OUTPUT_EXPRESSION_PRESET));
 			in.setExternalId(Messages.getString(MessageCodes.INQUIRY_EXTERNAL_ID_PRESET));
+			in.setRef(Messages.getMessage(MessageCodes.INQUIRY_REF_PRESET, CommonUtil.generateShortUUID()));
 		}
 	}
 
@@ -322,6 +324,10 @@ public class InquiryBean extends ManagedBeanBase {
 
 	public void handleCategorySelect(SelectEvent event) {
 		in.setCategory((String) event.getObject());
+	}
+
+	public void generateRef() {
+		in.setRef(CommonUtil.generateShortUUID());
 	}
 
 	@PostConstruct

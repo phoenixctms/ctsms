@@ -176,6 +176,10 @@ public final class DBToolOptions {
 	public static final String EXPORT_INPUT_FIELD_OPT = "eif";
 	public static final String EXPORT_ECRFS_OPT = "ee";
 	public static final String IMPORT_ECRFS_OPT = "ie";
+	public static final String EXPORT_INQUIRIES_OPT = "eiq";
+	public static final String IMPORT_INQUIRIES_OPT = "iiq";
+	public static final String EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT = "eplet";
+	public static final String IMPORT_PROBAND_LIST_ENTRY_TAGS_OPT = "iplet";
 	public static final String IMPORT_ASPS_OPT = "ia";
 	public static final String VALIDATE_PENDING_ECRFS_OPT = "vpe";
 	public static final String IMPORT_RANDOMIZATION_LISTS_OPT = "irl";
@@ -366,6 +370,14 @@ public final class DBToolOptions {
 				"import (stratification) randomization lists (including blinded data)", 1));
 		tasks.addOption(registerTaskOption(EXPORT_ECRFS_OPT, "export_ecrfs",
 				"export eCRFs, eCRF fields, input fields and selection set values", 1));
+		tasks.addOption(registerTaskOption(IMPORT_INQUIRIES_OPT, "import_inquiries",
+				"import inquiries, input fields and selection set values", 1));
+		tasks.addOption(registerTaskOption(EXPORT_INQUIRIES_OPT, "export_inquiries",
+				"export inquiries, input fields and selection set values", 1));
+		tasks.addOption(registerTaskOption(IMPORT_PROBAND_LIST_ENTRY_TAGS_OPT, "import_proband_list_entry_tags",
+				"import proband list attributes, input fields and selection set values", 1));
+		tasks.addOption(registerTaskOption(EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT, "export_proband_list_entry_tags",
+				"export proband list attributes, input fields and selection set values", 1));
 		tasks.addOption(registerTaskOption(IMPORT_ASPS_OPT, "import_asps",
 				"import asp and substances", 1, LockId.DEFAULT_LOCK_ID));
 		tasks.addOption(registerTaskOption(VALIDATE_PENDING_ECRFS_OPT, "validate_pending_ecrfs", "validate pending ecrfs", 0, LockId.VALIDATE_ECRF_LOCK_ID));

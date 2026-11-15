@@ -175,6 +175,15 @@
 							</f:facet>
 							<h:outputText value="#{inquiry.vo.externalId}" />
 						</p:column>
+						<p:column sortBy="#{inquiry.vo.ref}"
+							filterBy="#{inquiry.vo.ref}">
+							<f:attribute name="visibleDefault" value="false" />
+							<f:facet name="header">
+								<h:outputText
+									value="#{triallabels.inquiry_inquiry_list_ref_column}" />
+							</f:facet>
+							<h:outputText value="#{inquiry.vo.ref}" />
+						</p:column>
 						<p:column sortBy="#{inquiry.vo.comment}" filterBy="#{inquiry.vo.comment}">
 							<f:attribute name="visibleDefault" value="false" />
 							<f:facet name="header">
@@ -623,6 +632,27 @@
 									</p:tooltip>
 								</h:panelGroup>
 								<p:message for="inquiryExternalId" />
+
+								<h:outputLabel for="inquiryRef"
+									value="#{triallabels.inquiry_ref_label}" />
+								<h:panelGrid columns="2" cellpadding="0">
+									<h:panelGroup>
+										<p:inputText id="inquiryRef" value="#{inquiryBean.in.ref}"
+											required="true" label="#{triallabels.inquiry_ref}"
+											styleClass="ctsms-control">
+										</p:inputText>
+										<p:tooltip rendered="#{enableTooltips}" for="inquiryRef">
+											<h:outputText value="#{triallabels.inquiry_ref_tooltip}"
+												escape="false" />
+										</p:tooltip>
+									</h:panelGroup>
+									<p:commandButton process="@this"
+										title="#{triallabels.generate_ref_button_label}"
+										actionListener="#{inquiryBean.generateRef}"
+										icon="ui-icon ui-icon-gear" ajax="true"
+										disabled="#{!inquiryBean.createable and !inquiryBean.editable}" update="inquiryRef" />
+								</h:panelGrid>
+								<p:message for="inquiryRef" />
 
 
 							</h:panelGrid>

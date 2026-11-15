@@ -901,4 +901,10 @@ public interface ServiceExceptionCodes {
 	public static final String CRITERION_TEXT_MODULE_MISMATCH = "criterion_text_module_mismatch";
 	public static final String CRITERION_TEXT_SYNTAX_ERROR_AT_LINE = "criterion_text_syntax_error_at_line";
 	public static final String CRITERION_TEXT_SYNTAX_ERROR_AT_CRITERION = "criterion_text_syntax_error_at_criterion";
+	public static final String INQUIRY_REF_NOT_UNIQUE = "inquiry_ref_not_unique";
+	public static final String INQUIRY_DUPLICATE_ID = "inquiry_duplicate_id";
+	public static final String INQUIRY_FOR_WRONG_TRIAL = "inquiry_for_wrong_trial";
+	public static final String PROBAND_LIST_ENTRY_TAG_REF_NOT_UNIQUE = "proband_list_entry_tag_ref_not_unique";
+	public static final String PROBAND_LIST_ENTRY_TAG_DUPLICATE_ID = "proband_list_entry_tag_duplicate_id";
+	public static final String PROBAND_LIST_ENTRY_TAG_FOR_WRONG_TRIAL = "proband_list_entry_tag_for_wrong_trial";
 }

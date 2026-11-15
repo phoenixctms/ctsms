@@ -268,6 +268,18 @@ public class ProbandListEntryTagDaoImpl
 	}
 
 	@Override
+	protected Collection<ProbandListEntryTag> handleFindByTrialRef(Long trialId, String ref) throws Exception {
+		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
+		if (trialId != null) {
+			listEntryTagCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (ref != null) {
+			listEntryTagCriteria.add(Restrictions.eq("ref", ref));
+		}
+		return listEntryTagCriteria.list();
+	}
+
+	@Override
 	protected Long handleFindMaxPosition(Long trialId) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
 		if (trialId != null) {

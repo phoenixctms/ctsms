@@ -977,6 +977,42 @@ public class DBTool {
 								line.getOptionValue(DBToolOptions.ENCODING_OPT),
 								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
 					}
+				} else if (line.hasOption(DBToolOptions.IMPORT_INQUIRIES_OPT)) {
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_INQUIRIES_OPT, line);
+					dbTool.initJob(line).printPrelude(job);
+					if (dbTool.testForced(line, "DB will be modified - inquiries, input fields and selection set values will be updated!")) {
+						sendEmail = dbTool.getXlsImporter().loadInquiries(line.getOptionValue(DBToolOptions.IMPORT_INQUIRIES_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
+								getAuthenticationOptionValue(line),
+								getIdOptionValue(line, true)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_INQUIRIES_OPT)) {
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_INQUIRIES_OPT, line);
+					dbTool.initJob(line).printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT))) {
+						sendEmail = dbTool.getXlsExporter().exportInquiries(
+								line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT),
+								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.IMPORT_PROBAND_LIST_ENTRY_TAGS_OPT)) {
+					job = getTaskAndLockProcess(DBToolOptions.IMPORT_PROBAND_LIST_ENTRY_TAGS_OPT, line);
+					dbTool.initJob(line).printPrelude(job);
+					if (dbTool.testForced(line, "DB will be modified - proband list attributes, input fields and selection set values will be updated!")) {
+						sendEmail = dbTool.getXlsImporter().loadProbandListEntryTags(line.getOptionValue(DBToolOptions.IMPORT_PROBAND_LIST_ENTRY_TAGS_OPT), line.getOptionValue(DBToolOptions.ENCODING_OPT),
+								getAuthenticationOptionValue(line),
+								getIdOptionValue(line, true)) > 0l;
+					}
+				} else if (line.hasOption(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT)) {
+					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT, line);
+					dbTool.initJob(line).printPrelude(job);
+					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT))
+							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT))) {
+						sendEmail = dbTool.getXlsExporter().exportProbandListEntryTags(
+								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT),
+								line.getOptionValue(DBToolOptions.ENCODING_OPT),
+								getAuthenticationOptionValue(line), getIdOptionValue(line, true)) > 0l;
+					}
 				} else if (line.hasOption(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT)) {
 					job = getTaskAndLockProcess(DBToolOptions.IMPORT_RANDOMIZATION_LISTS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);

@@ -45,6 +45,7 @@ import org.phoenixctms.ctsms.adapt.EcrfNameRevisionCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InquiryJsVariableNameCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InquiryMoveAdapter;
 import org.phoenixctms.ctsms.adapt.InquiryPositionCollisionFinder;
+import org.phoenixctms.ctsms.adapt.InquiryRefCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandGroupTitleCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandGroupTokenCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryMoveAdapter;
@@ -54,6 +55,7 @@ import org.phoenixctms.ctsms.adapt.ProbandListEntryStatusCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagJsVariableNameCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagMoveAdapter;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagPositionCollisionFinder;
+import org.phoenixctms.ctsms.adapt.ProbandListEntryTagRefCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ProbandListEntryTagValueCollisionFinder;
 import org.phoenixctms.ctsms.adapt.ReminderEntityAdapter;
 import org.phoenixctms.ctsms.adapt.TeamMemberRoleCollisionFinder;
@@ -422,7 +424,11 @@ public class TrialServiceImpl
 	}
 
 	private InquiryOutVO addInquiry(InquiryInVO newInquiry, Timestamp now, User user) throws Exception {
-		checkAddInquiryInput(newInquiry);
+		if (CommonUtil.isEmptyString(newInquiry.getRef())) {
+			newInquiry = new InquiryInVO(newInquiry);
+			newInquiry.setRef(CommonUtil.generateShortUUID());
+		}
+		checkAddInquiryInput(newInquiry, true);
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Inquiry inquiry = inquiryDao.inquiryInVOToEntity(newInquiry);
 		CoreUtil.modifyVersion(inquiry, now, user);
@@ -571,7 +577,11 @@ public class TrialServiceImpl
 	}
 
 	private ProbandListEntryTagOutVO addProbandListEntryTag(ProbandListEntryTagInVO newProbandListEntryTag, Timestamp now, User user) throws Exception {
-		checkAddProbandListEntryTagInput(newProbandListEntryTag);
+		if (CommonUtil.isEmptyString(newProbandListEntryTag.getRef())) {
+			newProbandListEntryTag = new ProbandListEntryTagInVO(newProbandListEntryTag);
+			newProbandListEntryTag.setRef(CommonUtil.generateShortUUID());
+		}
+		checkAddProbandListEntryTagInput(newProbandListEntryTag, true);
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		ProbandListEntryTag probandListEntryTag = probandListEntryTagDao.probandListEntryTagInVOToEntity(newProbandListEntryTag);
 		CoreUtil.modifyVersion(probandListEntryTag, now, user);
@@ -1236,18 +1246,18 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkAddInquiryInput(InquiryInVO inquiryIn) throws ServiceException {
+	private void checkAddInquiryInput(InquiryInVO inquiryIn, boolean checkDeferredConstraints) throws ServiceException {
 		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(inquiryIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
-		checkInquiryInput(inquiryIn);
+		checkInquiryInput(inquiryIn, checkDeferredConstraints);
 	}
 
-	private void checkAddProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn) throws ServiceException {
+	private void checkAddProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn, boolean checkDeferredConstraints) throws ServiceException {
 		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao());
 		ServiceUtil.checkTrialLocked(trial);
-		checkProbandListEntryTagInput(listTagIn, trial, field);
+		checkProbandListEntryTagInput(listTagIn, trial, field, checkDeferredConstraints);
 	}
 
 	private ArrayList<RandomizationListCodeInVO> checkAddTrialInput(TrialInVO trialIn, Collection<RandomizationListCodeInVO> codes) throws ServiceException {
@@ -1568,7 +1578,7 @@ public class TrialServiceImpl
 		return statusEntry;
 	}
 
-	private void checkInquiryInput(InquiryInVO inquiryIn) throws ServiceException {
+	private void checkInquiryInput(InquiryInVO inquiryIn, boolean checkDeferredConstraints) throws ServiceException {
 		if (!JavaScriptCompressor.isEffectivelyEmpty(inquiryIn.getJsValueExpression())
 				&& ServiceUtil.isInputFieldType(this.getInputFieldDao().load(inquiryIn.getFieldId()), InputFieldType.FILE)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_JS_VALUE_EXPRESSION_NOT_ALLOWED);
@@ -1584,12 +1594,23 @@ public class TrialServiceImpl
 			if (!JS_VARIABLE_NAME_REGEXP.matcher(inquiryIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_INVALID, inquiryIn.getJsVariableName());
 			}
+		}
+		if (checkDeferredConstraints) {
+			checkInquiryInputDeferredConstraints(inquiryIn);
+		}
+	}
+
+	private void checkInquiryInputDeferredConstraints(InquiryInVO inquiryIn) throws ServiceException {
+		if (!CommonUtil.isEmptyString(inquiryIn.getJsVariableName())) {
 			if ((new InquiryJsVariableNameCollisionFinder(this.getTrialDao(), this.getInquiryDao())).collides(inquiryIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_JS_VARIABLE_NAME_NOT_UNIQUE);
 			}
 		}
 		if ((new InquiryPositionCollisionFinder(this.getTrialDao(), this.getInquiryDao())).collides(inquiryIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_POSITION_NOT_UNIQUE, inquiryIn.getCategory(), inquiryIn.getPosition().toString());
+		}
+		if ((new InquiryRefCollisionFinder(this.getTrialDao(), this.getInquiryDao())).collides(inquiryIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_REF_NOT_UNIQUE, inquiryIn.getRef());
 		}
 	}
 
@@ -1759,7 +1780,7 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn, Trial trial, InputField field) throws ServiceException {
+	private void checkProbandListEntryTagInput(ProbandListEntryTagInVO listTagIn, Trial trial, InputField field, boolean checkDeferredConstraints) throws ServiceException {
 		if (!JavaScriptCompressor.isEffectivelyEmpty(listTagIn.getJsValueExpression()) && ServiceUtil.isInputFieldType(field, InputFieldType.FILE)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_FILE_JS_VALUE_EXPRESSION_NOT_ALLOWED);
 		}
@@ -1774,6 +1795,14 @@ public class TrialServiceImpl
 			if (!JS_VARIABLE_NAME_REGEXP.matcher(listTagIn.getJsVariableName()).find()) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_INVALID, listTagIn.getJsVariableName());
 			}
+		}
+		if (checkDeferredConstraints) {
+			checkProbandListEntryTagInputDeferredConstraints(listTagIn, trial, field);
+		}
+	}
+
+	private void checkProbandListEntryTagInputDeferredConstraints(ProbandListEntryTagInVO listTagIn, Trial trial, InputField field) throws ServiceException {
+		if (!CommonUtil.isEmptyString(listTagIn.getJsVariableName())) {
 			if ((new ProbandListEntryTagJsVariableNameCollisionFinder(this.getTrialDao(), this.getProbandListEntryTagDao())).collides(listTagIn)) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_JS_VARIABLE_NAME_NOT_UNIQUE);
 			}
@@ -1781,6 +1810,10 @@ public class TrialServiceImpl
 		if ((new ProbandListEntryTagPositionCollisionFinder(this.getTrialDao(), this.getProbandListEntryTagDao())).collides(listTagIn)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_POSITION_NOT_UNIQUE, listTagIn.getPosition().toString());
 		}
+		if ((new ProbandListEntryTagRefCollisionFinder(this.getTrialDao(), this.getProbandListEntryTagDao())).collides(listTagIn)) {
+			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_REF_NOT_UNIQUE, listTagIn.getRef());
+		}
+		// stratification/randomize flags are unique per trial, so they are checked against the final set too:
 		Randomization.checkProbandListEntryTagInput(trial, field, listTagIn, this.getTrialDao(), this.getProbandGroupDao(), this.getProbandListEntryDao(),
 				this.getStratificationRandomizationListDao(), this.getProbandListEntryTagDao(), this.getInputFieldSelectionSetValueDao(), this.getProbandListEntryTagValueDao(),
 				this.getRandomizationListCodeDao());
@@ -2309,27 +2342,28 @@ public class TrialServiceImpl
 		}
 	}
 
-	private void checkUpdateInquiryInput(Inquiry originalInquiry, InquiryInVO inquiryIn) throws ServiceException {
+	private void checkUpdateInquiryInput(Inquiry originalInquiry, InquiryInVO inquiryIn, boolean checkDeferredConstraints) throws ServiceException {
 		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(inquiryIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalInquiry.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_TRIAL_CHANGED);
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		checkInquiryInput(inquiryIn);
+		checkInquiryInput(inquiryIn, checkDeferredConstraints);
 		if (!field.equals(originalInquiry.getField()) && this.getInquiryValueDao().getCount(originalInquiry.getId()) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_INPUT_FIELD_CHANGED);
 		}
 	}
 
-	private void checkUpdateProbandListEntryTagInput(ProbandListEntryTag originalProbandListEntryTag, ProbandListEntryTagInVO listTagIn) throws ServiceException {
+	private void checkUpdateProbandListEntryTagInput(ProbandListEntryTag originalProbandListEntryTag, ProbandListEntryTagInVO listTagIn, boolean checkDeferredConstraints)
+			throws ServiceException {
 		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalProbandListEntryTag.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_TRIAL_CHANGED);
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		checkProbandListEntryTagInput(listTagIn, trial, field);
+		checkProbandListEntryTagInput(listTagIn, trial, field, checkDeferredConstraints);
 		if (!field.equals(originalProbandListEntryTag.getField())) {
 			if (this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_INPUT_FIELD_CHANGED);
@@ -3529,6 +3563,186 @@ public class TrialServiceImpl
 		return result;
 	}
 
+	/**
+	 * Synchronizes the inquiries of a trial with the given set, e.g. from an inquiry setup sheet: inquiries with an id are updated,
+	 * the others created, and the trial's inquiries missing in the set are deleted (marked for deferred deletion if there are values).
+	 * Position, js variable name and ref collisions are checked when all inquiries are written, so inquiries can swap positions.
+	 */
+	@Override
+	protected Collection<InquiryOutVO> handleAddUpdateInquiries(AuthenticationVO auth, Long trialId, Set<InquiryInVO> modifiedInquiries) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
+		ServiceUtil.checkTrialLocked(trial);
+		InquiryDao inquiryDao = this.getInquiryDao();
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		LinkedHashSet<Long> inquiryIdsToDelete = new LinkedHashSet<Long>();
+		Iterator<Inquiry> originalInquiriesIt = trial.getInquiries().iterator();
+		while (originalInquiriesIt.hasNext()) {
+			Inquiry originalInquiry = originalInquiriesIt.next();
+			if (!originalInquiry.isDeferredDelete()) {
+				inquiryIdsToDelete.add(originalInquiry.getId());
+			}
+		}
+		ArrayList<InquiryInVO> inquiryIns = new ArrayList<InquiryInVO>();
+		if (modifiedInquiries != null) {
+			HashSet<Long> inquiryIdDupeCheck = new HashSet<Long>(modifiedInquiries.size());
+			Iterator<InquiryInVO> it = modifiedInquiries.iterator();
+			while (it.hasNext()) {
+				InquiryInVO modifiedInquiry = it.next();
+				if (modifiedInquiry != null) {
+					if (!trial.getId().equals(modifiedInquiry.getTrialId())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_FOR_WRONG_TRIAL, CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(trial)));
+					}
+					modifiedInquiry = new InquiryInVO(modifiedInquiry);
+					if (modifiedInquiry.getId() != null) {
+						if (!inquiryIdDupeCheck.add(modifiedInquiry.getId())) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_DUPLICATE_ID, modifiedInquiry.getId().toString());
+						}
+						inquiryIdsToDelete.remove(modifiedInquiry.getId());
+						if (CommonUtil.isEmptyString(modifiedInquiry.getRef())) {
+							modifiedInquiry.setRef(CheckIDUtil.checkInquiryId(modifiedInquiry.getId(), inquiryDao).getRef());
+						}
+					} else if (CommonUtil.isEmptyString(modifiedInquiry.getRef())) {
+						modifiedInquiry.setRef(CommonUtil.generateShortUUID());
+					}
+					inquiryIns.add(modifiedInquiry);
+				}
+			}
+		}
+		String deferredDeleteReason = L10nUtil.getMessage(MessageCodes.INQUIRY_SETUP_DEFERRED_DELETE_REASON, DefaultMessages.INQUIRY_SETUP_DEFERRED_DELETE_REASON);
+		Iterator<Long> inquiryIdsToDeleteIt = inquiryIdsToDelete.iterator();
+		while (inquiryIdsToDeleteIt.hasNext()) {
+			deleteInquiry(inquiryIdsToDeleteIt.next(), false, false, deferredDeleteReason, now, user);
+		}
+		ArrayList<InquiryOutVO> result = new ArrayList<InquiryOutVO>(inquiryIns.size());
+		Iterator<InquiryInVO> it = inquiryIns.iterator();
+		while (it.hasNext()) {
+			InquiryInVO modifiedInquiry = it.next();
+			Inquiry inquiry;
+			InquiryOutVO inquiryVO;
+			if (modifiedInquiry.getId() != null) {
+				Inquiry originalInquiry = CheckIDUtil.checkInquiryId(modifiedInquiry.getId(), inquiryDao);
+				checkUpdateInquiryInput(originalInquiry, modifiedInquiry, false); // access original associations before evict
+				InquiryOutVO original = inquiryDao.toInquiryOutVO(originalInquiry);
+				inquiryDao.evict(originalInquiry);
+				inquiry = inquiryDao.inquiryInVOToEntity(modifiedInquiry);
+				CoreUtil.modifyVersion(originalInquiry, inquiry, now, user);
+				inquiryDao.update(inquiry);
+				inquiryVO = inquiryDao.toInquiryOutVO(inquiry);
+				if (!InquiryOutVO.equalsExcluding(original, inquiryVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
+					ServiceUtil.logSystemMessage(inquiry.getTrial(), inquiryVO.getTrial(), now, user, SystemMessageCodes.INQUIRY_UPDATED, inquiryVO, original, journalEntryDao);
+				}
+			} else {
+				checkAddInquiryInput(modifiedInquiry, false);
+				inquiry = inquiryDao.inquiryInVOToEntity(modifiedInquiry);
+				CoreUtil.modifyVersion(inquiry, now, user);
+				inquiry = inquiryDao.create(inquiry);
+				inquiryVO = inquiryDao.toInquiryOutVO(inquiry);
+				ServiceUtil.logSystemMessage(inquiry.getTrial(), inquiryVO.getTrial(), now, user, SystemMessageCodes.INQUIRY_CREATED, inquiryVO, null, journalEntryDao);
+				modifiedInquiry.setId(inquiry.getId()); // for deferred constraints checks
+			}
+			result.add(inquiryVO);
+		}
+		it = inquiryIns.iterator();
+		while (it.hasNext()) {
+			checkInquiryInputDeferredConstraints(it.next());
+		}
+		return result;
+	}
+
+	/**
+	 * Synchronizes the proband list entry tags of a trial with the given set, e.g. from a proband list tag setup sheet: tags with an id are updated,
+	 * the others created, and the trial's tags missing in the set are deleted (with their values).
+	 * Position, js variable name, ref and stratification/randomize collisions are checked when all tags are written, so tags can swap positions.
+	 */
+	@Override
+	protected Collection<ProbandListEntryTagOutVO> handleAddUpdateProbandListEntryTags(AuthenticationVO auth, Long trialId,
+			Set<ProbandListEntryTagInVO> modifiedProbandListEntryTags) throws Exception {
+		TrialDao trialDao = this.getTrialDao();
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
+		ServiceUtil.checkTrialLocked(trial);
+		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		LinkedHashSet<Long> listEntryTagIdsToDelete = new LinkedHashSet<Long>();
+		Iterator<ProbandListEntryTag> originalListEntryTagsIt = trial.getListEntryTags().iterator();
+		while (originalListEntryTagsIt.hasNext()) {
+			listEntryTagIdsToDelete.add(originalListEntryTagsIt.next().getId());
+		}
+		ArrayList<ProbandListEntryTagInVO> listEntryTagIns = new ArrayList<ProbandListEntryTagInVO>();
+		if (modifiedProbandListEntryTags != null) {
+			HashSet<Long> listEntryTagIdDupeCheck = new HashSet<Long>(modifiedProbandListEntryTags.size());
+			Iterator<ProbandListEntryTagInVO> it = modifiedProbandListEntryTags.iterator();
+			while (it.hasNext()) {
+				ProbandListEntryTagInVO modifiedListEntryTag = it.next();
+				if (modifiedListEntryTag != null) {
+					if (!trial.getId().equals(modifiedListEntryTag.getTrialId())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_FOR_WRONG_TRIAL,
+								CommonUtil.trialOutVOToString(trialDao.toTrialOutVO(trial)));
+					}
+					modifiedListEntryTag = new ProbandListEntryTagInVO(modifiedListEntryTag);
+					if (modifiedListEntryTag.getId() != null) {
+						if (!listEntryTagIdDupeCheck.add(modifiedListEntryTag.getId())) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_DUPLICATE_ID, modifiedListEntryTag.getId().toString());
+						}
+						listEntryTagIdsToDelete.remove(modifiedListEntryTag.getId());
+						if (CommonUtil.isEmptyString(modifiedListEntryTag.getRef())) {
+							modifiedListEntryTag.setRef(CheckIDUtil.checkProbandListEntryTagId(modifiedListEntryTag.getId(), probandListEntryTagDao).getRef());
+						}
+					} else if (CommonUtil.isEmptyString(modifiedListEntryTag.getRef())) {
+						modifiedListEntryTag.setRef(CommonUtil.generateShortUUID());
+					}
+					listEntryTagIns.add(modifiedListEntryTag);
+				}
+			}
+		}
+		Iterator<Long> listEntryTagIdsToDeleteIt = listEntryTagIdsToDelete.iterator();
+		while (listEntryTagIdsToDeleteIt.hasNext()) {
+			deleteProbandListEntryTag(listEntryTagIdsToDeleteIt.next(), now, user);
+		}
+		ArrayList<ProbandListEntryTagOutVO> result = new ArrayList<ProbandListEntryTagOutVO>(listEntryTagIns.size());
+		Iterator<ProbandListEntryTagInVO> it = listEntryTagIns.iterator();
+		while (it.hasNext()) {
+			ProbandListEntryTagInVO modifiedListEntryTag = it.next();
+			ProbandListEntryTag listEntryTag;
+			ProbandListEntryTagOutVO listEntryTagVO;
+			if (modifiedListEntryTag.getId() != null) {
+				ProbandListEntryTag originalListEntryTag = CheckIDUtil.checkProbandListEntryTagId(modifiedListEntryTag.getId(), probandListEntryTagDao);
+				checkUpdateProbandListEntryTagInput(originalListEntryTag, modifiedListEntryTag, false); // access original associations before evict
+				ProbandListEntryTagOutVO original = probandListEntryTagDao.toProbandListEntryTagOutVO(originalListEntryTag);
+				probandListEntryTagDao.evict(originalListEntryTag);
+				listEntryTag = probandListEntryTagDao.probandListEntryTagInVOToEntity(modifiedListEntryTag);
+				CoreUtil.modifyVersion(originalListEntryTag, listEntryTag, now, user);
+				probandListEntryTagDao.update(listEntryTag);
+				listEntryTagVO = probandListEntryTagDao.toProbandListEntryTagOutVO(listEntryTag);
+				if (!ProbandListEntryTagOutVO.equalsExcluding(original, listEntryTagVO, CoreUtil.VO_VERSION_EQUALS_EXCLUDES, true, true)) {
+					ServiceUtil.logSystemMessage(listEntryTag.getTrial(), listEntryTagVO.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_UPDATED, listEntryTagVO,
+							original, journalEntryDao);
+				}
+			} else {
+				checkAddProbandListEntryTagInput(modifiedListEntryTag, false);
+				listEntryTag = probandListEntryTagDao.probandListEntryTagInVOToEntity(modifiedListEntryTag);
+				CoreUtil.modifyVersion(listEntryTag, now, user);
+				listEntryTag = probandListEntryTagDao.create(listEntryTag);
+				listEntryTagVO = probandListEntryTagDao.toProbandListEntryTagOutVO(listEntryTag);
+				ServiceUtil.logSystemMessage(listEntryTag.getTrial(), listEntryTagVO.getTrial(), now, user, SystemMessageCodes.PROBAND_LIST_ENTRY_TAG_CREATED, listEntryTagVO, null,
+						journalEntryDao);
+				modifiedListEntryTag.setId(listEntryTag.getId()); // for deferred constraints checks
+			}
+			result.add(listEntryTagVO);
+		}
+		InputFieldDao inputFieldDao = this.getInputFieldDao();
+		it = listEntryTagIns.iterator();
+		while (it.hasNext()) {
+			ProbandListEntryTagInVO modifiedListEntryTag = it.next();
+			checkProbandListEntryTagInputDeferredConstraints(modifiedListEntryTag, trial, inputFieldDao.load(modifiedListEntryTag.getFieldId()));
+		}
+		return result;
+	}
+
 	private final void checkSectionIndexes(ECRFFieldInVO ecrfFieldIn, ECRFStatusEntry ecrfStatusEntry, HashMap<Long, ArrayList<Long>> indexesToCheck)
 			throws ServiceException {
 		ArrayList<Long> valueIndexes = (ArrayList<Long>) this.getECRFFieldValueDao().getIndexes(ecrfStatusEntry.getListEntry().getId(),
@@ -3942,10 +4156,14 @@ public class TrialServiceImpl
 
 	@Override
 	protected InquiryOutVO handleDeleteInquiry(AuthenticationVO auth, Long inquiryId, boolean defer, boolean force, String deferredDeleteReason) throws Exception {
-		InquiryDao inquiryDao = this.getInquiryDao();
-		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
+		return deleteInquiry(inquiryId, defer, force, deferredDeleteReason, now, user);
+	}
+
+	private InquiryOutVO deleteInquiry(Long inquiryId, boolean defer, boolean force, String deferredDeleteReason, Timestamp now, User user) throws Exception {
+		InquiryDao inquiryDao = this.getInquiryDao();
+		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InquiryOutVO result;
 		if (!force && (defer
 				|| this.getInquiryValueDao().getCount(inquiryId) > 0)) {
@@ -4138,13 +4356,17 @@ public class TrialServiceImpl
 	@Override
 	protected ProbandListEntryTagOutVO handleDeleteProbandListEntryTag(
 			AuthenticationVO auth, Long probandListEntryTagId) throws Exception {
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		User user = CoreUtil.getUser();
+		return deleteProbandListEntryTag(probandListEntryTagId, now, user);
+	}
+
+	private ProbandListEntryTagOutVO deleteProbandListEntryTag(Long probandListEntryTagId, Timestamp now, User user) throws Exception {
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		ProbandListEntryTag probandListEntryTag = CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagId, probandListEntryTagDao);
 		Trial trial = probandListEntryTag.getTrial();
 		ServiceUtil.checkTrialLocked(trial);
 		ProbandListEntryTagOutVO result = probandListEntryTagDao.toProbandListEntryTagOutVO(probandListEntryTag);
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		User user = CoreUtil.getUser();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InputField field = probandListEntryTag.getField();
 		trial.removeListEntryTags(probandListEntryTag);
@@ -8685,7 +8907,7 @@ public class TrialServiceImpl
 			throws Exception {
 		InquiryDao inquiryDao = this.getInquiryDao();
 		Inquiry originalInquiry = CheckIDUtil.checkInquiryId(modifiedInquiry.getId(), inquiryDao);
-		checkUpdateInquiryInput(originalInquiry, modifiedInquiry); // access original associations before evict
+		checkUpdateInquiryInput(originalInquiry, modifiedInquiry, true); // access original associations before evict
 		InquiryOutVO original = inquiryDao.toInquiryOutVO(originalInquiry);
 		inquiryDao.evict(originalInquiry);
 		Inquiry inquiry = inquiryDao.inquiryInVOToEntity(modifiedInquiry);
@@ -8802,7 +9024,7 @@ public class TrialServiceImpl
 			throws Exception {
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		ProbandListEntryTag originalProbandListEntryTag = CheckIDUtil.checkProbandListEntryTagId(modifiedProbandListEntryTag.getId(), probandListEntryTagDao);
-		checkUpdateProbandListEntryTagInput(originalProbandListEntryTag, modifiedProbandListEntryTag); // access original associations before evict
+		checkUpdateProbandListEntryTagInput(originalProbandListEntryTag, modifiedProbandListEntryTag, true); // access original associations before evict
 		ProbandListEntryTagOutVO original = probandListEntryTagDao.toProbandListEntryTagOutVO(originalProbandListEntryTag);
 		probandListEntryTagDao.evict(originalProbandListEntryTag);
 		ProbandListEntryTag probandListEntryTag = probandListEntryTagDao.probandListEntryTagInVOToEntity(modifiedProbandListEntryTag);
