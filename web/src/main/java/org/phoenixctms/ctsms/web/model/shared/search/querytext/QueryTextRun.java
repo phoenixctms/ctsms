@@ -44,8 +44,9 @@ public class QueryTextRun {
 
 	public synchronized void cancel() {
 		if (status == Status.RUNNING) {
-			status = Status.CANCELLED;
+			// end time first: the unsynchronized getElapsedMillis() reads it once the status is final
 			endMillis = System.currentTimeMillis();
+			status = Status.CANCELLED;
 			addStep("cancelled");
 			Thread worker = thread;
 			if (worker != null) {
@@ -59,16 +60,16 @@ public class QueryTextRun {
 			this.answer = answer;
 			this.lastValidText = lastValidText;
 			this.lastValidCriterions = lastValidCriterions;
-			status = Status.DONE;
 			endMillis = System.currentTimeMillis();
+			status = Status.DONE;
 		}
 	}
 
 	synchronized void failed(String error) {
 		if (status == Status.RUNNING) {
 			this.error = error;
-			status = Status.FAILED;
 			endMillis = System.currentTimeMillis();
+			status = Status.FAILED;
 		}
 	}
 
