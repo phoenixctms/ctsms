@@ -808,6 +808,45 @@ if get_database_version() < '010901018' then
   null
   );
 
+  -- re-order the trial job types, so related ones are listed together (job types are listed by id):
+  alter table JOB drop constraint JOB_TYPE_FKC;
+  for r in select t.ID as OLD_ID from JOB_TYPE t left join (values
+      ('import_ecrfs', 1),
+      ('export_ecrfs', 2),
+      ('import_inquiries', 3),
+      ('export_inquiries', 4),
+      ('import_proband_list_entry_tags', 5),
+      ('export_proband_list_entry_tags', 6),
+      ('import_randomization_list_codes', 7),
+      ('import_ecrf_data', 8),
+      ('export_ecrf_data', 9),
+      ('export_done_ecrf_data', 10),
+      ('export_ecrf_pdfs', 11),
+      ('export_done_ecrf_pdfs', 12),
+      ('validate_pending_ecrfs', 13),
+      ('export_audit_trail', 14),
+      ('import_inquiry_data', 15),
+      ('export_inquiry_data', 16),
+      ('export_inquiry_pdfs', 17),
+      ('export_proband_list', 18),
+      ('export_proband_status', 19),
+      ('export_enrollment_log', 20),
+      ('export_screening_log', 21),
+      ('export_pre_screening_log', 22),
+      ('export_sicl', 23),
+      ('export_trial_journal', 24),
+      ('export_ecrf_journal', 25),
+      ('perform_inquiry_deferred_delete', 26),
+      ('perform_ecrf_deferred_delete', 27),
+      ('perform_ecrf_field_deferred_delete', 28)
+    ) as o(NAME_L10N_KEY, POS) on o.NAME_L10N_KEY = t.NAME_L10N_KEY and t.TRIAL_FK is null
+    where t.MODULE = 'TRIAL_JOB'
+    order by coalesce(o.POS, 1000), t.ID loop
+    with u as (update JOB_TYPE set ID = nextval('hibernate_sequence') where ID = r.OLD_ID returning ID)
+      update JOB set TYPE_FK = (select ID from u) where TYPE_FK = r.OLD_ID;
+  end loop;
+  alter table JOB add constraint JOB_TYPE_FKC foreign key (TYPE_FK) references JOB_TYPE (ID);
+
   perform set_database_version('010901018');
 
 end if;
