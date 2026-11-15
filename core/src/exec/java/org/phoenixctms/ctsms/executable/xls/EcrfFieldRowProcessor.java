@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EcrfFieldRowProcessor extends RowProcessor {
 
 	private final static String SHEET_NAME = "ecrffields";
+	// a skipped row removes its eCRF field on import (it is missing in the sheet's set), so rows with data but
+	// without eCRF name or input field name could be rejected instead of skipped (blank/commented rows are always ignored):
+	private final static boolean REJECT_INCOMPLETE_ROWS = false;
 	private final static int ECRF_NAME_COLUMN_INDEX = 0;
 	private final static int ECRF_REVISION_COLUMN_INDEX = 1;
 	private final static int REF_COLUMN_INDEX = 2;
@@ -336,6 +339,18 @@ public class EcrfFieldRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
+		if (REJECT_INCOMPLETE_ROWS) {
+			if (isBlankRow(values)) {
+				return false;
+			}
+			if (CommonUtil.isEmptyString(getEcrfName(values))) {
+				throw new IllegalArgumentException("row " + rowNumber + ": empty eCRF name");
+			}
+			if (CommonUtil.isEmptyString(getInputFieldName(values))) {
+				throw new IllegalArgumentException("row " + rowNumber + ": empty input field name");
+			}
+			return true;
+		}
 		if (CommonUtil.isEmptyString(getEcrfName(values))) {
 			return false;
 		}
