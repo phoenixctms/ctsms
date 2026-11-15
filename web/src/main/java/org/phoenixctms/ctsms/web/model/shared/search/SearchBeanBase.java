@@ -32,7 +32,6 @@ import org.phoenixctms.ctsms.util.AssociationPath;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.util.CommonUtil.EllipsisPlacement;
 import org.phoenixctms.ctsms.util.CriterionTextSyntaxError;
-import org.phoenixctms.ctsms.vo.AuthenticationVO;
 import org.phoenixctms.ctsms.vo.CriteriaInVO;
 import org.phoenixctms.ctsms.vo.CriteriaInstantVO;
 import org.phoenixctms.ctsms.vo.CriteriaOutVO;
@@ -1406,10 +1405,8 @@ public abstract class SearchBeanBase extends PickerBeanBase {
 		QueryTextRun run = new QueryTextRun(naturalLanguageRequest);
 		try {
 			// the prompt needs the faces context, so it is built here and not in the worker thread.
-			// the worker gets its own copy of the session auth: service calls write the credentials resolved from the jwt into it,
-			// and the session renews the jwt while the poll requests use it at the same time
-			AuthenticationVO auth = new AuthenticationVO(WebUtil.getAuthentication());
-			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, new QueryTextTools(auth, getDBModule(), maxCriterions), run);
+			// the worker gets its own copy of the session auth, as the session bean hands out copies only
+			QueryTextAgent.start(buildQueryTextPrompt(true), queryText, new QueryTextTools(WebUtil.getAuthentication(), getDBModule(), maxCriterions), run);
 		} catch (Exception e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, Labels.getMessageLocalized("search_query_text_llm_failed",
 					e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
