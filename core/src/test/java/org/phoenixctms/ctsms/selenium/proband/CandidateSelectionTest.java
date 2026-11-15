@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.TreeMap;
 
 import org.openqa.selenium.Keys;
 import org.phoenixctms.ctsms.domain.InputFieldSelectionSetValue;
@@ -50,6 +49,8 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	private TrialOutVO trial;
 	private String criteriaCategory;
 	private final static int PROBAND_COUNT = 10;
+	private final static String INQUIRY_FILE = "inquiries.xls";
+	private final static long INQUIRY_COUNT = 36l;
 	private Set<Long> probandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
 	private Long probandId;
 	private Set<Long> actualProbandIds = new LinkedHashSet<Long>(PROBAND_COUNT);
@@ -241,20 +242,9 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		trial = createTrial(trialName, department.getId());
 	}
 
-	@BeforeClass(description = "Setup a test inquiry form for the trial.")
-	public void init_03_setup_inquiry_form() throws Throwable {
-		ArrayList<InquiryOutVO> inquiries = createInquiryForm(trial);
-	}
-
-	@BeforeClass(description = "Setup the test search criteria.")
-	public void init_04_setup_proband_criteria() throws Throwable {
-		criteriaCategory = getTestId();
-		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
-	}
-
-	@Test(description = "Try to open the proband page of the Phoenix CTMS test instance. It will redirect to the login page at first.")
-	public void test_01_open_proband_page() {
-		load(getUrl("/proband/proband.jsf"));
+	@Test(description = "Try to open the trial page of the Phoenix CTMS test instance. It will redirect to the login page at first.")
+	public void test_01_open_trial_page() {
+		load(getUrl("/trial/trial.jsf?trialid=" + trial.getId()));
 	}
 
 	@Test(description = "Log in with the user created for this test.")
@@ -262,8 +252,41 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		login(userName, userPassword);
 	}
 
+	@Test(description = "Execute trial job for importing the test inquiry form setup (inquiries.xls).")
+	public void test_03_import_inquiry_setup_job() throws Throwable {
+		clickTab("tabView:trialjobs");
+		String job = "import inquiry setup";
+		clickJobTypeSelectOneRadio("tabView:trialjob_form", job);
+		uploadFile("tabView:trialjob_form:jobFileUpload", getResourceFilePath(INQUIRY_FILE));
+		waitForUploadSuccessful("tabView:trialjob_form");
+		clickButton("tabView:trialjob_form:addJob");
+		if (waitForAddOperationSuccessful("tabView:trialjob_form")) {
+			if (waitForJobSuccessful("tabView:trialjob_form", 60l, 5l)) {
+				long inquiryCount = getTestDataProvider().getInquiryCount(trial);
+				if (inquiryCount == INQUIRY_COUNT) {
+					testOK(inquiryCount + " inquiries imported");
+					return;
+				}
+				testFailed(inquiryCount + " inquiries imported, " + INQUIRY_COUNT + " expected");
+				return;
+			}
+		}
+		testFailed(job + " failed");
+	}
+
+	@Test(description = "Setup the test search criteria.")
+	public void test_04_setup_proband_criteria() throws Throwable {
+		criteriaCategory = getTestId();
+		ArrayList<CriteriaOutVO> criterias = createCriterias(criteriaCategory);
+	}
+
+	@Test(description = "Open the proband page of the Phoenix CTMS test instance.")
+	public void test_05_open_proband_page() {
+		load(getUrl("/proband/proband.jsf"));
+	}
+
 	@Test(description = "Create a blinded subject that belongs to the departement created for this testclass. The subject alias look like \"subject-xxx\".")
-	public void test_03_create_proband() {
+	public void test_06_create_proband() {
 		String subjectId = "subject-" + String.format("%03d", probandIds.size() + 1) + "-" + getTestId();
 		info("subject id: " + subjectId);
 		clickCheckbox("tabView:probandmain_form:blinded");
@@ -281,13 +304,13 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	}
 
 	@Test(description = "Open the test inquiry form for the created subject.")
-	public void test_04_load_inquiry_form() {
+	public void test_07_load_inquiry_form() {
 		clickTab("tabView:inquiryvalues");
 		clickSelectOneMenu("tabView:inquiryvalue_form:inquiriestrial", trial.getName());
 	}
 
 	@Test(description = "Fill in values for the test inquiry form of the created subject.")
-	public void test_05_enter_inquiry_values() {
+	public void test_08_enter_inquiry_values() {
 		String formId = "tabView:inquiryvalue_form";
 		//01 - Basisinformation
 		new InquiryFormFieldEntry() {
@@ -667,16 +690,16 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	}
 
 	@Test(description = "Create more subjects, and populate their inquiry forms.")
-	public void test_06_create_probands() {
+	public void test_09_create_probands() {
 		for (int i = 2; i <= PROBAND_COUNT; i++) {
 			//info("entering proband " + i + "...");
 			clickMenuItem("menubar_form:newEntityMenuItem_proband");
 			closeWindow(getWindowName());
 			switchToWindow(getNewProbandEntityWindowName());
-			test_03_create_proband();
+			test_06_create_proband();
 			createScreenshot();
-			test_04_load_inquiry_form();
-			test_05_enter_inquiry_values();
+			test_07_load_inquiry_form();
+			test_08_enter_inquiry_values();
 		}
 		Iterator<Entry<SearchCriteria, LinkedHashSet<Long>>> it = expectedProbandIdsMap.entrySet().iterator();
 		while (it.hasNext()) {
@@ -737,62 +760,62 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 	}
 
 	@Test(description = "Load a predefined search to list any subjects created by this test.")
-	public void test_07_search_DEPARTMENT_PROBANDS_open() throws Throwable {
+	public void test_10_search_DEPARTMENT_PROBANDS_open() throws Throwable {
 		openSearch(SearchCriteria.DEPARTMENT_PROBANDS);
 	}
 
 	@Test(description = "Search any subjects created by this test - check expected result size")
-	public void test_08_search_DEPARTMENT_PROBANDS_result_size() throws Throwable {
+	public void test_11_search_DEPARTMENT_PROBANDS_result_size() throws Throwable {
 		checkSearchResultSize(SearchCriteria.DEPARTMENT_PROBANDS);
 	}
 
 	@Test(description = "Search any subjects created by this test - check if all expected subjects are listed")
-	public void test_09_search_DEPARTMENT_PROBANDS_all_expected_probands() throws Throwable {
+	public void test_12_search_DEPARTMENT_PROBANDS_all_expected_probands() throws Throwable {
 		checkSearchAllExpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
 	}
 
 	@Test(description = "Search any subjects created by this test - check if no unexpected subjects are listed")
-	public void test_10_search_DEPARTMENT_PROBANDS_no_unexpected_probands() throws Throwable {
+	public void test_13_search_DEPARTMENT_PROBANDS_no_unexpected_probands() throws Throwable {
 		checkSearchNoUnexpectedProbands(SearchCriteria.DEPARTMENT_PROBANDS);
 	}
 
 	@Test(description = "Load a predefined search to list subjects with a particular disease. App. 50% of subjects have the particular disease.")
-	public void test_11_search_DISEASE_open() throws Throwable {
+	public void test_14_search_DISEASE_open() throws Throwable {
 		openSearch(SearchCriteria.DISEASE);
 	}
 
 	@Test(description = "Search subjects with a particular disease - check expected result size")
-	public void test_12_search_DISEASE_result_size() throws Throwable {
+	public void test_15_search_DISEASE_result_size() throws Throwable {
 		checkSearchResultSize(SearchCriteria.DISEASE);
 	}
 
 	@Test(description = "Search subjects with a particular disease - check if all expected subjects are listed")
-	public void test_13_search_DISEASE_all_expected_probands() throws Throwable {
+	public void test_16_search_DISEASE_all_expected_probands() throws Throwable {
 		checkSearchAllExpectedProbands(SearchCriteria.DISEASE);
 	}
 
 	@Test(description = "Search subjects with a particular disease - check if no unexpected subjects are listed")
-	public void test_14_search_DISEASE_no_unexpected_probands() throws Throwable {
+	public void test_17_search_DISEASE_no_unexpected_probands() throws Throwable {
 		checkSearchNoUnexpectedProbands(SearchCriteria.DISEASE);
 	}
 
 	@Test(description = "Load a predefined search to list subjects with a particular disease and particular therapy. App. 50% of subjects have the particular disease and app. 50% have the particular therapy.")
-	public void test_15_search_DISEASE_THERAPY_open() throws Throwable {
+	public void test_18_search_DISEASE_THERAPY_open() throws Throwable {
 		openSearch(SearchCriteria.DISEASE_THERAPY);
 	}
 
 	@Test(description = "List subjects with a particular disease and particular therapy - check expected result size")
-	public void test_16_search_DISEASE_THERAPY_result_size() throws Throwable {
+	public void test_19_search_DISEASE_THERAPY_result_size() throws Throwable {
 		checkSearchResultSize(SearchCriteria.DISEASE_THERAPY);
 	}
 
 	@Test(description = "List subjects with a particular disease and particular therapy - check if all expected subjects are listed")
-	public void test_17_search_DISEASE_THERAPY_all_expected_probands() throws Throwable {
+	public void test_20_search_DISEASE_THERAPY_all_expected_probands() throws Throwable {
 		checkSearchAllExpectedProbands(SearchCriteria.DISEASE_THERAPY);
 	}
 
 	@Test(description = "List subjects with a particular disease and particular therapy - check if no unexpected subjects are listed")
-	public void test_18_search_DISEASE_THERAPY_no_unexpected_probands() throws Throwable {
+	public void test_21_search_DISEASE_THERAPY_no_unexpected_probands() throws Throwable {
 		checkSearchNoUnexpectedProbands(SearchCriteria.DISEASE_THERAPY);
 	}
 
@@ -856,238 +879,10 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 
 	private InputFieldOutVO getInputField(InputFields inputField) throws Throwable {
 		InputFieldOutVO field = getTestDataProvider().getInputField(inputField);
-		if (field != null) {
-			return field;
-		} else {
-			String name = inputField.name();
-			String title = inputField.toString();
-			switch (inputField) {
-				//case HEIGHT:
-				case CST_HEIGHT:
-					return getTestDataProvider().createIntegerField(name, title);
-				case CST_WEIGHT:
-					return getTestDataProvider().createIntegerField(name, title);
-				case CST_BMI:
-					return getTestDataProvider().createFloatField(name, title);
-				case CST_SMOKER_YN:
-					return getTestDataProvider().createCheckBoxField(name, title);
-				case CST_CIGARETTES_PER_DAY:
-					return getTestDataProvider().createSelectOneDropdownField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_CIGARETTES_BELOW_5, false);
-									put(InputFieldValues.CST_CIGARETTES_5_20, false);
-									put(InputFieldValues.CST_CIGARETTES_20_40, false);
-									put(InputFieldValues.CST_CIGARETTES_ABOVE_40, false);
-								}
-							});
-				case CST_VEIN_CONDITION_PROBAND:
-					return getTestDataProvider().createSelectOneDropdownField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_VEIN_CONDITION_PROBAND_GOOD, false);
-									put(InputFieldValues.CST_VEIN_CONDITION_PROBAND_MEDIOCRE, false);
-									put(InputFieldValues.CST_VEIN_CONDITION_PROBAND_BAD, false);
-								}
-							});
-				case CST_VEIN_CONDITION_PYSICIAN:
-					return getTestDataProvider().createSelectOneDropdownField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_1, false);
-									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_2, false);
-									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_3, false);
-									put(InputFieldValues.CST_VEIN_CONDITION_PYSICIAN_4, false);
-								}
-							});
-				case CST_NOTE:
-					return getTestDataProvider().createMultiLineTextField(name, title);
-				case CST_UNDERLYING_DISEASE:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_DIABETES_TYPE_1, false);
-									put(InputFieldValues.CST_DIABETES_TYPE_2, false);
-									put(InputFieldValues.CST_DIABETES_TYPE_UNKNOWN, false);
-									put(InputFieldValues.CST_DIABETES_TYPE_OTHER, false);
-									put(InputFieldValues.CST_HEALTHY, false);
-								}
-							});
-				case CST_DIABETES_THERAPY:
-					return getTestDataProvider().createSelectOneDropdownField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_CSII, false);
-									put(InputFieldValues.CST_MDI_IIT, false);
-									put(InputFieldValues.CST_MDI_IIT_OAD, false);
-									put(InputFieldValues.CST_PRANDIAL, false);
-									put(InputFieldValues.CST_MIXED_INSULIN, false);
-									put(InputFieldValues.CST_BASAL_INSULIN, false);
-									put(InputFieldValues.CST_OAD, false);
-									put(InputFieldValues.CST_OAD_BASAL, false);
-									put(InputFieldValues.CST_OAD_BOLUS, false);
-									put(InputFieldValues.CST_OAD_MIXED, false);
-									put(InputFieldValues.CST_CSII_OAD, false);
-								}
-							});
-				case CST_CSII_TRADE_MARK:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_MEDTRONIC, false);
-									put(InputFieldValues.CST_ANIMAS, false);
-									put(InputFieldValues.CST_YPSOMED, false);
-									put(InputFieldValues.CST_ROCHE, false);
-								}
-							});
-				case CST_CSII_TRADE_MARK_OTHER:
-					return getTestDataProvider().createAutoCompleteField(name, title);
-				case CST_SENSOR_THERAPY:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_NO_SENSOR, false);
-									put(InputFieldValues.CST_CGM, false);
-									put(InputFieldValues.CST_FGM, false);
-								}
-							});
-				case CST_SENSOR_TRADE_MARK:
-					return getTestDataProvider().createAutoCompleteField(name, title);
-				case CST_BOLUS_INSULIN:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_ACTRAPID, false);
-									put(InputFieldValues.CST_APIDRA, false);
-									put(InputFieldValues.CST_HUMALOG, false);
-									put(InputFieldValues.CST_HUMINSULIN_LILLY_NORMAL, false);
-									put(InputFieldValues.CST_INSUMAN_RAPID, false);
-									put(InputFieldValues.CST_NOVORAPID, false);
-									//put(InputFieldValues.CST_NOVORAPID, false);
-									put(InputFieldValues.CST_BOLUS_INSULIN_OTHER, false);
-									put(InputFieldValues.CST_FIASP, false);
-								}
-							});
-				case CST_BOLUS_INSULIN_IU_BE:
-					return getTestDataProvider().createFloatField(name, title);
-				case CST_BOLUS_INSULIN_TDD:
-					return getTestDataProvider().createIntegerField(name, title);
-				case CST_BASAL_INSULIN:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_LEVEMIR, false);
-									put(InputFieldValues.CST_LANTUS, false);
-									put(InputFieldValues.CST_HUMINSULIN_LILLY_BASAL, false);
-									put(InputFieldValues.CST_INSULATARD, false);
-									put(InputFieldValues.CST_INSUMAN_BASAL, false);
-									put(InputFieldValues.CST_TRESIBA, false);
-									put(InputFieldValues.CST_BASAL_INSULIN_OTHER, false);
-									put(InputFieldValues.CST_TOUJEO, false);
-								}
-							});
-				case CST_BASAL_INSULIN_TDD:
-					return getTestDataProvider().createIntegerField(name, title);
-				case CST_MIXED_INSULIN:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_HUMALOG_MIX_25, false);
-									put(InputFieldValues.CST_HUMALOG_MIX_50, false);
-									put(InputFieldValues.CST_HUMINSULIN_LILLY_PROFIL_3, false);
-									put(InputFieldValues.CST_INSUMAN_COMB_25, false);
-									put(InputFieldValues.CST_INSUMAN_COMB_50, false);
-									put(InputFieldValues.CST_MIXTARD_30, false);
-									put(InputFieldValues.CST_MIXTARD_50, false);
-									put(InputFieldValues.CST_NOVOMIX_30, false);
-									put(InputFieldValues.CST_NOVOMIX_70, false);
-									put(InputFieldValues.CST_MIXED_INSULIN_OTHER, false);
-								}
-							});
-				case CST_MIXED_INSULIN_TDD:
-					return getTestDataProvider().createIntegerField(name, title);
-				case CST_OAD_METFORMIN:
-					return getTestDataProvider().createCheckBoxField(name, title);
-				case CST_OAD_METFORMIN_TDD:
-					return getTestDataProvider().createIntegerField(name, title);
-				case CST_OAD_OTHER:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_SULFONYLUREAS, false);
-									put(InputFieldValues.CST_ALPHA_GLUCOSIDASE_INHIBITORS, false);
-									put(InputFieldValues.CST_GLINIDE, false);
-									put(InputFieldValues.CST_GLITAZONE, false);
-									put(InputFieldValues.CST_GLIPTINE, false);
-									put(InputFieldValues.CST_INCRETINE, false);
-									put(InputFieldValues.CST_GLIFLOZINE, false);
-									put(InputFieldValues.CST_METFORMIN_GLIPTINE, false);
-									put(InputFieldValues.CST_METFORMIN_GLITAZONE, false);
-									put(InputFieldValues.CST_GLITAZONE_GLIMEPIRID, false);
-									put(InputFieldValues.CST_OAD_OTHER, false);
-									put(InputFieldValues.CST_METFORMIN_DAPAGLIFLOZINE, false);
-								}
-							});
-				case CST_OTHER_MEDICATION:
-					return getTestDataProvider().createSelectManyField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_ANTIHYPERTENSIVE_DRUGS, false);
-									put(InputFieldValues.CST_LIPID_LOWERING_DRUGS, false);
-									put(InputFieldValues.CST_ANTICOAGULANT_DRUGS, false);
-									put(InputFieldValues.CST_PSYCHOTROPIC_DRUGS, false);
-									put(InputFieldValues.CST_CORTISONE, false);
-								}
-							});
-				case CST_DIABETES_SINCE:
-					return getTestDataProvider().createDateField(name, title);
-				case CST_HBA1C_PERCENT:
-					return getTestDataProvider().createFloatField(name, title);
-				case CST_HBA1C_MMOLPERMOL:
-					return getTestDataProvider().createFloatField(name, title);
-				case CST_C_PEPTIDE:
-					return getTestDataProvider().createFloatField(name, title);
-				case CST_RECRUITED_FROM:
-					return getTestDataProvider().createAutoCompleteField(name, title);
-				case CST_SUBJECT_FILE:
-					return getTestDataProvider().createSelectOneDropdownField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_SUBJECT_FILE_YES, false);
-									put(InputFieldValues.CST_SUBJECT_FILE_NO, false);
-								}
-							});
-				case CST_DISTANCE:
-					return getTestDataProvider().createFloatField(name, title);
-				case CST_UPDATED:
-					return getTestDataProvider().createSelectOneRadioField(name, title,
-							new TreeMap<InputFieldValuesEnum, Boolean>() {
-
-								{
-									put(InputFieldValues.CST_UPDATED_DONE, false);
-									put(InputFieldValues.CST_UPDATED_PENDING, false);
-									put(InputFieldValues.CST_UPDATED_UNREACHABLE, false);
-								}
-							});
-				case CST_UPDATED_DATE:
-					return getTestDataProvider().createDateField(name, title);
-				default:
-					return null;
-			}
+		if (field == null) {
+			throw new IllegalArgumentException("input field " + inputField.name() + " not found - " + INQUIRY_FILE + " not imported?");
 		}
+		return field;
 	}
 
 	private TrialOutVO createTrial(String name, long departmentId) throws Exception {
@@ -1104,47 +899,6 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		newTrial.setProbandAliasFormat(null);
 		newTrial.setDutySelfAllocationLocked(false);
 		return getTestDataProvider().createTrial(newTrial, "migration_started", "na", "na", "na");
-	}
-
-	private ArrayList<InquiryOutVO> createInquiryForm(TrialOutVO trial) throws Throwable {
-		ArrayList<InquiryOutVO> inquiries = new ArrayList<InquiryOutVO>();
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_HEIGHT), trial, "01 - Basisinformation", 1));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_WEIGHT), trial, "01 - Basisinformation", 2));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BMI), trial, "01 - Basisinformation", 3));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SMOKER_YN), trial, "01 - Basisinformation", 4));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_CIGARETTES_PER_DAY), trial, "01 - Basisinformation", 5));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_VEIN_CONDITION_PROBAND), trial, "01 - Basisinformation", 6));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_VEIN_CONDITION_PYSICIAN), trial, "01 - Basisinformation", 7));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_NOTE), trial, "01 - Basisinformation", 8));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_UNDERLYING_DISEASE), trial, "02 - Medikamentöse Therapie", 1));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_DIABETES_THERAPY), trial, "02 - Medikamentöse Therapie", 2));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_NOTE), trial, "02 - Medikamentöse Therapie", 3));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_CSII_TRADE_MARK), trial, "02 - Medikamentöse Therapie", 4));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_CSII_TRADE_MARK_OTHER), trial, "02 - Medikamentöse Therapie", 5));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SENSOR_THERAPY), trial, "02 - Medikamentöse Therapie", 6));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SENSOR_TRADE_MARK), trial, "02 - Medikamentöse Therapie", 7));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BOLUS_INSULIN), trial, "02 - Medikamentöse Therapie", 8));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BOLUS_INSULIN_IU_BE), trial, "02 - Medikamentöse Therapie", 9));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BOLUS_INSULIN_TDD), trial, "02 - Medikamentöse Therapie", 10));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BASAL_INSULIN), trial, "02 - Medikamentöse Therapie", 11));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_BASAL_INSULIN_TDD), trial, "02 - Medikamentöse Therapie", 12));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_MIXED_INSULIN), trial, "02 - Medikamentöse Therapie", 13));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_MIXED_INSULIN_TDD), trial, "02 - Medikamentöse Therapie", 14));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OAD_METFORMIN), trial, "02 - Medikamentöse Therapie", 15));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OAD_METFORMIN_TDD), trial, "02 - Medikamentöse Therapie", 16));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OAD_OTHER), trial, "02 - Medikamentöse Therapie", 17));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_OTHER_MEDICATION), trial, "02 - Medikamentöse Therapie", 18));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_DIABETES_SINCE), trial, "03 - Sonstiges", 1));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_HBA1C_PERCENT), trial, "03 - Sonstiges", 2));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_HBA1C_MMOLPERMOL), trial, "03 - Sonstiges", 3));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_C_PEPTIDE), trial, "03 - Sonstiges", 4));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_NOTE), trial, "03 - Sonstiges", 5));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_RECRUITED_FROM), trial, "03 - Sonstiges", 6));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_SUBJECT_FILE), trial, "03 - Sonstiges", 7));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_DISTANCE), trial, "03 - Sonstiges", 8));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_UPDATED), trial, "04 - Aktualisierung der Daten", 1));
-		inquiries.add(getTestDataProvider().createInquiry(getInputField(InputFields.CST_UPDATED_DATE), trial, "04 - Aktualisierung der Daten", 2));
-		return inquiries;
 	}
 
 	private CriteriaOutVO getCriteria(SearchCriteria criteria, String category) throws Throwable {
