@@ -227,6 +227,10 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		return null;
 	}
 
+	public long getInquiryCount(TrialOutVO trial) throws Throwable {
+		return inquiryDao.getCount(trial.getId(), null, null);
+	}
+
 	public InquiryOutVO getInquiry(TrialOutVO trial, String category, int position) throws Throwable {
 		Iterator<Inquiry> it = (new ArrayList<Inquiry>(inquiryDao.search(new Search(new SearchParameter[] {
 				new SearchParameter("trial.id", trial.getId(), SearchParameter.EQUAL_COMPARATOR),
@@ -263,6 +267,7 @@ public class TestDataProvider { //extends ProductionDataProvider {
 		newInquiry.setFieldId(inputField.getId());
 		newInquiry.setTrialId(trial.getId());
 		newInquiry.setPosition(new Long(position));
+		newInquiry.setRef(CommonUtil.generateShortUUID());
 		newInquiry.setComment(comment);
 		newInquiry.setTitle(title);
 		newInquiry.setJsVariableName(jsVariableName);
