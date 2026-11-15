@@ -17,6 +17,10 @@ public class XlsExporter extends XlsExporterBase {
 	protected EcrfFieldRowWriter ecrfFieldRowWriter;
 	@Autowired
 	protected EcrfRowWriter ecrfRowWriter;
+	@Autowired
+	protected InquiryRowWriter inquiryRowWriter;
+	@Autowired
+	protected ProbandListEntryTagRowWriter probandListEntryTagRowWriter;
 
 	public XlsExporter() {
 	}
@@ -30,6 +34,26 @@ public class XlsExporter extends XlsExporterBase {
 		context.setEntityId(ecrfRowWriter, trialId);
 		context.setAuth(auth);
 		return printRows(context, encoding, ecrfRowWriter);
+	}
+
+	public long exportInquiries(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
+		XlsExporterContext context = new XlsExporterContext(this, fileName);
+		setContext(inquiryRowWriter, context);
+		setContext(inputFieldRowWriter, context);
+		setContext(selectionSetValueRowWriter, context);
+		context.setEntityId(inquiryRowWriter, trialId);
+		context.setAuth(auth);
+		return printRows(context, encoding, inquiryRowWriter);
+	}
+
+	public long exportProbandListEntryTags(String fileName, String encoding, AuthenticationVO auth, Long trialId) throws Throwable {
+		XlsExporterContext context = new XlsExporterContext(this, fileName);
+		setContext(probandListEntryTagRowWriter, context);
+		setContext(inputFieldRowWriter, context);
+		setContext(selectionSetValueRowWriter, context);
+		context.setEntityId(probandListEntryTagRowWriter, trialId);
+		context.setAuth(auth);
+		return printRows(context, encoding, probandListEntryTagRowWriter);
 	}
 
 	public long exportInputField(String fileName, String encoding, AuthenticationVO auth, Long inputFieldId) throws Throwable {

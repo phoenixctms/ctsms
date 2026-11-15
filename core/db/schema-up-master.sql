@@ -720,5 +720,97 @@ if get_database_version() < '010901017' then
 
 end if;
 
+if get_database_version() < '010901018' then
+
+  -- inquiry and proband list tag refs, to match the rows of setup sheets:
+  alter table INQUIRY add column REF CHARACTER VARYING(1024);
+  update INQUIRY set REF = left(replace(uuid_generate_v4()::text,'-',''),8);
+  alter table INQUIRY alter REF set not null;
+
+  alter table PROBAND_LIST_ENTRY_TAG add column REF CHARACTER VARYING(1024);
+  update PROBAND_LIST_ENTRY_TAG set REF = left(replace(uuid_generate_v4()::text,'-',''),8);
+  alter table PROBAND_LIST_ENTRY_TAG alter REF set not null;
+
+  -- inquiry and proband list tag setup sheet import/export jobs:
+  insert into JOB_TYPE 
+  (id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+  values (
+  nextval('hibernate_sequence'), 
+  'TRIAL_JOB',
+  'import_inquiries',
+  'import_inquiries',
+  '{0} -iiq="" -id={1} -auth={4} -jid={5} -f',
+  't',
+  'f',
+  'f',
+  'f',
+  't',
+  'f',
+  'f',
+  'f',
+  null
+  );
+
+  insert into JOB_TYPE 
+  (id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+  values (
+  nextval('hibernate_sequence'), 
+  'TRIAL_JOB',
+  'export_inquiries',
+  'export_inquiries',
+  '{0} -eiq="" -id={1} -auth={4} -jid={5} -f',
+  't',
+  'f',
+  'f',
+  'f',
+  'f',
+  't',
+  'f',
+  'f',
+  null
+  );
+
+  insert into JOB_TYPE 
+  (id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+  values (
+  nextval('hibernate_sequence'), 
+  'TRIAL_JOB',
+  'import_proband_list_entry_tags',
+  'import_proband_list_entry_tags',
+  '{0} -iplet="" -id={1} -auth={4} -jid={5} -f',
+  't',
+  'f',
+  'f',
+  'f',
+  't',
+  'f',
+  'f',
+  'f',
+  null
+  );
+
+  insert into JOB_TYPE 
+  (id,module,name_l10n_key,description_l10n_key,command_format,visible,daily,weekly,monthly,input_file,output_file,encrypt_file,email_recipients,trial_fk)
+  values (
+  nextval('hibernate_sequence'), 
+  'TRIAL_JOB',
+  'export_proband_list_entry_tags',
+  'export_proband_list_entry_tags',
+  '{0} -eplet="" -id={1} -auth={4} -jid={5} -f',
+  't',
+  'f',
+  'f',
+  'f',
+  'f',
+  't',
+  'f',
+  'f',
+  null
+  );
+
+  perform set_database_version('010901018');
+
+end if;
+
 end
 $$;

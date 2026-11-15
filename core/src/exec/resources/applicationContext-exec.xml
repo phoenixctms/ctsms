@@ -269,6 +269,12 @@
 		id="ecrfRowProcessor"
 		class="org.phoenixctms.ctsms.executable.xls.EcrfRowProcessor" />
 	<bean
+		id="inquiryRowProcessor"
+		class="org.phoenixctms.ctsms.executable.xls.InquiryRowProcessor" />
+	<bean
+		id="probandListEntryTagRowProcessor"
+		class="org.phoenixctms.ctsms.executable.xls.ProbandListEntryTagRowProcessor" />
+	<bean
 		id="aspRowProcessor"
 		class="org.phoenixctms.ctsms.executable.xls.AspRowProcessor" />
 	<bean
@@ -289,6 +295,12 @@
 	<bean
 		id="ecrfRowWriter"
 		class="org.phoenixctms.ctsms.executable.xls.EcrfRowWriter" />
+	<bean
+		id="inquiryRowWriter"
+		class="org.phoenixctms.ctsms.executable.xls.InquiryRowWriter" />
+	<bean
+		id="probandListEntryTagRowWriter"
+		class="org.phoenixctms.ctsms.executable.xls.ProbandListEntryTagRowWriter" />
 	<bean
 		id="journalPurger"
 		class="org.phoenixctms.ctsms.executable.JournalPurger" />

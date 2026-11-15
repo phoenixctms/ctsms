@@ -131,4 +131,5 @@ public interface MessageCodes {
 	public static final String UNSUPPORTED_OTP_AUTHENTICATOR_TYPE = "unsupported_otp_authenticator_type";
 	public final static String PROBAND_MERGED_COMMENT = "proband_merged_comment";
 	public static final String AGGREGATED_PDF_FILENAMES_FORMAT = "aggregated_pdf_filenames_format";
+	public static final String INQUIRY_SETUP_DEFERRED_DELETE_REASON = "inquiry_setup_deferred_delete_reason";
 }

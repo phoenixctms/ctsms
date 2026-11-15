@@ -313,6 +313,18 @@ public class InquiryDaoImpl
 	}
 
 	@Override
+	protected Collection<Inquiry> handleFindByTrialRef(Long trialId, String ref) throws Exception {
+		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();
+		if (trialId != null) {
+			inquiryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
+		}
+		if (ref != null) {
+			inquiryCriteria.add(Restrictions.eq("ref", ref));
+		}
+		return inquiryCriteria.list();
+	}
+
+	@Override
 	protected Collection<String> handleFindCategories(Long trialId,
 			String categoryPrefix, Boolean active, Boolean activeSignup, Integer limit) throws Exception {
 		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();

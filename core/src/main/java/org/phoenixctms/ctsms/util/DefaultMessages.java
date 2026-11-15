@@ -215,4 +215,5 @@ public interface DefaultMessages {
 	public static final String UNSUPPORTED_OTP_AUTHENTICATOR_TYPE = "unsupported OTP authentication service {0}";
 	public final static String PROBAND_MERGED_COMMENT = "proband ID {0} data merged/added";
 	public final static String AGGREGATED_PDF_FILENAMES_FORMAT = "{0}";
+	public final static String INQUIRY_SETUP_DEFERRED_DELETE_REASON = "removed by inquiry setup update";
 }
