@@ -641,6 +641,20 @@
 								</h:panelGroup>
 								<p:message for="probandListEntryTagExternalId" />
 
+								<h:outputLabel for="probandListEntryTagRandomize"
+									value="#{triallabels.proband_list_entry_tag_randomize_label}" />
+								<h:panelGroup>
+									<p:selectBooleanCheckbox id="probandListEntryTagRandomize"
+										value="#{probandListEntryTagBean.in.randomize}" />
+									<p:tooltip rendered="#{enableTooltips}"
+										for="probandListEntryTagRandomize">
+										<h:outputText
+											value="#{triallabels.proband_list_entry_tag_randomize_tooltip}"
+											escape="false" />
+									</p:tooltip>
+								</h:panelGroup>
+								<p:message for="probandListEntryTagRandomize" />
+
 								<h:outputLabel for="probandListEntryTagRef"
 									value="#{triallabels.proband_list_entry_tag_ref_label}" />
 								<h:panelGrid columns="2" cellpadding="0">
@@ -661,21 +675,6 @@
 										disabled="#{!probandListEntryTagBean.createable and !probandListEntryTagBean.editable}" update="probandListEntryTagRef" />
 								</h:panelGrid>
 								<p:message for="probandListEntryTagRef" />
-
-
-								<h:outputLabel for="probandListEntryTagRandomize"
-									value="#{triallabels.proband_list_entry_tag_randomize_label}" />
-								<h:panelGroup>
-									<p:selectBooleanCheckbox id="probandListEntryTagRandomize"
-										value="#{probandListEntryTagBean.in.randomize}" />
-									<p:tooltip rendered="#{enableTooltips}"
-										for="probandListEntryTagRandomize">
-										<h:outputText
-											value="#{triallabels.proband_list_entry_tag_randomize_tooltip}"
-											escape="false" />
-									</p:tooltip>
-								</h:panelGroup>
-								<p:message for="probandListEntryTagRandomize" />
 
 
 							</h:panelGrid>

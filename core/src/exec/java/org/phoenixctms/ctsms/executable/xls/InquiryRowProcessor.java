@@ -267,10 +267,9 @@ public class InquiryRowProcessor extends RowProcessor {
 		inquiryIn.setExcelValue(Boolean.parseBoolean(getExcelValue(values)));
 		inquiryIn.setExcelDate(Boolean.parseBoolean(getExcelDate(values)));
 		String jsVariableName = getJsVariableName(values);
-		// a commented-out variable name disables the javascript of the row; without a variable name, the expressions are kept as they are
-		// (e.g. the comment template), so an exported sheet imports without changes:
-		boolean clearJs = !CommonUtil.isEmptyString(jsVariableName) && !CommonUtil.isEmptyString(getCommentChar()) && jsVariableName.startsWith(getCommentChar());
-		inquiryIn.setJsVariableName(clearJs || CommonUtil.isEmptyString(jsVariableName) ? null : jsVariableName);
+		boolean clearJs = CommonUtil.isEmptyString(jsVariableName)
+				|| (!CommonUtil.isEmptyString(getCommentChar()) && jsVariableName.startsWith(getCommentChar()));
+		inquiryIn.setJsVariableName(clearJs ? null : jsVariableName);
 		inquiryIn.setJsValueExpression(clearJs ? null : getJsValueExpression(values));
 		inquiryIn.setJsOutputExpression(clearJs ? null : getJsOutputExpression(values));
 		String label = "inquiry category " + category + ", position " + position + ", field '" + inputFieldName + "'";
