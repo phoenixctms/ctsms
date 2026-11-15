@@ -193,42 +193,45 @@ public class ApplicationScopeBean {
 	}
 
 	public String getActiveUsersString(int length) {
+		// the messages below lock the session bean to get its locale, while a login holds the session bean lock
+		// when it registers the user. so only copy the users under the lock, to not deadlock.
+		ArrayList<UserOutVO> users;
 		synchronized (ApplicationScopeBean.class) {
-			StringBuilder sb = new StringBuilder();
-			int activeUsersCount;
-			activeUsersCount = activeUsers.size();
-			HashMap<Long, Integer> identityCountMap = new HashMap<Long, Integer>(activeUsersCount);
-			Iterator<UserOutVO> activeUsersIt = activeUsers.values().iterator();
-			while (activeUsersIt.hasNext()) {
-				UserOutVO user = activeUsersIt.next();
-				StaffOutVO identity = user.getIdentity();
-				if (identity != null) {
-					int count;
-					if (identityCountMap.containsKey(identity.getId())) {
-						count = identityCountMap.get(identity.getId());
-					} else {
-						count = 0;
-					}
-					identityCountMap.put(identity.getId(), count + 1);
-				}
-			}
-			activeUsersIt = activeUsers.values().iterator();
-			while (activeUsersIt.hasNext()) {
-				UserOutVO user = activeUsersIt.next();
-				if (sb.length() > 0) {
-					sb.append(", ");
-				}
-				Integer count;
-				StaffOutVO identity = user.getIdentity();
-				if (identity != null && (count = identityCountMap.get(identity.getId())) != null && count > 1) {
-					sb.append(WebUtil.getIdentityUserString(user));
-				} else {
-					sb.append(WebUtil.getIdentityString(user));
-				}
-			}
-			return Messages.getMessage(MessageCodes.ACTIVE_USERS, activeUsersCount,
-					CommonUtil.clipString(sb.toString(), length, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
+			users = new ArrayList<UserOutVO>(activeUsers.values());
 		}
+		StringBuilder sb = new StringBuilder();
+		int activeUsersCount = users.size();
+		HashMap<Long, Integer> identityCountMap = new HashMap<Long, Integer>(activeUsersCount);
+		Iterator<UserOutVO> activeUsersIt = users.iterator();
+		while (activeUsersIt.hasNext()) {
+			UserOutVO user = activeUsersIt.next();
+			StaffOutVO identity = user.getIdentity();
+			if (identity != null) {
+				int count;
+				if (identityCountMap.containsKey(identity.getId())) {
+					count = identityCountMap.get(identity.getId());
+				} else {
+					count = 0;
+				}
+				identityCountMap.put(identity.getId(), count + 1);
+			}
+		}
+		activeUsersIt = users.iterator();
+		while (activeUsersIt.hasNext()) {
+			UserOutVO user = activeUsersIt.next();
+			if (sb.length() > 0) {
+				sb.append(", ");
+			}
+			Integer count;
+			StaffOutVO identity = user.getIdentity();
+			if (identity != null && (count = identityCountMap.get(identity.getId())) != null && count > 1) {
+				sb.append(WebUtil.getIdentityUserString(user));
+			} else {
+				sb.append(WebUtil.getIdentityString(user));
+			}
+		}
+		return Messages.getMessage(MessageCodes.ACTIVE_USERS, activeUsersCount,
+				CommonUtil.clipString(sb.toString(), length, CommonUtil.DEFAULT_ELLIPSIS, EllipsisPlacement.TRAILING));
 	}
 
 	public String getApplicationInstance() {

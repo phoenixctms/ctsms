@@ -210,7 +210,7 @@ public class SessionScopeBean implements FilterItemsStore {
 	private boolean otpRequired;
 	private String authenticationFailedMessage;
 	private MenuModel userMenuModel;
-	private ColumnManagementBean columnManager;
+	private final ColumnManagementBean columnManager;
 
 	public SessionScopeBean() {
 		auth = new AuthenticationVO();
@@ -245,7 +245,9 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized AuthenticationVO getAuthentication() {
-		return auth;
+		// a copy: core writes into the credentials passed to a service (ErrorLogger obfuscates the passwords
+		// until the call returns), and the session renews the jwt, while other requests of the session use them
+		return new AuthenticationVO(auth);
 	}
 
 	public synchronized String getAuthenticationFailedMessage() {
@@ -255,12 +257,12 @@ public class SessionScopeBean implements FilterItemsStore {
 		return authenticationFailedMessage;
 	}
 
-	public synchronized MenuModel getCourseEntityMenuModel() {
+	public MenuModel getCourseEntityMenuModel() {
 		return DynamicEntityMenu.getCourseEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getCourseHomeMenuModel() {
+	public MenuModel getCourseHomeMenuModel() {
 		return DynamicHomeMenu.getCourseHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
@@ -673,22 +675,22 @@ public class SessionScopeBean implements FilterItemsStore {
 		return CommonUtil.getInputDateTimePattern(logon != null && !otpRequired ? logon.getInheritedUser().getDateFormat() : null);
 	}
 
-	public synchronized MenuModel getInputFieldEntityMenuModel() {
+	public MenuModel getInputFieldEntityMenuModel() {
 		return DynamicEntityMenu.getInputFieldEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getInputFieldHomeMenuModel() {
+	public MenuModel getInputFieldHomeMenuModel() {
 		return DynamicHomeMenu.getInputFieldHomeMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getInventoryEntityMenuModel() {
+	public MenuModel getInventoryEntityMenuModel() {
 		return DynamicEntityMenu.getInventoryEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getInventoryHomeMenuModel() {
+	public MenuModel getInventoryHomeMenuModel() {
 		return DynamicHomeMenu.getInventoryHomeMenu()
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
@@ -810,12 +812,12 @@ public class SessionScopeBean implements FilterItemsStore {
 		}
 	}
 
-	public synchronized MenuModel getMassMailEntityMenuModel() {
+	public MenuModel getMassMailEntityMenuModel() {
 		return DynamicEntityMenu.getMassMailEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getMassMailHomeMenuModel() {
+	public MenuModel getMassMailHomeMenuModel() {
 		return DynamicHomeMenu.getMassMailHomeMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
@@ -847,12 +849,12 @@ public class SessionScopeBean implements FilterItemsStore {
 		return policy;
 	}
 
-	public synchronized MenuModel getProbandEntityMenuModel() {
+	public MenuModel getProbandEntityMenuModel() {
 		return DynamicEntityMenu.getProbandEntityMenu().createMenuModel(this,
 				Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getProbandHomeMenuModel() {
+	public MenuModel getProbandHomeMenuModel() {
 		return DynamicHomeMenu.getProbandHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
@@ -861,18 +863,21 @@ public class SessionScopeBean implements FilterItemsStore {
 		return context.getExternalContext().getSessionMaxInactiveInterval();
 	}
 
-	public synchronized MenuModel getStaffEntityMenuModel() {
+	public MenuModel getStaffEntityMenuModel() {
 		return DynamicEntityMenu.getStaffEntityMenu()
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getStaffHomeMenuModel() {
+	public MenuModel getStaffHomeMenuModel() {
 		return DynamicHomeMenu.getStaffHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized String getStatusBarInfo() {
+	public String getStatusBarInfo() {
+		// not synchronized, so the announcement service call does not block the other requests of the session.
+		// works on a snapshot of the logon instead
 		StringBuilder result = new StringBuilder();
-		if (logon != null && !otpRequired) {
+		PasswordOutVO logon = getLoggedInLogon();
+		if (logon != null) {
 			AnnouncementVO announcementVO = getAnnouncement();
 			boolean announcementShown = false;
 			if (announcementVO != null) {
@@ -881,7 +886,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			}
 			boolean passwordExpiryShown = false;
 			boolean logonLimitShown = false;
-			if (isLocalAuthMethod()) {
+			if (isLocalAuthMethod(logon)) {
 				Boolean isPasswordExpired = WebUtil
 						.isPasswordExpired(DateUtil.addDayMinuteDelta(new Date(),
 								Settings.getInt(SettingCodes.EXPIRATION_INFO_DAYS, Bundle.SETTINGS, DefaultSettings.EXPIRATION_INFO_DAYS), 0), logon);
@@ -979,12 +984,12 @@ public class SessionScopeBean implements FilterItemsStore {
 		return TimeZone.getDefault();
 	}
 
-	public synchronized MenuModel getTrialEntityMenuModel() {
+	public MenuModel getTrialEntityMenuModel() {
 		return DynamicEntityMenu.getTrialEntityMenu()
 				.createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getTrialHomeMenuModel() {
+	public MenuModel getTrialHomeMenuModel() {
 		return DynamicHomeMenu.getTrialHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
@@ -995,11 +1000,11 @@ public class SessionScopeBean implements FilterItemsStore {
 		return null;
 	}
 
-	public synchronized MenuModel getUserEntityMenuModel() {
+	public MenuModel getUserEntityMenuModel() {
 		return DynamicEntityMenu.getUserEntityMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
-	public synchronized MenuModel getUserHomeMenuModel() {
+	public MenuModel getUserHomeMenuModel() {
 		return DynamicHomeMenu.getUserHomeMenu().createMenuModel(this, Settings.getInt(SettingCodes.MAX_RECENT_ENTITIES, Bundle.SETTINGS, DefaultSettings.MAX_RECENT_ENTITIES));
 	}
 
@@ -1127,7 +1132,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return authenticationFailed;
 	}
 
-	public boolean isCaptchaRequired() {
+	public synchronized boolean isCaptchaRequired() {
 		int logonAttemptsCaptchaRequiredLimit;
 		if (WebUtil.isTrustedHost()) {
 			logonAttemptsCaptchaRequiredLimit = Settings.getInt(SettingCodes.TRUSTED_HOST_LOGON_ATTEMPTS_CAPTCHA_REQUIRED_LIMIT, Bundle.SETTINGS,
@@ -1140,7 +1145,15 @@ public class SessionScopeBean implements FilterItemsStore {
 	}
 
 	public synchronized boolean isLocalAuthMethod() {
-		if (logon != null && !otpRequired) {
+		return isLocalAuthMethod(getLoggedInLogon());
+	}
+
+	private synchronized PasswordOutVO getLoggedInLogon() {
+		return logon != null && !otpRequired ? logon : null;
+	}
+
+	private static boolean isLocalAuthMethod(PasswordOutVO logon) {
+		if (logon != null) {
 			Boolean isLocal = WebUtil.isLocalAuthMethod(logon.getInheritedUser());
 			if (isLocal != null) {
 				return isLocal;
@@ -1161,12 +1174,15 @@ public class SessionScopeBean implements FilterItemsStore {
 		return logon != null && !otpRequired;
 	}
 
-	public synchronized boolean isShowStatusBarInfo() {
-		if (logon != null && !otpRequired) {
+	public boolean isShowStatusBarInfo() {
+		// not synchronized, so the announcement service call does not block the other requests of the session.
+		// works on a snapshot of the logon instead
+		PasswordOutVO logon = getLoggedInLogon();
+		if (logon != null) {
 			if (getAnnouncement() != null) {
 				return true;
 			}
-			if (isLocalAuthMethod()) {
+			if (isLocalAuthMethod(logon)) {
 				Boolean isPasswordExpired = WebUtil.isPasswordExpired(
 						DateUtil.addDayMinuteDelta(new Date(), Settings.getInt(SettingCodes.EXPIRATION_INFO_DAYS, Bundle.SETTINGS, DefaultSettings.EXPIRATION_INFO_DAYS), 0),
 						logon);
@@ -1422,7 +1438,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return outcome;
 	}
 
-	public String getOtpRegistrationInfo() {
+	public synchronized String getOtpRegistrationInfo() {
 		if (logon != null && otpRequired) {
 			try {
 				return WebUtil.getServiceLocator().getUserService().getOTPRegistrationInfo(auth, logon.getInheritedUser().getId(), null);
@@ -1510,7 +1526,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		return columnManager;
 	}
 
-	private synchronized void logout(String redirectUrlBase64) {
+	private void logout(String redirectUrlBase64) {
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		HttpServletRequest request = (HttpServletRequest) externalContext.getRequest();
 		StringBuilder url = new StringBuilder(Urls.LOGIN.toString(request));
