@@ -20,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class InquiryRowProcessor extends RowProcessor {
 
 	private final static String SHEET_NAME = "inquiries";
+	// a skipped row removes its inquiry on import (it is missing in the sheet's set), so rows with data but
+	// without position or input field name could be rejected instead of skipped (blank/commented rows are always ignored):
+	private final static boolean REJECT_INCOMPLETE_ROWS = false;
 	private final static int REF_COLUMN_INDEX = 0;
 	private final static int CATEGORY_COLUMN_INDEX = 1;
 	private final static int POSITION_COLUMN_INDEX = 2;
@@ -287,6 +290,18 @@ public class InquiryRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean testNotNullRowFields(String[] values, long rowNumber) {
+		if (REJECT_INCOMPLETE_ROWS) {
+			if (isBlankRow(values)) {
+				return false;
+			}
+			if (CommonUtil.isEmptyString(getPosition(values))) {
+				throw new IllegalArgumentException("row " + rowNumber + ": empty position");
+			}
+			if (CommonUtil.isEmptyString(getInputFieldName(values))) {
+				throw new IllegalArgumentException("row " + rowNumber + ": empty input field name");
+			}
+			return true;
+		}
 		if (CommonUtil.isEmptyString(getPosition(values))) {
 			return false;
 		}

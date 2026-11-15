@@ -34,6 +34,20 @@ public abstract class RowProcessor {
 		context = null;
 	}
 
+	/**
+	 * @return true if all cells of the row are empty, which also applies to commented-out rows
+	 */
+	protected static boolean isBlankRow(String[] values) {
+		if (values != null) {
+			for (int i = 0; i < values.length; i++) {
+				if (!CommonUtil.isEmptyString(values[i])) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	protected String getColumnValue(String[] values, int index) {
 		if (values != null && index >= 0 && index < values.length) {
 			return values[index];
