@@ -1093,15 +1093,15 @@ public class TrialServiceImpl
 	}
 
 	private void checkAddEcrfFieldInput(ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
+		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
+		ServiceUtil.checkTrialLocked(trial);
 		// lock the eCRF before the input field, in the same order as the collision finders (addUpdateEcrf holds the eCRF lock already):
 		ECRF ecrf = checkDeferredConstraints ? CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE)
 				: CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
-		CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
-		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
-		ServiceUtil.checkTrialLocked(trial);
 		if (!trial.equals(ecrf.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WRONG_ECRF, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
+		CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkEcrfFieldInput(ecrfFieldIn, checkDeferredConstraints);
 		ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		if (checkDeferredConstraints && ecrfFieldIn.getSeries()
@@ -1252,8 +1252,8 @@ public class TrialServiceImpl
 		// lock the trial before the input field, in the same order as the collision finders (the bulk addUpdate methods hold the trial lock already):
 		Trial trial = checkDeferredConstraints ? CheckIDUtil.checkTrialId(inquiryIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE)
 				: CheckIDUtil.checkTrialId(inquiryIn.getTrialId(), this.getTrialDao());
-		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
+		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkInquiryInput(inquiryIn, checkDeferredConstraints);
 	}
 
@@ -1261,8 +1261,8 @@ public class TrialServiceImpl
 		// lock the trial before the input field, in the same order as the collision finders (the bulk addUpdate methods hold the trial lock already):
 		Trial trial = checkDeferredConstraints ? CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE)
 				: CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao());
-		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
+		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkProbandListEntryTagInput(listTagIn, trial, field, checkDeferredConstraints);
 	}
 
@@ -2207,18 +2207,18 @@ public class TrialServiceImpl
 	}
 
 	private void checkUpdateEcrfFieldInput(ECRFField originalEcrfField, ECRFFieldInVO ecrfFieldIn, boolean checkDeferredConstraints) throws ServiceException {
-		// lock the eCRF before the input field, in the same order as the collision finders (addUpdateEcrf holds the eCRF lock already):
-		ECRF ecrf = checkDeferredConstraints ? CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE)
-				: CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
-		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		Trial trial = CheckIDUtil.checkTrialId(ecrfFieldIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalEcrfField.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_TRIAL_CHANGED);
 		}
 		ServiceUtil.checkTrialLocked(trial);
+		// lock the eCRF before the input field, in the same order as the collision finders (addUpdateEcrf holds the eCRF lock already):
+		ECRF ecrf = checkDeferredConstraints ? CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE)
+				: CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
 		if (!trial.equals(ecrf.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WRONG_ECRF, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
+		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkEcrfFieldInput(ecrfFieldIn, checkDeferredConstraints); // lock
 		boolean sectionChanged = this.getECRFFieldDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection(), ecrfFieldIn.getId()) == 0l;
 		if (!ecrf.equals(originalEcrfField.getEcrf())
@@ -2354,11 +2354,11 @@ public class TrialServiceImpl
 		// lock the trial before the input field, in the same order as the collision finders (the bulk addUpdate methods hold the trial lock already):
 		Trial trial = checkDeferredConstraints ? CheckIDUtil.checkTrialId(inquiryIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE)
 				: CheckIDUtil.checkTrialId(inquiryIn.getTrialId(), this.getTrialDao());
-		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		if (!trial.equals(originalInquiry.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_TRIAL_CHANGED);
 		}
 		ServiceUtil.checkTrialLocked(trial);
+		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkInquiryInput(inquiryIn, checkDeferredConstraints);
 		if (!field.equals(originalInquiry.getField()) && this.getInquiryValueDao().getCount(originalInquiry.getId()) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_INPUT_FIELD_CHANGED);
@@ -2370,11 +2370,11 @@ public class TrialServiceImpl
 		// lock the trial before the input field, in the same order as the collision finders (the bulk addUpdate methods hold the trial lock already):
 		Trial trial = checkDeferredConstraints ? CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE)
 				: CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao());
-		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		if (!trial.equals(originalProbandListEntryTag.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_TRIAL_CHANGED);
 		}
 		ServiceUtil.checkTrialLocked(trial);
+		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkProbandListEntryTagInput(listTagIn, trial, field, checkDeferredConstraints);
 		if (!field.equals(originalProbandListEntryTag.getField())) {
 			if (this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) {
