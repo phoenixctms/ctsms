@@ -837,7 +837,7 @@ public class CandidateSelectionTest extends SeleniumTestBase {
 		newUser.setEnableCourseModule(true);
 		newUser.setVisibleCourseTabList(null);
 		newUser.setEnableTrialModule(true);
-		newUser.setVisibleTrialTabList(null);
+		newUser.setVisibleTrialTabList("trialjobs");
 		newUser.setEnableInputFieldModule(true);
 		newUser.setVisibleInputFieldTabList(null);
 		newUser.setEnableProbandModule(true);
