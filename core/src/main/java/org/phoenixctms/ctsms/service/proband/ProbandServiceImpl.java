@@ -357,7 +357,8 @@ public class ProbandServiceImpl
 	private void checkDiagnosisInput(DiagnosisInVO diagnosisIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
-		Proband proband = CheckIDUtil.checkProbandId(diagnosisIn.getProbandId(), probandDao);
+		// lock the proband before its state is checked, like the medication checks; the collision finder below locked it only afterwards:
+		Proband proband = CheckIDUtil.checkProbandId(diagnosisIn.getProbandId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		AlphaId alphaId = CheckIDUtil.checkAlphaIdId(diagnosisIn.getCodeId(), this.getAlphaIdDao());
 		if (!probandDao.toProbandOutVO(proband).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
@@ -1378,7 +1379,8 @@ public class ProbandServiceImpl
 	private void checkProbandStatusEntryInput(ProbandStatusEntryInVO statusEntryIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
-		Proband proband = CheckIDUtil.checkProbandId(statusEntryIn.getProbandId(), probandDao);
+		// lock the proband before its state is checked, like the medication checks; the collision finder below locked it only afterwards:
+		Proband proband = CheckIDUtil.checkProbandId(statusEntryIn.getProbandId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		ProbandStatusType statusType = CheckIDUtil.checkProbandStatusTypeId(statusEntryIn.getTypeId(), this.getProbandStatusTypeDao());
 		if (!probandDao.toProbandOutVO(proband).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
@@ -1408,7 +1410,8 @@ public class ProbandServiceImpl
 	private void checkProcedureInput(ProcedureInVO procedureIn) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
 		// referential checks
-		Proband proband = CheckIDUtil.checkProbandId(procedureIn.getProbandId(), probandDao);
+		// lock the proband before its state is checked, like the medication checks; the collision finder below locked it only afterwards:
+		Proband proband = CheckIDUtil.checkProbandId(procedureIn.getProbandId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		OpsCode opsCode = CheckIDUtil.checkOpsCodeId(procedureIn.getCodeId(), this.getOpsCodeDao());
 		if (!probandDao.toProbandOutVO(proband).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
