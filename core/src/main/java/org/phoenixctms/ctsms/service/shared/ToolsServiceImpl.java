@@ -260,7 +260,9 @@ public class ToolsServiceImpl
 
 	@Override
 	protected void handleChangeDepartmentPassword(Long departmentId, String plainNewDepartmentPassword, String plainOldDepartmentPassword) throws Exception {
+		// lock the department before its users, so concurrent changes cannot both pass the old password check and overwrite each other's department key:
 		Department department = CheckIDUtil.checkDepartmentId(departmentId, this.getDepartmentDao());
+		this.getDepartmentDao().refresh(department, LockMode.PESSIMISTIC_WRITE);
 		PasswordPolicy.DEPARTMENT.checkStrength(plainNewDepartmentPassword);
 		if (!CryptoUtil.checkDepartmentPassword(department, plainOldDepartmentPassword)) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.OLD_DEPARTMENT_PASSWORD_WRONG);
