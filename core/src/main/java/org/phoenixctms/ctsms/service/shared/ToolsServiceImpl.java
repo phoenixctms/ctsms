@@ -1315,6 +1315,11 @@ public class ToolsServiceImpl
 		Iterator<NotificationRecipient> recipientsIt = notificationRecipientDao.findPending(null, departmentId, psf).iterator();
 		while (recipientsIt.hasNext()) {
 			NotificationRecipient recipient = recipientsIt.next();
+			// re-read under a lock like processMassMails, so overlapping runs cannot send it twice:
+			notificationRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
+			if (recipient.isSent() || recipient.isDropped()) {
+				continue;
+			}
 			Notification notification = recipient.getNotification();
 			NotificationType notificationType = notification.getType();
 			Staff recipientStaff = recipient.getStaff();
