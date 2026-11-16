@@ -764,6 +764,8 @@ public class ToolsServiceImpl
 			} else {
 				countMap.put(probandDepartmentId, 1l);
 			}
+			// commit each proband like processing notifications does, so the trial and proband locks are not held until the whole run ends:
+			probandDao.commitAndResumeTransaction();
 			count++;
 		}
 		if (count > 0) {
