@@ -248,7 +248,8 @@ public class StaffServiceImpl
 		// referential checks
 		Staff staff = null;
 		if (dutyRosterTurnIn.getStaffId() != null) {
-			staff = CheckIDUtil.checkStaffId(dutyRosterTurnIn.getStaffId(), this.getStaffDao());
+			// lock the staff before its employee and allocatable flags are checked; the collision finder below locked it only afterwards:
+			staff = CheckIDUtil.checkStaffId(dutyRosterTurnIn.getStaffId(), this.getStaffDao(), LockMode.PESSIMISTIC_WRITE);
 		}
 		Trial trial = null;
 		if (dutyRosterTurnIn.getTrialId() != null) {
@@ -437,7 +438,8 @@ public class StaffServiceImpl
 
 	private void checkStaffStatusEntryInput(StaffStatusEntryInVO statusEntryIn) throws ServiceException {
 		// referential checks
-		Staff staff = CheckIDUtil.checkStaffId(statusEntryIn.getStaffId(), this.getStaffDao());
+		// lock the staff before its person and employee flags are checked; the collision finder below locked it only afterwards:
+		Staff staff = CheckIDUtil.checkStaffId(statusEntryIn.getStaffId(), this.getStaffDao(), LockMode.PESSIMISTIC_WRITE);
 		StaffStatusType statusType = CheckIDUtil.checkStaffStatusTypeId(statusEntryIn.getTypeId(), this.getStaffStatusTypeDao());
 		// other input checks
 		if (!staff.isPerson()) {
@@ -1933,6 +1935,8 @@ public class StaffServiceImpl
 		if (identity == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.DUTY_ROSTER_TURN_NO_ACTIVE_IDENTITY);
 		}
+		// lock the identity before its employee and allocatable flags are checked; the collision finder below locked it only afterwards:
+		this.getStaffDao().refresh(identity, LockMode.PESSIMISTIC_WRITE);
 		Trial trial = dutyRosterTurn.getTrial();
 		ServiceUtil.checkTrialLocked(trial);
 		VisitScheduleItem visitScheduleItem = dutyRosterTurn.getVisitScheduleItem();
