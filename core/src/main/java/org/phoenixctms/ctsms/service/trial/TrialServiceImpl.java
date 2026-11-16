@@ -1117,6 +1117,16 @@ public class TrialServiceImpl
 		}
 	}
 
+	private void lockEcrfInputFields(ECRF ecrf) {
+		// the eCRF-wide checks for saved values lock all input fields of the eCRF by id, after the eCRF, as the value saves lock only those:
+		ArrayList<InputField> inputFields = new ArrayList<InputField>();
+		Iterator<ECRFField> ecrfFieldsIt = ecrf.getEcrfFields().iterator();
+		while (ecrfFieldsIt.hasNext()) {
+			inputFields.add(ecrfFieldsIt.next().getField());
+		}
+		ServiceUtil.lockInputFields(inputFields, this.getInputFieldDao());
+	}
+
 	private void lockInputFields(Collection<InputField> inputFields, Iterator<Long> inputFieldIds) {
 		// the bulk addUpdate methods lock all input fields involved up front by id, after the trial resp. eCRF, like the value saves lock theirs,
 		// instead of one by one in the order the items come in, so they cannot deadlock with value saves of other trials sharing input fields:
@@ -4117,6 +4127,7 @@ public class TrialServiceImpl
 		ECRF lockEcrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
 		this.getTrialDao().refresh(lockEcrf.getTrial(), LockMode.PESSIMISTIC_WRITE);
 		ecrfDao.refresh(lockEcrf, LockMode.PESSIMISTIC_WRITE);
+		lockEcrfInputFields(lockEcrf); // the cascade deletes their values
 		if (!force && (defer
 				|| this.getECRFStatusEntryDao().getCount(null, ecrfId, null, null, null, null, null, null) > 0)) {
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
@@ -8972,6 +8983,7 @@ public class TrialServiceImpl
 		// lock the trial before the eCRF, like the eCRF name/revision collision finder and the eCRF field writes (trial changes are refused below):
 		CheckIDUtil.checkTrialId(modifiedEcrf.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ECRF originalEcrf = CheckIDUtil.checkEcrfId(modifiedEcrf.getId(), ecrfDao, LockMode.PESSIMISTIC_WRITE);
+		lockEcrfInputFields(originalEcrf);
 		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = checkUpdateEcrfInput(modifiedEcrf, originalEcrf);
 		ECRFOutVO original = ecrfDao.toECRFOutVO(originalEcrf);
 		ecrfDao.evict(originalEcrf);
@@ -9016,6 +9028,7 @@ public class TrialServiceImpl
 			throws Exception {
 		ECRFDao ecrfDao = this.getECRFDao();
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao, LockMode.PESSIMISTIC_WRITE);
+		lockEcrfInputFields(ecrf);
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
 		ServiceUtil.checkLockedEcrfs(ecrf, this.getECRFStatusEntryDao(), this.getECRFDao());
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
