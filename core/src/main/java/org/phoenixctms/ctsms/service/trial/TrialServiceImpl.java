@@ -4130,11 +4130,12 @@ public class TrialServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRFFieldOutVO result;
-		// lock the trial, then the eCRF, like the eCRF changes and the value and status entry saves, so the values and status entries counted below
-		// and the cascade cannot race with them:
+		// lock the trial, then the eCRF, like the eCRF changes, then the input field, like the value and status entry saves, so the values and status entries
+		// counted below and the cascade cannot race with them:
 		ECRFField lockEcrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
 		this.getTrialDao().refresh(lockEcrfField.getTrial(), LockMode.PESSIMISTIC_WRITE);
 		this.getECRFDao().refresh(lockEcrfField.getEcrf(), LockMode.PESSIMISTIC_WRITE);
+		this.getInputFieldDao().lock(lockEcrfField.getField(), LockMode.PESSIMISTIC_WRITE);
 		this.getECRFFieldDao().refresh(lockEcrfField);
 		if (!force && (defer
 				|| this.getECRFFieldValueDao().getCount(ecrfFieldId, false) > 0
@@ -4223,9 +4224,11 @@ public class TrialServiceImpl
 		InquiryDao inquiryDao = this.getInquiryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InquiryOutVO result;
-		// lock the trial like the value saves (addUpdateInquiries holds it already), so the values counted below and the cascade cannot race with them:
+		// lock the trial like the inquiry changes (addUpdateInquiries holds it already), then the input field like the value saves, so the values counted below
+		// and the cascade cannot race with them:
 		Inquiry lockInquiry = CheckIDUtil.checkInquiryId(inquiryId, inquiryDao);
 		this.getTrialDao().lock(lockInquiry.getTrial(), LockMode.PESSIMISTIC_WRITE);
+		this.getInputFieldDao().lock(lockInquiry.getField(), LockMode.PESSIMISTIC_WRITE);
 		inquiryDao.refresh(lockInquiry);
 		if (!force && (defer
 				|| this.getInquiryValueDao().getCount(inquiryId) > 0)) {
@@ -4440,8 +4443,10 @@ public class TrialServiceImpl
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		ProbandListEntryTag probandListEntryTag = CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagId, probandListEntryTagDao);
 		Trial trial = probandListEntryTag.getTrial();
-		// lock the trial like the value saves (addUpdateProbandListEntryTags holds it already), so the cascade cannot race with them:
+		// lock the trial like the attribute changes (addUpdateProbandListEntryTags holds it already), then the input field like the value saves, so the cascade
+		// cannot race with them:
 		this.getTrialDao().lock(trial, LockMode.PESSIMISTIC_WRITE);
+		this.getInputFieldDao().lock(probandListEntryTag.getField(), LockMode.PESSIMISTIC_WRITE);
 		probandListEntryTagDao.refresh(probandListEntryTag);
 		ServiceUtil.checkTrialLocked(trial);
 		ProbandListEntryTagOutVO result = probandListEntryTagDao.toProbandListEntryTagOutVO(probandListEntryTag);
