@@ -125,10 +125,11 @@ jobs:
           jq -e 'del(.host, .schemes) | select(.swagger and (.paths | length > 0))' "$RUNNER_TEMP/swagger-raw.json" > "$RUNNER_TEMP/swagger.json"
           echo "swagger.json: $(jq '.paths | length' "$RUNNER_TEMP/swagger.json") paths, version $(jq -r '.info.version' "$RUNNER_TEMP/swagger.json")"
           curl -fsS -o "$RUNNER_TEMP/index-raw.json" http://localhost:8080/rest/
-          jq -e 'del(.instance, .jvm, .announcement)
+          # the response wraps the index in {"index": ...} (IndexBase field), kept as the API returns it
+          jq -e 'del(.index.instance, .index.jvm, .index.announcement)
             | walk(if type == "string" then sub("^https?://[^/]+/rest"; "/rest") else . end)
-            | select(.services | length > 0)' "$RUNNER_TEMP/index-raw.json" > "$RUNNER_TEMP/restapi-index.json"
-          echo "restapi-index.json: $(jq '.services | length' "$RUNNER_TEMP/restapi-index.json") services, version $(jq -r '.version' "$RUNNER_TEMP/restapi-index.json")"
+            | select(.index.services | length > 0)' "$RUNNER_TEMP/index-raw.json" > "$RUNNER_TEMP/restapi-index.json"
+          echo "restapi-index.json: $(jq '.index.services | length' "$RUNNER_TEMP/restapi-index.json") services, version $(jq -r '.index.version' "$RUNNER_TEMP/restapi-index.json")"
       - name: Publish swagger.json and index
         # manual runs (Actions tab, "Run workflow") publish too, from whatever branch they run on
         if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch'
