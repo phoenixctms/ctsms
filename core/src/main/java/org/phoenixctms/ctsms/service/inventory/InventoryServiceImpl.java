@@ -687,6 +687,7 @@ public class InventoryServiceImpl
 		InventoryBookingDao inventoryBookingDao = this.getInventoryBookingDao();
 		InventoryBooking inventoryBooking = CheckIDUtil.checkInventoryBookingId(inventoryBookingId, inventoryBookingDao);
 		Inventory inventory = inventoryBooking.getInventory();
+		this.getInventoryDao().lock(inventory, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		Staff onBehalfOf = inventoryBooking.getOnBehalfOf();
 		Proband proband = inventoryBooking.getProband();
 		ServiceUtil.checkProbandLocked(proband);
@@ -740,6 +741,7 @@ public class InventoryServiceImpl
 		InventoryStatusEntryDao statusEntryDao = this.getInventoryStatusEntryDao();
 		InventoryStatusEntry statusEntry = CheckIDUtil.checkInventoryStatusEntryId(inventoryStatusEntryId, statusEntryDao);
 		Inventory inventory = statusEntry.getInventory();
+		this.getInventoryDao().lock(inventory, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		Staff originator = statusEntry.getOriginator();
 		InventoryStatusEntryOutVO result = statusEntryDao.toInventoryStatusEntryOutVO(statusEntry);
 		inventory.removeStatusEntries(statusEntry);
@@ -766,6 +768,7 @@ public class InventoryServiceImpl
 		InventoryTagValueDao tagValueDao = this.getInventoryTagValueDao();
 		InventoryTagValue tagValue = CheckIDUtil.checkInventoryTagValueId(inventoryTagValueId, tagValueDao);
 		Inventory inventory = tagValue.getInventory();
+		this.getInventoryDao().lock(inventory, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		InventoryTagValueOutVO result = tagValueDao.toInventoryTagValueOutVO(tagValue);
 		inventory.removeTagValues(tagValue);
 		tagValue.setInventory(null);
@@ -782,6 +785,7 @@ public class InventoryServiceImpl
 		MaintenanceScheduleItemDao maintenanceScheduleItemDao = this.getMaintenanceScheduleItemDao();
 		MaintenanceScheduleItem maintenanceScheduleItem = CheckIDUtil.checkMaintenanceScheduleItemId(maintenanceScheduleItemId, maintenanceScheduleItemDao);
 		Inventory inventory = maintenanceScheduleItem.getInventory();
+		this.getInventoryDao().lock(inventory, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		Staff companyContact = maintenanceScheduleItem.getCompanyContact();
 		Staff responsiblePerson = maintenanceScheduleItem.getResponsiblePerson();
 		Staff responsiblePersonProxy = maintenanceScheduleItem.getResponsiblePersonProxy();
