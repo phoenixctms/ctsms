@@ -486,20 +486,62 @@ function handleTrialAssociationTabChange(index) {
 
 }
 
-// the names a value or output expression can use besides its arguments, as fieldCalculation.js exports them
+// what a value or output expression can use besides its arguments, as fieldCalculation.js exports it: the names, and the parameter
+// names of the functions (from their source; none if the source is minified, eg. "openTrial(a)")
 var expressionMaskNames = null;
+var expressionSignatures = null;
+
+function initExpressionMask() {
+	expressionMaskNames = [];
+	expressionSignatures = {};
+	try {
+		if (typeof FieldCalculation !== "undefined" && typeof FieldCalculation.getExpressionMask === "function") {
+			var mask = FieldCalculation.getExpressionMask();
+			for ( var name in mask) {
+				expressionMaskNames.push(name);
+				var parameters = typeof mask[name] === "function" ? getFunctionParameters(mask[name]) : null;
+				if (parameters != null) {
+					expressionSignatures[name] = parameters;
+				}
+			}
+			expressionMaskNames.sort();
+		}
+	} catch (e) {
+	}
+}
+
+// the parameter names of a function, or null for a native function or minified (all one letter) parameter names
+function getFunctionParameters(f) {
+	var source = Function.prototype.toString.call(f);
+	var match = /^[^(]*\(([^)]*)\)/.exec(source.replace(/\/\*[\s\S]*?\*\//g, ""));
+	if (match == null || /\[native code\]/.test(source)) {
+		return null;
+	}
+	var parameters = [];
+	var minified = true;
+	var names = match[1].split(",");
+	for (var i = 0; i < names.length; i++) {
+		var parameter = jQuery.trim(names[i]);
+		if (parameter.length > 0) {
+			parameters.push(parameter);
+			minified = minified && parameter.length == 1;
+		}
+	}
+	return parameters.length > 0 && minified ? null : parameters;
+}
 
 function getExpressionMaskNames() {
 	if (expressionMaskNames == null) {
-		expressionMaskNames = [];
-		try {
-			if (typeof FieldCalculation !== "undefined" && typeof FieldCalculation.getExpressionNames === "function") {
-				expressionMaskNames = FieldCalculation.getExpressionNames().sort();
-			}
-		} catch (e) {
-		}
+		initExpressionMask();
 	}
 	return expressionMaskNames;
+}
+
+function getExpressionSignatures() {
+	if (expressionSignatures == null) {
+		initExpressionMask();
+	}
+	return expressionSignatures;
 }
 
 // the variable names of the other fields (eCRF fields of the eCRF, inquiries or proband list attributes of the trial), next to the editor
@@ -575,11 +617,117 @@ function handleExpressionEditorKeyPress(event) {
 	if (!/[\w$]/.test(String.fromCharCode(event.charCode || event.which || 0))) {
 		return;
 	}
-	var wrapper = jQuery(this).closest(".CodeMirror");
-	var cm = wrapper.length > 0 ? wrapper[0].CodeMirror : null;
-	if (cm != null && wrapper.closest("fieldset").find(".ctsms-expression-variable-names").length > 0) {
+	var cm = getExpressionEditor(this);
+	if (cm != null) {
 		showTypedCodeMirrorHint(cm, typedExpressionHint);
 	}
 }
 
 jQuery(document).on("keypress", ".CodeMirror textarea", handleExpressionEditorKeyPress);
+
+// the innermost unclosed call before the caret of an expression editor, as { name, argument index }, or null.
+// strings, comments and the commas of nested brackets are skipped; member calls (eg. "Math.max(") get no name
+function getExpressionCall(text) {
+	var stack = [];
+	var i = 0;
+	while (i < text.length) {
+		var c = text.charAt(i);
+		if (c == "/" && text.charAt(i + 1) == "/") {
+			var lineEnd = text.indexOf("\n", i);
+			i = lineEnd < 0 ? text.length : lineEnd;
+		} else if (c == "/" && text.charAt(i + 1) == "*") {
+			var commentEnd = text.indexOf("*/", i + 2);
+			if (commentEnd < 0) {
+				return null;
+			}
+			i = commentEnd + 1;
+		} else if (c == "\"" || c == "'" || c == "`") {
+			var j = i + 1;
+			while (j < text.length && text.charAt(j) != c) {
+				j += (text.charAt(j) == "\\" ? 2 : 1);
+			}
+			if (j >= text.length) {
+				return null;
+			}
+			i = j;
+		} else if (c == "(") {
+			var callee = /(\.\s*)?([\w$]+)\s*$/.exec(text.substring(0, i));
+			stack.push({
+				name : callee != null && !callee[1] ? callee[2] : null,
+				index : 0
+			});
+		} else if (c == "[" || c == "{") {
+			stack.push(null);
+		} else if (c == ")" || c == "]" || c == "}") {
+			stack.pop();
+		} else if (c == "," && stack.length > 0 && stack[stack.length - 1] != null) {
+			stack[stack.length - 1].index++;
+		}
+		i++;
+	}
+	return stack.length > 0 ? stack[stack.length - 1] : null;
+}
+
+var expressionCallTip = null;
+
+function hideExpressionCallTip() {
+	if (expressionCallTip != null) {
+		expressionCallTip.remove();
+		expressionCallTip = null;
+	}
+}
+
+// the parameters of the fieldCalculation.js function whose arguments are typed, the current one in bold, above the caret
+function updateExpressionCallTip(cm) {
+	var cursor = cm.getCursor();
+	var call = cm.somethingSelected() ? null : getExpressionCall(cm.getRange({
+		line : 0,
+		ch : 0
+	}, cursor));
+	var signatures = getExpressionSignatures();
+	if (call == null || call.name == null || !signatures.hasOwnProperty(call.name)) {
+		hideExpressionCallTip();
+		return;
+	}
+	var parameters = signatures[call.name];
+	hideExpressionCallTip();
+	expressionCallTip = jQuery("<div class=\"ctsms-expression-call-tip\"></div>").text(call.name + "(");
+	for (var i = 0; i < parameters.length; i++) {
+		if (i > 0) {
+			expressionCallTip.append(document.createTextNode(", "));
+		}
+		var parameter = jQuery("<span></span>").text(parameters[i]);
+		if (i == call.index) {
+			parameter.addClass("ctsms-expression-call-tip-current");
+		}
+		expressionCallTip.append(parameter);
+	}
+	expressionCallTip.append(document.createTextNode(")"));
+	jQuery(document.body).append(expressionCallTip);
+	var pos = cm.cursorCoords();
+	expressionCallTip.css({
+		left : pos.x + "px",
+		top : Math.max(0, pos.y - expressionCallTip.outerHeight() - 2) + "px"
+	});
+}
+
+function getExpressionEditor(element) {
+	var wrapper = jQuery(element).closest(".CodeMirror");
+	var cm = wrapper.length > 0 ? wrapper[0].CodeMirror : null;
+	return cm != null && wrapper.closest("fieldset").find(".ctsms-expression-variable-names").length > 0 ? cm : null;
+}
+
+// the call tip follows the caret (keys and clicks), and closes when the editor loses the focus
+jQuery(document).on("keyup", ".CodeMirror textarea", function() {
+	var cm = getExpressionEditor(this);
+	if (cm != null) {
+		updateExpressionCallTip(cm);
+	}
+}).on("mouseup", ".CodeMirror", function() {
+	var cm = getExpressionEditor(this);
+	if (cm != null) {
+		window.setTimeout(function() {
+			updateExpressionCallTip(cm);
+		}, 0);
+	}
+}).on("focusout", ".CodeMirror textarea", hideExpressionCallTip);
