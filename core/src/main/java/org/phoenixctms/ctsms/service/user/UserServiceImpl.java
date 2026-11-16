@@ -685,7 +685,8 @@ public class UserServiceImpl
 
 	@Override
 	protected DataTableColumnsVO handleSetDataTableColumns(AuthenticationVO auth, Long userId, Set<DataTableColumnVO> columns) throws Exception {
-		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		// lock the user, so concurrent saves of the same table's columns cannot both delete and then both recreate them:
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao(), LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		DataTableColumnDao dataTableColumnDao = this.getDataTableColumnDao();
 		Iterator<DataTableColumnVO> columnVOIt = columns.iterator();
@@ -736,7 +737,8 @@ public class UserServiceImpl
 
 	@Override
 	protected DataTableColumnsVO handleClearDataTableColumns(AuthenticationVO auth, Long userId, String tableName, String columnName) throws Exception {
-		User user = CheckIDUtil.checkUserId(userId, this.getUserDao());
+		// lock the user, so concurrent saves of the same table's columns cannot both delete and then both recreate them:
+		User user = CheckIDUtil.checkUserId(userId, this.getUserDao(), LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		DataTableColumnsVO result = new DataTableColumnsVO();
 		result.getColumns().addAll(deleteDataTableColumns(user, tableName, columnName));
