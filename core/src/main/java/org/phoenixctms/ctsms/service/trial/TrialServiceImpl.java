@@ -3087,7 +3087,8 @@ public class TrialServiceImpl
 	protected Collection<ECRFFieldOutVO> handleAddEcrfFields(AuthenticationVO auth, Long ecrfId, String section, boolean series, boolean optional, boolean auditTrail,
 			boolean reasonForChangeRequired, Set<Long> inputFieldIds)
 			throws Exception {
-		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao());
+		// lock before reading the next position, which the per field checks would lock only afterwards:
+		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfId, this.getECRFDao(), LockMode.PESSIMISTIC_WRITE);
 		Long position = this.getECRFFieldDao().findMaxPosition(ecrfId, section);
 		if (position == null) {
 			position = CommonUtil.LIST_INITIAL_POSITION;
@@ -3139,7 +3140,8 @@ public class TrialServiceImpl
 	protected Collection<InquiryOutVO> handleAddInquiries(
 			AuthenticationVO auth, Long trialId, String category, boolean optional, boolean excelValue, boolean excelDate, boolean activeSignup, Set<Long> inputFieldIds)
 			throws Exception {
-		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		// lock before reading the next position, which the per inquiry checks would lock only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		Long position = this.getInquiryDao().findMaxPosition(trialId, category);
 		if (position == null) {
 			position = CommonUtil.LIST_INITIAL_POSITION;
@@ -3201,7 +3203,8 @@ public class TrialServiceImpl
 	protected Collection<ProbandListEntryOutVO> handleAddProbandListEntries(
 			AuthenticationVO auth, Long trialId, boolean randomize, Long groupId, Long rating, Long ratingMax, Set<Long> probandIds, boolean shuffle, Long limit) throws Exception {
 		TrialDao trialDao = this.getTrialDao();
-		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao);
+		// lock before reading the next position and the randomization, which the per entry checks would lock only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
 		Long position = this.getProbandListEntryDao().findMaxPosition(trialId);
 		if (position == null) {
 			position = CommonUtil.LIST_INITIAL_POSITION;
@@ -3256,7 +3259,8 @@ public class TrialServiceImpl
 			AuthenticationVO auth, boolean createProband, boolean signup, Boolean randomize, ProbandListEntryInVO newProbandListEntry) throws Exception {
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
-		Trial trial = CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao());
+		// lock before reading the randomization, which the entry checks would lock only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(newProbandListEntry.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		Randomization randomization = getRandomization(trial, randomize != null ? randomize : signup && trial.isSignupRandomize(),
 				newProbandListEntry.getGroupId());
 		return addProbandListEntry(newProbandListEntry, createProband, signup, randomization, trial, now, user);
@@ -3275,7 +3279,8 @@ public class TrialServiceImpl
 			AuthenticationVO auth, Long trialId, boolean optional, boolean excelValue, boolean excelDate, boolean ecrf, boolean stratification, boolean randomize,
 			Set<Long> inputFieldIds)
 			throws Exception {
-		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+		// lock before reading the next position, which the per attribute checks would lock only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		Long position = this.getProbandListEntryTagDao().findMaxPosition(trialId);
 		if (position == null) {
 			position = CommonUtil.LIST_INITIAL_POSITION;
