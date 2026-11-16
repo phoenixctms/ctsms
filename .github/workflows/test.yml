@@ -117,14 +117,14 @@ jobs:
         # Both describe the CI Tomcat, so drop its host/schemes and instance details, and make the index URLs relative.
         run: |
           for i in $(seq 1 36); do
-            if curl -fsS -o "$RUNNER_TEMP/swagger-raw.json" http://localhost:8080/rest/swagger.json; then
+            if curl -fsS --max-time 60 -o "$RUNNER_TEMP/swagger-raw.json" http://localhost:8080/rest/swagger.json; then
               break
             fi
             sleep 5
           done
-          jq -e 'del(.host, .schemes) | select(.swagger and (.paths | length > 0))' "$RUNNER_TEMP/swagger-raw.json" > "$RUNNER_TEMP/swagger.json"
-          echo "swagger.json: $(jq '.paths | length' "$RUNNER_TEMP/swagger.json") paths, version $(jq -r '.info.version' "$RUNNER_TEMP/swagger.json")"
-          curl -fsS -o "$RUNNER_TEMP/index-raw.json" http://localhost:8080/rest/
+          jq -e 'del(.host, .schemes) | select(.swagger and (.paths | length > 0) and .securityDefinitions.basicAuth and (.security | length > 0))' "$RUNNER_TEMP/swagger-raw.json" > "$RUNNER_TEMP/swagger.json"
+          echo "swagger.json: $(jq '.paths | length' "$RUNNER_TEMP/swagger.json") paths, version $(jq -r '.info.version' "$RUNNER_TEMP/swagger.json"), security $(jq -c '.securityDefinitions | keys' "$RUNNER_TEMP/swagger.json")"
+          curl -fsS --max-time 120 -o "$RUNNER_TEMP/index-raw.json" http://localhost:8080/rest/
           # the response wraps the index in {"index": ...} (IndexBase field), kept as the API returns it
           jq -e 'del(.index.instance, .index.jvm, .index.announcement)
             | walk(if type == "string" then sub("^https?://[^/]+/rest"; "/rest") else . end)
@@ -157,10 +157,13 @@ jobs:
             case "$dir" in
               /*) dir="%2F${dir#/}" ;;
             esac
-            # upload under a temp name and rename, so the public file is never half-written
-            curl -fsS --ftp-create-dirs --user "$FTP_USERNAME:$FTP_PASSWORD" \
-              -T "$1" "ftp://$FTP_HOST/$dir/$file.tmp" \
-              -Q "-RNFR $file.tmp" -Q "-RNTO $file"
+            # upload under a temp name and rename, so the public file is never half-written;
+            # the temp name is per run, so concurrent runs do not rename each other's upload away
+            local tmp="$file.$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT.tmp"
+            # --ssl-reqd: never send the credentials unencrypted
+            curl -fsS --ssl-reqd --max-time 300 --ftp-create-dirs --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              -T "$1" "ftp://$FTP_HOST/$dir/$tmp" \
+              -Q "-RNFR $tmp" -Q "-RNTO $file"
             echo "uploaded $(basename "$1") to $2"
           }
           upload "$RUNNER_TEMP/swagger.json" "$FTP_SWAGGER_PATH"
