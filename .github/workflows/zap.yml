@@ -1,12 +1,9 @@
 name: OWASP ZAP baseline
+# Not on pull requests: the scan runs on merges to master (and manually from the Actions tab).
 on:
   push:
     branches:
       - master
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches-ignore:
-      - 'l10n_master'
   workflow_dispatch:
 
 permissions:
