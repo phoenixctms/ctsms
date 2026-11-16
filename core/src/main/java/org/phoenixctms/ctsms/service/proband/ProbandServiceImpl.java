@@ -3071,6 +3071,17 @@ public class ProbandServiceImpl
 				}
 				if (proband == null) {
 					proband = CheckIDUtil.checkProbandId(inquiryValueIn.getProbandId(), this.getProbandDao(), LockMode.PESSIMISTIC_WRITE);
+					// then the input fields of all values, by id, as saves of trials sharing input fields would deadlock otherwise:
+					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(inquiryValuesIn.size());
+					Iterator<InquiryValueInVO> lockIt = inquiryValuesIn.iterator();
+					while (lockIt.hasNext()) {
+						InquiryValueInVO lockInquiryValueIn = lockIt.next();
+						Inquiry lockInquiry = lockInquiryValueIn.getInquiryId() != null ? this.getInquiryDao().load(lockInquiryValueIn.getInquiryId()) : null;
+						if (lockInquiry != null) {
+							lockInputFields.add(lockInquiry.getField());
+						}
+					}
+					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
 					ServiceUtil.checkProbandLocked(proband);
 				} else if (!proband.getId().equals(inquiryValueIn.getProbandId())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUES_FOR_DIFFERENT_PROBANDS);
