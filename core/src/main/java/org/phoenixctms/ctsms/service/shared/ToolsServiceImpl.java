@@ -97,6 +97,7 @@ import org.phoenixctms.ctsms.enumeration.Sex;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.security.Authenticator;
 import org.phoenixctms.ctsms.security.CryptoUtil;
 import org.phoenixctms.ctsms.security.PasswordPolicy;
@@ -727,6 +728,13 @@ public class ToolsServiceImpl
 		while (toBeAutoDeletedIt.hasNext()) {
 			Proband proband = toBeAutoDeletedIt.next();
 			ServiceUtil.lockProbandRemoval(proband, probandDao, this.getTrialDao()); // like deleting a single proband
+			// re-check under the lock, like findToBeAutoDeleted, as the deadline or privacy consent may have changed since the query:
+			if (!proband.getCategory().isPrivacyConsentControl() || !proband.getCategory().isDelete() || proband.getPrivacyConsentStatus() == null
+					|| !proband.getPrivacyConsentStatus().isAutoDelete()
+					|| CriteriaUtil.listExpirations(Collections.singletonList(proband), today, null, true, null, null, null, null).isEmpty()) {
+				probandDao.commitAndResumeTransaction(); // release its locks
+				continue;
+			}
 			Long probandDepartmentId = proband.getDepartment().getId();
 			ServiceUtil.removeProband(proband, null, true,
 					null,
