@@ -459,7 +459,8 @@ public class MassMailServiceImpl
 	@Override
 	protected Collection<MassMailRecipientOutVO> handleAddMassMailRecipients(AuthenticationVO auth, Long massMailId, Set<Long> probandIds) throws Exception {
 		MassMailDao massMailDao = this.getMassMailDao();
-		MassMail massMail = CheckIDUtil.checkMassMailId(massMailId, massMailDao);
+		// lock the mass mail before its locked status is checked; adding each recipient locked it only afterwards:
+		MassMail massMail = CheckIDUtil.checkMassMailId(massMailId, massMailDao, LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ArrayList<MassMailRecipientOutVO> result = new ArrayList<MassMailRecipientOutVO>();

@@ -691,7 +691,8 @@ public final class ServiceUtil {
 
 	private static void checkAddMassMailRecipientInput(MassMailRecipientInVO massMailRecipientIn, MassMailDao massMailDao, ProbandDao probandDao, TrialDao trialDao,
 			MassMailRecipientDao massMailRecipientDao) throws ServiceException {
-		MassMail massMail = CheckIDUtil.checkMassMailId(massMailRecipientIn.getMassMailId(), massMailDao);
+		// lock the mass mail before its locked status is checked; the collision finder locked it only afterwards:
+		MassMail massMail = CheckIDUtil.checkMassMailId(massMailRecipientIn.getMassMailId(), massMailDao, LockMode.PESSIMISTIC_WRITE);
 		checkMassMailLocked(massMail);
 		Proband proband = CheckIDUtil.checkProbandId(massMailRecipientIn.getProbandId(), probandDao);
 		checkProbandLocked(proband);
