@@ -8774,15 +8774,13 @@ public class TrialServiceImpl
 				ProbandListEntryTag listEntryTag = CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagValueIn.getTagId(), probandListEntryTagDao);
 				if (trial == null) {
 					trial = listEntryTag.getTrial();
-					// lock the trial before the list entry like the proband list attribute changes, so those refused for saved values cannot race with saving values:
-					this.getTrialDao().refresh(trial, LockMode.PESSIMISTIC_WRITE);
 					ServiceUtil.checkTrialLocked(trial);
 				} else if (!trial.equals(listEntryTag.getTrial())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_DIFFERENT_TRIALS);
 				}
 				if (listEntry == null) {
 					listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryTagValueIn.getListEntryId(), probandListEntryDao, LockMode.PESSIMISTIC_WRITE);
-					// then the input fields of all values, by id, as saves of trials sharing input fields would deadlock otherwise:
+					// then the input fields of all values, by id, so saves sharing input fields cannot deadlock (the changes checking for values lock them too):
 					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(probandListEntryTagValuesIn.size());
 					Iterator<ProbandListEntryTagValueInVO> lockIt = probandListEntryTagValuesIn.iterator();
 					while (lockIt.hasNext()) {
