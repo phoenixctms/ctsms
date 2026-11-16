@@ -4487,6 +4487,8 @@ public class TrialServiceImpl
 		StratificationRandomizationList randomizationList = CheckIDUtil.checkStratificationRandomizationListId(stratificationRandomizationListId,
 				stratificationRandomizationListDao);
 		Trial trial = randomizationList.getTrial();
+		// lock the trial like randomizing and the randomization list changes do:
+		this.getTrialDao().refresh(trial, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
 		StratificationRandomizationListOutVO result = stratificationRandomizationListDao.toStratificationRandomizationListOutVO(randomizationList);
 		trial.removeRandomizationLists(randomizationList);
