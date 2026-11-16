@@ -1,8 +1,10 @@
 package org.phoenixctms.ctsms.web.model.trial;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -14,6 +16,7 @@ import org.phoenixctms.ctsms.enumeration.PositionMovement;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagInVO;
@@ -111,6 +114,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 	private boolean bulkAddEcrf;
 	private boolean bulkAddStratification;
 	private boolean bulkAddRandomize;
+	private String jsVariableNamesJson;
 
 	public ProbandListEntryTagBean() {
 		super();
@@ -233,6 +237,30 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 		return in;
 	}
 
+	// the variable names of the trial's other proband list attributes, suggested in the value and output expression editors
+	public String getJsVariableNamesJson() {
+		if (jsVariableNamesJson == null) {
+			TreeSet<String> jsVariableNames = new TreeSet<String>();
+			if (in.getTrialId() != null) {
+				try {
+					Iterator<ProbandListEntryTagOutVO> it = WebUtil.getServiceLocator().getTrialService()
+							.getProbandListEntryTagList(WebUtil.getAuthentication(), in.getTrialId(), null).iterator();
+					while (it.hasNext()) {
+						ProbandListEntryTagOutVO tag = it.next();
+						if (!CommonUtil.isEmptyString(tag.getJsVariableName()) && (out == null || out.getId() != tag.getId())) {
+							jsVariableNames.add(tag.getJsVariableName());
+						}
+					}
+				} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				}
+			}
+			jsVariableNamesJson = JsUtil.voToJson(new ArrayList<String>(jsVariableNames));
+		}
+		return jsVariableNamesJson;
+	}
+
 	public InputFieldMultiPickerModel getInputFieldMultiPicker() {
 		return inputFieldMultiPicker;
 	}
@@ -299,6 +327,7 @@ public class ProbandListEntryTagBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
+		jsVariableNamesJson = null;
 		probandListEntryTagModel.setTrialId(in.getTrialId());
 		probandListEntryTagModel.updateRowCount();
 		trial = WebUtil.getTrial(this.in.getTrialId());

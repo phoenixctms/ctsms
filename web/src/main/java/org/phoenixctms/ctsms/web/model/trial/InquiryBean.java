@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -17,6 +18,7 @@ import org.phoenixctms.ctsms.enumeration.PositionMovement;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InquiryInVO;
@@ -115,6 +117,7 @@ public class InquiryBean extends ManagedBeanBase {
 	private boolean bulkAddExcelDate;
 	private boolean bulkAddActiveSignup;
 	private String deferredDeleteReason;
+	private String jsVariableNamesJson;
 
 	public InquiryBean() {
 		super();
@@ -280,6 +283,30 @@ public class InquiryBean extends ManagedBeanBase {
 		return in;
 	}
 
+	// the variable names of the trial's other inquiries, suggested in the value and output expression editors
+	public String getJsVariableNamesJson() {
+		if (jsVariableNamesJson == null) {
+			TreeSet<String> jsVariableNames = new TreeSet<String>();
+			if (in.getTrialId() != null) {
+				try {
+					Iterator<InquiryOutVO> it = WebUtil.getServiceLocator().getTrialService()
+							.getInquiryList(WebUtil.getAuthentication(), in.getTrialId(), null, null, false, null).iterator();
+					while (it.hasNext()) {
+						InquiryOutVO inquiry = it.next();
+						if (!CommonUtil.isEmptyString(inquiry.getJsVariableName()) && (out == null || out.getId() != inquiry.getId())) {
+							jsVariableNames.add(inquiry.getJsVariableName());
+						}
+					}
+				} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				}
+			}
+			jsVariableNamesJson = JsUtil.voToJson(new ArrayList<String>(jsVariableNames));
+		}
+		return jsVariableNamesJson;
+	}
+
 	public InputFieldMultiPickerModel getInputFieldMultiPicker() {
 		return inputFieldMultiPicker;
 	}
@@ -379,6 +406,7 @@ public class InquiryBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
+		jsVariableNamesJson = null;
 		initInquiryModel();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		if (WebUtil.isTrialLocked(trial)) {
