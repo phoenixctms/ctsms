@@ -4219,8 +4219,8 @@ public class TrialServiceImpl
 		ECRFField lockEcrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
 		this.getTrialDao().refresh(lockEcrfField.getTrial(), LockMode.PESSIMISTIC_WRITE);
 		this.getECRFDao().refresh(lockEcrfField.getEcrf(), LockMode.PESSIMISTIC_WRITE);
-		this.getInputFieldDao().lock(lockEcrfField.getField(), LockMode.PESSIMISTIC_WRITE);
 		this.getECRFFieldDao().refresh(lockEcrfField);
+		this.getInputFieldDao().lock(lockEcrfField.getField(), LockMode.PESSIMISTIC_WRITE);
 		if (!force && (defer
 				|| this.getECRFFieldValueDao().getCount(ecrfFieldId, false) > 0
 				|| this.getECRFFieldStatusEntryDao().getCount(ecrfFieldId, false) > 0)) {
