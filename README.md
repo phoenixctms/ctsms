@@ -40,10 +40,10 @@ git clone https://github.com/phoenixctms/docker.git
 cd docker
 docker compose build
 docker compose up -d
-docker compose logs -f db-seed
+docker compose logs -f db-init
 ```
 
-When seeding finishes, open http://localhost:8888 and log in with the printed `phoenix` credentials.
+When init finishes, open http://localhost:8888 and log in with the printed `phoenix` credentials.
 
 Build and Install (Debian)
 -----
