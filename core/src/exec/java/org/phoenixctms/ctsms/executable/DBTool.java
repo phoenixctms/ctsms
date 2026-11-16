@@ -17,6 +17,7 @@ import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.ProbandListStatusLogLevel;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
+import org.phoenixctms.ctsms.fileprocessors.xls.XlsArchive;
 import org.phoenixctms.ctsms.executable.DemoDataProvider.SearchCriteria;
 import org.phoenixctms.ctsms.executable.claml.ClamlImporter;
 import org.phoenixctms.ctsms.executable.csv.CsvExporter;
@@ -961,7 +962,7 @@ public class DBTool {
 					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT))
-							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT))) {
+							|| dbTool.testOverwriteSetupFile(line, line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT))) {
 						sendEmail = dbTool.getXlsExporter().exportInputField(
 								line.getOptionValue(DBToolOptions.EXPORT_INPUT_FIELD_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT),
@@ -971,7 +972,7 @@ public class DBTool {
 					job = getTaskAndLockProcess(DBToolOptions.EXPORT_ECRFS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT))
-							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT))) {
+							|| dbTool.testOverwriteSetupFile(line, line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT))) {
 						sendEmail = dbTool.getXlsExporter().exportEcrfs(
 								line.getOptionValue(DBToolOptions.EXPORT_ECRFS_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT),
@@ -989,7 +990,7 @@ public class DBTool {
 					job = getTaskAndLockProcess(DBToolOptions.EXPORT_INQUIRIES_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT))
-							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT))) {
+							|| dbTool.testOverwriteSetupFile(line, line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT))) {
 						sendEmail = dbTool.getXlsExporter().exportInquiries(
 								line.getOptionValue(DBToolOptions.EXPORT_INQUIRIES_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT),
@@ -1007,7 +1008,7 @@ public class DBTool {
 					job = getTaskAndLockProcess(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT, line);
 					dbTool.initJob(line).printPrelude(job);
 					if (CommonUtil.isEmptyString(line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT))
-							|| dbTool.testOverwriteFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT))) {
+							|| dbTool.testOverwriteSetupFile(line, line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT))) {
 						sendEmail = dbTool.getXlsExporter().exportProbandListEntryTags(
 								line.getOptionValue(DBToolOptions.EXPORT_PROBAND_LIST_ENTRY_TAGS_OPT),
 								line.getOptionValue(DBToolOptions.ENCODING_OPT),
@@ -1506,5 +1507,10 @@ public class DBTool {
 			return false;
 		}
 		return true;
+	}
+
+	// a setup export with sketch background images is written as zip archive (see XlsArchive) instead:
+	private boolean testOverwriteSetupFile(CommandLine line, String fileName) {
+		return testOverwriteFile(line, fileName) && testOverwriteFile(line, XlsArchive.getZipFileName(fileName));
 	}
 }
