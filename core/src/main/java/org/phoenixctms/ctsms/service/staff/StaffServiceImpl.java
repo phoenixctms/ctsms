@@ -2228,6 +2228,9 @@ public class StaffServiceImpl
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry originalCourseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(modifiedCourseParticipationStatusEntry.getId(),
 				courseParticipationStatusEntryDao);
+		// lock the course before its presets and self-registration flag are checked, like adding a participation does:
+		this.getCourseDao().refresh(originalCourseParticipation.getCourse(), LockMode.PESSIMISTIC_WRITE);
+		courseParticipationStatusEntryDao.refresh(originalCourseParticipation);
 		CourseParticipationStatusTypeDao courseParticipationStatusTypeDao = this.getCourseParticipationStatusTypeDao();
 		ServiceUtil.checkUpdateCourseParticipationStatusEntryInput(originalCourseParticipation, modifiedCourseParticipationStatusEntry, false,
 				this.getCvSectionDao(), this.getTrainingRecordSectionDao(), courseParticipationStatusTypeDao, this.getCourseParticipationStatusEntryDao(), this.getMimeTypeDao());
