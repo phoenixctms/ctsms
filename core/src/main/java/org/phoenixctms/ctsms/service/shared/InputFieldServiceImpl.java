@@ -959,6 +959,8 @@ public class InputFieldServiceImpl
 	protected InputFieldSelectionSetValueOutVO handleAddSelectionSetValue(
 			AuthenticationVO auth, InputFieldSelectionSetValueInVO newSelectionSetValue)
 			throws Exception {
+		// lock the field first, like updateSelectionSetValue, so its type and existing values checked below cannot change meanwhile
+		CheckIDUtil.checkInputFieldId(newSelectionSetValue.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkAddSelectionSetValueInput(newSelectionSetValue, true);
 		InputFieldSelectionSetValueDao selectionSetValueDao = this.getInputFieldSelectionSetValueDao();
 		InputFieldSelectionSetValue selectionSetValue = selectionSetValueDao.inputFieldSelectionSetValueInVOToEntity(newSelectionSetValue);
