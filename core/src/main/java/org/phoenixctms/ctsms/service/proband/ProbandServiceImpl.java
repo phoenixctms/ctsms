@@ -1516,9 +1516,10 @@ public class ProbandServiceImpl
 	@Override
 	protected ProbandOutVO handleAddProband(AuthenticationVO auth, ProbandInVO newProband, Integer maxInstances, Integer maxParentsDepth, Integer maxChildrenDepth)
 			throws Exception {
-		checkProbandInput(newProband);
 		User user = CoreUtil.getUser();
+		// lock the user before the input checks lock the child probands, in the same order as updating or merging probands:
 		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
+		checkProbandInput(newProband);
 		if (!user.getDepartment().getId().equals(newProband.getDepartmentId())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_DEPARTMENT_NOT_EQUAL_TO_USER_DEPARTMENT);
 		}
