@@ -4207,6 +4207,10 @@ public class TrialServiceImpl
 		InquiryDao inquiryDao = this.getInquiryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		InquiryOutVO result;
+		// lock the trial like the value saves (addUpdateInquiries holds it already), so the values counted below and the cascade cannot race with them:
+		Inquiry lockInquiry = CheckIDUtil.checkInquiryId(inquiryId, inquiryDao);
+		this.getTrialDao().lock(lockInquiry.getTrial(), LockMode.PESSIMISTIC_WRITE);
+		inquiryDao.refresh(lockInquiry);
 		if (!force && (defer
 				|| this.getInquiryValueDao().getCount(inquiryId) > 0)) {
 			Inquiry originalInquiry = CheckIDUtil.checkInquiryId(inquiryId, inquiryDao);
@@ -4407,6 +4411,9 @@ public class TrialServiceImpl
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		ProbandListEntryTag probandListEntryTag = CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagId, probandListEntryTagDao);
 		Trial trial = probandListEntryTag.getTrial();
+		// lock the trial like the value saves (addUpdateProbandListEntryTags holds it already), so the cascade cannot race with them:
+		this.getTrialDao().lock(trial, LockMode.PESSIMISTIC_WRITE);
+		probandListEntryTagDao.refresh(probandListEntryTag);
 		ServiceUtil.checkTrialLocked(trial);
 		ProbandListEntryTagOutVO result = probandListEntryTagDao.toProbandListEntryTagOutVO(probandListEntryTag);
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
