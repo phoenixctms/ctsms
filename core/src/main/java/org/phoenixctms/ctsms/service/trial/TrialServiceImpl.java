@@ -4114,6 +4114,12 @@ public class TrialServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRFFieldOutVO result;
+		// lock the trial, then the eCRF, like the eCRF changes and the value and status entry saves, so the values and status entries counted below
+		// and the cascade cannot race with them:
+		ECRFField lockEcrfField = CheckIDUtil.checkEcrfFieldId(ecrfFieldId, this.getECRFFieldDao());
+		this.getTrialDao().refresh(lockEcrfField.getTrial(), LockMode.PESSIMISTIC_WRITE);
+		this.getECRFDao().refresh(lockEcrfField.getEcrf(), LockMode.PESSIMISTIC_WRITE);
+		this.getECRFFieldDao().refresh(lockEcrfField);
 		if (!force && (defer
 				|| this.getECRFFieldValueDao().getCount(ecrfFieldId, false) > 0
 				|| this.getECRFFieldStatusEntryDao().getCount(ecrfFieldId, false) > 0)) {
