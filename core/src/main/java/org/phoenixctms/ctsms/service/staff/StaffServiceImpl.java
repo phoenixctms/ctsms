@@ -1010,6 +1010,9 @@ public class StaffServiceImpl
 		DutyRosterTurnDao dutyRosterTurnDao = this.getDutyRosterTurnDao();
 		DutyRosterTurn dutyRosterTurn = CheckIDUtil.checkDutyRosterTurnId(dutyRosterTurnId, dutyRosterTurnDao);
 		Staff staff = dutyRosterTurn.getStaff();
+		if (staff != null) {
+			this.getStaffDao().lock(staff, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the overlapping shifts checks cannot race with the delete
+		}
 		Trial trial = dutyRosterTurn.getTrial();
 		ServiceUtil.checkTrialLocked(trial);
 		VisitScheduleItem visitScheduleItem = dutyRosterTurn.getVisitScheduleItem();
@@ -1134,6 +1137,7 @@ public class StaffServiceImpl
 		StaffAddressDao addressDao = this.getStaffAddressDao();
 		StaffAddress address = CheckIDUtil.checkStaffAddressId(staffAddressId, addressDao);
 		Staff staff = address.getStaff();
+		this.getStaffDao().lock(staff, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		StaffAddressOutVO result = addressDao.toStaffAddressOutVO(address);
 		staff.removeAddresses(address);
 		address.setStaff(null);
@@ -1150,6 +1154,7 @@ public class StaffServiceImpl
 		StaffContactDetailValueDao contactValueDao = this.getStaffContactDetailValueDao();
 		StaffContactDetailValue contactValue = CheckIDUtil.checkStaffContactDetailValueId(staffContactDetailValueId, contactValueDao);
 		Staff staff = contactValue.getStaff();
+		this.getStaffDao().lock(staff, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		StaffContactDetailValueOutVO result = contactValueDao.toStaffContactDetailValueOutVO(contactValue);
 		staff.removeContactDetailValues(contactValue);
 		contactValue.setStaff(null);
@@ -1166,6 +1171,7 @@ public class StaffServiceImpl
 		StaffStatusEntryDao statusEntryDao = this.getStaffStatusEntryDao();
 		StaffStatusEntry statusEntry = CheckIDUtil.checkStaffStatusEntryId(staffStatusEntryId, statusEntryDao);
 		Staff staff = statusEntry.getStaff();
+		this.getStaffDao().lock(staff, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		StaffStatusEntryOutVO result = statusEntryDao.toStaffStatusEntryOutVO(statusEntry);
 		staff.removeStatusEntries(statusEntry);
 		statusEntry.setStaff(null);
@@ -1183,6 +1189,7 @@ public class StaffServiceImpl
 		StaffTagValueDao tagValueDao = this.getStaffTagValueDao();
 		StaffTagValue tagValue = CheckIDUtil.checkStaffTagValueId(staffTagValueId, tagValueDao);
 		Staff staff = tagValue.getStaff();
+		this.getStaffDao().lock(staff, LockMode.PESSIMISTIC_WRITE); // like adding or updating one, so the checks counting them cannot race with the delete
 		StaffTagValueOutVO result = tagValueDao.toStaffTagValueOutVO(tagValue);
 		staff.removeTagValues(tagValue);
 		tagValue.setStaff(null);
