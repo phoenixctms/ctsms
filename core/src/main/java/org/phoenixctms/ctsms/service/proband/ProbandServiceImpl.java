@@ -1643,6 +1643,9 @@ public class ProbandServiceImpl
 		BankAccountDao bankAccountDao = this.getBankAccountDao();
 		BankAccount bankAccount = CheckIDUtil.checkBankAccountId(bankAccountId, bankAccountDao);
 		Proband proband = bankAccount.getProband();
+		// lock the proband like the money transfer checks referring to the bank account do:
+		this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+		bankAccountDao.refresh(bankAccount);
 		BankAccountOutVO result = bankAccountDao.toBankAccountOutVO(bankAccount);
 		if (!result.isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_BANK_ACCOUNT);
@@ -1683,6 +1686,9 @@ public class ProbandServiceImpl
 		DiagnosisDao diagnosisDao = this.getDiagnosisDao();
 		Diagnosis diagnosis = CheckIDUtil.checkDiagnosisId(diagnosisId, diagnosisDao);
 		Proband proband = diagnosis.getProband();
+		// lock the proband like the medication checks referring to the diagnosis do:
+		this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+		diagnosisDao.refresh(diagnosis);
 		DiagnosisOutVO result = diagnosisDao.toDiagnosisOutVO(diagnosis);
 		if (!result.isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_DIAGNOSIS);
@@ -1950,6 +1956,9 @@ public class ProbandServiceImpl
 		ProcedureDao procedureDao = this.getProcedureDao();
 		Procedure procedure = CheckIDUtil.checkProcedureId(procedureId, procedureDao);
 		Proband proband = procedure.getProband();
+		// lock the proband like the medication checks referring to the procedure do:
+		this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+		procedureDao.refresh(procedure);
 		ProcedureOutVO result = procedureDao.toProcedureOutVO(procedure);
 		if (!result.isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROCEDURE);
