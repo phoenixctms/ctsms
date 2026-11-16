@@ -1132,8 +1132,6 @@ public class TrialServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_FOR_WRONG_TRIAL);
 		}
 		ECRF ecrf = ecrfField.getEcrf();
-		// lock the eCRF after the list entry like the value saves, also for an existing status entry, so deleting the eCRF field cannot race with it:
-		this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(ecrf.getTrial());
 		if (!ecrf.getTrial().getStatus().isEcrfValueInputEnabled()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_TRIAL,
@@ -1147,10 +1145,13 @@ public class TrialServiceImpl
 			ecrfStatusEntry = this.getECRFStatusEntryDao().findByListEntryEcrfVisit(listEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null);
 			if (ecrfStatusEntry == null) {
 				ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
+				this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
 				Object[] resultItems = addEcrfStatusEntry(listEntry, ecrf, visit, statusType, null, now, user);
 				ecrfStatusEntry = (ECRFStatusEntry) resultItems[0];
 			}
 		}
+		// lock the input field after the eCRF, like the value saves, so deleting the eCRF field, which counts its status entries, cannot race with it:
+		this.getInputFieldDao().lock(ecrfField.getField(), LockMode.PESSIMISTIC_WRITE);
 		if (visit != null) {
 			if (!visit.equals(ecrfStatusEntry.getVisit())) {
 				throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_STATUS_ENTRY_INVALID_VISIT);
