@@ -379,7 +379,7 @@ public class ProbandServiceImpl
 	private void checkInquiryValueInput(InquiryValueInVO inquiryValueIn, InputFieldValue originalValue, Proband proband, Inquiry inquiry) throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = inquiry.getField();
-		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
+		inputFieldDao.lock(inputField, ServiceUtil.getInputFieldValueLockMode(inputField)); // shared, like the up-front lock of the value save
 		ServiceUtil.checkInputFieldTextValue(inputField, inquiry.isOptional(), inquiryValueIn.getTextValue(), inputFieldDao, this.getInputFieldSelectionSetValueDao());
 		ServiceUtil.checkInputFieldBooleanValue(inputField, inquiry.isOptional(), inquiryValueIn.getBooleanValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldLongValue(inputField, inquiry.isOptional(), inquiryValueIn.getLongValue(), inputFieldDao);
@@ -3081,7 +3081,7 @@ public class ProbandServiceImpl
 							lockInquiries.put(lockInquiry, lockInquiry.getField().getId());
 						}
 					}
-					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
+					ServiceUtil.lockInputFieldsForValues(lockInputFields, this.getInputFieldDao());
 					// re-read the inquiries: if the input field of one was changed while waiting, refuse like a concurrent modification
 					Iterator<Map.Entry<Inquiry, Long>> lockInquiriesIt = lockInquiries.entrySet().iterator();
 					while (lockInquiriesIt.hasNext()) {

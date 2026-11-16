@@ -5818,6 +5818,38 @@ public final class ServiceUtil {
 		}
 	}
 
+	/**
+	 * The lock a value save holds on an input field: shared (FOR SHARE), so saves of the same input field for different subjects do not wait for each
+	 * other, while input field and eCRF/inquiry/attribute changes, which lock it exclusively, still wait for them and vice versa. Learning autocomplete
+	 * fields are locked exclusively, as a save may add the text as a selection set value after checking it does not exist yet.
+	 */
+	public static LockMode getInputFieldValueLockMode(InputField inputField) {
+		return InputFieldType.AUTOCOMPLETE.equals(inputField.getFieldType()) && inputField.getLearn() ? LockMode.PESSIMISTIC_WRITE : LockMode.PESSIMISTIC_READ;
+	}
+
+	/**
+	 * Locks the input fields of a value save by id (see getInputFieldValueLockMode), then re-reads them, as the value checks use their settings.
+	 * Refuses like a concurrent modification if one became a learning autocomplete field while waiting, instead of upgrading its shared lock.
+	 */
+	public static void lockInputFieldsForValues(Collection<InputField> inputFields, InputFieldDao inputFieldDao) throws ServiceException {
+		TreeMap<Long, InputField> inputFieldMap = new TreeMap<Long, InputField>();
+		Iterator<InputField> it = inputFields.iterator();
+		while (it.hasNext()) {
+			InputField inputField = it.next();
+			inputFieldMap.put(inputField.getId(), inputField);
+		}
+		Iterator<InputField> inputFieldsIt = inputFieldMap.values().iterator();
+		while (inputFieldsIt.hasNext()) {
+			InputField inputField = inputFieldsIt.next();
+			LockMode lockMode = getInputFieldValueLockMode(inputField);
+			inputFieldDao.lock(inputField, lockMode); // session.lock maps PESSIMISTIC_READ to "for share"
+			inputFieldDao.refresh(inputField);
+			if (!lockMode.equals(getInputFieldValueLockMode(inputField))) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, inputField.getModifiedUser().getName());
+			}
+		}
+	}
+
 	private static void lockProbands(Collection<Proband> probands, ProbandDao probandDao) {
 		TreeMap<Long, Proband> probandMap = new TreeMap<Long, Proband>();
 		Iterator<Proband> it = probands.iterator();

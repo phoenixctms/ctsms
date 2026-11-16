@@ -1128,7 +1128,7 @@ public class TrialServiceImpl
 			inputFieldIds.put(ecrfField.getId(), ecrfField.getField().getId());
 			inputFields.add(ecrfField.getField());
 		}
-		ServiceUtil.lockInputFields(inputFields, this.getInputFieldDao());
+		ServiceUtil.lockInputFieldsForValues(inputFields, this.getInputFieldDao());
 		it = ecrfFields.iterator();
 		while (it.hasNext()) {
 			ECRFField ecrfField = it.next();
@@ -1490,7 +1490,7 @@ public class TrialServiceImpl
 			throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = ecrfField.getField();
-		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
+		inputFieldDao.lock(inputField, ServiceUtil.getInputFieldValueLockMode(inputField)); // shared, like the up-front lock of the value save
 		ServiceUtil.checkInputFieldTextValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getTextValue(), inputFieldDao, this.getInputFieldSelectionSetValueDao());
 		ServiceUtil.checkInputFieldBooleanValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getBooleanValue(), inputFieldDao);
 		ServiceUtil.checkInputFieldLongValue(inputField, ecrfField.isOptional(), ecrfFieldValueIn.getLongValue(), inputFieldDao);
@@ -1881,7 +1881,7 @@ public class TrialServiceImpl
 			throws ServiceException {
 		InputFieldDao inputFieldDao = this.getInputFieldDao();
 		InputField inputField = listEntryTag.getField();
-		inputFieldDao.lock(inputField, LockMode.PESSIMISTIC_WRITE);
+		inputFieldDao.lock(inputField, ServiceUtil.getInputFieldValueLockMode(inputField)); // shared, like the up-front lock of the value save
 		ServiceUtil.checkInputFieldTextValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getTextValue(), inputFieldDao,
 				this.getInputFieldSelectionSetValueDao());
 		ServiceUtil.checkInputFieldBooleanValue(inputField, listEntryTag.isOptional(), probandListEntryTagValueIn.getBooleanValue(), inputFieldDao);
@@ -8910,7 +8910,7 @@ public class TrialServiceImpl
 							lockListEntryTags.put(lockListEntryTag, lockListEntryTag.getField().getId());
 						}
 					}
-					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
+					ServiceUtil.lockInputFieldsForValues(lockInputFields, this.getInputFieldDao());
 					// re-read the attributes: if the input field of one was changed while waiting, refuse like a concurrent modification
 					Iterator<Map.Entry<ProbandListEntryTag, Long>> lockListEntryTagsIt = lockListEntryTags.entrySet().iterator();
 					while (lockListEntryTagsIt.hasNext()) {
