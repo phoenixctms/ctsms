@@ -2213,8 +2213,19 @@ public class TrialServiceImpl
 		}
 		ServiceUtil.checkTrialLocked(trial);
 		// lock the eCRF before the input field, in the same order as the collision finders (addUpdateEcrf holds the eCRF lock already):
-		ECRF ecrf = checkDeferredConstraints ? CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao(), LockMode.PESSIMISTIC_WRITE)
-				: CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
+		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
+		if (checkDeferredConstraints) {
+			// also the eCRF the field is moved from, as its values are saved under that eCRF's lock; both by id:
+			ECRF originalEcrf = originalEcrfField.getEcrf();
+			if (originalEcrf.getId() < ecrf.getId()) {
+				this.getECRFDao().refresh(originalEcrf, LockMode.PESSIMISTIC_WRITE);
+			}
+			this.getECRFDao().refresh(ecrf, LockMode.PESSIMISTIC_WRITE);
+			if (originalEcrf.getId() > ecrf.getId()) {
+				this.getECRFDao().refresh(originalEcrf, LockMode.PESSIMISTIC_WRITE);
+			}
+			this.getECRFFieldDao().refresh(originalEcrfField); // loaded before the locks
+		}
 		if (!trial.equals(ecrf.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WRONG_ECRF, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
@@ -2357,6 +2368,9 @@ public class TrialServiceImpl
 		if (!trial.equals(originalInquiry.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_TRIAL_CHANGED);
 		}
+		if (checkDeferredConstraints) {
+			this.getInquiryDao().refresh(originalInquiry); // loaded before the trial lock
+		}
 		ServiceUtil.checkTrialLocked(trial);
 		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
 		checkInquiryInput(inquiryIn, checkDeferredConstraints);
@@ -2372,6 +2386,9 @@ public class TrialServiceImpl
 				: CheckIDUtil.checkTrialId(listTagIn.getTrialId(), this.getTrialDao());
 		if (!trial.equals(originalProbandListEntryTag.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_TRIAL_CHANGED);
+		}
+		if (checkDeferredConstraints) {
+			this.getProbandListEntryTagDao().refresh(originalProbandListEntryTag); // loaded before the trial lock
 		}
 		ServiceUtil.checkTrialLocked(trial);
 		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
