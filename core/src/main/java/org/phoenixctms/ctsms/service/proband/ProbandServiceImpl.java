@@ -1820,7 +1820,8 @@ public class ProbandServiceImpl
 				ServiceUtil.logSystemMessage(probandDao.load(parent.getId()), result, now, user, SystemMessageCodes.PROBAND_MARKED_FOR_DELETION, result, original, journalEntryDao);
 			}
 		} else {
-			Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao, LockMode.PESSIMISTIC_WRITE);
+			Proband proband = CheckIDUtil.checkProbandId(probandId, probandDao);
+			ServiceUtil.lockProbandRemoval(proband, probandDao, this.getTrialDao());
 			result = probandDao.toProbandOutVO(proband, maxInstances, maxParentsDepth, maxChildrenDepth);
 			if (result.getBlinded()) {
 				if (!user.getDepartment().getId().equals(result.getDepartment().getId())) {
