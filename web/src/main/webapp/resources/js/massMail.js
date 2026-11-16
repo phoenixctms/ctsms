@@ -113,22 +113,6 @@ function getMassMailTemplateVariables() {
 	return massMailTemplateVariables;
 }
 
-// names starting with the query, or if there are none, the names containing it
-function filterMassMailTemplateVariables(candidates, query) {
-	var lowerCaseQuery = query.toLowerCase();
-	var starting = [];
-	var containing = [];
-	for (var i = 0; i < candidates.length; i++) {
-		var index = candidates[i].toLowerCase().indexOf(lowerCaseQuery);
-		if (index == 0) {
-			starting.push(candidates[i]);
-		} else if (index > 0) {
-			containing.push(candidates[i]);
-		}
-	}
-	return starting.length > 0 ? starting : containing;
-}
-
 // the variables declared in the template by #foreach($x in ...) and #set($x = ...)
 function getMassMailTemplateLocalVariables(template) {
 	var localVariables = [];
@@ -168,7 +152,7 @@ function getMassMailTemplateSuggestions(textBefore, nextChar, template) {
 	var candidates = member ? getMassMailTemplateVariableMembers(match[2], template) : getMassMailTemplateLocalVariables(template).concat(
 	        getMassMailTemplateVariables().names);
 	var closingBrace = match[1] == "{" && nextChar != "}" ? "}" : "";
-	var list = filterMassMailTemplateVariables(candidates, query);
+	var list = filterHintNames(candidates, query);
 	for (var i = 0; i < list.length; i++) {
 		list[i] = list[i] + closingBrace;
 	}
@@ -199,21 +183,14 @@ function massMailTemplateHint(cm) {
 	};
 }
 
-function showMassMailTemplateHint(cm, typed) {
-	// a single suggestion is inserted right away on Ctrl-Space only, not while typing
-	CodeMirror.simpleHint(cm, massMailTemplateHint, {
-		completeSingle : !typed
-	});
+// Ctrl-Space
+function showMassMailTemplateHint(cm) {
+	showCodeMirrorHint(cm, massMailTemplateHint);
 }
 
 function handleMassMailTextTemplateKeyEvent(cm, event) {
 	if (event.type == "keypress" && isMassMailTemplateHintTrigger(String.fromCharCode(event.charCode || event.keyCode))) {
-		// show the suggestions once the typed character is in the editor
-		window.setTimeout(function() {
-			if (massMailTemplateHint(cm) != null) {
-				showMassMailTemplateHint(cm, true);
-			}
-		}, 50);
+		showTypedCodeMirrorHint(cm, massMailTemplateHint);
 	}
 	return false;
 }
@@ -343,8 +320,12 @@ function handleMassMailTemplateHtmlKeyDown(editor, event) {
 			moveMassMailTemplateHtmlHintSelection(select.size);
 			break;
 		case 9:
-		case 13:
 			pickMassMailTemplateHtmlHint(editor, massMailTemplateHtmlHint.suggestions, select.options[select.selectedIndex].text);
+			break;
+		case 13:
+			// Enter closes the suggestions and starts a new line, like in the code editors (see showCodeMirrorHint in common.js)
+			closeMassMailTemplateHtmlHint();
+			handled = false;
 			break;
 		case 27:
 			closeMassMailTemplateHtmlHint();

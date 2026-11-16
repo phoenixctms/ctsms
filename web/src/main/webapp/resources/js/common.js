@@ -1770,3 +1770,67 @@ function updateJobListPoll(polled) {
 		jobListPollTimer = null;
 	}
 }
+
+// code editor (codeMirror) suggestions, shared by the value and output expression editors (trial.js) and the mass mail text template editor (massMail.js)
+
+// the names starting with the query, or if there are none, the names containing it
+function filterHintNames(candidates, query) {
+	var lowerCaseQuery = query.toLowerCase();
+	var starting = [];
+	var containing = [];
+	for (var i = 0; i < candidates.length; i++) {
+		var index = candidates[i].toLowerCase().indexOf(lowerCaseQuery);
+		if (index == 0) {
+			starting.push(candidates[i]);
+		} else if (index > 0) {
+			containing.push(candidates[i]);
+		}
+	}
+	return starting.length > 0 ? starting : containing;
+}
+
+// the codeMirror whose suggestions were opened by showCodeMirrorHint
+var codeMirrorHintEditor = null;
+
+// show the suggestions (Ctrl-Space): in them, Tab picks one and Enter closes them and starts a new line
+function showCodeMirrorHint(cm, getHints, options) {
+	codeMirrorHintEditor = cm;
+	CodeMirror.simpleHint(cm, getHints, options);
+}
+
+// show the suggestions once the typed character is in the editor, unless the open suggestions already got it.
+// a single suggestion is not inserted right away while typing
+function showTypedCodeMirrorHint(cm, getHints) {
+	window.setTimeout(function() {
+		if (jQuery(".CodeMirror-completions").length == 0 && !cm.somethingSelected() && getHints(cm) != null) {
+			showCodeMirrorHint(cm, getHints, {
+				completeSingle : false
+			});
+		}
+	}, 50);
+}
+
+// captured before simpleHint's own keydown handler of the suggestions, which is also reached by the suggestions it re-opens while typing
+function handleCodeMirrorHintKeyDown(event) {
+	var code = event.keyCode;
+	var cm = codeMirrorHintEditor;
+	if ((code != 9 && code != 13) || cm == null || !jQuery(event.target).is(".CodeMirror-completions select")) {
+		return;
+	}
+	event.preventDefault();
+	event.stopPropagation();
+	if (code == 9) {
+		// simpleHint picks on double click
+		var dblclick = document.createEvent("MouseEvents");
+		dblclick.initEvent("dblclick", true, true);
+		event.target.dispatchEvent(dblclick);
+	} else {
+		// focusing the editor closes the suggestions (blur)
+		cm.focus();
+		cm.execCommand("newlineAndIndent");
+	}
+}
+
+if (document.addEventListener) {
+	document.addEventListener("keydown", handleCodeMirrorHintKeyDown, true);
+}

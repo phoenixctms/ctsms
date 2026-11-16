@@ -485,3 +485,101 @@ function handleTrialAssociationTabChange(index) {
 	return true;
 
 }
+
+// the names a value or output expression can use besides its arguments, as fieldCalculation.js exports them
+var expressionMaskNames = null;
+
+function getExpressionMaskNames() {
+	if (expressionMaskNames == null) {
+		expressionMaskNames = [];
+		try {
+			if (typeof FieldCalculation !== "undefined" && typeof FieldCalculation.getExpressionNames === "function") {
+				expressionMaskNames = FieldCalculation.getExpressionNames().sort();
+			}
+		} catch (e) {
+		}
+	}
+	return expressionMaskNames;
+}
+
+// the variable names of the other fields (eCRF fields of the eCRF, inquiries or proband list attributes of the trial), next to the editor
+function getExpressionVariableNames(cm) {
+	try {
+		return JSON.parse(jQuery(cm.getWrapperElement()).closest("fieldset").find(".ctsms-expression-variable-names").first().text() || "[]") || [];
+	} catch (e) {
+	}
+	return [];
+}
+
+// a global the expression cannot see: fieldCalculation.js hides the window's enumerable properties
+// (for (var p in this) mask[p] = undefined), unless it exports them again or the expression declares them
+function isHiddenExpressionGlobal(name, maskNames, localVars) {
+	return Object.prototype.propertyIsEnumerable.call(window, name) && jQuery.inArray(name, maskNames) < 0 && jQuery.inArray(name, localVars) < 0;
+}
+
+// the other fields' variable names and the expression names, then the javascript hint (keywords, the expression's own variables)
+// without the hidden globals. while typing, there are suggestions for a name only, not in strings, comments or after a "."
+function expressionHint(cm, typed) {
+	var hint = CodeMirror.javascriptHint(cm);
+	if (hint == null) {
+		return null;
+	}
+	var cursor = cm.getCursor();
+	var token = cm.getTokenAt(cursor);
+	var line = cm.getLine(hint.from.line);
+	var query = line.substring(hint.from.ch, cursor.ch);
+	var member = /\.\s*$/.test(line.substring(0, hint.from.ch));
+	if (typed) {
+		if (member || query.length == 0 || token.className == "string" || token.className == "comment" || token.className == "number") {
+			return null;
+		}
+	}
+	var maskNames = getExpressionMaskNames();
+	var localVars = [];
+	for (var v = token.state != null ? token.state.localVars : null; v; v = v.next) {
+		localVars.push(v.name);
+	}
+	var i;
+	if (member) {
+		// the members of a hidden global, eg. "document.", are no use either
+		var root = /([\w$]+)(?:\s*\.\s*[\w$]+)*\s*\.\s*$/.exec(line.substring(0, hint.from.ch));
+		if (root != null && isHiddenExpressionGlobal(root[1], maskNames, localVars)) {
+			return null;
+		}
+	} else {
+		var list = filterHintNames(getExpressionVariableNames(cm), query).concat(filterHintNames(maskNames, query));
+		for (i = 0; i < hint.list.length; i++) {
+			if (jQuery.inArray(hint.list[i], list) < 0 && !isHiddenExpressionGlobal(hint.list[i], maskNames, localVars)) {
+				list.push(hint.list[i]);
+			}
+		}
+		hint.list = list;
+	}
+	if (typed && (hint.list.length == 0 || (hint.list.length == 1 && hint.list[0] == query))) {
+		return null;
+	}
+	return hint;
+}
+
+function typedExpressionHint(cm) {
+	return expressionHint(cm, true);
+}
+
+// Ctrl-Space
+function showExpressionHint(cm) {
+	showCodeMirrorHint(cm, expressionHint);
+}
+
+// the suggestions pop up while typing a name in a value or output expression editor (a codeMirror next to the variable names)
+function handleExpressionEditorKeyPress(event) {
+	if (!/[\w$]/.test(String.fromCharCode(event.charCode || event.which || 0))) {
+		return;
+	}
+	var wrapper = jQuery(this).closest(".CodeMirror");
+	var cm = wrapper.length > 0 ? wrapper[0].CodeMirror : null;
+	if (cm != null && wrapper.closest("fieldset").find(".ctsms-expression-variable-names").length > 0) {
+		showTypedCodeMirrorHint(cm, typedExpressionHint);
+	}
+}
+
+jQuery(document).on("keypress", ".CodeMirror textarea", handleExpressionEditorKeyPress);

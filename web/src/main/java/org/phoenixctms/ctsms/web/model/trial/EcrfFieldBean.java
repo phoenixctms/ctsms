@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -17,6 +18,7 @@ import org.phoenixctms.ctsms.enumeration.PositionMovement;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
+import org.phoenixctms.ctsms.js.JsUtil;
 import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.ECRFFieldInVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldOutVO;
@@ -126,6 +128,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	private String newSection;
 	private boolean newSeries;
 	private String deferredDeleteReason;
+	private String jsVariableNamesJson;
 
 	public EcrfFieldBean() {
 		super();
@@ -328,6 +331,30 @@ public class EcrfFieldBean extends ManagedBeanBase {
 		return in;
 	}
 
+	// the variable names of the eCRF's other fields, suggested in the value and output expression editors
+	public String getJsVariableNamesJson() {
+		if (jsVariableNamesJson == null) {
+			TreeSet<String> jsVariableNames = new TreeSet<String>();
+			if (in.getTrialId() != null && in.getEcrfId() != null) {
+				try {
+					Iterator<ECRFFieldOutVO> it = WebUtil.getServiceLocator().getTrialService()
+							.getEcrfFieldList(WebUtil.getAuthentication(), in.getTrialId(), in.getEcrfId(), false, null).iterator();
+					while (it.hasNext()) {
+						ECRFFieldOutVO ecrfField = it.next();
+						if (!CommonUtil.isEmptyString(ecrfField.getJsVariableName()) && (out == null || out.getId() != ecrfField.getId())) {
+							jsVariableNames.add(ecrfField.getJsVariableName());
+						}
+					}
+				} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
+				} catch (AuthenticationException e) {
+					WebUtil.publishException(e);
+				}
+			}
+			jsVariableNamesJson = JsUtil.voToJson(new ArrayList<String>(jsVariableNames));
+		}
+		return jsVariableNamesJson;
+	}
+
 	public InputFieldMultiPickerModel getInputFieldMultiPicker() {
 		return inputFieldMultiPicker;
 	}
@@ -468,6 +495,7 @@ public class EcrfFieldBean extends ManagedBeanBase {
 	}
 
 	private void initSets() {
+		jsVariableNamesJson = null;
 		initEcrfFieldModel();
 		trial = WebUtil.getTrial(this.in.getTrialId());
 		ecrf = WebUtil.getEcrf(this.in.getEcrfId());
