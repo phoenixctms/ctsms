@@ -31,6 +31,7 @@ import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueNameCollisionFinde
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValuePresetCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueStrokesIdCollisionFinder;
 import org.phoenixctms.ctsms.adapt.InputFieldSelectionSetValueValueCollisionFinder;
+import org.phoenixctms.ctsms.domain.ECRF;
 import org.phoenixctms.ctsms.domain.ECRFDao;
 import org.phoenixctms.ctsms.domain.ECRFField;
 import org.phoenixctms.ctsms.domain.ECRFFieldDao;
@@ -817,6 +818,38 @@ public class InputFieldServiceImpl
 		}
 	}
 
+	private void lockInputFieldParents(InputField inputField) {
+		ArrayList<Trial> trials = new ArrayList<Trial>();
+		TreeMap<Long, ECRF> ecrfs = new TreeMap<Long, ECRF>();
+		Iterator<Inquiry> inquiriesIt = inputField.getInquiries().iterator();
+		while (inquiriesIt.hasNext()) {
+			trials.add(inquiriesIt.next().getTrial());
+		}
+		Iterator<ProbandListEntryTag> listEntryTagsIt = inputField.getListEntryTags().iterator();
+		while (listEntryTagsIt.hasNext()) {
+			trials.add(listEntryTagsIt.next().getTrial());
+		}
+		Iterator<ECRFField> ecrfFieldsIt = inputField.getEcrfFields().iterator();
+		while (ecrfFieldsIt.hasNext()) {
+			ECRFField ecrfField = ecrfFieldsIt.next();
+			trials.add(ecrfField.getTrial());
+			ecrfs.put(ecrfField.getEcrf().getId(), ecrfField.getEcrf());
+		}
+		Iterator<InputFieldSelectionSetValue> selectionSetValuesIt = inputField.getSelectionSetValues().iterator();
+		while (selectionSetValuesIt.hasNext()) {
+			Iterator<StratificationRandomizationList> randomizationListsIt = selectionSetValuesIt.next().getRandomizationLists().iterator();
+			while (randomizationListsIt.hasNext()) {
+				trials.add(randomizationListsIt.next().getTrial());
+			}
+		}
+		lockTrials(trials);
+		ECRFDao ecrfDao = this.getECRFDao();
+		Iterator<ECRF> ecrfsIt = ecrfs.values().iterator();
+		while (ecrfsIt.hasNext()) {
+			ecrfDao.lock(ecrfsIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
+	}
+
 	private void lockTrials(Collection<Trial> trials) {
 		// by id, so concurrent writes locking several trials cannot deadlock
 		TreeMap<Long, Trial> trialMap = new TreeMap<Long, Trial>();
@@ -1238,6 +1271,13 @@ public class InputFieldServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		InputFieldOutVO result;
+		// lock the field before counting its eCRF fields, inquiries and proband list attributes. if it may be deleted, lock the trials and eCRFs
+		// the cascade changes first, top-down like the trial service writes adding them, so neither can race nor deadlock:
+		InputField lockInputField = CheckIDUtil.checkInputFieldId(inputFieldId, inputFieldDao);
+		if (force || !defer) {
+			lockInputFieldParents(lockInputField);
+		}
+		inputFieldDao.refresh(lockInputField, LockMode.PESSIMISTIC_WRITE); // reload its collections, a child may have been added meanwhile
 		if (!force && (defer
 				|| this.getInquiryDao().getCountByField(inputFieldId) > 0
 				|| this.getProbandListEntryTagDao().getCountByFieldStratificationRandomize(inputFieldId, null, null) > 0
