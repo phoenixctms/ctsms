@@ -5767,6 +5767,52 @@ public final class ServiceUtil {
 		notificationsToRemove.clear();
 	}
 
+	/**
+	 * Locks what removeProband changes, top-down: the trials of the proband's money transfers, trial participations and inquiry values (like their writes),
+	 * the parents (like updating a parent, which locks it before its children), the proband itself, then its children. Each group by id.
+	 * The proband is re-read under the lock.
+	 */
+	public static void lockProbandRemoval(Proband proband, ProbandDao probandDao, TrialDao trialDao) {
+		TreeMap<Long, Trial> trials = new TreeMap<Long, Trial>();
+		Iterator<MoneyTransfer> moneyTransfersIt = proband.getMoneyTransfers().iterator();
+		while (moneyTransfersIt.hasNext()) {
+			Trial trial = moneyTransfersIt.next().getTrial();
+			if (trial != null) {
+				trials.put(trial.getId(), trial);
+			}
+		}
+		Iterator<ProbandListEntry> trialParticipationsIt = proband.getTrialParticipations().iterator();
+		while (trialParticipationsIt.hasNext()) {
+			Trial trial = trialParticipationsIt.next().getTrial();
+			trials.put(trial.getId(), trial);
+		}
+		Iterator<InquiryValue> inquiryValuesIt = proband.getInquiryValues().iterator();
+		while (inquiryValuesIt.hasNext()) {
+			Trial trial = inquiryValuesIt.next().getInquiry().getTrial();
+			trials.put(trial.getId(), trial);
+		}
+		Iterator<Trial> trialsIt = trials.values().iterator();
+		while (trialsIt.hasNext()) {
+			trialDao.lock(trialsIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
+		lockProbands(proband.getParents(), probandDao);
+		probandDao.refresh(proband, LockMode.PESSIMISTIC_WRITE);
+		lockProbands(proband.getChildren(), probandDao);
+	}
+
+	private static void lockProbands(Collection<Proband> probands, ProbandDao probandDao) {
+		TreeMap<Long, Proband> probandMap = new TreeMap<Long, Proband>();
+		Iterator<Proband> it = probands.iterator();
+		while (it.hasNext()) {
+			Proband proband = it.next();
+			probandMap.put(proband.getId(), proband);
+		}
+		Iterator<Proband> probandsIt = probandMap.values().iterator();
+		while (probandsIt.hasNext()) {
+			probandDao.lock(probandsIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
+	}
+
 	public static void removeProband(Proband proband, ProbandOutVO result, boolean deleteCascade,
 			User user,
 			Timestamp now,
