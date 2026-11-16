@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
@@ -45,13 +46,16 @@ import org.phoenixctms.ctsms.vo.ECRFOutVO;
 import org.phoenixctms.ctsms.vo.ECRFStatusEntryVO;
 import org.phoenixctms.ctsms.vo.FileContentOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
+import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueJsonVO;
 import org.phoenixctms.ctsms.vo.InquiryOutVO;
+import org.phoenixctms.ctsms.vo.InquiryValueJsonVO;
 import org.phoenixctms.ctsms.vo.InventoryBookingOutVO;
 import org.phoenixctms.ctsms.vo.JournalEntryOutVO;
 import org.phoenixctms.ctsms.vo.MaintenanceScheduleItemOutVO;
 import org.phoenixctms.ctsms.vo.MassMailOutVO;
 import org.phoenixctms.ctsms.vo.ProbandGroupOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListEntryTagOutVO;
+import org.phoenixctms.ctsms.vo.ProbandListEntryTagValueJsonVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandListStatusTypeVO;
 import org.phoenixctms.ctsms.vo.ProbandStatusEntryOutVO;
@@ -77,11 +81,35 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 @ManagedBean(eager = true)
 @ApplicationScoped
 public class ApplicationScopeBean {
 
 	private static final Map<Long, UserOutVO> activeUsers = new LinkedHashMap<Long, UserOutVO>();
+	private static String expressionCallbacksJson = null;
+
+	// the argument of a callback of a function that fieldCalculation.js exports to value and output expressions: its name, and the
+	// properties of the value it is (as json, see JsUtil.inputFieldVariableValueToJson), suggested in the expression editors
+	private static JsonObject getExpressionCallback(String argument, Object value) {
+		TreeSet<String> names = new TreeSet<String>(JsonParser.parseString(JsUtil.inputFieldVariableValueToJson(value)).getAsJsonObject().keySet());
+		if (names.contains("inputFieldSelectionSetValues")) {
+			// added by fieldCalculation.js (_sanitizeJsonValues)
+			names.add("selectionSetValues");
+		}
+		JsonArray properties = new JsonArray();
+		Iterator<String> it = names.iterator();
+		while (it.hasNext()) {
+			properties.add(it.next());
+		}
+		JsonObject callback = new JsonObject();
+		callback.addProperty("argument", argument);
+		callback.add("properties", properties);
+		return callback;
+	}
 	private final static Pattern ALLOWED_LABEL_EXPRESSIONS_PATTERN_REGEXP = Pattern.compile("^[a-z0-9_]+\\.[a-z0-9_]+$");
 
 	public static String evalLabelEl(String labelEl) {
@@ -388,6 +416,19 @@ public class ApplicationScopeBean {
 			return DateUtil.getBookingDurationString(booking.getStart(), booking.getStop());
 		}
 		return "";
+	}
+
+	// the functions fieldCalculation.js exports to value and output expressions that call back with a value (findInquiryValues(condition) calls
+	// condition(inquiryValue) etc.), see getExpressionCallback
+	public String getExpressionCallbacksJson() {
+		if (expressionCallbacksJson == null) {
+			JsonObject callbacks = new JsonObject();
+			callbacks.add("findInquiryValues", getExpressionCallback("inquiryValue", new InquiryValueJsonVO()));
+			callbacks.add("findTagValues", getExpressionCallback("tagValue", new ProbandListEntryTagValueJsonVO()));
+			callbacks.add("findSelectionSetValueIds", getExpressionCallback("selectionSetValue", new InputFieldSelectionSetValueJsonVO()));
+			expressionCallbacksJson = callbacks.toString();
+		}
+		return expressionCallbacksJson;
 	}
 
 	// http://stackoverflow.com/questions/6001743/how-to-show-hashmap-values-in-jsf

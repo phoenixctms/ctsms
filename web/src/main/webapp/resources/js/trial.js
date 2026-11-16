@@ -544,13 +544,25 @@ function getExpressionSignatures() {
 	return expressionSignatures;
 }
 
-// the variable names of the other fields (eCRF fields of the eCRF, inquiries or proband list attributes of the trial), next to the editor
-function getExpressionVariableNames(cm) {
+// json next to the editor: the variable names of the other fields (eCRF fields of the eCRF, inquiries or proband list attributes of the trial),
+// and the callbacks of the expression functions (see ApplicationScopeBean.getExpressionCallbacksJson)
+function getExpressionEditorJson(cm, styleClass, empty) {
 	try {
-		return JSON.parse(jQuery(cm.getWrapperElement()).closest("fieldset").find(".ctsms-expression-variable-names").first().text() || "[]") || [];
+		var json = JSON.parse(jQuery(cm.getWrapperElement()).closest("fieldset").find("." + styleClass).first().text() || empty);
+		if (json != null) {
+			return json;
+		}
 	} catch (e) {
 	}
-	return [];
+	return JSON.parse(empty);
+}
+
+function getExpressionVariableNames(cm) {
+	return getExpressionEditorJson(cm, "ctsms-expression-variable-names", "[]");
+}
+
+function getExpressionCallbacks(cm) {
+	return getExpressionEditorJson(cm, "ctsms-expression-callbacks", "{}");
 }
 
 // a global the expression cannot see: fieldCalculation.js hides the window's enumerable properties
@@ -559,20 +571,171 @@ function isHiddenExpressionGlobal(name, maskNames, localVars) {
 	return Object.prototype.propertyIsEnumerable.call(window, name) && jQuery.inArray(name, maskNames) < 0 && jQuery.inArray(name, localVars) < 0;
 }
 
-// the other fields' variable names and the expression names, then the javascript hint (keywords, the expression's own variables)
-// without the hidden globals. while typing, there are suggestions for a name only, not in strings, comments or after a "."
+function splitExpressionParameters(list) {
+	var parameters = [];
+	var names = list.split(",");
+	for (var i = 0; i < names.length; i++) {
+		var name = jQuery.trim(names[i]);
+		if (name.length > 0) {
+			parameters.push(name);
+		}
+	}
+	return parameters;
+}
+
+// the open brackets before the caret of an expression editor, innermost last: calls { name (null for member calls such as "Math.max("),
+// index of the argument }, function bodies { parameters, callback: the call the function is an argument of, as { name, index } } and other
+// brackets {}. a function body is "function(v) {", "(v) => {" or "v => ..." (up to the next "," ")" or ";").
+// strings and comments are skipped; null if the caret is in a string or comment
+function getExpressionFrames(text) {
+	var stack = [];
+	var pending = null;
+	var top = function() {
+		return stack.length > 0 ? stack[stack.length - 1] : null;
+	};
+	var enclosingCall = function() {
+		var frame = top();
+		return frame != null && frame.hasOwnProperty("index") ? {
+			name : frame.name,
+			index : frame.index
+		} : null;
+	};
+	var i = 0;
+	while (i < text.length) {
+		var c = text.charAt(i);
+		if (c == "/" && text.charAt(i + 1) == "/") {
+			var lineEnd = text.indexOf("\n", i);
+			if (lineEnd < 0) {
+				return null;
+			}
+			i = lineEnd;
+		} else if (c == "/" && text.charAt(i + 1) == "*") {
+			var commentEnd = text.indexOf("*/", i + 2);
+			if (commentEnd < 0) {
+				return null;
+			}
+			i = commentEnd + 1;
+		} else if (c == "\"" || c == "'" || c == "`") {
+			var j = i + 1;
+			while (j < text.length && text.charAt(j) != c) {
+				j += (text.charAt(j) == "\\" ? 2 : 1);
+			}
+			if (j >= text.length) {
+				return null;
+			}
+			i = j;
+		} else if (c == "=" && text.charAt(i + 1) == ">") {
+			var before = text.substring(0, i);
+			var arrow = /\(([^()]*)\)\s*$/.exec(before) || /([\w$]+)\s*$/.exec(before);
+			var arrowFunction = {
+				parameters : splitExpressionParameters(arrow != null ? arrow[1] : ""),
+				callback : enclosingCall()
+			};
+			i++;
+			if (/^\s*\{/.test(text.substring(i + 1))) {
+				pending = arrowFunction;
+			} else {
+				arrowFunction.concise = true;
+				stack.push(arrowFunction);
+			}
+		} else if (c == "(") {
+			var callee = /(\.\s*)?([\w$]+)\s*$/.exec(text.substring(0, i));
+			stack.push({
+				name : callee != null && !callee[1] ? callee[2] : null,
+				index : 0
+			});
+		} else if (c == "{") {
+			var declaration = /function\s*[\w$]*\s*\(([^()]*)\)\s*$/.exec(text.substring(0, i));
+			if (pending != null) {
+				stack.push(pending);
+				pending = null;
+			} else if (declaration != null) {
+				stack.push({
+					parameters : splitExpressionParameters(declaration[1]),
+					callback : enclosingCall()
+				});
+			} else {
+				stack.push({});
+			}
+		} else if (c == "[") {
+			stack.push({});
+		} else if (c == ")" || c == "]" || c == "}" || c == "," || c == ";") {
+			while (top() != null && top().concise) {
+				stack.pop();
+			}
+			if (c == ",") {
+				if (top() != null && top().hasOwnProperty("index")) {
+					top().index++;
+				}
+			} else if (c != ";") {
+				stack.pop();
+			}
+		}
+		i++;
+	}
+	return stack;
+}
+
+function getExpressionFramesBefore(cm, cursor) {
+	return getExpressionFrames(cm.getRange({
+		line : 0,
+		ch : 0
+	}, cursor));
+}
+
+// the properties of the value a callback parameter is, eg. of v in "findInquiryValues(function(v) { return v.", or null
+function getExpressionCallbackProperties(cm, cursor, name) {
+	var frames = getExpressionFramesBefore(cm, cursor);
+	if (frames != null) {
+		var callbacks = getExpressionCallbacks(cm);
+		for (var i = frames.length - 1; i >= 0; i--) {
+			var position = frames[i].parameters != null ? jQuery.inArray(name, frames[i].parameters) : -1;
+			if (position >= 0) {
+				// the innermost declaration of the name
+				var callback = frames[i].callback;
+				return position == 0 && callback != null && callback.index == 0 && callbacks.hasOwnProperty(callback.name) ? callbacks[callback.name].properties : null;
+			}
+		}
+	}
+	return null;
+}
+
+// the suggestions: after a callback parameter and a ".", the properties of its value. otherwise the other fields' variable names and the
+// expression names, then the javascript hint (keywords, the expression's own variables) without the hidden globals.
+// while typing, there are suggestions for a name or a callback parameter's property only, not in strings, comments or after other "."
 function expressionHint(cm, typed) {
+	var cursor = cm.getCursor();
+	var token = cm.getTokenAt(cursor);
+	var inText = token.className == "string" || token.className == "comment";
+	var textBefore = cm.getLine(cursor.line).substring(0, cursor.ch);
+	var word = /[\w$]*$/.exec(textBefore)[0];
+	var memberOf = /(?:^|[^\w$.\s])\s*([\w$]+)\s*\.\s*$/.exec(textBefore.substring(0, textBefore.length - word.length));
+	if (memberOf != null && !inText) {
+		var properties = getExpressionCallbackProperties(cm, cursor, memberOf[1]);
+		if (properties != null) {
+			var propertyList = filterHintNames(properties, word);
+			if (typed && (propertyList.length == 0 || (propertyList.length == 1 && propertyList[0] == word))) {
+				return null;
+			}
+			return {
+				list : propertyList,
+				from : {
+					line : cursor.line,
+					ch : cursor.ch - word.length
+				},
+				to : cursor
+			};
+		}
+	}
 	var hint = CodeMirror.javascriptHint(cm);
 	if (hint == null) {
 		return null;
 	}
-	var cursor = cm.getCursor();
-	var token = cm.getTokenAt(cursor);
 	var line = cm.getLine(hint.from.line);
 	var query = line.substring(hint.from.ch, cursor.ch);
 	var member = /\.\s*$/.test(line.substring(0, hint.from.ch));
 	if (typed) {
-		if (member || query.length == 0 || token.className == "string" || token.className == "comment" || token.className == "number") {
+		if (member || query.length == 0 || inText || token.className == "number") {
 			return null;
 		}
 	}
@@ -612,9 +775,9 @@ function showExpressionHint(cm) {
 	showCodeMirrorHint(cm, expressionHint);
 }
 
-// the suggestions pop up while typing a name in a value or output expression editor (a codeMirror next to the variable names)
+// the suggestions pop up while typing a name, or a "." after a callback parameter, in a value or output expression editor
 function handleExpressionEditorKeyPress(event) {
-	if (!/[\w$]/.test(String.fromCharCode(event.charCode || event.which || 0))) {
+	if (!/[\w$.]/.test(String.fromCharCode(event.charCode || event.which || 0))) {
 		return;
 	}
 	var cm = getExpressionEditor(this);
@@ -625,49 +788,6 @@ function handleExpressionEditorKeyPress(event) {
 
 jQuery(document).on("keypress", ".CodeMirror textarea", handleExpressionEditorKeyPress);
 
-// the innermost unclosed call before the caret of an expression editor, as { name, argument index }, or null.
-// strings, comments and the commas of nested brackets are skipped; member calls (eg. "Math.max(") get no name
-function getExpressionCall(text) {
-	var stack = [];
-	var i = 0;
-	while (i < text.length) {
-		var c = text.charAt(i);
-		if (c == "/" && text.charAt(i + 1) == "/") {
-			var lineEnd = text.indexOf("\n", i);
-			i = lineEnd < 0 ? text.length : lineEnd;
-		} else if (c == "/" && text.charAt(i + 1) == "*") {
-			var commentEnd = text.indexOf("*/", i + 2);
-			if (commentEnd < 0) {
-				return null;
-			}
-			i = commentEnd + 1;
-		} else if (c == "\"" || c == "'" || c == "`") {
-			var j = i + 1;
-			while (j < text.length && text.charAt(j) != c) {
-				j += (text.charAt(j) == "\\" ? 2 : 1);
-			}
-			if (j >= text.length) {
-				return null;
-			}
-			i = j;
-		} else if (c == "(") {
-			var callee = /(\.\s*)?([\w$]+)\s*$/.exec(text.substring(0, i));
-			stack.push({
-				name : callee != null && !callee[1] ? callee[2] : null,
-				index : 0
-			});
-		} else if (c == "[" || c == "{") {
-			stack.push(null);
-		} else if (c == ")" || c == "]" || c == "}") {
-			stack.pop();
-		} else if (c == "," && stack.length > 0 && stack[stack.length - 1] != null) {
-			stack[stack.length - 1].index++;
-		}
-		i++;
-	}
-	return stack.length > 0 ? stack[stack.length - 1] : null;
-}
-
 var expressionCallTip = null;
 
 function hideExpressionCallTip() {
@@ -677,27 +797,15 @@ function hideExpressionCallTip() {
 	}
 }
 
-// the parameters of the fieldCalculation.js function whose arguments are typed, the current one in bold, above the caret
-function updateExpressionCallTip(cm) {
-	var cursor = cm.getCursor();
-	var call = cm.somethingSelected() ? null : getExpressionCall(cm.getRange({
-		line : 0,
-		ch : 0
-	}, cursor));
-	var signatures = getExpressionSignatures();
-	if (call == null || call.name == null || !signatures.hasOwnProperty(call.name)) {
-		hideExpressionCallTip();
-		return;
-	}
-	var parameters = signatures[call.name];
+function showExpressionCallTip(cm, name, parameters, index) {
 	hideExpressionCallTip();
-	expressionCallTip = jQuery("<div class=\"ctsms-expression-call-tip\"></div>").text(call.name + "(");
+	expressionCallTip = jQuery("<div class=\"ctsms-expression-call-tip\"></div>").text(name + "(");
 	for (var i = 0; i < parameters.length; i++) {
 		if (i > 0) {
 			expressionCallTip.append(document.createTextNode(", "));
 		}
 		var parameter = jQuery("<span></span>").text(parameters[i]);
-		if (i == call.index) {
+		if (i == index) {
 			parameter.addClass("ctsms-expression-call-tip-current");
 		}
 		expressionCallTip.append(parameter);
@@ -709,6 +817,28 @@ function updateExpressionCallTip(cm) {
 		left : pos.x + "px",
 		top : Math.max(0, pos.y - expressionCallTip.outerHeight() - 2) + "px"
 	});
+}
+
+// above the caret: the parameters of the fieldCalculation.js function whose arguments are typed, the current one in bold,
+// or what a callback of it gets, eg. "function(inquiryValue)" in "findInquiryValues(function(" or "findInquiryValues(("
+function updateExpressionCallTip(cm) {
+	var frames = cm.somethingSelected() ? null : getExpressionFramesBefore(cm, cm.getCursor());
+	var call = frames != null && frames.length > 0 && frames[frames.length - 1].hasOwnProperty("index") ? frames[frames.length - 1] : null;
+	if (call != null) {
+		var signatures = getExpressionSignatures();
+		if (call.name != null && signatures.hasOwnProperty(call.name)) {
+			showExpressionCallTip(cm, call.name, signatures[call.name], call.index);
+			return;
+		}
+		var outer = frames.length > 1 ? frames[frames.length - 2] : null;
+		var callbacks = getExpressionCallbacks(cm);
+		if ((call.name == null || call.name == "function") && outer != null && outer.hasOwnProperty("index") && outer.index == 0 && outer.name != null
+				&& callbacks.hasOwnProperty(outer.name)) {
+			showExpressionCallTip(cm, "function", [ callbacks[outer.name].argument ], call.index);
+			return;
+		}
+	}
+	hideExpressionCallTip();
 }
 
 function getExpressionEditor(element) {
