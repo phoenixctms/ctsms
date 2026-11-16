@@ -5802,7 +5802,7 @@ public final class ServiceUtil {
 	}
 
 	/**
-	 * Locks input fields by id. Value saves check each value under its input field's lock; locking them up front by id keeps saves of different
+	 * Locks and re-reads input fields by id. Value saves check each value under its input field's lock; locking them up front by id keeps saves of different
 	 * trials or eCRFs sharing input fields from deadlocking, as the values come in no particular order.
 	 */
 	public static void lockInputFields(Collection<InputField> inputFields, InputFieldDao inputFieldDao) {
@@ -5814,7 +5814,7 @@ public final class ServiceUtil {
 		}
 		Iterator<InputField> inputFieldsIt = inputFieldMap.values().iterator();
 		while (inputFieldsIt.hasNext()) {
-			inputFieldDao.lock(inputFieldsIt.next(), LockMode.PESSIMISTIC_WRITE);
+			inputFieldDao.refresh(inputFieldsIt.next(), LockMode.PESSIMISTIC_WRITE); // re-read: the checks use the field settings
 		}
 	}
 
