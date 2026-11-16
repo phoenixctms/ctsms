@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -4250,6 +4251,19 @@ public class TrialServiceImpl
 		ProbandGroupDao probandGroupDao = this.getProbandGroupDao();
 		ProbandGroup probandGroup = CheckIDUtil.checkProbandGroupId(probandGroupId, probandGroupDao);
 		Trial trial = probandGroup.getTrial();
+		// lock the trial, like randomization picking a group, then the eCRFs updated below by id, like the eCRF changes:
+		this.getTrialDao().refresh(trial, LockMode.PESSIMISTIC_WRITE);
+		probandGroupDao.refresh(probandGroup);
+		TreeMap<Long, ECRF> lockEcrfs = new TreeMap<Long, ECRF>();
+		Iterator<ECRF> lockEcrfsIt = probandGroup.getEcrfs().iterator();
+		while (lockEcrfsIt.hasNext()) {
+			ECRF ecrf = lockEcrfsIt.next();
+			lockEcrfs.put(ecrf.getId(), ecrf);
+		}
+		lockEcrfsIt = lockEcrfs.values().iterator();
+		while (lockEcrfsIt.hasNext()) {
+			this.getECRFDao().refresh(lockEcrfsIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
 		ServiceUtil.checkTrialLocked(trial);
 		ProbandGroupOutVO result = probandGroupDao.toProbandGroupOutVO(probandGroup);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
