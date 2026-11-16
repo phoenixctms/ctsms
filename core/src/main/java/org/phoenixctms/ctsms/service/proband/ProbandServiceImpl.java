@@ -3043,6 +3043,8 @@ public class ProbandServiceImpl
 				Inquiry inquiry = CheckIDUtil.checkInquiryId(inquiryValueIn.getInquiryId(), this.getInquiryDao());
 				if (trial == null) {
 					trial = inquiry.getTrial();
+					// lock the trial before the proband like clearing the values does, so the inquiry changes refused for saved values cannot race with saving values:
+					this.getTrialDao().refresh(trial, LockMode.PESSIMISTIC_WRITE);
 					ServiceUtil.checkTrialLocked(trial);
 					if (!trial.getStatus().isInquiryValueInputEnabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_INPUT_DISABLED_FOR_TRIAL,
