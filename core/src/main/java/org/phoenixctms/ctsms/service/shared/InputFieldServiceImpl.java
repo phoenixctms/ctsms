@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -65,6 +66,7 @@ import org.phoenixctms.ctsms.domain.RandomizationListCodeValueDao;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationList;
 import org.phoenixctms.ctsms.domain.StratificationRandomizationListDao;
 import org.phoenixctms.ctsms.domain.Trial;
+import org.phoenixctms.ctsms.domain.TrialDao;
 import org.phoenixctms.ctsms.domain.User;
 import org.phoenixctms.ctsms.domain.VisitScheduleItemDao;
 import org.phoenixctms.ctsms.enumeration.FileModule;
@@ -815,6 +817,21 @@ public class InputFieldServiceImpl
 		}
 	}
 
+	private void lockTrials(Collection<Trial> trials) {
+		// by id, so concurrent writes locking several trials cannot deadlock
+		TreeMap<Long, Trial> trialMap = new TreeMap<Long, Trial>();
+		Iterator<Trial> it = trials.iterator();
+		while (it.hasNext()) {
+			Trial trial = it.next();
+			trialMap.put(trial.getId(), trial);
+		}
+		TrialDao trialDao = this.getTrialDao();
+		Iterator<Trial> trialsIt = trialMap.values().iterator();
+		while (trialsIt.hasNext()) {
+			trialDao.lock(trialsIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
+	}
+
 	private void checkValidationErrorMsg(boolean required, String validationErrorMsg) throws ServiceException {
 		if (required) {
 			if (CommonUtil.isEmptyString(validationErrorMsg)) {
@@ -1351,6 +1368,17 @@ public class InputFieldServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		InputFieldSelectionSetValueOutVO result;
+		// lock the trials of the stratification randomization lists removed below, then the field, like the answer writes do,
+		// so the saved answers counted and stripped below cannot change meanwhile:
+		InputFieldSelectionSetValue lockSelectionSetValue = CheckIDUtil.checkInputFieldSelectionSetValueId(selectionSetValueId, this.getInputFieldSelectionSetValueDao());
+		ArrayList<Trial> randomizationListTrials = new ArrayList<Trial>();
+		Iterator<StratificationRandomizationList> randomizationListsIt = lockSelectionSetValue.getRandomizationLists().iterator();
+		while (randomizationListsIt.hasNext()) {
+			randomizationListTrials.add(randomizationListsIt.next().getTrial());
+		}
+		lockTrials(randomizationListTrials);
+		CheckIDUtil.checkInputFieldId(lockSelectionSetValue.getField().getId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		this.getInputFieldSelectionSetValueDao().refresh(lockSelectionSetValue); // a randomization list may have been added meanwhile
 		if (!force && (defer
 				|| this.getInputFieldValueDao().getCount(selectionSetValueId) > 0)) {
 			InputFieldSelectionSetValueDao selectionSetValueDao = this.getInputFieldSelectionSetValueDao();
