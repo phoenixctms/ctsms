@@ -1516,7 +1516,8 @@ public class TrialServiceImpl
 		if (ecrfIn.getRevision() != null && !ecrfIn.getRevision().trim().equals(ecrfIn.getRevision())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.WHITESPACE_ECRF_REVISION, ecrfIn.getRevision());
 		}
-		Trial trial = CheckIDUtil.checkTrialId(ecrfIn.getTrialId(), this.getTrialDao());
+		// lock the trial before its locked status and the referenced items are checked; the collision finder below locked it only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(ecrfIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		Collection<Long> groupIds = ecrfIn.getGroupIds();
 		if (groupIds != null && groupIds.size() > 0) {
 			Iterator<Long> it = groupIds.iterator();
@@ -1713,7 +1714,8 @@ public class TrialServiceImpl
 	}
 
 	private void checkProbandGroupInput(ProbandGroupInVO probandGroupIn) throws ServiceException {
-		Trial trial = CheckIDUtil.checkTrialId(probandGroupIn.getTrialId(), this.getTrialDao());
+		// lock the trial before its locked status and the referenced items are checked; the collision finder below locked it only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(probandGroupIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
 		ServiceUtil.checkProbandGroupToken(probandGroupIn.getToken());
 		Randomization.checkProbandGroupInput(trial, probandGroupIn);
@@ -2475,7 +2477,8 @@ public class TrialServiceImpl
 	}
 
 	private void checkVisitScheduleItemInput(VisitScheduleItemInVO visitScheduleItemIn) throws ServiceException {
-		Trial trial = CheckIDUtil.checkTrialId(visitScheduleItemIn.getTrialId(), this.getTrialDao());
+		// lock the trial before its locked status and the referenced items are checked; the collision finder below locked it only afterwards:
+		Trial trial = CheckIDUtil.checkTrialId(visitScheduleItemIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ProbandGroup group = null;
 		if (visitScheduleItemIn.getGroupId() != null) {
 			group = CheckIDUtil.checkProbandGroupId(visitScheduleItemIn.getGroupId(), this.getProbandGroupDao());
