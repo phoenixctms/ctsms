@@ -528,6 +528,9 @@ public class CourseServiceImpl
 			AuthenticationVO auth, Long courseParticipationStatusEntryId) throws Exception {
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(courseParticipationStatusEntryId, courseParticipationStatusEntryDao);
+		// lock the course like adding a participation, which counts them, does:
+		this.getCourseDao().refresh(courseParticipation.getCourse(), LockMode.PESSIMISTIC_WRITE);
+		courseParticipationStatusEntryDao.refresh(courseParticipation);
 		Staff staff = courseParticipation.getStaff();
 		Course course = courseParticipation.getCourse();
 		CourseParticipationStatusEntryOutVO result = courseParticipationStatusEntryDao.toCourseParticipationStatusEntryOutVO(courseParticipation);
@@ -551,6 +554,7 @@ public class CourseServiceImpl
 		LecturerDao lecturerDao = this.getLecturerDao();
 		Lecturer lecturer = CheckIDUtil.checkLecturerId(lecturerId, lecturerDao);
 		Course course = lecturer.getCourse();
+		this.getCourseDao().lock(course, LockMode.PESSIMISTIC_WRITE); // like adding or updating a lecturer, which counts them
 		Staff staff = lecturer.getStaff();
 		LecturerOutVO result = lecturerDao.toLecturerOutVO(lecturer);
 		course.removeLecturers(lecturer);
