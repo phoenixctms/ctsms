@@ -4023,6 +4023,10 @@ public class TrialServiceImpl
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		ECRFOutVO result;
+		// lock the trial, then the eCRF, like the eCRF changes and the value saves, so the status entries counted below and the cascade cannot race with them:
+		ECRF lockEcrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
+		this.getTrialDao().refresh(lockEcrf.getTrial(), LockMode.PESSIMISTIC_WRITE);
+		ecrfDao.refresh(lockEcrf, LockMode.PESSIMISTIC_WRITE);
 		if (!force && (defer
 				|| this.getECRFStatusEntryDao().getCount(null, ecrfId, null, null, null, null, null, null) > 0)) {
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(ecrfId, ecrfDao);
