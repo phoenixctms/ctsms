@@ -1071,6 +1071,9 @@ public class StaffServiceImpl
 			AuthenticationVO auth, Long courseParticipationStatusEntryId) throws Exception {
 		CourseParticipationStatusEntryDao courseParticipationStatusEntryDao = this.getCourseParticipationStatusEntryDao();
 		CourseParticipationStatusEntry courseParticipation = CheckIDUtil.checkCourseParticipationStatusEntryId(courseParticipationStatusEntryId, courseParticipationStatusEntryDao);
+		// lock the course like adding a participation, which counts them, does:
+		this.getCourseDao().refresh(courseParticipation.getCourse(), LockMode.PESSIMISTIC_WRITE);
+		courseParticipationStatusEntryDao.refresh(courseParticipation);
 		checkSelfRegistrationCourseParticipationStatusEntryDeletion(courseParticipation);
 		Staff staff = courseParticipation.getStaff();
 		Course course = courseParticipation.getCourse();
