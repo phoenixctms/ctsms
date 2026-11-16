@@ -376,3 +376,19 @@
 .ctsms-codebreak-datalist-descriptiontext {
 	font-weight: bold;
 }
+.ctsms-expression-call-tip {
+	position: absolute;
+	z-index: 10;
+	padding: 2px 4px;
+	background: #fafafa;
+	border: 1px solid #c0c0c0;
+	font-family: monospace;
+	white-space: nowrap;
+	-webkit-box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+	-moz-box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+	box-shadow: 2px 3px 5px rgba(0, 0, 0, .2);
+}
+
+.ctsms-expression-call-tip-current {
+	font-weight: bold;
+}

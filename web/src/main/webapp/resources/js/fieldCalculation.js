@@ -2770,12 +2770,12 @@ var FIELD_CALCULATION_OVERRIDE_CALCULATED_VALUES = true;
 	FieldCalculation.getScriptAjax = _getScriptAjax;
 	FieldCalculation.getScript = _getScriptAjax;
 
-	// the names a value or output expression can use besides its arguments, eg. to suggest them in an editor
-	FieldCalculation.getExpressionNames = function() {
+	// what a value or output expression can use besides its arguments, eg. to suggest the names and function arguments in an editor
+	FieldCalculation.getExpressionMask = function() {
 		var mask = {};
 		_exportExpressionUtils(mask);
 		_exportVars(mask, { value : { series : true } });
-		return Object.keys(mask);
+		return mask;
 	};
 
 	_exportExpressionUtils(FieldCalculation);
