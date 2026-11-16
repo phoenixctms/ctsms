@@ -8782,6 +8782,17 @@ public class TrialServiceImpl
 				}
 				if (listEntry == null) {
 					listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryTagValueIn.getListEntryId(), probandListEntryDao, LockMode.PESSIMISTIC_WRITE);
+					// then the input fields of all values, by id, as saves of trials sharing input fields would deadlock otherwise:
+					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(probandListEntryTagValuesIn.size());
+					Iterator<ProbandListEntryTagValueInVO> lockIt = probandListEntryTagValuesIn.iterator();
+					while (lockIt.hasNext()) {
+						ProbandListEntryTagValueInVO lockTagValueIn = lockIt.next();
+						ProbandListEntryTag lockListEntryTag = lockTagValueIn.getTagId() != null ? probandListEntryTagDao.load(lockTagValueIn.getTagId()) : null;
+						if (lockListEntryTag != null) {
+							lockInputFields.add(lockListEntryTag.getField());
+						}
+					}
+					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
 					if (!trial.equals(listEntry.getTrial())) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_WRONG_TRIAL);
 					}
@@ -9634,6 +9645,17 @@ public class TrialServiceImpl
 					// lock the eCRF after the list entry like clearing values or setting the status does, also for an existing status entry, so the eCRF structure
 					// changes checking for values (sections, fields, visits) cannot race with saving values:
 					this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
+					// then the input fields of all values, by id:
+					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(ecrfFieldValuesIn.size());
+					Iterator<ECRFFieldValueInVO> lockIt = ecrfFieldValuesIn.iterator();
+					while (lockIt.hasNext()) {
+						ECRFFieldValueInVO lockEcrfFieldValueIn = lockIt.next();
+						ECRFField lockEcrfField = lockEcrfFieldValueIn.getEcrfFieldId() != null ? this.getECRFFieldDao().load(lockEcrfFieldValueIn.getEcrfFieldId()) : null;
+						if (lockEcrfField != null) {
+							lockInputFields.add(lockEcrfField.getField());
+						}
+					}
+					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
 					if (!ecrf.getTrial().equals(listEntry.getTrial())) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_WRONG_TRIAL);
 					}

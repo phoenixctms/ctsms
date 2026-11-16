@@ -5801,6 +5801,23 @@ public final class ServiceUtil {
 		lockProbands(proband.getChildren(), probandDao);
 	}
 
+	/**
+	 * Locks input fields by id. Value saves check each value under its input field's lock; locking them up front by id keeps saves of different
+	 * trials or eCRFs sharing input fields from deadlocking, as the values come in no particular order.
+	 */
+	public static void lockInputFields(Collection<InputField> inputFields, InputFieldDao inputFieldDao) {
+		TreeMap<Long, InputField> inputFieldMap = new TreeMap<Long, InputField>();
+		Iterator<InputField> it = inputFields.iterator();
+		while (it.hasNext()) {
+			InputField inputField = it.next();
+			inputFieldMap.put(inputField.getId(), inputField);
+		}
+		Iterator<InputField> inputFieldsIt = inputFieldMap.values().iterator();
+		while (inputFieldsIt.hasNext()) {
+			inputFieldDao.lock(inputFieldsIt.next(), LockMode.PESSIMISTIC_WRITE);
+		}
+	}
+
 	private static void lockProbands(Collection<Proband> probands, ProbandDao probandDao) {
 		TreeMap<Long, Proband> probandMap = new TreeMap<Long, Proband>();
 		Iterator<Proband> it = probands.iterator();
