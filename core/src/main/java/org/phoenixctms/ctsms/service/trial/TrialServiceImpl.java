@@ -3427,6 +3427,8 @@ public class TrialServiceImpl
 			ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 			NotificationDao notificationDao = this.getNotificationDao();
 			NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
+			// lock the trial before the eCRF, like the eCRF name/revision collision finder and the eCRF field writes (trial changes are refused below):
+			CheckIDUtil.checkTrialId(modifiedEcrf.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(modifiedEcrf.getId(), ecrfDao, LockMode.PESSIMISTIC_WRITE);
 			ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = checkUpdateEcrfInput(modifiedEcrf, originalEcrf);
 			original = ecrfDao.toECRFOutVO(originalEcrf);
@@ -8809,6 +8811,8 @@ public class TrialServiceImpl
 		ECRFStatusEntryDao ecrfStatusEntryDao = this.getECRFStatusEntryDao();
 		NotificationDao notificationDao = this.getNotificationDao();
 		NotificationRecipientDao notificationRecipientDao = this.getNotificationRecipientDao();
+		// lock the trial before the eCRF, like the eCRF name/revision collision finder and the eCRF field writes (trial changes are refused below):
+		CheckIDUtil.checkTrialId(modifiedEcrf.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 		ECRF originalEcrf = CheckIDUtil.checkEcrfId(modifiedEcrf.getId(), ecrfDao, LockMode.PESSIMISTIC_WRITE);
 		ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = checkUpdateEcrfInput(modifiedEcrf, originalEcrf);
 		ECRFOutVO original = ecrfDao.toECRFOutVO(originalEcrf);
