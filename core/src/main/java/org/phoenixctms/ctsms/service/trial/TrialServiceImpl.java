@@ -1117,6 +1117,20 @@ public class TrialServiceImpl
 		}
 	}
 
+	private void lockInputFields(Collection<InputField> inputFields, Iterator<Long> inputFieldIds) {
+		// the bulk addUpdate methods lock all input fields involved up front by id, after the trial resp. eCRF, like the value saves lock theirs,
+		// instead of one by one in the order the items come in, so they cannot deadlock with value saves of other trials sharing input fields:
+		ArrayList<InputField> lockInputFields = new ArrayList<InputField>(inputFields);
+		while (inputFieldIds.hasNext()) {
+			Long inputFieldId = inputFieldIds.next();
+			InputField inputField = inputFieldId != null ? this.getInputFieldDao().load(inputFieldId) : null;
+			if (inputField != null) {
+				lockInputFields.add(inputField);
+			}
+		}
+		ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
+	}
+
 	private Object[] checkAddEcrfFieldStatusEntryInput(ECRFFieldStatusEntryInVO ecrfFieldStatusEntryIn, ECRFStatusEntry ecrfStatusEntry, ECRFFieldStatusQueue queue, Timestamp now,
 			User user, boolean action)
 			throws Exception {
@@ -3464,6 +3478,22 @@ public class TrialServiceImpl
 			// lock the trial before the eCRF, like the eCRF name/revision collision finder and the eCRF field writes (trial changes are refused below):
 			CheckIDUtil.checkTrialId(modifiedEcrf.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
 			ECRF originalEcrf = CheckIDUtil.checkEcrfId(modifiedEcrf.getId(), ecrfDao, LockMode.PESSIMISTIC_WRITE);
+			ArrayList<InputField> lockInputFields = new ArrayList<InputField>();
+			Iterator<ECRFField> lockEcrfFieldsIt = originalEcrf.getEcrfFields().iterator();
+			while (lockEcrfFieldsIt.hasNext()) {
+				lockInputFields.add(lockEcrfFieldsIt.next().getField());
+			}
+			ArrayList<Long> lockInputFieldIds = new ArrayList<Long>();
+			if (modifiedEcrfFields != null) {
+				Iterator<ECRFFieldInVO> lockIt = modifiedEcrfFields.iterator();
+				while (lockIt.hasNext()) {
+					ECRFFieldInVO lockEcrfFieldIn = lockIt.next();
+					if (lockEcrfFieldIn != null) {
+						lockInputFieldIds.add(lockEcrfFieldIn.getFieldId());
+					}
+				}
+			}
+			lockInputFields(lockInputFields, lockInputFieldIds.iterator());
 			ArrayList<ECRFStatusEntry> ecrfStatusEntriesToRemove = checkUpdateEcrfInput(modifiedEcrf, originalEcrf);
 			original = ecrfDao.toECRFOutVO(originalEcrf);
 			Collection<ECRFField> originalEcrfFields = originalEcrf.getEcrfFields();
@@ -3493,6 +3523,17 @@ public class TrialServiceImpl
 			ecrf = ecrfDao.eCRFInVOToEntity(modifiedEcrf);
 			CoreUtil.modifyVersion(ecrf, now, user);
 			ecrf = ecrfDao.create(ecrf, LockMode.PESSIMISTIC_WRITE); // required here, as load(..,lockMode) will not work with created entities
+			ArrayList<Long> lockInputFieldIds = new ArrayList<Long>();
+			if (modifiedEcrfFields != null) {
+				Iterator<ECRFFieldInVO> lockIt = modifiedEcrfFields.iterator();
+				while (lockIt.hasNext()) {
+					ECRFFieldInVO lockEcrfFieldIn = lockIt.next();
+					if (lockEcrfFieldIn != null) {
+						lockInputFieldIds.add(lockEcrfFieldIn.getFieldId());
+					}
+				}
+			}
+			lockInputFields(new ArrayList<InputField>(), lockInputFieldIds.iterator());
 			update = false;
 		}
 		ECRFFieldDao ecrfFieldDao = this.getECRFFieldDao();
@@ -3621,6 +3662,22 @@ public class TrialServiceImpl
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
+		ArrayList<InputField> lockInputFields = new ArrayList<InputField>();
+		Iterator<Inquiry> lockInquiriesIt = trial.getInquiries().iterator();
+		while (lockInquiriesIt.hasNext()) {
+			lockInputFields.add(lockInquiriesIt.next().getField());
+		}
+		ArrayList<Long> lockInputFieldIds = new ArrayList<Long>();
+		if (modifiedInquiries != null) {
+			Iterator<InquiryInVO> lockIt = modifiedInquiries.iterator();
+			while (lockIt.hasNext()) {
+				InquiryInVO lockInquiryIn = lockIt.next();
+				if (lockInquiryIn != null) {
+					lockInputFieldIds.add(lockInquiryIn.getFieldId());
+				}
+			}
+		}
+		lockInputFields(lockInputFields, lockInputFieldIds.iterator());
 		InquiryDao inquiryDao = this.getInquiryDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -3711,6 +3768,22 @@ public class TrialServiceImpl
 		TrialDao trialDao = this.getTrialDao();
 		Trial trial = CheckIDUtil.checkTrialId(trialId, trialDao, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
+		ArrayList<InputField> lockInputFields = new ArrayList<InputField>();
+		Iterator<ProbandListEntryTag> lockListEntryTagsIt = trial.getListEntryTags().iterator();
+		while (lockListEntryTagsIt.hasNext()) {
+			lockInputFields.add(lockListEntryTagsIt.next().getField());
+		}
+		ArrayList<Long> lockInputFieldIds = new ArrayList<Long>();
+		if (modifiedProbandListEntryTags != null) {
+			Iterator<ProbandListEntryTagInVO> lockIt = modifiedProbandListEntryTags.iterator();
+			while (lockIt.hasNext()) {
+				ProbandListEntryTagInVO lockListEntryTagIn = lockIt.next();
+				if (lockListEntryTagIn != null) {
+					lockInputFieldIds.add(lockListEntryTagIn.getFieldId());
+				}
+			}
+		}
+		lockInputFields(lockInputFields, lockInputFieldIds.iterator());
 		ProbandListEntryTagDao probandListEntryTagDao = this.getProbandListEntryTagDao();
 		JournalEntryDao journalEntryDao = this.getJournalEntryDao();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
