@@ -9642,10 +9642,21 @@ public class TrialServiceImpl
 				}
 				if (listEntry == null) {
 					listEntry = CheckIDUtil.checkProbandListEntryId(ecrfFieldValueIn.getListEntryId(), this.getProbandListEntryDao(), LockMode.PESSIMISTIC_WRITE);
-					// lock the eCRF after the list entry like clearing values or setting the status does, also for an existing status entry, so the eCRF structure
-					// changes checking for values (sections, fields, visits) cannot race with saving values:
-					this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
-					// then the input fields of all values, by id:
+					if (!ecrf.getTrial().equals(listEntry.getTrial())) {
+						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_WRONG_TRIAL);
+					}
+					ServiceUtil.checkProbandLocked(listEntry.getProband());
+					statusEntry = this.getECRFStatusEntryDao().findByListEntryEcrfVisit(listEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null);
+					if (statusEntry == null) {
+						ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
+						this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
+						Object[] resultItems = addEcrfStatusEntry(listEntry, ecrf, visit, statusType, null, now, user);
+						statusEntry = (ECRFStatusEntry) resultItems[0];
+						statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
+					} else {
+						statusEntryVO = this.getECRFStatusEntryDao().toECRFStatusEntryVO(statusEntry);
+					}
+					// then the input fields of all values, by id, after the eCRF like the eCRF changes; saves for other list entries need no other lock:
 					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(ecrfFieldValuesIn.size());
 					Iterator<ECRFFieldValueInVO> lockIt = ecrfFieldValuesIn.iterator();
 					while (lockIt.hasNext()) {
@@ -9656,19 +9667,6 @@ public class TrialServiceImpl
 						}
 					}
 					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
-					if (!ecrf.getTrial().equals(listEntry.getTrial())) {
-						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_WRONG_TRIAL);
-					}
-					ServiceUtil.checkProbandLocked(listEntry.getProband());
-					statusEntry = this.getECRFStatusEntryDao().findByListEntryEcrfVisit(listEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null);
-					if (statusEntry == null) {
-						ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
-						Object[] resultItems = addEcrfStatusEntry(listEntry, ecrf, visit, statusType, null, now, user);
-						statusEntry = (ECRFStatusEntry) resultItems[0];
-						statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
-					} else {
-						statusEntryVO = this.getECRFStatusEntryDao().toECRFStatusEntryVO(statusEntry);
-					}
 					listEntryVO = statusEntryVO.getListEntry();
 					if (listEntryVO.getLastStatus() != null && !listEntryVO.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS,
