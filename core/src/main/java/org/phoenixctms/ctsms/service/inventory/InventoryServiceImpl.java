@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.InventoryBookingCollisionFinder;
@@ -656,6 +657,22 @@ public class InventoryServiceImpl
 			}
 		} else {
 			Inventory inventory = CheckIDUtil.checkInventoryId(inventoryId, inventoryDao);
+			// lock (and re-read) the children, the inventory and its parent, which the cascade updates, child towards ancestor like updating an inventory,
+			// so the cascade cannot race with the bookings, status entries and tag values checked under the inventory's lock:
+			TreeMap<Long, Inventory> children = new TreeMap<Long, Inventory>();
+			Iterator<Inventory> childrenIt = inventory.getChildren().iterator();
+			while (childrenIt.hasNext()) {
+				Inventory child = childrenIt.next();
+				children.put(child.getId(), child);
+			}
+			childrenIt = children.values().iterator();
+			while (childrenIt.hasNext()) {
+				inventoryDao.refresh(childrenIt.next(), LockMode.PESSIMISTIC_WRITE);
+			}
+			inventoryDao.refresh(inventory, LockMode.PESSIMISTIC_WRITE);
+			if (inventory.getParent() != null) {
+				inventoryDao.refresh(inventory.getParent(), LockMode.PESSIMISTIC_WRITE);
+			}
 			result = inventoryDao.toInventoryOutVO(inventory, maxInstances, maxParentDepth, maxChildrenDepth);
 			deleteInventoryHelper(inventory, true, user, now);
 			logSystemMessage(user, result, now, user, SystemMessageCodes.INVENTORY_DELETED, result, null, journalEntryDao);
