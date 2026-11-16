@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.hibernate.LockMode;
 import org.phoenixctms.ctsms.adapt.UserPermissionProfileCollisionFinder;
@@ -466,6 +467,32 @@ public class UserServiceImpl
 		UserDao userDao = this.getUserDao();
 		HashSet<Long> userIds = new HashSet<Long>();
 		if (userPermissionProfilesIn != null && userPermissionProfilesIn.size() > 0) {
+			// lock the users of the profiles, and the users profiles are moved from, by id up front, so two calls cannot deadlock and the profiles are read under the locks:
+			UserPermissionProfileDao lockUserPermissionProfileDao = this.getUserPermissionProfileDao();
+			TreeSet<Long> lockUserIds = new TreeSet<Long>();
+			ArrayList<UserPermissionProfile> lockUserPermissionProfiles = new ArrayList<UserPermissionProfile>();
+			Iterator<UserPermissionProfileInVO> lockIt = userPermissionProfilesIn.iterator();
+			while (lockIt.hasNext()) {
+				UserPermissionProfileInVO userPermissionProfileIn = lockIt.next();
+				if (userPermissionProfileIn.getUserId() != null) {
+					lockUserIds.add(userPermissionProfileIn.getUserId());
+				}
+				if (userPermissionProfileIn.getId() != null) {
+					UserPermissionProfile userPermissionProfile = lockUserPermissionProfileDao.load(userPermissionProfileIn.getId());
+					if (userPermissionProfile != null) {
+						lockUserIds.add(userPermissionProfile.getUser().getId());
+						lockUserPermissionProfiles.add(userPermissionProfile);
+					}
+				}
+			}
+			Iterator<Long> lockUserIdsIt = lockUserIds.iterator();
+			while (lockUserIdsIt.hasNext()) {
+				userDao.load(lockUserIdsIt.next(), LockMode.PESSIMISTIC_WRITE);
+			}
+			Iterator<UserPermissionProfile> lockUserPermissionProfilesIt = lockUserPermissionProfiles.iterator();
+			while (lockUserPermissionProfilesIt.hasNext()) {
+				lockUserPermissionProfileDao.refresh(lockUserPermissionProfilesIt.next());
+			}
 			result = new ArrayList<UserPermissionProfileOutVO>(userPermissionProfilesIn.size());
 			Iterator<UserPermissionProfileInVO> userPermissionProfilesInIt = userPermissionProfilesIn.iterator();
 			while (userPermissionProfilesInIt.hasNext()) {
