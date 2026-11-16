@@ -1369,6 +1369,10 @@ public class ToolsServiceImpl
 		if (proband == null) {
 			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
 			if (recipient != null) {
+				// lock the proband before the recipient, like deleting the proband does, so they cannot deadlock:
+				if (recipient.getProband() != null) {
+					this.getProbandDao().lock(recipient.getProband(), LockMode.PESSIMISTIC_WRITE);
+				}
 				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 				recipient.setUnsubscribed(recipient.getUnsubscribed() + 1l);
 				recipient.setUnsubscribedTimestamp(now);
@@ -1406,6 +1410,10 @@ public class ToolsServiceImpl
 		if (proband == null) {
 			MassMailRecipient recipient = massMailRecipientDao.searchUniqueBeacon(beacon);
 			if (recipient != null) {
+				// lock the proband before the recipient, like deleting the proband does, so they cannot deadlock:
+				if (recipient.getProband() != null) {
+					this.getProbandDao().lock(recipient.getProband(), LockMode.PESSIMISTIC_WRITE);
+				}
 				massMailRecipientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 				recipient.setConfirmed(recipient.getConfirmed() + 1l);
 				recipient.setConfirmedTimestamp(now);
