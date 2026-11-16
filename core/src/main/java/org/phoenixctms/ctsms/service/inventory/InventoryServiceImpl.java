@@ -200,7 +200,8 @@ public class InventoryServiceImpl
 
 	private void checkInventoryBookingInput(InventoryBookingInVO inventoryBookingIn) throws ServiceException {
 		// referential checks
-		Inventory inventory = CheckIDUtil.checkInventoryId(inventoryBookingIn.getInventoryId(), this.getInventoryDao());
+		// lock the inventory before its bookable flag is checked; the collision finder below locked it only afterwards:
+		Inventory inventory = CheckIDUtil.checkInventoryId(inventoryBookingIn.getInventoryId(), this.getInventoryDao(), LockMode.PESSIMISTIC_WRITE);
 		Long behalfOfId = inventoryBookingIn.getOnBehalfOfId();
 		if (this.getStaffDao().load(behalfOfId) == null) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INVENTORY_BOOKING_INVALID_BEHALF_OF_STAFF_ID, behalfOfId == null ? null : behalfOfId.toString());
