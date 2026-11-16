@@ -492,6 +492,8 @@ public class ProbandServiceImpl
 
 	private void checkMoneyTransferInput(MoneyTransferInVO moneyTransferIn, Long maxAllowedCostTypes) throws ServiceException {
 		ProbandDao probandDao = this.getProbandDao();
+		// lock the trial before the proband, like clearing or saving inquiry values does, so the cost types counted below cannot change meanwhile:
+		Trial trial = moneyTransferIn.getTrialId() != null ? CheckIDUtil.checkTrialId(moneyTransferIn.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE) : null;
 		Proband proband = CheckIDUtil.checkProbandId(moneyTransferIn.getProbandId(), probandDao, LockMode.PESSIMISTIC_WRITE);
 		if (!probandDao.toProbandOutVO(proband).isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND);
@@ -500,8 +502,7 @@ public class ProbandServiceImpl
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.MONEY_TRANSFER_PROBAND_NOT_PERSON);
 		}
 		ServiceUtil.checkProbandLocked(proband);
-		if (moneyTransferIn.getTrialId() != null) {
-			Trial trial = CheckIDUtil.checkTrialId(moneyTransferIn.getTrialId(), this.getTrialDao());
+		if (trial != null) {
 			ServiceUtil.checkTrialLocked(trial);
 			(new MaxCostTypesAdapter(maxAllowedCostTypes, this.getTrialDao(), this.getMoneyTransferDao())).checkCategoryInput(moneyTransferIn);
 		}
