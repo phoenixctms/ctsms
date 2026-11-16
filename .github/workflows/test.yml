@@ -112,9 +112,9 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
           sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
-      - name: Snapshot REST API swagger.json
+      - name: Snapshot REST API swagger.json and index
         # Fetched on every run, so a broken spec shows up in PRs too; published only from master.
-        # host/schemes are those of the CI Tomcat, so drop them: the snapshot describes any instance.
+        # Both describe the CI Tomcat, so drop its host/schemes and instance details, and make the index URLs relative.
         run: |
           for i in $(seq 1 36); do
             if curl -fsS -o "$RUNNER_TEMP/swagger-raw.json" http://localhost:8080/rest/swagger.json; then
@@ -124,7 +124,12 @@ jobs:
           done
           jq -e 'del(.host, .schemes) | select(.swagger and (.paths | length > 0))' "$RUNNER_TEMP/swagger-raw.json" > "$RUNNER_TEMP/swagger.json"
           echo "swagger.json: $(jq '.paths | length' "$RUNNER_TEMP/swagger.json") paths, version $(jq -r '.info.version' "$RUNNER_TEMP/swagger.json")"
-      - name: Publish swagger.json
+          curl -fsS -o "$RUNNER_TEMP/index-raw.json" http://localhost:8080/rest/
+          jq -e 'del(.instance, .jvm, .announcement)
+            | walk(if type == "string" then sub("^https?://[^/]+/rest"; "/rest") else . end)
+            | select(.services | length > 0)' "$RUNNER_TEMP/index-raw.json" > "$RUNNER_TEMP/restapi-index.json"
+          echo "restapi-index.json: $(jq '.services | length' "$RUNNER_TEMP/restapi-index.json") services, version $(jq -r '.version' "$RUNNER_TEMP/restapi-index.json")"
+      - name: Publish swagger.json and index
         # manual runs (Actions tab, "Run workflow") publish too, from whatever branch they run on
         if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch'
         env:
@@ -137,16 +142,20 @@ jobs:
             echo "FTP_HOST or FTP_SWAGGER_PATH not set, skipping"
             exit 0
           fi
-          # upload under a temp name and rename, so the public file is never half-written
+          # the index goes next to swagger.json, as restapi-index.json
           DIR=$(dirname "$FTP_SWAGGER_PATH")
-          FILE=$(basename "$FTP_SWAGGER_PATH")
           # an absolute path (like FTP_PATH) needs a leading %2F in the URL, otherwise curl treats it as relative to the login directory
           case "$DIR" in
             /*) DIR="%2F${DIR#/}" ;;
           esac
-          curl -fsS --ftp-create-dirs --user "$FTP_USERNAME:$FTP_PASSWORD" \
-            -T "$RUNNER_TEMP/swagger.json" "ftp://$FTP_HOST/$DIR/$FILE.tmp" \
-            -Q "-RNFR $FILE.tmp" -Q "-RNTO $FILE"
+          upload() {
+            # upload under a temp name and rename, so the public file is never half-written
+            curl -fsS --ftp-create-dirs --user "$FTP_USERNAME:$FTP_PASSWORD" \
+              -T "$1" "ftp://$FTP_HOST/$DIR/$2.tmp" \
+              -Q "-RNFR $2.tmp" -Q "-RNTO $2"
+          }
+          upload "$RUNNER_TEMP/swagger.json" "$(basename "$FTP_SWAGGER_PATH")"
+          upload "$RUNNER_TEMP/restapi-index.json" restapi-index.json
       - name: Setup ChromeDriver
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
