@@ -726,6 +726,7 @@ public class ToolsServiceImpl
 		Iterator<Proband> toBeAutoDeletedIt = this.getProbandDao().findToBeAutoDeleted(today, departmentId, null, null, null, true, true, psf).iterator();
 		while (toBeAutoDeletedIt.hasNext()) {
 			Proband proband = toBeAutoDeletedIt.next();
+			ServiceUtil.lockProbandRemoval(proband, probandDao, this.getTrialDao()); // like deleting a single proband
 			Long probandDepartmentId = proband.getDepartment().getId();
 			ServiceUtil.removeProband(proband, null, true,
 					null,
