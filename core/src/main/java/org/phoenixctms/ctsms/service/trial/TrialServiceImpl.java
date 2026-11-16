@@ -4434,6 +4434,9 @@ public class TrialServiceImpl
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListStatusEntry probandListStatusEntry = CheckIDUtil.checkProbandListStatusEntryId(probandListStatusEntryId, probandListStatusEntryDao);
 		ProbandListEntry listEntry = probandListStatusEntry.getListEntry();
+		// lock the proband like adding a status entry, so the last status checked below cannot change meanwhile:
+		this.getProbandDao().lock(listEntry.getProband(), LockMode.PESSIMISTIC_WRITE);
+		probandListEntryDao.refresh(listEntry);
 		ServiceUtil.checkTrialLocked(listEntry.getTrial());
 		ServiceUtil.checkProbandLocked(listEntry.getProband());
 		if (!probandListStatusEntry.equals(listEntry.getLastStatus())) {
