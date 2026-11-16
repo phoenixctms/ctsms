@@ -65,20 +65,25 @@ public final class XlsArchive {
 			byte[] block = new byte[BUFFER_SIZE];
 			while ((entry = zip.getNextEntry()) != null) {
 				String name = normalizePath(entry.getName());
-				if (entry.isDirectory() || name.startsWith(MACOSX_FOLDER)) {
-					continue;
-				}
-				if (name.startsWith(PATH_SEPARATOR) || name.matches("^[A-Za-z]:.*") || (PATH_SEPARATOR + name + PATH_SEPARATOR).contains(PATH_SEPARATOR + ".." + PATH_SEPARATOR)) {
+				// skipped entries are decompressed as well, so their content counts toward the limit too:
+				boolean skip = entry.isDirectory() || name.startsWith(MACOSX_FOLDER);
+				if (!skip && (name.startsWith(PATH_SEPARATOR) || name.matches("^[A-Za-z]:.*")
+						|| (PATH_SEPARATOR + name + PATH_SEPARATOR).contains(PATH_SEPARATOR + ".." + PATH_SEPARATOR))) {
 					throw new IllegalArgumentException("invalid zip entry path " + entry.getName());
 				}
-				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				ByteArrayOutputStream buffer = skip ? null : new ByteArrayOutputStream();
 				int nRead;
 				while ((nRead = zip.read(block, 0, block.length)) != -1) {
 					totalSize += nRead;
 					if (totalSize > sizeLimit) {
 						throw new IllegalArgumentException("zip archive content exceeds " + sizeLimit + " bytes");
 					}
-					buffer.write(block, 0, nRead);
+					if (buffer != null) {
+						buffer.write(block, 0, nRead);
+					}
+				}
+				if (skip) {
+					continue;
 				}
 				if (entries.containsKey(name)) {
 					throw new IllegalArgumentException("duplicate zip entry " + name);
@@ -92,23 +97,28 @@ public final class XlsArchive {
 	}
 
 	// archives created by zipping a folder (e.g. Windows "send to compressed folder") put everything below that folder
+	// (all nested folders shared by every entry, e.g. "export/setup/", are stripped in one pass)
 	private static LinkedHashMap<String, byte[]> stripCommonFolder(LinkedHashMap<String, byte[]> entries) {
-		String folder = null;
+		String prefix = null;
 		Iterator<String> it = entries.keySet().iterator();
 		while (it.hasNext()) {
 			String name = it.next();
-			int pos = name.indexOf(PATH_SEPARATOR);
-			if (pos <= 0) {
-				return entries;
-			}
-			String entryFolder = name.substring(0, pos + 1);
-			if (folder == null) {
-				folder = entryFolder;
-			} else if (!folder.equals(entryFolder)) {
-				return entries;
+			if (prefix == null) {
+				prefix = name;
+			} else {
+				int i = 0;
+				int max = Math.min(prefix.length(), name.length());
+				while (i < max && prefix.charAt(i) == name.charAt(i)) {
+					i++;
+				}
+				prefix = prefix.substring(0, i);
 			}
 		}
-		if (folder == null) {
+		if (prefix == null) {
+			return entries;
+		}
+		String folder = prefix.substring(0, prefix.lastIndexOf(PATH_SEPARATOR) + 1); // up to and including the last separator, or empty
+		if (folder.length() == 0) {
 			return entries;
 		}
 		LinkedHashMap<String, byte[]> result = new LinkedHashMap<String, byte[]>();
@@ -117,7 +127,7 @@ public final class XlsArchive {
 			Entry<String, byte[]> entry = entryIt.next();
 			result.put(entry.getKey().substring(folder.length()), entry.getValue());
 		}
-		return stripCommonFolder(result);
+		return result;
 	}
 
 	public static byte[] write(String xlsFileName, byte[] xlsData, Map<String, byte[]> files) throws IOException {
