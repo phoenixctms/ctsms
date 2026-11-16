@@ -112,6 +112,41 @@ jobs:
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
           sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+      - name: Snapshot REST API swagger.json
+        # Fetched on every run, so a broken spec shows up in PRs too; published only from master.
+        # host/schemes are those of the CI Tomcat, so drop them: the snapshot describes any instance.
+        run: |
+          for i in $(seq 1 36); do
+            if curl -fsS -o "$RUNNER_TEMP/swagger-raw.json" http://localhost:8080/rest/swagger.json; then
+              break
+            fi
+            sleep 5
+          done
+          jq -e 'del(.host, .schemes) | select(.swagger and (.paths | length > 0))' "$RUNNER_TEMP/swagger-raw.json" > "$RUNNER_TEMP/swagger.json"
+          echo "swagger.json: $(jq '.paths | length' "$RUNNER_TEMP/swagger.json") paths, version $(jq -r '.info.version' "$RUNNER_TEMP/swagger.json")"
+      - name: Publish swagger.json
+        # manual runs (Actions tab, "Run workflow") publish too, from whatever branch they run on
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'workflow_dispatch'
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SWAGGER_PATH: ${{ secrets.FTP_SWAGGER_PATH }}
+        run: |
+          if [ -z "$FTP_HOST" ] || [ -z "$FTP_SWAGGER_PATH" ]; then
+            echo "FTP_HOST or FTP_SWAGGER_PATH not set, skipping"
+            exit 0
+          fi
+          # upload under a temp name and rename, so the public file is never half-written
+          DIR=$(dirname "$FTP_SWAGGER_PATH")
+          FILE=$(basename "$FTP_SWAGGER_PATH")
+          # an absolute path (like FTP_PATH) needs a leading %2F in the URL, otherwise curl treats it as relative to the login directory
+          case "$DIR" in
+            /*) DIR="%2F${DIR#/}" ;;
+          esac
+          curl -fsS --ftp-create-dirs --user "$FTP_USERNAME:$FTP_PASSWORD" \
+            -T "$RUNNER_TEMP/swagger.json" "ftp://$FTP_HOST/$DIR/$FILE.tmp" \
+            -Q "-RNFR $FILE.tmp" -Q "-RNTO $FILE"
       - name: Setup ChromeDriver
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
