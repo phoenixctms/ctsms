@@ -137,25 +137,33 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_SWAGGER_PATH: ${{ secrets.FTP_SWAGGER_PATH }}
+          FTP_INDEX_PATH: ${{ secrets.FTP_INDEX_PATH }}
         run: |
-          if [ -z "$FTP_HOST" ] || [ -z "$FTP_SWAGGER_PATH" ]; then
-            echo "FTP_HOST or FTP_SWAGGER_PATH not set, skipping"
+          if [ -z "$FTP_HOST" ]; then
+            echo "FTP_HOST not set, skipping"
             exit 0
           fi
-          # the index goes next to swagger.json, as restapi-index.json
-          DIR=$(dirname "$FTP_SWAGGER_PATH")
-          # an absolute path (like FTP_PATH) needs a leading %2F in the URL, otherwise curl treats it as relative to the login directory
-          case "$DIR" in
-            /*) DIR="%2F${DIR#/}" ;;
-          esac
+          # $1: local file, $2: remote path as the FTP account sees it (absolute paths start at the FTP root, not the server's /)
           upload() {
+            if [ -z "$2" ]; then
+              echo "no remote path for $(basename "$1"), skipping"
+              return 0
+            fi
+            local dir file
+            dir=$(dirname "$2")
+            file=$(basename "$2")
+            # an absolute path needs a leading %2F in the URL, otherwise curl treats it as relative to the login directory
+            case "$dir" in
+              /*) dir="%2F${dir#/}" ;;
+            esac
             # upload under a temp name and rename, so the public file is never half-written
             curl -fsS --ftp-create-dirs --user "$FTP_USERNAME:$FTP_PASSWORD" \
-              -T "$1" "ftp://$FTP_HOST/$DIR/$2.tmp" \
-              -Q "-RNFR $2.tmp" -Q "-RNTO $2"
+              -T "$1" "ftp://$FTP_HOST/$dir/$file.tmp" \
+              -Q "-RNFR $file.tmp" -Q "-RNTO $file"
+            echo "uploaded $(basename "$1") to $2"
           }
-          upload "$RUNNER_TEMP/swagger.json" "$(basename "$FTP_SWAGGER_PATH")"
-          upload "$RUNNER_TEMP/restapi-index.json" restapi-index.json
+          upload "$RUNNER_TEMP/swagger.json" "$FTP_SWAGGER_PATH"
+          upload "$RUNNER_TEMP/restapi-index.json" "$FTP_INDEX_PATH"
       - name: Setup ChromeDriver
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_selenium.sh
