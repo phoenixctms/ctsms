@@ -31,8 +31,24 @@ After years of collaborative development with trial sites at the Medical Univers
 
 This GitHub repository contains all tiers of the main JEE web application. Transient artifacts generated using AndroMDA are excluded.
 
-Build and Install
+Try it (Docker)
 -----
+The fastest way to evaluate Phoenix is Docker Compose (Windows, macOS, or Linux) — no VirtualBox and no on-host Maven build. See [`phoenixctms/docker`](https://github.com/phoenixctms/docker):
+
+```bash
+git clone https://github.com/phoenixctms/docker.git
+cd docker
+docker compose build
+docker compose up -d
+docker compose logs -f db-seed
+```
+
+When seeding finishes, open http://localhost:8888 and log in with the printed `phoenix` credentials.
+
+Build and Install (Debian)
+-----
+For a classic single-host appliance (or production-style Debian install):
+
 1. Prepare a vanilla _Debian 13 (Trixie)_ Linux instance (ie. from [debian-13.6.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.6.0-amd64-netinst.iso)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
@@ -46,7 +62,7 @@ Build and Install
    sudo ~/install.sh
    ```
 
-   The procedure will require internet connectivity to download from debian, maven, cpan mirros and github. It will take around 1-2 hours to complete.
+   The procedure will require internet connectivity to download from debian, maven, cpan mirrors and github. It will take around 1-2 hours to complete. A ready-made `.ova` bootstrap VM is also described on [phoenixctms.org/installation](https://www.phoenixctms.org/installation/).
 
 3. You can now open a browser and log into the system using the link and credentials printed at last.
 4. If desired, populate the system with demo data:
