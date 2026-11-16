@@ -388,7 +388,8 @@ public class CourseServiceImpl
 	@Override
 	protected Collection<CourseParticipationStatusEntryOutVO> handleAddCourseParticipationStatusEntries(
 			AuthenticationVO auth, Long courseId, Set<Long> staffIds) throws Exception {
-		Course course = CheckIDUtil.checkCourseId(courseId, this.getCourseDao());
+		// lock the course before its self-registration flag and presets are read; adding each participation locked it only afterwards:
+		Course course = CheckIDUtil.checkCourseId(courseId, this.getCourseDao(), LockMode.PESSIMISTIC_WRITE);
 		CourseParticipationStatusType statusType = this.getCourseParticipationStatusTypeDao().findInitialStates(true, course.isSelfRegistration()).iterator().next();
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
