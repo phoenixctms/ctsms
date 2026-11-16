@@ -433,9 +433,10 @@ public class UserServiceImpl
 
 	@Override
 	protected PasswordOutVO handleSetPassword(AuthenticationVO auth, String plainNewPassword, String plainOldPassword, boolean resetOtpSecret) throws Exception {
-		Password lastPassword = CoreUtil.getLastPassword();
 		User user = CoreUtil.getUser();
 		this.getUserDao().lock(user, LockMode.PESSIMISTIC_WRITE);
+		// read the last password under the lock, like adminSetPassword, not the one of the logon, so concurrent password changes are checked and chained in turn:
+		Password lastPassword = this.getPasswordDao().findLastPassword(user.getId());
 		if (!AuthenticationType.LOCAL.equals(user.getAuthMethod())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.AUTHENTICATION_TYPE_NOT_LOCAL);
 		}
