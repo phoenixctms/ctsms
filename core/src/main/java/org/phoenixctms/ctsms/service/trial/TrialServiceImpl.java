@@ -9529,6 +9529,9 @@ public class TrialServiceImpl
 
 	private ProbandListEntryOutVO removeProbandListEntry(ProbandListEntry probandListEntry, Timestamp now, User user, boolean deleteCascade) throws Exception {
 		Trial trial = probandListEntry.getTrial();
+		// lock the trial, then the list entry, like the value saves, so the cascade cannot race with them (deleteProbandListEntries holds the trial already):
+		this.getTrialDao().lock(trial, LockMode.PESSIMISTIC_WRITE);
+		this.getProbandListEntryDao().refresh(probandListEntry, LockMode.PESSIMISTIC_WRITE);
 		ServiceUtil.checkTrialLocked(trial);
 		Proband proband = probandListEntry.getProband();
 		ServiceUtil.checkProbandLocked(proband);
