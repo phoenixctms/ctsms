@@ -3059,8 +3059,6 @@ public class ProbandServiceImpl
 				Inquiry inquiry = CheckIDUtil.checkInquiryId(inquiryValueIn.getInquiryId(), this.getInquiryDao());
 				if (trial == null) {
 					trial = inquiry.getTrial();
-					// lock the trial before the proband like clearing the values does, so the inquiry changes refused for saved values cannot race with saving values:
-					this.getTrialDao().refresh(trial, LockMode.PESSIMISTIC_WRITE);
 					ServiceUtil.checkTrialLocked(trial);
 					if (!trial.getStatus().isInquiryValueInputEnabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUE_INPUT_DISABLED_FOR_TRIAL,
@@ -3071,7 +3069,7 @@ public class ProbandServiceImpl
 				}
 				if (proband == null) {
 					proband = CheckIDUtil.checkProbandId(inquiryValueIn.getProbandId(), this.getProbandDao(), LockMode.PESSIMISTIC_WRITE);
-					// then the input fields of all values, by id, as saves of trials sharing input fields would deadlock otherwise:
+					// then the input fields of all values, by id, so saves sharing input fields cannot deadlock (the changes checking for values lock them too):
 					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(inquiryValuesIn.size());
 					Iterator<InquiryValueInVO> lockIt = inquiryValuesIn.iterator();
 					while (lockIt.hasNext()) {
