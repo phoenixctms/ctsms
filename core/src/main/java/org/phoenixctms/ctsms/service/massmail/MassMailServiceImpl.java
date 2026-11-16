@@ -582,7 +582,10 @@ public class MassMailServiceImpl
 	@Override
 	protected MassMailRecipientOutVO handleDeleteMassMailRecipient(AuthenticationVO auth, Long massMailRecipientId) throws Exception {
 		MassMailRecipientDao massMailRecpientDao = this.getMassMailRecipientDao();
-		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecpientDao, LockMode.PESSIMISTIC_WRITE);
+		MassMailRecipient recipient = CheckIDUtil.checkMassMailRecipientId(massMailRecipientId, massMailRecpientDao);
+		// lock the mass mail before the recipient, like deleting recipients in bulk and preparing them, so its locked status is read under the lock and they cannot deadlock:
+		this.getMassMailDao().lock(recipient.getMassMail(), LockMode.PESSIMISTIC_WRITE);
+		massMailRecpientDao.refresh(recipient, LockMode.PESSIMISTIC_WRITE);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		User user = CoreUtil.getUser();
 		return removeMassMailRecipient(recipient, now, user);
