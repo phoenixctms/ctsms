@@ -3071,15 +3071,26 @@ public class ProbandServiceImpl
 					proband = CheckIDUtil.checkProbandId(inquiryValueIn.getProbandId(), this.getProbandDao(), LockMode.PESSIMISTIC_WRITE);
 					// then the input fields of all values, by id, so saves sharing input fields cannot deadlock (the changes checking for values lock them too):
 					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(inquiryValuesIn.size());
+					HashMap<Inquiry, Long> lockInquiries = new HashMap<Inquiry, Long>();
 					Iterator<InquiryValueInVO> lockIt = inquiryValuesIn.iterator();
 					while (lockIt.hasNext()) {
 						InquiryValueInVO lockInquiryValueIn = lockIt.next();
 						Inquiry lockInquiry = lockInquiryValueIn.getInquiryId() != null ? this.getInquiryDao().load(lockInquiryValueIn.getInquiryId()) : null;
 						if (lockInquiry != null) {
 							lockInputFields.add(lockInquiry.getField());
+							lockInquiries.put(lockInquiry, lockInquiry.getField().getId());
 						}
 					}
 					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
+					// re-read the inquiries: if the input field of one was changed while waiting, refuse like a concurrent modification
+					Iterator<Map.Entry<Inquiry, Long>> lockInquiriesIt = lockInquiries.entrySet().iterator();
+					while (lockInquiriesIt.hasNext()) {
+						Map.Entry<Inquiry, Long> lockInquiry = lockInquiriesIt.next();
+						this.getInquiryDao().refresh(lockInquiry.getKey());
+						if (!lockInquiry.getKey().getField().getId().equals(lockInquiry.getValue())) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, lockInquiry.getKey().getModifiedUser().getName());
+						}
+					}
 					ServiceUtil.checkProbandLocked(proband);
 				} else if (!proband.getId().equals(inquiryValueIn.getProbandId())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_VALUES_FOR_DIFFERENT_PROBANDS);

@@ -1117,6 +1117,28 @@ public class TrialServiceImpl
 		}
 	}
 
+	private void lockEcrfFieldInputFields(Collection<ECRFField> ecrfFields) throws ServiceException {
+		// lock the input fields of value saves by id, then re-read the eCRF fields, which were loaded before: if the input field of one was changed
+		// while waiting, the values would be checked against the old one, so refuse like a concurrent modification:
+		HashMap<Long, Long> inputFieldIds = new HashMap<Long, Long>(ecrfFields.size());
+		ArrayList<InputField> inputFields = new ArrayList<InputField>(ecrfFields.size());
+		Iterator<ECRFField> it = ecrfFields.iterator();
+		while (it.hasNext()) {
+			ECRFField ecrfField = it.next();
+			inputFieldIds.put(ecrfField.getId(), ecrfField.getField().getId());
+			inputFields.add(ecrfField.getField());
+		}
+		ServiceUtil.lockInputFields(inputFields, this.getInputFieldDao());
+		it = ecrfFields.iterator();
+		while (it.hasNext()) {
+			ECRFField ecrfField = it.next();
+			this.getECRFFieldDao().refresh(ecrfField);
+			if (!ecrfField.getField().getId().equals(inputFieldIds.get(ecrfField.getId()))) {
+				throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, ecrfField.getModifiedUser().getName());
+			}
+		}
+	}
+
 	private void lockEcrfInputFields(ECRF ecrf) {
 		// the eCRF-wide checks for saved values lock all input fields of the eCRF by id, after the eCRF, as the value saves lock only those:
 		ArrayList<InputField> inputFields = new ArrayList<InputField>();
@@ -8878,15 +8900,26 @@ public class TrialServiceImpl
 					listEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryTagValueIn.getListEntryId(), probandListEntryDao, LockMode.PESSIMISTIC_WRITE);
 					// then the input fields of all values, by id, so saves sharing input fields cannot deadlock (the changes checking for values lock them too):
 					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(probandListEntryTagValuesIn.size());
+					HashMap<ProbandListEntryTag, Long> lockListEntryTags = new HashMap<ProbandListEntryTag, Long>();
 					Iterator<ProbandListEntryTagValueInVO> lockIt = probandListEntryTagValuesIn.iterator();
 					while (lockIt.hasNext()) {
 						ProbandListEntryTagValueInVO lockTagValueIn = lockIt.next();
 						ProbandListEntryTag lockListEntryTag = lockTagValueIn.getTagId() != null ? probandListEntryTagDao.load(lockTagValueIn.getTagId()) : null;
 						if (lockListEntryTag != null) {
 							lockInputFields.add(lockListEntryTag.getField());
+							lockListEntryTags.put(lockListEntryTag, lockListEntryTag.getField().getId());
 						}
 					}
 					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
+					// re-read the attributes: if the input field of one was changed while waiting, refuse like a concurrent modification
+					Iterator<Map.Entry<ProbandListEntryTag, Long>> lockListEntryTagsIt = lockListEntryTags.entrySet().iterator();
+					while (lockListEntryTagsIt.hasNext()) {
+						Map.Entry<ProbandListEntryTag, Long> lockListEntryTag = lockListEntryTagsIt.next();
+						probandListEntryTagDao.refresh(lockListEntryTag.getKey());
+						if (!lockListEntryTag.getKey().getField().getId().equals(lockListEntryTag.getValue())) {
+							throw L10nUtil.initServiceException(ServiceExceptionCodes.ENTITY_WAS_MODIFIED_SINCE, lockListEntryTag.getKey().getModifiedUser().getName());
+						}
+					}
 					if (!trial.equals(listEntry.getTrial())) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_WRONG_TRIAL);
 					}
@@ -9753,16 +9786,27 @@ public class TrialServiceImpl
 						statusEntryVO = this.getECRFStatusEntryDao().toECRFStatusEntryVO(statusEntry);
 					}
 					// then the input fields of all values, by id, after the eCRF like the eCRF changes; saves for other list entries need no other lock:
-					ArrayList<InputField> lockInputFields = new ArrayList<InputField>(ecrfFieldValuesIn.size());
+					HashMap<Long, ECRFField> lockEcrfFields = new HashMap<Long, ECRFField>();
 					Iterator<ECRFFieldValueInVO> lockIt = ecrfFieldValuesIn.iterator();
 					while (lockIt.hasNext()) {
 						ECRFFieldValueInVO lockEcrfFieldValueIn = lockIt.next();
 						ECRFField lockEcrfField = lockEcrfFieldValueIn.getEcrfFieldId() != null ? this.getECRFFieldDao().load(lockEcrfFieldValueIn.getEcrfFieldId()) : null;
 						if (lockEcrfField != null) {
-							lockInputFields.add(lockEcrfField.getField());
+							lockEcrfFields.put(lockEcrfField.getId(), lockEcrfField);
+							if (lockEcrfField.isSeries()) {
+								// the missing values of its series section are saved with preset values below, so lock their input fields too:
+								Iterator<ECRFField> sectionEcrfFieldsIt = ecrf.getEcrfFields().iterator();
+								while (sectionEcrfFieldsIt.hasNext()) {
+									ECRFField sectionEcrfField = sectionEcrfFieldsIt.next();
+									if (sectionEcrfField.isSeries() && (lockEcrfField.getSection() == null ? sectionEcrfField.getSection() == null
+											: lockEcrfField.getSection().equals(sectionEcrfField.getSection()))) {
+										lockEcrfFields.put(sectionEcrfField.getId(), sectionEcrfField);
+									}
+								}
+							}
 						}
 					}
-					ServiceUtil.lockInputFields(lockInputFields, this.getInputFieldDao());
+					lockEcrfFieldInputFields(lockEcrfFields.values());
 					listEntryVO = statusEntryVO.getListEntry();
 					if (listEntryVO.getLastStatus() != null && !listEntryVO.getLastStatus().getStatus().getEcrfValueInputEnabled()) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUE_INPUT_DISABLED_FOR_PROBAND_LIST_STATUS,
