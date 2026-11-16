@@ -9022,7 +9022,9 @@ public class TrialServiceImpl
 	protected ProbandListEntryOutVO handleUpdateProbandListEntry(
 			AuthenticationVO auth, ProbandListEntryInVO modifiedProbandListEntry, Long probandListStatusTypeId, boolean randomize) throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
-		ProbandListEntry originalProbandListEntry = CheckIDUtil.checkProbandListEntryId(modifiedProbandListEntry.getId(), probandListEntryDao);
+		// lock the trial, then the list entry, like deleting it and saving its values, before reading its last status and group (trial changes are refused below):
+		CheckIDUtil.checkTrialId(modifiedProbandListEntry.getTrialId(), this.getTrialDao(), LockMode.PESSIMISTIC_WRITE);
+		ProbandListEntry originalProbandListEntry = CheckIDUtil.checkProbandListEntryId(modifiedProbandListEntry.getId(), probandListEntryDao, LockMode.PESSIMISTIC_WRITE);
 		ProbandListStatusEntry lastStatus = originalProbandListEntry.getLastStatus();
 		checkProbandListEntryInput(modifiedProbandListEntry, false, false, lastStatus == null ? null : lastStatus.getRealTimestamp()); // access original associations before evict
 		if (!modifiedProbandListEntry.getTrialId().equals(originalProbandListEntry.getTrial().getId())) {
