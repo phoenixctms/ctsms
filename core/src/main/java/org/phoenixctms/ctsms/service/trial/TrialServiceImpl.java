@@ -9562,6 +9562,9 @@ public class TrialServiceImpl
 				}
 				if (listEntry == null) {
 					listEntry = CheckIDUtil.checkProbandListEntryId(ecrfFieldValueIn.getListEntryId(), this.getProbandListEntryDao(), LockMode.PESSIMISTIC_WRITE);
+					// lock the eCRF after the list entry like clearing values or setting the status does, also for an existing status entry, so the eCRF structure
+					// changes checking for values (sections, fields, visits) cannot race with saving values:
+					this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
 					if (!ecrf.getTrial().equals(listEntry.getTrial())) {
 						throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_VALUES_FOR_WRONG_TRIAL);
 					}
@@ -9569,7 +9572,6 @@ public class TrialServiceImpl
 					statusEntry = this.getECRFStatusEntryDao().findByListEntryEcrfVisit(listEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null);
 					if (statusEntry == null) {
 						ECRFStatusType statusType = this.getECRFStatusTypeDao().findInitialStates().iterator().next();
-						this.getECRFDao().lock(ecrf, LockMode.PESSIMISTIC_WRITE);
 						Object[] resultItems = addEcrfStatusEntry(listEntry, ecrf, visit, statusType, null, now, user);
 						statusEntry = (ECRFStatusEntry) resultItems[0];
 						statusEntryVO = (ECRFStatusEntryVO) resultItems[1];
