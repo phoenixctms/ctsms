@@ -2220,7 +2220,7 @@ public class TrialServiceImpl
 		// lock the eCRF before the input field, in the same order as the collision finders (addUpdateEcrf holds the eCRF lock already):
 		ECRF ecrf = CheckIDUtil.checkEcrfId(ecrfFieldIn.getEcrfId(), this.getECRFDao());
 		if (checkDeferredConstraints) {
-			// also the eCRF the field is moved from, as its values are saved under that eCRF's lock; both by id:
+			// also the eCRF the field is moved from (its sections and positions change too); both by id:
 			ECRF originalEcrf = originalEcrfField.getEcrf();
 			if (originalEcrf.getId() < ecrf.getId()) {
 				this.getECRFDao().refresh(originalEcrf, LockMode.PESSIMISTIC_WRITE);
@@ -2234,7 +2234,9 @@ public class TrialServiceImpl
 		if (!trial.equals(ecrf.getTrial())) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.ECRF_FIELD_WRONG_ECRF, CommonUtil.trialOutVOToString(this.getTrialDao().toTrialOutVO(trial)));
 		}
-		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		// lock the new and the original input field by id, as the values checked below are saved under the original one's lock:
+		InputField field = CheckIDUtil.checkInputFieldId(ecrfFieldIn.getFieldId(), this.getInputFieldDao());
+		ServiceUtil.lockInputFields(Arrays.asList(field, originalEcrfField.getField()), this.getInputFieldDao());
 		checkEcrfFieldInput(ecrfFieldIn, checkDeferredConstraints); // lock
 		boolean sectionChanged = this.getECRFFieldDao().getCount(ecrfFieldIn.getEcrfId(), ecrfFieldIn.getSection(), ecrfFieldIn.getId()) == 0l;
 		if (!ecrf.equals(originalEcrfField.getEcrf())
@@ -2377,7 +2379,9 @@ public class TrialServiceImpl
 			this.getInquiryDao().refresh(originalInquiry); // loaded before the trial lock
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		// lock the new and the original input field by id, as the values checked below are saved under the original one's lock:
+		InputField field = CheckIDUtil.checkInputFieldId(inquiryIn.getFieldId(), this.getInputFieldDao());
+		ServiceUtil.lockInputFields(Arrays.asList(field, originalInquiry.getField()), this.getInputFieldDao());
 		checkInquiryInput(inquiryIn, checkDeferredConstraints);
 		if (!field.equals(originalInquiry.getField()) && this.getInquiryValueDao().getCount(originalInquiry.getId()) > 0) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.INQUIRY_INPUT_FIELD_CHANGED);
@@ -2396,7 +2400,9 @@ public class TrialServiceImpl
 			this.getProbandListEntryTagDao().refresh(originalProbandListEntryTag); // loaded before the trial lock
 		}
 		ServiceUtil.checkTrialLocked(trial);
-		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao(), LockMode.PESSIMISTIC_WRITE);
+		// lock the new and the original input field by id, as the values checked below are saved under the original one's lock:
+		InputField field = CheckIDUtil.checkInputFieldId(listTagIn.getFieldId(), this.getInputFieldDao());
+		ServiceUtil.lockInputFields(Arrays.asList(field, originalProbandListEntryTag.getField()), this.getInputFieldDao());
 		checkProbandListEntryTagInput(listTagIn, trial, field, checkDeferredConstraints);
 		if (!field.equals(originalProbandListEntryTag.getField())) {
 			if (this.getProbandListEntryTagValueDao().getCount(null, originalProbandListEntryTag.getId()) > 0) {
