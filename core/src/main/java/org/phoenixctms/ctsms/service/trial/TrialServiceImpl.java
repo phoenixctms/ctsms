@@ -8712,6 +8712,8 @@ public class TrialServiceImpl
 				ProbandListEntryTag listEntryTag = CheckIDUtil.checkProbandListEntryTagId(probandListEntryTagValueIn.getTagId(), probandListEntryTagDao);
 				if (trial == null) {
 					trial = listEntryTag.getTrial();
+					// lock the trial before the list entry like the proband list attribute changes, so those refused for saved values cannot race with saving values:
+					this.getTrialDao().refresh(trial, LockMode.PESSIMISTIC_WRITE);
 					ServiceUtil.checkTrialLocked(trial);
 				} else if (!trial.equals(listEntryTag.getTrial())) {
 					throw L10nUtil.initServiceException(ServiceExceptionCodes.PROBAND_LIST_ENTRY_TAG_VALUES_FOR_DIFFERENT_TRIALS);
