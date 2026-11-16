@@ -1872,6 +1872,7 @@ public class ProbandServiceImpl
 		ProbandAddress address = CheckIDUtil.checkProbandAddressId(probandAddressId, addressDao);
 		Proband proband = address.getProband();
 		this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+		addressDao.refresh(address); // its wire transfer flag checked below was read before the lock
 		ProbandAddressOutVO result = addressDao.toProbandAddressOutVO(address);
 		if (!result.isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_ADDRESS);
@@ -3148,6 +3149,7 @@ public class ProbandServiceImpl
 		ProbandAddress address = CheckIDUtil.checkProbandAddressId(probandAddressId, addressDao);
 		Proband proband = address.getProband();
 		this.getProbandDao().lock(proband, LockMode.PESSIMISTIC_WRITE);
+		addressDao.refresh(address); // its wire transfer flag checked below was read before the lock
 		ProbandAddressOutVO original = addressDao.toProbandAddressOutVO(address);
 		if (!original.isDecrypted()) {
 			throw L10nUtil.initServiceException(ServiceExceptionCodes.CANNOT_DECRYPT_PROBAND_ADDRESS);
