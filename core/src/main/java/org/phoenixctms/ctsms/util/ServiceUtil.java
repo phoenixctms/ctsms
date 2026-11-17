@@ -3774,14 +3774,20 @@ public final class ServiceUtil {
 	public static InquiryValuesOutVO getInquiryValues(Trial trial, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues, boolean loadAllJsValues,
 			boolean sort,
 			PSFVO psf, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
+		return getInquiryValues(trial, probandVO, active, activeSignup, jsValues, loadAllJsValues, sort, null, psf, inquiryDao, inquiryValueDao, inputFieldSelectionSetValueDao);
+	}
+
+	public static InquiryValuesOutVO getInquiryValues(Trial trial, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues, boolean loadAllJsValues,
+			boolean sort, String fieldQuery,
+			PSFVO psf, InquiryDao inquiryDao, InquiryValueDao inquiryValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao) throws Exception {
 		InquiryValuesOutVO result = new InquiryValuesOutVO();
-		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, null, psf);
+		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialActiveJsField(probandVO.getId(), trial.getId(), active, activeSignup, sort, null, fieldQuery, psf);
 		result.setPageValues(getInquiryValues(probandVO, inquiryValues, null,
 				inquiryDao, inquiryValueDao));
 		if (jsValues) {
 			if (loadAllJsValues) {
 				result.setJsValues(getInquiryJsonValues(
-						inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null),
+						inquiryValueDao.findByProbandTrialActiveJsField(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null, null),
 						false, inquiryValueDao, inputFieldSelectionSetValueDao));
 			} else {
 				result.setJsValues(getInquiryJsonValues(inquiryValues,
@@ -4046,13 +4052,21 @@ public final class ServiceUtil {
 	public static ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(ProbandListEntryOutVO listEntryVO, boolean jsValues, boolean loadAllJsValues, boolean sort, PSFVO psf,
 			ProbandListEntryTagDao probandListEntryTagDao, ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao)
 			throws Exception {
+		return getProbandListEntryTagValues(listEntryVO, jsValues, loadAllJsValues, sort, null, psf, probandListEntryTagDao, probandListEntryTagValueDao,
+				inputFieldSelectionSetValueDao);
+	}
+
+	public static ProbandListEntryTagValuesOutVO getProbandListEntryTagValues(ProbandListEntryOutVO listEntryVO, boolean jsValues, boolean loadAllJsValues, boolean sort,
+			String fieldQuery, PSFVO psf,
+			ProbandListEntryTagDao probandListEntryTagDao, ProbandListEntryTagValueDao probandListEntryTagValueDao, InputFieldSelectionSetValueDao inputFieldSelectionSetValueDao)
+			throws Exception {
 		ProbandListEntryTagValuesOutVO result = new ProbandListEntryTagValuesOutVO();
-		Collection<Map> tagValues = probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), sort, null, psf);
+		Collection<Map> tagValues = probandListEntryTagValueDao.findByListEntryJsField(listEntryVO.getId(), sort, null, fieldQuery, psf);
 		result.setPageValues(getProbandListEntryTagValues(listEntryVO, tagValues, null,
 				probandListEntryTagDao, probandListEntryTagValueDao));
 		if (jsValues) {
 			if (loadAllJsValues) {
-				result.setJsValues(getProbandListEntryTagJsonValues(probandListEntryTagValueDao.findByListEntryJs(listEntryVO.getId(), sort, true, null),
+				result.setJsValues(getProbandListEntryTagJsonValues(probandListEntryTagValueDao.findByListEntryJsField(listEntryVO.getId(), sort, true, null, null),
 						false, probandListEntryTagValueDao, inputFieldSelectionSetValueDao));
 			} else {
 				result.setJsValues(getProbandListEntryTagJsonValues(tagValues,

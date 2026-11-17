@@ -82,6 +82,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		jsInquiryValuesOut = null;
 		this.trialId = null;
 		this.probandId = id;
+		setFieldQuery(null);
 		paginator.initPages(true, trialId);
 		initIn(true, false);
 		initSets();
@@ -231,7 +232,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		inquiryValuesCount = null;
 		if (trialId != null) {
 			try {
-				inquiryValuesCount = WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), trialId, null, null, probandId);
+				inquiryValuesCount = WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), trialId, null, null, probandId, null);
 			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			} catch (AuthenticationException e) {
 				WebUtil.publishException(e);
@@ -262,7 +263,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 			if (inquiryValuesOut == null || jsInquiryValuesOut == null) {
 				try {
 					portionInquiryValues(WebUtil.getServiceLocator().getProbandService()
-							.getInquiryValues(WebUtil.getAuthentication(), trialId, true, null, probandId, true, loadAllJsValues, paginator.getPsf()));
+							.getInquiryValues(WebUtil.getAuthentication(), trialId, true, null, probandId, true, loadAllJsValues, getFieldQuery(), paginator.getPsf()));
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
@@ -320,7 +321,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		jsInquiryValuesOut = null;
 		try {
 			portionInquiryValues(WebUtil.getServiceLocator().getProbandService()
-					.getInquiryValues(WebUtil.getAuthentication(), trialId, true, null, probandId, true, true, paginator.getPsf()));
+					.getInquiryValues(WebUtil.getAuthentication(), trialId, true, null, probandId, true, true, getFieldQuery(), paginator.getPsf()));
 			return LOAD_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());

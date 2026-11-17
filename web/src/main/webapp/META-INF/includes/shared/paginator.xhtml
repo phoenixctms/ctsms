@@ -3,18 +3,25 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<title>paginator</title>
 </h:head>
 <h:body>
 	<ui:composition>
+		<c:if test="#{showFieldQuery}">
+			<p:remoteCommand process="@this,field_query"
+				name="#{empty filterFieldsName ? 'filterFields' : filterFieldsName}"
+				actionListener="#{valueBean.handleFieldQueryChange}"
+				oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+				update="#{update}" />
+		</c:if>
 		<h:panelGrid
-			columns="#{(valueBean.paginator.showNavigatorButtons ? (valueBean.paginator.inputFieldForm ? 8 : 7) : (valueBean.paginator.inputFieldForm ? 4 : 3)) + (showAjaxStatus ? 1 : 0)}"
+			columns="#{(showFieldQuery ? 2 : 0) + (valueBean.paginator.showNavigatorButtons ? (valueBean.paginator.inputFieldForm ? 8 : 7) : (valueBean.paginator.inputFieldForm ? 4 : 3)) + (showAjaxStatus ? 1 : 0)}"
 			cellpadding="0" rendered="#{valueBean.paginator.psf.rowCount gt 0}"
 			styleClass="ui-widget-header ui-corner-all ctsms-pages-panelgrid"
-			columnClasses="#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}ctsms-pages-message-column,#{showAjaxStatus ? 'ctsms-ajaxstatus-column,' : ''}ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
-
+			columnClasses="#{valueBean.paginator.inputFieldForm ? 'ctsms-pages-fieldsperrow-column,' : ''}#{showFieldQuery ? 'ctsms-label-for-column,ctsms-input-column,' : ''}ctsms-pages-message-column,#{showAjaxStatus ? 'ctsms-ajaxstatus-column,' : ''}ctsms-pages-pagesize-column,#{valueBean.paginator.showNavigatorButtons ? 'ctsms-pages-navbutton-column,ctsms-pages-navbutton-column,' : ''}ctsms-pages-button-column#{valueBean.paginator.showNavigatorButtons ? ',ctsms-pages-navbutton-column,ctsms-pages-navbutton-column' : ''}">
 
 			<p:selectOneMenu required="false"
 				rendered="#{valueBean.paginator.inputFieldForm}"
@@ -27,6 +34,23 @@
 					listener="#{valueBean.handleFieldsPerRowChange}"
 					oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}" />
 			</p:selectOneMenu>
+
+			<c:if test="#{showFieldQuery}">
+				<h:outputLabel for="field_query"
+					value="#{labels.input_field_values_field_query_label}" />
+				<h:panelGroup>
+					<p:inputText id="field_query" value="#{valueBean.fieldQuery}"
+						required="false" label="#{labels.input_field_values_field_query}"
+						styleClass="ctsms-control-medium"
+						onkeyup="onKeyUpDelay(function(){ #{empty filterFieldsName ? 'filterFields' : filterFieldsName}(); }, 500);">
+					</p:inputText>
+					<p:tooltip rendered="#{enableTooltips}" for="field_query">
+						<h:outputText
+							value="#{labels.input_field_values_field_query_tooltip}"
+							escape="false" />
+					</p:tooltip>
+				</h:panelGroup>
+			</c:if>
 
 			<h:outputText
 				value="#{valueBean.paginator.showPagesMessage ? labels.pages_save_before_change_message : ''}" />

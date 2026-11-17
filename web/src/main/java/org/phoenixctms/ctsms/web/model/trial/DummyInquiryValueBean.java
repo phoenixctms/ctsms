@@ -49,6 +49,7 @@ public class DummyInquiryValueBean extends InquiryValueBeanBase {
 		inquiryValuesOut = null;
 		jsInquiryValuesOut = null;
 		this.trialId = id;
+		setFieldQuery(null);
 		paginator.initPages(true, trialId);
 		initIn(true, false);
 		initSets();

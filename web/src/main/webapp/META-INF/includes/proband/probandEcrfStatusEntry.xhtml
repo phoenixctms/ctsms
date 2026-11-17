@@ -15,33 +15,29 @@
 			<p:remoteCommand process="@this,signPassword" name="updateEcrfStatus"
 				actionListener="#{probandEcrfStatusEntryBean.updateEcrfStatus()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this,signPassword"
 				name="signVerifiedEcrfs"
 				actionListener="#{probandEcrfStatusEntryBean.signVerifiedEcrfs()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this,signPassword" name="signAllEcrfs"
 				actionListener="#{probandEcrfStatusEntryBean.signAllEcrfs()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
-				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this" name="refreshProbandEcrfProgress"
 				actionListener="#{probandEcrfStatusEntryBean.refreshEcrfProgress()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update="probandecrfstatus_ecrf_list,section_filter,field_query" />
+				update="probandecrfstatus_ecrf_list,section_filter" />
 			<p:remoteCommand process="@this" name="reloadEcrf"
 				actionListener="#{probandEcrfStatusEntryBean.load}"
 				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
-				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this" name="refreshProbandEcrfsProgress"
 				actionListener="#{probandEcrfStatusEntryBean.refreshEcrfProgress()}"
 				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,field_query" />
-			<p:remoteCommand process="@this,field_query" name="filterFields"
-				update="ecrffield_input_grid"
-				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				actionListener="#{probandEcrfStatusEntryBean.handleFilterSectionChange()}" />
-			<h:panelGrid columns="1" cellpadding="0"
+				update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter" />
+<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<h:panelGroup id="probandecrfstatus_proband_list_wrapper">
 					<p:dataTable styleClass="ctsms-datatable" lazy="true"
@@ -483,24 +479,6 @@
 										</p:tooltip>
 									</h:panelGroup>
 									<p:message for="section_filter" />
-
-									<h:outputLabel for="field_query"
-										value="#{probandlabels.ecrf_field_values_field_query_label}" />
-									<h:panelGroup>
-										<p:inputText id="field_query"
-											value="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.fieldQuery}"
-											required="false"
-											label="#{probandlabels.ecrf_field_values_field_query}"
-											styleClass="ctsms-control-largest"
-											onkeyup="onKeyUpDelay(function(){ filterFields(); }, 500);">
-										</p:inputText>
-										<p:tooltip rendered="#{enableTooltips}" for="field_query">
-											<h:outputText
-												value="#{probandlabels.ecrf_field_values_field_query_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
-									<p:message for="field_query" />
 								</h:panelGrid>
 								<h:panelGrid id="ecrf_detail" columns="8" cellpadding="2"
 									styleClass="ctsms-content-panelgrid"
@@ -547,9 +525,10 @@
 						<ui:param name="valueBean"
 							value="#{probandEcrfStatusEntryBean.ecrfFieldValueBean}" />
 						<ui:param name="showAjaxStatus" value="true" />
+						<ui:param name="showFieldQuery" value="#{true}" />
+						<ui:param name="filterFieldsName" value="filterEcrfFields" />
 						<ui:param name="update"
-							value=":tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:field_query,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
-
+							value=":tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
 					</ui:include>
 					<p:dataGrid var="section"
 						value="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.sections}"
@@ -591,7 +570,7 @@
 												oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
 												icon="ui-icon ui-icon-disk" ajax="true"
 												disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.editable and !probandEcrfStatusEntryBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}"
-												update=":tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:field_query,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid">
+												update=":tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid">
 												<f:param name="includeDisabled" value="true" />	
 											</p:commandButton>
 
@@ -631,7 +610,7 @@
 								oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-close" ajax="true"
 								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								update="probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+								update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 
 							<p:commandButton process="@this,ecrffield_inputs" id="update"
 								value="#{labels.update_page_button_label}"
@@ -639,7 +618,7 @@
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
 								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								update="probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid">
+								update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
 								<f:param name="includeDisabled" value="true" />	
 							</p:commandButton>
 
@@ -658,7 +637,7 @@
 								oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
 								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.created}"
-								update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+								update="probandecrfstatus_proband_list,probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 							<p:commandButton process="@this"
 								value="#{labels.verify_signature_button_label}"
 								actionListener="#{probandEcrfStatusEntryBean.verifySignature}"
@@ -772,8 +751,9 @@
 						<ui:param name="valueBean"
 							value="#{probandEcrfStatusEntryBean.ecrfFieldValueBean}" />
 						<ui:param name="showAjaxStatus" value="false" />
+						<ui:param name="showFieldQuery" value="#{false}" />
 						<ui:param name="update"
-							value=":tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:field_query,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
+							value=":tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
 
 					</ui:include>
 				</h:panelGrid>
@@ -803,7 +783,7 @@
 					onstart="ecrfClearSectionConfirmation.hide();"
 					oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
 					icon="ui-icon ui-icon-trash" ajax="true"
-					update=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list,:tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:field_query,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
+					update=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list,:tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:section_filter,:tabView:probandecrfstatusentry_form:ecrf_detail,:tabView:probandecrfstatusentry_form:ecrf_title,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="ecrfClearSectionConfirmation.hide();" type="button" />
 			</p:confirmDialog>

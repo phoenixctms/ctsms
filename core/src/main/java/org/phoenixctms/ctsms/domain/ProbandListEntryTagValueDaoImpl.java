@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -58,6 +60,27 @@ public class ProbandListEntryTagValueDaoImpl
 		}
 	}
 
+	private void applyProbandListEntryTagSearchCriterions(org.hibernate.Criteria listEntryTagCriteria, String fieldQuery) {
+		if (!CommonUtil.isEmptyString(fieldQuery)) {
+			listEntryTagCriteria.createCriteria("field", "inputField0");
+			Junction junction = Restrictions.disjunction();
+			junction.add(Restrictions.ilike("titleL10nKey", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.ilike("externalId", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.and(
+					Restrictions.and(
+							Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+							Restrictions.or(Restrictions.eq("inputField0.externalId", ""), Restrictions.isNull("inputField0.externalId"))),
+					Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("titleL10nKey", ""), Restrictions.isNull("titleL10nKey")),
+					Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+					Restrictions.ilike("inputField0.externalId", fieldQuery, MatchMode.ANYWHERE)));
+			listEntryTagCriteria.add(junction);
+		}
+	}
+
 	private org.hibernate.Criteria createListEntryTagValueCriteria() {
 		org.hibernate.Criteria listEntryTagValueCriteria = this.getSession().createCriteria(ProbandListEntryTagValue.class);
 		return listEntryTagValueCriteria;
@@ -91,6 +114,11 @@ public class ProbandListEntryTagValueDaoImpl
 
 	@Override
 	protected Collection<Map> handleFindByListEntryJs(Long probandListEntryId, boolean sort, Boolean js, PSFVO psf) throws Exception {
+		return handleFindByListEntryJsField(probandListEntryId, sort, js, null, psf);
+	}
+
+	@Override
+	protected Collection<Map> handleFindByListEntryJsField(Long probandListEntryId, boolean sort, Boolean js, String fieldQuery, PSFVO psf) throws Exception {
 		org.hibernate.Criteria listEntryTagCriteria = createProbandListEntryTagCriteria(probandListEntryId);
 		if (js != null) {
 			if (js) {
@@ -99,6 +127,7 @@ public class ProbandListEntryTagValueDaoImpl
 				listEntryTagCriteria.add(Restrictions.or(Restrictions.eq("jsVariableName", ""), Restrictions.isNull("jsVariableName")));
 			}
 		}
+		applyProbandListEntryTagSearchCriterions(listEntryTagCriteria, fieldQuery);
 		if (psf != null) {
 			SubCriteriaMap criteriaMap = new SubCriteriaMap(ProbandListEntryTag.class, listEntryTagCriteria);
 			// clear sort and filters?
@@ -135,6 +164,27 @@ public class ProbandListEntryTagValueDaoImpl
 		}
 		if (probandListEntryTagId != null) {
 			listEntryTagValueCriteria.add(Restrictions.eq("tag.id", probandListEntryTagId.longValue()));
+		}
+		return (Long) listEntryTagValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
+	protected long handleGetCountField(Long probandListEntryId, Long probandListEntryTagId, String fieldQuery) throws Exception {
+		if (probandListEntryId != null) {
+			org.hibernate.Criteria listEntryTagCriteria = createProbandListEntryTagCriteria(probandListEntryId);
+			if (probandListEntryTagId != null) {
+				listEntryTagCriteria.add(Restrictions.eq("id", probandListEntryTagId.longValue()));
+			}
+			applyProbandListEntryTagSearchCriterions(listEntryTagCriteria, fieldQuery);
+			return (Long) listEntryTagCriteria.setProjection(Projections.rowCount()).uniqueResult();
+		}
+		org.hibernate.Criteria listEntryTagValueCriteria = createListEntryTagValueCriteria();
+		if (probandListEntryTagId != null) {
+			listEntryTagValueCriteria.add(Restrictions.eq("tag.id", probandListEntryTagId.longValue()));
+		}
+		if (!CommonUtil.isEmptyString(fieldQuery)) {
+			org.hibernate.Criteria tagCriteria = listEntryTagValueCriteria.createCriteria("tag", CriteriaSpecification.INNER_JOIN);
+			applyProbandListEntryTagSearchCriterions(tagCriteria, fieldQuery);
 		}
 		return (Long) listEntryTagValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}

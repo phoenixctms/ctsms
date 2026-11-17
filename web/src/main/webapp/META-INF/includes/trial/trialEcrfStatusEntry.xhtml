@@ -14,37 +14,32 @@
 			<p:remoteCommand process="@this,signPassword" name="updateEcrfStatus"
 				actionListener="#{trialEcrfStatusEntryBean.updateEcrfStatus()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this,signPassword"
 				name="signVerifiedEcrfs"
 				actionListener="#{trialEcrfStatusEntryBean.signVerifiedEcrfs()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this,signPassword" name="signAllEcrfs"
 				actionListener="#{trialEcrfStatusEntryBean.signAllEcrfs()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 			<p:remoteCommand process="@this" name="refreshTrialEcrfProgress"
 				actionListener="#{trialEcrfStatusEntryBean.refreshEcrfProgress()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-				update="trialecrfstatus_ecrf_list,section_filter,field_query" />
+				update="trialecrfstatus_ecrf_list,section_filter" />
 
 
 			<p:remoteCommand process="@this" name="reloadEcrf"
 				actionListener="#{trialEcrfStatusEntryBean.load}"
 				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 
 			<p:remoteCommand process="@this" name="refreshTrialEcrfsProgress"
 				actionListener="#{trialEcrfStatusEntryBean.refreshEcrfProgress()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
-				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query" />
-
-			<p:remoteCommand process="@this,field_query" name="filterFields"
-				update="ecrffield_input_grid"
-				oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				actionListener="#{trialEcrfStatusEntryBean.handleFilterSectionChange()}" />
-			<h:panelGrid columns="1" cellpadding="0"
+				update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter" />
+<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<h:panelGroup id="trialecrfstatus_proband_list_wrapper">
 					<p:dataTable styleClass="ctsms-datatable" lazy="true"
@@ -585,24 +580,6 @@
 									</h:panelGroup>
 									<p:message for="section_filter" />
 
-									<h:outputLabel for="field_query"
-										value="#{triallabels.ecrf_field_values_field_query_label}" />
-									<h:panelGroup>
-										<p:inputText id="field_query"
-											value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.fieldQuery}"
-											required="false"
-											label="#{triallabels.ecrf_field_values_field_query}"
-											styleClass="ctsms-control-largest"
-											onkeyup="onKeyUpDelay(function(){ filterFields(); }, 500);">
-										</p:inputText>
-										<p:tooltip rendered="#{enableTooltips}" for="field_query">
-											<h:outputText
-												value="#{triallabels.ecrf_field_values_field_query_tooltip}"
-												escape="false" />
-										</p:tooltip>
-									</h:panelGroup>
-									<p:message for="field_query" />
-
 								</h:panelGrid>
 								<h:panelGrid id="ecrf_detail" columns="8" cellpadding="2"
 									styleClass="ctsms-content-panelgrid"
@@ -649,9 +626,10 @@
 						<ui:param name="valueBean"
 							value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean}" />
 						<ui:param name="showAjaxStatus" value="true" />
+						<ui:param name="showFieldQuery" value="#{true}" />
+						<ui:param name="filterFieldsName" value="filterEcrfFields" />
 						<ui:param name="update"
-							value=":tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
-
+							value=":tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
 					</ui:include>
 					<p:dataGrid var="section"
 						value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.sections}"
@@ -694,7 +672,7 @@
 												oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
 												icon="ui-icon ui-icon-disk" ajax="true"
 												disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.editable and !trialEcrfStatusEntryBean.ecrfFieldValueBean.sectionUnlockValueMap[section]}"
-												update=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" >
+												update=":tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" >
 											    <f:param name="includeDisabled" value="true" />	
 											</p:commandButton>
 										</p:toolbarGroup>
@@ -733,7 +711,7 @@
 								oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-close" ajax="true"
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								update="trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+								update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 
 							<p:commandButton process="@this,ecrffield_inputs" id="update"
 								value="#{labels.update_page_button_label}"
@@ -741,7 +719,7 @@
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
-								update="trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" >
+								update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" >
 								<f:param name="includeDisabled" value="true" />
 							</p:commandButton>
 
@@ -761,7 +739,7 @@
 								oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
 								icon="ui-icon-refresh" ajax="true"
 								disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.created}"
-								update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,field_query,ecrf_detail,ecrf_title,ecrffield_input_grid" />
+								update="trialecrfstatus_proband_list,trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 							<p:commandButton process="@this"
 								value="#{labels.verify_signature_button_label}"
 								actionListener="#{trialEcrfStatusEntryBean.verifySignature}"
@@ -875,8 +853,9 @@
 						<ui:param name="valueBean"
 							value="#{trialEcrfStatusEntryBean.ecrfFieldValueBean}" />
 						<ui:param name="showAjaxStatus" value="false" />
+						<ui:param name="showFieldQuery" value="#{false}" />
 						<ui:param name="update"
-							value=":tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
+							value=":tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
 
 					</ui:include>
 				</h:panelGrid>
@@ -905,7 +884,7 @@
 					onstart="ecrfClearSectionConfirmation.hide();"
 					oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
 					icon="ui-icon ui-icon-trash" ajax="true"
-					update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:field_query,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
+					update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:section_filter,:tabView:trialecrfstatusentry_form:ecrf_detail,:tabView:trialecrfstatusentry_form:ecrf_title,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
 
 				<p:commandButton value="#{labels.no_button_label}"
 					onclick="ecrfClearSectionConfirmation.hide();" type="button" />

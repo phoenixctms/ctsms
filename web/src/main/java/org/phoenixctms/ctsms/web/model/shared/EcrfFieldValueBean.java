@@ -660,6 +660,16 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		appendRequestContextCallbackArgs(true);
 	}
 
+	public void handleFieldQueryChange() {
+		ecrfFieldValuesOut = null;
+		jsEcrfFieldValuesOut = null;
+		initPages(true);
+		initIn(true, false);
+		updateInputModelsMap();
+		updateInputModelModifiedAnnotations();
+		appendRequestContextCallbackArgs(true);
+	}
+
 	public void handleFirstPage() {
 		paginator.setToFirstPage();
 		handlePageChange();

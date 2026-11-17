@@ -7736,20 +7736,23 @@ public class TrialServiceImpl
 	}
 
 	@Override
-	protected long handleGetProbandListEntryTagValueCount(AuthenticationVO auth, Long probandListEntryId) throws Exception {
-		ProbandListEntry probandListEntry = CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
-		return this.getProbandListEntryTagValueDao().getCount(probandListEntryId, null);
+	protected long handleGetProbandListEntryTagValueCount(AuthenticationVO auth, Long probandListEntryId, String fieldQuery) throws Exception {
+		CheckIDUtil.checkProbandListEntryId(probandListEntryId, this.getProbandListEntryDao());
+		if (CommonUtil.isEmptyString(fieldQuery)) {
+			return this.getProbandListEntryTagValueDao().getCount(probandListEntryId, null);
+		}
+		return this.getProbandListEntryTagValueDao().getCountField(probandListEntryId, null, fieldQuery);
 	}
 
 	@Override
 	protected ProbandListEntryTagValuesOutVO handleGetProbandListEntryTagValues(
-			AuthenticationVO auth, Long probandListEntryId, boolean sort, boolean loadAllJsValues, PSFVO psf) throws Exception {
+			AuthenticationVO auth, Long probandListEntryId, boolean sort, boolean loadAllJsValues, String fieldQuery, PSFVO psf) throws Exception {
 		ProbandListEntryDao probandListEntryDao = this.getProbandListEntryDao();
 		ProbandListEntryOutVO listEntryVO = probandListEntryDao.toProbandListEntryOutVO(CheckIDUtil.checkProbandListEntryId(probandListEntryId, probandListEntryDao));
 		return ServiceUtil.getProbandListEntryTagValues(listEntryVO,
 				Settings.getBoolean(SettingCodes.PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 						DefaultSettings.PROBAND_LIST_ENTRY_TAG_VALUES_ENABLE_BROWSER_FIELD_CALCULATION),
-				loadAllJsValues, sort, psf, this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(), this.getInputFieldSelectionSetValueDao());
+				loadAllJsValues, sort, fieldQuery, psf, this.getProbandListEntryTagDao(), this.getProbandListEntryTagValueDao(), this.getInputFieldSelectionSetValueDao());
 	}
 
 	@Override

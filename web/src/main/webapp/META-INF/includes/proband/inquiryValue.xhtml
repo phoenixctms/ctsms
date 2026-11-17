@@ -182,6 +182,8 @@
 					</p:toolbar>
 					<ui:include src="../shared/paginator.xhtml">
 						<ui:param name="valueBean" value="#{inquiryValueBean}" />
+						<ui:param name="showFieldQuery" value="#{true}" />
+						<ui:param name="filterFieldsName" value="filterInquiryFields" />
 						<ui:param name="update"
 							value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiriessignup,:tabView:inquiryvalue_form:inquiry_input_grid" />
 					</ui:include>

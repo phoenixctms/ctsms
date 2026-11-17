@@ -16,6 +16,8 @@ import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -60,6 +62,27 @@ public class InquiryValueDaoImpl
 		}
 	}
 
+	private void applyInquirySearchCriterions(org.hibernate.Criteria inquiryCriteria, String fieldQuery) {
+		if (!CommonUtil.isEmptyString(fieldQuery)) {
+			inquiryCriteria.createCriteria("field", "inputField0");
+			Junction junction = Restrictions.disjunction();
+			junction.add(Restrictions.ilike("titleL10nKey", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.ilike("externalId", fieldQuery, MatchMode.ANYWHERE));
+			junction.add(Restrictions.and(
+					Restrictions.and(
+							Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+							Restrictions.or(Restrictions.eq("inputField0.externalId", ""), Restrictions.isNull("inputField0.externalId"))),
+					Restrictions.ilike("inputField0.nameL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("titleL10nKey", ""), Restrictions.isNull("titleL10nKey")),
+					Restrictions.ilike("inputField0.titleL10nKey", fieldQuery, MatchMode.ANYWHERE)));
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+					Restrictions.ilike("inputField0.externalId", fieldQuery, MatchMode.ANYWHERE)));
+			inquiryCriteria.add(junction);
+		}
+	}
+
 	private org.hibernate.Criteria createInquiryCriteria(Long probandId, Long trialId) {
 		org.hibernate.Criteria inquiryCriteria = this.getSession().createCriteria(Inquiry.class, ServiceUtil.INQUIRY_VALUE_DAO_INQUIRY_ALIAS);
 		inquiryCriteria.add(Restrictions.eq("trial.id", trialId.longValue()));
@@ -90,6 +113,12 @@ public class InquiryValueDaoImpl
 	@Override
 	protected Collection<Map> handleFindByProbandTrialActiveJs(Long probandId, Long trialId, Boolean active, Boolean activeSignup, boolean sort, Boolean js, PSFVO psf)
 			throws Exception {
+		return handleFindByProbandTrialActiveJsField(probandId, trialId, active, activeSignup, sort, js, null, psf);
+	}
+
+	@Override
+	protected Collection<Map> handleFindByProbandTrialActiveJsField(Long probandId, Long trialId, Boolean active, Boolean activeSignup, boolean sort, Boolean js,
+			String fieldQuery, PSFVO psf) throws Exception {
 		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria(probandId, trialId);
 		if (active != null) {
 			inquiryCriteria.add(Restrictions.eq("active", active.booleanValue()));
@@ -104,6 +133,7 @@ public class InquiryValueDaoImpl
 				inquiryCriteria.add(Restrictions.or(Restrictions.eq("jsVariableName", ""), Restrictions.isNull("jsVariableName")));
 			}
 		}
+		applyInquirySearchCriterions(inquiryCriteria, fieldQuery);
 		if (psf != null) {
 			SubCriteriaMap criteriaMap = new SubCriteriaMap(Inquiry.class, inquiryCriteria);
 			// clear sort and filters?
@@ -119,6 +149,12 @@ public class InquiryValueDaoImpl
 	@Override
 	protected Collection<Map> handleFindByProbandTrialCategoryActiveJs(Long probandId, Long trialId, String category, Boolean active, Boolean activeSignup, boolean sort,
 			Boolean js, PSFVO psf) throws Exception {
+		return handleFindByProbandTrialCategoryActiveJsField(probandId, trialId, category, active, activeSignup, sort, js, null, psf);
+	}
+
+	@Override
+	protected Collection<Map> handleFindByProbandTrialCategoryActiveJsField(Long probandId, Long trialId, String category, Boolean active, Boolean activeSignup, boolean sort,
+			Boolean js, String fieldQuery, PSFVO psf) throws Exception {
 		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria(probandId, trialId);
 		if (active != null) {
 			inquiryCriteria.add(Restrictions.eq("active", active.booleanValue()));
@@ -138,6 +174,7 @@ public class InquiryValueDaoImpl
 				inquiryCriteria.add(Restrictions.or(Restrictions.eq("jsVariableName", ""), Restrictions.isNull("jsVariableName")));
 			}
 		}
+		applyInquirySearchCriterions(inquiryCriteria, fieldQuery);
 		if (psf != null) {
 			SubCriteriaMap criteriaMap = new SubCriteriaMap(Inquiry.class, inquiryCriteria);
 			// clear sort and filters?
@@ -206,6 +243,19 @@ public class InquiryValueDaoImpl
 	}
 
 	@Override
+	protected long handleGetCountField(Long trialId, Boolean active, Boolean activeSignup, Long probandId, String fieldQuery) throws Exception {
+		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria(probandId, trialId);
+		if (active != null) {
+			inquiryCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (activeSignup != null) {
+			inquiryCriteria.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
+		}
+		applyInquirySearchCriterions(inquiryCriteria, fieldQuery);
+		return (Long) inquiryCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
 	protected long handleGetCount(Long trialId, String category, Boolean active, Boolean activeSignup, Long probandId) throws Exception {
 		org.hibernate.Criteria inquiryValueCriteria = createInquiryValueCriteria();
 		if (probandId != null) {
@@ -227,6 +277,24 @@ public class InquiryValueDaoImpl
 			inquiryCriteria.add(Restrictions.or(Restrictions.eq("category", ""), Restrictions.isNull("category")));
 		}
 		return (Long) inquiryValueCriteria.setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
+	protected long handleGetCountField(Long trialId, String category, Boolean active, Boolean activeSignup, Long probandId, String fieldQuery) throws Exception {
+		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria(probandId, trialId);
+		if (active != null) {
+			inquiryCriteria.add(Restrictions.eq("active", active.booleanValue()));
+		}
+		if (activeSignup != null) {
+			inquiryCriteria.add(Restrictions.eq("activeSignup", activeSignup.booleanValue()));
+		}
+		if (category != null && category.length() > 0) {
+			inquiryCriteria.add(Restrictions.eq("category", category));
+		} else {
+			inquiryCriteria.add(Restrictions.or(Restrictions.eq("category", ""), Restrictions.isNull("category")));
+		}
+		applyInquirySearchCriterions(inquiryCriteria, fieldQuery);
+		return (Long) inquiryCriteria.setProjection(Projections.rowCount()).uniqueResult();
 	}
 
 	@Override
