@@ -27,6 +27,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
@@ -1379,6 +1380,18 @@ public class SessionScopeBean implements FilterItemsStore {
 		}
 	}
 
+	private static String currentSessionId() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context == null) {
+			return null;
+		}
+		Object session = context.getExternalContext().getSession(false);
+		if (session instanceof HttpSession) {
+			return ((HttpSession) session).getId();
+		}
+		return null;
+	}
+
 	public synchronized String login() {
 		logon = null;
 		otpRequired = false;
@@ -1396,7 +1409,7 @@ public class SessionScopeBean implements FilterItemsStore {
 				otpRequired = true;
 				outcome = getLoginOutcome(false);
 			} else {
-				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
+				ApplicationScopeBean.registerActiveUser(currentSessionId(), logon.getInheritedUser());
 				WebUtil.setSessionTimeout();
 				renewRestApiJwtIfRequired();
 				failedAttempts = 0;
@@ -1456,7 +1469,7 @@ public class SessionScopeBean implements FilterItemsStore {
 		if (logon != null && otpRequired) {
 			try {
 				WebUtil.getServiceLocator().getUserService().verifyOTP(auth, logon.getInheritedUser().getId(), logon.getOtpToken(), null);
-				ApplicationScopeBean.registerActiveUser(logon.getInheritedUser());
+				ApplicationScopeBean.registerActiveUser(currentSessionId(), logon.getInheritedUser());
 				WebUtil.setSessionTimeout();
 				renewRestApiJwtIfRequired();
 				failedAttempts = 0;
