@@ -232,7 +232,7 @@ public class ApplicationScopeBean {
 		Iterator<UserOutVO> sessionIt = sessions.iterator();
 		while (sessionIt.hasNext()) {
 			UserOutVO user = sessionIt.next();
-			if (user != null && user.getId() != null && !usersById.containsKey(user.getId())) {
+			if (user != null && !usersById.containsKey(user.getId())) {
 				usersById.put(user.getId(), user);
 			}
 		}
