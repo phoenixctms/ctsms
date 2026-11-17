@@ -53,7 +53,7 @@ Build and Install (Debian)
 -----
 For a classic single-host appliance (or production-style Debian install):
 
-1. Prepare a vanilla _Debian 13 (Trixie)_ Linux instance (ie. from [debian-13.6.0-amd64-netinst.iso](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-13.6.0-amd64-netinst.iso)):
+1. Prepare a vanilla recent _Debian_ stable Linux instance (netinst image from the [current amd64 images](https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/)):
   * 2 vCPUs, 4-8 GB RAM and 10-20 GB disk should be fine for a test environment
   * Select basic packages only (no database or webserver)
   * The procedure was also successfully tested with latest _Ubuntu_
