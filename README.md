@@ -33,17 +33,21 @@ This GitHub repository contains all tiers of the main JEE web application. Trans
 
 Try it (Docker)
 -----
-The fastest way to evaluate Phoenix is Docker Compose (Windows, macOS, or Linux) — no VirtualBox and no on-host Maven build. See [`phoenixctms/docker`](https://github.com/phoenixctms/docker):
+The fastest way to evaluate Phoenix is Docker Compose — no VirtualBox and no on-host Maven build. On Windows, install [WSL2](https://learn.microsoft.com/windows/wsl/install) first; Docker Desktop runs on it. See [`phoenixctms/docker`](https://github.com/phoenixctms/docker).
+
+Linux, macOS, or WSL:
 
 ```bash
-git clone https://github.com/phoenixctms/docker.git
-cd docker
-docker compose build
-docker compose up -d
-docker compose logs -f db-init
+if ! command -v curl >/dev/null 2>&1; then sudo apt-get update && sudo apt-get install -y curl ca-certificates; fi && curl -fsSL https://raw.githubusercontent.com/phoenixctms/docker/master/install.sh | bash
 ```
 
-When init finishes, open http://localhost:8888 and log in with the printed `phoenix` credentials.
+Windows PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/phoenixctms/docker/master/install.ps1 | iex
+```
+
+When init finishes, open http://localhost:8888 and log in with the printed `phoenix` password. Signup is at http://localhost:3000. Set `PHOENIX_SIGNUP=false` to skip it.
 
 Build and Install (Debian)
 -----
