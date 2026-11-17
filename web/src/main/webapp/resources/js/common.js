@@ -666,7 +666,10 @@ function openTrialTeamMemberMultiPicker(trialTargetField, start, stop, pickTarge
 
 }
 
-function ajaxRequest(source, process, update, oncomplete) {
+// ext: the ext argument a pe:javascript behavior passes to its execute function. A dropdown's
+// change behavior gets an ext.oncomplete there, which releases its reopen guard (see
+// primefacesOverrides.js), so it must be called when the request completed.
+function ajaxRequest(source, process, update, oncomplete, ext) {
 	var ajaxCfg = {
 	    source : _stripLeadingColons(source),
 	    process : _stripLeadingColons(process),
@@ -675,9 +678,15 @@ function ajaxRequest(source, process, update, oncomplete) {
 	if (update != null && update.length > 0) {
 		ajaxCfg['update'] = _stripLeadingColons(update);
 	}
-	if (_testFunction(window[oncomplete])) {
-		ajaxCfg['oncomplete'] = function(xhr, status) {
-			window[oncomplete](xhr, status, null);
+	var extOncomplete = (ext != null && _testFunction(ext.oncomplete)) ? ext.oncomplete : null;
+	if (_testFunction(window[oncomplete]) || extOncomplete != null) {
+		ajaxCfg['oncomplete'] = function(xhr, status, args) {
+			if (_testFunction(window[oncomplete])) {
+				window[oncomplete](xhr, status, null);
+			}
+			if (extOncomplete != null) {
+				extOncomplete.call(this, xhr, status, args);
+			}
 		};
 	}
 	setSupressWait();
