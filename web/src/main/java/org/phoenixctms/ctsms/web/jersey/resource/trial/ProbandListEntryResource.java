@@ -104,11 +104,11 @@ public class ProbandListEntryResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	@Path("{id}/tagvalues")
 	public JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO> getProbandListEntryTagValues(@PathParam("id") Long id,
-			@QueryParam("sort") Boolean sort, @QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
+			@QueryParam("sort") Boolean sort, @QueryParam("load_all_js_values") Boolean loadAllJsValues, @QueryParam("query") String query, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf = new PSFUriPart(uriInfo, "sort", "load_all_js_values");
+		PSFUriPart psf = new PSFUriPart(uriInfo, "sort", "load_all_js_values", "query");
 		ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService()
-				.getProbandListEntryTagValues(auth, id, sort, loadAllJsValues, psf);
+				.getProbandListEntryTagValues(auth, id, sort, loadAllJsValues, query, psf);
 		return new JsValuesOutVOPage<ProbandListEntryTagValueOutVO, ProbandListEntryTagValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
 	}
 

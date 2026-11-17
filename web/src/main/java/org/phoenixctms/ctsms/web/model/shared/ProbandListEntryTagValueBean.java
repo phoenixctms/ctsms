@@ -140,16 +140,26 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	private Collection<ProbandGroupOutVO> probandGroups;
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<InquiryValueJsonVO> inquiryValuesOut;
+	private String fieldQuery;
 
 	public ProbandListEntryTagValueBean() {
 		super();
-		paginator = new Paginator() {
+		fieldQuery = null;
+		paginator = new Paginator(this) {
 
 			@Override
 			protected Long getCount(Long... ids) {
-				ProbandListEntryOutVO probandListEntry = WebUtil.getProbandListEntry(ids[0]);
-				if (probandListEntry != null) {
-					return WebUtil.getProbandListEntryTagCount(probandListEntry.getTrial().getId(), null);
+				ProbandListEntryTagValueBean valueBean = (ProbandListEntryTagValueBean) bean;
+				if (!CommonUtil.isEmptyString(valueBean.getFieldQuery()) && ids[0] != null) {
+					try {
+						return WebUtil.getServiceLocator().getTrialService().getProbandListEntryTagValueCount(WebUtil.getAuthentication(), ids[0], valueBean.getFieldQuery());
+					} catch (Exception e) {
+						return null;
+					}
+				}
+				ProbandListEntryOutVO listEntry = WebUtil.getProbandListEntry(ids[0]);
+				if (listEntry != null) {
+					return WebUtil.getProbandListEntryTagCount(listEntry.getTrial().getId(), null);
 				}
 				return null;
 			}
@@ -266,10 +276,28 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		tagValuesOut = null;
 		jsTagValuesOut = null;
 		this.probandListEntryId = id;
+		fieldQuery = null;
 		paginator.initPages(false, probandListEntryId);
 		initIn(true, false);
 		initSets();
 		return CHANGE_OUTCOME;
+	}
+
+	public String getFieldQuery() {
+		return fieldQuery;
+	}
+
+	public void setFieldQuery(String fieldQuery) {
+		this.fieldQuery = fieldQuery;
+	}
+
+	public void handleFieldQueryChange() {
+		tagValuesOut = null;
+		jsTagValuesOut = null;
+		paginator.initPages(true, probandListEntryId);
+		initIn(true, false);
+		initSets();
+		appendRequestContextCallbackArgs(true);
 	}
 
 	private void clearInputModelErrorMsgs() {
@@ -403,7 +431,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 			if (tagValuesOut == null || jsTagValuesOut == null) {
 				try {
 					portionTagValues(WebUtil.getServiceLocator().getTrialService()
-							.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, loadAllJsValues, paginator.getPsf()));
+							.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, loadAllJsValues, fieldQuery, paginator.getPsf()));
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {
 					WebUtil.publishException(e);
@@ -455,7 +483,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		jsTagValuesOut = null;
 		try {
 			portionTagValues(WebUtil.getServiceLocator().getTrialService()
-					.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, true, paginator.getPsf()));
+					.getProbandListEntryTagValues(WebUtil.getAuthentication(), probandListEntryId, true, true, fieldQuery, paginator.getPsf()));
 			return LOAD_OUTCOME;
 		} catch (ServiceException e) {
 			Messages.addMessageClientId("probandListEntryTagValueMessages", FacesMessage.SEVERITY_ERROR, e.getMessage());

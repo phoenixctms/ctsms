@@ -928,6 +928,8 @@
 								<ui:include src="../shared/paginator.xhtml">
 									<ui:param name="valueBean"
 										value="#{probandListEntryBean.probandListEntryTagValueBean}" />
+									<ui:param name="showFieldQuery" value="#{true}" />
+									<ui:param name="filterFieldsName" value="filterTagFields" />
 									<ui:param name="update"
 										value=":tabView:probandlist_form:probandListTabView:tagvalue_input_grid" />
 								</ui:include>

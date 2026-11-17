@@ -125,11 +125,13 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 	private HashMap<String, Boolean> categoryCollapsedMap;
 	private Collection<InquiryCategory> categories;
 	private HashMap<String, List<Object[]>> paddedInputModelsMap;
+	private String fieldQuery;
 
 	public InquiryValueBeanBase() {
 		super();
 		trialId = null;
 		trial = null;
+		fieldQuery = null;
 		categories = new ArrayList<InquiryCategory>();
 		inputModelsMap = new HashMap<String, InquiryInputModelList>();
 		categoryCollapsedMap = new HashMap<String, Boolean>();
@@ -138,7 +140,21 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 
 			@Override
 			protected Long getCount(Long... ids) {
-				if (isSignup()) {
+				InquiryValueBeanBase valueBean = (InquiryValueBeanBase) bean;
+				String query = valueBean.getFieldQuery();
+				ProbandOutVO proband = valueBean.getProband();
+				if (!CommonUtil.isEmptyString(query) && proband != null && ids[0] != null) {
+					try {
+						if (valueBean.isSignup()) {
+							return WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), ids[0], null, true, proband.getId(), query);
+						} else {
+							return WebUtil.getServiceLocator().getProbandService().getInquiryValueCount(WebUtil.getAuthentication(), ids[0], true, null, proband.getId(), query);
+						}
+					} catch (Exception e) {
+						return null;
+					}
+				}
+				if (valueBean.isSignup()) {
 					return WebUtil.getInquiryCount(ids[0], null, true);
 				} else {
 					return WebUtil.getInquiryCount(ids[0], true, null);
@@ -272,6 +288,24 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 
 	public TrialOutVO getTrial() {
 		return trial;
+	}
+
+	public String getFieldQuery() {
+		return fieldQuery;
+	}
+
+	public void setFieldQuery(String fieldQuery) {
+		this.fieldQuery = fieldQuery;
+	}
+
+	public void handleFieldQueryChange() {
+		inquiryValuesOut = null;
+		jsInquiryValuesOut = null;
+		paginator.initPages(true, trialId);
+		initIn(true, false);
+		updateInputModelsMap();
+		updateInputModelModifiedAnnotations();
+		appendRequestContextCallbackInputModelValuesOutArgs(true);
 	}
 
 	public void handleFieldsPerRowChange() {

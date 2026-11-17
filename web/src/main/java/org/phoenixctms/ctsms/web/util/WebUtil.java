@@ -4228,7 +4228,7 @@ public final class WebUtil {
 				TrialOutVO trialVO = it.next();
 				Long inquiryValueCount = 0L;
 				try {
-					inquiryValueCount = getServiceLocator().getProbandService().getInquiryValueCount(getAuthentication(), trialVO.getId(), active, activeSignup, probandId);
+					inquiryValueCount = getServiceLocator().getProbandService().getInquiryValueCount(getAuthentication(), trialVO.getId(), active, activeSignup, probandId, null);
 					totalInquiryValueCount += inquiryValueCount;
 				} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
 				} catch (AuthenticationException e) {

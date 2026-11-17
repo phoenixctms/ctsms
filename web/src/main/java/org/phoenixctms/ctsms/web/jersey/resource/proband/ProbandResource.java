@@ -179,10 +179,10 @@ public final class ProbandResource extends ServiceResourceBase {
 	@Path("{id}/inquiryvalues/{trialId}")
 	public JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO> getInquiryValues(@PathParam("id") Long id, @PathParam("trialId") Long trialId,
 			@QueryParam("active") Boolean active, @QueryParam("active_signup") Boolean activeSignup, @QueryParam("sort") Boolean sort,
-			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @Context UriInfo uriInfo)
+			@QueryParam("load_all_js_values") Boolean loadAllJsValues, @QueryParam("query") String query, @Context UriInfo uriInfo)
 			throws AuthenticationException, AuthorisationException, ServiceException {
-		PSFUriPart psf = new PSFUriPart(uriInfo, "active", "active_signup", "sort", "load_all_js_values");
-		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, active, activeSignup, id, sort, loadAllJsValues, psf);
+		PSFUriPart psf = new PSFUriPart(uriInfo, "active", "active_signup", "sort", "load_all_js_values", "query");
+		InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().getInquiryValues(auth, trialId, active, activeSignup, id, sort, loadAllJsValues, query, psf);
 		return new JsValuesOutVOPage<InquiryValueOutVO, InquiryValueJsonVO>(values.getPageValues(), values.getJsValues(), psf);
 	}
 

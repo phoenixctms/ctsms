@@ -1431,15 +1431,16 @@ public class ProbandServiceImpl
 	}
 
 	private InquiryValuesOutVO getInquiryValues(Trial trial, String category, ProbandOutVO probandVO, Boolean active, Boolean activeSignup, boolean jsValues,
-			boolean loadAllJsValues, boolean sort, PSFVO psf) throws Exception {
+			boolean loadAllJsValues, boolean sort, String fieldQuery, PSFVO psf) throws Exception {
 		InquiryValueDao inquiryValueDao = this.getInquiryValueDao();
 		InquiryValuesOutVO result = new InquiryValuesOutVO();
-		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialCategoryActiveJs(probandVO.getId(), trial.getId(), category, active, activeSignup, sort, null, psf);
+		Collection<Map> inquiryValues = inquiryValueDao.findByProbandTrialCategoryActiveJsField(probandVO.getId(), trial.getId(), category, active, activeSignup, sort, null,
+				fieldQuery, psf);
 		result.setPageValues(ServiceUtil.getInquiryValues(probandVO, inquiryValues, null, this.getInquiryDao(), inquiryValueDao));
 		if (jsValues) {
 			if (loadAllJsValues) {
 				result.setJsValues(ServiceUtil.getInquiryJsonValues(
-						inquiryValueDao.findByProbandTrialActiveJs(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null),
+						inquiryValueDao.findByProbandTrialActiveJsField(probandVO.getId(), trial.getId(), active, activeSignup, sort, true, null, null),
 						false, inquiryValueDao, this.getInputFieldSelectionSetValueDao()));
 			} else {
 				result.setJsValues(ServiceUtil.getInquiryJsonValues(inquiryValues,
@@ -2350,42 +2351,48 @@ public class ProbandServiceImpl
 
 	@Override
 	protected long handleGetInquiryValueCount(AuthenticationVO auth, Long trialId, Boolean active, Boolean activeSignup,
-			Long probandId) throws Exception {
-		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+			Long probandId, String fieldQuery) throws Exception {
+		CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
-		return this.getInquiryValueDao().getCount(trialId, active, activeSignup, probandId);
+		if (CommonUtil.isEmptyString(fieldQuery)) {
+			return this.getInquiryValueDao().getCount(trialId, active, activeSignup, probandId);
+		}
+		return this.getInquiryValueDao().getCountField(trialId, active, activeSignup, probandId, fieldQuery);
 	}
 
 	@Override
 	protected long handleGetInquiryValueCount(AuthenticationVO auth, Long trialId, String category,
-			Boolean active, Boolean activeSignup, Long probandId) throws Exception {
-		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
+			Boolean active, Boolean activeSignup, Long probandId, String fieldQuery) throws Exception {
+		CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		CheckIDUtil.checkProbandId(probandId, this.getProbandDao());
-		return this.getInquiryValueDao().getCount(trialId, category, active, activeSignup, probandId);
+		if (CommonUtil.isEmptyString(fieldQuery)) {
+			return this.getInquiryValueDao().getCount(trialId, category, active, activeSignup, probandId);
+		}
+		return this.getInquiryValueDao().getCountField(trialId, category, active, activeSignup, probandId, fieldQuery);
 	}
 
 	@Override
 	protected InquiryValuesOutVO handleGetInquiryValues(
 			AuthenticationVO auth, Long trialId, Boolean active, Boolean activeSignup, Long probandId,
-			boolean sort, boolean loadAllJsValues, PSFVO psf) throws Exception {
+			boolean sort, boolean loadAllJsValues, String fieldQuery, PSFVO psf) throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		ProbandDao probandDao = this.getProbandDao();
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(CheckIDUtil.checkProbandId(probandId, probandDao));
 		return ServiceUtil.getInquiryValues(trial, probandVO, active, activeSignup,
 				Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION, Bundle.SETTINGS,
 						DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION),
-				loadAllJsValues, sort, psf, this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao());
+				loadAllJsValues, sort, fieldQuery, psf, this.getInquiryDao(), this.getInquiryValueDao(), this.getInputFieldSelectionSetValueDao());
 	}
 
 	@Override
 	protected InquiryValuesOutVO handleGetInquiryValues(
 			AuthenticationVO auth, Long trialId, String category, Boolean active, Boolean activeSignup, Long probandId,
-			boolean sort, boolean loadAllJsValues, PSFVO psf) throws Exception {
+			boolean sort, boolean loadAllJsValues, String fieldQuery, PSFVO psf) throws Exception {
 		Trial trial = CheckIDUtil.checkTrialId(trialId, this.getTrialDao());
 		ProbandDao probandDao = this.getProbandDao();
 		ProbandOutVO probandVO = probandDao.toProbandOutVO(CheckIDUtil.checkProbandId(probandId, probandDao));
 		return getInquiryValues(trial, category, probandVO, active, activeSignup, Settings.getBoolean(SettingCodes.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION,
-				Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION), loadAllJsValues, sort, psf);
+				Bundle.SETTINGS, DefaultSettings.INQUIRY_VALUES_ENABLE_BROWSER_FIELD_CALCULATION), loadAllJsValues, sort, fieldQuery, psf);
 	}
 
 	@Override
