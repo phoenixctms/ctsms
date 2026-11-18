@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -256,6 +257,10 @@ public final class CoreUtil implements ApplicationContextAware {
 	}
 
 	public static boolean checkTimeZone(String timeZoneID) {
+		if (timeZoneID != null && ZoneId.SHORT_IDS.containsKey(timeZoneID)) {
+			// deprecated three-letter ID, no longer listed but still accepted for existing settings
+			return true;
+		}
 		TimeZone timeZone = CommonUtil.timeZoneFromString(timeZoneID);
 		Iterator<TimeZone> it = getTimeZones().iterator();
 		while (it.hasNext()) {
@@ -844,6 +849,11 @@ public final class CoreUtil implements ApplicationContextAware {
 		if (availableIDs != null && availableIDs.length > 0) {
 			result = new ArrayList<TimeZone>(availableIDs.length);
 			for (int i = 0; i < availableIDs.length; i++) {
+				// skip the deprecated three-letter IDs (EST, PST, MIT, ...): Java 25 logs a warning for each,
+				// and they are ambiguous aliases of the region IDs that are listed anyway
+				if (ZoneId.SHORT_IDS.containsKey(availableIDs[i])) {
+					continue;
+				}
 				result.add(CommonUtil.timeZoneFromString(availableIDs[i]));
 			}
 		} else {

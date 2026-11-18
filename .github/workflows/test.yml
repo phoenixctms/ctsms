@@ -21,14 +21,13 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           persist-credentials: false
+      # Temurin from the runner's tool cache or GitHub's CDN instead of apt's default-jdk: the
+      # Ubuntu mirror sometimes serves the 154 MB of default-jdk at ~60 kB/s (40+ minutes).
       - name: Set up JDK
-        run: |
-          sudo apt-get update
-          sudo apt-get -q -y install default-jdk
-#         apt-get -q -y install libservlet3.1-java tomcat9
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 11
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
       # repo.maven.apache.org returns 403 to GitHub-hosted runners for this tarball.
       - name: Set up Maven
         run: |
@@ -37,6 +36,10 @@ jobs:
             "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
           tar -xzf "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+      - name: Show Java and Maven versions
+        run: |
+          java -version
+          mvn -v
       - name: Cache Maven packages
         uses: actions/cache@v6
         with:
@@ -61,6 +64,9 @@ jobs:
           UUID+=$(cat /proc/sys/kernel/random/uuid)
           sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /home/runner/work/ctsms/ctsms/pom.xml
           mvn install -DskipTests --no-transfer-progress -c
+      # package index for the apt installs below (database, BulkProcessor, Tomcat, wkhtmltopdf)
+      - name: Update apt package index
+        run: sudo apt-get update
       - name: Setup database
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
@@ -112,8 +118,8 @@ jobs:
       - name: Setup Tomcat
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
-          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION explicitly
-          sudo VERSION="$VERSION" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION and JAVA_HOME explicitly
+          sudo VERSION="$VERSION" JAVA_HOME="$JAVA_HOME" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
       - name: Snapshot REST API swagger.json and index
         # Fetched on every run, so a broken spec shows up in PRs too; published only from master.
         # Both describe the CI Tomcat, so drop its host/schemes and instance details, and make the index URLs relative.
