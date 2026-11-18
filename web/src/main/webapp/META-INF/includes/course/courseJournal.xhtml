@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="coursejournal_form">
+			<p:remoteCommand process="@this" name="changeCourseJournalEntry"
+				actionListener="#{journalBean.changeCourse(courseBean.in.id)}"
+				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
+				update=":tabView:coursejournal_form:journal_list,:tabView:coursejournal_form:journal_input" />
 
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
 				<ui:param name="namingContainer" value=":tabView:coursejournal_form" />

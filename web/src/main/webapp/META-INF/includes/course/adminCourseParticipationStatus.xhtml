@@ -11,6 +11,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="admincourseparticipationstatus_form">
+			<p:remoteCommand process="@this"
+				name="changeAdminCourseParticipationStatus"
+				actionListener="#{adminCourseParticipationStatusBean.change(courseBean.in.id)}"
+				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
+				update=":tabView:admincourseparticipationstatus_form:courseparticipationstatus_list,:tabView:admincourseparticipationstatus_form:courseparticipationstatus_bulkadd,:tabView:admincourseparticipationstatus_form:courseparticipationstatus_input" />
 
 			<p:remoteCommand process="@this,lastPickedStaffIds"
 				name="addStaffIDs"
