@@ -348,7 +348,7 @@
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.update}"
 										oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 										icon="ui-icon ui-icon-disk" ajax="true"
-										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable}"
+										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable and !trialParticipationBean.probandListEntryTagValueBean.draftsSaveable}"
 										update="tagvalue_input_grid">
 										<f:param name="includeDisabled" value="true" />	
 										<p:menuitem process="@this,tagvalue_inputs"
@@ -356,7 +356,7 @@
 											actionListener="#{trialParticipationBean.probandListEntryTagValueBean.updateWithDrafts}"
 											oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
 											icon="ui-icon ui-icon-disk" ajax="true"
-											disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable or trialParticipationBean.probandListEntryTagValueBean.hiddenDraftCount le 0}"
+											disabled="#{!trialParticipationBean.probandListEntryTagValueBean.draftsSaveable}"
 											update="tagvalue_input_grid">
 											<f:param name="includeDisabled" value="true" />
 										</p:menuitem>

@@ -1858,7 +1858,8 @@ function updateUnsavedInputFields(root) {
 	fieldsets.each(function() {
 		var fieldset = jQuery(this);
 		// file uploads and photo captures only re-render the file label:
-		var values = fieldset.find(":input").serialize() + "|" + fieldset.find(".ctsms-input-file-link").text();
+		// (not the collapsed state of a toggleable field row, which is an input too)
+		var values = fieldset.find(":input").not("[name$='_collapsed']").serialize() + "|" + fieldset.find(".ctsms-input-file-link").text();
 		var renderedValues = fieldset.data("ctsmsRenderedValues");
 		if (renderedValues === undefined) {
 			fieldset.data("ctsmsRenderedValues", values);
