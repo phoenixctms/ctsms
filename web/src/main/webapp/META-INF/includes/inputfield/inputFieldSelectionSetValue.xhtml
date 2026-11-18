@@ -12,6 +12,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldselectionsetvalue_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeSelectionSetValue"
+				actionListener="#{selectionSetValueBean.change(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldselectionsetvalue_form:selectionsetvalue_list,:tabView:inputfieldselectionsetvalue_form:selectionsetvalue_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

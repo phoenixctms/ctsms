@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldjob_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldJob"
+				actionListener="#{jobBean.changeInputField(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldjob_form:job_list,:tabView:inputfieldjob_form:job_input" />
 
 			<ui:include src="/META-INF/includes/shared/job.xhtml">
 				<ui:param name="markUnEncrypted" value="false" />

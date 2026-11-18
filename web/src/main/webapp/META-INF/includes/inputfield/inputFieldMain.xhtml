@@ -14,36 +14,6 @@
 		<h:form id="inputfieldmain_form">
 
 
-			<p:remoteCommand
-				process="@this"
-				name="changeInputFieldAssociation"
-				actionListener="#{inputFieldAssociationBean.change(inputFieldBean.in.id)}"
-				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-				update=":tabView:inputfieldassociation_form:association_lists" />
-			<p:remoteCommand
-				process="@this"
-				name="changeDummy"
-				actionListener="#{dummyInputFieldValueBean.change(inputFieldBean.in.id)}"
-				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update=":tabView:inputfielddummy_form:input_dummy_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInputFieldJournalEntry"
-				actionListener="#{journalBean.changeInputField(inputFieldBean.in.id)}"
-				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-				update=":tabView:inputfieldjournal_form:journal_list,:tabView:inputfieldjournal_form:journal_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInputFieldJob"
-				actionListener="#{jobBean.changeInputField(inputFieldBean.in.id)}"
-				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-				update=":tabView:inputfieldjob_form:job_list,:tabView:inputfieldjob_form:job_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeSelectionSetValue"
-				actionListener="#{selectionSetValueBean.change(inputFieldBean.in.id)}"
-				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-				update=":tabView:inputfieldselectionsetvalue_form:selectionsetvalue_list,:tabView:inputfieldselectionsetvalue_form:selectionsetvalue_input" />		
 		
 		
 			<p:remoteCommand
