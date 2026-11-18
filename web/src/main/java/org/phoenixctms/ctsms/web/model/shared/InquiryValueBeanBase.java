@@ -302,7 +302,7 @@ public abstract class InquiryValueBeanBase extends ManagedBeanBase {
 		inquiryValuesOut = null;
 		jsInquiryValuesOut = null;
 		paginator.initPages(true, trialId);
-		initIn(true, false);
+		initIn(false, true);
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		appendRequestContextCallbackInputModelValuesOutArgs(true);

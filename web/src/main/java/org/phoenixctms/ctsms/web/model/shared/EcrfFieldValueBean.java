@@ -664,7 +664,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
 		initPages(true);
-		initIn(true, false);
+		initIn(false, true);
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		appendRequestContextCallbackArgs(true);

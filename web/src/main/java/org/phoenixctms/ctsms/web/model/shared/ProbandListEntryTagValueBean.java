@@ -295,7 +295,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		tagValuesOut = null;
 		jsTagValuesOut = null;
 		paginator.initPages(true, probandListEntryId);
-		initIn(true, false);
+		initIn(false, true);
 		initSets();
 		appendRequestContextCallbackArgs(true);
 	}
