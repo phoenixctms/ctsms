@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldassociation_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldAssociation"
+				actionListener="#{inputFieldAssociationBean.change(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldassociation_form:association_lists" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inputfieldjournal_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInputFieldJournalEntry"
+				actionListener="#{journalBean.changeInputField(inputFieldBean.in.id)}"
+				oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+				update=":tabView:inputfieldjournal_form:journal_list,:tabView:inputfieldjournal_form:journal_input" />
 
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
 				<ui:param name="namingContainer"

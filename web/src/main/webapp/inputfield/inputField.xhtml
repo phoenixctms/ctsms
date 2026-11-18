@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<title>input field tab</title>
 </h:head>
@@ -21,7 +22,10 @@
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.inputFieldTabTitles)}" />
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.inputFieldVisibleTabSet}" />
 				<ui:param name="tabViewWidgetVar" value="inputFieldTabView" />
-			</ui:include>		
+			</ui:include>
+			<script type="text/javascript">
+				sendBuildTabParam('inputFieldTabView');
+			</script>
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -46,7 +50,9 @@
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_SELECTION_SET_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_SELECTION_SET_VALUE_COUNT'))}">
-						<ui:include src="/META-INF/includes/inputfield/inputFieldSelectionSetValue.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inputfieldselectionsetvalue')}">
+							<ui:include src="/META-INF/includes/inputfield/inputFieldSelectionSetValue.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inputfielddummy"
@@ -54,7 +60,9 @@
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.input_field_preview_tab_label}">
-						<ui:include src="/META-INF/includes/inputfield/inputFieldDummy.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inputfielddummy')}">
+							<ui:include src="/META-INF/includes/inputfield/inputFieldDummy.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inputfieldassociations"
@@ -62,7 +70,9 @@
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.input_field_associations_tab_label}">
-						<ui:include src="/META-INF/includes/inputfield/inputFieldAssociation.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inputfieldassociations')}">
+							<ui:include src="/META-INF/includes/inputfield/inputFieldAssociation.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inputfieldjobs"
@@ -70,7 +80,9 @@
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOB_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOB_COUNT'))}">
-						<ui:include src="/META-INF/includes/inputfield/inputFieldJob.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inputfieldjobs')}">
+							<ui:include src="/META-INF/includes/inputfield/inputFieldJob.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inputfieldjournal"
@@ -78,7 +90,9 @@
 						disabled="#{!inputFieldBean.created}"
 						titleStyleClass="#{inputFieldBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inputFieldBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INPUT_FIELD_JOURNAL_ENTRY_COUNT'))}">
-						<ui:include src="/META-INF/includes/inputfield/inputFieldJournal.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inputfieldjournal')}">
+							<ui:include src="/META-INF/includes/inputfield/inputFieldJournal.xhtml" />
+						</c:if>
 					</p:tab>
 				</p:tabView>
 			</h:panelGrid>
