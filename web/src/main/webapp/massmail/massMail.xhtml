@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<title>mass mail tab</title>
 </h:head>
@@ -22,6 +23,9 @@
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.massMailVisibleTabSet}" />
 				<ui:param name="tabViewWidgetVar" value="massMailTabView" />
 			</ui:include>
+			<script type="text/javascript">
+				sendBuildTabParam('massMailTabView');
+			</script>
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -46,7 +50,9 @@
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_RECIPIENT_COUNT'))}">
-						<ui:include src="/META-INF/includes/massmail/massMailRecipient.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('massmailrecipients')}">
+							<ui:include src="/META-INF/includes/massmail/massMailRecipient.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="massmailfiles"
@@ -54,7 +60,9 @@
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_FILE_COUNT'))}">
-						<ui:include src="/META-INF/includes/massmail/massMailFile.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('massmailfiles')}">
+							<ui:include src="/META-INF/includes/massmail/massMailFile.xhtml" />
+						</c:if>
 					</p:tab>					
 					<p:tab
 						id="massmailjournal"
@@ -62,7 +70,9 @@
 						disabled="#{!massMailBean.created}"
 						titleStyleClass="#{massMailBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{massMailBean.getTabTitle(applicationScopeBean.jsValue('AJAX_MASS_MAIL_JOURNAL_ENTRY_COUNT'))}">
-						<ui:include src="/META-INF/includes/massmail/massMailJournal.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('massmailjournal')}">
+							<ui:include src="/META-INF/includes/massmail/massMailJournal.xhtml" />
+						</c:if>
 					</p:tab>
 				</p:tabView>
 			</h:panelGrid>

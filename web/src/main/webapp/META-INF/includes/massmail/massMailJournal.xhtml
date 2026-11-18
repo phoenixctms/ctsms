@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="massmailjournal_form">
+			<p:remoteCommand process="@this" name="changeMassMailJournalEntry"
+				actionListener="#{journalBean.changeMassMail(massMailBean.in.id)}"
+				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
+				update=":tabView:massmailjournal_form:journal_list,:tabView:massmailjournal_form:journal_input" />
 
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
 				<ui:param name="namingContainer"
