@@ -10,6 +10,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="useractivity_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeUserActivity"
+				actionListener="#{userActivityBean.change(userBean.in.id)}"
+				update=":tabView:useractivity_form:useractivity_list" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:dataTable styleClass="ctsms-datatable" lazy="true"
