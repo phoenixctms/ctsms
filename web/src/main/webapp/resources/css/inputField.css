@@ -60,14 +60,19 @@
 	width: 0%;
 }
 
-.ctsms-region-buttons-column {
-	width: 32px;
-	vertical-align: middle;
-}
-
 .ctsms-region-codemirror-column {
 	vertical-align: top;
 	width: 100%;
+	padding-left: 12px;
+}
+
+.ctsms-region-codemirror-panelgrid {
+	width: 100%;
+}
+
+/* until initSelectionSetValueRegionsSync matches the height of the sketch */
+.ctsms-region-codemirror-column .CodeMirror-scroll {
+	height: 160px;
 }
 
 .ctsms-inputfield-output-row {

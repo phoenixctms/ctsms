@@ -81,7 +81,6 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	private InputFieldOutVOConfig config;
 	private InputFieldSelectionSetValueLazyModel selectionSetValueModel;
 	private String inkRegionsJson;
-	private boolean inkRegionsJsonVisible;
 	private String deferredDeleteReason;
 
 	public SelectionSetValueBean() {
@@ -236,15 +235,6 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 		}
 	}
 
-	public void handleJsonToSketch() throws UnsupportedEncodingException {
-		setInkRegions(WebUtil.compressJson(inkRegionsJson));
-	}
-
-	public void handleSketchToJson() throws UnsupportedEncodingException {
-		inkRegionsJson = WebUtil.beautifyJson(getInkRegions());
-		inkRegionsJsonVisible = true;
-	}
-
 	@PostConstruct
 	private void init() {
 		Long id = WebUtil.getLongParamValue(GetParamNames.INPUT_FIELD_SELECTION_SET_VALUE_ID);
@@ -280,7 +270,6 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 			} catch (UnsupportedEncodingException e) {
 			}
 		}
-		inkRegionsJsonVisible = false;
 		if (!config.isSelect()) {
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.INPUT_FIELD_NOT_SELECT);
 		}
@@ -311,10 +300,6 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 	@Override
 	public boolean isEditable() {
 		return isCreated() && config.isSelect();
-	}
-
-	public boolean isInkRegionsJsonVisible() {
-		return inkRegionsJsonVisible;
 	}
 
 	public boolean isInputVisible() {
@@ -400,10 +385,6 @@ public class SelectionSetValueBean extends ManagedBeanBase {
 
 	public void setInkRegionsJson(String inkRegionsJson) {
 		this.inkRegionsJson = inkRegionsJson;
-	}
-
-	public void setInkRegionsJsonVisible(boolean inkRegionsJsonVisible) {
-		this.inkRegionsJsonVisible = inkRegionsJsonVisible;
 	}
 
 	public void setSelectedInputFieldSelectionSetValue(IDVO inputFieldSelectionSet) {
