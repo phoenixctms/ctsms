@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="staffimage_form">
+			<p:remoteCommand process="@this" name="changeStaffImage"
+				actionListener="#{staffImageBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffimage_form:photo,:tabView:staffimage_form:photo_input" />
 
 			<ui:decorate template="../shared/photo.xhtml">
 				<ui:param name="photoBean" value="#{staffImageBean}" />

@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="cvposition_form">
+			<p:remoteCommand process="@this" name="changeCvPosition"
+				actionListener="#{cvPositionBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:cvposition_form:cvposition_list,:tabView:cvposition_form:cvposition_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
