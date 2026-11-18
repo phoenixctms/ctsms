@@ -11,54 +11,6 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventorymain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryTag"
-				actionListener="#{inventoryTagBean.change(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventorytag_form:inventorytag_list,:tabView:inventorytag_form:inventorytag_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryStatus"
-				actionListener="#{inventoryStatusBean.change(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventorystatus_form:inventorystatus_list,:tabView:inventorystatus_form:inventorystatus_input" />		
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryMaintenance"
-				actionListener="#{inventoryMaintenanceBean.change(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventorymaintenance_form:inventorymaintenance_list,:tabView:inventorymaintenance_form:inventorymaintenance_input" />		
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryBooking"
-				actionListener="#{inventoryBookingBean.change(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventorybooking_form:inventorybooking_list,:tabView:inventorybooking_form:inventorybooking_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryBookingDuration"
-				actionListener="#{inventoryBookingDurationBean.change(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventorybookingduration_form:bookingDurationSummaryDataTable" />				
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryFile"
-				actionListener="#{fileBean.changeInventory(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventoryfile_form" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryHyperlink"
-				actionListener="#{hyperlinkBean.changeInventory(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventoryhyperlink_form:hyperlink_list,:tabView:inventoryhyperlink_form:hyperlink_input" />
-			<p:remoteCommand
-				process="@this"
-				name="changeInventoryJournalEntry"
-				actionListener="#{journalBean.changeInventory(inventoryBean.in.id)}"
-				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
-				update=":tabView:inventoryjournal_form:journal_list,:tabView:inventoryjournal_form:journal_input" />		
 		
 		
 			<p:remoteCommand

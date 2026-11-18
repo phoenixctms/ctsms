@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventoryfile_form" enctype="multipart/form-data">
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryFile"
+				actionListener="#{fileBean.changeInventory(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventoryfile_form" />
 
 			<ui:include src="/META-INF/includes/shared/file.xhtml">
 				<ui:param name="namingContainer" value=":tabView:inventoryfile_form" />
