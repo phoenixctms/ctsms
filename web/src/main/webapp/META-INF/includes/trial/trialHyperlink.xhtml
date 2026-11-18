@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialhyperlink_form">
+			<p:remoteCommand process="@this" name="changeTrialHyperlink"
+				actionListener="#{hyperlinkBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialhyperlink_form:hyperlink_list,:tabView:trialhyperlink_form:hyperlink_input" />
 			<ui:include src="/META-INF/includes/shared/hyperlink.xhtml">
 				<ui:param name="namingContainer"
 					value=":tabView:trialhyperlink_form" />

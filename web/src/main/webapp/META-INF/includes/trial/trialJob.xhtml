@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialjob_form">
+			<p:remoteCommand process="@this" name="changeTrialJob"
+				actionListener="#{jobBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialjob_form:job_list,:tabView:trialjob_form:job_input" />
 			<ui:include src="/META-INF/includes/shared/job.xhtml">
 				<ui:param name="markUnEncrypted" value="true" />
 				<ui:param name="namingContainer" value=":tabView:trialjob_form" />

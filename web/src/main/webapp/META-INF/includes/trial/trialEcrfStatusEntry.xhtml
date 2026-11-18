@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialecrfstatusentry_form">
+			<p:remoteCommand process="@this" name="changeTrialEcrfStatusEntry"
+				actionListener="#{trialEcrfStatusEntryBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:trialecrfstatusentry_form:trialecrfstatus_proband_list,:tabView:trialecrfstatusentry_form:trialecrfstatus_ecrf_list,:tabView:trialecrfstatusentry_form:ecrf_header,:tabView:trialecrfstatusentry_form:ecrffield_input_grid" />
 			<p:remoteCommand process="@this,signPassword" name="updateEcrfStatus"
 				actionListener="#{trialEcrfStatusEntryBean.updateEcrfStatus()}"
 				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"

@@ -12,6 +12,10 @@
 	<ui:composition>
 		<h:form id="visitschedule_form"
 			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<p:remoteCommand process="@this" name="changeVisitSchedule"
+				actionListener="#{visitScheduleBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:visitschedule_form:visitschedule_list,:tabView:visitschedule_form:visitschedule_matrix,:tabView:visitschedule_form:visitschedule_input" />
 			<p:remoteCommand process="@this"
 				name="visitScheduleItemSelectVisitGroup"
 				actionListener="#{visitScheduleBean.matrix.selectVisitGroup()}"

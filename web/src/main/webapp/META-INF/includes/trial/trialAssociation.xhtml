@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialassociation_form">
+			<p:remoteCommand process="@this" name="changeTrialAssociation"
+				actionListener="#{trialAssociationBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialassociation_form:association_lists" />
 
 			<p:remoteCommand process="@this" name="changeEnrollmentChart"
 				actionListener="#{trialAssociationBean.handleEnrollmentChartChange}"

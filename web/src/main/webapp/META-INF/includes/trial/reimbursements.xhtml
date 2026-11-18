@@ -12,6 +12,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="reimbursements_form">
+			<p:remoteCommand process="@this" name="changeReimbursements"
+				actionListener="#{reimbursementsBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:reimbursements_form:probandmoneytransfersummary_list,:tabView:reimbursements_form:probandmoneytransfernoparticipationsummary_list,:tabView:reimbursements_form:toolbar,:tabView:reimbursements_form:messages" />
 
 			<p:remoteCommand process="@this" name="updateAllPaid"
 				actionListener="#{reimbursementsBean.updateMoneyTransfersPaid}"

@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialfile_form" enctype="multipart/form-data">
+			<p:remoteCommand process="@this" name="changeTrialFile"
+				actionListener="#{fileBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialfile_form" />
 			<ui:include src="/META-INF/includes/shared/file.xhtml">
 				<ui:param name="namingContainer" value=":tabView:trialfile_form" />
 				<ui:param name="markUnEncrypted" value="true" />

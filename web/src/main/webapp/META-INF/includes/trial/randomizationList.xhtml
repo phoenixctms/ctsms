@@ -10,6 +10,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="randomizationlist_form">
+			<p:remoteCommand process="@this"
+				name="changeStratificationRandomizationList"
+				actionListener="#{randomizationListBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:randomizationlist_form:randomizationlist_list,:tabView:randomizationlist_form:randomizationlist_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

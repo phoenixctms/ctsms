@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandlist_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<p:remoteCommand process="@this" name="changeProbandListEntry"
+				actionListener="#{probandListEntryBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:probandlist_form:proband_list,:tabView:probandlist_form:probandlist_bulkadd,:tabView:probandlist_form:probandListTabView" />
 
 			<p:remoteCommand process="@this,lastPickedProbandIds"
 				name="addProbandIDs"

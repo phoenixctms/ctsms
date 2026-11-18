@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="ecrffieldstatus_form">
+			<p:remoteCommand process="@this" name="changeEcrfFieldStatus"
+				actionListener="#{ecrfFieldStatusBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:ecrffieldstatus_form:ecrffieldstatus_list,:tabView:ecrffieldstatus_form:ecrffieldstatus_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

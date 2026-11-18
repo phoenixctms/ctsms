@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="teammember_form">
+			<p:remoteCommand process="@this" name="changeTeamMember"
+				actionListener="#{teamMemberBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:teammember_form:team_member_list,:tabView:teammember_form:team_member_bulkadd,:tabView:teammember_form:team_member_input" />
 
 			<p:remoteCommand process="@this,lastPickedStaffIds"
 				name="addStaffIDs"

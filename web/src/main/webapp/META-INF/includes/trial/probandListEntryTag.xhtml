@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandlistentrytag_form">
+			<p:remoteCommand process="@this" name="changeProbandListEntryTag"
+				actionListener="#{probandListEntryTagBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:probandlistentrytag_form:probandlistentrytag_list,:tabView:probandlistentrytag_form:probandlistentrytag_bulkadd,:tabView:probandlistentrytag_form:probandlistentrytag_input" />
 
 			<p:remoteCommand process="@this,lastPickedInputFieldIds"
 				name="probandlistEntryTagAddInputFieldIDs"
