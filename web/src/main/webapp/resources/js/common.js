@@ -1398,11 +1398,25 @@ function storeTabIndexParam(index) {
 }
 
 var _buildTabWidgetVar = null;
+var _sendingBuildTab = null;
 
-function _getBuildTab() {
+function _getBuildTab(source) {
+	// the tab holding the source of the request, else the shown tab:
 	var tabView = _buildTabWidgetVar != null ? window[_buildTabWidgetVar] : null;
 	if (tabView && tabView.panelContainer) {
-		var id = tabView.panelContainer.children().eq(tabView.getActiveIndex()).attr('id');
+		var panels = tabView.panelContainer.children();
+		var panel = null;
+		if (source != null) {
+			try {
+				panel = (typeof source == 'string' ? jQuery(PrimeFaces.escapeClientId(source)) : jQuery(source)).closest(panels);
+			} catch (e) {
+				panel = null;
+			}
+		}
+		if (panel == null || panel.length == 0) {
+			panel = panels.eq(tabView.getActiveIndex());
+		}
+		var id = panel.attr('id');
 		if (id) {
 			return id.substring(id.lastIndexOf(':') + 1);
 		}
@@ -1412,21 +1426,39 @@ function _getBuildTab() {
 
 function sendBuildTabParam(tabViewWidgetVar) {
 	// the server builds only the shown tab into the component tree (ApplicationScopeBean.isTabBuilt),
-	// so every postback of the page tells which tab is shown. without the parameter, all tabs are built.
+	// so every postback of the page tells which tab it belongs to. without the parameter, all tabs are built.
 	if (_buildTabWidgetVar != null) {
 		_buildTabWidgetVar = tabViewWidgetVar;
 		return;
 	}
 	_buildTabWidgetVar = tabViewWidgetVar;
+	// take the tab when a request is created, not when it is sent: a request can wait in the queue
+	// while another tab is selected, and still needs the components of its own tab.
+	var ajaxRequest = PrimeFaces.ajax.AjaxRequest;
+	PrimeFaces.ajax.AjaxRequest = function(cfg, ext) {
+		if (cfg && cfg.buildTab === undefined) {
+			cfg.buildTab = _getBuildTab(cfg.source);
+		}
+		return ajaxRequest.apply(this, arguments);
+	};
+	var send = PrimeFaces.ajax.AjaxUtils.send;
+	PrimeFaces.ajax.AjaxUtils.send = function(cfg) {
+		_sendingBuildTab = (cfg && cfg.buildTab != null) ? cfg.buildTab : null;
+		try {
+			return send.apply(this, arguments);
+		} finally {
+			_sendingBuildTab = null;
+		}
+	};
 	jQuery.ajaxPrefilter(function(options) {
-		var tab = _getBuildTab();
+		var tab = _sendingBuildTab != null ? _sendingBuildTab : _getBuildTab();
 		if (tab != null && options.url && options.type && options.type.toUpperCase() == 'POST') {
 			options.url = options.url + (options.url.indexOf('?') < 0 ? '?' : '&') + BUILD_TAB + '=' + encodeURIComponent(tab);
 		}
 	});
 	jQuery(document).on('submit', 'form', function() {
 		// non-ajax submits, e.g. file downloads:
-		var tab = _getBuildTab();
+		var tab = _getBuildTab(this);
 		if (tab != null) {
 			var input = jQuery('<input type="hidden"/>').attr('name', BUILD_TAB).val(tab);
 			jQuery(this).append(input);
