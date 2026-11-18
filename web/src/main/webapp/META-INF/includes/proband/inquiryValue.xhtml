@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inquiryvalue_form">
+			<p:remoteCommand process="@this" name="changeInquiryValue"
+				actionListener="#{inquiryValueBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiry_input_grid" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

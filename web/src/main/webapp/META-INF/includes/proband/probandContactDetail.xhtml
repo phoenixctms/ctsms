@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandcontactdetail_form">
+			<p:remoteCommand process="@this" name="changeProbandContactDetail"
+				actionListener="#{probandContactDetailBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandcontactdetail_form:probandcontactdetail_list,:tabView:probandcontactdetail_form:probandcontactdetail_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

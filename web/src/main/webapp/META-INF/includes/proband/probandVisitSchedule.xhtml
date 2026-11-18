@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandvisitschedule_form">
+			<p:remoteCommand process="@this" name="changeProbandVisitSchedule"
+				actionListener="#{probandVisitScheduleBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandvisitschedule_form:probandvisitschedule_list,:tabView:probandvisitschedule_form:toolbar" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

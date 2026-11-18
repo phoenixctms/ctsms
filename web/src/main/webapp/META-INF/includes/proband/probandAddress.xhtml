@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandaddress_form">
+			<p:remoteCommand process="@this" name="changeProbandAddress"
+				actionListener="#{probandAddressBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandaddress_form:probandaddress_list,:tabView:probandaddress_form:probandaddress_input" />
 
 			<p:remoteCommand process="@this" name="updateWireTransferAddress"
 				actionListener="#{probandAddressBean.setWireTransferAddress}"

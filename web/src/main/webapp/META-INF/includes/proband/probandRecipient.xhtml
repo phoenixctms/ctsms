@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="massmailrecipient_form">
+			<p:remoteCommand process="@this" name="changeProbandRecipient"
+				actionListener="#{probandRecipientBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:massmailrecipient_form:probandrecipient_list,:tabView:massmailrecipient_form:probandrecipient_input" />
 			<p:remoteCommand process="@this" name="resetMassMailRecipient"
 				actionListener="#{probandRecipientBean.resetMassMailRecipient}"
 				update="probandrecipient_list,probandrecipient_input" />

@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandjob_form">
+			<p:remoteCommand process="@this" name="changeProbandJob"
+				actionListener="#{jobBean.changeProband(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandjob_form:job_list,:tabView:probandjob_form:job_input" />
 
 			<ui:include src="/META-INF/includes/shared/job.xhtml">
 				<ui:param name="markUnEncrypted" value="true" />
