@@ -166,7 +166,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
 		ecrfFieldValueBean.setFieldQuery(null);
-		initSets(false);
+		initSets();
 		return CHANGE_OUTCOME;
 	}
 
@@ -735,7 +735,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		addMessages();
 	}
 
-	protected void initSets(boolean setFirstSection) {
+	protected void initSets() {
 		initSpecificSets();
 		password = null;
 		clearCaches();
@@ -755,9 +755,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.setFilterSectionProgress(null);
 		ecrfFieldValueBean.setFilterIndex(null);
 		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, false);
-		if (setFirstSection) {
-			setFirstFilterSection();
-		}
 		ecrfFieldValueBean.changeRootEntity(ecrfId);
 		signature = loadSignature();
 		addMessages();
@@ -839,26 +836,6 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		appendRequestContextCallbackArgs(true);
 	}
 
-	private void setFirstFilterSection() {
-		if (filterSections != null && filterSections.size() > 0) {
-			Iterator<SelectItem> it = filterSections.iterator();
-			while (it.hasNext()) {
-				Object value = it.next().getValue();
-				if (value instanceof ECRFSectionProgressVO) {
-					if (!CommonUtil.isEmptyString(((ECRFSectionProgressVO) value).getSection())) {
-						ecrfFieldValueBean.setFilterSectionProgress((ECRFSectionProgressVO) value);
-						return;
-					}
-				} else if (value instanceof String) {
-					if (!CommonUtil.isEmptyString((String) value)) {
-						ecrfFieldValueBean.setFilterSection((String) value);
-						return;
-					}
-				}
-			}
-		}
-	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -868,7 +845,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			this.ecrf = ecrfVisit.getEcrf();
 			this.visit = ecrfVisit.getVisit();
 			ecrfFieldValueBean.setFieldQuery(null);
-			initSets(true);
+			initSets();
 		}
 	}
 
@@ -888,7 +865,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		ecrfVisitModel.updateRowCount();
 		ecrfFieldValueBean.setFieldQuery(null);
-		initSets(false);
+		initSets();
 	}
 
 	public void signAllEcrfs() {
