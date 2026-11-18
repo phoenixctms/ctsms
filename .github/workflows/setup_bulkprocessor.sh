@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Only what the CI jobs and tests need, like the bulk-processor part of the docker image (phoenixctms/docker).
+# Not needed here: Render diagrams (gnuplot, GraphViz, ImageMagick/ghostscript), the SQL Server
+# connector (ODBC/FreeTDS) and memcached sessions for the Signup app.
 apt-get -q -y -o=Dpkg::Use-Pty=0 install \
 libarchive-zip-perl \
 libconfig-any-perl \
@@ -16,7 +19,6 @@ libdatetime-timezone-perl \
 libdbd-csv-perl \
 libdbd-mysql-perl \
 libdbd-sqlite3-perl \
-tdsodbc \
 libdigest-md5-perl \
 libemail-mime-attachment-stripper-perl \
 libemail-mime-perl \
@@ -28,7 +30,6 @@ libio-socket-ssl-perl \
 libjson-xs-perl \
 liblog-log4perl-perl \
 libmail-imapclient-perl \
-libmime-base64-perl \
 libmime-lite-perl \
 libmime-tools-perl \
 libnet-address-ip-local-perl \
@@ -55,24 +56,9 @@ libdbd-pg-perl \
 libredis-perl \
 libjson-perl \
 libplack-perl \
-libcache-memcached-perl \
-libdancer-session-memcached-perl \
-libgraphviz-perl \
-unixodbc \
-unixodbc-dev \
-gnuplot \
-imagemagick \
-ghostscript \
+libsys-cpuaffinity-perl \
 build-essential \
 cpanminus
-sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
-if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
-  apt-get -q -y -o=Dpkg::Use-Pty=0 install libsys-cpuaffinity-perl
-else
-  cpanm Sys::CpuAffinity
-  cpanm threads::shared
-fi
-cpanm --notest DBD::ODBC
 cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 wget --no-verbose --tries=5 --waitretry=10 --retry-on-http-error=429,500,502,503,504 --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /ctsms/bulk-processor.tar.gz
