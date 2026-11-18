@@ -28,7 +28,6 @@ libio-socket-ssl-perl \
 libjson-xs-perl \
 liblog-log4perl-perl \
 libmail-imapclient-perl \
-libmarpa-r2-perl \
 libmime-base64-perl \
 libmime-lite-perl \
 libmime-tools-perl \
@@ -38,6 +37,7 @@ libole-storage-lite-perl \
 libphp-serialization-perl \
 libexcel-writer-xlsx-perl \
 libspreadsheet-parseexcel-perl \
+libspreadsheet-parsexlsx-perl \
 libstring-mkpasswd-perl \
 libtext-csv-xs-perl \
 libtie-ixhash-perl \
@@ -64,8 +64,6 @@ gnuplot \
 imagemagick \
 ghostscript \
 build-essential \
-libtest-utf8-perl \
-libmoosex-hasdefaults-perl \
 cpanminus
 sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
 if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
@@ -77,8 +75,6 @@ fi
 cpanm --notest DBD::ODBC
 cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
-cpanm --notest Spreadsheet::Reader::Format
-cpanm --notest Spreadsheet::Reader::ExcelXML
 wget --no-verbose --tries=5 --waitretry=10 --retry-on-http-error=429,500,502,503,504 --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /ctsms/bulk-processor.tar.gz
 tar -zxvf /ctsms/bulk-processor.tar.gz -C /ctsms/bulk_processor --strip-components 1
 perl /ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/minify.pl --folder=/ctsms/bulk_processor/CTSMS/BulkProcessor/Projects/WebApps/Signup
