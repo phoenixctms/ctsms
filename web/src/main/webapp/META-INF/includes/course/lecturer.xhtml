@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="lecturer_form">
+			<p:remoteCommand process="@this" name="changeLecturer"
+				actionListener="#{lecturerBean.change(courseBean.in.id)}"
+				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
+				update=":tabView:lecturer_form:lecturer_list,:tabView:lecturer_form:lecturer_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<title>course tab</title>
 </h:head>
@@ -22,6 +23,9 @@
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.courseVisibleTabSet}" />
 				<ui:param name="tabViewWidgetVar" value="courseTabView" />
 			</ui:include>
+			<script type="text/javascript">
+				sendBuildTabParam('courseTabView');
+			</script>
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -46,7 +50,9 @@
 						disabled="#{!courseBean.created}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_LECTURER_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_LECTURER_COUNT'))}">
-						<ui:include src="/META-INF/includes/course/lecturer.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('lecturers')}">
+							<ui:include src="/META-INF/includes/course/lecturer.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="courseinventorybookings"
@@ -54,7 +60,9 @@
 						disabled="#{!courseBean.created}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_INVENTORY_BOOKING_COUNT'))}">
-						<ui:include src="/META-INF/includes/course/courseInventoryBooking.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('courseinventorybookings')}">
+							<ui:include src="/META-INF/includes/course/courseInventoryBooking.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="admincourseparticipationstatus"
@@ -62,7 +70,9 @@
 						disabled="#{!courseBean.created}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_ADMIN_COURSE_PARTICIPATION_STATUS_ENTRY_COUNT'))}">
-						<ui:include src="/META-INF/includes/course/adminCourseParticipationStatus.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('admincourseparticipationstatus')}">
+							<ui:include src="/META-INF/includes/course/adminCourseParticipationStatus.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="coursehyperlinks"
@@ -70,7 +80,9 @@
 						disabled="#{!courseBean.created}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_HYPERLINK_COUNT'))}">
-						<ui:include src="/META-INF/includes/course/courseHyperlink.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('coursehyperlinks')}">
+							<ui:include src="/META-INF/includes/course/courseHyperlink.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="coursefiles"
@@ -78,7 +90,9 @@
 						disabled="#{!courseBean.created}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_FILE_COUNT'))}">
-						<ui:include src="/META-INF/includes/course/courseFile.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('coursefiles')}">
+							<ui:include src="/META-INF/includes/course/courseFile.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="coursejournal"
@@ -86,7 +100,9 @@
 						disabled="#{!courseBean.created}"
 						titleStyleClass="#{courseBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_COURSE_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{courseBean.getTabTitle(applicationScopeBean.jsValue('AJAX_COURSE_JOURNAL_ENTRY_COUNT'))}">
-						<ui:include src="/META-INF/includes/course/courseJournal.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('coursejournal')}">
+							<ui:include src="/META-INF/includes/course/courseJournal.xhtml" />
+						</c:if>
 					</p:tab>
 				</p:tabView>
 			</h:panelGrid>

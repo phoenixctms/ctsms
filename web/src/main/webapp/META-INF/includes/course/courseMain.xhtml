@@ -10,31 +10,6 @@
 <h:body>
 	<ui:composition>
 		<h:form id="coursemain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-			<p:remoteCommand process="@this" name="changeLecturer"
-				actionListener="#{lecturerBean.change(courseBean.in.id)}"
-				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:lecturer_form:lecturer_list,:tabView:lecturer_form:lecturer_input" />
-			<p:remoteCommand process="@this" name="changeCourseInventoryBooking"
-				actionListener="#{courseInventoryBookingBean.change(courseBean.in.id)}"
-				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:courseinventorybooking_form:inventorybooking_list,:tabView:courseinventorybooking_form:inventorybooking_input" />
-			<p:remoteCommand process="@this"
-				name="changeAdminCourseParticipationStatus"
-				actionListener="#{adminCourseParticipationStatusBean.change(courseBean.in.id)}"
-				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:admincourseparticipationstatus_form:courseparticipationstatus_list,:tabView:admincourseparticipationstatus_form:courseparticipationstatus_bulkadd,:tabView:admincourseparticipationstatus_form:courseparticipationstatus_input" />
-			<p:remoteCommand process="@this" name="changeCourseFile"
-				actionListener="#{fileBean.changeCourse(courseBean.in.id)}"
-				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:coursefile_form" />
-			<p:remoteCommand process="@this" name="changeCourseHyperlink"
-				actionListener="#{hyperlinkBean.changeCourse(courseBean.in.id)}"
-				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:coursehyperlink_form:hyperlink_list,:tabView:coursehyperlink_form:hyperlink_input" />
-			<p:remoteCommand process="@this" name="changeCourseJournalEntry"
-				actionListener="#{journalBean.changeCourse(courseBean.in.id)}"
-				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
-				update=":tabView:coursejournal_form:journal_list,:tabView:coursejournal_form:journal_input" />
 
 			<p:remoteCommand process="@this" name="changeCourseByLecturer"
 				actionListener="#{courseBean.change(lecturerBean.in.courseId)}"

@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="coursefile_form" enctype="multipart/form-data">
+			<p:remoteCommand process="@this" name="changeCourseFile"
+				actionListener="#{fileBean.changeCourse(courseBean.in.id)}"
+				oncomplete="handleUpdateCourseTabTitles(xhr, status, args)"
+				update=":tabView:coursefile_form" />
 
 			<ui:include src="/META-INF/includes/shared/file.xhtml">
 				<ui:param name="namingContainer" value=":tabView:coursefile_form" />
