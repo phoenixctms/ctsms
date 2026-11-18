@@ -89,7 +89,8 @@ import com.google.gson.JsonParser;
 @ApplicationScoped
 public class ApplicationScopeBean {
 
-	private static final Map<Long, UserOutVO> activeUsers = new LinkedHashMap<Long, UserOutVO>();
+	// one entry per HTTP session, so logging out one browser keeps the account while another session of it is still logged in
+	private static final Map<String, UserOutVO> activeUsers = new LinkedHashMap<String, UserOutVO>();
 	private static String expressionCallbacksJson = null;
 
 	// the argument of a callback of a function that fieldCalculation.js exports to value and output expressions: its name, and the
@@ -122,18 +123,18 @@ public class ApplicationScopeBean {
 		return labelEl;
 	}
 
-	public static final void registerActiveUser(UserOutVO user) {
+	public static final void registerActiveUser(String sessionId, UserOutVO user) {
 		synchronized (ApplicationScopeBean.class) {
-			if (user != null) {
-				activeUsers.put(user.getId(), user);
+			if (sessionId != null && user != null) {
+				activeUsers.put(sessionId, user);
 			}
 		}
 	}
 
-	public static final void unregisterActiveUser(UserOutVO user) {
+	public static final void unregisterActiveSession(String sessionId) {
 		synchronized (ApplicationScopeBean.class) {
-			if (user != null) {
-				activeUsers.remove(user.getId());
+			if (sessionId != null) {
+				activeUsers.remove(sessionId);
 			}
 		}
 	}
@@ -223,10 +224,19 @@ public class ApplicationScopeBean {
 	public String getActiveUsersString(int length) {
 		// the messages below lock the session bean to get its locale, while a login holds the session bean lock
 		// when it registers the user. so only copy the users under the lock, to not deadlock.
-		ArrayList<UserOutVO> users;
+		ArrayList<UserOutVO> sessions;
 		synchronized (ApplicationScopeBean.class) {
-			users = new ArrayList<UserOutVO>(activeUsers.values());
+			sessions = new ArrayList<UserOutVO>(activeUsers.values());
 		}
+		LinkedHashMap<Long, UserOutVO> usersById = new LinkedHashMap<Long, UserOutVO>();
+		Iterator<UserOutVO> sessionIt = sessions.iterator();
+		while (sessionIt.hasNext()) {
+			UserOutVO user = sessionIt.next();
+			if (user != null && !usersById.containsKey(user.getId())) {
+				usersById.put(user.getId(), user);
+			}
+		}
+		ArrayList<UserOutVO> users = new ArrayList<UserOutVO>(usersById.values());
 		StringBuilder sb = new StringBuilder();
 		int activeUsersCount = users.size();
 		HashMap<Long, Integer> identityCountMap = new HashMap<Long, Integer>(activeUsersCount);
