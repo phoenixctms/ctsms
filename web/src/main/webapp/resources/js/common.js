@@ -1843,3 +1843,9 @@ function handleCodeMirrorHintKeyDown(event) {
 if (document.addEventListener) {
 	document.addEventListener("keydown", handleCodeMirrorHintKeyDown, true);
 }
+
+// value forms: mark a field as entered but not saved as soon as it changes;
+// the server renders this state with each update of the field rows.
+jQuery(document).on("change", "fieldset.ctsms-input-unsaved-tracked :input", function() {
+	jQuery(this).closest("fieldset.ctsms-input-unsaved-tracked").addClass("ctsms-input-unsaved");
+});

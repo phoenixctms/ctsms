@@ -26,7 +26,9 @@ import org.phoenixctms.ctsms.vo.ProbandListEntryOutVO;
 import org.phoenixctms.ctsms.vo.ProbandOutVO;
 import org.phoenixctms.ctsms.vo.TrialStatusTypeVO;
 import org.phoenixctms.ctsms.vo.UserOutVO;
+import org.phoenixctms.ctsms.web.model.shared.InputValueDrafts;
 import org.phoenixctms.ctsms.web.model.shared.InquiryValueBeanBase;
+import org.phoenixctms.ctsms.web.model.shared.inputfield.InquiryInputModel;
 import org.phoenixctms.ctsms.web.model.shared.inputfield.InquiryInputModelList;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -76,8 +78,26 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		appendRequestContextCallbackInputModelValuesOutArgs(operationSuccess);
 	}
 
+	private boolean includeDrafts;
+	private final InputValueDrafts<Long, InquiryValueInVO> drafts = new InputValueDrafts<Long, InquiryValueInVO>() {
+
+		@Override
+		protected Long getKey(InquiryValueInVO value) {
+			return value.getInquiryId();
+		}
+
+		@Override
+		protected boolean isEqual(InquiryValueInVO value, InquiryValueInVO savedValue) {
+			return InquiryValueInVO.equalsExcluding(value, savedValue, EQUALS_EXCLUDES, true, true)
+					&& isSameTime(value.getDateValue(), savedValue.getDateValue())
+					&& isSameTime(value.getTimestampValue(), savedValue.getTimestampValue())
+					&& isSameTime(value.getTimeValue(), savedValue.getTimeValue());
+		}
+	};
+
 	@Override
 	protected String changeAction(Long id) {
+		drafts.clear();
 		inquiryValuesOut = null;
 		jsInquiryValuesOut = null;
 		this.trialId = null;
@@ -118,7 +138,12 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	@Override
 	protected InquiryInputModelList getInquiryInputModelList(
 			ArrayList<InquiryValueInVO> values) {
-		return new InquiryInputModelList(values);
+		InquiryInputModelList inputModelList = new InquiryInputModelList(values);
+		Iterator<InquiryInputModel> it = inputModelList.iterator();
+		while (it.hasNext()) {
+			it.next().setDrafts(drafts);
+		}
+		return inputModelList;
 	}
 
 	public String getInquiryPdfButtonLabel(boolean blank) {
@@ -202,6 +227,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 	}
 
 	public void handleTrialChange() {
+		drafts.clear();
 		inquiryValuesOut = null;
 		jsInquiryValuesOut = null;
 		paginator.initPages(true, trialId);
@@ -253,6 +279,8 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		}
 		if (probandId == null || trialId == null) {
 			inquiryValuesIn.clear();
+			drafts.clear();
+			drafts.setSavedValues(null);
 			if (inquiryValuesOut != null) {
 				inquiryValuesOut.clear();
 			}
@@ -260,6 +288,9 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 				jsInquiryValuesOut.clear();
 			}
 		} else {
+			if (keepInquiryValuesIn) {
+				drafts.capture(inquiryValuesIn, null);
+			}
 			if (inquiryValuesOut == null || jsInquiryValuesOut == null) {
 				try {
 					portionInquiryValues(WebUtil.getServiceLocator().getProbandService()
@@ -269,7 +300,15 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 					WebUtil.publishException(e);
 				}
 			}
-			copyInquiryValuesOutToIn(inquiryValuesIn, inquiryValuesOut, keepInquiryValuesIn);
+			copyInquiryValuesOutToIn(inquiryValuesIn, inquiryValuesOut, false);
+			ArrayList<InquiryValueInVO> savedValues = new ArrayList<InquiryValueInVO>();
+			copyInquiryValuesOutToIn(savedValues, inquiryValuesOut, false);
+			drafts.setSavedValues(savedValues);
+			if (keepInquiryValuesIn) {
+				drafts.restore(inquiryValuesIn);
+			} else {
+				drafts.remove(inquiryValuesIn);
+			}
 		}
 	}
 
@@ -317,6 +356,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	@Override
 	public String loadAction() {
+		drafts.clear();
 		inquiryValuesOut = null;
 		jsInquiryValuesOut = null;
 		try {
@@ -355,11 +395,41 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 		this.trialId = trialId;
 	}
 
+	public int getHiddenDraftCount() {
+		return drafts.getHiddenDraftCount(inquiryValuesIn);
+	}
+
+	@Override
+	public String resetAction() {
+		drafts.clear();
+		return super.resetAction();
+	}
+
+	public void updateWithDrafts() {
+		includeDrafts = true;
+		try {
+			update();
+		} finally {
+			includeDrafts = false;
+		}
+	}
+
 	@Override
 	public String updateAction() {
 		try {
+			boolean withDrafts = includeDrafts;
+			HashSet<InquiryValueInVO> values = new HashSet<InquiryValueInVO>(inquiryValuesIn);
+			if (withDrafts) {
+				values.addAll(drafts.getHiddenDrafts(inquiryValuesIn));
+			}
 			portionInquiryValues(
-					WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), new HashSet<InquiryValueInVO>(inquiryValuesIn), false));
+					WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), values, false));
+			if (withDrafts) {
+				// the saved drafts are not on this page, so reload it:
+				drafts.clear();
+				inquiryValuesOut = null;
+				jsInquiryValuesOut = null;
+			}
 			initIn(false, false);
 			initSets();
 			addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
@@ -378,6 +448,7 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	@Override
 	public String deleteAction() {
+		drafts.clear();
 		try {
 			Long trialId = trial == null ? null : trial.getId();
 			Long probandId = proband == null ? null : proband.getId();

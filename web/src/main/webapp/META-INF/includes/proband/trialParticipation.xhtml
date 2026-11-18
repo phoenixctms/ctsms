@@ -342,7 +342,7 @@
 										oncomplete="FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 										icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 										update="tagvalue_input_grid" />
-									<p:commandButton process="@this,tagvalue_inputs"
+									<p:splitButton process="@this,tagvalue_inputs"
 										id="updateProbandListEntryTagValues"
 										value="#{labels.update_page_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.update}"
@@ -351,7 +351,16 @@
 										disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable}"
 										update="tagvalue_input_grid">
 										<f:param name="includeDisabled" value="true" />	
-									</p:commandButton>
+										<p:menuitem process="@this,tagvalue_inputs"
+											value="#{labels.update_page_drafts_button_label} (#{trialParticipationBean.probandListEntryTagValueBean.hiddenDraftCount})"
+											actionListener="#{trialParticipationBean.probandListEntryTagValueBean.updateWithDrafts}"
+											oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);trialParticipationList.unselectAllRows();trialParticipationList.filter()"
+											icon="ui-icon ui-icon-disk" ajax="true"
+											disabled="#{!trialParticipationBean.probandListEntryTagValueBean.editable or trialParticipationBean.probandListEntryTagValueBean.hiddenDraftCount le 0}"
+											update="tagvalue_input_grid">
+											<f:param name="includeDisabled" value="true" />
+										</p:menuitem>
+									</p:splitButton>
 									<p:commandButton process="@this"
 										value="#{labels.load_button_label}"
 										actionListener="#{trialParticipationBean.probandListEntryTagValueBean.load}"

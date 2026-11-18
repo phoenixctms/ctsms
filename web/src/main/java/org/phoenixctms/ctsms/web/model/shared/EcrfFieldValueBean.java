@@ -173,6 +173,22 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	private String fieldQuery;
 	private ECRFSectionProgressVO filterSectionProgress;
 	private Long filterIndex;
+	private boolean includeDrafts;
+	private final InputValueDrafts<String, ECRFFieldValueInVO> drafts = new InputValueDrafts<String, ECRFFieldValueInVO>() {
+
+		@Override
+		protected String getKey(ECRFFieldValueInVO value) {
+			return getDraftKey(value);
+		}
+
+		@Override
+		protected boolean isEqual(ECRFFieldValueInVO value, ECRFFieldValueInVO savedValue) {
+			return ECRFFieldValueInVO.equalsExcluding(value, savedValue, EQUALS_EXCLUDES, true, true)
+					&& isSameTime(value.getDateValue(), savedValue.getDateValue())
+					&& isSameTime(value.getTimestampValue(), savedValue.getTimestampValue())
+					&& isSameTime(value.getTimeValue(), savedValue.getTimeValue());
+		}
+	};
 
 	public EcrfFieldValueBean() {
 		super();
@@ -387,8 +403,41 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 	}
 
+	private static String getDraftKey(ECRFFieldValueInVO value) {
+		return value.getEcrfFieldId() + ":" + value.getIndex();
+	}
+
+	/**
+	 * @return keys of the shown values a page save leaves out (new series sections)
+	 */
+	private HashSet<String> getNotSaveableDraftKeys() {
+		HashSet<String> saveableKeys = new HashSet<String>();
+		Iterator<ECRFFieldValueInVO> it = getEcrfFieldInValues(true).iterator();
+		while (it.hasNext()) {
+			saveableKeys.add(getDraftKey(it.next()));
+		}
+		HashSet<String> result = new HashSet<String>();
+		it = ecrfFieldValuesIn.iterator();
+		while (it.hasNext()) {
+			String key = getDraftKey(it.next());
+			if (!saveableKeys.contains(key)) {
+				result.add(key);
+			}
+		}
+		return result;
+	}
+
+	public int getHiddenDraftCount() {
+		return drafts.getHiddenDraftCount(ecrfFieldValuesIn);
+	}
+
+	public void setIncludeDrafts(boolean includeDrafts) {
+		this.includeDrafts = includeDrafts;
+	}
+
 	@Override
 	protected String changeAction(Long id) {
+		drafts.clear();
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
 		this.ecrf = WebUtil.getEcrf(id);
@@ -450,6 +499,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	@Override
 	public String deleteAction() {
+		drafts.clear();
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
@@ -710,6 +760,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		}
 		if (probandListEntry == null || ecrf == null) {
 			ecrfFieldValuesIn.clear();
+			drafts.clear();
+			drafts.setSavedValues(null);
 			if (ecrfFieldValuesOut != null) {
 				ecrfFieldValuesOut.clear();
 			}
@@ -717,10 +769,21 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				jsEcrfFieldValuesOut.clear();
 			}
 		} else {
+			if (keepEcrfFieldValuesIn) {
+				drafts.capture(ecrfFieldValuesIn, getNotSaveableDraftKeys());
+			}
 			if (ecrfFieldValuesOut == null || jsEcrfFieldValuesOut == null) {
 				loadEcrfFieldValues(loadAllJsValues, false);
 			}
-			copyEcrfFieldValuesOutToIn(ecrfFieldValuesIn, ecrfFieldValuesOut, keepEcrfFieldValuesIn);
+			copyEcrfFieldValuesOutToIn(ecrfFieldValuesIn, ecrfFieldValuesOut, false);
+			ArrayList<ECRFFieldValueInVO> savedValues = new ArrayList<ECRFFieldValueInVO>();
+			copyEcrfFieldValuesOutToIn(savedValues, ecrfFieldValuesOut, false);
+			drafts.setSavedValues(savedValues);
+			if (keepEcrfFieldValuesIn) {
+				drafts.restore(ecrfFieldValuesIn);
+			} else {
+				drafts.remove(ecrfFieldValuesIn);
+			}
 		}
 	}
 
@@ -803,6 +866,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	@Override
 	public String loadAction() {
+		drafts.clear();
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
 		try {
@@ -902,6 +966,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	@Override
 	public String resetAction() {
+		drafts.clear();
 		ecrfFieldValuesOut = null;
 		jsEcrfFieldValuesOut = null;
 		initIn(true, false);
@@ -991,6 +1056,10 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	public String updateAction() {
 		try {
 			Set<ECRFFieldValueInVO> inValues = getEcrfFieldInValues(true);
+			boolean withDrafts = includeDrafts;
+			if (withDrafts) {
+				inValues.addAll(drafts.getHiddenDrafts(ecrfFieldValuesIn));
+			}
 			if (inValues.size() > 0) {
 				PSFVO psf = paginator.getPsfCopy(true);
 				if (CommonUtil.isEmptyString(filterSection)) {
@@ -1001,6 +1070,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 							.setEcrfFieldValues(WebUtil.getAuthentication(), inValues, filterSection, filterIndex, true, false, fieldQuery, psf));
 				}
 				paginator.initPages(psf, false);
+				if (withDrafts) {
+					drafts.clear();
+				}
 				initIn(false, false);
 				initSets();
 				addOperationSuccessMessage(MessageCodes.UPDATE_OPERATION_SUCCESSFUL);
@@ -1127,6 +1199,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				boolean unlockValue = false;
 				while (modelsIt.hasNext()) {
 					EcrfFieldInputModel model = modelsIt.next();
+					model.setDrafts(drafts);
 					model.setLastFieldStatus(ecrfFieldValuesOutMap.get(model.getEcrfFieldValue().getEcrfFieldId()).get(index));
 					collapsed = collapsed && model.isCollapsed();
 					created = created && model.isCreated();
@@ -1168,6 +1241,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				}
 			}
 			paginator.initPages(psf, false);
+			drafts.remove(getEcrfFieldInValues(section));
 			ecrfFieldValuesIn = clearFromEcrfFieldValuesIn(section);
 			initIn(false, true);
 			initSets();

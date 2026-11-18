@@ -175,6 +175,11 @@ public class InquiryInputModel extends InputModel {
 		return null;
 	}
 
+	@Override
+	protected Object getDraftValue() {
+		return getInquiryValue();
+	}
+
 	public InquiryValueInVO getInquiryValue() {
 		return inquiryValue;
 	}
@@ -406,6 +411,9 @@ public class InquiryInputModel extends InputModel {
 						.getInquiryValue(WebUtil.getAuthentication(), inquiryValue.getProbandId(), inquiryValue.getInquiryId());
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
+				InquiryValueInVO savedValue = new InquiryValueInVO();
+				InquiryValueBeanBase.copyInquiryValueOutToIn(savedValue, out);
+				setSavedValue(savedValue);
 				setModifiedAnnotation(out);
 				return values.getJsValues();
 			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -563,6 +571,9 @@ public class InquiryInputModel extends InputModel {
 				InquiryValuesOutVO values = WebUtil.getServiceLocator().getProbandService().setInquiryValues(WebUtil.getAuthentication(), inquiryValues, force);
 				InquiryValueOutVO out = values.getPageValues().iterator().next();
 				InquiryValueBeanBase.copyInquiryValueOutToIn(inquiryValue, out);
+				InquiryValueInVO savedValue = new InquiryValueInVO();
+				InquiryValueBeanBase.copyInquiryValueOutToIn(savedValue, out);
+				setSavedValue(savedValue);
 				setModifiedAnnotation(out);
 				return values.getJsValues();
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {

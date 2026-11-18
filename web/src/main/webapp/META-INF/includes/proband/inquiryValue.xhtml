@@ -115,7 +115,7 @@
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-close" ajax="true" disabled="false"
 								update="inquiriestrial,inquiriessignup,inquiry_input_grid" />
-							<p:commandButton process="@this,inquiry_inputs" id="update"
+							<p:splitButton process="@this,inquiry_inputs" id="update"
 								value="#{labels.update_page_button_label}"
 								actionListener="#{inquiryValueBean.update}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
@@ -123,7 +123,16 @@
 								disabled="#{!inquiryValueBean.editable}"
 								update="inquiriestrial,inquiriessignup,inquiry_input_grid">
 								<f:param name="includeDisabled" value="true" />	
-							</p:commandButton>
+								<p:menuitem process="@this,inquiry_inputs"
+									value="#{labels.update_page_drafts_button_label} (#{inquiryValueBean.hiddenDraftCount})"
+									actionListener="#{inquiryValueBean.updateWithDrafts}"
+									oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
+									icon="ui-icon ui-icon-disk" ajax="true"
+									disabled="#{!inquiryValueBean.editable or inquiryValueBean.hiddenDraftCount le 0}"
+									update="inquiriestrial,inquiriessignup,inquiry_input_grid">
+									<f:param name="includeDisabled" value="true" />
+								</p:menuitem>
+							</p:splitButton>
 							
 							<p:commandButton
 								value="#{probandlabels.clear_inquiry_button_label}"

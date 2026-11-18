@@ -298,6 +298,11 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 		return null;
 	}
 
+	@Override
+	protected Object getDraftValue() {
+		return getTagValue();
+	}
+
 	public ProbandListEntryTagValueInVO getTagValue() {
 		return tagValue;
 	}
@@ -415,6 +420,9 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 						.getProbandListEntryTagValue(WebUtil.getAuthentication(), tagValue.getListEntryId(), tagValue.getTagId());
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
+				ProbandListEntryTagValueInVO savedValue = new ProbandListEntryTagValueInVO();
+				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(savedValue, out);
+				setSavedValue(savedValue);
 				setModifiedAnnotation(out);
 				return values;
 			} catch (NoSuchElementException | ServiceException | AuthorisationException | IllegalArgumentException e) {
@@ -572,6 +580,9 @@ public final class ProbandListEntryTagInputModel extends InputModel {
 				ProbandListEntryTagValuesOutVO values = WebUtil.getServiceLocator().getTrialService().setProbandListEntryTagValues(WebUtil.getAuthentication(), tagValues, force);
 				ProbandListEntryTagValueOutVO out = values.getPageValues().iterator().next();
 				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(tagValue, out);
+				ProbandListEntryTagValueInVO savedValue = new ProbandListEntryTagValueInVO();
+				ProbandListEntryTagValueBean.copyProbandListEntryTagValueOutToIn(savedValue, out);
+				setSavedValue(savedValue);
 				setModifiedAnnotation(out);
 				return values;
 			} catch (NoSuchElementException | AuthorisationException | IllegalArgumentException e) {

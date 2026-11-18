@@ -32,6 +32,7 @@ import org.phoenixctms.ctsms.vo.FileOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.vo.InputFieldSelectionSetValueOutVO;
 import org.phoenixctms.ctsms.vo.MimeTypeVO;
+import org.phoenixctms.ctsms.web.model.shared.InputValueDrafts;
 import org.phoenixctms.ctsms.web.util.DateUtil;
 import org.phoenixctms.ctsms.web.util.DefaultSettings;
 import org.phoenixctms.ctsms.web.util.JSValues;
@@ -58,6 +59,8 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private final static String CAPTURE_FILE_NAME_EXTENSION = "jpg";
 	private final static String IMAGE_MIME_TYPE_PREFIX = "image/";
 	private final static String FILE_ICON_STYLECLASS = "ctsms-field-icon ctsms-mimetype-unknown";
+	private final static String UNSAVED_TRACKED_STYLECLASS = "ctsms-input-unsaved-tracked";
+	private final static String UNSAVED_STYLECLASS = "ctsms-input-unsaved";
 	private final static int FILE_IMAGE_PREVIEW_WIDTH = 320;
 	private final static int FILE_IMAGE_PREVIEW_HEIGHT = 240;
 	private final static long FILE_IMAGE_PREVIEW_MAX_PIXELS = 4096L * 4096L;
@@ -76,6 +79,7 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 	private ArrayList<MimeTypeVO> fileValueMimeTypes;
 	private Object fileImagePreviewKey;
 	private String fileImagePreview;
+	private InputValueDrafts drafts;
 
 	protected InputModel() {
 		errorMessage = null;
@@ -702,6 +706,34 @@ public abstract class InputModel extends InputFieldOutVOConfigBase {
 
 	public boolean isEditable() {
 		return !isDisabled();
+	}
+
+	/**
+	 * @return the value VO compared with its saved value to mark unsaved fields
+	 */
+	protected Object getDraftValue() {
+		return null;
+	}
+
+	public void setDrafts(InputValueDrafts drafts) {
+		this.drafts = drafts;
+	}
+
+	protected void setSavedValue(Object savedValue) {
+		if (drafts != null) {
+			drafts.setSavedValue(savedValue);
+		}
+	}
+
+	public boolean isUnsaved() {
+		return drafts != null && drafts.isUnsaved(getDraftValue());
+	}
+
+	public String getUnsavedStyleClass() {
+		if (drafts == null || isDisabled()) {
+			return "";
+		}
+		return isUnsaved() ? UNSAVED_TRACKED_STYLECLASS + " " + UNSAVED_STYLECLASS : UNSAVED_TRACKED_STYLECLASS;
 	}
 
 	public boolean isError() {

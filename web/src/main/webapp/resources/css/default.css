@@ -2904,3 +2904,8 @@ overflow-y:scroll;
 .ctsms-strikethrough span {
 	text-decoration: line-through;
 }
+
+/* value forms: entered but not yet saved field values, hatched over the field color */
+.ui-fieldset.ctsms-input-unsaved {
+	background-image: repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08) 4px, transparent 4px, transparent 10px);
+}

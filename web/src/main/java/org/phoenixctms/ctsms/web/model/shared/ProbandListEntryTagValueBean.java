@@ -141,6 +141,22 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 	private Collection<VisitScheduleItemOutVO> visitScheduleItems;
 	private Collection<InquiryValueJsonVO> inquiryValuesOut;
 	private String fieldQuery;
+	private boolean includeDrafts;
+	private final InputValueDrafts<Long, ProbandListEntryTagValueInVO> drafts = new InputValueDrafts<Long, ProbandListEntryTagValueInVO>() {
+
+		@Override
+		protected Long getKey(ProbandListEntryTagValueInVO value) {
+			return value.getTagId();
+		}
+
+		@Override
+		protected boolean isEqual(ProbandListEntryTagValueInVO value, ProbandListEntryTagValueInVO savedValue) {
+			return ProbandListEntryTagValueInVO.equalsExcluding(value, savedValue, EQUALS_EXCLUDES, true, true)
+					&& isSameTime(value.getDateValue(), savedValue.getDateValue())
+					&& isSameTime(value.getTimestampValue(), savedValue.getTimestampValue())
+					&& isSameTime(value.getTimeValue(), savedValue.getTimeValue());
+		}
+	};
 
 	public ProbandListEntryTagValueBean() {
 		super();
@@ -277,6 +293,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		jsTagValuesOut = null;
 		this.probandListEntryId = id;
 		fieldQuery = null;
+		drafts.clear();
 		paginator.initPages(false, probandListEntryId);
 		initIn(true, false);
 		initSets();
@@ -421,6 +438,8 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		}
 		if (probandListEntryId == null) {
 			tagValuesIn.clear();
+			drafts.clear();
+			drafts.setSavedValues(null);
 			if (tagValuesOut != null) {
 				tagValuesOut.clear();
 			}
@@ -428,6 +447,9 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 				jsTagValuesOut.clear();
 			}
 		} else {
+			if (keepTagValuesIn) {
+				drafts.capture(tagValuesIn, null);
+			}
 			if (tagValuesOut == null || jsTagValuesOut == null) {
 				try {
 					portionTagValues(WebUtil.getServiceLocator().getTrialService()
@@ -437,12 +459,24 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 					WebUtil.publishException(e);
 				}
 			}
-			copyProbandListEntryTagValuesOutToIn(tagValuesIn, tagValuesOut, keepTagValuesIn);
+			copyProbandListEntryTagValuesOutToIn(tagValuesIn, tagValuesOut, false);
+			ArrayList<ProbandListEntryTagValueInVO> savedValues = new ArrayList<ProbandListEntryTagValueInVO>();
+			copyProbandListEntryTagValuesOutToIn(savedValues, tagValuesOut, false);
+			drafts.setSavedValues(savedValues);
+			if (keepTagValuesIn) {
+				drafts.restore(tagValuesIn);
+			} else {
+				drafts.remove(tagValuesIn);
+			}
 		}
 	}
 
 	private void initSets() {
 		inputModels = new ProbandListEntryTagInputModelList(tagValuesIn);
+		Iterator<ProbandListEntryTagInputModel> modelIt = inputModels.iterator();
+		while (modelIt.hasNext()) {
+			modelIt.next().setDrafts(drafts);
+		}
 		paddedInputModels = inputModels.createPaddedList(paginator.getFieldsPerRow(), MAX_INPUT_FIELDS_PER_ROW,
 				Settings.getInt(SettingCodes.PROBAND_LIST_TAG_INPUTS_GRID_COLUMNS_THRESHOLD_WIDTH, Bundle.SETTINGS,
 						DefaultSettings.PROBAND_LIST_TAG_INPUTS_GRID_COLUMNS_THRESHOLD_WIDTH));
@@ -479,6 +513,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 	@Override
 	public String loadAction() {
+		drafts.clear();
 		tagValuesOut = null;
 		jsTagValuesOut = null;
 		try {
@@ -540,6 +575,7 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 	@Override
 	public String resetAction() {
+		drafts.clear();
 		tagValuesOut = null;
 		jsTagValuesOut = null;
 		initIn(true, false);
@@ -573,11 +609,35 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 		}
 	}
 
+	public int getHiddenDraftCount() {
+		return drafts.getHiddenDraftCount(tagValuesIn);
+	}
+
+	public void updateWithDrafts() {
+		includeDrafts = true;
+		try {
+			update();
+		} finally {
+			includeDrafts = false;
+		}
+	}
+
 	@Override
 	public String updateAction() {
 		try {
+			boolean withDrafts = includeDrafts;
+			HashSet<ProbandListEntryTagValueInVO> values = new HashSet<ProbandListEntryTagValueInVO>(tagValuesIn);
+			if (withDrafts) {
+				values.addAll(drafts.getHiddenDrafts(tagValuesIn));
+			}
 			portionTagValues(WebUtil.getServiceLocator().getTrialService()
-					.setProbandListEntryTagValues(WebUtil.getAuthentication(), new HashSet<ProbandListEntryTagValueInVO>(tagValuesIn), false));
+					.setProbandListEntryTagValues(WebUtil.getAuthentication(), values, false));
+			if (withDrafts) {
+				// the saved drafts are not on this page, so reload it:
+				drafts.clear();
+				tagValuesOut = null;
+				jsTagValuesOut = null;
+			}
 			initIn(false, false);
 			initSets();
 			addOperationSuccessMessage("probandListEntryTagValueMessages", MessageCodes.UPDATE_OPERATION_SUCCESSFUL);

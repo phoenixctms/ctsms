@@ -15,7 +15,7 @@
 			rendered="#{rendered}">
 		<p:fieldset id="row#{index}"
 			toggleable="#{toggleable}"
-			styleClass="#{fieldInput.getColor(optional)}"
+			styleClass="#{fieldInput.getColor(optional)} #{fieldInput.unsavedStyleClass}"
 			collapsed="#{toggleable and fieldInput.collapsed}">
 			<f:facet name="legend">
 				<h:outputText

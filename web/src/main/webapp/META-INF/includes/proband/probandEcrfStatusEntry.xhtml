@@ -612,7 +612,7 @@
 								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
 								update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 
-							<p:commandButton process="@this,ecrffield_inputs" id="update"
+							<p:splitButton process="@this,ecrffield_inputs" id="update"
 								value="#{labels.update_page_button_label}"
 								actionListener="#{probandEcrfStatusEntryBean.update}"
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
@@ -620,7 +620,16 @@
 								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
 								update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
 								<f:param name="includeDisabled" value="true" />	
-							</p:commandButton>
+								<p:menuitem process="@this,ecrffield_inputs"
+									value="#{labels.update_page_drafts_button_label} (#{probandEcrfStatusEntryBean.ecrfFieldValueBean.hiddenDraftCount})"
+									actionListener="#{probandEcrfStatusEntryBean.updateWithDrafts}"
+									oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk" ajax="true"
+									disabled="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.hiddenDraftCount le 0}"
+									update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
+									<f:param name="includeDisabled" value="true" />
+								</p:menuitem>
+							</p:splitButton>
 
 
 
