@@ -13,26 +13,6 @@
 		<h:form id="usermain_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
 			<p:remoteCommand
 				process="@this"
-				name="changePassword"
-				actionListener="#{passwordBean.change(userBean.in.id)}"
-				update=":tabView:password_form:password_input,:tabView:password_form:passwordadd_departmentpassword" />
-			<p:remoteCommand
-				process="@this"
-				name="changeUserActivity"
-				actionListener="#{userActivityBean.change(userBean.in.id)}"
-				update=":tabView:useractivity_form:useractivity_list" />		
-			<p:remoteCommand
-				process="@this"
-				name="changeUserPermissionProfiles"
-				actionListener="#{userPermissionProfileBean.change(userBean.in.id)}"
-				update=":tabView:userpermissionprofile_form:userpermissionprofile_input_grid" />		
-			<p:remoteCommand
-				process="@this"
-				name="changeUserJournalEntry"
-				actionListener="#{journalBean.changeUser(userBean.in.id)}"
-				update=":tabView:userjournal_form:journal_list,:tabView:userjournal_form:journal_input" />		
-			<p:remoteCommand
-				process="@this"
 				name="changeUserByJournalEntry"
 				actionListener="#{userBean.change(journalBean.in.userId)}"
 				oncomplete="handleUserChanged(xhr, status, args)"

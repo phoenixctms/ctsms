@@ -10,6 +10,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="userpermissionprofile_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeUserPermissionProfiles"
+				actionListener="#{userPermissionProfileBean.change(userBean.in.id)}"
+				update=":tabView:userpermissionprofile_form:userpermissionprofile_input_grid" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<h:panelGrid id="userpermissionprofile_input_grid" columns="1"
