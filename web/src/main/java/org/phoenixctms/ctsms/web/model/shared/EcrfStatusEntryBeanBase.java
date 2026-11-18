@@ -971,6 +971,15 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		return signEcrfsAction(false);
 	}
 
+	public void updateWithDrafts() {
+		ecrfFieldValueBean.setIncludeDrafts(true);
+		try {
+			update();
+		} finally {
+			ecrfFieldValueBean.setIncludeDrafts(false);
+		}
+	}
+
 	@Override
 	public String updateAction() {
 		ecrfFieldValueBean.update();

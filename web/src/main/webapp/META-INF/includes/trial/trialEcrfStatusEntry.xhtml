@@ -713,7 +713,7 @@
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
 								update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" />
 
-							<p:commandButton process="@this,ecrffield_inputs" id="update"
+							<p:splitButton process="@this,ecrffield_inputs" id="update"
 								value="#{labels.update_page_button_label}"
 								actionListener="#{trialEcrfStatusEntryBean.update}"
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
@@ -721,7 +721,16 @@
 								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
 								update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" >
 								<f:param name="includeDisabled" value="true" />
-							</p:commandButton>
+								<p:menuitem process="@this,ecrffield_inputs"
+									value="#{labels.update_page_drafts_button_label} (#{trialEcrfStatusEntryBean.ecrfFieldValueBean.hiddenDraftCount})"
+									actionListener="#{trialEcrfStatusEntryBean.updateWithDrafts}"
+									oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
+									icon="ui-icon ui-icon-disk" ajax="true"
+									disabled="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.hiddenDraftCount le 0}"
+									update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
+									<f:param name="includeDisabled" value="true" />
+								</p:menuitem>
+							</p:splitButton>
 
 
 

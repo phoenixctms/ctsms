@@ -116,6 +116,11 @@ public class EcrfFieldInputModel extends InputModel {
 		return visitId;
 	}
 
+	@Override
+	protected Object getDraftValue() {
+		return getEcrfFieldValue();
+	}
+
 	public ECRFFieldValueInVO getEcrfFieldValue() {
 		return ecrfFieldValue;
 	}
@@ -427,6 +432,9 @@ public class EcrfFieldInputModel extends InputModel {
 								ecrfFieldValue.getIndex());
 				ECRFFieldValueOutVO out = values.getPageValues().iterator().next();
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
+				ECRFFieldValueInVO savedValue = new ECRFFieldValueInVO();
+				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(savedValue, out);
+				setSavedValue(savedValue);
 				setLastFieldStatus(out);
 				setModifiedAnnotation(out);
 				return values.getJsValues();
@@ -666,6 +674,9 @@ public class EcrfFieldInputModel extends InputModel {
 						.setEcrfFieldValues(WebUtil.getAuthentication(), ecrfFieldValues, null, force, null, null);
 				ECRFFieldValueOutVO out = values.getPageValues().iterator().next();
 				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(ecrfFieldValue, out);
+				ECRFFieldValueInVO savedValue = new ECRFFieldValueInVO();
+				EcrfFieldValueBean.copyEcrfFieldValueOutToIn(savedValue, out);
+				setSavedValue(savedValue);
 				setLastFieldStatus(out);
 				setModifiedAnnotation(out);
 				return values.getJsValues();
