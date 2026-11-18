@@ -46,6 +46,10 @@ import org.primefaces.model.StreamedContent;
 
 public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 
+	// preselect the first non-empty section when an eCRF is opened, to keep the initial load small.
+	// the field values are paginated, so start with the empty filter showing all sections.
+	private static final boolean SET_FIRST_FILTER_SECTION = false;
+
 	private static ArrayList<SelectItem> mergeEcrfFilterSections(Collection<String> sectionStrings, ECRFProgressVO ecrfProgress, ECRFProgressVO sectionEcrfProgress) {
 		ArrayList<SelectItem> filterSections;
 		if (sectionStrings != null) {
@@ -166,7 +170,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		probandListEntryModel.resetRows();
 		probandListEntryModel.updateRowCount();
 		ecrfFieldValueBean.setFieldQuery(null);
-		initSets();
+		initSets(false);
 		return CHANGE_OUTCOME;
 	}
 
@@ -735,7 +739,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		addMessages();
 	}
 
-	protected void initSets() {
+	protected void initSets(boolean setFirstSection) {
 		initSpecificSets();
 		password = null;
 		clearCaches();
@@ -755,6 +759,9 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		ecrfFieldValueBean.setFilterSectionProgress(null);
 		ecrfFieldValueBean.setFilterIndex(null);
 		filterSections = getEcrfFilterSections(listEntryId, ecrfId, visitId, false);
+		if (setFirstSection) {
+			setFirstFilterSection();
+		}
 		ecrfFieldValueBean.changeRootEntity(ecrfId);
 		signature = loadSignature();
 		addMessages();
@@ -836,6 +843,26 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		appendRequestContextCallbackArgs(true);
 	}
 
+	private void setFirstFilterSection() {
+		if (filterSections != null && filterSections.size() > 0) {
+			Iterator<SelectItem> it = filterSections.iterator();
+			while (it.hasNext()) {
+				Object value = it.next().getValue();
+				if (value instanceof ECRFSectionProgressVO) {
+					if (!CommonUtil.isEmptyString(((ECRFSectionProgressVO) value).getSection())) {
+						ecrfFieldValueBean.setFilterSectionProgress((ECRFSectionProgressVO) value);
+						return;
+					}
+				} else if (value instanceof String) {
+					if (!CommonUtil.isEmptyString((String) value)) {
+						ecrfFieldValueBean.setFilterSection((String) value);
+						return;
+					}
+				}
+			}
+		}
+	}
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -845,7 +872,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 			this.ecrf = ecrfVisit.getEcrf();
 			this.visit = ecrfVisit.getVisit();
 			ecrfFieldValueBean.setFieldQuery(null);
-			initSets();
+			initSets(SET_FIRST_FILTER_SECTION);
 		}
 	}
 
@@ -865,7 +892,7 @@ public abstract class EcrfStatusEntryBeanBase extends EcrfDataEntryBeanBase {
 		}
 		ecrfVisitModel.updateRowCount();
 		ecrfFieldValueBean.setFieldQuery(null);
-		initSets();
+		initSets(false);
 	}
 
 	public void signAllEcrfs() {

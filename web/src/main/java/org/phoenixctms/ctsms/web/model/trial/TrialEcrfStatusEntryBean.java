@@ -85,7 +85,7 @@ public class TrialEcrfStatusEntryBean extends EcrfStatusEntryBeanBase {
 
 	@PostConstruct
 	private void init() {
-		initSets();
+		initSets(false);
 	}
 
 	@Override
