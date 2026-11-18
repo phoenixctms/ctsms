@@ -499,7 +499,6 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 
 	@Override
 	public String deleteAction() {
-		drafts.clear();
 		try {
 			Long listEntryId = probandListEntry == null ? null : probandListEntry.getId();
 			Long ecrfId = ecrf == null ? null : ecrf.getId();
@@ -510,6 +509,7 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				WebUtil.getServiceLocator().getTrialService().clearEcrfFieldValues(WebUtil.getAuthentication(), listEntryId, ecrfId, visitId, filterSection);
 			}
 			portionEcrfFieldValues(null);
+			drafts.clear();
 			initPages(true);
 			initIn(true, false);
 			initSets();
@@ -614,9 +614,18 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	public boolean getEditable(boolean unlockValue) {
+		return ecrfFieldValuesIn.size() > 0 && isEntryEditable(unlockValue);
+	}
+
+	/**
+	 * @return true if hidden drafts can be saved, also when no field is shown (Find fields without hits)
+	 */
+	public boolean isDraftsSaveable() {
+		return isEntryEditable(false) && getHiddenDraftCount() > 0;
+	}
+
+	private boolean isEntryEditable(boolean unlockValue) {
 		if (probandListEntry == null || ecrf == null) {
-			return false;
-		} else if (ecrfFieldValuesIn.size() == 0) {
 			return false;
 		} else if (WebUtil.isTrialLocked(probandListEntry)) {
 			return false;
@@ -1057,8 +1066,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 		try {
 			Set<ECRFFieldValueInVO> inValues = getEcrfFieldInValues(true);
 			boolean withDrafts = includeDrafts;
+			ArrayList<ECRFFieldValueInVO> hiddenDrafts = withDrafts ? drafts.getHiddenDrafts(ecrfFieldValuesIn) : null;
 			if (withDrafts) {
-				inValues.addAll(drafts.getHiddenDrafts(ecrfFieldValuesIn));
+				inValues.addAll(hiddenDrafts);
 			}
 			if (inValues.size() > 0) {
 				PSFVO psf = paginator.getPsfCopy(true);
@@ -1071,7 +1081,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				}
 				paginator.initPages(psf, false);
 				if (withDrafts) {
-					drafts.clear();
+					// drafts of new series sections were not saved and stay:
+					drafts.remove(hiddenDrafts);
 				}
 				initIn(false, false);
 				initSets();

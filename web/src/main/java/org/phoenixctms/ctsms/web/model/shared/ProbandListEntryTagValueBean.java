@@ -503,7 +503,18 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 	@Override
 	public boolean isEditable() {
-		return ((probandListEntryId != null && tagValuesIn.size() > 0 && !WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry)) ? true : false);
+		return tagValuesIn.size() > 0 && isEntryEditable();
+	}
+
+	private boolean isEntryEditable() {
+		return probandListEntryId != null && !WebUtil.isTrialLocked(probandListEntry) && !WebUtil.isProbandLocked(probandListEntry);
+	}
+
+	/**
+	 * @return true if hidden drafts can be saved, also when no field is shown (Find fields without hits)
+	 */
+	public boolean isDraftsSaveable() {
+		return isEntryEditable() && getHiddenDraftCount() > 0;
 	}
 
 	@Override

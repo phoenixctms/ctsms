@@ -120,7 +120,7 @@
 								actionListener="#{inquiryValueBean.update}"
 								oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
-								disabled="#{!inquiryValueBean.editable}"
+								disabled="#{!inquiryValueBean.editable and !inquiryValueBean.draftsSaveable}"
 								update="inquiriestrial,inquiriessignup,inquiry_input_grid">
 								<f:param name="includeDisabled" value="true" />	
 								<p:menuitem process="@this,inquiry_inputs"
@@ -128,7 +128,7 @@
 									actionListener="#{inquiryValueBean.updateWithDrafts}"
 									oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)"
 									icon="ui-icon ui-icon-disk" ajax="true"
-									disabled="#{!inquiryValueBean.editable or inquiryValueBean.hiddenDraftCount le 0}"
+									disabled="#{!inquiryValueBean.draftsSaveable}"
 									update="inquiriestrial,inquiriessignup,inquiry_input_grid">
 									<f:param name="includeDisabled" value="true" />
 								</p:menuitem>

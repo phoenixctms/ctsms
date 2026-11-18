@@ -617,7 +617,7 @@
 								actionListener="#{probandEcrfStatusEntryBean.update}"
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
-								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
+								rendered="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.editable or probandEcrfStatusEntryBean.ecrfFieldValueBean.draftsSaveable}"
 								update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
 								<f:param name="includeDisabled" value="true" />	
 								<p:menuitem process="@this,ecrffield_inputs"
@@ -625,7 +625,7 @@
 									actionListener="#{probandEcrfStatusEntryBean.updateWithDrafts}"
 									oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateProbandTabTitles(xhr, status, args)"
 									icon="ui-icon ui-icon-disk" ajax="true"
-									disabled="#{probandEcrfStatusEntryBean.ecrfFieldValueBean.hiddenDraftCount le 0}"
+									disabled="#{!probandEcrfStatusEntryBean.ecrfFieldValueBean.draftsSaveable}"
 									update="probandecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
 									<f:param name="includeDisabled" value="true" />
 								</p:menuitem>

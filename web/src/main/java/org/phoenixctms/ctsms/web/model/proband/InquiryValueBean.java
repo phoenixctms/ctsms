@@ -335,7 +335,18 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	@Override
 	public boolean isEditable() {
-		if (trial != null && proband != null && inquiryValuesIn.size() > 0) {
+		return inquiryValuesIn.size() > 0 && isProbandEditable();
+	}
+
+	/**
+	 * @return true if hidden drafts can be saved, also when no field is shown (Find fields without hits)
+	 */
+	public boolean isDraftsSaveable() {
+		return isProbandEditable() && getHiddenDraftCount() > 0;
+	}
+
+	private boolean isProbandEditable() {
+		if (trial != null && proband != null) {
 			TrialStatusTypeVO trialStatusType = trial.getStatus();
 			if (!trialStatusType.getLockdown() && trialStatusType.getInquiryValueInputEnabled()) {
 				return !WebUtil.isProbandLocked(proband);
@@ -448,12 +459,12 @@ public class InquiryValueBean extends InquiryValueBeanBase {
 
 	@Override
 	public String deleteAction() {
-		drafts.clear();
 		try {
 			Long trialId = trial == null ? null : trial.getId();
 			Long probandId = proband == null ? null : proband.getId();
 			WebUtil.getServiceLocator().getProbandService().clearInquiryValues(WebUtil.getAuthentication(), trialId, probandId);
 			portionInquiryValues(null);
+			drafts.clear();
 			initIn(true, false);
 			initSets();
 			addOperationSuccessMessage(MessageCodes.DELETE_OPERATION_SUCCESSFUL);

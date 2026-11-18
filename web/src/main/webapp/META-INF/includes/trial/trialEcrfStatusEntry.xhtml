@@ -718,7 +718,7 @@
 								actionListener="#{trialEcrfStatusEntryBean.update}"
 								oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
 								icon="ui-icon ui-icon-disk" ajax="true"
-								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable}"
+								rendered="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.editable or trialEcrfStatusEntryBean.ecrfFieldValueBean.draftsSaveable}"
 								update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid" >
 								<f:param name="includeDisabled" value="true" />
 								<p:menuitem process="@this,ecrffield_inputs"
@@ -726,7 +726,7 @@
 									actionListener="#{trialEcrfStatusEntryBean.updateWithDrafts}"
 									oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);handleUpdateTrialTabTitles(xhr, status, args)"
 									icon="ui-icon ui-icon-disk" ajax="true"
-									disabled="#{trialEcrfStatusEntryBean.ecrfFieldValueBean.hiddenDraftCount le 0}"
+									disabled="#{!trialEcrfStatusEntryBean.ecrfFieldValueBean.draftsSaveable}"
 									update="trialecrfstatus_ecrf_list,section_filter,ecrf_detail,ecrf_title,ecrffield_input_grid">
 									<f:param name="includeDisabled" value="true" />
 								</p:menuitem>
