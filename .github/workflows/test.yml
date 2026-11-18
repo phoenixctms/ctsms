@@ -118,8 +118,8 @@ jobs:
       - name: Setup Tomcat
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
-          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION explicitly
-          sudo VERSION="$VERSION" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION and JAVA_HOME explicitly
+          sudo VERSION="$VERSION" JAVA_HOME="$JAVA_HOME" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
       - name: Snapshot REST API swagger.json and index
         # Fetched on every run, so a broken spec shows up in PRs too; published only from master.
         # Both describe the CI Tomcat, so drop its host/schemes and instance details, and make the index URLs relative.
