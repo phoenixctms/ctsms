@@ -11,55 +11,6 @@
 	<ui:composition>
 		<h:form id="staffmain_form"
 			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-			<p:remoteCommand process="@this" name="changeStaffTag"
-				actionListener="#{staffTagBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:stafftag_form:stafftag_list,:tabView:stafftag_form:stafftag_input" />
-			<p:remoteCommand process="@this" name="changeStaffImage"
-				actionListener="#{staffImageBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffimage_form:photo,:tabView:staffimage_form:photo_input" />
-			<p:remoteCommand process="@this" name="changeStaffStatus"
-				actionListener="#{staffStatusBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffstatus_form:staffstatus_list,:tabView:staffstatus_form:staffstatus_input" />
-			<p:remoteCommand process="@this" name="changeStaffContactDetail"
-				actionListener="#{staffContactDetailBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffcontactdetail_form:staffcontactdetail_list,:tabView:staffcontactdetail_form:staffcontactdetail_input" />
-			<p:remoteCommand process="@this" name="changeStaffDutyRosterTurn"
-				actionListener="#{staffDutyRosterTurnBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffdutyrosterturn_form:dutyrosterturn_list,:tabView:staffdutyrosterturn_form:dutyrosterturn_input" />
-			<p:remoteCommand process="@this" name="changeStaffAddress"
-				actionListener="#{staffAddressBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffaddress_form:staffaddress_list,:tabView:staffaddress_form:staffaddress_input" />
-			<p:remoteCommand process="@this" name="changeCvPosition"
-				actionListener="#{cvPositionBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:cvposition_form:cvposition_list,:tabView:cvposition_form:cvposition_input" />
-			<p:remoteCommand process="@this"
-				name="changeCourseParticipationStatus"
-				actionListener="#{courseParticipationStatusBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:courseparticipationstatus_form:courseparticipationstatus_list,:tabView:courseparticipationstatus_form:courseparticipationstatus_input" />
-			<p:remoteCommand process="@this" name="changeStaffAssociation"
-				actionListener="#{staffAssociationBean.change(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffassociation_form:association_lists" />
-			<p:remoteCommand process="@this" name="changeStaffFile"
-				actionListener="#{fileBean.changeStaff(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:stafffile_form" />
-			<p:remoteCommand process="@this" name="changeStaffHyperlink"
-				actionListener="#{hyperlinkBean.changeStaff(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffhyperlink_form:hyperlink_list,:tabView:staffhyperlink_form:hyperlink_input" />
-			<p:remoteCommand process="@this" name="changeStaffJournalEntry"
-				actionListener="#{journalBean.changeStaff(staffBean.in.id)}"
-				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
-				update=":tabView:staffjournal_form:journal_list,:tabView:staffjournal_form:journal_input" />
 
 			<p:remoteCommand process="@this" name="changeStaffByTag"
 				actionListener="#{staffBean.change(staffTagBean.in.staffId)}"

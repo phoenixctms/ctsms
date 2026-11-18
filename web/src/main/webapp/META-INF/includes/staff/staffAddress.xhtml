@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="staffaddress_form">
+			<p:remoteCommand process="@this" name="changeStaffAddress"
+				actionListener="#{staffAddressBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffaddress_form:staffaddress_list,:tabView:staffaddress_form:staffaddress_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

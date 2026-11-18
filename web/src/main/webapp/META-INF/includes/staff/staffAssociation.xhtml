@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="staffassociation_form">
+			<p:remoteCommand process="@this" name="changeStaffAssociation"
+				actionListener="#{staffAssociationBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffassociation_form:association_lists" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

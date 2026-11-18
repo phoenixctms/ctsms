@@ -11,6 +11,11 @@
 <h:body>
 	<ui:composition>
 		<h:form id="courseparticipationstatus_form">
+			<p:remoteCommand process="@this"
+				name="changeCourseParticipationStatus"
+				actionListener="#{courseParticipationStatusBean.change(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:courseparticipationstatus_form:courseparticipationstatus_list,:tabView:courseparticipationstatus_form:courseparticipationstatus_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

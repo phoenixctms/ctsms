@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="staffhyperlink_form">
+			<p:remoteCommand process="@this" name="changeStaffHyperlink"
+				actionListener="#{hyperlinkBean.changeStaff(staffBean.in.id)}"
+				oncomplete="handleUpdateStaffTabTitles(xhr, status, args)"
+				update=":tabView:staffhyperlink_form:hyperlink_list,:tabView:staffhyperlink_form:hyperlink_input" />
 
 			<ui:include src="/META-INF/includes/shared/hyperlink.xhtml">
 				<ui:param name="namingContainer"
