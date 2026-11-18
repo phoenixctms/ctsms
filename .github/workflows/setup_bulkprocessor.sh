@@ -65,7 +65,13 @@ imagemagick \
 ghostscript \
 build-essential \
 cpanminus
-sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' /etc/ImageMagick-6/policy.xml
+# allow ghostscript (PS) conversions; the policy lives in ImageMagick-7 on Ubuntu 26.04, ImageMagick-6 before:
+for policy in /etc/ImageMagick-*/policy.xml; do
+  [ -f "$policy" ] || continue
+  sed -r -i 's/^\s*(<policy domain="coder" rights="none" pattern="PS" \/>)\s*$/<!--\1-->/' "$policy"
+  echo "$policy:"
+  grep -n 'pattern="PS"' "$policy" || echo "  (no PS policy)"
+done
 if [ "$(lsb_release -d | grep -Ei 'debian')" ]; then
   apt-get -q -y -o=Dpkg::Use-Pty=0 install libsys-cpuaffinity-perl
 else
