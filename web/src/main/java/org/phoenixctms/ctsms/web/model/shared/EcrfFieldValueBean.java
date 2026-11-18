@@ -661,10 +661,8 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	public void handleFieldQueryChange() {
-		ecrfFieldValuesOut = null;
-		jsEcrfFieldValuesOut = null;
 		initPages(true);
-		initIn(false, true);
+		reloadEcrfFieldValuesKeepingIn();
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		appendRequestContextCallbackArgs(true);
@@ -686,20 +684,16 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 	}
 
 	public void handlePageChange() {
-		ecrfFieldValuesOut = null;
-		jsEcrfFieldValuesOut = null;
 		initPages(false);
-		initIn(false, true);
+		reloadEcrfFieldValuesKeepingIn();
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		appendRequestContextCallbackArgs(true);
 	}
 
 	public void handlePageSizeChange() {
-		ecrfFieldValuesOut = null;
-		jsEcrfFieldValuesOut = null;
 		initPages(false);
-		initIn(false, true);
+		reloadEcrfFieldValuesKeepingIn();
 		updateInputModelsMap();
 		updateInputModelModifiedAnnotations();
 		appendRequestContextCallbackArgs(true);
@@ -724,28 +718,42 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 			}
 		} else {
 			if (ecrfFieldValuesOut == null || jsEcrfFieldValuesOut == null) {
-				if (CommonUtil.isEmptyString(filterSection)) {
-					try {
-						portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-								.getEcrfFieldValues(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, true,
-										loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), fieldQuery, paginator.getPsf()));
-					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-					} catch (AuthenticationException e) {
-						WebUtil.publishException(e);
-					}
-				} else {
-					try {
-						portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
-								.getEcrfFieldValues(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, filterSection,
-										filterIndex, true,
-										loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), fieldQuery, paginator.getPsf()));
-					} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
-					} catch (AuthenticationException e) {
-						WebUtil.publishException(e);
-					}
-				}
+				loadEcrfFieldValues(loadAllJsValues, false);
 			}
 			copyEcrfFieldValuesOutToIn(ecrfFieldValuesIn, ecrfFieldValuesOut, keepEcrfFieldValuesIn);
+		}
+	}
+
+	private boolean loadEcrfFieldValues(boolean loadAllJsValues, boolean reportErrors) {
+		try {
+			if (CommonUtil.isEmptyString(filterSection)) {
+				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
+						.getEcrfFieldValues(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, true,
+								loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), fieldQuery, paginator.getPsf()));
+			} else {
+				portionEcrfFieldValues(WebUtil.getServiceLocator().getTrialService()
+						.getEcrfFieldValues(WebUtil.getAuthentication(), probandListEntry.getId(), ecrf.getId(), visit != null ? visit.getId() : null, filterSection,
+								filterIndex, true,
+								loadAllJsValues && ecrf.getEnableBrowserFieldCalculation(), fieldQuery, paginator.getPsf()));
+			}
+			return true;
+		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			if (reportErrors) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			}
+		} catch (AuthenticationException e) {
+			if (reportErrors) {
+				Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
+			}
+			WebUtil.publishException(e);
+		}
+		return false;
+	}
+
+	private void reloadEcrfFieldValuesKeepingIn() {
+		// a failed load leaves ecrfFieldValuesOut untouched, so the displayed inputs including pending edits are kept:
+		if (probandListEntry == null || ecrf == null || loadEcrfFieldValues(false, true)) {
+			initIn(false, true);
 		}
 	}
 
