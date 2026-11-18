@@ -7,6 +7,10 @@ usermod --append --groups ctsms tomcat
 #sed -r -i "s/^JAVA_OPTS.+/JAVA_OPTS=\"-server -Djava.awt.headless=true -Xms$XMS -Xmx$XMX -Xss$XSS -XX:+UseParallelGC -XX:MaxGCPauseMillis=1500 -XX:GCTimeRatio=9 -XX:ReservedCodeCacheSize=$PERM\"/" /etc/default/tomcat9
 echo "CTSMS_PROPERTIES=/ctsms/properties" >>/etc/default/tomcat10
 echo "CTSMS_JAVA=/ctsms/java" >>/etc/default/tomcat10
+# Tomcat's start script only looks for Ubuntu's own JVM packages; use the JDK from actions/setup-java:
+if [ -n "$JAVA_HOME" ]; then
+  echo "JAVA_HOME=$JAVA_HOME" >>/etc/default/tomcat10
+fi
 #echo "JDK_JAVA_OPTIONS=--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" >>/etc/default/tomcat10
 sed -r -i "s|# Lifecycle|EnvironmentFile=/etc/default/tomcat10\\n\\n# Lifecycle|" /usr/lib/systemd/system/tomcat10.service
 sed -r -i "s|# Security|# Security\\nReadWritePaths=/ctsms/external_files/ /ctsms/bulk_processor/output/ /ctsms/ /tmp/|" /usr/lib/systemd/system/tomcat10.service
@@ -18,3 +22,5 @@ rm /var/lib/tomcat10/webapps/ROOT/ -rf
 cp /home/runner/work/ctsms/ctsms/web/target/ctsms-$VERSION-migrated.war /var/lib/tomcat10/webapps/ROOT.war
 systemctl daemon-reload
 systemctl start tomcat10
+sleep 10
+systemctl --no-pager status tomcat10 || journalctl -u tomcat10 --no-pager -n 100
