@@ -72,7 +72,8 @@ jobs:
       - name: Setup BulkProcessor
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
-          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
+          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; this script needs no caller env
+          sudo /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
       - name: Setup dbtool.sh
         env:
           MAIL_SENDER_HOST: ${{ secrets.MAIL_SENDER_HOST }}
@@ -111,7 +112,8 @@ jobs:
       - name: Setup Tomcat
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
-          sudo -E /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION explicitly
+          sudo VERSION="$VERSION" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
       - name: Snapshot REST API swagger.json and index
         # Fetched on every run, so a broken spec shows up in PRs too; published only from master.
         # Both describe the CI Tomcat, so drop its host/schemes and instance details, and make the index URLs relative.
