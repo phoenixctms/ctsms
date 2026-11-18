@@ -511,6 +511,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//				.findElement(By.xpath("//div[contains(@class, 'ui-radiobutton-box')]")).click();
 		getChildElements(getParentElement(getParentElement(new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']//.//label[contains(text(), '" + itemLabel + "')]")))))).get(0).click();
+		waitForAjax();
 		info("jobtype selectonemenu option '" + itemLabel + "' selected: " + id);
 	}
 
@@ -547,6 +548,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='" + id + "']//label[contains(text(), '" + itemLabel + "')]")))
 				.click();
+		waitForAjax();
 		info("selectmany option '" + itemLabel + "' selected: " + id);
 	}
 
@@ -554,6 +556,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//table[@id='" + id + "']//label[contains(text(), '" + itemLabel + "')]")))
 				.click();
+		waitForAjax();
 		info("selectonemenu option '" + itemLabel + "' selected: " + id);
 	}
 
@@ -617,6 +620,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 			clickButton(id + "_menuButton");
 			new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 					.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_menu']/ul/li/a/span[contains(text(), '" + itemLabel + "')]"))).click();
+			waitForAjax();
 			info("splitbutton menu option '" + itemLabel + "' clicked");
 		} else {
 			clickButton(id + "_button");
@@ -635,6 +639,7 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 		//		}
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_panel']/ul/li[contains(text(), '" + itemLabel + "')]"))).click();
+		waitForAjax();
 		info("selectonemenu option '" + itemLabel + "' selected: " + id);
 	}
 
@@ -643,12 +648,14 @@ public class SeleniumTestBase implements OutputLogger, ITestListener {
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "']/div[contains(@class, 'ui-selectonemenu-trigger')]"))).click();
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='" + id + "_panel']/table//tr[" + Integer.toString(index + 1) + "]"))).click();
+		waitForAjax();
 		info("selectonemenu option index " + Integer.toString(index) + " selected: " + id);
 	}
 
 	protected void clickCheckbox(String id) {
 		new WebDriverWait(getChromeDriver(), WEB_DRIVER_WAIT)
 				.until(ExpectedConditions.elementToBeClickable(By.id(id))).click();
+		waitForAjax();
 		info("checkbox clicked: " + id);
 	}
 
