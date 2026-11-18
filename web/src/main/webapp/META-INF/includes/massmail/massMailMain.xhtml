@@ -12,18 +12,6 @@
 	<ui:composition>
 		<h:form id="massmailmain_form"
 			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
-			<p:remoteCommand process="@this" name="changeMassMailRecipient"
-				actionListener="#{massMailRecipientBean.change(massMailBean.in.id)}"
-				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
-				update=":tabView:massmailrecipient_form:mass_mail_recipient_list,:tabView:massmailrecipient_form:mass_mail_recipient_bulkadd,:tabView:massmailrecipient_form:mass_mail_recipient_input" />
-			<p:remoteCommand process="@this" name="changeMassMailJournalEntry"
-				actionListener="#{journalBean.changeMassMail(massMailBean.in.id)}"
-				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
-				update=":tabView:massmailjournal_form:journal_list,:tabView:massmailjournal_form:journal_input" />
-			<p:remoteCommand process="@this" name="changeMassMailFile"
-				actionListener="#{fileBean.changeMassMail(massMailBean.in.id)}"
-				oncomplete="handleUpdateMassMailTabTitles(xhr, status, args)"
-				update=":tabView:massmailfile_form" />
 			<p:remoteCommand process="@this"
 				name="changeMassMailByMassMailRecipient"
 				actionListener="#{massMailBean.change(massMailRecipientBean.in.massMailId)}"
