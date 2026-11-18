@@ -418,7 +418,7 @@
 						disabled="#{!enabled or (fieldInput.disabled and facesContext.currentPhaseId.ordinal eq 6)}"
 						label="#{fieldInput.label}"
 						backgroundImage="#{request.contextPath}/inputfieldimage?#{applicationScopeBean.parameterName('INPUT_FIELD_ID')}=#{fieldInput.inputField.id}"
-						onChange="#{fieldInput.getEventJSCall('FieldCalculation.sketchOnChange')}" />
+						onChange="#{fieldInput.getEventJSCall('FieldCalculation.sketchOnChange')};ajaxRequest('#{namingContainer}:sketchpad#{index}','#{namingContainer}:sketchpad#{index}',null,null);" />
 					<ui:include src="errorMessage.xhtml">
 						<ui:param name="rendered" value="#{fieldInput.error}" />
 						<ui:param name="value" value="#{fieldInput.errorMessage}" />

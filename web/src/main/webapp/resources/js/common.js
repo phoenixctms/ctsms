@@ -1844,8 +1844,40 @@ if (document.addEventListener) {
 	document.addEventListener("keydown", handleCodeMirrorHintKeyDown, true);
 }
 
-// value forms: mark a field as entered but not saved as soon as it changes;
-// the server renders this state with each update of the field rows.
-jQuery(document).on("change", "fieldset.ctsms-input-unsaved-tracked :input", function() {
-	jQuery(this).closest("fieldset.ctsms-input-unsaved-tracked").addClass("ctsms-input-unsaved");
+// value forms: mark a field as entered but not saved as soon as its value changes.
+// The server renders this state with each update of the field rows. Widgets report changes in
+// different ways (change, blur, dateSelect, timeSelect, itemSelect, drawing), so the inputs of a
+// field are compared with their state when the field was rendered.
+function updateUnsavedInputFields(root) {
+	var selector = "fieldset.ctsms-input-unsaved-tracked";
+	var context = jQuery(root || document);
+	var fieldsets = context.find(selector);
+	if (context.is(selector)) { // jQuery 1.7: no addBack
+		fieldsets = fieldsets.add(context);
+	}
+	fieldsets.each(function() {
+		var fieldset = jQuery(this);
+		// file uploads and photo captures only re-render the file label:
+		var values = fieldset.find(":input").serialize() + "|" + fieldset.find(".ctsms-input-file-link").text();
+		var renderedValues = fieldset.data("ctsmsRenderedValues");
+		if (renderedValues === undefined) {
+			fieldset.data("ctsmsRenderedValues", values);
+			fieldset.data("ctsmsRenderedUnsaved", fieldset.hasClass("ctsms-input-unsaved"));
+		} else {
+			fieldset.toggleClass("ctsms-input-unsaved", values !== renderedValues || fieldset.data("ctsmsRenderedUnsaved") === true);
+		}
+	});
+}
+
+jQuery(document).ready(function() {
+	updateUnsavedInputFields();
+});
+jQuery(document).ajaxComplete(function() {
+	updateUnsavedInputFields();
+});
+jQuery(document).on("change input keyup mouseup touchend", "fieldset.ctsms-input-unsaved-tracked", function() {
+	var fieldset = this;
+	setTimeout(function() {
+		updateUnsavedInputFields(fieldset);
+	}, 0);
 });
