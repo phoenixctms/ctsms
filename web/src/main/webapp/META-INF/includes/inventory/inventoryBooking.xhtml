@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventorybooking_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryBooking"
+				actionListener="#{inventoryBookingBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorybooking_form:inventorybooking_list,:tabView:inventorybooking_form:inventorybooking_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<title>inventory tab</title>
 </h:head>
@@ -21,7 +22,10 @@
 				<ui:param name="tabTitles" value="#{applicationScopeBean.mapToList(sessionScopeBean.inventoryTabTitles)}" />
 				<ui:param name="visibleTabSet" value="#{sessionScopeBean.inventoryVisibleTabSet}" />
 				<ui:param name="tabViewWidgetVar" value="inventoryTabView" />
-			</ui:include>		
+			</ui:include>
+			<script type="text/javascript">
+				sendBuildTabParam('inventoryTabView');
+			</script>
 			<h:panelGrid
 				columns="1"
 				cellpadding="0"
@@ -46,7 +50,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_TAG_VALUE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_TAG_VALUE_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryTag.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventorytags')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryTag.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventorystatus"
@@ -54,7 +60,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_STATUS_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_STATUS_ENTRY_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryStatus.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventorystatus')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryStatus.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventorymaintenance"
@@ -62,7 +70,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_MAINTENANCE_ITEM_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryMaintenance.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventorymaintenance')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryMaintenance.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventorybookings"
@@ -70,7 +80,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_BOOKING_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_BOOKING_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryBooking.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventorybookings')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryBooking.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventorybookingsummary"
@@ -78,7 +90,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="ctsms-tabtitle"
 						title="#{messages.inventory_booking_summary_tab_label}">
-						<ui:include src="/META-INF/includes/inventory/inventoryBookingDuration.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventorybookingsummary')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryBookingDuration.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventoryhyperlinks"
@@ -86,7 +100,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_HYPERLINK_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_HYPERLINK_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryHyperlink.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventoryhyperlinks')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryHyperlink.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventoryfiles"
@@ -94,7 +110,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_FILE_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_FILE_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryFile.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventoryfiles')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryFile.xhtml" />
+						</c:if>
 					</p:tab>
 					<p:tab
 						id="inventoryjournal"
@@ -102,7 +120,9 @@
 						disabled="#{!inventoryBean.created}"
 						titleStyleClass="#{inventoryBean.isTabEmphasized(applicationScopeBean.jsValue('AJAX_INVENTORY_JOURNAL_ENTRY_COUNT')) ? 'ctsms-tabtitle-emphasized' : 'ctsms-tabtitle'}"
 						title="#{inventoryBean.getTabTitle(applicationScopeBean.jsValue('AJAX_INVENTORY_JOURNAL_ENTRY_COUNT'))}">
-						<ui:include src="/META-INF/includes/inventory/inventoryJournal.xhtml" />
+						<c:if test="#{applicationScopeBean.isTabBuilt('inventoryjournal')}">
+							<ui:include src="/META-INF/includes/inventory/inventoryJournal.xhtml" />
+						</c:if>
 					</p:tab>
 				</p:tabView>
 			</h:panelGrid>

@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventorytag_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryTag"
+				actionListener="#{inventoryTagBean.change(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventorytag_form:inventorytag_list,:tabView:inventorytag_form:inventorytag_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

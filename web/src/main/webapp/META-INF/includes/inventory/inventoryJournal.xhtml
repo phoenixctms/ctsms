@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventoryjournal_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryJournalEntry"
+				actionListener="#{journalBean.changeInventory(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventoryjournal_form:journal_list,:tabView:inventoryjournal_form:journal_input" />
 
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
 				<ui:param name="namingContainer"

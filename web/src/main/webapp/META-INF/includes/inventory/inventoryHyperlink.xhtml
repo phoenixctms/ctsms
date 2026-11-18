@@ -10,6 +10,12 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inventoryhyperlink_form">
+			<p:remoteCommand
+				process="@this"
+				name="changeInventoryHyperlink"
+				actionListener="#{hyperlinkBean.changeInventory(inventoryBean.in.id)}"
+				oncomplete="handleUpdateInventoryTabTitles(xhr, status, args)"
+				update=":tabView:inventoryhyperlink_form:hyperlink_list,:tabView:inventoryhyperlink_form:hyperlink_input" />
 
 			<ui:include src="/META-INF/includes/shared/hyperlink.xhtml">
 				<ui:param name="namingContainer"
