@@ -1397,6 +1397,46 @@ function storeTabIndexParam(index) {
 	}
 }
 
+var _buildTabWidgetVar = null;
+
+function _getBuildTab() {
+	var tabView = _buildTabWidgetVar != null ? window[_buildTabWidgetVar] : null;
+	if (tabView && tabView.panelContainer) {
+		var id = tabView.panelContainer.children().eq(tabView.getActiveIndex()).attr('id');
+		if (id) {
+			return id.substring(id.lastIndexOf(':') + 1);
+		}
+	}
+	return null;
+}
+
+function sendBuildTabParam(tabViewWidgetVar) {
+	// the server builds only the shown tab into the component tree (ApplicationScopeBean.isTabBuilt),
+	// so every postback of the page tells which tab is shown. without the parameter, all tabs are built.
+	if (_buildTabWidgetVar != null) {
+		_buildTabWidgetVar = tabViewWidgetVar;
+		return;
+	}
+	_buildTabWidgetVar = tabViewWidgetVar;
+	jQuery.ajaxPrefilter(function(options) {
+		var tab = _getBuildTab();
+		if (tab != null && options.url && options.type && options.type.toUpperCase() == 'POST') {
+			options.url = options.url + (options.url.indexOf('?') < 0 ? '?' : '&') + BUILD_TAB + '=' + encodeURIComponent(tab);
+		}
+	});
+	jQuery(document).on('submit', 'form', function() {
+		// non-ajax submits, e.g. file downloads:
+		var tab = _getBuildTab();
+		if (tab != null) {
+			var input = jQuery('<input type="hidden"/>').attr('name', BUILD_TAB).val(tab);
+			jQuery(this).append(input);
+			setTimeout(function() {
+				input.remove();
+			}, 0);
+		}
+	});
+}
+
 function restoreTabIndexParam(tabView) {
 	var match = new RegExp('[?&]' + TAB + '=(\\d+)(&|$)').exec(location.search);
 	if (match && tabView) {

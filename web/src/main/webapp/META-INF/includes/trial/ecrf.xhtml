@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="ecrf_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<p:remoteCommand process="@this" name="changeEcrf"
+				actionListener="#{ecrfBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:ecrf_form:ecrf_list,:tabView:ecrf_form:ecrf_matrix,:tabView:ecrf_form:ecrf_clone,:tabView:ecrf_form:ecrf_input" />
 
 			<p:remoteCommand process="@this" name="ecrfSelectVisitGroup"
 				actionListener="#{ecrfBean.matrix.selectVisitGroup()}"

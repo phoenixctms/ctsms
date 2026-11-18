@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialtag_form">
+			<p:remoteCommand process="@this" name="changeTrialTag"
+				actionListener="#{trialTagBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialtag_form:trialtag_list,:tabView:trialtag_form:trialtag_input" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:dataTable styleClass="ctsms-datatable" lazy="true"

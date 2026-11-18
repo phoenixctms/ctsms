@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="timelineevent_form" onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<p:remoteCommand process="@this" name="changeTimelineEvent"
+				actionListener="#{timelineEventBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:timelineevent_form:timelineevent_list,:tabView:timelineevent_form:timelineevent_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

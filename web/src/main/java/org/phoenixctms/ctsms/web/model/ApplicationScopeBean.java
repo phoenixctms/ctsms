@@ -753,6 +753,18 @@ public class ApplicationScopeBean {
 		return result.toString();
 	}
 
+	// the tabview pages send the id of the shown tab with each postback, so only that tab is built into the component tree.
+	// the initial GET builds all tabs: their components put the scripts and stylesheets they need into the page head
+	// (e.g. primefaces extensions), which a later ajax tab load cannot add. postbacks without the parameter build all tabs too.
+	public boolean isTabBuilt(String tabId) {
+		FacesContext context = FacesContext.getCurrentInstance();
+		if (context == null || !context.isPostback()) {
+			return true;
+		}
+		String buildTab = WebUtil.getParamValue(GetParamNames.BUILD_TAB);
+		return buildTab == null || buildTab.length() == 0 || buildTab.equals(tabId);
+	}
+
 	public boolean resourceExists(String fileName) {
 		return WebUtil.resourceExists(fileName);
 	}

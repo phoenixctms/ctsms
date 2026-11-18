@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inquiry_form">
+			<p:remoteCommand process="@this" name="changeInquiry"
+				actionListener="#{inquiryBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:inquiry_form:inquiry_list,:tabView:inquiry_form:inquiry_bulkadd,:tabView:inquiry_form:inquiry_input" />
 
 			<p:remoteCommand process="@this,lastPickedInputFieldIds"
 				name="inquiryAddInputFieldIDs"

@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="ecrffield_form">
+			<p:remoteCommand process="@this" name="changeEcrfField"
+				actionListener="#{ecrfFieldBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:ecrffield_form:ecrffield_ecrf_list,:tabView:ecrffield_form:ecrffield_list,:tabView:ecrffield_form:ecrffield_bulkadd,:tabView:ecrffield_form:ecrffield_updatesections,:tabView:ecrffield_form:ecrffield_input" />
 
 			<p:remoteCommand process="@this,lastPickedInputFieldIds"
 				name="ecrfFieldAddInputFieldIDs"

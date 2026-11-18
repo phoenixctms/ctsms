@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="visit_form">
+			<p:remoteCommand process="@this" name="changeVisit"
+				actionListener="#{visitBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:visit_form:visit_list,:tabView:visit_form:visit_input" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:dataTable styleClass="ctsms-datatable" lazy="true"

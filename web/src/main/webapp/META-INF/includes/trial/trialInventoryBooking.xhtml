@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialinventorybooking_form">
+			<p:remoteCommand process="@this" name="changeTrialInventoryBooking"
+				actionListener="#{trialInventoryBookingBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialinventorybooking_form:inventorybooking_list,:tabView:trialinventorybooking_form:inventorybooking_input" />
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
 				<p:dataTable styleClass="ctsms-datatable" lazy="true"

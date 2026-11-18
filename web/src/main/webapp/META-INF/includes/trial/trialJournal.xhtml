@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="trialjournal_form">
+			<p:remoteCommand process="@this" name="changeTrialJournalEntry"
+				actionListener="#{journalBean.changeTrial(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args)"
+				update=":tabView:trialjournal_form:journal_list,:tabView:trialjournal_form:journal_input" />
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
 				<ui:param name="namingContainer" value=":tabView:trialjournal_form" />
 				<ui:param name="validate" value="true" />

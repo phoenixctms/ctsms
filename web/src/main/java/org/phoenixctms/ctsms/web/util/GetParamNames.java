@@ -75,6 +75,7 @@ public enum GetParamNames {
 	AUTHENTICATION_FAILED_MESSAGE("authenticationfailedmessage"),
 	REFERER("referer"),
 	TAB("tab"),
+	BUILD_TAB("buildtab"),
 	UUID("uuid"),
 	VALIDATE("validate"),
 	BEACON("beacon"),

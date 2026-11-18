@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="inquiryvaluedummy_form">
+			<p:remoteCommand process="@this" name="changeInquiryValueDummy"
+				actionListener="#{dummyInquiryValueBean.change(trialBean.in.id)}"
+				oncomplete="handleUpdateTrialTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
+				update=":tabView:inquiryvaluedummy_form:inquiry_input_grid" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
