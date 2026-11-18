@@ -11,91 +11,15 @@
 	<ui:composition>
 		<h:form id="probandmain_form">
 
-			<p:remoteCommand process="@this" name="changeDiagnosis"
-				actionListener="#{diagnosisBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:diagnosis_form:diagnosis_list,:tabView:diagnosis_form:diagnosis_input" />
-			<p:remoteCommand process="@this" name="changeMedication"
-				actionListener="#{medicationBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:medication_form:medication_list,:tabView:medication_form:medication_input" />
-
-			<p:remoteCommand process="@this" name="changeProbandImage"
-				actionListener="#{probandImageBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandimage_form:photo,:tabView:probandimage_form:photo_input" />
-			<p:remoteCommand process="@this" name="changeProbandContactDetail"
-				actionListener="#{probandContactDetailBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandcontactdetail_form:probandcontactdetail_list,:tabView:probandcontactdetail_form:probandcontactdetail_input" />
-			<p:remoteCommand process="@this" name="changeProbandRecipient"
-				actionListener="#{probandRecipientBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:massmailrecipient_form:probandrecipient_list,:tabView:massmailrecipient_form:probandrecipient_input" />
-			<p:remoteCommand process="@this" name="changeProbandTag"
-				actionListener="#{probandTagBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandtag_form:probandtag_list,:tabView:probandtag_form:probandtag_input" />
-			<p:remoteCommand process="@this" name="changeProbandAddress"
-				actionListener="#{probandAddressBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandaddress_form:probandaddress_list,:tabView:probandaddress_form:probandaddress_input" />
-			<p:remoteCommand process="@this" name="changeProbandStatus"
-				actionListener="#{probandStatusBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandstatus_form:probandstatus_list,:tabView:probandstatus_form:probandstatus_input" />
 
 
-			<p:remoteCommand process="@this" name="changeProcedure"
-				actionListener="#{procedureBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:procedure_form:procedure_list,:tabView:procedure_form:procedure_input" />
-
-			<p:remoteCommand process="@this" name="changeProbandInventoryBooking"
-				actionListener="#{probandInventoryBookingBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandinventorybooking_form:inventorybooking_list,:tabView:probandinventorybooking_form:inventorybooking_input" />
 
 
-			<p:remoteCommand process="@this" name="changeInquiryValue"
-				actionListener="#{inquiryValueBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiry_input_grid" />
 
-			<p:remoteCommand process="@this" name="changeProbandVisitSchedule"
-				actionListener="#{probandVisitScheduleBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandvisitschedule_form:probandvisitschedule_list,:tabView:probandvisitschedule_form:toolbar" />
 
-			<p:remoteCommand process="@this" name="changeProbandEcrfStatusEntry"
-				actionListener="#{probandEcrfStatusEntryBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update=":tabView:probandecrfstatusentry_form:probandecrfstatus_proband_list,:tabView:probandecrfstatusentry_form:probandecrfstatus_ecrf_list,:tabView:probandecrfstatusentry_form:ecrf_header,:tabView:probandecrfstatusentry_form:ecrffield_input_grid" />
 
-			<p:remoteCommand process="@this" name="changeBankAccount"
-				actionListener="#{bankAccountBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:bankaccount_form:bankaccount_list,:tabView:bankaccount_form:bankaccount_input" />
-			<p:remoteCommand process="@this" name="changeMoneyTransfer"
-				actionListener="#{moneyTransferBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:moneytransfer_form:moneytransfer_list,:tabView:moneytransfer_form:moneytransfer_input" />
-			<p:remoteCommand process="@this" name="changeTrialParticipation"
-				actionListener="#{trialParticipationBean.change(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args);FieldCalculation.handleInitInputFieldVariables(xhr, status, args)"
-				update=":tabView:trialparticipation_form:trialparticipation_list,:tabView:trialparticipation_form:trialParticipationListTabView" />
-			<p:remoteCommand process="@this" name="changeProbandFile"
-				actionListener="#{fileBean.changeProband(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandfile_form" />
-			<p:remoteCommand process="@this" name="changeProbandJob"
-				actionListener="#{jobBean.changeProband(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandjob_form:job_list,:tabView:probandjob_form:job_input" />
-			<p:remoteCommand process="@this" name="changeProbandJournalEntry"
-				actionListener="#{journalBean.changeProband(probandBean.in.id)}"
-				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
-				update=":tabView:probandjournal_form:journal_list,:tabView:probandjournal_form:journal_input" />
+
+
 
 			<p:remoteCommand process="@this" name="changeProbandByTag"
 				actionListener="#{probandBean.change(probandTagBean.in.probandId)}"

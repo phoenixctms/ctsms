@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandtag_form">
+			<p:remoteCommand process="@this" name="changeProbandTag"
+				actionListener="#{probandTagBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandtag_form:probandtag_list,:tabView:probandtag_form:probandtag_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

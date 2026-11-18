@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="probandjournal_form">
+			<p:remoteCommand process="@this" name="changeProbandJournalEntry"
+				actionListener="#{journalBean.changeProband(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:probandjournal_form:journal_list,:tabView:probandjournal_form:journal_input" />
 
 			<ui:include src="/META-INF/includes/shared/journal.xhtml">
 				<ui:param name="namingContainer"

@@ -11,6 +11,10 @@
 	<ui:composition>
 		<h:form id="diagnosis_form"
 			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<p:remoteCommand process="@this" name="changeDiagnosis"
+				actionListener="#{diagnosisBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:diagnosis_form:diagnosis_list,:tabView:diagnosis_form:diagnosis_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

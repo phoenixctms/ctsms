@@ -11,6 +11,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="moneytransfer_form">
+			<p:remoteCommand process="@this" name="changeMoneyTransfer"
+				actionListener="#{moneyTransferBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:moneytransfer_form:moneytransfer_list,:tabView:moneytransfer_form:moneytransfer_input" />
 
 			<p:remoteCommand process="@this" name="updatePaid"
 				actionListener="#{moneyTransferBean.updatePaid}"

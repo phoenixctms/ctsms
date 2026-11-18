@@ -11,6 +11,10 @@
 	<ui:composition>
 		<h:form id="procedure_form"
 			onkeypress="#{autoCompleteForceSelectionPreventFormSubmission}">
+			<p:remoteCommand process="@this" name="changeProcedure"
+				actionListener="#{procedureBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:procedure_form:procedure_list,:tabView:procedure_form:procedure_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">

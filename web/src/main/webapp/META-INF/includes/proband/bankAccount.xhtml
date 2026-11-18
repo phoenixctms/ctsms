@@ -10,6 +10,10 @@
 <h:body>
 	<ui:composition>
 		<h:form id="bankaccount_form">
+			<p:remoteCommand process="@this" name="changeBankAccount"
+				actionListener="#{bankAccountBean.change(probandBean.in.id)}"
+				oncomplete="handleUpdateProbandTabTitles(xhr, status, args)"
+				update=":tabView:bankaccount_form:bankaccount_list,:tabView:bankaccount_form:bankaccount_input" />
 
 			<h:panelGrid columns="1" cellpadding="0"
 				styleClass="ctsms-content-panelgrid">
