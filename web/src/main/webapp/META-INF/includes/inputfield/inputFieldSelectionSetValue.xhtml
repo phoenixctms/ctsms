@@ -250,8 +250,8 @@
 						</h:panelGrid>
 						<h:panelGrid id="region_input"
 							rendered="#{selectionSetValueBean.inputVisible and selectionSetValueBean.sketch}"
-							columns="3" cellpadding="0" styleClass="ctsms-input-panelgrid"
-							columnClasses="ctsms-region-sketchpad-column,ctsms-region-buttons-column,ctsms-region-codemirror-column">
+							columns="2" cellpadding="0" styleClass="ctsms-input-panelgrid"
+							columnClasses="ctsms-region-sketchpad-column,ctsms-region-codemirror-column">
 							<h:panelGrid columns="1" cellpadding="0"
 								rowClasses="ctsms-sketchpad-label-for-row,ctsms-sketchpad-input-row,ctsms-sketchpad-message-for-row">
 								<h:outputLabel for="regions"
@@ -263,42 +263,28 @@
 									required="true" disabled="false"
 									label="#{inputfieldlabels.input_field_selection_set_value_regions}"
 									strokesId="#{selectionSetValueBean.in.strokesId}"
+									widgetVar="selectionSetValueRegionsSketch"
+									onChange="handleSelectionSetValueRegionsSketchChange(this);"
 									backgroundImage="#{request.contextPath}/inputfieldimage?#{applicationScopeBean.parameterName('INPUT_FIELD_ID')}=#{selectionSetValueBean.inputField.id}" />
 								<p:message for="regions" />
 							</h:panelGrid>
-							<h:panelGrid columns="1" cellpadding="0">
-								<p:commandButton process="@this,regions"
-									actionListener="#{selectionSetValueBean.handleSketchToJson}"
-									icon="ui-icon ui-icon-carat-1-e"
-									title="#{inputfieldlabels.sketch_to_json_button_title}"
-									rendered="#{!selectionSetValueBean.inkRegionsJsonVisible}"
-									ajax="true" update="region_input" />
-								<p:commandButton process="@this,regions"
-									actionListener="#{selectionSetValueBean.handleSketchToJson}"
-									icon="ui-icon ui-icon-carat-1-e"
-									title="#{inputfieldlabels.sketch_to_json_button_title}"
-									rendered="#{selectionSetValueBean.inkRegionsJsonVisible}"
-									ajax="true" update="regions_json" />
-								<p:commandButton process="@this,regions_json"
-									actionListener="#{selectionSetValueBean.handleJsonToSketch}"
-									icon="ui-icon ui-icon-carat-1-w"
-									title="#{inputfieldlabels.json_to_sketch_button_title}"
-									disabled="#{!selectionSetValueBean.inkRegionsJsonVisible}"
-									ajax="true" update="regions" />
-							</h:panelGrid>
-							<h:panelGrid
-								rendered="#{selectionSetValueBean.inkRegionsJsonVisible}"
-								columns="1" cellpadding="0"
+							<h:panelGrid columns="1" cellpadding="0"
+								styleClass="ctsms-region-codemirror-panelgrid"
 								rowClasses="ctsms-codemirror-label-for-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row">
 								<h:outputLabel for="regions_json"
 									value="#{inputfieldlabels.input_field_selection_set_value_regions_json_label}" />
 								<pe:codeMirror id="regions_json"
+									widgetVar="selectionSetValueRegionsJsonEditor"
 									mode="{name: 'javascript', json: true}" theme="eclipse"
 									value="#{selectionSetValueBean.inkRegionsJson}"
 									label="#{inputfieldlabels.input_field_selection_set_value_regions_json}"
 									required="false" lineWrapping="true" lineNumbers="true">
 								</pe:codeMirror>
 								<p:message for="regions_json" />
+								<!-- the sketch and its JSON follow each other while editing -->
+								<script type="text/javascript">
+									initSelectionSetValueRegionsSync();
+								</script>
 							</h:panelGrid>
 						</h:panelGrid>
 						<h:outputLabel

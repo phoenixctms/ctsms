@@ -144,6 +144,10 @@ var Sketch = Sketch || {};
 					if (!silent) {
 						_updateButtons(sketchpad, undo, redo, clear, regions);
 						input.val(sketchpad.json());
+
+						if (onChange != null && onChange.length > 0) {
+							(new Function(onChange)).call(sketchpad);
+						}
 					}
 				});
 
