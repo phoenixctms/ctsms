@@ -81,7 +81,15 @@
 				</p:panel>
 				<h:panelGrid id="inquiry_input_grid" columns="1" cellpadding="0"
 					styleClass="ctsms-inquiryvalues-input-panelgrid"
-					rowClasses="ctsms-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
+					rowClasses="ctsms-pages-row,ctsms-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
+					<ui:include src="../shared/paginator.xhtml">
+						<ui:param name="valueBean" value="#{inquiryValueBean}" />
+						<ui:param name="showAjaxStatus" value="true" />
+						<ui:param name="showFieldQuery" value="#{true}" />
+						<ui:param name="filterFieldsName" value="filterInquiryFields" />
+						<ui:param name="update"
+							value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiriessignup,:tabView:inquiryvalue_form:inquiry_input_grid" />
+					</ui:include>
 					<p:dataGrid var="category" value="#{inquiryValueBean.categories}"
 						paginator="false"
 						emptyMessage="#{probandlabels.inquiry_value_inquiries_empty_message}"
@@ -195,8 +203,8 @@
 					</p:toolbar>
 					<ui:include src="../shared/paginator.xhtml">
 						<ui:param name="valueBean" value="#{inquiryValueBean}" />
-						<ui:param name="showFieldQuery" value="#{true}" />
-						<ui:param name="filterFieldsName" value="filterInquiryFields" />
+						<ui:param name="showAjaxStatus" value="false" />
+						<ui:param name="showFieldQuery" value="#{false}" />
 						<ui:param name="update"
 							value=":tabView:inquiryvalue_form:inquiriestrial,:tabView:inquiryvalue_form:inquiriessignup,:tabView:inquiryvalue_form:inquiry_input_grid" />
 					</ui:include>

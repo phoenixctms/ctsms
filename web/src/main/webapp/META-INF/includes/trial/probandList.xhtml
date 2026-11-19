@@ -861,7 +861,16 @@
 							title="#{triallabels.proband_list_entry_tag_values_tab_label}">
 							<h:panelGrid id="tagvalue_input_grid" columns="1" cellpadding="0"
 								styleClass="ctsms-input-panelgrid"
-								rowClasses="ctsms-input-row,ctsms-textarea-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
+								rowClasses="ctsms-pages-row,ctsms-input-row,ctsms-message-row,ctsms-toolbar-row,ctsms-pages-row">
+								<ui:include src="../shared/paginator.xhtml">
+									<ui:param name="valueBean"
+										value="#{probandListEntryBean.probandListEntryTagValueBean}" />
+									<ui:param name="showAjaxStatus" value="true" />
+									<ui:param name="showFieldQuery" value="#{true}" />
+									<ui:param name="filterFieldsName" value="filterTagFields" />
+									<ui:param name="update"
+										value=":tabView:probandlist_form:probandListTabView:tagvalue_input_grid" />
+								</ui:include>
 								<ui:include src="../shared/probandListEntryTagValue.xhtml">
 									<ui:param name="probandListBean"
 										value="#{probandListEntryBean}" />
@@ -941,8 +950,8 @@
 								<ui:include src="../shared/paginator.xhtml">
 									<ui:param name="valueBean"
 										value="#{probandListEntryBean.probandListEntryTagValueBean}" />
-									<ui:param name="showFieldQuery" value="#{true}" />
-									<ui:param name="filterFieldsName" value="filterTagFields" />
+									<ui:param name="showAjaxStatus" value="false" />
+									<ui:param name="showFieldQuery" value="#{false}" />
 									<ui:param name="update"
 										value=":tabView:probandlist_form:probandListTabView:tagvalue_input_grid" />
 								</ui:include>
