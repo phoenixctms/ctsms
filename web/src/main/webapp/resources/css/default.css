@@ -2905,27 +2905,16 @@ overflow-y:scroll;
 	text-decoration: line-through;
 }
 
-/* value forms: entered but not yet saved field values. The background keeps the field color (saved/new/error),
-   so the row gets an amber bar on its left edge, a pencil icon after its name and an amber save button of its own. */
-.ui-fieldset.ctsms-input-unsaved {
-	box-shadow: inset 4px 0 0 #e69500;
-}
-
+/* value forms: entered but not yet saved field values. The background keeps the field color (saved/new/error);
+   common.js puts the legend and the field's own save button in the theme's highlight state (ui-state-highlight),
+   and the legend shows a pencil icon after the field name. */
 .ui-fieldset .ctsms-input-unsaved-icon {
 	display: none;
 }
 
+/* negative vertical margins: the 16px icon must not make the legend taller than its text */
 .ui-fieldset.ctsms-input-unsaved > .ui-fieldset-legend .ctsms-input-unsaved-icon {
 	display: inline-block;
-	vertical-align: text-bottom;
-	margin-left: 0.3em;
-}
-
-.ui-fieldset.ctsms-input-unsaved .ctsms-input-update-button.ui-button:not(.ui-state-disabled) {
-	background: #e69500;
-	border-color: #b37400;
-}
-
-.ui-fieldset.ctsms-input-unsaved .ctsms-input-update-button.ui-button.ui-state-hover:not(.ui-state-disabled) {
-	background: #cc8400;
+	vertical-align: middle;
+	margin: -4px 0 -4px 0.3em;
 }
