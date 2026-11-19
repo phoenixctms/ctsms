@@ -18,10 +18,13 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      # Temurin from the runner's tool cache or GitHub's CDN instead of apt's default-jdk: the
+      # Ubuntu mirror sometimes serves the 154 MB of default-jdk at ~60 kB/s (40+ minutes).
       - name: Set up JDK
-        run: |
-          sudo apt-get update
-          sudo apt-get -q -y install default-jdk
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
       # repo.maven.apache.org returns 403 to GitHub-hosted runners for this tarball.
       - name: Set up Maven
         run: |
@@ -54,7 +57,37 @@ jobs:
           UUID+=$(cat /proc/sys/kernel/random/uuid)
           sed -r -i "s/<application.uuid><\/application.uuid>/<application.uuid>$UUID<\/application.uuid>/" /home/runner/work/ctsms/ctsms/pom.xml
           mvn install -DskipTests --no-transfer-progress -c
+      # The Ubuntu mirror sometimes serves packages very slowly. Keep the downloaded .debs between runs
+      # (restored below, saved after the last apt install), so most runs only fetch the package index.
+      # Retries and a shorter timeout recover from dropped connections; timeout-minutes on the apt steps
+      # end a stuck download instead of letting it run for 40+ minutes.
+      - name: Configure apt
+        id: apt-config
+        run: |
+          # runner image variables are not in the env context; new image = new package versions
+          echo "image=$ImageOS-$ImageVersion" >> "$GITHUB_OUTPUT"
+          sudo install -d -o "$USER" /var/cache/apt-ci /var/cache/apt-ci/partial
+          sudo tee /etc/apt/apt.conf.d/90ci >/dev/null <<'EOF'
+          Dir::Cache::Archives "/var/cache/apt-ci/";
+          APT::Keep-Downloaded-Packages "true";
+          Binary::apt::APT::Keep-Downloaded-Packages "true";
+          Acquire::Retries "5";
+          Acquire::http::Timeout "30";
+          Acquire::https::Timeout "30";
+          EOF
+      - name: Restore apt packages
+        id: apt-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: /var/cache/apt-ci/*.deb
+          key: apt-zap-${{ steps.apt-config.outputs.image }}-${{ hashFiles('.github/workflows/zap.yml', '.github/workflows/setup_*.sh') }}
+          restore-keys: apt-zap-
+      # package index for the apt installs below (database, BulkProcessor, Tomcat)
+      - name: Update apt package index
+        timeout-minutes: 5
+        run: sudo apt-get update
       - name: Setup database
+        timeout-minutes: 15
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
           /home/runner/work/ctsms/ctsms/.github/workflows/setup_database.sh
@@ -63,6 +96,7 @@ jobs:
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
           sudo /home/runner/work/ctsms/ctsms/.github/workflows/download_masterdata.sh
       - name: Setup BulkProcessor
+        timeout-minutes: 15
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_bulkprocessor.sh
           # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; this script needs no caller env
@@ -103,10 +137,24 @@ jobs:
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
           /home/runner/work/ctsms/ctsms/.github/workflows/init_database.sh
       - name: Setup Tomcat
+        timeout-minutes: 15
         run: |
           sudo chmod 755 /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
-          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION explicitly
-          sudo VERSION="$VERSION" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+          # sudo-rs on Ubuntu 26.04 ignores -E/--preserve-env; pass VERSION and JAVA_HOME explicitly
+          sudo VERSION="$VERSION" JAVA_HOME="$JAVA_HOME" /home/runner/work/ctsms/ctsms/.github/workflows/setup_tomcat10.sh
+      # after the last apt install; only when the restore missed (new runner image or package list),
+      # dropping .debs of superseded versions first so the cache does not grow from run to run
+      - name: Clean apt packages
+        if: steps.apt-cache.outputs.cache-hit != 'true'
+        run: |
+          sudo apt-get -q autoclean
+          du -sh /var/cache/apt-ci
+      - name: Save apt packages
+        if: steps.apt-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: /var/cache/apt-ci/*.deb
+          key: ${{ steps.apt-cache.outputs.cache-primary-key }}
       - name: Wait for Tomcat
         run: |
           for i in $(seq 1 36); do
