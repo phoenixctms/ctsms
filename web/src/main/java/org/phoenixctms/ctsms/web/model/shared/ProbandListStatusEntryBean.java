@@ -121,10 +121,10 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 	@Override
 	public String deleteAction(Long id) {
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().deleteProbandListStatusEntry(WebUtil.getAuthentication(), id);
+			WebUtil.getServiceLocator().getTrialService().deleteProbandListStatusEntry(WebUtil.getAuthentication(), id);
+			out = null; //offer the transitions from the new last state
 			initIn();
 			initSets();
-			out = null;
 			addOperationSuccessMessage("probandListStatusEntryMessages", MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
 		} catch (AuthorisationException | ServiceException | IllegalArgumentException e) {
