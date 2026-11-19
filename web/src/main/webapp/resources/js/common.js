@@ -1939,6 +1939,14 @@ function updateUnsavedInputFields(root) {
 		} else {
 			fieldset.toggleClass("ctsms-input-unsaved", values !== renderedValues || fieldset.data("ctsmsRenderedUnsaved") === true);
 		}
+		// highlight the field name and the field's own save button in the theme's highlight color
+		// (not a disabled save button, e.g. a draft left in a form that is no longer editable):
+		var unsaved = fieldset.hasClass("ctsms-input-unsaved");
+		fieldset.children(".ui-fieldset-legend").toggleClass("ui-state-highlight", unsaved);
+		fieldset.find(".ctsms-input-update-button").each(function() {
+			var button = jQuery(this);
+			button.toggleClass("ui-state-highlight", unsaved && !button.hasClass("ui-state-disabled"));
+		});
 	});
 }
 
