@@ -1,6 +1,7 @@
 #!/bin/bash
+set -e
 
-apt-get -q -y -o=Dpkg::Use-Pty=0 install tomcat10
+bash "$(dirname "$0")/apt_install.sh" tomcat10
 systemctl stop tomcat10
 usermod --append --groups ctsms tomcat
 #VERSION=$(grep -oP '<application.version>\K[^<]+' /home/runner/work/ctsms/ctsms/pom.xml)
