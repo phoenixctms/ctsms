@@ -801,6 +801,7 @@
 							icon="ui-icon ui-icon-help" rendered="#{fieldInput.dummy}"
 							ajax="true" disabled="false" update="row#{index},#{update}" />
 						<p:commandButton process="@this,row#{index}" id="update#{index}"
+							styleClass="ctsms-input-update-button"
 							title="#{labels.update_button_label}"
 							actionListener="#{fieldInput.forceUpdate}" tabindex="-1"
 							oncomplete="FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args);#{updateOnComplete}"
