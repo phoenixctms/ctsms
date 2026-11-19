@@ -1939,14 +1939,19 @@ function updateUnsavedInputFields(root) {
 		} else {
 			fieldset.toggleClass("ctsms-input-unsaved", values !== renderedValues || fieldset.data("ctsmsRenderedUnsaved") === true);
 		}
-		// highlight the field name and the field's own save button in the theme's highlight color
-		// (not a disabled save button, e.g. a draft left in a form that is no longer editable):
-		var unsaved = fieldset.hasClass("ctsms-input-unsaved");
-		fieldset.children(".ui-fieldset-legend").toggleClass("ui-state-highlight", unsaved);
-		fieldset.find(".ctsms-input-update-button").each(function() {
-			var button = jQuery(this);
-			button.toggleClass("ui-state-highlight", unsaved && !button.hasClass("ui-state-disabled"));
-		});
+		markUnsavedInputField(fieldset);
+	});
+}
+
+// show the field name and the field's own save button of an unsaved field in the theme's active
+// state, like a selected tab (not a disabled save button, e.g. a draft left in a form that is no
+// longer editable):
+function markUnsavedInputField(fieldset) {
+	var unsaved = fieldset.hasClass("ctsms-input-unsaved");
+	fieldset.children(".ui-fieldset-legend").toggleClass("ui-state-active", unsaved);
+	fieldset.find(".ctsms-input-update-button").each(function() {
+		var button = jQuery(this);
+		button.toggleClass("ui-state-active", unsaved && !button.hasClass("ui-state-disabled"));
 	});
 }
 
@@ -1960,5 +1965,13 @@ jQuery(document).on("change input keyup mouseup touchend", "fieldset.ctsms-input
 	var fieldset = this;
 	setTimeout(function() {
 		updateUnsavedInputFields(fieldset);
+	}, 0);
+});
+// PrimeFaces buttons drop ui-state-active on mouseout, mouseup and keyup, and a toggleable
+// fieldset legend toggles it on mousedown and mouseup, so restore it afterwards:
+jQuery(document).on("mouseout mouseup keyup", "fieldset.ctsms-input-unsaved-tracked .ctsms-input-update-button, fieldset.ctsms-input-unsaved-tracked > .ui-fieldset-legend", function() {
+	var fieldset = jQuery(this).closest("fieldset.ctsms-input-unsaved-tracked");
+	setTimeout(function() {
+		markUnsavedInputField(fieldset);
 	}, 0);
 });
