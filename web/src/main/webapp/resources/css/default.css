@@ -2906,14 +2906,18 @@ overflow-y:scroll;
 }
 
 /* value forms: entered but not yet saved field values. The background keeps the field color (saved/new/error),
-   so the row gets an amber bar on its left edge, a dot after its name and an amber save button of its own. */
+   so the row gets an amber bar on its left edge, a pencil icon after its name and an amber save button of its own. */
 .ui-fieldset.ctsms-input-unsaved {
 	box-shadow: inset 4px 0 0 #e69500;
 }
 
-.ui-fieldset.ctsms-input-unsaved > .ui-fieldset-legend::after {
-	content: "\25CF";
-	color: #e69500;
+.ui-fieldset .ctsms-input-unsaved-icon {
+	display: none;
+}
+
+.ui-fieldset.ctsms-input-unsaved > .ui-fieldset-legend .ctsms-input-unsaved-icon {
+	display: inline-block;
+	vertical-align: text-bottom;
 	margin-left: 0.3em;
 }
 

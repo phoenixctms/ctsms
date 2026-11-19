@@ -18,9 +18,13 @@
 			styleClass="#{fieldInput.getColor(optional)} #{fieldInput.unsavedStyleClass}"
 			collapsed="#{toggleable and fieldInput.collapsed}">
 			<f:facet name="legend">
-				<h:outputText
-					styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
-					value="#{fieldInput.name}" />
+				<h:panelGroup>
+					<h:outputText
+						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
+						value="#{fieldInput.name}" />
+					<h:panelGroup styleClass="ui-icon ui-icon-pencil ctsms-input-unsaved-icon"
+						rendered="#{not empty fieldInput.unsavedStyleClass}" />
+				</h:panelGroup>
 			</f:facet>
 			<p:remoteCommand process="@this"
 				rendered="#{not empty reloadRemoteCommand}"
