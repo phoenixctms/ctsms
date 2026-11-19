@@ -227,7 +227,7 @@ jobs:
         if: steps.apt-cache.outputs.cache-hit != 'true'
         run: |
           sudo apt-get -q autoclean
-          du -sh /var/cache/apt-ci
+          sudo du -sh /var/cache/apt-ci
       - name: Save apt packages
         if: steps.apt-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v6
