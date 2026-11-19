@@ -1945,10 +1945,12 @@ function updateUnsavedInputFields(root) {
 
 // show the field name and the field's own save button of an unsaved field in the theme's active
 // state, like a selected tab (not a disabled save button, e.g. a draft left in a form that is no
-// longer editable):
+// longer editable), and draw a bar on the row's left edge in the active legend's border color
+// (CSS cannot take the color from the theme):
 function markUnsavedInputField(fieldset) {
 	var unsaved = fieldset.hasClass("ctsms-input-unsaved");
-	fieldset.children(".ui-fieldset-legend").toggleClass("ui-state-active", unsaved);
+	var legend = fieldset.children(".ui-fieldset-legend").toggleClass("ui-state-active", unsaved);
+	fieldset.css("box-shadow", unsaved && legend.length > 0 ? "inset 4px 0 0 " + legend.css("border-top-color") : "");
 	fieldset.find(".ctsms-input-update-button").each(function() {
 		var button = jQuery(this);
 		button.toggleClass("ui-state-active", unsaved && !button.hasClass("ui-state-disabled"));

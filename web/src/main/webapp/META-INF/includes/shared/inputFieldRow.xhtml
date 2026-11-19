@@ -23,8 +23,7 @@
 						styleClass="#{fieldInput.deferredDelete ? 'ctsms-strikethrough' : ''}"
 						value="#{fieldInput.name}" />
 					<h:panelGroup styleClass="ui-icon ui-icon-pencil ctsms-input-unsaved-icon"
-						rendered="#{not empty fieldInput.unsavedStyleClass}" />
-				</h:panelGroup>
+						rendered="#{not empty fieldInput.unsavedStyleClass}" />				</h:panelGroup>
 			</f:facet>
 			<p:remoteCommand process="@this"
 				rendered="#{not empty reloadRemoteCommand}"
