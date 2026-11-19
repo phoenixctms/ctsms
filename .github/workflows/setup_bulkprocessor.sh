@@ -3,7 +3,7 @@
 # Only what the CI jobs and tests need, like the bulk-processor part of the docker image (phoenixctms/docker).
 # Not needed here: Render diagrams (gnuplot, GraphViz, ImageMagick/ghostscript), the SQL Server
 # connector (ODBC/FreeTDS) and memcached sessions for the Signup app.
-apt-get -q -y -o=Dpkg::Use-Pty=0 install \
+bash "$(dirname "$0")/apt_install.sh" \
 libarchive-zip-perl \
 libconfig-any-perl \
 libdata-dump-perl \
@@ -58,7 +58,7 @@ libjson-perl \
 libplack-perl \
 libsys-cpuaffinity-perl \
 build-essential \
-cpanminus
+cpanminus || exit 1
 cpanm --notest Dancer::Plugin::I18N
 cpanm --notest DateTime::Format::Excel
 wget --no-verbose --tries=5 --waitretry=10 --retry-on-http-error=429,500,502,503,504 --no-check-certificate --content-disposition https://github.com/phoenixctms/bulk-processor/archive/master.tar.gz -O /ctsms/bulk-processor.tar.gz

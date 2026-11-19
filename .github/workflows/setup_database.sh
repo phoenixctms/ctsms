@@ -9,7 +9,7 @@ sudo useradd ctsms -p '*' --groups sudo
 # Add the PGDG repository and install the plperl package matching the installed major version.
 PGVER=$(ls /usr/lib/postgresql | sort -V | tail -1)
 sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
-sudo apt-get -q -y install "postgresql-plperl-$PGVER"
+sudo bash "$(dirname "$0")/apt_install.sh" "postgresql-plperl-$PGVER"
 sudo sed -r -i "s|#*join_collapse_limit.*|join_collapse_limit = 1|" "/etc/postgresql/$PGVER/main/postgresql.conf"
 sudo service postgresql start
 sudo -u postgres psql -v ON_ERROR_STOP=1 postgres -c "CREATE USER ctsms WITH PASSWORD 'ctsms';"
