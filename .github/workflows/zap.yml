@@ -64,8 +64,10 @@ jobs:
       - name: Configure apt
         id: apt-config
         run: |
-          # runner image variables are not in the env context; new image = new package versions
-          echo "image=$ImageOS-$ImageVersion" >> "$GITHUB_OUTPUT"
+          # runner image variables are not in the env context. Not ImageVersion: it differs between runners
+          # of the same pool. A weekly key picks up updated packages (autoclean drops the superseded ones).
+          echo "image=$ImageOS" >> "$GITHUB_OUTPUT"
+          echo "week=$(date -u +%G-%V)" >> "$GITHUB_OUTPUT"
           sudo install -d -o "$USER" /var/cache/apt-ci /var/cache/apt-ci/partial
           sudo tee /etc/apt/apt.conf.d/90ci >/dev/null <<'EOF'
           Dir::Cache::Archives "/var/cache/apt-ci/";
@@ -80,8 +82,8 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: /var/cache/apt-ci/*.deb
-          key: apt-zap-${{ steps.apt-config.outputs.image }}-${{ hashFiles('.github/workflows/zap.yml', '.github/workflows/setup_*.sh') }}
-          restore-keys: apt-zap-
+          key: apt-zap-${{ steps.apt-config.outputs.image }}-${{ steps.apt-config.outputs.week }}-${{ hashFiles('.github/workflows/zap.yml', '.github/workflows/setup_*.sh') }}
+          restore-keys: apt-zap-${{ steps.apt-config.outputs.image }}-
       # package index for the apt installs below (database, BulkProcessor, Tomcat)
       - name: Update apt package index
         timeout-minutes: 5
