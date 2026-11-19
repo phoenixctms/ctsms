@@ -858,7 +858,7 @@ table.ctsms-content-panelgrid-maxheight > tbody > tr > td > table:last-of-type >
 }
 
 .ctsms-input-top-column .ctsms-plaintext-top {
-	padding-top: 0.6667em;
+	padding-top: calc(0.6667em - 2px); /* the cell's cellpadding="2" adds to it, label cells override it */
 }
 
 .ctsms-bottom-column {
