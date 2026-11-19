@@ -68,6 +68,13 @@
 
 .ctsms-region-codemirror-panelgrid {
 	width: 100%;
+	min-width: 240px;
+}
+
+/* a drawn path is one long string without spaces: break it anywhere, or the
+   editor (and the page) widens to the length of the path */
+.ctsms-region-codemirror-column .CodeMirror pre {
+	overflow-wrap: anywhere;
 }
 
 /* until initSelectionSetValueRegionsSync matches the height of the sketch */
