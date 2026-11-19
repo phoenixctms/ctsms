@@ -48,6 +48,7 @@ import org.primefaces.model.StreamedContent;
 public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 	private static int MAX_INPUT_FIELDS_PER_ROW = 10;
+	private final static int BOTTOM_PAGINATOR_MIN_ROWS = 5;
 
 	public static void copyProbandListEntryTagValueOutToIn(ProbandListEntryTagValueInVO in, ProbandListEntryTagValueOutVO out) {
 		if (in != null && out != null) {
@@ -333,6 +334,10 @@ public class ProbandListEntryTagValueBean extends ManagedBeanBase {
 
 	public List<Object[]> getInputModels() {
 		return paddedInputModels;
+	}
+
+	public boolean isShowBottomPaginator() {
+		return paddedInputModels != null && paddedInputModels.size() >= BOTTOM_PAGINATOR_MIN_ROWS;
 	}
 
 	@Override
