@@ -10,13 +10,6 @@
 </h:head>
 <h:body>
 	<ui:composition>
-		<c:if test="#{showFieldQuery}">
-			<p:remoteCommand process="@this,field_query"
-				name="#{empty filterFieldsName ? 'filterFields' : filterFieldsName}"
-				actionListener="#{valueBean.handleFieldQueryChange}"
-				oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
-				update="#{update}" />
-		</c:if>
 		<h:panelGrid
 			columns="#{(showFieldQuery ? 2 : 0) + (valueBean.paginator.showNavigatorButtons ? (valueBean.paginator.inputFieldForm ? 8 : 7) : (valueBean.paginator.inputFieldForm ? 4 : 3)) + (showAjaxStatus ? 1 : 0)}"
 			cellpadding="0"
@@ -40,6 +33,11 @@
 				<h:outputLabel for="field_query"
 					value="#{labels.input_field_values_field_query_label}" />
 				<h:panelGroup>
+					<p:remoteCommand process="@this,field_query"
+						name="#{empty filterFieldsName ? 'filterFields' : filterFieldsName}"
+						actionListener="#{valueBean.handleFieldQueryChange}"
+						oncomplete="#{valueBean.paginator.inputFieldForm ? 'FieldCalculation.handleUpdateInputFieldVariables(xhr, status, args)' : ''}"
+						update="#{update}" />
 					<p:inputText id="field_query" value="#{valueBean.fieldQuery}"
 						required="false" label="#{labels.input_field_values_field_query}"
 						styleClass="ctsms-control-medium"
@@ -119,7 +117,7 @@
 				disabled="#{valueBean.paginator.lastPage or !(valueBean.created or valueBean.paginator.pagesEnabled)}"
 				update="#{update}" />
 		</h:panelGrid>
-		<h:outputLabel rendered="#{valueBean.paginator.psf.rowCount le 0}" />
+		<h:outputLabel rendered="#{not (valueBean.paginator.psf.rowCount gt 0 or (showFieldQuery and not empty valueBean.fieldQuery))}" />
 	</ui:composition>
 </h:body>
 </html>
