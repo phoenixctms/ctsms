@@ -2906,7 +2906,7 @@ overflow-y:scroll;
 }
 
 /* value forms: entered but not yet saved field values. The background keeps the field color (saved/new/error);
-   common.js puts the legend and the field's own save button in the theme's highlight state (ui-state-highlight),
+   common.js puts the legend and the field's own save button in the theme's active state (ui-state-active, like a selected tab),
    and the legend shows a pencil icon after the field name. */
 .ui-fieldset .ctsms-input-unsaved-icon {
 	display: none;
