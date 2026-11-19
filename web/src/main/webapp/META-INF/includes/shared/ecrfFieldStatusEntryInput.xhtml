@@ -21,6 +21,7 @@
 					value="#{labels.ecrffieldstatus_status_type_label}" />
 				<h:panelGroup>
 					<p:selectOneMenu id="#{id_prefix}_type"
+						disabled="#{ecrfFieldStatusEntryBean.created}"
 						value="#{ecrfFieldStatusEntryBean.in.statusId}" required="true"
 						label="#{labels.ecrffieldstatus_status_type}"
 						styleClass="ctsms-control">
@@ -60,6 +61,7 @@
 					value="#{labels.ecrffieldstatus_comment_label}" />
 				<h:panelGroup>
 					<p:inputTextarea id="#{id_prefix}_comment"
+						disabled="#{ecrfFieldStatusEntryBean.created}"
 						value="#{ecrfFieldStatusEntryBean.in.comment}" required="false"
 						autoResize="false" styleClass="ctsms-textarea"
 						label="#{labels.ecrffieldstatus_comment}">

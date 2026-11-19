@@ -86,7 +86,8 @@ public class ProbandListStatusEntryBean extends ManagedBeanBase {
 		in.setVersion(null);
 		sanitizeInVals();
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().addProbandListStatusEntry(WebUtil.getAuthentication(), false, in);
+			WebUtil.getServiceLocator().getTrialService().addProbandListStatusEntry(WebUtil.getAuthentication(), false, in);
+			out = null; //status entries are append-only: go on with a blank form for the next state
 			initIn();
 			initSets();
 			addOperationSuccessMessage("probandListStatusEntryMessages", MessageCodes.ADD_OPERATION_SUCCESSFUL);

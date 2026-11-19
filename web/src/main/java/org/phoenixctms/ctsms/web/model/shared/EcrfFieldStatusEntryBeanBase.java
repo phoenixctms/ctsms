@@ -86,7 +86,8 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 		in.setVersion(null);
 		clearFromCache(out);
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().addEcrfFieldStatusEntry(WebUtil.getAuthentication(), getQueue(), in);
+			WebUtil.getServiceLocator().getTrialService().addEcrfFieldStatusEntry(WebUtil.getAuthentication(), getQueue(), in);
+			out = null; //status entries are append-only: go on with a blank form for the next state
 			initIn();
 			initSets();
 			addOperationSuccessMessage(getMessagesId(), MessageCodes.ADD_OPERATION_SUCCESSFUL);
