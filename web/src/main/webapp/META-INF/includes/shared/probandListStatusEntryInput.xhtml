@@ -52,7 +52,7 @@
 					disabled="#{probandListBean.probandListStatusEntryBean.created}"
 					value="#{probandListBean.probandListStatusEntryBean.visitScheduleItems}"
 					label="#{triallabels.proband_list_status_entry_visit_schedule_items}"
-					styleClass="ctsms-control-larger"
+					styleClass="ctsms-control-larger#{probandListBean.probandListStatusEntryBean.created ? ' ui-state-disabled' : ''}"
 					minQueryLength="#{autoCompleteMinQueryLengthVisitScheduleItem}"
 					maxResults="#{autoCompleteMaxResultsVisitScheduleItem}"
 					queryDelay="#{autoCompleteQueryDelayVisitScheduleItem}"

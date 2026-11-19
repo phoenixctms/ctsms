@@ -137,10 +137,10 @@ public abstract class EcrfFieldStatusEntryBeanBase extends ManagedBeanBase {
 	public String deleteAction(Long id) {
 		clearFromCache(out);
 		try {
-			out = WebUtil.getServiceLocator().getTrialService().deleteEcrfFieldStatusEntry(WebUtil.getAuthentication(), id);
+			WebUtil.getServiceLocator().getTrialService().deleteEcrfFieldStatusEntry(WebUtil.getAuthentication(), id);
+			out = null; //offer the transitions from the new last state
 			initIn();
 			initSets();
-			out = null;
 			addOperationSuccessMessage(getMessagesId(), MessageCodes.DELETE_OPERATION_SUCCESSFUL);
 			return DELETE_OUTCOME;
 		} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
