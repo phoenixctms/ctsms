@@ -115,7 +115,13 @@ public class EcrfSpecificationPDFBlock {
 
 	protected String getEcrfFieldSection() {
 		if (ecrfField != null) {
-			return ecrfField.getSection();
+			// the setup document shows the section as entered, plus its text if there is one:
+			String section = ecrfField.getSection();
+			String sectionLocalized = L10nUtil.getEcrfFieldSection(Locales.ECRF_SPECIFICATION_PDF, section);
+			if (!CommonUtil.isEmptyString(section) && sectionLocalized != null && !sectionLocalized.equals(section)) {
+				return section + " (" + sectionLocalized + ")";
+			}
+			return section;
 		}
 		return "";
 	}

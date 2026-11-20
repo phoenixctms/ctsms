@@ -110,7 +110,8 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		if (indexBlock != null) {
 			Long index = indexBlock.getIndex();
 			if (index != null) {
-				return L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.ECRF_FIELD_INDEX, PDFUtil.DEFAULT_LABEL, index.toString(), indexBlock.getSection());
+				return L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.ECRF_FIELD_INDEX, PDFUtil.DEFAULT_LABEL, index.toString(),
+						L10nUtil.getEcrfFieldSection(Locales.ECRF_PDF, indexBlock.getSection()));
 			}
 		}
 		return null;
@@ -147,7 +148,8 @@ public class EcrfPDFBlockCursor extends PDFBlockCursor implements InputFieldPDFB
 		if (sectionBlock != null) {
 			String section = sectionBlock.getSection();
 			if (section != null && section.length() > 0) {
-				return L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.ECRF_FIELD_SECTION, PDFUtil.DEFAULT_LABEL, section);
+				return L10nUtil.getEcrfPDFLabel(Locales.ECRF_PDF, EcrfPDFLabelCodes.ECRF_FIELD_SECTION, PDFUtil.DEFAULT_LABEL,
+						L10nUtil.getEcrfFieldSection(Locales.ECRF_PDF, section));
 			}
 		}
 		return null;

@@ -361,4 +361,5 @@ public interface SystemMessageCodes {
 	public static final String JOB_CREATED = "job_created";
 	public static final String JOB_UPDATED = "job_updated";
 	public static final String JOB_DELETED = "job_deleted";
+	public static final String INPUT_FIELD_L10N_TEXT_UPDATED = "input_field_l10n_text_updated";
 }

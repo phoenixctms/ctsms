@@ -1018,6 +1018,7 @@ public class ECRFFieldValueDaoImpl
 			target.setJsValueExpression(ecrfField.getJsValueExpression());
 			target.setJsOutputExpression(ecrfField.getJsOutputExpression());
 			target.setSection(ecrfField.getSection());
+			target.setSectionLocalized(L10nUtil.getEcrfFieldSection(Locales.USER, ecrfField.getSection()));
 			//target.setRef(ecrfField.getRef());
 			ECRF ecrf = ecrfField.getEcrf();
 			if (ecrf != null) {

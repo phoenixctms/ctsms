@@ -641,6 +641,7 @@ public class InquiryValueDaoImpl
 			target.setJsValueExpression(inquiry.getJsValueExpression());
 			target.setJsOutputExpression(inquiry.getJsOutputExpression());
 			target.setCategory(inquiry.getCategory());
+			target.setCategoryLocalized(L10nUtil.getInquiryCategory(Locales.USER, inquiry.getCategory()));
 			target.setDisabled(inquiry.isDisabled());
 			InputField inputField = inquiry.getField();
 			if (inputField != null) {

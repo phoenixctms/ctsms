@@ -147,7 +147,7 @@ public class InquiryRowWriter extends RowWriter {
 			values[externalIdColumnIndex] = inquiry.getExternalId();
 			values[inputFieldNameColumnIndex] = inquiry.getField().getNameL10nKey();
 			values[titleColumnIndex] = inquiry.getTitleL10nKey();
-			values[commentColumnIndex] = inquiry.getComment();
+			values[commentColumnIndex] = inquiry.getCommentL10nKey();
 			values[activeColumnIndex] = Boolean.toString(inquiry.getActive());
 			values[activeSignupColumnIndex] = Boolean.toString(inquiry.getActiveSignup());
 			values[optionalColumnIndex] = Boolean.toString(inquiry.getOptional());
