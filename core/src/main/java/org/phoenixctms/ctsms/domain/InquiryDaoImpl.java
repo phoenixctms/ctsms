@@ -17,6 +17,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -131,6 +132,7 @@ public class InquiryDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "inputField.titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			CriteriaUtil.addL10nNameInfixCriterions(junction, nameInfix, InputFieldL10nBundle.INQUIRY_CATEGORIES, "category");
 			addUniqueInquiryNameMatchRestriction(junction, nameInfix);
 			inquiryCriteria.add(junction);
 		}

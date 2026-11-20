@@ -132,6 +132,7 @@ public class ECRFFieldValueDaoImpl
 			junction.add(Restrictions.and(
 					Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
 					Restrictions.ilike("inputField0.externalId", fieldQuery, MatchMode.ANYWHERE)));
+			CriteriaUtil.addL10nFieldQueryCriterions(junction, fieldQuery);
 			ecrfFieldCriteria.add(junction);
 		}
 	}

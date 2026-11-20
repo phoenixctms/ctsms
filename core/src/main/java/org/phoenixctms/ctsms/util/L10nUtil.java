@@ -580,6 +580,28 @@ public final class L10nUtil {
 		return matchingKeys;
 	}
 
+	/**
+	 * The keys of an editable localization bundle whose text (in the user's language) contains the infix,
+	 * ignoring case, so filters can match translated texts.
+	 */
+	public static Collection<String> getMatchingInputFieldL10nKeys(InputFieldL10nBundle bundle, String infix) {
+		ArrayList<String> matchingKeys = new ArrayList<String>();
+		String lowerCaseInfix = (infix != null ? infix.trim().toLowerCase() : null);
+		String baseName = getInputFieldL10nBundleBasename(bundle);
+		if (lowerCaseInfix == null || lowerCaseInfix.length() == 0 || baseName == null) {
+			return matchingKeys;
+		}
+		Map<String, String> symbols = CommonUtil.getBundleSymbolMap(getBundle(Locales.USER, baseName), false);
+		Iterator<Map.Entry<String, String>> it = symbols.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, String> entry = it.next();
+			if (entry.getValue() != null && entry.getValue().toLowerCase().contains(lowerCaseInfix)) {
+				matchingKeys.add(entry.getKey());
+			}
+		}
+		return matchingKeys;
+	}
+
 	public static String getEcrfFieldStatusTypeName(Locales locale, String l10nKey) {
 		return CommonUtil.getString(l10nKey, getBundle(locale, ecrfFieldStatusTypesBundleBasename), DefaultMessages.ECRF_FIELD_STATUS_TYPE_NAME);
 	}

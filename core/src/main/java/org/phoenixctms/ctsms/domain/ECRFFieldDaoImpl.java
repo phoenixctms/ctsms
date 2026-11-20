@@ -16,6 +16,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.query.CategoryCriterion;
 import org.phoenixctms.ctsms.query.CriteriaUtil;
 import org.phoenixctms.ctsms.query.SubCriteriaMap;
@@ -251,6 +252,7 @@ public class ECRFFieldDaoImpl
 			junction.add((new CategoryCriterion(nameInfix, "trial0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "ecrf0.name", MatchMode.ANYWHERE)).getRestriction());
 			junction.add((new CategoryCriterion(nameInfix, "titleL10nKey", MatchMode.ANYWHERE)).getRestriction());
+			CriteriaUtil.addL10nNameInfixCriterions(junction, nameInfix, InputFieldL10nBundle.ECRF_FIELD_SECTIONS, "section");
 			addUniqueECRFFieldNameMatchRestriction(junction, nameInfix);
 			ecrfFieldCriteria.add(junction);
 		}
