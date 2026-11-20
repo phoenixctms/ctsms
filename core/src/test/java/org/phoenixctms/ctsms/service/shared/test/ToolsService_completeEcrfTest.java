@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>completeEcrf</code> of service <code>ToolsService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.ToolsService#completeEcrf(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.shared.ToolsService#completeEcrf(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Long, java.lang.Integer)
  */
 @Test(groups={"service","ToolsService"})
 public class ToolsService_completeEcrfTest extends ToolsServiceBaseTest {

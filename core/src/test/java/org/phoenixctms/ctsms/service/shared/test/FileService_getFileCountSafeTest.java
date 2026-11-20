@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getFileCountSafe</code> of service <code>FileService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.FileService#getFileCountSafe(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Long, java.lang.String, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.shared.FileService#getFileCountSafe(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Long, java.lang.String, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Integer)
  */
 @Test(groups={"service","FileService"})
 public class FileService_getFileCountSafeTest extends FileServiceBaseTest {

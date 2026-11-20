@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getInquiryValueCount</code> of service <code>ProbandService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.proband.ProbandService#getInquiryValueCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Boolean, java.lang.Boolean, java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.proband.ProbandService#getInquiryValueCount(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Boolean, java.lang.Boolean, java.lang.Long, java.lang.String)
  */
 @Test(groups={"service","ProbandService"})
 public class ProbandService_getInquiryValueCountTest extends ProbandServiceBaseTest {

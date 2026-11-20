@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getInquiryValues</code> of service <code>ProbandService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.proband.ProbandService#getInquiryValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.lang.Boolean, java.lang.Boolean, java.lang.Long, boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.proband.ProbandService#getInquiryValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, java.lang.Boolean, java.lang.Boolean, java.lang.Long, boolean, boolean, java.lang.String, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","ProbandService"})
 public class ProbandService_getInquiryValuesTest extends ProbandServiceBaseTest {
