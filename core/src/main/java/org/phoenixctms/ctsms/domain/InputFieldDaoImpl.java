@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.util.Set;
 import org.hibernate.Query;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
@@ -79,6 +80,18 @@ public class InputFieldDaoImpl
 	private org.hibernate.Criteria createInputFieldCriteria() {
 		org.hibernate.Criteria inputFieldCriteria = this.getSession().createCriteria(InputField.class);
 		return inputFieldCriteria;
+	}
+
+	/**
+	 * Localized input fields that hold one of the keys in any of their localized properties.
+	 */
+	@Override
+	protected Collection<InputField> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria inputFieldCriteria = createInputFieldCriteria();
+		inputFieldCriteria.add(Restrictions.eq("localized", true));
+		inputFieldCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "nameL10nKey", "titleL10nKey", "topCommentL10nKey", "bottomCommentL10nKey",
+				"textPresetL10nKey", "validationErrorMsgL10nKey"));
+		return inputFieldCriteria.list();
 	}
 
 	@Override

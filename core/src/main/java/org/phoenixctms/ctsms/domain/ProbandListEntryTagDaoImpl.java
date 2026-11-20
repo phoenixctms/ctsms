@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -101,6 +102,17 @@ public class ProbandListEntryTagDaoImpl
 	private org.hibernate.Criteria createListEntryTagCriteria() {
 		org.hibernate.Criteria listEntryTagCriteria = this.getSession().createCriteria(ProbandListEntryTag.class);
 		return listEntryTagCriteria;
+	}
+
+	/**
+	 * Usages of localized input fields that hold one of the keys as title or comment.
+	 */
+	@Override
+	protected Collection<ProbandListEntryTag> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria listEntryTagCriteria = createListEntryTagCriteria();
+		listEntryTagCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
+		listEntryTagCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		return listEntryTagCriteria.list();
 	}
 
 	@Override

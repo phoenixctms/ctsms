@@ -9,6 +9,7 @@ package org.phoenixctms.ctsms.domain;
 import java.util.Collection;
 import java.util.HashMap;
 
+import java.util.Set;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -64,6 +65,17 @@ public class InputFieldSelectionSetValueDaoImpl
 	private org.hibernate.Criteria createSelectionSetValueCriteria() {
 		org.hibernate.Criteria selectionSetValueCriteria = this.getSession().createCriteria(InputFieldSelectionSetValue.class);
 		return selectionSetValueCriteria;
+	}
+
+	/**
+	 * Localized selection set values that hold one of the keys as name, row or column.
+	 */
+	@Override
+	protected Collection<InputFieldSelectionSetValue> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria selectionSetValueCriteria = createSelectionSetValueCriteria();
+		selectionSetValueCriteria.add(Restrictions.eq("localized", true));
+		selectionSetValueCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "nameL10nKey", "rowL10nKey", "columnL10nKey"));
+		return selectionSetValueCriteria.list();
 	}
 
 	@Override

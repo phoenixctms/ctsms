@@ -1680,56 +1680,58 @@ public class InputFieldServiceImpl
 	private HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>> getL10nKeyUsages(InputFieldL10nBundle bundle,
 			Map<String, InputFieldL10nTextUtil.Change> changes) throws Exception {
 		HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>> result = new HashMap<InputField, TreeMap<String, InputFieldL10nTextUtil.Change>>();
+		HashSet<String> keys = new HashSet<String>(changes.keySet());
 		switch (bundle) {
-			case ECRF_FIELD_SECTIONS:
-			case INQUIRY_CATEGORIES:
-				// eCRF sections and inquiry categories belong to no input field; the eCRF audit trail lists their changes
-				return result;
-			default:
-		}
-		// a localized input field applies its own keys, its localized values' keys and its usages' title and comment keys:
-		Iterator<InputField> fieldsIt = this.getInputFieldDao().findByNameL10nKeyLocalized(null, true).iterator();
-		while (fieldsIt.hasNext()) {
-			InputField field = fieldsIt.next();
-			addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getKeys(field), bundle, changes);
-			switch (bundle) {
-				case TITLES:
-				case COMMENTS:
-					Iterator<ECRFField> ecrfFieldsIt = field.getEcrfFields().iterator();
-					while (ecrfFieldsIt.hasNext()) {
-						addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getUsageKeys(ecrfFieldsIt.next()), bundle, changes);
-					}
-					Iterator<Inquiry> inquiriesIt = field.getInquiries().iterator();
-					while (inquiriesIt.hasNext()) {
-						addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getUsageKeys(inquiriesIt.next()), bundle, changes);
-					}
-					Iterator<ProbandListEntryTag> tagsIt = field.getListEntryTags().iterator();
-					while (tagsIt.hasNext()) {
-						addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getUsageKeys(tagsIt.next()), bundle, changes);
-					}
-					break;
-				default:
-			}
-		}
-		// localized selection set values of input fields that are not localized themselves:
-		switch (bundle) {
+			case NAMES:
+			case TITLES:
+			case COMMENTS:
+			case TEXT_PRESETS:
+			case VALIDATION_ERROR_MSGS:
+				// the input fields holding a changed key:
+				Iterator<InputField> fieldsIt = this.getInputFieldDao().findByL10nKeys(keys).iterator();
+				while (fieldsIt.hasNext()) {
+					InputField field = fieldsIt.next();
+					addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getKeys(field), bundle, changes);
+				}
+				break;
 			case SELECTION_SET_VALUE_NAMES:
 			case SELECTION_SET_VALUE_ROWS:
 			case SELECTION_SET_VALUE_COLUMNS:
-				HashSet<InputField> fields = new HashSet<InputField>();
-				Iterator<InputFieldSelectionSetValue> valuesIt = this.getInputFieldSelectionSetValueDao().findByFieldNameL10nKeyLocalized(null, null, true).iterator();
+				// the input fields of the selection set values holding a changed key:
+				Iterator<InputFieldSelectionSetValue> valuesIt = this.getInputFieldSelectionSetValueDao().findByL10nKeys(keys).iterator();
 				while (valuesIt.hasNext()) {
 					InputField field = valuesIt.next().getField();
-					if (!field.isLocalized() && fields.add(field)) {
-						addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getKeys(field), bundle, changes);
-					}
+					addL10nKeyUsages(result, field, InputFieldL10nKeyUsage.getKeys(field), bundle, changes);
+				}
+				break;
+			default:
+				// eCRF sections and inquiry categories belong to no input field; the eCRF audit trail lists their changes
+				return result;
+		}
+		switch (bundle) {
+			case TITLES:
+			case COMMENTS:
+				// the input fields of the eCRF fields, inquiries and proband list entry tags holding a changed key:
+				Iterator<ECRFField> ecrfFieldsIt = this.getECRFFieldDao().findByL10nKeys(keys).iterator();
+				while (ecrfFieldsIt.hasNext()) {
+					ECRFField ecrfField = ecrfFieldsIt.next();
+					addL10nKeyUsages(result, ecrfField.getField(), InputFieldL10nKeyUsage.getUsageKeys(ecrfField), bundle, changes);
+				}
+				Iterator<Inquiry> inquiriesIt = this.getInquiryDao().findByL10nKeys(keys).iterator();
+				while (inquiriesIt.hasNext()) {
+					Inquiry inquiry = inquiriesIt.next();
+					addL10nKeyUsages(result, inquiry.getField(), InputFieldL10nKeyUsage.getUsageKeys(inquiry), bundle, changes);
+				}
+				Iterator<ProbandListEntryTag> tagsIt = this.getProbandListEntryTagDao().findByL10nKeys(keys).iterator();
+				while (tagsIt.hasNext()) {
+					ProbandListEntryTag tag = tagsIt.next();
+					addL10nKeyUsages(result, tag.getField(), InputFieldL10nKeyUsage.getUsageKeys(tag), bundle, changes);
 				}
 				break;
 			default:
 		}
 		return result;
 	}
-
 
 	@Override
 	protected InputFieldL10nTextOutVO handleGetInputFieldL10nText(AuthenticationVO auth, InputFieldL10nBundle bundle, String locale) throws Exception {
