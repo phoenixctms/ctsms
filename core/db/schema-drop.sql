@@ -161,6 +161,9 @@
     alter table INPUT_FIELD 
         drop constraint INPUT_FIELD_CONTENT_TYPE_FKC;
 
+    alter table INPUT_FIELD_L10N_TEXT 
+        drop constraint INPUT_FIELD_L10N_TEXT_MODIFIED_USER_FKC;
+
     alter table INPUT_FIELD_SELECTION_SET_VALUE 
         drop constraint INPUT_FIELD_SELECTION_SET_VALUE_MODIFIED_USER_FKC;
 
@@ -1106,6 +1109,8 @@
     drop table ICD_SYST_MODIFIER cascade;
 
     drop table INPUT_FIELD cascade;
+
+    drop table INPUT_FIELD_L10N_TEXT cascade;
 
     drop table INPUT_FIELD_SELECTION_SET_VALUE cascade;
 

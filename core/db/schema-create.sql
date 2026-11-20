@@ -563,6 +563,18 @@
         primary key (ID)
     );
 
+    create table INPUT_FIELD_L10N_TEXT (
+        ID BIGINT not null,
+        BUNDLE CHARACTER VARYING(1024) not null,
+        LOCALE CHARACTER VARYING(1024) not null,
+        TEXT TEXT not null,
+        VERSION BIGINT not null,
+        MODIFIED_TIMESTAMP TIMESTAMP WITHOUT TIME ZONE not null,
+        MODIFIED_USER_FK BIGINT not null,
+        primary key (ID),
+        unique (BUNDLE, LOCALE, VERSION)
+    );
+
     create table INPUT_FIELD_SELECTION_SET_VALUE (
         ID BIGINT not null,
         VALUE CHARACTER VARYING(1024) not null,
@@ -2582,6 +2594,11 @@
         add constraint INPUT_FIELD_CONTENT_TYPE_FKC 
         foreign key (CONTENT_TYPE_FK) 
         references MIME_TYPE;
+
+    alter table INPUT_FIELD_L10N_TEXT 
+        add constraint INPUT_FIELD_L10N_TEXT_MODIFIED_USER_FKC 
+        foreign key (MODIFIED_USER_FK) 
+        references users;
 
     alter table INPUT_FIELD_SELECTION_SET_VALUE 
         add constraint INPUT_FIELD_SELECTION_SET_VALUE_MODIFIED_USER_FKC 
