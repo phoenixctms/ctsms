@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getFiles</code> of service <code>FileService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.FileService#getFiles(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Long, java.lang.String, boolean, java.lang.Boolean, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.shared.FileService#getFiles(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Long, java.lang.String, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","FileService"})
 public class FileService_getFilesTest extends FileServiceBaseTest {

@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getProbandMoneyTransferNoParticipationSummaryList</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getProbandMoneyTransferNoParticipationSummaryList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.String, org.phoenixctms.ctsms.enumeration.PaymentMethod, java.lang.Boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getProbandMoneyTransferNoParticipationSummaryList(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, java.lang.Long, java.lang.String, org.phoenixctms.ctsms.enumeration.PaymentMethod, java.lang.Boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getProbandMoneyTransferNoParticipationSummaryListTest extends TrialServiceBaseTest {

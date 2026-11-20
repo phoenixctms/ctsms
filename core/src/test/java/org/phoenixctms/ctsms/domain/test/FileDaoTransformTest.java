@@ -93,4 +93,24 @@ public class FileDaoTransformTest extends DaoTransformTestBase {
     Assert.fail("Test 'FileDaoTransformTest.testFileStreamOutVOToEntity' not implemented!");
   }
 
+  /**
+   * Test for method FileDao.toFileJsonVO
+   *
+   * @see org.phoenixctms.ctsms.domain.FileDao#toFileJsonVO(org.phoenixctms.ctsms.domain.File source, org.phoenixctms.ctsms.vo.FileJsonVO target)
+   */
+  @Test
+  public void testToFileJsonVO() {
+    Assert.fail("Test 'FileDaoTransformTest.testToFileJsonVO' not implemented!");
+  }
+
+    /**
+   * Test for method fileJsonVOToEntity
+   *
+   * @see org.phoenixctms.ctsms.domain.FileDao#fileJsonVOToEntity(org.phoenixctms.ctsms.vo.FileJsonVO source, org.phoenixctms.ctsms.domain.File target, boolean copyIfNull)
+   */
+  @Test
+  public void testFileJsonVOToEntity() {
+    Assert.fail("Test 'FileDaoTransformTest.testFileJsonVOToEntity' not implemented!");
+  }
+
 }

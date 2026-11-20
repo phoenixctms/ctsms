@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getMimeTypes</code> of service <code>SelectionSetService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.SelectionSetService#getMimeTypes(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.DBModule)
+ * @see org.phoenixctms.ctsms.service.shared.SelectionSetService#getMimeTypes(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule)
  */
 @Test(groups={"service","SelectionSetService"})
 public class SelectionSetService_getMimeTypesTest extends SelectionSetServiceBaseTest {

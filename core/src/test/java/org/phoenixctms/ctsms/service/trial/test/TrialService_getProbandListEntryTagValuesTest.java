@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getProbandListEntryTagValues</code> of service <code>TrialService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.trial.TrialService#getProbandListEntryTagValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, org.phoenixctms.ctsms.vo.PSFVO)
+ * @see org.phoenixctms.ctsms.service.trial.TrialService#getProbandListEntryTagValues(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, boolean, java.lang.String, org.phoenixctms.ctsms.vo.PSFVO)
  */
 @Test(groups={"service","TrialService"})
 public class TrialService_getProbandListEntryTagValuesTest extends TrialServiceBaseTest {

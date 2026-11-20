@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getOrganisationDuplicates</code> of service <code>StaffService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.staff.StaffService#getOrganisationDuplicates(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Integer)
+ * @see org.phoenixctms.ctsms.service.staff.StaffService#getOrganisationDuplicates(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.String, java.lang.Long, java.lang.Integer)
  */
 @Test(groups={"service","StaffService"})
 public class StaffService_getOrganisationDuplicatesTest extends StaffServiceBaseTest {

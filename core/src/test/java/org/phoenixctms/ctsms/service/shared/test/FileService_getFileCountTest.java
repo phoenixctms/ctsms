@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getFileCount</code> of service <code>FileService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.shared.FileService#getFileCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Long, java.lang.String, boolean, java.lang.Boolean, java.lang.Boolean)
+ * @see org.phoenixctms.ctsms.service.shared.FileService#getFileCount(org.phoenixctms.ctsms.vo.AuthenticationVO, org.phoenixctms.ctsms.enumeration.FileModule, java.lang.Long, java.lang.String, boolean, java.lang.Boolean, java.lang.Boolean, java.lang.Boolean)
  */
 @Test(groups={"service","FileService"})
 public class FileService_getFileCountTest extends FileServiceBaseTest {

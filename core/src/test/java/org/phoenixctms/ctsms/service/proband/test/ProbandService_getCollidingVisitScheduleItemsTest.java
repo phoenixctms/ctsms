@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>getCollidingVisitScheduleItems</code> of service <code>ProbandService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.proband.ProbandService#getCollidingVisitScheduleItems(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean)
+ * @see org.phoenixctms.ctsms.service.proband.ProbandService#getCollidingVisitScheduleItems(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long, boolean, java.lang.Boolean)
  */
 @Test(groups={"service","ProbandService"})
 public class ProbandService_getCollidingVisitScheduleItemsTest extends ProbandServiceBaseTest {

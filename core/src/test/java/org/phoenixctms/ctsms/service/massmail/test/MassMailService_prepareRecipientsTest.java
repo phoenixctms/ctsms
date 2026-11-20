@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  * Test case for method <code>prepareRecipients</code> of service <code>MassMailService</code>.
  * </p>
  *
- * @see org.phoenixctms.ctsms.service.massmail.MassMailService#prepareRecipients(java.lang.Long)
+ * @see org.phoenixctms.ctsms.service.massmail.MassMailService#prepareRecipients(org.phoenixctms.ctsms.vo.AuthenticationVO, java.lang.Long)
  */
 @Test(groups={"service","MassMailService"})
 public class MassMailService_prepareRecipientsTest extends MassMailServiceBaseTest {
