@@ -1181,7 +1181,9 @@ public class EcrfFieldValueBean extends ManagedBeanBase {
 				} else {
 					ecrfFieldValues = new ArrayList<ECRFFieldValueInVO>();
 					indexEcrfFieldValuesMap.put(ecrfFieldValue.getIndex(), ecrfFieldValues);
-					sections.add(new EcrfFieldSection(section, ecrfFieldValue.getIndex(), sectionRowIndex));
+					EcrfFieldSection ecrfFieldSection = new EcrfFieldSection(section, ecrfFieldValue.getIndex(), sectionRowIndex);
+					ecrfFieldSection.setSectionLocalized(ecrfFieldVO.getSectionLocalized());
+					sections.add(ecrfFieldSection);
 					sectionRowIndex++;
 				}
 				ecrfFieldValues.add(ecrfFieldValue);

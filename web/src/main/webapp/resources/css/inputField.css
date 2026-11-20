@@ -82,6 +82,19 @@
 	height: 160px;
 }
 
+/* localization tab: one editor per bundle */
+.ctsms-l10n-codemirror-panelgrid {
+	width: 100%;
+}
+
+.ctsms-l10n-codemirror-panelgrid .CodeMirror-scroll {
+	height: 180px;
+}
+
+.ctsms-l10n-modified {
+	font-size: smaller;
+}
+
 .ctsms-inputfield-output-row {
 	font-family: monospace;
 	font-weight: bolder;

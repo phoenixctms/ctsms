@@ -1807,6 +1807,7 @@ public class SessionScopeBean implements FilterItemsStore {
 			inputFieldTabTitleMap = new LinkedHashMap<String, String>();
 			inputFieldTabTitleMap.put("inputfieldselectionsetvalue", Messages.getString(MessageCodes.SELECTION_SET_VALUES_TAB_TITLE));
 			inputFieldTabTitleMap.put("inputfielddummy", Messages.getString(MessageCodes.INPUT_FIELD_PREVIEW_TAB_LABEL));
+			inputFieldTabTitleMap.put("inputfieldl10n", Messages.getString(MessageCodes.INPUT_FIELD_L10N_TAB_LABEL));
 			inputFieldTabTitleMap.put("inputfieldassociations", Messages.getString(MessageCodes.INPUT_FIELD_ASSOCIATIONS_TAB_LABEL));
 			inputFieldTabTitleMap.put("inputfieldjobs", Messages.getString(MessageCodes.INPUT_FIELD_JOBS_TAB_TITLE));
 			inputFieldTabTitleMap.put("inputfieldjournal", Messages.getString(MessageCodes.INPUT_FIELD_JOURNAL_TAB_TITLE));
