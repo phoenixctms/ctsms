@@ -698,6 +698,11 @@ public interface MessageCodes {
 	public final static String SELECTION_SET_VALUES_TAB_TITLE = "selection_set_values_tab_title";
 	public final static String SELECTION_SET_VALUES_TAB_TITLE_WITH_COUNT = "selection_set_values_tab_title_with_count";
 	public final static String INPUT_FIELD_PREVIEW_TAB_LABEL = "input_field_preview_tab_label";
+	public final static String INPUT_FIELD_L10N_TAB_LABEL = "input_field_l10n_tab_label";
+	public final static String INPUT_FIELD_L10N_ROOT_LOCALE_LABEL = "input_field_l10n_root_locale_label";
+	public final static String INPUT_FIELD_L10N_TEXT_SAVED = "input_field_l10n_text_saved";
+	public final static String INPUT_FIELD_L10N_TEXT_UNCHANGED = "input_field_l10n_text_unchanged";
+	public final static String INPUT_FIELD_L10N_BUNDLE_LABEL_PREFIX = "input_field_l10n_bundle_";
 	public final static String INPUT_FIELD_ASSOCIATIONS_TAB_LABEL = "input_field_associations_tab_label";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE = "input_field_journal_tab_title";
 	public final static String INPUT_FIELD_JOURNAL_TAB_TITLE_WITH_COUNT = "input_field_journal_tab_title_with_count";

@@ -65,6 +65,16 @@
 						</c:if>
 					</p:tab>
 					<p:tab
+						id="inputfieldl10n"
+						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfieldl10n')}"
+						disabled="#{!inputFieldBean.created}"
+						titleStyleClass="ctsms-tabtitle"
+						title="#{messages.input_field_l10n_tab_label}">
+						<c:if test="#{applicationScopeBean.isTabBuilt('inputfieldl10n')}">
+							<ui:include src="/META-INF/includes/inputfield/inputFieldL10n.xhtml" />
+						</c:if>
+					</p:tab>
+					<p:tab
 						id="inputfieldassociations"
 						rendered="#{sessionScopeBean.inputFieldVisibleTabSet.contains('inputfieldassociations')}"
 						disabled="#{!inputFieldBean.created}"

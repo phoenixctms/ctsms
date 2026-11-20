@@ -3,6 +3,7 @@ package org.phoenixctms.ctsms.web.model.shared;
 public class InquiryCategory {
 
 	private String category;
+	private String categoryLocalized;
 	private int rowIndex;
 
 	public InquiryCategory(String category, int rowIndex) {
@@ -34,6 +35,17 @@ public class InquiryCategory {
 
 	public String getCategory() {
 		return category;
+	}
+
+	/**
+	 * The translated category, for display only: equality is by the category as entered.
+	 */
+	public String getCategoryLocalized() {
+		return categoryLocalized != null ? categoryLocalized : category;
+	}
+
+	public void setCategoryLocalized(String categoryLocalized) {
+		this.categoryLocalized = categoryLocalized;
 	}
 
 	public int getRowIndex() {

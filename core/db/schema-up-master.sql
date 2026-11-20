@@ -869,6 +869,10 @@ if get_database_version() < '010901019' then
     add constraint INPUT_FIELD_L10N_TEXT_MODIFIED_USER_FKC
     foreign key (MODIFIED_USER_FK)
     references users;
+  -- show the new localization tab of input fields to users who see the input field tabs:
+  update USERS set VISIBLE_INPUT_FIELD_TAB_LIST = VISIBLE_INPUT_FIELD_TAB_LIST || ',inputfieldl10n'
+    where VISIBLE_INPUT_FIELD_TAB_LIST is not null and VISIBLE_INPUT_FIELD_TAB_LIST <> ''
+    and VISIBLE_INPUT_FIELD_TAB_LIST not like '%inputfieldl10n%';
 
   perform set_database_version('010901019');
 

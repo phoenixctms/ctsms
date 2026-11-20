@@ -6,6 +6,7 @@ import org.phoenixctms.ctsms.web.util.Messages;
 public class EcrfFieldSection {
 
 	private String section;
+	private String sectionLocalized;
 	private int rowIndex;
 	private Long seriesIndex;
 
@@ -87,12 +88,23 @@ public class EcrfFieldSection {
 		this.seriesIndex = seriesIndex;
 	}
 
+	/**
+	 * The translated section, for display only: equality is by the section as entered.
+	 */
+	public String getSectionLocalized() {
+		return sectionLocalized != null ? sectionLocalized : section;
+	}
+
+	public void setSectionLocalized(String sectionLocalized) {
+		this.sectionLocalized = sectionLocalized;
+	}
+
 	@Override
 	public String toString() {
 		if (isSeries()) {
-			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_SERIES_INDEX_LABEL, section, seriesIndex);
+			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_SERIES_INDEX_LABEL, getSectionLocalized(), seriesIndex);
 		} else {
-			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_LABEL, section);
+			return Messages.getMessage(MessageCodes.ECRF_ENTRY_SECTION_LABEL, getSectionLocalized());
 		}
 	}
 }
