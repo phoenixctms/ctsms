@@ -142,6 +142,7 @@ public class EcrfFieldRowWriter extends RowWriter {
 		Iterator<ECRFFieldOutVO> it = ecrfFields.iterator();
 		while (it.hasNext()) {
 			ECRFFieldOutVO ecrfField = it.next();
+			((XlsExporter) context.getExporter()).getL10nKeyCollector().addEcrfField(ecrfField);
 			if (inputFieldIds.add(ecrfField.getField().getId())) {
 				((XlsExporter) context.getExporter()).getInputFieldRowWriter().printRows(ecrfField.getField());
 			}

@@ -134,6 +134,7 @@ public class InquiryRowWriter extends RowWriter {
 		Iterator<InquiryOutVO> it = inquiries.iterator();
 		while (it.hasNext()) {
 			InquiryOutVO inquiry = it.next();
+			((XlsExporter) context.getExporter()).getL10nKeyCollector().addInquiry(inquiry);
 			if (inquiry.getDeferredDelete()) {
 				continue;
 			}

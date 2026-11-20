@@ -253,6 +253,7 @@ public class InputFieldRowWriter extends RowWriter {
 	}
 
 	public void printRows(InputFieldOutVO inputField) throws Throwable {
+		((XlsExporter) context.getExporter()).getL10nKeyCollector().addInputField(inputField);
 		String[] values = new String[maxColumnIndex + 1];
 		values[nameColumnIndex] = inputField.getNameL10nKey();
 		values[titleColumnIndex] = inputField.getTitleL10nKey();
