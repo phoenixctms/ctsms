@@ -134,6 +134,7 @@ public class ProbandListEntryTagRowWriter extends RowWriter {
 		Iterator<ProbandListEntryTagOutVO> it = listEntryTags.iterator();
 		while (it.hasNext()) {
 			ProbandListEntryTagOutVO listEntryTag = it.next();
+			((XlsExporter) context.getExporter()).getL10nKeyCollector().addProbandListEntryTag(listEntryTag);
 			if (inputFieldIds.add(listEntryTag.getField().getId())) {
 				((XlsExporter) context.getExporter()).getInputFieldRowWriter().printRows(listEntryTag.getField());
 			}
