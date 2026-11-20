@@ -43,4 +43,16 @@ public interface AuditTrailExcelSettingCodes {
 	public static final String AUDIT_TRAIL_GROUP_LABEL_FORMAT = "audit_trail_group_label_format";
 	public static final String ECRF_PROGRESS_GROUP_LABEL_FORMAT = "ecrf_progress_group_label_format";
 	public static final String ECRF_FIELD_STATUS_GROUP_LABEL_FORMAT = "ecrf_field_status_group_label_format";
+	public static final String L10N_TEXT_CHANGES_AUTOSIZE = "l10n_text_changes_autosize";
+	public static final String L10N_TEXT_CHANGES_PAGE_BREAK_AT_ROW = "l10n_text_changes_page_break_at_row";
+	public static final String L10N_TEXT_CHANGES_ROW_OFFSET_FIRST_PAGE = "l10n_text_changes_row_offset_first_page";
+	public static final String L10N_TEXT_CHANGES_ROW_OFFSET_OTHER_PAGES = "l10n_text_changes_row_offset_other_pages";
+	public static final String L10N_TEXT_CHANGES_COL_OFFSET = "l10n_text_changes_col_offset";
+	public static final String L10N_TEXT_CHANGES_SCALE_FACTOR = "l10n_text_changes_scale_factor";
+	public static final String L10N_TEXT_CHANGES_HEAD_FORMAT = "l10n_text_changes_head_format";
+	public static final String L10N_TEXT_CHANGES_GROUP_LABEL_FORMAT = "l10n_text_changes_group_label_format";
+	public static final String L10N_TEXT_CHANGES_ROW_FORMAT = "l10n_text_changes_row_format";
+	public static final String L10N_TEXT_CHANGES_ROW_COLORS = "l10n_text_changes_row_colors";
+	public static final String L10N_TEXT_CHANGES_WRITEHEAD = "l10n_text_changes_writehead";
+	public static final String L10N_TEXT_CHANGES_APPEND_HEADER_FOOTER = "l10n_text_changes_append_header_footer";
 }

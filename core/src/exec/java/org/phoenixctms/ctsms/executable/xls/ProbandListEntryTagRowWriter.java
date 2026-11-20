@@ -143,7 +143,7 @@ public class ProbandListEntryTagRowWriter extends RowWriter {
 			values[externalIdColumnIndex] = listEntryTag.getExternalId();
 			values[inputFieldNameColumnIndex] = listEntryTag.getField().getNameL10nKey();
 			values[titleColumnIndex] = listEntryTag.getTitleL10nKey();
-			values[commentColumnIndex] = listEntryTag.getComment();
+			values[commentColumnIndex] = listEntryTag.getCommentL10nKey();
 			values[optionalColumnIndex] = Boolean.toString(listEntryTag.getOptional());
 			values[disabledColumnIndex] = Boolean.toString(listEntryTag.getDisabled());
 			values[excelValueColumnIndex] = Boolean.toString(listEntryTag.getExcelValue());

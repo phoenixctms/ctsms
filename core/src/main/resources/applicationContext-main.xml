@@ -1070,6 +1070,15 @@
 			name="inputFieldCommentsBundleBasename"
 			value="ctsms-inputfieldcomments" />
 		<property
+			name="inputFieldL10nTargetNamesBundleBasename"
+			value="ctsms-inputfieldl10ntargetnames" />
+		<property
+			name="ecrfFieldSectionsBundleBasename"
+			value="ctsms-ecrffieldsections" />
+		<property
+			name="inquiryCategoriesBundleBasename"
+			value="ctsms-inquirycategories" />
+		<property
 			name="massMailStatusTypesBundleBasename"
 			value="ctsms-massmailstatustypes" />
 		<property
@@ -1198,6 +1207,18 @@
 		<property
 			name="permissionProfileGroupNamesBundleBasename"
 			value="ctsms-permissionprofilegroupnames" />
+	</bean>
+	<bean
+		id="inputFieldL10nOverlay"
+		class="org.phoenixctms.ctsms.util.InputFieldL10nOverlay"
+		depends-on="l10nUtil"
+		init-method="init">
+		<property
+			name="inputFieldL10nTextDao"
+			ref="inputFieldL10nTextDao" />
+		<property
+			name="transactionManager"
+			ref="transactionManager" />
 	</bean>
 	<bean
 		id="settings"

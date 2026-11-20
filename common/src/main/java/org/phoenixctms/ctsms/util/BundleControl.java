@@ -5,8 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
@@ -42,7 +44,6 @@ public class BundleControl extends Control {
 		String bundleName = toBundleName(baseName, locale);
 		String resourceName = toResourceName(bundleName, BUNDLE_EXTENSION);
 		InputStream stream = null;
-		ResourceBundle bundle = null;
 		// The below code is copied from default Control#newBundle() implementation.
 		// Only the PropertyResourceBundle line is changed to read the file as UTF-8.
 		if (reload) {
@@ -57,9 +58,11 @@ public class BundleControl extends Control {
 		} else {
 			stream = loader.getResourceAsStream(resourceName);
 		}
+		// the layers of this locale, lowest first: classpath copy, CTSMS_PROPERTIES overloads, overlay provider
+		ArrayList<PropertyResourceBundle> layers = new ArrayList<PropertyResourceBundle>();
 		if (stream != null) {
 			try {
-				bundle = new PropertyResourceBundle(new InputStreamReader(stream, ENCODING));
+				layers.add(new PropertyResourceBundle(new InputStreamReader(stream, ENCODING)));
 			} finally {
 				stream.close();
 			}
@@ -69,7 +72,7 @@ public class BundleControl extends Control {
 			try {
 				stream = new FileInputStream(new java.io.File(it.next(), resourceName));
 				try {
-					bundle = new ChildPropertyResourceBundle(new InputStreamReader(stream, ENCODING), bundle);
+					layers.add(new PropertyResourceBundle(new InputStreamReader(stream, ENCODING)));
 				} catch (IOException e) {
 				} finally {
 					stream.close();
@@ -77,6 +80,34 @@ public class BundleControl extends Control {
 			} catch (FileNotFoundException | SecurityException e) {
 			}
 		}
-		return bundle;
+		BundleOverlayProvider provider = overlayProvider;
+		if (provider != null) {
+			String overlay = provider.getOverlay(baseName, locale);
+			if (overlay != null) {
+				layers.add(new PropertyResourceBundle(new StringReader(overlay)));
+			}
+		}
+		if (layers.isEmpty()) {
+			return null;
+		} else if (layers.size() == 1) {
+			return layers.get(0);
+		}
+		// merged into one bundle without a parent, so the locale fallback (e.g. "de" -> root) is
+		// attached to it by ResourceBundle and keys missing in all layers still fall back:
+		return new LayeredResourceBundle(layers);
+	}
+
+	private static volatile BundleOverlayProvider overlayProvider = null;
+
+	public static BundleOverlayProvider getOverlayProvider() {
+		return overlayProvider;
+	}
+
+	/**
+	 * Sets the provider of the top layer for all bundles loaded with this control. Bundles already cached
+	 * are not affected until the ResourceBundle cache is cleared.
+	 */
+	public static void setOverlayProvider(BundleOverlayProvider provider) {
+		overlayProvider = provider;
 	}
 }

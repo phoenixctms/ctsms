@@ -605,12 +605,17 @@ public class ECRFFieldDaoImpl
 			target.setTrial(this.getTrialDao().toTrialOutVO(trial));
 		}
 		target.setTitle(source.getTitleL10nKey());
+		target.setCommentL10nKey(source.getComment());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
+				if (!CommonUtil.isEmptyString(source.getComment())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				}
 			}
 		}
+		target.setSectionLocalized(L10nUtil.getEcrfFieldSection(Locales.USER, source.getSection()));
 		if (modifiedUser != null) {
 			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
 		}

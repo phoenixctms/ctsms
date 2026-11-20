@@ -2523,6 +2523,7 @@ public final class ServiceUtil {
 		ecrfFieldValueVO.setJsOutputExpression(ecrfField.getJsOutputExpression());
 		ecrfFieldValueVO.setDisabled(ecrfField.isDisabled());
 		ecrfFieldValueVO.setSection(ecrfField.getSection());
+		ecrfFieldValueVO.setSectionLocalized(L10nUtil.getEcrfFieldSection(Locales.USER, ecrfField.getSection()));
 		//ecrfFieldValueVO.setRef(  ecrfField.getRef()   );
 		ECRF ecrf = ecrfField.getEcrf();
 		if (ecrf != null) {
@@ -2605,7 +2606,17 @@ public final class ServiceUtil {
 			localizedEcrfFieldVO.copy(ecrfFieldVO);
 			localizedEcrfFieldVO.setField(localizedInputField);
 			localizedEcrfFieldVO.setTitle(L10nUtil.getInputFieldTitle(locale, localizedEcrfFieldVO.getTitleL10nKey()));
+			if (!CommonUtil.isEmptyString(localizedEcrfFieldVO.getCommentL10nKey())) {
+				localizedEcrfFieldVO.setComment(L10nUtil.getInputFieldComment(locale, localizedEcrfFieldVO.getCommentL10nKey()));
+			}
 			ecrfFieldVO = localizedEcrfFieldVO;
+		}
+		if (locale != null) {
+			// sections are localized regardless of the input field:
+			ECRFFieldOutVO sectionLocalizedEcrfFieldVO = new ECRFFieldOutVO();
+			sectionLocalizedEcrfFieldVO.copy(ecrfFieldVO);
+			sectionLocalizedEcrfFieldVO.setSectionLocalized(L10nUtil.getEcrfFieldSection(locale, ecrfFieldVO.getSection()));
+			ecrfFieldVO = sectionLocalizedEcrfFieldVO;
 		}
 		ecrfFieldValueVO.setEcrfField(ecrfFieldVO);
 		ecrfFieldValueVO.setVisit(visitVO);
@@ -2691,6 +2702,7 @@ public final class ServiceUtil {
 		inquiryValueVO.setJsOutputExpression(inquiry.getJsOutputExpression());
 		inquiryValueVO.setDisabled(inquiry.isDisabled());
 		inquiryValueVO.setCategory(inquiry.getCategory());
+		inquiryValueVO.setCategoryLocalized(L10nUtil.getInquiryCategory(Locales.USER, inquiry.getCategory()));
 		inquiryValueVO.setInputFieldId(inputField.getId());
 		inquiryValueVO.setInputFieldType(inputField.getFieldType());
 		inquiryValueVO.setUserTimeZone(inputField.isUserTimeZone());
@@ -2748,7 +2760,17 @@ public final class ServiceUtil {
 			localizedInquiryVO.copy(inquiryVO);
 			localizedInquiryVO.setField(localizedInputField);
 			localizedInquiryVO.setTitle(L10nUtil.getInputFieldTitle(locale, localizedInquiryVO.getTitleL10nKey()));
+			if (!CommonUtil.isEmptyString(localizedInquiryVO.getCommentL10nKey())) {
+				localizedInquiryVO.setComment(L10nUtil.getInputFieldComment(locale, localizedInquiryVO.getCommentL10nKey()));
+			}
 			inquiryVO = localizedInquiryVO;
+		}
+		if (locale != null) {
+			// categories are localized regardless of the input field:
+			InquiryOutVO categoryLocalizedInquiryVO = new InquiryOutVO();
+			categoryLocalizedInquiryVO.copy(inquiryVO);
+			categoryLocalizedInquiryVO.setCategoryLocalized(L10nUtil.getInquiryCategory(locale, inquiryVO.getCategory()));
+			inquiryVO = categoryLocalizedInquiryVO;
 		}
 		inquiryValueVO.setInquiry(inquiryVO);
 		inquiryValueVO.setProband(probandVO);
@@ -2876,6 +2898,9 @@ public final class ServiceUtil {
 			localizedListEntryTagVO.copy(listEntryTagVO);
 			localizedListEntryTagVO.setField(localizedInputField);
 			localizedListEntryTagVO.setTitle(L10nUtil.getInputFieldTitle(locale, localizedListEntryTagVO.getTitleL10nKey()));
+			if (!CommonUtil.isEmptyString(localizedListEntryTagVO.getCommentL10nKey())) {
+				localizedListEntryTagVO.setComment(L10nUtil.getInputFieldComment(locale, localizedListEntryTagVO.getCommentL10nKey()));
+			}
 			listEntryTagVO = localizedListEntryTagVO;
 		}
 		listEntryTagValueVO.setTag(listEntryTagVO);
@@ -4935,6 +4960,7 @@ public final class ServiceUtil {
 			} else {
 				sectionProgress = new ECRFSectionProgressVO();
 				sectionProgress.setSection(section);
+				sectionProgress.setSectionLocalized(L10nUtil.getEcrfFieldSection(Locales.USER, section));
 				populateEcrfFieldStatusEntryCount(sectionProgress.getEcrfFieldStatusQueueCounts(), listEntryVO.getId(), ecrfVO.getId(), visitVO != null ? visitVO.getId() : null,
 						section, ecrfFieldStatusEntryDao);
 				result.setEcrfFieldStatusQueueCounts(addEcrfFieldStatusEntryCounts(result.getEcrfFieldStatusQueueCounts(),

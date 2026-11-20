@@ -8,179 +8,180 @@
 package org.phoenixctms.ctsms.domain;
 
 import java.util.Collection;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
+import org.phoenixctms.ctsms.util.CommonUtil;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextInVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
+import org.phoenixctms.ctsms.vo.UserOutVO;
 
 /**
  * @see InputFieldL10nText
  */
 public class InputFieldL10nTextDaoImpl
-    extends InputFieldL10nTextDaoBase
-{
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected InputFieldL10nText handleFindLatest(InputFieldL10nBundle bundle, String locale)
-    {
-        // TODO implement public InputFieldL10nText handleFindLatest(InputFieldL10nBundle bundle, String locale)
-        return null;
-    }
+		extends InputFieldL10nTextDaoBase {
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Collection<InputFieldL10nText> handleFindRevisions(InputFieldL10nBundle bundle, String locale)
-    {
-        // TODO implement public Collection<InputFieldL10nText> handleFindRevisions(InputFieldL10nBundle bundle, String locale)
-        return null;
-    }
+	private static String normalizeLocale(String locale) {
+		// the root bundle is stored with an empty locale:
+		return CommonUtil.isEmptyString(locale) ? "" : locale;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected Collection<InputFieldL10nText> handleFindAllLatest()
-    {
-        // TODO implement public Collection<InputFieldL10nText> handleFindAllLatest()
-        return null;
-    }
+	private org.hibernate.Criteria createTextCriteria(String alias) {
+		org.hibernate.Criteria textCriteria = this.getSession().createCriteria(InputFieldL10nText.class, alias);
+		return textCriteria;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void toInputFieldL10nTextInVO(
-        InputFieldL10nText source,
-        InputFieldL10nTextInVO target)
-    {
-        // TODO verify behavior of toInputFieldL10nTextInVO
-        super.toInputFieldL10nTextInVO(source, target);
-    }
+	/**
+	 * All revisions that are the latest of their bundle and locale.
+	 */
+	@Override
+	protected Collection<InputFieldL10nText> handleFindAllLatest() {
+		org.hibernate.Criteria textCriteria = createTextCriteria("text0");
+		DetachedCriteria subQuery = DetachedCriteria.forClass(InputFieldL10nTextImpl.class, "text1"); // IMPL!!!!
+		subQuery.add(Property.forName("text1.bundle").eqProperty("text0.bundle"));
+		subQuery.add(Property.forName("text1.locale").eqProperty("text0.locale"));
+		subQuery.setProjection(Projections.max("text1.version"));
+		textCriteria.add(Subqueries.propertyEq("text0.version", subQuery));
+		textCriteria.addOrder(Order.asc("text0.bundle"));
+		textCriteria.addOrder(Order.asc("text0.locale"));
+		return textCriteria.list();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputFieldL10nTextInVO toInputFieldL10nTextInVO(final InputFieldL10nText entity)
-    {
-        // TODO verify behavior of toInputFieldL10nTextInVO
-        return super.toInputFieldL10nTextInVO(entity);
-    }
+	@Override
+	protected InputFieldL10nText handleFindLatest(InputFieldL10nBundle bundle, String locale) {
+		org.hibernate.Criteria textCriteria = createTextCriteria(null);
+		textCriteria.add(Restrictions.eq("bundle", bundle));
+		textCriteria.add(Restrictions.eq("locale", normalizeLocale(locale)));
+		textCriteria.addOrder(Order.desc("version"));
+		textCriteria.setMaxResults(1);
+		return (InputFieldL10nText) textCriteria.uniqueResult();
+	}
 
-    /**
-     * Retrieves the entity object that is associated with the specified value object
-     * from the object store. If no such entity object exists in the object store,
-     * a new, blank entity is created
-     */
-    private InputFieldL10nText loadInputFieldL10nTextFromInputFieldL10nTextInVO(InputFieldL10nTextInVO inputFieldL10nTextInVO)
-    {
-        // TODO implement loadInputFieldL10nTextFromInputFieldL10nTextInVO
-        throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldL10nTextFromInputFieldL10nTextInVO(InputFieldL10nTextInVO) not yet implemented.");
+	/**
+	 * The revisions of a bundle, of one locale or of all locales (locale null), oldest first.
+	 */
+	@Override
+	protected Collection<InputFieldL10nText> handleFindRevisions(InputFieldL10nBundle bundle, String locale) {
+		org.hibernate.Criteria textCriteria = createTextCriteria(null);
+		textCriteria.add(Restrictions.eq("bundle", bundle));
+		if (locale != null) {
+			textCriteria.add(Restrictions.eq("locale", normalizeLocale(locale)));
+		}
+		textCriteria.addOrder(Order.asc("locale"));
+		textCriteria.addOrder(Order.asc("version"));
+		return textCriteria.list();
+	}
 
-        /* A typical implementation looks like this:
-        if (inputFieldL10nTextInVO.getId() == null)
-        {
-            return  InputFieldL10nText.Factory.newInstance();
-        }
-        else
-        {
-            return this.load(inputFieldL10nTextInVO.getId());
-        }
-        */
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void toInputFieldL10nTextInVO(
+			InputFieldL10nText source,
+			InputFieldL10nTextInVO target) {
+		super.toInputFieldL10nTextInVO(source, target);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public InputFieldL10nText inputFieldL10nTextInVOToEntity(InputFieldL10nTextInVO inputFieldL10nTextInVO)
-    {
-        // TODO verify behavior of inputFieldL10nTextInVOToEntity
-        InputFieldL10nText entity = this.loadInputFieldL10nTextFromInputFieldL10nTextInVO(inputFieldL10nTextInVO);
-        this.inputFieldL10nTextInVOToEntity(inputFieldL10nTextInVO, entity, true);
-        return entity;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public InputFieldL10nTextInVO toInputFieldL10nTextInVO(final InputFieldL10nText entity) {
+		return super.toInputFieldL10nTextInVO(entity);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void inputFieldL10nTextInVOToEntity(
-        InputFieldL10nTextInVO source,
-        InputFieldL10nText target,
-        boolean copyIfNull)
-    {
-        // TODO verify behavior of inputFieldL10nTextInVOToEntity
-        super.inputFieldL10nTextInVOToEntity(source, target, copyIfNull);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void toInputFieldL10nTextOutVO(
-        InputFieldL10nText source,
-        InputFieldL10nTextOutVO target)
-    {
-        // TODO verify behavior of toInputFieldL10nTextOutVO
-        super.toInputFieldL10nTextOutVO(source, target);
-        // WARNING! No conversion for target.modifiedUser (can't convert source.getModifiedUser():org.phoenixctms.ctsms.domain.User to org.phoenixctms.ctsms.vo.UserOutVO
-    }
+	/**
+	 * Revisions are never updated: every save is a new entity.
+	 */
+	private InputFieldL10nText loadInputFieldL10nTextFromInputFieldL10nTextInVO(InputFieldL10nTextInVO inputFieldL10nTextInVO) {
+		return InputFieldL10nText.Factory.newInstance();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public InputFieldL10nTextOutVO toInputFieldL10nTextOutVO(final InputFieldL10nText entity)
-    {
-        // TODO verify behavior of toInputFieldL10nTextOutVO
-        return super.toInputFieldL10nTextOutVO(entity);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public InputFieldL10nText inputFieldL10nTextInVOToEntity(InputFieldL10nTextInVO inputFieldL10nTextInVO) {
+		InputFieldL10nText entity = this.loadInputFieldL10nTextFromInputFieldL10nTextInVO(inputFieldL10nTextInVO);
+		this.inputFieldL10nTextInVOToEntity(inputFieldL10nTextInVO, entity, true);
+		return entity;
+	}
 
-    /**
-     * Retrieves the entity object that is associated with the specified value object
-     * from the object store. If no such entity object exists in the object store,
-     * a new, blank entity is created
-     */
-    private InputFieldL10nText loadInputFieldL10nTextFromInputFieldL10nTextOutVO(InputFieldL10nTextOutVO inputFieldL10nTextOutVO)
-    {
-        // TODO implement loadInputFieldL10nTextFromInputFieldL10nTextOutVO
-        throw new UnsupportedOperationException("org.phoenixctms.ctsms.domain.loadInputFieldL10nTextFromInputFieldL10nTextOutVO(InputFieldL10nTextOutVO) not yet implemented.");
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void inputFieldL10nTextInVOToEntity(
+			InputFieldL10nTextInVO source,
+			InputFieldL10nText target,
+			boolean copyIfNull) {
+		super.inputFieldL10nTextInVOToEntity(source, target, copyIfNull);
+		target.setLocale(normalizeLocale(source.getLocale()));
+		if (target.getText() == null) {
+			target.setText("");
+		}
+	}
 
-        /* A typical implementation looks like this:
-        if (inputFieldL10nTextOutVO.getId() == null)
-        {
-            return  InputFieldL10nText.Factory.newInstance();
-        }
-        else
-        {
-            return this.load(inputFieldL10nTextOutVO.getId());
-        }
-        */
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void toInputFieldL10nTextOutVO(
+			InputFieldL10nText source,
+			InputFieldL10nTextOutVO target) {
+		super.toInputFieldL10nTextOutVO(source, target);
+		User modifiedUser = source.getModifiedUser();
+		if (modifiedUser != null) {
+			target.setModifiedUser(this.getUserDao().toUserOutVO(modifiedUser));
+		}
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public InputFieldL10nText inputFieldL10nTextOutVOToEntity(InputFieldL10nTextOutVO inputFieldL10nTextOutVO)
-    {
-        // TODO verify behavior of inputFieldL10nTextOutVOToEntity
-        InputFieldL10nText entity = this.loadInputFieldL10nTextFromInputFieldL10nTextOutVO(inputFieldL10nTextOutVO);
-        this.inputFieldL10nTextOutVOToEntity(inputFieldL10nTextOutVO, entity, true);
-        return entity;
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public InputFieldL10nTextOutVO toInputFieldL10nTextOutVO(final InputFieldL10nText entity) {
+		return super.toInputFieldL10nTextOutVO(entity);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void inputFieldL10nTextOutVOToEntity(
-        InputFieldL10nTextOutVO source,
-        InputFieldL10nText target,
-        boolean copyIfNull)
-    {
-        // TODO verify behavior of inputFieldL10nTextOutVOToEntity
-        super.inputFieldL10nTextOutVOToEntity(source, target, copyIfNull);
-    }
+	private InputFieldL10nText loadInputFieldL10nTextFromInputFieldL10nTextOutVO(InputFieldL10nTextOutVO inputFieldL10nTextOutVO) {
+		InputFieldL10nText inputFieldL10nText = this.load(inputFieldL10nTextOutVO.getId());
+		if (inputFieldL10nText == null) {
+			inputFieldL10nText = InputFieldL10nText.Factory.newInstance();
+		}
+		return inputFieldL10nText;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public InputFieldL10nText inputFieldL10nTextOutVOToEntity(InputFieldL10nTextOutVO inputFieldL10nTextOutVO) {
+		InputFieldL10nText entity = this.loadInputFieldL10nTextFromInputFieldL10nTextOutVO(inputFieldL10nTextOutVO);
+		this.inputFieldL10nTextOutVOToEntity(inputFieldL10nTextOutVO, entity, true);
+		return entity;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void inputFieldL10nTextOutVOToEntity(
+			InputFieldL10nTextOutVO source,
+			InputFieldL10nText target,
+			boolean copyIfNull) {
+		super.inputFieldL10nTextOutVOToEntity(source, target, copyIfNull);
+		UserOutVO modifiedUserVO = source.getModifiedUser();
+		if (modifiedUserVO != null) {
+			target.setModifiedUser(this.getUserDao().userOutVOToEntity(modifiedUserVO));
+		} else if (copyIfNull) {
+			target.setModifiedUser(null);
+		}
+	}
 }

@@ -21,6 +21,7 @@ import org.phoenixctms.ctsms.util.L10nUtil.Locales;
 import org.phoenixctms.ctsms.util.Settings;
 import org.phoenixctms.ctsms.util.Settings.Bundle;
 import org.phoenixctms.ctsms.vo.AuditTrailExcelVO;
+import org.phoenixctms.ctsms.vo.ECRFFieldL10nTextChangeVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldStatusEntryOutVO;
 import org.phoenixctms.ctsms.vo.ECRFFieldValueOutVO;
 import org.phoenixctms.ctsms.vo.ECRFOutVO;
@@ -161,6 +162,48 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 			getSpreadSheetWriters().add(createEcrfFieldStatusSpreadSheetWriter(omitFields));
 			queueSheetIndexMap.put(queues[i], i + 2);
 		}
+		// appended last, so the sheet indexes above stay as they are:
+		l10nTextChangesSheetIndex = getSpreadSheetWriters().size();
+		getSpreadSheetWriters().add(createL10nTextChangesSpreadSheetWriter(omitFields));
+	}
+
+	protected int l10nTextChangesSheetIndex;
+
+	protected SpreadSheetWriter createL10nTextChangesSpreadSheetWriter(boolean omitFields) {
+		return new SpreadSheetWriter(this,
+				getColumnIndexMap(L10nUtil.getAuditTrailExcelColumns(Locales.USER, AuditTrailExcelLabelCodes.L10N_TEXT_CHANGES_VO_FIELD_COLUMNS,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_VO_FIELD_COLUMNS)),
+				Settings.getInt(AuditTrailExcelSettingCodes.VO_GRAPH_RECURSION_DEPTH, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.VO_GRAPH_RECURSION_DEPTH),
+				omitFields,
+				Settings.getBoolean(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_AUTOSIZE, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_AUTOSIZE),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_WRITEHEAD, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_WRITEHEAD),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_PAGE_BREAK_AT_ROW, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_PAGE_BREAK_AT_ROW),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_ROW_OFFSET_FIRST_PAGE, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_ROW_OFFSET_FIRST_PAGE),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_ROW_OFFSET_OTHER_PAGES, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_ROW_OFFSET_OTHER_PAGES),
+				Settings.getIntNullable(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_COL_OFFSET, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_COL_OFFSET),
+				Settings.getBoolean(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_ROW_COLORS, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_ROW_COLORS),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_HEAD_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_HEAD_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_GROUP_LABEL_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_GROUP_LABEL_FORMAT),
+				Settings.getExcelCellFormat(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_ROW_FORMAT, Bundle.AUDIT_TRAIL_EXCEL,
+						AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_ROW_FORMAT));
+	}
+
+	public Collection getL10nTextChangeVOs() {
+		return getSpreadSheetWriters().get(l10nTextChangesSheetIndex).getVOs();
+	}
+
+	public void setL10nTextChangeVOs(Collection<ECRFFieldL10nTextChangeVO> VOs) {
+		getSpreadSheetWriters().get(l10nTextChangesSheetIndex).setVOs(VOs);
 	}
 
 	protected void appendHeaderFooter(HeaderFooter header, HeaderFooter footer) throws Exception {
@@ -211,6 +254,18 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 	@Override
 	public void applySpreadsheetSettings(WritableSheet spreadSheet, int sheetIndex) throws Exception {
 		Integer scaleFactor;
+		if (sheetIndex == l10nTextChangesSheetIndex) {
+			scaleFactor = Settings.getIntNullable(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_SCALE_FACTOR, Bundle.AUDIT_TRAIL_EXCEL,
+					AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_SCALE_FACTOR);
+			if (Settings.getBoolean(AuditTrailExcelSettingCodes.L10N_TEXT_CHANGES_APPEND_HEADER_FOOTER, Bundle.AUDIT_TRAIL_EXCEL,
+					AuditTrailExcelDefaultSettings.L10N_TEXT_CHANGES_APPEND_HEADER_FOOTER)) {
+				appendHeaderFooter(spreadSheet.getSettings().getHeader(), spreadSheet.getSettings().getFooter());
+			}
+			if (scaleFactor != null && scaleFactor.intValue() > 0) {
+				spreadSheet.getSettings().setScaleFactor(scaleFactor);
+			}
+			return;
+		}
 		switch (sheetIndex) {
 			case 0:
 				scaleFactor = Settings.getIntNullable(AuditTrailExcelSettingCodes.AUDIT_TRAIL_SCALE_FACTOR, Bundle.AUDIT_TRAIL_EXCEL,
@@ -417,6 +472,8 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 			getSpreadSheetWriters().get(queueSheetIndex.getValue()).setSpreadSheetName(
 					L10nUtil.getAuditTrailExcelLabel(Locales.USER, labelCode, ExcelUtil.DEFAULT_LABEL, spreadSheetName));
 		}
+		getSpreadSheetWriters().get(l10nTextChangesSheetIndex).setSpreadSheetName(
+				L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.L10N_TEXT_CHANGES_SPREADSHEET_NAME, ExcelUtil.DEFAULT_LABEL, spreadSheetName));
 	}
 
 	public void setTrial(TrialOutVO trial) {
@@ -466,6 +523,7 @@ public class AuditTrailExcelWriter extends WorkbookWriter {
 			ecrfFieldStatusRowCountMap.put(queue, new Long(getFieldStatusVOs(queue).size()));
 		}
 		excelVO.setEcrfFieldStatusRowCountMap(ecrfFieldStatusRowCountMap);
+		excelVO.setL10nTextChangeRowCount(getL10nTextChangeVOs().size());
 		StringBuilder fileName = new StringBuilder(AUDIT_TRAIL_EXCEL_FILENAME_PREFIX);
 		if (trial != null) {
 			fileName.append(AUDIT_TRAIL_EXCEL_FILENAME_TRIAL);

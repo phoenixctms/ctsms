@@ -547,10 +547,14 @@ public class ProbandListEntryTagDaoImpl
 		Trial trial = source.getTrial();
 		User modifiedUser = source.getModifiedUser();
 		target.setTitle(source.getTitleL10nKey());
+		target.setCommentL10nKey(source.getComment());
 		if (field != null) {
 			target.setField(this.getInputFieldDao().toInputFieldOutVO(field));
 			if (field.isLocalized()) {
 				target.setTitle(L10nUtil.getInputFieldTitle(Locales.USER, source.getTitleL10nKey()));
+				if (!CommonUtil.isEmptyString(source.getComment())) {
+					target.setComment(L10nUtil.getInputFieldComment(Locales.USER, source.getComment()));
+				}
 			}
 		}
 		if (trial != null) {
