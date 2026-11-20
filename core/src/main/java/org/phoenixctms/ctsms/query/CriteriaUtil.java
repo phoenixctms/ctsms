@@ -149,6 +149,11 @@ public final class CriteriaUtil {
 		return getL10nKeysCriterion(bundle, propertyName, L10N_FILTER_LOCALIZED_ENTITIES.contains(entityName) ? "localized" : null, value);
 	}
 
+	private static String getEntityName(Class entityClass) {
+		String name = entityClass.getSimpleName();
+		return name.endsWith("Impl") ? name.substring(0, name.length() - "Impl".length()) : name;
+	}
+
 	/**
 	 * Any of the properties holds one of the keys (IN lists chunked).
 	 */
@@ -268,15 +273,20 @@ public final class CriteriaUtil {
 			String value, PSFVO psf) throws Exception {
 		String timeZone = psf != null ? psf.getFilterTimeZone() : null;
 		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
-		if (pathClass != null) {
-			org.hibernate.criterion.Criterion l10nOr = getL10nKeysCriterion(pathClass.getSimpleName(), filterFieldAssociationPath.getPropertyName(), value);
-			if (l10nOr != null) {
-				org.hibernate.criterion.Criterion or = applyAlternativeFilters(criteriaMap, filterFieldAssociationPath, filterCriteria, value, pathClass, timeZone);
-				return or != null ? Restrictions.or(l10nOr, or) : l10nOr;
-			}
-			return applyAlternativeFilters(criteriaMap, filterFieldAssociationPath, filterCriteria, value, pathClass, timeZone);
+		// properties of the root entity have no path class:
+		Class l10nPathClass = pathClass != null ? pathClass : (filterFieldAssociationPath.getPathDepth() == 0 ? criteriaMap.getEntity() : null);
+		org.hibernate.criterion.Criterion l10nOr = null;
+		if (l10nPathClass != null) {
+			l10nOr = getL10nKeysCriterion(getEntityName(l10nPathClass), filterFieldAssociationPath.getPropertyName(), value);
 		}
-		return null;
+		org.hibernate.criterion.Criterion or = null;
+		if (pathClass != null) {
+			or = applyAlternativeFilters(criteriaMap, filterFieldAssociationPath, filterCriteria, value, pathClass, timeZone);
+		}
+		if (l10nOr != null) {
+			return or != null ? Restrictions.or(l10nOr, or) : l10nOr;
+		}
+		return or;
 	}
 
 	private static org.hibernate.criterion.Criterion applyAlternativeFilters(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, Criteria filterCriteria,
