@@ -46,6 +46,7 @@ import org.phoenixctms.ctsms.enumeration.DBModule;
 import org.phoenixctms.ctsms.enumeration.EventImportance;
 import org.phoenixctms.ctsms.enumeration.FileModule;
 import org.phoenixctms.ctsms.enumeration.HyperlinkModule;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JobStatus;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
@@ -116,6 +117,99 @@ public final class CriteriaUtil {
 		ALTERNATIVE_FILTER_MAP.put("AnimalContactParticulars.animalName", new String[] { "alias" });
 		ALTERNATIVE_FILTER_MAP.put("Department.nameL10nKey", new String[] { ALTERNATIVE_FILTER_DEPARTMENT_NAME });
 	}
+	// filters on these properties also match the translated texts of the keys they hold:
+	private final static HashMap<String, InputFieldL10nBundle> L10N_FILTER_ENTITY_FIELDS = new HashMap<String, InputFieldL10nBundle>();
+	// ... where the entity has a localized flag of its own, only if it is set:
+	private final static HashSet<String> L10N_FILTER_LOCALIZED_ENTITIES = new HashSet<String>();
+	private final static int L10N_FILTER_IN_CHUNK_SIZE = 1000;
+	static {
+		L10N_FILTER_ENTITY_FIELDS.put("InputField.nameL10nKey", InputFieldL10nBundle.NAMES);
+		L10N_FILTER_ENTITY_FIELDS.put("InputField.titleL10nKey", InputFieldL10nBundle.TITLES);
+		L10N_FILTER_ENTITY_FIELDS.put("InputFieldSelectionSetValue.nameL10nKey", InputFieldL10nBundle.SELECTION_SET_VALUE_NAMES);
+		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.titleL10nKey", InputFieldL10nBundle.TITLES);
+		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.comment", InputFieldL10nBundle.COMMENTS);
+		L10N_FILTER_ENTITY_FIELDS.put("ECRFField.section", InputFieldL10nBundle.ECRF_FIELD_SECTIONS);
+		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.titleL10nKey", InputFieldL10nBundle.TITLES);
+		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.comment", InputFieldL10nBundle.COMMENTS);
+		L10N_FILTER_ENTITY_FIELDS.put("Inquiry.category", InputFieldL10nBundle.INQUIRY_CATEGORIES);
+		L10N_FILTER_ENTITY_FIELDS.put("ProbandListEntryTag.titleL10nKey", InputFieldL10nBundle.TITLES);
+		L10N_FILTER_ENTITY_FIELDS.put("ProbandListEntryTag.comment", InputFieldL10nBundle.COMMENTS);
+		L10N_FILTER_LOCALIZED_ENTITIES.add("InputField");
+		L10N_FILTER_LOCALIZED_ENTITIES.add("InputFieldSelectionSetValue");
+	}
+
+	/**
+	 * The keys of a localized property whose translation (in the user's language) contains the filter value.
+	 */
+	public static org.hibernate.criterion.Criterion getL10nKeysCriterion(String entityName, String propertyName, String value) {
+		InputFieldL10nBundle bundle = L10N_FILTER_ENTITY_FIELDS.get(entityName + AssociationPath.ASSOCIATION_PATH_SEPARATOR + propertyName);
+		if (bundle == null) {
+			return null;
+		}
+		return getL10nKeysCriterion(bundle, propertyName, L10N_FILTER_LOCALIZED_ENTITIES.contains(entityName) ? "localized" : null, value);
+	}
+
+	/**
+	 * Adds the translated texts to the name autocomplete of eCRF fields, inquiries and proband list entry tags,
+	 * with the input field joined as "inputField", and optionally their section or category.
+	 */
+	public static void addL10nNameInfixCriterions(Junction junction, String nameInfix, InputFieldL10nBundle groupBundle, String groupProperty) {
+		org.hibernate.criterion.Criterion[] criterions = new org.hibernate.criterion.Criterion[] {
+				getL10nKeysCriterion(InputFieldL10nBundle.TITLES, "titleL10nKey", "inputField.localized", nameInfix),
+				getL10nKeysCriterion(InputFieldL10nBundle.NAMES, "inputField.nameL10nKey", "inputField.localized", nameInfix),
+				getL10nKeysCriterion(InputFieldL10nBundle.TITLES, "inputField.titleL10nKey", "inputField.localized", nameInfix),
+				groupBundle != null ? getL10nKeysCriterion(groupBundle, groupProperty, null, nameInfix) : null };
+		for (int i = 0; i < criterions.length; i++) {
+			if (criterions[i] != null) {
+				junction.add(criterions[i]);
+			}
+		}
+	}
+
+	/**
+	 * Adds the translated texts to the "find fields" search of eCRF fields, inquiries and proband list entry tags,
+	 * with the input field joined as "inputField0", under the same conditions as the keys themselves.
+	 */
+	public static void addL10nFieldQueryCriterions(Junction junction, String fieldQuery) {
+		org.hibernate.criterion.Criterion title = getL10nKeysCriterion(InputFieldL10nBundle.TITLES, "titleL10nKey", "inputField0.localized", fieldQuery);
+		if (title != null) {
+			junction.add(title);
+		}
+		org.hibernate.criterion.Criterion name = getL10nKeysCriterion(InputFieldL10nBundle.NAMES, "inputField0.nameL10nKey", "inputField0.localized", fieldQuery);
+		if (name != null) {
+			junction.add(Restrictions.and(
+					Restrictions.and(
+							Restrictions.or(Restrictions.eq("externalId", ""), Restrictions.isNull("externalId")),
+							Restrictions.or(Restrictions.eq("inputField0.externalId", ""), Restrictions.isNull("inputField0.externalId"))),
+					name));
+		}
+		org.hibernate.criterion.Criterion fieldTitle = getL10nKeysCriterion(InputFieldL10nBundle.TITLES, "inputField0.titleL10nKey", "inputField0.localized", fieldQuery);
+		if (fieldTitle != null) {
+			junction.add(Restrictions.and(
+					Restrictions.or(Restrictions.eq("titleL10nKey", ""), Restrictions.isNull("titleL10nKey")),
+					fieldTitle));
+		}
+	}
+
+	/**
+	 * The keys held by a property (path) whose translation in a bundle (in the user's language) contains the value,
+	 * optionally only where a localized flag (path) is set; null if no translation matches.
+	 */
+	public static org.hibernate.criterion.Criterion getL10nKeysCriterion(InputFieldL10nBundle bundle, String propertyPath, String localizedPath, String value) {
+		ArrayList<String> keys = new ArrayList<String>(L10nUtil.getMatchingInputFieldL10nKeys(bundle, value));
+		if (keys.size() == 0) {
+			return null;
+		}
+		org.hibernate.criterion.Criterion in = null;
+		for (int i = 0; i < keys.size(); i += L10N_FILTER_IN_CHUNK_SIZE) {
+			org.hibernate.criterion.Criterion chunk = Restrictions.in(propertyPath, keys.subList(i, Math.min(i + L10N_FILTER_IN_CHUNK_SIZE, keys.size())));
+			in = (in == null ? chunk : Restrictions.or(in, chunk));
+		}
+		if (localizedPath != null) {
+			return Restrictions.and(Restrictions.eq(localizedPath, true), in);
+		}
+		return in;
+	}
 	private final static String UNSUPPORTED_BINARY_RESTRICTION_CRITERION_TYPE = "unsupported binary restriction criterion type {0}";
 	private final static String UNSUPPORTED_UNARY_RESTRICTION_CRITERION_TYPE = "unsupported unary restriction criterion type {0}";
 
@@ -160,6 +254,19 @@ public final class CriteriaUtil {
 		String timeZone = psf != null ? psf.getFilterTimeZone() : null;
 		Class pathClass = criteriaMap.getPropertyClassMap().get(filterFieldAssociationPath.getPathString());
 		if (pathClass != null) {
+			org.hibernate.criterion.Criterion l10nOr = getL10nKeysCriterion(pathClass.getSimpleName(), filterFieldAssociationPath.getPropertyName(), value);
+			if (l10nOr != null) {
+				org.hibernate.criterion.Criterion or = applyAlternativeFilters(criteriaMap, filterFieldAssociationPath, filterCriteria, value, pathClass, timeZone);
+				return or != null ? Restrictions.or(l10nOr, or) : l10nOr;
+			}
+			return applyAlternativeFilters(criteriaMap, filterFieldAssociationPath, filterCriteria, value, pathClass, timeZone);
+		}
+		return null;
+	}
+
+	private static org.hibernate.criterion.Criterion applyAlternativeFilters(SubCriteriaMap criteriaMap, AssociationPath filterFieldAssociationPath, Criteria filterCriteria,
+			String value, Class pathClass, String timeZone) throws Exception {
+		{
 			String[] altFilterArr = ALTERNATIVE_FILTER_MAP
 					.get(pathClass.getSimpleName() + AssociationPath.ASSOCIATION_PATH_SEPARATOR + filterFieldAssociationPath.getPropertyName());
 			if (altFilterArr != null && altFilterArr.length > 0) {
