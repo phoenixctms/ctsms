@@ -9,6 +9,7 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -111,6 +112,17 @@ public class InquiryDaoImpl
 	private org.hibernate.Criteria createInquiryCriteria() {
 		org.hibernate.Criteria inquiryCriteria = this.getSession().createCriteria(Inquiry.class);
 		return inquiryCriteria;
+	}
+
+	/**
+	 * Usages of localized input fields that hold one of the keys as title or comment.
+	 */
+	@Override
+	protected Collection<Inquiry> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria inquiryCriteria = createInquiryCriteria();
+		inquiryCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
+		inquiryCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		return inquiryCriteria.list();
 	}
 
 	@Override

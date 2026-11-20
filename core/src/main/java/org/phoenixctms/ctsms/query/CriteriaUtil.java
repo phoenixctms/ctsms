@@ -150,6 +150,21 @@ public final class CriteriaUtil {
 	}
 
 	/**
+	 * Any of the properties holds one of the keys (IN lists chunked).
+	 */
+	public static org.hibernate.criterion.Criterion getL10nKeysInCriterion(Collection<String> keys, String... propertyPaths) {
+		ArrayList<String> keyList = new ArrayList<String>(keys);
+		Junction junction = Restrictions.disjunction();
+		for (int i = 0; i < keyList.size(); i += L10N_FILTER_IN_CHUNK_SIZE) {
+			List<String> chunk = keyList.subList(i, Math.min(i + L10N_FILTER_IN_CHUNK_SIZE, keyList.size()));
+			for (String propertyPath : propertyPaths) {
+				junction.add(Restrictions.in(propertyPath, chunk));
+			}
+		}
+		return junction;
+	}
+
+	/**
 	 * Adds the translated texts to the name autocomplete of eCRF fields, inquiries and proband list entry tags,
 	 * with the input field joined as "inputField", and optionally their section or category.
 	 */

@@ -8,6 +8,7 @@ package org.phoenixctms.ctsms.domain;
 import java.text.MessageFormat;
 import java.util.Collection;
 
+import java.util.Set;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -119,6 +120,17 @@ public class ECRFFieldDaoImpl
 	private org.hibernate.Criteria createEcrfFieldCriteria() {
 		org.hibernate.Criteria ecrfFieldCriteria = this.getSession().createCriteria(ECRFField.class);
 		return ecrfFieldCriteria;
+	}
+
+	/**
+	 * Usages of localized input fields that hold one of the keys as title or comment.
+	 */
+	@Override
+	protected Collection<ECRFField> handleFindByL10nKeys(Set<String> keys) throws Exception {
+		org.hibernate.Criteria ecrfFieldCriteria = createEcrfFieldCriteria();
+		ecrfFieldCriteria.createCriteria("field", "inputField0").add(Restrictions.eq("localized", true));
+		ecrfFieldCriteria.add(CriteriaUtil.getL10nKeysInCriterion(keys, "titleL10nKey", "comment"));
+		return ecrfFieldCriteria.list();
 	}
 
 	@Override

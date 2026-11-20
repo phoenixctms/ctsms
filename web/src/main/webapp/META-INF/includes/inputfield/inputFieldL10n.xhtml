@@ -45,7 +45,7 @@
 						<p:message for="l10nlocale" />
 					</h:panelGrid>
 					<c:forEach items="#{inputFieldL10nBean.editors}" var="editor" varStatus="status">
-						<p:fieldset legend="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}"
+						<p:fieldset id="l10nbundle_#{status.index}" legend="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}"
 							styleClass="ctsms-l10n-fieldset">
 							<h:panelGrid columns="1" cellpadding="0"
 								styleClass="ctsms-l10n-codemirror-panelgrid"
@@ -63,11 +63,11 @@
 									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
 									icon="ui-icon ui-icon-disk" ajax="true"
 									disabled="#{!inputFieldL10nBean.created}"
-									update=":tabView:inputfieldl10n_form:l10n_input" />
+									update=":tabView:inputfieldl10n_form:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing :tabView:inputfieldl10n_form:l10nmessages" />
 							</h:panelGrid>
 						</p:fieldset>
 					</c:forEach>
-					<p:fieldset legend="#{inputfieldlabels.input_field_l10n_missing_keys_label}">
+					<p:fieldset id="l10nmissing" legend="#{inputfieldlabels.input_field_l10n_missing_keys_label}">
 						<h:outputText rendered="#{inputFieldL10nBean.missingKeysEmpty}"
 							value="#{inputfieldlabels.input_field_l10n_no_missing_keys}" />
 						<p:dataTable rendered="#{!inputFieldL10nBean.missingKeysEmpty}"
@@ -87,7 +87,7 @@
 							</p:column>
 						</p:dataTable>
 					</p:fieldset>
-					<p:messages globalOnly="true" />
+					<p:messages id="l10nmessages" globalOnly="true" />
 					<p:toolbar>
 						<p:toolbarGroup align="right">
 							<p:commandButton process="@this"
