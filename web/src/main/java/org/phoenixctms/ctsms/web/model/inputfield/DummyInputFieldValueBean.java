@@ -1,15 +1,20 @@
 package org.phoenixctms.ctsms.web.model.inputfield;
 
+import java.util.ArrayList;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.exception.AuthenticationException;
 import org.phoenixctms.ctsms.exception.AuthorisationException;
 import org.phoenixctms.ctsms.exception.ServiceException;
 import org.phoenixctms.ctsms.util.CommonUtil;
+import org.phoenixctms.ctsms.vo.AuthenticationVO;
+import org.phoenixctms.ctsms.vo.InputFieldOutVO;
 import org.phoenixctms.ctsms.web.model.ManagedBeanBase;
 import org.phoenixctms.ctsms.web.model.shared.inputfield.DummyInputModel;
 import org.phoenixctms.ctsms.web.model.shared.inputfield.InputModel;
@@ -30,10 +35,12 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 
 	private DummyInputModel inputModel;
 	private Long inputFieldId;
+	private String locale; // the language to preview the input field in
 
 	public DummyInputFieldValueBean() {
 		super();
 		inputModel = new DummyInputModel();
+		locale = CommonUtil.localeToString(WebUtil.getLocale());
 	}
 
 	@Override
@@ -65,7 +72,7 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 
 	public String checkInputAction() {
 		try {
-			WebUtil.getServiceLocator().getInputFieldService().checkInputFieldValue(WebUtil.getAuthentication(), inputModel.getInputFieldValue());
+			WebUtil.getServiceLocator().getInputFieldService().checkInputFieldValue(getPreviewAuthentication(), inputModel.getInputFieldValue());
 			Messages.addLocalizedMessage(FacesMessage.SEVERITY_INFO, MessageCodes.DUMMY_INPUT_FIELD_INPUT_VALID, inputModel.getValueString());
 			return VALID_OUTCOME;
 		} catch (ServiceException e) {
@@ -77,6 +84,48 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 			Messages.addMessage(FacesMessage.SEVERITY_ERROR, e.getMessage());
 		}
 		return ERROR_OUTCOME;
+	}
+
+	/**
+	 * The authentication of the user, with the language to localize the input field texts
+	 * (and validation messages) in.
+	 */
+	private AuthenticationVO getPreviewAuthentication() {
+		AuthenticationVO auth = WebUtil.getAuthentication();
+		if (auth != null && !CommonUtil.isEmptyString(locale)) {
+			auth = new AuthenticationVO(auth);
+			auth.setLocale(locale);
+		}
+		return auth;
+	}
+
+	private InputFieldOutVO getInputField() {
+		if (inputFieldId != null) {
+			try {
+				return WebUtil.getServiceLocator().getInputFieldService().getInputField(getPreviewAuthentication(), inputFieldId);
+			} catch (ServiceException | AuthorisationException | IllegalArgumentException e) {
+			} catch (AuthenticationException e) {
+				WebUtil.publishException(e);
+			}
+		}
+		return null;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
+	public ArrayList<SelectItem> getLocales() {
+		return WebUtil.getLocales();
+	}
+
+	public void changeLocale() {
+		inputModel.setInputField(getInputField());
+		actionPostProcess(CHANGE_OUTCOME);
 	}
 
 	public InputModel getInputModel() {
@@ -105,7 +154,7 @@ public class DummyInputFieldValueBean extends ManagedBeanBase {
 	}
 
 	private void initIn() {
-		inputModel.setInputField(WebUtil.getInputField(inputFieldId));
+		inputModel.setInputField(getInputField());
 		inputModel.getInputFieldValue().setFieldId(inputFieldId);
 	}
 
