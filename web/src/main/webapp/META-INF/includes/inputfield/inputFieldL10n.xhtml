@@ -66,7 +66,6 @@
 							</p:column>
 						</p:dataTable>
 					</p:fieldset>
-					<p:messages id="l10nmessages" globalOnly="true" />
 					<p:tabView id="l10nbundletabs" widgetVar="inputFieldL10nBundleTabView" dynamic="true" cache="true"
 						onTabShow="refreshInputFieldL10nEditor(index.index())"
 						styleClass="ctsms-l10n-tabview">
@@ -74,13 +73,14 @@
 							<p:tab id="l10nbundletab_#{status.index}" title="#{inputFieldL10nBean.getBundleTabTitle(editor.bundle)}">
 								<h:panelGrid id="l10nbundle_#{status.index}" columns="1" cellpadding="0"
 									styleClass="ctsms-l10n-codemirror-panelgrid"
-									rowClasses="ctsms-l10n-bundle-label-row,ctsms-codemirror-input-row,ctsms-toolbar-row">
+									rowClasses="ctsms-l10n-bundle-label-row,ctsms-codemirror-input-row,ctsms-message-row,ctsms-toolbar-row">
 									<h:outputText value="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}" />
 									<pe:codeMirror id="l10ntext_#{status.index}"
 										mode="properties" theme="eclipse"
 										value="#{editor.text}"
 										readOnly="#{!inputFieldL10nBean.created}"
 										required="false" lineWrapping="true" lineNumbers="true" />
+										<p:messages globalOnly="true" />
 									<p:toolbar>
 										<p:toolbarGroup align="left">
 											<h:outputText
@@ -96,7 +96,7 @@
 												oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args);sizeInputFieldL10nEditors()"
 												icon="ui-icon ui-icon-disk" ajax="true"
 												disabled="#{!inputFieldL10nBean.created}"
-												update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing :tabView:inputfieldl10n_form:l10nmessages" />
+												update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing" />
 											<p:commandButton process="@this"
 												value="#{labels.load_button_label}"
 												actionListener="#{inputFieldL10nBean.changeLocale}"
