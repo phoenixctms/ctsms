@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,8 +11,8 @@ import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowProcessor;
 import org.phoenixctms.ctsms.service.shared.InputFieldService;
 import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.InputFieldL10nTextUtil;
+import org.phoenixctms.ctsms.util.L10nUtil;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextInVO;
 import org.phoenixctms.ctsms.vo.InputFieldL10nTextOutVO;
 
@@ -90,11 +89,8 @@ public class L10nTextRowProcessor extends RowProcessor {
 
 	@Override
 	protected boolean processHeaderRow(String[] values) throws Throwable {
-		HashSet<String> supportedLocales = new HashSet<String>();
-		Iterator<Locale> it = CoreUtil.getSupportedLocales().iterator();
-		while (it.hasNext()) {
-			supportedLocales.add(CommonUtil.localeToString(it.next()));
-		}
+		// English is no language of its own (its texts are the default ones), so an "en" column is skipped:
+		HashSet<String> supportedLocales = new HashSet<String>(L10nUtil.getInputFieldL10nLocales());
 		columnLocales = new ArrayList<String>(values.length);
 		for (int i = 0; i < values.length; i++) {
 			String header = values[i] != null ? values[i].trim() : "";
