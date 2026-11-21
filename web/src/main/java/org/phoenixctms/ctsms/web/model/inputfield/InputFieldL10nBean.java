@@ -115,6 +115,18 @@ public class InputFieldL10nBean extends ManagedBeanBase {
 		return CHANGE_OUTCOME;
 	}
 
+	@Override
+	public String loadAction() {
+		return loadAction(inputFieldId);
+	}
+
+	@Override
+	public String loadAction(Long id) {
+		inputFieldId = id;
+		loadTexts();
+		return LOAD_OUTCOME;
+	}
+
 	/**
 	 * Reloads the texts of the selected locale (locale dropdown).
 	 */
