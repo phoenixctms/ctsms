@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -1633,11 +1632,9 @@ public class InputFieldServiceImpl
 		if (CommonUtil.isEmptyString(locale)) {
 			return "";
 		}
-		Iterator<Locale> it = CoreUtil.getSupportedLocales().iterator();
-		while (it.hasNext()) {
-			if (locale.equals(CommonUtil.localeToString(it.next()))) {
-				return locale;
-			}
+		// English is no language of its own: its texts are the default ones
+		if (L10nUtil.getInputFieldL10nLocales().contains(locale)) {
+			return locale;
 		}
 		throw L10nUtil.initServiceException(ServiceExceptionCodes.INPUT_FIELD_L10N_LOCALE_NOT_SUPPORTED, locale);
 	}

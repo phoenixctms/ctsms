@@ -3,13 +3,10 @@ package org.phoenixctms.ctsms.executable.xls;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
 import org.phoenixctms.ctsms.fileprocessors.xls.RowWriter;
-import org.phoenixctms.ctsms.util.CommonUtil;
-import org.phoenixctms.ctsms.util.CoreUtil;
 import org.phoenixctms.ctsms.util.L10nUtil;
 
 /**
@@ -55,11 +52,8 @@ public class L10nTextRowWriter extends RowWriter {
 	@Override
 	public void init() {
 		super.init();
-		locales = new ArrayList<String>();
-		Iterator<Locale> it = CoreUtil.getSupportedLocales().iterator();
-		while (it.hasNext()) {
-			locales.add(CommonUtil.localeToString(it.next()));
-		}
+		// the default column holds the English texts, so there is no column for English:
+		locales = L10nUtil.getInputFieldL10nLocales();
 		context.getSpreadSheet(this);
 	}
 

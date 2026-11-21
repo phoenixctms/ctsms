@@ -715,6 +715,27 @@ public final class L10nUtil {
 	}
 
 	/**
+	 * The default (root) localization texts are the English ones and the fallback of every language,
+	 * so English has no texts of its own.
+	 */
+	public final static String INPUT_FIELD_L10N_ROOT_LANGUAGE = Locale.ENGLISH.getLanguage();
+
+	/**
+	 * The languages that can have localization texts of their own: the supported locales except English.
+	 */
+	public static ArrayList<String> getInputFieldL10nLocales() {
+		ArrayList<String> result = new ArrayList<String>();
+		Iterator<Locale> it = CoreUtil.getSupportedLocales().iterator();
+		while (it.hasNext()) {
+			String language = CommonUtil.localeToString(it.next());
+			if (!CommonUtil.isEmptyString(language) && !INPUT_FIELD_L10N_ROOT_LANGUAGE.equals(language)) {
+				result.add(language);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * The effective bundle (classpath, CTSMS_PROPERTIES overloads, database texts, with locale fallback)
 	 * of an editable localization bundle, for a locale string ("" or null for the root bundle).
 	 */
