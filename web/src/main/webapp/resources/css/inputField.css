@@ -96,9 +96,17 @@
 	margin-bottom: 12px;
 }
 
+/* the key on the left, its copy button at the right edge of the column */
+.ctsms-l10n-key-cell {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-weight: bold;
+}
+
 .ctsms-l10n-missing-fieldset .ctsms-l10n-copy-key-button {
+	flex: none;
 	margin-left: 6px;
-	vertical-align: middle;
 }
 
 .ctsms-inputfield-output-row {
