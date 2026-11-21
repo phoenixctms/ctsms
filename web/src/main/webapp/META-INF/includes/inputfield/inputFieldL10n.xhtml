@@ -44,29 +44,33 @@
 						</h:panelGroup>
 						<p:message for="l10nlocale" />
 					</h:panelGrid>
-					<c:forEach items="#{inputFieldL10nBean.editors}" var="editor" varStatus="status">
-						<p:fieldset id="l10nbundle_#{status.index}" legend="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}"
-							styleClass="ctsms-l10n-fieldset">
-							<h:panelGrid columns="1" cellpadding="0"
-								styleClass="ctsms-l10n-codemirror-panelgrid"
-								rowClasses="ctsms-codemirror-input-row,ctsms-codemirror-message-for-row,ctsms-toolbar-row">
-								<pe:codeMirror id="l10ntext_#{status.index}"
-									mode="properties" theme="eclipse"
-									value="#{editor.text}"
-									readOnly="#{!inputFieldL10nBean.created}"
-									required="false" lineWrapping="true" lineNumbers="true" />
-								<h:outputText value="#{editor.modifiedAnnotation}" styleClass="ctsms-l10n-modified" />
-								<p:commandButton id="l10nsave_#{status.index}"
-									process="@this,l10ntext_#{status.index}"
-									value="#{labels.update_button_label}"
-									actionListener="#{inputFieldL10nBean.save(editor.bundleName)}"
-									oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
-									icon="ui-icon ui-icon-disk" ajax="true"
-									disabled="#{!inputFieldL10nBean.created}"
-									update=":tabView:inputfieldl10n_form:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing :tabView:inputfieldl10n_form:l10nmessages" />
-							</h:panelGrid>
-						</p:fieldset>
-					</c:forEach>
+					<p:tabView id="l10nbundletabs" widgetVar="inputFieldL10nBundleTabView" dynamic="true" cache="true"
+						onTabShow="refreshInputFieldL10nEditor(index.index())"
+						styleClass="ctsms-l10n-tabview">
+						<c:forEach items="#{inputFieldL10nBean.editors}" var="editor" varStatus="status">
+							<p:tab id="l10nbundletab_#{status.index}" title="#{inputFieldL10nBean.getBundleTabTitle(editor.bundle)}">
+								<h:panelGrid id="l10nbundle_#{status.index}" columns="1" cellpadding="0"
+									styleClass="ctsms-l10n-codemirror-panelgrid"
+									rowClasses="ctsms-l10n-bundle-label-row,ctsms-codemirror-input-row,ctsms-codemirror-message-for-row,ctsms-toolbar-row">
+									<h:outputText value="#{inputFieldL10nBean.getBundleLabel(editor.bundle)}" />
+									<pe:codeMirror id="l10ntext_#{status.index}"
+										mode="properties" theme="eclipse"
+										value="#{editor.text}"
+										readOnly="#{!inputFieldL10nBean.created}"
+										required="false" lineWrapping="true" lineNumbers="true" />
+									<h:outputText value="#{editor.modifiedAnnotation}" styleClass="ctsms-l10n-modified" />
+									<p:commandButton id="l10nsave_#{status.index}"
+										process="@this,l10ntext_#{status.index}"
+										value="#{labels.update_button_label}"
+										actionListener="#{inputFieldL10nBean.save(editor.bundleName)}"
+										oncomplete="handleUpdateInputFieldTabTitles(xhr, status, args)"
+										icon="ui-icon ui-icon-disk" ajax="true"
+										disabled="#{!inputFieldL10nBean.created}"
+										update=":tabView:inputfieldl10n_form:l10nbundletabs:l10nbundle_#{status.index} :tabView:inputfieldl10n_form:l10nmissing :tabView:inputfieldl10n_form:l10nmessages" />
+								</h:panelGrid>
+							</p:tab>
+						</c:forEach>
+					</p:tabView>
 					<p:fieldset id="l10nmissing" legend="#{inputfieldlabels.input_field_l10n_missing_keys_label}">
 						<h:outputText rendered="#{inputFieldL10nBean.missingKeysEmpty}"
 							value="#{inputfieldlabels.input_field_l10n_no_missing_keys}" />
