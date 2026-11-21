@@ -59,13 +59,15 @@
 								<h:outputText value="#{missingKey.target.name}" />
 							</p:column>
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_key_column}">
-								<h:outputText value="#{missingKey.l10nKey}" />
-								<h:outputText styleClass="ctsms-l10n-key-line" style="display:none;"
-									value="#{inputFieldL10nBean.getKeyLine(missingKey.l10nKey)}" />
-								<p:commandButton type="button" icon="ui-icon ui-icon-copy"
-									title="#{inputfieldlabels.input_field_l10n_copy_key_button_title}"
-									onclick="copyInputFieldL10nKeyLine(this);return false;"
-									styleClass="ctsms-l10n-copy-key-button" />
+								<h:panelGroup layout="block" styleClass="ctsms-l10n-key-cell">
+									<h:outputText value="#{missingKey.l10nKey}" />
+									<h:outputText styleClass="ctsms-l10n-key-line" style="display:none;"
+										value="#{inputFieldL10nBean.getKeyLine(missingKey.l10nKey)}" />
+									<p:commandButton type="button" icon="ui-icon ui-icon-copy"
+										title="#{inputfieldlabels.input_field_l10n_copy_key_button_title}"
+										onclick="copyInputFieldL10nKeyLine(this);return false;"
+										styleClass="ctsms-l10n-copy-key-button" />
+								</h:panelGroup>
 							</p:column>
 							<p:column headerText="#{inputfieldlabels.input_field_l10n_missing_key_usage_column}">
 								<h:outputText value="#{missingKey.usage}" />
