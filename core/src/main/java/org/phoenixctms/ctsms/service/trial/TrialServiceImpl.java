@@ -88,6 +88,7 @@ import org.phoenixctms.ctsms.enumeration.Color;
 import org.phoenixctms.ctsms.enumeration.ECRFFieldStatusQueue;
 import org.phoenixctms.ctsms.enumeration.ECRFValidationStatus;
 import org.phoenixctms.ctsms.enumeration.InputFieldL10nBundle;
+import org.phoenixctms.ctsms.enumeration.InputFieldL10nTarget;
 import org.phoenixctms.ctsms.enumeration.InputFieldType;
 import org.phoenixctms.ctsms.enumeration.JournalModule;
 import org.phoenixctms.ctsms.enumeration.PaymentMethod;
@@ -98,6 +99,7 @@ import org.phoenixctms.ctsms.enumeration.SignatureModule;
 import org.phoenixctms.ctsms.enumeration.VariablePeriod;
 import org.phoenixctms.ctsms.enumeration.VisitScheduleDateMode;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelDefaultSettings;
+import org.phoenixctms.ctsms.excel.AuditTrailExcelLabelCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelSettingCodes;
 import org.phoenixctms.ctsms.excel.AuditTrailExcelWriter;
 import org.phoenixctms.ctsms.excel.ExcelCellFormat;
@@ -5285,6 +5287,7 @@ public class TrialServiceImpl
 		}
 		ArrayList<ECRFFieldL10nTextChangeVO> result = new ArrayList<ECRFFieldL10nTextChangeVO>();
 		HashMap<Long, ECRFFieldOutVO> ecrfFieldVOs = new HashMap<Long, ECRFFieldOutVO>();
+		HashMap<Long, ECRFOutVO> ecrfVOs = new HashMap<Long, ECRFOutVO>();
 		HashMap<Long, UserOutVO> userVOs = new HashMap<Long, UserOutVO>();
 		HashMap<Long, InputFieldSelectionSetValueOutVO> selectionSetValueVOs = new HashMap<Long, InputFieldSelectionSetValueOutVO>();
 		InputFieldL10nTextDao inputFieldL10nTextDao = this.getInputFieldL10nTextDao();
@@ -5307,17 +5310,32 @@ public class TrialServiceImpl
 					ArrayList<Object[]> usages = bundleKeys.getValue().get(change.getKey());
 					if (usages != null) {
 						Iterator<Object[]> usagesIt = usages.iterator();
+						HashSet<Long> sectionEcrfIds = new HashSet<Long>();
 						while (usagesIt.hasNext()) {
 							Object[] usage = usagesIt.next();
 							ECRFField ecrfField = (ECRFField) usage[0];
 							InputFieldL10nKeyUsage key = (InputFieldL10nKeyUsage) usage[1];
 							ECRFFieldL10nTextChangeVO row = new ECRFFieldL10nTextChangeVO();
-							ECRFFieldOutVO ecrfFieldVO = ecrfFieldVOs.get(ecrfField.getId());
-							if (ecrfFieldVO == null) {
-								ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
-								ecrfFieldVOs.put(ecrfField.getId(), ecrfFieldVO);
+							ECRFOutVO ecrfVO = ecrfVOs.get(ecrfField.getEcrf().getId());
+							if (ecrfVO == null) {
+								ecrfVO = this.getECRFDao().toECRFOutVO(ecrfField.getEcrf());
+								ecrfVOs.put(ecrfField.getEcrf().getId(), ecrfVO);
 							}
-							row.setEcrfField(ecrfFieldVO);
+							row.setEcrf(ecrfVO);
+							row.setSection(ecrfField.getSection());
+							if (InputFieldL10nTarget.ECRF_FIELD_SECTION.equals(key.getTarget())) {
+								// a section change is listed once per eCRF, without a field:
+								if (!sectionEcrfIds.add(ecrfVO.getId())) {
+									continue;
+								}
+							} else {
+								ECRFFieldOutVO ecrfFieldVO = ecrfFieldVOs.get(ecrfField.getId());
+								if (ecrfFieldVO == null) {
+									ecrfFieldVO = ecrfFieldDao.toECRFFieldOutVO(ecrfField);
+									ecrfFieldVOs.put(ecrfField.getId(), ecrfFieldVO);
+								}
+								row.setEcrfField(ecrfFieldVO);
+							}
 							if (key.getSelectionSetValue() != null) {
 								InputFieldSelectionSetValueOutVO selectionSetValueVO = selectionSetValueVOs.get(key.getSelectionSetValue().getId());
 								if (selectionSetValueVO == null) {
@@ -5328,7 +5346,9 @@ public class TrialServiceImpl
 							}
 							row.setTarget(L10nUtil.createInputFieldL10nTargetVO(Locales.USER, key.getTarget()));
 							row.setBundle(bundleKeys.getKey());
-							row.setLocale(revision.getLocale());
+							row.setLocale(CommonUtil.isEmptyString(revision.getLocale())
+									? L10nUtil.getAuditTrailExcelLabel(Locales.USER, AuditTrailExcelLabelCodes.L10N_TEXT_CHANGES_DEFAULT_LOCALE, ExcelUtil.DEFAULT_LABEL)
+									: revision.getLocale());
 							row.setL10nKey(change.getKey());
 							row.setOldText(change.getValue().getOldValue());
 							row.setNewText(change.getValue().getNewValue());
